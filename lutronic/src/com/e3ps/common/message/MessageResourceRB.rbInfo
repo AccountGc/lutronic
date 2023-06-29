@@ -1,0 +1,2786 @@
+ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.customizable=true
+ResourceInfo.deprecated=false
+
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable=
+
+# Entry Contents
+# MSG2
+MSG2.value=Submenu
+MSG2.order=1002
+
+# MSG3
+MSG3.value=Close
+MSG3.order=1003
+
+# MSG4
+MSG4.value=Open
+MSG4.order=1004
+
+# MSG5
+MSG5.value=User Information (error)
+MSG5.order=1005
+
+# MSG6
+MSG6.value=Search (error)
+MSG6.order=1006
+
+# MSG7
+MSG7.value=Are you sure?
+MSG7.order=1007
+
+# MSG8
+MSG8.value=Done
+MSG8.order=1008
+
+# MSG9
+MSG9.value=User name setting (error)
+MSG9.order=1009
+
+# MSG10
+MSG10.value=: connected
+MSG10.order=1010
+
+# MSG11
+MSG11.value=Administrator
+MSG11.order=1011
+
+# MSG12
+MSG12.value=My work
+MSG12.order=1012
+
+# MSG13
+MSG13.value=Document
+MSG13.order=1013
+
+# MSG14
+MSG14.value=Parts
+MSG14.order=1014
+
+# MSG15
+MSG15.value=Drawing
+MSG15.order=1015
+
+# MSG16
+MSG16.value=Engineering Changes
+MSG16.order=1016
+
+# MSG17
+MSG17.value=Project
+MSG17.order=1017
+
+# MSG18
+MSG18.value=Distribution
+MSG18.order=1018
+
+# MSG19
+MSG19.value=Dashboard
+MSG19.order=1019
+
+# MSG20
+MSG20.value=(error) Search data
+MSG20.order=1020
+
+# MSG21
+MSG21.value=Announcement
+MSG21.order=1021
+
+# MSG22
+MSG22.value=Workspace
+MSG22.order=1022
+
+# MSG23
+MSG23.value=Should work
+MSG23.order=1023
+
+# MSG24
+MSG24.value=In progress
+MSG24.order=1024
+
+# MSG25
+MSG25.value=Completed
+MSG25.order=1025
+
+# MSG26
+MSG26.value=Inbox
+MSG26.order=1026
+
+# MSG27
+MSG27.value=Normal menu
+MSG27.order=1027
+
+# MSG28
+MSG28.value=Change Password
+MSG28.order=1028
+
+# MSG29
+MSG29.value=Organization
+MSG29.order=1029
+
+# MSG30
+MSG30.value=Administrator menu
+MSG30.order=1030
+
+# MSG31
+MSG31.value=Change property values
+MSG31.order=1031
+
+# MSG32
+MSG32.value=Drawing reconversion
+MSG32.order=1032
+
+# MSG33
+MSG33.value=Main portal
+MSG33.order=1033
+
+# MSG34
+MSG34.value=Approval
+MSG34.order=1034
+
+# MSG35
+MSG35.value=Jobs
+MSG35.order=1035
+
+# MSG36
+MSG36.value=My project
+MSG36.order=1036
+
+# MSG37
+MSG37.value=My issues
+MSG37.order=1037
+
+# MSG38
+MSG38.value=Project
+MSG38.order=1038
+
+# MSG39
+MSG39.value=Please enter a :
+MSG39.order=1039
+
+# MSG40
+MSG40.value=Project code
+MSG40.order=1040
+
+# MSG41
+MSG41.value=PL
+MSG41.order=1041
+
+# MSG42
+MSG42.value=Please select the :
+MSG42.order=1042
+
+# MSG43
+MSG43.value=Planned Start Date
+MSG43.order=1043
+
+# MSG44
+MSG44.value=Project type
+MSG44.order=1044
+
+# MSG45
+MSG45.value=Description
+MSG45.order=1045
+
+# MSG46
+MSG46.value=Would you like to registry?
+MSG46.order=1046
+
+# MSG47
+MSG47.value=Code list (error)
+MSG47.order=1047
+
+# MSG48
+MSG48.value=Template list (error)
+MSG48.order=1048
+
+# MSG49
+MSG49.value=Select
+MSG49.order=1049
+
+# MSG50
+MSG50.value=Templates
+MSG50.order=1050
+
+# MSG51
+MSG51.value=Select a :
+MSG51.order=1051
+
+# MSG52
+MSG52.value=Status
+MSG52.order=1052
+
+# MSG53
+MSG53.value=Project
+MSG53.order=1053
+
+# MSG54
+MSG54.value=Number
+MSG54.order=1054
+
+# MSG55
+MSG55.value=Part Number List (error)
+MSG55.order=1055
+
+# MSG56
+MSG56.value=Project code
+MSG56.order=1056
+
+# MSG57
+MSG57.value=Task
+MSG57.order=1057
+
+# MSG58
+MSG58.value=Issue name
+MSG58.order=1058
+
+# MSG59
+MSG59.value=Reporter
+MSG59.order=1059
+
+# MSG60
+MSG60.value=Reporting date
+MSG60.order=1060
+
+# MSG61
+MSG61.value=Person of charge
+MSG61.order=1061
+
+# MSG62
+MSG62.value=Issue category
+MSG62.order=1062
+
+# MSG63
+MSG63.value=Total
+MSG63.order=1063
+
+# MSG64
+MSG64.value=Role
+MSG64.order=1064
+
+# MSG65
+MSG65.value=Issues
+MSG65.order=1065
+
+# MSG66
+MSG66.value=Incomplete
+MSG66.order=1066
+
+# MSG67
+MSG67.value=Completed
+MSG67.order=1067
+
+# MSG68
+MSG68.value=Search
+MSG68.order=1068
+
+# MSG69
+MSG69.value=Initialization
+MSG69.order=1069
+
+# MSG70
+MSG70.value=Management
+MSG70.order=1070
+
+# MSG71
+MSG71.value=Issue category 
+MSG71.order=1071
+
+# MSG72
+MSG72.value=Role
+MSG72.order=1072
+
+# MSG73
+MSG73.value=Download Excel
+MSG73.order=1073
+
+# MSG74
+MSG74.value=Output
+MSG74.order=1074
+
+# MSG75
+MSG75.value=List
+MSG75.order=1075
+
+# MSG76
+MSG76.value=Issues List
+MSG76.order=1076
+
+# MSG77
+MSG77.value=Edit Task
+MSG77.order=1077
+
+# MSG78
+MSG78.value=Refresh
+MSG78.order=1078
+
+# MSG79
+MSG79.value=Default
+MSG79.order=1079
+
+# MSG80
+MSG80.value=Do you want to delete this project?
+MSG80.order=1080
+
+# MSG81
+MSG81.value=Do you want to request approval for this project?
+MSG81.order=1081
+
+# MSG82
+MSG82.value=Do you want to check out for this project?
+MSG82.order=1082
+
+# MSG83
+MSG83.value=Do you want to cancel check out for the project ?
+MSG83.order=1083
+
+# MSG84
+MSG84.value=Basic Information
+MSG84.order=1084
+
+# MSG85
+MSG85.value=Chart
+MSG85.order=1085
+
+# MSG86
+MSG86.value=View history
+MSG86.order=1086
+
+# MSG87
+MSG87.value=Checkout
+MSG87.order=1087
+
+# MSG88
+MSG88.value=Stop
+MSG88.order=1088
+
+# MSG89
+MSG89.value=Change
+MSG89.order=1089
+
+# MSG90
+MSG90.value=Delete
+MSG90.order=1090
+
+# MSG91
+MSG91.value=Project Name
+MSG91.order=1091
+
+# MSG92
+MSG92.value=Version
+MSG92.order=1092
+
+# MSG93
+MSG93.value=Register
+MSG93.order=1093
+
+# MSG94
+MSG94.value=Entry date
+MSG94.order=1094
+
+# MSG95
+MSG95.value=Change date
+MSG95.order=1095
+
+# MSG96
+MSG96.value=Precedence, lagging task
+MSG96.order=1096
+
+# MSG97
+MSG97.value=Task name
+MSG97.order=1097
+
+# MSG98
+MSG98.value=Preceding, lagging
+MSG98.order=1098
+
+# MSG99
+MSG99.value=Information
+MSG99.order=1099
+
+# MSG100
+MSG100.value=Preceding Task
+MSG100.order=1100
+
+# MSG101
+MSG101.value=Planned end date
+MSG101.order=1101
+
+# MSG102
+MSG102.value=Lagging task
+MSG102.order=1102
+
+# MSG103
+MSG103.value=Search issue (error)
+MSG103.order=1103
+
+# MSG104
+MSG104.value=Project Status
+MSG104.order=1104
+
+# MSG105
+MSG105.value=Under development.
+MSG105.order=1105
+
+# MSG106
+MSG106.value=Project status
+MSG106.order=1106
+
+# MSG107
+MSG107.value=Status per members
+MSG107.order=1107
+
+# MSG108
+MSG108.value=Per members
+MSG108.order=1108
+
+# MSG109
+MSG109.value=Per projects
+MSG109.order=1109
+
+# MSG110
+MSG110.value=Search status list (error)
+MSG110.order=1110
+
+# MSG111
+MSG111.value=Year
+MSG111.order=1111
+
+# MSG112
+MSG112.value=Month
+MSG112.order=1112
+
+# MSG113
+MSG113.value=Project type
+MSG113.order=1113
+
+# MSG114
+MSG114.value=Project Status
+MSG114.order=1114
+
+# MSG115
+MSG115.value=Team
+MSG115.order=1115
+
+# MSG116
+MSG116.value=Team members
+MSG116.order=1116
+
+# MSG117
+MSG117.value=Full task
+MSG117.order=1117
+
+# MSG118
+MSG118.value=Preparing a task
+MSG118.order=1118
+
+# MSG119
+MSG119.value=Ongoing task
+MSG119.order=1119
+
+# MSG120
+MSG120.value=End task
+MSG120.order=1120
+
+# MSG121
+MSG121.value=Open Issues
+MSG121.order=1121
+
+# MSG122
+MSG122.value=Closed Issues
+MSG122.order=1122
+
+# MSG123
+MSG123.value=Full Issue List
+MSG123.order=1123
+
+# MSG124
+MSG124.value=end Rate
+MSG124.order=1124
+
+# MSG125
+MSG125.value=Full Issue
+MSG125.order=1125
+
+# MSG126
+MSG126.value=Distribution
+MSG126.order=1126
+
+# MSG127
+MSG127.value=Status
+MSG127.order=1127
+
+# MSG128
+MSG128.value=Registration
+MSG128.order=1128
+
+# MSG129
+MSG129.value=Vendor
+MSG129.order=1129
+
+# MSG130
+MSG130.value=Distribution Name
+MSG130.order=1130
+
+# MSG131
+MSG131.value=Distribution type
+MSG131.order=1131
+
+# MSG132
+MSG132.value=Drawings type
+MSG132.order=1132
+
+# MSG133
+MSG133.value=Related items
+MSG133.order=1133
+
+# MSG134
+MSG134.value=New product
+MSG134.order=1134
+
+# MSG135
+MSG135.value=Parts
+MSG135.order=1135
+
+# MSG136
+MSG136.value=Title
+MSG136.order=1136
+
+# MSG137
+MSG137.value=The purpose of ECO
+MSG137.order=1137
+
+# MSG138
+MSG138.value=Entry date
+MSG138.order=1138
+
+# MSG139
+MSG139.value=Review result
+MSG139.order=1139
+
+# MSG140
+MSG140.value=Category
+MSG140.order=1140
+
+# MSG141
+MSG141.value=Activities
+MSG141.order=1141
+
+# MSG142
+MSG142.value=Receive date
+MSG142.order=1142
+
+# MSG143
+MSG143.value=Operator
+MSG143.order=1143
+
+# MSG144
+MSG144.value=Document
+MSG144.order=1144
+
+# MSG145
+MSG145.value=Document Name
+MSG145.order=1145
+
+# MSG146
+MSG146.value=Classification hierarchy
+MSG146.order=1146
+
+# MSG147
+MSG147.value=Document classification
+MSG147.order=1147
+
+# MSG148
+MSG148.value=The latest version
+MSG148.order=1148
+
+# MSG149
+MSG149.value=All versions
+MSG149.order=1149
+
+# MSG150
+MSG150.value=Search authentication type list (error)
+MSG150.order=1150
+
+# MSG151
+MSG151.value=Template name
+MSG151.order=1151
+
+# MSG152
+MSG152.value=Enter a :
+MSG152.order=1152
+
+# MSG153
+MSG153.value=Select the :
+MSG153.order=1153
+
+# MSG154
+MSG154.value=Content
+MSG154.order=1154
+
+# MSG155
+MSG155.value=Item
+MSG155.order=1155
+
+# MSG156
+MSG156.value=Product
+MSG156.order=1156
+
+# MSG157
+MSG157.value=Spare
+MSG157.order=1157
+
+# MSG158
+MSG158.value=User Registration
+MSG158.order=1158
+
+# MSG159
+MSG159.value=Batch Registration
+MSG159.order=1159
+
+# MSG160
+MSG160.value=Parts Number
+MSG160.order=1160
+
+# MSG161
+MSG161.value=Parts name
+MSG161.order=1161
+
+# MSG162
+MSG162.value=Unit list (error)
+MSG162.order=1162
+
+# MSG163
+MSG163.value=Parts classification
+MSG163.order=1163
+
+# MSG164
+MSG164.value=Surface treatment
+MSG164.order=1164
+
+# MSG165
+MSG165.value=Purchase-in
+MSG165.order=1165
+
+# MSG166
+MSG166.value=Subcontract
+MSG166.order=1166
+
+# MSG167
+MSG167.value=Advanced search
+MSG167.order=1167
+
+# MSG168
+MSG168.value=Do you want to revise?
+MSG168.order=1168
+
+# MSG169
+MSG169.value=Do you want to delete?
+MSG169.order=1169
+
+# MSG170
+MSG170.value=If related part exists , it can not be deleted.
+MSG170.order=1170
+
+# MSG171
+MSG171.value=Deletion (error)
+MSG171.order=1171
+
+# MSG172
+MSG172.value=Details
+MSG172.order=1172
+
+# MSG173
+MSG173.value=Version history
+MSG173.order=1173
+
+# MSG174
+MSG174.value=Download history
+MSG174.order=1174
+
+# MSG175
+MSG175.value=Approval history
+MSG175.order=1175
+
+# MSG176
+MSG176.value=Modifier
+MSG176.order=1176
+
+# MSG177
+MSG177.value=Last changing date
+MSG177.order=1177
+
+# MSG178
+MSG178.value=Document grade
+MSG178.order=1178
+
+# MSG179
+MSG179.value=Document type
+MSG179.order=1179
+
+# MSG180
+MSG180.value=Main Attachments
+MSG180.order=1180
+
+# MSG181
+MSG181.value=Attachments
+MSG181.order=1181
+
+# MSG182
+MSG182.value=Last changing date
+MSG182.order=1182
+
+# MSG183
+MSG183.value=: does not exist.
+MSG183.order=1183
+
+# MSG184
+MSG184.value=Related projects
+MSG184.order=1184
+
+# MSG185
+MSG185.value=Output name
+MSG185.order=1185
+
+# MSG186
+MSG186.value=Releated distribution 
+MSG186.order=1186
+
+# MSG187
+MSG187.value=Distribution type
+MSG187.order=1187
+
+# MSG188
+MSG188.value=Drawings Type
+MSG188.order=1188
+
+# MSG189
+MSG189.value=Document grade
+MSG189.order=1189
+
+# MSG190
+MSG190.value=Selected main attachment can not be registered .
+MSG190.order=1190
+
+# MSG191
+MSG191.value=Add
+MSG191.order=1191
+
+# MSG192
+MSG192.value=You can not register more than one part
+MSG192.order=1192
+
+# MSG193
+MSG193.value=Part name
+MSG193.order=1193
+
+# MSG194
+MSG194.value=There is no related projects.
+MSG194.order=1194
+
+# MSG195
+MSG195.value=View version history
+MSG195.order=1195
+
+# MSG196
+MSG196.value=History
+MSG196.order=1196
+
+# MSG197
+MSG197.value=Do you want to correct?
+MSG197.order=1197
+
+# MSG198
+MSG198.value=Previous page
+MSG198.order=1198
+
+# MSG199
+MSG199.value=Reason for changing
+MSG199.order=1199
+
+# MSG200
+MSG200.value=Department
+MSG200.order=1200
+
+# MSG201
+MSG201.value=Rank
+MSG201.order=1201
+
+# MSG202
+MSG202.value=Name
+MSG202.order=1202
+
+# MSG203
+MSG203.value=Download time
+MSG203.order=1203
+
+# MSG204
+MSG204.value=Downloads
+MSG204.order=1204
+
+# MSG205
+MSG205.value=There is no download history.
+MSG205.order=1205
+
+# MSG206
+MSG206.value=Order
+MSG206.order=1206
+
+# MSG207
+MSG207.value=Approval Date
+MSG207.order=1207
+
+# MSG208
+MSG208.value=Approval Comment
+MSG208.order=1208
+
+# MSG209
+MSG209.value=There is no approval history.
+MSG209.order=1209
+
+# MSG210
+MSG210.value=External user mail
+MSG210.order=1210
+
+# MSG211
+MSG211.value=Email
+MSG211.order=1211
+
+# MSG212
+MSG212.value=There is no selected data 
+MSG212.order=1212
+
+# MSG213
+MSG213.value=Changing failed.
+MSG213.order=1213
+
+# MSG214
+MSG214.value=Saved
+MSG214.order=1214
+
+# MSG215
+MSG215.value=Deletion failed.
+MSG215.order=1215
+
+# MSG216
+MSG216.value=Deleted
+MSG216.order=1216
+
+# MSG217
+MSG217.value=Registration failed
+MSG217.order=1217
+
+# MSG218
+MSG218.value=Registration was successfully
+MSG218.order=1218
+
+# MSG219
+MSG219.value=Received
+MSG219.order=1219
+
+# MSG220
+MSG220.value=Agreement
+MSG220.order=1220
+
+# MSG221
+MSG221.value=Are you sure approval?
+MSG221.order=1221
+
+# MSG222
+MSG222.value=Define approval path
+MSG222.order=1222
+
+# MSG223
+MSG223.value=Task name
+MSG223.order=1223
+
+# MSG224
+MSG224.value=Receiving Date
+MSG224.order=1224
+
+# MSG225
+MSG225.value=Due date
+MSG225.order=1225
+
+# MSG226
+MSG226.value=Submit
+MSG226.order=1226
+
+# MSG227
+MSG227.value=An error occurred when deleting an external mail.
+MSG227.order=1227
+
+# MSG228
+MSG228.value=Specified external mail
+MSG228.order=1228
+
+# MSG229
+MSG229.value=Mail
+MSG229.order=1229
+
+# MSG230
+MSG230.value=Approval way
+MSG230.order=1230
+
+# MSG231
+MSG231.value=Approver
+MSG231.order=1231
+
+# MSG232
+MSG232.value=Do you want to set :
+MSG232.order=1232
+
+# MSG233
+MSG233.value=Delete the existing approval path
+MSG233.order=1233
+
+# MSG234
+MSG234.value=Must select the more than one approver 
+MSG234.order=1234
+
+# MSG235
+MSG235.value=Approval path has been setted.
+MSG235.order=1235
+
+# MSG236
+MSG236.value=Approval path (error)
+MSG236.order=1236
+
+# MSG237
+MSG237.value=Registrant can not be added.
+MSG237.order=1237
+
+# MSG238
+MSG238.value=: is duplicated.
+MSG238.order=1238
+
+# MSG239
+MSG239.value=Select the approval path for deletion
+MSG239.order=1239
+
+# MSG240
+MSG240.value=Deleting (error) 
+MSG240.order=1240
+
+# MSG241
+MSG241.value=Select the approval path for reference
+MSG241.order=1241
+
+# MSG242
+MSG242.value=Approval path
+MSG242.order=1242
+
+# MSG243
+MSG243.value=Cancel
+MSG243.order=1243
+
+# MSG244
+MSG244.value=Search by name or ID
+MSG244.order=1244
+
+# MSG245
+MSG245.value=Approval way
+MSG245.order=1245
+
+# MSG246
+MSG246.value=Delete all
+MSG246.order=1246
+
+# MSG247
+MSG247.value=An error occurred during select external mail.
+MSG247.order=1247
+
+# MSG248
+MSG248.value=Back
+MSG248.order=1248
+
+# MSG249
+MSG249.value=Delegator
+MSG249.order=1249
+
+# MSG250
+MSG250.value=Can not be delegated to registrant
+MSG250.order=1250
+
+# MSG251
+MSG251.value=Delegate
+MSG251.order=1251
+
+# MSG252
+MSG252.value=Delegate
+MSG252.order=1252
+
+# MSG253
+MSG253.value=Presentation of a problem
+MSG253.order=1253
+
+# MSG254
+MSG254.value=Position
+MSG254.order=1254
+
+# MSG255
+MSG255.value=Head of the department
+MSG255.order=1255
+
+# MSG256
+MSG256.value=Rights
+MSG256.order=1256
+
+# MSG257
+MSG257.value=Role
+MSG257.order=1257
+
+# MSG258
+MSG258.value="+ event +"?
+MSG258.order=1258
+
+# MSG259
+MSG259.value=Approved
+MSG259.order=1259
+
+# MSG260
+MSG260.value=Rejected
+MSG260.order=1260
+
+# MSG261
+MSG261.value=Revised
+MSG261.order=1261
+
+# MSG262
+MSG262.value=Revision fail.
+MSG262.order=1262
+
+# MSG263
+MSG263.value=Revised.
+MSG263.order=1263
+
+# MSG264
+MSG264.value=ID
+MSG264.order=1264
+
+# MSG265
+MSG265.value=Position
+MSG265.order=1265
+
+# MSG266
+MSG266.value=Employee management
+MSG266.order=1266
+
+# MSG267
+MSG267.value=Selecting your ID, you can change your password.
+MSG267.order=1267
+
+# MSG268
+MSG268.value=NULL can not be used as a password.
+MSG268.order=1268
+
+# MSG269
+MSG269.value=Enter your password.
+MSG269.order=1269
+
+# MSG270
+MSG270.value=Changing password, you must log on again.
+MSG270.order=1270
+
+# MSG271
+MSG271.value=Change password
+MSG271.order=1271
+
+# MSG272
+MSG272.value=Confirm Changing Password
+MSG272.order=1272
+
+# MSG273
+MSG273.value=You doesn't have a permission for download.
+MSG273.order=1273
+
+# MSG274
+MSG274.value=end date
+MSG274.order=1274
+
+# MSG275
+MSG275.value=Ongoing Task
+MSG275.order=1275
+
+# MSG276
+MSG276.value=Value
+MSG276.order=1276
+
+# MSG277
+MSG277.value=Attribute name.
+MSG277.order=1277
+
+# MSG278
+MSG278.value=Attribute value
+MSG278.order=1278
+
+# MSG279
+MSG279.value=Change?
+MSG279.order=1279
+
+# MSG280
+MSG280.value=Part number
+MSG280.order=1280
+
+# MSG281
+MSG281.value=Drawing number
+MSG281.order=1281
+
+# MSG282
+MSG282.value=Drawing name
+MSG282.order=1282
+
+# MSG283
+MSG283.value=Approver
+MSG283.order=1283
+
+# MSG284
+MSG284.value=?
+MSG284.order=1284
+
+# MSG285
+MSG285.value=Material
+MSG285.order=1285
+
+# MSG286
+MSG286.value=Product type
+MSG286.order=1286
+
+# MSG287
+MSG287.value=Product subtype
+MSG287.order=1287
+
+# MSG288
+MSG288.value=Product demension group
+MSG288.order=1288
+
+# MSG289
+MSG289.value=Product/Part Category
+MSG289.order=1289
+
+# MSG290
+MSG290.value=Check part number
+MSG290.order=1290
+
+# MSG291
+MSG291.value=Change
+MSG291.order=1291
+
+# MSG292
+MSG292.value=To main page
+MSG292.order=1292
+
+# MSG293
+MSG293.value=Enter your start date
+MSG293.order=1293
+
+# MSG294
+MSG294.value=Enter your end date
+MSG294.order=1294
+
+# MSG295
+MSG295.value=~
+MSG295.order=1295
+
+# MSG296
+MSG296.value=: request conversion?
+MSG296.order=1296
+
+# MSG297
+MSG297.value=Request conversion 
+MSG297.order=1297
+
+# MSG298
+MSG298.value=Model classification
+MSG298.order=1298
+
+# MSG299
+MSG299.value=Duplicated number.
+MSG299.order=1299
+
+# MSG300
+MSG300.value=Please check the code duplication
+MSG300.order=1300
+
+# MSG301
+MSG301.value=More than 4 relevant documents required.
+MSG301.order=1301
+
+# MSG302
+MSG302.value=More than 2 relevant drawings required. 
+MSG302.order=1302
+
+# MSG303
+MSG303.value=Document classification
+MSG303.order=1303
+
+# MSG304
+MSG304.value=Check the document :
+MSG304.order=1304
+
+# MSG305
+MSG305.value=Enter your drawing file :
+MSG305.order=1305
+
+# MSG306
+MSG306.value=Product classification
+MSG306.order=1306
+
+# MSG307
+MSG307.value=Product Information
+MSG307.order=1307
+
+# MSG308
+MSG308.value=Add a :
+MSG308.order=1308
+
+# MSG309
+MSG309.value=User code
+MSG309.order=1309
+
+# MSG310
+MSG310.value=Product name
+MSG310.order=1310
+
+# MSG311
+MSG311.value=Enter 4 digits.
+MSG311.order=1311
+
+# MSG312
+MSG312.value=Enter new number.
+MSG312.order=1312
+
+# MSG313
+MSG313.value=Number generation is possible.
+MSG313.order=1313
+
+# MSG314
+MSG314.value=Get number
+MSG314.order=1314
+
+# MSG315
+MSG315.value=Type
+MSG315.order=1315
+
+# MSG316
+MSG316.value=Generated
+MSG316.order=1316
+
+# MSG317
+MSG317.value=Input
+MSG317.order=1317
+
+# MSG318
+MSG318.value=Product family
+MSG318.order=1318
+
+# MSG319
+MSG319.value=Check duplication
+MSG319.order=1319
+
+# MSG320
+MSG320.value=Attribute information
+MSG320.order=1320
+
+# MSG321
+MSG321.value=Unit
+MSG321.order=1321
+
+# MSG322
+MSG322.value=Related documents
+MSG322.order=1322
+
+# MSG323
+MSG323.value=Attachment
+MSG323.order=1323
+
+# MSG324
+MSG324.value=Control file
+MSG324.order=1324
+
+# MSG325
+MSG325.value=Related drawings
+MSG325.order=1325
+
+# MSG326
+MSG326.value=Path
+MSG326.order=1326
+
+# MSG327
+MSG327.value=Properties
+MSG327.order=1327
+
+# MSG328
+MSG328.value=Main drawing 
+MSG328.order=1328
+
+# MSG329
+MSG329.value=Drawing
+MSG329.order=1329
+
+# MSG330
+MSG330.value=Reference
+MSG330.order=1330
+
+# MSG331
+MSG331.value=Dependent type
+MSG331.order=1331
+
+# MSG332
+MSG332.value=Document Title
+MSG332.order=1332
+
+# MSG333
+MSG333.value=Related
+MSG333.order=1333
+
+# MSG334
+MSG334.value=Classfication
+MSG334.order=1334
+
+# MSG335
+MSG335.value=Changed
+MSG335.order=1335
+
+# MSG336
+MSG336.value=Removed
+MSG336.order=1336
+
+# MSG337
+MSG337.value=Registered.
+MSG337.order=1337
+
+# MSG338
+MSG338.value=List (error)
+MSG338.order=1338
+
+# MSG339
+MSG339.value=You don't selected  BOM for comparison
+MSG339.order=1339
+
+# MSG340
+MSG340.value=All possible baseline
+MSG340.order=1340
+
+# MSG341
+MSG341.value=Explosion
+MSG341.order=1341
+
+# MSG342
+MSG342.value=Reversed explosion
+MSG342.order=1342
+
+# MSG343
+MSG343.value=Parent item
+MSG343.order=1343
+
+# MSG344
+MSG344.value=Sub item
+MSG344.order=1344
+
+# MSG345
+MSG345.value=Details
+MSG345.order=1345
+
+# MSG346
+MSG346.value=Baseline comparison
+MSG346.order=1346
+
+# MSG347
+MSG347.value=Explosion
+MSG347.order=1347
+
+# MSG348
+MSG348.value=Changing Date
+MSG348.order=1348
+
+# MSG349
+MSG349.value=Part names
+MSG349.order=1349
+
+# MSG350
+MSG350.value=Quantity
+MSG350.order=1350
+
+# MSG351
+MSG351.value=No parent item.
+MSG351.order=1351
+
+# MSG352
+MSG352.value=No sub items.
+MSG352.order=1352
+
+# MSG353
+MSG353.value=Attribute information
+MSG353.order=1353
+
+# MSG354
+MSG354.value=Product Information
+MSG354.order=1354
+
+# MSG355
+MSG355.value=Enter at least 6 digits part number
+MSG355.order=1355
+
+# MSG356
+MSG356.value=Check document :
+MSG356.order=1356
+
+# MSG357
+MSG357.value=Input drawing files : 
+MSG357.order=1357
+
+# MSG358
+MSG358.value=User
+MSG358.order=1358
+
+# MSG359
+MSG359.value=Part Number
+MSG359.order=1359
+
+# MSG360
+MSG360.value=Select a file :
+MSG360.order=1360
+
+# MSG361
+MSG361.value=Can registry :
+MSG361.order=1361
+
+# MSG362
+MSG362.value=Upload
+MSG362.order=1362
+
+# MSG363
+MSG363.value=Form download
+MSG363.order=1363
+
+# MSG364
+MSG364.value=Registration failed
+MSG364.order=1364
+
+# MSG365
+MSG365.value=Parent part number
+MSG365.order=1365
+
+# MSG366
+MSG366.value=Sub part number
+MSG366.order=1366
+
+# MSG367
+MSG367.value=Results
+MSG367.order=1367
+
+# MSG368
+MSG368.value=Drawing classification
+MSG368.order=1368
+
+# MSG369
+MSG369.value=Registration type
+MSG369.order=1369
+
+# MSG370
+MSG370.value=New
+MSG370.order=1370
+
+# MSG371
+MSG371.value=Drawing Category
+MSG371.order=1371
+
+# MSG372
+MSG372.value=Drawing files
+MSG372.order=1372
+
+# MSG373
+MSG373.value=Main parts
+MSG373.order=1373
+
+# MSG374
+MSG374.value=Reference
+MSG374.order=1374
+
+# MSG375
+MSG375.value=Reference item
+MSG375.order=1375
+
+# MSG376
+MSG376.value=Use same file name.
+MSG376.order=1376
+
+# MSG377
+MSG377.value=Registered.
+MSG377.order=1377
+
+# MSG378
+MSG378.value=Deleted.
+MSG378.order=1378
+
+# MSG379
+MSG379.value=Reason
+MSG379.order=1379
+
+# MSG380
+MSG380.value=Contents of request 
+MSG380.order=1380
+
+# MSG381
+MSG381.value=Select the person of charge for activity
+MSG381.order=1381
+
+# MSG382
+MSG382.value=Select the requested end date for activity
+MSG382.order=1382
+
+# MSG383
+MSG383.value=Requested end date can not be earlier than today
+MSG383.order=1383
+
+# MSG384
+MSG384.value=Changing is necessary.
+MSG384.order=1384
+
+# MSG385
+MSG385.value=Step
+MSG385.order=1385
+
+# MSG386
+MSG386.value=Activity name
+MSG386.order=1386
+
+# MSG387
+MSG387.value=Department
+MSG387.order=1387
+
+# MSG388
+MSG388.value=Rrequested end date
+MSG388.order=1388
+
+# MSG389
+MSG389.value=No items selected.
+MSG389.order=1389
+
+# MSG390
+MSG390.value=: ECO in progress or not newest version
+MSG390.order=1390
+
+# MSG391
+MSG391.value=: Changing is necessary.
+MSG391.order=1391
+
+# MSG392
+MSG392.value=ECO items
+MSG392.order=1392
+
+# MSG393
+MSG393.value=Purpose
+MSG393.order=1393
+
+# MSG394
+MSG394.value=Changing history
+MSG394.order=1394
+
+# MSG395
+MSG395.value=Send
+MSG395.order=1395
+
+# MSG396
+MSG396.value=Target items
+MSG396.order=1396
+
+# MSG397
+MSG397.value=ECO items
+MSG397.order=1397
+
+# MSG398
+MSG398.value=Note
+MSG398.order=1398
+
+# MSG399
+MSG399.value=Changing Type
+MSG399.order=1399
+
+# MSG400
+MSG400.value=Related request
+MSG400.order=1400
+
+# MSG401
+MSG401.value=Reason for request
+MSG401.order=1401
+
+# MSG402
+MSG402.value=Contents of request
+MSG402.order=1402
+
+# MSG403
+MSG403.value=Compatibility
+MSG403.order=1403
+
+# MSG404
+MSG404.value=Activities status
+MSG404.order=1404
+
+# MSG405
+MSG405.value=Complete
+MSG405.order=1405
+
+# MSG406
+MSG406.value=Progress
+MSG406.order=1406
+
+# MSG407
+MSG407.value=Delay
+MSG407.order=1407
+
+# MSG408
+MSG408.value=Planned
+MSG408.order=1408
+
+# MSG409
+MSG409.value=Department
+MSG409.order=1409
+
+# MSG410
+MSG410.value=Request end date
+MSG410.order=1410
+
+# MSG411
+MSG411.value=Can not be deleted if there are related items
+MSG411.order=1411
+
+# MSG412
+MSG412.value=Request date
+MSG412.order=1412
+
+# MSG413
+MSG413.value=Review
+MSG413.order=1413
+
+# MSG414
+MSG414.value=Review Date
+MSG414.order=1414
+
+# MSG415
+MSG415.value=Comment
+MSG415.order=1415
+
+# MSG416
+MSG416.value=No results found.
+MSG416.order=1416
+
+# MSG417
+MSG417.value=Target items
+MSG417.order=1417
+
+# MSG418
+MSG418.value=Old Parts number
+MSG418.order=1418
+
+# MSG419
+MSG419.value=Send BOM
+MSG419.order=1419
+
+# MSG420
+MSG420.value=Revision part number
+MSG420.order=1420
+
+# MSG421
+MSG421.value=Application classificaton
+MSG421.order=1421
+
+# MSG422
+MSG422.value=No revised data.
+MSG422.order=1422
+
+# MSG423
+MSG423.value=Contents of ECO
+MSG423.order=1423
+
+# MSG424
+MSG424.value=Registration Department
+MSG424.order=1424
+
+# MSG425
+MSG425.value=Second Sheet
+MSG425.order=1425
+
+# MSG426
+MSG426.value=No contents of ECO
+MSG426.order=1426
+
+# MSG427
+MSG427.value=No related ECN history.
+MSG427.order=1427
+
+# MSG428
+MSG428.value=Set activity
+MSG428.order=1428
+
+# MSG429
+MSG429.value=Holidays
+MSG429.order=1429
+
+# MSG430
+MSG430.value=Start date
+MSG430.order=1430
+
+# MSG431
+MSG431.value=Enabled
+MSG431.order=1431
+
+# MSG432
+MSG432.value=Success.
+MSG432.order=1432
+
+# MSG433
+MSG433.value=Failed.
+MSG433.order=1433
+
+# MSG434
+MSG434.value=Holiday management
+MSG434.order=1434
+
+# MSG435
+MSG435.value=Please select the :
+MSG435.order=1435
+
+# MSG436
+MSG436.value=My task 
+MSG436.order=1436
+
+# MSG437
+MSG437.value=Output status
+MSG437.order=1437
+
+# MSG438
+MSG438.value=Project type
+MSG438.order=1438
+
+# MSG439
+MSG439.value=Period
+MSG439.order=1439
+
+# MSG440
+MSG440.value=(error) search list
+MSG440.order=1440
+
+# MSG441
+MSG441.value=Search project 
+MSG441.order=1441
+
+# MSG442
+MSG442.value=Planned start date
+MSG442.order=1442
+
+# MSG443
+MSG443.value=Applying template
+MSG443.order=1443
+
+# MSG444
+MSG444.value=Manpower
+MSG444.order=1444
+
+# MSG445
+MSG445.value=Day
+MSG445.order=1445
+
+# MSG446
+MSG446.value=Output document list
+MSG446.order=1446
+
+# MSG447
+MSG447.value=Order
+MSG447.order=1447
+
+# MSG448
+MSG448.value=Template name
+MSG448.order=1448
+
+# MSG449
+MSG449.value=Changing date
+MSG449.order=1449
+
+# MSG450
+MSG450.value=Disabled
+MSG450.order=1450
+
+# MSG451
+MSG451.value=Code
+MSG451.order=1451
+
+# MSG452
+MSG452.value=Enable or disable
+MSG452.order=1452
+
+# MSG453
+MSG453.value=Import template
+MSG453.order=1453
+
+# MSG454
+MSG454.value=Save
+MSG454.order=1454
+
+# MSG455
+MSG455.value=Progress
+MSG455.order=1455
+
+# MSG456
+MSG456.value=Optimum
+MSG456.order=1456
+
+# MSG457
+MSG457.value=Actual start date
+MSG457.order=1457
+
+# MSG458
+MSG458.value=Actual end date
+MSG458.order=1458
+
+# MSG459
+MSG459.value=Search tree (error)
+MSG459.order=1459
+
+# MSG460
+MSG460.value=Sub task status
+MSG460.order=1460
+
+# MSG461
+MSG461.value=Now
+MSG461.order=1461
+
+# MSG462
+MSG462.value=Members
+MSG462.order=1462
+
+# MSG463
+MSG463.value=Search output (error)
+MSG463.order=1463
+
+# MSG464
+MSG464.value=Restart date
+MSG464.order=1464
+
+# MSG465
+MSG465.value=Restart history
+MSG465.order=1465
+
+# MSG466
+MSG466.value=Edit
+MSG466.order=1466
+
+# MSG467
+MSG467.value=Only numbers can be entered
+MSG467.order=1467
+
+# MSG468
+MSG468.value=Please enter numbers between :
+MSG468.order=1468
+
+# MSG469
+MSG469.value=Are you want to cancel to end?
+MSG469.order=1469
+
+# MSG470
+MSG470.value=Do you want to disconnect with this documents?
+MSG470.order=1470
+
+# MSG471
+MSG471.value=There is no document to be registered.
+MSG471.order=1471
+
+# MSG472
+MSG472.value=Issue Type
+MSG472.order=1472
+
+# MSG473
+MSG473.value=Select a :
+MSG473.order=1473
+
+# MSG474
+MSG474.value=Issue details
+MSG474.order=1474
+
+# MSG475
+MSG475.value=Attachment file
+MSG475.order=1475
+
+# MSG476
+MSG476.value=Solution
+MSG476.order=1476
+
+# MSG477
+MSG477.value=Raised date
+MSG477.order=1477
+
+# MSG478
+MSG478.value=Estimated end date
+MSG478.order=1478
+
+# MSG479
+MSG479.value=Issue overview
+MSG479.order=1479
+
+# MSG480
+MSG480.value=Answers
+MSG480.order=1480
+
+# MSG481
+MSG481.value=Confirm end
+MSG481.order=1481
+
+# MSG482
+MSG482.value=Answers date
+MSG482.order=1482
+
+# MSG483
+MSG483.value=Select a :
+MSG483.order=1483
+
+# MSG484
+MSG484.value=Person of charge for Issues 
+MSG484.order=1484
+
+# MSG485
+MSG485.value=Status
+MSG485.order=1485
+
+# MSG486
+MSG486.value=Start Date
+MSG486.order=1486
+
+# MSG487
+MSG487.value=Output type
+MSG487.order=1487
+
+# MSG488
+MSG488.value=Direct registration
+MSG488.order=1488
+
+# MSG489
+MSG489.value=Link registration
+MSG489.order=1489
+
+# MSG490
+MSG490.value=The document classification :
+MSG490.order=1490
+
+# MSG491
+MSG491.value=Output certification type
+MSG491.order=1491
+
+# MSG492
+MSG492.value=Sub output certification type
+MSG492.order=1492
+
+# MSG493
+MSG493.value=If not selected certification type, it will be registered with the normal.
+MSG493.order=1493
+
+# MSG494
+MSG494.value=Add project output
+MSG494.order=1494
+
+# MSG495
+MSG495.value=Certification Type
+MSG495.order=1495
+
+# MSG496
+MSG496.value=Main attachments
+MSG496.order=1496
+
+# MSG497
+MSG497.value=Break link
+MSG497.order=1497
+
+# MSG498
+MSG498.value=Actual start date must be later than actual end date of precedence task.
+MSG498.order=1498
+
+# MSG499
+MSG499.value=Actual end date
+MSG499.order=1499
+
+# MSG500
+MSG500.value=Actual start date
+MSG500.order=1500
+
+# MSG501
+MSG501.value=Project deliverables list
+MSG501.order=1501
+
+# MSG502
+MSG502.value=Batch download
+MSG502.order=1502
+
+# MSG503
+MSG503.value=Batch download (the latest version of file)
+MSG503.order=1503
+
+# MSG504
+MSG504.value=Project issue list
+MSG504.order=1504
+
+# MSG505
+MSG505.value=End date
+MSG505.order=1505
+
+# MSG506
+MSG506.value=Prerequisite
+MSG506.order=1506
+
+# MSG507
+MSG507.value=Select the task below 1 Level.
+MSG507.order=1507
+
+# MSG508
+MSG508.value=You can not delete if it has sub tasks.
+MSG508.order=1508
+
+# MSG509
+MSG509.value=You can not delete the completed tasks.
+MSG509.order=1509
+
+# MSG510
+MSG510.value=Are you sure you want to delete?
+MSG510.order=1510
+
+# MSG511
+MSG511.value=6 LEVEL.
+MSG511.order=1511
+
+# MSG512
+MSG512.value=You can not add the child task to the completed task.
+MSG512.order=1512
+
+# MSG513
+MSG513.value=Selected prerequisite will be deleted. Do you want to create?
+MSG513.order=1513
+
+# MSG514
+MSG514.value=Select the task.
+MSG514.order=1514
+
+# MSG515
+MSG515.value=Node creation error
+MSG515.order=1515
+
+# MSG516
+MSG516.value=Error!
+MSG516.order=1516
+
+# MSG517
+MSG517.value=Please try again.
+MSG517.order=1517
+
+# MSG518
+MSG518.value=Select the End Item.
+MSG518.order=1518
+
+# MSG519
+MSG519.value=You can not update if it is completed.
+MSG519.order=1519
+
+# MSG520
+MSG520.value=Planned end date can not be earlier than the planned start date.
+MSG520.order=1520
+
+# MSG521
+MSG521.value=Please enter an integer.
+MSG521.order=1521
+
+# MSG522
+MSG522.value=Please enter a number that is greater than before.
+MSG522.order=1522
+
+# MSG523
+MSG523.value=Please enter a number that is less than before. 
+MSG523.order=1523
+
+# MSG524
+MSG524.value=Entry exceeds the limit.
+MSG524.order=1524
+
+# MSG525
+MSG525.value=Please try again.
+MSG525.order=1525
+
+# MSG526
+MSG526.value=Up
+MSG526.order=1526
+
+# MSG527
+MSG527.value=Down
+MSG527.order=1527
+
+# MSG528
+MSG528.value=You can not add the child node if the task has the deliverables.
+MSG528.order=1528
+
+# MSG529
+MSG529.value=Lowest
+MSG529.order=1529
+
+# MSG530
+MSG530.value=Add child
+MSG530.order=1530
+
+# MSG531
+MSG531.value=Add node
+MSG531.order=1531
+
+# MSG532
+MSG532.value=Next
+MSG532.order=1532
+
+# MSG533
+MSG533.value=Previous
+MSG533.order=1533
+
+# MSG534
+MSG534.value=Complete task
+MSG534.order=1534
+
+# MSG535
+MSG535.value=Please enter.
+MSG535.order=1535
+
+# MSG536
+MSG536.value=List searching error!
+MSG536.order=1536
+
+# MSG537
+MSG537.value=Cancel completion
+MSG537.order=1537
+
+# MSG538
+MSG538.value=Part code
+MSG538.order=1538
+
+# MSG539
+MSG539.value=Vendor code
+MSG539.order=1539
+
+# MSG540
+MSG540.value=Vendor Name
+MSG540.order=1540
+
+# MSG541
+MSG541.value=Distributor
+MSG541.order=1541
+
+# MSG542
+MSG542.value=Category
+MSG542.order=1542
+
+# MSG543
+MSG543.value=Drawing distribution status
+MSG543.order=1543
+
+# MSG544
+MSG544.value=Drawing distribution method
+MSG544.order=1544
+
+# MSG545
+MSG545.value=Vendor type
+MSG545.order=1545
+
+# MSG546
+MSG546.value=Drawing is distributed
+MSG546.order=1546
+
+# MSG547
+MSG547.value=Drawing isn't distributed
+MSG547.order=1547
+
+# MSG548
+MSG548.value=Please add at least one part or document.
+MSG548.order=1548
+
+# MSG549
+MSG549.value=Please enter the related vendor more than one.
+MSG549.order=1549
+
+# MSG550
+MSG550.value=Related vendor
+MSG550.order=1550
+
+# MSG551
+MSG551.value=Vendor code
+MSG551.order=1551
+
+# MSG552
+MSG552.value=Vendor
+MSG552.order=1552
+
+# MSG553
+MSG553.value=Vendor type
+MSG553.order=1553
+
+# MSG554
+MSG554.value=Email
+MSG554.order=1554
+
+# MSG555
+MSG555.value=Select the parent department.
+MSG555.order=1555
+
+# MSG556
+MSG556.value=Enter the department name.
+MSG556.order=1556
+
+# MSG557
+MSG557.value=Please enter a department code.
+MSG557.order=1557
+
+# MSG558
+MSG558.value=The only number can be entered for sorting.
+MSG558.order=1558
+
+# MSG559
+MSG559.value=Please select the department to be updated.
+MSG559.order=1559
+
+# MSG560
+MSG560.value=Please select the department to be deleted.
+MSG560.order=1560
+
+# MSG561
+MSG561.value=You can not delete if it has the sub department.
+MSG561.order=1561
+
+# MSG562
+MSG562.value=Add department
+MSG562.order=1562
+
+# MSG563
+MSG563.value=Department name
+MSG563.order=1563
+
+# MSG564
+MSG564.value=Department code
+MSG564.order=1564
+
+# MSG565
+MSG565.value=Sort number
+MSG565.order=1565
+
+# MSG566
+MSG566.value=Selected department
+MSG566.order=1566
+
+# MSG567
+MSG567.value=Parent department code
+MSG567.order=1567
+
+# MSG568
+MSG568.value=has been registered as the owner of department.
+MSG568.order=1568
+
+# MSG569
+MSG569.value=Please specify the department.
+MSG569.order=1569
+
+# MSG570
+MSG570.value=Department management
+MSG570.order=1570
+
+# MSG571
+MSG571.value=Department setting
+MSG571.order=1571
+
+# MSG572
+MSG572.value=Position setting
+MSG572.order=1572
+
+# MSG573
+MSG573.value=users are registered.
+MSG573.order=1573
+
+# MSG574
+MSG574.value=Designate department owner
+MSG574.order=1574
+
+# MSG575
+MSG575.value=Please enter the Korean name.
+MSG575.order=1575
+
+# MSG576
+MSG576.value=Enter the code.
+MSG576.order=1576
+
+# MSG577
+MSG577.value=Please enter a sort number.
+MSG577.order=1577
+
+# MSG578
+MSG578.value=Name (Korean)
+MSG578.order=1578
+
+# MSG579
+MSG579.value=Name (English)
+MSG579.order=1579
+
+# MSG580
+MSG580.value=Sort
+MSG580.order=1580
+
+# MSG581
+MSG581.value=Activity group name
+MSG581.order=1581
+
+# MSG582
+MSG582.value=Group code
+MSG582.order=1582
+
+# MSG583
+MSG583.value=Business role name (English)
+MSG583.order=1583
+
+# MSG584
+MSG584.value=Step
+MSG584.order=1584
+
+# MSG585
+MSG585.value=Sort
+MSG585.order=1585
+
+# MSG586
+MSG586.value=Activity type
+MSG586.order=1586
+
+# MSG587
+MSG587.value=Activity code
+MSG587.order=1587
+
+# MSG588
+MSG588.value=Required
+MSG588.order=1588
+
+# MSG589
+MSG589.value=Use
+MSG589.order=1589
+
+# MSG590
+MSG590.value=Approval required
+MSG590.order=1590
+
+# MSG591
+MSG591.value=Document required
+MSG591.order=1591
+
+# MSG592
+MSG592.value=Document approval
+MSG592.order=1592
+
+# MSG593
+MSG593.value=Please enter your name.
+MSG593.order=1593
+
+# MSG594
+MSG594.value=Please enter your email.
+MSG594.order=1594
+
+# MSG595
+MSG595.value=External mail management
+MSG595.order=1595
+
+# MSG596
+MSG596.value=Access times
+MSG596.order=1596
+
+# MSG597
+MSG597.value=Login history management
+MSG597.order=1597
+
+# MSG598
+MSG598.value=Selected module 
+MSG598.order=1598
+
+# MSG599
+MSG599.value=Downtime count
+MSG599.order=1599
+
+# MSG600
+MSG600.value=Downtime
+MSG600.order=1600
+
+# MSG601
+MSG601.value=Download history management 
+MSG601.order=1601
+
+# MSG602
+MSG602.value=Search users
+MSG602.order=1602
+
+# MSG603
+MSG603.value=Start
+MSG603.order=1603
+
+# MSG604
+MSG604.value=In preparation
+MSG604.order=1604
+
+# MSG605
+MSG605.value=In process
+MSG605.order=1605
+
+# MSG606
+MSG606.value=In modification
+MSG606.order=1606
+
+# MSG607
+MSG607.value=Stopped
+MSG607.order=1607
+
+# MSG608
+MSG608.value=In stopping
+MSG608.order=1608
+
+# MSG609
+MSG609.value=Cancelled
+MSG609.order=1609
+
+# MSG610
+MSG610.value=Please select the parent task of the task to be added.
+MSG610.order=1610
+
+# MSG611
+MSG611.value=The only task can be deleted.
+MSG611.order=1611
+
+# MSG612
+MSG612.value=Select the task to be deleted.
+MSG612.order=1612
+
+# MSG613
+MSG613.value=Node can not be added to the highest level. 
+MSG613.order=1613
+
+# MSG614
+MSG614.value=Node movement error!
+MSG614.order=1614
+
+# MSG615
+MSG615.value=Last
+MSG615.order=1615
+
+# MSG616
+MSG616.value=Current node
+MSG616.order=1616
+
+# MSG617
+MSG617.value=Add lower node
+MSG617.order=1617
+
+# MSG618
+MSG618.value=Are you sure you want to delete this template?
+MSG618.order=1618
+
+# MSG619
+MSG619.value=Basic Informations
+MSG619.order=1619
+
+# MSG620
+MSG620.value=Task name
+MSG620.order=1620
+
+# MSG621
+MSG621.value=You can not enter the lower number than .
+MSG621.order=1621
+
+# MSG622
+MSG622.value=Task searcing error!
+MSG622.order=1622
+
+# MSG623
+MSG623.value=Deliverables seaching error!
+MSG623.order=1623
+
+# MSG624
+MSG624.value=Role lists searching error!
+MSG624.order=1624
+
+# MSG625
+MSG625.value=Related tasks
+MSG625.order=1625
+
+# MSG626
+MSG626.value=Preceding task
+MSG626.order=1626
+
+# MSG627
+MSG627.value=Distribution code
+MSG627.order=1627
+
+# MSG628
+MSG628.value=Please select the document or part.
+MSG628.order=1628
+
+# MSG629
+MSG629.value=Related ECO
+MSG629.order=1629
+
+# MSG630
+MSG630.value=Manual
+MSG630.order=1630
+
+# MSG631
+MSG631.value=Process
+MSG631.order=1631
+
+# MSG632
+MSG632.value=Other
+MSG632.order=1632
+
+# MSG633
+MSG633.value=Work operation sheet
+MSG633.order=1633
+
+# MSG634
+MSG634.value=Improvements
+MSG634.order=1634
+
+# MSG635
+MSG635.value=Administrator only
+MSG635.order=1635
+
+# MSG636
+MSG636.value=Installation
+MSG636.order=1636
+
+# MSG637
+MSG637.value=Update project basic informations
+MSG637.order=1637
+
+# MSG638
+MSG638.value=There are no files to download.
+MSG638.order=1638
+
+# MSG639
+MSG639.value=Some part has no part code.
+MSG639.order=1639
+
+# MSG640
+MSG640.value=Please register the ECA activities.
+MSG640.order=1640
+
+# MSG641
+MSG641.value=Task can be completed after approving documents.
+MSG641.order=1641
+
+# MSG642
+MSG642.value=Please enter a confirmation commitment.
+MSG642.order=1642
+
+# MSG643
+MSG643.value=Please enter a review commitment.
+MSG643.order=1643
+
+# MSG644
+MSG644.value=Part has no ORCAD.
+MSG644.order=1644
+
+# MSG645
+MSG645.value=The documents related to ORCAD are insufficient.
+MSG645.order=1645
+
+# MSG646
+MSG646.value=Part has no PDF.
+MSG646.order=1646
+
+# MSG647
+MSG647.value=Complete task
+MSG647.order=1647
+
+# MSG648
+MSG648.value=Related documents
+MSG648.order=1648
+
+# MSG649
+MSG649.value=Check related drawings
+MSG649.order=1649
+
+# MSG650
+MSG650.value=Control document
+MSG650.order=1650
+
+# MSG651
+MSG651.value=Control drawings
+MSG651.order=1651
+
+# MSG652
+MSG652.value=PDF
+MSG652.order=1652
+
+# MSG653
+MSG653.value=Compatibility
+MSG653.order=1653
+
+# MSG654
+MSG654.value=Ratings
+MSG654.order=1654
+
+# MSG655
+MSG655.value=Please select Application type.
+MSG655.order=1655
+
+# MSG656
+MSG656.value=Select the S/N management.
+MSG656.order=1656
+
+# MSG657
+MSG657.value=Review date
+MSG657.order=1657
+
+# MSG658
+MSG658.value=Registration of a review meeting
+MSG658.order=1658
+
+# MSG659
+MSG659.value=Document number
+MSG659.order=1659
+
+# MSG660
+MSG660.value=File
+MSG660.order=1660
+
+# MSG661
+MSG661.value=The deliverables has been registered.
+MSG661.order=1661
+
+# MSG662
+MSG662.value=The deliverables link has been removed.
+MSG662.order=1662
+
+# MSG663
+MSG663.value=Attached files has been registered or deleted.
+MSG663.order=1663
+
+# MSG664
+MSG664.value=Review result has been registered.
+MSG664.order=1664
+
+# MSG665
+MSG665.value=Complete conditions.
+MSG665.order=1665
+
+# MSG666
+MSG666.value=Pending
+MSG666.order=1666
+
+# MSG667
+MSG667.value=Responsible
+MSG667.order=1667
+
+# MSG668
+MSG668.value=Current stage
+MSG668.order=1668
+
+# MSG669
+MSG669.value=Output
+MSG669.order=1669
+
+# MSG670
+MSG670.value=Plan
+MSG670.order=1670
+
+# MSG671
+MSG671.value=Reassign completed.
+MSG671.order=1671
+
+# MSG672
+MSG672.value=Revision object
+MSG672.order=1672
+
+# MSG673
+MSG673.value=Part List
+MSG673.order=1673
+
+# MSG674
+MSG674.value=Batch revision
+MSG674.order=1674
+
+# MSG675
+MSG675.value=Add part
+MSG675.order=1675
+
+# MSG676
+MSG676.value=Before revision
+MSG676.order=1676
+
+# MSG677
+MSG677.value=After revision
+MSG677.order=1677
+
+# MSG678
+MSG678.value=Primary drawing 
+MSG678.order=1678
+
+# MSG679
+MSG679.value=Change type
+MSG679.order=1679
+
+# MSG680
+MSG680.value=Please enter the name of approval process.
+MSG680.order=1680
+
+# MSG681
+MSG681.value=Change is required.
+MSG681.order=1681
+
+# MSG682
+MSG682.value=Activity setting
+MSG682.order=1682
+
+# MSG683
+MSG683.value=Activity registration
+MSG683.order=1683
+
+# MSG684
+MSG684.value=The ECA activity has been registered.
+MSG684.order=1684
+
+# MSG685
+MSG685.value=Some drawings or parts are not up to date.
+MSG685.order=1685
+
+# MSG686
+MSG686.value=Are you sure you want to batch revision?
+MSG686.order=1686
+
+# MSG687
+MSG687.value=Part batch revision
+MSG687.order=1687
+
+# MSG688
+MSG688.value=There is no primary drawing.
+MSG688.order=1688
+
+# MSG689
+MSG689.value=Confirm
+MSG689.order=1689
+
+# MSG690
+MSG690.value=Compatibility
+MSG690.order=1690
+
+# MSG691
+MSG691.value=S/N management
+MSG691.order=1691
+
+# MSG692
+MSG692.value=The ECO confirmation has been registered.
+MSG692.order=1692
+

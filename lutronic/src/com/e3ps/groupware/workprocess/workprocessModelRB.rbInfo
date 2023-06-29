@@ -1,0 +1,131 @@
+ResourceInfo.class=wt.tools.resource.MetadataResourceInfo
+ResourceInfo.customizable=true
+ResourceInfo.deprecated=false
+
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+
+# Entry Contents
+
+AppPerLink.value=App Per Link
+
+AppPerLink.approval.value=Approval
+
+AppPerLink.persistable.value=Persistable
+
+AsmApproval.value=Asm Approval
+
+AsmApproval.description.value=Description
+
+AsmApproval.name.value=Name
+
+AsmApproval.number.value=Number
+
+AsmApproval.persistable.value=Persistable
+
+CreatorTheWorkProcessForm.value=Creator The Work Process Form
+
+CreatorTheWorkProcessForm.creator.value=Creator
+
+CreatorTheWorkProcessForm.theWorkProcessForm.value=Work Process Form
+
+WFItem.value=WFItem
+
+WFItem.deleteFlag.value=Delete Flag
+
+WFItem.objectState.value=Object State
+
+WFItem.objectVersion.value=Object Version
+
+WFItem.user.value=User
+
+WFItem.wfObject.value=Wf Object
+
+WFItem.wfObjectReference.value=Wf Object Reference
+
+WFItemUserLink.value=WFItem User Link
+
+WFItemUserLink.activityName.value=Activity Name
+
+WFItemUserLink.approver.value=Approver
+
+WFItemUserLink.comment.value=Comment
+
+WFItemUserLink.deleteFlag.value=Delete Flag
+
+WFItemUserLink.departmentName.value=Department Name
+
+WFItemUserLink.processDate.value=Process Date
+
+WFItemUserLink.processOrder.value=Process Order
+
+WFItemUserLink.receiveDate.value=Receive Date
+
+WFItemUserLink.state.value=State
+
+WFItemUserLink.user.value=User
+
+WFItemUserLink.wfItem.value=Wf Item
+
+WFObjectWFItemLink.value=WFObject WFItem Link
+
+WFObjectWFItemLink.wfItem.value=Wf Item
+
+WFObjectWFItemLink.wfObject.value=Wf Object
+
+WorkProcessForm.value=GW
+
+WorkProcessForm.activeDate.value=Active Date
+
+WorkProcessForm.attendance.value=Attendance
+
+WorkProcessForm.carbonCopy.value=Carbon Copy
+
+WorkProcessForm.company.value=Company
+
+WorkProcessForm.contents.value=Contents
+
+WorkProcessForm.creator.value=Creator
+
+WorkProcessForm.creatorReference.value=Creator Reference
+
+WorkProcessForm.departmentName.value=Department Name
+
+WorkProcessForm.foreignType.value=Foreign Type
+
+WorkProcessForm.formType.value=Form Type
+
+WorkProcessForm.keepYear.value=Keep Year
+
+WorkProcessForm.meeting.value=Meeting
+
+WorkProcessForm.name.value=Name
+
+WorkProcessForm.number.value=Number
+
+WorkProcessForm.receive.value=Receive
+
+WorkProcessForm.reportType.value=Report Type
+
+WorkProcessForm.securityLevel.value=Security Level
+
+WorkProcessForm.writer.value=Writer
+
+WorkProcessForm.writerReference.value=Writer Reference
+
+WriterTheWorkProcessForm.value=Writer The Work Process Form
+
+WriterTheWorkProcessForm.theWorkProcessForm.value=Work Process Form
+
+WriterTheWorkProcessForm.writer.value=Writer

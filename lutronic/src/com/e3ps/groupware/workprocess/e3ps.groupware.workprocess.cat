@@ -1,0 +1,1831 @@
+
+(object Petal
+    version    	50
+    _written   	"Rose 2006.0.0.060314"
+    charSet    	129)
+
+(object Class_Category "workprocess"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    quid       	"514AA1EA0066"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class "WFItem"
+	    quid       	"435C52BC0395"
+	    documentation 	
+|objectVersion : 결재를 타는 객체의 버전
+|objectState : 결재를 타는 객체의 상태(결재가 승인이 되면 '승인됨'을 넣어서 완료함 구현)
+|
+	    
+	    realized_interfaces 	(list realize_rel_list
+		(object Realize_Relationship
+		    quid       	"435C53EB0295"
+		    supplier   	"Logical View::wnc::Foundation::wt::ownership::Ownable"
+		    quidu      	"342D3FB20271")
+		(object Realize_Relationship
+		    quid       	"435C53EF02AE"
+		    supplier   	"Logical View::wnc::Foundation::wt::content::ContentHolder"
+		    quidu      	"348899BF0399"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "objectVersion"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "10")))
+		    quid       	"435C542D02E0"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "objectState"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "30")))
+		    quid       	"435C543501E7"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")))
+	(object Class "WFItemUserLink"
+	    quid       	"435C54EF037F"
+	    documentation 	
+|departmentName : 부서명
+|processOrder : 결재 순서
+|comment : 코멘트
+|activityName : 업무 이름
+|state : 결재내용( 승인, 반려, 접수, 이의 등등)
+|processDate : 결재일자
+|approver : 결재자(only name)
+	    
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"435C5703012B"
+		    supplier   	"Logical View::wnc::Foundation::wt::fc::ObjectToObjectLink"
+		    quidu      	"36095EC90148"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "departmentName"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "50")))
+		    quid       	"435C551D0046"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "processOrder"
+		    quid       	"435C55230239"
+		    type       	"int"
+		    exportControl 	"Public")
+		(object ClassAttribute "comment"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"ColumnName"
+			    value      	(value Text "wfComment")))
+		    quid       	"435C553D02CD"
+		    type       	"Object"
+		    quidu      	"3784E518034B"
+		    exportControl 	"Public")
+		(object ClassAttribute "activityName"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "50")))
+		    quid       	"435C554501C0"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "state"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "20")))
+		    quid       	"435C555402EE"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "processDate"
+		    quid       	"435C555C0317"
+		    type       	"java.sql.Timestamp"
+		    exportControl 	"Public")
+		(object ClassAttribute "receiveDate"
+		    quid       	"43AA47F901F8"
+		    type       	"java.sql.Timestamp"
+		    exportControl 	"Public")
+		(object ClassAttribute "deleteFlag"
+		    quid       	"436AB8D0030B"
+		    type       	"boolean"
+		    initv      	"false"
+		    exportControl 	"Public")
+		(object ClassAttribute "approver"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "30")))
+		    quid       	"43C88E380329"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "seqNo"
+		    quid       	"51AD81AD02B0"
+		    type       	"int"
+		    exportControl 	"Public")
+		(object ClassAttribute "disabled"
+		    quid       	"51AD81B10181"
+		    type       	"boolean"
+		    exportControl 	"Public")))
+	(object Class "AsmApproval"
+	    quid       	"41FA03660319"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"41FA03660318"
+		    supplier   	"Logical View::wnc::Foundation::wt::enterprise::Managed"
+		    quidu      	"35291AE0022A"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "name"
+		    quid       	"41FA0366031A"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "number"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "20"))
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"StringCase"
+			    value      	("StringCase_Set" 5102))
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"ColumnName"
+			    value      	(value Text "asmNumber")))
+		    quid       	"41FA0366031B"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "description"
+		    quid       	"41FA0366031C"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")))
+	(object Class "WorkProcessForm"
+	    quid       	"43AA410F0030"
+	    documentation 	
+|activieDate - 기안서:시행일자 & 회의록:회의일자
+|meeting - 회의일자(12:25:12:50)$회의장소
+	    
+	    realized_interfaces 	(list realize_rel_list
+		(object Realize_Relationship
+		    quid       	"43AA42250184"
+		    supplier   	"Logical View::wnc::Foundation::wt::content::FormatContentHolder"
+		    quidu      	"35228E240177")
+		(object Realize_Relationship
+		    quid       	"43AA4492003D"
+		    supplier   	"Logical View::wnc::Foundation::wt::enterprise::Managed"
+		    quidu      	"35291AE0022A"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "company"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "30")))
+		    quid       	"43AA414C03B3"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "formType"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "30")))
+		    quid       	"43AA42C80373"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "number"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "20"))
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"ColumnName"
+			    value      	(value Text "formNumber")))
+		    quid       	"43AA416F0164"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "name"
+		    quid       	"43AA4176039F"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "departmentName"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "30")))
+		    quid       	"43AA419D0106"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "keepYear"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "10")))
+		    quid       	"43AA41A60055"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "securityLevel"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "10")))
+		    quid       	"43AA42D700C2"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "reportType"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "40")))
+		    quid       	"43AA43170309"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "receive"
+		    quid       	"43AA43930267"
+		    type       	"Object"
+		    quidu      	"3784E518034B"
+		    exportControl 	"Public")
+		(object ClassAttribute "activeDate"
+		    quid       	"43AA44C200FA"
+		    type       	"java.sql.Timestamp"
+		    exportControl 	"Public")
+		(object ClassAttribute "contents"
+		    quid       	"43AA44E30166"
+		    type       	"Object"
+		    quidu      	"3784E518034B"
+		    exportControl 	"Public")
+		(object ClassAttribute "meeting"
+		    attributes 	(list Attribute_Set
+			(object Attribute
+			    tool       	"Windchill"
+			    name       	"UpperLimit"
+			    value      	(value Text "40")))
+		    quid       	"43AA4936033E"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "carbonCopy"
+		    quid       	"44307C5D01C5"
+		    type       	"Object"
+		    quidu      	"3784E518034B"
+		    exportControl 	"Public")
+		(object ClassAttribute "attendance"
+		    quid       	"44307F61012F"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "foreignType"
+		    quid       	"4431EFD50064"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")))
+	(object Class "ApprovalLineTemplate"
+	    quid       	"520195FA02FC"
+	    superclasses 	(list inheritance_relationship_list
+		(object Inheritance_Relationship
+		    quid       	"5201961A00C9"
+		    supplier   	"Logical View::wnc::Foundation::wt::fc::Persistable"
+		    quidu      	"3432A8740232"))
+	    class_attributes 	(list class_attribute_list
+		(object ClassAttribute "owner"
+		    quid       	"520196400233"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "approvalList"
+		    quid       	"52019651000B"
+		    type       	"ArrayList"
+		    exportControl 	"Public")
+		(object ClassAttribute "name"
+		    quid       	"5201965B0005"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "tempList"
+		    quid       	"52019671017C"
+		    type       	"ArrayList"
+		    quidu      	"378636410351"
+		    exportControl 	"Public")
+		(object ClassAttribute "preDiscussList"
+		    quid       	"5201967C039C"
+		    type       	"ArrayList"
+		    exportControl 	"Public")
+		(object ClassAttribute "discussList"
+		    quid       	"520196860217"
+		    type       	"ArrayList"
+		    exportControl 	"Public")
+		(object ClassAttribute "postDiscussList"
+		    quid       	"5201968F01AC"
+		    type       	"ArrayList"
+		    exportControl 	"Public")
+		(object ClassAttribute "reportList"
+		    quid       	"520196A30332"
+		    type       	"ArrayList"
+		    exportControl 	"Public")
+		(object ClassAttribute "orderType"
+		    quid       	"520196B300F8"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")
+		(object ClassAttribute "title"
+		    quid       	"520196BF0317"
+		    type       	"String"
+		    quidu      	"3784E5160158"
+		    exportControl 	"Public")))
+	(object Association "WFItemUserLink"
+	    quid       	"435C52BC03A1"
+	    roles      	(list role_list
+		(object Role "user"
+		    quid       	"435C52BC03A2"
+		    label      	"user"
+		    supplier   	"Logical View::wnc::Foundation::wt::org::WTUser"
+		    quidu      	"33F8A95400CA"
+		    client_cardinality 	(value cardinality "0..n")
+		    is_navigable 	TRUE)
+		(object Role "wfitem"
+		    quid       	"435C52BC03A3"
+		    label      	"wfitem"
+		    supplier   	"Logical View::com::e3ps::groupware::workprocess::WFItem"
+		    quidu      	"435C52BC0395"
+		    client_cardinality 	(value cardinality "0..1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE))
+	    AssociationClass 	"Logical View::com::e3ps::groupware::workprocess::WFItemUserLink")
+	(object Association "WFObjectWFItemLink"
+	    quid       	"435C52BC03A4"
+	    roles      	(list role_list
+		(object Role "wfItem"
+		    quid       	"435C52BC03A5"
+		    label      	"wfItem"
+		    supplier   	"Logical View::com::e3ps::groupware::workprocess::WFItem"
+		    quidu      	"435C52BC0395"
+		    client_cardinality 	(value cardinality "0..n")
+		    is_navigable 	TRUE)
+		(object Role "wfObject"
+		    quid       	"435C52BC03A6"
+		    label      	"wfObject"
+		    supplier   	"Logical View::wnc::Foundation::wt::fc::WTObject"
+		    quidu      	"34240FF701C2"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE)))
+	(object Association "AppPerLink"
+	    quid       	"41FA03A50194"
+	    roles      	(list role_list
+		(object Role "persistable"
+		    quid       	"41FA03A50325"
+		    label      	"persistable"
+		    supplier   	"Logical View::wnc::Foundation::wt::fc::Persistable"
+		    quidu      	"3432A8740232"
+		    client_cardinality 	(value cardinality "0..n")
+		    is_navigable 	TRUE)
+		(object Role "approval"
+		    quid       	"41FA03A50343"
+		    label      	"approval"
+		    supplier   	"Logical View::com::e3ps::groupware::workprocess::AsmApproval"
+		    quidu      	"41FA03660319"
+		    client_cardinality 	(value cardinality "1")
+		    is_navigable 	TRUE
+		    is_aggregate 	TRUE))))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "1. 결재객체"
+	    quid       	"4387FFEE0170"
+	    title      	"1. 결재객체"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::content::ContentHolder" @1
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1272, 441)
+		    font       	(object Font
+			size       	10
+			face       	"굴림"
+			bold       	TRUE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(1097, 419)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	350
+			justify    	0
+			label      	"ContentHolder")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@1
+			location   	(1097, 378)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	350
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"348899BF0399"
+		    width      	368
+		    height     	146
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::com::e3ps::groupware::workprocess::WFItem" @2
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1218, 978)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(1130, 904)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	176
+			justify    	0
+			label      	"WFItem")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"435C52BC0395"
+		    compartment 	(object Compartment
+			Parent_View 	@2
+			location   	(1130, 965)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	469
+			justify    	1)
+		    width      	194
+		    height     	172
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::ownership::Ownable" @3
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(468, 440)
+		    font       	(object Font
+			size       	10
+			face       	"굴림"
+			bold       	TRUE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@3
+			location   	(317, 418)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	302
+			justify    	0
+			label      	"Ownable")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@3
+			location   	(317, 377)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	302
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"342D3FB20271"
+		    width      	320
+		    height     	146
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object RealizeView "" @4
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"435C53EF02AE"
+		    client     	@2
+		    supplier   	@1
+		    vertices   	(list Points
+			(1225, 891)
+			(1264, 514))
+		    line_style 	0)
+		(object RealizeView "" @5
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"435C53EB0295"
+		    client     	@2
+		    supplier   	@3
+		    vertices   	(list Points
+			(1120, 906)
+			(569, 513))
+		    line_style 	0)))
+	(object ClassDiagram "2. 클래스연관"
+	    quid       	"435C52BC03AE"
+	    title      	"2. 클래스연관"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	144
+	    origin_y   	319
+	    items      	(list diagram_item_list
+		(object NoteView @6
+		    location   	(578, 144)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			charSet    	129
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@6
+			location   	(65, 47)
+			fill_color 	13434879
+			nlines     	4
+			max_width  	990
+			justify    	1
+			label      	
+|Workflow 이력관리를 위한 클래스 연관도
+|Master를 가진 객체는 Master에 연관을 시켜준다. 그리고 반드시 버젼정보를 WFHistory에 넣어줄것. 향후 이력을 볼때 검색조건으로 가져가게 된다
+			)
+		    line_color 	3342489
+		    fill_color 	65408
+		    width      	1050
+		    height     	206)
+		(object NoteView @7
+		    location   	(512, 584)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			charSet    	129
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@7
+			location   	(240, 525)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	509
+			justify    	1
+			label      	"Workflow 이력관리될 객체")
+		    line_color 	3342489
+		    fill_color 	65408
+		    width      	569
+		    height     	131)
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::fc::WTObject" @8
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(514, 862)
+		    font       	(object Font
+			size       	10
+			face       	"굴림"
+			charSet    	129
+			bold       	TRUE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@8
+			location   	(388, 840)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	252
+			justify    	0
+			label      	"WTObject")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@8
+			location   	(388, 799)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	252
+			justify    	0
+			label      	"<<Abstract>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14671839
+		    quidu      	"34240FF701C2"
+		    width      	270
+		    height     	146
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AttachView "" @9
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@7
+		    supplier   	@8
+		    vertices   	(list Points
+			(512, 649)
+			(513, 788))
+		    line_style 	0)
+		(object ClassView "Class" "Logical View::com::e3ps::groupware::workprocess::WFItem" @10
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    ShowOperationSignature 	TRUE
+		    location   	(511, 1572)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@10
+			location   	(423, 1499)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	176
+			justify    	0
+			label      	"WFItem")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"435C52BC0395"
+		    compartment 	(object Compartment
+			Parent_View 	@10
+			location   	(423, 1551)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	2
+			max_width  	478
+			justify    	1)
+		    width      	194
+		    height     	170
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "WFObjectWFItemLink" @11
+		    location   	(512, 1210)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object SegLabel @12
+			Parent_View 	@11
+			location   	(512, 1151)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			anchor     	1
+			anchor_loc 	1
+			nlines     	1
+			max_width  	423
+			justify    	0
+			label      	"WFObjectWFItemLink"
+			pctDist    	0.500000
+			height     	60
+			orientation 	0)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"435C52BC03A4"
+		    roleview_list 	(list RoleViews
+			(object RoleView "wfObject" @13
+			    Parent_View 	@11
+			    location   	(-1154, -144)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @14
+				Parent_View 	@13
+				location   	(520, 1015)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	188
+				justify    	0
+				label      	"+wfObject"
+				pctDist    	0.712121
+				height     	7
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"435C52BC03A6"
+			    client     	@11
+			    supplier   	@8
+			    vertices   	(list Points
+				(512, 1210)
+				(513, 935))
+			    line_style 	0
+			    label      	(object SegLabel @15
+				Parent_View 	@13
+				location   	(460, 964)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	0))
+			(object RoleView "wfItem" @16
+			    Parent_View 	@11
+			    location   	(-1154, -144)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @17
+				Parent_View 	@16
+				location   	(519, 1395)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	144
+				justify    	0
+				label      	"+wfItem"
+				pctDist    	0.671717
+				height     	8
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"435C52BC03A5"
+			    client     	@11
+			    supplier   	@10
+			    vertices   	(list Points
+				(512, 1210)
+				(511, 1486))
+			    line_style 	0
+			    label      	(object SegLabel @18
+				Parent_View 	@16
+				location   	(458, 1458)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.900000
+				height     	54
+				orientation 	1))))
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::org::WTUser" @19
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    location   	(1970, 1574)
+		    font       	(object Font
+			size       	10
+			face       	"굴림"
+			bold       	TRUE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@19
+			location   	(1867, 1535)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	206
+			justify    	0
+			label      	"WTUser")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"33F8A95400CA"
+		    width      	224
+		    height     	98
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object AssociationViewNew "WFItemUserLink" @20
+		    location   	(1232, 1572)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"435C52BC03A1"
+		    roleview_list 	(list RoleViews
+			(object RoleView "wfitem" @21
+			    Parent_View 	@20
+			    location   	(-1148, -394)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @22
+				Parent_View 	@21
+				location   	(734, 1614)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	144
+				justify    	0
+				label      	"+wfitem"
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"435C52BC03A3"
+			    client     	@20
+			    supplier   	@10
+			    vertices   	(list Points
+				(1232, 1572)
+				(608, 1572))
+			    line_style 	0
+			    label      	(object SegLabel @23
+				Parent_View 	@21
+				location   	(671, 1519)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	1))
+			(object RoleView "user" @24
+			    Parent_View 	@20
+			    location   	(-1148, -394)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @25
+				Parent_View 	@24
+				location   	(1732, 1615)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	113
+				justify    	0
+				label      	"+user"
+				pctDist    	0.800000
+				height     	42
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"435C52BC03A2"
+			    client     	@20
+			    supplier   	@19
+			    vertices   	(list Points
+				(1232, 1572)
+				(1857, 1573))
+			    line_style 	0
+			    label      	(object SegLabel @26
+				Parent_View 	@24
+				location   	(1794, 1520)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.900000
+				height     	54
+				orientation 	0))))
+		(object ClassView "Class" "Logical View::com::e3ps::groupware::workprocess::WFItemUserLink" @27
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1319, 1194)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@27
+			location   	(959, 943)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	720
+			justify    	0
+			label      	"WFItemUserLink")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"435C54EF037F"
+		    compartment 	(object Compartment
+			Parent_View 	@27
+			location   	(959, 995)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	11
+			max_width  	716
+			justify    	1)
+		    width      	738
+		    height     	522
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::fc::ObjectToObjectLink" @28
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1319, 761)
+		    font       	(object Font
+			size       	10
+			face       	"굴림"
+			bold       	TRUE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@28
+			location   	(1081, 739)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	476
+			justify    	0
+			label      	"ObjectToObjectLink")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@28
+			location   	(1081, 698)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	476
+			justify    	0
+			label      	"<<Abstract>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"36095EC90148"
+		    width      	494
+		    height     	146
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @29
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"435C5703012B"
+		    client     	@27
+		    supplier   	@28
+		    vertices   	(list Points
+			(1319, 932)
+			(1319, 834))
+		    line_style 	0)
+		(object AssocAttachView "" @30
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    client     	@20
+		    supplier   	@27
+		    vertices   	(list Points
+			(1281, 1572)
+			(1256, 1455))
+		    line_style 	0)))
+	(object ClassDiagram "3. 일괄결재"
+	    quid       	"439D04AC0139"
+	    title      	"3. 일괄결재"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	66
+	    origin_y   	2218
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::enterprise::Managed" @31
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(840, 1908)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@31
+			location   	(581, 1722)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	518
+			justify    	0
+			label      	"Managed")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@31
+			location   	(581, 1681)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	518
+			justify    	0
+			label      	"<<Abstract>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"35291AE0022A"
+		    compartment 	(object Compartment
+			Parent_View 	@31
+			location   	(581, 1827)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	6
+			max_width  	511
+			justify    	1)
+		    width      	536
+		    height     	478
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::fc::Persistable" @32
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1981, 2598)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@32
+			location   	(1798, 2466)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	366
+			justify    	0
+			label      	"Persistable")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@32
+			location   	(1798, 2416)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	366
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"3432A8740232"
+		    compartment 	(object Compartment
+			Parent_View 	@32
+			location   	(1798, 2562)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	4
+			max_width  	387
+			justify    	1)
+		    width      	384
+		    height     	388
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::com::e3ps::groupware::workprocess::AsmApproval" @33
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(839, 2599)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@33
+			location   	(700, 2479)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	278
+			justify    	0
+			label      	"AsmApproval")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"41FA03660319"
+		    compartment 	(object Compartment
+			Parent_View 	@33
+			location   	(700, 2531)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	4
+			max_width  	428
+			justify    	1)
+		    width      	296
+		    height     	264
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @34
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"41FA03660318"
+		    client     	@33
+		    supplier   	@31
+		    vertices   	(list Points
+			(839, 2466)
+			(839, 2147))
+		    line_style 	0)
+		(object AssociationViewNew "AppPerLink" @35
+		    location   	(1387, 2598)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object SegLabel @36
+			Parent_View 	@35
+			location   	(1387, 2539)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			anchor     	1
+			anchor_loc 	1
+			nlines     	1
+			max_width  	450
+			justify    	0
+			label      	"AppPerLink"
+			pctDist    	0.500000
+			height     	60
+			orientation 	0)
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"41FA03A50194"
+		    roleview_list 	(list RoleViews
+			(object RoleView "persistable" @37
+			    Parent_View 	@35
+			    location   	(547, -1)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @38
+				Parent_View 	@37
+				location   	(1707, 2557)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	280
+				justify    	0
+				label      	"+persistable"
+				pctDist    	0.800000
+				height     	42
+				orientation 	0)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41FA03A50325"
+			    client     	@35
+			    supplier   	@32
+			    vertices   	(list Points
+				(1387, 2598)
+				(1788, 2598))
+			    line_style 	0
+			    label      	(object SegLabel @39
+				Parent_View 	@37
+				location   	(1747, 2652)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"0..n"
+				pctDist    	0.900000
+				height     	54
+				orientation 	1))
+			(object RoleView "approval" @40
+			    Parent_View 	@35
+			    location   	(547, -1)
+			    font       	(object Font
+				size       	10
+				face       	"Arial"
+				bold       	FALSE
+				italics    	FALSE
+				underline  	FALSE
+				strike     	FALSE
+				color      	0
+				default_color 	TRUE)
+			    label      	(object SegLabel @41
+				Parent_View 	@40
+				location   	(1067, 2557)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	1
+				anchor_loc 	1
+				nlines     	1
+				max_width  	255
+				justify    	0
+				label      	"+approval"
+				pctDist    	0.800000
+				height     	42
+				orientation 	1)
+			    stereotype 	TRUE
+			    line_color 	3342489
+			    quidu      	"41FA03A50343"
+			    client     	@35
+			    supplier   	@33
+			    vertices   	(list Points
+				(1387, 2598)
+				(987, 2598))
+			    line_style 	0
+			    label      	(object SegLabel @42
+				Parent_View 	@40
+				location   	(1028, 2652)
+				font       	(object Font
+				    size       	10
+				    face       	"Arial"
+				    bold       	FALSE
+				    italics    	FALSE
+				    underline  	FALSE
+				    strike     	FALSE
+				    color      	0
+				    default_color 	TRUE)
+				anchor     	2
+				anchor_loc 	1
+				nlines     	1
+				max_width  	15
+				justify    	0
+				label      	"1"
+				pctDist    	0.900000
+				height     	54
+				orientation 	0))))))
+	(object ClassDiagram "4. 양식"
+	    quid       	"43AA40700320"
+	    title      	"4. 양식"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	1013
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::content::FormatContentHolder" @43
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1351, 419)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@43
+			location   	(1118, 326)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	466
+			justify    	0
+			label      	"FormatContentHolder")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@43
+			location   	(1118, 285)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	466
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"35228E240177"
+		    compartment 	(object Compartment
+			Parent_View 	@43
+			location   	(1118, 422)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	3
+			max_width  	463
+			justify    	1)
+		    width      	484
+		    height     	288
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::enterprise::Managed" @44
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(528, 426)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	TRUE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@44
+			location   	(269, 240)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	518
+			justify    	0
+			label      	"Managed")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@44
+			location   	(269, 199)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	518
+			justify    	0
+			label      	"<<Abstract>>")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	14145495
+		    quidu      	"35291AE0022A"
+		    compartment 	(object Compartment
+			Parent_View 	@44
+			location   	(269, 345)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	TRUE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	6
+			max_width  	521
+			justify    	1)
+		    width      	536
+		    height     	478
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::com::e3ps::groupware::workprocess::WorkProcessForm" @45
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(1019, 1239)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@45
+			location   	(686, 885)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	666
+			justify    	0
+			label      	"WorkProcessForm")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"43AA410F0030"
+		    compartment 	(object Compartment
+			Parent_View 	@45
+			location   	(686, 937)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	16777215
+			anchor     	2
+			nlines     	16
+			max_width  	663
+			justify    	1)
+		    width      	684
+		    height     	728
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object RealizeView "" @46
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"43AA42250184"
+		    client     	@45
+		    supplier   	@43
+		    vertices   	(list Points
+			(1165, 874)
+			(1290, 563))
+		    line_style 	0)
+		(object RealizeView "" @47
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"43AA4492003D"
+		    client     	@45
+		    supplier   	@44
+		    vertices   	(list Points
+			(798, 874)
+			(671, 665))
+		    line_style 	0)))
+	(object ClassDiagram "5. 결재라인"
+	    quid       	"520195EF03C8"
+	    title      	"5. 결재라인"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object ClassView "Class" "Logical View::com::e3ps::groupware::workprocess::ApprovalLineTemplate" @48
+		    ShowCompartmentStereotypes 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(698, 1109)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@48
+			location   	(412, 858)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	572
+			justify    	0
+			label      	"ApprovalLineTemplate")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"520195FA02FC"
+		    compartment 	(object Compartment
+			Parent_View 	@48
+			location   	(412, 910)
+			font       	(object Font
+			    size       	10
+			    face       	"Arial"
+			    bold       	FALSE
+			    italics    	FALSE
+			    underline  	FALSE
+			    strike     	FALSE
+			    color      	0
+			    default_color 	TRUE)
+			icon_style 	"Icon"
+			fill_color 	13434879
+			anchor     	2
+			nlines     	11
+			max_width  	569
+			justify    	1)
+		    width      	590
+		    height     	522
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object ClassView "Class" "Logical View::wnc::Foundation::wt::fc::Persistable" @49
+		    ShowCompartmentStereotypes 	TRUE
+		    SuppressAttribute 	TRUE
+		    SuppressOperation 	TRUE
+		    IncludeAttribute 	TRUE
+		    IncludeOperation 	TRUE
+		    location   	(688, 430)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@49
+			location   	(558, 403)
+			fill_color 	13434879
+			nlines     	1
+			max_width  	260
+			justify    	0
+			label      	"Persistable")
+		    stereotype 	(object ItemLabel
+			Parent_View 	@49
+			location   	(558, 362)
+			fill_color 	13434879
+			anchor     	10
+			nlines     	1
+			max_width  	260
+			justify    	0
+			label      	"<<Interface>>")
+		    icon       	"Interface"
+		    icon_style 	"Label"
+		    line_color 	3342489
+		    fill_color 	12632256
+		    quidu      	"3432A8740232"
+		    width      	278
+		    height     	156
+		    annotation 	8
+		    autoResize 	TRUE)
+		(object InheritView "" @50
+		    stereotype 	TRUE
+		    line_color 	3342489
+		    quidu      	"5201961A00C9"
+		    client     	@48
+		    supplier   	@49
+		    vertices   	(list Points
+			(693, 847)
+			(688, 508))
+		    line_style 	0)))))

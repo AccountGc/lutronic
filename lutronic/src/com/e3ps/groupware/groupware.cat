@@ -1,0 +1,87 @@
+
+(object Petal
+    version    	50
+    _written   	"Rose 2006.0.0.060314"
+    charSet    	129)
+
+(object Class_Category "groupware"
+    is_unit    	TRUE
+    is_loaded  	TRUE
+    quid       	"4A84D01403A9"
+    exportControl 	"Public"
+    logical_models 	(list unit_reference_list
+	(object Class_Category "board"
+	    is_unit    	TRUE
+	    is_loaded  	FALSE
+	    file_name  	"$WT_WORK\\com\\e3ps\\groupware\\board\\board.cat"
+	    quid       	"4A84D10202EE")
+	(object Class_Category "notice"
+	    is_unit    	TRUE
+	    is_loaded  	FALSE
+	    file_name  	"$WT_WORK\\com\\e3ps\\groupware\\notice\\notice.cat"
+	    quid       	"4A84D1080232")
+	(object Class_Category "workprocess"
+	    is_unit    	TRUE
+	    is_loaded  	FALSE
+	    file_name  	"$WT_WORK\\com\\e3ps\\groupware\\workprocess\\e3ps.groupware.workprocess.cat"
+	    quid       	"514AA1EA0066"))
+    logical_presentations 	(list unit_reference_list
+	(object ClassDiagram "Main"
+	    quid       	"4A84D0FE01F4"
+	    title      	"Main"
+	    zoom       	100
+	    max_height 	28350
+	    max_width  	21600
+	    origin_x   	0
+	    origin_y   	0
+	    items      	(list diagram_item_list
+		(object CategoryView "Logical View::com::e3ps::groupware::board" @1
+		    location   	(547, 494)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@1
+			location   	(403, 410)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	288
+			justify    	0
+			label      	"board")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4A84D10202EE"
+		    width      	300
+		    height     	180)
+		(object CategoryView "Logical View::com::e3ps::groupware::notice" @2
+		    location   	(1159, 453)
+		    font       	(object Font
+			size       	10
+			face       	"Arial"
+			bold       	FALSE
+			italics    	FALSE
+			underline  	FALSE
+			strike     	FALSE
+			color      	0
+			default_color 	TRUE)
+		    label      	(object ItemLabel
+			Parent_View 	@2
+			location   	(1015, 369)
+			fill_color 	13434879
+			nlines     	2
+			max_width  	288
+			justify    	0
+			label      	"notice")
+		    icon_style 	"Icon"
+		    line_color 	3342489
+		    fill_color 	13434879
+		    quidu      	"4A84D1080232"
+		    width      	300
+		    height     	180)))))

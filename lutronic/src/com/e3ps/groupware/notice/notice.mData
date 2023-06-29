@@ -1,0 +1,35 @@
+# Rose Model Data for Package: com.e3ps.groupware.notice
+# Written: 09-07-2013 07:01:01 PM
+# Using: DumpSelections 20020924
+# Windchill Properties Version: 20020924
+PCKG.uniqueID=PCKG
+PCKG.name=notice
+PCKG.className1=com.e3ps.groupware.notice.Notice
+Notice.uniqueID=49DC2B550119
+49DC2B550119.name=Notice
+49DC2B550119.Deprecated=<Default>
+49DC2B550119.fullPackage=com.e3ps.groupware.notice
+49DC2B550119.inherit1=49DC2B6501D4
+49DC2B6501D4.uniqueID=49DC2B6501D4
+49DC2B6501D4.supplierClass=348899BF0399
+49DC2B6501D4.supplierClassName=wnc/Foundation:wt.content.ContentHolder
+49DC2B6501D4.interface=true
+49DC2B550119.inherit2=49DC2B670232
+49DC2B670232.uniqueID=49DC2B670232
+49DC2B670232.supplierClass=499A5A6A00EA
+49DC2B670232.supplierClassName=com.e3ps.common.util.OwnPersistable
+49DC2B670232.interface=true
+49DC2B550119.inherit3=522AF91E030F
+522AF91E030F.uniqueID=522AF91E030F
+522AF91E030F.supplierClass=34240FF80302
+522AF91E030F.supplierClassName=wnc/Foundation:wt.fc.Item
+49DC2B550119.attribute1=49DC2B6E0261
+49DC2B6E0261.uniqueID=49DC2B6E0261
+49DC2B6E0261.name=title
+49DC2B6E0261.Deprecated=<Default>
+49DC2B6E0261.type=String
+49DC2B550119.attribute2=49DC2B6F02AF
+49DC2B6F02AF.uniqueID=49DC2B6F02AF
+49DC2B6F02AF.name=contents
+49DC2B6F02AF.UpperLimit=6000
+49DC2B6F02AF.type=String

@@ -1,0 +1,2785 @@
+ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.customizable=true
+ResourceInfo.deprecated=false
+
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable=
+
+# Entry Contents
+#MSG2 
+MSG2.value=서브메뉴
+MSG2.order=1002
+
+#MSG3 
+MSG3.value=닫기
+MSG3.order=1003
+
+#MSG4 
+MSG4.value=열기
+MSG4.order=1004
+
+#MSG5 
+MSG5.value=유저 정보 오류
+MSG5.order=1005
+
+#MSG6 
+MSG6.value=검색오류
+MSG6.order=1006
+
+#MSG7 
+MSG7.value=하시겠습니까?
+MSG7.order=1007
+
+#MSG8 
+MSG8.value=되었습니다.
+MSG8.order=1008
+
+#MSG9 
+MSG9.value=유저 이름 설정 오류
+MSG9.order=1009
+
+#MSG10 
+MSG10.value=님께서 접속하셨습니다.
+MSG10.order=1010
+
+#MSG11 
+MSG11.value=관리자
+MSG11.order=1011
+
+#MSG12 
+MSG12.value=나의업무
+MSG12.order=1012
+
+#MSG13 
+MSG13.value=문서관리
+MSG13.order=1013
+
+#MSG14 
+MSG14.value=품목관리
+MSG14.order=1014
+
+#MSG15 
+MSG15.value=도면관리
+MSG15.order=1015
+
+#MSG16 
+MSG16.value=설계변경
+MSG16.order=1016
+
+#MSG17 
+MSG17.value=프로젝트관리
+MSG17.order=1017
+
+#MSG18 
+MSG18.value=배포관리
+MSG18.order=1018
+
+#MSG19 
+MSG19.value=현황판
+MSG19.order=1019
+
+#MSG20 
+MSG20.value=데이터 검색오류
+MSG20.order=1020
+
+#MSG21 
+MSG21.value=공지사항
+MSG21.order=1021
+
+#MSG22 
+MSG22.value=작업공간
+MSG22.order=1022
+
+#MSG23 
+MSG23.value=작업함
+MSG23.order=1023
+
+#MSG24 
+MSG24.value=진행함
+MSG24.order=1024
+
+#MSG25 
+MSG25.value=완료함
+MSG25.order=1025
+
+#MSG26 
+MSG26.value=수신함
+MSG26.order=1026
+
+#MSG27 
+MSG27.value=일반메뉴
+MSG27.order=1027
+
+#MSG28 
+MSG28.value=비밀번호 변경
+MSG28.order=1028
+
+#MSG29 
+MSG29.value=조직도
+MSG29.order=1029
+
+#MSG30 
+MSG30.value=관리자메뉴
+MSG30.order=1030
+
+#MSG31 
+MSG31.value=속성값 변경
+MSG31.order=1031
+
+#MSG32 
+MSG32.value=도면 재변환
+MSG32.order=1032
+
+#MSG33 
+MSG33.value=메인포탈
+MSG33.order=1033
+
+#MSG34 
+MSG34.value=결재
+MSG34.order=1034
+
+#MSG35 
+MSG35.value=작업
+MSG35.order=1035
+
+#MSG36 
+MSG36.value=나의 프로젝트
+MSG36.order=1036
+
+#MSG37 
+MSG37.value=나의 이슈
+MSG37.order=1037
+
+#MSG38 
+MSG38.value=프로젝트 명
+MSG38.order=1038
+
+#MSG39 
+MSG39.value=을(를) 입력해 주십시오.
+MSG39.order=1039
+
+#MSG40 
+MSG40.value=프로젝트 코드
+MSG40.order=1040
+
+#MSG41 
+MSG41.value=PL
+MSG41.order=1041
+
+#MSG42 
+MSG42.value=을(를) 선택해 주십시오.
+MSG42.order=1042
+
+#MSG43 
+MSG43.value=계획 시작일
+MSG43.order=1043
+
+#MSG44 
+MSG44.value=프로젝트 유형
+MSG44.order=1044
+
+#MSG45 
+MSG45.value=설명
+MSG45.order=1045
+
+#MSG46 
+MSG46.value=등록하시겠습니까?
+MSG46.order=1046
+
+#MSG47 
+MSG47.value= 코드 목록 오류
+MSG47.order=1047
+
+#MSG48 
+MSG48.value=템플릿 리스트 오류
+MSG48.order=1048
+
+#MSG49 
+MSG49.value=선택
+MSG49.order=1049
+
+#MSG50 
+MSG50.value=템플릿
+MSG50.order=1050
+
+#MSG51 
+MSG51.value=을(를) 선택하여 주십시오.
+MSG51.order=1051
+
+#MSG52 
+MSG52.value=상태
+MSG52.order=1052
+
+#MSG53 
+MSG53.value=프로젝트
+MSG53.order=1053
+
+#MSG54 
+MSG54.value=번호
+MSG54.order=1054
+
+#MSG55 
+MSG55.value=코드 목록 오류
+MSG55.order=1055
+
+#MSG56 
+MSG56.value=프로젝트코드
+MSG56.order=1056
+
+#MSG57 
+MSG57.value=태스크
+MSG57.order=1057
+
+#MSG58 
+MSG58.value=이슈명
+MSG58.order=1058
+
+#MSG59 
+MSG59.value=제기자
+MSG59.order=1059
+
+#MSG60 
+MSG60.value=제기일자
+MSG60.order=1060
+
+#MSG61 
+MSG61.value=담당자
+MSG61.order=1061
+
+#MSG62 
+MSG62.value=이슈 구분
+MSG62.order=1062
+
+#MSG63 
+MSG63.value=전체
+MSG63.order=1063
+
+#MSG64 
+MSG64.value=담당 역할
+MSG64.order=1064
+
+#MSG65 
+MSG65.value=이슈
+MSG65.order=1065
+
+#MSG66 
+MSG66.value=미완료
+MSG66.order=1066
+
+#MSG67 
+MSG67.value=완료됨
+MSG67.order=1067
+
+#MSG68 
+MSG68.value=검색
+MSG68.order=1068
+
+#MSG69 
+MSG69.value=초기화
+MSG69.order=1069
+
+#MSG70 
+MSG70.value=관리
+MSG70.order=1070
+
+#MSG71 
+MSG71.value=이슈구분
+MSG71.order=1071
+
+#MSG72 
+MSG72.value=담당역할
+MSG72.order=1072
+
+#MSG73 
+MSG73.value=엑셀다운
+MSG73.order=1073
+
+#MSG74 
+MSG74.value=산출물
+MSG74.order=1074
+
+#MSG75 
+MSG75.value=목록
+MSG75.order=1075
+
+#MSG76 
+MSG76.value=이슈 목록
+MSG76.order=1076
+
+#MSG77 
+MSG77.value=태스크 편집
+MSG77.order=1077
+
+#MSG78 
+MSG78.value=새로고침
+MSG78.order=1078
+
+#MSG79 
+MSG79.value=기본
+MSG79.order=1079
+
+#MSG80 
+MSG80.value=해당 프로젝트를 삭제 하시겠습니까?
+MSG80.order=1080
+
+#MSG81 
+MSG81.value=프로젝트 결재요청을 하시겠습니까?
+MSG81.order=1081
+
+#MSG82 
+MSG82.value=프로젝트를 체크아웃 하시겠습니까?
+MSG82.order=1082
+
+#MSG83 
+MSG83.value=프로젝트 체크아웃을 취소 하시겠습니까?
+MSG83.order=1083
+
+#MSG84 
+MSG84.value=기본정보
+MSG84.order=1084
+
+#MSG85 
+MSG85.value=차트
+MSG85.order=1085
+
+#MSG86 
+MSG86.value=이력보기
+MSG86.order=1086
+
+#MSG87 
+MSG87.value=체크아웃
+MSG87.order=1087
+
+#MSG88 
+MSG88.value=중단
+MSG88.order=1088
+
+#MSG89 
+MSG89.value=수정
+MSG89.order=1089
+
+#MSG90 
+MSG90.value=삭제
+MSG90.order=1090
+
+#MSG91 
+MSG91.value=프로젝트명
+MSG91.order=1091
+
+#MSG92 
+MSG92.value=버전
+MSG92.order=1092
+
+#MSG93 
+MSG93.value=등록자
+MSG93.order=1093
+
+#MSG94 
+MSG94.value=등록일
+MSG94.order=1094
+
+#MSG95 
+MSG95.value=수정일
+MSG95.order=1095
+
+#MSG96 
+MSG96.value=선,후행 테스크
+MSG96.order=1096
+
+#MSG97 
+MSG97.value=태스크명
+MSG97.order=1097
+
+#MSG98 
+MSG98.value=선후행
+MSG98.order=1098
+
+#MSG99 
+MSG99.value=정보
+MSG99.order=1099
+
+#MSG100 
+MSG100.value=선행 태스크
+MSG100.order=1100
+
+#MSG101 
+MSG101.value=계획 종료일
+MSG101.order=1101
+
+#MSG102 
+MSG102.value=후행 태스크
+MSG102.order=1102
+
+#MSG103 
+MSG103.value=이슈 검색 오류
+MSG103.order=1103
+
+#MSG104 
+MSG104.value=프로젝트현황
+MSG104.order=1104
+
+#MSG105 
+MSG105.value=개발중입니다.
+MSG105.order=1105
+
+#MSG106 
+MSG106.value=프로젝트 진행현황
+MSG106.order=1106
+
+#MSG107 
+MSG107.value=인별 현황
+MSG107.order=1107
+
+#MSG108 
+MSG108.value=인별
+MSG108.order=1108
+
+#MSG109 
+MSG109.value=프로젝트별
+MSG109.order=1109
+
+#MSG110 
+MSG110.value=상태 리스트 검색오류
+MSG110.order=1110
+
+#MSG111 
+MSG111.value=년도
+MSG111.order=1111
+
+#MSG112 
+MSG112.value=월
+MSG112.order=1112
+
+#MSG113 
+MSG113.value=프로젝트 타입
+MSG113.order=1113
+
+#MSG114 
+MSG114.value=프로젝트 상태
+MSG114.order=1114
+
+#MSG115 
+MSG115.value=팀
+MSG115.order=1115
+
+#MSG116 
+MSG116.value=팀원
+MSG116.order=1116
+
+#MSG117 
+MSG117.value=전체 태스크
+MSG117.order=1117
+
+#MSG118 
+MSG118.value=준비중 태스크
+MSG118.order=1118
+
+#MSG119 
+MSG119.value=진행 태스크
+MSG119.order=1119
+
+#MSG120 
+MSG120.value=완료 태스크
+MSG120.order=1120
+
+#MSG121 
+MSG121.value=Open 이슈
+MSG121.order=1121
+
+#MSG122 
+MSG122.value=Close 이슈
+MSG122.order=1122
+
+#MSG123 
+MSG123.value=전체 이슈
+MSG123.order=1123
+
+#MSG124 
+MSG124.value=진행율
+MSG124.order=1124
+
+#MSG125 
+MSG125.value=전체이슈
+MSG125.order=1125
+
+#MSG126 
+MSG126.value=배포
+MSG126.order=1126
+
+#MSG127 
+MSG127.value=현황
+MSG127.order=1127
+
+#MSG128 
+MSG128.value=등록
+MSG128.order=1128
+
+#MSG129 
+MSG129.value=배포업체
+MSG129.order=1129
+
+#MSG130 
+MSG130.value=배포명
+MSG130.order=1130
+
+#MSG131 
+MSG131.value=배포 타입
+MSG131.order=1131
+
+#MSG132 
+MSG132.value=도면 타입
+MSG132.order=1132
+
+#MSG133 
+MSG133.value=관련품목
+MSG133.order=1133
+
+#MSG134 
+MSG134.value=신제품
+MSG134.order=1134
+
+#MSG135 
+MSG135.value=부품
+MSG135.order=1135
+
+#MSG136 
+MSG136.value=제목
+MSG136.order=1136
+
+#MSG137 
+MSG137.value=설변목적
+MSG137.order=1137
+
+#MSG138 
+MSG138.value=등록일자
+MSG138.order=1138
+
+#MSG139 
+MSG139.value=검토결과
+MSG139.order=1139
+
+#MSG140 
+MSG140.value=구분
+MSG140.order=1140
+
+#MSG141 
+MSG141.value=활동
+MSG141.order=1141
+
+#MSG142 
+MSG142.value=수신일
+MSG142.order=1142
+
+#MSG143 
+MSG143.value=작업자
+MSG143.order=1143
+
+#MSG144 
+MSG144.value=문서
+MSG144.order=1144
+
+#MSG145 
+MSG145.value=문서명
+MSG145.order=1145
+
+#MSG146 
+MSG146.value=분류체계
+MSG146.order=1146
+
+#MSG147 
+MSG147.value=문서분류
+MSG147.order=1147
+
+#MSG148 
+MSG148.value=최신버전
+MSG148.order=1148
+
+#MSG149 
+MSG149.value=모든버전
+MSG149.order=1149
+
+#MSG150 
+MSG150.value=인증타입 리스트 검색오류
+MSG150.order=1150
+
+#MSG151 
+MSG151.value=템플릿 명
+MSG151.order=1151
+
+#MSG152 
+MSG152.value=을(를) 입력하세요.
+MSG152.order=1152
+
+#MSG153 
+MSG153.value=을(를) 선택하세요.
+MSG153.order=1153
+
+#MSG154 
+MSG154.value=내용
+MSG154.order=1154
+
+#MSG155 
+MSG155.value=품목
+MSG155.order=1155
+
+#MSG156 
+MSG156.value=제품
+MSG156.order=1156
+
+#MSG157 
+MSG157.value=스페어
+MSG157.order=1157
+
+#MSG158 
+MSG158.value=사용자등록
+MSG158.order=1158
+
+#MSG159 
+MSG159.value=일괄등록
+MSG159.order=1159
+
+#MSG160 
+MSG160.value=품목코드
+MSG160.order=1160
+
+#MSG161 
+MSG161.value=품목명
+MSG161.order=1161
+
+#MSG162 
+MSG162.value=단위 목록 오류
+MSG162.order=1162
+
+#MSG163 
+MSG163.value=품목분류
+MSG163.order=1163
+
+#MSG164 
+MSG164.value=표면처리
+MSG164.order=1164
+
+#MSG165 
+MSG165.value=사급
+MSG165.order=1165
+
+#MSG166 
+MSG166.value=도급
+MSG166.order=1166
+
+#MSG167 
+MSG167.value=상세검색
+MSG167.order=1167
+
+#MSG168 
+MSG168.value=개정하시겠습니까?
+MSG168.order=1168
+
+#MSG169 
+MSG169.value=삭제하시겠습니까?
+MSG169.order=1169
+
+#MSG170 
+MSG170.value=관련품목이 있을경우 삭제할 수 없습니다.
+MSG170.order=1170
+
+#MSG171 
+MSG171.value=삭제 오류 발생
+MSG171.order=1171
+
+#MSG172 
+MSG172.value=상세보기
+MSG172.order=1172
+
+#MSG173 
+MSG173.value=버전이력
+MSG173.order=1173
+
+#MSG174 
+MSG174.value=다운로드 이력
+MSG174.order=1174
+
+#MSG175 
+MSG175.value=결재이력
+MSG175.order=1175
+
+#MSG176 
+MSG176.value=수정자
+MSG176.order=1176
+
+#MSG177 
+MSG177.value=최종 수정일
+MSG177.order=1177
+
+#MSG178 
+MSG178.value=문서 등급
+MSG178.order=1178
+
+#MSG179 
+MSG179.value=문서타입
+MSG179.order=1179
+
+#MSG180 
+MSG180.value=주 첨부파일
+MSG180.order=1180
+
+#MSG181 
+MSG181.value=첨부파일
+MSG181.order=1181
+
+#MSG182 
+MSG182.value=최종수정일
+MSG182.order=1182
+
+#MSG183 
+MSG183.value=이(가) 없습니다.
+MSG183.order=1183
+
+#MSG184 
+MSG184.value=관련 프로젝트
+MSG184.order=1184
+
+#MSG185 
+MSG185.value=산출물명
+MSG185.order=1185
+
+#MSG186 
+MSG186.value=관련배포
+MSG186.order=1186
+
+#MSG187 
+MSG187.value=배포타입
+MSG187.order=1187
+
+#MSG188 
+MSG188.value=도면타입
+MSG188.order=1188
+
+#MSG189 
+MSG189.value=문서등급
+MSG189.order=1189
+
+#MSG190 
+MSG190.value=선택한 주 첨부파일은 등록할 수 없습니다.
+MSG190.order=1190
+
+#MSG191 
+MSG191.value=추가
+MSG191.order=1191
+
+#MSG192 
+MSG192.value=품목을 하나이상 추가할 수 없습니다.
+MSG192.order=1192
+
+#MSG193 
+MSG193.value=품명
+MSG193.order=1193
+
+#MSG194 
+MSG194.value=관련 프로젝트가 없습니다.
+MSG194.order=1194
+
+#MSG195 
+MSG195.value=버전 이력보기
+MSG195.order=1195
+
+#MSG196 
+MSG196.value=이력내용
+MSG196.order=1196
+
+#MSG197 
+MSG197.value=수정하시겠습니까?
+MSG197.order=1197
+
+#MSG198 
+MSG198.value=이전페이지
+MSG198.order=1198
+
+#MSG199 
+MSG199.value=수정사유
+MSG199.order=1199
+
+#MSG200 
+MSG200.value=부서
+MSG200.order=1200
+
+#MSG201 
+MSG201.value=직급
+MSG201.order=1201
+
+#MSG202 
+MSG202.value=이름
+MSG202.order=1202
+
+#MSG203 
+MSG203.value=다운로드 시간
+MSG203.order=1203
+
+#MSG204 
+MSG204.value=다운로드 횟수
+MSG204.order=1204
+
+#MSG205 
+MSG205.value=다운로드 이력이 없습니다.
+MSG205.order=1205
+
+#MSG206 
+MSG206.value=순서
+MSG206.order=1206
+
+#MSG207 
+MSG207.value=결재일
+MSG207.order=1207
+
+#MSG208 
+MSG208.value=결재의견
+MSG208.order=1208
+
+#MSG209 
+MSG209.value=결재이력이 없습니다.
+MSG209.order=1209
+
+#MSG210 
+MSG210.value=외부 유저 메일
+MSG210.order=1210
+
+#MSG211 
+MSG211.value=이메일
+MSG211.order=1211
+
+#MSG212 
+MSG212.value=선택된 데이터가 없습니다.
+MSG212.order=1212
+
+#MSG213 
+MSG213.value=수정 실패하였습니다.
+MSG213.order=1213
+
+#MSG214 
+MSG214.value=수정 되었습니다.
+MSG214.order=1214
+
+#MSG215 
+MSG215.value=삭제 실패하였습니다.
+MSG215.order=1215
+
+#MSG216 
+MSG216.value=삭제 되었습니다
+MSG216.order=1216
+
+#MSG217 
+MSG217.value=등록 실패하였습니다
+MSG217.order=1217
+
+#MSG218 
+MSG218.value=등록 성공하였습니다
+MSG218.order=1218
+
+#MSG219 
+MSG219.value=수신
+MSG219.order=1219
+
+#MSG220 
+MSG220.value=합의
+MSG220.order=1220
+
+#MSG221 
+MSG221.value=결재하시겠습니까?
+MSG221.order=1221
+
+#MSG222 
+MSG222.value=결재선 지정
+MSG222.order=1222
+
+#MSG223 
+MSG223.value=업무명
+MSG223.order=1223
+
+#MSG224 
+MSG224.value=도착일
+MSG224.order=1224
+
+#MSG225 
+MSG225.value=기한일
+MSG225.order=1225
+
+#MSG226 
+MSG226.value=기안
+MSG226.order=1226
+
+#MSG227 
+MSG227.value=외부 메일 삭제시 오류가 발생 하였습니다.
+MSG227.order=1227
+
+#MSG228 
+MSG228.value=외부 메일 지정
+MSG228.order=1228
+
+#MSG229 
+MSG229.value=메일
+MSG229.order=1229
+
+#MSG230 
+MSG230.value=결재 방법
+MSG230.order=1230
+
+#MSG231 
+MSG231.value=결재자
+MSG231.order=1231
+
+#MSG232 
+MSG232.value=을(를) 설정하시겠습니까?
+MSG232.order=1232
+
+#MSG233 
+MSG233.value=기존의 결재선이 지워집니다.
+MSG233.order=1233
+
+#MSG234 
+MSG234.value=결재자는 1명이상 선택 해야 합니다.
+MSG234.order=1234
+
+#MSG235 
+MSG235.value=결재선이 지정 되었습니다.
+MSG235.order=1235
+
+#MSG236 
+MSG236.value=결재선 지정시 오류가 발생 하였습니다.
+MSG236.order=1236
+
+#MSG237 
+MSG237.value=등록자는 추가할 수 없습니다.
+MSG237.order=1237
+
+#MSG238 
+MSG238.value=이(가) 중복됩니다.
+MSG238.order=1238
+
+#MSG239 
+MSG239.value=삭제할 결재선을 선택하세요.
+MSG239.order=1239
+
+#MSG240 
+MSG240.value=데이터 삭제오류
+MSG240.order=1240
+
+#MSG241 
+MSG241.value=가져올 결재선을 선택하세요.
+MSG241.order=1241
+
+#MSG242 
+MSG242.value=결재선
+MSG242.order=1242
+
+#MSG243 
+MSG243.value=취소
+MSG243.order=1243
+
+#MSG244 
+MSG244.value=이름 또는 ID 검색
+MSG244.order=1244
+
+#MSG245 
+MSG245.value=결재방법
+MSG245.order=1245
+
+#MSG246 
+MSG246.value=모두삭제
+MSG246.order=1246
+
+#MSG247 
+MSG247.value=외부 메일 지정시 오류가 발생 했습니다.
+MSG247.order=1247
+
+#MSG248 
+MSG248.value=뒤로
+MSG248.order=1248
+
+#MSG249 
+MSG249.value=위임자
+MSG249.order=1249
+
+#MSG250 
+MSG250.value=기안자에게는 위임을 할 수 없습니다.
+MSG250.order=1250
+
+#MSG251 
+MSG251.value=결재위임하기
+MSG251.order=1251
+
+#MSG252 
+MSG252.value=위임
+MSG252.order=1252
+
+#MSG253 
+MSG253.value=이의
+MSG253.order=1253
+
+#MSG254 
+MSG254.value=직책
+MSG254.order=1254
+
+#MSG255 
+MSG255.value=부서장
+MSG255.order=1255
+
+#MSG256 
+MSG256.value=권한
+MSG256.order=1256
+
+#MSG257 
+MSG257.value=업무
+MSG257.order=1257
+
+#MSG258 
+MSG258.value="+event+"?
+MSG258.order=1258
+
+#MSG259 
+MSG259.value=승인
+MSG259.order=1259
+
+#MSG260 
+MSG260.value=반려
+MSG260.order=1260
+
+#MSG261 
+MSG261.value=개정
+MSG261.order=1261
+
+#MSG262 
+MSG262.value=개정 실패하였습니다.
+MSG262.order=1262
+
+#MSG263 
+MSG263.value=개정되었습니다.
+MSG263.order=1263
+
+#MSG264 
+MSG264.value=아이디
+MSG264.order=1264
+
+#MSG265 
+MSG265.value=직위
+MSG265.order=1265
+
+#MSG266 
+MSG266.value=부서 및 사원 관리
+MSG266.order=1266
+
+#MSG267 
+MSG267.value=아이디를 클릭하면 비밀번호를 변경할 수 있습니다.
+MSG267.order=1267
+
+#MSG268 
+MSG268.value=공백은 비밀번호로 사용할 수 없습니다.
+MSG268.order=1268
+
+#MSG269 
+MSG269.value=비밀번호를 입력하세요.
+MSG269.order=1269
+
+#MSG270 
+MSG270.value=비밀번호 변경 시 로그인을 다시 해야 합니다.
+MSG270.order=1270
+
+#MSG271 
+MSG271.value=변경 비밀번호
+MSG271.order=1271
+
+#MSG272 
+MSG272.value=변경 비밀번호 확인
+MSG272.order=1272
+
+#MSG273 
+MSG273.value=다운로드 권한이 없습니다.
+MSG273.order=1273
+
+#MSG274 
+MSG274.value=완료일
+MSG274.order=1274
+
+#MSG275 
+MSG275.value=진행중단계
+MSG275.order=1275
+
+#MSG276 
+MSG276.value=값
+MSG276.order=1276
+
+#MSG277 
+MSG277.value=속성명
+MSG277.order=1277
+
+#MSG278 
+MSG278.value=속성값
+MSG278.order=1278
+
+#MSG279 
+MSG279.value=변경하시겠습니까?
+MSG279.order=1279
+
+#MSG280 
+MSG280.value=부품번호
+MSG280.order=1280
+
+#MSG281 
+MSG281.value=도면번호
+MSG281.order=1281
+
+#MSG282 
+MSG282.value=도면명
+MSG282.order=1282
+
+#MSG283 
+MSG283.value=승인자
+MSG283.order=1283
+
+#MSG284 
+MSG284.value=검도자
+MSG284.order=1284
+
+#MSG285 
+MSG285.value=재질
+MSG285.order=1285
+
+#MSG286 
+MSG286.value=제품유형
+MSG286.order=1286
+
+#MSG287 
+MSG287.value=제품하위유형
+MSG287.order=1287
+
+#MSG288 
+MSG288.value=제품차원그룹
+MSG288.order=1288
+
+#MSG289 
+MSG289.value=제품부품 구분
+MSG289.order=1289
+
+#MSG290 
+MSG290.value=채번유무
+MSG290.order=1290
+
+#MSG291 
+MSG291.value=변경
+MSG291.order=1291
+
+#MSG292 
+MSG292.value=메인화면으로
+MSG292.order=1292
+
+#MSG293 
+MSG293.value=등록일자의 시작일을 입력하세요.
+MSG293.order=1293
+
+#MSG294 
+MSG294.value=등록일자의 종료을 입력하세요.
+MSG294.order=1294
+
+#MSG295 
+MSG295.value=부터
+MSG295.order=1295
+
+#MSG296 
+MSG296.value=까지의 변환요청을 진행 하시겠습니까?
+MSG296.order=1296
+
+#MSG297 
+MSG297.value=변환요청
+MSG297.order=1297
+
+#MSG298 
+MSG298.value=모델분류
+MSG298.order=1298
+
+#MSG299 
+MSG299.value=중복된 번호 입니다.
+MSG299.order=1299
+
+#MSG300 
+MSG300.value=채번 중복체크를 하세요.
+MSG300.order=1300
+
+#MSG301 
+MSG301.value=4개 이상의 관련 문서가 필요합니다.
+MSG301.order=1301
+
+#MSG302 
+MSG302.value=2개 이상의 관련 도면이 필요합니다.
+MSG302.order=1302
+
+#MSG303 
+MSG303.value=문서 분류
+MSG303.order=1303
+
+#MSG304 
+MSG304.value=번째 문서를 확인해주세요.
+MSG304.order=1304
+
+#MSG305 
+MSG305.value=번째 도면 파일을 입력해주세요.
+MSG305.order=1305
+
+#MSG306 
+MSG306.value=제품분류
+MSG306.order=1306
+
+#MSG307 
+MSG307.value=제품 정보
+MSG307.order=1307
+
+#MSG308 
+MSG308.value=을(를) 추가하세요.
+MSG308.order=1308
+
+#MSG309 
+MSG309.value=사용자코드
+MSG309.order=1309
+
+#MSG310 
+MSG310.value=제품명
+MSG310.order=1310
+
+#MSG311 
+MSG311.value=4자리를 입력하세요.
+MSG311.order=1311
+
+#MSG312 
+MSG312.value=새로운 번호를 입력하세요.
+MSG312.order=1312
+
+#MSG313 
+MSG313.value=생성 가능한 번호 입니다.
+MSG313.order=1313
+
+#MSG314 
+MSG314.value=채번
+MSG314.order=1314
+
+#MSG315 
+MSG315.value=타입
+MSG315.order=1315
+
+#MSG316 
+MSG316.value=생성
+MSG316.order=1316
+
+#MSG317 
+MSG317.value=입력
+MSG317.order=1317
+
+#MSG318 
+MSG318.value=제품군
+MSG318.order=1318
+
+#MSG319 
+MSG319.value=중복체크
+MSG319.order=1319
+
+#MSG320 
+MSG320.value=속성 정보
+MSG320.order=1320
+
+#MSG321 
+MSG321.value=단위
+MSG321.order=1321
+
+#MSG322 
+MSG322.value=관련문서
+MSG322.order=1322
+
+#MSG323 
+MSG323.value=첨부
+MSG323.order=1323
+
+#MSG324 
+MSG324.value=제어파일
+MSG324.order=1324
+
+#MSG325 
+MSG325.value=관련도면
+MSG325.order=1325
+
+#MSG326 
+MSG326.value=경로
+MSG326.order=1326
+
+#MSG327 
+MSG327.value=속성
+MSG327.order=1327
+
+#MSG328 
+MSG328.value=주 도면
+MSG328.order=1328
+
+#MSG329 
+MSG329.value=도면
+MSG329.order=1329
+
+#MSG330 
+MSG330.value=참조항목
+MSG330.order=1330
+
+#MSG331 
+MSG331.value=종속유형
+MSG331.order=1331
+
+#MSG332 
+MSG332.value=문서제목
+MSG332.order=1332
+
+#MSG333 
+MSG333.value=관련
+MSG333.order=1333
+
+#MSG334 
+MSG334.value=분류
+MSG334.order=1334
+
+#MSG335 
+MSG335.value=수정 성공하였습니다.
+MSG335.order=1335
+
+#MSG336 
+MSG336.value=삭제되었습니다
+MSG336.order=1336
+
+#MSG337 
+MSG337.value=등록되었습니다.
+MSG337.order=1337
+
+#MSG338 
+MSG338.value=목록 오류
+MSG338.order=1338
+
+#MSG339 
+MSG339.value=비교할 BOM이 선택 되지 않았습니다.
+MSG339.order=1339
+
+#MSG340 
+MSG340.value=등록 가능한 모든 베이스라인
+MSG340.order=1340
+
+#MSG341 
+MSG341.value=정전개
+MSG341.order=1341
+
+#MSG342 
+MSG342.value=역전개
+MSG342.order=1342
+
+#MSG343 
+MSG343.value=상위품목
+MSG343.order=1343
+
+#MSG344 
+MSG344.value=하위품목
+MSG344.order=1344
+
+#MSG345 
+MSG345.value=상세정보
+MSG345.order=1345
+
+#MSG346 
+MSG346.value=베이스라인 비교
+MSG346.order=1346
+
+#MSG347 
+MSG347.value=전개
+MSG347.order=1347
+
+#MSG348 
+MSG348.value=변경일자
+MSG348.order=1348
+
+#MSG349 
+MSG349.value=부품명
+MSG349.order=1349
+
+#MSG350 
+MSG350.value=수량
+MSG350.order=1350
+
+#MSG351 
+MSG351.value=상위품목이 없습니다.
+MSG351.order=1351
+
+#MSG352 
+MSG352.value=하위품목이 없습니다.
+MSG352.order=1352
+
+#MSG353 
+MSG353.value=속성정보
+MSG353.order=1353
+
+#MSG354 
+MSG354.value=제품정보
+MSG354.order=1354
+
+#MSG355 
+MSG355.value=품번을 6자리 이상 입력하세요.
+MSG355.order=1355
+
+#MSG356 
+MSG356.value=번째 문서를 확인하세요..
+MSG356.order=1356
+
+#MSG357 
+MSG357.value=번째 도면 파일을 입력하세요.
+MSG357.order=1357
+
+#MSG358 
+MSG358.value=사용자
+MSG358.order=1358
+
+#MSG359 
+MSG359.value=품번
+MSG359.order=1359
+
+#MSG360 
+MSG360.value=파일을 선택하세요.
+MSG360.order=1360
+
+#MSG361 
+MSG361.value=만 등록 가능합니다.
+MSG361.order=1361
+
+#MSG362 
+MSG362.value=업로드
+MSG362.order=1362
+
+#MSG363 
+MSG363.value=양식다운
+MSG363.order=1363
+
+#MSG364 
+MSG364.value=등록실패
+MSG364.order=1364
+
+#MSG365 
+MSG365.value=모부품코드
+MSG365.order=1365
+
+#MSG366 
+MSG366.value=자부품코드
+MSG366.order=1366
+
+#MSG367 
+MSG367.value=결과
+MSG367.order=1367
+
+#MSG368 
+MSG368.value=도면분류
+MSG368.order=1368
+
+#MSG369 
+MSG369.value=등록타입
+MSG369.order=1369
+
+#MSG370 
+MSG370.value=신규
+MSG370.order=1370
+
+#MSG371 
+MSG371.value=도면구분
+MSG371.order=1371
+
+#MSG372 
+MSG372.value=도면파일
+MSG372.order=1372
+
+#MSG373 
+MSG373.value=주 부품
+MSG373.order=1373
+
+#MSG374 
+MSG374.value=참조
+MSG374.order=1374
+
+#MSG375 
+MSG375.value=참조품목
+MSG375.order=1375
+
+#MSG376 
+MSG376.value=파일명이 동일해야 합니다.
+MSG376.order=1376
+
+#MSG377 
+MSG377.value=등록 되었습니다.
+MSG377.order=1377
+
+#MSG378 
+MSG378.value=삭제되었습니다.
+MSG378.order=1378
+
+#MSG379 
+MSG379.value=사유
+MSG379.order=1379
+
+#MSG380 
+MSG380.value=요청 내용
+MSG380.order=1380
+
+#MSG381 
+MSG381.value=활동 담당자를 선택하세요.
+MSG381.order=1381
+
+#MSG382 
+MSG382.value=활동 요청 완료일을 선택하세요.
+MSG382.order=1382
+
+#MSG383 
+MSG383.value=요청완료일은 오늘 날짜 이전일 수 없습니다.
+MSG383.order=1383
+
+#MSG384 
+MSG384.value=변경은 필수 사항입니다.
+MSG384.order=1384
+
+#MSG385 
+MSG385.value=단계
+MSG385.order=1385
+
+#MSG386 
+MSG386.value=활동명
+MSG386.order=1386
+
+#MSG387 
+MSG387.value=담당 부서
+MSG387.order=1387
+
+#MSG388 
+MSG388.value=요청 완료일
+MSG388.order=1388
+
+#MSG389 
+MSG389.value=선택한 품목이 없습니다.
+MSG389.order=1389
+
+#MSG390 
+MSG390.value=의 품목은 설변진행중이거나,최신정보가 아닙니다.
+MSG390.order=1390
+
+#MSG391 
+MSG391.value=는 변경은 필수 사항입니다.
+MSG391.order=1391
+
+#MSG392 
+MSG392.value=설변품목
+MSG392.order=1392
+
+#MSG393 
+MSG393.value=목적
+MSG393.order=1393
+
+#MSG394 
+MSG394.value=변경사항
+MSG394.order=1394
+
+#MSG395 
+MSG395.value=전송
+MSG395.order=1395
+
+#MSG396 
+MSG396.value=대상 품목
+MSG396.order=1396
+
+#MSG397 
+MSG397.value=설변 품목
+MSG397.order=1397
+
+#MSG398 
+MSG398.value=비고
+MSG398.order=1398
+
+#MSG399 
+MSG399.value=변경유형
+MSG399.order=1399
+
+#MSG400 
+MSG400.value=관련 요청서
+MSG400.order=1400
+
+#MSG401 
+MSG401.value=요청사유
+MSG401.order=1401
+
+#MSG402 
+MSG402.value=요청내용
+MSG402.order=1402
+
+#MSG403 
+MSG403.value=호환 여부
+MSG403.order=1403
+
+#MSG404 
+MSG404.value=활동 현황
+MSG404.order=1404
+
+#MSG405 
+MSG405.value=완료
+MSG405.order=1405
+
+#MSG406 
+MSG406.value=진행
+MSG406.order=1406
+
+#MSG407 
+MSG407.value=지연
+MSG407.order=1407
+
+#MSG408 
+MSG408.value=예정
+MSG408.order=1408
+
+#MSG409 
+MSG409.value=담당부서
+MSG409.order=1409
+
+#MSG410 
+MSG410.value=요청완료일
+MSG410.order=1410
+
+#MSG411 
+MSG411.value=관련 품목이 있을경우 삭제할 수 없습니다
+MSG411.order=1411
+
+#MSG412 
+MSG412.value=요청일
+MSG412.order=1412
+
+#MSG413 
+MSG413.value=검토 결과
+MSG413.order=1413
+
+#MSG414 
+MSG414.value=검토 일자
+MSG414.order=1414
+
+#MSG415 
+MSG415.value=의견
+MSG415.order=1415
+
+#MSG416 
+MSG416.value=검색 결과가 없습니다.
+MSG416.order=1416
+
+#MSG417 
+MSG417.value=대상품목
+MSG417.order=1417
+
+#MSG418 
+MSG418.value=개정전 품목코드
+MSG418.order=1418
+
+#MSG419 
+MSG419.value=BOM전송
+MSG419.order=1419
+
+#MSG420 
+MSG420.value=개정후 품목코드
+MSG420.order=1420
+
+#MSG421 
+MSG421.value=적용구분
+MSG421.order=1421
+
+#MSG422 
+MSG422.value=개정된 데이터가 없습니다.
+MSG422.order=1422
+
+#MSG423 
+MSG423.value=설계변경내역
+MSG423.order=1423
+
+#MSG424 
+MSG424.value=등록부서
+MSG424.order=1424
+
+#MSG425 
+MSG425.value=을지
+MSG425.order=1425
+
+#MSG426 
+MSG426.value=설계 변경 내역이 없습니다.
+MSG426.order=1426
+
+#MSG427 
+MSG427.value=관련 ECN 내역이 없습니다.
+MSG427.order=1427
+
+#MSG428 
+MSG428.value=활동 설정
+MSG428.order=1428
+
+#MSG429 
+MSG429.value=휴무일
+MSG429.order=1429
+
+#MSG430 
+MSG430.value=시작일
+MSG430.order=1430
+
+#MSG431 
+MSG431.value=활성화
+MSG431.order=1431
+
+#MSG432 
+MSG432.value=성공했습니다.
+MSG432.order=1432
+
+#MSG433 
+MSG433.value=실패했습니다.
+MSG433.order=1433
+
+#MSG434 
+MSG434.value=휴무일관리
+MSG434.order=1434
+
+#MSG435 
+MSG435.value=을(를) 선택하여 주세요.
+MSG435.order=1435
+
+#MSG436 
+MSG436.value=나의 태스크
+MSG436.order=1436
+
+#MSG437 
+MSG437.value=산출물 현황
+MSG437.order=1437
+
+#MSG438 
+MSG438.value=프로젝트타입
+MSG438.order=1438
+
+#MSG439 
+MSG439.value=기간
+MSG439.order=1439
+
+#MSG440 
+MSG440.value=리스트 검색오류
+MSG440.order=1440
+
+#MSG441 
+MSG441.value=프로젝트 검색
+MSG441.order=1441
+
+#MSG442 
+MSG442.value=계획 시작일자
+MSG442.order=1442
+
+#MSG443 
+MSG443.value=적용 템플릿
+MSG443.order=1443
+
+#MSG444 
+MSG444.value=공수
+MSG444.order=1444
+
+#MSG445 
+MSG445.value=일
+MSG445.order=1445
+
+#MSG446 
+MSG446.value=산출물 문서 목록
+MSG446.order=1446
+
+#MSG447 
+MSG447.value=순번
+MSG447.order=1447
+
+#MSG448 
+MSG448.value=템플릿명
+MSG448.order=1448
+
+#MSG449 
+MSG449.value=수정일자
+MSG449.order=1449
+
+#MSG450 
+MSG450.value=비활성화
+MSG450.order=1450
+
+#MSG451 
+MSG451.value=코드
+MSG451.order=1451
+
+#MSG452 
+MSG452.value=활성화 여부
+MSG452.order=1452
+
+#MSG453 
+MSG453.value=기존 템플릿 가져오기
+MSG453.order=1453
+
+#MSG454 
+MSG454.value=저장
+MSG454.order=1454
+
+#MSG455 
+MSG455.value=진행 현황
+MSG455.order=1455
+
+#MSG456 
+MSG456.value=적정
+MSG456.order=1456
+
+#MSG457 
+MSG457.value=실제 시작일
+MSG457.order=1457
+
+#MSG458 
+MSG458.value=실제 종료일
+MSG458.order=1458
+
+#MSG459 
+MSG459.value=트리 검색오류
+MSG459.order=1459
+
+#MSG460 
+MSG460.value=하위 태스크 진행현황
+MSG460.order=1460
+
+#MSG461 
+MSG461.value=현재
+MSG461.order=1461
+
+#MSG462 
+MSG462.value=구성원
+MSG462.order=1462
+
+#MSG463 
+MSG463.value=산출물 검색오류
+MSG463.order=1463
+
+#MSG464 
+MSG464.value=재시작 일자
+MSG464.order=1464
+
+#MSG465 
+MSG465.value=재시작 이력
+MSG465.order=1465
+
+#MSG466 
+MSG466.value=편집
+MSG466.order=1466
+
+#MSG467 
+MSG467.value=숫자만 입력하세요.
+MSG467.order=1467
+
+#MSG468 
+MSG468.value=사이의 숫자만 입력하세요.
+MSG468.order=1468
+
+#MSG469 
+MSG469.value=완료를 취소 하시겠습니까?
+MSG469.order=1469
+
+#MSG470 
+MSG470.value=해당 산출물과 문서의 관계를 끊으시겠습니까?
+MSG470.order=1470
+
+#MSG471 
+MSG471.value=등록할 문서가 없습니다.
+MSG471.order=1471
+
+#MSG472 
+MSG472.value=이슈 타입
+MSG472.order=1472
+
+#MSG473 
+MSG473.value=을(를) 지정해 주세요.
+MSG473.order=1473
+
+#MSG474 
+MSG474.value=이슈 내용
+MSG474.order=1474
+
+#MSG475 
+MSG475.value=파일첨부
+MSG475.order=1475
+
+#MSG476 
+MSG476.value=해결방안
+MSG476.order=1476
+
+#MSG477 
+MSG477.value=제기일
+MSG477.order=1477
+
+#MSG478 
+MSG478.value=완료 예정일
+MSG478.order=1478
+
+#MSG479 
+MSG479.value=이슈 개요
+MSG479.order=1479
+
+#MSG480 
+MSG480.value=답변 제기자
+MSG480.order=1480
+
+#MSG481 
+MSG481.value=완료확인
+MSG481.order=1481
+
+#MSG482 
+MSG482.value=답변 제기일자
+MSG482.order=1482
+
+#MSG483 
+MSG483.value=을(를) 지정하세요.
+MSG483.order=1483
+
+#MSG484 
+MSG484.value=이슈 담당자
+MSG484.order=1484
+
+#MSG485 
+MSG485.value=작업상황
+MSG485.order=1485
+
+#MSG486 
+MSG486.value=시작일자
+MSG486.order=1486
+
+#MSG487 
+MSG487.value=산출물 타입
+MSG487.order=1487
+
+#MSG488 
+MSG488.value=직접등록
+MSG488.order=1488
+
+#MSG489 
+MSG489.value=링크등록
+MSG489.order=1489
+
+#MSG490 
+MSG490.value=문서분류를
+MSG490.order=1490
+
+#MSG491 
+MSG491.value=산출물 인증타입
+MSG491.order=1491
+
+#MSG492 
+MSG492.value=하위 산출물 인증타입
+MSG492.order=1492
+
+#MSG493 
+MSG493.value=인증타입 미 선택시 일반 산출물로 등록 됩니다.
+MSG493.order=1493
+
+#MSG494 
+MSG494.value=프로젝트 산출물 추가
+MSG494.order=1494
+
+#MSG495 
+MSG495.value=인증타입
+MSG495.order=1495
+
+#MSG496 
+MSG496.value=주 첨부 파일
+MSG496.order=1496
+
+#MSG497 
+MSG497.value=링크 끊기
+MSG497.order=1497
+
+#MSG498 
+MSG498.value=실제 시작일자는 선행 태스크의 실제 종료일자보다 빠를 수 없습니다.
+MSG498.order=1498
+
+#MSG499 
+MSG499.value=실제 종료일자
+MSG499.order=1499
+
+#MSG500 
+MSG500.value=실제 시작일자
+MSG500.order=1500
+
+#MSG501 
+MSG501.value=프로젝트 전체 산출물 목록
+MSG501.order=1501
+
+#MSG502 
+MSG502.value=일괄 다운로드
+MSG502.order=1502
+
+#MSG503 
+MSG503.value=최신 버전 파일 일괄 다운로드
+MSG503.order=1503
+
+#MSG504 
+MSG504.value=프로젝트 전체 이슈 목록
+MSG504.order=1504
+
+#MSG505 
+MSG505.value=종료일
+MSG505.order=1505
+
+#MSG506 
+MSG506.value=선행
+MSG506.order=1506
+
+#MSG507 
+MSG507.value=1 Level 이하의 태스크를 선택하세요.
+MSG507.order=1507
+
+#MSG508 
+MSG508.value=하위 태스크가 있는 경우 삭제할 수 없습니다.
+MSG508.order=1508
+
+#MSG509 
+MSG509.value=완료된 태스크의 삭제는 불가능 합니다.
+MSG509.order=1509
+
+#MSG510 
+MSG510.value=삭제 하시겠습니까?
+MSG510.order=1510
+
+#MSG511 
+MSG511.value=6 LEVEL 까지 생성 가능합니다.
+MSG511.order=1511
+
+#MSG512 
+MSG512.value=완료된 태스크의 자식추가는 불가능 합니다.
+MSG512.order=1512
+
+#MSG513 
+MSG513.value=해당 태스크의 선행이 삭제됩니다. 생성하시겠습니까?
+MSG513.order=1513
+
+#MSG514 
+MSG514.value=태스크를 선택하세요.
+MSG514.order=1514
+
+#MSG515 
+MSG515.value=노드 생성 오류
+MSG515.order=1515
+
+#MSG516 
+MSG516.value=오류발생
+MSG516.order=1516
+
+#MSG517 
+MSG517.value=다시 시도하십시오.
+MSG517.order=1517
+
+#MSG518 
+MSG518.value=End Item을 선택하세요.
+MSG518.order=1518
+
+#MSG519 
+MSG519.value=완료된 태스크의 수정은 불가능 합니다.
+MSG519.order=1519
+
+#MSG520 
+MSG520.value=계획 종료일은 계획 시작일보다 빠를 수 없습니다.
+MSG520.order=1520
+
+#MSG521 
+MSG521.value=정수로 입력하세요.
+MSG521.order=1521
+
+#MSG522 
+MSG522.value=보다 큰 수를 입력하세요.
+MSG522.order=1522
+
+#MSG523 
+MSG523.value=보다 작은 수를 입력하세요.
+MSG523.order=1523
+
+#MSG524 
+MSG524.value=입력 글자수를 초과하였습니다.
+MSG524.order=1524
+
+#MSG525 
+MSG525.value=다시 시도하세요.
+MSG525.order=1525
+
+#MSG526 
+MSG526.value=위로
+MSG526.order=1526
+
+#MSG527 
+MSG527.value=아래로
+MSG527.order=1527
+
+#MSG528 
+MSG528.value=자식 노드 추가시 선택된 태스크의 산출물 정의한 내용이 있을 경우 추가되지 않습니다.
+MSG528.order=1528
+
+#MSG529 
+MSG529.value=최하위
+MSG529.order=1529
+
+#MSG530 
+MSG530.value=자식추가
+MSG530.order=1530
+
+#MSG531 
+MSG531.value=노드추가
+MSG531.order=1531
+
+#MSG532 
+MSG532.value=다음
+MSG532.order=1532
+
+#MSG533 
+MSG533.value=이전
+MSG533.order=1533
+
+#MSG534 
+MSG534.value=작업완료
+MSG534.order=1534
+
+#MSG535 
+MSG535.value=을(를) 입력해주세요.
+MSG535.order=1535
+
+#MSG536 
+MSG536.value=리스트 검색 오류
+MSG536.order=1536
+
+#MSG537 
+MSG537.value=완료취소
+MSG537.order=1537
+
+#MSG538 
+MSG538.value=품목 코드
+MSG538.order=1538
+
+#MSG539 
+MSG539.value=업체 코드
+MSG539.order=1539
+
+#MSG540 
+MSG540.value=업체명
+MSG540.order=1540
+
+#MSG541 
+MSG541.value=배포자
+MSG541.order=1541
+
+#MSG542 
+MSG542.value=카테고리
+MSG542.order=1542
+
+#MSG543 
+MSG543.value=도면 배포 여부
+MSG543.order=1543
+
+#MSG544 
+MSG544.value=도면 배포 방법
+MSG544.order=1544
+
+#MSG545 
+MSG545.value=업체구분
+MSG545.order=1545
+
+#MSG546 
+MSG546.value=도면 배포 유
+MSG546.order=1546
+
+#MSG547 
+MSG547.value=도면 배포 무
+MSG547.order=1547
+
+#MSG548 
+MSG548.value=품목 또는 문서를 하나이상 추가해 주세요.
+MSG548.order=1548
+
+#MSG549 
+MSG549.value=관련업체를 하나이상 등록해 주세요.
+MSG549.order=1549
+
+#MSG550 
+MSG550.value=관련업체
+MSG550.order=1550
+
+#MSG551 
+MSG551.value=업체코드
+MSG551.order=1551
+
+#MSG552 
+MSG552.value=업체
+MSG552.order=1552
+
+#MSG553 
+MSG553.value=업체 구분
+MSG553.order=1553
+
+#MSG554 
+MSG554.value=Email
+MSG554.order=1554
+
+#MSG555 
+MSG555.value=상위 부서를 선택하세요.
+MSG555.order=1555
+
+#MSG556 
+MSG556.value=부서명을 입력하세요.
+MSG556.order=1556
+
+#MSG557 
+MSG557.value=부서 코드를 입력하세요.
+MSG557.order=1557
+
+#MSG558 
+MSG558.value=소트 넘버는 숫자만 입력 가능합니다.
+MSG558.order=1558
+
+#MSG559 
+MSG559.value=수정할 부서를 선택하세요.
+MSG559.order=1559
+
+#MSG560 
+MSG560.value=삭제할 부서를 선택하세요.
+MSG560.order=1560
+
+#MSG561 
+MSG561.value=하위 부서가 있는경우 삭제할 수 없습니다.
+MSG561.order=1561
+
+#MSG562 
+MSG562.value=부서 추가
+MSG562.order=1562
+
+#MSG563 
+MSG563.value=부서명
+MSG563.order=1563
+
+#MSG564 
+MSG564.value=부서코드
+MSG564.order=1564
+
+#MSG565 
+MSG565.value=소트넘버
+MSG565.order=1565
+
+#MSG566 
+MSG566.value=선택 부서
+MSG566.order=1566
+
+#MSG567 
+MSG567.value=상위부서코드
+MSG567.order=1567
+
+#MSG568 
+MSG568.value=님이 부서장으로 등록 되었습니다.
+MSG568.order=1568
+
+#MSG569 
+MSG569.value=의 부서를 지정해 주세요.
+MSG569.order=1569
+
+#MSG570 
+MSG570.value=부서 관리
+MSG570.order=1570
+
+#MSG571 
+MSG571.value=부서 설정
+MSG571.order=1571
+
+#MSG572 
+MSG572.value=직위 설정
+MSG572.order=1572
+
+#MSG573 
+MSG573.value=명의 사용자가 등록 되어 있습니다.
+MSG573.order=1573
+
+#MSG574 
+MSG574.value=부서장 지정
+MSG574.order=1574
+
+#MSG575 
+MSG575.value=이름(국문)을 입력하세요.
+MSG575.order=1575
+
+#MSG576 
+MSG576.value=코드를 입력하세요.
+MSG576.order=1576
+
+#MSG577 
+MSG577.value=소트를 입력하세요.
+MSG577.order=1577
+
+#MSG578 
+MSG578.value=이름(국문)
+MSG578.order=1578
+
+#MSG579 
+MSG579.value=이름(영문)
+MSG579.order=1579
+
+#MSG580 
+MSG580.value=소트
+MSG580.order=1580
+
+#MSG581 
+MSG581.value=활동그룹명
+MSG581.order=1581
+
+#MSG582 
+MSG582.value=그룹 코드
+MSG582.order=1582
+
+#MSG583 
+MSG583.value=업무명(영문)
+MSG583.order=1583
+
+#MSG584 
+MSG584.value=Step
+MSG584.order=1584
+
+#MSG585 
+MSG585.value=Sort
+MSG585.order=1585
+
+#MSG586 
+MSG586.value=활동타입
+MSG586.order=1586
+
+#MSG587 
+MSG587.value=활동코드
+MSG587.order=1587
+
+#MSG588 
+MSG588.value=필수여부
+MSG588.order=1588
+
+#MSG589 
+MSG589.value=사용여부
+MSG589.order=1589
+
+#MSG590 
+MSG590.value=결재여부
+MSG590.order=1590
+
+#MSG591 
+MSG591.value=문서필수
+MSG591.order=1591
+
+#MSG592 
+MSG592.value=문서승인
+MSG592.order=1592
+
+#MSG593 
+MSG593.value=이름을 입력하세요.
+MSG593.order=1593
+
+#MSG594 
+MSG594.value=이메일을 입력하세요.
+MSG594.order=1594
+
+#MSG595 
+MSG595.value=외부 메일 관리
+MSG595.order=1595
+
+#MSG596 
+MSG596.value=접속시간
+MSG596.order=1596
+
+#MSG597 
+MSG597.value=로그인 이력관리
+MSG597.order=1597
+
+#MSG598 
+MSG598.value=해당모듈
+MSG598.order=1598
+
+#MSG599 
+MSG599.value=다운횟수
+MSG599.order=1599
+
+#MSG600 
+MSG600.value=다운시간
+MSG600.order=1600
+
+#MSG601 
+MSG601.value=다운로드 이력관리
+MSG601.order=1601
+
+#MSG602 
+MSG602.value=유저 검색
+MSG602.order=1602
+
+#MSG603 
+MSG603.value=시작
+MSG603.order=1603
+
+#MSG604 
+MSG604.value=준비중
+MSG604.order=1604
+
+#MSG605 
+MSG605.value=진행중
+MSG605.order=1605
+
+#MSG606 
+MSG606.value=수정중
+MSG606.order=1606
+
+#MSG607 
+MSG607.value=중단됨
+MSG607.order=1607
+
+#MSG608 
+MSG608.value=중단중
+MSG608.order=1608
+
+#MSG609 
+MSG609.value=취소됨
+MSG609.order=1609
+
+#MSG610 
+MSG610.value=추가할 태스크의 상위 태스크를 선택하세요.
+MSG610.order=1610
+
+#MSG611 
+MSG611.value=삭제는 태스크만 가능합니다.
+MSG611.order=1611
+
+#MSG612 
+MSG612.value=삭제할 태스크를 선택하세요.
+MSG612.order=1612
+
+#MSG613 
+MSG613.value=최상위 Level의 다음 노드 추가는 불가능 합니다.
+MSG613.order=1613
+
+#MSG614 
+MSG614.value=노드 이동 오류
+MSG614.order=1614
+
+#MSG615 
+MSG615.value=마지막
+MSG615.order=1615
+
+#MSG616 
+MSG616.value=현재노드
+MSG616.order=1616
+
+#MSG617 
+MSG617.value=하위추가
+MSG617.order=1617
+
+#MSG618 
+MSG618.value=해당 템플릿을 삭제 하시겠습니까?
+MSG618.order=1618
+
+#MSG619 
+MSG619.value=기본 정보
+MSG619.order=1619
+
+#MSG620 
+MSG620.value=태스크 명
+MSG620.order=1620
+
+#MSG621 
+MSG621.value=보다 작은 수를 입력할 수 없습니다.
+MSG621.order=1621
+
+#MSG622 
+MSG622.value=선, 후행 테스크 검색 오류
+MSG622.order=1622
+
+#MSG623 
+MSG623.value=산출물 검색 오류
+MSG623.order=1623
+
+#MSG624 
+MSG624.value=Role 리스트 검색 오류
+MSG624.order=1624
+
+#MSG625 
+MSG625.value=선후행 정보
+MSG625.order=1625
+
+#MSG626 
+MSG626.value=선행태스크
+MSG626.order=1626
+
+#MSG627 
+MSG627.value=배포 코드
+MSG627.order=1627
+
+#MSG628 
+MSG628.value=문서 또는 품목을 선택하세요.
+MSG628.order=1628
+
+#MSG629 
+MSG629.value=관련 ECO
+MSG629.order=1629
+
+#MSG630 
+MSG630.value=메뉴얼
+MSG630.order=1630
+
+#MSG631 
+MSG631.value=프로세스
+MSG631.order=1631
+
+#MSG632 
+MSG632.value=기타
+MSG632.order=1632
+
+#MSG633 
+MSG633.value=업무표준서
+MSG633.order=1633
+
+#MSG634 
+MSG634.value=개선사항
+MSG634.order=1634
+
+#MSG635 
+MSG635.value=관리자 전용
+MSG635.order=1635
+
+#MSG636 
+MSG636.value=설치
+MSG636.order=1636
+
+#MSG637 
+MSG637.value=프로젝트 기본정보 수정
+MSG637.order=1637
+
+#MSG638 
+MSG638.value=다운로드할 파일이 없습니다.
+MSG638.order=1638
+
+#MSG639 
+MSG639.value=채번이 안된 부품이  존재합니다.
+MSG639.order=1639
+
+#MSG640 
+MSG640.value=ECA 활동을 등록하세요.
+MSG640.order=1640
+
+#MSG641 
+MSG641.value=산출물 문서가 승인후 업무 완료를 할수 있습니다.
+MSG641.order=1641
+
+#MSG642 
+MSG642.value=확정 회의를 입력하세요.
+MSG642.order=1642
+
+#MSG643 
+MSG643.value=검토 회의를 입력하세요.
+MSG643.order=1643
+
+#MSG644 
+MSG644.value=부품에 ORCAD가 없습니다.
+MSG644.order=1644
+
+#MSG645 
+MSG645.value=부품에 ORCAD 관련문서가 부족합니다.
+MSG645.order=1645
+
+#MSG646 
+MSG646.value=부품에 PDF가 없습니다.
+MSG646.order=1646
+
+#MSG647 
+MSG647.value=업무완료
+MSG647.order=1647
+
+#MSG648 
+MSG648.value=관련 문서
+MSG648.order=1648
+
+#MSG649 
+MSG649.value=관련 도면 체크
+MSG649.order=1649
+
+#MSG650 
+MSG650.value=제어문서
+MSG650.order=1650
+
+#MSG651 
+MSG651.value=제어도면
+MSG651.order=1651
+
+#MSG652 
+MSG652.value=PDF
+MSG652.order=1652
+
+#MSG653 
+MSG653.value=호환성 여부
+MSG653.order=1653
+
+#MSG654 
+MSG654.value=등급
+MSG654.order=1654
+
+#MSG655 
+MSG655.value=의 적용 구분을 선택하세요.
+MSG655.order=1655
+
+#MSG656 
+MSG656.value=의 S/N관리를 선택하세요.
+MSG656.order=1656
+
+#MSG657 
+MSG657.value=검토일자
+MSG657.order=1657
+
+#MSG658 
+MSG658.value=검토회의 등록
+MSG658.order=1658
+
+#MSG659 
+MSG659.value=문서번호
+MSG659.order=1659
+
+#MSG660 
+MSG660.value=파일
+MSG660.order=1660
+
+#MSG661 
+MSG661.value=산출물이 등록 되었습니다.
+MSG661.order=1661
+
+#MSG662 
+MSG662.value=산출물 링크를 삭제 하였습니다.
+MSG662.order=1662
+
+#MSG663 
+MSG663.value=첨부 파일이 등록 및 삭제 되었습니다.
+MSG663.order=1663
+
+#MSG664 
+MSG664.value=검토결과가 등록 되었습니다.
+MSG664.order=1664
+
+#MSG665 
+MSG665.value=상태 완료.
+MSG665.order=1665
+
+#MSG666 
+MSG666.value=지연중
+MSG666.order=1666
+
+#MSG667 
+MSG667.value=담당
+MSG667.order=1667
+
+#MSG668 
+MSG668.value=현단계
+MSG668.order=1668
+
+#MSG669 
+MSG669.value=실적
+MSG669.order=1669
+
+#MSG670 
+MSG670.value=계획
+MSG670.order=1670
+
+#MSG671 
+MSG671.value=Reassign 완료.
+MSG671.order=1671
+
+#MSG672 
+MSG672.value=개정 대상
+MSG672.order=1672
+
+#MSG673 
+MSG673.value=품목목록
+MSG673.order=1673
+
+#MSG674 
+MSG674.value=일괄개정
+MSG674.order=1674
+
+#MSG675 
+MSG675.value=품목추가
+MSG675.order=1675
+
+#MSG676 
+MSG676.value=개정 전
+MSG676.order=1676
+
+#MSG677 
+MSG677.value=개정 후
+MSG677.order=1677
+
+#MSG678 
+MSG678.value=주도면
+MSG678.order=1678
+
+#MSG679 
+MSG679.value=변경 유형
+MSG679.order=1679
+
+#MSG680 
+MSG680.value=결재선 이름 입력
+MSG680.order=1680
+
+#MSG681 
+MSG681.value=변경은 필수사항 입니다.
+MSG681.order=1681
+
+#MSG682 
+MSG682.value=활동설정
+MSG682.order=1682
+
+#MSG683 
+MSG683.value=활동등록
+MSG683.order=1683
+
+#MSG684 
+MSG684.value=ECA 활동이 등록 되었습니다.
+MSG684.order=1684
+
+#MSG685 
+MSG685.value=최신 버전이 아닌 도면이나 품목이 있습니다.
+MSG685.order=1685
+
+#MSG686 
+MSG686.value=일괄 개정을 하시겠습니까?
+MSG686.order=1686
+
+#MSG687 
+MSG687.value=품목 일괄 개정
+MSG687.order=1687
+
+#MSG688 
+MSG688.value=주도면이 없습니다.
+MSG688.order=1688
+
+#MSG689 
+MSG689.value=확정
+MSG689.order=1689
+
+#MSG690 
+MSG690.value=호환여부
+MSG690.order=1690
+
+#MSG691 
+MSG691.value=S/N 관리
+MSG691.order=1691
+
+#MSG692 
+MSG692.value=ECO 확정이 등록 되었습니다.
+MSG692.order=1692

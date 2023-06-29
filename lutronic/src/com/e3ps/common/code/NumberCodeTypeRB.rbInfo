@@ -1,0 +1,140 @@
+ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.abbreviatedDisplay=true
+ResourceInfo.deprecated=false
+
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=true는 계층 구조 (Tree)
+# <key>.fullDisplay=
+# <key>.shortDescription= Code 생성시 : 자동 true (longDescription에서 정해진 key값으로 code 자동 생성) 수동 false(사용자가 입력 하는 방식))
+# <key>.longDescription=seq - XX001
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable= 
+
+# Entry Contents
+
+#PARTTYPE - 부품분류
+PARTTYPE.value=PARTTYPE
+PARTTYPE.order=10
+PARTTYPE.shortDescription=false
+PARTTYPE.longDescription=XX
+PARTTYPE.abbreviatedDisplay=true
+
+#PARTNAME1 - 부품명1
+PARTNAME1.value=PARTNAME1
+PARTNAME1.order=20
+PARTNAME1.shortDescription=true
+PARTNAME1.longDescription=P1
+PARTNAME1.abbreviatedDisplay=false
+
+#PARTNAME2 - 부품명2
+PARTNAME2.value=PARTNAME2
+PARTNAME2.order=30
+PARTNAME2.shortDescription=true
+PARTNAME2.longDescription=P2
+PARTNAME2.abbreviatedDisplay=false
+
+#PARTNAME3 - 부품명3
+PARTNAME3.value=PARTNAME3
+PARTNAME3.order=40
+PARTNAME3.shortDescription=true
+PARTNAME3.longDescription=P3
+PARTNAME3.abbreviatedDisplay=false
+
+#MAT - 재질
+MAT.value=MAT
+MAT.order=50
+MAT.shortDescription=true
+MAT.longDescription=MA
+MAT.abbreviatedDisplay=false
+
+#FINISH - 후처리
+FINISH.value=FINISH
+FINISH.order=60
+FINISH.shortDescription=true
+FINISH.longDescription=FI
+FINISH.abbreviatedDisplay=false
+
+
+#MANUFACTURE - MANUFACTURE
+MANUFACTURE.value=MANUFACTURE
+MANUFACTURE.order=70
+MANUFACTURE.shortDescription=true
+MANUFACTURE.longDescription=MF
+MANUFACTURE.abbreviatedDisplay=false
+
+#DEPTCODE - 부서
+DEPTCODE.value=DEPARTMENT
+DEPTCODE.order=80
+DEPTCODE.shortDescription=false
+DEPTCODE.longDescription=XX
+DEPTCODE.abbreviatedDisplay=false
+
+#PRODUCTMETHOD - 제작방법
+PRODUCTMETHOD.value=PRODUCTMETHOD
+PRODUCTMETHOD.order=90
+PRODUCTMETHOD.shortDescription=true
+PRODUCTMETHOD.longDescription=PM
+PRODUCTMETHOD.abbreviatedDisplay=false
+
+#MODEL - 프로젝트 코드
+MODEL.value=PROJECT CODE
+MODEL.order=100
+MODEL.shortDescription=false
+MODEL.longDescription=XX
+MODEL.abbreviatedDisplay=false
+
+#PRESERATION - 보존 기간
+PRESERATION.value=PRESERATION
+PRESERATION.order=110
+PRESERATION.shortDescription=true
+PRESERATION.longDescription=PR
+PRESERATION.abbreviatedDisplay=false
+
+#PRODUCTNAME - 제품명
+#PRODUCTNAME.value=제품명
+#PRODUCTNAME.order=120
+
+#MOLDTYPE - 금형 타입
+MOLDTYPE.value=MOLDTYPE
+MOLDTYPE.order=130
+MOLDTYPE.shortDescription=true
+MOLDTYPE.longDescription=MT
+MOLDTYPE.abbreviatedDisplay=false
+
+
+#CHANGESECTION - 변경부분
+CHANGESECTION.value=CHANGESECTION
+CHANGESECTION.order=140
+CHANGESECTION.shortDescription=true
+CHANGESECTION.longDescription=CS
+CHANGESECTION.abbreviatedDisplay=false
+
+#LICENSING - 인허가변경
+LICENSING.value=LICENSING
+LICENSING.order=150
+LICENSING.shortDescription=true
+LICENSING.longDescription=LI
+LICENSING.abbreviatedDisplay=false
+
+#EOSTEP - 설변활동단계
+EOSTEP.value=EOSTEP
+EOSTEP.order=160
+EOSTEP.shortDescription=true
+EOSTEP.longDescription=ES
+EOSTEP.abbreviatedDisplay=false
+
+#DOCUMNETNAME - DOCUMENTNAME
+DOCUMENTNAME.value=DOCUMENTNAME
+DOCUMENTNAME.order=160
+DOCUMENTNAME.shortDescription=true
+DOCUMENTNAME.longDescription=DN
+DOCUMENTNAME.abbreviatedDisplay=false
