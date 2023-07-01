@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rows>
+	<userdata name="gud1">
+		userdata value 1
+	</userdata>
+	<userdata name="gud2">
+		userdata value 2
+	</userdata>
+	<row id="root" open="1" >
+		<cell>ROOT</cell>
+		<cell>ROOT</cell>
+		<cell>true</cell>
+    	<row id="ec" open="1" >
+    		<cell>설계변경관리</cell>
+			<cell>EC-100</cell>
+			<cell>true</cell>
+				<row id="eco" open="1" >
+	        		<cell>ECO</cell>
+					<cell>ECO-110</cell>
+					<cell>true</cell>
+					<row id="ecocreate">
+		        		<cell>ECO 등록</cell>
+						<cell>ECO-111</cell>
+						<cell>true</cell>
+		        	</row>
+		        	<row id="ecosearch">
+		        		<cell>ECO 검색</cell>
+						<cell>ECO-112</cell>
+						<cell>false</cell>
+		        	</row>
+	        	</row>
+    	</row>
+    	<row id="doc" open="1" >
+			<cell>문서관리</cell>
+			<cell>DOC-100</cell>
+			<cell>true</cell>
+			<row id="doccreate">
+				<cell>문서등록</cell>
+				<cell>DOC-110</cell>
+				<cell>true</cell>
+			</row>
+			<row id="docsearch">
+				<cell>문서검색</cell>
+				<cell>DOC-120</cell>
+				<cell>true</cell>
+			</row>
+		</row>
+	</row>
+</rows>
