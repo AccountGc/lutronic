@@ -8,25 +8,25 @@
 <!-- 각 화면 개발시 Tag 복사해서 붙여넣고 사용할것 -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<link rel="stylesheet" type="text/css" href="/Windchill/jsp/js/dhtmlx/dhtmlx.css" />
-<link rel="stylesheet" href="/Windchill/jsp/css/default.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/css.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/js/dhtmlx/dhtmlx.css" />
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/default.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/css.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css" type="text/css">
 <!-- AUIGrid -->
-<link rel="stylesheet" href="/Windchill/AUIGrid/AUIGrid_style.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/AUIGrid/AUIGrid_style.css" type="text/css">
 
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="/Windchill/dhtmlx/dhtmlx.js"></script>
-<script type="text/javascript" src="/Windchill/dhtmlx/dhtmlxPaging.js"></script>
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/jquery.json-2.4.min.js"></script>
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/pageGrid.js"></script>
-<script type="text/javascript" src="/Windchill/jsp/js/common.js"></script>
-<script type="text/javascript" src="/Windchill/jsp/js/popup.js"></script>
-<script type="text/javascript" src="/Windchill/jsp/js/script.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/dhtmlx.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/dhtmlxPaging.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/jquery.json-2.4.min.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/pageGrid.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/common.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/popup.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/script.js"></script>
 <!-- AUIGrid -->
-<script type="text/javascript" src="/Windchill/AUIGrid/AUIGrid.js"></script>
-<script type="text/javascript" src="/Windchill/AUIGrid/AUIGridLicense.js"></script>
-<script type="text/javascript" src="/Windchill/AUIGrid/AUIGrid_paging.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/AUIGrid/AUIGrid.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/AUIGrid/AUIGridLicense.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/AUIGrid/AUIGrid_paging.js"></script>
 <title>LUTRONIC PDM</title>
 
 <style>
@@ -66,21 +66,21 @@
 }
 
 .Sub_Right_LT {
-	background: url(/Windchill/jsp/portal/images/base_design/Sub_Right_LT.gif);
+	background: url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_LT.gif);
 	background-repeat: no-repeat;
 	width: 19px;
 	height: 29px;
 }
 
 .Sub_Right_LBG {
-	background: url(/Windchill/jsp/portal/images/base_design/Sub_Right_LBG.gif);
+	background: url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_LBG.gif);
 	background-repeat: repeat-y;
 	vertical-align: top;
 	padding-top: 20px;
 }
 
 .Sub_Right_LB {
-	background: url(/Windchill/jsp/portal/images/base_design/Sub_Right_LB.gif);
+	background: url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_LB.gif);
 	background-repeat: no-repeat;
 	width: 19px;
 	height: 4px;
@@ -90,7 +90,7 @@
 	position: fixed;
 	right: 0px;
 	bottom: 10px;
-	background: url(/Windchill/jsp/portal/img/Blue_03_s.gif);
+	background: url(/Windchill/extcore/jsp/portal/img/Blue_03_s.gif);
 	width: 30px;
 	height: 30px;
 	cursor: pointer;
@@ -156,15 +156,15 @@
 		if ('none' == smenu.style.display) {
 			smenu.style.display = "";
 			smenuh.style.display = "none";
-			button.src = "/Windchill/jsp/portal/images/base_design/layer_hidden.gif";
+			button.src = "/Windchill/extcore/jsp/portal/images/base_design/layer_hidden.gif";
 			button.title = "${f:getMessage('서브메뉴')} ${f:getMessage('닫기')}";
 			leftMenuSlide(true)
 		} else {
 			smenu.style.display = "none";
 			smenuh.style.display = "";
-			button.src = "/Windchill/jsp/portal/images/base_design/layer_show.gif";
+			button.src = "/Windchill/extcore/jsp/portal/images/base_design/layer_show.gif";
 			button.title = "${f:getMessage('서브메뉴')} ${f:getMessage('열기')}";
-			leftMenuSlide(true)
+			/* leftMenuSlide(true) */
 		}
 
 		if ($("#xmlString").val() != null) {
@@ -251,13 +251,13 @@
 		if (isMenuSlide) {
 			width = $(window).width() - (250 + 16 + 10);
 			$("#menuTD").show();
-			$("#hiddenArrow").attr("src", "/Windchill/jsp/portal/images/base_design/layer_hidden.gif");
+			$("#hiddenArrow").attr("src", "/Windchill/extcore/jsp/portal/images/base_design/layer_hidden.gif");
 			$("#hiddenArrow").attr("title", "${f:getMessage('서브메뉴')} ${f:getMessage('닫기')}");
 			//setCookie("subMenuHidden", 1, 999999999);
 		} else {
 			width = $(window).width() - (16 + 10);
 			$("#menuTD").hide();
-			$("#hiddenArrow").attr("src", "/Windchill/jsp/portal/images/base_design/layer_show.gif");
+			$("#hiddenArrow").attr("src", "/Windchill/extcore/jsp/portal/images/base_design/layer_show.gif");
 			$("#hiddenArrow").attr("title", "${f:getMessage('서브메뉴')} ${f:getMessage('열기')}");
 			//setCookie("subMenuHidden", 0, -1);
 		}
@@ -303,7 +303,7 @@
 					<td width="99%" style="padding: 3; vertical-align: top">
 						<table border="0" width="100%" height="680" cellpadding="0" cellspacing="0">
 							<tr>
-								<td valign=top width=0 background="/Windchill/jsp/portal/images/ds_sub.gif">
+								<td valign=top width=0 background="/Windchill/extcore/jsp/portal/images/ds_sub.gif">
 									<table border=0 id=subMenu_table width=220 height="100%" style="display:" cellpadding="0" cellspacing="0">
 										<tr>
 											<td valign=top>
@@ -348,7 +348,7 @@
 										<tr>
 											<td class="Sub_Right_LBG">
 												<a href="JavaScript:switchMenu()">
-													<img id="hiddenArrow" src="/Windchill/jsp/portal/images/base_design/layer_hidden.gif" border=0 title="서브메뉴 닫기">
+													<img id="hiddenArrow" src="/Windchill/extcore/jsp/portal/images/base_design/layer_hidden.gif" border=0 title="서브메뉴 닫기">
 												</a>
 											</td>
 										</tr>
@@ -388,7 +388,7 @@
 <div id='scrollTop' class='scrollTop'></div>
 
 <DIV id="lodingDIV" class='loading_edge' style='display: none;'>
-	<img src="/Windchill/jsp/portal/images/loading.gif" />
+	<img src="/Windchill/extcore/jsp/portal/images/loading.gif" />
 </DIV>
 
 <DIV id="errorDIV" style="display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: rgba(300, 300, 300, 0.8);">
@@ -396,7 +396,7 @@
 		<table style="width: 100%">
 			<tr style="text-align: right;">
 				<td>
-					<img alt="" src="/Windchill/jsp/portal/img/x.gif" id="errorDIV_close" style="cursor: pointer;">
+					<img alt="" src="/Windchill/extcore/jsp/portal/img/x.gif" id="errorDIV_close" style="cursor: pointer;">
 				</td>
 			</tr>
 

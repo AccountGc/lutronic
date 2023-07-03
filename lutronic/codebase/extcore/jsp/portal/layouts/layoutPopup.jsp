@@ -9,27 +9,27 @@
 <!-- 각 화면 개발시 Tag 복사해서 붙여넣고 사용할것 -->
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 
-<link rel="stylesheet" type="text/css" href="/Windchill/jsp/js/dhtmlx/dhtmlx.css" />
-<link rel="stylesheet" href="/Windchill/jsp/css/default.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/css.css" type="text/css">
-<link rel="stylesheet" type="text/css" href="/Windchill/jsp/css/dtree.css" />
+<link rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/js/dhtmlx/dhtmlx.css" />
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/default.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/css.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/css/dtree.css" />
 <!-- AUIGrid -->
-<link rel="stylesheet" href="/Windchill/AUIGrid/AUIGrid_style.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/AUIGrid/AUIGrid_style.css" type="text/css">
 
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/jquery-1.11.1.min.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/dhtmlx/dhtmlx.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/dhtmlx/dhtmlxPaging.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/jquery.json-2.4.min.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/pageGrid.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/common.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/popup.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/dtree.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/jquery-1.11.1.min.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/dhtmlx/dhtmlx.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/dhtmlx/dhtmlxPaging.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/jquery.json-2.4.min.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/pageGrid.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/common.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/popup.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/dtree.js"></script>
 
 <!-- AUIGrid -->
-<script type="text/javascript" src="/Windchill/AUIGrid/AUIGrid.js" ></script>
-<script type="text/javascript" src="/Windchill/AUIGrid/AUIGridLicense.js" ></script>
-<script type="text/javascript" src="/Windchill/AUIGrid/AUIGrid_paging.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/AUIGrid/AUIGrid.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/AUIGrid/AUIGridLicense.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/AUIGrid/AUIGrid_paging.js" ></script>
 <script>
 
 $(document).ready(function() {
@@ -74,7 +74,7 @@ $(window).resize(function() {
 	</div>
 
 <DIV id="lodingDIV" class='loading_edge' style='display: none;'>
-	<img src="/Windchill/jsp/portal/images/loading.gif" />
+	<img src="/Windchill/extcore/jsp/portal/images/loading.gif" />
 </DIV>
 
 <form name='hiddenForm' id='hiddenForm'>

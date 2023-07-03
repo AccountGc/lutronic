@@ -7,7 +7,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>LUTRONIC PDM</title>
 </head>
-<LINK rel="stylesheet" type="text/css" href="/Windchill/login/css/e3ps.css">
+<LINK rel="stylesheet" type="text/css" href="/Windchill/extcore/login/css/e3ps.css">
 <%!
 public static String getClientIp(HttpServletRequest req) {
     String ip = req.getHeader("X-Forwarded-For");

@@ -749,13 +749,13 @@ input.p_select{
 	width: 19px;
 	height: 16px;
 	border: none 0px transparent;
-	background-image: url('/Windchill/jsp/portal/images/icon/people_select.gif');
+	background-image: url('/Windchill/extcore/jsp/portal/images/icon/people_select.gif');
 	cursor: hand;
 }
 
-#input_2 { font:"돋움"; font-size:12px; color:#666; line-height: 13pt; background:url(/Windchill/jsp/portal/images/base_design/Button_2text.gif); width:48; border:none;}
-#input_3 { font:"돋움"; font-size:12px; color:#666; line-height: 13pt; background:url(/Windchill/jsp/portal/images/base_design/Button_3text.gif); width:59; border:none;}
-#input_4 { font:"돋움"; font-size:12px; color:#666; line-height: 13pt; background:url(/Windchill/jsp/portal/images/base_design/Button_4text.gif); width:69; border:none;}
+#input_2 { font:"돋움"; font-size:12px; color:#666; line-height: 13pt; background:url(/Windchill/extcore/jsp/portal/images/base_design/Button_2text.gif); width:48; border:none;}
+#input_3 { font:"돋움"; font-size:12px; color:#666; line-height: 13pt; background:url(/Windchill/extcore/jsp/portal/images/base_design/Button_3text.gif); width:59; border:none;}
+#input_4 { font:"돋움"; font-size:12px; color:#666; line-height: 13pt; background:url(/Windchill/extcore/jsp/portal/images/base_design/Button_4text.gif); width:69; border:none;}
 
 tr.onTr{
 	 background-color: #EFF7FF;
