@@ -4,17 +4,9 @@
  */
 package com.e3ps.part.beans;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
 
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.beans.ECOData;
-import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.change.service.ECOSearchService;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -23,17 +15,16 @@ import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.part.util.PartUtil;
 
+import lombok.Getter;
+import lombok.Setter;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildRule;
-import wt.fc.QueryResult;
-import wt.occurrence.OccurrenceHelper;
-import wt.occurrence.UsesOccurrence;
-import wt.part.PartUsesOccurrence;
 import wt.part.WTPart;
 import wt.part.WTPartUsageLink;
-import wt.util.WTException;
 
+@Getter
+@Setter
 public class PartTreeData implements java.io.Serializable{
     public int level;
     public WTPart part;
@@ -77,37 +68,30 @@ public class PartTreeData implements java.io.Serializable{
     
     public String locationOid = "";  //idx+oid;
     
-    
-   
-   
-    
-   
-
 	public PartTreeData(WTPart part, WTPartUsageLink link,int level,String rowID) throws Exception{
-        this.part = part;
-        this.link = link;
-        this.level = level;
-        
+		
+        setPart(part);
+        setLink(link);
+        setLevel(level);
         PartData data = new PartData(part);
         
-        number = data.number;
-        name = data.name;
-        
-        version = data.version;
-        iteration = data.iteration;
+        setNumber(data.number);
+        setName(data.name);
+        setVersion(data.version);
+        setIteration(data.iteration);
         
         if(link!=null){
               double qs = (double)link.getQuantity().getAmount();
-              unit = link.getQuantity().getUnit().toString();
-              quantity = qs;
+              setUnit( link.getQuantity().getUnit().toString());
+              setQuantity(qs);
               try{
-                  itemSeq = data.number;
+                  setItemSeq(data.number);
              }catch(Exception ex){ex.printStackTrace();}
         
         }else {
-        	unit = part.getDefaultUnit().toString();
+        	setUnit(part.getDefaultUnit().toString());
         }
-        parentId = rowID;
+        setParentId(rowID);
         String ecoNumber ="";
         /*
         weight = IBAUtil.getAttrfloatValue(part, AttributeKey.IBAKey.IBA_WEIGHT);
@@ -118,15 +102,15 @@ public class PartTreeData implements java.io.Serializable{
     	ecoNumber = IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_CHANGENO);
     	*/
         HashMap map =IBAUtil.getAttributes(part);
-        model =  (String)map.get(AttributeKey.IBAKey.IBA_MODEL);  //프로젝트 코드
-        productmethod =  (String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD);//제작방법
-        deptcode =  (String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE);	//부서 코드
-        manufacture =  (String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE);//MANUFATURER
-        mat = (String)map.get(AttributeKey.IBAKey.IBA_MAT);//재질
-        finish = (String)map.get(AttributeKey.IBAKey.IBA_FINISH);//재질
-        remark =(String)map.get(AttributeKey.IBAKey.IBA_REMARKS);//비고
-        weight =  (String)map.get(AttributeKey.IBAKey.IBA_WEIGHT);  //무게
-        specification =  (String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION);//사양
+        setModel((String)map.get(AttributeKey.IBAKey.IBA_MODEL));  //프로젝트 코드
+        setProductmethod((String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));//제작방법
+        setDeptcode((String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE));	//부서 코드
+        setManufacture((String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));//MANUFATURER
+        setMat((String)map.get(AttributeKey.IBAKey.IBA_MAT));//재질
+        setFinish((String)map.get(AttributeKey.IBAKey.IBA_FINISH));//재질
+        setRemark((String)map.get(AttributeKey.IBAKey.IBA_REMARKS));//비고
+        setWeight((String)map.get(AttributeKey.IBAKey.IBA_WEIGHT));  //무게
+        setSpecification((String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));//사양
        
        
        
@@ -134,9 +118,9 @@ public class PartTreeData implements java.io.Serializable{
         
         ecoNumber =  (String)map.get(AttributeKey.IBAKey.IBA_CHANGENO); //ECO NO
     	if( ecoNumber != null && ecoNumber.length()> 0 ){
-    		ecoNo =ecoNumber;
+    		setEcoNo(ecoNumber);
     	}else{
-    		ecoNo =IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO);
+    		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
     	}
     	
     	/*
@@ -286,41 +270,4 @@ public class PartTreeData implements java.io.Serializable{
     	return IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_DEPTCODE);
     }
 
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-
-	public boolean isChildren() {
-		return isChildren;
-	}
-
-	public void setChildren(boolean isChildren) {
-		this.isChildren = isChildren;
-	}
-    
-	public String getZitmsta() {
-		return zitmsta;
-	}
-
-	public void setZitmsta(String zitmsta) {
-		this.zitmsta = zitmsta;
-	}
-
-	public void setDwgOid(String dwgOid) {
-		this.dwgOid = dwgOid;
-	}
-
-	public String getLocationOid() {
-		return locationOid;
-	}
-
-	public void setLocationOid(String locationOid) {
-		this.locationOid = locationOid;
-	}
-	
-    
 }

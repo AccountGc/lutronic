@@ -5,72 +5,53 @@
 package com.e3ps.part.beans;
 
 import java.beans.PropertyDescriptor;
-import java.rmi.RemoteException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
 
+import com.e3ps.common.beans.VersionData;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.AttributeKey.IBAKey;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.drawing.beans.EpmData;
+import com.e3ps.drawing.service.DrawingHelper;
+import com.e3ps.drawing.service.EpmSearchHelper;
+import com.e3ps.part.service.PartSearchHelper;
+import com.e3ps.part.util.PartUtil;
+
+import lombok.Getter;
+import lombok.Setter;
 import wt.enterprise.BasicTemplateProcessor;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildRule;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.folder.Folder;
 import wt.introspection.ClassInfo;
 import wt.introspection.WTIntrospector;
 import wt.lifecycle.State;
-import wt.method.MethodContext;
 import wt.part.WTPart;
 import wt.part.WTPartBaselineConfigSpec;
 import wt.part.WTPartConfigSpec;
 import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
-import wt.pom.DBProperties;
-import wt.pom.WTConnection;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.util.WTException;
-import wt.util.WTProperties;
-import wt.util.WTPropertyVetoException;
-import wt.vc.VersionControlHelper;
 import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
-import wt.vc.baseline.ManagedBaseline;
 //import com.e3ps.common.web.CommonWebHelper;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
-
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.common.beans.VersionData;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.AttributeKey.IBAKey;
-import com.e3ps.common.iba.AttributeKey.NumberCodeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.drawing.beans.EpmData;
-import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.part.service.PartSearchHelper;
-import com.e3ps.part.service.PartSearchService;
-import com.e3ps.part.service.VersionHelper;
-import com.e3ps.part.util.PartUtil;
-import com.ptc.windchill.enterprise.requirement.integrity.IntegrityAttributesHelper.IBA_ATTRIBUTES;
 
 
 /**
@@ -81,6 +62,8 @@ import com.ptc.windchill.enterprise.requirement.integrity.IntegrityAttributesHel
  * @since 1.4
  * @see e3ps.util.attr.ObjectData
  */
+@Getter
+@Setter
 public class PartData extends VersionData{
 	
 	public WTPart part;
@@ -121,52 +104,51 @@ public class PartData extends VersionData{
 	private String ecoNo;
     public PartData(final WTPart part) throws Exception {
     	super(part);
-    	this.part = part;
-    	this.icon = BasicTemplateProcessor.getObjectIconImgTag(part);
-    	this.number = part.getNumber();
-    	this.unit = part.getDefaultUnit().toString();
+    	setPart(part);
+    	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
+    	setNumber(part.getNumber());
+    	setUnit(part.getDefaultUnit().toString());
     	String ecoNumber ="";
         HashMap map =IBAUtil.getAttributes(part);
-        this.model =  (String)map.get(AttributeKey.IBAKey.IBA_MODEL);  //프로젝트 코드
-        this.productmethod =  (String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD);//제작방법
-        this.deptcode =  (String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE);	//부서 코드
-        this.manufacture =  (String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE);//MANUFATURER
-        this.mat = (String)map.get(AttributeKey.IBAKey.IBA_MAT);//재질
-        this.finish = (String)map.get(AttributeKey.IBAKey.IBA_FINISH);//재질
-        this.remark =(String)map.get(AttributeKey.IBAKey.IBA_REMARKS);//비고
-        this.weight =  (String)map.get(AttributeKey.IBAKey.IBA_WEIGHT);  //무게
-        this.specification =  (String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION);//사양
+        setModel((String)map.get(AttributeKey.IBAKey.IBA_MODEL));  //프로젝트 코드
+        setProductmethod((String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));//제작방법
+        setDeptcode((String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE));	//부서 코드
+        setManufacture((String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));//MANUFATURER
+        setMat((String)map.get(AttributeKey.IBAKey.IBA_MAT));//재질
+        setFinish((String)map.get(AttributeKey.IBAKey.IBA_FINISH));//재질
+        setRemark((String)map.get(AttributeKey.IBAKey.IBA_REMARKS));//비고
+        setWeight((String)map.get(AttributeKey.IBAKey.IBA_WEIGHT));  //무게
+        setSpecification((String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));//사양
         ecoNumber =  (String)map.get(AttributeKey.IBAKey.IBA_CHANGENO); //ECO NO
     	if( ecoNumber != null && ecoNumber.length()> 0 ){
-    		this.ecoNo =ecoNumber;
+    		setEcoNo(ecoNumber);
     	}else{
-    		this.ecoNo =IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO);
+    		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
     	}
     	
     }
 	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{
 		super(part);
-		this.part = part;
-    	this.icon = BasicTemplateProcessor.getObjectIconImgTag(part);
-    	this.number = part.getNumber();
-    	this.unit = part.getDefaultUnit().toString();
+    	setPart(part);
+    	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
+    	setNumber(part.getNumber());
+    	setUnit(part.getDefaultUnit().toString());
     	String ecoNumber ="";
         HashMap map =IBAUtil.getAttributes(part);
-        this.model =  (String)map.get(AttributeKey.IBAKey.IBA_MODEL);  //프로젝트 코드
-        this.productmethod =  (String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD);//제작방법
-        this.deptcode =  (String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE);	//부서 코드
-        this.manufacture =  (String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE);//MANUFATURER
-        this.mat = (String)map.get(AttributeKey.IBAKey.IBA_MAT);//재질
-        this.finish = (String)map.get(AttributeKey.IBAKey.IBA_FINISH);//재질
-        this.remark =(String)map.get(AttributeKey.IBAKey.IBA_REMARKS);//비고
-        this.weight =  (String)map.get(AttributeKey.IBAKey.IBA_WEIGHT);  //무게
-        this.specification =  (String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION);//사양
-        
+        setModel((String)map.get(AttributeKey.IBAKey.IBA_MODEL));  //프로젝트 코드
+        setProductmethod((String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));//제작방법
+        setDeptcode((String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE));	//부서 코드
+        setManufacture((String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));//MANUFATURER
+        setMat((String)map.get(AttributeKey.IBAKey.IBA_MAT));//재질
+        setFinish((String)map.get(AttributeKey.IBAKey.IBA_FINISH));//재질
+        setRemark((String)map.get(AttributeKey.IBAKey.IBA_REMARKS));//비고
+        setWeight((String)map.get(AttributeKey.IBAKey.IBA_WEIGHT));  //무게
+        setSpecification((String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));//사양
         ecoNumber =  (String)map.get(AttributeKey.IBAKey.IBA_CHANGENO); //ECO NO
     	if( ecoNumber != null && ecoNumber.length()> 0 ){
-    		this.ecoNo =ecoNumber;
+    		setEcoNo(ecoNumber);
     	}else{
-    		this.ecoNo =IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO);
+    		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
     	}
     	if(obj instanceof Baseline){
     		Baseline baseline = (Baseline) obj;
@@ -549,105 +531,6 @@ public class PartData extends VersionData{
 		}
 		return v;
 	}
-    
-    public String getProductmethod() {
-		return productmethod;
-	}
-
-
-
-	public void setProductmethod(String productmethod) {
-		this.productmethod = productmethod;
-	}
-
-
-
-	public String getDeptcode() {
-		return deptcode;
-	}
-
-
-
-	public void setDeptcode(String deptcode) {
-		this.deptcode = deptcode;
-	}
-
-
-
-	public String getManufacture() {
-		return manufacture;
-	}
-
-
-
-	public void setManufacture(String manufacture) {
-		this.manufacture = manufacture;
-	}
-
-
-
-	public String getFinish() {
-		return finish;
-	}
-
-
-
-	public void setFinish(String finish) {
-		this.finish = finish;
-	}
-
-
-
-	public String getRemark() {
-		return remark;
-	}
-
-
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-
-
-	public String getEcoNo() {
-		return ecoNo;
-	}
-
-
-
-	public String getLineImg() {
-		return lineImg;
-	}
-	public void setEcoNo(String ecoNo) {
-		this.ecoNo = ecoNo;
-	}
-
-
-
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-
-
-	public void setMat(String mat) {
-		this.mat = mat;
-	}
-
-
-
-	public void setWeight(String weight) {
-		this.weight = weight;
-	}
-
-
-
-	public void setSpecification(String specification) {
-		this.specification = specification;
-	}
-
-
 
 	/**
      * @return 주도면이 있으면 true, 없으면 false
@@ -782,46 +665,6 @@ public class PartData extends VersionData{
 		return PartUtil.isChange(this.number);
 	}
 	
-	public WTPart getPart() {
-		return part;
-	}
-
-	public void setPart(WTPart part) {
-		this.part = part;
-	}
-	
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public String getBaseline() {
-		return baseline;
-	}
-
-	public void setBaseline(String baseline) {
-		this.baseline = baseline;
-	}
-
-	public String getUnit() {
-		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
 	//순중량
 	public String getWeight(){
 		String weight ="";
@@ -1049,26 +892,5 @@ public class PartData extends VersionData{
 		Collections.sort(descPartlist,comparator);
 		return descPartlist;
 	}
-	public ArrayList<Object[]> getAscPartlist() {
-		return ascPartlist;
-	}
-	public EPMDocument getEpm() {
-		return epm;
-	}
-	public void setEpm(EPMDocument epm) {
-		this.epm = epm;
-	}
-	public void setLineImg(String lineImg) {
-		this.lineImg = lineImg;
-	}
-	public void setDescPartlist(ArrayList<Object[]> descPartlist) {
-		this.descPartlist = descPartlist;
-	}
-	public void setAscPartlist(ArrayList<Object[]> ascPartlist) {
-		this.ascPartlist = ascPartlist;
-	}
-	
-	
-	
 	
 }

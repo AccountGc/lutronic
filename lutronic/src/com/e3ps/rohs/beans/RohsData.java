@@ -17,18 +17,20 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.rohs.ROHSMaterial;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class RohsData extends VersionData{
 	
 	public ROHSMaterial rohs;
 	public String number;
-	public String icon;
-	
 	
 	public RohsData(ROHSMaterial rohs) throws Exception {
 		super(rohs);
-		this.rohs = rohs;
-		this.number = rohs.getNumber();
-		
+		setRohs(rohs);
+		setNumber(rohs.getNumber());
 	}
 	public String getDescription(boolean isView) {
 		String description = StringUtil.checkNull(this.rohs.getDescription());
@@ -55,29 +57,5 @@ public class RohsData extends VersionData{
 		}else {
 			return manufa;
 		}
-	}
-
-	public ROHSMaterial getRohs() {
-		return rohs;
-	}
-
-	public void setRohs(ROHSMaterial rohs) {
-		this.rohs = rohs;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
 	}
 }
