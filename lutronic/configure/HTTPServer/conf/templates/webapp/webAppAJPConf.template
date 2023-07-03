@@ -4,7 +4,7 @@
 
 <IfModule mod_jk.c>
   # add lutronic start
-  JkMount /@@WEB_APP_NAME@@/plm/* @@AJP_WORKER_NAME@@
+  JkMount /@@WEB_APP_NAME@@/eSolution/* @@AJP_WORKER_NAME@@
   # add lutronic end
   
   JkMount /@@WEB_APP_NAME@@/*.jsp* @@AJP_WORKER_NAME@@

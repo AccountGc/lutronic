@@ -1,0 +1,75 @@
+ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.customizable=true
+ResourceInfo.deprecated=false
+ResourceInfo.UUID=48de8535-78c4-4872-bb60-fa3b4042c6ec
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable=
+
+# Entry Contents
+
+
+#############################################################
+#		LC_DEFAULT,LC_Default_NonWF
+# ECR : 작업중-일괄결재-승인중-승인됨-반려됨-재작업-폐기
+#############################################################
+APPROVING.value=APPROVING
+APPROVING.shortDescription=APPROVING
+
+RETURN.value=RETURN
+RETURN.shortDescription=RETURN
+
+DEATH.value=DEATH
+DEATH.shortDescription=DEATH
+
+BATCHAPPROVAL.value=BATCHAPPROVAL
+BAATHAPPROVAL.shortDescription=BATCHAPPROVAL
+
+
+#############################################################
+#		CHANGE 에서 사용하는 LifeCycle 상태 
+# ECO : 작업중-ECA 활동
+# 작업중-ECA 활동-승인중-승인됨-반려됨-재작업-폐기
+#############################################################
+ACTIVITY.value=ACTIVITY
+ACTIVITY.shortDescription=ACTIVITY
+
+APPROVE_REQUEST.value=APPROVE REQUEST
+APPROVE_REQUEST.shortDescription=APPROVE REQUEST
+#############################################################
+#
+#개발 업무 관리에서 사용하는 LifeCycle 상태 
+#마스터 - 진행중,보류됨,완료됨,중단됨
+#TASK - 진행중,완료됨
+#ACTIVITY - 진행중,완료됨
+#############################################################중
+
+PROGRESS.value=PROGRESS
+PROGRESS.shortDescription=PROGRESS
+
+STOP.value=STOP
+STOP.shortDescription=STOP
+
+REQUEST_COMPLETED.value=REQUEST_COMPLETED
+REQUEST_COMPLETED.shortDescription=REQUEST_COMPLETED
+
+#############################################################
+#		Part 에서 사용하는 LifeCycle 상태 
+# ECO : 작업중-ECA 활동
+# 작업중-ECA 활동-승인요청-승인중-승인됨-반려됨-재작업-폐기
+#############################################################
+DEV_APPROVED.value=DEV_APPROVED
+DEV_APPROVED.shortDescription=DEV_APPROVED

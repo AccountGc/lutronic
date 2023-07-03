@@ -1,0 +1,88 @@
+﻿ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.customizable=true
+ResourceInfo.deprecated=false
+
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable=
+
+# Entry Contents
+
+ROHS1.value=ROHS01
+ROHS1.shortDescription=ROHS01
+
+ROHS2.value=ROHS02
+ROHS2.shortDescription=ROHS02
+
+ROHS3.value=ROHS03
+ROHS3.shortDescription=ROHS03
+
+ROHS4.value=ROHS04
+ROHS4.shortDescription=ROHS04
+
+ROHS5.value=ROHS05
+ROHS5.shortDescription=ROHS05
+
+ROHS6.value=ROHS06
+ROHS6.shortDescription=ROHS06
+
+ROHS7.value=ROHS07
+ROHS7.shortDescription=ROHS07
+
+ROHS8.value=ROHS08
+ROHS8.shortDescription=ROHS08
+
+ROHS9.value=ROHS09
+ROHS9.shortDescription=ROHS09
+
+ROHS10.value=ROHS10
+ROHS10.shortDescription=ROHS10
+
+ROHS11.value=ROHS11
+ROHS11.shortDescription=ROHS11
+
+ROHS12.value=ROHS12
+ROHS12.shortDescription=ROHS12
+
+ROHS13.value=ROHS13
+ROHS13.shortDescription=ROHS13
+
+ROHS14.value=ROHS14
+ROHS14.shortDescription=ROHS14
+
+ROHS15.value=ROHS15
+ROHS15.shortDescription=ROHS15
+
+ROHS16.value=ROHS16
+ROHS16.shortDescription=ROHS16
+
+ROHS17.value=ROHS17
+ROHS17.shortDescription=ROHS17
+
+ROHS18.value=ROHS18
+ROHS18.shortDescription=ROHS18
+
+ROHS19.value=ROHS19
+ROHS19.shortDescription=ROHS19
+
+ROHS20.value=ROHS20
+ROHS20.shortDescription=ROHS20
+
+ECR.value=ECR
+ECR.shortDescription=ECR
+
+ECO.value=ECO
+ECO.shortDescription=ECO

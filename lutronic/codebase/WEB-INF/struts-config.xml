@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<!--
+  Default configuration file for examples application.
+  Each module also has its own struts-config under: /WEB-INF/$MODULE/
+  @version $Revision: 1.2 $ $Date: 2017/03/21 07:26:20 $
+-->
+<struts-config>
+  <data-sources />
+  <message-resources parameter="com.e3ps.MessageResources" />
+</struts-config>

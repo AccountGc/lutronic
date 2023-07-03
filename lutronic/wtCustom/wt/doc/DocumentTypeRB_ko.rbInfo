@@ -1,0 +1,65 @@
+﻿ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.customizable=true
+ResourceInfo.deprecated=false
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+# <key>.comment=
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable=
+
+# Entry Contents
+
+#일반 문서
+$$NDDocument.value=일반문서
+$$NDDocument.shortDescription=NDDocument
+$$NDDocument.longDescription=ND
+
+#개발 문서
+$$RDDocument.value=개발문서
+$$RDDocument.shortDescription=RDDocument
+$$RDDocument.longDescription=RD
+
+#승인원
+$$APDocument.value=승인원
+$$APDocument.shortDescription=APDocument
+$$APDocument.longDescription=AP
+
+#인증문서
+$$RADocument.value=인증문서
+$$RADocument.shortDescription=RADocument
+$$RADocument.longDescription=RA
+
+#금형문서
+$$MMDocument.value=금형문서
+$$MMDocument.shortDescription=MMDocument
+$$MMDocument.longDescription=MM
+
+#개발소스
+$$DSDocument.value=개발소스
+$$DSDocument.shortDescription=DSDocument
+$$DSDocument.longDescription=DS
+
+#배포자료
+$$DDDocument.value=배포자료
+$$DDDocument.shortDescription=DDDocument
+$$DDDocument.longDescription=DD
+
+#ROHS
+$$ROHS.value=ROHS
+$$ROHS.shortDescription=ROHS
+
+#기타문서
+$$ETDocument.value=기타문서
+$$ETDocument.shortDescription=ETDocument
+$$ETDocument.longDescription=ED

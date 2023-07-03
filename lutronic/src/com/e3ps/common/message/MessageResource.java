@@ -17,23 +17,18 @@ import com.ptc.windchill.annotations.metadata.GenAsEnumeratedType;
 
 /**
  *
- * @version   1.0
+ * @version 1.0
  **/
 
 @GenAsEnumeratedType
 public class MessageResource extends _MessageResource {
 
+	/**
+	 * Used by sub-classes that need a default constructor.
+	 *
+	 **/
+	protected MessageResource() {
 
-
-
-
-
-   /**
-    * Used by sub-classes that need a default constructor.
-    *
-    **/
-   protected MessageResource() {
-
-   }
+	}
 
 }

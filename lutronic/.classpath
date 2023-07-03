@@ -50,5 +50,6 @@
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-request-freemarker-1.0.6.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-request-jsp-1.0.6.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-velocity-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/lombok.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

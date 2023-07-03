@@ -1,0 +1,1064 @@
+#MSG692 - 이전 페이지로 돌아가시겠습니까?
+MSG692.value=이전 페이지로 돌아가시겠습니까?
+MSG692.order=1692
+
+#MSG693 - 서브메뉴
+MSG693.value=서브메뉴
+MSG693.order=1693
+
+#MSG694 - 닫기
+MSG694.value=닫기
+MSG694.order=1694
+
+#MSG695 - 열기
+MSG695.value=열기
+MSG695.order=1695
+
+#MSG696 - 등록 성공하였습니다.
+MSG696.value=등록 성공하였습니다.
+MSG696.order=1696
+
+#MSG697 - 등록에 실패하였습니다.
+MSG697.value=등록에 실패하였습니다.
+MSG697.order=1697
+
+#MSG698 - 유저 정보 오류
+MSG698.value=유저 정보 오류
+MSG698.order=1698
+
+#MSG699 - 검색오류
+MSG699.value=검색오류
+MSG699.order=1699
+
+#MSG700 - 하시겠습니까?
+MSG700.value=하시겠습니까?
+MSG700.order=1700
+
+#MSG701 - 되었습니다.
+MSG701.value=되었습니다.
+MSG701.order=1701
+
+#MSG702 - 님께서 접속하셨습니다.
+MSG702.value=님께서 접속하셨습니다.
+MSG702.order=1702
+
+#MSG703 - 배포시스템
+MSG703.value=배포시스템
+MSG703.order=1703
+
+#MSG704 - 관리자
+MSG704.value=관리자
+MSG704.order=1704
+
+#MSG705 - 나의 업무
+MSG705.value=나의 업무
+MSG705.order=1705
+
+#MSG706 - 개발업무관리
+MSG706.value=개발업무관리
+MSG706.order=1706
+
+#MSG707 - 문서관리
+MSG707.value=문서관리
+MSG707.order=1707
+
+#MSG708 - 품목관리
+MSG708.value=품목관리
+MSG708.order=1708
+
+#MSG709 - 도면관리
+MSG709.value=도면관리
+MSG709.order=1709
+
+#MSG710 - 설계변경
+MSG710.value=설계변경
+MSG710.order=1710
+
+#MSG711 - RoHS
+MSG711.value=RoHS
+MSG711.order=1711
+
+#MSG712 - 금형관리
+MSG712.value=금형관리
+MSG712.order=1712
+
+#MSG713 - 도면
+MSG713.value=도면
+MSG713.order=1713
+
+#MSG714 - 관리
+MSG714.value=관리
+MSG714.order=1714
+
+#MSG715 - 검색
+MSG715.value=검색
+MSG715.order=1715
+
+#MSG716 - 등록
+MSG716.value=등록
+MSG716.order=1716
+
+#MSG717 - 주 도면
+MSG717.value=주 도면
+MSG717.order=1717
+
+#MSG718 - 일괄등록
+MSG718.value=일괄등록
+MSG718.order=1718
+
+#MSG719 - 선택
+MSG719.value=선택
+MSG719.order=1719
+
+#MSG720 - 번호
+MSG720.value=번호
+MSG720.order=1720
+
+#MSG721 - 타입
+MSG721.value=타입
+MSG721.order=1721
+
+#MSG722 - 도면번호
+MSG722.value=도면번호
+MSG722.order=1722
+
+#MSG723 - 도면명
+MSG723.value=도면명
+MSG723.order=1723
+
+#MSG724 - 도면분류
+MSG724.value=도면분류
+MSG724.order=1724
+
+#MSG725 - 상태
+MSG725.value=상태
+MSG725.order=1725
+
+#MSG726 - 등록자
+MSG726.value=등록자
+MSG726.order=1726
+
+#MSG727 - 등록일
+MSG727.value=등록일
+MSG727.order=1727
+
+#MSG728 - 수정일
+MSG728.value=수정일
+MSG728.order=1728
+
+#MSG729 - 상태 리스트 검색오류
+MSG729.value=상태 리스트 검색오류
+MSG729.order=1729
+
+#MSG730 - 상세검색
+MSG730.value=상세검색
+MSG730.order=1730
+
+#MSG731 - 데이터 검색오류
+MSG731.value=데이터 검색오류
+MSG731.order=1731
+
+#MSG732 -  오류
+MSG732.value= 오류
+MSG732.order=1732
+
+#MSG733 - 최신버전
+MSG733.value=최신버전
+MSG733.order=1733
+
+#MSG734 - 모든버전
+MSG734.value=모든버전
+MSG734.order=1734
+
+#MSG735 - 구분
+MSG735.value=구분
+MSG735.order=1735
+
+#MSG736 - 프로젝트코드
+MSG736.value=프로젝트코드
+MSG736.order=1736
+
+#MSG737 - 제작방법
+MSG737.value=제작방법
+MSG737.order=1737
+
+#MSG738 - 부서
+MSG738.value=부서
+MSG738.order=1738
+
+#MSG739 - 단위
+MSG739.value=단위
+MSG739.order=1739
+
+#MSG740 - 무게
+MSG740.value=무게
+MSG740.order=1740
+
+#MSG741 - 재질
+MSG741.value=재질
+MSG741.order=1741
+
+#MSG742 - 후처리
+MSG742.value=후처리
+MSG742.order=1742
+
+#MSG743 - 비고
+MSG743.value=비고
+MSG743.order=1743
+
+#MSG744 - 사양
+MSG744.value=사양
+MSG744.order=1744
+
+#MSG745 - 초기화
+MSG745.value=초기화
+MSG745.order=1745
+
+#MSG746 - 엑셀다운
+MSG746.value=엑셀다운
+MSG746.order=1746
+
+#MSG747 - 나의업무
+MSG747.value=나의업무
+MSG747.order=1747
+
+#MSG748 - 공지사항
+MSG748.value=공지사항
+MSG748.order=1748
+
+#MSG749 - 작업공간
+MSG749.value=작업공간
+MSG749.order=1749
+
+#MSG750 - 작업함
+MSG750.value=작업함
+MSG750.order=1750
+
+#MSG751 - 진행함
+MSG751.value=진행함
+MSG751.order=1751
+
+#MSG752 - 완료함
+MSG752.value=완료함
+MSG752.order=1752
+
+#MSG753 - 수신함
+MSG753.value=수신함
+MSG753.order=1753
+
+#MSG754 - 일괄결재
+MSG754.value=일괄결재
+MSG754.order=1754
+
+#MSG755 - 일괄결재 검색
+MSG755.value=일괄결재 검색
+MSG755.order=1755
+
+#MSG756 - 일반메뉴
+MSG756.value=일반메뉴
+MSG756.order=1756
+
+#MSG757 - 비밀번호 변경
+MSG757.value=비밀번호 변경
+MSG757.order=1757
+
+#MSG758 - 조직도
+MSG758.value=조직도
+MSG758.order=1758
+
+#MSG759 - 관리자메뉴
+MSG759.value=관리자메뉴
+MSG759.order=1759
+
+#MSG760 - 속성값 변경
+MSG760.value=속성값 변경
+MSG760.order=1760
+
+#MSG761 - 도면 재변환
+MSG761.value=도면 재변환
+MSG761.order=1761
+
+#MSG762 - 활동
+MSG762.value=활동
+MSG762.order=1762
+
+#MSG763 - 제목
+MSG763.value=제목
+MSG763.order=1763
+
+#MSG764 - 수신일
+MSG764.value=수신일
+MSG764.order=1764
+
+#MSG765 - 작업자
+MSG765.value=작업자
+MSG765.order=1765
+
+#MSG766 - 선택된 데이터가 없습니다.
+MSG766.value=선택된 데이터가 없습니다.
+MSG766.order=1766
+
+#MSG767 - 일괄수신
+MSG767.value=일괄수신
+MSG767.order=1767
+
+#MSG768 - 새로고침
+MSG768.value=새로고침
+MSG768.order=1768
+
+#MSG769 - 개발업무
+MSG769.value=개발업무
+MSG769.order=1769
+
+#MSG770 - 나의
+MSG770.value=나의
+MSG770.order=1770
+
+#MSG771 - 프로젝트명
+MSG771.value=프로젝트명
+MSG771.order=1771
+
+#MSG772 - 예상 시작일
+MSG772.value=예상 시작일
+MSG772.order=1772
+
+#MSG773 - 예상 종료일
+MSG773.value=예상 종료일
+MSG773.order=1773
+
+#MSG774 - 문서
+MSG774.value=문서
+MSG774.order=1774
+
+#MSG775 - 문서번호
+MSG775.value=문서번호
+MSG775.order=1775
+
+#MSG776 - 내부 문서번호
+MSG776.value=내부 문서번호
+MSG776.order=1776
+
+#MSG777 - 문서명
+MSG777.value=문서명
+MSG777.order=1777
+
+#MSG778 - 문서분류
+MSG778.value=문서분류
+MSG778.order=1778
+
+#MSG779 - Rev.
+MSG779.value=Rev.
+MSG779.order=1779
+
+#MSG780 - 작성자
+MSG780.value=작성자
+MSG780.order=1780
+
+#MSG781 - 최신Rev.
+MSG781.value=최신Rev.
+MSG781.order=1781
+
+#MSG782 - 모든Rev.
+MSG782.value=모든Rev.
+MSG782.order=1782
+
+#MSG783 - 문서유형
+MSG783.value=문서유형
+MSG783.order=1783
+
+#MSG784 - 보존기간
+MSG784.value=보존기간
+MSG784.order=1784
+
+#MSG785 - 내용
+MSG785.value=내용
+MSG785.order=1785
+
+#MSG786 - 설명
+MSG786.value=설명
+MSG786.order=1786
+
+#MSG787 - 품목
+MSG787.value=품목
+MSG787.order=1787
+
+#MSG788 - 제품
+MSG788.value=제품
+MSG788.order=1788
+
+#MSG789 - 체크
+MSG789.value=체크
+MSG789.order=1789
+
+#MSG790 - 품목번호
+MSG790.value=품목번호
+MSG790.order=1790
+
+#MSG791 - 품목명
+MSG791.value=품목명
+MSG791.order=1791
+
+#MSG792 - 품목분류
+MSG792.value=품목분류
+MSG792.order=1792
+
+#MSG793 - OEM Info.
+MSG793.value=OEM Info.
+MSG793.order=1793
+
+#MSG794 - 단위 목록 오류
+MSG794.value=단위 목록 오류
+MSG794.order=1794
+
+#MSG795 - 더미제외
+MSG795.value=더미제외
+MSG795.order=1795
+
+#MSG796 - ECO No.
+MSG796.value=ECO No.
+MSG796.order=1796
+
+#MSG797 - EO No.
+MSG797.value=EO No.
+MSG797.order=1797
+
+#MSG798 - 전송
+MSG798.value=전송
+MSG798.order=1798
+
+#MSG799 - 현황
+MSG799.value=현황
+MSG799.order=1799
+
+#MSG800 - 인허가변경
+MSG800.value=인허가변경
+MSG800.order=1800
+
+#MSG801 - 위험 통제
+MSG801.value=위험 통제
+MSG801.order=1801
+
+#MSG802 - 승인일
+MSG802.value=승인일
+MSG802.order=1802
+
+#MSG803 - 제품명
+MSG803.value=제품명
+MSG803.order=1803
+
+#MSG804 - 추가
+MSG804.value=추가
+MSG804.order=1804
+
+#MSG805 - 삭제
+MSG805.value=삭제
+MSG805.order=1805
+
+#MSG806 - 완제품 품목
+MSG806.value=완제품 품목
+MSG806.order=1806
+
+#MSG807 - 물질 검색
+MSG807.value=물질 검색
+MSG807.order=1807
+
+#MSG808 - 물질 등록
+MSG808.value=물질 등록
+MSG808.order=1808
+
+#MSG809 - 파일 검색
+MSG809.value=파일 검색
+MSG809.order=1809
+
+#MSG810 - 부품 현황
+MSG810.value=부품 현황
+MSG810.order=1810
+
+#MSG811 - 제품 현황
+MSG811.value=제품 현황
+MSG811.order=1811
+
+#MSG812 - 물질 일괄결재
+MSG812.value=물질 일괄결재
+MSG812.order=1812
+
+#MSG813 - 물질 일괄등록
+MSG813.value=물질 일괄등록
+MSG813.order=1813
+
+#MSG814 - 물질 일괄링크
+MSG814.value=물질 일괄링크
+MSG814.order=1814
+
+#MSG815 - 물질
+MSG815.value=물질
+MSG815.order=1815
+
+#MSG816 - 협력업체
+MSG816.value=협력업체
+MSG816.order=1816
+
+#MSG817 - 물질명
+MSG817.value=물질명
+MSG817.order=1817
+
+#MSG818 - 물질번호
+MSG818.value=물질번호
+MSG818.order=1818
+
+#MSG819 - 금형
+MSG819.value=금형
+MSG819.order=1819
+
+#MSG820 - 금형번호
+MSG820.value=금형번호
+MSG820.order=1820
+
+#MSG821 - 금형명
+MSG821.value=금형명
+MSG821.order=1821
+
+#MSG822 - 금형타입
+MSG822.value=금형타입
+MSG822.order=1822
+
+#MSG823 - 업체자제금형번호
+MSG823.value=업체자제금형번호
+MSG823.order=1823
+
+#MSG824 - 금형개발비
+MSG824.value=금형개발비
+MSG824.order=1824
+
+#MSG825 - 결재방식
+MSG825.value=결재방식
+MSG825.order=1825
+
+#MSG826 - 을(를) 선택하세요.
+MSG826.value=을(를) 선택하세요.
+MSG826.order=1826
+
+#MSG827 - 을(를) 입력하세요.
+MSG827.value=을(를) 입력하세요.
+MSG827.order=1827
+
+#MSG828 - 파일
+MSG828.value=파일
+MSG828.order=1828
+
+#MSG829 - 을(를) 첨부하세요.
+MSG829.value=을(를) 첨부하세요.
+MSG829.order=1829
+
+#MSG830 - 파일구분
+MSG830.value=파일구분
+MSG830.order=1830
+
+#MSG831 - 발행일
+MSG831.value=발행일
+MSG831.order=1831
+
+#MSG832 - 등록하시겠습니까?
+MSG832.value=등록하시겠습니까?
+MSG832.order=1832
+
+#MSG833 - 20개를 초과하여 추가할 수 없습니다.
+MSG833.value=20개를 초과하여 추가할 수 없습니다.
+MSG833.order=1833
+
+#MSG834 - 물질등록
+MSG834.value=물질등록
+MSG834.order=1834
+
+#MSG835 - 정보
+MSG835.value=정보
+MSG835.order=1835
+
+#MSG836 - 번호 중복
+MSG836.value=번호 중복
+MSG836.order=1836
+
+#MSG837 - 기본결재
+MSG837.value=기본결재
+MSG837.order=1837
+
+#MSG838 - 물질명 중복
+MSG838.value=물질명 중복
+MSG838.order=1838
+
+#MSG839 - 첨부파일
+MSG839.value=첨부파일
+MSG839.order=1839
+
+#MSG840 - 관련 품목
+MSG840.value=관련 품목
+MSG840.order=1840
+
+#MSG841 - 품목을 하나이상 추가할 수 없습니다.
+MSG841.value=품목을 하나이상 추가할 수 없습니다.
+MSG841.order=1841
+
+#MSG842 - 관련
+MSG842.value=관련
+MSG842.order=1842
+
+#MSG843 - 목록
+MSG843.value=목록
+MSG843.order=1843
+
+#MSG844 - 제품 코드
+MSG844.value=제품 코드
+MSG844.order=1844
+
+#MSG845 - 제품 명
+MSG845.value=제품 명
+MSG845.order=1845
+
+#MSG846 - 제품현황
+MSG846.value=제품현황
+MSG846.order=1846
+
+#MSG847 - 전체선택
+MSG847.value=전체선택
+MSG847.order=1847
+
+#MSG848 - 품번
+MSG848.value=품번
+MSG848.order=1848
+
+#MSG849 - 물질 상태
+MSG849.value=물질 상태
+MSG849.order=1849
+
+#MSG850 - 파일명
+MSG850.value=파일명
+MSG850.order=1850
+
+#MSG851 - 부품
+MSG851.value=부품
+MSG851.order=1851
+
+#MSG852 - 번호를 입력해 주세요.
+MSG852.value=번호를 입력해 주세요.
+MSG852.order=1852
+
+#MSG853 - 상태 색상
+MSG853.value=상태 색상
+MSG853.order=1853
+
+#MSG854 - 부품현황
+MSG854.value=부품현황
+MSG854.order=1854
+
+#MSG855 - 일괄 다운
+MSG855.value=일괄 다운
+MSG855.order=1855
+
+#MSG856 - 대상
+MSG856.value=대상
+MSG856.order=1856
+
+#MSG857 - 완제품 품번
+MSG857.value=완제품 품번
+MSG857.order=1857
+
+#MSG858 - 변경 사유
+MSG858.value=변경 사유
+MSG858.order=1858
+
+#MSG859 - 변경 사항
+MSG859.value=변경 사항
+MSG859.order=1859
+
+#MSG860 - 설계변경 부품
+MSG860.value=설계변경 부품
+MSG860.order=1860
+
+#MSG861 - 특기사항
+MSG861.value=특기사항
+MSG861.order=1861
+
+#MSG862 - 기타사항
+MSG862.value=기타사항
+MSG862.order=1862
+
+#MSG863 - ECO
+MSG863.value=ECO
+MSG863.order=1863
+
+#MSG864 - 품명
+MSG864.value=품명
+MSG864.order=1864
+
+#MSG865 - 보기
+MSG865.value=보기
+MSG865.order=1865
+
+#MSG866 - 변경사유
+MSG866.value=변경사유
+MSG866.order=1866
+
+#MSG867 - 변경사항
+MSG867.value=변경사항
+MSG867.order=1867
+
+#MSG868 - 설계변경 부품 내역파일
+MSG868.value=설계변경 부품 내역파일
+MSG868.order=1868
+
+#MSG869 - 양식다운
+MSG869.value=양식다운
+MSG869.order=1869
+
+#MSG870 - 삭제하시겠습니까?
+MSG870.value=삭제하시겠습니까?
+MSG870.order=1870
+
+#MSG871 - 파일찾기
+MSG871.value=파일찾기
+MSG871.order=1871
+
+#MSG872 - 파일당 최대
+MSG872.value=파일당 최대
+MSG872.order=1872
+
+#MSG873 - 까지 업로드 할 수 있습니다.
+MSG873.value=까지 업로드 할 수 있습니다.
+MSG873.order=1873
+
+#MSG874 - 활동을 초기화 하시겠습니까
+MSG874.value=활동을 초기화 하시겠습니까
+MSG874.order=1874
+
+#MSG875 - 의 활동 담당자를 선택하세요.
+MSG875.value=의 활동 담당자를 선택하세요.
+MSG875.order=1875
+
+#MSG876 - 의 활동 요청 완료일을 선택하세요.
+MSG876.value=의 활동 요청 완료일을 선택하세요.
+MSG876.order=1876
+
+#MSG877 - 요청완료일은 오늘 날짜 이전일 수 없습니다.
+MSG877.value=요청완료일은 오늘 날짜 이전일 수 없습니다.
+MSG877.order=1877
+
+#MSG878 - 활동 설정
+MSG878.value=활동 설정
+MSG878.order=1878
+
+#MSG879 - 활동 불러오기
+MSG879.value=활동 불러오기
+MSG879.order=1879
+
+#MSG880 - 활동추가
+MSG880.value=활동추가
+MSG880.order=1880
+
+#MSG881 - 활동삭제
+MSG881.value=활동삭제
+MSG881.order=1881
+
+#MSG882 - 활동명
+MSG882.value=활동명
+MSG882.order=1882
+
+#MSG883 - 활동구분
+MSG883.value=활동구분
+MSG883.order=1883
+
+#MSG884 - 담당자
+MSG884.value=담당자
+MSG884.order=1884
+
+#MSG885 - 완료 요청일
+MSG885.value=완료 요청일
+MSG885.order=1885
+
+#MSG886 - 제품분류
+MSG886.value=제품분류
+MSG886.order=1886
+
+#MSG887 - 품목 분류
+MSG887.value=품목 분류
+MSG887.order=1887
+
+#MSG888 - 대분류
+MSG888.value=대분류
+MSG888.order=1888
+
+#MSG889 - 중분류
+MSG889.value=중분류
+MSG889.order=1889
+
+#MSG890 - 은(는) 40자 이내로 입력하세요.
+MSG890.value=은(는) 40자 이내로 입력하세요.
+MSG890.order=1890
+
+#MSG891 - 기타
+MSG891.value=기타
+MSG891.order=1891
+
+#MSG892 - 채번
+MSG892.value=채번
+MSG892.order=1892
+
+#MSG893 - 자동
+MSG893.value=자동
+MSG893.order=1893
+
+#MSG894 - 수동
+MSG894.value=수동
+MSG894.order=1894
+
+#MSG895 - 대제목
+MSG895.value=대제목
+MSG895.order=1895
+
+#MSG896 - 중제목
+MSG896.value=중제목
+MSG896.order=1896
+
+#MSG897 - 소제목
+MSG897.value=소제목
+MSG897.order=1897
+
+#MSG898 - 사용자
+MSG898.value=사용자
+MSG898.order=1898
+
+#MSG899 - 품목구분
+MSG899.value=품목구분
+MSG899.order=1899
+
+#MSG900 - SEQ
+MSG900.value=SEQ
+MSG900.order=1900
+
+#MSG901 - 현황보기
+MSG901.value=현황보기
+MSG901.order=1901
+
+#MSG902 - 속성 정보
+MSG902.value=속성 정보
+MSG902.order=1902
+
+#MSG903 - 속성
+MSG903.value=속성
+MSG903.order=1903
+
+#MSG904 - 메카
+MSG904.value=메카
+MSG904.order=1904
+
+#MSG905 - 광학
+MSG905.value=광학
+MSG905.order=1905
+
+#MSG906 - 제어
+MSG906.value=제어
+MSG906.order=1906
+
+#MSG907 - 파워
+MSG907.value=파워
+MSG907.order=1907
+
+#MSG908 - 인증
+MSG908.value=인증
+MSG908.order=1908
+
+#MSG909 - 배포파일
+MSG909.value=배포파일
+MSG909.order=1909
+
+#MSG910 - 관련 문서
+MSG910.value=관련 문서
+MSG910.order=1910
+
+#MSG911 - Root 에러
+MSG911.value=Root 에러
+MSG911.order=1911
+
+#MSG912 - 영문명
+MSG912.value=영문명
+MSG912.order=1912
+
+#MSG913 - 추가 하시겠습니까?
+MSG913.value=추가 하시겠습니까?
+MSG913.order=1913
+
+#MSG914 - 활동명(영문)
+MSG914.value=활동명(영문)
+MSG914.order=1914
+
+#MSG915 - 메인포탈
+MSG915.value=메인포탈
+MSG915.order=1915
+
+#MSG916 - 결재
+MSG916.value=결재
+MSG916.order=1916
+
+#MSG917 - 작업
+MSG917.value=작업
+MSG917.order=1917
+
+#MSG918 - 나의 개발업무
+MSG918.value=나의 개발업무
+MSG918.order=1918
+
+#MSG919 - 제품 설계 개요
+MSG919.value=제품 설계 개요
+MSG919.order=1919
+
+#MSG920 - 가채번 ,더미 ,제품군 부품은 선택 할수 없습니다.
+MSG920.value=가채번 ,더미 ,제품군 부품은 선택 할수 없습니다.
+MSG920.order=1920
+
+#MSG921 - 개발 EO는 는 완제품을 선택 할수 없습니다.
+MSG921.value=개발 EO는 는 완제품을 선택 할수 없습니다.
+MSG921.order=1921
+
+#MSG922 - 양산 EO는 는 완제품만 선택할수 있습니다.
+MSG922.value=양산 EO는 는 완제품만 선택할수 있습니다.
+MSG922.order=1922
+
+#MSG923 - EO
+MSG923.value=EO
+MSG923.order=1923
+
+#MSG924 - 개발
+MSG924.value=개발
+MSG924.order=1924
+
+#MSG925 - 양산
+MSG925.value=양산
+MSG925.order=1925
+
+#MSG926 - 이름(국문)
+MSG926.value=이름(국문)
+MSG926.order=1926
+
+#MSG927 - 코드
+MSG927.value=코드
+MSG927.order=1927
+
+#MSG928 - 없음
+MSG928.value=없음
+MSG928.order=1928
+
+#MSG929 - ERP 전송 하시게습니까?
+MSG929.value=ERP 전송 하시게습니까?
+MSG929.order=1929
+
+#MSG930 - ERP 전송 오류
+MSG930.value=ERP 전송 오류
+MSG930.order=1930
+
+#MSG931 - 상세보기
+MSG931.value=상세보기
+MSG931.order=1931
+
+#MSG932 - 수정
+MSG932.value=수정
+MSG932.order=1932
+
+#MSG933 - 산출물
+MSG933.value=산출물
+MSG933.order=1933
+
+#MSG934 - 결재이력
+MSG934.value=결재이력
+MSG934.order=1934
+
+#MSG935 - 다운로드이력
+MSG935.value=다운로드이력
+MSG935.order=1935
+
+#MSG936 - 활동 현황
+MSG936.value=활동 현황
+MSG936.order=1936
+
+#MSG937 - 완료
+MSG937.value=완료
+MSG937.order=1937
+
+#MSG938 - 진행
+MSG938.value=진행
+MSG938.order=1938
+
+#MSG939 - 지연
+MSG939.value=지연
+MSG939.order=1939
+
+#MSG940 - 예정
+MSG940.value=예정
+MSG940.order=1940
+
+#MSG941 - 단계
+MSG941.value=단계
+MSG941.order=1941
+
+#MSG942 - 담당부서
+MSG942.value=담당부서
+MSG942.order=1942
+
+#MSG943 - 요청 완료일
+MSG943.value=요청 완료일
+MSG943.order=1943
+
+#MSG944 - 완료일
+MSG944.value=완료일
+MSG944.order=1944
+
+#MSG945 - 완제품 삭제시 오류 발생
+MSG945.value=완제품 삭제시 오류 발생
+MSG945.order=1945
+
+#MSG946 - 삭제 실패하였습니다.
+MSG946.value=삭제 실패하였습니다.
+MSG946.order=1946
+
+#MSG947 - 삭제 오류 발생
+MSG947.value=삭제 오류 발생
+MSG947.order=1947
+
+#MSG948 - 객체 삭제 재확인
+MSG948.value=객체 삭제 재확인
+MSG948.order=1948
+
+#MSG949 - 확인
+MSG949.value=확인
+MSG949.order=1949
+
+#MSG950 - 취소
+MSG950.value=취소
+MSG950.order=1950
+
+#MSG951 - 삭제 되었습니다.
+MSG951.value=삭제 되었습니다.
+MSG951.order=1951
+
+#MSG952 - 조회횟수
+MSG952.value=조회횟수
+MSG952.order=1952
+
+#MSG953 - 팝업
+MSG953.value=팝업
+MSG953.order=1953
+
+#MSG954 - 도번
+MSG954.value=도번
+MSG954.order=1954
+
+#MSG955 - 주 첨부파일
+MSG955.value=주 첨부파일
+MSG955.order=1955
+
+#MSG956 - 등록 오류
+MSG956.value=등록 오류
+MSG956.order=1956
+
+#MSG957 - 등록 실패하였습니다.
+MSG957.value=등록 실패하였습니다.
+MSG957.order=1957
+
