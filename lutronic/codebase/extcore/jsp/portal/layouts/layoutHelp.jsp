@@ -8,19 +8,19 @@
 <!-- 각 화면 개발시 Tag 복사해서 붙여넣고 사용할것 -->
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 
-<link rel="stylesheet" type="text/css" href="/Windchill/jsp/js/dhtmlx/dhtmlx.css" />
-<link rel="stylesheet" href="/Windchill/jsp/css/default.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/css.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/js/dhtmlx/dhtmlx.css" />
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/default.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/css.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css" type="text/css">
 
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/jquery-1.11.1.min.js" ></script>
-<script type="text/javascript" src="/Windchill/dhtmlx/dhtmlx.js" ></script>
-<script type="text/javascript" src="/Windchill/dhtmlx/dhtmlxPaging.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/jquery.json-2.4.min.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/jquery/pageGrid.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/common.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/popup.js" ></script>
-<script type="text/javascript" src="/Windchill/jsp/js/script.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/jquery-1.11.1.min.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/dhtmlx/dhtmlx.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/dhtmlx/dhtmlxPaging.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/jquery.json-2.4.min.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/jquery/pageGrid.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/common.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/popup.js" ></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/script.js" ></script>
 
 <title>
 	LUTRONIC PDM
@@ -62,9 +62,9 @@ margin: 2px;
 background-size:100%;
 }
 
-.Sub_Right_LT { background:url(/Windchill/jsp/portal/images/base_design/Sub_Right_LT.gif); background-repeat:no-repeat; width:19px; height:29px;}
-.Sub_Right_LBG { background:url(/Windchill/jsp/portal/images/base_design/Sub_Right_LBG.gif); background-repeat:repeat-y; vertical-align:top; padding-top:20px;}
-.Sub_Right_LB { background:url(/Windchill/jsp/portal/images/base_design/Sub_Right_LB.gif); background-repeat:no-repeat; width:19px; height:4px;}
+.Sub_Right_LT { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_LT.gif); background-repeat:no-repeat; width:19px; height:29px;}
+.Sub_Right_LBG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_LBG.gif); background-repeat:repeat-y; vertical-align:top; padding-top:20px;}
+.Sub_Right_LB { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_LB.gif); background-repeat:no-repeat; width:19px; height:4px;}
 </style>
 
 <script>
@@ -92,7 +92,7 @@ window.switchMenu = function(){
     if('none' == smenu.style.display){
         smenu.style.display="";
         smenuh.style.display="none";
-        button.src = "/Windchill/jsp/portal/images/base_design/layer_hidden.gif";
+        button.src = "/Windchill/extcore/jsp/portal/images/base_design/layer_hidden.gif";
         button.title = "<bean:message key='E3PS.Msg.578' />";
     }else{
         smenu.style.display="none";

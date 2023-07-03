@@ -5,8 +5,8 @@
 
 
 <html>
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/css.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/css.css" type="text/css">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>${f:getMessage('결재선 이름 입력')}</title>

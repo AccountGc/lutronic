@@ -26,54 +26,54 @@ A.Smenu_R:hover    {font: 8pt 占쏙옙占쏙옙; text-decoration: none; color: 
 
 
 /* 占쏙옙체틀 */
-.Top_images1 { background:url(/Windchill/jsp/portal/images/base_design/Top_image1.jpg); height:20; }
-.TLeft_BG { background:url(/Windchill/jsp/portal/images/base_design/TLeft_BG.gif); width:12; height:3; background-position:right; table-layout:fixed; }
-.Top_BG { background:url(/Windchill/jsp/portal/images/base_design/Top_BG.gif); }
-.TRight_BG { background:url(/Windchill/jsp/portal/images/base_design/TRight_BG.gif); width:10; height:3; }
-.Left_BG { background:url(/Windchill/jsp/portal/images/base_design/Left_BG.gif); background-position:right; padding:0 3; table-layout:fixed; }
-.Right_BG { background:url(/Windchill/jsp/portal/images/base_design/Right_BG.gif); background-position:left; padding:0 2; table-layout:fixed; }
-.BottomL_BG { background:url(/Windchill/jsp/portal/images/base_design/BottomL_BG.gif); background-position:right; padding-left:3px; table-layout:fixed; }
-.Bottom_BG { background:url(/Windchill/jsp/portal/images/base_design/Bottom_BG.gif); height:7px; }
-.BottomR_BG { background:url(/Windchill/jsp/portal/images/base_design/BottomR_BG.gif); background-position:left; padding-right:3px; table-layout:fixed; }
-.copyright { background:url(/Windchill/jsp/portal/images/base_design/COPYRIGHT.gif); height:21; background-position:right }
+.Top_images1 { background:url(/Windchill/extcore/jsp/portal/images/base_design/Top_image1.jpg); height:20; }
+.TLeft_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/TLeft_BG.gif); width:12; height:3; background-position:right; table-layout:fixed; }
+.Top_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Top_BG.gif); }
+.TRight_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/TRight_BG.gif); width:10; height:3; }
+.Left_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Left_BG.gif); background-position:right; padding:0 3; table-layout:fixed; }
+.Right_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Right_BG.gif); background-position:left; padding:0 2; table-layout:fixed; }
+.BottomL_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/BottomL_BG.gif); background-position:right; padding-left:3px; table-layout:fixed; }
+.Bottom_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Bottom_BG.gif); height:7px; }
+.BottomR_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/BottomR_BG.gif); background-position:left; padding-right:3px; table-layout:fixed; }
+.copyright { background:url(/Windchill/extcore/jsp/portal/images/base_design/COPYRIGHT.gif); height:21; background-position:right }
 
 /* 占싸듸옙占쏙옙info */
-.info_table { background:url(/Windchill/jsp/portal/images/base_design/Main_info_bg.gif); table-layout:fixed; }
-.info_table2 { background:url(/Windchill/jsp/portal/images/base_design/Main_info_bg2.gif); table-layout:fixed; }
-.info_img { background:url(/Windchill/jsp/portal/images/base_design/Main_info.gif); width:167; height:92; table-layout:fixed; }
-.info_btm { background:url(/Windchill/jsp/portal/images/base_design/Main_info_btm.gif); height:3; table-layout:fixed; }
+.info_table { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_info_bg.gif); table-layout:fixed; }
+.info_table2 { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_info_bg2.gif); table-layout:fixed; }
+.info_img { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_info.gif); width:167; height:92; table-layout:fixed; }
+.info_btm { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_info_btm.gif); height:3; table-layout:fixed; }
 
 /* 占쏙옙占쏙옙틀 */
-.Main_TLeft { background:url(/Windchill/jsp/portal/images/base_design/Main_TLeft.gif); width:22; height:5; background-position:right; table-layout:fixed; }
-.Main_TBG { background:url(/Windchill/jsp/portal/images/base_design/Main_TBG.gif); table-layout:fixed; }
-.Main_TRight { background:url(/Windchill/jsp/portal/images/base_design/Main_TRight.gif); width:3; height:5; background-position:left; table-layout:fixed; }
-.Main_LeftBG { background:url(/Windchill/jsp/portal/images/base_design/Main_LeftBG.gif); background-position:right; table-layout:fixed; }
-.Main_RightBG { background:url(/Windchill/jsp/portal/images/base_design/Main_RightBG.gif); background-position:left; table-layout:fixed; }
-.Main_BL { background:url(/Windchill/jsp/portal/images/base_design/Main_BL.gif); width:22; height:3; background-position:right; table-layout:fixed; }
-.Main_BBG { background:url(/Windchill/jsp/portal/images/base_design/Main_BBG.gif); table-layout:fixed; }
-.Main_BR { background:url(/Windchill/jsp/portal/images/base_design/Main_BR.gif); width:3; height:3; background-position:left; table-layout:fixed; }
+.Main_TLeft { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_TLeft.gif); width:22; height:5; background-position:right; table-layout:fixed; }
+.Main_TBG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_TBG.gif); table-layout:fixed; }
+.Main_TRight { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_TRight.gif); width:3; height:5; background-position:left; table-layout:fixed; }
+.Main_LeftBG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_LeftBG.gif); background-position:right; table-layout:fixed; }
+.Main_RightBG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_RightBG.gif); background-position:left; table-layout:fixed; }
+.Main_BL { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_BL.gif); width:22; height:3; background-position:right; table-layout:fixed; }
+.Main_BBG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_BBG.gif); table-layout:fixed; }
+.Main_BR { background:url(/Windchill/extcore/jsp/portal/images/base_design/Main_BR.gif); width:3; height:3; background-position:left; table-layout:fixed; }
 
 /* 占쏙옙占싸곤옙占쏙옙 */
-.MainBBS_TL { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_TL.gif); width:13; height:14; background-position:right; table-layout:fixed; }
-.MainBBS_T { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_T.gif); table-layout:fixed; }
-.MainBBS_TR { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_TR.gif); width:13; height:14; background-position:left; table-layout:fixed; }
-.MainBBS_L { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_L.gif); background-position:right; table-layout:fixed; }
-.MainBBS_R { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_R.gif); background-position:left; table-layout:fixed; }
-.MainBBS_BL { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_BL.gif); width:13; height:14; background-position:right; table-layout:fixed; }
-.MainBBS_B { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_B.gif); table-layout:fixed; }
-.MainBBS_BR { background:url(/Windchill/jsp/portal/images/base_design/MainBBS_BR.gif); width:13; height:14; background-position:left; table-layout:fixed; }
+.MainBBS_TL { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_TL.gif); width:13; height:14; background-position:right; table-layout:fixed; }
+.MainBBS_T { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_T.gif); table-layout:fixed; }
+.MainBBS_TR { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_TR.gif); width:13; height:14; background-position:left; table-layout:fixed; }
+.MainBBS_L { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_L.gif); background-position:right; table-layout:fixed; }
+.MainBBS_R { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_R.gif); background-position:left; table-layout:fixed; }
+.MainBBS_BL { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_BL.gif); width:13; height:14; background-position:right; table-layout:fixed; }
+.MainBBS_B { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_B.gif); table-layout:fixed; }
+.MainBBS_BR { background:url(/Windchill/extcore/jsp/portal/images/base_design/MainBBS_BR.gif); width:13; height:14; background-position:left; table-layout:fixed; }
 
 /* 占쏙옙占쏙옙 */
-.Subinfo_img { background:url(/Windchill/jsp/portal/images/base_design/Sub_Left_img.gif); width:15; height:28;}
-.Sub_TLeft { background:url(/Windchill/jsp/portal/images/base_design/Sub_Right_L.gif); width:22; height:29; background-position:right; table-layout:fixed; }
-.Sub_TBG { background:url(/Windchill/jsp/portal/images/base_design/Sub_Right_BG.gif); table-layout:fixed; }
-.Sub_TRight { background:url(/Windchill/jsp/portal/images/base_design/Sub_Right_R.gif); width:3; height:29; background-position:left; table-layout:fixed; }
-.Subinfo_img_bg { background:url(/Windchill/jsp/portal/images/base_design/Sub_Left_imgBG.gif);}
+.Subinfo_img { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Left_img.gif); width:15; height:28;}
+.Sub_TLeft { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_L.gif); width:22; height:29; background-position:right; table-layout:fixed; }
+.Sub_TBG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_BG.gif); table-layout:fixed; }
+.Sub_TRight { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Right_R.gif); width:3; height:29; background-position:left; table-layout:fixed; }
+.Subinfo_img_bg { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_Left_imgBG.gif);}
 
 /* 占쏙옙占쏙옙濱占�*/
-.Sub_Menu_L { background:url(/Windchill/jsp/portal/images/base_design/Sub_menu_L.gif); width:9; height:28; background-position:right; table-layout:fixed; }
-.Sub_Menu_R { background:url(/Windchill/jsp/portal/images/base_design/Sub_menu_R.gif); width:9; height:28; background-position:left; table-layout:fixed; }
-.Sub_Menu_BG { background:url(/Windchill/jsp/portal/images/base_design/Sub_menu_BG.gif); table-layout:fixed; }
+.Sub_Menu_L { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_menu_L.gif); width:9; height:28; background-position:right; table-layout:fixed; }
+.Sub_Menu_R { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_menu_R.gif); width:9; height:28; background-position:left; table-layout:fixed; }
+.Sub_Menu_BG { background:url(/Windchill/extcore/jsp/portal/images/base_design/Sub_menu_BG.gif); table-layout:fixed; }
 .Sub_line { width: 15; text-align:center; vertical-align:top;}
 
 #workspaceLayer1 { position:absolute; left:60px; top:58px; z-index:1; }

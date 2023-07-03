@@ -20,8 +20,8 @@
 <jsp:useBean id="toDay" class="java.util.Date" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <html>
-<LINK rel="stylesheet" type="text/css" href="/Windchill/jsp/css/e3ps.css">
-<LINK rel="stylesheet" type="text/css" href="/Windchill/jsp/css/default.css">
+<LINK rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/css/e3ps.css">
+<LINK rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/css/default.css">
 <style>
 #module_menu {background-color:#444444;width:100%;background-color:#444444;height:50px;}
 #module_menu ul { list-style:none; margin:0; padding:0;}
@@ -316,7 +316,7 @@ $(document).ready(function(){
 									<table border=0 width=100% cellpadding=0 cellspacing=0>
 										<tr> 
 											<td width=5%>
-												<img id="topMenu_img" src="/Windchill/jsp/portal/images/img_menu/topMenu_lutronic.gif"  border="0" style="cursor: pointer;">
+												<img id="topMenu_img" src="/Windchill/extcore/jsp/portal/images/img_menu/topMenu_lutronic.gif"  border="0" style="cursor: pointer;">
 											<BR>
 											</td>
 											<td valign='bottom'><span id="urlTitle"></span>
