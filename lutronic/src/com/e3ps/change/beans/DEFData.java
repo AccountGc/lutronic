@@ -1,7 +1,5 @@
 package com.e3ps.change.beans;
 
-import wt.org.WTUser;
-
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.service.ChangeUtil;
 import com.e3ps.common.code.NumberCode;
@@ -10,9 +8,16 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 
+import lombok.Getter;
+import lombok.Setter;
+import wt.org.WTUser;
+
+@Getter
+@Setter
 public class DEFData {
 	
-	public String oid;
+//	public String oid;
+	private String oid;
 	public String rootOid;
 	public String name;
 	public String name_eng;
