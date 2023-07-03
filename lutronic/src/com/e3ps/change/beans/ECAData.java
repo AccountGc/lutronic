@@ -25,283 +25,71 @@ import com.e3ps.org.People;
 import com.e3ps.org.beans.PeopleData;
 import com.e3ps.org.service.UserHelper;
 
+import lombok.Getter;
+import lombok.Setter;
 import wt.org.WTUser;
 import wt.vc.wip.WorkInProgressHelper;
 
-
-
+@Getter
+@Setter
 public class ECAData{
-	
-	
-	public ImageIcon icon;
-	
-    public String oid;
-    public String step;
-    public String stepName;
-    public String stepSort;
-    public String name;
-    public String activityType;
-    public String activityName;
-    //public String departmentName;
-    public String activeUserOid;
-    public String activeUserName;
-    public String finishDate;
-    public String state;
-    public String stateName;
-    public String completeDate;
-    public String description;
-    public String comments;
-    public String departName;
-    public boolean isAutoCreate=false;
-    public boolean isModify = false;
-    public List<DocumentData> docList;
-    
+	private ImageIcon icon;
+    private String oid;
+    private String step;
+    private String stepName;
+    private String stepSort;
+    private String name;
+    private String activityType;
+    private String activityName;
+    private String activeUserOid;
+    private String activeUserName;
+    private String finishDate;
+    private String state;
+    private String stateName;
+    private String completeDate;
+    private String description;
+    private String comments;
+    private String departName;
+    private String departmentName;
+    private boolean isAutoCreate=false;
+    private boolean isModify = false;
+    private List<DocumentData> docList;
     
 	public ECAData(final EChangeActivity eca) {
-		
-		this.oid = CommonUtil.getOIDString(eca);
-		this.step = eca.getStep();
-		this.name = eca.getName();
-		this.activityType = eca.getActiveType();
-		this.activityName = ChangeUtil.getActivityName(eca.getActiveType());
-		this.activeUserName ="";
-		
-		if(eca.getActiveUser() != null){
-			activeUserName = eca.getActiveUser().getFullName();
-			activeUserOid =CommonUtil.getOIDString(eca.getActiveUser());
+		setOid(CommonUtil.getOIDString(eca));
+		setStep(eca.getStep());
+		NumberCode stepCode = NumberCodeHelper.service.getNumberCode("EOSTEP", getStep());
+		if (stepCode != null) {
+			setStepName(stepCode.getName());
 		}
-		
-		this.finishDate =  DateUtil.getDateString(eca.getFinishDate(), "d");
-		this.state = eca.getLifeCycleState().toString();
-		this.stateName = eca.getLifeCycleState().getDisplay();
-		
+		setName(eca.getName());
+		setActivityType(eca.getActiveType());
+		setActivityName(ChangeUtil.getActivityName(eca.getActiveType()));
+		if(eca.getActiveUser() != null){
+			setActiveUserOid(CommonUtil.getOIDString(eca.getActiveUser()));
+			setActiveUserName(eca.getActiveUser().getFullName());
+		}
+		setFinishDate(DateUtil.getDateString(eca.getFinishDate(), "d"));
+		setState(eca.getLifeCycleState().toString());
+		setStateName(eca.getLifeCycleState().getDisplay());
 		if(state.equals("COMPLETED")){
-    		this.completeDate = DateUtil.getDateString(eca.getModifyTimestamp(),"d");
+			setCompleteDate(DateUtil.getDateString(eca.getModifyTimestamp(),"d"));
     	}
-		
-		this.description =  WebUtil.getHtml(eca.getDescription());
-		this.comments =  WebUtil.getHtml(eca.getComments());
+		setDescription(WebUtil.getHtml(eca.getDescription()));
+		setComments(WebUtil.getHtml(eca.getComments()));
 		String eoNumber = eca.getEo().getEoNumber();
-		this.isAutoCreate = this.name.startsWith(eoNumber);
-		this.isModify = !state.equals("COMPLETED");
-		
+		setAutoCreate(getName().startsWith(eoNumber));
+		setModify(!state.equals("COMPLETED"));
+        if(eca.getActiveUser() != null){
+            WTUser user = eca.getActiveUser();
+            People pp = UserHelper.service.getPeople(user);
+            if(pp != null && pp.getDepartment() != null){
+                setDepartmentName(pp.getDepartment().getName());
+            }
+        }
+		setStepSort(getStepSort());
+		setIcon(getIcon());
+		setDocList(getDocList());
+		setDepartName(getDepartName());
 	}
-
-	public String getStepSort() {
-		return stepSort;
-	}
-
-	public void setStepSort(String stepSort) {
-		this.stepSort = stepSort;
-	}
-
-	public String getDepartmentName(){
-		
-		String departmentName ="";
-		EChangeActivity eca = (EChangeActivity)CommonUtil.getObject(oid);
-				
-		if(eca.getActiveUser() != null){
-			WTUser user = eca.getActiveUser();
-			People pp = UserHelper.service.getPeople(user);
-			if(pp != null && pp.getDepartment() != null){
-				departmentName = pp.getDepartment().getName();
-			}
-			
-		}
-		
-		return departmentName;
-	}
-	
-	
-	
-	
-	public ImageIcon getIcon() {
-		
-		return icon;
-	}
-
-
-	public void setIcon(ImageIcon icon) {
-		this.icon = icon;
-	}
-
-
-	public String getOid() {
-		return oid;
-	}
-
-
-	public void setOid(String oid) {
-		this.oid = oid;
-	}
-
-
-	public String getStep() {
-		return step;
-	}
-
-
-	public void setStep(String step) {
-		this.step = step;
-	}
-
-
-	public String getStepName() {
-		
-		String stepName = "";
-		NumberCode code =NumberCodeHelper.service.getNumberCode("EOSTEP", this.step);
-		if(code != null){
-			stepName = code.getName();
-		}
-		
-		return stepName;
-	}
-
-
-	public void setStepName(String stepName) {
-		this.stepName = stepName;
-	}
-
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public String getActivityType() {
-		return activityType;
-	}
-
-
-	public void setActivityType(String activityType) {
-		this.activityType = activityType;
-	}
-
-
-		
-
-	public String getActivityName() {
-		return activityName;
-	}
-
-	public void setActivityName(String activityName) {
-		this.activityName = activityName;
-	}
-
-	public String getActiveUserName() {
-		return activeUserName;
-	}
-
-	public void setActiveUserName(String activeUserName) {
-		this.activeUserName = activeUserName;
-	}
-
-	public String getFinishDate() {
-		return finishDate;
-	}
-
-
-	public void setFinishDate(String finishDate) {
-		this.finishDate = finishDate;
-	}
-
-
-	public String getState() {
-		return state;
-	}
-
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-
-	public String getStateName() {
-		return stateName;
-	}
-
-
-	public void setStateName(String stateName) {
-		this.stateName = stateName;
-	}
-
-
-	public String getCompleteDate() {
-		return completeDate;
-	}
-
-
-	public void setCompleteDate(String completeDate) {
-		this.completeDate = completeDate;
-	}
-
-
-	public String getDescription() {
-		return description;
-	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-	public String getComments() {
-		return comments;
-	}
-
-
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-
-	public List<DocumentData> getDocList() {
-		return docList;
-	}
-
-	public void setDocList(List<DocumentData> docList) {
-		this.docList = docList;
-	}
-
-	public boolean isAutoCreate() {
-		return isAutoCreate;
-	}
-
-	public void setAutoCreate(boolean isAutoCreate) {
-		this.isAutoCreate = isAutoCreate;
-	}
-
-	public String getDepartName() {
-		return departName;
-	}
-
-	public void setDepartName(String departName) {
-		this.departName = departName;
-	}
-
-	public boolean isModify() {
-		return isModify;
-	}
-
-	public void setModify(boolean isModify) {
-		this.isModify = isModify;
-	}
-
-	public String getActiveUserOid() {
-		return activeUserOid;
-	}
-
-	public void setActiveUserOid(String activeUserOid) {
-		this.activeUserOid = activeUserOid;
-	}
-	
-	
-	
-	
-	
 }	

@@ -24,32 +24,38 @@ import com.e3ps.org.People;
 import com.e3ps.org.beans.UserHelper;
 import com.e3ps.org.service.PeopleHelper;
 
+import lombok.Getter;
+import lombok.Setter;
 import wt.fc.PersistenceHelper;
 import wt.org.WTUser;
 
+@Getter
+@Setter
 public class ECRData extends EOData{
 
-    public EChangeRequest ecr;
-    public String writeDate;
-    public String approveDate;
-    public String createDepart;
-    public String writer;
-    public String proposer;
-    public String changeSection;
-    public Vector<NumberCode> changeCode = null;
+    private EChangeRequest ecr;
+    private String writeDate;
+    private String approveDate;
+    private String createDepart;
+    private String writer;
+    private String proposer;
+    private String changeSection;
+    private Vector<NumberCode> changeCode = null;
     
 
 	public ECRData(final EChangeRequest ecr) {
     	super(ecr);
-    	this.ecr = ecr;
-    	this.writeDate = StringUtil.checkNull(ecr.getCreateDate());
-    	this.approveDate = StringUtil.checkNull(ecr.getApproveDate());
-    	this.createDepart = StringUtil.checkNull(ecr.getCreateDepart());
-    	this.writer = StringUtil.checkNull(ecr.getWriter());
-    	this.changeSection = StringUtil.checkNull(ecr.getChangeSection());
-    	this.proposer =StringUtil.checkNull(ecr.getProposer());
+    	
+    	setEcr(getEcr());
+    	setWriteDate(StringUtil.checkNull(ecr.getCreateDate()));
+    	setApproveDate(StringUtil.checkNull(ecr.getApproveDate()));
+    	setCreateDepart(StringUtil.checkNull(ecr.getCreateDepart()));
+    	setWriter(StringUtil.checkNull(ecr.getWriter()));
+    	setChangeSection(StringUtil.checkNull(ecr.getChangeSection()));
+    	setProposer(StringUtil.checkNull(ecr.getProposer()));
+    	setChangeCode(getChangeCode());
     }
-
+    
 	/**
      * 변경 구분
      * @return
@@ -100,71 +106,4 @@ public class ECRData extends EOData{
     	return ecoLink;
     	
     }
-
-	public EChangeRequest getEcr() {
-		return ecr;
-	}
-
-	public void setEcr(EChangeRequest ecr) {
-		this.ecr = ecr;
-	}
-	
-	public String getWriteDate() {
-		return writeDate;
-	}
-
-	public void setWriteDate(String writeDate) {
-		this.writeDate = writeDate;
-	}
-
-	public String getApproveDate() {
-		return approveDate;
-	}
-
-	public void setApproveDate(String approveDate) {
-		this.approveDate = approveDate;
-	}
-
-	public String getCreateDepart() {
-		return createDepart;
-	}
-
-	public void setCreateDepart(String createDepart) {
-		this.createDepart = createDepart;
-	}
-
-	public String getWriter() {
-		return writer;
-	}
-
-	public void setWriter(String writer) {
-		this.writer = writer;
-	}
-
-	public String getProposer() {
-		return proposer;
-	}
-
-	public void setProposer(String proposer) {
-		this.proposer = proposer;
-	}
-
-	public String getChangeSection() {
-		return changeSection;
-	}
-
-	public void setChangeSection(String changeSection) {
-		this.changeSection = changeSection;
-	}
-
-	public Vector<NumberCode> getChangeCode() {
-		return changeCode;
-	}
-
-	public void setChangeCode(Vector<NumberCode> changeCode) {
-		this.changeCode = changeCode;
-	}
-    
-    
-    
 }

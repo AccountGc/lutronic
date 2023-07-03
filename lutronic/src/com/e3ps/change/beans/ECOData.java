@@ -31,6 +31,9 @@ import com.e3ps.erp.service.ERPSearchHelper;
 //import com.e3ps.org.beans.UserHelper;
 import com.e3ps.part.service.PartHelper;
 
+import lombok.Getter;
+import lombok.Setter;
+import wt.org.WTUser;
 //import wt.doc.WTDocument;
 //import wt.fc.PersistenceHelper;
 //import wt.lifecycle.LifeCycleManaged;
@@ -40,31 +43,39 @@ import wt.part.WTPartMaster;
 import wt.session.SessionHelper;
 import wt.vc.baseline.ManagedBaseline;
 
-
-
+@Getter
+@Setter
 public class ECOData extends EOData{
 	
-	public EChangeOrder eco;
-	public String licensing;
-	public Vector<NumberCode> licensingCode = null;
-	public EChangeRequest ecr;
-	public String riskType;
-	public String riskTypeName;
-	public String listInitCount;
+	private EChangeOrder eco;
+	private String licensing;
+	private Vector<NumberCode> licensingCode = null;
+	private EChangeRequest ecr;
+	private String riskType;
+	private String riskTypeName;
+	private String listInitCount;
+	private String licensingDisplay;
 	
-	
-	
-	public ECOData(final EChangeOrder eco) {
+	public ECOData(final EChangeOrder eco) throws Exception{
 		super(eco);
-		
-		this.eco= eco;
-    	
-    	this.licensing = eco.getLicensingChange();
-    	this.riskType = StringUtil.checkNull(eco.getRiskType());
-    	this.riskTypeName = ChangeUtil.getRiskTypeName(riskType,true);
-    	
-    	
-    	
+		setEco(getEco());
+		setLicensing(eco.getLicensingChange());
+		setRiskType(StringUtil.checkNull(eco.getRiskType()));
+		setRiskTypeName(ChangeUtil.getRiskTypeName(riskType,true));
+		setLicensingCode(ChangeUtil.getNumberCodeVec(this.licensing, "LICENSING"));
+		if(licensingCode == null){
+    		licensingCode = getLicensingCode();
+    	}
+    	String licensingDisplay = ChangeUtil.getCodeListDisplay(licensingCode);
+    	if(licensingDisplay.length()==0){
+    		if(true){
+    			licensingDisplay ="<b><font color='red'>선택안됨</font</b>";
+    		}else{
+    			licensingDisplay ="선택안됨";
+    		}
+    	}
+    	setLicensingDisplay(licensingDisplay);
+		setListInitCount(getListInitCount());
 	}
 	
 	/**
@@ -73,8 +84,6 @@ public class ECOData extends EOData{
 	 * @throws Exception
 	 */
 	public List<Map<String,Object>> getCompletePartList() throws Exception{
-		
-		
 		List<EOCompletePartLink> list= ECOSearchHelper.service.getCompletePartLink(eco);
 		//( (이 CHANGE (ECO) 자동으로 생성,승인됨이 아닌것 , 작성자  ) || 관리자 ) && ECO
 		String eoType = eco.getEoType();
@@ -117,40 +126,6 @@ public class ECOData extends EOData{
 		//PJT EDIT START END
 		return listLink;
 	}
-	
-	/**
-     * 인허가 변경 Code
-     * @return
-     */
-    public Vector<NumberCode> getlicensingCode(){
-    	this.licensingCode = ChangeUtil.getNumberCodeVec(this.licensing, "LICENSING");
-    	return licensingCode;
-    	
-    }
-	
-    public String getlicensingDisplay(){
-    	return getlicensingDisplay(true);
-    }
-    /**
-     * 인허가 변경 Display
-     * @return
-     */
-    public String getlicensingDisplay(boolean isHtml){
-    	
-    	if(licensingCode == null){
-    		licensingCode = getlicensingCode();
-    	}
-    	String licensingDisplay = ChangeUtil.getCodeListDisplay(licensingCode);
-    	if(licensingDisplay.length()==0){
-    		if(isHtml){
-    			licensingDisplay ="<b><font color='red'>선택안됨</font</b>";
-    		}else{
-    			licensingDisplay ="선택안됨";
-    		}
-    		
-    	}
-    	return licensingDisplay;
-    }
     
     /**
      * 관련 ECR
@@ -250,57 +225,6 @@ public class ECOData extends EOData{
 		}
     	return list;
     }
-	
-    /*********** 일반 속성 ***************/
-    public String getLicensing() {
-		return licensing;
-	}
-
-	public void setLicensing(String licensing) {
-		this.licensing = licensing;
-	}
-
-	public EChangeOrder getEco() {
-		return eco;
-	}
-
-	public void setEco(EChangeOrder eco) {
-		this.eco = eco;
-	}
-	
-	
-	
-	
-
-	public String getRiskType() {
-		return riskType;
-	}
-
-	public void setRiskType(String riskType) {
-		this.riskType = riskType;
-	}
-
-	public String getRiskTypeName() {
-		return riskTypeName;
-	}
-
-	public void setRiskTypeName(String riskTypeName) {
-		this.riskTypeName = riskTypeName;
-	}
-
-    
-
-
-	public String getListInitCount() {
-		return listInitCount;
-	}
-
-	public void setListInitCount(String listInitCount) {
-		this.listInitCount = listInitCount;
-	}
-
-
-
 
 	//PJT EDIT START START 20161116
 	static class NumberAscCompare implements Comparator<Map<String,Object>> {
