@@ -36,5 +36,19 @@
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/TwxIEWebService.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/wc3rdpartylibs.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/wncWeb.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-api-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-autotag-core-runtime-1.1.0.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-compat-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-core-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-el-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-extras-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-freemarker-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-jsp-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-mvel-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-ognl-3.0.5.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-request-api-1.0.6.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-request-freemarker-1.0.6.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-request-jsp-1.0.6.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/tiles-velocity-3.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
