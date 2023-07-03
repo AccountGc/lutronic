@@ -6,7 +6,7 @@
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 <%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
 <script type="text/javascript" src="/Windchill/jsp/js/common.js"></script>
-<link rel="stylesheet" type="text/css" href="/Windchill/jsp/css/e3ps.css">
+<link rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/css/e3ps.css">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>

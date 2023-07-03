@@ -38,7 +38,7 @@ if(folder!=null && folder.length()>0){
 	location = sfolder.getLocation()+"/"+sfolder.getName();
 }
 %>
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css" type="text/css">
 <script language="javascript" src="/Windchill/jsp/js/common.js"></script>
 <script type="text/javascript" src="/Windchill/jsp/js/dtree.js"></script>
 <script type="text/javascript">

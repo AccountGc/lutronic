@@ -25,7 +25,7 @@ if(oid==null)oid="";
 <html>
 <head>
 <title>BOM Editor</TITLE>
-<LINK rel="stylesheet" type="text/css" href="/Windchill/jsp/css/e3ps.css">
+<LINK rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/css/e3ps.css">
 </head>
 <body>
 

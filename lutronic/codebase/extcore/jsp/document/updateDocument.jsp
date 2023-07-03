@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8"%>
 
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css" type="text/css">
 <%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 <script language="javascript" src="/Windchill/jsp/js/common.js"></script>

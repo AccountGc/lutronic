@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="/Windchill/jsp/js/dhtmlx/dhtmlx.css" />
 <link rel="stylesheet" href="/Windchill/jsp/css/default.css" type="text/css">
 <link rel="stylesheet" href="/Windchill/jsp/css/css.css" type="text/css">
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css" type="text/css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css" type="text/css">
 
 <script type="text/javascript" src="/Windchill/jsp/js/jquery/jquery-1.11.1.min.js" ></script>
 <script type="text/javascript" src="/Windchill/dhtmlx/dhtmlx.js" ></script>

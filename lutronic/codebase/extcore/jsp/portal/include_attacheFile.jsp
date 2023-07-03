@@ -3,7 +3,7 @@
 <%@page import="java.util.*,wt.content.*,wt.fc.*,wt.query.*" %>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="com.e3ps.common.content.FileRequest"%>
-<link rel="stylesheet" href="/Windchill/jsp/css/e3ps.css">
+<link rel="stylesheet" href="/Windchill/extcore/jsp/css/e3ps.css">
 <%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 

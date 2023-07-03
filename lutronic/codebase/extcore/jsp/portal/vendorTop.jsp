@@ -18,7 +18,7 @@
 <jsp:useBean id="toDay" class="java.util.Date" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <html>
-<LINK rel="stylesheet" type="text/css" href="/Windchill/jsp/css/e3ps.css">
+<LINK rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/css/e3ps.css">
 <LINK rel="stylesheet" type="text/css" href="/Windchill/jsp/css/default.css">
 <style>
 #module_menu {background-color:#444444;width:100%;background-color:#444444;height:50px;}
