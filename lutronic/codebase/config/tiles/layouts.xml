@@ -1,117 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE tiles-definitions PUBLIC
-        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+<!DOCTYPE tiles-definitions PUBLIC  
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
         "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>
-
-	<definition name="layoutDefault" template="/extcore/jsp/portal/layouts/layoutDefault.jsp">
-		<put-attribute name="header" value="/extcore/jsp/portal/top.jsp" />
-		<put-attribute name="menu" value="" />
-		<put-attribute name="body" value="" />
-		<put-attribute name="footer" value="" />
-	</definition>
-
-	<definition name="default:/*/*" extends="layoutDefault">
-		<put-attribute name="menu" value="/extcore/jsp/{1}/menu.jsp" />
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}.jsp" />
-	</definition>
-
-	<definition name="default:/*/*/*" extends="layoutDefault">
-		<put-attribute name="menu" value="/extcore/jsp/{1}/menu.jsp" />
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}/{3}.jsp" />
+	<definition name="layout" template="/extcore/layout/layout.jsp">
+		<put-attribute name="title" value="LUTRONIC PDM SYSTEM"></put-attribute>
+		<put-attribute name="header" value="/eSolution/header"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
+		<put-attribute name="footer" value="/eSolution/footer"></put-attribute>
 	</definition>
 
 
-	<definition name="layoutPopup" template="/extcore/jsp/portal/layouts/layoutPopup.jsp">
-		<put-attribute name="title" value="LUTRONIC PDM" />
-		<put-attribute name="body" value="" />
+	<definition name="popup" template="/extcore/layout/popup.jsp">
+		<put-attribute name="title" value="LUTRONIC PDM SYSTEM"></put-attribute>
+		<put-attribute name="body" value=""></put-attribute>
 	</definition>
 
-	<definition name="popup:/*/*" extends="layoutPopup">
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}.jsp" />
+	<!-- default layout patter -->
+	<definition name="content:/*" extends="layout">
+		<put-attribute name="body" value="/extcore/jsp/{1}.jsp"></put-attribute>
 	</definition>
 
-	<definition name="popup:/*/*/*" extends="layoutPopup">
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}/{3}.jsp" />
+	<definition name="content:/*/*" extends="layout">
+		<put-attribute name="body" value="/extcore/jsp/{1}/{2}.jsp"></put-attribute>
 	</definition>
 
-	<definition name="layoutInclude" template="/extcore/jsp/portal/layouts/layoutInclude.jsp">
-		<put-attribute name="incBody" value="" />
+	<definition name="content:/*/*/*" extends="layout">
+		<put-attribute name="body" value="/extcore/jsp/{1}/{2}/{3}.jsp"></put-attribute>
 	</definition>
 
-	<definition name="include:/*/*" extends="layoutInclude">
-		<put-attribute name="incBody" value="/extcore/jsp/{1}/{2}.jsp" />
+	<definition name="popup:/*" extends="popup">
+		<put-attribute name="body" value="/extcore/jsp/{1}.jsp"></put-attribute>
 	</definition>
 
-	<definition name="include:/*/*/*" extends="layoutInclude">
-		<put-attribute name="incBody" value="/extcore/jsp/{1}/{2}/{3}.jsp" />
+	<definition name="popup:/*/*" extends="popup">
+		<put-attribute name="body" value="/extcore/jsp/{1}/{2}.jsp"></put-attribute>
 	</definition>
 
-
-	<definition name="layoutEmpty" template="/extcore/jsp/portal/layouts/layoutEmpty.jsp">
-		<put-attribute name="body" value="" />
+	<definition name="popup:/*/*/*" extends="popup">
+		<put-attribute name="body" value="/extcore/jsp/{1}/{2}/{3}.jsp"></put-attribute>
 	</definition>
 
-	<definition name="empty:/*/*" extends="layoutEmpty">
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}.jsp" />
+	<definition name="popup:/*/*/*/*" extends="popup">
+		<put-attribute name="body" value="/extcore/jsp/{1}/{2}/{3}/{4}.jsp"></put-attribute>
 	</definition>
-
-	<definition name="empty:/*/*/*" extends="layoutEmpty">
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}/{3}.jsp" />
-	</definition>
-
-
-	<definition name="layoutAdmin" template="/extcore/jsp/portal/layouts/layoutAdmin.jsp">
-		<put-attribute name="header" value="/extcore/jsp/admin/top.jsp" />
-		<put-attribute name="body" value="" />
-	</definition>
-
-	<definition name="admin:/*/*" extends="layoutAdmin">
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}.jsp" />
-	</definition>
-
-
-	<definition name="taskEdit" template="/extcore/jsp/portal/layouts/taskEdit.jsp">
-		<put-attribute name="title" value="LUTRONIC PDM" />
-		<put-attribute name="body" value="" />
-	</definition>
-
-	<definition name="taskEdit:/*/*" extends="taskEdit">
-		<put-attribute name="body" value="/extcore/jsp/{1}/{2}.jsp" />
-	</definition>
-
-
-	<definition name="layoutVendor" template="/extcore/jsp/portal/layouts/layoutDefault.jsp">
-		<put-attribute name="header" value="/extcore/jsp/portal/vendorTop.jsp" />
-		<put-attribute name="menu" value="/extcore/jsp/distribute/vendorMenu.jsp" />
-		<put-attribute name="body" value="" />
-		<put-attribute name="footer" value="" />
-	</definition>
-
-	<definition name="vendor:/*/*" extends="layoutVendor">
-		<put-attribute name="body" value="/jsp/{1}/{2}.jsp" />
-	</definition>
-
-	<definition name="layoutHelp" template="/jsp/portal/layouts/layoutHelp.jsp">
-		<put-attribute name="header" value="" />
-		<put-attribute name="menu" value="/jsp/help/menu.jsp" />
-		<put-attribute name="body" value="" />
-		<put-attribute name="footer" value="" />
-	</definition>
-
-	<definition name="help:/*/*" extends="layoutHelp">
-		<put-attribute name="body" value="/jsp/{1}/{2}.jsp" />
-	</definition>
-
-	<definition name="layoutDistribute" template="/jsp/portal/layouts/layoutDefault.jsp">
-		<put-attribute name="header" value="/jsp/portal/distributeTop.jsp" />
-		<put-attribute name="menu" value="/jsp/distribute/menu.jsp" />
-		<put-attribute name="body" value="" />
-		<put-attribute name="footer" value="" />
-	</definition>
-
-	<definition name="distribute:/*/*" extends="layoutDistribute">
-		<put-attribute name="body" value="/jsp/{1}/{2}.jsp" />
-	</definition>
-
 </tiles-definitions>
