@@ -813,6 +813,24 @@
     <url-pattern>/servlet/PlanTimelineFeed/*</url-pattern>
   </servlet-mapping>
   
+  <!-- add lutronic -->
+  <servlet>
+    <servlet-name>DownloadGW</servlet-name>
+    <servlet-class>com.e3ps.common.content.servlet.DownLoadServlet</servlet-class>
+  </servlet>
+	
+  <servlet-mapping>
+    <servlet-name>DownloadGW</servlet-name>
+    <url-pattern>/servlet/DownloadGW/*</url-pattern>
+  </servlet-mapping>
+	
+  <servlet>
+    <servlet-name>SchedulerServlet</servlet-name> 
+    <servlet-class>com.e3ps.common.scheduler.SchedulerServlet</servlet-class> 
+    <load-on-startup>1</load-on-startup> 
+  </servlet>
+  <!-- add lutronic -->
+  
   <servlet-mapping>
     <servlet-name>MVCDispatcher</servlet-name>
     <url-pattern>/servlet/WizardServlet/*</url-pattern>
