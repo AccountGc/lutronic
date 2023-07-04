@@ -1,4 +1,4 @@
-package com.e3ps.help.controller;
+package com.e3ps.controller;
 
 import java.io.File;
 import java.util.ArrayList;
