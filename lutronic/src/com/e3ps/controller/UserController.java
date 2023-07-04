@@ -1,4 +1,4 @@
-package com.e3ps.org.controller;
+package com.e3ps.controller;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.e3ps.drawing.controller;
+package com.e3ps.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
