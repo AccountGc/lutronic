@@ -164,7 +164,7 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 조회');">문서 조회</a>
+						<a onclick="moveToPage(this, '/doc/create', '> 문서 관리 > 문서 검색');">문서 검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/output/list', '> 문서 관리 > 산출물 조회');">산출물 조회</a>

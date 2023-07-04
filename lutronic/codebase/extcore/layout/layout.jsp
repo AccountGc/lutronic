@@ -44,7 +44,7 @@
 			}
 			obj.classList.add("menu");
 			subLoc.innerHTML = loc;
-			iframe.src = "/Windchill/plm" + url;
+			iframe.src = "/Windchill/eSolution" + url;
 		}
 
 		let toggle = document.getElementById("toggle");
@@ -84,7 +84,7 @@
 
 		function index() {
 			cover.open();
-			document.location.href = "/Windchill/plm/index";
+			document.location.href = "/Windchill/eSolution/index";
 		}
 
 		function _popup(url) {

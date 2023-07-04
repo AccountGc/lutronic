@@ -26,7 +26,7 @@ public class IndexController {
 	@GetMapping(value = "/index")
 	public ModelAndView index() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("content:/index");
+		model.setViewName("default:/index");
 		return model;
 	}
 

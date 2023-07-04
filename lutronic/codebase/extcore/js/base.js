@@ -3,7 +3,7 @@
  * CONTEXT 값을 제외한 URL 주소
  */
 function getCallUrl(url) {
-	return "/Windchill/plm" + url;
+	return "/Windchill/eSolution" + url;
 }
 
 /**
