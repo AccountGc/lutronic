@@ -8,6 +8,7 @@ import wt.enterprise.RevisionControlled;
 import wt.iba.value.IBAHolder;
 import wt.inf.container.WTContained;
 import wt.lifecycle.State;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.session.SessionHelper;
 import wt.util.WTException;
@@ -22,37 +23,40 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.part.service.VersionHelper;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class VersionData {
 	
-	public RevisionControlled rev;
+	private RevisionControlled rev;
 	
-	public String oid;
-	public String vrOid;
-	public String name;
-	public String version;
-	public String iteration;
-	public String creator;
-	public String createDate;
-	public String modifier;
-	public String modifyDate;
-	public String location;
-	public String stateKey;
+	private String oid;
+	private String vrOid;
+	private String name;
+	private String version;
+	private String iteration;
+	private String creator;
+	private String createDate;
+	private String modifier;
+	private String modifyDate;
+	private String location;
+	private String stateKey;
 	
 	public VersionData(final RevisionControlled rev) throws Exception {
-		
-		this.rev = rev;
-	 	this.oid = rev.getPersistInfo().getObjectIdentifier().toString();
-	 	this.vrOid = CommonUtil.getVROID(rev);
-    	this.name = rev.getName();
-    	this.version = rev.getVersionIdentifier().getValue();
-    	this.iteration = rev.getIterationIdentifier().getSeries().getValue();
-    	this.creator = VersionControlHelper.getVersionCreator(rev).getDisplayName();
-    	this.createDate = DateUtil.getDateString(rev.getPersistInfo().getCreateStamp(), "a");
-    	this.modifier = rev.getModifierFullName();
-    	this.modifyDate = DateUtil.getDateString(rev.getPersistInfo().getModifyStamp(), "a");
-    	this.location = rev.getLocation();
-    	this.stateKey = rev.getLifeCycleState().toString();
-    	
+		setRev(rev);
+		setOid(rev.getPersistInfo().getObjectIdentifier().toString());
+		setVrOid(CommonUtil.getVROID(rev));
+		setName(rev.getName());
+		setVersion(rev.getVersionIdentifier().getValue());
+		setIteration(rev.getIterationIdentifier().getSeries().getValue());
+		setCreator(VersionControlHelper.getVersionCreator(rev).getDisplayName());
+		setCreateDate(DateUtil.getDateString(rev.getPersistInfo().getCreateStamp(), "a"));
+		setModifier(rev.getModifierFullName());
+		setModifyDate(DateUtil.getDateString(rev.getPersistInfo().getModifyStamp(), "a"));
+		setLocation(rev.getLocation());
+		setStateKey(rev.getLifeCycleState().toString());
 	}
 	
 	public String dateSubString(boolean isCreateDate) {
@@ -178,99 +182,4 @@ public class VersionData {
 		}
 		return approvalTypeCode;
 	}
-	/* 변수 GnS */
-	
-	public RevisionControlled getRev() {
-		return rev;
-	}
-
-	public void setRev(RevisionControlled rev) {
-		this.rev = rev;
-	}
-
-	public String getOid() {
-		return oid;
-	}
-
-	public void setOid(String oid) {
-		this.oid = oid;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getIteration() {
-		return iteration;
-	}
-
-	public void setIteration(String iteration) {
-		this.iteration = iteration;
-	}
-
-	public String getCreator() {
-		return creator;
-	}
-
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
-
-	public String getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate;
-	}
-
-	public String getModifier() {
-		return modifier;
-	}
-
-	public void setModifier(String modifier) {
-		this.modifier = modifier;
-	}
-
-	public String getModifyDate() {
-		return modifyDate;
-	}
-
-	public void setModifyDate(String modifyDate) {
-		this.modifyDate = modifyDate;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getVrOid() {
-		return vrOid;
-	}
-
-	public void setVrOid(String vrOid) {
-		this.vrOid = vrOid;
-	}
-
-	public String getStateKey() {
-		return stateKey;
-	}
-
-	public void setStateKey(String stateKey) {
-		this.stateKey = stateKey;
-	}
-	
-	
 }

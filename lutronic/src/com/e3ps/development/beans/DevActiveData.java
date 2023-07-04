@@ -15,55 +15,53 @@ import com.e3ps.development.devMaster;
 import com.e3ps.development.devTask;
 import com.e3ps.development.service.DevelopmentQueryHelper;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class DevActiveData {
 
-	public String oid;
+	private String oid;
 	
-	public devMaster master;
-	public String masterName;
+	private devMaster master;
+	private String masterName;
 	
-	public devTask task;
-	public String taskName;
+	private devTask task;
+	private String taskName;
 	
-	public devActive active;
+	private devActive active;
 	
-	public WTUser dm;
-	public String dmName;
+	private WTUser dm;
+	private String dmName;
 	
-	public String name;
-	public String activeDate;
-	public String finishDate;
+	private String name;
+	private String activeDate;
+	private String finishDate;
 	
-	public String state;
+	private String state;
 	
-	public WTUser worker;
-	public String workerOid;
-	public String workerName;
+	private WTUser worker;
+	private String workerOid;
+	private String workerName;
 	
 	public DevActiveData(devActive active){
-		
-		this.oid = active.getPersistInfo().getObjectIdentifier().toString();
-
-		this.master = active.getMaster();
-		this.masterName = "[" + StringUtil.checkNull(this.master.getModel()) + "] " + StringUtil.checkNull(this.master.getName());
-		
-		this.task = active.getTask();
-		this.taskName = active.getTask().getName();
-		
-		this.active = active;
-		
-		this.dm = active.getDm();
-		this.dmName = active.getDm().getFullName();
-		
-		this.name = active.getName();
-		this.activeDate = active.getActiveDate();
-		this.finishDate = DateUtil.getDateString(active.getFinishDate(), "a");
-		
-		this.state = active.getLifeCycleState().getDisplay(Message.getLocale());
-		
-		this.worker = active.getWorker();
-		this.workerOid = this.worker.getPersistInfo().getObjectIdentifier().toString();
-		this.workerName = this.worker.getFullName();
+		setOid(active.getPersistInfo().getObjectIdentifier().toString());
+		setMaster(active.getMaster());
+		String masterNm = "[" + StringUtil.checkNull(this.master.getModel()) + "] " + StringUtil.checkNull(this.master.getName());
+		setMasterName(masterNm);
+		setTask(active.getTask());
+		setTaskName(active.getTask().getName());
+		setActive(active);
+		setDm(active.getDm());
+		setDmName(active.getDm().getFullName());
+		setName(active.getName());
+		setActiveDate(active.getActiveDate());
+		setFinishDate(DateUtil.getDateString(active.getFinishDate(), "a"));
+		setState(active.getLifeCycleState().getDisplay(Message.getLocale()));
+		setWorker(active.getWorker());
+		setWorkerOid(active.getWorker().getPersistInfo().getObjectIdentifier().toString());
+		setWorkerName(active.getWorker().getFullName());
 	}
 	
 	public boolean isAdmin() {
@@ -105,129 +103,4 @@ public class DevActiveData {
 	public boolean isDelete() {
 		return DevelopmentQueryHelper.service.isActiveDelete(this.oid);
 	}
-	
-    public devActive getActive() {
-		return active;
-	}
-
-	public void setActive(devActive active) {
-		this.active = active;
-	}
-
-	public String getDmName() {
-		return dmName;
-	}
-
-	public void setDmName(String dmName) {
-		this.dmName = dmName;
-	}
-
-	public boolean isState(String state) {
-    	return (State.toState(state)).equals(active.getLifeCycleState());
-    }
-	
-	public String getOid() {
-		return oid;
-	}
-
-	public void setOid(String oid) {
-		this.oid = oid;
-	}
-
-	public devMaster getMaster() {
-		return master;
-	}
-
-	public void setMaster(devMaster master) {
-		this.master = master;
-	}
-
-	public devTask getTask() {
-		return task;
-	}
-
-	public void setTask(devTask task) {
-		this.task = task;
-	}
-
-	public WTUser getDm() {
-		return dm;
-	}
-
-	public void setDm(WTUser dm) {
-		this.dm = dm;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getActiveDate() {
-		return activeDate;
-	}
-
-	public void setActiveDate(String activeDate) {
-		this.activeDate = activeDate;
-	}
-
-	public String getFinishDate() {
-		return finishDate;
-	}
-
-	public void setFinishDate(String finishDate) {
-		this.finishDate = finishDate;
-	}
-
-	public WTUser getWorker() {
-		return worker;
-	}
-
-	public void setWorker(WTUser worker) {
-		this.worker = worker;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public String getWorkerOid() {
-		return workerOid;
-	}
-
-	public void setWorkerOid(String workerOid) {
-		this.workerOid = workerOid;
-	}
-
-	public String getWorkerName() {
-		return workerName;
-	}
-
-	public void setWorkerName(String workerName) {
-		this.workerName = workerName;
-	}
-
-	public String getMasterName() {
-		return masterName;
-	}
-
-	public void setMasterName(String masterName) {
-		this.masterName = masterName;
-	}
-
-	public String getTaskName() {
-		return taskName;
-	}
-
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
-	
 }

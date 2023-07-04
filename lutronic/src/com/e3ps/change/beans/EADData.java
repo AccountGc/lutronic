@@ -12,261 +12,54 @@ import com.e3ps.common.web.WebUtil;
 import com.e3ps.org.People;
 import com.e3ps.org.service.UserHelper;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class EADData {
+	private String oid;
+	private String rootOid;
+	private String name;
+	private String name_eng;
+	private String step;
+	private String stepName;
+	private String stepSort;
+	private String activityType;
+	private String activityName;
+	private WTUser activeUser;
+	private String activeUserOid;
+	private String activeUserName;
+	private String departName;
+	private int sortNumber;
+	private String description;
+	private String viewDescription;
+	private String finishDate;
+	private boolean isModify = true;
 	
-	
-	public String oid;
-	public String rootOid;
-	public String name;
-	public String name_eng;
-	public String step;
-	public String stepName;
-	public String stepSort;
-	public String activityType;
-	public String activityName;
-	//public WTUser activeUser;
-	public String activeUserOid;
-	public String activeUserName;
-	public String departName;
-	public int sortNumber;
-	public String description;
-	public String viewDescription;
-	public String finishDate;
-	public boolean isModify = true;
 	public EADData(final EChangeActivityDefinition ead) {
-		
 		if(ead == null){
 			return;
 		}
-		this.oid = CommonUtil.getOIDString(ead);
-		this.rootOid = CommonUtil.getOIDString(ead.getRoot());
-		this.name = StringUtil.checkNull(ead.getName());
-		this.name_eng = StringUtil.checkNull(ead.getName_eng());
-		this.step = StringUtil.checkNull(ead.getStep());
-		this.activityType = StringUtil.checkNull(ead.getActiveType());
-		this.activityName = ChangeUtil.getActivityName(ead.getActiveType());
-		//this.activeUser = ead.getActiveUser();
-		this.activeUserOid = "";
-		this.activeUserName = "";
+		setOid(CommonUtil.getOIDString(ead));
+		setRootOid(CommonUtil.getOIDString(ead.getRoot()));
+		setName(StringUtil.checkNull(ead.getName()));
+		setName_eng(StringUtil.checkNull(ead.getName_eng()));
+		setStep(StringUtil.checkNull(ead.getStep()));
+		NumberCode stepCode = NumberCodeHelper.service.getNumberCode("EOSTEP", getStep());
+		if (stepCode != null) {
+			setStepName(stepCode.getName());
+		}
+		setActivityType(StringUtil.checkNull(ead.getActiveType()));
+		setActivityName(ChangeUtil.getActivityName(ead.getActiveType()));
 		if(ead.getActiveUser() != null){
-			this.activeUserOid = CommonUtil.getOIDString(ead.getActiveUser());
-			this.activeUserName = ead.getActiveUser().getFullName();
+			setActiveUser(ead.getActiveUser());
+			setActiveUserOid(CommonUtil.getOIDString(ead.getActiveUser()));
+			setActiveUserName(ead.getActiveUser().getFullName());
 		}
-		
-		this.sortNumber = ead.getSortNumber();
-		this.description = StringUtil.checkNull(ead.getDescription());
-		this.viewDescription = WebUtil.getHtml(description);
-		this.isModify = true;
-		
-		
+		setSortNumber(ead.getSortNumber());
+		setDescription(StringUtil.checkNull(ead.getDescription()));
+		setViewDescription(WebUtil.getHtml(getDescription()));
+		setModify(true);
 	}
-	
-	
-	/**
-	 * eca 담당자 부서명
-	 * @return
-	 
-	
-	public String departName(){
-		
-		String departName = "";
-		EChangeActivityDefinition ad = (EChangeActivityDefinition)CommonUtil.getObject(this.oid);
-		if(ad.getActiveUser() !=null){
-			
-			People pp = UserHelper.service.getPeople(ad.getActiveUser());
-			if(pp != null && pp.getDepartment() != null){
-				departName = pp.getDepartment().getName();
-			}
-		}
-		
-		return departName;
-	}
-	*/
-	/**
-	 * Step의 Name
-	 * @return
-	 
-	
-	public String getStepName(){
-		String stepName = "";
-		NumberCode code =NumberCodeHelper.service.getNumberCode("EOSTEP", this.step);
-		if(code != null){
-			stepName = code.getName();
-		}
-		
-		return stepName;
-	}
-*/
-	/**일반 속성 **/
-	
-	public String getOid() {
-		return oid;
-	}
-
-
-	public void setOid(String oid) {
-		this.oid = oid;
-	}
-
-
-	public String getRootOid() {
-		return rootOid;
-	}
-
-
-	public void setRootOid(String rootOid) {
-		this.rootOid = rootOid;
-	}
-
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public String getName_eng() {
-		return name_eng;
-	}
-
-
-	public void setName_eng(String name_eng) {
-		this.name_eng = name_eng;
-	}
-
-
-	public String getStep() {
-		return step;
-	}
-
-
-	public void setStep(String step) {
-		this.step = step;
-	}
-
-
-	public String getActivityType() {
-		return activityType;
-	}
-
-
-	public void setActivityType(String activityType) {
-		this.activityType = activityType;
-	}
-
-
-	public String getActivityName() {
-		return activityName;
-	}
-
-
-	public void setActivityName(String activityName) {
-		this.activityName = activityName;
-	}
-
-
-	
-
-	public String getActiveUserOid() {
-		return activeUserOid;
-	}
-
-
-	public void setActiveUserOid(String activeUserOid) {
-		this.activeUserOid = activeUserOid;
-	}
-
-
-	public String getActiveUserName() {
-		return activeUserName;
-	}
-
-
-	public void setActiveUserName(String activeUserName) {
-		this.activeUserName = activeUserName;
-	}
-
-
-	public int getSortNumber() {
-		return sortNumber;
-	}
-
-
-	public void setSortNumber(int sortNumber) {
-		this.sortNumber = sortNumber;
-	}
-
-
-	public String getDescription() {
-		return description;
-	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-	public String getViewDescription() {
-		return viewDescription;
-	}
-
-
-	public void setViewDescription(String viewDescription) {
-		this.viewDescription = viewDescription;
-	}
-
-	public String getDepartName() {
-		return departName;
-	}
-
-	public void setDepartName(String departName) {
-		this.departName = departName;
-	}
-
-	public void setStepName(String stepName) {
-		this.stepName = stepName;
-	}
-
-
-	public String getStepName() {
-		return stepName;
-	}
-
-
-	public String getFinishDate() {
-		return finishDate;
-	}
-
-
-	public void setFinishDate(String finishDate) {
-		this.finishDate = finishDate;
-	}
-
-
-	public String getStepSort() {
-		return stepSort;
-	}
-
-
-	public void setStepSort(String stepSort) {
-		this.stepSort = stepSort;
-	}
-
-
-	public boolean isModify() {
-		return isModify;
-	}
-
-
-	public void setModify(boolean isModify) {
-		this.isModify = isModify;
-	}
-
-	
-	
 }

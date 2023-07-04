@@ -1,4 +1,4 @@
-package com.e3ps.admin.controller;
+package com.e3ps.controller;
 
 import java.io.BufferedWriter;
 import java.io.File;
