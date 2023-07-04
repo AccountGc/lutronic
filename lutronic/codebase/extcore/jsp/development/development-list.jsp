@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-문서 등록페이지
+개발업무 검색
 </body>
 </html>

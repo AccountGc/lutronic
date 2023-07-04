@@ -73,6 +73,24 @@
 				</ul>
 			</li>
 			<li>
+				<a href="#">
+					<i class="fa fa-envelope"></i>
+					<span class="nav-label">개발업무관리</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/development/list', '> 개발업무관리 > 개발업무 검색');">개발업무 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/development/create', '> 개발업무관리 > 개발업무 등록');">개발업무 등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/development/my', '> 개발업무관리 > 나의 개발업무');">나의 개발업무</a>
+					</li>
+				</ul>
+			</li>
+			<li>
 				<a href="metrics.html">
 					<i class="fa fa-pie-chart"></i>
 					<span class="nav-label">작번 관리</span>
@@ -164,12 +182,18 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/doc/create', '> 문서 관리 > 문서 검색');">문서 검색</a>
+						<a onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');">문서 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/output/list', '> 문서 관리 > 산출물 조회');">산출물 조회</a>
+						<a onclick="moveToPage(this, '/doc/create', '> 문서 관리 > 문서 등록');">문서 등록</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/doc/batch', '> 문서 관리 > 문서 일괄등록');">문서 일괄등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/all', '> 문서 관리 > 문서 일괄결재');">문서 일괄결재</a>
+					</li>
+					<!-- <li>
 						<a onclick="moveToPage(this, '/requestDocument/list', '> 문서 관리 > 의뢰서 조회');">의뢰서 조회</a>
 					</li>
 					<li>
@@ -177,7 +201,7 @@
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/doc/register', '> 문서 관리 > 문서 결재');">문서 결재</a>
-					</li>
+					</li> -->
 				</ul>
 			</li>
 			<li>

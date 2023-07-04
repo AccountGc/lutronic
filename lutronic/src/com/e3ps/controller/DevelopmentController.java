@@ -8,7 +8,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,17 +33,19 @@ import com.e3ps.development.service.DevelopmentHelper;
 @RequestMapping("/development")
 public class DevelopmentController {
 	
-	/**  개발업무 관리 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createDevelopment")
-	public ModelAndView createDevelopment(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "개발업무 등록")
+	@GetMapping(value = "/create")
+	public ModelAndView create() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu2");
-		model.addObject("module","development");
-		model.setViewName("default:/development/createDevelopment");
+		model.setViewName("/extcore/jsp/development/development-create.jsp");
+		return model;
+	}
+	
+	@Description(value = "나의 개발업무")
+	@GetMapping(value = "/my")
+	public ModelAndView my() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/development/my-development.jsp");
 		return model;
 	}
 	
@@ -57,17 +61,11 @@ public class DevelopmentController {
 		return DevelopmentHelper.service.createDevelopmentAction(request, response);
 	}
 	
-	/**  개발업무 관리 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listDevelopment")
-	public ModelAndView listDevelopment(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "개발업무 검색")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module","development");
-		model.setViewName("default:/development/listDevelopment");
+		model.setViewName("/extcore/jsp/development/development-list.jsp");
 		return model;
 	}
 	

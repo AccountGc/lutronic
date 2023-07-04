@@ -59,19 +59,11 @@ public class DocumentController {
 		return DocumentHelper.service.createDocumentAction(map);
 	}
 
-	/**
-	 * 문서 검색 페이지
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listDocument")
-	public ModelAndView listDocument(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "문서 검색 페이지")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "document");
-		model.setViewName("default:/document/listDocument");
+		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;
 	}
 
@@ -170,19 +162,19 @@ public class DocumentController {
 		return DocumentHelper.service.updateDocumentAction(map);
 	}
 
-	/**
-	 * 일괄 등록 메뉴 이동
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createPackageDocument")
-	public ModelAndView createPackageDocument(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "문서 일괄등록")
+	@GetMapping(value = "/batch")
+	public ModelAndView batch() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu3");
-		model.addObject("module", "document");
-		model.setViewName("default:/document/createPackageDocument");
+		model.setViewName("/extcore/jsp/document/document-batch.jsp");
+		return model;
+	}
+	
+	@Description(value = "문서 일괄결재")
+	@GetMapping(value = "/all")
+	public ModelAndView all() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/document/document-all.jsp");
 		return model;
 	}
 
