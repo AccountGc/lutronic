@@ -2,6 +2,24 @@ package com.e3ps.drawing.beans;
 
 import java.util.Vector;
 
+import com.e3ps.common.beans.VersionData;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.obj.ObjectUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.web.WebUtil;
+import com.e3ps.drawing.service.DrawingHelper;
+import com.e3ps.drawing.service.EpmSearchHelper;
+import com.e3ps.groupware.workprocess.WFItem;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.service.VersionHelper;
+import com.e3ps.part.util.PartUtil;
+import com.ptc.wvs.server.util.FileHelper;
+import com.ptc.wvs.server.util.PublishUtils;
+
+import lombok.Getter;
+import lombok.Setter;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
@@ -19,22 +37,8 @@ import wt.representation.Representable;
 import wt.representation.Representation;
 import wt.util.WTException;
 
-import com.e3ps.common.beans.VersionData;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.WebUtil;
-import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.groupware.workprocess.WFItem;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.VersionHelper;
-import com.e3ps.part.util.PartUtil;
-import com.ptc.wvs.server.util.FileHelper;
-import com.ptc.wvs.server.util.PublishUtils;
-
+@Getter
+@Setter
 public class EpmData extends VersionData{
 	
 	public EPMDocument epm;
@@ -45,9 +49,9 @@ public class EpmData extends VersionData{
 	
 	public EpmData(final EPMDocument epm) throws Exception {
 		super(epm);
-		this.epm = epm;
-		this.number = epm.getNumber();
-		this.icon = BasicTemplateProcessor.getObjectIconImgTag(epm);
+		setEPM(epm);
+		setNumber(epm.getNumber());
+		setIcon(BasicTemplateProcessor.getObjectIconImgTag(epm));
 	}
 	//승인여부
 	public boolean getApprove() throws Exception{
@@ -145,22 +149,6 @@ public class EpmData extends VersionData{
     		e.printStackTrace();
     	}
     	return pdfFile;
-    }
-    
-    public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
-	}
-	
-	public EPMDocument getEpm(){
-    	return epm;
-    }
-    
-    public void setEPM(EPMDocument epm){
-    	this.epm = epm;
     }
     
     //주 도면의 파일 타입
@@ -345,13 +333,6 @@ public class EpmData extends VersionData{
 		return WebUtil.getHtml(epm.getDescription());
 	}
 	
-	
-	public String getIcon() {
-		return icon;
-	}
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
 	/**
 	 * true이면 동기화 버튼 활성화, false 이면 비활성
 	 * @return

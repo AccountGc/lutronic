@@ -3,7 +3,7 @@
 <html>
 <head>
 <script type="text/javascript" src="/Windchill/jsp/js/common.js"></script>
-<script type="text/javascript" src="/Windchill/jsp/js/e3ps.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/e3ps.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
 <script type="text/javascript">
