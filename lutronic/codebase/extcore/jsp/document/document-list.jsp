@@ -16,10 +16,7 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
-		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -30,31 +27,23 @@
 			</colgroup>
 			<tr>
 				<th>문서 분류</th>
-				<td class="indent5">
-					<input type="hidden" name="location" id="location" value="<%//=DocumentHelper.DOCUMENT_ROOT%>">
-					<span id="locationText">
-						<%
-						//=DocumentHelper.DOCUMENT_ROOT
-						%>
-					</span>
-				</td>
+				<td class="indent5"><input type="hidden" name="location" id="location" value="<%//=DocumentHelper.DOCUMENT_ROOT%>"> <span id="locationText"> <%
+ //=DocumentHelper.DOCUMENT_ROOT
+ %>
+				</span></td>
 				<th>버전</th>
-				<td>
-					&nbsp;
+				<td>&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="true" checked="checked">
 						<div class="state p-success">
-							<label>
-								<b>최신버전</b>
+							<label> <b>최신버전</b>
 							</label>
 						</div>
-					</div>
-					&nbsp;
+					</div> &nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="">
 						<div class="state p-success">
-							<label>
-								<b>모든버전</b>
+							<label> <b>모든버전</b>
 							</label>
 						</div>
 					</div>
@@ -62,69 +51,43 @@
 			</tr>
 			<tr>
 				<th>문서 번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-200">
-				</td>
+				<td class="indent5"><input type="text" name="docNumber" id="docNumber" class="width-200"></td>
 				<th>문서명</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-200">
-				</td>
+				<td class="indent5"><input type="text" name="docName" id="docName" class="width-200"></td>
 			</tr>
 			<tr>
 				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
+				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 				<th>수정일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
+				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 			</tr>
 			<tr>
 				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
+				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
 				<th>상태</th>
-				<td class="indent5">
-					<select name="state" id="state" class="width-200">
+				<td class="indent5"><select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
+				</select></td>
 			</tr>
 		</table>
 
 		<table class="button-table">
 			<tr>
-				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
-					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
-				</td>
-				<td class="right">
-					<select name="_psize" id="_psize">
+				<td class="left"><img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> <img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');"> <img src="/Windchill/extcore/images/redo.gif"
+					title="테이블 초기화" onclick="resetColumnLayout('document-list');"> <img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> <input type="button" value="등록" title="등록" class="blue" onclick="create();"></td>
+				<td class="right"><select name="_psize" id="_psize">
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
-					</select>
-					<input type="button" value="조회" title="조회" onclick="loadGridData();">
-				</td>
+				</select> <input type="button" value="조회" title="조회" onclick="loadGridData();"></td>
 			</tr>
 		</table>
 
@@ -138,8 +101,7 @@
 				<td valign="top"></td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
 		</table>
@@ -148,7 +110,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
+					dataField : "docNumber",
 					headerText : "문서번호",
 					dataType : "string",
 					width : 120,
@@ -157,7 +119,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "number",
+					dataField : "interalnumber",
 					headerText : "내부 문서번호",
 					dataType : "string",
 					width : 120,
@@ -166,7 +128,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "number",
+					dataField : "model",
 					headerText : "프로젝트 코드",
 					dataType : "string",
 					width : 120,
@@ -175,7 +137,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "name",
+					dataField : "docName",
 					headerText : "문서명",
 					dataType : "string",
 					width : 350,
@@ -211,7 +173,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
 					width : 100,
@@ -311,9 +273,9 @@
 			});
 
 			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+				// 				const exceptColumnFields = [ "primary" ];
+				// 				const sessionName = document.getElementById("sessionName").value;
+				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {

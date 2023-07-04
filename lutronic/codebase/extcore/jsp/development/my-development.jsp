@@ -16,10 +16,7 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
-		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -30,104 +27,63 @@
 			</colgroup>
 			<tr>
 				<th>프로젝트 코드</th>
-				<td class="indent5">
-					<select name="state" id="state" class="width-200">
+				<td class="indent5"><select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
+				</select></td>
 				<th>프로젝트명</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-200">
-				</td>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
 			</tr>
 			<tr>
 				<th>프로젝트 상태</th>
-				<td class="indent5">
-					<select name="state" id="state" class="width-200">
+				<td class="indent5"><select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
+				</select></td>
 				<th>ACTIVITY명</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-200">
-				</td>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
 			</tr>
 			<tr>
-			<th>완료 요청일</th>
-			<td class="indent5">
-				<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-				~
-				<input type="text" name="createdTo" id="createdTo" class="width-100">
-				<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-			</td>
-			<th>완료일</th>
-			<td class="indent5">
-				<input type="text" name="createdFrom" id="modifiedFrom" class="width-100">
-				~
-				<input type="text" name="createdTo" id="modifiedTo" class="width-100">
-				<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-			</td>
-		</tr>
-		<tr>
-			<th>ACTIVITY 상태</th>
-			<td class="indent5" colspan="3">
-				<select name="state" id="state" class="width-200">
-					<option value="">선택</option>
-					<option value="INWORK">작업 중</option>
-					<option value="UNDERAPPROVAL">승인 중</option>
-					<option value="APPROVED">승인됨</option>
-					<option value="RETURN">반려됨</option>
-				</select>
-			</td>
-		</tr>
-	</table>
-		
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-				<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
-				<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
-				<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');">
-				<input type="button" value="등록" title="등록" class="blue" onclick="create();">
-			</td>
-			<td class="right">
-				<select name="_psize" id="_psize">
-					<option value="30">30</option>
-					<option value="50">50</option>
-					<option value="100">100</option>
-					<option value="200">200</option>
-					<option value="300">300</option>
-				</select>
-				<input type="button" value="조회" title="조회" onclick="loadGridData();">
-			</td>
-		</tr>
-	</table>
-	
-	<table>
-		<colgroup>
-			<col width="230">
-			<col width="10">
-			<col width="*">
-		</colgroup>
-		<tr>
-			<td valign="top"></td>
-			<td valign="top">&nbsp;</td>
-			<td valign="top">
-				<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-				<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-			</td>
-		</tr>
-	</table>
+				<th>완료 요청일</th>
+				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<th>완료일</th>
+				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+			</tr>
+			<tr>
+				<th>ACTIVITY 상태</th>
+				<td class="indent5" colspan="3"><select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+				</select></td>
+			</tr>
+		</table>
 
+		<table class="button-table">
+			<tr>
+				<td class="left"><img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> <img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');"> <img src="/Windchill/extcore/images/redo.gif"
+					title="테이블 초기화" onclick="resetColumnLayout('document-list');"> <img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> <input type="button" value="등록" title="등록" class="blue" onclick="create();"></td>
+				<td class="right"><select name="_psize" id="_psize">
+						<option value="30">30</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+						<option value="200">200</option>
+						<option value="300">300</option>
+				</select> <input type="button" value="조회" title="조회" onclick="loadGridData();"></td>
+			</tr>
+		</table>
+		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
@@ -227,6 +183,7 @@
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
+					fillColumnSizeMode : true,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
@@ -286,9 +243,9 @@
 			});
 
 			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+				// 				const exceptColumnFields = [ "primary" ];
+				// 				const sessionName = document.getElementById("sessionName").value;
+				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {
