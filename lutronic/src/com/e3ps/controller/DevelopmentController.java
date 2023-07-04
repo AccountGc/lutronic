@@ -35,7 +35,7 @@ public class DevelopmentController {
 	
 	@Description(value = "개발업무 등록")
 	@GetMapping(value = "/create")
-	public ModelAndView create() {
+	public ModelAndView create() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/development/development-create.jsp");
 		return model;
@@ -43,7 +43,7 @@ public class DevelopmentController {
 	
 	@Description(value = "나의 개발업무")
 	@GetMapping(value = "/my")
-	public ModelAndView my() {
+	public ModelAndView my() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/development/my-development.jsp");
 		return model;
@@ -63,7 +63,7 @@ public class DevelopmentController {
 	
 	@Description(value = "개발업무 검색")
 	@GetMapping(value = "/list")
-	public ModelAndView list() {
+	public ModelAndView list() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/development/development-list.jsp");
 		return model;

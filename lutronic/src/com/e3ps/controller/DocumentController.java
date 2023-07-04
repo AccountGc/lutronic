@@ -61,7 +61,7 @@ public class DocumentController {
 
 	@Description(value = "문서 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() {
+	public ModelAndView list() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;
@@ -164,7 +164,7 @@ public class DocumentController {
 
 	@Description(value = "문서 일괄등록")
 	@GetMapping(value = "/batch")
-	public ModelAndView batch() {
+	public ModelAndView batch() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/document/document-batch.jsp");
 		return model;
@@ -172,7 +172,7 @@ public class DocumentController {
 	
 	@Description(value = "문서 일괄결재")
 	@GetMapping(value = "/all")
-	public ModelAndView all() {
+	public ModelAndView all() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/document/document-all.jsp");
 		return model;

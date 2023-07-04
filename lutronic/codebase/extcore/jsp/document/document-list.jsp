@@ -27,14 +27,10 @@
 				<col width="*">
 				<col width="130">
 				<col width="*">
-				<col width="130">
-				<col width="*">
-				<col width="130">
-				<col width="*">
 			</colgroup>
 			<tr>
 				<th>문서 분류</th>
-				<td colspan="7" class="indent5">
+				<td class="indent5">
 					<input type="hidden" name="location" id="location" value="<%//=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText">
 						<%
@@ -42,47 +38,8 @@
 						%>
 					</span>
 				</td>
-			</tr>
-			<tr>
-				<th>문서 제목</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-200">
-				</td>
-				<th>문서 번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-200">
-				</td>
-				<th>설명</th>
-				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-300">
-				</td>
-				<th>상태</th>
-				<td class="indent5">
-					<select name="state" id="state" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>작성자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
-				<th>작성일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
 				<th>버전</th>
-				<td colspan="3">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="true" checked="checked">
@@ -101,6 +58,50 @@
 							</label>
 						</div>
 					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>문서 번호</th>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-200">
+				</td>
+				<th>문서명</th>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-200">
+				</td>
+			</tr>
+			<tr>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+				<th>수정일</th>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>등록자</th>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
 				</td>
 			</tr>
 		</table>
@@ -147,15 +148,6 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "name",
-					headerText : "문서제목",
-					dataType : "string",
-					width : 350,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
 					dataField : "number",
 					headerText : "문서번호",
 					dataType : "string",
@@ -165,8 +157,26 @@
 						inline : true
 					},
 				}, {
-					dataField : "description",
-					headerText : "설명",
+					dataField : "number",
+					headerText : "내부 문서번호",
+					dataType : "string",
+					width : 120,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "number",
+					headerText : "프로젝트 코드",
+					dataType : "string",
+					width : 120,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "name",
+					headerText : "문서명",
 					dataType : "string",
 					width : 350,
 					filter : {
@@ -183,19 +193,19 @@
 						inline : true
 					},
 				}, {
-					dataField : "state",
-					headerText : "상태",
+					dataField : "description",
+					headerText : "Rev",
 					dataType : "string",
-					width : 100,
+					width : 350,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "version",
-					headerText : "버전",
+					dataField : "state",
+					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -210,22 +220,22 @@
 						inline : true
 					},
 				}, {
+					dataField : "version",
+					headerText : "등록자",
+					dataType : "string",
+					width : 80,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "createdDate",
-					headerText : "작성일",
+					headerText : "등록일",
 					dataType : "date",
 					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,
-					},
-				}, {
-					dataField : "modifier",
-					headerText : "수정자",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "modifiedDate",
@@ -235,14 +245,6 @@
 					filter : {
 						showIcon : true,
 						inline : true,
-					},
-				}, {
-					dataField : "primary",
-					headerText : "첨부파일",
-					width : 100,
-					filter : {
-						showIcon : false,
-						inline : false
 					},
 				} ]
 			}
@@ -304,6 +306,7 @@
 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
+				twindate("modified");
 				selectbox("_psize");
 			});
 
