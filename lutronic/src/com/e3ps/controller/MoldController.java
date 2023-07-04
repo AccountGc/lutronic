@@ -6,7 +6,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,34 +23,22 @@ import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.doc.service.DocumentHelper;
 
 @Controller
-@RequestMapping("/doc")
+@RequestMapping(value = "/mold")
 public class MoldController {
 	
-	/** 금형 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listMold")
-	public ModelAndView listMold(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "금형 검색 페이지")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module","mold");
-		model.setViewName("default:/mold/listMold");
+		model.setViewName("/extcore/jsp/mold/mold-list.jsp");
 		return model;
 	}
 	
-	/**	금형 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createMold")
-	public ModelAndView createMold(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "금형 등록 페이지")
+	@GetMapping(value = "/create")
+	public ModelAndView create() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu2");
-		model.addObject("module","mold");
-		model.setViewName("default:/mold/createMold");
+		model.setViewName("/extcore/jsp/mold/mold-create.jsp");
 		return model;
 	}
 	

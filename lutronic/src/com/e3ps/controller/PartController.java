@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,7 +60,7 @@ import com.e3ps.part.service.PartSearchHelper;
  *
  */
 @Controller
-@RequestMapping("/part")
+@RequestMapping(value = "/part")
 public class PartController {
 	
 	/**
@@ -68,18 +70,35 @@ public class PartController {
 	 * 
 	 */
 	
-	
-	/**	품목 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createPart")
-	public ModelAndView createPart(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "품목 검색 페이지")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu2");
-		model.addObject("module", "part");
-		model.setViewName("default:/part/createPart");
+		model.setViewName("/extcore/jsp/part/part-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "품목 등록 페이지")
+	@GetMapping(value = "/create")
+	public ModelAndView create() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/part/part-create.jsp");
+		return model;
+	}
+	
+	@Description(value = "일괄 등록 페이지")
+	@GetMapping(value = "/batch")
+	public ModelAndView batch() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/part/part-batch.jsp");
+		return model;
+	}
+	
+	@Description(value = "BOM EDITOR 페이지")
+	@GetMapping(value = "/bom")
+	public ModelAndView bom() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/part/part-bom.jsp");
 		return model;
 	}
 	
@@ -119,20 +138,6 @@ public class PartController {
 		String partNumber = request.getParameter("partNumber");
 		model.addObject("partNumber", partNumber);
 		model.setViewName("popup:/part/searchSeqList");
-		return model;
-	}
-	
-	/**	품목 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listPart")
-	public ModelAndView listPart(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module","part");
-		model.setViewName("default:/part/listPart");
 		return model;
 	}
 	

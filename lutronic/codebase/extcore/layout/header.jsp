@@ -113,6 +113,27 @@
 			</li>
 			<li>
 				<a href="#">
+					<i class="fa fa-desktop"></i>
+					<span class="nav-label">품목관리</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">제품/품목 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/part/create', '> 품목관리 > 제품/품목 등록');">제품/품목 등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 제품/품목 일괄등록');">제품/품목 일괄등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/part/bom', '> 품목관리 > BOM EDITOR');">BOM EDITOR</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
 					<i class="fa fa-edit"></i>
 					<span class="nav-label">도면 관리</span>
 					<span class="fa arrow"></span>
@@ -136,42 +157,6 @@
 					<li>
 						<a onclick="moveToPage(this, '/epm/register', '> 도면 관리 > 도면 결재')">도면 결재</a>
 					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">
-					<i class="fa fa-desktop"></i>
-					<span class="nav-label">부품 관리</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/part/list', '> 부품 관리 > 부품 조회');">부품 조회</a>
-					</li>
-					<!-- 					<li> -->
-					<!-- 						<a href="profile.html">코드 생성</a> -->
-					<!-- 					</li> -->
-					<li>
-						<a onclick="moveToPage(this, '/part/bundle', '> 부품 관리 > 부품 일괄 등록');">부품 일괄 등록</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/part/spec', '> 부품 관리 > 제작사양서 등록');">제작사양서 등록</a>
-					</li>
-					<!-- 					<li> -->
-					<!-- 						<a href="contacts_2.html">제작사양서 등록</a> -->
-					<!-- 					</li> -->
-					<!-- 					<li> -->
-					<!-- 						<a href="projects.html">UNIT BOM 조회</a> -->
-					<!-- 					</li> -->
-					<li>
-						<a onclick="moveToPage(this, '/kePart/list', '> 부품 관리 > KE 부품 조회');">KE 부품 조회</a>
-					</li>
-					<!-- 					<li> -->
-					<!-- 						<a href="project_detail.html">UNIT BOM 등록</a> -->
-					<!-- 					</li> -->
-					<!-- 					<li> -->
-					<!-- 						<a href="activity_stream.html">EPLAN 결재</a> -->
-					<!-- 					</li> -->
 				</ul>
 			</li>
 			<li>
@@ -237,6 +222,24 @@
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/history/list', '> 한국 생산 > 이력 관리 조회');">이력 관리 조회</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-files-o"></i>
+					<span class="nav-label">금형관리</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');">금형 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/mold/create', '> 금형관리 > 금형 등록');">금형 등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/mold/all', '> 금형관리 > 금형 일괄결재');">금형 일괄결재</a>
 					</li>
 				</ul>
 			</li>
