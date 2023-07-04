@@ -1,9 +1,10 @@
 /*!
  * AUIGrid 3.0.12 License
- * Product ID : AUIGrid-EN-83023-514247-230313
- * Authorized Domain(or IP) : plm.kekorea.co.kr
+ * License Type : Evaluation(Trial) Version
+ * Authorized Domain(or IP) : localhost,127.0.0.1,plmdev.lutronic.com
+ * Expiration Date : 2023-08-03
  * www.auisoft.net
  */
  /* eslint-disable */
-var AUIGridLicense = "eyJjdCI6IlBvUlEzTEdHK29VbitkWDVlXC9zZTJ0SElPK1oxKzFndEVWVXFjUG1cL3lubGcyeThBbEJDeUk2OCtnK0syUE1qcVZjczJQVkNcL29aXC81b3JlMXg5cE94cUIxUjlaK2M5TVVsODAxNEVPTXlyeG4wSEVYTEFYaGZPK1g3azJONjFuTHcybkY2ZjJKRnVsT1RBUklCSTNLYmc9PSIsIml2IjoiNmZkMWNjMzg5N2Y4OGNlYzM4NDdkNTk0OTE4ZDNhMTgiLCJzIjoiZmVkOWNhMGFmYTBhN2Q2ZSJ9";
+var AUIGridLicense = "eyJjdCI6ImpjZGdtU3BMSXZtQk5XdkdWYTFOYkxtYTd6WVlROU5HRVJZeWNlWEdyb3BFU0trS1wvazlIcXRIZ3pPWHhvelRiZWVUdXlHOVB3NGMyT21LTHNQV1Q3VW4yOG9NRjZId1laQVA5Y1VjOElwU3VrRHArekxFeXkxRTNnS001eU15RSIsIml2IjoiOTVmYzVhZTkxODE0NTQzMjZiZGQ0NDhjZDgzNjljMzgiLCJzIjoiZWFhOTIwOWFlZDI1Y2Q3YSJ9";
 if (typeof window !== "undefined") window.AUIGridLicense = AUIGridLicense;
