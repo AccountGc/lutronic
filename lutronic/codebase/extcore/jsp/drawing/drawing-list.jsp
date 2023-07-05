@@ -397,6 +397,15 @@
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
+				selectbox("cadDivision");
+				selectbox("cadType");
+				selectbox("model");
+				selectbox("productmethod");
+				selectbox("deptcode");
+				selectbox("manufacture");
+				selectbox("unit");
+				selectbox("mat");
+				selectbox("finish");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
