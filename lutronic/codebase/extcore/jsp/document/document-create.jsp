@@ -185,6 +185,13 @@
 				document.getElementById("number").value = data.number;
 			})
 		}
+		
+		document.addEventListener("DOMContentLoaded", function() {
+			selectbox("model");
+			selectbox("preseration");
+			selectbox("documentType");
+			selectbox("deptcode");
+		});
 
 		function create(isSelf) {
 			const name = document.getElementById("name");

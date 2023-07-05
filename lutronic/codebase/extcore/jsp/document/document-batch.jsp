@@ -266,11 +266,7 @@
 			});
 			createAUIGrid(columns);
 			AUIGrid.resize(myGridID);
-			selectbox("state");
-			finderUser("creator");
-			twindate("created");
-			twindate("modified");
-			selectbox("_psize");
+
 		});
 
 		/* function folder() {
