@@ -29,13 +29,64 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>금형 번호</th>
+				<th>도면분류</th>
 				<td class="indent5">
-					<input type="text" name="docNumber" id="docNumber" class="width-500">
+					<span id="locationName">
+						/Default/PART_Drawing
+					</span>
 				</td>
-				<th>금형명</th>
+				<th>Rev.</th>
 				<td class="indent5">
-					<input type="text" name="docName" id="docName" class="width-500">
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="islastversion" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>최신버전</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="islastversion" value="">
+						<div class="state p-success">
+							<label>
+								<b>모든버전</b>
+							</label>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>CAD 구분</th>
+				<td class="indent5">
+					<select name="cadDivision" id="cadDivision" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+				<th>CAD 타입</th>
+				<td class="indent5">
+					<select name="cadType" id="cadType" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>도면번호</th>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-500">
+				</td>
+				<th>도면명</th>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-500">
 				</td>
 			</tr>
 			<tr>
@@ -73,32 +124,9 @@
 				</td>
 			</tr>
 			<tr>
-				<th>Rev.</th>
-				<td class="indent5" colspan="3">
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="true" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>최신Rev.</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="">
-						<div class="state p-success">
-							<label>
-								<b>모든Rev.</b>
-							</label>
-						</div>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th>Manufacturer</th>
+				<th>프로젝트코드</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
+					<select name="model" id="model" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -106,9 +134,9 @@
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-				<th>금형타입</th>
+				<th>제작방법</th>
 				<td class="indent5">
-					<select name="moldtype" id="moldtype" class="width-200">
+					<select name="productmethod" id="productmethod" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -118,29 +146,74 @@
 				</td>
 			</tr>
 			<tr>
-				<th>업체자체금형번호</th>
-				<td class="indent5">
-					<input type="text" name="moldnumber" id="moldnumber" class="width-500">
-				</td>
-				<th>금형개발비</th>
-				<td class="indent5">
-					<input type="text" name="moldcost" id="moldcost" class="width-500">
-				</td>
-			</tr>
-			<tr>
-				<th>내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-500">
-				</td>
 				<th>부서</th>
 				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-200">
+					<select name="deptcode" id="deptcode" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
 					</select>
+				</td>
+				<th>단위</th>
+				<td class="indent5">
+					<select name="unit" id="unit" class="width-500">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>무게</th>
+				<td class="indent5">
+					<input type="text" name="weight1" id="weight1" class="width-200"> ~ 
+					<input type="text" name="weight2" id="weight2" class="width-200">
+				</td>
+				<th>Manufacturer</th>
+				<td class="indent5">
+					<select name="manufacture" id="manufacture" class="width-500">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>재질</th>
+				<td class="indent5">
+					<select name="mat" id="mat" class="width-500">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+				<th>후처리</th>
+				<td class="indent5">
+					<select name="finish" id="finish" class="width-500">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>비고</th>
+				<td class="indent5">
+					<input type="text" name="remarks" id="remarks" class="width-500">
+				</td>
+				<th>사양</th>
+				<td class="indent5">
+					<input type="text" name="specification" id="specification" class="width-500">
 				</td>
 			</tr>
 		</table>
@@ -178,54 +251,81 @@
 			function _layout() {
 				return [ {
 					dataField : "name",
-					headerText : "금형번호",
+					headerText : "CAD타입",
 					dataType : "string",
-					width : 295,
+					width : 60,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "number",
-					headerText : "금형명",
+					headerText : "도면번호",
 					dataType : "string",
-					width : 450,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "description",
-					headerText : "Rev.",
+					headerText : "Thumbnail",
 					dataType : "string",
-					width : 170,
+					width : 380,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "location",
-					headerText : "상태",
+					headerText : "도면명",
 					dataType : "string",
-					width : 170,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "state",
-					headerText : "등록자",
+					headerText : "도면분류",
 					dataType : "string",
-					width : 170,
+					width : 90,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "version",
+					headerText : "Rev.",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "creator",
+					headerText : "상태",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "creator",
+					headerText : "등록자",
+					dataType : "string",
+					width : 140,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "creator",
 					headerText : "등록일",
 					dataType : "string",
-					width : 170,
+					width : 140,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -234,7 +334,7 @@
 					dataField : "creator",
 					headerText : "수정일",
 					dataType : "string",
-					width : 170,
+					width : 140,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -297,9 +397,6 @@
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
-				selectbox("manufacture");
-				selectbox("moldtype");
-				selectbox("deptcode");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");

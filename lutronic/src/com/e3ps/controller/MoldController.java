@@ -42,6 +42,14 @@ public class MoldController {
 		return model;
 	}
 	
+	@Description(value = "금형 일괄결재 페이지")
+	@GetMapping(value = "/all")
+	public ModelAndView all() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/mold/mold-all.jsp");
+		return model;
+	}
+	
 	/**	문서 상세보기
 	 * @param request
 	 * @param response

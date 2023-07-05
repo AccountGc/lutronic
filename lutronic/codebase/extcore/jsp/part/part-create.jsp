@@ -33,59 +33,118 @@
 			<tr>
 				<th>품목분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
-					<input type="text" name="description" id="description" class="width-500">
+					<span id="locationName">
+						/Default/PART_Drawing
+					</span>
 				</td>
 				<th rowspan="4">품목명 <span style="color:red;">*</span></th>
 				<th>대제목</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-300">
+					<input type="text" name="partName1" id="partName1" class="width-300">
 				</td>
 			</tr>
 			<tr>
 				<th>품목구분 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="partType1" id="partType1" class="width-500">
 				</td>
 				<th>중제목</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-300">
+					<input type="text" name="partName2" id="partName2" class="width-300">
 				</td>
 			</tr>
 			<tr>
 				<th>대분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="partType2" id="partType2" class="width-500">
 				</td>
 				<th>소제목</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-300">
+					<input type="text" name="partName3" id="partName3" class="width-300">
 				</td>
 			</tr>
 			<tr>
 				<th>중분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="partType3" id="partType3" class="width-500">
 				</td>
 				<th>사용자 Key in</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-300">
+					<input type="text" name="partName4" id="partName4" class="width-300">
 				</td>
 			</tr>
-			
+			<tr>
+				<th>SEQ <br><span style="color:red;">(3자리)</span></th>
+				<td class="indent5" colspan="5">
+					<input type="text" name="seq" id="seq" class="width-200">
+					<input type="button" id="seqList" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" onclick="loadGridData();">
+				</td>
+			</tr>
+			<tr>
+				<th>기타 <br><span style="color:red;">(2자리)</span></th>
+				<td class="indent5" colspan="5">
+					<input type="text" name="etc" id="etc" class="width-200">
+				</td>
+			</tr>
 		</table>
+		
 		<br>
 		
 		<table class="search-table">
 			<colgroup>
-				<col width="130">
+				<col width="174">
 				<col width="*">
-				<col width="130">
+				<col width="174">
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>관련 품목</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="description" id="description" class="width-300">
+				<th>프로젝트코드 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+				<th>제작방법 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>부서 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+				<th>단위 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>무게(g)</th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+				<th>MANUFACTURER</th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>재질</th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+				<th>후처리</th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>OEM Info.</th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
+				</td>
+				<th>사양</th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-500">
 				</td>
 			</tr>
 		</table>
@@ -93,15 +152,56 @@
 		
 		<table class="search-table">
 			<colgroup>
-				<col width="130">
+				<col width="180">
 				<col width="*">
-				<col width="130">
+				<col width="180">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>주 도면</th>
+				<td class="indent5" colspan="3">
+				</td>
+			</tr>
+		</table>
+		<br>
+		<table class="search-table">
+			<colgroup>
+				<col width="180">
+				<col width="*">
+				<col width="180">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>첨부파일</th>
+				<td class="indent5" colspan="3">
+				</td>
+			</tr>
+		</table>
+		<br>
+		<table class="search-table">
+			<colgroup>
+				<col width="180">
+				<col width="*">
+				<col width="180">
 				<col width="*">
 			</colgroup>
 			<tr>
 				<th>관련 문서</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="description" id="description" class="width-300">
+				</td>
+			</tr>
+		</table>
+		<br>
+		<table class="search-table">
+			<colgroup>
+				<col width="180">
+				<col width="*">
+				<col width="180">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>관련 RoHS</th>
+				<td class="indent5" colspan="3">
 				</td>
 			</tr>
 		</table>
@@ -109,9 +209,9 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" onclick="loadGridData();">
-					<input type="button" value="목록" title="목록" onclick="loadGridData();">
+					<input type="button" value="등록" title="등록" id="createBtn" onclick="loadGridData();">
+					<input type="button" value="초기화" title="초기화" id="resetBtn" onclick="loadGridData();">
+					<input type="button" value="목록" title="목록" id="listBtn" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
@@ -121,63 +221,63 @@
 			function _layout() {
 				return [ {
 					dataField : "name",
-					headerText : "금형번호",
+					headerText : "품목번호",
 					dataType : "string",
-					width : 295,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "number",
-					headerText : "금형명",
+					headerText : "결과",
 					dataType : "string",
-					width : 450,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "description",
-					headerText : "Rev.",
+					headerText : "품목구분(*)",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "location",
-					headerText : "상태",
+					headerText : "대분류(*)",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "state",
-					headerText : "등록자",
+					headerText : "중분류(*)",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "version",
-					headerText : "등록일",
+					headerText : "SEQ",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "creator",
-					headerText : "수정일",
+					headerText : "etc",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true

@@ -140,22 +140,13 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/keDrawing/list', '> 도면 관리 > KE 도면 조회');">KE 도면 조회</a>
+						<a onclick="moveToPage(this, '/drawing/list', '> 도면 관리 > 도면 검색');">도면 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/numberRule/list', '> 도면 관리 > KEK 도번 조회');">KEK 도번 조회</a>
+						<a onclick="moveToPage(this, '/drawing/create', '> 도면 관리 > 도면 등록');">도면 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/epm/list', '> 도면 관리 > KEK 도면 조회');">KEK 도면 조회</a>
-					</li>
-					<!-- 					<li> -->
-					<!-- 						<a href="form_advanced.html">라이브러리 조회</a> -->
-					<!-- 					</li> -->
-					<li>
-						<a onclick="moveToPage(this, '/workOrder/list', '> 도면 관리 > 도면일람표 조회');">도면일람표 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/epm/register', '> 도면 관리 > 도면 결재')">도면 결재</a>
+						<a onclick="moveToPage(this, '/drawing/batch', '> 도면 관리 >주 도면 일괄등록');">주 도면 일괄등록</a>
 					</li>
 				</ul>
 			</li>

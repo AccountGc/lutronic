@@ -25,37 +25,19 @@
 			<colgroup>
 				<col width="180">
 				<col width="*">
-				<col width="180">
-				<col width="*">
 			</colgroup>
 			<tr>
-				<th>품목분류</th>
-				<td class="indent5" colspan="3">
-					<span id="locationName">
-	        			/Default/PART_Drawing
-	        		</span>
+				<th>
+					Excel 업로드 <span style="color:red;">*</span>
+					<br>
+					<input type="button" value="양식다운" title="양식다운" onclick="loadGridData();">
+				</th>
+				<td class="indent5">
 				</td>
 			</tr>
 			<tr>
 				<th>첨부파일</th>
-				<td class="indent5" colspan="3">
-				</td>
-			</tr>
-		</table>
-		<table class="button-table">
-			<tr>
-				<td class="right">
-					<input type="button" value="추가" title="추가" onclick="loadGridData();">
-					<input type="button" value="삭제" title="삭제" onclick="loadGridData();">
-				</td>
-			</tr>
-		</table>
-
-		<table>
-			<tr>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+				<td class="indent5">
 				</td>
 			</tr>
 		</table>
@@ -64,7 +46,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
+					dataField : "name",
 					headerText : "품목번호",
 					dataType : "string",
 					width : 100,
@@ -73,7 +55,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "msg",
+					dataField : "number",
 					headerText : "결과",
 					dataType : "string",
 					width : 100,
@@ -82,7 +64,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "partType1",
+					dataField : "description",
 					headerText : "품목구분(*)",
 					dataType : "string",
 					width : 100,
@@ -91,7 +73,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "partType2",
+					dataField : "location",
 					headerText : "대분류(*)",
 					dataType : "string",
 					width : 100,
@@ -100,7 +82,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "partType3",
+					dataField : "state",
 					headerText : "중분류(*)",
 					dataType : "string",
 					width : 100,
@@ -109,7 +91,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "seq",
+					dataField : "version",
 					headerText : "SEQ",
 					dataType : "string",
 					width : 100,
@@ -118,7 +100,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "etc",
+					dataField : "creator",
 					headerText : "etc",
 					dataType : "string",
 					width : 100,
@@ -127,6 +109,7 @@
 						inline : true
 					},
 				}, {
+					dataField : "creator",
 					headerText : "품목명(*)",
 					dataType : "string",
 // 					width : 50,
@@ -136,7 +119,7 @@
 						inline : true
 					},
 					children : [{
-						dataField : "partName1",
+						dataField : "creator",
 						headerText : "대제목",
 						dataType : "string",
 						width : 100,
@@ -145,7 +128,7 @@
 							inline : true
 						},
 				     }, {
-				    	 dataField : "partName2",
+				    	 dataField : "creator",
 						 headerText : "중제목",
 						 dataType : "string",
 						 width : 100,
@@ -154,7 +137,7 @@
 							 inline : true
 						 },
 				     }, {
-				    	 dataField : "partName3",
+				    	 dataField : "creator",
 						 headerText : "소제목",
 						 dataType : "string",
 						 width : 100,
@@ -163,7 +146,7 @@
 							 inline : true
 						 },
 				     }, {
-				    	 dataField : "partName4",
+				    	 dataField : "creator",
 						 headerText : "사용자 Key in",
 						 dataType : "string",
 						 width : 100,
@@ -173,7 +156,7 @@
 						 },
 				     }] // end of children
 				}, {
-					dataField : "model",
+					dataField : "creator",
 					headerText : "프로젝트 코드 (*)",
 					dataType : "string",
 					width : 100,
@@ -182,7 +165,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "productmethod",
+					dataField : "creator",
 					headerText : "제작방법 (*)",
 					dataType : "string",
 					width : 100,
@@ -191,7 +174,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "deptcode",
+					dataField : "creator",
 					headerText : "부서 (*)",
 					dataType : "string",
 					width : 100,
@@ -200,7 +183,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "unit",
+					dataField : "creator",
 					headerText : "단위 (*)",
 					dataType : "string",
 					width : 100,
@@ -209,7 +192,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "manufacture",
+					dataField : "creator",
 					headerText : "MANUFATURER",
 					dataType : "string",
 					width : 100,
@@ -218,7 +201,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "mat",
+					dataField : "creator",
 					headerText : "재질",
 					dataType : "string",
 					width : 100,
@@ -227,7 +210,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "finish",
+					dataField : "creator",
 					headerText : "후처리",
 					dataType : "string",
 					width : 100,
@@ -236,7 +219,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "specification",
+					dataField : "creator",
 					headerText : "사양",
 					dataType : "string",
 					width : 100,
@@ -245,7 +228,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "weight",
+					dataField : "creator",
 					headerText : "무게(g)",
 					dataType : "string",
 					width : 100,
@@ -254,7 +237,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "remarks",
+					dataField : "creator",
 					headerText : "OEM Info.",
 					dataType : "string",
 					width : 100,
@@ -263,7 +246,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "primary",
+					dataField : "creator",
 					headerText : "주도면",
 					dataType : "string",
 					width : 100,
