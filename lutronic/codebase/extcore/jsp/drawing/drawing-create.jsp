@@ -29,33 +29,65 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>품목분류</th>
+				<th>품목분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="3">
 					<span id="locationName">
-	        			/Default/PART_Drawing
-	        		</span>
+               			/Default/PART_Drawing
+               		</span>
+				</td>
+			</tr>
+			<tr>
+				<th>도번 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-500">
+				</td>
+				<th>도면명 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>도면설명</th>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-800">
+				</td>
+			</tr>
+			<tr>
+				<th>주 첨부파일 <span style="color:red;">*</span></th>
+				<td class="indent5">
 				</td>
 			</tr>
 			<tr>
 				<th>첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 				</td>
 			</tr>
 		</table>
+		
+		<br>
+		
+		<table class="search-table">
+			<colgroup>
+				<col width="180">
+				<col width="80">
+				<col width="180">
+				<col width="*">
+				<col width="120">
+			</colgroup>
+			<tr>
+				<th>관련 품목</th>
+				<th><input type="checkbox" name="moduleType" id="moduleType"></th>
+				<th>품목번호</th>
+				<th>품목명</th>
+				<th>Rev.</th>
+		</table>
+		
 		<table class="button-table">
 			<tr>
-				<td class="right">
-					<input type="button" value="추가" title="추가" onclick="loadGridData();">
-					<input type="button" value="삭제" title="삭제" onclick="loadGridData();">
-				</td>
-			</tr>
-		</table>
-
-		<table>
-			<tr>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+				<td class="center">
+					<input type="button" value="등록" title="등록" id="createBtn" onclick="loadGridData();">
+					<input type="button" value="초기화" title="초기화" id="resetBtn" onclick="loadGridData();">
+					<input type="button" value="목록" title="목록" id="listBtn" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
@@ -64,7 +96,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
+					dataField : "name",
 					headerText : "품목번호",
 					dataType : "string",
 					width : 100,
@@ -73,7 +105,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "msg",
+					dataField : "number",
 					headerText : "결과",
 					dataType : "string",
 					width : 100,
@@ -82,7 +114,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "partType1",
+					dataField : "description",
 					headerText : "품목구분(*)",
 					dataType : "string",
 					width : 100,
@@ -91,7 +123,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "partType2",
+					dataField : "location",
 					headerText : "대분류(*)",
 					dataType : "string",
 					width : 100,
@@ -100,7 +132,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "partType3",
+					dataField : "state",
 					headerText : "중분류(*)",
 					dataType : "string",
 					width : 100,
@@ -109,7 +141,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "seq",
+					dataField : "version",
 					headerText : "SEQ",
 					dataType : "string",
 					width : 100,
@@ -118,153 +150,8 @@
 						inline : true
 					},
 				}, {
-					dataField : "etc",
+					dataField : "creator",
 					headerText : "etc",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					headerText : "품목명(*)",
-					dataType : "string",
-// 					width : 50,
-					cellColMerge : true, // 셀 가로 병합 실행
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-					children : [{
-						dataField : "partName1",
-						headerText : "대제목",
-						dataType : "string",
-						width : 100,
-						filter : {
-							showIcon : true,
-							inline : true
-						},
-				     }, {
-				    	 dataField : "partName2",
-						 headerText : "중제목",
-						 dataType : "string",
-						 width : 100,
-						 filter : {
-							 showIcon : true,
-							 inline : true
-						 },
-				     }, {
-				    	 dataField : "partName3",
-						 headerText : "소제목",
-						 dataType : "string",
-						 width : 100,
-						 filter : {
-							 showIcon : true,
-							 inline : true
-						 },
-				     }, {
-				    	 dataField : "partName4",
-						 headerText : "사용자 Key in",
-						 dataType : "string",
-						 width : 100,
-						 filter : {
-							 showIcon : true,
-							 inline : true
-						 },
-				     }] // end of children
-				}, {
-					dataField : "model",
-					headerText : "프로젝트 코드 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "productmethod",
-					headerText : "제작방법 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "deptcode",
-					headerText : "부서 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "unit",
-					headerText : "단위 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "manufacture",
-					headerText : "MANUFATURER",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "mat",
-					headerText : "재질",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "finish",
-					headerText : "후처리",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "specification",
-					headerText : "사양",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "weight",
-					headerText : "무게(g)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "remarks",
-					headerText : "OEM Info.",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "primary",
-					headerText : "주도면",
 					dataType : "string",
 					width : 100,
 					filter : {
@@ -329,10 +216,8 @@
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
-				finderUser("creator");
-				twindate("created");
-				twindate("modified");
-				selectbox("_psize");
+				selectbox("type");
+				selectbox("depart");
 			});
 
 			function exportExcel() {

@@ -10,7 +10,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,20 +40,30 @@ import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.part.service.PartHelper;
 
 @Controller
-@RequestMapping("/drawing")
+@RequestMapping(value = "/drawing")
 public class DrawingController {
 	
-	/**	도면 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listDrawing")
-	public ModelAndView listDrawing(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "도면 검색 페이지")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "drawing");
-		model.setViewName("default:/drawing/listDrawing");
+		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "도면 등록 페이지")
+	@GetMapping(value = "/create")
+	public ModelAndView create() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/drawing/drawing-create.jsp");
+		return model;
+	}
+	
+	@Description(value = "일괄 등록 페이지")
+	@GetMapping(value = "/batch")
+	public ModelAndView batch() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/drawing/drawing-batch.jsp");
 		return model;
 	}
 	
@@ -71,20 +83,6 @@ public class DrawingController {
 		}
 		
 		return result;
-	}
-	
-	/**	도면 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createDrawing")
-	public ModelAndView createDrawing(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu2");
-		model.addObject("module", "drawing");
-		model.setViewName("default:/drawing/createDrawing");
-		return model;
 	}
 	
 	/** 도면 등록

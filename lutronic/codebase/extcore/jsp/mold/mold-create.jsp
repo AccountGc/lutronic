@@ -29,11 +29,11 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>결재방식</th>
+				<th>결재방식 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="3">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="true" checked="checked">
+						<input type="radio" name="lifecycle" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>기본결재</b>
@@ -42,7 +42,7 @@
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="">
+						<input type="radio" name="lifecycle" value="">
 						<div class="state p-success">
 							<label>
 								<b>일괄결재</b>
@@ -52,15 +52,15 @@
 				</td>
 			</tr>
 			<tr>
-				<th>문서명</th>
+				<th>문서명 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="docName" id="docName" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-200">
+					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -68,9 +68,9 @@
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-				<th>금형타입</th>
+				<th>금형타입 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select name="type" id="type" class="width-200">
+					<select name="moldtype" id="moldtype" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -82,21 +82,21 @@
 			<tr>
 				<th>업체자제금형번호</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="moldnumber" id="moldnumber" class="width-500">
 				</td>
 				<th>금형개발비</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-500">
+					<input type="text" name="moldcost" id="moldcost" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>내부 문서번호 <br>(자산등록번호)</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-500">
 				</td>
 				<th>부서</th>
 				<td class="indent5">
-					<select name="depart" id="depart" class="width-200">
+					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -112,15 +112,13 @@
 				</td>
 			</tr>
 			<tr>
-				<th>주 첨부파일</th>
+				<th>주 첨부파일 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="description" id="description" class="width-300">
 				</td>
 			</tr>
 			<tr>
 				<th>첨부파일</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="description" id="description" class="width-300">
 				</td>
 			</tr>
 		</table>
@@ -290,9 +288,9 @@
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("state");
-				selectbox("type");
-				selectbox("depart");
+				selectbox("manufacture");
+				selectbox("moldtype");
+				selectbox("deptcode");
 			});
 
 			function exportExcel() {

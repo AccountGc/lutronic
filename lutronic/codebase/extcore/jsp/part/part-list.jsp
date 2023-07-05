@@ -31,13 +31,15 @@
 			<tr>
 				<th>품목분류</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<span id="locationName">
+	        			/Default/PART_Drawing
+	        		</span>
 				</td>
 				<th>Rev.</th>
 				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="true" checked="checked">
+						<input type="radio" name="islastversion" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>최신Rev.</b>
@@ -46,7 +48,7 @@
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="">
+						<input type="radio" name="islastversion" value="false">
 						<div class="state p-success">
 							<label>
 								<b>모든Rev.</b>
@@ -58,26 +60,26 @@
 			<tr>
 				<th>품목번호</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="partNumber" id="partNumber" class="width-500">
 				</td>
 				<th>품목명</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="partName" id="partName" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>등록일</th>
 				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					<input type="text" name="predate" id="createdFrom" class="width-100">
 					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<input type="text" name="postdate" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
-					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+					<input type="text" name="predate_modify" id="modifiedFrom" class="width-100">
 					~
-					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<input type="text" name="postdate_modify" id="modifiedTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
@@ -102,7 +104,7 @@
 			<tr>
 				<th>프로젝트코드</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-500">
+					<select name="model" id="model" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -112,7 +114,7 @@
 				</td>
 				<th>제작방법</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-500">
+					<select name="productmethod" id="productmethod" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -124,7 +126,7 @@
 			<tr>
 				<th>부서</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-500">
+					<select name="deptcode" id="deptcode" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -134,7 +136,7 @@
 				</td>
 				<th>단위</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-500">
+					<select name="unit" id="unit" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -146,11 +148,11 @@
 			<tr>
 				<th>무게</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="weight" id="weight" class="width-500">
 				</td>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -162,7 +164,7 @@
 			<tr>
 				<th>재질</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-500">
+					<select name="mat" id="mat" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -172,7 +174,7 @@
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-500">
+					<select name="finish" id="finish" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -184,21 +186,21 @@
 			<tr>
 				<th>OEM Info.</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="remarks" id="remarks" class="width-500">
 				</td>
 				<th>사양</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="specification" id="specification" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>ECO No.</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="ecoNo" id="ecoNo" class="width-500">
 				</td>
 				<th>Eo No.</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
+					<input type="text" name="eoNo" id="eoNo" class="width-500">
 				</td>
 			</tr>
 		</table>
@@ -213,9 +215,11 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" onclick="loadGridData();">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
+					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
+					<a href="javascript:onExcelDown();">
+						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					</a>	
 				</td>
 			</tr>
 		</table>
@@ -389,6 +393,13 @@
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
+				selectbox("model");
+				selectbox("productmethod");
+				selectbox("deptcode");
+				selectbox("unit");
+				selectbox("mat");
+				selectbox("finish");
+				selectbox("manufacture");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
