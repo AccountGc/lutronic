@@ -280,14 +280,6 @@
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
-				const contenxtHeader = genColumnHtml(columns);
-				$("#h_item_ul").append(contenxtHeader);
-				$("#headerMenu").menu({
-					select : headerMenuSelectHandler
-				});
-				createAUIGrid(columns);
-				AUIGrid.resize(myGridID);
 				selectbox("manufacture");
 				selectbox("moldtype");
 				selectbox("deptcode");
