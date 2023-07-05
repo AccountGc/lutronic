@@ -26,8 +26,8 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>프로젝트 코드</th>
-				<td class="indent5"><select name="state" id="state" class="width-200">
+				<th>프로젝트코드</th>
+				<td class="indent5"><select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -80,7 +80,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
+					dataField : "model",
 					headerText : "프로젝트 코드",
 					dataType : "string",
 					width : 120,

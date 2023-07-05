@@ -27,21 +27,21 @@
 			</colgroup>
 			<tr>
 				<th>문서 분류</th>
-				<td class="indent5"><input type="hidden" name="location" id="location" value="<%//=DocumentHelper.DOCUMENT_ROOT%>"> <span id="locationText"> <%
+				<td class="indent5"><input type="hidden" name="locationName" id="locationName" value="<%//=DocumentHelper.DOCUMENT_ROOT%>"> <span id="locationText"> <%
  //=DocumentHelper.DOCUMENT_ROOT
  %>
 				</span></td>
 				<th>버전</th>
 				<td>&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="true" checked="checked">
+						<input type="radio" name="islastversion" value="true" checked="checked">
 						<div class="state p-success">
 							<label> <b>최신버전</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="">
+						<input type="radio" name="islastversion" value="false">
 						<div class="state p-success">
 							<label> <b>모든버전</b>
 							</label>
