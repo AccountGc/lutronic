@@ -8,15 +8,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-import wt.part.WTPart;
-//import wt.vc.baseline.ManagedBaseline;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -37,22 +36,19 @@ import com.e3ps.common.util.StringUtil;
 //import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmUtil;
 
+import wt.part.WTPart;
+//import wt.vc.baseline.ManagedBaseline;
+
 @Controller
 @RequestMapping("/changeECO")
 public class ChangeECOController {
 	
 	
-	/**	ECO 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createECO")
-	public ModelAndView createECO(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "ECO 등록")
+	@GetMapping(value = "/create")
+	public ModelAndView create() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu4");
-		model.addObject("module", "change");
-		model.setViewName("default:/change/createECO");
+		model.setViewName("/extcore/jsp/change/eco-create.jsp");
 		return model;
 	}
 	
@@ -67,17 +63,11 @@ public class ChangeECOController {
 		return ECOHelper.service.createECOAction(request);//ECRHelper.service.createECRAction(request);
 	}
 	
-	/**	EO 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listECO")
-	public ModelAndView listECO(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "ECO 검색")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu3");
-		model.addObject("module","change");
-		model.setViewName("default:/change/listECO");
+		model.setViewName("/extcore/jsp/change/eco-list.jsp");
 		return model;
 	}
 	
