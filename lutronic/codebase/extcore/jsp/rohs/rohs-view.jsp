@@ -70,7 +70,7 @@
 			function _layout() {
 				return [ {
 					dataField : "rohsNumber",
-					headerText : "물질번호",
+					headerText : "업체명",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -79,15 +79,6 @@
 					},
 				}, {
 					dataField : "manufacture",
-					headerText : "협력업체",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "rohsName",
 					headerText : "물질명",
 					dataType : "string",
 					width : 120,
@@ -96,8 +87,17 @@
 						inline : true
 					},
 				}, {
+					dataField : "rohsName",
+					headerText : "파일명",
+					dataType : "string",
+					width : 120,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "발행일자",
 					dataType : "string",
 					width : 350,
 					filter : {
@@ -106,7 +106,7 @@
 					},
 				}, {
 					dataField : "state",
-					headerText : "상태",
+					headerText : "등록일",
 					dataType : "string",
 					width : 100,
 					filter : {
@@ -115,30 +115,12 @@
 					},
 				}, {
 					dataField : "creator",
-					headerText : "등록자",
+					headerText : "작성자",
 					dataType : "string",
 					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
-					},
-				}, {
-					dataField : "createdDate",
-					headerText : "등록일",
-					dataType : "date",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
-				}, {
-					dataField : "modifiedDate",
-					headerText : "수정일",
-					dataType : "date",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
 					},
 				} ]
 			}

@@ -244,13 +244,13 @@
 						<a onclick="moveToPage(this, '/rohs/listRoHSProduct', '> RoHS > 제품 현황');">제품 현황</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/list', '> RoHS > 물질 일괄결재');">물질 일괄결재</a>
+						<a onclick="moveToPage(this, '/rohs/all', '> RoHS > 물질 일괄결재');">물질 일괄결재</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/list', '> RoHS > 물질 일괄결재');">물질 일괄등록</a>
+						<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄결재');">물질 일괄등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/list', '> RoHS > 물질 일괄결재');">물질 일괄링크</a>
+						<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄결재');">물질 일괄링크</a>
 					</li>
 				</ul>
 			</li>

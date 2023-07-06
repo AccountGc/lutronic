@@ -56,6 +56,22 @@ public class RohsController {
 		return model;
 	}
 	
+	@Description(value = "물질 일괄등록")
+	@GetMapping(value = "/batch")
+	public ModelAndView batch() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/rohs/rohs-batch.jsp");
+		return model;
+	}
+	
+	@Description(value = "물질 일괄링크")
+	@GetMapping(value = "/link")
+	public ModelAndView link() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/rohs/rohs-link.jsp");
+		return model;
+	}
+	
 //	/** rohs 검색 페이지
 //	 * @param request
 //	 * @param response
@@ -80,7 +96,7 @@ public class RohsController {
 	
 	@Description(value = "파일 검색")
 	@GetMapping(value =  "/view")
-	public ModelAndView view(HttpServletRequest request, HttpServletResponse response
+	public ModelAndView view(
 //			,@RequestParam(value="oid") String oid
 			) throws Exception {
 		ModelAndView model = new ModelAndView();
@@ -395,7 +411,7 @@ public class RohsController {
 	@GetMapping(value = "/listRoHSProduct")
 	public ModelAndView listRoHSProduct() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("default:/rohs/rohs-listRoHSProduct");
+		model.setViewName("/extcore/jsp/rohs/rohs-listRoHSProduct.jsp");
 		return model;
 	}
 	
