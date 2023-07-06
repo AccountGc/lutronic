@@ -8,7 +8,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,14 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.beans.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
-import com.e3ps.rohs.service.RohsQueryHelper;
-import com.e3ps.rohs.service.RohsService;
 
 @Controller
 @RequestMapping("/rohs")
@@ -35,31 +34,47 @@ public class RohsController {
 		return RohsHelper.service.rohsFileType();
 	}
 	
-	/**	rohs 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createRohs")
-	public ModelAndView createRohs(HttpServletRequest request, HttpServletResponse response) {
+//	/**	rohs 등록 페이지
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/createRohs")
+//	public ModelAndView createRohs(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu2");
+//		model.addObject("module","rohs");
+//		model.setViewName("default:/rohs/createRohs");
+//		return model;
+//	}
+	
+	@Description(value = "물질 등록")
+	@GetMapping(value = "/create")
+	public ModelAndView create() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu2");
-		model.addObject("module","rohs");
-		model.setViewName("default:/rohs/createRohs");
+		model.setViewName("/extcore/jsp/rohs/rohs-create.jsp");
 		return model;
 	}
 	
-	/** rohs 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listRohs")
-	public ModelAndView listRohs(HttpServletRequest request, HttpServletResponse response) {
+//	/** rohs 검색 페이지
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/listRohs")
+//	public ModelAndView listRohs(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu1");
+//		model.addObject("module","rohs");
+//		model.setViewName("default:/rohs/listRohs");
+//		return model;
+//	}
+	
+	@Description(value = "물질검색")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module","rohs");
-		model.setViewName("default:/rohs/listRohs");
+		model.setViewName("/extcore/jsp/rohs/rohs-list.jsp");
 		return model;
 	}
 	

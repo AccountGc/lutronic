@@ -229,10 +229,10 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/drawing/list', '> RoHS > 물질 검색');">물질 검색</a>
+						<a onclick="moveToPage(this, '/rohs/list', '> RoHS > 물질 검색');">물질 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/list', '> RoHS > 물질 등록');">물질 등록</a>
+						<a onclick="moveToPage(this, '/rohs/create', '> RoHS > 물질 등록');">물질 등록</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/drawing/list', '> RoHS > 파일 검색');">파일 검색</a>
