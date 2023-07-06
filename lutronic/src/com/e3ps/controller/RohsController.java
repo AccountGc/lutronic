@@ -78,27 +78,45 @@ public class RohsController {
 		return model;
 	}
 	
-	/**	rohs 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewRohs")
-	public ModelAndView viewRohs(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+	@Description(value = "파일 검색")
+	@GetMapping(value =  "/view")
+	public ModelAndView view(HttpServletRequest request, HttpServletResponse response
+//			,@RequestParam(value="oid") String oid
+			) throws Exception {
 		ModelAndView model = new ModelAndView();
-		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-		RohsData rohsData = new RohsData(rohs);
-		
-		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
-		
-		model.setViewName("popup:/rohs/viewRohs");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("rohsData", rohsData);
-		model.addObject("list", list);
+//		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+//		RohsData rohsData = new RohsData(rohs);
+//		
+//		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
+//		
+		model.setViewName("/extcore/jsp/rohs/rohs-view.jsp");
+//		model.addObject("isAdmin", CommonUtil.isAdmin());
+//		model.addObject("rohsData", rohsData);
+//		model.addObject("list", list);
 		return model;
 	}
+	
+//	/**	rohs 상세보기
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/viewRohs")
+//	public ModelAndView viewRohs(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+//		RohsData rohsData = new RohsData(rohs);
+//		
+//		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
+//		
+//		model.setViewName("popup:/rohs/viewRohs");
+//		model.addObject("isAdmin", CommonUtil.isAdmin());
+//		model.addObject("rohsData", rohsData);
+//		model.addObject("list", list);
+//		return model;
+//	}
 	
 	/**	rohs 등록
 	 * @param request
@@ -319,33 +337,27 @@ public class RohsController {
 		return result;
 	}
 	
-	/**  부품현황
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listRoHSPart")
-	public ModelAndView listRoHSPart(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "부품현황")
+	@GetMapping(value = "/listAUIRoHSPart")
+	public ModelAndView listAUIRoHSPart() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu5");
-		model.addObject("module","rohs");
-		model.setViewName("default:/rohs/listRoHSPart");
+		model.setViewName("/extcore/jsp/rohs/rohs-listAUIRoHSPart.jsp");
 		return model;
 	}
 	
-	/**  부품현황
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listAUIRoHSPart")
-	public ModelAndView listAUIRoHSPart(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu5");
-		model.addObject("module","rohs");
-		model.setViewName("default:/rohs/listAUIRoHSPart");
-		return model;
-	}
+//	/**  부품현황
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/listAUIRoHSPart")
+//	public ModelAndView listAUIRoHSPart(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu5");
+//		model.addObject("module","rohs");
+//		model.setViewName("default:/rohs/listAUIRoHSPart");
+//		return model;
+//	}
 	
 	@ResponseBody
 	@RequestMapping("/listRoHSPartAction")
@@ -379,19 +391,27 @@ public class RohsController {
 		return returnMap;
 	}
 	
-	/**  제품현황
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listRoHSProduct")
-	public ModelAndView listPartsRoHSState(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "제품현황")
+	@GetMapping(value = "/listRoHSProduct")
+	public ModelAndView listRoHSProduct() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu6");
-		model.addObject("module","rohs");
-		model.setViewName("default:/rohs/listRoHSProduct");
+		model.setViewName("default:/rohs/rohs-listRoHSProduct");
 		return model;
 	}
+	
+//	/**  제품현황
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/listRoHSProduct")
+//	public ModelAndView listPartsRoHSState(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu6");
+//		model.addObject("module","rohs");
+//		model.setViewName("default:/rohs/listRoHSProduct");
+//		return model;
+//	}
 	
 	@ResponseBody
 	@RequestMapping("/listRoHSProductAction")
