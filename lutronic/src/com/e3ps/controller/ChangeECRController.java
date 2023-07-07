@@ -8,7 +8,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,17 +41,11 @@ public class ChangeECRController {
 	
 	
 	
-	/**	ECR 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createECR")
+	@Description(value = "ECR 등록 페이지")
+	@GetMapping(value = "/createECR")
 	public ModelAndView createECR(HttpServletRequest request, HttpServletResponse response){
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu2");
-		model.addObject("module", "change");
-		model.setViewName("default:/change/createECR");
+		model.setViewName("/extcore/jsp/change/ecr-create.jsp");
 		return model;
 	}
 	
@@ -66,17 +62,11 @@ public class ChangeECRController {
 		return ECRHelper.service.createECRAction(request);
 	}
 	
-	/**	ECR 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listECR")
-	public ModelAndView listECR(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "ECR 검색 페이지")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module","change");
-		model.setViewName("default:/change/listECR");
+		model.setViewName("/extcore/jsp/change/ecr-list.jsp");
 		return model;
 	}
 	
