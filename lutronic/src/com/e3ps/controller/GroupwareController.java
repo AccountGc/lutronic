@@ -538,15 +538,10 @@ public class GroupwareController {
 		return model;
 	}
 	
-	/**	비밀번호 변경 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/changePassword")
-	public ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+	@Description(value = "비밀번호 변경 페이지")
+	@GetMapping(value = "/changePassword")
+	public ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		ModelAndView model = new ModelAndView();
 		String id = request.getParameter("id");
 		
 		if(!StringUtil.checkString(id)) {
@@ -557,19 +552,18 @@ public class GroupwareController {
 		}
 		
 		String isPop = request.getParameter("isPop");
-		
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu11");
-		model.addObject("module", "workprocess");
 		model.addObject("id", id);
 		model.addObject("isPop", isPop);
+		model.setViewName("/extcore/jsp/workprocess/popup-changePassword.jsp");
 		
-		String viewName = "default:/workprocess/changePassword";
-		if("true".equals(isPop)) {
-			viewName = "popup:/workprocess/changePassword";
-		}
+//        String viewName = "default:/workprocess/changePassword";
+//        if("true".equals(isPop)) {
+//            viewName = "popup:/workprocess/changePassword";
+//        }
+//        
+//        model.setViewName(viewName);
 		
-		model.setViewName(viewName);
+//		model.setViewName("popup:/workprocess/popup-changePassword");
 		return model;
 	}
 	
@@ -605,44 +599,40 @@ public class GroupwareController {
 		}
 	}
 	
-	/**	조직도 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/companyTree")
-	public ModelAndView companyTree(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@Description(value = "조직도 페이지")
+	@GetMapping(value = "/listCompanyTree")
+	public ModelAndView listCompanyTree() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu12");
-		model.addObject("module", "workprocess");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.setViewName("default:/workprocess/companyTree");
+		model.setViewName("/extcore/jsp/workprocess/companyTree-list.jsp");
 		return model;
 	}
 	
-	/**  관라지 메뉴
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/wfProcessInfo")
-	public ModelAndView wfProcessInfo(HttpServletRequest request, HttpServletResponse response) {
-		
-		String oid = request.getParameter("oid");
+	@Description(value = "관리자 메뉴")
+	@GetMapping(value = "/listWfProcessInfo")
+	public ModelAndView listWfProcessInfo() {
 		ModelAndView model = new ModelAndView();
-		if(StringUtil.checkString(oid)) {
-			model.addObject("oid",oid);
-			model.setViewName("popup:/workprocess/wfProcessInfo");
-			model.addObject("isPoup", true);
-		}else {
-			model.setViewName("default:/workprocess/wfProcessInfo");
-			model.addObject("isPoup", false);
-		}
-		
-		model.addObject("menu", "menu10");
-		model.addObject("module", "workprocess");
+		model.setViewName("/extcore/jsp/workprocess/wfProcessInfo-list.jsp");
 		return model;
 	}
+	
+//	@RequestMapping("/wfProcessInfo")
+//	public ModelAndView wfProcessInfo(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		String oid = request.getParameter("oid");
+//		ModelAndView model = new ModelAndView();
+//		if(StringUtil.checkString(oid)) {
+//			model.addObject("oid",oid);
+//			model.setViewName("popup:/workprocess/wfProcessInfo");
+//			model.addObject("isPoup", true);
+//		}else {
+//			model.setViewName("default:/workprocess/wfProcessInfo");
+//			model.addObject("isPoup", false);
+//		}
+//		
+//		model.addObject("menu", "menu10");
+//		model.addObject("module", "workprocess");
+//		return model;
+//	}
 	
 	@ResponseBody
 	@RequestMapping("/wfProcessInfoAction")

@@ -63,13 +63,14 @@
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/org/organization', '> 나의 업무 > 조직도');">조직도</a>
+						<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a>
 					</li>
 					<li>
-						<a onclick="javascript:_popup('/org/password');">비밀번호 변경</a>
+<!-- 						<a onclick="javascript:_popup('/groupware/changePassword');">비밀번호 변경</a> -->
+						<a onclick="moveToPage(this, '/groupware/changePassword');">비밀번호 변경</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 관리자메뉴');">
+						<a onclick="moveToPage(this, '/groupware/listWfProcessInfo', '> 나의업무 > 관리자메뉴');">
 							관리자 메뉴
 						</a>
 					</li>
