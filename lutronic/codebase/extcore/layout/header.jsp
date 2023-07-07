@@ -26,40 +26,40 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/notice/list', '> 나의 업무 > 공지사항');">공지사항</a>
+						<a onclick="moveToPage(this, '/groupware/listNotice', '> 나의 업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/agree', '> 나의 업무 > 검토함');">
+						<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 검토함');">
 							검토함
 							<span class="label label-info float-right"><%//=count.get("agree")%></span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/approval', '> 나의 업무 > 결재함');">
+						<a onclick="moveToPage(this, '/groupware/listItem?state=approval', '> 나의 업무 > 결재함');">
 							결재함
 							<span class="label label-info float-right"><%//=count.get("approval")%></span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/receive', '> 나의 업무 > 수신함');">
+						<a onclick="moveToPage(this, '//groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
 							수신함
 							<span class="label label-info float-right"><%//=count.get("receive")%></span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/progress', '> 나의 업무 > 진행함');">
+						<a onclick="moveToPage(this, '//groupware/listItem?state=ing', '> 나의 업무 > 진행함');">
 							진행함
 							<span class="label label-info float-right"><%//=count.get("progress")%></span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/complete', '> 나의 업무 > 완료함');">
+						<a onclick="moveToPage(this, '/groupware/listItem?state=complete', '> 나의 업무 > 완료함');">
 							완료함
 							<span class="label label-info float-right"><%//=count.get("complete")%></span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/reject', '> 나의 업무 > 반려함');">
+						<a onclick="moveToPage(this, '/groupware/listItem?state=rtn', '> 나의 업무 > 반려함');">
 							반려함
 							<span class="label label-info float-right"><%//W=count.get("reject")%></span>
 						</a>
