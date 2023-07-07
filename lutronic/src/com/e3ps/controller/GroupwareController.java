@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import oracle.net.aso.a;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,7 +50,7 @@ import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.service.MailUserHelper;
 
 @Controller
-@RequestMapping("/groupware")
+@RequestMapping(value = "/groupware")
 public class GroupwareController {
 	
 	/** 메인 페이지
@@ -73,23 +75,13 @@ public class GroupwareController {
 		return model;
 	}
 	
-	/** 공지사항 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/listNotice")
-	public ModelAndView notice(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@Description(value = "공지사항 검색 페이지")
+	@GetMapping(value = "/listNotice")
+	public ModelAndView listNotice() throws Exception{
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "workprocess");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.setViewName("default:/workprocess/listNotice");
+		model.setViewName("/extcore/jsp/workprocess/notice-list.jsp");
 		return model;
 	}
-	
-	
 	
 	/** 공지사항 검색
 	 * @param request
@@ -126,19 +118,11 @@ public class GroupwareController {
 		return returnData;
 	}
 	
-	/** 공지사항 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/createNotice")
-	public ModelAndView createNotice(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@Description(value = "공지사항 등록 페이지")
+	@GetMapping(value = "/createNotice")
+	public ModelAndView createNotice() throws Exception{
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "workprocess");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.setViewName("default:/workprocess/createNotice");
+		model.setViewName("/extcore/jsp/workprocess/notice-create.jsp");
 		return model;
 	}
 	
@@ -278,20 +262,12 @@ public class GroupwareController {
 		}
 		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
 	}
-
-	/** 작업합 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/listWorkItem")
-	public ModelAndView listWorkItem(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	
+	@Description(value = "작업함 페이지")
+	@GetMapping(value = "/listWorkItem")
+	public ModelAndView listWorkItem() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu3");
-		model.addObject("module","workprocess");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.setViewName("default:/workprocess/listWorkItem");
+		model.setViewName("/extcore/jsp/workprocess/workItem-list.jsp");
 		return model;
 	}
 	
@@ -464,18 +440,11 @@ public class GroupwareController {
 		return model;
 	}
 	
-	/** 진행중, 완료함, 수신함 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listItem")
-	public ModelAndView listItem(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "진행함, 완료함, 수신함 페이지")
+	@GetMapping(value = "/listItem")
+	public ModelAndView listItem(HttpServletRequest request) throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.addObject("module","workprocess");
-		
 		String state = request.getParameter("state");
-		
 		if("ing".equals(state)) {
 			model.addObject("menu","menu4");
 		}else if("complete".equals(state)) {
@@ -483,9 +452,7 @@ public class GroupwareController {
 		}else if("receive".equals(state)){
 			model.addObject("menu","menu6");
 		}
-		model.setViewName("default:/workprocess/listItem");
-		model.addObject("state", state);
-		
+		model.setViewName("/extcore/jsp/workprocess/listItem-list.jsp");
 		return model;
 	}
 	
