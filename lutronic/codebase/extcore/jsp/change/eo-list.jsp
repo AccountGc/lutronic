@@ -26,21 +26,16 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>CR/ECPR 제목</th>
+				<th>EO 제목</th>
 				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
-				<th>CR/ECPR 번호</th>
+				<th>EO 번호</th>
 				<td class="indent5"><input type="text" name="number" id="number" class="width-200"></td>
 			</tr>
 			<tr>
-				<th>등록일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 				<th>등록자</th>
 				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
-			</tr>
-			<tr>
 				<th>상태</th>
-				<td class="indent5" colspan="3"><select name="state" id="state" class="width-200" >
+				<td class="indent5"><select name="state" id="state" class="width-200" >
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -49,18 +44,38 @@
 				</select></td>
 			</tr>
 			<tr>
-				<th>작성일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+				<th>등록일</th>
+				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
-				<th>승인일</th>
-				<td class="indent5"><input type="text" name="approveForm" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<th>구분</th>
+				<td>&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="eoType" value=""  checked>
+						<div class="state p-success">
+							<label> <b>없음</b>
+							</label>
+						</div>
+					</div> &nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="eoType" value="DEV">
+						<div class="state p-success">
+							<label> <b>개발</b>
+							</label>
+						</div>
+					</div> &nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="eoType" value="PRODUCT">
+						<div class="state p-success">
+							<label> <b>양산</b>
+							</label>
+						</div>
+					</div>
+				</td>
 			</tr>
 			<tr>
-				<th>작성부서</th>
-				<td class="indent5"><input type="text" name="createDepart" id="createDepart" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
-				<th>작성자</th>
-				<td class="indent5"><input type="text" name="writer" id="writer" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+				<th>승인일</th>
+				<td class="indent5" colspan="3"><input type="text" name="approveForm" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 			</tr>
 			<tr>
 				<th>제품명 <input name="modelCodeCheck" id="modelCodeCheck" type="checkbox"></th>
@@ -70,38 +85,10 @@
 				</td>
 			</tr>
 			<tr>
-				<th>제안자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
-				<th>변경구분</th>
-				<td>&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="true" checked="NONE">
-						<div class="state p-success">
-							<label> <b>선택안됨</b>
-							</label>
-						</div>
-					</div> &nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="0">
-						<div class="state p-success">
-							<label> <b>불필요</b>
-							</label>
-						</div>
-					</div> &nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="1">
-						<div class="state p-success">
-							<label> <b>필요</b>
-							</label>
-						</div>
-					</div> &nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="">
-						<div class="state p-success">
-							<label> <b>전체</b>
-							</label>
-						</div>
-					</div>
+				<th>완제품 품목<input name="completePartCheck" id="completePartCheck" type="checkbox"></th>
+				<td class="indent5" colspan="3">
+					<button type="button" name="addNumberCode" id="addNumberCode" class="btnCustom">추가</button>
+					<button type="button" name="delNumberCode" id="delNumberCode" class="btnCustom">삭제</button>
 				</td>
 			</tr>
 		</table>
@@ -127,7 +114,7 @@
 			function _layout() {
 				return [ {
 					dataField : "number",
-					headerText : "CR/ECPR 번호",
+					headerText : "EO 번호",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -136,7 +123,7 @@
 					},
 				}, {
 					dataField : "name",
-					headerText : "CR/ECPR 제목",
+					headerText : "EO 제목",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -144,37 +131,10 @@
 						inline : true
 					},
 				}, {
-					dataField : "model",
-					headerText : "변경구분",
+					dataField : "eoType",
+					headerText : "구분",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "writer",
-					headerText : "작성자",
-					dataType : "string",
-					width : 350,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "createDepart",
-					headerText : "작성부서",
-					dataType : "string",
-					width : 250,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "preCreateDate",
-					headerText : "작성일",
-					dataType : "string",
-					width : 350,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -183,7 +143,7 @@
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
+					width : 350,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -192,13 +152,22 @@
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 100,
+					width : 250,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "predate",
+					dataField : "approveDate",
+					headerText : "승인일",
+					dataType : "string",
+					width : 350,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 100,

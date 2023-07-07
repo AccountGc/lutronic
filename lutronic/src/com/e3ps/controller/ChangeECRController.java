@@ -42,7 +42,7 @@ public class ChangeECRController {
 	
 	
 	@Description(value = "ECR 등록 페이지")
-	@GetMapping(value = "/createECR")
+	@GetMapping(value = "/create")
 	public ModelAndView createECR(HttpServletRequest request, HttpServletResponse response){
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/change/ecr-create.jsp");

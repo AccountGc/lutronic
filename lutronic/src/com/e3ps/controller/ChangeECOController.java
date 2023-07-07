@@ -117,7 +117,7 @@ public class ChangeECOController {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu6");
 		model.addObject("module", "change");
-		model.setViewName("default:/change/createEO");
+		model.setViewName("/extcore/jsp/change/eo-create.jsp");
 		return model;
 	}
 	
@@ -133,18 +133,12 @@ public class ChangeECOController {
 		
 		return ECOHelper.service.createEOAction(request);//ECRHelper.service.createECRAction(request);
 	}
-	
-	/**	EO 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listEO")
-	public ModelAndView listEO(HttpServletRequest request, HttpServletResponse response) {
+
+	@Description(value = "EO 검색 페이지")
+	@GetMapping(value = "/listEO")
+	public ModelAndView listEO() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu5");
-		model.addObject("module","change");
-		model.setViewName("default:/change/listEO");
+		model.setViewName("/extcore/jsp/change/eo-list.jsp");
 		return model;
 	}
 	
