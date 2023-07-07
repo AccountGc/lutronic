@@ -67,7 +67,7 @@
 					</li>
 					<li>
 <!-- 						<a onclick="javascript:_popup('/groupware/changePassword');">비밀번호 변경</a> -->
-						<a onclick="moveToPage(this, '/groupware/changePassword');">비밀번호 변경</a>
+						<a onclick="moveToPage(this, '/groupware/changePassword', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listWfProcessInfo', '> 나의업무 > 관리자메뉴');">

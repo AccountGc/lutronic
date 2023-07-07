@@ -27,13 +27,10 @@
 				<col width="*">
 			</colgroup>
 			<tr bgcolor="ffffff">
-				<td class="indent5">
-					비밀번호 변경 시 로그인을 다시 해야 합니다.
-				</td>
-			</tr>
-			<tr bgcolor="ffffff">
-				<td class="indent5">
-					비밀번호 변경 시 로그인을 다시 해야 합니다.
+				<td class="indent5" colspan="2">
+					<span style="color: red;">
+						비밀번호 변경 시 로그인을 다시 해야 합니다.
+					</span>
 				</td>
 			</tr>
 			<tr bgcolor="ffffff">
