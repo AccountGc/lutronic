@@ -661,7 +661,7 @@ public class GroupwareController {
 		return map;
 	}
 	
-	/**  속성값 변환
+	/**  
 	 * @param request
 	 * @param response
 	 * @return
@@ -703,12 +703,11 @@ public class GroupwareController {
 		return GroupwareHelper.service.changeIBAAction(request, response);
 	}
 	
-	@RequestMapping("/multiPublishing")
-	public ModelAndView multiPublishing(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "도면 재변환")
+	@GetMapping(value = "/multiPublishing")
+	public ModelAndView multiPublishing() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu14");
-		model.addObject("module", "workprocess");
-		model.setViewName("default:/workprocess/multiPublishing");
+		model.setViewName("/extcore/jsp/groupware/workprocess/my-multiPublishing.jsp");
 		return model;
 	}
 	

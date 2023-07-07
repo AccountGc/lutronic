@@ -5,13 +5,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.erp.service.ERPHelper;
@@ -22,18 +23,11 @@ import com.e3ps.erp.service.ERPSearchHelper;
 @RequestMapping("/erp")
 public class ERPController {
 	
-	/**	PARTERP 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listPARTERP")
-	public ModelAndView listPARTERP(HttpServletRequest request, HttpServletResponse response) {
-//		System.out.println("======== listPARTERP =============");
+	@Description(value = "PART 전송 현황")
+	@GetMapping(value = "/send-listPARTERP")
+	public ModelAndView listPARTERP() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu7");
-		model.addObject("module","change");
-		model.setViewName("default:/change/listPARTERP");
+		model.setViewName("/extcore/jsp/change/send-listPARTERP.jsp");
 		return model;
 	}
 	
@@ -58,17 +52,11 @@ public class ERPController {
 		
 	}
 	
-	/**	ECOERP 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listECOERP")
-	public ModelAndView listECOERP(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "EO&ECO 전송 현황")
+	@GetMapping(value = "/send-listECOERP")
+	public ModelAndView listECOERP() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu8");
-		model.addObject("module","change");
-		model.setViewName("default:/change/listECOERP");
+		model.setViewName("/extcore/jsp/change/send-listECOERP.jsp");
 		return model;
 	}
 	
@@ -91,17 +79,11 @@ public class ERPController {
 		
 	}
 	
-	/**	listBOMERP 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listBOMERP")
-	public ModelAndView listBOMERP(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "BOM 전송 현황")
+	@GetMapping(value = "/send-listBOMERP")
+	public ModelAndView listBOMERP() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu9");
-		model.addObject("module","change");
-		model.setViewName("default:/change/listBOMERP");
+		model.setViewName("/extcore/jsp/change/send-listBOMERP.jsp");
 		return model;
 	}
 	
