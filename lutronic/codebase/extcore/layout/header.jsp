@@ -80,7 +80,7 @@
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/receive', '> 나의 업무 > 도면 재변환');">
+						<a onclick="moveToPage(this, '/workspace/multiPublishing', '> 나의 업무 > 도면 재변환');">
 							도면 재변환
 						</a>
 					</li>
@@ -214,19 +214,19 @@
 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">CR/ECPR 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/batch', '> 설계변경 >EO 검색');">EO 검색</a>
+						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/batch', '> 설계변경 >EO 등록');">EO 등록</a>
+						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/batch', '> 설계변경 >PART 전송 현황');">PART 전송 현황</a>
+						<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 설계변경 >PART 전송 현황');">PART 전송 현황</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/batch', '> 설계변경 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a>
+						<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 설계변경 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/drawing/batch', '> 설계변경 >BOM 전송 현황');">BOM 전송 현황</a>
+						<a onclick="moveToPage(this, '/erp/send-listBOMERP', '> 설계변경 >BOM 전송 현황');">BOM 전송 현황</a>
 					</li>
 				</ul>
 			</li>
