@@ -1,4 +1,3 @@
-
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -29,18 +28,6 @@
 				<col width="174">
 				<col width="*">
 			</colgroup>
-			<tr>
-				<th>제목</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
-				</td>
-				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
-			</tr>
 		</table>
 		
 		<table class="button-table">
@@ -53,9 +40,6 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="search">
-					<input type="button" value="등록" title="등록" id="create">
-					<input type="button" value="초기화" title="초기화" id="reset">
 				</td>
 			</tr>
 		</table>
@@ -74,7 +58,7 @@
 			function _layout() {
 				return [ {
 					dataField : "name",
-					headerText : "제목",
+					headerText : "구분",
 					dataType : "string",
 					width : 295,
 					filter : {
@@ -83,7 +67,7 @@
 					},
 				}, {
 					dataField : "number",
-					headerText : "등록자",
+					headerText : "제목",
 					dataType : "string",
 					width : 450,
 					filter : {
@@ -101,7 +85,7 @@
 					},
 				}, {
 					dataField : "location",
-					headerText : "조회횟수",
+					headerText : "완료일",
 					dataType : "string",
 					width : 170,
 					filter : {
@@ -110,7 +94,25 @@
 					},
 				}, {
 					dataField : "state",
-					headerText : "팝업",
+					headerText : "상태",
+					dataType : "string",
+					width : 170,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "version",
+					headerText : "진행중단계",
+					dataType : "string",
+					width : 170,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "version",
+					headerText : "등록자",
 					dataType : "string",
 					width : 170,
 					filter : {
@@ -123,8 +125,8 @@
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : true,
-					rowNumHeaderText : "번호",
+// 					showRowNumColumn : true,
+// 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,

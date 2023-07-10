@@ -28,8 +28,45 @@
 				<col width="174">
 				<col width="*">
 			</colgroup>
+			<tr>
+				<th>일괄결재 제목</th>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-300">
+				</td>
+				<th>일괄결재 번호</th>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-300">
+				</td>
+			</tr>
+			<tr>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="predate" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="postdate" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+				<th>등록자</th>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+			</tr>
+			<tr>
+				<th>상태</th>
+				<td class="indent5" colspan="3">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+			</tr>
 		</table>
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="right">
@@ -40,15 +77,23 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
+					<input type="button" value="검색" title="검색" id="searchBtn">
+					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
 		</table>
 
 		<table>
+			<colgroup>
+				<col width="230">
+				<col width="10">
+				<col width="*">
+			</colgroup>
 			<tr>
+				<td valign="top"></td>
+				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
 		</table>
@@ -58,27 +103,27 @@
 			function _layout() {
 				return [ {
 					dataField : "name",
-					headerText : "구분",
+					headerText : "일괄결재 번호",
 					dataType : "string",
-					width : 295,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "number",
-					headerText : "제목",
+					headerText : "일괄결재 제목",
 					dataType : "string",
-					width : 450,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "description",
-					headerText : "등록일",
+					headerText : "일괄결재 타입",
 					dataType : "string",
-					width : 170,
+					width : 380,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -87,25 +132,25 @@
 					dataField : "location",
 					headerText : "상태",
 					dataType : "string",
-					width : 170,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "state",
-					headerText : "진행중단계",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "version",
+					dataField : "location",
 					headerText : "등록자",
 					dataType : "string",
-					width : 170,
+					width : 180,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "location",
+					headerText : "등록일",
+					dataType : "string",
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -168,9 +213,15 @@
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
-				selectbox("manufacture");
-				selectbox("moldtype");
+				selectbox("cadDivision");
+				selectbox("cadType");
+				selectbox("model");
+				selectbox("productmethod");
 				selectbox("deptcode");
+				selectbox("manufacture");
+				selectbox("unit");
+				selectbox("mat");
+				selectbox("finish");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
@@ -197,22 +248,6 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
-			$(function() {
-				$("#search").click(function() {
-					resetSearch();
-				})
-				
-				$("#create").click(function() {
-					document.location =  getURLString("groupware", "createNotice", "do");
-				})
-				
-				$(document).keypress(function(event) {
-					 if(event.which == 13 && $( '#userNameSearch' ).is( ':hidden' )) {
-						 resetSearch();
-					 }
-				})
-			})
 		</script>
 	</form>
 </body>

@@ -452,7 +452,7 @@ public class GroupwareController {
 		}else if("receive".equals(state)){
 			model.addObject("menu","menu6");
 		}
-		model.setViewName("/extcore/jsp/workprocess/listItem-list.jsp");
+		model.setViewName("/extcore/jsp/workprocess/item-list.jsp");
 		return model;
 	}
 	

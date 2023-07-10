@@ -54,16 +54,22 @@
 						<option value="100">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
-					</select>
+					</select> 
 				</td>
 			</tr>
 		</table>
 
 		<table>
+			<colgroup>
+				<col width="230">
+				<col width="10">
+				<col width="*">
+			</colgroup>
 			<tr>
+				<td valign="top"></td>
+				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
 		</table>

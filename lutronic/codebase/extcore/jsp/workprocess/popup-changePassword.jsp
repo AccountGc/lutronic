@@ -34,13 +34,13 @@
 				</td>
 			</tr>
 			<tr bgcolor="ffffff">
-				<th>변경 비밀번호 <span class="style1">*</span></th>
+				<th>변경 비밀번호 <span style="color:red;">*</span></th>
 				<td class="indent5">
 					<input type="password" name="field_view" id="field_view" class="width-300">
 				</td>
 			</tr>
 			<tr bgcolor="ffffff">
-				<th>변경 비밀번호 확인 <span class="style1">*</span></th>
+				<th>변경 비밀번호 확인 <span style="color:red;">*</span></th>
 				<td class="indent5">
 					<input type="password" name="_field_view" id="_field_view" class="width-300">
 				</td>
@@ -52,7 +52,6 @@
 				<td class="center">
 					<input type="button" value="수정" title="수정" id="update">
 					<input type="button" value="뒤로" title="뒤로" onclick="javascript:history.back();">
-					<input type="button" value="닫기" title="닫기" onclick="self.close();">
 				</td>
 			</tr>
 		</table>

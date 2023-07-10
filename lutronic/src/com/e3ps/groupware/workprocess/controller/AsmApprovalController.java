@@ -6,7 +6,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,7 +29,7 @@ import com.e3ps.groupware.workprocess.service.AsmApprovalHelper;
 import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
 
 @Controller
-@RequestMapping("/asmApproval")
+@RequestMapping(value = "/asmApproval")
 public class AsmApprovalController {
 	
 	/**	일괄 결제 등록 메뉴 이동
@@ -57,17 +59,11 @@ public class AsmApprovalController {
 		return AsmApprovalHelper.service.createAsmAction(request, response);
 	}
 	
-	/**	일괄결재 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listAsm")
-	public ModelAndView listECR(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "일괄결재 검색 페이지")
+	@GetMapping(value = "/listAsm")
+	public ModelAndView listAsm() throws Exception{
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu15");
-		model.addObject("module","groupware");
-		model.setViewName("default:/workprocess/listAsm");
+		model.setViewName("/extcore/jsp/workprocess/asm-list.jsp");
 		return model;
 	}
 	

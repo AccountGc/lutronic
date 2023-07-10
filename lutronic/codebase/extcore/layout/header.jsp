@@ -63,6 +63,9 @@
 						</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의 업무 > 일괄결재');">일괄결재</a>
+					</li>
+					<li>
 						<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a>
 					</li>
 					<li>
