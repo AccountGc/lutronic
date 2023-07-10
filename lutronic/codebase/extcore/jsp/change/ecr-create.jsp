@@ -37,28 +37,28 @@
 			<td class="indent5"><input type="text" name="number" id="number" class="width-200"></td>
 		</tr>
 		<tr>
-			<th class="req lb">작성일</th>
+			<th class="lb">작성일</th>
 			<td class="indent5"><input type="text" name="createDate" id="createDate" class="width-100"><img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"></td>
-			<th class="req lb">승인일</th>
+			<th class="lb">승인일</th>
 			<td class="indent5"><input type="text" name="approveDate" id="approveDate" class="width-100"><img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"></td>
 		</tr>
 		<tr>
-			<th class="req lb">작성부서</th>
+			<th class="lb">작성부서</th>
 			<td class="indent5" ><input type="text" name="createDepart" id="createDepart" class="width-200"></td>
-			<th class="req lb">작성자</th>
+			<th class="lb">작성자</th>
 			<td class="indent5" ><input type="text" name="writer" id="writer" class="width-200"></td>
 		</tr>
 		<tr>
-			<th class="lb" >제품명</th>
+			<th class="req lb" >제품명</th>
 			<td colspan="3">
 				<button>추가</button>
 				<button>삭제</button>
 			</td>
 		</tr>
 		<tr>
-			<th class="req lb">제안자</th>
+			<th class="lb">제안자</th>
 			<td class="indent5" ><input type="text" name="createDepart" id="createDepart" class="width-200"></td>
-			<th class="req lb">변경구분</th>
+			<th class="lb">변경구분</th>
 			<td class="indent5" ><input type="text" name="writer" id="writer" class="width-200"></td>
 		</tr>
 		<tr>
@@ -70,14 +70,11 @@
 			<td class="indent5" colspan="3"><textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea></td>
 		</tr>
 		<tr>
-			<th class="req lb">프로젝트 코드</th>
-			<td class="indent5" colspan="3"><select name="model" id="model" class="width-200" >
-					<option value="">선택</option>
-					<option value="INWORK">작업 중</option>
-					<option value="UNDERAPPROVAL">승인 중</option>
-					<option value="APPROVED">승인됨</option>
-					<option value="RETURN">반려됨</option>
-			</select></td>
+			<th class="lb">관련 CR/ECPR</th>
+			<td class="indent5" colspan="3">
+				<button type="button" name="addNumberCode" id="addNumberCode" class="btnCustom">추가</button>
+				<button type="button" name="delNumberCode" id="delNumberCode" class="btnCustom">삭제</button>
+			</td>
 		</tr>
 		<tr>
 			<th class="lb">참고사항</th>

@@ -33,7 +33,7 @@
 		<tr>
 			<th class="req lb">EO 제목</th>
 			<td class="indent5" ><input type="text" name="name" id="name" class="width-200"></td>
-			<th class="req lb">구분</th>
+			<th class="req lb">EO 구분</th>
 			<td>&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="eoType"  id="eoType" value="DEV" >
@@ -52,15 +52,18 @@
 				</td>
 		</tr>
 		<tr>
-			<th class="lb" >제품명</th>
+			<th class="req lb" >제품명</th>
 			<td colspan="3">
 				<button>추가</button>
 				<button>삭제</button>
 			</td>
 		</tr>
 		<tr>
-			<th class="lb">완제품 품목</th>
-			<td class="indent5" colspan="3"></td>
+			<th class="req lb">완제품 품목</th>
+			<td colspan="3">
+				<button>추가</button>
+				<button>삭제</button>
+			</td>
 		</tr>
 		<tr>
 			<th class="lb">제품 설계 개요</th>
