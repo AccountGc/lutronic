@@ -2,7 +2,6 @@ package com.e3ps.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -12,26 +11,26 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import wt.clients.folder.FolderTaskLogic;
-import wt.doc.WTDocument;
-import wt.folder.Folder;
-
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.message.Message;
-import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.rohs.service.RohsHelper;
+
+import wt.clients.folder.FolderTaskLogic;
+import wt.doc.WTDocument;
+import wt.folder.Folder;
 
 @Controller
 @RequestMapping(value = "/doc")
@@ -67,23 +66,20 @@ public class DocumentController {
 		return model;
 	}
 
-	/**
-	 * 문서 검색
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "문서 조회 함수")
 	@ResponseBody
-	@RequestMapping("/listDocumentAction")
-	public Map<String, Object> listDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Object> result = null;
+	@PostMapping(value = "/list")
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = DocumentHelper.service.listDocumentAction(request, response);
+			result = DocumentHelper.manager.list(params);
+//			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+//			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/doc/list", "문서 조회 함수");
 		}
-
 		return result;
 	}
 
