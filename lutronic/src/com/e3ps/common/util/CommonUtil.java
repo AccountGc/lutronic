@@ -24,6 +24,14 @@ import java.util.Vector;
 
 import javax.servlet.ServletRequest;
 
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.jdf.config.Config;
+import com.e3ps.common.jdf.config.ConfigEx;
+import com.e3ps.common.jdf.config.ConfigExImpl;
+import com.e3ps.common.jdf.config.ConfigImpl;
+import com.e3ps.common.message.Message;
+
 import wt.content.ApplicationData;
 import wt.content.ContentHolder;
 import wt.content.ContentItem;
@@ -40,10 +48,12 @@ import wt.fc.WTObject;
 import wt.fc.WTReference;
 import wt.httpgw.URLFactory;
 import wt.iba.value.IBAHolder;
+import wt.inf.container.WTContainerRef;
 import wt.method.RemoteMethodServer;
 import wt.org.OrganizationServicesHelper;
 import wt.org.WTPrincipal;
 import wt.org.WTUser;
+import wt.pdmlink.PDMLinkProduct;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.session.SessionHelper;
@@ -55,21 +65,26 @@ import wt.vc.Iterated;
 import wt.vc.VersionForeignKey;
 import wt.vc.VersionReference;
 
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAAttributes;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.jdf.config.Config;
-import com.e3ps.common.jdf.config.ConfigEx;
-import com.e3ps.common.jdf.config.ConfigExImpl;
-import com.e3ps.common.jdf.config.ConfigImpl;
-import com.e3ps.common.message.Message;
-import com.e3ps.groupware.workprocess.AsmApproval;
-
 
 public class CommonUtil  implements wt.method.RemoteAccess, java.io.Serializable {
 
 	private static ReferenceFactory rf = null;
 	static final boolean SERVER = wt.method.RemoteMethodServer.ServerFlag;
+	
+	/**
+	 * 제품 컨테이너 가져오기
+	 */
+	public static WTContainerRef getPDMLinkProductContainer() throws Exception {
+		QuerySpec query = new QuerySpec(PDMLinkProduct.class);
+		SearchCondition sc = new SearchCondition(PDMLinkProduct.class, PDMLinkProduct.NAME, "=", "Commonspace");
+		query.appendWhere(sc, new int[] { 0 });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			PDMLinkProduct pdmLinkProduct = (PDMLinkProduct) result.nextElement();
+			return WTContainerRef.newWTContainerRef(pdmLinkProduct);
+		}
+		return null;
+	}
 	
 	public static String getObjectIconImageTag(WTObject object) throws Exception{
 

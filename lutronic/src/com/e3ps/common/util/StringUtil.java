@@ -19,6 +19,17 @@ public final class StringUtil {
 	* 객체 생성을 방지하기 위해서 디폴트 생성자를 Private로 선언
 	*/    
 	private StringUtil() {}
+	
+	/**
+	 * String 값이 null 인지 체크하는 함수
+	 */
+	public static boolean isNull(String value) {
+		if (value == null || value.length() == 0) {
+			return true;
+		}
+		return false;
+	}
+
 
 /*
  * 금잔디(frogx)님의 블로그에서 발췌

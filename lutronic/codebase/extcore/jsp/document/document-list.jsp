@@ -60,8 +60,8 @@
 				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 				<th>수정일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<td class="indent5"><input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="modifiedTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('modifiedFrom', 'modifiedTo')"></td>
 			</tr>
 			<tr>
 				<th>등록자</th>
@@ -137,7 +137,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "docName",
+					dataField : "name",
 					headerText : "문서명",
 					dataType : "string",
 					width : 350,
@@ -155,7 +155,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "description",
+					dataField : "version",
 					headerText : "Rev",
 					dataType : "string",
 					width : 350,
@@ -182,7 +182,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "version",
+					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 80,
@@ -239,21 +239,21 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				let params = new Object();
+				const url = getCallUrl("/doc/list");
+				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
+				const latest = !!document.querySelector("input[name=latest]:checked").value;
+				params = toField(params, field);
+				params.latest = latest;
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					AUIGrid.setGridData(myGridID, data.list);
+					document.getElementById("sessionid").value = data.sessionid;
+					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
+					parent.closeLayer();
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
