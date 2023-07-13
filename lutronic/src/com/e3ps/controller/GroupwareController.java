@@ -651,6 +651,14 @@ public class GroupwareController {
 		return map;
 	}
 	
+	@Description(value = "속성값 변경 페이지")
+    @GetMapping(value = "/changeIBA")
+    public ModelAndView changeIBA() throws Exception {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("/extcore/jsp/workprocess/changeIBA-list.jsp");
+        return model;
+    }
+	
 	/**  
 	 * @param request
 	 * @param response

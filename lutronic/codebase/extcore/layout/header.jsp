@@ -78,7 +78,7 @@
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/receive', '> 나의 업무 > 속성값 변경');">
+						<a onclick="moveToPage(this, '/groupware/changeIBA', '> 나의 업무 > 속성값 변경');">
 							속성값 변경
 						</a>
 					</li>
