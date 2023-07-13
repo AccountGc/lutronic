@@ -34,14 +34,14 @@
 				<th>버전</th>
 				<td>&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="true" checked="checked">
+						<input type="radio" name="latest" value="true" checked="checked">
 						<div class="state p-success">
 							<label> <b>최신버전</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="false">
+						<input type="radio" name="latest" value="false">
 						<div class="state p-success">
 							<label> <b>모든버전</b>
 							</label>
@@ -51,9 +51,9 @@
 			</tr>
 			<tr>
 				<th>문서 번호</th>
-				<td class="indent5"><input type="text" name="docNumber" id="docNumber" class="width-200"></td>
+				<td class="indent5"><input type="text" name="number" id="number" class="width-200"></td>
 				<th>문서명</th>
-				<td class="indent5"><input type="text" name="docName" id="docName" class="width-200"></td>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
 			</tr>
 			<tr>
 				<th>등록일</th>
@@ -241,7 +241,7 @@
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
+				const field = ["_psize","oid","name","number", "state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo"];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = latest;
@@ -251,7 +251,7 @@
 					AUIGrid.removeAjaxLoader(myGridID);
 					AUIGrid.setGridData(myGridID, data.list);
 					document.getElementById("sessionid").value = data.sessionid;
-					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
+					/* document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length; */
 					parent.closeLayer();
 				});
 			}

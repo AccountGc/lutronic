@@ -141,23 +141,37 @@ public class PartController {
 		return model;
 	}
 	
-	/** 품목 데이터 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "품목 데이터 검색")
 	@ResponseBody
-	@RequestMapping("/listPartAction")
+	@RequestMapping(value = "/listPartAction")
 	public Map<String,Object> listPartAction(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> result = null;
 		try {
-			result = PartHelper.service.listPartAction(request, response);
+			result = PartHelper.manager.listPartAction(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
-			result = new HashMap<String,Object>();
+//			result = new HashMap<String,Object>();
 		}
 		return result;
 	}
+	
+//	/** 품목 데이터 검색
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listPartAction")
+//	public Map<String,Object> listPartAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> result = null;
+//		try {
+//			result = PartHelper.service.listPartAction(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			result = new HashMap<String,Object>();
+//		}
+//		return result;
+//	}
 
 	/**	품목 상세보기
 	 * @param request

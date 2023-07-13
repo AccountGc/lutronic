@@ -49,7 +49,7 @@ public class EpmData extends VersionData{
 	
 	public EpmData(final EPMDocument epm) throws Exception {
 		super(epm);
-		setEPM(epm);
+		setEpm(epm);
 		setNumber(epm.getNumber());
 		setIcon(BasicTemplateProcessor.getObjectIconImgTag(epm));
 	}

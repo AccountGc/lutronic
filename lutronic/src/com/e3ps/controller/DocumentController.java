@@ -73,10 +73,10 @@ public class DocumentController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = DocumentHelper.manager.list(params);
-//			result.put("result", SUCCESS);
+			result.put("result", "SUCCESS");
 		} catch (Exception e) {
 			e.printStackTrace();
-//			result.put("result", FAIL);
+			result.put("result", "FAIL");
 			result.put("msg", e.toString());
 //			ErrorLogHelper.service.create(e.toString(), "/doc/list", "문서 조회 함수");
 		}

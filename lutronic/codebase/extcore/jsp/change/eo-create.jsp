@@ -86,7 +86,7 @@
 	<table class="button-table">
 		<tr>
 			<td class="center">
-				<input type="button"  value="등록"  title="등록"  class="btnCRUD"  id="createBtn" name="createBtn">
+				<input type="button"  value="등록"  title="등록"  class="btnCRUD"  id="createBtn" name="createBtn" onclick="create()">
 				<input type="button" value="초기화" title="초기화"  class="btnCRUD"  id="resetBtn" name="resetBtn">
 				<input type="button" value="목록" title="목록"  class="btnCRUD"  id="listBtn" name="listBtn">
 			</td>
@@ -117,17 +117,18 @@
 			selectbox("deptcode");
 		});
 
-		function create(isSelf) {
-			const name = document.getElementById("name");
-			const number = document.getElementById("number").value;
-			const description = document.getElementById("description").value;
-			const location = document.getElementById("location").value;
-			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
-			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
-			const primarys = toArray("primarys");
+		function create() {
+			const name = document.getElementById("name").value;
+			const eoType = document.getElementById("eoType").value;
+			/* const models = document.getElementById("models").value;
+			const completeOids = document.getElementById("completeOids").value; */
+			const eoCommentA = document.getElementById("eoCommentA").value;
+			const eoCommentB = document.getElementById("eoCommentB").value;
+			const eoCommentC = document.getElementById("eoCommentC").value;
+			/* const secondarys = document.getElementById("secondarys").value; */
+			
 
-			if (location === "/Default/문서") {
+			/* if (location === "/Default/문서") {
 				alert("문서 저장위치를 선택하세요.");
 				folder();
 				return false;
@@ -137,7 +138,7 @@
 				alert("문서제목을 입력하세요.");
 				name.focus();
 				return false;
-			}
+			} */
 
 			// 		if(addRows11.length === 0) {
 			// 			alert("도번을 추가하세요.");
@@ -145,34 +146,35 @@
 			// 			return false;
 			// 		}
 
-			if (primarys.length === 0) {
+			/* if (primarys.length === 0) {
 				alert("첨부파일을 선택하세요.");
 				return false;
-			}
+			} */
 
 			if (!confirm("등록 하시겠습니까?")) {
 				return false;
 			}
 
 			const params = new Object();
-			const url = getCallUrl("/doc/create");
+			const url = getCallUrl("/changeECO/createEOAction");
 			params.name = name.value;
-			params.number = number;
-			params.self = JSON.parse(isSelf);
-			params.description = description;
-			params.location = location;
-			params.addRows7 = addRows7;
-			params.addRows11 = addRows11;
-			params.primarys = primarys;
-			toRegister(params, addRows8);
-			openLayer();
+			params.eoType = eoType.value;
+			/* params.models = models.value;
+			params.completeOids = completeOids.value; */
+			params.eoCommentA = eoCommentA.value;
+			params.eoCommentB = eoCommentB.value;
+			params.eoCommentC = eoCommentC.value;
+			/* params.secondarys = secondarys.value; */
+			/* params.self = JSON.parse(isSelf); */
+			/* toRegister(params, addRows8);
+			openLayer(); */
 			call(url, params, function(data) {
 				alert(data.msg);
 				if (data.result) {
 					opener.loadGridData();
-					self.close();
+					/* self.close(); */
 				} else {
-					closeLayer();
+					/* closeLayer(); */
 				}
 			});
 		};
@@ -180,12 +182,12 @@
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
 			// DOM이 로드된 후 실행할 코드 작성
-			createAUIGrid7(columns7);
+			/* createAUIGrid7(columns7);
 			createAUIGrid11(columns11);
 			createAUIGrid8(columns8);
 			AUIGrid.resize(myGridID7);
 			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
+			AUIGrid.resize(myGridID8); */
 			document.getElementById("name").focus();
 		});
 
