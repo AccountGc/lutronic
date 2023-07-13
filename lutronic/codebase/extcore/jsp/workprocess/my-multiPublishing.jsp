@@ -51,10 +51,6 @@
 		}
 		
 		document.addEventListener("DOMContentLoaded", function() {
-			selectbox("model");
-			selectbox("preseration");
-			selectbox("documentType");
-			selectbox("deptcode");
 			twindate("created");
 		});
 

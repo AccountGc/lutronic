@@ -50,7 +50,7 @@
 		</tr>
 		<tr>
 			<th class="req lb">관리자</th>
-			<td class="indent5" colspan="3"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+			<td class="indent5" colspan="3"><input type="text" name="dm" id="dm" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
 		</tr>
 		<tr>
 			<th class="lb">설명</th>
@@ -83,22 +83,14 @@
 
 		function create(isSelf) {
 			const name = document.getElementById("name");
-			const number = document.getElementById("number").value;
+			const model = document.getElementById("model").value;
+			const developmentStart = document.getElementById("developmentStart").value;
+			const developmentEnd = document.getElementById("developmentEnd").value;
 			const description = document.getElementById("description").value;
-			const location = document.getElementById("location").value;
-			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
-			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
-			const primarys = toArray("primarys");
-
-			if (location === "/Default/문서") {
-				alert("문서 저장위치를 선택하세요.");
-				folder();
-				return false;
-			}
+			const dm = document.getElementById("dm").value;
 
 			if (isNull(name.value)) {
-				alert("문서제목을 입력하세요.");
+				alert("프로젝트명을 입력하세요.");
 				name.focus();
 				return false;
 			}
@@ -109,34 +101,24 @@
 			// 			return false;
 			// 		}
 
-			if (primarys.length === 0) {
-				alert("첨부파일을 선택하세요.");
-				return false;
-			}
-
 			if (!confirm("등록 하시겠습니까?")) {
 				return false;
 			}
 
 			const params = new Object();
-			const url = getCallUrl("/doc/create");
+			const url = getCallUrl("/development/createDevelopmentAction");
 			params.name = name.value;
-			params.number = number;
-			params.self = JSON.parse(isSelf);
+			params.model = model;
+			params.developmentStart = developmentStart;
+			params.developmentEnd = developmentEnd;
 			params.description = description;
-			params.location = location;
-			params.addRows7 = addRows7;
-			params.addRows11 = addRows11;
-			params.primarys = primarys;
-			toRegister(params, addRows8);
-			openLayer();
+			params.dm = dm;
 			call(url, params, function(data) {
 				alert(data.msg);
 				if (data.result) {
 					opener.loadGridData();
 					self.close();
 				} else {
-					closeLayer();
 				}
 			});
 		};
@@ -148,12 +130,6 @@
 			date("developmentEnd");
 			selectbox("model");
 			// DOM이 로드된 후 실행할 코드 작성
-			createAUIGrid7(columns7);
-			createAUIGrid11(columns11);
-			createAUIGrid8(columns8);
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
 			document.getElementById("name").focus();
 		});
 

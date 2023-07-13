@@ -67,23 +67,36 @@ public class DrawingController {
 		return model;
 	}
 	
-	/** 도면 검색 리스트 리턴
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "도면 검색 리스트 리턴")
 	@ResponseBody
-	@RequestMapping("/listDrawingAction")
+	@RequestMapping(value = "/listDrawingAction")
 	public Map<String,Object> listDrawingAction(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> result = null;
 		try {
-			result = DrawingHelper.service.listDrawingAction(request, response);
+			result = DrawingHelper.manager.listDrawingAction(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return result;
 	}
+	
+//	/** 도면 검색 리스트 리턴
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listDrawingAction")
+//	public Map<String,Object> listDrawingAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> result = null;
+//		try {
+//			result = DrawingHelper.service.listDrawingAction(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return result;
+//	}
 	
 	/** 도면 등록
 	 * @param request

@@ -69,24 +69,38 @@ public class DevelopmentController {
 		return model;
 	}
 	
-	/**  개발업무 관리 검색 수행
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = " 개발업무 관리 검색 수행")
 	@ResponseBody
-	@RequestMapping("/listDevelopmentAction")
+	@RequestMapping(value = "/listDevelopmentAction")
 	public Map<String,Object> listDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> result = null;
 		try {
-			result = DevelopmentHelper.service.listDevelopmentAction(request, response);
+			result = DevelopmentHelper.manager.listDevelopmentAction(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
-			result = new HashMap<String,Object>();
+//			result = new HashMap<String,Object>();
 		}
 		return result;
 	}
 	
+//	/**  개발업무 관리 검색 수행
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listDevelopmentAction")
+//	public Map<String,Object> listDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> result = null;
+//		try {
+//			result = DevelopmentHelper.service.listDevelopmentAction(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			result = new HashMap<String,Object>();
+//		}
+//		return result;
+//	}
+//	
 	
 	/**
 	 * 				개발업무 관리 관련 Controll

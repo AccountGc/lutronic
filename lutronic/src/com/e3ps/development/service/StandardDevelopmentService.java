@@ -112,20 +112,20 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 			master.setEndDay(developmentEnd);
 			master.setDescription(description);
 			
-			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
-			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
-			master.setContainer(product);
+//			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+//			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
+//			master.setContainer(product);
 			
 			// 폴더 설정
 			Folder folder = FolderTaskLogic.getFolder("/Default/DEVWORK/Master", WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) master, folder);
 			
 			// 라이프사이클 셋팅
-			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(LC_Development, wtContainerRef);
-			master = (devMaster) LifeCycleHelper.setLifeCycle(master, tmpLifeCycle);
+//			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(LC_Development, wtContainerRef);
+//			master = (devMaster) LifeCycleHelper.setLifeCycle(master, tmpLifeCycle);
 			
 			// DmMaster Link 생성
-			WTUser dmUser = (WTUser)CommonUtil.getObject(dm);// (WTUser)SessionHelper.manager.getPrincipal();
+			WTUser dmUser = (WTUser)CommonUtil.getObject("wt.org.WTUser:11");// (WTUser)SessionHelper.manager.getPrincipal();
 			master.setDm(dmUser);
 			
 			master = (devMaster) PersistenceHelper.manager.save(master);

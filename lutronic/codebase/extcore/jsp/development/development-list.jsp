@@ -98,7 +98,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "location",
+					dataField : "dm",
 					headerText : "관리자",
 					dataType : "string",
 					width : 250,
@@ -107,7 +107,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "createdDate",
+					dataField : "developmentStart",
 					headerText : "예상 시작일",
 					dataType : "date",
 					width : 100,
@@ -116,7 +116,7 @@
 						inline : true,
 					},
 				}, {
-					dataField : "modifiedDate",
+					dataField : "developmentEnd",
 					headerText : "예상 종료일",
 					dataType : "date",
 					width : 100,
@@ -125,7 +125,7 @@
 						inline : true,
 					},
 				}, {
-					dataField : "modifiedDate",
+					dataField : "createdAt",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
@@ -174,21 +174,19 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				 				let params = new Object();
+			 					const url = getCallUrl("/development/listDevelopmentAction");
+				 				const field = ["_psize","model","name","dm","developmentStart","developmentEnd","createdAt","state"];
+				 				/* params = toField(params, field); */
+				 				AUIGrid.showAjaxLoader(myGridID);
+				 				parent.openLayer();
+				 				call(url, params, function(data) {
+				 					AUIGrid.removeAjaxLoader(myGridID);
+				 					AUIGrid.setGridData(myGridID, data.list);
+				 					document.getElementById("sessionid").value = data.sessionid;
+				 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
+				 					parent.closeLayer();
+				 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

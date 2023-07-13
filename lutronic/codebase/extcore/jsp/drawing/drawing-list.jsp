@@ -250,7 +250,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "name",
+					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
 					width : 60,
@@ -277,7 +277,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "location",
+					dataField : "name",
 					headerText : "도면명",
 					dataType : "string",
 					width : 180,
@@ -304,7 +304,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
@@ -322,7 +322,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "predate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 140,
@@ -331,7 +331,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "predate_modify",
 					headerText : "수정일",
 					dataType : "string",
 					width : 140,
@@ -370,21 +370,21 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				 				let params = new Object();
+				 				const url = getCallUrl("/drawing/listDrawingAction");
+				 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				 				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				 				params = toField(params, field);
+				 				params.latest = latest; */
+				 				AUIGrid.showAjaxLoader(myGridID);
+				 				parent.openLayer();
+				 				call(url, params, function(data) {
+				 					AUIGrid.removeAjaxLoader(myGridID);
+				 					AUIGrid.setGridData(myGridID, data.list);
+				 					document.getElementById("sessionid").value = data.sessionid;
+				 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
+				 					parent.closeLayer();
+				 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
