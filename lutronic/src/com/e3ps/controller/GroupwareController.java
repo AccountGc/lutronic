@@ -697,7 +697,7 @@ public class GroupwareController {
 	@GetMapping(value = "/multiPublishing")
 	public ModelAndView multiPublishing() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/groupware/workprocess/my-multiPublishing.jsp");
+		model.setViewName("/extcore/jsp/workprocess/my-multiPublishing.jsp");
 		return model;
 	}
 	

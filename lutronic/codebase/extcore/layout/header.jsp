@@ -83,7 +83,7 @@
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/multiPublishing', '> 나의 업무 > 도면 재변환');">
+						<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 나의 업무 > 도면 재변환');">
 							도면 재변환
 						</a>
 					</li>
