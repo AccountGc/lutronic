@@ -13,6 +13,7 @@ import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.rohs.ROHSMaterial;
@@ -26,11 +27,24 @@ public class RohsData extends VersionData{
 	
 	public ROHSMaterial rohs;
 	public String number;
+	public String name;
+	public String state;
+	public String manufacture;
+	public String creator;
+	public String createDate;
+	public String modifyDate;
 	
 	public RohsData(ROHSMaterial rohs) throws Exception {
 		super(rohs);
 		setRohs(rohs);
 		setNumber(rohs.getNumber());
+		setName(rohs.getName());
+		setState(rohs.getLifeCycleState().toString());
+		setCreator(rohs.getCreatorFullName());
+		setCreateDate(DateUtil.getDateString(rohs.getCreateTimestamp(),"a"));
+		setModifyDate(DateUtil.getDateString(rohs.getModifyTimestamp(),"a"));
+//		setCreateDate(DateUtil.getTimeFormat(rohs.getCreateTimestamp(),"yyyy-MM-dd"));
+//		setModifyDate(DateUtil.getTimeFormat(rohs.getModifyTimestamp(),"yyyy-MM-dd"));
 	}
 	public String getDescription(boolean isView) {
 		String description = StringUtil.checkNull(this.rohs.getDescription());

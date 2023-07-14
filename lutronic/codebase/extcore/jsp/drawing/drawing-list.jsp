@@ -1,8 +1,28 @@
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.fc.QueryResult"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.e3ps.drawing.beans.EpmData"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="wt.epm.EPMDocument"%>
+<%@page import="wt.query.QuerySpec"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+
+	ArrayList<EpmData> list = new ArrayList<>();
+	QuerySpec query = new QuerySpec();
+	int idx = query.addClassList(EPMDocument.class, true);
+	
+	QueryResult result = PersistenceHelper.manager.find(query);
+	while (result.hasMoreElements()) {
+		Object[] obj = (Object[]) result.nextElement();
+		EpmData data = new EpmData((EPMDocument) obj[0]);
+		list.add(data);
+	}
+
 %>
 <!DOCTYPE html>
 <html>
@@ -253,7 +273,7 @@
 					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
-					width : 60,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -271,7 +291,7 @@
 					dataField : "description",
 					headerText : "Thumbnail",
 					dataType : "string",
-					width : 380,
+					width : 300,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -322,19 +342,19 @@
 						inline : true
 					},
 				}, {
-					dataField : "predate",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 140,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "predate_modify",
+					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "string",
-					width : 140,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -350,15 +370,15 @@
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
+					enableFilter : false,
+					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -370,21 +390,48 @@
 			}
 
 			function loadGridData() {
-				 				let params = new Object();
-				 				const url = getCallUrl("/drawing/listDrawingAction");
-				 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
-				 				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
-				 				params = toField(params, field);
-				 				params.latest = latest; */
-				 				AUIGrid.showAjaxLoader(myGridID);
-				 				parent.openLayer();
-				 				call(url, params, function(data) {
-				 					AUIGrid.removeAjaxLoader(myGridID);
-				 					AUIGrid.setGridData(myGridID, data.list);
-				 					document.getElementById("sessionid").value = data.sessionid;
-				 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				 					parent.closeLayer();
-				 				});
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				var array = new Array();
+				<%
+				for(int i=0; i<10; i++){
+				%>
+					var data = new Object();
+					var number = "<%=list.get(i).getNumber()%>";
+					var name = "<%=list.get(i).getName()%>";
+					var cadType = "<%=list.get(i).getCadType()%>";
+					var creator = "<%=list.get(i).getCreator()%>";
+					var createDate = "<%=list.get(i).getCreateDate()%>";
+					var modifyDate = "<%=list.get(i).getModifyDate()%>";
+					var data = new Object();
+					data.number = number;
+					data.name = name;
+					data.cadType = cadType;
+					data.creator = creator;
+					data.createDate = createDate;
+					data.modifyDate = modifyDate;
+					array.push(data);
+				<%		
+				}
+				%>
+				AUIGrid.removeAjaxLoader(myGridID);
+				AUIGrid.setGridData(myGridID, array);
+				parent.closeLayer();
+// 				let params = new Object();
+// 				const url = getCallUrl("/drawing/listDrawingAction");
+// 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				params = toField(params, field);
+				params.latest = latest; */
+// 				AUIGrid.showAjaxLoader(myGridID);
+// 				parent.openLayer();
+// 				call(url, params, function(data) {
+// 					AUIGrid.removeAjaxLoader(myGridID);
+// 					AUIGrid.setGridData(myGridID, data.list);
+// 					document.getElementById("sessionid").value = data.sessionid;
+// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
+// 					parent.closeLayer();
+// 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

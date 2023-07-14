@@ -1,4 +1,24 @@
+<%@page import="wt.doc.DocumentType"%>
+<%@page import="wt.ownership.Ownership"%>
+<%@page import="com.e3ps.common.util.SequenceDao"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="com.e3ps.common.util.DateUtil"%>
+<%@page import="com.e3ps.rohs.ROHSMaterial"%>
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.folder.FolderEntry"%>
+<%@page import="wt.folder.FolderHelper"%>
+<%@page import="wt.clients.folder.FolderTaskLogic"%>
+<%@page import="wt.folder.Folder"%>
+<%@page import="wt.inf.container.WTContainerHelper"%>
+<%@page import="wt.inf.container.WTContainerRef"%>
+<%@page import="wt.org.OrganizationServicesHelper"%>
+<%@page import="wt.org.WTOrganization"%>
+<%@page import="wt.doc.WTDocument"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
+<%@page import="wt.org.WTPrincipal"%>
+<%@page import="wt.session.SessionHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
@@ -32,7 +52,10 @@
 		</colgroup>
 		<tr>
 			<th class="req lb">문서분류</th>
-			<td class="indent5"  id="locationName" name="locationName">
+			<td class="indent5">
+				<span id="locationName">
+					/Default/Document
+				</span>
 			</td>
 			<th class="req lb">결재방식</th>
 			<td>&nbsp;
@@ -169,6 +192,7 @@
 		</tr>
 	</table>
 	<script type="text/javascript">
+	
 		function folder() {
 			const location = decodeURIComponent("/Default/문서");
 			const url = getCallUrl("/folder?location=" + location + "&container=product&method=setNumber&multi=false");

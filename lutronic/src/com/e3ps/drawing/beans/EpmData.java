@@ -6,6 +6,7 @@ import com.e3ps.common.beans.VersionData;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.drawing.service.DrawingHelper;
@@ -46,12 +47,20 @@ public class EpmData extends VersionData{
 	public String linkRefernceType;
 	public String icon;
 	public WTPart part;
+	public String cadType;
+	public String creator;
+	public String createDate;
+	public String modifyDate;
 	
 	public EpmData(final EPMDocument epm) throws Exception {
 		super(epm);
 		setEpm(epm);
 		setNumber(epm.getNumber());
 		setIcon(BasicTemplateProcessor.getObjectIconImgTag(epm));
+		setCadType(epm.getDocType().toString());
+		setCreator(epm.getCreatorFullName());
+		setCreateDate(DateUtil.getDateString(epm.getCreateTimestamp(),"a"));
+		setModifyDate(DateUtil.getDateString(epm.getModifyTimestamp(),"a"));
 	}
 	//승인여부
 	public boolean getApprove() throws Exception{

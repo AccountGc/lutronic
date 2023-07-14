@@ -1,5 +1,53 @@
+<%@page import="com.e3ps.common.service.CommonHelper"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.e3ps.common.iba.AttributeKey"%>
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.ownership.Ownership"%>
+<%@page import="wt.session.SessionHelper"%>
+<%@page import="wt.org.WTPrincipal"%>
+<%@page import="com.e3ps.common.util.SequenceDao"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
+<%@page import="com.e3ps.common.util.DateUtil"%>
+<%@page import="wt.doc.DocumentType"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
+<%@page import="com.e3ps.rohs.ROHSMaterial"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+			
+	ROHSMaterial rohs = null;
+	
+   	String rohsName = StringUtil.checkNull("물질_test");
+   	
+   	String manufacture = StringUtil.checkNull("MF003");
+   	rohs = ROHSMaterial.newROHSMaterial();
+   	rohs.setName(rohsName);
+	rohs.setRohsName(rohsName);
+	
+	String today = DateUtil.getDateString(new Date(), new SimpleDateFormat("yyyyMM"));
+	
+	String number = manufacture.concat("_");
+	String noFormat = "0000";
+    String seqNo = SequenceDao.manager.getSeqNo(number, noFormat, "WTDocumentMaster", "WTDocumentNumber");
+    number = number + seqNo;
+       
+	rohs.setRohsNumber(number);
+	rohs.setNumber(number);
+	Map<String,Object> map = new HashMap<String,Object>();
+          
+	String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT;
+          
+    map.put("approvalType", approvalType);
+    map.put("manufacture", manufacture);
+    CommonHelper.service.changeIBAValues(rohs, map);
+       
+	WTPrincipal prin = SessionHelper.manager.getPrincipal();
+	rohs.setOwnership(Ownership.newOwnership(prin));
+	PersistenceHelper.manager.save(rohs);
+	
+%>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
 <%-- <input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>"> --%>
@@ -241,6 +289,7 @@
 			AUIGrid.resize(myGridID11);
 			AUIGrid.resize(myGridID8);
 		});
+		
 	</script>
 </body>
 </html>

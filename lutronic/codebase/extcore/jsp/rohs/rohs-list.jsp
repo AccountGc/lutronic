@@ -1,8 +1,31 @@
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.fc.QueryResult"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="wt.fc.PagingQueryResult"%>
+<%@page import="com.e3ps.common.util.PageQueryUtils"%>
+<%@page import="wt.util.WTAttributeNameIfc"%>
+<%@page import="com.e3ps.common.util.QuerySpecUtils"%>
+<%@page import="wt.doc.WTDocumentMaster"%>
+<%@page import="com.e3ps.rohs.ROHSMaterial"%>
+<%@page import="wt.query.QuerySpec"%>
+<%@page import="com.e3ps.rohs.beans.RohsData"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+	ArrayList<RohsData> list = new ArrayList<>();
+	QuerySpec query = new QuerySpec();
+	int idx = query.addClassList(ROHSMaterial.class, true);
+	
+	QueryResult result = PersistenceHelper.manager.find(query);
+	while (result.hasMoreElements()) {
+		Object[] obj = (Object[]) result.nextElement();
+		RohsData data = new RohsData((ROHSMaterial) obj[0]);
+		list.add(data);
+	}
 %>
 <!DOCTYPE html>
 <html>
@@ -138,13 +161,13 @@
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 80,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "createdDate",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
@@ -153,7 +176,7 @@
 						inline : true,
 					},
 				}, {
-					dataField : "modifiedDate",
+					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
@@ -169,18 +192,18 @@
 					headerHeight : 30,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
+					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
+					enableFilter : false,
+					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -192,21 +215,45 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				var array = new Array();
+				<%
+				for(int i=0; i<list.size(); i++){
+				%>
+					var data = new Object();
+					var rohsNumber = "<%=list.get(i).getNumber()%>";
+					var rohsName = "<%=list.get(i).getName()%>";
+					var creator = "<%=list.get(i).getCreator()%>";
+					var createDate = "<%=list.get(i).getCreateDate()%>";
+					var modifyDate = "<%=list.get(i).getModifyDate()%>";
+					data.rohsNumber = rohsNumber;
+					data.rohsName = rohsName;
+					data.creator = creator;
+					data.createDate = createDate;
+					data.modifyDate = modifyDate;
+					array.push(data);
+				<%		
+				}
+				%>
+				AUIGrid.removeAjaxLoader(myGridID);
+				AUIGrid.setGridData(myGridID, array);
+				parent.closeLayer();
+// 				let params = new Object();
+// 				const url = getCallUrl("/rohs/list");
+// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
+// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
+// 				params = toField(params, field);
+// 				params.latest = latest;
+// 				AUIGrid.showAjaxLoader(myGridID);
+// 				parent.openLayer();
+// 				call(url, params, function(data) {
+// 					AUIGrid.removeAjaxLoader(myGridID);
+// 					AUIGrid.setGridData(myGridID, data.list);
+// 					document.getElementById("sessionid").value = data.sessionid;
+// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
+// 					parent.closeLayer();
+// 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
