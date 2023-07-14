@@ -2,6 +2,7 @@ package com.e3ps.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +33,20 @@ public class MoldController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/mold/mold-list.jsp");
 		return model;
+	}
+	
+	@Description(value = "금형 검색")
+	@ResponseBody
+	@RequestMapping(value = "/listMoldAction")
+	public List<Map<String,Object>> listMoldAction(HttpServletRequest request, HttpServletResponse response){
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		try {
+			list = DocumentHelper.manager.listMoldAction(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 	
 	@Description(value = "금형 등록 페이지")
