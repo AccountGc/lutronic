@@ -16,16 +16,6 @@
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-	ArrayList<RohsData> list = new ArrayList<>();
-	QuerySpec query = new QuerySpec();
-	int idx = query.addClassList(ROHSMaterial.class, true);
-	
-	QueryResult result = PersistenceHelper.manager.find(query);
-	while (result.hasMoreElements()) {
-		Object[] obj = (Object[]) result.nextElement();
-		RohsData data = new RohsData((ROHSMaterial) obj[0]);
-		list.add(data);
-	}
 %>
 <!DOCTYPE html>
 <html>
@@ -215,30 +205,6 @@
 			}
 
 			function loadGridData() {
-				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
-				var array = new Array();
-				<%
-				for(int i=0; i<list.size(); i++){
-				%>
-					var data = new Object();
-					var rohsNumber = "<%=list.get(i).getNumber()%>";
-					var rohsName = "<%=list.get(i).getName()%>";
-					var creator = "<%=list.get(i).getCreator()%>";
-					var createDate = "<%=list.get(i).getCreateDate()%>";
-					var modifyDate = "<%=list.get(i).getModifyDate()%>";
-					data.rohsNumber = rohsNumber;
-					data.rohsName = rohsName;
-					data.creator = creator;
-					data.createDate = createDate;
-					data.modifyDate = modifyDate;
-					array.push(data);
-				<%		
-				}
-				%>
-				AUIGrid.removeAjaxLoader(myGridID);
-				AUIGrid.setGridData(myGridID, array);
-				parent.closeLayer();
 // 				let params = new Object();
 // 				const url = getCallUrl("/rohs/list");
 // 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];

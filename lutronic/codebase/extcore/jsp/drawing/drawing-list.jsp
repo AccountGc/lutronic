@@ -11,18 +11,6 @@
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-
-	ArrayList<EpmData> list = new ArrayList<>();
-	QuerySpec query = new QuerySpec();
-	int idx = query.addClassList(EPMDocument.class, true);
-	
-	QueryResult result = PersistenceHelper.manager.find(query);
-	while (result.hasMoreElements()) {
-		Object[] obj = (Object[]) result.nextElement();
-		EpmData data = new EpmData((EPMDocument) obj[0]);
-		list.add(data);
-	}
-
 %>
 <!DOCTYPE html>
 <html>
@@ -390,33 +378,6 @@
 			}
 
 			function loadGridData() {
-				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
-				var array = new Array();
-				<%
-				for(int i=0; i<10; i++){
-				%>
-					var data = new Object();
-					var number = "<%=list.get(i).getNumber()%>";
-					var name = "<%=list.get(i).getName()%>";
-					var cadType = "<%=list.get(i).getCadType()%>";
-					var creator = "<%=list.get(i).getCreator()%>";
-					var createDate = "<%=list.get(i).getCreateDate()%>";
-					var modifyDate = "<%=list.get(i).getModifyDate()%>";
-					var data = new Object();
-					data.number = number;
-					data.name = name;
-					data.cadType = cadType;
-					data.creator = creator;
-					data.createDate = createDate;
-					data.modifyDate = modifyDate;
-					array.push(data);
-				<%		
-				}
-				%>
-				AUIGrid.removeAjaxLoader(myGridID);
-				AUIGrid.setGridData(myGridID, array);
-				parent.closeLayer();
 // 				let params = new Object();
 // 				const url = getCallUrl("/drawing/listDrawingAction");
 // 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
