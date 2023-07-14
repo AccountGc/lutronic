@@ -71,17 +71,13 @@ public class ChangeECOController {
 		return model;
 	}
 	
-	/** ECO 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "ECO 검색")
 	@ResponseBody
-	@RequestMapping("/listECOAction")
+	@RequestMapping(value = "/listECOAction")
 	public Map<String,Object> listECOAction(HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> result = null;
 		try {
-			result = ECOSearchHelper.service.listECOAction(request, response);
+			result = ECOSearchHelper.manager.listECOAction(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,6 +85,24 @@ public class ChangeECOController {
 		return result;
 		
 	}
+//	/** ECO 검색
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listECOAction")
+//	public Map<String,Object> listECOAction(HttpServletRequest request, HttpServletResponse response){
+//		Map<String,Object> result = null;
+//		try {
+//			result = ECOSearchHelper.service.listECOAction(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return result;
+//		
+//	}
 	
 	/**	viewECO 상세보기
 	 * @param request
@@ -142,17 +156,13 @@ public class ChangeECOController {
 		return model;
 	}
 	
-	/** EO 검색  Action
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value="EO 검색  Action")
 	@ResponseBody
-	@RequestMapping("/listEOAction")
+	@RequestMapping(value = "/listEOAction")
 	public Map<String,Object> listEOAction(HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> result = null;
 		try {
-			 result = ECOSearchHelper.service.listEOAction(request, response);//ECRSearchHelper.service.listECRAction(request, response);
+			 result = ECOSearchHelper.manager.listEOAction(request, response);//ECRSearchHelper.service.listECRAction(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -160,6 +170,24 @@ public class ChangeECOController {
 		return result;
 		
 	}
+//	/** EO 검색  Action
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listEOAction")
+//	public Map<String,Object> listEOAction(HttpServletRequest request, HttpServletResponse response){
+//		Map<String,Object> result = null;
+//		try {
+//			result = ECOSearchHelper.service.listEOAction(request, response);//ECRSearchHelper.service.listECRAction(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return result;
+//		
+//	}
 	
 	/**	EO,ECO 수정 페이지
 	 * @param request

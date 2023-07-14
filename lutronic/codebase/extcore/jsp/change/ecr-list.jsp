@@ -257,21 +257,21 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				let params = new Object();
+				const url = getCallUrl("/changeECR/listECRAction");
+				const field = ["_psize","oid","name","number", "predate","postdate","creator","state", "preCreateDate", "postCreateDate", "preApproveDate", "postApproveDate", "createDepart", "writer", "proposer", "model", "changeSection", "sortValue", "sortCheck"];
+				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				params = toField(params, field);
+				params.latest = latest; */
+				AUIGrid.showAjaxLoader(myGridID);
+				/* parent.openLayer(); */
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					AUIGrid.setGridData(myGridID, data.list);
+					document.getElementById("sessionid").value = data.sessionid;
+					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
+					/* parent.closeLayer(); */
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

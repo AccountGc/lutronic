@@ -70,17 +70,13 @@ public class ChangeECRController {
 		return model;
 	}
 	
-	/** ECR 검색  Action
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "ECR 검색  Action")
 	@ResponseBody
-	@RequestMapping("/listECRAction")
+	@RequestMapping(value = "/listECRAction")
 	public Map<String,Object> listECRAction(HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> result = null;
 		try {
-			 result = ECRSearchHelper.service.listECRAction(request, response);
+			 result = ECRSearchHelper.manager.listECRAction(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -88,6 +84,24 @@ public class ChangeECRController {
 		return result;
 		
 	}
+//	/** ECR 검색  Action
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listECRAction")
+//	public Map<String,Object> listECRAction(HttpServletRequest request, HttpServletResponse response){
+//		Map<String,Object> result = null;
+//		try {
+//			result = ECRSearchHelper.service.listECRAction(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return result;
+//		
+//	}
 	
 	/**	ECR 상세보기
 	 * @param request
