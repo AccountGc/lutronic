@@ -145,17 +145,13 @@ public class RohsController {
 		return RohsHelper.service.createRohsAction(request, response);
 	}
 	
-	/** rohs 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "rohs 검색")
 	@ResponseBody
-	@RequestMapping("/listRohsAction")
+	@RequestMapping(value = "/listRohsAction")
 	public Map<String,Object> listRohsAction(HttpServletRequest request, HttpServletResponse response){
 		Map<String,Object> result = null;
 		try {
-			result = RohsHelper.service.listRohsAction(request, response);
+			result = RohsHelper.manager.listRohsAction(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -163,6 +159,24 @@ public class RohsController {
 		return result;
 	}
 	
+//	/** rohs 검색
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listRohsAction")
+//	public Map<String,Object> listRohsAction(HttpServletRequest request, HttpServletResponse response){
+//		Map<String,Object> result = null;
+//		try {
+//			result = RohsHelper.service.listRohsAction(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return result;
+//	}
+//	
 	/**	관련 문서 추가
 	 * @param request
 	 * @param response

@@ -20,7 +20,7 @@
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
-
+		
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -155,7 +155,7 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
+					<input type="button" value="조회" title="조회" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
 					<a href="javascript:onExcelDown();">
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
@@ -164,14 +164,7 @@
 			</tr>
 		</table>
 
-		<table>
-			<tr>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-				</td>
-			</tr>
-		</table>
+		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
 		<script type="text/javascript">
 			let myGridID;
@@ -258,7 +251,7 @@
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				/* loadGridData(); */
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -270,21 +263,21 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				let params = new Object();
+				const url = getCallUrl("/mold/listMoldAction");
+				const field = ["_psize","oid","islastversion","docNumber","docName","predate","postdate","predate_modify","postdate_modify", "creator", "state", "documentType", "preseration", "model", "interalnumber", "deptcode", "writer", "description", "sortValue", "sortCheck", "searchType", "manufacture", "moldtype", "moldnumber", "moldcost"];
+				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				params = toField(params, field);
+				params.latest = latest; */
+				AUIGrid.showAjaxLoader(myGridID);
+				/* parent.openLayer(); */
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					AUIGrid.setGridData(myGridID, data.list);
+					document.getElementById("sessionid").value = data.sessionid;
+					/* document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length; */
+					/* parent.closeLayer(); */
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
