@@ -18,13 +18,13 @@ import lombok.Setter;
 public class RohsData{
 	
 //	public ROHSMaterial rohs;
-	public String number;
-	public String name;
-	public String state;
-	public String manufacture;
-	public String creator;
-	public String createDate;
-	public String modifyDate;
+	private String number;
+	private String name;
+	private String state;
+	private String manufacture;
+	private String creator;
+	private String createDate;
+	private String modifyDate;
 	
 	public RohsData(ROHSMaterial rohs) throws Exception {
 //		super(rohs);

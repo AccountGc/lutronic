@@ -16,6 +16,7 @@ import oracle.net.aso.a;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,7 +51,7 @@ import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.service.MailUserHelper;
 
 @Controller
-@RequestMapping(value = "/groupware")
+@RequestMapping(value = "/groupware/**")
 public class GroupwareController {
 	
 	/** 메인 페이지
@@ -88,12 +89,14 @@ public class GroupwareController {
 	 * @param response
 	 * @return
 	 */
+	@Description(value = "공지사항 조회 함수")
 	@ResponseBody
-	@RequestMapping("/listNoticeAction")
-	public Map<String,Object> listNoticeAction(HttpServletRequest request, HttpServletResponse response) {
+	@PostMapping(value = "/listNotice")
+	public Map<String,Object> listNotice(HttpServletRequest request, HttpServletResponse response) {
 		Map<String,Object> result = null;
 		try {
-			result = GroupwareHelper.service.listNoticeAction(request,response);
+//			result = GroupwareHelper.service.listNoticeAction(request,response);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

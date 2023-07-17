@@ -230,18 +230,18 @@
 					headerHeight : 30,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
+					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
+					enableFilter : false,
+					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -254,19 +254,24 @@
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/changeECO/listECOAction");
-				const field = ["_psize","oid","name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
+				const url = getCallUrl("/changeECO/list");
+// 				const field = ["_psize","oid","name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
 				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = latest; */
 				AUIGrid.showAjaxLoader(myGridID);
-				/* parent.openLayer(); */
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
-					AUIGrid.setGridData(myGridID, data.list);
-					document.getElementById("sessionid").value = data.sessionid;
-					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-					/* parent.closeLayer(); */
+					if (data.result) {
+						document.getElementById("sessionid").value = data.sessionid;
+						document.getElementById("curPage").value = data.curPage;
+						document.getElementById("lastNum").value = data.list.length;
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
 				});
 			}
 

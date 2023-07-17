@@ -1,4 +1,9 @@
 
+<%@page import="wt.fc.PersistenceHelper"%>
+<%@page import="wt.ownership.Ownership"%>
+<%@page import="wt.session.SessionHelper"%>
+<%@page import="wt.org.WTPrincipal"%>
+<%@page import="com.e3ps.groupware.notice.Notice"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -125,18 +130,18 @@
 					headerHeight : 30,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
+					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
+					enableFilter : false,
+					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -148,21 +153,26 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				let params = new Object();
+				const url = getCallUrl("/groupware/listNotice");
+// 				const field = ["_psize","oid","islastversion","docNumber","docName","predate","postdate","predate_modify","postdate_modify", "creator", "state", "documentType", "preseration", "model", "interalnumber", "deptcode", "writer", "description", "sortValue", "sortCheck", "searchType", "manufacture", "moldtype", "moldnumber", "moldcost"];
+				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				params = toField(params, field);
+				params.latest = latest; */
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						document.getElementById("sessionid").value = data.sessionid;
+						document.getElementById("curPage").value = data.curPage;
+						document.getElementById("lastNum").value = data.list.length;
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
