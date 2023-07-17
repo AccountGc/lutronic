@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,10 +38,8 @@ import com.e3ps.common.util.StringUtil;
 //import com.e3ps.doc.service.DocumentHelper;
 
 @Controller
-@RequestMapping("/changeECR")
-public class ChangeECRController {
-	
-	
+@RequestMapping(value = "/changeECR/**")
+public class ChangeECRController extends BaseController {
 	
 	@Description(value = "ECR 등록 페이지")
 	@GetMapping(value = "/create")
@@ -72,15 +72,17 @@ public class ChangeECRController {
 	
 	@Description(value = "ECR 검색  Action")
 	@ResponseBody
-	@RequestMapping(value = "/listECRAction")
-	public Map<String,Object> listECRAction(HttpServletRequest request, HttpServletResponse response){
+	@PostMapping(value = "/list")
+	public Map<String,Object> list(@RequestBody Map<String, Object> params){
 		Map<String,Object> result = null;
 		try {
-			 result = ECRSearchHelper.manager.listECRAction(request);
+			 result = ECRHelper.manager.list(params);
+			 result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
 		return result;
 		
 	}

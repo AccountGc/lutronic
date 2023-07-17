@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,13 +37,14 @@ import com.e3ps.common.util.StringUtil;
 //import com.e3ps.doc.beans.DocumentData;
 //import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmUtil;
+import com.e3ps.rohs.service.RohsHelper;
 
 import wt.part.WTPart;
 //import wt.vc.baseline.ManagedBaseline;
 
 @Controller
-@RequestMapping("/changeECO")
-public class ChangeECOController {
+@RequestMapping(value = "/changeECO/**")
+public class ChangeECOController extends BaseController {
 	
 	
 	@Description(value = "ECO 등록")
@@ -73,15 +76,17 @@ public class ChangeECOController {
 	
 	@Description(value = "ECO 검색")
 	@ResponseBody
-	@RequestMapping(value = "/listECOAction")
-	public Map<String,Object> listECOAction(HttpServletRequest request, HttpServletResponse response){
-		Map<String,Object> result = null;
+	@PostMapping(value = "/list")
+	public Map<String,Object> list(@RequestBody Map<String, Object> params){
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = ECOSearchHelper.manager.listECOAction(request);
+			result = ECOHelper.manager.list(params);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
 		return result;
 		
 	}
@@ -158,15 +163,17 @@ public class ChangeECOController {
 	
 	@Description(value="EO 검색  Action")
 	@ResponseBody
-	@RequestMapping(value = "/listEOAction")
-	public Map<String,Object> listEOAction(HttpServletRequest request, HttpServletResponse response){
+	@PostMapping(value = "/listEO")
+	public Map<String,Object> listEO(@RequestBody Map<String, Object> params){
 		Map<String,Object> result = null;
 		try {
-			 result = ECOSearchHelper.manager.listEOAction(request, response);//ECRSearchHelper.service.listECRAction(request, response);
+			result = ECOHelper.manager.listEO(params);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
 		return result;
 		
 	}

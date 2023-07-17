@@ -226,15 +226,14 @@ public class RohsHelper {
 				}
 			}else{
 				//query.appendOrderBy(new OrderBy(new ClassAttribute(ROHSMaterial.class,"thePersistInfo.createStamp"), true), new int[] { idx }); 
-				SearchUtil.setOrderBy(query, WTDocument.class, idx, WTDocument.MODIFY_TIMESTAMP, "sort", true);
+				SearchUtil.setOrderBy(query, ROHSMaterial.class, idx, ROHSMaterial.MODIFY_TIMESTAMP, "sort", true);
 			}
 			
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
-				ROHSMaterial rohs = (ROHSMaterial) obj[0];
-				RohsData data = new RohsData(rohs);
+				RohsData data = new RohsData((ROHSMaterial) obj[0]);
 				list.add(data);
 			}
 

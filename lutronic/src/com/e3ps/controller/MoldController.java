@@ -1,6 +1,7 @@
 package com.e3ps.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,43 +11,55 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import wt.doc.WTDocument;
+import wt.org.WTUser;
+import wt.session.SessionHelper;
 
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.rohs.service.RohsHelper;
+import com.e3ps.rohs.service.RohsQueryHelper;
 
 @Controller
-@RequestMapping(value = "/mold")
-public class MoldController {
+@RequestMapping(value = "/mold/**")
+public class MoldController extends BaseController {
 	
 	@Description(value = "금형 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() {
+	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/jsp/mold/mold-list.jsp");
 		return model;
 	}
 	
 	@Description(value = "금형 검색")
 	@ResponseBody
-	@RequestMapping(value = "/listMoldAction")
-	public List<Map<String,Object>> listMoldAction(HttpServletRequest request, HttpServletResponse response){
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+	@PostMapping(value = "/list")
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			list = DocumentHelper.manager.listMoldAction(request, response);
+			result = DocumentHelper.manager.listMoldAction(params);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
-		return list;
+		return result;
 	}
 	
 	@Description(value = "금형 등록 페이지")
