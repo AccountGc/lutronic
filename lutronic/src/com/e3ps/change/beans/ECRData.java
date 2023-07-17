@@ -31,9 +31,9 @@ import wt.org.WTUser;
 
 @Getter
 @Setter
-public class ECRData extends EOData{
+public class ECRData{
 
-    private EChangeRequest ecr;
+//    private EChangeRequest ecr;
     private String writeDate;
     private String approveDate;
     private String createDepart;
@@ -41,19 +41,29 @@ public class ECRData extends EOData{
     private String proposer;
     private String changeSection;
     private Vector<NumberCode> changeCode = null;
-    
+    private String eoName;
+    private String eoNumber;
+    private String model;
+    private String createDate;
+    private String state;
 
-	public ECRData(final EChangeRequest ecr) {
-    	super(ecr);
+	public ECRData(EChangeRequest ecr) {
+//    	super(ecr);
     	
-    	setEcr(getEcr());
+//    	setEcr(getEcr());
     	setWriteDate(StringUtil.checkNull(ecr.getCreateDate()));
     	setApproveDate(StringUtil.checkNull(ecr.getApproveDate()));
     	setCreateDepart(StringUtil.checkNull(ecr.getCreateDepart()));
-    	setWriter(StringUtil.checkNull(ecr.getWriter()));
+//    	setWriter(StringUtil.checkNull(ecr.getWriter()));
+    	setWriter(ecr.getCreatorFullName());
     	setChangeSection(StringUtil.checkNull(ecr.getChangeSection()));
     	setProposer(StringUtil.checkNull(ecr.getProposer()));
     	setChangeCode(getChangeCode());
+    	setEoName(ecr.getEoName());
+    	setEoNumber(ecr.getEoNumber());
+    	setModel(ecr.getModel());
+    	setCreateDate(DateUtil.getDateString(ecr.getCreateTimestamp(),"a"));
+    	setState(ecr.getLifeCycleState().toString());
     }
     
 	/**
@@ -83,27 +93,27 @@ public class ECRData extends EOData{
      * 관련 ECO
      * @return
      */
-    public List<Map<String,Object>> getEcoLink(){
-    	
-    	Vector<RequestOrderLink> vecLinks = ChangeHelper.service.getRelationECO((EChangeRequest)this.eo);
-    	
-    	List<Map<String,Object>> ecoLink = new ArrayList<Map<String,Object>>();
-		for(int i = 0 ; i < vecLinks.size() ; i++){
-			RequestOrderLink link = vecLinks.get(i);
-			if(link.getEcoType().equals(ChangeKey.ecrReference)) continue;
-			EChangeOrder eco = link.getEco();
-			Map<String,Object> map = new HashMap<String,Object>();
-			map.put("ecoOid", PersistenceHelper.getObjectIdentifier( eco ).toString());
-			map.put("ecoNumber", eco.getEoNumber());
-			map.put("ecoName", eco.getEoName());
-			map.put("ecoState", eco.getLifeCycleState().getDisplay(Message.getLocale()));
-			map.put("ecoCreator", eco.getCreatorFullName());
-			map.put("ecoDate", DateUtil.getDateString(eco.getCreateTimestamp(), "d"));
-			ecoLink.add(map);
-			
-		}
-    	
-    	return ecoLink;
-    	
-    }
+//    public List<Map<String,Object>> getEcoLink(){
+//    	
+//    	Vector<RequestOrderLink> vecLinks = ChangeHelper.service.getRelationECO((EChangeRequest)this.eo);
+//    	
+//    	List<Map<String,Object>> ecoLink = new ArrayList<Map<String,Object>>();
+//		for(int i = 0 ; i < vecLinks.size() ; i++){
+//			RequestOrderLink link = vecLinks.get(i);
+//			if(link.getEcoType().equals(ChangeKey.ecrReference)) continue;
+//			EChangeOrder eco = link.getEco();
+//			Map<String,Object> map = new HashMap<String,Object>();
+//			map.put("ecoOid", PersistenceHelper.getObjectIdentifier( eco ).toString());
+//			map.put("ecoNumber", eco.getEoNumber());
+//			map.put("ecoName", eco.getEoName());
+//			map.put("ecoState", eco.getLifeCycleState().getDisplay(Message.getLocale()));
+//			map.put("ecoCreator", eco.getCreatorFullName());
+//			map.put("ecoDate", DateUtil.getDateString(eco.getCreateTimestamp(), "d"));
+//			ecoLink.add(map);
+//			
+//		}
+//    	
+//    	return ecoLink;
+//    	
+//    }
 }

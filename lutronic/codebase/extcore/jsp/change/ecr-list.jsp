@@ -146,7 +146,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
+					dataField : "eoNumber",
 					headerText : "CR/ECPR 번호",
 					dataType : "string",
 					width : 120,
@@ -155,7 +155,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "name",
+					dataField : "eoName",
 					headerText : "CR/ECPR 제목",
 					dataType : "string",
 					width : 120,
@@ -173,15 +173,6 @@
 						inline : true
 					},
 				}, {
-					dataField : "writer",
-					headerText : "작성자",
-					dataType : "string",
-					width : 350,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
@@ -191,10 +182,19 @@
 						inline : true
 					},
 				}, {
-					dataField : "preCreateDate",
+					dataField : "writer",
+					headerText : "작성자",
+					dataType : "string",
+					width : 180,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "createDate",
 					headerText : "작성일",
 					dataType : "string",
-					width : 350,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -209,19 +209,19 @@
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "writer",
 					headerText : "등록자",
 					dataType : "string",
-					width : 100,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "predate",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 100,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
