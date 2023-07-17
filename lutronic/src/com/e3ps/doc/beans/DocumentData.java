@@ -1,30 +1,17 @@
 package com.e3ps.doc.beans;
 
-import java.rmi.RemoteException;
-import java.util.Locale;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 
+import lombok.Getter;
+import lombok.Setter;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
-import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.enterprise.BasicTemplateProcessor;
 import wt.fc.QueryResult;
-import wt.org.WTUser;
-import wt.session.SessionHelper;
-import wt.util.WTException;
-
-import com.e3ps.common.beans.VersionData;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.WebUtil;
-
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -33,14 +20,24 @@ public class DocumentData {
 //	private WTDocument doc;
 	
 	private String number;
+	private String name;
+	private String state;
 	private String icon;
 	private String linkOid;
 	private String icon2;
+	private String creator;
+	private String createDate;
+	private String modifyDate;
 	
 	public DocumentData(WTDocument doc) throws Exception {
 //		super(doc);
 //		setDoc(doc);
 		setNumber(doc.getNumber());
+		setName(doc.getName());
+		setState(doc.getLifeCycleState().toString());
+		setCreator(doc.getCreatorFullName());
+		setCreateDate(DateUtil.getDateString(doc.getCreateTimestamp(),"a"));
+		setModifyDate(DateUtil.getDateString(doc.getModifyTimestamp(),"a"));
 		
 		ContentItem item = null;
 		QueryResult result = ContentHelper.service.getContentsByRole ((ContentHolder)doc, ContentRoleType.PRIMARY );

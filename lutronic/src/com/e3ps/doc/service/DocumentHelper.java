@@ -141,101 +141,52 @@ public class DocumentHelper {
 		return map;
 	}
 	
-	public List<Map<String,Object>> listMoldAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Map<String,Object> listMoldAction(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		ArrayList<DocumentData> list = new ArrayList<>();
 		
-		QuerySpec query = DocumentQueryHelper.service.getListQuery(request, response);
-		QueryResult qr = PersistenceHelper.manager.find(query);
-	
-		List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
-		HashMap<String , String> verMap = new HashMap<String, String>();
-		while(qr.hasMoreElements()){	
-			Map<String, Object> result = new HashMap<String, Object>();
-			Object[] o = (Object[]) qr.nextElement();
-			WTDocument doc = (WTDocument) o[0];
-			DocumentData data = new DocumentData(doc);
-
-//			int kk = 0 ;
-//			if(verMap.containsKey(data.number)){
-//				
-//				kk = verMap.get(data.number).compareTo(data.version);
-//				if(kk>0){
-//					continue;
-//				}else{
-//					verMap.put(data.number, data.version);
-//				}
-//			}else{
-//				verMap.put(data.number, data.version);
-//			}
-			
-			
-			result.put("number", data.getNumber());
-			result.put("interNumber", data.getIBAValue(AttributeKey.IBAKey.IBA_INTERALNUMBER));
-			result.put("model", data.getIBAValue(AttributeKey.IBAKey.IBA_MODEL));
-			result.put("name", data.getName());
-			result.put("oid", data.getOid());
-			result.put("location", data.getLocation());
-			result.put("version", data.getVersion());
-			result.put("rev", data.getVersion()+"." + data.getIteration());
-			result.put("state", data.getLifecycle());
-			result.put("creator", data.getCreator());
-			result.put("createDate", data.getCreateDate().substring(0, 10));
-			result.put("modifyDate", data.getModifyDate().substring(0, 10));
-			
-			resultList.add(result);
-		}
-		
-		return resultList;
-		
-	}
-	
-	public QuerySpec getListQuery(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    	
-    	QuerySpec query = new QuerySpec();
+		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(WTDocument.class, true);
     	ReferenceFactory rf = new ReferenceFactory();
     	
     	try {
-    		
-    		
-    		String location 	= StringUtil.checkNull(request.getParameter("location"));
-			String foid 		= StringUtil.checkNull(request.getParameter("fid"));
+    		String location	= StringUtil.checkNull((String) params.get("location"));
+    		String foid = StringUtil.checkNull((String) params.get("fid"));
 			if(foid.length() == 0) {
-				foid = StringUtil.checkNull(request.getParameter("folder"));
+				foid = StringUtil.checkNull((String) params.get("folder"));
 			}
 			if(location.length() ==0 ) {
 				location = "/Default/Document";
 			}
 			//System.out.println("location =" + location);
-			String islastversion 	= StringUtil.checkNull(request.getParameter("islastversion"));
-			String docNumber 		= StringUtil.checkNull(request.getParameter("docNumber"));
-			String docName 			= StringUtil.checkNull(request.getParameter("docName"));
-			String predate 			= StringUtil.checkNull(request.getParameter("predate"));
-			String postdate 		= StringUtil.checkNull(request.getParameter("postdate"));
-			String predate_modify	= StringUtil.checkNull(request.getParameter("predate_modify"));
-			String postdate_modify	= StringUtil.checkNull(request.getParameter("postdate_modify"));
-			String creator 			= StringUtil.checkNull(request.getParameter("creator"));
-			String state 			= StringUtil.checkNull(request.getParameter("state"));
+			String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
+			String docNumber 		= StringUtil.checkNull((String)params.get("docNumber"));
+			String docName 			= StringUtil.checkNull((String)params.get("docName"));
+			String predate 			= StringUtil.checkNull((String)params.get("predate"));
+			String postdate 		= StringUtil.checkNull((String)params.get("postdate"));
+			String predate_modify	= StringUtil.checkNull((String)params.get("predate_modify"));
+			String postdate_modify	= StringUtil.checkNull((String)params.get("postdate_modify"));
+			String creator 			= StringUtil.checkNull((String)params.get("creator"));
+			String state 			= StringUtil.checkNull((String)params.get("state"));
 			
-			String documentType     = StringUtil.checkNull(request.getParameter("documentType"));
-			String preseration      = StringUtil.checkNull(request.getParameter("preseration"));
-			String model 			= StringUtil.checkNull(request.getParameter("model"));
-			String interalnumber	= StringUtil.checkNull(request.getParameter("interalnumber"));
-			String deptcode			= StringUtil.checkNull(request.getParameter("deptcode"));
-			String writer			= StringUtil.checkNull(request.getParameter("writer"));
+			String documentType     = StringUtil.checkNull((String)params.get("documentType"));
+			String preseration      = StringUtil.checkNull((String)params.get("preseration"));
+			String model 			= StringUtil.checkNull((String)params.get("model"));
+			String interalnumber	= StringUtil.checkNull((String)params.get("interalnumber"));
+			String deptcode			= StringUtil.checkNull((String)params.get("deptcode"));
+			String writer			= StringUtil.checkNull((String)params.get("writer"));
 			
-			String description		= StringUtil.checkNull(request.getParameter("description"));
+			String description		= StringUtil.checkNull((String)params.get("description"));
 			
-			String sortValue 		= StringUtil.checkNull(request.getParameter("sortValue"));
-			String sortCheck 		= StringUtil.checkNull(request.getParameter("sortCheck"));
+			String sortValue 		= StringUtil.checkNull((String)params.get("sortValue"));
+			String sortCheck 		= StringUtil.checkNull((String)params.get("sortCheck"));
 			
-			String searchType		= StringUtil.checkNull(request.getParameter("searchType"));
+			String searchType		= StringUtil.checkNull((String)params.get("searchType"));
 			
-			String manufacture      = StringUtil.checkNull(request.getParameter("manufacture"));
-			String moldtype         = StringUtil.checkNull(request.getParameter("moldtype"));
-			String moldNumber 		= StringUtil.checkNull(request.getParameter("moldnumber"));
-			String moldCost 		= StringUtil.checkNull(request.getParameter("moldcost"));
-			
-			
+			String manufacture      = StringUtil.checkNull((String)params.get("manufacture"));
+			String moldtype         = StringUtil.checkNull((String)params.get("moldtype"));
+			String moldNumber 		= StringUtil.checkNull((String)params.get("moldnumber"));
+			String moldCost 		= StringUtil.checkNull((String)params.get("moldcost"));
 			
 			// 최신 이터레이션
 	    	if(query.getConditionCount() > 0) { query.appendAnd(); }
@@ -253,9 +204,8 @@ public class DocumentHelper {
 	    	//Working Copy 제외
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();
+				query.appendWhere(new SearchCondition(WTDocument.class, "checkoutInfo.state", SearchCondition.NOT_EQUAL, "wrk", false), new int[] { idx });
 			}
-			query.appendWhere(new SearchCondition(WTDocument.class, "checkoutInfo.state", SearchCondition.NOT_EQUAL, "wrk", false), new int[] { idx });
-
 			
 			// 일괄 결재시 타입에 따른 LC 상태 검색
 			if(searchType.length() > 0){
@@ -498,23 +448,21 @@ public class DocumentHelper {
 			}
 			
 	    	//folder search
-	    	if (location.length() > 0) {
-				int l = location.indexOf(ROOTLOCATION);
-				if (l >= 0) {
-					if (query.getConditionCount() > 0) {
-						query.appendAnd();
-					}
-					location = location.substring((l + ROOTLOCATION.length()));
-					// Folder Search
-					int folder_idx = query.addClassList(DocLocation.class, false);
-					query.appendWhere(new SearchCondition(DocLocation.class, DocLocation.DOC, WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
-					query.appendAnd();
-
-					query.appendWhere(new SearchCondition(DocLocation.class, "loc", SearchCondition.LIKE, location + "%"), new int[] { folder_idx });
-				}
-			}
-	    	
-	    	
+//	    	if (location.length() > 0) {
+//				int l = location.indexOf(ROOTLOCATION);
+//				if (l >= 0) {
+//					if (query.getConditionCount() > 0) {
+//						query.appendAnd();
+//					}
+//					location = location.substring((l + ROOTLOCATION.length()));
+//					// Folder Search
+//					int folder_idx = query.addClassList(DocLocation.class, false);
+//					query.appendWhere(new SearchCondition(DocLocation.class, DocLocation.DOC, WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
+//					query.appendAnd();
+//
+//					query.appendWhere(new SearchCondition(DocLocation.class, "loc", SearchCondition.LIKE, location + "%"), new int[] { folder_idx });
+//				}
+//			}
 	    	
 	    	//소팅
 	    	if (sortCheck == null) sortCheck = "true";
@@ -538,52 +486,25 @@ public class DocumentHelper {
 					SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort" , sort);
 				}
 				
-				/*
-				if("true".equals(sortCheck)){
-					if( !"creator".equals(sortValue)){
-						//query.appendOrderBy(new OrderBy(new ClassAttribute(WTDocument.class,sortValue), true), new int[] { idx });
-						SearchUtil.setOrderBy(query, WTDocument.class, idx, sortValue, "sort", true);
-					}else{
-						if(query.getConditionCount() > 0) query.appendAnd();
-						int idx_user = query.appendClassList(WTUser.class, false);
-						int idx_people = query.appendClassList(People.class, false);
-						
-						ClassAttribute ca = new ClassAttribute(WTDocument.class, "creator.key.id");
-			            ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-			            query.appendWhere(new SearchCondition(ca, "=", ca2), new int[]{idx, idx_user});
-						ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-						query.appendAnd();
-						query.appendWhere(new SearchCondition(ca2, "=", ca3), new int[]{idx_user, idx_people});
-						SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort" , true);
-					}
-				}else{
-					if( !"creator".equals(sortValue)){
-						//query.appendOrderBy(new OrderBy(new ClassAttribute(WTDocument.class,sortValue), false), new int[] { idx });
-						SearchUtil.setOrderBy(query, WTDocument.class, idx, sortValue, "sort", false);
-					}else{
-						if(query.getConditionCount() > 0) query.appendAnd();
-						int idx_user = query.appendClassList(WTUser.class, false);
-						int idx_people = query.appendClassList(People.class, false);
-						
-						ClassAttribute ca = new ClassAttribute(WTDocument.class, "creator.key.id");
-			            ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-			            query.appendWhere(new SearchCondition(ca, "=", ca2), new int[]{idx, idx_user});
-						ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-						query.appendAnd();
-						query.appendWhere(new SearchCondition(ca2, "=", ca3), new int[]{idx_user, idx_people});
-						SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort" , false);
-					}
-				}
-				 */
 			}else{
 				//query.appendOrderBy(new OrderBy(new ClassAttribute(WTDocument.class,"thePersistInfo.createStamp"), true), new int[] { idx }); 
 				SearchUtil.setOrderBy(query, WTDocument.class, idx, WTDocument.MODIFY_TIMESTAMP, "sort", true);
 			}
+			
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				WTDocument document = (WTDocument) obj[0];
+				DocumentData data = new DocumentData(document);
+				list.add(data);
+			}
+			
+			map.put("list", list);
 	    }catch (Exception e) {
 			e.printStackTrace();
 		}
-    	//System.out.println(query.toString());
-		return query;
-    }
-
+		return map;
+		
+	}
 }
