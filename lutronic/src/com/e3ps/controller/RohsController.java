@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +26,12 @@ import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.beans.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 
+import wt.org.WTUser;
+import wt.session.SessionHelper;
+
 @Controller
-@RequestMapping("/rohs")
-public class RohsController {
+@RequestMapping(value = "/rohs/**")
+public class RohsController extends BaseController {
 	
 	@ResponseBody
 	@RequestMapping("/rohsFileType")
@@ -88,8 +93,12 @@ public class RohsController {
 	
 	@Description(value = "물질검색")
 	@GetMapping(value = "/list")
-	public ModelAndView list() {
+	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/jsp/rohs/rohs-list.jsp");
 		return model;
 	}
@@ -145,17 +154,19 @@ public class RohsController {
 		return RohsHelper.service.createRohsAction(request, response);
 	}
 	
-	@Description(value = "rohs 검색")
+	@Description(value = "rohs 조회 함수")
 	@ResponseBody
-	@RequestMapping(value = "/listRohsAction")
-	public Map<String,Object> listRohsAction(HttpServletRequest request, HttpServletResponse response){
-		Map<String,Object> result = null;
+	@PostMapping(value = "/list")
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = RohsHelper.manager.listRohsAction(request, response);
+			result = RohsHelper.manager.list(params);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
 		return result;
 	}
 	

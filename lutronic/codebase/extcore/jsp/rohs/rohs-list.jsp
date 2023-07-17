@@ -14,8 +14,8 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 %>
 <!DOCTYPE html>
 <html>
@@ -29,7 +29,10 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="lastNum" id="lastNum"> 
+		<input type="hidden" name="curPage" id="curPage"> 
+		<input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -103,7 +106,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "rohsNumber",
+					dataField : "number",
 					headerText : "물질번호",
 					dataType : "string",
 					width : 120,
@@ -121,7 +124,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "rohsName",
+					dataField : "name",
 					headerText : "물질명",
 					dataType : "string",
 					width : 120,
@@ -130,7 +133,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "version",
+					dataField : "islastversion",
 					headerText : "Rev.",
 					dataType : "string",
 					width : 350,
@@ -160,7 +163,7 @@
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "date",
-					width : 100,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -169,7 +172,7 @@
 					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "date",
-					width : 100,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -205,21 +208,28 @@
 			}
 
 			function loadGridData() {
-// 				let params = new Object();
-// 				const url = getCallUrl("/rohs/list");
+				let params = new Object();
+				const url = getCallUrl("/rohs/list");
 // 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
 // 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 // 				params = toField(params, field);
 // 				params.latest = latest;
-// 				AUIGrid.showAjaxLoader(myGridID);
-// 				parent.openLayer();
-// 				call(url, params, function(data) {
-// 					AUIGrid.removeAjaxLoader(myGridID);
-// 					AUIGrid.setGridData(myGridID, data.list);
-// 					document.getElementById("sessionid").value = data.sessionid;
-// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-// 					parent.closeLayer();
-// 				});
+// 				const field = [ "_psize" ];
+// 				params = toField(params, field);
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						document.getElementById("sessionid").value = data.sessionid;
+						document.getElementById("curPage").value = data.curPage;
+						document.getElementById("lastNum").value = data.list.length;
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

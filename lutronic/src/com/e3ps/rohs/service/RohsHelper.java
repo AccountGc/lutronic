@@ -11,13 +11,18 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.org.People;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.beans.RohsData;
 
 import wt.doc.WTDocument;
+import wt.fc.PagingQueryResult;
+import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
@@ -36,7 +41,7 @@ public class RohsHelper {
 	public static final RohsService service = ServiceFactory.getService(RohsService.class);
 	public static final RohsHelper manager = new RohsHelper();
 	
-public Map<String, Object> listRohsAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<RohsData> list = new ArrayList<>();
     	
@@ -46,29 +51,24 @@ public Map<String, Object> listRohsAction(HttpServletRequest request, HttpServle
     	
     	try {
     		
-    		//String location 	= StringUtil.checkNull(request.getParameter("location"));
-			String foid 		= StringUtil.checkNull(request.getParameter("fid"));
-			if(foid.length() == 0) {
-				foid = StringUtil.checkNull(request.getParameter("folder"));
-			}
-			
-			String islastversion 	= StringUtil.checkNull(request.getParameter("islastversion"));
-			String rohsNumber 		= StringUtil.checkNull(request.getParameter("rohsNumber"));
-			String rohsName 		= StringUtil.checkNull(request.getParameter("rohsName"));
-			String description		= StringUtil.checkNull(request.getParameter("description"));
-			String predate 			= StringUtil.checkNull(request.getParameter("predate"));
-			String postdate 		= StringUtil.checkNull(request.getParameter("postdate"));
-			String predate_modify	= StringUtil.checkNull(request.getParameter("predate_modify"));
-			String postdate_modify	= StringUtil.checkNull(request.getParameter("postdate_modify"));
-			String creator 			= StringUtil.checkNull(request.getParameter("creator"));
-			String state 			= StringUtil.checkNull(request.getParameter("state"));
-			
-			String manufacture 		= StringUtil.checkNull(request.getParameter("manufacture"));
-						
-			String sortValue 		= StringUtil.checkNull(request.getParameter("sortValue"));
-			String sortCheck 		= StringUtil.checkNull(request.getParameter("sortCheck"));
-			
-			//System.out.println("ROHS getListQuery description =" + description);
+    		String foid = StringUtil.checkNull((String) params.get("fid"));
+    		if(foid.length() == 0) {
+    			foid = StringUtil.checkNull((String) params.get("folder"));
+    		}
+    		
+    		String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
+    		String rohsNumber 		= StringUtil.checkNull((String) params.get("number"));
+    		String rohsName 		= StringUtil.checkNull((String) params.get("name"));
+    		String description		= StringUtil.checkNull((String) params.get("description"));
+    		String predate 			= StringUtil.checkNull((String) params.get("predate"));
+    		String postdate 		= StringUtil.checkNull((String) params.get("postdate"));
+    		String predate_modify	= StringUtil.checkNull((String) params.get("predate_modify"));
+    		String postdate_modify	= StringUtil.checkNull((String) params.get("postdate_modify"));
+    		String creator 			= StringUtil.checkNull((String) params.get("creator"));
+    		String state 			= StringUtil.checkNull((String) params.get("state"));
+    		String manufacture 		= StringUtil.checkNull((String) params.get("manufacture"));
+    		String sortValue 		= StringUtil.checkNull((String) params.get("sortValue"));
+    		String sortCheck 		= StringUtil.checkNull((String) params.get("sortCheck"));
 			
 			if(!StringUtil.checkString(islastversion)) {
 	    		islastversion = "true";
@@ -229,7 +229,8 @@ public Map<String, Object> listRohsAction(HttpServletRequest request, HttpServle
 				SearchUtil.setOrderBy(query, WTDocument.class, idx, WTDocument.MODIFY_TIMESTAMP, "sort", true);
 			}
 			
-			QueryResult result = PersistenceHelper.manager.find(query);
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				ROHSMaterial rohs = (ROHSMaterial) obj[0];
@@ -242,8 +243,8 @@ public Map<String, Object> listRohsAction(HttpServletRequest request, HttpServle
 	    }catch (Exception e) {
 			e.printStackTrace();
 		}
-    	//System.out.println(query.toString());
     	return map;
-    }
+    	
+	}
 
 }
