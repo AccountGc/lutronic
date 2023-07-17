@@ -153,8 +153,8 @@ public class DevelopmentHelper {
 			}
 
 			map.put("list", list);
-//			map.put("sessionid", pager.getSessionId());
-//			map.put("curPage", pager.getCpage());
+			map.put("sessionid", pager.getSessionId());
+			map.put("curPage", pager.getCpage());
 			
 		} catch(Exception e){
 			e.printStackTrace();

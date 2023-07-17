@@ -116,7 +116,7 @@
 			call(url, params, function(data) {
 				alert(data.msg);
 				if (data.result) {
-					opener.loadGridData();
+// 					opener.loadGridData();
 					self.close();
 				} else {
 				}
