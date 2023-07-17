@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,7 +33,7 @@ import com.e3ps.development.service.DevelopmentHelper;
 
 @Controller
 @RequestMapping("/development")
-public class DevelopmentController {
+public class DevelopmentController extends BaseController{
 	
 	@Description(value = "개발업무 등록")
 	@GetMapping(value = "/create")
@@ -71,14 +73,16 @@ public class DevelopmentController {
 	
 	@Description(value = " 개발업무 관리 검색 수행")
 	@ResponseBody
-	@RequestMapping(value = "/listDevelopmentAction")
-	public Map<String,Object> listDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
+	@PostMapping(value = "/list")
+	public Map<String,Object> list(@RequestBody Map<String, Object> params) {
 		Map<String,Object> result = null;
 		try {
-			result = DevelopmentHelper.manager.listDevelopmentAction(request, response);
+			result = DevelopmentHelper.manager.list(params);
+			result.put("result", SUCCESS);
 		} catch(Exception e) {
 			e.printStackTrace();
-//			result = new HashMap<String,Object>();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
 		return result;
 	}

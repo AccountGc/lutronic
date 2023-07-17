@@ -2,25 +2,38 @@ package com.e3ps.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.service.ChangeHelper;
+import com.e3ps.change.service.ECOSearchHelper;
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.obj.ObjectUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.part.beans.PartData;
+import com.e3ps.part.service.BomSearchHelper;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.service.PartSearchHelper;
 
 import wt.enterprise.Master;
 import wt.fc.ReferenceFactory;
@@ -32,36 +45,13 @@ import wt.vc.baseline.ManagedBaseline;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.service.ChangeHelper;
-import com.e3ps.change.service.ECOHelper;
-import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.beans.NumberCodeData;
-import com.e3ps.common.code.service.CodeHelper;
-import com.e3ps.common.content.FileRequest;
-import com.e3ps.common.excelDown.service.ExcelDownHelper;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.ControllerUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
-import com.e3ps.part.service.BomSearchHelper;
-import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.PartSearchHelper;
-
 /**
  * @author Administrator
  *
  */
 @Controller
 @RequestMapping(value = "/part")
-public class PartController {
+public class PartController extends BaseController {
 	
 	/**
 	 * 
@@ -143,14 +133,16 @@ public class PartController {
 	
 	@Description(value = "품목 데이터 검색")
 	@ResponseBody
-	@RequestMapping(value = "/listPartAction")
-	public Map<String,Object> listPartAction(HttpServletRequest request, HttpServletResponse response) {
+	@PostMapping(value = "/list")
+	public Map<String,Object> list(@RequestBody Map<String, Object> params) {
 		Map<String,Object> result = null;
 		try {
-			result = PartHelper.manager.listPartAction(request, response);
+			result = PartHelper.manager.list(params);
+			result.put("result", SUCCESS);
 		} catch(Exception e) {
 			e.printStackTrace();
-//			result = new HashMap<String,Object>();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
 		return result;
 	}

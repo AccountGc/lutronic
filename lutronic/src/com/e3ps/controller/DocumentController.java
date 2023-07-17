@@ -34,7 +34,7 @@ import wt.folder.Folder;
 
 @Controller
 @RequestMapping(value = "/doc")
-public class DocumentController {
+public class DocumentController extends BaseController {
 
 	@Description(value = "문서 등록 페이지")
 	@GetMapping(value = "/create")
@@ -73,10 +73,10 @@ public class DocumentController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = DocumentHelper.manager.list(params);
-			result.put("result", "SUCCESS");
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("result", "FAIL");
+			result.put("result", FAIL);
 			result.put("msg", e.toString());
 //			ErrorLogHelper.service.create(e.toString(), "/doc/list", "문서 조회 함수");
 		}

@@ -1,11 +1,3 @@
-<%@page import="wt.fc.PersistenceHelper"%>
-<%@page import="wt.fc.QueryResult"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.Map"%>
-<%@page import="com.e3ps.drawing.beans.EpmData"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="wt.epm.EPMDocument"%>
-<%@page import="wt.query.QuerySpec"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -261,7 +253,7 @@
 					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
-					width : 100,
+					width : 60,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -279,7 +271,7 @@
 					dataField : "description",
 					headerText : "Thumbnail",
 					dataType : "string",
-					width : 300,
+					width : 380,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -330,19 +322,19 @@
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "predate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 180,
+					width : 140,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "modifyDate",
+					dataField : "predate_modify",
 					headerText : "수정일",
 					dataType : "string",
-					width : 180,
+					width : 140,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -358,15 +350,15 @@
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
-					enableFilter : false,
-					showInlineFilter : false,
+					enableFilter : true,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -378,21 +370,26 @@
 			}
 
 			function loadGridData() {
-// 				let params = new Object();
-// 				const url = getCallUrl("/drawing/listDrawingAction");
-// 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
-				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
-				params = toField(params, field);
-				params.latest = latest; */
-// 				AUIGrid.showAjaxLoader(myGridID);
-// 				parent.openLayer();
-// 				call(url, params, function(data) {
-// 					AUIGrid.removeAjaxLoader(myGridID);
-// 					AUIGrid.setGridData(myGridID, data.list);
-// 					document.getElementById("sessionid").value = data.sessionid;
-// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-// 					parent.closeLayer();
-// 				});
+				 				let params = new Object();
+				 				const url = getCallUrl("/drawing/list");
+// 				 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				 				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				 				params = toField(params, field);
+				 				params.latest = latest; */
+				 				AUIGrid.showAjaxLoader(myGridID);
+				 				parent.openLayer();
+				 				call(url, params, function(data) {
+									AUIGrid.removeAjaxLoader(myGridID);
+									if (data.result) {
+										document.getElementById("sessionid").value = data.sessionid;
+										document.getElementById("curPage").value = data.curPage;
+// 										document.getElementById("lastNum").value = data.list.length;
+										AUIGrid.setGridData(myGridID, data.list);
+									} else {
+										alert(data.msg);
+									}
+									parent.closeLayer();
+								});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

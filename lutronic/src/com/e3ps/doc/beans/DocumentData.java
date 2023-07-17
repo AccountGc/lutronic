@@ -28,9 +28,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DocumentData extends VersionData {
+public class DocumentData {
 	
-	private WTDocument doc;
+//	private WTDocument doc;
 	
 	private String number;
 	private String icon;
@@ -38,8 +38,8 @@ public class DocumentData extends VersionData {
 	private String icon2;
 	
 	public DocumentData(WTDocument doc) throws Exception {
-		super(doc);
-		setDoc(doc);
+//		super(doc);
+//		setDoc(doc);
 		setNumber(doc.getNumber());
 		
 		ContentItem item = null;

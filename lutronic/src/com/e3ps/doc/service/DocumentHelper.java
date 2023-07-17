@@ -12,6 +12,7 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocLocation;
@@ -20,6 +21,7 @@ import com.e3ps.org.People;
 
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
@@ -51,7 +53,8 @@ public class DocumentHelper {
 	 * PDM업그레이드 제작사양서 위치
 	 */
 	public static final String SPEC_OLD_ROOT = "/Default/문서/프로젝트/제작사양서";
-
+	public static final String ROOTLOCATION = "/Default/Document";
+	
 	public static final DocumentService service = ServiceFactory.getService(DocumentService.class);
 	public static final DocumentHelper manager = new DocumentHelper();
 
@@ -121,10 +124,10 @@ public class DocumentHelper {
 
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
 
-//		PageQueryUtils pager = new PageQueryUtils(params, query);
-//		PagingQueryResult result = pager.find();
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
 		
-		QueryResult result = PersistenceHelper.manager.find(query);
+//		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTDocument document = (WTDocument) obj[0];

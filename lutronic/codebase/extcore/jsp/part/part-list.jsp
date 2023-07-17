@@ -367,20 +367,25 @@
 
 			function loadGridData() {
 				 				let params = new Object();
-				 				const url = getCallUrl("/part/listPartAction");
+				 				const url = getCallUrl("/part/list");
 				 				const field = ["_psize","oid","partNumber","partName","predate","predate_modify","creator","state","model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo", "eoNo"];
 				 				/* const latest = !!document.querySelector("input[name=latest]:checked").value; */
 				 				/* params = toField(params, field); */
 				 				/* params.latest = latest; */
 				 				AUIGrid.showAjaxLoader(myGridID);
-				 			 	parent.openLayer();
+				 				parent.openLayer();
 				 				call(url, params, function(data) {
-				 					AUIGrid.removeAjaxLoader(myGridID);
-				 					AUIGrid.setGridData(myGridID, data.list);
-				 					document.getElementById("sessionid").value = data.sessionid;
-			 						document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-		 							parent.closeLayer();
-		 						});
+									AUIGrid.removeAjaxLoader(myGridID);
+									if (data.result) {
+										document.getElementById("sessionid").value = data.sessionid;
+										document.getElementById("curPage").value = data.curPage;
+// 										document.getElementById("lastNum").value = data.list.length;
+										AUIGrid.setGridData(myGridID, data.list);
+									} else {
+										alert(data.msg);
+									}
+									parent.closeLayer();
+								});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

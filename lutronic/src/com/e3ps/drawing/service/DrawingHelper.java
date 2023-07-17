@@ -9,11 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.org.People;
 
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
+import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
@@ -34,7 +38,7 @@ public class DrawingHelper {
 	public static final DrawingHelper manager = new DrawingHelper();
 	public static final String ROOTLOCATION = "/Default/PART_Drawing";
 	
-	public Map<String, Object> listDrawingAction(HttpServletRequest request) throws Exception{
+	public Map<String, Object> list(Map<String, Object> params) throws Exception{
 		
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(EPMDocument.class, true);
@@ -43,33 +47,33 @@ public class DrawingHelper {
 		Map<String, Object> map = new HashMap<>();
 		
 		try {
-			String foid 	        = StringUtil.checkNull(request.getParameter("foid"));	
-			String location         = StringUtil.checkNull(request.getParameter("location"));		
-			String cadDivision      = StringUtil.checkNull(request.getParameter("cadDivision")); 	
-			String cadType          = StringUtil.checkNull(request.getParameter("cadType"));		
-			String number           = StringUtil.checkNull(request.getParameter("number"));		
-			String name             = StringUtil.checkNull(request.getParameter("name"));		
-			String predate 	        = StringUtil.checkNull(request.getParameter("predate"));	
-			String postdate         = StringUtil.checkNull(request.getParameter("postdate"));	
-			String predate_modify 	= StringUtil.checkNull(request.getParameter("predate_modify"));
-			String postdate_modify  = StringUtil.checkNull(request.getParameter("postdate_modify"));
-			String creator 		    = StringUtil.checkNull(request.getParameter("creator"));
-			String state 	        = StringUtil.checkNull(request.getParameter("state"));	
-			String islastversion 	= StringUtil.checkNull(request.getParameter("islastversion"));
-			String sortValue 	    = StringUtil.checkNull(request.getParameter("sortValue"));
-			String sortCheck 	    = StringUtil.checkNull(request.getParameter("sortCheck"));
-			String autoCadLink 	    = StringUtil.checkNull(request.getParameter("autoCadLink"));
-			String unit             = StringUtil.checkNull(request.getParameter("unit"));     
-			String model            = StringUtil.checkNull(request.getParameter("model"));   
-			String productmethod    = StringUtil.checkNull(request.getParameter("productmethod"));
-			String deptcode         = StringUtil.checkNull(request.getParameter("deptcode"));
-			String weight1           = StringUtil.checkNull(request.getParameter("weight1"));
-			String weight2           = StringUtil.checkNull(request.getParameter("weight2"));
-			String manufacture      = StringUtil.checkNull(request.getParameter("manufacture"));
-			String mat              = StringUtil.checkNull(request.getParameter("mat"));
-			String finish           = StringUtil.checkNull(request.getParameter("finish"));
-			String remarks          = StringUtil.checkNull(request.getParameter("remarks"));
-			String specification    = StringUtil.checkNull(request.getParameter("specification"));
+			String foid 	        = StringUtil.checkNull((String)params.get("foid"));	
+			String location         = StringUtil.checkNull((String)params.get("location"));		
+			String cadDivision      = StringUtil.checkNull((String)params.get("cadDivision")); 	
+			String cadType          = StringUtil.checkNull((String)params.get("cadType"));		
+			String number           = StringUtil.checkNull((String)params.get("number"));		
+			String name             = StringUtil.checkNull((String)params.get("name"));		
+			String predate 	        = StringUtil.checkNull((String)params.get("predate"));	
+			String postdate         = StringUtil.checkNull((String)params.get("postdate"));	
+			String predate_modify 	= StringUtil.checkNull((String)params.get("predate_modify"));
+			String postdate_modify  = StringUtil.checkNull((String)params.get("postdate_modify"));
+			String creator 		    = StringUtil.checkNull((String)params.get("creator"));
+			String state 	        = StringUtil.checkNull((String)params.get("state"));	
+			String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
+			String sortValue 	    = StringUtil.checkNull((String)params.get("sortValue"));
+			String sortCheck 	    = StringUtil.checkNull((String)params.get("sortCheck"));
+			String autoCadLink 	    = StringUtil.checkNull((String)params.get("autoCadLink"));
+			String unit             = StringUtil.checkNull((String)params.get("unit"));     
+			String model            = StringUtil.checkNull((String)params.get("model"));   
+			String productmethod    = StringUtil.checkNull((String)params.get("productmethod"));
+			String deptcode         = StringUtil.checkNull((String)params.get("deptcode"));
+			String weight1           = StringUtil.checkNull((String)params.get("weight1"));
+			String weight2           = StringUtil.checkNull((String)params.get("weight2"));
+			String manufacture      = StringUtil.checkNull((String)params.get("manufacture"));
+			String mat              = StringUtil.checkNull((String)params.get("mat"));
+			String finish           = StringUtil.checkNull((String)params.get("finish"));
+			String remarks          = StringUtil.checkNull((String)params.get("remarks"));
+			String specification    = StringUtil.checkNull((String)params.get("specification"));
 
 			
 			String temp = "";
@@ -421,7 +425,12 @@ public class DrawingHelper {
 				query.appendOrderBy(new OrderBy(new ClassAttribute(EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP), true), new int[] { idx });    
 			}
 			
-			QueryResult result = PersistenceHelper.manager.find(query);
+//			QueryResult result = PersistenceHelper.manager.find(query);
+			QuerySpecUtils.toOrderBy(query, idx, EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP, true);
+
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
+			
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				EPMDocument epm = (EPMDocument) obj[0];

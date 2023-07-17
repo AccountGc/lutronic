@@ -7,11 +7,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.beans.MasterData;
@@ -19,6 +22,7 @@ import com.e3ps.org.People;
 import com.e3ps.part.beans.PartData;
 
 import wt.clients.folder.FolderTaskLogic;
+import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
@@ -47,7 +51,7 @@ public class PartHelper {
 	public static final PartService service = ServiceFactory.getService(PartService.class);
 	public static final PartHelper manager = new PartHelper();
 	
-	public Map<String, Object> listPartAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
 		ReferenceFactory rf = new ReferenceFactory();
@@ -56,48 +60,48 @@ public class PartHelper {
 
 		try {
 			
-			String foid = StringUtil.checkNull(request.getParameter("fid"));
-			String islastversion = StringUtil.checkNull(request.getParameter("islastversion"));
+			String foid = StringUtil.checkNull((String)params.get("fid"));
+			String islastversion = StringUtil.checkNull((String)params.get("islastversion"));
 			
-			String partNumber = StringUtil.checkNull(request.getParameter("partNumber"));
+			String partNumber = StringUtil.checkNull((String)params.get("partNumber"));
 			partNumber = partNumber.trim();
-			String partName = StringUtil.checkNull(request.getParameter("partName"));
-			String predate = StringUtil.checkNull(request.getParameter("predate"));
-			String postdate = StringUtil.checkNull(request.getParameter("postdate"));
-			String predate_modify = StringUtil.checkNull(request.getParameter("predate_modify"));
-			String postdate_modify = StringUtil.checkNull(request.getParameter("postdate_modify"));
-			String creator = StringUtil.checkNull(request.getParameter("creator"));
-			String state = StringUtil.checkNull(request.getParameter("state"));
+			String partName = StringUtil.checkNull((String)params.get("partName"));
+			String predate = StringUtil.checkNull((String)params.get("predate"));
+			String postdate = StringUtil.checkNull((String)params.get("postdate"));
+			String predate_modify = StringUtil.checkNull((String)params.get("predate_modify"));
+			String postdate_modify = StringUtil.checkNull((String)params.get("postdate_modify"));
+			String creator = StringUtil.checkNull((String)params.get("creator"));
+			String state = StringUtil.checkNull((String)params.get("state"));
 
-			String unit = StringUtil.checkNull(request.getParameter("unit"));
+			String unit = StringUtil.checkNull((String)params.get("unit"));
 
-			String model = StringUtil.checkNull(request.getParameter("model"));									// 프로젝트 코드 (NumberCode, IBA)
-			String productmethod = StringUtil.checkNull(request.getParameter("productmethod"));					// 제작방법 (NumberCode, IBA) 
-			String deptcode = StringUtil.checkNull(request.getParameter("deptcode"));							// 부서 (NumberCode, IBA)
+			String model = StringUtil.checkNull((String)params.get("model"));									// 프로젝트 코드 (NumberCode, IBA)
+			String productmethod = StringUtil.checkNull((String)params.get("productmethod"));					// 제작방법 (NumberCode, IBA) 
+			String deptcode = StringUtil.checkNull((String)params.get("deptcode"));							// 부서 (NumberCode, IBA)
 			
-			String weight = StringUtil.checkNull(request.getParameter("weight"));								// 무게 (Key IN, IBA)
-			String manufacture = StringUtil.checkNull(request.getParameter("manufacture"));						// MANUTACTURE (NumberCode, IBA)
-			String mat = StringUtil.checkNull(request.getParameter("mat"));										// 재질 (NumberCode, IBA)
-			String finish = StringUtil.checkNull(request.getParameter("finish"));								// 후처리 (NumberCode, IBA)
-			String remarks = StringUtil.checkNull(request.getParameter("remarks"));								// 비고 (Key IN, IBA)
-			String specification = StringUtil.checkNull(request.getParameter("specification"));					// 사양 (Key IN, iBA)
-			String ecoNo = StringUtil.checkNull(request.getParameter("ecoNo"));									// ECO no (Key IN, iBA)
-			String eoNo = StringUtil.checkNull(request.getParameter("eoNo"));	
+			String weight = StringUtil.checkNull((String)params.get("weight"));								// 무게 (Key IN, IBA)
+			String manufacture = StringUtil.checkNull((String)params.get("manufacture"));						// MANUTACTURE (NumberCode, IBA)
+			String mat = StringUtil.checkNull((String)params.get("mat"));										// 재질 (NumberCode, IBA)
+			String finish = StringUtil.checkNull((String)params.get("finish"));								// 후처리 (NumberCode, IBA)
+			String remarks = StringUtil.checkNull((String)params.get("remarks"));								// 비고 (Key IN, IBA)
+			String specification = StringUtil.checkNull((String)params.get("specification"));					// 사양 (Key IN, iBA)
+			String ecoNo = StringUtil.checkNull((String)params.get("ecoNo"));									// ECO no (Key IN, iBA)
+			String eoNo = StringUtil.checkNull((String)params.get("eoNo"));	
 			
-			String ecoPostdate = StringUtil.checkNull(request.getParameter("ecoPostdate"));
-			String ecoPredate = StringUtil.checkNull(request.getParameter("ecoPredate"));
-			String checkDummy = StringUtil.checkNull(request.getParameter("checkDummy"));
+			String ecoPostdate = StringUtil.checkNull((String)params.get("ecoPostdate"));
+			String ecoPredate = StringUtil.checkNull((String)params.get("ecoPredate"));
+			String checkDummy = StringUtil.checkNull((String)params.get("checkDummy"));
 			
 			//System.out.println("checkDummy = " + checkDummy);
 			//배포 관련 추가 
-			boolean isProduction =  StringUtil.checkNull(request.getParameter("production")).equals("true") ? true : false;
-			boolean ischeckDummy =  StringUtil.checkNull(request.getParameter("checkDummy")).equals("true") ? true : false;
+			boolean isProduction =  StringUtil.checkNull((String)params.get("production")).equals("true") ? true : false;
+			boolean ischeckDummy =  StringUtil.checkNull((String)params.get("checkDummy")).equals("true") ? true : false;
 			
 			
-			String sortValue = StringUtil.checkNull(request.getParameter("sortValue"));
-			String sortCheck = StringUtil.checkNull(request.getParameter("sortCheck"));
+			String sortValue = StringUtil.checkNull((String)params.get("sortValue"));
+			String sortCheck = StringUtil.checkNull((String)params.get("sortCheck"));
 
-			String location = StringUtil.checkNull(request.getParameter("location"));
+			String location = StringUtil.checkNull((String)params.get("location"));
 			if (location == null || location.length() == 0) {
 				location = "/Default/PART_Drawing";
 			}
@@ -589,7 +593,8 @@ ORDER BY A0.modifyStampA2 DESC;
 				query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, WTPart.MODIFY_TIMESTAMP), true), new int[] { idx });
 			}
 			
-			QueryResult result = PersistenceHelper.manager.find(query);
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				WTPart part = (WTPart) obj[0];

@@ -64,9 +64,9 @@ import wt.vc.views.ViewHelper;
  */
 @Getter
 @Setter
-public class PartData extends VersionData{
+public class PartData {
 	
-	public WTPart part;
+//	public WTPart part;
 	
 	
 	public String number;
@@ -103,8 +103,8 @@ public class PartData extends VersionData{
 
 	private String ecoNo;
     public PartData(final WTPart part) throws Exception {
-    	super(part);
-    	setPart(part);
+//    	super(part);
+//    	setPart(part);
     	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
     	setNumber(part.getNumber());
     	setUnit(part.getDefaultUnit().toString());
@@ -127,63 +127,63 @@ public class PartData extends VersionData{
     	}
     	
     }
-	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{
-		super(part);
-    	setPart(part);
-    	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
-    	setNumber(part.getNumber());
-    	setUnit(part.getDefaultUnit().toString());
-    	String ecoNumber ="";
-        HashMap map =IBAUtil.getAttributes(part);
-        setModel((String)map.get(AttributeKey.IBAKey.IBA_MODEL));  //프로젝트 코드
-        setProductmethod((String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));//제작방법
-        setDeptcode((String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE));	//부서 코드
-        setManufacture((String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));//MANUFATURER
-        setMat((String)map.get(AttributeKey.IBAKey.IBA_MAT));//재질
-        setFinish((String)map.get(AttributeKey.IBAKey.IBA_FINISH));//재질
-        setRemark((String)map.get(AttributeKey.IBAKey.IBA_REMARKS));//비고
-        setWeight((String)map.get(AttributeKey.IBAKey.IBA_WEIGHT));  //무게
-        setSpecification((String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));//사양
-        ecoNumber =  (String)map.get(AttributeKey.IBAKey.IBA_CHANGENO); //ECO NO
-    	if( ecoNumber != null && ecoNumber.length()> 0 ){
-    		setEcoNo(ecoNumber);
-    	}else{
-    		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
-    	}
-    	if(obj instanceof Baseline){
-    		Baseline baseline = (Baseline) obj;
-    		if (desc) {
-    			if (baseline != null) {
-    				this.descPartlist = descentLastPart(part,baseline,isCheckDummy, null);
-    			}
-    			/*} else {
-    			if (baseline != null) {
-    				list = ancestorPart(part, baseline, null);
-    			} else {
-    				list = ancestorPart(part, view, null);
-    			}*/
-    		}else{
-    			if (baseline != null) {
-    				this.ascPartlist = ancestorPart(part, baseline,isCheckDummy, null);
-    			} 
-    		}
-    	} else {
-			if (desc) {
-				View[] views = ViewHelper.service.getAllViews();
-				this.descPartlist = descentLastPart(part, views[0],isCheckDummy, null);
-			}else{
-				View[] views = ViewHelper.service.getAllViews();
-				this.ascPartlist = ancestorPart(part, views[0],isCheckDummy, null);
-			}
-		}
-    	Object o = null;
-    	if(obj instanceof Baseline){
-    		Baseline baseline = (Baseline) obj;
-    	}else{
-    		View[] views = ViewHelper.service.getAllViews();
-    	}
-    	
-	}
+//	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{
+//		super(part);
+//    	setPart(part);
+//    	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
+//    	setNumber(part.getNumber());
+//    	setUnit(part.getDefaultUnit().toString());
+//    	String ecoNumber ="";
+//        HashMap map =IBAUtil.getAttributes(part);
+//        setModel((String)map.get(AttributeKey.IBAKey.IBA_MODEL));  //프로젝트 코드
+//        setProductmethod((String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));//제작방법
+//        setDeptcode((String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE));	//부서 코드
+//        setManufacture((String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));//MANUFATURER
+//        setMat((String)map.get(AttributeKey.IBAKey.IBA_MAT));//재질
+//        setFinish((String)map.get(AttributeKey.IBAKey.IBA_FINISH));//재질
+//        setRemark((String)map.get(AttributeKey.IBAKey.IBA_REMARKS));//비고
+//        setWeight((String)map.get(AttributeKey.IBAKey.IBA_WEIGHT));  //무게
+//        setSpecification((String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));//사양
+//        ecoNumber =  (String)map.get(AttributeKey.IBAKey.IBA_CHANGENO); //ECO NO
+//    	if( ecoNumber != null && ecoNumber.length()> 0 ){
+//    		setEcoNo(ecoNumber);
+//    	}else{
+//    		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
+//    	}
+//    	if(obj instanceof Baseline){
+//    		Baseline baseline = (Baseline) obj;
+//    		if (desc) {
+//    			if (baseline != null) {
+//    				this.descPartlist = descentLastPart(part,baseline,isCheckDummy, null);
+//    			}
+//    			/*} else {
+//    			if (baseline != null) {
+//    				list = ancestorPart(part, baseline, null);
+//    			} else {
+//    				list = ancestorPart(part, view, null);
+//    			}*/
+//    		}else{
+//    			if (baseline != null) {
+//    				this.ascPartlist = ancestorPart(part, baseline,isCheckDummy, null);
+//    			} 
+//    		}
+//    	} else {
+//			if (desc) {
+//				View[] views = ViewHelper.service.getAllViews();
+//				this.descPartlist = descentLastPart(part, views[0],isCheckDummy, null);
+//			}else{
+//				View[] views = ViewHelper.service.getAllViews();
+//				this.ascPartlist = ancestorPart(part, views[0],isCheckDummy, null);
+//			}
+//		}
+//    	Object o = null;
+//    	if(obj instanceof Baseline){
+//    		Baseline baseline = (Baseline) obj;
+//    	}else{
+//    		View[] views = ViewHelper.service.getAllViews();
+//    	}
+//    	
+//	}
 	
 	/*public int getmaXLevel(WTPart part,Object obj, boolean desc) throws WTException {
         MethodContext methodcontext = null;
@@ -564,29 +564,29 @@ public class PartData extends VersionData{
 		return "";
 	}
 	
-	public String getPartName(int index) {
-		try {
-			
-			if(index == 4) {
-				String partName1 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME1"));
-				String partName2 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME2"));
-				String partName3 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME3"));
-				String partName4 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME4"));
-				if(partName1.length() == 0 && partName2.length() == 0 && partName3.length() == 0 && partName4.length() == 0) {
-					return this.name;
-				}else {
-					return partName4;
-				}
-			}else {
-				return StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME"+index));
-			}
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-		
-	}
+//	public String getPartName(int index) {
+//		try {
+//			
+//			if(index == 4) {
+//				String partName1 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME1"));
+//				String partName2 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME2"));
+//				String partName3 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME3"));
+//				String partName4 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME4"));
+//				if(partName1.length() == 0 && partName2.length() == 0 && partName3.length() == 0 && partName4.length() == 0) {
+//					return this.name;
+//				}else {
+//					return partName4;
+//				}
+//			}else {
+//				return StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME"+index));
+//			}
+//			
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			return "";
+//		}
+//		
+//	}
 	
 	
 	 public String getDwgOid() {
@@ -597,56 +597,56 @@ public class PartData extends VersionData{
 		this.dwgOid = dwgOid;
 	}
 
-	public String getDwgNo() {
-	    	String dwgNo = "";
-	    	boolean isDwg = false;
-	    	try {
-	    		EPMBuildRule buildRule = PartSearchHelper.service.getBuildRule(this.part);
-	    		if(buildRule != null) {
-	    			EPMDocument epm = (EPMDocument) buildRule.getBuildSource();
-	    			EPMDocument epm2D = EpmSearchHelper.service.getEPM2D((EPMDocumentMaster)epm.getMaster());
-	    			//System.out.println("check 1"+(null != epm2D));
-	    			if(epm2D != null) {
-	    				dwgNo = epm2D.getNumber();
-	    				dwgOid = CommonUtil.getOIDString(epm2D);
-	    			}else {
-	    				isDwg = true;
-	    				if(epm != null){
-	    					
-	    					EpmData epmData = new EpmData(epm);
-	    					String appType = epmData.getApplicationType();
-	    					if("MANUAL".equals(appType)){
-	    						//System.out.println("check 2");
-		        				dwgNo = epm.getNumber();
-		        				dwgOid = CommonUtil.getOIDString(epm);
-		        				isDwg = false;
-	    					}
-	        			}
-	    			}
-	    			
-	    			
-	    			
-	    		}else {
-	    			isDwg = true;
-	    		}
-	    		
-	    		if(isDwg) {
-	    			boolean isAP = PartSearchHelper.service.isHasDocumentType(part, "$$APDocument");
-	    			if(isAP){
-	    				dwgNo = "AP";
-	    				dwgOid = PartSearchHelper.service.getHasDocumentOid(part, "$$APDocument");
-	    			}else {
-	    				dwgNo = "ND";
-	    			}
-	    		}
-	    		
-	    	}catch(Exception e) {
-	    		e.printStackTrace();
-	    		dwgNo = "";
-	    	}
-	    	
-	    	return dwgNo;
-	    }
+//	public String getDwgNo() {
+//	    	String dwgNo = "";
+//	    	boolean isDwg = false;
+//	    	try {
+//	    		EPMBuildRule buildRule = PartSearchHelper.service.getBuildRule(this.part);
+//	    		if(buildRule != null) {
+//	    			EPMDocument epm = (EPMDocument) buildRule.getBuildSource();
+//	    			EPMDocument epm2D = EpmSearchHelper.service.getEPM2D((EPMDocumentMaster)epm.getMaster());
+//	    			//System.out.println("check 1"+(null != epm2D));
+//	    			if(epm2D != null) {
+//	    				dwgNo = epm2D.getNumber();
+//	    				dwgOid = CommonUtil.getOIDString(epm2D);
+//	    			}else {
+//	    				isDwg = true;
+//	    				if(epm != null){
+//	    					
+//	    					EpmData epmData = new EpmData(epm);
+//	    					String appType = epmData.getApplicationType();
+//	    					if("MANUAL".equals(appType)){
+//	    						//System.out.println("check 2");
+//		        				dwgNo = epm.getNumber();
+//		        				dwgOid = CommonUtil.getOIDString(epm);
+//		        				isDwg = false;
+//	    					}
+//	        			}
+//	    			}
+//	    			
+//	    			
+//	    			
+//	    		}else {
+//	    			isDwg = true;
+//	    		}
+//	    		
+//	    		if(isDwg) {
+//	    			boolean isAP = PartSearchHelper.service.isHasDocumentType(part, "$$APDocument");
+//	    			if(isAP){
+//	    				dwgNo = "AP";
+//	    				dwgOid = PartSearchHelper.service.getHasDocumentOid(part, "$$APDocument");
+//	    			}else {
+//	    				dwgNo = "ND";
+//	    			}
+//	    		}
+//	    		
+//	    	}catch(Exception e) {
+//	    		e.printStackTrace();
+//	    		dwgNo = "";
+//	    	}
+//	    	
+//	    	return dwgNo;
+//	    }
 	/**
 	 * 설계 변경 유무 체크
 	 * @return
@@ -864,22 +864,22 @@ public class PartData extends VersionData{
 	 * GENERIC 이고 최신 버전 이고  작업중인 경우 수정 
 	 * @return
 	 */
-	public boolean isFamliyModify(){
-		//System.out.println("======= isFamliyModify ============");
-		return (isGENERIC() && isLatest() && isWorking());
-	}
-	
-	/**
-	 * 속성 clearing 
-	 */
-	public boolean isClearing(){
-		String ver = this.version;
-		
-		boolean isClearing = ver.equals("A") && this.isState("INWORK");
-		
-		return isClearing;
-		
-	}
+//	public boolean isFamliyModify(){
+//		//System.out.println("======= isFamliyModify ============");
+//		return (isGENERIC() && isLatest() && isWorking());
+//	}
+//	
+//	/**
+//	 * 속성 clearing 
+//	 */
+//	public boolean isClearing(){
+//		String ver = this.version;
+//		
+//		boolean isClearing = ver.equals("A") && this.isState("INWORK");
+//		
+//		return isClearing;
+//		
+//	}
 	public ArrayList<Object[]> getDescPartlist() {
 		Comparator comparator =new Comparator<Object[]>(){
 			@Override
