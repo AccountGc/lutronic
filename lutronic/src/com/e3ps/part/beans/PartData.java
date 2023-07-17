@@ -532,37 +532,37 @@ public class PartData {
 		return v;
 	}
 
-	/**
-     * @return 주도면이 있으면 true, 없으면 false
-     */
-    public boolean isMainEPM() {
-    	try {
-    		if(epm == null){
-    			epm = DrawingHelper.service.getEPMDocument(this.part);
-    		}
-	    	
-	    	return (epm != null);
-    	}catch(Exception e) {
-    		e.printStackTrace();
-    		return false;
-    	}
-    }
-    
-	public String getViewName() {
-		View view = ViewHelper.getView(part);
-		return view == null ? "" : view.getName();
-	}
-	
-	public String getEpmOid() throws Exception {
-		if(epm == null){
-			epm = DrawingHelper.service.getEPMDocument(part);
-		}
-		
-		if(epm != null) {
-			return epm.getPersistInfo().getObjectIdentifier().toString();
-		}
-		return "";
-	}
+//	/**
+//     * @return 주도면이 있으면 true, 없으면 false
+//     */
+//    public boolean isMainEPM() {
+//    	try {
+//    		if(epm == null){
+//    			epm = DrawingHelper.service.getEPMDocument(this.part);
+//    		}
+//	    	
+//	    	return (epm != null);
+//    	}catch(Exception e) {
+//    		e.printStackTrace();
+//    		return false;
+//    	}
+//    }
+//    
+//	public String getViewName() {
+//		View view = ViewHelper.getView(part);
+//		return view == null ? "" : view.getName();
+//	}
+//	
+//	public String getEpmOid() throws Exception {
+//		if(epm == null){
+//			epm = DrawingHelper.service.getEPMDocument(part);
+//		}
+//		
+//		if(epm != null) {
+//			return epm.getPersistInfo().getObjectIdentifier().toString();
+//		}
+//		return "";
+//	}
 	
 //	public String getPartName(int index) {
 //		try {
@@ -651,11 +651,11 @@ public class PartData {
 	 * 설계 변경 유무 체크
 	 * @return
 	 */
-	public boolean isSelectEO(){
-    	
-		return PartSearchHelper.service.isSelectEO(this.part);
-    	
-    }
+//	public boolean isSelectEO(){
+//    	
+//		return PartSearchHelper.service.isSelectEO(this.part);
+//    	
+//    }
 	
 	/**
 	 * 진채번 유무 체크
@@ -666,131 +666,131 @@ public class PartData {
 	}
 	
 	//순중량
-	public String getWeight(){
-		String weight ="";
-		try {
-			weight = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_WEIGHT)) ;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return weight;
-			
-	}
+//	public String getWeight(){
+//		String weight ="";
+//		try {
+//			weight = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_WEIGHT)) ;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return weight;
+//			
+//	}
 	
 	//재질(기본자재)
-	public String getMat(){
-		String mat ="";
-		try {
-			mat = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_MAT)) ;
-			if(mat.length()>0){
-				NumberCode code =NumberCodeHelper.service.getNumberCode("MAT", mat);
-				
-				if(code != null){
-					mat =mat+":"+code.getName();
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return mat;
-	}
+//	public String getMat(){
+//		String mat ="";
+//		try {
+//			mat = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_MAT)) ;
+//			if(mat.length()>0){
+//				NumberCode code =NumberCodeHelper.service.getNumberCode("MAT", mat);
+//				
+//				if(code != null){
+//					mat =mat+":"+code.getName();
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return mat;
+//	}
 	
 	//사양(SPECIFICATION)
-	public String getSpecification(){
-		String specification ="";
-		try {
-			//specification = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_SPECIFICATION)) ;
-			specification = StringUtil.checkNull(IBAUtil.getAttrValue2(part, IBAKey.IBA_SPECIFICATION)) ;
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return specification;
-	}
+//	public String getSpecification(){
+//		String specification ="";
+//		try {
+//			//specification = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_SPECIFICATION)) ;
+//			specification = StringUtil.checkNull(IBAUtil.getAttrValue2(part, IBAKey.IBA_SPECIFICATION)) ;
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return specification;
+//	}
 	
 	//후처리
-	public String getFINISH(){
-		String finish ="";
-		try {
-			finish = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_FINISH)) ;
-			if(finish.length()>0){
-				NumberCode code =NumberCodeHelper.service.getNumberCode("FINISH", finish);
-				
-				if(code != null){
-					finish =finish+":"+code.getName();
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return finish;
-	}
+//	public String getFINISH(){
+//		String finish ="";
+//		try {
+//			finish = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_FINISH)) ;
+//			if(finish.length()>0){
+//				NumberCode code =NumberCodeHelper.service.getNumberCode("FINISH", finish);
+//				
+//				if(code != null){
+//					finish =finish+":"+code.getName();
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return finish;
+//	}
 	
 	//후처리
-	public String getModel(){
-		String model ="";
-		try {
-			model = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_MODEL)) ;
-			if(model.length()>0){
-				NumberCode code =NumberCodeHelper.service.getNumberCode("MODEL", model);
-				
-				if(code != null){
-					model =model+":"+code.getName();
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return model;
-	}
+//	public String getModel(){
+//		String model ="";
+//		try {
+//			model = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_MODEL)) ;
+//			if(model.length()>0){
+//				NumberCode code =NumberCodeHelper.service.getNumberCode("MODEL", model);
+//				
+//				if(code != null){
+//					model =model+":"+code.getName();
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return model;
+//	}
 	
 	//제작 방법
-	public String getPRODUCTMETHOD(){
-		String method ="";
-		try {
-			method = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_PRODUCTMETHOD)) ;
-			if(method.length()>0){
-				NumberCode code =NumberCodeHelper.service.getNumberCode("PRODUCTMETHOD", method);
-				
-				if(code != null){
-					method =method+":"+code.getName();
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return method;
-	}
+//	public String getPRODUCTMETHOD(){
+//		String method ="";
+//		try {
+//			method = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_PRODUCTMETHOD)) ;
+//			if(method.length()>0){
+//				NumberCode code =NumberCodeHelper.service.getNumberCode("PRODUCTMETHOD", method);
+//				
+//				if(code != null){
+//					method =method+":"+code.getName();
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return method;
+//	}
 	
 	//부서 코드
-	public String getDEPTCODE(){
-		String departcode ="";
-		try {
-			departcode = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_DEPTCODE)) ;
-			if(departcode.length()>0){
-				NumberCode code =NumberCodeHelper.service.getNumberCode("DEPTCODE", departcode);
-				
-				if(code != null){
-					departcode =departcode+":"+code.getName();
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return departcode;
-	}
+//	public String getDEPTCODE(){
+//		String departcode ="";
+//		try {
+//			departcode = StringUtil.checkNull(IBAUtil.getAttrfloatValue(part, IBAKey.IBA_DEPTCODE)) ;
+//			if(departcode.length()>0){
+//				NumberCode code =NumberCodeHelper.service.getNumberCode("DEPTCODE", departcode);
+//				
+//				if(code != null){
+//					departcode =departcode+":"+code.getName();
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return departcode;
+//	}
 	/**
 	 * isGENERIC 유무 체크
 	 * epm.getFamilyTableStatus()  : 0 = Normal
@@ -799,66 +799,66 @@ public class PartData {
 	 * epm.getFamilyTableStatus()  : 3 = GENERIC and INSTANCE
 	 * @return
 	 */
-	public boolean isGENERIC(){
-		
-		boolean isGENERIC = false;
-		int status;
-		try{
-			if(epm != null){
-				
-				status = epm.getFamilyTableStatus();
-				//System.out.println("getFamilyTableStatus1 =" +status );
-				if(status == 2 || status == 3){
-					isGENERIC = true;
-				}
-			}else{
-				epm = DrawingHelper.service.getEPMDocument(this.part);
-				if(epm != null){
-					status = epm.getFamilyTableStatus();
-					//System.out.println("getFamilyTableStatus2 =" +status );
-					if(status == 2 || status == 3){
-						isGENERIC = true;
-					}
-				}
-				
-			}
-			//System.out.println("======= isGENERIC ============" + epm + ":" + isGENERIC);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return isGENERIC;
-	}
+//	public boolean isGENERIC(){
+//		
+//		boolean isGENERIC = false;
+//		int status;
+//		try{
+//			if(epm != null){
+//				
+//				status = epm.getFamilyTableStatus();
+//				//System.out.println("getFamilyTableStatus1 =" +status );
+//				if(status == 2 || status == 3){
+//					isGENERIC = true;
+//				}
+//			}else{
+//				epm = DrawingHelper.service.getEPMDocument(this.part);
+//				if(epm != null){
+//					status = epm.getFamilyTableStatus();
+//					//System.out.println("getFamilyTableStatus2 =" +status );
+//					if(status == 2 || status == 3){
+//						isGENERIC = true;
+//					}
+//				}
+//				
+//			}
+//			//System.out.println("======= isGENERIC ============" + epm + ":" + isGENERIC);
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		
+//		return isGENERIC;
+//	}
 	
-	public boolean isINSTANCE(){
-		
-		boolean isINSTANCE = false;
-		int status;
-		try{
-			if(epm != null){
-				
-				status = epm.getFamilyTableStatus();
-				
-				if(status == 1){
-					isINSTANCE = true;
-				}
-			}else{
-				epm = DrawingHelper.service.getEPMDocument(this.part);
-				if(epm != null){
-					status = epm.getFamilyTableStatus();
-					
-					if(status == 1 ){
-						isINSTANCE = true;
-					}
-				}
-				
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		return isINSTANCE;
-	}
+//	public boolean isINSTANCE(){
+//		
+//		boolean isINSTANCE = false;
+//		int status;
+//		try{
+//			if(epm != null){
+//				
+//				status = epm.getFamilyTableStatus();
+//				
+//				if(status == 1){
+//					isINSTANCE = true;
+//				}
+//			}else{
+//				epm = DrawingHelper.service.getEPMDocument(this.part);
+//				if(epm != null){
+//					status = epm.getFamilyTableStatus();
+//					
+//					if(status == 1 ){
+//						isINSTANCE = true;
+//					}
+//				}
+//				
+//			}
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		
+//		return isINSTANCE;
+//	}
 	
 	/**
 	 * GENERIC 이고 최신 버전 이고  작업중인 경우 수정 

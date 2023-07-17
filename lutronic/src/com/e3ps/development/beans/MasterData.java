@@ -14,7 +14,7 @@ import com.e3ps.development.devMaster;
 
 public class MasterData{
 	
-	public devMaster master;
+//	public devMaster master;
 	
 	public String oid;
 	
@@ -39,7 +39,7 @@ public class MasterData{
 
 	public MasterData(devMaster master) {
 		
-		this.master = master;
+//		this.master = master;
 		
 		this.oid = master.getPersistInfo().getObjectIdentifier().toString();
 		
@@ -95,25 +95,25 @@ public class MasterData{
 		}
 	}
 	
-	public String getDescription(boolean isView) {
-		String description = StringUtil.checkNull(this.master.getDescription());
-		if(isView) {
-			description = WebUtil.getHtml(description);
-		}
-		return description;
-	}
-	
-	public boolean isState(String state) {
-    	return (State.toState(state)).equals(this.master.getLifeCycleState());
-    }
-	
-	/**
-	 * 폴더 위치
-	 * @return
-	 */
-	public String getLocation() {
-		return StringUtil.checkNull(this.master.getLocation()).replaceAll("/Default","");
-	}
+//	public String getDescription(boolean isView) {
+//		String description = StringUtil.checkNull(this.master.getDescription());
+//		if(isView) {
+//			description = WebUtil.getHtml(description);
+//		}
+//		return description;
+//	}
+//	
+//	public boolean isState(String state) {
+//    	return (State.toState(state)).equals(this.master.getLifeCycleState());
+//    }
+//	
+//	/**
+//	 * 폴더 위치
+//	 * @return
+//	 */
+//	public String getLocation() {
+//		return StringUtil.checkNull(this.master.getLocation()).replaceAll("/Default","");
+//	}
 
 	public String getFullName() {
 		return fullName;
@@ -139,13 +139,13 @@ public class MasterData{
 		this.dmOid = dmOid;
 	}
 
-	public devMaster getMaster() {
-		return master;
-	}
-
-	public void setMaster(devMaster master) {
-		this.master = master;
-	}
+//	public devMaster getMaster() {
+//		return master;
+//	}
+//
+//	public void setMaster(devMaster master) {
+//		this.master = master;
+//	}
 
 	public String getOid() {
 		return oid;

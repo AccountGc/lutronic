@@ -55,47 +55,47 @@ public class DocumentData {
 		this.icon2 = BasicTemplateProcessor.getObjectIconImgTag(doc);
 	}
 	
-	public String getDocumentName(int index) {
-		try {
-			
-			if(index == 2) {
-				String docName1 = StringUtil.checkNull(IBAUtil.getAttrValue2(doc, "DOCUMENTNAME1"));
-				String docName2 = StringUtil.checkNull(IBAUtil.getAttrValue2(doc, "DOCUMENTNAME2"));
-				if(docName1.length() == 0 && docName2.length() == 0) {
-					return this.name;
-				}else {
-					return docName2;
-				}
-			}else {
-				return StringUtil.checkNull(IBAUtil.getAttrValue2(doc, "DOCUMENTNAME"+index));
-			}
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-	
-	public String getDescription(boolean isView) {
-		String description = StringUtil.checkNull(this.doc.getDescription());
-		if(isView) {
-			description = WebUtil.getHtml(description);
-		}
-		return description;
-	}
-	
-	public String getDocumentType() {
-		String type = this.doc.getDocType().getDisplay(Message.getLocale());
-		return type;
-	}
-	
-	public String getIBAValue(String iba) {
-		try {
-			return IBAUtil.getAttrValue(this.doc, iba);
-		} catch(Exception e) {
-			return "";
-		}
-	}
+//	public String getDocumentName(int index) {
+//		try {
+//			
+//			if(index == 2) {
+//				String docName1 = StringUtil.checkNull(IBAUtil.getAttrValue2(doc, "DOCUMENTNAME1"));
+//				String docName2 = StringUtil.checkNull(IBAUtil.getAttrValue2(doc, "DOCUMENTNAME2"));
+//				if(docName1.length() == 0 && docName2.length() == 0) {
+//					return this.name;
+//				}else {
+//					return docName2;
+//				}
+//			}else {
+//				return StringUtil.checkNull(IBAUtil.getAttrValue2(doc, "DOCUMENTNAME"+index));
+//			}
+//			
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			return "";
+//		}
+//	}
+//	
+//	public String getDescription(boolean isView) {
+//		String description = StringUtil.checkNull(this.doc.getDescription());
+//		if(isView) {
+//			description = WebUtil.getHtml(description);
+//		}
+//		return description;
+//	}
+//	
+//	public String getDocumentType() {
+//		String type = this.doc.getDocType().getDisplay(Message.getLocale());
+//		return type;
+//	}
+//	
+//	public String getIBAValue(String iba) {
+//		try {
+//			return IBAUtil.getAttrValue(this.doc, iba);
+//		} catch(Exception e) {
+//			return "";
+//		}
+//	}
 
 	public String getIcon() {
 		return icon;
