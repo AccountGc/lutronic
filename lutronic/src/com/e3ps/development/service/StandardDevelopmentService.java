@@ -89,7 +89,7 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 	}
 	
 	@Override
-	public ResultData createDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
+	public ResultData createDevelopmentAction(Map<String, Object> params) {
 		ResultData data = new ResultData();
 		
 		Transaction trx = new Transaction();
@@ -99,12 +99,12 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 			
 			devMaster master = devMaster.newdevMaster();
 			
-			String name = StringUtil.checkNull(request.getParameter("name"));
-			String model = StringUtil.checkNull(request.getParameter("model"));
-			String developmentStart = StringUtil.checkNull(request.getParameter("developmentStart"));
-			String developmentEnd = StringUtil.checkNull(request.getParameter("developmentEnd"));
-			String description = StringUtil.checkNull(request.getParameter("description"));
-			String dm = StringUtil.checkNull(request.getParameter("dm"));
+			String name = StringUtil.checkNull((String)params.get("name"));
+			String model = StringUtil.checkNull((String)params.get("model"));
+			String developmentStart = StringUtil.checkNull((String)params.get("developmentStart"));
+			String developmentEnd = StringUtil.checkNull((String)params.get("developmentEnd"));
+			String description = StringUtil.checkNull((String)params.get("description"));
+			String dm = StringUtil.checkNull((String)params.get("dm"));
 			
 			master.setName(name);
 			master.setModel(model);

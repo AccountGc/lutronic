@@ -1,6 +1,7 @@
 package com.e3ps.development.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +24,7 @@ public interface DevelopmentQueryService {
 
 	QuerySpec getActiveListFromTaskOid(String oid);
 	
-	QuerySpec listMyDevelopmentSearchQuery(HttpServletRequest request, HttpServletResponse response);
+	QuerySpec listMyDevelopmentSearchQuery(Map<String, Object> params);
 	
 	QuerySpec getDevelopmentUsers(String oid);
 

@@ -2,6 +2,7 @@ package com.e3ps.development.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -203,7 +204,7 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 	}
 	
 	@Override
-	public QuerySpec listMyDevelopmentSearchQuery(HttpServletRequest request, HttpServletResponse response) {
+	public QuerySpec listMyDevelopmentSearchQuery(Map<String, Object> params) {
 		QuerySpec query = null;
 		
 		try {
@@ -222,7 +223,7 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 			query.appendWhere(new SearchCondition(ca_a, SearchCondition.EQUAL, ca_m), new int[] {idx_a, idx_m});
 
 			// 프로젝트 코드
-			String model = StringUtil.checkNull(request.getParameter("model"));
+			String model = StringUtil.checkNull((String)params.get("model"));
 			if(model.length() > 0) {
 				if(query.getConditionCount() > 0) {
 					query.appendAnd();
@@ -231,7 +232,7 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 			}
 			
 			// 프로젝트 명
-			String name = StringUtil.checkNull(request.getParameter("name"));
+			String name = StringUtil.checkNull((String)params.get("name"));
 			if(name.length() > 0) {
 				if(query.getConditionCount() > 0) {
 					query.appendAnd();
@@ -240,7 +241,7 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 			}
 			
 			// 프로젝트 상태
-			String masterState = StringUtil.checkNull(request.getParameter("masterState"));
+			String masterState = StringUtil.checkNull((String)params.get("masterState"));
 			if(masterState.length() > 0){
 				if(query.getConditionCount() > 0) {
 					query.appendAnd();
@@ -249,7 +250,7 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 			}
 			
 			// Active 명
-			String activeName = StringUtil.checkNull(request.getParameter("activeName"));
+			String activeName = StringUtil.checkNull((String)params.get("activeName"));
 			if(activeName.length() > 0) {
 				if(query.getConditionCount() > 0){
 					query.appendAnd();
@@ -258,14 +259,14 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 			}
 			
 			// 요청일자
-			String activeDateStart = StringUtil.checkNull(request.getParameter("activeDateStart"));
+			String activeDateStart = StringUtil.checkNull((String)params.get("activeDateStart"));
 			if(activeDateStart.length() > 0){
 				if(query.getConditionCount() > 0){
 					query.appendAnd();
 				}
 				query.appendWhere(new SearchCondition(devActive.class, devActive.ACTIVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL, activeDateStart), new int[] {idx_a});
 			}
-			String activeDateEnd = StringUtil.checkNull(request.getParameter("activeDateEnd"));
+			String activeDateEnd = StringUtil.checkNull((String)params.get("activeDateEnd"));
 			if(activeDateEnd.length() > 0){
 				if(query.getConditionCount() > 0){
 					query.appendAnd();
@@ -274,14 +275,14 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 			}
 			
 			// 완료일자
-			String finishDateStart = StringUtil.checkNull(request.getParameter("finishDateStart"));
+			String finishDateStart = StringUtil.checkNull((String)params.get("finishDateStart"));
 			if(finishDateStart.length() > 0){
 				if(query.getConditionCount() > 0){
 					query.appendAnd();
 				}
 				query.appendWhere(new SearchCondition(devActive.class, devActive.FINISH_DATE, SearchCondition.GREATER_THAN_OR_EQUAL, DateUtil.convertStartDate(finishDateStart)), new int[] {idx_a});
 			}
-			String finishDateEnd = StringUtil.checkNull(request.getParameter("finishDateEnd"));
+			String finishDateEnd = StringUtil.checkNull((String)params.get("finishDateEnd"));
 			if(finishDateEnd.length() > 0){
 				if(query.getConditionCount() > 0){
 					query.appendAnd();
@@ -290,7 +291,7 @@ public class StandardDevelopmentQueryService extends StandardManager implements 
 			}
 			
 			// Active 상태
-			String activeState = StringUtil.checkNull(request.getParameter("activeState"));
+			String activeState = StringUtil.checkNull((String)params.get("activeState"));
 			if(activeState.length() > 0) {
 				if(query.getConditionCount() > 0) {
 					query.appendAnd();

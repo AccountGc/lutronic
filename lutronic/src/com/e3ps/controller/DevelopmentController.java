@@ -51,6 +51,22 @@ public class DevelopmentController extends BaseController{
 		return model;
 	}
 	
+	@Description(value = "나의 개발업무 조회")
+	@ResponseBody
+	@PostMapping(value = "/my")
+	public Map<String,Object> my(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = DevelopmentHelper.manager.my(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	/**  개발업무 관리 등록 수행
 	 * @param request
 	 * @param response
@@ -58,9 +74,9 @@ public class DevelopmentController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/createDevelopmentAction")
-	public ResultData createDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
+	public ResultData createDevelopmentAction(@RequestBody Map<String, Object> params) {
 		//Map<String,String> map = DevelopmentHelper.service.requestDevelopmentMapping(request, response);
-		return DevelopmentHelper.service.createDevelopmentAction(request, response);
+		return DevelopmentHelper.service.createDevelopmentAction(params);
 	}
 	
 	@Description(value = "개발업무 검색")
@@ -450,18 +466,18 @@ public class DevelopmentController extends BaseController{
 		return model;
 	}
 	
-	@ResponseBody
-	@RequestMapping("/listMyDevelopmentAction")
-	public Map<String,Object> myDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> result = null;
-		try {
-			result = DevelopmentHelper.service.listMyDevelopmentAction(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-			result = new HashMap<String,Object>();
-		}
-		return result;
-	}
+//	@ResponseBody
+//	@RequestMapping("/listMyDevelopmentAction")
+//	public Map<String,Object> myDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> result = null;
+//		try {
+//			result = DevelopmentHelper.service.listMyDevelopmentAction(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			result = new HashMap<String,Object>();
+//		}
+//		return result;
+//	}
 	
 	@RequestMapping("/include_DevelopmentView")
 	public ModelAndView include_DevelopmentView(HttpServletRequest request, HttpServletResponse response) {

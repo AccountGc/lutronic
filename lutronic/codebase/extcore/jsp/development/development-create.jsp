@@ -134,9 +134,9 @@
 		});
 
 		window.addEventListener("resize", function() {
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
+// 			AUIGrid.resize(myGridID7);
+// 			AUIGrid.resize(myGridID11);
+// 			AUIGrid.resize(myGridID8);
 		});
 	</script>
 </body>
