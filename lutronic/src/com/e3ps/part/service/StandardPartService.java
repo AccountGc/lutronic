@@ -148,59 +148,59 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 
 	@Override 
-	public Map<String,Object> requestPartMapping(HttpServletRequest request, HttpServletResponse response) {
+	public Map<String,Object> requestPartMapping(Map<String, Object> params) {
 		
 		Map<String,Object> map = new HashMap<String,Object>();
 		// 품목 기본 정보
-		String oid = StringUtil.checkNull(request.getParameter("oid"));
+		String oid = StringUtil.checkNull((String)params.get("oid"));
 		if(oid.length() > 0) {
 			map.put("oid", oid);
 		}
 		
-		String lifecycle = StringUtil.checkNull(request.getParameter("lifecycle"));							// LifeCycle
-		String view = StringUtil.checkNull(request.getParameter("view"));									// view
-		String fid = StringUtil.checkNull(request.getParameter("fid"));										// 분류체계
-		String wtPartType = StringUtil.checkNull(request.getParameter("wtPartType"));
-		String source = StringUtil.checkNull(request.getParameter("source"));
+		String lifecycle = StringUtil.checkNull((String)params.get("lifecycle"));							// LifeCycle
+		String view = StringUtil.checkNull((String)params.get("view"));									// view
+		String fid = StringUtil.checkNull((String)params.get("fid"));										// 분류체계
+		String wtPartType = StringUtil.checkNull((String)params.get("wtPartType"));
+		String source = StringUtil.checkNull((String)params.get("source"));
 		
 		//String[] partNames = request.getParameterValues("partName");										
-		String partName1 = StringUtil.checkNull(request.getParameter("partName1"));							// 품목명1 (NumberCode)
-		String partName2 = StringUtil.checkNull(request.getParameter("partName2"));							// 품목명2 (NumberCode)
-		String partName3 = StringUtil.checkNull(request.getParameter("partName3"));							// 품목명3 (NumberCode)
-		String partName4 = StringUtil.checkNull(request.getParameter("partName4"));							// 품목명4 (Key In)
+		String partName1 = StringUtil.checkNull((String)params.get("partName1"));							// 품목명1 (NumberCode)
+		String partName2 = StringUtil.checkNull((String)params.get("partName2"));							// 품목명2 (NumberCode)
+		String partName3 = StringUtil.checkNull((String)params.get("partName3"));							// 품목명3 (NumberCode)
+		String partName4 = StringUtil.checkNull((String)params.get("partName4"));							// 품목명4 (Key In)
 		
-		String partType1 = StringUtil.checkNull(request.getParameter("partType1"));							// 품목구분 (NumberCode)
-		String partType2 = StringUtil.checkNull(request.getParameter("partType2"));							// 대 분류 (NumberCode)
-		String partType3 = StringUtil.checkNull(request.getParameter("partType3"));							// 중 분류 (NumberCode)
-		String seq = StringUtil.checkNull(request.getParameter("seq"));										// SEQ
-		String etc = StringUtil.checkNull(request.getParameter("etc"));										// 기타
+		String partType1 = StringUtil.checkNull((String)params.get("partType1"));							// 품목구분 (NumberCode)
+		String partType2 = StringUtil.checkNull((String)params.get("partType2"));							// 대 분류 (NumberCode)
+		String partType3 = StringUtil.checkNull((String)params.get("partType3"));							// 중 분류 (NumberCode)
+		String seq = StringUtil.checkNull((String)params.get("seq"));										// SEQ
+		String etc = StringUtil.checkNull((String)params.get("etc"));										// 기타
 		
 		// 품목 속성
-		String unit = StringUtil.checkNull(request.getParameter("unit"));									// 단위 (NumberCode)
-		String model = StringUtil.checkNull(request.getParameter("model"));									// 프로젝트 코드 (NumberCode, IBA)
-		String productmethod = StringUtil.checkNull(request.getParameter("productmethod"));					// 제작방법 (NumberCode, IBA) 
-		String deptcode = StringUtil.checkNull(request.getParameter("deptcode"));							// 부서 (NumberCode, IBA)
-		String weight = StringUtil.checkNull(request.getParameter("weight"));								// 무게 (Key IN, IBA)
-		String manufacture = StringUtil.checkNull(request.getParameter("manufacture"));						// MANUTACTURE (NumberCode, IBA)
-		String mat = StringUtil.checkNull(request.getParameter("mat"));										// 재질 (NumberCode, IBA)
-		String finish = StringUtil.checkNull(request.getParameter("finish"));								// 후처리 (NumberCode, IBA)
-		String remarks = StringUtil.checkNull(request.getParameter("remarks"));								// 비고 (Key IN, IBA)
-		String specification = StringUtil.checkNull(request.getParameter("specification"));					// 사양 (Key IN, iBA)
+		String unit = StringUtil.checkNull((String)params.get("unit"));									// 단위 (NumberCode)
+		String model = StringUtil.checkNull((String)params.get("model"));									// 프로젝트 코드 (NumberCode, IBA)
+		String productmethod = StringUtil.checkNull((String)params.get("productmethod"));					// 제작방법 (NumberCode, IBA) 
+		String deptcode = StringUtil.checkNull((String)params.get("deptcode"));							// 부서 (NumberCode, IBA)
+		String weight = StringUtil.checkNull((String)params.get("weight"));								// 무게 (Key IN, IBA)
+		String manufacture = StringUtil.checkNull((String)params.get("manufacture"));						// MANUTACTURE (NumberCode, IBA)
+		String mat = StringUtil.checkNull((String)params.get("mat"));										// 재질 (NumberCode, IBA)
+		String finish = StringUtil.checkNull((String)params.get("finish"));								// 후처리 (NumberCode, IBA)
+		String remarks = StringUtil.checkNull((String)params.get("remarks"));								// 비고 (Key IN, IBA)
+		String specification = StringUtil.checkNull((String)params.get("specification"));					// 사양 (Key IN, iBA)
 		
 		// 주 도면
-		String primary = StringUtil.checkNull(request.getParameter("PRIMARY"));
+		String primary = StringUtil.checkNull((String)params.get("PRIMARY"));
 					
 		// 관련 문서
-		String[] docOids = request.getParameterValues("docOid");
+		String[] docOids = (String[])params.get("docOid");
 		
 		// 관련 RoHs
-		String[] rohsOid = request.getParameterValues("rohsOid");
+		String[] rohsOid = (String[])params.get("rohsOid");
 					
 		// 첨부파일
-		String[] secondary = request.getParameterValues("SECONDARY");
+		String[] secondary = (String[])params.get("SECONDARY");
 		
 		// 첨부 추가
-		String[] delocIds = request.getParameterValues("delocIds");
+		String[] delocIds = (String[])params.get("delocIds");
 
 		String partName = "";
 		String[] partNames = new String[]{partName1, partName2, partName3, partName4}; 
@@ -363,15 +363,14 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 	
 	@Override
-	public ResultData createPartAction(Map<String,Object> map) {
+	public ResultData create(Map<String,Object> map) {
 		ResultData result = new ResultData();
 		Transaction trx = new Transaction();
-		WTPart part = null;
 		try{
 			
 			trx.start();
 			
-			/*
+			
 			String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
 			String view = StringUtil.checkNull((String)map.get("view"));									// view
 			String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
@@ -466,7 +465,6 @@ public class StandardPartService extends StandardManager implements PartService 
 				CommonContentHelper.service.attach(part, null, secondary);
 			}
 			
-			*/
 			
 			part = createPart(map);
 			
@@ -487,121 +485,121 @@ public class StandardPartService extends StandardManager implements PartService 
 		return result;
 	}
 
-	@Override
-	public Map<String, Object> listPartAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-		//System.out.println("================ listPartAction");
-		long start = System.currentTimeMillis();
-		
-		int page = StringUtil.getIntParameter(request.getParameter("page"), 1);
-		int rows = StringUtil.getIntParameter(request.getParameter("rows"), 10);
-		int formPage = StringUtil.getIntParameter(request.getParameter("formPage"), 15);
-
-		String sessionId = request.getParameter("sessionId");
-
-		PagingQueryResult qr = null;
-
-		if (StringUtil.checkString(sessionId)) {
-			long pagingstart = System.currentTimeMillis();
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-			long pagingend = System.currentTimeMillis();
-			//System.out.println("paging " + (pagingend-pagingstart));
-		} else {
-			long querystart = System.currentTimeMillis();
-			QuerySpec query = PartQueryHelper.service.listPartSearchQuery(request, response);
-			long querymiddle = System.currentTimeMillis();
-			//System.out.println("query " + (querymiddle-querystart));
-			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
-			long queryend = System.currentTimeMillis();
-			//System.out.println("result " + (queryend-querymiddle));
-		}
-		long pagestart = System.currentTimeMillis();
-		PageControl control = new PageControl(qr, page, formPage, rows);
-		int totalPage = control.getTotalPage();
-		int startPage = control.getStartPage();
-		int endPage = control.getEndPage();
-		int listCount = control.getTopListCount();
-		int totalCount = control.getTotalCount();
-		int currentPage = control.getCurrentPage();
-		String param = control.getParam();
-		int rowCount = control.getTopListCount();
-		long pageend = System.currentTimeMillis();
-		//System.out.println("result " + (pageend-pagestart));
-		StringBuffer xmlBuf = new StringBuffer();
-		xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
-		xmlBuf.append("<rows>");
-
-		Object[] o = null;
-		WTPart part = null;
-		PartData data = null;
-
-		String select = StringUtil.checkReplaceStr(request.getParameter("select"), "false");
-		String remarks = "";
-		long whilestart = System.currentTimeMillis();
-		while (qr.hasMoreElements()) {
-			o = (Object[]) qr.nextElement();
-			part = (WTPart) o[0];
-			data = new PartData(part);
-			remarks =  StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder) part, AttributeKey.IBAKey.IBA_REMARKS));
-			xmlBuf.append("<row id='" + data.oid + "'>");
-			if ("true".equals(select)) {
-				xmlBuf.append("<cell><![CDATA[]]></cell>");
-			}
-
-			String bom = "<button type='button' class='btnCustom' onclick=javascript:auiBom('" + data.oid+ "','')><span></span>BOM</buttom>";
-			
-			String bom2 = "<button type='button' class='btnCustom' onclick=javascript:auiBom2('" + data.oid+ "','')><span></span>BOM(데이터 요청)</buttom>";
-
-			xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.icon + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.number + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[<a href=javascript:openView('" + data.oid + "')>" + data.name + "</a>]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.getLocation() + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.version + "." + data.iteration + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + remarks + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.getLifecycle() + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.creator + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.createDate.substring(0, 10) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.modifyDate.substring(0, 10) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + bom+ "]]></cell>");
-			
-			if("true".equals(select)) {
-				String moduleType = request.getParameter("moduleType");
-				if("ECO".equals(moduleType) || "EO".equals(moduleType)){
-		        	
-		        	boolean isSlect = PartSearchHelper.service.isSelectEO(part,moduleType);//data.isSelectEO();
-		        	xmlBuf.append("<cell><![CDATA[" + !isSlect + "]]></cell>");
-		        }else {
-		        	xmlBuf.append("<cell><![CDATA[]]></cell>");
-		        }
-			}
-			
-			xmlBuf.append("</row>");
-		}
-		xmlBuf.append("</rows>");
-
-		long whileend = System.currentTimeMillis();
-		//System.out.println("while " + (whileend-whilestart));
-		
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		result.put("formPage", formPage);
-		result.put("rows", rows);
-		result.put("totalPage", totalPage);
-		result.put("startPage", startPage);
-		result.put("endPage", endPage);
-		result.put("listCount", listCount);
-		result.put("totalCount", totalCount);
-		result.put("currentPage", currentPage);
-		result.put("param", param);
-		result.put("sessionId", qr.getSessionId() == 0 ? "" : qr.getSessionId());
-		result.put("xmlString", xmlBuf);
-		
-		long end = System.currentTimeMillis();
-		//System.out.println("result " + (end-start));
-		
-		return result;
-	}
+//	@Override
+//	public Map<String, Object> listPartAction(HttpServletRequest request, HttpServletResponse response)
+//			throws Exception {
+//		//System.out.println("================ listPartAction");
+//		long start = System.currentTimeMillis();
+//		
+//		int page = StringUtil.getIntParameter(request.getParameter("page"), 1);
+//		int rows = StringUtil.getIntParameter(request.getParameter("rows"), 10);
+//		int formPage = StringUtil.getIntParameter(request.getParameter("formPage"), 15);
+//
+//		String sessionId = request.getParameter("sessionId");
+//
+//		PagingQueryResult qr = null;
+//
+//		if (StringUtil.checkString(sessionId)) {
+//			long pagingstart = System.currentTimeMillis();
+//			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
+//			long pagingend = System.currentTimeMillis();
+//			//System.out.println("paging " + (pagingend-pagingstart));
+//		} else {
+//			long querystart = System.currentTimeMillis();
+//			QuerySpec query = PartQueryHelper.service.listPartSearchQuery(request, response);
+//			long querymiddle = System.currentTimeMillis();
+//			//System.out.println("query " + (querymiddle-querystart));
+//			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
+//			long queryend = System.currentTimeMillis();
+//			//System.out.println("result " + (queryend-querymiddle));
+//		}
+//		long pagestart = System.currentTimeMillis();
+//		PageControl control = new PageControl(qr, page, formPage, rows);
+//		int totalPage = control.getTotalPage();
+//		int startPage = control.getStartPage();
+//		int endPage = control.getEndPage();
+//		int listCount = control.getTopListCount();
+//		int totalCount = control.getTotalCount();
+//		int currentPage = control.getCurrentPage();
+//		String param = control.getParam();
+//		int rowCount = control.getTopListCount();
+//		long pageend = System.currentTimeMillis();
+//		//System.out.println("result " + (pageend-pagestart));
+//		StringBuffer xmlBuf = new StringBuffer();
+//		xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
+//		xmlBuf.append("<rows>");
+//
+//		Object[] o = null;
+//		WTPart part = null;
+//		PartData data = null;
+//
+//		String select = StringUtil.checkReplaceStr(request.getParameter("select"), "false");
+//		String remarks = "";
+//		long whilestart = System.currentTimeMillis();
+//		while (qr.hasMoreElements()) {
+//			o = (Object[]) qr.nextElement();
+//			part = (WTPart) o[0];
+//			data = new PartData(part);
+//			remarks =  StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder) part, AttributeKey.IBAKey.IBA_REMARKS));
+//			xmlBuf.append("<row id='" + data.oid + "'>");
+//			if ("true".equals(select)) {
+//				xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			}
+//
+//			String bom = "<button type='button' class='btnCustom' onclick=javascript:auiBom('" + data.oid+ "','')><span></span>BOM</buttom>";
+//			
+//			String bom2 = "<button type='button' class='btnCustom' onclick=javascript:auiBom2('" + data.oid+ "','')><span></span>BOM(데이터 요청)</buttom>";
+//
+//			xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.icon + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.number + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[<a href=javascript:openView('" + data.oid + "')>" + data.name + "</a>]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.getLocation() + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.version + "." + data.iteration + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + remarks + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.getLifecycle() + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.creator + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.createDate.substring(0, 10) + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + data.modifyDate.substring(0, 10) + "]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[" + bom+ "]]></cell>");
+//			
+//			if("true".equals(select)) {
+//				String moduleType = request.getParameter("moduleType");
+//				if("ECO".equals(moduleType) || "EO".equals(moduleType)){
+//		        	
+//		        	boolean isSlect = PartSearchHelper.service.isSelectEO(part,moduleType);//data.isSelectEO();
+//		        	xmlBuf.append("<cell><![CDATA[" + !isSlect + "]]></cell>");
+//		        }else {
+//		        	xmlBuf.append("<cell><![CDATA[]]></cell>");
+//		        }
+//			}
+//			
+//			xmlBuf.append("</row>");
+//		}
+//		xmlBuf.append("</rows>");
+//
+//		long whileend = System.currentTimeMillis();
+//		//System.out.println("while " + (whileend-whilestart));
+//		
+//		Map<String, Object> result = new HashMap<String, Object>();
+//
+//		result.put("formPage", formPage);
+//		result.put("rows", rows);
+//		result.put("totalPage", totalPage);
+//		result.put("startPage", startPage);
+//		result.put("endPage", endPage);
+//		result.put("listCount", listCount);
+//		result.put("totalCount", totalCount);
+//		result.put("currentPage", currentPage);
+//		result.put("param", param);
+//		result.put("sessionId", qr.getSessionId() == 0 ? "" : qr.getSessionId());
+//		result.put("xmlString", xmlBuf);
+//		
+//		long end = System.currentTimeMillis();
+//		//System.out.println("result " + (end-start));
+//		
+//		return result;
+//	}
 
 	@Override
 	public ResultData updatePartAction(Map<String, Object> map) {
@@ -622,7 +620,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				part = (WTPart) rf.getReference(oid).getObject();
 				PartData partData = new PartData(part);
-				boolean isNonCheckout = !(partData.isGENERIC() || partData.isINSTANCE());
+//				boolean isNonCheckout = !(partData.isGENERIC() || partData.isINSTANCE());
 				String oldPartName = part.getName();
 				
 				part = (WTPart) getWorkingCopy(part);

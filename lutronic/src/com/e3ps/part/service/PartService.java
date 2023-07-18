@@ -29,9 +29,9 @@ public interface PartService {
 	 * 
 	 */
 	
-	Map<String, Object> requestPartMapping(HttpServletRequest request, HttpServletResponse response);
+	Map<String, Object> requestPartMapping(Map<String, Object> params);
 	
-	ResultData createPartAction(Map<String,Object> map);
+	ResultData create(Map<String,Object> map);
 	
 	ResultData updatePartAction(Map<String, Object> map);
 	

@@ -104,17 +104,12 @@ public class PartController extends BaseController {
 		return list;
 	}
 	
-	/** 품목 등록
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
+	@Description(value = "품목 등록")
 	@ResponseBody
-	@RequestMapping("/createPartAction")
-	public ResultData createPartAction(HttpServletRequest request, HttpServletResponse response){
-		Map<String,Object> map = PartHelper.service.requestPartMapping(request, response);
-		return PartHelper.service.createPartAction(map);
+	@PostMapping(value = "/create")
+	public ResultData create(@RequestBody Map<String, Object> params){
+		Map<String,Object> map = PartHelper.service.requestPartMapping(params);
+		return PartHelper.manager.create(map);
 	}
 	
 	/**  부품 등록시 SEQ 버튼
@@ -229,8 +224,8 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/updatePartAction")
-	public ResultData updatePartAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Map<String, Object> map = PartHelper.service.requestPartMapping(request, response);
+	public ResultData updatePartAction(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> map = PartHelper.service.requestPartMapping(params);
 		return PartHelper.service.updatePartAction(map);
 	}
 	
