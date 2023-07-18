@@ -18,7 +18,7 @@ public interface DevelopmentService {
 	
 	Map<String,String> requestDevelopmentMapping(HttpServletRequest request, HttpServletResponse response);
 	
-	ResultData createDevelopmentAction(Map<String, Object> params);
+	ResultData create(Map<String, Object> params);
 	
 	Map<String,Object> listDevelopmentAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	

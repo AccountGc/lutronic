@@ -67,16 +67,12 @@ public class DevelopmentController extends BaseController{
 		return result;
 	}
 	
-	/**  개발업무 관리 등록 수행
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value="개발업무 관리 등록 수행")
 	@ResponseBody
-	@RequestMapping("/createDevelopmentAction")
-	public ResultData createDevelopmentAction(@RequestBody Map<String, Object> params) {
+	@PostMapping(value = "/create")
+	public ResultData create(@RequestBody Map<String, Object> params) {
 		//Map<String,String> map = DevelopmentHelper.service.requestDevelopmentMapping(request, response);
-		return DevelopmentHelper.service.createDevelopmentAction(params);
+		return DevelopmentHelper.service.create(params);
 	}
 	
 	@Description(value = "개발업무 검색")

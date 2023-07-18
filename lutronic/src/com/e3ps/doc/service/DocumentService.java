@@ -19,7 +19,7 @@ import com.e3ps.doc.beans.DocumentData;
 @RemoteInterface
 public interface DocumentService {
 	
-	Map<String,Object> requestDocumentMapping(HttpServletRequest request, HttpServletResponse response);
+	Map<String,Object> requestDocumentMapping(Map<String, Object> params);
 	
 	ResultData createDocumentAction(Map<String, Object> map);
 	

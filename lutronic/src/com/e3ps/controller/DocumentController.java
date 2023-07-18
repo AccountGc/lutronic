@@ -44,17 +44,11 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	/**
-	 * 문서 등록
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "문서 등록")
 	@ResponseBody
-	@RequestMapping("/createDocumentAction")
-	public ResultData createDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Object> map = DocumentHelper.service.requestDocumentMapping(request, response);
+	@PostMapping(value = "/create")
+	public ResultData createDocumentAction(@RequestBody Map<String, Object> params) {
+		Map<String, Object> map = DocumentHelper.service.requestDocumentMapping(params);
 		return DocumentHelper.service.createDocumentAction(map);
 	}
 

@@ -22,6 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -111,41 +112,41 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 	
 	@Override
-	public Map<String,Object> requestDocumentMapping(HttpServletRequest request, HttpServletResponse response) {
+	public Map<String,Object> requestDocumentMapping(Map<String, Object> params) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		
-		String oid = StringUtil.checkNull(request.getParameter("oid"));
-		String lifecycle = StringUtil.checkNull(request.getParameter("lifecycle"));
+		String oid = StringUtil.checkNull((String)params.get("oid"));
+		String lifecycle = StringUtil.checkNull((String)params.get("lifecycle"));
 		
-		String location = StringUtil.checkNull(request.getParameter("location"));
-		String documentName = StringUtil.checkNull(request.getParameter("documentName"));
-		String docName = StringUtil.checkNull(request.getParameter("docName"));
+		String location = StringUtil.checkNull((String)params.get("location"));
+		String documentName = StringUtil.checkNull((String)params.get("documentName"));
+		String docName = StringUtil.checkNull((String)params.get("docName"));
 		
-		String documentType = StringUtil.checkNull(request.getParameter("documentType"));
-		String model = StringUtil.checkNull(request.getParameter("model"));
-		String preseration = StringUtil.checkNull(request.getParameter("preseration"));
-		String interalnumber = StringUtil.checkNull(request.getParameter("interalnumber"));
-		String deptcode = StringUtil.checkNull(request.getParameter("deptcode"));
-		String writer = StringUtil.checkNull(request.getParameter("writer"));
+		String documentType = StringUtil.checkNull((String)params.get("documentType"));
+		String model = StringUtil.checkNull((String)params.get("model"));
+		String preseration = StringUtil.checkNull((String)params.get("preseration"));
+		String interalnumber = StringUtil.checkNull((String)params.get("interalnumber"));
+		String deptcode = StringUtil.checkNull((String)params.get("deptcode"));
+		String writer = StringUtil.checkNull((String)params.get("writer"));
 		
-		String manufacture = StringUtil.checkNull(request.getParameter("manufacture"));
-		String moldType = StringUtil.checkNull(request.getParameter("moldtype"));
-		String moldNumber = StringUtil.checkNull(request.getParameter("moldnumber"));
-		String moldCost = StringUtil.checkNull(request.getParameter("moldcost"));
+		String manufacture = StringUtil.checkNull((String)params.get("manufacture"));
+		String moldType = StringUtil.checkNull((String)params.get("moldtype"));
+		String moldNumber = StringUtil.checkNull((String)params.get("moldnumber"));
+		String moldCost = StringUtil.checkNull((String)params.get("moldcost"));
 		
-		String description = StringUtil.checkNull(request.getParameter("description"));
-		String iterationNote = StringUtil.checkNull(request.getParameter("iterationNote"));
+		String description = StringUtil.checkNull((String)params.get("description"));
+		String iterationNote = StringUtil.checkNull((String)params.get("iterationNote"));
 		
-		String primary = StringUtil.checkNull(request.getParameter("PRIMARY"));
-		String[] secondary = request.getParameterValues("SECONDARY");
-		String[] delocIds = request.getParameterValues("delocIds");
+		String primary = StringUtil.checkNull((String)params.get("PRIMARY"));
+		String[] secondary = (String[])params.get("SECONDARY");
+		String[] delocIds = (String[])params.get("delocIds");
 		
-		String[] partOids = request.getParameterValues("partOid");
-		String[] activeOids = request.getParameterValues("activeOid");
-		String[] docOids = request.getParameterValues("docOid");
+		String[] partOids = (String[])params.get("partOid");
+		String[] activeOids = (String[])params.get("activeOid");
+		String[] docOids = (String[])params.get("docOid");
 		
-		String type = StringUtil.checkNull(request.getParameter("type"));
-		String parentOid = StringUtil.checkNull(request.getParameter("parentOid"));
+		String type = StringUtil.checkNull((String)params.get("type"));
+		String parentOid = StringUtil.checkNull((String)params.get("parentOid"));
 		
 		map.put("oid", oid);
 		map.put("lifecycle", lifecycle);
