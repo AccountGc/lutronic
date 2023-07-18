@@ -52,7 +52,7 @@ import com.e3ps.org.service.MailUserHelper;
 
 @Controller
 @RequestMapping(value = "/groupware/**")
-public class GroupwareController {
+public class GroupwareController extends BaseController {
 	
 	/** 메인 페이지
 	 * @param request
@@ -92,13 +92,16 @@ public class GroupwareController {
 	@Description(value = "공지사항 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/listNotice")
-	public Map<String,Object> listNotice(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> result = null;
+	public Map<String,Object> listNotice(Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
+			result = GroupwareHelper.manager.listNotice(params);
+			result.put("result", SUCCESS);
 //			result = GroupwareHelper.service.listNoticeAction(request,response);
-			
 		} catch(Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
 		return result;
 	}

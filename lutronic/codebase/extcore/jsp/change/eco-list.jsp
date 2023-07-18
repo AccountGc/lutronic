@@ -151,7 +151,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "docNumber",
+					dataField : "eoNumber",
 					headerText : "ECO번호",
 					dataType : "string",
 					width : 120,
@@ -160,7 +160,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "interalnumber",
+					dataField : "eoName",
 					headerText : "ECO제목",
 					dataType : "string",
 					width : 120,
@@ -169,7 +169,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "model",
+					dataField : "licensing",
 					headerText : "인허가변경",
 					dataType : "string",
 					width : 120,
@@ -178,7 +178,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "docName",
+					dataField : "riskType",
 					headerText : "위험 통제",
 					dataType : "string",
 					width : 350,
@@ -187,7 +187,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "location",
+					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 250,
@@ -196,7 +196,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "description",
+					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 350,
@@ -214,7 +214,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "writer",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 100,

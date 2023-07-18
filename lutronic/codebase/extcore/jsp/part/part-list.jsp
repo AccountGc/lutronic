@@ -237,7 +237,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "name",
+					dataField : "",
 					headerText : "체크",
 					dataType : "string",
 					width : 60,
@@ -255,7 +255,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "description",
+					dataField : "name",
 					headerText : "품목명",
 					dataType : "string",
 					width : 380,
@@ -273,7 +273,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "state",
+					dataField : "islastversion",
 					headerText : "Rev.",
 					dataType : "string",
 					width : 90,
@@ -291,7 +291,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
@@ -327,7 +327,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "ecoNo",
 					headerText : "BOM",
 					dataType : "string",
 					width : 80,

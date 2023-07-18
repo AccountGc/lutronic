@@ -18,6 +18,7 @@ import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
@@ -65,31 +66,19 @@ import wt.vc.views.ViewHelper;
 @Getter
 @Setter
 public class PartData {
-	
 //	public WTPart part;
-	
-	
-	public String number;
-	
-	public String icon;
-	
-	public String baseline;
-	public String unit;
-	public EPMDocument epm;
-
+	private String number;
+	private String icon;
+	private String baseline;
+	private String unit;
+	private EPMDocument epm;
+	private String name;
+	private String state;
 
 	private String dwgOid;
-
-
 	private String model;
-
-
 	private String productmethod;
-
-
 	private String deptcode;
-
-
 	private String manufacture;
 
 	private String lineImg = "joinbottom";
@@ -102,6 +91,10 @@ public class PartData {
 	private ArrayList<Object[]> ascPartlist = new ArrayList<Object[]>();
 
 	private String ecoNo;
+	private String creator;
+	private String createDate;
+	private String modifyDate;
+	
     public PartData(final WTPart part) throws Exception {
 //    	super(part);
 //    	setPart(part);
@@ -125,8 +118,13 @@ public class PartData {
     	}else{
     		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
     	}
-    	
+    	setName(part.getName());
+    	setState(part.getLifeCycleState().toString());
+    	setCreator(part.getCreatorFullName());
+    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
+    	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
     }
+    
 //	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{
 //		super(part);
 //    	setPart(part);

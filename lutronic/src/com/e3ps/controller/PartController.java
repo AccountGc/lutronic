@@ -50,7 +50,7 @@ import wt.vc.views.ViewHelper;
  *
  */
 @Controller
-@RequestMapping(value = "/part")
+@RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 	
 	/**

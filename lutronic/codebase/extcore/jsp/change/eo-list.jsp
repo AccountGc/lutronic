@@ -122,7 +122,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
+					dataField : "eoNumber",
 					headerText : "EO 번호",
 					dataType : "string",
 					width : 120,
@@ -131,7 +131,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "name",
+					dataField : "eoName",
 					headerText : "EO 제목",
 					dataType : "string",
 					width : 120,

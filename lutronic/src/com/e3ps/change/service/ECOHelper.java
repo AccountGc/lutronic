@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EOData;
@@ -21,6 +22,7 @@ import com.e3ps.org.People;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.beans.RohsData;
 
+import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.org.WTUser;
 import wt.part.WTPart;
@@ -173,8 +175,6 @@ public class ECOHelper {
 				qs.appendWhere(new SearchCondition(ecoClass, "eoApproveDate", SearchCondition.LESS_THAN_OR_EQUAL , postApproveDate), new int[] {ecoIdx});
 			}
 			
-			
-			
 			//제품명
 			if(models != null){
 				if( qs.getConditionCount() > 0 ) {
@@ -217,15 +217,10 @@ public class ECOHelper {
 			}
 			
 			if(sortValue != null && sortValue.length() > 0) {
-				//System.out.println("sortCheck="+sortCheck+"\tsortValue="+sortValue);
 				if("true".equals(sortCheck)){
-					
-					if( !"creator.key.id".equals(sortValue)){
-						if(!"PROCESSDATE".equals(sortValue)){
-							qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class,sortValue), true), new int[] { ecoIdx });
-						}
+					if( !"creator".equals(sortValue)){
+						qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class,sortValue), true), new int[] { ecoIdx });
 					}else{
-						
 						if(qs.getConditionCount() > 0) qs.appendAnd();
 						int idx_user = qs.appendClassList(WTUser.class, false);
 						int idx_people = qs.appendClassList(People.class, false);
@@ -240,13 +235,9 @@ public class ECOHelper {
 					}
 					
 				}else{
-					
-					if( !"creator.key.id".equals(sortValue)){
-						if(!"PROCESSDATE".equals(sortValue)){
-							qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class,sortValue), false), new int[] { ecoIdx });
-						}
+					if( !"creator".equals(sortValue)){
+						qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class,sortValue), false), new int[] { ecoIdx });
 					}else{
-						
 						if(qs.getConditionCount() > 0) qs.appendAnd();
 						int idx_user = qs.appendClassList(WTUser.class, false);
 						int idx_people = qs.appendClassList(People.class, false);
@@ -261,8 +252,7 @@ public class ECOHelper {
 					}
 				}
 			}else{
-				qs.appendOrderBy(new OrderBy(new ClassAttribute(ecoClass, EChangeOrder.EO_APPROVE_DATE), true), new int[] { ecoIdx }); 
-				qs.appendOrderBy(new OrderBy(new ClassAttribute(ecoClass, EChangeOrder.CREATE_TIMESTAMP), true), new int[] { ecoIdx });
+				qs.appendOrderBy(new OrderBy(new ClassAttribute(ecoClass, "thePersistInfo.modifyStamp"), true), new int[] { ecoIdx }); 
 			}
 			
 			PageQueryUtils pager = new PageQueryUtils(params, qs);

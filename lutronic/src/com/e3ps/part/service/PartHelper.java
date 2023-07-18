@@ -109,14 +109,14 @@ public class PartHelper {
 				sortCheck = "true";
 			}
 			
-//			Folder folder = null;
-//			if (foid.length() > 0) {
-//				folder = (Folder) rf.getReference(foid).getObject();
-//				location = FolderHelper.getFolderPath(folder);
-//			} else {
-//				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-//				foid = "";
-//			}
+			Folder folder = null;
+			if (foid.length() > 0) {
+				folder = (Folder) rf.getReference(foid).getObject();
+				location = FolderHelper.getFolderPath(folder);
+			} else {
+				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+				foid = "";
+			}
 			
 			// 최신 이터레이션
 			if (query.getConditionCount() > 0) {
@@ -476,36 +476,36 @@ ORDER BY A0.modifyStampA2 DESC;
 			}
 			
 			// folder search
-//			if (!"/Default/PART_Drawing".equals(location)) {
-//				if (query.getConditionCount() > 0) {
-//					query.appendAnd();
-//				}
-//
-//				int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
-//				SearchCondition sc1 = new SearchCondition(new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"), SearchCondition.EQUAL, new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
-//				sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
-//				sc1.setOuterJoin(0);
-//				query.appendWhere(sc1, new int[] { folder_idx, idx });
-//
-//				query.appendAnd();
-//				ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
-//				query.appendOpenParen();
-//				query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()), new int[] { folder_idx });
-//
-//				for (int fi = 0; fi < folders.size(); fi++) {
-//					String[] s = (String[]) folders.get(fi);
-//					Folder sf = (Folder) rf.getReference(s[2]).getObject();
-//					query.appendOr();
-//					query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()), new int[] { folder_idx });
-//				}
-//				query.appendCloseParen();
-//			} else {
-//				if (query.getConditionCount() > 0) {
-//					query.appendAnd();
-//				}
-//				query.appendWhere(new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false), new int[] { idx });
-//
-//			}
+			if (!"/Default/PART_Drawing".equals(location)) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+
+				int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
+				SearchCondition sc1 = new SearchCondition(new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"), SearchCondition.EQUAL, new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+				sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
+				sc1.setOuterJoin(0);
+				query.appendWhere(sc1, new int[] { folder_idx, idx });
+
+				query.appendAnd();
+				ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
+				query.appendOpenParen();
+				query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()), new int[] { folder_idx });
+
+				for (int fi = 0; fi < folders.size(); fi++) {
+					String[] s = (String[]) folders.get(fi);
+					Folder sf = (Folder) rf.getReference(s[2]).getObject();
+					query.appendOr();
+					query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()), new int[] { folder_idx });
+				}
+				query.appendCloseParen();
+			} else {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false), new int[] { idx });
+
+			}
 
 			// sorting
 			if (sortValue.length() > 0) {
@@ -597,8 +597,7 @@ ORDER BY A0.modifyStampA2 DESC;
 			PagingQueryResult result = pager.find();
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
-				WTPart part = (WTPart) obj[0];
-				PartData data = new PartData(part);
+				PartData data = new PartData((WTPart) obj[0]);
 				list.add(data);
 			}
 			

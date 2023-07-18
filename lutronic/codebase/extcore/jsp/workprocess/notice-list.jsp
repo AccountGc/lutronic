@@ -78,7 +78,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "name",
+					dataField : "title",
 					headerText : "제목",
 					dataType : "string",
 					width : 295,
@@ -87,7 +87,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "number",
+					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 450,
@@ -96,7 +96,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "description",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 170,
@@ -105,7 +105,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "location",
+					dataField : "count",
 					headerText : "조회횟수",
 					dataType : "string",
 					width : 170,
@@ -114,7 +114,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "state",
+					dataField : "isPopup",
 					headerText : "팝업",
 					dataType : "string",
 					width : 170,
