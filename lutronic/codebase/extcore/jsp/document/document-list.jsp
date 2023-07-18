@@ -110,7 +110,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "docNumber",
+					dataField : "number",
 					headerText : "문서번호",
 					dataType : "string",
 					width : 120,
@@ -191,7 +191,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "createdDate",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
@@ -200,7 +200,7 @@
 						inline : true,
 					},
 				}, {
-					dataField : "modifiedDate",
+					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
@@ -250,6 +250,7 @@
  				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						console.log(data);
 						document.getElementById("sessionid").value = data.sessionid;
 						document.getElementById("curPage").value = data.curPage;
 //							document.getElementById("lastNum").value = data.list.length;

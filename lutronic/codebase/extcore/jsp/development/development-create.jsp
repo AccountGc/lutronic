@@ -106,7 +106,7 @@
 			}
 
 			const params = new Object();
-			const url = getCallUrl("/development/createDevelopmentAction");
+			const url = getCallUrl("/development/create");
 			params.name = name.value;
 			params.model = model;
 			params.developmentStart = developmentStart;

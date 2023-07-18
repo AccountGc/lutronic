@@ -2,11 +2,7 @@ package com.e3ps.doc.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
@@ -15,17 +11,16 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.DocLocation;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.org.People;
 
+import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
-import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
+import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
@@ -93,13 +88,13 @@ public class DocumentHelper {
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, modifiedFrom,
 				modifiedTo);
 
-		Folder folder = null;
+//		Folder folder = null;
 //		if (!StringUtil.isNull(oid)) {
 //			folder = (Folder) CommonUtil.getObject(oid);
 //		} else {
 //			folder = FolderTaskLogic.getFolder(DOCUMENT_ROOT, CommonUtil.getPDMLinkProductContainer());
 //		}
-//
+
 //		if (folder != null) {
 //			if (query.getConditionCount() > 0) {
 //				query.appendAnd();
@@ -136,8 +131,8 @@ public class DocumentHelper {
 		}
 
 		map.put("list", list);
-//		map.put("sessionid", pager.getSessionId());
-//		map.put("curPage", pager.getCpage());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
 		return map;
 	}
 	
