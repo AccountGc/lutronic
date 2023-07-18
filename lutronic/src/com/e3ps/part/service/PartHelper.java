@@ -9,35 +9,57 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.beans.MasterData;
+import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.People;
 import com.e3ps.part.beans.PartData;
+import com.e3ps.rohs.service.RohsHelper;
 
 import wt.clients.folder.FolderTaskLogic;
+import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
+import wt.epm.build.EPMBuildRule;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
+import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.StringDefinition;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
+import wt.inf.container.WTContainerRef;
 import wt.introspection.ClassInfo;
 import wt.introspection.WTIntrospector;
+import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleTemplate;
 import wt.org.WTUser;
+import wt.part.PartType;
+import wt.part.QuantityUnit;
+import wt.part.Source;
 import wt.part.WTPart;
+import wt.part.WTPartDescribeLink;
+import wt.pdmlink.PDMLinkProduct;
 import wt.pds.DatabaseInfoUtilities;
+import wt.pom.Transaction;
 import wt.query.ClassAttribute;
 import wt.query.KeywordExpression;
 import wt.query.OrderBy;
@@ -46,10 +68,249 @@ import wt.query.RelationalExpression;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
+import wt.vc.views.ViewHelper;
 
 public class PartHelper {
 	public static final PartService service = ServiceFactory.getService(PartService.class);
 	public static final PartHelper manager = new PartHelper();
+	
+	public ResultData create(Map<String,Object> map) {
+		ResultData result = new ResultData();
+		Transaction trx = new Transaction();
+		try{
+			
+			trx.start();
+			
+			
+			String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
+			String view = StringUtil.checkNull((String)map.get("view"));									// view
+			String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
+			String wtPartType = StringUtil.checkNull((String)map.get("wtPartType"));
+			String source = StringUtil.checkNull((String)map.get("source"));
+			
+			String partName = StringUtil.checkNull((String)map.get("partName"));							// 품목명
+			String partNumber = StringUtil.checkNull((String)map.get("partNumber"));						// 품목번호
+			
+			String seq = StringUtil.checkNull((String)map.get("seq"));										// SEQ
+
+			if(seq.length() == 0) {
+				seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
+			}else if(seq.length() == 1) {
+				seq = "00" + seq;
+			}else if(seq.length() == 2) {
+				seq = "0" + seq;
+			}
+			
+			String etc = StringUtil.checkNull((String)map.get("etc"));										// etc
+			if(etc.length() == 0) {
+				etc = "00";
+			}else if(etc.length() == 1) {
+				etc = "0" + etc;
+			}
+			partNumber += seq + etc;
+			
+			String unit = StringUtil.checkNull((String)map.get("unit"));									// 단위
+			
+			WTPart part = WTPart.newWTPart();
+			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
+			part.setContainer(product);
+			
+			part.setNumber(partNumber);
+			part.setName(partName.trim());
+			part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
+			
+			part.setPartType(PartType.toPartType(wtPartType));
+			part.setSource(Source.toSource(source));
+			
+			// 뷰 셋팅(Design 고정임)
+			ViewHelper.assignToView(part, ViewHelper.service.getView(view));
+
+			// 폴더 셋팅
+			Folder folder = null;
+			if (StringUtil.checkString(fid)) {
+				folder = (Folder) CommonUtil.getObject(fid);
+			} else {
+				folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
+			}
+			FolderHelper.assignLocation((FolderEntry) part, folder);
+
+			// 라이프사이클 셋팅
+			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+			
+			part = (WTPart)PersistenceHelper.manager.save(part);
+			
+			// IBA 설정
+			CommonHelper.service.changeIBAValues(part, map);
+			
+			// 주 도면
+			String primary = StringUtil.checkNull((String)map.get("primary"));
+			if(primary.length() > 0) {
+				map.put("oid", CommonUtil.getOIDString(part));
+				map.put("epmfid", fid);
+				EPMDocument epm = DrawingHelper.service.createEPM(map);
+				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
+				PersistenceServerHelper.manager.insert(link);
+			}
+			
+			// 관련 문서 연결
+			String[] docOids = (String[])map.get("docOids");
+			if(docOids != null) {
+				for(String docOid : docOids) {
+					WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
+					WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
+					PersistenceServerHelper.manager.insert(dlink);
+				}
+			}
+			
+			// 관련 ROHS 연결
+			String[] rohsOid = (String[])map.get("rohsOid");
+			if(rohsOid != null){
+				RohsHelper.service.createROHSToPartLink(part, rohsOid);
+			}
+			
+			// 첨부 파일
+			String[] secondary = (String[])map.get("secondary");
+			if(secondary != null) {
+				CommonContentHelper.service.attach(part, null, secondary);
+			}
+			
+			
+			part = createPart(map);
+			
+			trx.commit();
+			trx = null;
+			result.setResult(true);
+			result.setOid(CommonUtil.getOIDString(part));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setResult(false);
+			result.setMessage(e.getLocalizedMessage());
+		} finally {
+			if(trx != null) {
+				trx.rollback();
+			}
+		}
+		
+		return result;
+	}
+	
+	public WTPart createPart(Map<String,Object> map) throws Exception {
+		String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
+		String view = StringUtil.checkNull((String)map.get("view"));									// view
+		String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
+		String wtPartType = StringUtil.checkNull((String)map.get("wtPartType"));
+		String source = StringUtil.checkNull((String)map.get("source"));
+		
+		String partName = StringUtil.checkNull((String)map.get("partName"));							// 품목명
+		String partNumber = StringUtil.checkNull((String)map.get("partNumber"));						// 품목번호
+		
+		String seq = StringUtil.checkNull((String)map.get("seq"));										// SEQ
+
+		if(seq.length() == 0) {
+			seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
+		}else if(seq.length() == 1) {
+			seq = "00" + seq;
+		}else if(seq.length() == 2) {
+			seq = "0" + seq;
+		}
+		
+		String etc = StringUtil.checkNull((String)map.get("etc"));										// etc
+		if(etc.length() == 0) {
+			etc = "00";
+		}else if(etc.length() == 1) {
+			etc = "0" + etc;
+		}
+		partNumber += seq + etc;
+		
+		if(partNumber.length() > 10) {
+			throw new Exception(Message.get("허용된 품목번호의 길이가 아닙니다."));
+		}
+		
+		String unit = StringUtil.checkNull((String)map.get("unit"));									// 단위
+		
+		WTPart part = WTPart.newWTPart();
+		PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+		WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
+		part.setContainer(product);
+		
+		part.setNumber(partNumber);
+		part.setName(partName.trim());
+		part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
+		
+		part.setPartType(PartType.toPartType(wtPartType));
+		part.setSource(Source.toSource(source));
+		
+		// 뷰 셋팅(Design 고정임)
+		ViewHelper.assignToView(part, ViewHelper.service.getView(view));
+
+		// 폴더 셋팅
+		Folder folder = null;
+		if (StringUtil.checkString(fid)) {
+			folder = (Folder) CommonUtil.getObject(fid);
+		} else {
+			folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
+		}
+		FolderHelper.assignLocation((FolderEntry) part, folder);
+
+		// 라이프사이클 셋팅
+		LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+		part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+		
+		part = (WTPart)PersistenceHelper.manager.save(part);
+		
+		// IBA 설정
+		CommonHelper.service.changeIBAValues(part, map);
+		IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, partName, "string");
+		
+		// 주 도면
+		String primary = StringUtil.checkNull((String)map.get("primary"));
+		if(primary.length() > 0) {
+			map.put("oid", CommonUtil.getOIDString(part));
+			map.put("epmfid", fid);
+			EPMDocument epm = DrawingHelper.service.createEPM(map);
+			EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
+			PersistenceServerHelper.manager.insert(link);
+			
+			IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_DES, partName, "string");
+			/*
+			ResultData data = DrawingHelper.service.createDrawing(map);
+			if(data.result) {
+				String epmOid = data.oid;
+				EPMDocument epm = (EPMDocument)CommonUtil.getObject(epmOid);
+				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
+				PersistenceServerHelper.manager.insert(link);
+			}else {
+				throw new Exception(data.message);
+			}
+			*/
+		}
+		
+		// 관련 문서 연결
+		String[] docOids = (String[])map.get("docOids");
+		if(docOids != null) {
+			for(String docOid : docOids) {
+				WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
+				WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
+				PersistenceServerHelper.manager.insert(dlink);
+			}
+		}
+		
+		// 관련 ROHS 연결
+		String[] rohsOid = (String[])map.get("rohsOid");
+		if(rohsOid != null){
+			RohsHelper.service.createROHSToPartLink(part, rohsOid);
+		}
+		
+		// 첨부 파일
+		String[] secondary = (String[])map.get("secondary");
+		if(secondary != null) {
+			CommonContentHelper.service.attach(part, null, secondary);
+		}
+		
+		return part;
+	}
 	
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
 		QuerySpec query = new QuerySpec();

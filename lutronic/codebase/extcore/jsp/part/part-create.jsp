@@ -100,51 +100,51 @@
 			<tr>
 				<th>프로젝트코드 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="model" id="model" class="width-500">
 				</td>
 				<th>제작방법 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="productmethod" id="productmethod" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>부서 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="deptcode" id="deptcode" class="width-500">
 				</td>
 				<th>단위 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="unit" id="unit" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>무게(g)</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="weight" id="weight" class="width-500">
 				</td>
 				<th>MANUFACTURER</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="manufacture" id="manufacture" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>재질</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="mat" id="mat" class="width-500">
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="finish" id="finish" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th>OEM Info.</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="remarks" id="remarks" class="width-500">
 				</td>
 				<th>사양</th>
 				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-500">
+					<input type="text" name="specification" id="specification" class="width-500">
 				</td>
 			</tr>
 		</table>
@@ -209,140 +209,79 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" id="createBtn" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="resetBtn" onclick="loadGridData();">
-					<input type="button" value="목록" title="목록" id="listBtn" onclick="loadGridData();">
+					<input type="button" value="등록" title="등록" id="createBtn" onclick="create('false');" />
+					<input type="button" value="초기화" title="초기화" id="resetBtn" />
+					<input type="button" value="목록" title="목록" id="listBtn" />
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
-			let myGridID;
-			function _layout() {
-				return [ {
-					dataField : "name",
-					headerText : "품목번호",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "number",
-					headerText : "결과",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "description",
-					headerText : "품목구분(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "대분류(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "state",
-					headerText : "중분류(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "version",
-					headerText : "SEQ",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "etc",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				} ]
-			}
 
-			function createAUIGrid(columnLayout) {
-				const props = {
-					headerHeight : 30,
-					showRowNumColumn : true,
-					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
-					useContextMenu : true,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-				};
-				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-					hideContextMenu();
-					vScrollChangeHandler(event);
-				});
-				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-					hideContextMenu();
-				});
-			}
+			function create(isSelf) {
+				const partName1 = document.getElementById("partName1").value;
+				const partType1 = document.getElementById("partType1").value;
+				const partName2 = document.getElementById("partName2").value;
+				const partType2 = document.getElementById("partType2").value;
+				const partName3 = document.getElementById("partName3").value;
+				const partType3 = document.getElementById("partType3").value;
+				const partName4 = document.getElementById("partName4").value;
+				const seq = document.getElementById("seq").value;
+				const etc = document.getElementById("etc").value;
+				const model = document.getElementById("model").value;
+				const productmethod = document.getElementById("productmethod").value;
+				const deptcode = document.getElementById("deptcode").value;
+				const weight = document.getElementById("weight").value;
+				const manufacture = document.getElementById("manufacture").value;
+				const mat = document.getElementById("mat").value;
+				const finish = document.getElementById("finish").value;
+				const remarks = document.getElementById("remarks").value;
+				const specification = document.getElementById("specification").value;
+				const unit = "ea";
+//	 			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
+//	 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+//	 			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
+				const primarys = toArray("primarys");
 
-			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
-			}
+				if (!confirm("등록 하시겠습니까?")) {
+					return false;
+				}
 
-			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
-				const contenxtHeader = genColumnHtml(columns);
-				$("#h_item_ul").append(contenxtHeader);
-				$("#headerMenu").menu({
-					select : headerMenuSelectHandler
+				const params = new Object();
+				const url = getCallUrl("/part/create");
+				params.partName1 = partName1;
+				params.partType1 = partType1;
+				params.partName2 = partName2;
+				params.partType2 = partType2;
+				params.partName3 = partName3;
+				params.partType3 = partType3;
+				params.partName4 = partName4;
+				params.seq = seq;
+				params.etc = etc;
+				params.model = model;
+				params.productmethod = productmethod;
+				params.deptcode = deptcode;
+				params.weight = weight;
+				params.manufacture = manufacture;
+				params.mat = mat;
+				params.finish = finish;
+				params.remarks = remarks;
+				params.specification = specification;
+//	 			params.addRows7 = addRows7;
+//	 			params.addRows11 = addRows11;
+				params.primarys = primarys;
+//	 			toRegister(params, addRows8);
+//	 			openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+//	 					opener.loadGridData();
+//	 					self.close();
+					} else {
+//	 					closeLayer();
+					}
 				});
-				createAUIGrid(columns);
-				AUIGrid.resize(myGridID);
-				selectbox("state");
-				selectbox("type");
-				selectbox("depart");
-			});
+			};
 
 			function exportExcel() {
 // 				const exceptColumnFields = [ "primary" ];
@@ -353,7 +292,7 @@
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
-					loadGridData();
+// 					loadGridData();
 				}
 			})
 
@@ -361,9 +300,9 @@
 				hideContextMenu();
 			})
 
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
-			});
+// 			window.addEventListener("resize", function() {
+// 				AUIGrid.resize(myGridID);
+// 			});
 		</script>
 	</form>
 </body>
