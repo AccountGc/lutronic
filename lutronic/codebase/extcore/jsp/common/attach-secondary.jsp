@@ -71,7 +71,7 @@ String oid = request.getParameter("oid");
 // 				}
 // 			}
 // 		});
-// 	}
+	}
 	load();
 
 	function deleteAllFiles() {
