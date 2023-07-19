@@ -141,7 +141,15 @@ public class DocumentHelper {
 		ArrayList<DocumentData> list = new ArrayList<>();
 		
 		QuerySpec query = new QuerySpec();
-    	int idx = query.addClassList(WTDocument.class, true);
+//    	int idx = query.addClassList(WTDocument.class, true);
+		int idx = query.appendClassList(WTDocument.class, true);
+		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
+
+		query.setAdvancedQueryEnabled(true);
+		query.setDescendantQuery(false);
+
+		QuerySpecUtils.toInnerJoin(query, WTDocument.class, WTDocumentMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
     	ReferenceFactory rf = new ReferenceFactory();
     	
     	try {
