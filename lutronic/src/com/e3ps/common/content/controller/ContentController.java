@@ -1,8 +1,11 @@
 package com.e3ps.common.content.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,36 +15,97 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+import org.springframework.context.annotation.Description;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.web.WebUtil;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.content.FormatContentHolder;
 import wt.content.URLData;
 import wt.epm.EPMDocument;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
-import wt.fv.uploadtocache.CachedContentDescriptor;
 import wt.fv.uploadtocache.UploadToCacheHelper;
 import wt.org.WTUser;
 import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.util.WTProperties;
 
-import com.e3ps.common.content.CacheUploadUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.WebUtil;
 
 @Controller
 @RequestMapping("/content")
 public class ContentController {
+	
+	@Description(value = "파일 다운로드")
+	@GetMapping(value = "/download")
+	public ResponseEntity<byte[]> download(@RequestParam String oid) throws Exception {
+		ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
+		InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = is.read(buffer)) != -1) {
+			byteArrayOutputStream.write(buffer, 0, length);
+		}
+
+		byte[] bytes = byteArrayOutputStream.toByteArray();
+		String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		headers.setContentLength(bytes.length);
+		headers.setContentDispositionFormData("attachment", name);
+
+		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+	}
+
+	@Description(value = "첨부 파일 리스트 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/list")
+	public JSONObject list(HttpServletRequest param) throws Exception {
+		String oid = (String) param.getParameter("oid");
+		String roleType = (String) param.getParameter("roleType");
+		JSONObject list = CommonContentHelper.manager.list(oid, roleType);
+		return list;
+	}
+	
+	@Description(value = "첨부 파일 업로드")
+	@ResponseBody
+	@PostMapping(value = "/upload")
+	public JSONObject upload(HttpServletRequest request) throws Exception {
+		return CommonContentHelper.manager.upload(request);
+	}
+	
+	@Description(value = "첨부 파일 삭제(화면에서의 제거)")
+	@ResponseBody
+	@PostMapping(value = "/delete")
+	public JSONObject delete(HttpServletRequest param) throws Exception {
+		JSONObject result = new JSONObject();
+		result.put("status", 0);
+		result.put("result", "ok");
+		return result;
+	}
 	
 	/** 첨부파일 insert / update
 	 * @param request

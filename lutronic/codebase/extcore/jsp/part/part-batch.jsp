@@ -37,8 +37,11 @@
 				</td>
 			</tr>
 			<tr>
-				<th>첨부파일</th>
+				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
+						<jsp:param value="" name="oid" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>

@@ -2,16 +2,13 @@ package com.e3ps.common.content.service;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Vector;
-
-import org.apache.poi.xssf.usermodel.XSSFCell;
 
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
@@ -22,7 +19,6 @@ import com.e3ps.common.jdf.config.ConfigImpl;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.beans.EpmUtil;
-import com.ptc.ddl.wtutil.ContentHolderHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import wt.content.ApplicationData;
@@ -34,17 +30,26 @@ import wt.content.ContentServerHelper;
 import wt.content.FormatContentHolder;
 import wt.content.StreamData;
 import wt.content.Streamed;
-import wt.content.URLData;
 import wt.doc.WTDocument;
-import wt.enterprise.RevisionControlled;
 import wt.epm.EPMDocument;
 import wt.fc.LobLocator;
 import wt.fc.ObjectReference;
-import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.fv.FileFolder;
+import wt.fv.FvHelper;
+import wt.fv.FvMount;
+import wt.fv.FvTransaction;
+import wt.fv.StandardFvService;
+import wt.fv.StoreStreamListener;
+import wt.fv.StoredItem;
+import wt.fv.Vault;
+import wt.fv.uploadtocache.BackupedFile;
 import wt.fv.uploadtocache.CacheDescriptor;
 import wt.fv.uploadtocache.CachedContentDescriptor;
+import wt.objectstorage.ContentFileWriter;
+import wt.objectstorage.ContentManagerFactory;
+import wt.objectstorage.ContentStorageManager;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.pom.Transaction;
@@ -820,6 +825,80 @@ public class StandardCommonContentService extends StandardManager implements Com
 		
 		
 		return app;
+	}
+
+	@Override
+	public CachedContentDescriptor doUpload(CacheDescriptor localCacheDescriptor, File file) throws Exception {
+		CachedContentDescriptor ccd = null;
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			long folderId = localCacheDescriptor.getFolderId();
+			long fileName = localCacheDescriptor.getFileNames()[0];
+			long vaultId = localCacheDescriptor.getVaultId();
+			long streamId = localCacheDescriptor.getStreamIds()[0];
+
+			InputStream[] streams = new InputStream[1];
+			streams[0] = new FileInputStream(file);
+			long[] fileSize = new long[1];
+			fileSize[0] = file.length();
+
+			Vault vault = CommonContentHelper.manager.getLocalVault(vaultId);
+			saveVault(vault, folderId, fileName, streams[0], fileSize);
+			ccd = new CachedContentDescriptor(streamId, folderId, fileSize[0], 0, file.getPath());
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+		return ccd;
+	}
+	
+	private void saveVault(Vault vault, long folderId, long fileName, InputStream inputStream, long[] fileSize)
+			throws Exception {
+		FileFolder folder = null;
+		StoreStreamListener listener = new StoreStreamListener();
+		FvTransaction trs = new FvTransaction();
+		try {
+			trs.start();
+			trs.addTransactionListener(listener);
+			listener.prepareToGetFolder(vault);
+
+			folder = StandardFvService.getActiveFolder(vault);
+
+			listener.informGotFolderOk();
+			FvMount mount = StandardFvService.getLocalMount(folder);
+
+			String path = mount.getPath();
+			String fn = StoredItem.buildFileName(fileName);
+			String mountType = FvHelper.service.getMountType(mount);
+			BackupedFile backupFile = new BackupedFile(mountType, path, fn);
+
+			listener.prepareToUpload(folder, backupFile, path, fn);
+
+			ContentStorageManager manager = ContentManagerFactory.getContentManager(mountType);
+			ContentFileWriter cfWriter = manager.getContentFileWriter(backupFile.getFirstContentFile());
+
+			cfWriter.storeStream(inputStream, backupFile, fileSize[0], false);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
 	}
 	
 }

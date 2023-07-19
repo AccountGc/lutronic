@@ -1,7 +1,7 @@
 package com.e3ps.common.content.service;
 
+import java.io.File;
 import java.util.List;
-import java.util.Map;
 
 import com.e3ps.common.beans.BatchDownData;
 
@@ -9,9 +9,15 @@ import wt.content.ApplicationData;
 import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
+import wt.fv.uploadtocache.CacheDescriptor;
 import wt.fv.uploadtocache.CachedContentDescriptor;
 
 public interface CommonContentService {
+	
+	/**
+	 * 첨부 파일 파일볼트 업로드
+	 */
+	public abstract CachedContentDescriptor doUpload(CacheDescriptor localCacheDescriptor, File file) throws Exception;
 
 	ContentHolder attachPrimary(ContentHolder holder, String loc) throws Exception;
 
