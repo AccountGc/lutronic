@@ -3,6 +3,10 @@
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+boolean popup = false;
+if(request.getParameter("popup")!=null){
+	popup = true;
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -215,8 +219,15 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" id="searchBtn">
+					<input type="button" value="초기화" title="초기화" id="btnReset">
+					<%
+					if(popup){
+					%>	
+						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+					<%
+					}
+					%>
 					<a href="javascript:onExcelDown();">
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					</a>	
@@ -237,15 +248,6 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "",
-					headerText : "체크",
-					dataType : "string",
-					width : 60,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
 					dataField : "number",
 					headerText : "품목번호",
 					dataType : "string",
@@ -342,6 +344,7 @@
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
+					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -349,9 +352,11 @@
 					enableFilter : true,
 					showInlineFilter : false,
 					useContextMenu : true,
+					enableRowCheckShiftKey : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					rowCheckToRadio : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -373,7 +378,7 @@
 				 				/* params = toField(params, field); */
 				 				/* params.latest = latest; */
 				 				AUIGrid.showAjaxLoader(myGridID);
-				 				parent.openLayer();
+// 				 				parent.openLayer();
 				 				call(url, params, function(data) {
 									AUIGrid.removeAjaxLoader(myGridID);
 									if (data.result) {
@@ -384,7 +389,7 @@
 									} else {
 										alert(data.msg);
 									}
-									parent.closeLayer();
+// 									parent.closeLayer();
 								});
 			}
 
@@ -431,6 +436,12 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function addBtn(){
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				debugger;
+			}
+			
 		</script>
 	</form>
 </body>
