@@ -74,6 +74,7 @@ public class PartData {
 	private EPMDocument epm;
 	private String name;
 	private String state;
+	private String oid;
 
 	private String dwgOid;
 	private String model;
@@ -98,6 +99,7 @@ public class PartData {
     public PartData(final WTPart part) throws Exception {
 //    	super(part);
 //    	setPart(part);
+    	setOid(part.getPersistInfo().getObjectIdentifier().toString());
     	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
     	setNumber(part.getNumber());
     	setUnit(part.getDefaultUnit().toString());
