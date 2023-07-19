@@ -36,7 +36,7 @@
 			<th class="req lb">EO 구분</th>
 			<td>&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="eoType"  id="eoType" value="DEV" >
+						<input type="radio" name="eoType"  id="eoType" value="DEV" checked="checked">
 						<div class="state p-success">
 							<label> <b>개발</b>
 							</label>
@@ -61,8 +61,10 @@
 		<tr>
 			<th class="req lb">완제품 품목</th>
 			<td colspan="3">
-				<button>추가</button>
-				<button>삭제</button>
+				<jsp:include page="/extcore/jsp/change/include_ecrCompletePart.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
 		</tr>
 		<tr>
@@ -185,6 +187,8 @@
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
 			// DOM이 로드된 후 실행할 코드 작성
+			createAUIGrid2(columnsPart);
+			AUIGrid.resize(partGridID);
 			/* createAUIGrid7(columns7);
 			createAUIGrid11(columns11);
 			createAUIGrid8(columns8);
@@ -195,9 +199,10 @@
 		});
 
 		window.addEventListener("resize", function() {
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
+			AUIGrid.resize(partGridID);
+// 			AUIGrid.resize(myGridID7);
+// 			AUIGrid.resize(myGridID11);
+// 			AUIGrid.resize(myGridID8);
 		});
 	</script>
 </body>

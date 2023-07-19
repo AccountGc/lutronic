@@ -232,7 +232,7 @@ input[type="button"].red {
 	letter-spacing: 1px;
 	line-height: 20px;
 	padding: 0px 10px 25px 10px;
-	border: 1px solid #00c192;
+	border: 1px solid #ff5555;
 	background: #ff5555;
 }
 
@@ -247,7 +247,7 @@ input[type="button"].blue {
 	letter-spacing: 1px;
 	line-height: 20px;
 	padding: 0px 10px 25px 10px;
-	border: 1px solid #00c192;
+	border: 1px solid #3f3ff1;
 	background: #3f3ff1;
 }
 
@@ -262,8 +262,23 @@ input[type="button"].orange {
 	letter-spacing: 1px;
 	line-height: 20px;
 	padding: 0px 10px 25px 10px;
-	border: 1px solid #00c192;
+	border: 1px solid #ff7f00;
 	background: #ff7f00;
+}
+
+input[type="button"].gray {
+	display: inline-block;
+	border-radius: 5px;
+	text-align: center;
+	cursor: pointer;
+	height: 24px;
+	color: white;
+	font-weight: bold;
+	letter-spacing: 1px;
+	line-height: 20px;
+	padding: 0px 10px 25px 10px;
+	border: 1px solid darkgray;
+	background: darkgray;
 }
 
 /** 로딩 레이어 CSS **/

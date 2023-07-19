@@ -671,4 +671,12 @@ public class ChangeECOController extends BaseController {
 		model.setViewName("include:/change/include_ECOView_ECA");
 		return model;
 	}
+	
+	@Description(value = "관련 CR/ECPR 검색 페이지")
+	@GetMapping(value = "/ecrPopup")
+	public ModelAndView ecrPopup() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/change/select_ecrPopup.jsp");
+		return model;
+	}
 }

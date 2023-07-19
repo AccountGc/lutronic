@@ -14,10 +14,10 @@ if (isCreate || isUpdate) {
 <%
 }
 %>
-<div id="grid_wrap9" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
-	let myGridID9;
-	const columns9 = [ {
+	let partGridID;
+	const columnsPart = [ {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
@@ -42,21 +42,6 @@ if (isCreate || isUpdate) {
 		headerText : "품목명",
 		dataType : "string",
 		width : 180,
-		<%
-			if(isView) {
-		%>
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/project/info?oid=" + oid);
-				popup(url);
-			}
-		},
-		<%
-			}
-		%>
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
@@ -72,7 +57,7 @@ if (isCreate || isUpdate) {
 		visible : false
 	} ]
 
-	function createAUIGrid9(columnLayout) {
+	function createAUIGrid2(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
@@ -87,9 +72,9 @@ if (isCreate || isUpdate) {
 			<%}%>
 			rowCheckToRadio : true
 		}
-		myGridID9 = AUIGrid.create("#grid_wrap9", columnLayout, props);
+		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 		<%if (isView || isUpdate) {%>
-<%-- 		AUIGrid.setGridData(myGridID9, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+<%-- 		AUIGrid.setGridData(partGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
 		<%}%>
 	}
 
@@ -97,22 +82,32 @@ if (isCreate || isUpdate) {
 		const url = getCallUrl("/part/list?popup=true");
 		popup(url, 1500, 700);
 	}
-
-	function append(data, callBack) {
-		for (let i = 0; i < data.length; i++) {
-			const item = data[i].item;
-			const isUnique = AUIGrid.isUniqueValue(myGridID9, "oid", item.oid);
-			if (isUnique) {
-				// 멀티 아닐경우 그리드 데이터 클리어
-				AUIGrid.clearGridData(myGridID9);
-				AUIGrid.addRow(myGridID9, item, "first");
+	
+	function append(items){
+		var arr = [];
+		var count=0;
+		var data = AUIGrid.getGridData(partGridID);
+		for (var i=0; i<items.length; i++){
+			var a=0;
+			if(data.length==0){
+				arr[i] = items[i];
+			}else{
+				for(var j=0; j<data.length; j++){
+					if(data[j].oid == items[i].oid){
+						a++;
+					}
+				}
+			}
+			if(a==0){
+				arr[count] = items[i];
+				count++;
 			}
 		}
-		callBack(true);
+		AUIGrid.addRow(partGridID, arr);
 	}
 
 	function deleteRow9() {
-		const checked = AUIGrid.getCheckedRowItems(myGridID9);
+		const checked = AUIGrid.getCheckedRowItems(partGridID);
 		if (checked.length === 0) {
 			alert("삭제할 행을 선택하세요.");
 			return false;
@@ -120,7 +115,8 @@ if (isCreate || isUpdate) {
 
 		for (let i = checked.length - 1; i >= 0; i--) {
 			const rowIndex = checked[i].rowIndex;
-			AUIGrid.removeRow(myGridID9, rowIndex);
+			AUIGrid.removeRow(partGridID, rowIndex);
 		}
 	}
+	
 </script>

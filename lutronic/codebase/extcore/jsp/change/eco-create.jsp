@@ -38,19 +38,13 @@
 			<td class="indent5" colspan="7"><input type="text" name="name" id="name" class="width-200"></td>
 		</tr>
 		<tr>
-			<th class="lb"  rowspan="2">관련 CR/ECPR</th>
+			<th class="lb">관련 CR/ECPR</th>
 			<td colspan="7">
-				<button>추가</button>
-				<button>삭제</button>
+				<jsp:include page="/extcore/jsp/change/include_ecoEcr.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
-		</tr>
-		<tr>
-			<th><input type="checkbox"/></th>
-			<th>CR/ECRP번호</th>
-			<th>CR/ECPR제목</th>
-			<th>상태</th>
-			<th>등록자</th>
-			<th>등록일</th>
 		</tr>
 		<tr>
 			<th class="lb">변경사유</th>
@@ -61,18 +55,13 @@
 			<td class="indent5" colspan="7"><textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea></td>
 		</tr>
 		<tr>
-			<th class="req lb"  rowspan="2">설계변경 부품</th>
+			<th class="req lb">설계변경 부품</th>
 			<td colspan="7">
-				<button>추가</button>
-				<button>삭제</button>
+				<jsp:include page="/extcore/jsp/change/include_ecoPart.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
-		</tr>
-		<tr>
-			<th><input type="checkbox"/></th>
-			<th>품목번호</th>
-			<th colspan="2">품목명</th>
-			<th>Rev.</th>
-			<th>BOM</th>
 		</tr>
 		<tr>
 			<th class="lb">인허가변경</th>
@@ -143,13 +132,13 @@
 			</td>
 		</tr>
 		<tr>
-				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
-						<jsp:param value="" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
+			<th class="lb">첨부파일</th>
+			<td class="indent5" colspan="3">
+				<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
+					<jsp:param value="" name="oid" />
+				</jsp:include>
+			</td>
+		</tr>
 	</table>
 	<table class="button-table">
 		<tr>
@@ -280,19 +269,16 @@
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
 			// DOM이 로드된 후 실행할 코드 작성
-			createAUIGrid7(columns7);
-			createAUIGrid11(columns11);
-			createAUIGrid8(columns8);
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
+			createAUIGrid1(columnsEcr);
+			createAUIGrid2(columnsPart);
+			AUIGrid.resize(partGridID);
+			AUIGrid.resize(ecrGridID);
 			document.getElementById("name").focus();
 		});
 
 		window.addEventListener("resize", function() {
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
+			AUIGrid.resize(partGridID);
+			AUIGrid.resize(ecrGridID);
 		});
 	</script>
 </body>

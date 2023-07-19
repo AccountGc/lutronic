@@ -225,6 +225,7 @@ if(request.getParameter("popup")!=null){
 					if(popup){
 					%>	
 						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+						<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 					<%
 					}
 					%>
@@ -337,6 +338,9 @@ if(request.getParameter("popup")!=null){
 						showIcon : true,
 						inline : true
 					},
+				}, {
+					dataField : "oid",
+					visible : false
 				} ]
 			}
 
@@ -438,8 +442,13 @@ if(request.getParameter("popup")!=null){
 			});
 			
 			function addBtn(){
-				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				debugger;
+				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if (items.length == 0) {
+					alert("추가할 부품을 선택하세요.");
+					return false;
+				}
+				opener.append(items);
+				self.close();
 			}
 			
 		</script>

@@ -72,8 +72,10 @@
 		<tr>
 			<th class="lb">관련 CR/ECPR</th>
 			<td class="indent5" colspan="3">
-				<button type="button" name="addNumberCode" id="addNumberCode" class="btnCustom">추가</button>
-				<button type="button" name="delNumberCode" id="delNumberCode" class="btnCustom">삭제</button>
+				<jsp:include page="/extcore/jsp/change/include_ecoEcr.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
 		</tr>
 		<tr>
@@ -194,9 +196,11 @@
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
 			// DOM이 로드된 후 실행할 코드 작성
+			createAUIGrid1(columnsEcr);
 			createAUIGrid7(columns7);
 			createAUIGrid11(columns11);
 			createAUIGrid8(columns8);
+			AUIGrid.resize(ecrGridID);
 			AUIGrid.resize(myGridID7);
 			AUIGrid.resize(myGridID11);
 			AUIGrid.resize(myGridID8);
@@ -204,6 +208,7 @@
 		});
 
 		window.addEventListener("resize", function() {
+			AUIGrid.resize(ecrGridID);
 			AUIGrid.resize(myGridID7);
 			AUIGrid.resize(myGridID11);
 			AUIGrid.resize(myGridID8);
