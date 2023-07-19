@@ -112,8 +112,11 @@
 				</td>
 			</tr>
 			<tr>
-				<th>주 첨부파일 <span style="color:red;">*</span></th>
+				<th class="req lb">주 첨부파일</th>
 				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
+						<jsp:param value="" name="oid" />
+					</jsp:include>
 				</td>
 			</tr>
 			<tr>

@@ -3,7 +3,7 @@
 String oid = request.getParameter("oid");
 %>
 <div class="AXUpload5" id="secondary_layer"></div>
-<div class="AXUpload5QueueBox_list" id="uploadQueueBox" style=""></div>
+<div class="AXUpload5QueueBox_list" id="uploadQueueBox2" style=""></div>
 <script type="text/javascript">
 	const secondary = new AXUpload5();
 	function load() {
@@ -14,8 +14,8 @@ String oid = request.getParameter("oid");
 			buttonTxt : "파일 선택",
 			uploadMaxFileSize : (1024 * 1024 * 1024),
 			uploadUrl : getCallUrl("/content/upload"),
-			dropBoxID : "uploadQueueBox",
-			queueBoxID : "uploadQueueBox",
+			dropBoxID : "uploadQueueBox2",
+			queueBoxID : "uploadQueueBox2",
 			uploadPars : {
 				roleType : "secondary"
 			},
