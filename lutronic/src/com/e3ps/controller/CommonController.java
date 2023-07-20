@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,31 +20,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import wt.doc.WTDocument;
-import wt.epm.EPMDocument;
-import wt.part.WTPart;
-import wt.pdmlink.PDMLinkProduct;
-import wt.vc.views.View;
-import wt.vc.views.ViewHelper;
-
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.CodeHelper;
-import com.e3ps.common.code.service.StandardCodeService;
-import com.e3ps.common.excelDown.service.ExcelDownHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.rohs.service.RohsHelper;
 import com.infoengine.util.Base64;
+
+import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
+import wt.part.WTPart;
+import wt.pdmlink.PDMLinkProduct;
+import wt.vc.views.View;
+import wt.vc.views.ViewHelper;
 
 @Controller
 @RequestMapping("/common")
@@ -120,26 +117,39 @@ public class CommonController {
 		List<String> list = CodeHelper.service.autoSearchNameRtnName(codeType, name);
 		return list;
 	}
-	//
-	/**
-	 * 팝업 코드 리스트
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/popup_numberCodeList")
-	public ModelAndView popup_numberCodeList(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "팝업 코드 리스트")
+	@RequestMapping(value = "/popup_numberCodes")
+	public ModelAndView popup_numberCodes(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		String codeType = request.getParameter("codeType");
-		String disable= StringUtil.checkReplaceStr(request.getParameter("disable"),"false"); //false 사용,true 미사용
-		//boolean disabled = disable.equals("true")?false:true;
-		NumberCodeType cType = NumberCodeType.toNumberCodeType(codeType);
-		model.setViewName("popup:/common/popup_numberCodeList");
-		model.addObject("codeType", codeType);
-		model.addObject("title", cType.getDisplay());
-		model.addObject("disable", disable);
+//		String codeType = request.getParameter("codeType");
+//		String disable= StringUtil.checkReplaceStr(request.getParameter("disable"),"false"); //false 사용,true 미사용
+//		//boolean disabled = disable.equals("true")?false:true;
+//		NumberCodeType cType = NumberCodeType.toNumberCodeType(codeType);
+		model.setViewName("/extcore/jsp/common/popup_numberCodes.jsp");
+//		model.addObject("codeType", codeType);
+//		model.addObject("title", cType.getDisplay());
+//		model.addObject("disable", disable);
 		return model;
 	}
+//	/**
+//	 * 팝업 코드 리스트
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/popup_numberCodeList")
+//	public ModelAndView popup_numberCodeList(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		String codeType = request.getParameter("codeType");
+//		String disable= StringUtil.checkReplaceStr(request.getParameter("disable"),"false"); //false 사용,true 미사용
+//		//boolean disabled = disable.equals("true")?false:true;
+//		NumberCodeType cType = NumberCodeType.toNumberCodeType(codeType);
+//		model.setViewName("popup:/common/popup_numberCodeList");
+//		model.addObject("codeType", codeType);
+//		model.addObject("title", cType.getDisplay());
+//		model.addObject("disable", disable);
+//		return model;
+//	}
 	/**
 	 * popup NumberCode 리스트
 	 * @param request
