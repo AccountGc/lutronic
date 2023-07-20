@@ -20,7 +20,17 @@
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
-
+		
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 채번 정보
+					</div>
+				</td>
+			</tr>
+		</table>
+		
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -89,6 +99,15 @@
 		</table>
 		
 		<br>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 품목 속성
+					</div>
+				</td>
+			</tr>
+		</table>
 		
 		<table class="search-table">
 			<colgroup>
@@ -149,6 +168,16 @@
 			</tr>
 		</table>
 		<br>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 주 도면&nbsp;&nbsp;
+						<span class="red">(메카 : CAD파일), (광학/제어/파워/인증 : PDF파일)</span>
+					</div>
+				</td>
+			</tr>
+		</table>
 		
 		<table class="search-table">
 			<colgroup>
@@ -164,6 +193,17 @@
 			</tr>
 		</table>
 		<br>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 첨부파일&nbsp;&nbsp;
+						<span class="red">(제어/파워 : 배포파일)</span>
+					</div>
+				</td>
+			</tr>
+		</table>
+		
 		<table class="search-table">
 			<colgroup>
 				<col width="180">
@@ -181,6 +221,16 @@
 			</tr>
 		</table>
 		<br>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 관련 문서
+					</div>
+				</td>
+			</tr>
+		</table>
+	
 		<table class="search-table">
 			<colgroup>
 				<col width="180">
@@ -199,6 +249,16 @@
 			</tr>
 		</table>
 		<br>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
+					</div>
+				</td>
+			</tr>
+		</table>
+		
 		<table class="search-table">
 			<colgroup>
 				<col width="180">

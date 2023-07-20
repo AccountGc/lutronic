@@ -667,3 +667,7 @@ img.edit {
 	font-weight: bold;
 	cursor: pointer;
 }
+
+span.red {
+    color: red;
+}
