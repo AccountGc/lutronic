@@ -16,6 +16,10 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+boolean popup = false;
+if(request.getParameter("popup")!=null){
+	popup = true;
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -93,6 +97,14 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
+					<%
+					if(popup){
+					%>	
+						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+						<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
+					<%
+					}
+					%>
 					<a href="javascript:onExcelDown();">
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					</a>	
@@ -217,7 +229,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 // 				const field = [ "_psize" ];
 // 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
+// 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -228,7 +240,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					} else {
 						alert(data.msg);
 					}
-					parent.closeLayer();
+// 					parent.closeLayer();
 				});
 			}
 

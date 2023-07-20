@@ -123,6 +123,10 @@
 		<tr>
 			<th class="lb">관련 품목</th>
 			<td colspan="3">
+				<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
 		</tr>
 	</table>
@@ -145,6 +149,10 @@
 		<tr>
 			<th class="lb">관련 RoHS</th>
 			<td colspan="3">
+				<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
 		</tr>
 	</table>
@@ -245,19 +253,25 @@
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
 			// DOM이 로드된 후 실행할 코드 작성
-			createAUIGrid7(columns7);
-			createAUIGrid11(columns11);
-			createAUIGrid8(columns8);
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
+			createAUIGrid2(columnsPart);
+			AUIGrid.resize(partGridID);
+			createAUIGrid6(columnsRohs);
+			AUIGrid.resize(rohsGridID);
+// 			createAUIGrid7(columns7);
+// 			createAUIGrid11(columns11);
+// 			createAUIGrid8(columns8);
+// 			AUIGrid.resize(myGridID7);
+// 			AUIGrid.resize(myGridID11);
+// 			AUIGrid.resize(myGridID8);
 			document.getElementById("name").focus();
 		});
 
 		window.addEventListener("resize", function() {
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
+			AUIGrid.resize(partGridID);
+			AUIGrid.resize(rohsGridID);
+// 			AUIGrid.resize(myGridID7);
+// 			AUIGrid.resize(myGridID11);
+// 			AUIGrid.resize(myGridID8);
 		});
 		
 	</script>

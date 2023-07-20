@@ -140,7 +140,10 @@
 			<tr>
 				<th>관련 품목</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="description" id="description" class="width-300">
+					<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
@@ -156,7 +159,10 @@
 			<tr>
 				<th>관련 문서</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="description" id="description" class="width-300">
+					<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
@@ -289,6 +295,18 @@
 				selectbox("manufacture");
 				selectbox("moldtype");
 				selectbox("deptcode");
+				
+				createAUIGrid2(columnsPart);
+				AUIGrid.resize(partGridID);
+				createAUIGrid4(columnsDoc);
+				AUIGrid.resize(docGridID);
+				document.getElementById("name").focus();
+			});
+			
+			window.addEventListener("resize", function() {
+				AUIGrid.resize(myGridID);
+				AUIGrid.resize(partGridID);
+				AUIGrid.resize(docGridID);
 			});
 
 			function exportExcel() {
@@ -307,10 +325,6 @@
 			document.addEventListener("click", function(event) {
 				hideContextMenu();
 			})
-
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
-			});
 		</script>
 	</form>
 </body>

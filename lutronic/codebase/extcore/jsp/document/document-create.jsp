@@ -169,6 +169,10 @@
 		<tr>
 			<th class="lb">관련품목</th>
 			<td colspan="3">
+				<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
 		</tr>
 	</table>
@@ -191,6 +195,10 @@
 		<tr>
 			<th class="lb">관련문서</th>
 			<td colspan="3">
+				<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
 		</tr>
 	</table>
@@ -306,6 +314,10 @@
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
 			// DOM이 로드된 후 실행할 코드 작성
+			createAUIGrid2(columnsPart);
+			AUIGrid.resize(partGridID);
+			createAUIGrid4(columnsDoc);
+			AUIGrid.resize(docGridID);
 // 			createAUIGrid7(columns7);
 // 			createAUIGrid11(columns11);
 // 			createAUIGrid8(columns8);
@@ -316,6 +328,8 @@
 		});
 
 		window.addEventListener("resize", function() {
+			AUIGrid.resize(partGridID);
+			AUIGrid.resize(docGridID);
 // 			AUIGrid.resize(myGridID7);
 // 			AUIGrid.resize(myGridID11);
 // 			AUIGrid.resize(myGridID8);

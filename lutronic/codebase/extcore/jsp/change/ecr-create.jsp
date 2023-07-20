@@ -72,7 +72,7 @@
 		<tr>
 			<th class="lb">관련 CR/ECPR</th>
 			<td class="indent5" colspan="3">
-				<jsp:include page="/extcore/jsp/change/include_ecoEcr.jsp">
+				<jsp:include page="/extcore/jsp/change/include_selectEcr.jsp">
 					<jsp:param value="" name="oid" />
 					<jsp:param value="create" name="mode" />
 				</jsp:include>

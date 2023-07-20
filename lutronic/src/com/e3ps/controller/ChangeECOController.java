@@ -673,8 +673,8 @@ public class ChangeECOController extends BaseController {
 	}
 	
 	@Description(value = "관련 CR/ECPR 검색 페이지")
-	@GetMapping(value = "/ecrPopup")
-	public ModelAndView ecrPopup() {
+	@GetMapping(value = "/select_ecrPopup")
+	public ModelAndView select_ecrPopup() {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/change/select_ecrPopup.jsp");
 		return model;

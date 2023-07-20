@@ -75,17 +75,16 @@
 		<table class="search-table">
 			<colgroup>
 				<col width="180">
-				<col width="80">
-				<col width="180">
 				<col width="*">
-				<col width="120">
 			</colgroup>
 			<tr>
 				<th>관련 품목</th>
-				<th><input type="checkbox" name="moduleType" id="moduleType"></th>
-				<th>품목번호</th>
-				<th>품목명</th>
-				<th>Rev.</th>
+				<td class="indent5">
+					<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
 		</table>
 		
 		<table class="button-table">
@@ -99,128 +98,9 @@
 		</table>
 
 		<script type="text/javascript">
-			let myGridID;
-			function _layout() {
-				return [ {
-					dataField : "name",
-					headerText : "품목번호",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "number",
-					headerText : "결과",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "description",
-					headerText : "품목구분(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "대분류(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "state",
-					headerText : "중분류(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "version",
-					headerText : "SEQ",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "etc",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				} ]
-			}
-
-			function createAUIGrid(columnLayout) {
-				const props = {
-					headerHeight : 30,
-					showRowNumColumn : true,
-					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
-					useContextMenu : true,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-				};
-				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-					hideContextMenu();
-					vScrollChangeHandler(event);
-				});
-				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-					hideContextMenu();
-				});
-			}
-
-			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
-			}
-
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
-				const contenxtHeader = genColumnHtml(columns);
-				$("#h_item_ul").append(contenxtHeader);
-				$("#headerMenu").menu({
-					select : headerMenuSelectHandler
-				});
-				createAUIGrid(columns);
-				AUIGrid.resize(myGridID);
+				createAUIGrid2(columnsPart);
+				AUIGrid.resize(partGridID);
 				selectbox("state");
 				selectbox("type");
 				selectbox("depart");
@@ -244,7 +124,7 @@
 			})
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
+				AUIGrid.resize(partGridID);
 			});
 		</script>
 	</form>

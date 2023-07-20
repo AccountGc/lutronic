@@ -40,7 +40,7 @@
 		<tr>
 			<th class="lb">관련 CR/ECPR</th>
 			<td colspan="7">
-				<jsp:include page="/extcore/jsp/change/include_ecoEcr.jsp">
+				<jsp:include page="/extcore/jsp/change/include_selectEcr.jsp">
 					<jsp:param value="" name="oid" />
 					<jsp:param value="create" name="mode" />
 				</jsp:include>
@@ -57,7 +57,7 @@
 		<tr>
 			<th class="req lb">설계변경 부품</th>
 			<td colspan="7">
-				<jsp:include page="/extcore/jsp/change/include_ecoPart.jsp">
+				<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
 					<jsp:param value="" name="oid" />
 					<jsp:param value="create" name="mode" />
 				</jsp:include>

@@ -191,6 +191,10 @@
 			<tr>
 				<th>관련 문서</th>
 				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
@@ -205,6 +209,10 @@
 			<tr>
 				<th>관련 RoHS</th>
 				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
@@ -302,10 +310,19 @@
 			document.addEventListener("click", function(event) {
 				hideContextMenu();
 			})
-
-// 			window.addEventListener("resize", function() {
-// 				AUIGrid.resize(myGridID);
-// 			});
+			
+			document.addEventListener("DOMContentLoaded", function() {
+				createAUIGrid4(columnsDoc);
+				AUIGrid.resize(docGridID);
+				createAUIGrid6(columnsRohs);
+				AUIGrid.resize(rohsGridID);
+				document.getElementById("partName1").focus();
+			});
+			
+			window.addEventListener("resize", function() {
+				AUIGrid.resize(docGridID);
+				AUIGrid.resize(rohsGridID);
+			});
 		</script>
 	</form>
 </body>

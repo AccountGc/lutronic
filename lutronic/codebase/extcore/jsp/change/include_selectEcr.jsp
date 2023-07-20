@@ -84,7 +84,7 @@ if (isCreate || isUpdate) {
 	}
 
 	function addECR() {
-		const url = getCallUrl("/changeECO/ecrPopup");
+		const url = getCallUrl("/changeECO/select_ecrPopup");
 		popup(url, 1500, 700);
 	}
 	
