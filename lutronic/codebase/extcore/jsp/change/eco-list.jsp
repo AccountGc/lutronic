@@ -217,7 +217,7 @@
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 100,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true

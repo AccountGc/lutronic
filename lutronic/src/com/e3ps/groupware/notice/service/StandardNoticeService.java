@@ -27,12 +27,48 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.groupware.notice.Notice;
 import com.e3ps.groupware.notice.beans.NoticeData;
 
+@SuppressWarnings("serial")
 public class StandardNoticeService extends StandardManager implements NoticeService {
 
 	public static StandardNoticeService newStandardNoticeService() throws Exception {
 		final StandardNoticeService instance = new StandardNoticeService();
 		instance.initialize();
 		return instance;
+	}
+	
+	@Override
+	public void createNotice(NoticeData data) throws Exception {
+		Transaction trs = new Transaction();
+		try{
+			trs.start();
+			Notice b = Notice.newNotice();
+			b.setTitle(data.getTitle());
+			b.setContents(data.getContents());
+			b.setIsPopup(data.isPopup());
+			b.setOwner(SessionHelper.manager.getPrincipalReference());
+			PersistenceHelper.manager.save(b);
+			
+//			if(loc != null){
+//				for(int i=0; i< loc.length; i++){
+//					String cacheId = loc[i].split("/")[0];
+//			        String fileName = loc[i].split("/")[1];
+//
+//			        CachedContentDescriptor cacheDs = new CachedContentDescriptor(cacheId);
+//
+//			        CommonContentHelper.service.attach(b, cacheDs, fileName, null, ContentRoleType.SECONDARY);
+//				}
+//			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
 	}
 	
 	@Override
@@ -210,4 +246,5 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 		
 			
 	}
+
 }

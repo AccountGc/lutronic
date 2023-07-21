@@ -15,19 +15,28 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form>
+	<form id="form">
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
-
+		
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 공지사항 등록
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="174">
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>제목 <span style="color:red;">*</span></th>
+				<th>제목 <span class="red">*</span></th>
 				<td class="indent5">
 					<input type="text" name="title" id="title" class="width-800">
 				</td>
@@ -35,7 +44,20 @@
 			<tr>
 				<th>팝업 유무</th>
 				<td class="indent5">
-					<input type="text" name="isPopup" id="isPopup" class="width-800">
+					<div class="pretty p-switch">
+						<input type="radio" name="isPopup" value="true" id="T" checked="checked">
+						<div class="state p-success">
+							<label for="T"> <b>팝업 O</b>
+							</label>
+						</div>
+					</div> &nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="isPopup" value="false" id="F">
+						<div class="state p-success">
+							<label for="F"> <b>팝업 X</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -57,8 +79,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" id="create">
-					<input type="button" value="목록" title="목록" id="reset">
+					<input type="button" value="등록" title="등록" id="createBtn" class="blue">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 				</td>
 			</tr>
 		</table>
@@ -148,7 +170,6 @@
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -158,24 +179,29 @@
 					hideContextMenu();
 				});
 			}
-
-			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
-			}
+			
+			$("#createBtn").click(function() {
+				if ($("#title").val() == "") {
+					alert("제목을 입력하세요.");
+					return;
+				}
+				
+				if (!confirm("등록 하시겠습니까?")) {
+					return;
+				}
+				
+				var params = _data($("#form"));
+				var url = getCallUrl("/groupware/createNotice");
+				call(url, params, function(data) {
+					if(data.result){
+						alert(data.msg);
+						opener.loadGridData();
+						self.close();
+					}else{
+						alert(data.msg);
+					}
+				});
+			})
 
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("manufacture");
@@ -203,6 +229,7 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
 		</script>
 	</form>
 </body>

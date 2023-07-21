@@ -59,8 +59,8 @@
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" id="search">
-					<input type="button" value="등록" title="등록" id="create">
 					<input type="button" value="초기화" title="초기화" id="reset">
+					<input type="button" value="등록" title="등록" id="create" class="blue">
 				</td>
 			</tr>
 		</table>
@@ -160,7 +160,7 @@
 				params = toField(params, field);
 				params.latest = latest; */
 				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
+// 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -171,7 +171,7 @@
 					} else {
 						alert(data.msg);
 					}
-					parent.closeLayer();
+// 					parent.closeLayer();
 				});
 			}
 
@@ -221,7 +221,9 @@
 				})
 				
 				$("#create").click(function() {
-					document.location =  getURLString("groupware", "createNotice", "do");
+// 					document.location =  getURLString("groupware", "createNotice", "do");
+					const url = getCallUrl("/groupware/createNotice");
+					popup(url, 1500, 700);
 				})
 				
 				$(document).keypress(function(event) {

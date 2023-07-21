@@ -1,33 +1,15 @@
 package com.e3ps.change.beans;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Vector;
 
-import com.e3ps.change.EChangeActivity;
-import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.RequestOrderLink;
-import com.e3ps.change.key.ChangeKey;
-import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ChangeUtil;
-import com.e3ps.change.service.ECAHelper;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.CodeHelper;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.People;
-import com.e3ps.org.beans.UserHelper;
-import com.e3ps.org.service.PeopleHelper;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.fc.PersistenceHelper;
-import wt.org.WTUser;
 
 @Getter
 @Setter
@@ -46,6 +28,13 @@ public class ECRData{
     private String model;
     private String createDate;
     private String state;
+    private String eoCommentA;
+    private String eoCommentB;
+    private String eoCommentC;
+    
+    public ECRData() {
+    	
+    }
 
 	public ECRData(EChangeRequest ecr) {
 //    	super(ecr);
@@ -64,6 +53,9 @@ public class ECRData{
     	setModel(ecr.getModel());
     	setCreateDate(DateUtil.getDateString(ecr.getCreateTimestamp(),"a"));
     	setState(ecr.getLifeCycleState().toString());
+    	setEoCommentA(ecr.getEoCommentA());
+    	setEoCommentB(ecr.getEoCommentB());
+    	setEoCommentC(ecr.getEoCommentC());
     }
     
 	/**

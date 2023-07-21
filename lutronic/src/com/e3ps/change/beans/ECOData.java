@@ -1,47 +1,16 @@
 package com.e3ps.change.beans;
 
-import java.util.ArrayList;
-//import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 //import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.EOCompletePartLink;
-import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ChangeUtil;
-//import com.e3ps.change.service.ECNSearchHelper;
-import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.change.service.ECRSearchHelper;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.iba.AttributeKey.ECOKey;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-//import com.e3ps.common.web.WebUtil;
-import com.e3ps.erp.service.ERPSearchHelper;
-//import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
-//import com.e3ps.org.People;
-//import com.e3ps.org.beans.UserHelper;
-import com.e3ps.part.service.PartHelper;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.org.WTUser;
-//import wt.doc.WTDocument;
-//import wt.fc.PersistenceHelper;
-//import wt.lifecycle.LifeCycleManaged;
-//import wt.org.WTUser;
-import wt.part.WTPart;
-import wt.part.WTPartMaster;
-import wt.session.SessionHelper;
-import wt.vc.baseline.ManagedBaseline;
 
 @Getter
 @Setter
@@ -62,6 +31,15 @@ public class ECOData{
 	private String creator;
 	private String createDate;
 	private String eoApproveDate;
+	private String eoCommentA;
+	private String eoCommentB;
+	private String eoCommentC;
+	private String eoCommentD;
+	private String eoCommentE;
+	
+	public ECOData() {
+		
+	}
 	
 	public ECOData(EChangeOrder eco){
 //		super(eco);
@@ -90,6 +68,11 @@ public class ECOData{
 		setCreator(eco.getCreatorFullName());
 		setCreateDate(DateUtil.getDateString(eco.getCreateTimestamp(),"a"));
 		setEoApproveDate(eco.getEoApproveDate());
+		setEoCommentA(eco.getEoCommentA());
+		setEoCommentB(eco.getEoCommentB());
+		setEoCommentC(eco.getEoCommentC());
+		setEoCommentD(eco.getEoCommentD());
+		setEoCommentE(eco.getEoCommentE());
 	}
 	
 	/**

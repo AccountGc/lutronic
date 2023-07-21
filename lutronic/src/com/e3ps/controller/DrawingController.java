@@ -29,6 +29,8 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
+import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.service.NoticeHelper;
 
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
@@ -97,17 +99,34 @@ public class DrawingController extends BaseController{
 //		return result;
 //	}
 	
+	@Description(value = "도면 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DrawingHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	/** 도면 등록
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("/createDrawingAction")
-	public ResultData createDrawingAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> map = DrawingHelper.service.requestDrawingMapping(request, response);
-		return DrawingHelper.service.createDrawing(map);
-	}
+//	@ResponseBody
+//	@RequestMapping("/createDrawingAction")
+//	public ResultData createDrawingAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> map = DrawingHelper.service.requestDrawingMapping(request, response);
+//		return DrawingHelper.service.createDrawing(map);
+//	}
 	
 	/** CAD 구분 리스트 리턴
 	 * @param request

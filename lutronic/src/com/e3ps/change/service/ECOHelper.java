@@ -125,13 +125,15 @@ public class ECOHelper {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}
-				qs.appendOpenParen();
-				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL, ECOKey.ECO_DEV, false), new int[] {ecoIdx});
+//				qs.appendOpenParen();
+//				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL, ECOKey.ECO_DEV, false), new int[] {ecoIdx});
+//				
+//				qs.appendOr();
+//				
+//				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL, ECOKey.ECO_PRODUCT, false), new int[] {ecoIdx});
+//				qs.appendCloseParen();
 				
-				qs.appendOr();
-				
-				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL, ECOKey.ECO_PRODUCT, false), new int[] {ecoIdx});
-				qs.appendCloseParen();
+				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL, ECOKey.ECO_CHANGE, false), new int[] {ecoIdx});
 			}
 			
 			//인허가 구분

@@ -84,11 +84,6 @@ public class GroupwareController extends BaseController {
 		return model;
 	}
 	
-	/** 공지사항 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
 	@Description(value = "공지사항 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/listNotice")
@@ -132,42 +127,59 @@ public class GroupwareController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "공지사항 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/createNotice")
+	public Map<String,Object> createNotice(@RequestBody NoticeData data) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			NoticeHelper.service.createNotice(data);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	/** 공지사항 등록
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/createNoticeAction")
-	public ModelAndView createNoticeAction(HttpServletRequest request, HttpServletResponse response){
-		String msg = "";
-		try {
-		
-			FileRequest req = new FileRequest(request);
-			
-			String title = req.getParameter("title");
-			String contents = req.getParameter("contents");
-			String isPopup = StringUtil.checkNull(req.getParameter("isPopup"));
-			//System.out.println("isPopup =" + isPopup);
-			
-			Hashtable<String,String> hash = new Hashtable<String,String>();
-			hash.put("title" , title);
-			if(contents == null) contents = "";
-			hash.put("contents" , contents);
-			hash.put("isPopup", isPopup);
-			String[] loc = req.getParameterValues("SECONDARY");//req.getFileLocations("secondary");
-			msg = NoticeHelper.service.create(hash , loc);
-			
-		}catch (Exception e ){
-			e.printStackTrace();
-			msg = e.getLocalizedMessage();
-			msg = msg.replaceAll("\r\n", "\\\\n");
-			msg = msg.replaceAll("\r", "\\\\n");
-			msg = msg.replaceAll("\n", "\\\\n");
-			msg = Message.get("작업 중 다음과 같은 오류가 발생했습니다. ") + msg;
-		}
-		
-		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
-	}
+//	@RequestMapping("/createNoticeAction")
+//	public ModelAndView createNoticeAction(HttpServletRequest request, HttpServletResponse response){
+//		String msg = "";
+//		try {
+//		
+//			FileRequest req = new FileRequest(request);
+//			
+//			String title = req.getParameter("title");
+//			String contents = req.getParameter("contents");
+//			String isPopup = StringUtil.checkNull(req.getParameter("isPopup"));
+//			//System.out.println("isPopup =" + isPopup);
+//			
+//			Hashtable<String,String> hash = new Hashtable<String,String>();
+//			hash.put("title" , title);
+//			if(contents == null) contents = "";
+//			hash.put("contents" , contents);
+//			hash.put("isPopup", isPopup);
+//			String[] loc = req.getParameterValues("SECONDARY");//req.getFileLocations("secondary");
+//			msg = NoticeHelper.service.create(hash , loc);
+//			
+//		}catch (Exception e ){
+//			e.printStackTrace();
+//			msg = e.getLocalizedMessage();
+//			msg = msg.replaceAll("\r\n", "\\\\n");
+//			msg = msg.replaceAll("\r", "\\\\n");
+//			msg = msg.replaceAll("\n", "\\\\n");
+//			msg = Message.get("작업 중 다음과 같은 오류가 발생했습니다. ") + msg;
+//		}
+//		
+//		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
+//	}
 	
 	/** 공지사항 상세보기
 	 * @param request

@@ -29,12 +29,16 @@ public class NoticeData {
 	public String creator;
 	public String createDate;
 	public String contents;
-	public String vContents;
+//	public String vContents;
 	public String checked;
 	public int count;
 	public boolean isPopup;
 	
 	public boolean auth = false;
+	
+	public NoticeData() {
+		
+	}
 	
 	public NoticeData(Notice notice) throws Exception {
 		setOid(notice.getPersistInfo().getObjectIdentifier().toString());

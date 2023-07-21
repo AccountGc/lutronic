@@ -29,251 +29,220 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> RoHS 정보
-				</div>
-			</td>
-		</tr>
-	</table>
-	<table class="create-table">
-		<colgroup>
-			<col width="150">
-			<col width="*">
-			<col width="150">
-			<col width="*">
-		</colgroup>
-		<tr>
-			<th class="lb">물질번호</th>
-			<td class="indent5">
-				<input type="text" name="rohsNumber" id="rohsNumber" class="width-200">
-				&nbsp;<button id="NumberCheck" class="btnSearch" type="button">
-							번호 중복
-							</button>
-			</td>
-			<th class="req lb">결재방식</th>
-			<td>&nbsp;
+	<form id="form">
+<!-- 		<input type="hidden" name="docType"			id="docType"				value="$$ROHS"/> -->
+		<input type="hidden" name="docType"			id="docType"				value="$$Document"/>
+		<input type="hidden" name="location"		id="location"				value="/Default/ROHS" />
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> RoHS 정보
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="create-table">
+			<colgroup>
+				<col width="150">
+				<col width="*">
+				<col width="150">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th class="lb">물질번호</th>
+				<td class="indent5">
+					<input type="text" name="rohsNumber" id="rohsNumber" class="width-200">
+					&nbsp;<button id="NumberCheck" class="btnSearch" type="button">
+								번호 중복
+								</button>
+				</td>
+				<th class="req lb">결재방식</th>
+				<td>
 					<div class="pretty p-switch">
-						<input type="radio"name="lifecycle" id="lifecycle" value="LC_Default" >
+						<input type="radio"name="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">
 							<label> <b>기본결재</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="lifecycle" id="lifecycle" value="LC_Default_NonWF">
+						<input type="radio" name="lifecycle" value="LC_Default_NonWF">
 						<div class="state p-success">
 							<label> <b>일괄결재</b>
 							</label>
 						</div>
 					</div>
 				</td>
-		</tr>
-		<tr>
-			<th class="req lb">물질명</th>
-			<td class="indent5">
-				<input type="text" name="rohsName" id="rohsName" readonly="readonly" class="width-200">
-				&nbsp;
-				<button id="NameCheck" class="btnSearch" type="button">
-					물질명 중복
-				</button>
-			</td>
-			<th class="req lb">협력업체</th>
-			<td class="indent5">
-				<select name="manufacture" id="manufacture" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<th class="lb">설명</th>
-			<td colspan="3" class="indent5"><textarea name="description" id="description" rows="6"></textarea></td>
-		</tr>
-		<tr>
-			<th class="lb">첨부파일</th>
-			<td class="indent5" colspan="3">
-				<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
-					<jsp:param value="" name="oid" />
-				</jsp:include>
-			</td>
-		</tr>
-	</table>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 관련 품목
-				</div>
-			</td>
-		</tr>
-	</table>
-	<table class="create-table">
-		<colgroup>
-			<col width="150">
-			<col width="600">
-			<col width="150">
-			<col width="600">
-		</colgroup>
-		<tr>
-			<th class="lb">관련 품목</th>
-			<td colspan="3">
-				<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
-					<jsp:param value="" name="oid" />
-					<jsp:param value="create" name="mode" />
-				</jsp:include>
-			</td>
-		</tr>
-	</table>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
-				</div>
-			</td>
-		</tr>
-	</table>
-	<table class="create-table">
-		<colgroup>
-			<col width="150">
-			<col width="600">
-			<col width="150">
-			<col width="600">
-		</colgroup>
-		<tr>
-			<th class="lb">관련 RoHS</th>
-			<td colspan="3">
-				<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-					<jsp:param value="" name="oid" />
-					<jsp:param value="create" name="mode" />
-				</jsp:include>
-			</td>
-		</tr>
-	</table>
-	<table class="button-table">
-		<tr>
-			<td class="center">
-				<input type="button"  value="등록"  title="등록"  class="btnCRUD"  id="createBtn" name="createBtn">
-				<input type="button" value="초기화" title="초기화"  class="btnCRUD"  id="resetBtn" name="resetBtn">
-				<input type="button" value="목록" title="목록"  class="btnCRUD"  id="listBtn" name="listBtn">
-			</td>
-		</tr>
-	</table>
-	<script type="text/javascript">
-		function folder() {
-			const location = decodeURIComponent("/Default/문서");
-			const url = getCallUrl("/folder?location=" + location + "&container=product&method=setNumber&multi=false");
-			popup(url, 500, 600);
-		}
-
-		function setNumber(item) {
-			const url = getCallUrl("/doc/setNumber");
-			const params = new Object();
-			params.loc = item.location;
-			call(url, params, function(data) {
-				document.getElementById("loc").innerHTML = item.location;
-				document.getElementById("location").value = item.location;
-				document.getElementById("number").value = data.number;
-			})
-		}
-		
-		document.addEventListener("DOMContentLoaded", function() {
-			selectbox("model");
-			selectbox("preseration");
-			selectbox("documentType");
-			selectbox("deptcode");
-		});
-
-		function create(isSelf) {
-			const name = document.getElementById("name");
-			const number = document.getElementById("number").value;
-			const description = document.getElementById("description").value;
-			const location = document.getElementById("location").value;
-			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
-			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
-			const primarys = toArray("primarys");
-
-			if (location === "/Default/문서") {
-				alert("문서 저장위치를 선택하세요.");
-				folder();
-				return false;
+			</tr>
+			<tr>
+				<th class="req lb">물질명</th>
+				<td class="indent5">
+					<input type="text" name="rohsName" id="rohsName" class="width-200">
+					&nbsp;
+					<button id="NameCheck" class="btnSearch" type="button">
+						물질명 중복
+					</button>
+				</td>
+				<th class="req lb">협력업체</th>
+				<td class="indent5">
+					<select name="manufacture" id="manufacture" class="width-200">
+							<option value="">선택</option>
+							<option value="MF003">MF003</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">설명</th>
+				<td colspan="3" class="indent5"><textarea name="description" id="description" rows="6"></textarea></td>
+			</tr>
+			<tr>
+				<th class="lb">첨부파일</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
+						<jsp:param value="" name="oid" />
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 관련 품목
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="create-table">
+			<colgroup>
+				<col width="150">
+				<col width="600">
+				<col width="150">
+				<col width="600">
+			</colgroup>
+			<tr>
+				<th class="lb">관련 품목</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="create-table">
+			<colgroup>
+				<col width="150">
+				<col width="600">
+				<col width="150">
+				<col width="600">
+			</colgroup>
+			<tr>
+				<th class="lb">관련 RoHS</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
+		<table class="button-table">
+			<tr>
+				<td class="center">
+					<input type="button"  value="등록"  title="등록"  class="blue"  id="createBtn">
+					<input type="button" value="초기화" title="초기화" id="resetBtn">
+					<input type="button" value="목록" title="목록" id="listBtn">
+				</td>
+			</tr>
+		</table>
+		<script type="text/javascript">
+			function folder() {
+				const location = decodeURIComponent("/Default/문서");
+				const url = getCallUrl("/folder?location=" + location + "&container=product&method=setNumber&multi=false");
+				popup(url, 500, 600);
 			}
-
-			if (isNull(name.value)) {
-				alert("문서제목을 입력하세요.");
-				name.focus();
-				return false;
+	
+			function setNumber(item) {
+				const url = getCallUrl("/doc/setNumber");
+				const params = new Object();
+				params.loc = item.location;
+				call(url, params, function(data) {
+					document.getElementById("loc").innerHTML = item.location;
+					document.getElementById("location").value = item.location;
+					document.getElementById("number").value = data.number;
+				})
 			}
-
-			// 		if(addRows11.length === 0) {
-			// 			alert("도번을 추가하세요.");
-			// 			insert11();
-			// 			return false;
-			// 		}
-
-			if (primarys.length === 0) {
-				alert("첨부파일을 선택하세요.");
-				return false;
-			}
-
-			if (!confirm("등록 하시겠습니까?")) {
-				return false;
-			}
-
-			const params = new Object();
-			const url = getCallUrl("/doc/create");
-			params.name = name.value;
-			params.number = number;
-			params.self = JSON.parse(isSelf);
-			params.description = description;
-			params.location = location;
-			params.addRows7 = addRows7;
-			params.addRows11 = addRows11;
-			params.primarys = primarys;
-			toRegister(params, addRows8);
-			openLayer();
-			call(url, params, function(data) {
-				alert(data.msg);
-				if (data.result) {
-					opener.loadGridData();
-					self.close();
-				} else {
-					closeLayer();
-				}
+			
+			document.addEventListener("DOMContentLoaded", function() {
+				selectbox("model");
+				selectbox("preseration");
+				selectbox("documentType");
+				selectbox("deptcode");
 			});
-		};
-
-		// jquery 삭제를 해가는 쪽으로 한다..
-		document.addEventListener("DOMContentLoaded", function() {
-			// DOM이 로드된 후 실행할 코드 작성
-			createAUIGrid2(columnsPart);
-			AUIGrid.resize(partGridID);
-			createAUIGrid6(columnsRohs);
-			AUIGrid.resize(rohsGridID);
-// 			createAUIGrid7(columns7);
-// 			createAUIGrid11(columns11);
-// 			createAUIGrid8(columns8);
-// 			AUIGrid.resize(myGridID7);
-// 			AUIGrid.resize(myGridID11);
-// 			AUIGrid.resize(myGridID8);
-			document.getElementById("name").focus();
-		});
-
-		window.addEventListener("resize", function() {
-			AUIGrid.resize(partGridID);
-			AUIGrid.resize(rohsGridID);
-// 			AUIGrid.resize(myGridID7);
-// 			AUIGrid.resize(myGridID11);
-// 			AUIGrid.resize(myGridID8);
-		});
-		
-	</script>
+	
+			$("#createBtn").click(function() {
+				if($("#rohsName").val() == "") {
+					alert("물질명을 입력하세요.");
+					return;
+				}
+				
+				if($("#manufacture").val() == "") {
+					alert("협력업체를 선택하세요.");
+					return;
+				}
+				
+				if (!confirm("등록 하시겠습니까?")) {
+					return;
+				}
+				
+				var params = _data($("#form"));
+				var url = getCallUrl("/rohs/create");
+				call(url, params, function(data) {
+					if(data.result){
+						alert(data.msg);
+						location.href = getCallUrl("/rohs/list");
+					}else{
+						alert(data.msg);
+					}
+				});
+			});
+	
+			// jquery 삭제를 해가는 쪽으로 한다..
+			document.addEventListener("DOMContentLoaded", function() {
+				// DOM이 로드된 후 실행할 코드 작성
+				createAUIGrid2(columnsPart);
+				AUIGrid.resize(partGridID);
+				createAUIGrid6(columnsRohs);
+				AUIGrid.resize(rohsGridID);
+	// 			createAUIGrid7(columns7);
+	// 			createAUIGrid11(columns11);
+	// 			createAUIGrid8(columns8);
+	// 			AUIGrid.resize(myGridID7);
+	// 			AUIGrid.resize(myGridID11);
+	// 			AUIGrid.resize(myGridID8);
+				document.getElementById("name").focus();
+			});
+	
+			window.addEventListener("resize", function() {
+				AUIGrid.resize(partGridID);
+				AUIGrid.resize(rohsGridID);
+	// 			AUIGrid.resize(myGridID7);
+	// 			AUIGrid.resize(myGridID11);
+	// 			AUIGrid.resize(myGridID8);
+			});
+			
+		</script>
+	</form>	
 </body>
 </html>

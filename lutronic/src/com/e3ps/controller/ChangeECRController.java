@@ -26,6 +26,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.beans.ECRData;
+import com.e3ps.change.service.ECOHelper;
 //import com.e3ps.change.beans.EOData;
 import com.e3ps.change.service.ECRHelper;
 import com.e3ps.change.service.ECRSearchHelper;
@@ -49,18 +50,35 @@ public class ChangeECRController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "ECR 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String,Object> create(@RequestBody ECRData data) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ECRHelper.service.create(data);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	/**	ECR 등록 Action
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("/createECRtAction")
-	public ResultData createECRtAction(HttpServletRequest request, HttpServletResponse response) {
-		
-		//return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/change/listECR.do", message);
-		return ECRHelper.service.createECRAction(request);
-	}
+//	@ResponseBody
+//	@RequestMapping("/createECRtAction")
+//	public ResultData createECRtAction(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		//return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/change/listECR.do", message);
+//		return ECRHelper.service.createECRAction(request);
+//	}
 	
 	@Description(value = "ECR 검색 페이지")
 	@GetMapping(value = "/list")

@@ -2272,4 +2272,101 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	            return false;
 	        }
 	}
+
+	@Override
+	public void create(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		ROHSMaterial rohs = null;
+		try {
+			trs.start();
+			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+	    	String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
+			DocumentType docType = DocumentType.toDocumentType("$$Document");
+			String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
+			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+			String description = StringUtil.checkNull((String) params.get("description"));
+			// 문서 기본 정보 설정
+			rohs = ROHSMaterial.newROHSMaterial();
+			rohs.setName(rohsName);
+			if("".equals(rohsNumber)){
+				rohs.setNumber(getRohsNumberSeq(manufacture));
+			}else{
+				rohs.setNumber(rohsNumber);
+			}
+			
+	        rohs.setDocType(docType);
+			rohs.setDescription(description);
+	        // 문서 분류쳬게 설정
+			String location = StringUtil.checkNull((String) params.get("location"));
+	        Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+	        FolderHelper.assignLocation((FolderEntry)rohs, folder);
+	        
+	        // 문서 Container 설정
+	        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+	        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+	        rohs.setContainer(e3psProduct);
+	        
+	        // 문서 lifeCycle 설정
+	        LifeCycleHelper.setLifeCycle(rohs, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
+            
+	        rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
+	        
+//	        String[] roleTypes = request.getParameterValues("roleType");
+//	        if(roleTypes != null) {
+//		        for(String roleType: roleTypes) {
+//			        String file = StringUtil.checkNull(request.getParameter(roleType));
+//			        String fileType = StringUtil.checkNull(request.getParameter(roleType + "_fileType"));
+//			        String date = StringUtil.checkNull(request.getParameter(roleType + "_date"));
+//			        if(date.length()>0 && !isDateValid(date)){
+//			        	throw new Exception("발행일자 날짜 형식이 맞지 않습니다.");
+//			        }
+//			        String fileName = file.split("/")[1];
+//			        
+//			        HashMap<String, Object> map = new HashMap<String, Object>();
+//			        map.put("roleType", roleType);
+//			        map.put("file", file);
+//			        map.put("fileName", fileName);
+//			        map.put("fileType", fileType);
+//			        map.put("publicationDate", date);
+//			        
+//			        createROHSContHolder(rohs, map);
+//		        }
+//	        }
+	        
+            //관련 부품            
+//	        String[] partOids = request.getParameterValues("partOid");
+//			createROHSToPartLink(rohs, partOids);
+			
+			//관련 물질
+//			String[] rohsOids = request.getParameterValues("rohsOid");
+//			createROHSToROHSLink(rohs, rohsOids);
+			
+	        
+            String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+            if("LC_Default_NonWF".equals(lifecycle)){
+            	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) rohs, "BATCHAPPROVAL");
+            	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+            }
+            
+            Map<String,Object> map = new HashMap<String,Object>();
+            
+            
+            map.put("approvalType", approvalType);
+            map.put("manufacture", manufacture);
+            CommonHelper.service.changeIBAValues(rohs, map);
+            
+            trs.commit();
+			trs = null;
+//            result.setResult(true);
+//            result.setOid(CommonUtil.getOIDString(rohs));
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
 }

@@ -44,9 +44,9 @@ function call(url, params, callBack, methodType) {
 				alert("에러코드 : " + status + ", 호출 URL : " + url + ", 존재하지 않는 호출 주소 !!");
 			}
 
-			if (opener !== undefined) {
-				closeLayer();
-			}
+//			if (opener !== undefined) {
+//				closeLayer();
+//			}
 		}
 	})
 }

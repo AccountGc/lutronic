@@ -12,3 +12,6 @@
 
 <!-- asixj -->
 <script type="text/javascript" src="/Windchill/extcore/component/axisj/AXJ.all.js"></script>
+
+<!-- 공통 js -->
+<script type="text/javascript" src="/Windchill/extcore/jsp/js/common.js"></script>

@@ -39,4 +39,5 @@ public interface ECRService {
 
 	List<EcrToEcrLink> getEcrToEcrLinks(EChangeRequest ecr, String string) throws Exception;
 	
+	public void create(ECRData data) throws Exception;
 }

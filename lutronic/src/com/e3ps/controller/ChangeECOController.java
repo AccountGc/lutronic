@@ -22,10 +22,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.beans.ECOData;
+import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ChangeWfHelper;
 import com.e3ps.change.service.ECOHelper;
 import com.e3ps.change.service.ECOSearchHelper;
+import com.e3ps.change.service.ECRHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.CodeHelper;
@@ -37,6 +39,8 @@ import com.e3ps.common.util.StringUtil;
 //import com.e3ps.doc.beans.DocumentData;
 //import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmUtil;
+import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.rohs.service.RohsHelper;
 
 import wt.part.WTPart;
@@ -55,16 +59,33 @@ public class ChangeECOController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "ECO 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String,Object> create(@RequestBody ECOData data) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ECOHelper.service.create(data);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	/**	ECO 등록 Action
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("/createECOAction")
-	public ResultData createECOAction(HttpServletRequest request, HttpServletResponse response) {
-		return ECOHelper.service.createECOAction(request);//ECRHelper.service.createECRAction(request);
-	}
+//	@ResponseBody
+//	@RequestMapping("/createECOAction")
+//	public ResultData createECOAction(HttpServletRequest request, HttpServletResponse response) {
+//		return ECOHelper.service.createECOAction(request);//ECRHelper.service.createECRAction(request);
+//	}
 	
 	@Description(value = "ECO 검색")
 	@GetMapping(value = "/list")
@@ -126,18 +147,43 @@ public class ChangeECOController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "EO 등록 페이지")
+	@GetMapping(value = "/createEO")
+	public ModelAndView createEO(HttpServletRequest request, HttpServletResponse response){
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/change/eo-create.jsp");
+		return model;
+	}
+	
 	/**	EO 등록 페이지
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/createEO")
-	public ModelAndView createEO(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu6");
-		model.addObject("module", "change");
-		model.setViewName("/extcore/jsp/change/eo-create.jsp");
-		return model;
+//	@RequestMapping("/createEO")
+//	public ModelAndView createEO(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu6");
+//		model.addObject("module", "change");
+//		model.setViewName("/extcore/jsp/change/eo-create.jsp");
+//		return model;
+//	}
+	
+	@Description(value = "EO 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/createEO")
+	public Map<String,Object> createEO(@RequestBody ECOData data) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ECOHelper.service.createEO(data);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/**	EO 등록 Action

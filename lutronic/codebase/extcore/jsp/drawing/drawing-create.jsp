@@ -15,11 +15,10 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
-		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
+	<form id="form">
+		<input type="hidden" name="lifecycle"	id="lifecycle" 	value="LC_PART" />
+		<input type="hidden" name="fid" 		id="fid"		value="" />
+		<input type="hidden" name="location" 	id="location"	value="/Default/PART_Drawing" />
 
 		<table class="search-table">
 			<colgroup>
@@ -29,7 +28,7 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>품목분류 <span style="color:red;">*</span></th>
+				<th>도면분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="3">
 					<span id="locationName">
                			/Default/PART_Drawing
@@ -99,14 +98,46 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" id="createBtn" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="resetBtn" onclick="loadGridData();">
-					<input type="button" value="목록" title="목록" id="listBtn" onclick="loadGridData();">
+					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
+					<input type="button" value="초기화" title="초기화" id="resetBtn">
+					<input type="button" value="목록" title="목록" id="listBtn">
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
+			$("#createBtn").click(function() {
+				if ($("#location").val() == "") {
+					alert("도면분류를 선택하세요.");
+					return;
+				}
+				if($("#number").val() == "") {
+					alert("도번을 입력하세요.')}");
+					return;
+				}
+				
+				if($("#name").val() == "") {
+					alert("도면명 입력하세요.')}");
+					return;
+				}
+				
+				if (!confirm("등록 하시겠습니까?")) {
+					return;
+				}
+				
+				var params = _data($("#form"));
+				var url = getCallUrl("/drawing/create");
+				call(url, params, function(data) {
+					if(data.result){
+						alert(data.msg);
+						opener.loadGridData();
+						self.close();
+					}else{
+						alert(data.msg);
+					}
+				});
+			})
+			
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);

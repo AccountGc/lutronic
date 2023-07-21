@@ -111,6 +111,7 @@ import com.e3ps.drawing.EpmLocation;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.e3ps.drawing.util.EpmPublishUtil;
+import com.e3ps.groupware.notice.Notice;
 import com.e3ps.org.People;
 import com.e3ps.part.beans.ExcelData;
 import com.e3ps.part.beans.PartData;
@@ -2222,5 +2223,144 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 				}
 			}
 		}
+	}
+
+	@Override
+	public void create(Map<String, Object> map) throws Exception {
+		Transaction trs = new Transaction();
+		try{
+			trs.start();
+			
+			String fid			 = StringUtil.checkNull((String) map.get("fid"));
+			String location		 = StringUtil.checkNull((String) map.get("location"));
+			String primary		 = StringUtil.checkNull((String) map.get("primary"));
+			String description 	 = StringUtil.checkNull((String) map.get("description"));
+			String lifecycle 	 = StringUtil.checkNull((String) map.get("lifecycle"));
+			String drwName		 = StringUtil.checkNull((String) map.get("name"));
+			String number 		 = StringUtil.checkNull((String) map.get("number"));
+			String partToDrwOid  = StringUtil.checkNull((String) map.get("partToDrwOid"));
+			
+//			if (primary.length() == 0) {
+//            	primary = "";
+//				throw new Exception(Message.get("파일이 존재 하지 않습니다."));
+//			}
+//            
+//			String applicationType = "MANUAL";
+//			
+//			String extName = "";
+//			
+//			String authoringType ="";
+//			if(primary.length() > 0) {
+//				extName = primary.split("/")[1];
+//				authoringType = EpmUtil.getAuthoringType(extName);
+//			}
+//			
+//			String extentionName = getPrefix(extName);
+			EPMDocument epm = EPMDocument.newEPMDocument();
+			
+//			boolean partToDrwOidTemp = false;
+//			if(!partToDrwOid.equals("")){
+//				partToDrwOidTemp = true;
+//			}
+			
+			epm.setNumber(number);
+			epm.setName(drwName);
+			epm.setDescription(description); 
+			
+			// 수정필요
+			EPMDocumentMaster epmMaster = (EPMDocumentMaster)epm.getMaster();
+			EPMContextHelper.setApplication(EPMApplicationType.toEPMApplicationType("EPM"));
+			epmMaster.setOwnerApplication(EPMContextHelper.getApplication());
+			EPMAuthoringAppType appType = EPMAuthoringAppType.toEPMAuthoringAppType("CATIAV5");
+			epmMaster.setAuthoringApplication(appType);
+//			EPMDocumentMaster epmMaster = (EPMDocumentMaster)epm.getMaster();
+//			EPMContextHelper.setApplication(EPMApplicationType.toEPMApplicationType(applicationType));
+//			epmMaster.setOwnerApplication(EPMContextHelper.getApplication());
+//			EPMAuthoringAppType appType = EPMAuthoringAppType.toEPMAuthoringAppType(authoringType);
+//			epmMaster.setAuthoringApplication(appType);
+			
+			//Folder  && LifeCycle  Setting
+			ReferenceFactory rf = new ReferenceFactory();
+			Folder folder = null;
+			if(StringUtil.checkString(fid)) {
+				folder = (Folder)rf.getReference(fid).getObject();
+			}else {
+				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+			}
+			FolderHelper.assignLocation((FolderEntry)epm, folder);
+			
+			PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+			epm.setContainer(e3psProduct);
+			LifeCycleHelper.setLifeCycle(epm, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
+			
+			String newFileName = "";
+			String orgFileName = "";
+			String fileName = "";
+			String fileDir = "";
+			File file = null;
+			File rfile = null;
+			if (primary.length() > 0) {
+				String cacheId = primary.split("/")[0];
+				CachedContentDescriptor cacheDs = new CachedContentDescriptor(cacheId);
+
+				file = new File(cacheDs.getContentIdentity());
+				orgFileName = file.getAbsolutePath();
+				fileDir = file.getParent();
+				
+				fileName = primary.split("/")[1];
+				
+				if(isFileNameCheck(fileName)){
+	            	throw new Exception(Message.get("중복된 파일입니다."));
+	            }
+				
+				int lastIndex = fileName.lastIndexOf(".");
+				String fileEnd = fileName.substring(lastIndex).toLowerCase();
+				newFileName = fileDir + File.separator +fileName;
+				rfile = new File(newFileName);
+				file.renameTo(rfile);
+				file = rfile;
+
+				epm.setCADName(fileName);
+				EPMDocumentType docType = getEPMDocumentType(fileEnd);
+				epm.setDocType(docType);
+			}
+			
+			epm = (EPMDocument)PersistenceHelper.manager.save(epm);
+			
+			// 첨부 파일
+			String[] secondary = (String[])map.get("secondary");
+			if(secondary != null) {
+				CommonContentHelper.service.attach(epm, null, secondary);
+			}else {
+				CommonContentHelper.service.attach(epm, primary, secondary);
+			}
+			
+			//EpmUtil.createRelation(epm3D, epm);
+			String[] partOids = (String[])map.get("partOids");
+			if(partOids != null) {
+				for(String partOid : partOids) {
+					WTPart part = (WTPart)CommonUtil.getObject(partOid);
+					EPMDescribeLink describeLink = EPMDescribeLink.newEPMDescribeLink(part, epm);
+					PersistenceServerHelper.manager.insert(describeLink);
+				}
+			}
+			
+			EpmPublishUtil.publish(epm);  //��ǥ�۾�
+			File orgfile = new File(orgFileName);
+			file.renameTo(orgfile);
+			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
+		
 	}
 }

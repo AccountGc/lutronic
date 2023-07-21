@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.beans.ECRData;
+import com.e3ps.change.service.ECRHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
@@ -142,6 +144,22 @@ public class RohsController extends BaseController {
 //		model.addObject("list", list);
 //		return model;
 //	}
+	@Description(value = "RoHS 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			RohsHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 	
 	/**	rohs 등록
 	 * @param request

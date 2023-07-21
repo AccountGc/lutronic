@@ -62,6 +62,7 @@ import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.State;
 import wt.org.WTUser;
+import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.pdmlink.PDMLinkProduct;
@@ -452,6 +453,100 @@ public class StandardECRService extends StandardManager implements ECRService {
 			list.add(link);
     	}
 		return list;
+	}
+
+	@Override
+	public void create(ECRData data) throws Exception {
+		Transaction trs = new Transaction();
+	    try{
+	    	
+	    	trs.start();
+			
+//			String name = StringUtil.checkNull(req.getParameter("name"));
+//			String number = StringUtil.checkNull(req.getParameter("number"));
+//			String createDate = StringUtil.checkNull(req.getParameter("createDate"));
+//			String approveDate = StringUtil.checkNull(req.getParameter("approveDate"));
+//			
+//			String createDepart = StringUtil.checkNull(req.getParameter("createDepart"));
+//			String writer = StringUtil.checkNull(req.getParameter("writer"));
+//			
+//			String[] models = req.getParameterValues("model");
+//			
+//			String proposer = StringUtil.checkNull(req.getParameter("proposer"));
+//			String[] changeSections = req.getParameterValues("changeSection");
+//			String eoCommentA = StringUtil.checkNull(req.getParameter("eoCommentA"));
+//			String eoCommentB = StringUtil.checkNull(req.getParameter("eoCommentB"));
+//			String eoCommentC = StringUtil.checkNull(req.getParameter("eoCommentC"));
+//			String[] secondarys = req.getParameterValues("SECONDARY");
+//			
+//			
+//			String model = ChangeUtil.getArrayList(models);
+//			String changeSection = ChangeUtil.getArrayList(changeSections);
+			
+//			String number = "ECR-" +DateUtil.getCurrentDateString("year")+"-"+DateUtil.getCurrentDateString("month")+ "-";
+//			String seqNo = SequenceDao.manager.getSeqNo(number, "00000", "EChangeRequest", EChangeRequest.EO_NUMBER);
+			
+			//number = number + seqNo;
+			
+			
+			
+			
+			EChangeRequest ecr = null;
+			ecr = EChangeRequest.newEChangeRequest();
+			ecr.setEoName(data.getEoName());
+			ecr.setEoNumber(data.getEoNumber());
+			
+			ecr.setCreateDate(data.getCreateDate());
+			ecr.setWriter(data.getWriter());
+			ecr.setApproveDate(data.getApproveDate());
+			ecr.setCreateDepart(data.getCreateDepart());
+			ecr.setModel(data.getModel());
+			ecr.setProposer(data.getProposer());
+			ecr.setChangeSection(data.getChangeSection());
+			ecr.setEoCommentA(data.getEoCommentA());
+			ecr.setEoCommentB(data.getEoCommentB());
+			ecr.setEoCommentC(data.getEoCommentC());
+			ecr.setOwner(SessionHelper.manager.getPrincipalReference());
+			
+			// ECR 분류쳬게 설정
+			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
+			Folder folder = FolderTaskLogic.getFolder("/Default/설계변경/ECR", WCUtil.getWTContainerRef());
+	        
+			FolderHelper.assignLocation((FolderEntry)ecr, folder);
+	        
+	        // ECR Container 설정
+	        ecr.setContainer(product);
+	        
+	        // ECR lifeCycle 설정
+	        LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate("LC_Default", wtContainerRef);
+	        LifeCycleHelper.setLifeCycle(ecr, tmpLifeCycle); //Lifecycle
+						
+			ecr=(EChangeRequest) PersistenceHelper.manager.save(ecr);
+//			String[] ecrOids 	= (String[]) req.getParameterValues("ecrOid"); 
+//			updateECRToECRLink(ecr, ecrOids, false);
+			//첨부파일
+//			CommonContentHelper.service.attach(ecr, null, secondarys);
+			//주첩부 파일
+//			String ecrFile = req.getParameter("ECR");
+		    //System.out.println("ecrFile =" + ecrFile);
+			
+//			ApplicationData app = CommonContentHelper.service.attachADDRole((ContentHolder)ecr, "ECR", ecrFile, false);
+			//System.out.println("app =" + app);
+			
+	    	trs.commit();
+			trs = null;
+//			result.setResult(true);
+//			result.setOid(CommonUtil.getOIDString(ecr));
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
 	}
 	
 }

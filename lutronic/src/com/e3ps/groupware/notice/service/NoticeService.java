@@ -10,6 +10,8 @@ import wt.method.RemoteInterface;
 
 @RemoteInterface
 public interface NoticeService {
+	
+	public void createNotice(NoticeData data) throws Exception;
 
 	String create(Hashtable hash, String[] loc) throws Exception;
 

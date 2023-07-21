@@ -2570,6 +2570,185 @@ public class StandardECOService extends StandardManager implements ECOService {
 			   }
 	       }
 	}
-	
+
+	@Override
+	public void create(ECOData data) throws Exception {
+	    Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+		    	
+//	    	String name = StringUtil.checkNull((String) params.get("name"));
+//	    	String eoType = StringUtil.checkNull((String) params.get("eoType"));
+//	    	String[] ecrOids = params.get("ecrOid");
+	    	//String[] models = params.get("model");
+//	    	String[] partOids = params.get("partOid");
+//	    	String[] isSelectBoms =params.get("isSelectBom");
+	    	//String[] completeOids = params.get("completeOid");
+//	    	String licensing = StringUtil.checkNull((String) params.get("licensing"));
+//	    	String eoCommentA = StringUtil.checkNull((String) params.get("eoCommentA"));
+//			String eoCommentB = StringUtil.checkNull((String) params.get("eoCommentB"));
+//			String eoCommentC = StringUtil.checkNull((String) params.get("eoCommentC"));
+//			String eoCommentD = StringUtil.checkNull((String) params.get("eoCommentD"));
+				
+//			String riskType = StringUtil.checkNull((String) params.get("riskType"));
+//			String[] secondarys = params.get("SECONDARY");
+			
+			//21.12.30_shjeong 기존 YYMM 으로 사용 시  12월 마지막주에는 다음 년도로 표기되는 오류로 인해 수정.
+			Date currentDate = new Date ();
+			String number = "C" +new SimpleDateFormat( "yyMM" , Locale.KOREA ).format ( currentDate );
+			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
+			
+			number = number + seqNo;
+			
+	    	EChangeOrder eco = 	EChangeOrder.newEChangeOrder();
+	    	
+	    	
+	    	//설계 대상 부품으로 제품,완제품,설계 변경 부품 수집
+//	    	Map ecoMap=  getEODataCollection(partOids);
+	    	
+//	    	String model = (String)ecoMap.get("model");								//제품명
+//	    	List<WTPart> completeList = (List<WTPart>)ecoMap.get("completeList"); 	//완제품
+//	    	List<WTPart> changeList = (List<WTPart>)ecoMap.get("changeList");	  	//변경 대상
+	    	
+	    	eco.setEoName(data.getEoName());
+	    	eco.setEoNumber(number);
+	    	eco.setEoType(data.getEoType());
+//	    	eco.setModel(model);
+//	    	eco.setLicensingChange(data.get);
+	    	eco.setEoCommentA(data.getEoCommentA());
+	    	eco.setEoCommentB(data.getEoCommentB());
+	    	eco.setEoCommentC(data.getEoCommentC());
+	    	eco.setEoCommentD(data.getEoCommentD());
+	    	eco.setRiskType(data.getRiskType());
+	    	eco.setOwner(SessionHelper.manager.getPrincipalReference());
+	    	
+	    	String location="/Default/설계변경/ECO";
+	    	String lifecycle="LC_ECO";
+	    	
+	    	//분류체계,lifecycle 셋팅
+	    	CommonHelper.service.setManagedDefaultSetting(eco, location, lifecycle);
+	    	
+	    	eco =(EChangeOrder)PersistenceHelper.manager.save(eco);
+	    	
+	    	//활동 생성
+//	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);
+	    	
+	    	//관련 ECR
+//	    	createReauestOrderLink(eco, ecrOids);
+	    	
+	    	//완제품 생성
+//	    	createCompleteLink(eco, completeList);
+	    	
+	    	//설계 변경 부품
+//	    	createPartLink(eco, changeList, null);
+	    	
+	    	//첨부파일
+//			CommonContentHelper.service.attach(eco, null, secondarys);
+			
+	    	//설계변경 부품 내역파일
+//	    	String ecoFile = params.get("ECO");
+	    	
+//			ApplicationData app = CommonContentHelper.service.attachADDRole((ContentHolder)eco, "ECO", ecoFile, false);
+			
+	    	
+			
+	    	trs.commit();
+	    	trs = null;
+	    	
+//	    	result.setResult(true);
+//			result.setOid(CommonUtil.getOIDString(eco));
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
+
+	@Override
+	public void createEO(ECOData data) throws Exception {
+		Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+//	    	String name = StringUtil.checkNull(req.getParameter("name"));
+//	    	String eoType = StringUtil.checkNull(req.getParameter("eoType"));
+//	    	String[] models = req.getParameterValues("model");
+	    	//String[] partOids = req.getParameterValues("partOid");
+//	    	String[] completeOids = req.getParameterValues("completeOid");
+//	    	String eoCommentA = StringUtil.checkNull(req.getParameter("eoCommentA"));
+//			String eoCommentB = StringUtil.checkNull(req.getParameter("eoCommentB"));
+//			String eoCommentC = StringUtil.checkNull(req.getParameter("eoCommentC"));
+//			String[] secondarys = req.getParameterValues("SECONDARY");
+			
+			////System.out.println("partOids =" + partOids);
+			////System.out.println("completeOids =" + completeOids);
+//			String model = ChangeUtil.getArrayList(models);
+			//EO-1605-0001
+			//String number = "E" +DateUtil.getCurrentDateString("ym");
+			String eoTypeNumber = "E";
+			if(data.getEoType().equals("DEV")) {
+				eoTypeNumber = "D";
+			}
+			String number = eoTypeNumber +DateUtil.getCurrentDateString("ym");
+			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
+			
+			number = number + seqNo;
+			
+	    	EChangeOrder eco = 	EChangeOrder.newEChangeOrder();
+	    	
+	    	eco.setEoName(data.getEoName());
+	    	eco.setEoNumber(number);
+	    	eco.setEoType(data.getEoType());
+//	    	eco.setModel(model);
+	    	eco.setEoCommentA(data.getEoCommentA());
+	    	eco.setEoCommentB(data.getEoCommentB());
+	    	eco.setEoCommentC(data.getEoCommentC());
+	    	eco.setOwner(SessionHelper.manager.getPrincipalReference());
+	    	
+	    	String location="/Default/설계변경/EO";
+	    	String lifecycle="LC_ECO";
+	    	
+	    	//분류체계,lifecycle 셋팅
+	    	CommonHelper.service.setManagedDefaultSetting(eco, location, lifecycle);//eoDefaultSetting(eco, location, lifecycle);
+	    	
+	    	eco =(EChangeOrder)PersistenceHelper.manager.save(eco);
+	    	
+	    	//완제품 생성
+//	    	createCompleteLink(eco, completeOids);
+	    	
+	    	//첨부파일
+//			CommonContentHelper.service.attach(eco, null, secondarys);
+	    	
+	    	//활동 생성
+//	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);
+	    	
+	    	//eco 상태 설정
+	    	/*
+	    	if(isActivity){
+	    		LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco, State.toState("ACTIVITY"));
+	    	}else{
+	    		LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco, State.toState("APPROVE_REQUEST"));
+	    	}
+	    	*/
+	    	
+	    	
+	    	trs.commit();
+			trs = null;
+			
+//			result.setResult(true);
+//			result.setOid(CommonUtil.getOIDString(eco));
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
 	
 }

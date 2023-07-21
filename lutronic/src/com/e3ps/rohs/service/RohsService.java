@@ -11,6 +11,7 @@ import wt.method.RemoteInterface;
 import wt.part.WTPart;
 import wt.util.WTException;
 
+import com.e3ps.change.beans.ECRData;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.rohs.beans.RohsData;
 
@@ -59,4 +60,5 @@ public interface RohsService {
 
 	ResultData batchROHSDown(HttpServletRequest request, HttpServletResponse response);
 			
+	public void create(Map<String, Object> params) throws Exception;
 }

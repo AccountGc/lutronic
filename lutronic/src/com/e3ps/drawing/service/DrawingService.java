@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.drawing.beans.EpmData;
+import com.e3ps.groupware.notice.beans.NoticeData;
 
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentType;
@@ -75,4 +76,6 @@ public interface DrawingService {
 
 	void partTreeDrawingDown(HttpServletRequest request,
 			HttpServletResponse response) throws Exception;
+	
+	public void create(Map<String,Object> map) throws Exception;
 }
