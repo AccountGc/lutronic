@@ -1,26 +1,24 @@
 package com.e3ps.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
-
-import wt.org.WTUser;
-import wt.session.SessionHelper;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.common.util.FolderUtils;
+
+import net.sf.json.JSONArray;
 import wt.org.WTUser;
 import wt.session.SessionHelper;
 
-import org.springframework.stereotype.Controller;
-
 @Controller
-public class IndexController {
+public class IndexController extends BaseController{
 
 	@Description(value = "메인 페이지")
 	@GetMapping(value = "/index")
@@ -45,5 +43,22 @@ public class IndexController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/layout/footer.jsp");
 		return model;
+	}
+	
+	@Description(value = "폴더 트리 구조 가져오기")
+	@PostMapping(value = "/loadFolderTree")
+	@ResponseBody
+	public Map<String, Object> loadFolderTree(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			JSONArray list = FolderUtils.loadFolderTree(params);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

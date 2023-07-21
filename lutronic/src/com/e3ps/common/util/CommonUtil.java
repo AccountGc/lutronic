@@ -49,6 +49,7 @@ import wt.fc.WTReference;
 import wt.httpgw.URLFactory;
 import wt.iba.value.IBAHolder;
 import wt.inf.container.WTContainerRef;
+import wt.inf.library.WTLibrary;
 import wt.method.RemoteMethodServer;
 import wt.org.OrganizationServicesHelper;
 import wt.org.WTPrincipal;
@@ -70,6 +71,20 @@ public class CommonUtil  implements wt.method.RemoteAccess, java.io.Serializable
 
 	private static ReferenceFactory rf = null;
 	static final boolean SERVER = wt.method.RemoteMethodServer.ServerFlag;
+	/**
+	 * 라이브러리 컨테이너 가져오기
+	 */
+	public static WTContainerRef getWTLibraryContainer() throws Exception {
+		QuerySpec query = new QuerySpec(WTLibrary.class);
+		SearchCondition sc = new SearchCondition(WTLibrary.class, WTLibrary.NAME, "=", "LIBRARY");
+		query.appendWhere(sc, new int[] { 0 });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			WTLibrary wtLibrary = (WTLibrary) result.nextElement();
+			return WTContainerRef.newWTContainerRef(wtLibrary);
+		}
+		return null;
+	}
 	
 	/**
 	 * 제품 컨테이너 가져오기
