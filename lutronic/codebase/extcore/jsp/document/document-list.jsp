@@ -1,4 +1,5 @@
 <%@page import="wt.org.WTUser"%>
+<%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
@@ -116,7 +117,6 @@ if(request.getParameter("popup")!=null){
 				</td>
 			</tr>
 		</table>
-
 		<table>
 			<colgroup>
 				<col width="230">
@@ -124,14 +124,21 @@ if(request.getParameter("popup")!=null){
 				<col width="*">
 			</colgroup>
 			<tr>
-				<td valign="top"></td>
+				<td valign="top">
+					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
+						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
+						<jsp:param value="product" name="container" />
+						<jsp:param value="list" name="mode" />
+						<jsp:param value="670" name="height" />
+					</jsp:include>
+				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
 		</table>
-
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
@@ -276,7 +283,6 @@ if(request.getParameter("popup")!=null){
  				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
-						console.log(data);
 						document.getElementById("sessionid").value = data.sessionid;
 						document.getElementById("curPage").value = data.curPage;
 //							document.getElementById("lastNum").value = data.list.length;
