@@ -107,9 +107,7 @@
 			<tr>
 				<th class="lb">
 					설계변경 부품 내역파일
-					<button type="button" class="btnCustom" id="download">
-						양식다운
-					</button>
+					<input type="button"  value="양식다운"  title="양식다운"  id="download">
 				</th>
 				<td class="indent5" colspan="7">
 				</td>

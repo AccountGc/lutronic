@@ -78,14 +78,14 @@
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 			</tr>
 			<tr>
-				<th>제품명 <input name="modelCodeCheck" id="modelCodeCheck" type="checkbox"></th>
+				<th>제품명</th>
 				<td colspan="3">
 					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode"  onclick="addNumberCode();">
 					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  onclick="delNumberCode();">
 				</td>
 			</tr>
 			<tr>
-				<th>완제품 품목<input name="completePartCheck" id="completePartCheck" type="checkbox"></th>
+				<th>완제품 품목</th>
 				<td colspan="3">
 					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode"  onclick="addNumberCode();">
 					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  onclick="delNumberCode();">

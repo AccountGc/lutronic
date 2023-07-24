@@ -280,7 +280,7 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" id="createBtn" onclick="create('false');" />
+					<input type="button" value="등록" title="등록" id="createBtn" class="blue" onclick="create('false');" />
 					<input type="button" value="초기화" title="초기화" id="resetBtn" />
 					<input type="button" value="목록" title="목록" id="listBtn" />
 				</td>

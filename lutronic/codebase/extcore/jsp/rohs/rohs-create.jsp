@@ -53,9 +53,7 @@
 				<th class="lb">물질번호</th>
 				<td class="indent5">
 					<input type="text" name="rohsNumber" id="rohsNumber" class="width-200">
-					&nbsp;<button id="NumberCheck" class="btnSearch" type="button">
-								번호 중복
-								</button>
+					&nbsp;<input type="button" value="번호 중복" title="번호 중복" id="NumberCheck">
 				</td>
 				<th class="req lb">결재방식</th>
 				<td>
@@ -79,10 +77,7 @@
 				<th class="req lb">물질명</th>
 				<td class="indent5">
 					<input type="text" name="rohsName" id="rohsName" class="width-200">
-					&nbsp;
-					<button id="NameCheck" class="btnSearch" type="button">
-						물질명 중복
-					</button>
+					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" id="NameCheck">
 				</td>
 				<th class="req lb">협력업체</th>
 				<td class="indent5">
@@ -224,6 +219,7 @@
 	
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
+				selectbox("manufacture");
 				// DOM이 로드된 후 실행할 코드 작성
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);

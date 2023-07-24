@@ -4,8 +4,8 @@ String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
 boolean isCreate = "create".equals(mode);
 %>
-<input type="button" value="추가" title="추가" class="blue" onclick="insert9();">
-<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow9();">
+<input type="button" value="추가" title="추가" class="blue" onclick="addRohs();">
+<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRohs();">
 <div id="grid_rohs" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let rohsGridID;
@@ -45,7 +45,7 @@ boolean isCreate = "create".equals(mode);
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 	}
 
-	function insert9() {
+	function addRohs() {
 		const url = getCallUrl("/rohs/list?popup=true");
 		popup(url, 1500, 700);
 	}
@@ -73,7 +73,7 @@ boolean isCreate = "create".equals(mode);
 		AUIGrid.addRow(rohsGridID, arr);
 	}
 
-	function deleteRow9() {
+	function deleteRohs() {
 		const checked = AUIGrid.getCheckedRowItems(rohsGridID);
 		if (checked.length === 0) {
 			alert("삭제할 행을 선택하세요.");

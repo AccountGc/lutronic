@@ -48,8 +48,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="right">
-					<input type="button" value="추가" title="추가" onclick="loadGridData();">
-					<input type="button" value="삭제" title="삭제" onclick="loadGridData();">
+					<input type="button" value="추가" title="추가" class="blue" onclick="loadGridData();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>

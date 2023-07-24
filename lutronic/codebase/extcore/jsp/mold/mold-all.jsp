@@ -73,7 +73,7 @@
 		<table class="button-table">
 			<tr>
 				<td class="right">
-					<input type="button" value="등록" title="등록" id="createBtn" onclick="loadGridData();">
+					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
 				</td>
 			</tr>
 		</table>

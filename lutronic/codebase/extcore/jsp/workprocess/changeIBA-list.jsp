@@ -55,7 +55,7 @@
 		<table class="button-table">
 			<tr>
 				<td class="right">
-					<input type="button" value="변경" title="변경" id="doSubmit" style="background-color: red;">
+					<input type="button" value="변경" title="변경" id="doSubmit" class="blue">
 					<input type="button" value="초기화" title="초기화" id="btnReset">
 					<input type="button" value="메인화면으로" title="메인화면으로" id="goMain">
 				</td>

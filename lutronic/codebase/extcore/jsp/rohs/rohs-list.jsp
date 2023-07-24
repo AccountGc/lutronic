@@ -254,6 +254,7 @@ if(request.getParameter("popup")!=null){
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
+				selectbox("manufacture");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
