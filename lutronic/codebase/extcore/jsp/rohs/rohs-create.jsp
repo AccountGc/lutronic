@@ -217,6 +217,10 @@
 					}
 				});
 			});
+			
+			$("#listBtn").click(function() {
+				location.href = getCallUrl("/rohs/list");
+			});
 	
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {

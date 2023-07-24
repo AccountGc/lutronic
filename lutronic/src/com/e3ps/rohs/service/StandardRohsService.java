@@ -46,6 +46,7 @@ import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTUser;
+import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
@@ -2309,6 +2310,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	        // 문서 lifeCycle 설정
 	        LifeCycleHelper.setLifeCycle(rohs, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
             
+	        rohs.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
 	        rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
 	        
 //	        String[] roleTypes = request.getParameterValues("roleType");

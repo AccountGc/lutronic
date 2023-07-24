@@ -63,4 +63,5 @@ public interface DocumentService {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
 	
+	public void create(Map<String, Object> params) throws Exception;
 }

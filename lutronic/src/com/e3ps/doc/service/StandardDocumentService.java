@@ -48,6 +48,7 @@ import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.method.MethodContext;
+import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.part.WTPartMaster;
@@ -58,6 +59,7 @@ import wt.pom.WTConnection;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
 import wt.vc.wip.CheckoutLink;
@@ -98,6 +100,7 @@ import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.VersionHelper;
+import com.e3ps.rohs.ROHSMaterial;
 
 
 @SuppressWarnings("serial")
@@ -2096,4 +2099,63 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 		}
     }
+
+	@Override
+	public void create(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		Map<String,String> fileMap = new HashMap<String,String>();
+		try {
+			trs.start();
+			
+			String[] secondary = (String[]) params.get("SECONDARY");
+			if(secondary != null) {
+				for(String attachFile : secondary) {
+			        String fileName = attachFile.split("/")[1].toUpperCase();
+			        if(fileMap.get(fileName) == null){
+			        	fileMap.put(fileName, attachFile);
+			        }else {
+			        	fileMap.remove(fileName);
+			        }
+				}
+			}
+			
+			WTDocument doc = WTDocument.newWTDocument();
+			// 문서명
+			String docName = StringUtil.checkNull((String) params.get("docName"));
+			doc.setName(docName);
+			
+			// 결재 방식
+			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+			
+			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+			String description = StringUtil.checkNull((String) params.get("description"));
+			doc.setDescription(description);
+			doc.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
+			PersistenceHelper.manager.save(doc);
+			
+			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+            if("LC_Default_NonWF".equals(lifecycle)){
+            	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, "BATCHAPPROVAL");
+            	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+            }
+            
+            Map<String,Object> map = new HashMap<String,Object>();
+            
+            
+            map.put("approvalType", approvalType);
+            map.put("manufacture", manufacture);
+            CommonHelper.service.changeIBAValues(doc, map);
+			
+            trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
 }

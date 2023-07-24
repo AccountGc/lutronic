@@ -70,6 +70,23 @@ public class MoldController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "금형 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "금형 일괄결재 페이지")
 	@GetMapping(value = "/all")
 	public ModelAndView all() {

@@ -28,6 +28,7 @@ public class DocumentData {
 	private String creator;
 	private String createDate;
 	private String modifyDate;
+	private String description;
 	
 	public DocumentData(WTDocument doc) throws Exception {
 //		super(doc);
@@ -38,6 +39,7 @@ public class DocumentData {
 		setCreator(doc.getCreatorFullName());
 		setCreateDate(DateUtil.getDateString(doc.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(doc.getModifyTimestamp(),"a"));
+		setDescription(doc.getDescription());
 		
 		ContentItem item = null;
 		QueryResult result = ContentHelper.service.getContentsByRole ((ContentHolder)doc, ContentRoleType.PRIMARY );
