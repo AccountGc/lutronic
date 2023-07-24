@@ -17,8 +17,8 @@
 	<table class="button-table">
 		<tr>
 			<td class="right">
-				<input type="button" value="등록" title="등록" onclick="create('false');" class="blue">
-				<input type="button" value="엑셀등록이동" title="엑셀등록이동" onclick="create('true')">
+				<input type="button" value="등록" title="등록" onclick="create('false');">
+				<input type="button" value="엑셀등록이동" title="엑셀등록이동" class="blue" onclick="create('true')">
 			</td>
 		</tr>
 	</table>
@@ -42,13 +42,31 @@
 	</table>
 	<table class="button-table">
 		<tr>
-			<td class="right">
-				<input type="button" value="추가" title="추가" class="blue" onclick="create('false');">&nbsp;
-				<input type="button" value="삭제" title="삭제" class="red" onclick="self.close();">
+			<td class="right"><input type="button" value="추가" title="추가" onclick="create('false');"><input type="button" value="삭제" title="삭제" class="red" onclick="self.close();"></td>
+		</tr>
+	</table>
+	<table>
+		<colgroup>
+			<col width="230">
+			<col width="10">
+			<col width="*">
+		</colgroup>
+		<tr>
+			<td valign="top">
+				<jsp:include page="/extcore/jsp/common/folder-include.jsp">
+					<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
+					<jsp:param value="product" name="container" />
+					<jsp:param value="list" name="mode" />
+					<jsp:param value="670" name="height" />
+				</jsp:include>
+			</td>
+			<td valign="top">&nbsp;</td>
+			<td valign="top">
+				<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+				<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 			</td>
 		</tr>
 	</table>
-	<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
 	<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 	<script type="text/javascript">
 		let myGridID;

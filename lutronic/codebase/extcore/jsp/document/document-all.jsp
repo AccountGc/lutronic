@@ -34,7 +34,7 @@
 		</tr>
 		<tr>
 			<th class="lb">일괄결재 설명</th>
-			<td colspan="3" class="indent5"><textarea name="description" id="description" rows="6"></textarea></td>
+			<td class="indent5"><textarea name="description" id="description" rows="6"></textarea></td>
 		</tr>
 	</table>
 	<table class="button-table">
@@ -50,24 +50,15 @@
 		<colgroup>
 			<col width="150">
 			<col width="*">
-			<col width="*">
-			<col width="*">
-			<col width="*">
-			<col width="*">
 		</colgroup>
 		<tr>
-			<th class="req lb"  rowspan="2">일괄결재 문서</th>
-			<td colspan="4">
-				<button>추가</button>
-				<button>삭제</button>
+			<th class="req lb" >일괄결재 문서</th>
+			<td>
+				<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
+					<jsp:param value="" name="oid" />
+					<jsp:param value="create" name="mode" />
+				</jsp:include>
 			</td>
-		</tr>
-		<tr>
-			<th></th>
-			<th><input type="checkbox"/></th>
-			<th>문서번호</th>
-			<th>문서명</th>
-			<th>Rev.</th>
 		</tr>
 	</table>
 	<script type="text/javascript">
@@ -157,14 +148,6 @@
 
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
-			// DOM이 로드된 후 실행할 코드 작성
-			createAUIGrid7(columns7);
-			createAUIGrid11(columns11);
-			createAUIGrid8(columns8);
-			AUIGrid.resize(myGridID7);
-			AUIGrid.resize(myGridID11);
-			AUIGrid.resize(myGridID8);
-			document.getElementById("name").focus();
 		});
 
 		window.addEventListener("resize", function() {

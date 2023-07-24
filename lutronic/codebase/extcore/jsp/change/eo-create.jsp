@@ -56,8 +56,8 @@
 			<tr>
 				<th class="req lb">제품명</th>
 				<td colspan="3">
-					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode"  onclick="addNumberCode();">
-					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  onclick="delNumberCode();">
+					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
+					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
 				</td>
 			</tr>
 			<tr>
@@ -160,14 +160,14 @@
 				location.href = getCallUrl("/changeECO/listEO");
 			});
 			
-			function addNumberCode(){
+			document.querySelector("#addNumberCode").addEventListener("click", () => {
 				const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
 				popup(url, 1500, 700);
-			};
+			});
 			
-			function delNumberCode(){
+			document.querySelector("#delNumberCode").addEventListener("click", () => {
 				
-			}
+			});
 	
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
@@ -180,7 +180,6 @@
 				AUIGrid.resize(myGridID7);
 				AUIGrid.resize(myGridID11);
 				AUIGrid.resize(myGridID8); */
-				document.getElementById("name").focus();
 			});
 	
 			window.addEventListener("resize", function() {

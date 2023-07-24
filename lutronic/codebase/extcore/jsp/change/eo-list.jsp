@@ -78,17 +78,19 @@
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 			</tr>
 			<tr>
-				<th>제품명</th>
+				<th class="req lb">제품명</th>
 				<td colspan="3">
-					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode"  onclick="addNumberCode();">
-					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  onclick="delNumberCode();">
+					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
+					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
 				</td>
 			</tr>
 			<tr>
-				<th>완제품 품목</th>
+				<th class="req lb">완제품 품목</th>
 				<td colspan="3">
-					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode"  onclick="addNumberCode();">
-					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  onclick="delNumberCode();">
+					<jsp:include page="/extcore/jsp/change/include_ecrCompletePart.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
@@ -236,16 +238,16 @@
 					parent.closeLayer();
 				});
 			}
-			
-			function addNumberCode(){
+
+			document.querySelector("#addNumberCode").addEventListener("click", () => {
 				const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
 				popup(url, 1500, 700);
-			};
+			});
 			
-			function delNumberCode(){
+			document.querySelector("#delNumberCode").addEventListener("click", () => {
 				
-			}
-
+			});
+	
 			document.addEventListener("DOMContentLoaded", function() {
 				const columns = loadColumnLayout("document-list");
 				const contenxtHeader = genColumnHtml(columns);

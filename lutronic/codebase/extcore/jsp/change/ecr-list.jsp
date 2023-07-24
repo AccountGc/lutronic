@@ -71,10 +71,10 @@
 				</td>
 			</tr>
 			<tr>
-				<th>제품명</th>
-				<td class="indent5" colspan="3">
-					<button type="button" name="addNumberCode" id="addNumberCode" class="btnCustom">추가</button>
-					<button type="button" name="delNumberCode" id="delNumberCode" class="btnCustom">삭제</button>
+				<th class="req lb">제품명</th>
+				<td colspan="3">
+					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
+					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
 				</td>
 			</tr>
 			<tr>
@@ -301,6 +301,15 @@
 				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
+			document.querySelector("#addNumberCode").addEventListener("click", () => {
+				const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
+				popup(url, 1500, 700);
+			});
+			
+			document.querySelector("#delNumberCode").addEventListener("click", () => {
+				
+			});
+	
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
