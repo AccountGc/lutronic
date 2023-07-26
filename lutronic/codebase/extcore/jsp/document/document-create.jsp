@@ -259,24 +259,30 @@
 // 				folder();
 // 				return false;
 // 			}
-
-			if (isNull(docName.value)) {
-				alert("문서제목을 입력하세요.");
-				name.focus();
-				return false;
+			if(isEmpty($("#lifecycle").val())){
+				alert("결재방식을 입력하세요.");
+				return;					
 			}
-
-			// 		if(addRows11.length === 0) {
-			// 			alert("도번을 추가하세요.");
-			// 			insert11();
-			// 			return false;
-			// 		}
-
-// 			if (primarys.length === 0) {
-// 				alert("첨부파일을 선택하세요.");
-// 				return false;
-// 			}
-
+			if(isEmpty($("#documentName").val())){
+				alert("문서종류를 입력하세요.");
+				return;					
+			}
+			if(isEmpty($("#documentType").val())){
+				alert("문서유형을 입력하세요.");
+				return;					
+			}
+			if(isEmpty($("#preseration").val())){
+				alert("보존기간을 입력하세요.");
+				return;					
+			}
+			if(isEmpty($("#dm").val())){
+				alert("관리자를 입력하세요.");
+				return;					
+			}
+			if(isEmpty($(primarys).val())){
+				alert("첨부파일을 선택하세요.");
+				return;					
+			}
 			if (!confirm("등록 하시겠습니까?")) {
 				return false;
 			}

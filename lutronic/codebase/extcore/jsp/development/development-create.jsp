@@ -89,10 +89,25 @@
 			const description = document.getElementById("description").value;
 			const dm = document.getElementById("dm").value;
 
-			if (isNull(name.value)) {
+			if(isEmpty($("#name").val())){
 				alert("프로젝트명을 입력하세요.");
-				name.focus();
-				return false;
+				return;					
+			}
+			if(isEmpty($("#model").val())){
+				alert("프로젝트 코드를 입력하세요.");
+				return;					
+			}
+			if(isEmpty($("#developmentStart").val())){
+				alert("예상시작일을 입력하세요.");
+				return;					
+			}
+			if(isEmpty($("#developmentEnd").val())){
+				alert("예상종료일을 입력하세요.");
+				return;					
+			}
+			if(isEmpty($("#dm").val())){
+				alert("관리자를 입력하세요.");
+				return;					
 			}
 
 			// 		if(addRows11.length === 0) {
