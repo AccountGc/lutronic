@@ -314,10 +314,42 @@
 //	 			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
 				const primarys = toArray("primarys");
 
+				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
+					alert("품목명을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partType1").val())){
+					alert("품목구분을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partType2").val())){
+					alert("대분류를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partType3").val())){
+					alert("중분류를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#model").val())){
+					alert("프로젝트 코드를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#productmethod").val())){
+					alert("제작방법을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#deptcode").val())){
+					alert("부서를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#unit").val())){
+					alert("단위를 입력하세요.");
+					return;					
+				}
 				if (!confirm("등록 하시겠습니까?")) {
 					return false;
 				}
-
+				
 				const params = new Object();
 				const url = getCallUrl("/part/create");
 				params.partName1 = partName1;
