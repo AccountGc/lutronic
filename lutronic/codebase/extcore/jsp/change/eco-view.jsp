@@ -128,7 +128,7 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 	</tr>
 	<tr>
 		<th>승인일</th>
-		<td colspan="3"></td>
+		<td colspan="3"><%=dto.getEoApproveDate()%></td>
 	</tr>
 	<tr>
 		<th>제품명</th>
@@ -203,152 +203,257 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 		<td colspan="3"></td>
 	</tr>
 </table>
-		<script type="text/javascript">
-			//수정
-			$("#updateBtn").click(function () {
-				const oid = document.getElementById("oid").value;
-				const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-				openLayer();
-				document.location.href = url;
-			})
-			
-			//삭제
-			$("#deleteBtn").click(function () {
+<div id="tabs">
+	<ul>
+		<li>
+			<a href="#tabs-1">활동 현황</a>
+		</li>
+		<li>
+			<a href="#tabs-2">완제품 품목</a>
+		</li>
+		<%
+		if(dto.getEoType().equals("CHANGE")){
+		%>
+			<li>
+				<a href="#tabs-3">대상 품목</a>
+			</li>
+			<li>
+				<a href="#tabs-4">관련 ECR</a>
+			</li>
+		<%	
+		}
+		%>	
+	</ul>
+	<div id="tabs-1">
+		<!-- 활동 현황 -->
+		<jsp:include page="/extcore/jsp/change/include_viewECA.jsp" flush="false">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-2">
+		<!-- 완제품 품목 -->
+		<jsp:include page="/extcore/jsp/change/include_viewCompletePart.jsp" flush="false">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	<%
+	if(dto.getEoType().equals("CHANGE")){
+	%>
+		<div id="tabs-3">
+			<!-- 대상 품목 -->
+			<jsp:include page="/extcore/jsp/change/include_viewChangePart.jsp" flush="false">
+				<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			</jsp:include>
+		</div>	
+		<div id="tabs-4">
+			<!-- 관련 ECR -->
+			<jsp:include page="/extcore/jsp/change/include_viewECR.jsp" flush="false">
+				<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			</jsp:include>
+		</div>
+	<%	
+	}
+	%>
+</div>
 
-				if (!confirm("삭제 하시겠습니까?")) {
-					return false;
-				}
-
-				const oid = document.getElementById("oid").value;
-				const url = getCallUrl("/doc/delete?oid=" + oid);
-				call(url, null, function(data) {
-					alert(data.msg);
-					if (data.result) {
-//		 				opener.loadGridData();
-						self.close();
-					}
-				}, "GET");
-			})
-			
-			//산출물
-			$("#viewECA").click(function () {
-				var oid = $("#oid").val();
-				var url = getURLString("changeECA" , "viewECA", "do") + "?oid="+oid;
-				openWindow(url, "eca", 1000, 600);
-			})
-			
-			//결재이력
-			$("#approveBtn").click(function () {
-				var oid = $("#oid").val();
-				var url = getURLString("groupware", "historyWork", "do") + "?oid=" + oid;
-				openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
-			})
-			
-			//다운로드 이력
-			$("#downloadBtn").click(function () {
-				var oid = $("#oid").val();
-				var url = getURLString("common", "downloadHistory", "do") + "?oid=" + oid;
-				openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
-			})
-			
-			//결재 회수
-			$("#withDrawBtn").click(function() {
-				var url	= getURLString("common", "withDrawPopup", "do") + "?oid="+$("#oid").val();
-				openOtherName(url,"withDrawBtn","400","220","status=no,scrollbars=yes,resizable=yes");
-			})
+<script type="text/javascript">
+	//수정
+	$("#updateBtn").click(function () {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
+		openLayer();
+		document.location.href = url;
+	})
 	
-			$("#erpSend").click(function() {
-				if (!confirm("ERP 전송 하시게습니까?")){
-					return;
-				}
-				
-				var form = $("form[name=viewECOForm]").serialize();
-				var url	= getURLString("erp", "erpSendAction", "do");
-				$.ajax({
-					type:"POST",
-					url: url,
-					data:form,
-					dataType:"json",
-					async: true,
-					cache: false,
-					error: function(data) {
-						alert("ERP 전송 오류");
-					},
-					success:function(data){
-						alert(data.message);
-						location.reload();
-					}
-					,beforeSend: function() {
-						gfn_StartShowProcessing();
-			        }
-					,complete: function() {
-						gfn_EndShowProcessing();
-			        }
-				});
-			})
-			
-			$('#excelDown').click(function() {
-				var url = getURLString("changeECO", "excelDown", "do");
-				console.log(this.value);
-				console.log(url);
-				$.ajax({
-					type:"POST",
-					url: url,
-					data:{
-						oid : $('#oid').val(),
-						eoType : this.value
-					},
-					dataType:"json",
-					async: false,
-					cache: false,
-					success:function(data){
-						console.log(data);
-						if(data.result) {
-							location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-						}else {
-							alert(data.message);
-						}
-					}
-				});
-			})
-			
-			$("#batchSecondaryDown").click(function() {
-				var form = $("form[name=viewECOForm]").serialize();
-				var url	= getURLString("common", "batchSecondaryDown", "do");
-				$.ajax({
-					type:"POST",
-					url: url,
-					data:form,
-					dataType:"json",
-					async: true,
-					cache: false,
-					
-					error:function(data){
-						var msg = "데이터 검색오류";
-						alert(msg);
-					},
-					
-					success:function(data){
-						console.log(data.message);
-						if(data.result) {
-							location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-						}else {
-							alert(data.message);
-						}
-					}
-					,beforeSend: function() {
-						gfn_StartShowProcessing();
-			        }
-					,complete: function() {
-						gfn_EndShowProcessing();
-			        }
-				});
-				
-			})
+	//삭제
+	$("#deleteBtn").click(function () {
 
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID7);
-				AUIGrid.resize(myGridID);
-				AUIGrid.resize(myGridID100);
-			});
-		</script>
+		if (!confirm("삭제 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/doc/delete?oid=" + oid);
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+//		 				opener.loadGridData();
+				self.close();
+			}
+		}, "GET");
+	})
+			
+	//산출물
+	$("#viewECA").click(function () {
+		var oid = $("#oid").val();
+		var url = getURLString("changeECA" , "viewECA", "do") + "?oid="+oid;
+		openWindow(url, "eca", 1000, 600);
+	})
+	
+	//결재이력
+	$("#approveBtn").click(function () {
+		var oid = $("#oid").val();
+		var url = getURLString("groupware", "historyWork", "do") + "?oid=" + oid;
+		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+	})
+	
+	//다운로드 이력
+	$("#downloadBtn").click(function () {
+		var oid = $("#oid").val();
+		var url = getURLString("common", "downloadHistory", "do") + "?oid=" + oid;
+		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+	})
+	
+	//결재 회수
+	$("#withDrawBtn").click(function() {
+		var url	= getURLString("common", "withDrawPopup", "do") + "?oid="+$("#oid").val();
+		openOtherName(url,"withDrawBtn","400","220","status=no,scrollbars=yes,resizable=yes");
+	})
+	
+	$("#erpSend").click(function() {
+		if (!confirm("ERP 전송 하시게습니까?")){
+			return;
+		}
+		
+		var form = $("form[name=viewECOForm]").serialize();
+		var url	= getURLString("erp", "erpSendAction", "do");
+		$.ajax({
+			type:"POST",
+			url: url,
+			data:form,
+			dataType:"json",
+			async: true,
+			cache: false,
+			error: function(data) {
+				alert("ERP 전송 오류");
+			},
+			success:function(data){
+				alert(data.message);
+				location.reload();
+			}
+			,beforeSend: function() {
+				gfn_StartShowProcessing();
+	        }
+			,complete: function() {
+				gfn_EndShowProcessing();
+	        }
+		});
+	})
+			
+	$('#excelDown').click(function() {
+		var url = getURLString("changeECO", "excelDown", "do");
+		console.log(this.value);
+		console.log(url);
+		$.ajax({
+			type:"POST",
+			url: url,
+			data:{
+				oid : $('#oid').val(),
+				eoType : this.value
+			},
+			dataType:"json",
+			async: false,
+			cache: false,
+			success:function(data){
+				console.log(data);
+				if(data.result) {
+					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
+				}else {
+					alert(data.message);
+				}
+			}
+		});
+	})
+	
+	$("#batchSecondaryDown").click(function() {
+		var form = $("form[name=viewECOForm]").serialize();
+		var url	= getURLString("common", "batchSecondaryDown", "do");
+		$.ajax({
+			type:"POST",
+			url: url,
+			data:form,
+			dataType:"json",
+			async: true,
+			cache: false,
+			
+			error:function(data){
+				var msg = "데이터 검색오류";
+				alert(msg);
+			},
+			
+			success:function(data){
+				console.log(data.message);
+				if(data.result) {
+					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
+				}else {
+					alert(data.message);
+				}
+			}
+			,beforeSend: function() {
+				gfn_StartShowProcessing();
+	        }
+			,complete: function() {
+				gfn_EndShowProcessing();
+	        }
+		});
+		
+	})
+	
+	document.addEventListener("DOMContentLoaded", function() {
+		$("#tabs").tabs({
+			active : 0,
+			activate : function(event, ui) {
+				var tabId = ui.newPanel.prop("id");
+				switch (tabId) {
+				case "tabs-1":
+					const isCreated1 = AUIGrid.isCreated(ecaGridID);
+					if (isCreated1) {
+						AUIGrid.resize(ecaGridID);
+					} else {
+						createAUIGrid1(columnEca);
+					}
+					break;
+				case "tabs-2":
+					const isCreated2 = AUIGrid.isCreated(complePartGridID);
+					if (isCreated2) {
+						AUIGrid.resize(complePartGridID);
+					} else {
+						createAUIGrid2(columnComplePart);
+					}
+					break;
+				case "tabs-3":
+					const isCreated3 = AUIGrid.isCreated(changePartGridID);
+					if (isCreated3) {
+						AUIGrid.resize(changePartGridID);
+					} else {
+						createAUIGrid3(columnChangePart);
+					}
+					break;
+				case "tabs-4":
+					const isCreated4 = AUIGrid.isCreated(ecrGridID);
+					if (isCreated4) {
+						AUIGrid.resize(ecrGridID);
+					} else {
+						createAUIGrid4(columnEcr);
+					}
+					break;	
+				}
+			}
+		});
+		createAUIGrid1(columnEca);
+		AUIGrid.resize(ecaGridID);
+		createAUIGrid2(columnComplePart);
+		AUIGrid.resize(complePartGridID);
+		createAUIGrid3(columnChangePart);
+		AUIGrid.resize(changePartGridID);
+		createAUIGrid4(columnEcr);
+		AUIGrid.resize(ecrGridID);
+	});
+
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(ecaGridID);
+		AUIGrid.resize(complePartGridID);
+		AUIGrid.resize(changePartGridID);
+		AUIGrid.resize(ecrGridID);
+	});
+</script>
