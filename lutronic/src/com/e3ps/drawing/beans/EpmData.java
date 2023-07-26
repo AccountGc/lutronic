@@ -44,26 +44,35 @@ public class EpmData {
 	
 //	public EPMDocument epm;
 	public String oid;																							// 도면번호
+	public String name;																							// 도면번호
 	public String number;																							// 도면번호
 	public String linkRefernceType;
 	public String icon;
 	public WTPart part;
 	public String cadType;
 	public String creator;
+	private String modifier;
 	public String createDate;
 	public String modifyDate;
 	public boolean isNameSyschronization = true;
 	public boolean isUpdate = false;
 	public boolean isLatest = false;
+	public String location;
+	public String state;
+	public String cadName;
+	public String pNum;
+	public String applicationType;
 	
 	public EpmData(EPMDocument epm) throws Exception {
 //		super(epm);
 //		setEpm(epm);
 		setOid(CommonUtil.getOIDString(epm));
+		setName(epm.getName());
 		setNumber(epm.getNumber());
 		setIcon(BasicTemplateProcessor.getObjectIconImgTag(epm));
 		setCadType(epm.getDocType().toString());
 		setCreator(epm.getCreatorFullName());
+		setModifier(epm.getModifierFullName());
 		setCreateDate(DateUtil.getDateString(epm.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(epm.getModifyTimestamp(),"a"));
 		//true이면 동기화 버튼 활성화, false 이면 비활성
@@ -80,6 +89,65 @@ public class EpmData {
 		//최신객체여부
 		setLatest(VersionHelper.service.isLastVersion(epm));
 		
+		setLocation(StringUtil.checkNull(epm.getLocation()).replaceAll("/Default",""));
+		setState(epm.getLifeCycleState().toString());
+    	EPMDocumentMaster master = (EPMDocumentMaster)epm.getMaster();
+    	String cadName = master.getCADName();
+		setCadName(cadName);
+		
+		//Creo의 드로잉은 경우 3D의 WTPArt
+		if(EpmUtil.isCreoDrawing(epm)){
+			String number= epm.getNumber();
+			String version = epm.getVersionIdentifier().getValue();
+			number = EpmUtil.getFileNameNonExtension(number);
+			part = PartHelper.service.getPart(number, version);
+		}else{
+			part = DrawingHelper.service.getWTPart(epm);
+		}
+		
+		//연관 파트 번호
+		if(part == null){
+			part = getDrawingPart();
+		}
+		if(part != null){
+			pNum = part.getNumber();
+		}
+		setPNum(pNum);
+		
+		setApplicationType(epm.getOwnerApplication().toString());
+	}
+	//연관 파트 번호
+	public String getpNum() {
+		String pNum = "";
+		try {
+			if(part == null){
+				part = getDrawingPart();
+			}
+			
+			if(part != null) {
+				pNum = part.getNumber();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pNum;
+	}
+	
+	/**
+	 * Creo의 드로잉은 경우 3D의 WTPArt
+	 * @return
+	 */
+	public WTPart getDrawingPart() {
+		
+		try {
+			
+			
+			
+			return part;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	//승인여부

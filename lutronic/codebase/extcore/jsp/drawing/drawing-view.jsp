@@ -56,14 +56,14 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<col width="350">
 	</colgroup>
 	<tr>
-		<th>물질명</th>
+		<th>도면명</th>
 		<td colspan="3"><%=dto.getName()%></td>
 	</tr>
 	<tr>
-		<th>물질 번호</th>
+		<th>도면번호</th>
 		<td><%=dto.getNumber()%></td>
-		<th>협력업체</th>
-		<td><%=dto.getManufactureDisplay()%></td>
+		<th>도면분류</th>
+		<td><%=dto.getLocation()%></td>
 	</tr>
 	<tr>
 		<th>상태</th>
@@ -84,10 +84,20 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<td><%=dto.getModifyDate()%></td>
 	</tr>
 	<tr>
-		<th>결재방식</th>
-		<td><%=dto.getApprovalType()%></td>
-		<th>설명</th>
-		<td><%=dto.getDescription()%></td>
+		<th>도면구분</th>
+		<td><%=dto.getCadType()%></td>
+		<th>도면파일</th>
+		<td><%=dto.getCadName()%></td>
+	</tr>
+	<tr>
+		<th>주 부품</th>
+		<td><%=dto.getpNum()%></td>
+		<th>ApplicationType</th>
+		<td><%=dto.getApplicationType()%></td>
+	</tr>
+	<tr>
+		<th>dxf</th>
+		<td colspan="3"></td>
 	</tr>
 	<tr>
 		<th>첨부파일</th>
