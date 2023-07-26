@@ -125,7 +125,7 @@
 			});
 	
 			$("#createBtn").click(function() {
-				if($("#name").val() == "") {
+				if(isEmpty($("#name").val())) {
 					alert("제목을 입력하세요.");
 					return;
 				}

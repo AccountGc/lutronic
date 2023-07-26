@@ -201,12 +201,12 @@
 
 		<script type="text/javascript">
 			$("#createBtn").click(function() {
-				if($("#lifecycle").val() == "") {
+				if(isEmpty($("#lifecycle").val())) {
 					alert("결재방식을 선택하세요.");
 					return;
 				}
 				
-				if($("#docName").val() == "") {
+				if(isEmpty($("#docName").val())) {
 					alert("문서명을 입력하세요.");
 					return;
 				}

@@ -192,7 +192,7 @@
 					return;
 				}
 				
-				if($("#manufacture").val() == "") {
+				if(isEmpty($("#manufacture").val())) {
 					alert("협력업체를 선택하세요.");
 					return;
 				}
