@@ -105,21 +105,19 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
-	@Description(value = "파일 검색")
+	@Description(value = "rohs 상세 페이지")
 	@GetMapping(value =  "/view")
-	public ModelAndView view(
-//			,@RequestParam(value="oid") String oid
-			) throws Exception {
+	public ModelAndView view(@RequestParam String oid) throws Exception{
 		ModelAndView model = new ModelAndView();
-//		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-//		RohsData rohsData = new RohsData(rohs);
-//		
+		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		RohsData dto = new RohsData(rohs);
+		
 //		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
-//		
-		model.setViewName("/extcore/jsp/rohs/rohs-view.jsp");
-//		model.addObject("isAdmin", CommonUtil.isAdmin());
-//		model.addObject("rohsData", rohsData);
 //		model.addObject("list", list);
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/rohs/rohs-view.jsp");
 		return model;
 	}
 	

@@ -126,6 +126,15 @@ if(request.getParameter("popup")!=null){
 						showIcon : true,
 						inline : true
 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/rohs/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 				}, {
 					dataField : "manufacture",
 					headerText : "협력업체",
@@ -143,6 +152,15 @@ if(request.getParameter("popup")!=null){
 					filter : {
 						showIcon : true,
 						inline : true
+					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/rohs/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
 					},
 				}, {
 					dataField : "islastversion",

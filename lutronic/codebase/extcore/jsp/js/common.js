@@ -1828,3 +1828,62 @@ function _data($form) {
 	return o;
 }
 
+function isEmpty(object){
+   return object === null || "undefined" === typeof object || (isObject(object) && !Object.keys(object).length && !isDate(object)) || (isString(object) && object.trim() === "") || (isArray(object) && object.length === 0);
+}
+
+ function isObject(object) {
+        return object !== null && "object" === typeof object;
+}
+
+function isDate(object) {
+        return isObject(object) && typeof object.getTime === "function";
+}
+
+ function isString(object) {
+        return "string" === typeof object;
+}
+
+function isArray(object) {
+        return Array.isArray(object);
+}
+
+function formatDate(date, format) {
+        if (date === typeof object) {
+            date = new Date(date);
+        }
+        var me = date;
+        
+       return format.replace(/(yyyy|yy|MM|M|dd|d|HH|H|mm|m|ss|s)/g, function(match) {
+            switch (match) {
+                case "yyyy":
+                    return me.getFullYear();
+                case "yy":
+                    var v = me.getFullYear() % 100;
+                    return v > 10 ? v : "0" + v;
+                case "MM":
+                case "M":
+                    var v = me.getMonth() + 1;
+                    return match.length === 1 || v >= 10 ? v : "0" + v;
+                case "dd":
+                case "d":
+                    var v = me.getDate();
+                    return match.length === 1 || v >= 10 ? v : "0" + v;
+                case "HH":
+                case "H":
+                    var v = me.getHours();
+                    return match.length === 1 || v >= 10 ? v : "0" + v;
+                case "mm":
+                case "m":
+                    var v = me.getMinutes();
+                    return match.length === 1 || v >= 10 ? v : "0" + v;
+                case "ss":
+                case "s":
+                    var v = me.getSeconds();
+                    return match.length === 1 || v >= 10 ? v : "0" + v;
+                default:
+                    return match;
+            }
+        });
+}
+

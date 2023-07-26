@@ -43,6 +43,7 @@ import wt.util.WTException;
 public class EpmData {
 	
 //	public EPMDocument epm;
+	public String oid;																							// 도면번호
 	public String number;																							// 도면번호
 	public String linkRefernceType;
 	public String icon;
@@ -51,17 +52,36 @@ public class EpmData {
 	public String creator;
 	public String createDate;
 	public String modifyDate;
+	public boolean isNameSyschronization = true;
+	public boolean isUpdate = false;
+	public boolean isLatest = false;
 	
-	public EpmData(final EPMDocument epm) throws Exception {
+	public EpmData(EPMDocument epm) throws Exception {
 //		super(epm);
 //		setEpm(epm);
+		setOid(CommonUtil.getOIDString(epm));
 		setNumber(epm.getNumber());
 		setIcon(BasicTemplateProcessor.getObjectIconImgTag(epm));
 		setCadType(epm.getDocType().toString());
 		setCreator(epm.getCreatorFullName());
 		setCreateDate(DateUtil.getDateString(epm.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(epm.getModifyTimestamp(),"a"));
+		//true이면 동기화 버튼 활성화, false 이면 비활성
+		boolean isDRW = epm.getDocType().toString().equals("CADDRAWING");
+		if(!isDRW){
+			setNameSyschronization(false);
+		}
+		//수정 가능여부
+		boolean wgm = false;
+		wgm = epm.getOwnerApplication().toString().equals("EPM") ? true : false;
+		if((State.INWORK).equals(epm.getLifeCycleState()) && VersionHelper.service.isLastVersion(epm) && ! wgm) {
+			setUpdate(true);
+		}
+		//최신객체여부
+		setLatest(VersionHelper.service.isLastVersion(epm));
+		
 	}
+	
 	//승인여부
 //	public boolean getApprove() throws Exception{
 //		boolean approve = false;
@@ -342,16 +362,7 @@ public class EpmData {
 //		return WebUtil.getHtml(epm.getDescription());
 //	}
 //	
-//	/**
-//	 * true이면 동기화 버튼 활성화, false 이면 비활성
-//	 * @return
-//	 */
-//	public boolean isNameSyschronization(){
-//		
-//		boolean isDRW = this.epm.getDocType().toString().equals("CADDRAWING");
-//		if(!isDRW){
-//			return false;
-//		}
+
 //		
 //		
 //		boolean isLastest = isLatest();

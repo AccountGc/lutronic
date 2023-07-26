@@ -137,13 +137,31 @@ public class ChangeECOController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/viewECO")
-	public ModelAndView viewECO(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+//	@RequestMapping("/viewECO")
+//	public ModelAndView viewECO(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		EChangeOrder eco = (EChangeOrder)CommonUtil.getObject(oid);
+//		ECOData ecoData = new ECOData(eco);
+//		model.setViewName("popup:/change/viewECO");
+//		model.addObject("ecoData", ecoData);
+//		return model;
+//	}
+	
+	@Description(value = "ECO 상세 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception{
 		ModelAndView model = new ModelAndView();
-		EChangeOrder eco = (EChangeOrder)CommonUtil.getObject(oid);
-		ECOData ecoData = new ECOData(eco);
-		model.setViewName("popup:/change/viewECO");
-		model.addObject("ecoData", ecoData);
+		EChangeOrder order = (EChangeOrder) CommonUtil.getObject(oid);
+		ECOData dto = new ECOData(order);
+		
+//		JSONArray versionHistory = PartHelper.manager.versionHistory(part);
+//		boolean isSupervisor = CommonUtils.isSupervisor();
+//		model.addObject("isSupervisor", isSupervisor);
+//		model.addObject("versionHistory", versionHistory);
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/change/eco-view.jsp");
 		return model;
 	}
 	

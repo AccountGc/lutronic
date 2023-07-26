@@ -187,7 +187,7 @@
 			});
 	
 			$("#createBtn").click(function() {
-				if($("#rohsName").val() == "") {
+				if(isEmpty($("#rohsName").val())) {
 					alert("물질명을 입력하세요.");
 					return;
 				}

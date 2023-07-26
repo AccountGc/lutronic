@@ -6,11 +6,14 @@ import java.util.Map;
 //import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.service.ChangeUtil;
+import com.e3ps.common.iba.AttributeKey.ECOKey;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.session.SessionHelper;
 
 @Getter
 @Setter
@@ -20,6 +23,7 @@ public class ECOData{
 //	private String licensing;
 //	private Vector<NumberCode> licensingCode = null;
 //	private EChangeRequest ecr;
+	private String oid;
 	private String riskType;
 	private String riskTypeName;
 //	private String listInitCount;
@@ -27,9 +31,12 @@ public class ECOData{
 	private String eoName;
 	private String eoNumber;
 	private String eoType;
+	private String eoTypeDisplay;
 	private String state;
 	private String creator;
 	private String createDate;
+	private String modifyDate;
+	
 	private String eoApproveDate;
 	private String eoCommentA;
 	private String eoCommentB;
@@ -45,6 +52,7 @@ public class ECOData{
 //		super(eco);
 //		setEco(getEco());
 //		setLicensing(eco.getLicensingChange());
+		setOid(CommonUtil.getOIDString(eco));
 		setRiskType(StringUtil.checkNull(eco.getRiskType()));
 		setRiskTypeName(ChangeUtil.getRiskTypeName(riskType,true));
 //		setLicensingCode(ChangeUtil.getNumberCodeVec(this.licensing, "LICENSING"));
@@ -64,9 +72,17 @@ public class ECOData{
 		setEoName(eco.getEoName());
 		setEoNumber(eco.getEoNumber());
 		setEoType(eco.getEoType());
+    	if(eco.getEoType().equals(ECOKey.ECO_DEV)){
+    		setEoTypeDisplay("개발");
+    	}else if(this.eoType.equals(ECOKey.ECO_PRODUCT)){
+    		setEoTypeDisplay("양산");
+    	}else {
+    		setEoTypeDisplay("설계변경");
+    	}
 		setState(eco.getLifeCycleState().toString());
 		setCreator(eco.getCreatorFullName());
 		setCreateDate(DateUtil.getDateString(eco.getCreateTimestamp(),"a"));
+		setModifyDate(DateUtil.getDateString(eco.getModifyTimestamp(),"a"));
 		setEoApproveDate(eco.getEoApproveDate());
 		setEoCommentA(eco.getEoCommentA());
 		setEoCommentB(eco.getEoCommentB());
@@ -74,6 +90,50 @@ public class ECOData{
 		setEoCommentD(eco.getEoCommentD());
 		setEoCommentE(eco.getEoCommentE());
 	}
+	
+	/**
+   * 회수 권한  승인중 && (소유자 || 관리자 ) && 기본 결재 
+   * @return
+   */
+   public boolean isWithDraw(){
+  	   try{
+			return  (state.equals("APPROVING") && ( isOwner() || CommonUtil.isAdmin()));
+  	   }catch(Exception e){
+			e.printStackTrace();
+  	   }
+  	   return false;
+		
+	}
+   
+   /**
+    * Owner 유무 체크
+    * @return
+    */
+	public boolean isOwner(){
+		
+		try{
+			return SessionHelper.getPrincipal().getName().equals(getCreator());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * ERP 전송 유무 체크
+	 * 승인됨,관리자, 전송이력이 없음
+	 * @return
+	 */
+//	public boolean isERPSend(){
+//		boolean isERPSend = false;
+//		try{
+//			isERPSend = state.equals("APPROVED") && CommonUtil.isAdmin() && ! ERPSearchHelper.service.checkSendEO(eoNumber);
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		return isERPSend;
+//	}
 	
 	/**
 	 * 완제품 품목
@@ -239,20 +299,5 @@ public class ECOData{
 		}
  
 	}
-	
-	/**
-	 * ERP 전송 유무 체크
-	 * 승인됨,관리자, 전송이력이 없음
-	 * @return
-	 */
-//	public boolean isERPSend(){
-//		boolean isERPSend = false;
-//		try{
-//			isERPSend = isApproved() && CommonUtil.isAdmin() && ! ERPSearchHelper.service.checkSendEO(this.number);
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		return isERPSend;
-//	}
 	
 }

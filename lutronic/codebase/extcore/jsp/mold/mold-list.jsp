@@ -178,6 +178,15 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						showIcon : true,
 						inline : true
 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/mold/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 				}, {
 					dataField : "name",
 					headerText : "금형명",
@@ -186,6 +195,15 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					filter : {
 						showIcon : true,
 						inline : true
+					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/mold/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
 					},
 				}, {
 					dataField : "description",

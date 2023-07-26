@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
+import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.service.ECOHelper;
 //import com.e3ps.change.beans.EOData;
@@ -123,6 +124,20 @@ public class ChangeECRController extends BaseController {
 //		
 //	}
 	
+	@Description(value = "ECR 상세 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		EChangeRequest ecr = (EChangeRequest)CommonUtil.getObject(oid);
+		ECRData dto = new ECRData(ecr);
+		
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/change/ecr-view.jsp");
+		return model;
+	}
+	
 	/**	ECR 상세보기
 	 * @param request
 	 * @param response
@@ -130,15 +145,15 @@ public class ChangeECRController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/viewECR")
-	public ModelAndView viewECR(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		EChangeRequest ecr = (EChangeRequest)CommonUtil.getObject(oid);
-		ECRData ecrData = new ECRData(ecr);
-		model.setViewName("popup:/change/viewECR");
-		model.addObject("ecrData", ecrData);
-		return model;
-	}
+//	@RequestMapping("/viewECR")
+//	public ModelAndView viewECR(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		EChangeRequest ecr = (EChangeRequest)CommonUtil.getObject(oid);
+//		ECRData ecrData = new ECRData(ecr);
+//		model.setViewName("popup:/change/viewECR");
+//		model.addObject("ecrData", ecrData);
+//		return model;
+//	}
 	
 	/**	ECR 수정 페이지
 	 * @param request

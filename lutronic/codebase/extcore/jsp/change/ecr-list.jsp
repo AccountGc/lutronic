@@ -154,6 +154,15 @@
 						showIcon : true,
 						inline : true
 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/changeECR/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 				}, {
 					dataField : "eoName",
 					headerText : "CR/ECPR 제목",
@@ -162,6 +171,15 @@
 					filter : {
 						showIcon : true,
 						inline : true
+					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/changeECR/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
 					},
 				}, {
 					dataField : "model",

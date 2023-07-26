@@ -31,6 +31,8 @@ import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.groupware.notice.beans.NoticeData;
 import com.e3ps.groupware.notice.service.NoticeHelper;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.beans.RohsData;
 
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
@@ -127,6 +129,20 @@ public class DrawingController extends BaseController{
 //		Map<String,Object> map = DrawingHelper.service.requestDrawingMapping(request, response);
 //		return DrawingHelper.service.createDrawing(map);
 //	}
+	
+	@Description(value = "도면 상세 페이지")
+	@GetMapping(value =  "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		EPMDocument doc = (EPMDocument)CommonUtil.getObject(oid);
+		EpmData dto = new EpmData(doc);
+		
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/drawing/drawing-view.jsp");
+		return model;
+	}
 	
 	/** CAD 구분 리스트 리턴
 	 * @param request

@@ -27,6 +27,8 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.beans.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.rohs.service.RohsQueryHelper;
 
@@ -87,6 +89,20 @@ public class MoldController extends BaseController {
 		return result;
 	}
 	
+	@Description(value = "금형 상세 페이지")
+	@GetMapping(value =  "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
+		DocumentData dto = new DocumentData(doc);
+		
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/mold/mold-view.jsp");
+		return model;
+	}
+	
 	@Description(value = "금형 일괄결재 페이지")
 	@GetMapping(value = "/all")
 	public ModelAndView all() {
@@ -102,17 +118,17 @@ public class MoldController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/viewMold")
-	public ModelAndView viewMold(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
-		DocumentData docData = new DocumentData(doc);
-		
-		model.setViewName("popup:/mold/viewMold");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("docData", docData);
-		return model;
-	}
+//	@RequestMapping("/viewMold")
+//	public ModelAndView viewMold(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
+//		DocumentData docData = new DocumentData(doc);
+//		
+//		model.setViewName("popup:/mold/viewMold");
+//		model.addObject("isAdmin", CommonUtil.isAdmin());
+//		model.addObject("docData", docData);
+//		return model;
+//	}
 	
 	/**  일괄 등록 메뉴 이동
 	 * @param request

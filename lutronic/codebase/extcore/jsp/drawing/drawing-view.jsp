@@ -1,4 +1,4 @@
-<%@page import="com.e3ps.rohs.beans.RohsData"%>
+<%@page import="com.e3ps.drawing.beans.EpmData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@include file="/extcore/jsp/common/css.jsp"%>
@@ -7,7 +7,7 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-RohsData dto = (RohsData) request.getAttribute("dto");
+EpmData dto = (EpmData) request.getAttribute("dto");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -15,45 +15,33 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				RoHS 상세보기
+				도면 상세보기
 			</div>
 		</td>
 		<td class="right">
 			<%
-			if(dto.isLatest()){
+			if(dto.isNameSyschronization){
 			%>
-				<input type="button" value="물질복사" title="물질복사" class="" id="copyRohs">
-				<%
-				if(dto.getState().equals("APPROVED")){
-				%>
-					<input type="button" value="개정" title="개정" class="" id="reviseBtn">
-				<%	
-				}
-				%>
-				<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-				<%
-				if(dto.isWithDraw()){
-				%>
-					<input type="button" value="결재회수" title="결재회수" class="" id="withDrawBtn">
-				<%	
-				}
-				%>
-				<%
-				if(dto.getState().equals("INWORK") || dto.getState().equals("BATCHAPPROVAL") || dto.getState().equals("REWORK")){
-				%>
-					<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-					<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
-				<%	
-				}
-				%>
-			<%	
-			}else{
-			%>
-				<input type="button" value="최신Rev." title="최신Rev." class="" id="lastestBtn">
+				<input type="button" value="Name 동기화" title="Name 동기화" class="" id="updateName">
 			<%	
 			}
 			%>
-			<input type="button" value="Rev.이력" title="Rev.이력" class="" id="versionBtn">
+			<%
+			if(dto.isUpdate){
+			%>
+				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
+				<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+			<%	
+			}
+			%>
+			<%
+			if(dto.isLatest){
+			%>
+				<input type="button" value="최신버전" title="최신버전" class="" id="latestBtn">
+			<%	
+			}
+			%>
+			<input type="button" value="버전이력" title="버전이력" class="" id="versionBtn">
 			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn">
 			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">
 			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">

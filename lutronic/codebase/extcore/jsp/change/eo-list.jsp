@@ -132,6 +132,15 @@
 						showIcon : true,
 						inline : true
 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/changeECO/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 				}, {
 					dataField : "eoName",
 					headerText : "EO 제목",
@@ -140,6 +149,15 @@
 					filter : {
 						showIcon : true,
 						inline : true
+					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/changeECO/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
 					},
 				}, {
 					dataField : "eoType",
