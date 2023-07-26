@@ -31,6 +31,8 @@ import com.e3ps.development.beans.DevTaskData;
 import com.e3ps.development.beans.MasterData;
 import com.e3ps.development.service.DevelopmentHelper;
 
+import net.sf.json.JSONArray;
+
 @Controller
 @RequestMapping("/development")
 public class DevelopmentController extends BaseController{
@@ -134,25 +136,23 @@ public class DevelopmentController extends BaseController{
 	public ModelAndView bodyDevelopment(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("module","development");
-		model.setViewName("default:/development/bodyDevelopment");
+		model.setViewName("/extcore/jsp/development/development-view.jsp");
 		model.addObject("oid", oid);
 		return model;
 	}
 	
-	/**  개발업무 관리 상세 페이지
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
-	@RequestMapping("/viewDevelopment")
-	public ModelAndView viewDevelopment(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) {
+	@Description(value = "개발업무 관리 상세 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam(value="oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		devMaster master = (devMaster)CommonUtil.getObject(oid);
 		MasterData data = new MasterData(master);
+//		JSONArray versionHistory = DevelopmentHelper.manager.versionHistory(master);
+		boolean isAdmin = CommonUtil.isAdmin();
 		
-		model.setViewName("empty:/development/viewDevelopment");
+		model.setViewName("/extcore/jsp/development/development-view.jsp");
 		model.addObject("masterData", data);
+		model.addObject("isAdmin", isAdmin);
 		return model;
 	}
 	
@@ -216,21 +216,47 @@ public class DevelopmentController extends BaseController{
 	 */
 	
 
-	/**  개발업무 관리 상세보기 Task 리스트 보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
-	@RequestMapping("/viewTaskList")
-	public ModelAndView viewTaskList(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) {
-		List<DevTaskData> list = DevelopmentHelper.service.getTaskDataList(oid);
+	@Description(value = "개발업무 관리 상세보기 Task 페이지")
+	@GetMapping(value = "/taskList")
+	public ModelAndView taskList(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) {
 		ModelAndView model = new ModelAndView();
-		model.addObject("enAbled", DevelopmentHelper.service.buttonControll(oid));
-		model.addObject("list", list);
+		model.addObject("oid", oid);
 		model.setViewName("empty:/development/viewTaskList");
 		return model;
 	}
+	@Description(value = "개발업무 관리 상세보기 Task 리스트 불러오기")
+	@PostMapping(value = "/taskList")
+	@ResponseBody
+	public Map<String,Object> taskList(@RequestBody Map<String, Object> params){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try {
+			String oid = (String) params.get("oid");
+			List<DevTaskData> list = DevelopmentHelper.service.getTaskDataList(oid);
+			result.put("result", SUCCESS);
+			result.put("enAbled", DevelopmentHelper.service.buttonControll(oid));
+			result.put("list", list);			
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+//	/**  개발업무 관리 상세보기 Task 리스트 보기
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 */
+//	@RequestMapping("/viewTaskList")
+//	public ModelAndView viewTaskList(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) {
+//		List<DevTaskData> list = DevelopmentHelper.service.getTaskDataList(oid);
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("enAbled", DevelopmentHelper.service.buttonControll(oid));
+//		model.addObject("list", list);
+//		model.setViewName("empty:/development/viewTaskList");
+//		return model;
+//	}
 	
 	/**  개발업무 관리 상세보기 Task 수정 페이지
 	 * @param request
@@ -424,22 +450,48 @@ public class DevelopmentController extends BaseController{
 		return DevelopmentHelper.service.changeStateAction(oid, state);
 	}
 	
-	/**  구성원 보기 페이지
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
-	@RequestMapping("/viewUserList")
-	public ModelAndView viewUserList(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid){
-		
-		List<Map<String,String>> list = DevelopmentHelper.service.viewUserList(oid);
-		
+	@Description(value = "구성원 보기 페이지")
+	@GetMapping(value = "/userList")
+	public ModelAndView userList(@RequestParam(value="oid") String oid){
 		ModelAndView model = new ModelAndView();
-		model.setViewName("empty:/development/viewUserList");
-		model.addObject("list", list);
+		model.setViewName("/extcore/jsp/development/userList.jsp");
+		model.addObject("oid", oid);
 		return model;
 	}
+	
+	@Description(value = "구성원 보기 페이지")
+	@PostMapping(value = "/userList")
+	@ResponseBody
+	public Map<String,Object> userList(@RequestBody Map<String, Object> params){
+		Map<String,Object> result = new HashMap<String,Object>();
+		try {
+			String oid = (String) params.get("oid");
+			List<Map<String,String>> list = DevelopmentHelper.service.viewUserList(oid);
+			result.put("result", SUCCESS);
+			result.put("list", list);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+//	/**  구성원 보기 페이지
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 */
+//	@RequestMapping("/viewUserList")
+//	public ModelAndView viewUserList(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid){
+//		
+//		List<Map<String,String>> list = DevelopmentHelper.service.viewUserList(oid);
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("empty:/development/viewUserList");
+//		model.addObject("list", list);
+//		return model;
+//	}
 	
 	/**  Active 상세보기 Active 삭제
 	 * @param request

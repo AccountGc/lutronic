@@ -15,7 +15,9 @@ import com.e3ps.development.beans.DevActiveData;
 import com.e3ps.development.beans.MasterData;
 import com.e3ps.org.People;
 
+import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
+import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
@@ -23,6 +25,7 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
+import wt.vc.VersionControlHelper;
 
 public class DevelopmentHelper {
 	public static final DevelopmentService service = ServiceFactory.getService(DevelopmentService.class);
@@ -108,6 +111,15 @@ public class DevelopmentHelper {
 				}
 				query.appendWhere(new SearchCondition(devMaster.class, devMaster.LIFE_CYCLE_STATE, SearchCondition.EQUAL, state),new int[] {idx});
 			}
+			
+//			// 설명
+//			String description = StringUtil.checkNull((String)params.get("description"));
+//			if(description.length() > 0) {
+//				if(query.getConditionCount() > 0) {
+//					query.appendAnd();
+//				}
+//				query.appendWhere(new SearchCondition(devMaster.class, devMaster.DESCRIPTION, SearchCondition));
+//			}
 			
 			// SORT
 			String sortValue = StringUtil.checkNull((String)params.get("sortValue"));
@@ -303,4 +315,28 @@ public class DevelopmentHelper {
 		
 		return map;
 	}
+	
+//	/**
+//	 * 문서 버전 이력
+//	 */
+//	public JSONArray versionHistory(devMaster master) throws Exception {
+//		ArrayList<Map<String, Object>> list = new ArrayList<>();
+//		QueryResult result = VersionControlHelper.service.allIterationsOf(master);
+//		while (result.hasMoreElements()) {
+//			Map<String, Object> map = new HashMap<>();
+//			MasterData data = (MasterData) result.nextElement();
+//			map.put("oid", dd.getPersistInfo().getObjectIdentifier().getStringValue());
+//			map.put("name", dd.getName());
+//			map.put("model", dd.getNumber());
+//			map.put("modelName", CommonUtils.getFullVersion(dd));
+//			map.put("creator", dd.getCreatorFullName());
+//			map.put("createdDate_txt", CommonUtils.getPersistableTime(dd.getCreateTimestamp()));
+//			map.put("modifier", dd.getModifierName());
+//			map.put("modifiedDate_txt", dd.getModifierFullName());
+//			map.put("primary", AUIGridUtils.primaryTemplate(dd));
+//			map.put("secondary", AUIGridUtils.secondaryTemplate(dd));
+//			list.add(map);
+//		}
+//		return JSONArray.fromObject(list);
+//	}
 }

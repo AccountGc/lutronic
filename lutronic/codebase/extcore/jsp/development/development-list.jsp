@@ -16,8 +16,10 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
-
+		<input type="hidden" name="sessionid" id="sessionid">
+		<input type="hidden" name="lastNum" id="lastNum">
+		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="oid" id="oid">
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -84,6 +86,15 @@
 					headerText : "프로젝트 코드",
 					dataType : "string",
 					width : 120,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/development/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -93,6 +104,15 @@
 					headerText : "프로젝트명",
 					dataType : "string",
 					width : 350,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/development/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true

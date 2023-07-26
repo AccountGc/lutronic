@@ -40,12 +40,14 @@ public class MasterData{
 	public String creator;
 	public String createDate;
 	public String modifyDate;
+	
+	public String description;
 
 	public MasterData(devMaster master) throws Exception{
 		
 //		setMaster(master);
 		
-		setOid(master.getPersistInfo().getObjectIdentifier().toString());
+		setOid(CommonUtil.getOIDString(master));
 		
 		setName(StringUtil.checkNull(master.getName()));
 		
@@ -61,15 +63,17 @@ public class MasterData{
 		setDevelopmentStart(master.getStartDay());
 		setDevelopmentEnd(master.getEndDay());
 		
-//		setDm(master.getDm());
-//		setDmOid(master.getDm().getPersistInfo().getObjectIdentifier().toString());
-//		setDmName(master.getDm().getFullName());
+		setDm(master.getDm());
+		setDmOid(CommonUtil.getOIDString(master.getDm()));
+		setDmName(master.getDm().getFullName());
 		
 		setState(master.getLifeCycleState().getDisplay(Message.getLocale()));
 		
 		setCreator(master.getCreatorFullName());
 		setCreateDate(DateUtil.getDateString(master.getPersistInfo().getCreateStamp(), "a"));
 		setModifyDate(DateUtil.getDateString(master.getPersistInfo().getModifyStamp(), "a"));
+		
+		setDescription(master.getDescription());
 		
 	}
 	

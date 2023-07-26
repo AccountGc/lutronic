@@ -720,13 +720,13 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 			
 			devMaster master = (devMaster)CommonUtil.getObject(oid);
 			WTUser dm = master.getDm();
-			People people = UserHelper.service.getPeople(dm);
-			Department dept = people.getDepartment();
+//			People people = UserHelper.service.getPeople(dm);
+//			Department dept = people.getDepartment();
 			
 			map.put("Role", "DM");
 			map.put("name", dm.getFullName());
-			map.put("duty", people.getDuty());
-			map.put("department", dept == null ? "" : StringUtil.checkNull(dept.getName()));
+//			map.put("duty", people.getDuty());
+//			map.put("department", dept == null ? "" : StringUtil.checkNull(dept.getName()));
 			list.add(map);
 			
 			QuerySpec userSpec = DevelopmentQueryHelper.service.getDevelopmentUsers(oid);
@@ -738,13 +738,13 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 				long userOid = ((BigDecimal) obj[0]).intValue();
 				
 				WTUser worker = (WTUser)CommonUtil.getObject("wt.org.WTUser:"+userOid);
-				people = UserHelper.service.getPeople(worker);
-				dept = people.getDepartment();
+//				people = UserHelper.service.getPeople(worker);
+//				dept = people.getDepartment();
 				
 				map.put("Role", Message.get("수행자"));
 				map.put("name", worker.getFullName());
-				map.put("duty", people.getDuty());
-				map.put("department", dept == null ? "" : StringUtil.checkNull(dept.getName()));
+//				map.put("duty", people.getDuty());
+//				map.put("department", dept == null ? "" : StringUtil.checkNull(dept.getName()));
 				list.add(map);
 			}
 			
