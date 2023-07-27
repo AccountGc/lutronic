@@ -266,16 +266,17 @@ public class CommonUtil  implements wt.method.RemoteAccess, java.io.Serializable
             return null;
         }
     }
-	/**
-	 * OID占쏙옙 占쏙옙체占쏙옙 찾占쏙옙 占쏙옙占쏙옙 占싼댐옙 <br>
+    
+    /**
+	 * 객체를 가져오는 함수
 	 */
 	public static Persistable getObject(String oid) {
 		if (oid == null) return null;
 		try {
 			if (rf == null) rf = new ReferenceFactory ();
-			return rf.getReference ( oid ).getObject ();
+			return rf.getReference( oid ).getObject ();
 		} catch (Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			return null;
 		}
 	}

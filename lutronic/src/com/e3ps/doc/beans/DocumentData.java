@@ -1,5 +1,7 @@
 package com.e3ps.doc.beans;
 
+import com.e3ps.common.beans.VersionData;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 
@@ -19,6 +21,7 @@ public class DocumentData {
 	
 //	private WTDocument doc;
 	
+	private String oid;
 	private String number;
 	private String name;
 	private String state;
@@ -29,10 +32,12 @@ public class DocumentData {
 	private String createDate;
 	private String modifyDate;
 	private String description;
+	private String documentType;
 	
 	public DocumentData(WTDocument doc) throws Exception {
-//		super(doc);
+//		super();
 //		setDoc(doc);
+		setOid(CommonUtil.getOIDString(doc));
 		setNumber(doc.getNumber());
 		setName(doc.getName());
 		setState(doc.getLifeCycleState().toString());
@@ -40,6 +45,7 @@ public class DocumentData {
 		setCreateDate(DateUtil.getDateString(doc.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(doc.getModifyTimestamp(),"a"));
 		setDescription(doc.getDescription());
+		setDocumentType(doc.getDocType().getDisplay(Message.getLocale()));
 		
 		ContentItem item = null;
 		QueryResult result = ContentHelper.service.getContentsByRole ((ContentHolder)doc, ContentRoleType.PRIMARY );
