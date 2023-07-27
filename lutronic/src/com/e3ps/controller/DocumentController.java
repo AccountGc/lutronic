@@ -77,27 +77,39 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	/**
-	 * 문서 상세보기
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewDocument")
-	public ModelAndView viewDocument(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "oid") String oid) throws Exception {
+	@Description(value = "문서 상세보기")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam(value = "oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentData docData = new DocumentData(doc);
 
-		model.setViewName("popup:/document/viewDocument");
+		model.setViewName("/extcore/jsp/document/document-view.jsp");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
 		return model;
 	}
+//	/**
+//	 * 문서 상세보기
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/viewDocument")
+//	public ModelAndView viewDocument(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam(value = "oid") String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+//		DocumentData docData = new DocumentData(doc);
+//		
+//		model.setViewName("popup:/document/viewDocument");
+//		model.addObject("isAdmin", CommonUtil.isAdmin());
+//		model.addObject("docData", docData);
+//		return model;
+//	}
 
 	/**
 	 * 문서 삭제

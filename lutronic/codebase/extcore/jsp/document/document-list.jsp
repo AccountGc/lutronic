@@ -21,7 +21,10 @@ if(request.getParameter("popup")!=null){
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid">
+		<input type="hidden" name="lastNum" id="lastNum">
+		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -147,6 +150,15 @@ if(request.getParameter("popup")!=null){
 					headerText : "문서번호",
 					dataType : "string",
 					width : 120,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/doc/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -174,6 +186,15 @@ if(request.getParameter("popup")!=null){
 					headerText : "문서명",
 					dataType : "string",
 					width : 350,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/doc/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -241,6 +262,15 @@ if(request.getParameter("popup")!=null){
 						showIcon : true,
 						inline : true,
 					},
+				}, {
+						dataField : "oid",
+						headerText : "oid",
+						dataType : "string",
+						width : 100,
+						filter : {
+							showIcon : true,
+							inline : true,
+						},
 				} ]
 			}
 

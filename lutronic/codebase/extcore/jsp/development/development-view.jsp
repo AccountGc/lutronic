@@ -107,6 +107,9 @@ MasterData data = (MasterData) request.getAttribute("masterData");
 					TASK
 				</div>
 			</td>
+			<td class="right">
+				<input type="button" value="수정" title="수정" onclick="update('modify');">
+			</td>
 		</tr>
 	</table>
 	<div id="tabs-3">

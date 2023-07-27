@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -176,25 +177,39 @@ public class CommonController {
 		return result; 
 	}
 	
-	/**	품목 속성 보기
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/include_Attributes")
+	@Description(value = "품목 속성 보기")
+	@GetMapping(value = "/include_Attributes")
 	public ModelAndView include_Attributes(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String oid = request.getParameter("oid");
 		String module = request.getParameter("module");
 		String mode = request.getParameter("mode");
 		
 		ModelAndView model = new ModelAndView();
-		Map<String,String> map = CommonHelper.service.getAttributes(oid, mode);
+		Map<String,String> map = CommonHelper.manager.getAttributes(oid, mode);
 		model.setViewName("include:/common/include_Attributes");
-		model.addAllObjects(map);
+		model.addObject("data", map);
 		model.addObject("module", module);
 		return model;
 	}
+//	/**	품목 속성 보기
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/include_Attributes")
+//	public ModelAndView include_Attributes(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		String oid = request.getParameter("oid");
+//		String module = request.getParameter("module");
+//		String mode = request.getParameter("mode");
+//		
+//		ModelAndView model = new ModelAndView();
+//		Map<String,String> map = CommonHelper.service.getAttributes(oid, mode);
+//		model.setViewName("include:/common/include_Attributes");
+//		model.addAllObjects(map);
+//		model.addObject("module", module);
+//		return model;
+//	}
 	
 	/**  픔목 속성 등록/수정
 	 * @param request
