@@ -20,6 +20,12 @@
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="wtPartType"		id="wtPartType"		 	value="separable"     />
+		<input type="hidden" name="source"			id="source"	      		value="make"            />
+		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
+		<input type="hidden" name="view"			id="view"        		value="Design" />
+		<input type="hidden" name="fid" 			id="fid"				value="" >
+		<input type="hidden" name="location" 		id="location" 				value="/Default/PART_Drawing">
 		
 		<table class="button-table">
 			<tr>
@@ -56,7 +62,11 @@
 			<tr>
 				<th>품목구분 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
-					<input type="text" name="partType1" id="partType1" class="width-500">
+					<select id="partType1" name="partType1" style="width: 95%">
+						<option value="1">
+							선택
+						</option>
+					</select>
 				</td>
 				<th>중제목</th>
 				<td class="indent5">
@@ -66,7 +76,11 @@
 			<tr>
 				<th>대분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
-					<input type="text" name="partType2" id="partType2" class="width-500">
+					<select id="partType2" name="partType2" style="width: 95%">
+						<option value="01">
+							선택
+						</option>
+					</select>
 				</td>
 				<th>소제목</th>
 				<td class="indent5">
@@ -76,7 +90,11 @@
 			<tr>
 				<th>중분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
-					<input type="text" name="partType3" id="partType3" class="width-500">
+					<select id="partType3" name="partType3" style="width: 95%">
+						<option value="01">
+							선택
+						</option>
+					</select>
 				</td>
 				<th>사용자 Key in</th>
 				<td class="indent5">
@@ -85,9 +103,20 @@
 			</tr>
 			<tr>
 				<th>SEQ <br><span style="color:red;">(3자리)</span></th>
-				<td class="indent5" colspan="5">
+				<td class="indent5" colspan="2">
 					<input type="text" name="seq" id="seq" class="width-200">
 					<input type="button" id="seqList" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" onclick="loadGridData();">
+				</td>
+				<td class="indent5" colspan="3">
+					<div id="partTypeNum" style="padding-left: 45%;font-weight:bold; vertical-align:middle; float: left;"></div>
+					<div id="manualNum">
+						<div id="seqNum" style="font-weight:bold; vertical-align:middle; float: left;"></div>
+						<div id="etcNum" style="font-weight:bold; vertical-align:middle; float: left;"></div>
+					</div>
+					<br>
+					<div>
+						<span style="font-weight: bold; vertical-align: middle;" id="displayName"></span>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -308,11 +337,17 @@
 				const finish = document.getElementById("finish").value;
 				const remarks = document.getElementById("remarks").value;
 				const specification = document.getElementById("specification").value;
-				const unit = "ea";
+				const unit = "EA";
 //	 			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
 //	 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 //	 			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
 				const primarys = toArray("primarys");
+				const wtPartType = document.getElementById("wtPartType").value;
+				const source = document.getElementById("source").value;
+				const lifecycle = document.getElementById("lifecycle").value;
+				const view = document.getElementById("view").value;
+				const fid = document.getElementById("fid").value;
+				const location = document.getElementById("location").value;
 
 				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
 					alert("품목명을 입력하세요.");
@@ -352,13 +387,13 @@
 				
 				const params = new Object();
 				const url = getCallUrl("/part/create");
-				params.partName1 = partName1;
+				params.partName1 = "MODULE";
 				params.partType1 = partType1;
-				params.partName2 = partName2;
+				params.partName2 = "BOARD";
 				params.partType2 = partType2;
-				params.partName3 = partName3;
+				params.partName3 = "LD DRIVER";
 				params.partType3 = partType3;
-				params.partName4 = partName4;
+				params.partName4 = "";
 				params.seq = seq;
 				params.etc = etc;
 				params.model = model;
@@ -370,9 +405,17 @@
 				params.finish = finish;
 				params.remarks = remarks;
 				params.specification = specification;
+				params.unit = "ea";
 //	 			params.addRows7 = addRows7;
 //	 			params.addRows11 = addRows11;
 				params.primarys = primarys;
+				params.wtPartType = wtPartType;
+				params.source = source;
+				params.lifecycle = lifecycle;
+				params.view = view;
+				params.fid = fid;
+				params.location = location;
+				
 //	 			toRegister(params, addRows8);
 //	 			openLayer();
 				call(url, params, function(data) {
@@ -415,6 +458,38 @@
 				AUIGrid.resize(docGridID);
 				AUIGrid.resize(rohsGridID);
 			});
+			
+			<%----------------------------------------------------------
+			*                      NumberCode 리스트 가져오기
+			----------------------------------------------------------%>
+// 			const numberCodeList = (id, parentCode1) => {
+// 				var type = "";
+// 				if(id == 'partType1' || id == 'partType2' || id =='partType3') {
+// 					type = "PARTTYPE";
+// 				}else {
+// 					type = id.toUpperCase();
+// 				}
+				
+// 				let data = common_numberCodeList(type, parentCode1, false);
+				
+// 				addSelectList(id, eval(data.responseText));
+// 			}
+
+			<%----------------------------------------------------------
+			*                      selectBodx에 옵션 추가
+			----------------------------------------------------------%>
+// 			const addSelectList = (id,data) => {
+// 				const removeId = "#"+ id + " option";
+// 				document.querySelector(removeId).remove();
+// 				const selectId = "#"+ id;
+// 				document.querySelector(selectId).innerHTML = "<option value='' title='' > 선택 </option>";
+// 				if(data.length > 0) {
+// 					for(var i=0; i<data.length; i++) {
+// 						let value = "<option value='" + data[i].code + "' title='" + data[i].oid + "' > [" + data[i].code + "] " + data[i].name + "</option>";
+// 						document.querySelector(selectId).innerHTML += value;
+// 					}
+// 				}
+// 			}
 		</script>
 	</form>
 </body>
