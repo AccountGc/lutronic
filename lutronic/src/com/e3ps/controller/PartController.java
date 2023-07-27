@@ -107,9 +107,19 @@ public class PartController extends BaseController {
 	@Description(value = "품목 등록")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public ResultData create(@RequestBody Map<String, Object> params){
-		Map<String,Object> map = PartHelper.service.requestPartMapping(params);
-		return PartHelper.manager.create(map);
+	public Map<String,Object> create(@RequestBody Map<String, Object> params){
+		Map<String,Object> result = new HashMap<String, Object>();
+		try {
+			Map<String,Object> map = PartHelper.manager.requestPartMapping(params);
+			PartHelper.manager.create(map);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/**  부품 등록시 SEQ 버튼
