@@ -104,6 +104,48 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<td colspan="3"></td>
 	</tr>
 </table>
+<div id="tabs">
+	<ul>
+		<li>
+			<a href="#tabs-1">참조</a>
+		</li>
+		<li>
+			<a href="#tabs-2">참조 항목</a>
+		</li>
+		<li>
+			<a href="#tabs-3">참조 품목</a>
+		</li>
+		<li>
+			<a href="#tabs-4">관련 개발업무</a>
+		</li>
+	</ul>
+	<div id="tabs-1">
+		<!-- 참조 -->
+		<jsp:include page="/extcore/jsp/drawing/include_viewReference.jsp">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-2">
+		<!-- 참조 항목 -->
+		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-3">
+		<!-- 참조 품목 -->
+		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="참조 품목" name="title" />
+		</jsp:include>
+	</div>
+	<div id="tabs-4">
+		<!-- 관련 개발업무 -->
+		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+</div>
+
 		<script type="text/javascript">
 			//수정
 			$("#updateBtn").click(function () {
@@ -211,10 +253,61 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				
 			})
 			
+			document.addEventListener("DOMContentLoaded", function() {
+				$("#tabs").tabs({
+					active : 0,
+					activate : function(event, ui) {
+						var tabId = ui.newPanel.prop("id");
+						switch (tabId) {
+						case "tabs-1":
+							const isCreated1 = AUIGrid.isCreated(refGridID);
+							if (isCreated1) {
+								AUIGrid.resize(refGridID);
+							} else {
+								createAUIGrid2(columnRef);
+							}
+							break;
+						case "tabs-2":
+							const isCreated2 = AUIGrid.isCreated(refbyGridID);
+							if (isCreated2) {
+								AUIGrid.resize(refbyGridID);
+							} else {
+								createAUIGrid3(columnRefby);
+							}
+							break;
+						case "tabs-3":
+							const isCreated3 = AUIGrid.isCreated(partGridID);
+							if (isCreated3) {
+								AUIGrid.resize(partGridID);
+							} else {
+								createAUIGrid1(columnPart);
+							}
+							break;
+						case "tabs-4":
+							const isCreated4 = AUIGrid.isCreated(devGridID);
+							if (isCreated4) {
+								AUIGrid.resize(devGridID);
+							} else {
+								createAUIGrid4(columnDev);
+							}
+							break;
+						}
+					}
+				});
+				createAUIGrid2(columnRef);
+				AUIGrid.resize(refGridID);
+				createAUIGrid3(columnRefby);
+				AUIGrid.resize(refbyGridID);
+				createAUIGrid1(columnPart);
+				AUIGrid.resize(partGridID);
+				createAUIGrid4(columnDev);
+				AUIGrid.resize(devGridID);
+			});
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID7);
-				AUIGrid.resize(myGridID);
-				AUIGrid.resize(myGridID100);
+				AUIGrid.resize(refGridID);
+				AUIGrid.resize(refbyGridID);
+				AUIGrid.resize(partGridID);
+				AUIGrid.resize(devGridID);
 			});
 		</script>

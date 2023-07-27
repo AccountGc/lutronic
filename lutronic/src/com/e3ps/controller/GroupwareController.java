@@ -49,6 +49,8 @@ import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.beans.RohsData;
 
 @Controller
 @RequestMapping(value = "/groupware/**")
@@ -180,6 +182,21 @@ public class GroupwareController extends BaseController {
 //		
 //		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
 //	}
+	
+	@Description(value = "공지사항 상세 페이지")
+	@GetMapping(value =  "/viewNotice")
+	public ModelAndView viewNotice(@RequestParam String oid) throws Exception{
+		NoticeHelper.service.updateCount(oid);
+		Notice notice = (Notice)CommonUtil.getObject(oid);
+		NoticeData dto = new NoticeData(notice);
+		
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/workprocess/notice-view.jsp");
+		return model;
+	}
 	
 	/** 공지사항 상세보기
 	 * @param request

@@ -106,6 +106,46 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 		<td colspan="3"></td>
 	</tr>
 </table>
+<div id="tabs">
+	<ul>
+		<li>
+			<a href="#tabs-1">관련 품목</a>
+		</li>
+		<li>
+			<a href="#tabs-2">관련 대표 물질</a>
+		</li>
+		<li>
+			<a href="#tabs-3">관련 물질</a>
+		</li>
+	</ul>
+	<div id="tabs-1">
+		<!-- 관련 품목 -->
+		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp" flush="false" >
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="관련 품목" name="title" />
+		</jsp:include>
+	</div>
+	<div id="tabs-2">
+		<!-- 관련 대표 물질 -->
+		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="represent" name="roleType"/>
+			<jsp:param value="관련 대표 물질" name="title"/>
+		</jsp:include>
+	</div>
+	<div id="tabs-3">
+		<!-- 관련 물질 -->
+		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="composition" name="roleType"/>
+			<jsp:param value="관련 물질" name="title"/>
+		</jsp:include>
+	</div>
+</div>
+
+
+
+
 		<script type="text/javascript">
 			//수정
 			$("#updateBtn").click(function () {
@@ -213,10 +253,54 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 				
 			})
 			
+			document.addEventListener("DOMContentLoaded", function() {
+				$("#tabs").tabs({
+					active : 0,
+					activate : function(event, ui) {
+						var tabId = ui.newPanel.prop("id");
+						switch (tabId) {
+						case "tabs-1":
+							const isCreated1 = AUIGrid.isCreated(partGridID);
+							if (isCreated1) {
+								AUIGrid.resize(partGridID);
+							} else {
+								createAUIGrid1(columnPart);
+							}
+							break;
+						case "tabs-2":
+							const isCreated2 = AUIGrid.isCreated(rohsGridID);
+							if (isCreated2) {
+								AUIGrid.resize(rohsGridID);
+							} else {
+								createAUIGrid2(columnRohs);
+							}
+							break;
+						case "tabs-3":
+							const isCreated3 = AUIGrid.isCreated(rohs2GridID);
+							if (isCreated3) {
+								AUIGrid.resize(rohs2GridID);
+							} else {
+								createAUIGrid3(columnRohs2);
+							}
+							break;
+						}
+					}
+				});
+				createAUIGrid1(columnPart);
+				AUIGrid.resize(partGridID);
+				createAUIGrid2(columnRohs);
+				AUIGrid.resize(rohsGridID);
+				createAUIGrid3(columnRohs2);
+				AUIGrid.resize(rohs2GridID);
+			});
+			
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID7);
-				AUIGrid.resize(myGridID);
-				AUIGrid.resize(myGridID100);
+				AUIGrid.resize(partGridID);
+				AUIGrid.resize(rohsGridID);
+				AUIGrid.resize(rohs2GridID);
+// 				AUIGrid.resize(myGridID7);
+// 				AUIGrid.resize(myGridID);
+// 				AUIGrid.resize(myGridID100);
 			});
 		</script>
