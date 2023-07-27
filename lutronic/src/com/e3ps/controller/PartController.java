@@ -170,24 +170,36 @@ public class PartController extends BaseController {
 //		return result;
 //	}
 
-	/**	품목 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewPart")
-	public ModelAndView viewPart(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
+	@Description(value = "품목 상세보기")
+	@RequestMapping("/view")
+	public ModelAndView view(@RequestParam(value="oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTPart part = (WTPart)CommonUtil.getObject(oid);
 		PartData partData = new PartData(part);
 		model.addObject("oid",oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("partData", partData);
-		model.setViewName("popup:/part/viewPart");
+		model.setViewName("/extcore/jsp/part/part-view.jsp");
 		return model;
 	}
+//	/**	품목 상세보기
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/viewPart")
+//	public ModelAndView viewPart(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		WTPart part = (WTPart)CommonUtil.getObject(oid);
+//		PartData partData = new PartData(part);
+//		model.addObject("oid",oid);
+//		model.addObject("isAdmin", CommonUtil.isAdmin());
+//		model.addObject("partData", partData);
+//		model.setViewName("popup:/part/viewPart");
+//		return model;
+//	}
 
 	/** 품목 삭제
 	 * @param request

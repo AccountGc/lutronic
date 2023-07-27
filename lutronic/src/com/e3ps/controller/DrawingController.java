@@ -26,6 +26,8 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.development.beans.DevTaskData;
+import com.e3ps.development.service.DevelopmentHelper;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
@@ -387,38 +389,70 @@ public class DrawingController extends BaseController{
 		return model;
 	}
 	
-	/** 관련 도면 보기
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/include_DrawingView")
-	public ModelAndView include_DrawingView(HttpServletRequest request, HttpServletResponse response) {
-		String moduleType = request.getParameter("moduleType");
-		String oid = request.getParameter("oid");
-		String title = request.getParameter("title");
-		String paramName = request.getParameter("paramName");
-		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"),"");
-		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-		//System.out.println("include_DrawingView distribute =" + distribute);
-		List<EpmData> list = null;
+	@Description(value = "관련 도면 보기")
+	@PostMapping(value = "/drawingView_include")
+	@ResponseBody
+	public Map<String,Object> include_DrawingView(@RequestBody Map<String, Object> params) {
+		Map<String,Object> result = new HashMap<String,Object>();
 		try {
+			String moduleType = (String) params.get("moduleType");
+			String oid = (String) params.get("oid");
+			String title = (String) params.get("title");
+			String paramName = (String) params.get("paramName");
+			String epmType = StringUtil.checkReplaceStr((String) params.get("epmType"),"");
+			String distribute = StringUtil.checkNull((String) params.get("distribute"));
+			//System.out.println("include_DrawingView distribute =" + distribute);
+			List<EpmData> list = null;
 			list = DrawingHelper.service.include_DrawingList(oid,moduleType,epmType);
+			
+			result.put("result", SUCCESS);
+			result.put("moduleType", moduleType);
+			result.put("epmType", epmType);
+			result.put("oid", oid);
+			result.put("title", title);
+			result.put("paramName", paramName);
+			result.put("list", list);
+			result.put("distribute", distribute);
 		} catch(Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
-		ModelAndView model = new ModelAndView();
-		model.addObject("moduleType", moduleType);
-		model.addObject("epmType", epmType);
-		model.addObject("oid", oid);
-		model.addObject("title", title);
-		model.addObject("paramName", paramName);
-		model.addObject("list", list);
-		model.addObject("distribute", distribute);
-		model.setViewName("include:/drawing/include_DrawingView");
-		return model;
+		return result;
+	
 	}
+//	/** 관련 도면 보기
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/include_DrawingView")
+//	public ModelAndView include_DrawingView(HttpServletRequest request, HttpServletResponse response) {
+//		String moduleType = request.getParameter("moduleType");
+//		String oid = request.getParameter("oid");
+//		String title = request.getParameter("title");
+//		String paramName = request.getParameter("paramName");
+//		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"),"");
+//		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
+//		//System.out.println("include_DrawingView distribute =" + distribute);
+//		List<EpmData> list = null;
+//		try {
+//			list = DrawingHelper.service.include_DrawingList(oid,moduleType,epmType);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("moduleType", moduleType);
+//		model.addObject("epmType", epmType);
+//		model.addObject("oid", oid);
+//		model.addObject("title", title);
+//		model.addObject("paramName", paramName);
+//		model.addObject("list", list);
+//		model.addObject("distribute", distribute);
+//		model.setViewName("include:/drawing/include_DrawingView");
+//		return model;
+//	}
 	
 	/** 도면 미리보기
 	 * @param request

@@ -282,6 +282,15 @@ if(request.getParameter("popup")!=null){
 					headerText : "품목번호",
 					dataType : "string",
 					width : 180,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/part/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -291,6 +300,15 @@ if(request.getParameter("popup")!=null){
 					headerText : "품목명",
 					dataType : "string",
 					width : 380,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/part/view?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true

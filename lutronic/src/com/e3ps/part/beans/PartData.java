@@ -72,6 +72,7 @@ public class PartData {
 	private String baseline;
 	private String unit;
 	private EPMDocument epm;
+	private String epmOid;
 	private String name;
 	private String state;
 	private String oid;
@@ -125,6 +126,13 @@ public class PartData {
     	setCreator(part.getCreatorFullName());
     	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
     	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
+    	
+    	if(epm == null){
+			epm = DrawingHelper.service.getEPMDocument(part);
+			setEpmOid("");
+		}else {
+			setEpmOid(epm.getPersistInfo().getObjectIdentifier().toString());
+		}
     }
     
 //	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{
