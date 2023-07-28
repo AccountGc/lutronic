@@ -98,7 +98,7 @@ if(roleType.equals("represent")){
 	
 	
 
-	function createAUIGrid2(columnLayout) {
+	function createAUIGridRohs1(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
@@ -113,7 +113,7 @@ if(roleType.equals("represent")){
 		AUIGrid.setGridData(rohsGridID, <%=json%>);
 	}
 	
-	function createAUIGrid3(columnLayout) {
+	function createAUIGridRohs2(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
