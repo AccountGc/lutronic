@@ -47,7 +47,7 @@
 					autoGridHeight : true,
 				}
 				myGridID2 = AUIGrid.create("#grid_taskWrap", columnLayout, props);
-// 				loadGridData2();
+				loadGridData2();
 				AUIGrid.setGridData(myGridID2,);
 			}
 			
