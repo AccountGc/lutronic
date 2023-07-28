@@ -50,6 +50,23 @@ PartData data = (PartData) request.getAttribute("data");
 		<li>
 			<a href="#tabs-4">관련 도면</a>
 		</li>
+		<li>
+			<a href="#tabs-5">관련 문서</a>
+		</li>
+		<li>
+			<a href="#tabs-6">관련 물질</a>
+		</li>
+		<li>
+			<a href="#tabs-7">관련 ECO</a>
+		</li>
+		<li>
+			<a href="#tabs-8">관련 개별 업무</a>
+		</li>
+		<% if(isAdmin){ %>
+		<li>
+			<a href="#tabs-9">관리자 속성</a>
+		</li>
+		<% } %>
 	</ul>
 	<div id="tabs-1">
 		<table class="view-table">
@@ -139,7 +156,8 @@ PartData data = (PartData) request.getAttribute("data");
 	<!-- 참조 항목 -->
 	<div id="tabs-3">
 		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
-			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="part" name="moduleType"/>
+			<jsp:param value="<%=data.getEpmOid() %>" name="oid" />
 		</jsp:include>
 	</div>
 	
@@ -156,16 +174,46 @@ PartData data = (PartData) request.getAttribute("data");
 	<!-- 관련 문서 -->
 	<div id="tabs-5">
 		<jsp:include page="/extcore/jsp/document/include_viewDocument.jsp">
+			<jsp:param value="part" name="moduleType"/>
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>
 	
-	<!-- 관련 ECO -->
+	<!-- 관련 물질 -->
 	<div id="tabs-6">
+		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="part" name="module"/>
+			<jsp:param value="관련 RoHs" name="title"/>
+			<jsp:param value="composition" name="roleType"/>
+		</jsp:include>
+	</div>
+	
+	<!-- 관련 ECO -->
+	<div id="tabs-7">
 		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp">
+			<jsp:param value="part" name="moduleType"/>
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>
+	
+	<!-- 관련 개별 업무 -->
+	<div id="tabs-8">
+		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="part" name="moduleType"/>
+		</jsp:include>
+	</div>
+	
+	<% if(isAdmin){ %>
+	<!-- 관리자 속성 -->
+	<div id="tabs-9">
+		<jsp:include page="/extcore/jsp/common/adminAttributes_include.jsp">
+			<jsp:param value="part" name="module"/>
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	<% } %>
 </div>
 <script type="text/javascript">
 	function update(mode) {
@@ -200,21 +248,22 @@ PartData data = (PartData) request.getAttribute("data");
 			active : 0,
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
+				let isCreated = false;
 				switch (tabId) {
 				case "tabs-2":
-					const isCreated = AUIGrid.isCreated(myGridID1);
+					isCreated = AUIGrid.isCreated(drawingGridID);
 					if (isCreated) {
-						AUIGrid.resize(myGridID1);
+						AUIGrid.resize(drawingGridID);
 					} else {
-						createAUIGrid1(columns1);
+						createAUIGridDrawing(columnsDrawing);
 					}
 					break;
 				case "tabs-3":
-					const isCreated2 = AUIGrid.isCreated(myGridID2);
-					if (isCreated2) {
-						AUIGrid.resize(myGridID2);
+					isCreated = AUIGrid.isCreated(refbyGridID);
+					if (isCreated) {
+						AUIGrid.resize(refbyGridID);
 					} else {
-						createAUIGrid2(columns2);
+						createAUIGrid3(columnRefby);
 					}
 					break;
 // 				case "tabs-4":
@@ -225,13 +274,58 @@ PartData data = (PartData) request.getAttribute("data");
 // 						createAUIGrid1(columns1);
 // 					}
 // 					break;
+				case "tabs-5":
+					isCreated = AUIGrid.isCreated(docGridID);
+					if (isCreated) {
+						AUIGrid.resize(docGridID);
+					} else {
+						createAUIGrid5(columnDoc);
+					}
+					break;
+				case "tabs-6":
+					isCreated = AUIGrid.isCreated(rohs2GridID);
+					if (isCreated) {
+						AUIGrid.resize(rohs2GridID);
+					} else {
+						createAUIGridRohs2(columnRohs2);
+					}
+					break;
+				case "tabs-7":
+					isCreated = AUIGrid.isCreated(ecoGridID);
+					if (isCreated) {
+						AUIGrid.resize(ecoGridID);
+					} else {
+						createAUIGrid7(columnEco);
+					}
+					break;
+				case "tabs-8":
+					isCreated = AUIGrid.isCreated(devGridID);
+					if (isCreated) {
+						AUIGrid.resize(devGridID);
+					} else {
+						createAUIGrid4(columnDev);
+					}
+					break;
+				case "tabs-9":
+					isCreated = AUIGrid.isCreated(adminGridID);
+					if (isCreated) {
+						AUIGrid.resize(adminGridID);
+					} else {
+						createAUIGridAdmin(columnsAdmin);
+					}
+					break;
 				}
 			},
 		});
 	});
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID1);
-		AUIGrid.resize(myGridID2);
+		AUIGrid.resize(drawingGridID);
+		AUIGrid.resize(refbyGridID);
+		AUIGrid.resize(docGridID);
+		AUIGrid.resize(rohs2GridID);
+		AUIGrid.resize(ecoGridID);
+		AUIGrid.resize(devGridID);
+		AUIGrid.resize(adminGridID);
 	});
 </script>

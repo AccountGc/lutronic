@@ -1,7 +1,16 @@
 package com.e3ps.common.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -9,6 +18,8 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 
+import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.iba.value.IBAHolder;
 import wt.part.WTPart;
@@ -109,4 +120,41 @@ public class CommonHelper {
     	
     	return map;
     }
+	
+	/**
+	 * 관리자 속성 가져오기
+	 */
+	public JSONArray include_adminAttribute(String oid, String module) {
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		try {
+			
+			Map<String,String> map = new HashMap<String,String>();
+			
+			Object object = CommonUtil.getObject(oid);
+			
+			HashMap has = null;
+			if("part".equals(module)) {
+				has = IBAUtil.getAttributes((WTPart)object);
+			}else if("drawing".equals(module)) {
+				has = IBAUtil.getAttributes((EPMDocument)object);
+			}else if("doc".equals(module)) {
+				has = IBAUtil.getAttributes((WTDocument)object);
+			}
+			
+			String temp = has.toString();
+			StringTokenizer tokens = new StringTokenizer(temp,", ");
+			
+			while(tokens.hasMoreTokens()){
+				String badT = (String)tokens.nextToken();
+				map.put("badT", badT);
+				
+				list.add(map);
+			}
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return JSONArray.fromObject(list);
+	}
 }

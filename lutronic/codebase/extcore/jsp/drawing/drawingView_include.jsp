@@ -30,8 +30,8 @@
 </table>
 <div id="grid_drawing_Wrap" style="height: 350px; border-top: 1px solid #3180c3;"></div>
 <script type="text/javascript">
-	let myGridID1;
-	const columns1 = [ {
+	let drawingGridID;
+	const columnsDrawing = [ {
 		dataField : "number",
 		headerText : "도면번호",
 		dataType : "string",
@@ -67,7 +67,7 @@
 		width : 100,
 	}]
 
-	function createAUIGrid1(columnLayout) {
+	function createAUIGridDrawing(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : false,
@@ -77,7 +77,6 @@
 			autoGridHeight : true,
 		}
 		myGridID1 = AUIGrid.create("#grid_drawing_Wrap", columnLayout, props);
-		loadGridData1();
 		AUIGrid.setGridData(myGridID1,<%= includeDrawingList %>);
 	}
 </script>
