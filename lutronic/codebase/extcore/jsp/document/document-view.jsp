@@ -11,6 +11,7 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
+
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -64,120 +65,144 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		</td>
 	</tr>
 </table>
-<table class="view-table">
-	<colgroup>
-		<col width="150">
-		<col width="350">
-		<col width="150">
-		<col width="350">
-	</colgroup>
-	<tr>
-		<% if(data.getDocumentType().equals("금형문서")){ %>
-		<th class="lb">금형번호</th>
-		<% }else{ %>
-		<th class="lb">문서번호</th>
-		<% } %>
-		<td class="indent5"><%=data.getNumber()%></td>
-		<% if(data.getDocumentType().equals("금형문서")){ %>
-		<th class="lb">금형분류</th>
-		<% }else{ %>
-		<th class="lb">문서분류</th>
-		<% } %>
-		<td class="indent5"><%=data.getLocation()%></td>
-	</tr>
-	<tr>
-		<th class="lb">상태</th>
-		<td class="indent5"><%=data.getState()%></td>
-		<th>Rev.</th>
-		<td class="indent5">
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">등록자</th>
-		<td class="indent5"><%=data.getCreator()%></td>
-		<th class="lb">수정자</th>
-		<td class="indent5"><%=data.getModifier()%></td>
-	</tr>
-	<tr>
-		<th class="lb">등록일</th>
-		<td class="indent5"><%=data.getCreateDate()%></td>
-		<th class="lb">수정일</th>
-		<td class="indent5"><%=data.getModifyDate()%></td>
-	</tr>
-	<tr>
-		<th class="lb">문서유형</th>
-		<td class="indent5"><%=data.getDocumentType()%></td>
-		<th class="lb">결재방식</th>
-		<td class="indent5"><%=data.getApprovalType()%></td>
-	</tr>
-	<tr>
-		<th class="lb">설명</th>
-		<td colspan="3" class="indent5">
-			<textarea rows="5" readonly="readonly"><%=data.getDescription() != null ? data.getDescription() : ""%></textarea>
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">주 첨부파일</th>
-		<td colspan="3" class="indent5">
-<%-- 			<jsp:include page="/eSolution/content/includeAttachFileView"> --%>
-<%-- 				<jsp:param value="p" name="type"/> --%>
-<%-- 				<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
-<%-- 			</jsp:include> --%>
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">첨부파일
-			<br>
-			<input type="button" value="일괄 다운" title="일괄 다운"  onclick="">
-		</th>
-		<td colspan="3" class="indent5">
-<%-- 			<jsp:include page="/eSolution/content/includeAttachFileView"> --%>
-<%-- 				<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
-<%-- 			</jsp:include> --%>
-		</td>
-	</tr>
-</table>
-
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> 속성
-			</div>
-		</td>
-	</tr>
-</table>
-<%if(data.getDocumentType().equals("금형문서")){%>
-	<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
-		<jsp:param value="<%=data.getOid()%>" name="oid" />
-		<jsp:param value="mold" name="module"/>
-	</jsp:include>
-<%}else{ %>
-	<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
-		<jsp:param value="<%=data.getOid()%>" name="oid" />
-		<jsp:param value="doc" name="module"/>
-	</jsp:include>
-<%} %>
-
 <div id="tabs">
 	<ul>
 		<li>
-			<a href="#tabs-1">관련 품목</a>
+			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">관련 개발업무</a>
+			<a href="#tabs-2">관련 품목</a>
+		</li>
+		<li>
+			<a href="#tabs-3">관련 개발업무</a>
+		</li>
+		<li>
+			<a href="#tabs-4">관련 문서</a>
+		</li>
+		<li>
+			<a href="#tabs-5">관련 ECO</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
+		<!-- 기본 정보 -->
+		<table class="view-table">
+			<colgroup>
+				<col width="150">
+				<col width="350">
+				<col width="150">
+				<col width="350">
+			</colgroup>
+			<tr>
+				<% if(data.getDocumentType().equals("금형문서")){ %>
+				<th class="lb">금형번호</th>
+				<% }else{ %>
+				<th class="lb">문서번호</th>
+				<% } %>
+				<td class="indent5"><%=data.getNumber()%></td>
+				<% if(data.getDocumentType().equals("금형문서")){ %>
+				<th class="lb">금형분류</th>
+				<% }else{ %>
+				<th class="lb">문서분류</th>
+				<% } %>
+				<td class="indent5"><%=data.getLocation()%></td>
+			</tr>
+			<tr>
+				<th class="lb">상태</th>
+				<td class="indent5"><%=data.getState()%></td>
+				<th>Rev.</th>
+				<td class="indent5">
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">등록자</th>
+				<td class="indent5"><%=data.getCreator()%></td>
+				<th class="lb">수정자</th>
+				<td class="indent5"><%=data.getModifier()%></td>
+			</tr>
+			<tr>
+				<th class="lb">등록일</th>
+				<td class="indent5"><%=data.getCreateDate()%></td>
+				<th class="lb">수정일</th>
+				<td class="indent5"><%=data.getModifyDate()%></td>
+			</tr>
+			<tr>
+				<th class="lb">문서유형</th>
+				<td class="indent5"><%=data.getDocumentType()%></td>
+				<th class="lb">결재방식</th>
+				<td class="indent5"><%=data.getApprovalType()%></td>
+			</tr>
+			<tr>
+				<th class="lb">설명</th>
+				<td colspan="3" class="indent5">
+					<textarea rows="5" readonly="readonly"><%=data.getDescription() != null ? data.getDescription() : ""%></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">주 첨부파일</th>
+				<td colspan="3" class="indent5">
+		<%-- 			<jsp:include page="/eSolution/content/includeAttachFileView"> --%>
+		<%-- 				<jsp:param value="p" name="type"/> --%>
+		<%-- 				<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
+		<%-- 			</jsp:include> --%>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">첨부파일
+					<br>
+					<input type="button" value="일괄 다운" title="일괄 다운"  onclick="">
+				</th>
+				<td colspan="3" class="indent5">
+		<%-- 			<jsp:include page="/eSolution/content/includeAttachFileView"> --%>
+		<%-- 				<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
+		<%-- 			</jsp:include> --%>
+				</td>
+			</tr>
+		</table>
+		
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 속성
+					</div>
+				</td>
+			</tr>
+		</table>
+		<%if(data.getDocumentType().equals("금형문서")){%>
+			<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+				<jsp:param value="<%=data.getOid()%>" name="oid" />
+				<jsp:param value="mold" name="module"/>
+			</jsp:include>
+		<%}else{ %>
+			<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+				<jsp:param value="<%=data.getOid()%>" name="oid" />
+				<jsp:param value="<%=data.getCreator()%>" name="creator" />
+				<jsp:param value="doc" name="module"/>
+			</jsp:include>
+		<%} %>
+	</div>
+	<div id="tabs-2">
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
 			<jsp:param value="관련 품목" name="title" />
 		</jsp:include>
 	</div>
-	<div id="tabs-2">
+	<div id="tabs-3">
 		<!-- 관련 개발업무 -->
 		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-4">
+		<!-- 관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include_viewDocument.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-5">
+		<!-- 관련 ECO -->
+		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>
@@ -290,7 +315,7 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-1":
+				case "tabs-2":
 					const isCreated1 = AUIGrid.isCreated(partGridID);
 					if (isCreated1) {
 						AUIGrid.resize(partGridID);
@@ -298,12 +323,28 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 						createAUIGrid1(columnPart);
 					}
 					break;
-				case "tabs-2":
+				case "tabs-3":
 					const isCreated2 = AUIGrid.isCreated(devGridID);
 					if (isCreated2) {
 						AUIGrid.resize(devGridID);
 					} else {
 						createAUIGrid4(columnDev);
+					}
+					break;	
+				case "tabs-4":
+					const isCreated3 = AUIGrid.isCreated(docGridID);
+					if (isCreated3) {
+						AUIGrid.resize(docGridID);
+					} else {
+						createAUIGrid5(columnDoc);
+					}
+					break;	
+				case "tabs-5":
+					const isCreated4 = AUIGrid.isCreated(ecoGridID);
+					if (isCreated4) {
+						AUIGrid.resize(ecoGridID);
+					} else {
+						createAUIGrid7(columnEco);
 					}
 					break;	
 				}
@@ -313,11 +354,17 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		AUIGrid.resize(partGridID);
 		createAUIGrid4(columnDev);
 		AUIGrid.resize(devGridID);
+		createAUIGrid5(columnDoc);
+		AUIGrid.resize(docGridID);
+		createAUIGrid7(columnEco);
+		AUIGrid.resize(ecoGridID);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(partGridID);
 		AUIGrid.resize(devGridID);
+		AUIGrid.resize(docGridID);
+		AUIGrid.resize(ecoGridID);
 	});
 	
 </script>
