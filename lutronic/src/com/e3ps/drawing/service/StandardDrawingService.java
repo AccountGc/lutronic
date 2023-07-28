@@ -1125,42 +1125,6 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 	}
 	
 	@Override
-	public List<EpmData> include_DrawingList(String oid, String moduleType, String epmType) throws Exception {
-		List<EpmData> list = new ArrayList<EpmData>();
-    	if("part".equals(moduleType)) {
-    		WTPart part = (WTPart)CommonUtil.getObject(oid);
-    		boolean lastVer = VersionHelper.service.isLastVersion(part);
-    		if("main".equals(epmType)) {
-    			EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
-    			if(epm != null) {
-	    			EpmData data = new EpmData(epm);
-	    			list.add(data);
-    			}
-    		}else {
-    			Vector<EPMDescribeLink> vecDesc = EpmSearchHelper.service.getEPMDescribeLink(part, lastVer);
-				for(EPMDescribeLink link : vecDesc){
-		    		EPMDocument epmLink = (EPMDocument)link.getRoleBObject();
-	    			EpmData data = new EpmData(epmLink);
-    				list.add(data);
-				}
-    			
-    		}
-    	}else if("active".equals(moduleType)) {
-    		devActive m = (devActive)CommonUtil.getObject(oid);
-    		QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
-    		
-    		while(qr.hasMoreElements()){ 
-        		Object p = (Object)qr.nextElement();
-        		if(p instanceof EPMDocument) {
-        			EpmData data = new EpmData((EPMDocument)p);
-            		list.add(data);
-        		}
-    		}
-    	}
-    	return list;
-	}
-	
-	@Override
 	public EPMDocument getLastEPMDocument(String number){
 		
 		EPMDocument epm = null;

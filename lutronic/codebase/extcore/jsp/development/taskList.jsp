@@ -1,4 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.development.service.DevelopmentHelper"%>
+<%
+String oid = (String) request.getParameter("oid");
+boolean enAbled = (boolean) request.getAttribute("enAbled");
+JSONArray taskList = DevelopmentHelper.manager.viewTaskList(oid);
+%>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				TASK
+			</div>
+		</td>
+		<% if(enAbled){ %>
+		<td class="right">
+			<input type="button" value="수정" title="수정" onclick="update('modify');">
+		</td>
+		<% } %>
+	</tr>
+</table>
 <div id="grid_taskWrap" style="height: 350px; border-top: 1px solid #3180c3;"></div>
 <script type="text/javascript">
 			let myGridID2;
@@ -47,28 +69,6 @@
 					autoGridHeight : true,
 				}
 				myGridID2 = AUIGrid.create("#grid_taskWrap", columnLayout, props);
-				loadGridData2();
-				AUIGrid.setGridData(myGridID2,);
-			}
-			
-			function loadGridData2() {
- 				let params = new Object();
-				const url = getCallUrl("/development/taskList");
-				const field = ["oid"];
- 				params = toField(params, field);
- 				AUIGrid.showAjaxLoader(myGridID2);
-//  				parent.openLayer();
- 				call(url, params, function(data) {
-					AUIGrid.removeAjaxLoader(myGridID2);
-					if (data.result) {
-// 						document.getElementById("sessionid").value = data.sessionid;
-// 						document.getElementById("curPage").value = data.curPage;
-//							document.getElementById("lastNum").value = data.list.length;
-						AUIGrid.setGridData(myGridID2, data.list);
-					} else {
-						alert(data.msg);
-					}
-// 					parent.closeLayer();
-				});
+				AUIGrid.setGridData(myGridID2, <%= taskList %>);
 			}
 	</script>

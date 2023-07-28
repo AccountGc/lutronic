@@ -218,21 +218,16 @@ public class DrawingController extends BaseController{
 		return model;
 	}
 	
-	/** 참조 항목
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/include_ReferenceBy")
-	public ModelAndView include_ReferenceBy(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String title = StringUtil.checkReplaceStr(request.getParameter("title"),"참조 항목");
-		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-		ModelAndView model = new ModelAndView();
-		model.setViewName("include:/drawing/include_ReferenceBy");
+	@Description(value = "참조 항목")
+	@PostMapping("/include_ReferenceBy")
+	@ResponseBody
+	public Map<String,Object> include_ReferenceBy(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String,Object> result = new HashMap<String,Object>();
+		String title = StringUtil.checkReplaceStr((String)params.get("title"),"참조 항목");
+		String distribute = StringUtil.checkNull((String)params.get("distribute"));
 		
 		List<EpmData> list = new ArrayList<EpmData>();
-		String oid = request.getParameter("oid");
+		String oid = (String)params.get("oid");
 		if(StringUtil.checkString(oid)) {
 			EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
 			List<EPMReferenceLink> refList = EpmSearchHelper.service.getEPMReferenceList((EPMDocumentMaster)epm.getMaster());
@@ -245,11 +240,43 @@ public class DrawingController extends BaseController{
 				list.add(data);
 			}
 		}
-		model.addObject("title",title);
-		model.addObject("list", list);
-		model.addObject("distribute", distribute);
-		return model;
+		result.put("title",title);
+		result.put("list", list);
+		result.put("distribute", distribute);
+		return result;
 	}
+//	/** 참조 항목
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/include_ReferenceBy")
+//	public ModelAndView include_ReferenceBy(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		String title = StringUtil.checkReplaceStr(request.getParameter("title"),"참조 항목");
+//		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("include:/drawing/include_ReferenceBy");
+//		
+//		List<EpmData> list = new ArrayList<EpmData>();
+//		String oid = request.getParameter("oid");
+//		if(StringUtil.checkString(oid)) {
+//			EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
+//			List<EPMReferenceLink> refList = EpmSearchHelper.service.getEPMReferenceList((EPMDocumentMaster)epm.getMaster());
+//			for(EPMReferenceLink link : refList) {
+//				EPMDocument epmdoc = link.getReferencedBy();
+//				EpmData data = new EpmData(epmdoc);
+//				
+//				data.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
+//				
+//				list.add(data);
+//			}
+//		}
+//		model.addObject("title",title);
+//		model.addObject("list", list);
+//		model.addObject("distribute", distribute);
+//		return model;
+//	}
 	
 	/** 도면 삭제
 	 * @param request
@@ -389,70 +416,38 @@ public class DrawingController extends BaseController{
 		return model;
 	}
 	
-	@Description(value = "관련 도면 보기")
-	@PostMapping(value = "/drawingView_include")
-	@ResponseBody
-	public Map<String,Object> include_DrawingView(@RequestBody Map<String, Object> params) {
-		Map<String,Object> result = new HashMap<String,Object>();
+	/** 관련 도면 보기
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/include_DrawingView")
+	public ModelAndView include_DrawingView(HttpServletRequest request, HttpServletResponse response) {
+		String moduleType = request.getParameter("moduleType");
+		String oid = request.getParameter("oid");
+		String title = request.getParameter("title");
+		String paramName = request.getParameter("paramName");
+		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"),"");
+		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
+		//System.out.println("include_DrawingView distribute =" + distribute);
+		List<EpmData> list = null;
 		try {
-			String moduleType = (String) params.get("moduleType");
-			String oid = (String) params.get("oid");
-			String title = (String) params.get("title");
-			String paramName = (String) params.get("paramName");
-			String epmType = StringUtil.checkReplaceStr((String) params.get("epmType"),"");
-			String distribute = StringUtil.checkNull((String) params.get("distribute"));
-			//System.out.println("include_DrawingView distribute =" + distribute);
-			List<EpmData> list = null;
 			list = DrawingHelper.service.include_DrawingList(oid,moduleType,epmType);
-			
-			result.put("result", SUCCESS);
-			result.put("moduleType", moduleType);
-			result.put("epmType", epmType);
-			result.put("oid", oid);
-			result.put("title", title);
-			result.put("paramName", paramName);
-			result.put("list", list);
-			result.put("distribute", distribute);
 		} catch(Exception e) {
 			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
 		}
-		return result;
-	
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("moduleType", moduleType);
+		model.addObject("epmType", epmType);
+		model.addObject("oid", oid);
+		model.addObject("title", title);
+		model.addObject("paramName", paramName);
+		model.addObject("list", list);
+		model.addObject("distribute", distribute);
+		model.setViewName("include:/drawing/include_DrawingView");
+		return model;
 	}
-//	/** 관련 도면 보기
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping("/include_DrawingView")
-//	public ModelAndView include_DrawingView(HttpServletRequest request, HttpServletResponse response) {
-//		String moduleType = request.getParameter("moduleType");
-//		String oid = request.getParameter("oid");
-//		String title = request.getParameter("title");
-//		String paramName = request.getParameter("paramName");
-//		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"),"");
-//		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-//		//System.out.println("include_DrawingView distribute =" + distribute);
-//		List<EpmData> list = null;
-//		try {
-//			list = DrawingHelper.service.include_DrawingList(oid,moduleType,epmType);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("moduleType", moduleType);
-//		model.addObject("epmType", epmType);
-//		model.addObject("oid", oid);
-//		model.addObject("title", title);
-//		model.addObject("paramName", paramName);
-//		model.addObject("list", list);
-//		model.addObject("distribute", distribute);
-//		model.setViewName("include:/drawing/include_DrawingView");
-//		return model;
-//	}
 	
 	/** 도면 미리보기
 	 * @param request

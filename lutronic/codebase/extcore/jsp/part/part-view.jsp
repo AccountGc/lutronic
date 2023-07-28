@@ -37,17 +37,20 @@ PartData data = (PartData) request.getAttribute("data");
 	</tr>
 </table>
 <div id="tabs">
-<!-- 	<ul> -->
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-1">개발업무 상세보기</a> -->
-<!-- 		</li> -->
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-2">구성원</a> -->
-<!-- 		</li> -->
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-3">TASK</a> -->
-<!-- 		</li> -->
-<!-- 	</ul> -->
+	<ul>
+		<li>
+			<a href="#tabs-1">기본 정보</a>
+		</li>
+		<li>
+			<a href="#tabs-2">주도면</a>
+		</li>
+		<li>
+			<a href="#tabs-3">참조 항목</a>
+		</li>
+		<li>
+			<a href="#tabs-4">관련 도면</a>
+		</li>
+	</ul>
 	<div id="tabs-1">
 		<table class="view-table">
 			<colgroup>
@@ -105,19 +108,17 @@ PartData data = (PartData) request.getAttribute("data");
 				</td>
 			</tr>
 		</table>
-	</div>
 	
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png">
-					품목 속성
-				</div>
-			</td>
-		</tr>
-	</table>
-	<div id="tabs-2">
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						품목 속성
+					</div>
+				</td>
+			</tr>
+		</table>
 		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
 			<jsp:param value="<%=data.getOid()%>" name="oid" />
 			<jsp:param value="part" name="module"/>
@@ -125,7 +126,7 @@ PartData data = (PartData) request.getAttribute("data");
 	</div>
 	
 	<!-- 	주도면 -->
-	<div id="tabs-3">
+	<div id="tabs-2">
 		<jsp:include page="/extcore/jsp/drawing/drawingView_include.jsp">
 			<jsp:param value="part" name="moduleType"/>
 			<jsp:param value="main" name="epmType" />
@@ -136,13 +137,35 @@ PartData data = (PartData) request.getAttribute("data");
 	</div>	
 	
 	<!-- 참조 항목 -->
-	<div id="tabs-4">
+	<div id="tabs-3">
 		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>
 	
-		
+	<!-- 관련 도면 -->
+	<div id="tabs-4">
+<%-- 		<jsp:include page="/extcore/jsp/drawing/drawingView_include.jsp"> --%>
+<%-- 			<jsp:param value="part" name="moduleType"/> --%>
+<%-- 			<jsp:param value="<%=data.getOid() %>" name="oid"/> --%>
+<%-- 			<jsp:param value="관련 도면" name="title"/> --%>
+<%-- 			<jsp:param value="epmOid" name="paramName"/> --%>
+<%-- 		</jsp:include> --%>
+	</div>
+	
+	<!-- 관련 문서 -->
+	<div id="tabs-5">
+		<jsp:include page="/extcore/jsp/document/include_viewDocument.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	
+	<!-- 관련 ECO -->
+	<div id="tabs-6">
+		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
 </div>
 <script type="text/javascript">
 	function update(mode) {
@@ -178,33 +201,37 @@ PartData data = (PartData) request.getAttribute("data");
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-3":
-					const isCreated = AUIGrid.isCreated(myGridID);
+				case "tabs-2":
+					const isCreated = AUIGrid.isCreated(myGridID1);
 					if (isCreated) {
-						AUIGrid.resize(myGridID);
+						AUIGrid.resize(myGridID1);
 					} else {
-						createAUIGrid(columns);
+						createAUIGrid1(columns1);
 					}
 					break;
-// 				case "tabs-3":
-// 					const isCreated2 = AUIGrid.isCreated(myGridID2);
-// 					if (isCreated2) {
-// 						AUIGrid.resize(myGridID2);
+				case "tabs-3":
+					const isCreated2 = AUIGrid.isCreated(myGridID2);
+					if (isCreated2) {
+						AUIGrid.resize(myGridID2);
+					} else {
+						createAUIGrid2(columns2);
+					}
+					break;
+// 				case "tabs-4":
+// 					const isCreated = AUIGrid.isCreated(myGridID1);
+// 					if (isCreated) {
+// 						AUIGrid.resize(myGridID1);
 // 					} else {
-// 						createAUIGrid2(columns2);
+// 						createAUIGrid1(columns1);
 // 					}
 // 					break;
 				}
 			},
 		});
-		createAUIGrid(columns);
-// 		createAUIGrid2(columns2);
-		AUIGrid.resize(myGridID);
-// 		AUIGrid.resize(myGridID2);
 	});
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID);
-// 		AUIGrid.resize(myGridID2);
+		AUIGrid.resize(myGridID1);
+		AUIGrid.resize(myGridID2);
 	});
 </script>

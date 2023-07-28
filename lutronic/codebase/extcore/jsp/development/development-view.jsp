@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.development.beans.MasterData"%>
-<%-- <%@page import="e3ps.project.dto.ProjectDTO"%> --%>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -35,17 +34,17 @@ MasterData data = (MasterData) request.getAttribute("masterData");
 	</tr>
 </table>
 <div id="tabs">
-<!-- 	<ul> -->
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-1">개발업무 상세보기</a> -->
-<!-- 		</li> -->
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-2">구성원</a> -->
-<!-- 		</li> -->
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-3">TASK</a> -->
-<!-- 		</li> -->
-<!-- 	</ul> -->
+	<ul>
+		<li>
+			<a href="#tabs-1">기본 정보</a>
+		</li>
+		<li>
+			<a href="#tabs-2">구성원</a>
+		</li>
+		<li>
+			<a href="#tabs-3">TASK</a>
+		</li>
+	</ul>
 	<div id="tabs-1">
 		<table class="view-table">
 			<colgroup>
@@ -84,34 +83,15 @@ MasterData data = (MasterData) request.getAttribute("masterData");
 			</tr>
 		</table>
 	</div>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png">
-					구성원
-				</div>
-			</td>
-		</tr>
-	</table>
+	
+	<!-- 	구성원 -->
 	<div id="tabs-2">
 		<jsp:include page="/extcore/jsp/development/userList.jsp">
 			<jsp:param value="<%=data.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png">
-					TASK
-				</div>
-			</td>
-			<td class="right">
-				<input type="button" value="수정" title="수정" onclick="update('modify');">
-			</td>
-		</tr>
-	</table>
+	
+	<!-- 	TASK -->
 	<div id="tabs-3">
 		<jsp:include page="/extcore/jsp/development/taskList.jsp">
 			<jsp:param value="<%=data.getOid()%>" name="oid" />

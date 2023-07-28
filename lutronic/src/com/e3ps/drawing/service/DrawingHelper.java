@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Vector;
 
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.message.Message;
@@ -15,13 +14,16 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.development.devActive;
+import com.e3ps.development.devOutPutLink;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.org.People;
+import com.e3ps.part.service.VersionHelper;
 
 import net.sf.json.JSONArray;
-import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
+import wt.epm.structure.EPMDescribeLink;
 import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -32,6 +34,7 @@ import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.FloatValue;
 import wt.iba.value.StringValue;
 import wt.org.WTUser;
+import wt.part.WTPart;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
@@ -494,5 +497,79 @@ public class DrawingHelper {
 			e.printStackTrace();
 		}	
 		return JSONArray.fromObject(list);
+	}
+	
+	/**
+	 * 상세보기 주도면 불러오기
+	 */
+	public JSONArray include_DrawingList(Map<String, Object> params) {
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		String oid = (String) params.get("oid");
+		String moduleType = (String)params.get("moduleType");
+		String title = (String) params.get("title");
+		String paramName = (String) params.get("paramName");
+		String epmType = StringUtil.checkReplaceStr((String)params.get("epmType"),"");
+		String distribute = StringUtil.checkNull((String)params.get("distribute"));
+		
+		try {
+			Map<String,String> map = new HashMap<String,String>();
+			
+			map.put("title", title);
+			map.put("paramName", paramName);
+			map.put("distribute", distribute);
+			if("part".equals(moduleType)) {
+				WTPart part = (WTPart)CommonUtil.getObject(oid);
+				boolean lastVer = VersionHelper.service.isLastVersion(part);
+				if("main".equals(epmType)) {
+					EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
+					if(epm != null) {
+						EpmData data = new EpmData(epm);
+
+						map.put("number", data.getNumber());
+						map.put("name", data.getName());
+						map.put("state", data.getState());
+//						map.put("version", data.getVersion());
+						map.put("creator", data.getCreator());
+//						map.put("description", data.getDescription());
+					}
+				}else {
+					Vector<EPMDescribeLink> vecDesc = EpmSearchHelper.service.getEPMDescribeLink(part, lastVer);
+					for(EPMDescribeLink link : vecDesc){
+						EPMDocument epmLink = (EPMDocument)link.getRoleBObject();
+						EpmData data = new EpmData(epmLink);
+
+						map.put("number", data.getNumber());
+						map.put("name", data.getName());
+						map.put("state", data.getState());
+//						map.put("version", data.getVersion());
+						map.put("creator", data.getCreator());
+//						map.put("description", data.getDescription());
+					}
+					
+				}
+			}else if("active".equals(moduleType)) {
+				devActive m = (devActive)CommonUtil.getObject(oid);
+				QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
+				
+				while(qr.hasMoreElements()){ 
+					Object p = (Object)qr.nextElement();
+					if(p instanceof EPMDocument) {
+						EpmData data = new EpmData((EPMDocument)p);
+
+						map.put("number", data.getNumber());
+						map.put("name", data.getName());
+						map.put("state", data.getState());
+//						map.put("version", data.getVersion());
+						map.put("creator", data.getCreator());
+//						map.put("description", data.getDescription());
+					}
+				}
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+    	return JSONArray.fromObject(list);
 	}
 }

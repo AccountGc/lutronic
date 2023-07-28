@@ -11,10 +11,29 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.mail.MailHtmlContentTemplate;
+import com.e3ps.common.mail.MailUtil;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.web.PageControl;
+import com.e3ps.common.web.PageQueryBroker;
+import com.e3ps.development.devActive;
+import com.e3ps.development.devMaster;
+import com.e3ps.development.devOutPutLink;
+import com.e3ps.development.devTask;
+import com.e3ps.development.beans.DevActiveData;
+import com.e3ps.development.beans.DevTaskData;
+import com.e3ps.development.beans.MasterData;
+
+import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
-import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
@@ -34,29 +53,6 @@ import wt.pds.StatementSpec;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.services.StandardManager;
-
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.mail.MailHtmlContentTemplate;
-import com.e3ps.common.mail.MailUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.development.devActive;
-import com.e3ps.development.devMaster;
-import com.e3ps.development.devOutPutLink;
-import com.e3ps.development.devTask;
-import com.e3ps.development.beans.DevActiveData;
-import com.e3ps.development.beans.DevTaskData;
-import com.e3ps.development.beans.MasterData;
-import com.e3ps.org.Department;
-import com.e3ps.org.People;
-import com.e3ps.org.service.UserHelper;
 
 public class StandardDevelopmentService extends StandardManager implements DevelopmentService {
 
@@ -711,7 +707,7 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 	}
 	
 	@Override
-	public List<Map<String,String>> viewUserList(String oid) {
+	public JSONArray viewUserList(String oid) {
 		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
 		
 		try {
@@ -752,7 +748,7 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 			e.printStackTrace();
 		}
 		
-		return list;
+		return JSONArray.fromObject(list);
 	}
 	
 	@Override

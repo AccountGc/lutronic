@@ -1,10 +1,12 @@
 package com.e3ps.development.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -12,22 +14,26 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devMaster;
+import com.e3ps.development.devTask;
 import com.e3ps.development.beans.DevActiveData;
+import com.e3ps.development.beans.DevTaskData;
 import com.e3ps.development.beans.MasterData;
 import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import wt.enterprise.RevisionControlled;
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
+import wt.pds.StatementSpec;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
-import wt.vc.VersionControlHelper;
 
 public class DevelopmentHelper {
 	public static final DevelopmentService service = ServiceFactory.getService(DevelopmentService.class);
@@ -334,6 +340,113 @@ public class DevelopmentHelper {
 		return JSONArray.fromObject(list);
 	}
 	
+	/**
+	 * 개발업무 상세보기 구성원 불러오기
+	 */
+	public JSONArray viewUserList(String oid) {
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		
+		try {
+			
+			Map<String,String> map = new HashMap<String,String>();
+			
+			devMaster master = (devMaster)CommonUtil.getObject(oid);
+			WTUser dm = master.getDm();
+//			People people = UserHelper.service.getPeople(dm);
+//			Department dept = people.getDepartment();
+			
+			map.put("Role", "DM");
+			map.put("name", dm.getFullName());
+//			map.put("duty", people.getDuty());
+//			map.put("department", dept == null ? "" : StringUtil.checkNull(dept.getName()));
+			list.add(map);
+			
+			QuerySpec userSpec = DevelopmentQueryHelper.service.getDevelopmentUsers(oid);
+			QueryResult userResult = PersistenceServerHelper.manager.query(userSpec);
+			
+			while(userResult.hasMoreElements()) {
+				map = new HashMap<String,String>();
+				Object obj[] = (Object[]) userResult.nextElement();
+				long userOid = ((BigDecimal) obj[0]).intValue();
+				
+				WTUser worker = (WTUser)CommonUtil.getObject("wt.org.WTUser:"+userOid);
+//				people = UserHelper.service.getPeople(worker);
+//				dept = people.getDepartment();
+				
+				map.put("Role", Message.get("수행자"));
+				map.put("name", worker.getFullName());
+//				map.put("duty", people.getDuty());
+//				map.put("department", dept == null ? "" : StringUtil.checkNull(dept.getName()));
+				list.add(map);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return JSONArray.fromObject(list);
+	}
+	
+	/**
+	 * 개발업무 상세보기 TASK 불러오기
+	 */
+	public JSONArray viewTaskList(String oid) {
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		
+		try{
+			
+			Map<String,String> map = new HashMap<String,String>();
+		
+			QuerySpec query = DevelopmentQueryHelper.service.getTaskListFormMasterOid(oid);
+			
+			QueryResult result = PersistenceHelper.manager.find((StatementSpec)query);
+			
+			while(result.hasMoreElements()) {
+				Object[] o = (Object[])result.nextElement();
+				devTask task = (devTask)o[0];
+				DevTaskData data = new DevTaskData(task);
+				
+				map.put("name", data.getName());
+				map.put("state", data.getState());
+				map.put("description", data.getDescription());
+				
+				list.add(map);
+			}
+		
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return JSONArray.fromObject(list);
+	}
+	
+	/**
+	 * 개발업무 상세보기 TASK 수정 권한 조회
+	 */
+	public boolean buttonControll(String oid) {
+		
+		try {
+			if(CommonUtil.isAdmin()) {
+				return true;
+			}else {
+				Object obj = CommonUtil.getObject(oid);
+				
+				if(obj instanceof devMaster) {
+					MasterData data = new MasterData((devMaster)obj);
+					return data.isDm();
+				}else if(obj instanceof devTask) {
+					DevTaskData data = new DevTaskData((devTask)obj);
+					return data.isDm();
+				}else if(obj instanceof devActive) {
+					DevActiveData data = new DevActiveData((devActive)obj);
+					return data.isDm() || data.isWorker();
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 //	/**
 //	 * 문서 버전 이력
 //	 */
