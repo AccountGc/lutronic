@@ -65,172 +65,179 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 		</td>
 	</tr>
 </table>
-<table class="view-table">
-	<colgroup>
-		<col width="13%">
-		<col width="37%">
-		<col width="13%">
-		<col width="37%">
-	</colgroup>
-	<tr>
-		<th>
-			<%
-			if(dto.getEoType().equals("CHANGE")){
-			%>
-				ECO
-			<%	
-			}else{
-			%>
-				EO
-			<%	
-			}
-			%>
-			제목
-		</th>
-		<td colspan="3"><%=dto.getEoName()%></td>
-	</tr>
-	<tr>
-		<th>
-			<%
-			if(dto.getEoType().equals("CHANGE")){
-			%>
-				ECO
-			<%	
-			}else{
-			%>
-				EO
-			<%	
-			}
-			%>
-			번호
-		</th>
-		<td><%=dto.getEoNumber()%></td>
-		<th>상태</th>
-		<td><%=dto.getState()%></td>
-	</tr>
-	<tr>
-		<th>등록자</th>
-		<td><%=dto.getCreator()%></td>
-		<th>구분</th>
-		<td><%=dto.getEoTypeDisplay()%></td>
-	</tr>
-	<tr>
-		<th>인허가 변경</th>
-		<td></td>
-		<th>위험 통제</th>
-		<td><%=dto.getRiskTypeName()%></td>
-	</tr>
-	<tr>
-		<th>등록일</th>
-		<td><%=dto.getCreateDate()%></td>
-		<th>수정일</th>
-		<td><%=dto.getModifyDate()%></td>
-	</tr>
-	<tr>
-		<th>승인일</th>
-		<td colspan="3"><%=dto.getEoApproveDate()%></td>
-	</tr>
-	<tr>
-		<th>제품명</th>
-		<td colspan="3"></td>
-	</tr>
-	<tr>
-		<th>
-			<%
-			if(dto.getEoType().equals("CHANGE")){
-			%>
-				변경사유
-			<%	
-			}else{
-			%>
-				제품 설계 개요
-			<%	
-			}
-			%>
-		</th>
-		<td colspan="3"><%=dto.getEoCommentA()%></td>
-	</tr>
-	<tr>
-		<th>
-			<%
-			if(dto.getEoType().equals("CHANGE")){
-			%>
-				변경사항
-			<%	
-			}else{
-			%>
-				특기사항
-			<%	
-			}
-			%>
-		</th>
-		<td colspan="3"><%=dto.getEoCommentB()%></td>
-	</tr>
-	<%
-	if(dto.getEoType().equals("CHANGE")){
-	%>
-		<tr>
-			<th>특기사항</th>
-			<td colspan="3"><%=dto.getEoCommentC()%></td>
-		</tr>
-	<%	
-	}
-	%>	
-	<tr>
-		<th>기타사항</th>
-		<td colspan="3">
-			<%
-			if(dto.getEoType().equals("CHANGE")){
-				dto.getEoCommentD();
-			}else{
-				dto.getEoCommentC();
-			}
-			%>
-		</td>
-	</tr>
-	<%
-	if(dto.getEoType().equals("CHANGE")){
-	%>
-		<tr>
-			<th>설계변경 부품 내역파일</th>
-			<td colspan="3"></td>
-		</tr>
-	<%	
-	}
-	%>	
-	<tr>
-		<th>첨부파일</th>
-		<td colspan="3"></td>
-	</tr>
-</table>
+
 <div id="tabs">
 	<ul>
 		<li>
-			<a href="#tabs-1">활동 현황</a>
+			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">완제품 품목</a>
+			<a href="#tabs-2">활동 현황</a>
+		</li>
+		<li>
+			<a href="#tabs-3">완제품 품목</a>
 		</li>
 		<%
 		if(dto.getEoType().equals("CHANGE")){
 		%>
 			<li>
-				<a href="#tabs-3">대상 품목</a>
+				<a href="#tabs-4">대상 품목</a>
 			</li>
 			<li>
-				<a href="#tabs-4">관련 ECR</a>
+				<a href="#tabs-5">관련 ECR</a>
 			</li>
 		<%	
 		}
 		%>	
 	</ul>
 	<div id="tabs-1">
+		<!-- 기본 정보 -->
+		<table class="view-table">
+			<colgroup>
+				<col width="13%">
+				<col width="37%">
+				<col width="13%">
+				<col width="37%">
+			</colgroup>
+			<tr>
+				<th>
+					<%
+					if(dto.getEoType().equals("CHANGE")){
+					%>
+						ECO
+					<%	
+					}else{
+					%>
+						EO
+					<%	
+					}
+					%>
+					제목
+				</th>
+				<td colspan="3"><%=dto.getEoName()%></td>
+			</tr>
+			<tr>
+				<th>
+					<%
+					if(dto.getEoType().equals("CHANGE")){
+					%>
+						ECO
+					<%	
+					}else{
+					%>
+						EO
+					<%	
+					}
+					%>
+					번호
+				</th>
+				<td><%=dto.getEoNumber()%></td>
+				<th>상태</th>
+				<td><%=dto.getState()%></td>
+			</tr>
+			<tr>
+				<th>등록자</th>
+				<td><%=dto.getCreator()%></td>
+				<th>구분</th>
+				<td><%=dto.getEoTypeDisplay()%></td>
+			</tr>
+			<tr>
+				<th>인허가 변경</th>
+				<td></td>
+				<th>위험 통제</th>
+				<td><%=dto.getRiskTypeName()%></td>
+			</tr>
+			<tr>
+				<th>등록일</th>
+				<td><%=dto.getCreateDate()%></td>
+				<th>수정일</th>
+				<td><%=dto.getModifyDate()%></td>
+			</tr>
+			<tr>
+				<th>승인일</th>
+				<td colspan="3"><%=dto.getEoApproveDate()%></td>
+			</tr>
+			<tr>
+				<th>제품명</th>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<th>
+					<%
+					if(dto.getEoType().equals("CHANGE")){
+					%>
+						변경사유
+					<%	
+					}else{
+					%>
+						제품 설계 개요
+					<%	
+					}
+					%>
+				</th>
+				<td colspan="3"><%=dto.getEoCommentA()%></td>
+			</tr>
+			<tr>
+				<th>
+					<%
+					if(dto.getEoType().equals("CHANGE")){
+					%>
+						변경사항
+					<%	
+					}else{
+					%>
+						특기사항
+					<%	
+					}
+					%>
+				</th>
+				<td colspan="3"><%=dto.getEoCommentB()%></td>
+			</tr>
+			<%
+			if(dto.getEoType().equals("CHANGE")){
+			%>
+				<tr>
+					<th>특기사항</th>
+					<td colspan="3"><%=dto.getEoCommentC()%></td>
+				</tr>
+			<%	
+			}
+			%>	
+			<tr>
+				<th>기타사항</th>
+				<td colspan="3">
+					<%
+					if(dto.getEoType().equals("CHANGE")){
+						dto.getEoCommentD();
+					}else{
+						dto.getEoCommentC();
+					}
+					%>
+				</td>
+			</tr>
+			<%
+			if(dto.getEoType().equals("CHANGE")){
+			%>
+				<tr>
+					<th>설계변경 부품 내역파일</th>
+					<td colspan="3"></td>
+				</tr>
+			<%	
+			}
+			%>	
+			<tr>
+				<th>첨부파일</th>
+				<td colspan="3"></td>
+			</tr>
+		</table>
+	</div>
+	<div id="tabs-2">
 		<!-- 활동 현황 -->
 		<jsp:include page="/extcore/jsp/change/include_viewECA.jsp" flush="false">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>
-	<div id="tabs-2">
+	<div id="tabs-3">
 		<!-- 완제품 품목 -->
 		<jsp:include page="/extcore/jsp/change/include_viewCompletePart.jsp" flush="false">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
@@ -239,13 +246,13 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 	<%
 	if(dto.getEoType().equals("CHANGE")){
 	%>
-		<div id="tabs-3">
+		<div id="tabs-4">
 			<!-- 대상 품목 -->
 			<jsp:include page="/extcore/jsp/change/include_viewChangePart.jsp" flush="false">
 				<jsp:param value="<%=dto.getOid() %>" name="oid" />
 			</jsp:include>
 		</div>	
-		<div id="tabs-4">
+		<div id="tabs-5">
 			<!-- 관련 ECR -->
 			<jsp:include page="/extcore/jsp/change/include_viewECR.jsp" flush="false">
 				<jsp:param value="<%=dto.getOid() %>" name="oid" />
@@ -405,7 +412,7 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-1":
+				case "tabs-2":
 					const isCreated1 = AUIGrid.isCreated(ecaGridID);
 					if (isCreated1) {
 						AUIGrid.resize(ecaGridID);
@@ -413,7 +420,7 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 						createAUIGrid1(columnEca);
 					}
 					break;
-				case "tabs-2":
+				case "tabs-3":
 					const isCreated2 = AUIGrid.isCreated(complePartGridID);
 					if (isCreated2) {
 						AUIGrid.resize(complePartGridID);
@@ -421,7 +428,7 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 						createAUIGrid2(columnComplePart);
 					}
 					break;
-				case "tabs-3":
+				case "tabs-4":
 					const isCreated3 = AUIGrid.isCreated(changePartGridID);
 					if (isCreated3) {
 						AUIGrid.resize(changePartGridID);
@@ -429,7 +436,7 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 						createAUIGrid3(columnChangePart);
 					}
 					break;
-				case "tabs-4":
+				case "tabs-5":
 					const isCreated4 = AUIGrid.isCreated(ecrGridID);
 					if (isCreated4) {
 						AUIGrid.resize(ecrGridID);

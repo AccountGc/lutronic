@@ -36,92 +36,99 @@ ECRData dto = (ECRData) request.getAttribute("dto");
 		</td>
 	</tr>
 </table>
-<table class="view-table">
-	<colgroup>
-		<col width="13%">
-		<col width="37%">
-		<col width="13%">
-		<col width="37%">
-	</colgroup>
-	<tr>
-		<th>CR/ECPR 제목</th>
-		<td colspan="3"><%=dto.getEoName()%></td>
-	</tr>
-	<tr>
-		<th>CR/ECPR 번호</th>
-		<td><%=dto.getEoNumber()%></td>
-		<th>상태</th>
-		<td><%=dto.getState()%></td>
-	</tr>
-	<tr>
-		<th>등록자</th>
-		<td colspan="3"><%=dto.getCreator()%></td>
-	</tr>
-	<tr>
-		<th>등록일</th>
-		<td><%=dto.getCreateDate()%></td>
-		<th>수정일</th>
-		<td><%=dto.getModifyDate()%></td>
-	</tr>
-	<tr>
-		<th>작성자</th>
-		<td><%=dto.getWriter()%></td>
-		<th>작성부서</th>
-		<td><%=dto.getCreateDepart()%></td>
-	</tr>
-	<tr>
-		<th>작성일</th>
-		<td><%=dto.getWriteDate()%></td>
-		<th>승인일</th>
-		<td><%=dto.getApproveDate()%></td>
-	</tr>
-	<tr>
-		<th>제안자</th>
-		<td><%=dto.getProposer()%></td>
-		<th>변경부분</th>
-		<td><%=dto.getChangeDisplay()%></td>
-	</tr>
-	<tr>
-		<th>제품명</th>
-		<td colspan="3"><%=dto.getModelDisplay()%></td>
-	</tr>
-	<tr>
-		<th>변경사유</th>
-		<td colspan="3"><%=dto.getEoCommentA()%></td>
-	</tr>
-	<tr>
-		<th>변경사항</th>
-		<td colspan="3"><%=dto.getEoCommentB()%></td>
-	</tr>
-	<tr>
-		<th>참고사항</th>
-		<td colspan="3"><%=dto.getEoCommentC()%></td>
-	</tr>
-	<tr>
-		<th>주 첨부파일</th>
-		<td colspan="3"></td>
-	</tr>
-	<tr>
-		<th>첨부파일</th>
-		<td colspan="3"></td>
-	</tr>
-</table>
+
 <div id="tabs">
 	<ul>
 		<li>
-			<a href="#tabs-1">관련 ECO</a>
+			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">관련 ECR</a>
+			<a href="#tabs-2">관련 ECO</a>
+		</li>
+		<li>
+			<a href="#tabs-3">관련 ECR</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
-		<!-- 완제품 품목 -->
+		<!-- 기본 정보 -->
+		<table class="view-table">
+			<colgroup>
+				<col width="13%">
+				<col width="37%">
+				<col width="13%">
+				<col width="37%">
+			</colgroup>
+			<tr>
+				<th>CR/ECPR 제목</th>
+				<td colspan="3"><%=dto.getEoName()%></td>
+			</tr>
+			<tr>
+				<th>CR/ECPR 번호</th>
+				<td><%=dto.getEoNumber()%></td>
+				<th>상태</th>
+				<td><%=dto.getState()%></td>
+			</tr>
+			<tr>
+				<th>등록자</th>
+				<td colspan="3"><%=dto.getCreator()%></td>
+			</tr>
+			<tr>
+				<th>등록일</th>
+				<td><%=dto.getCreateDate()%></td>
+				<th>수정일</th>
+				<td><%=dto.getModifyDate()%></td>
+			</tr>
+			<tr>
+				<th>작성자</th>
+				<td><%=dto.getWriter()%></td>
+				<th>작성부서</th>
+				<td><%=dto.getCreateDepart()%></td>
+			</tr>
+			<tr>
+				<th>작성일</th>
+				<td><%=dto.getWriteDate()%></td>
+				<th>승인일</th>
+				<td><%=dto.getApproveDate()%></td>
+			</tr>
+			<tr>
+				<th>제안자</th>
+				<td><%=dto.getProposer()%></td>
+				<th>변경부분</th>
+				<td><%=dto.getChangeDisplay()%></td>
+			</tr>
+			<tr>
+				<th>제품명</th>
+				<td colspan="3"><%=dto.getModelDisplay()%></td>
+			</tr>
+			<tr>
+				<th>변경사유</th>
+				<td colspan="3"><%=dto.getEoCommentA()%></td>
+			</tr>
+			<tr>
+				<th>변경사항</th>
+				<td colspan="3"><%=dto.getEoCommentB()%></td>
+			</tr>
+			<tr>
+				<th>참고사항</th>
+				<td colspan="3"><%=dto.getEoCommentC()%></td>
+			</tr>
+			<tr>
+				<th>주 첨부파일</th>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<th>첨부파일</th>
+				<td colspan="3"></td>
+			</tr>
+		</table>
+	</div>
+	<div id="tabs-2">
+		<!-- 관련 ECO -->
 		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp" flush="false">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>
-	<div id="tabs-2">
+	<div id="tabs-3">
 		<!-- 관련 ECR -->
 		<jsp:include page="/extcore/jsp/change/include_view_ecr_ecr.jsp" flush="false">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
@@ -266,15 +273,15 @@ ECRData dto = (ECRData) request.getAttribute("dto");
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-1":
+				case "tabs-2":
 					const isCreated1 = AUIGrid.isCreated(ecoGridID);
 					if (isCreated1) {
 						AUIGrid.resize(ecoGridID);
 					} else {
-						createAUIGrid1(columnEco);
+						createAUIGrid7(columnEco);
 					}
 					break;
-				case "tabs-2":
+				case "tabs-3":
 					const isCreated2 = AUIGrid.isCreated(ecrGridID);
 					if (isCreated2) {
 						AUIGrid.resize(ecrGridID);
@@ -285,7 +292,7 @@ ECRData dto = (ECRData) request.getAttribute("dto");
 				}
 			}
 		});
-		createAUIGrid1(columnEco);
+		createAUIGrid7(columnEco);
 		AUIGrid.resize(ecoGridID);
 		createAUIGrid2(columnEcr);
 		AUIGrid.resize(ecrGridID);
