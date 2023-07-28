@@ -15,6 +15,7 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -97,6 +98,11 @@ public class PartData {
 	private String createDate;
 	private String modifyDate;
 	
+//	private boolean isDelete;
+	private boolean isApproved;
+	private String version;
+	private String baselineOid;
+	
     public PartData(final WTPart part) throws Exception {
 //    	super(part);
 //    	setPart(part);
@@ -122,7 +128,8 @@ public class PartData {
     		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
     	}
     	setName(part.getName());
-    	setState(part.getLifeCycleState().toString());
+//    	setState(part.getLifeCycleState().toString());
+    	setState(part.getLifeCycleState().getDisplay(Message.getLocale()));
     	setCreator(part.getCreatorFullName());
     	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
     	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
@@ -133,6 +140,10 @@ public class PartData {
 		}else {
 			setEpmOid(epm.getPersistInfo().getObjectIdentifier().toString());
 		}
+//    	setDelete(false);
+    	setApproved(false);
+    	setVersion(part.getVersionIdentifier().getValue()+"."+part.getIterationIdentifier().getValue());
+    	setBaselineOid("");
     }
     
 //	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{

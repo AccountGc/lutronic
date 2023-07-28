@@ -13,6 +13,7 @@ import com.e3ps.change.ECOChange;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EOData;
 import com.e3ps.change.service.StandardChangeWfService.NumberAscCompare;
@@ -24,6 +25,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.People;
+import com.e3ps.part.beans.PartData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.beans.RohsData;
@@ -31,6 +33,8 @@ import com.e3ps.rohs.beans.RohsData;
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
@@ -40,6 +44,7 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
+import wt.util.WTException;
 import wt.vc.baseline.ManagedBaseline;
 
 public class ECOHelper {
@@ -534,7 +539,7 @@ public class ECOHelper {
 	}
 	
 	public JSONArray getCompletePartList(String oid) throws Exception{
-		List<Map<String,Object>> listLink = new ArrayList<Map<String,Object>>();
+		List<PartData> partList = new ArrayList<PartData>();
 		try {
 			if (oid.length() > 0) {
 				EChangeOrder eco = (EChangeOrder)CommonUtil.getObject(oid);
@@ -548,7 +553,7 @@ public class ECOHelper {
 				boolean isECO = eoType.equals(ECOKey.ECO_CHANGE);
 				boolean isCreate = userName.equals(sessionName);
 				boolean isstate = !state.equals("APPROVED") ;
-				boolean isDelete = ((isCreate && isstate) || CommonUtil.isAdmin()) && isECO;
+//				boolean isDelete = ((isCreate && isstate) || CommonUtil.isAdmin()) && isECO;
 				
 				for(EOCompletePartLink link : list){
 					
@@ -557,30 +562,68 @@ public class ECOHelper {
 					WTPart part = PartHelper.service.getPart(master.getNumber(),version);
 					ManagedBaseline baseline = ChangeHelper.service.getEOToPartBaseline(eco.getEoNumber(), part.getNumber());
 					boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED") ? true : false; 
-					Map<String,Object> map = new HashMap<String,Object>();
 					
-					map.put("Oid", CommonUtil.getOIDString(part));
-					//System.out.println("========Oid= " + CommonUtil.getOIDString(part));
-					map.put("isDelete", isDelete);
-					map.put("likOid", CommonUtil.getOIDString(link));
-					map.put("Number", part.getNumber());
-					map.put("Name", part.getName());
-					map.put("ver", part.getVersionIdentifier().getValue()+"."+part.getIterationIdentifier().getValue());
-					map.put("State", part.getLifeCycleState().getDisplay(Message.getLocale()));
-					map.put("Creator", part.getCreatorFullName());
-					map.put("CreateDate", DateUtil.getDateString(part.getCreateTimestamp(), "d"));
-					map.put("isApproved", isApproved);
-					map.put("baselineOid", CommonUtil.getOIDString(baseline));
-					listLink.add(map);
-					
+					PartData data = new PartData(part);
+//					data.setDelete(isDelete);
+					data.setApproved(isApproved);
+					data.setBaselineOid(CommonUtil.getOIDString(baseline));
+					partList.add(data);
 				}
 				//PJT EDIT START START 20161116
-				Collections.sort(listLink,new NumberAscCompare());
+//				Collections.sort(partList,new NumberAscCompare());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		//PJT EDIT START END
-		return JSONArray.fromObject(listLink);
+		return JSONArray.fromObject(partList);
+	}
+	
+	public JSONArray getRequestOrderLinkECOData(String oid) throws Exception {
+		List<ECOData> dataList = new ArrayList<ECOData>();
+		try {
+			if(oid.length()>0){
+				EChangeRequest ecr = (EChangeRequest)CommonUtil.getObject(oid);
+				List<EChangeOrder> ecoList = getRequestOrderLinkECO(ecr);
+				
+				for(EChangeOrder eco : ecoList){
+					ECOData data = new ECOData(eco);
+					dataList.add(data);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return JSONArray.fromObject(dataList);
+	}
+	
+	public List<EChangeOrder> getRequestOrderLinkECO(EChangeRequest ecr) throws Exception {
+		
+		List<RequestOrderLink> list = getRequestOrderLink(ecr);
+		List<EChangeOrder> ecoList = new ArrayList<EChangeOrder>();
+		for(RequestOrderLink link : list){
+			EChangeOrder eco = (EChangeOrder)link.getRoleAObject();
+			ecoList.add(eco);
+		}
+		
+		return ecoList;
+	}
+	
+	public List<RequestOrderLink> getRequestOrderLink(ECOChange eo) throws WTException {
+		List<RequestOrderLink> list = new ArrayList<RequestOrderLink>();
+		QueryResult rt = null;
+		if(eo instanceof EChangeOrder){
+			rt=PersistenceHelper.manager.navigate(eo, "ecr", RequestOrderLink.class,false);
+		}else if (eo instanceof EChangeRequest){
+			rt=PersistenceHelper.manager.navigate(eo, "eco", RequestOrderLink.class,false);
+		}else {
+			return list;
+		}
+		
+		while(rt.hasMoreElements()){
+			RequestOrderLink link = (RequestOrderLink)rt.nextElement();
+			list.add(link);
+		}
+		return list;
 	}
 }

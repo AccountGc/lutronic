@@ -1,6 +1,9 @@
+<%@page import="com.e3ps.change.service.ECOHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+JSONArray json = ECOHelper.manager.getCompletePartList(oid);
 %>
 <table class="button-table">
 	<tr>
@@ -52,7 +55,7 @@ String oid = request.getParameter("oid");
 		dataType : "string",
 		width : 180,
 	}, {
-		dataField : "bom",
+		dataField : "",
 		headerText : "BOM",
 		dataType : "string",
 		width : 180,
@@ -78,7 +81,7 @@ String oid = request.getParameter("oid");
 			rowCheckToRadio : true
 		}
 		complePartGridID = AUIGrid.create("#grid_complePart", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(complePartGridID, <%=json%>);
 	}
 	
 	$('img[name=linkDelete]').click(function() {

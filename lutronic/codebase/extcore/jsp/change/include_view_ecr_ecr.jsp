@@ -1,6 +1,9 @@
+<%@page import="com.e3ps.change.service.ECRHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+JSONArray json = ECRHelper.manager.include_ECRView(oid);
 %>
 <table class="button-table">
 	<tr>
@@ -68,7 +71,7 @@ String oid = request.getParameter("oid");
 			rowCheckToRadio : true
 		}
 		ecrGridID = AUIGrid.create("#grid_ecr", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(ecrGridID, <%=json%>);
 	}
 	
 	//구성원 접기/펼치기

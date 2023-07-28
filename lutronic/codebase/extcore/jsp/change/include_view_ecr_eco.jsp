@@ -1,6 +1,9 @@
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.change.service.ECOHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+JSONArray json = ECOHelper.manager.getRequestOrderLinkECOData(oid);
 %>
 <table class="button-table">
 	<tr>
@@ -68,7 +71,7 @@ String oid = request.getParameter("oid");
 			rowCheckToRadio : true
 		}
 		ecoGridID = AUIGrid.create("#grid_eco", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(ecoGridID, <%=json%>);
 	}
 	
 	//구성원 접기/펼치기

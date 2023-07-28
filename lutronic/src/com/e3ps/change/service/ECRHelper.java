@@ -2,9 +2,12 @@ package com.e3ps.change.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.beans.ECRData;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -13,6 +16,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.People;
 
+import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
 import wt.org.WTUser;
 import wt.query.ClassAttribute;
@@ -261,5 +265,33 @@ public class ECRHelper {
 		}
 		
 		return map;
+	}
+	
+	public JSONArray include_ECRView(String oid) throws Exception{
+		List<ECRData> list = new ArrayList<ECRData>();
+		try {
+			Object obj = CommonUtil.getObject(oid);
+			if(obj instanceof EChangeOrder){
+				EChangeOrder eco = (EChangeOrder)obj;
+				list = ECRSearchHelper.service.getRequestOrderLinkECRData(eco);//ECRHelper.service.include_ecrList(oid);
+			}else if(obj instanceof EChangeRequest){
+				EChangeRequest ecr = (EChangeRequest)obj;
+				List<EcrToEcrLink> list_ECRtoECRLINK = ECRHelper.service.getEcrToEcrLinks(ecr, "useBy");
+				for(EcrToEcrLink link : list_ECRtoECRLINK){
+					EChangeRequest linkECR = link.getUseBy();
+					ECRData data = new ECRData(linkECR);
+					list.add(data);
+				}
+				list_ECRtoECRLINK = ECRHelper.service.getEcrToEcrLinks(ecr, "used");
+				for(EcrToEcrLink link : list_ECRtoECRLINK){
+					EChangeRequest linkECR = link.getUsed();
+					ECRData data = new ECRData(linkECR);
+					list.add(data);
+				}
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return JSONArray.fromObject(list);
 	}
 }
