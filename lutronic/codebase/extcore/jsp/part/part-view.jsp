@@ -7,7 +7,7 @@
 <%@page import="net.sf.json.JSONArray"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-PartData data = (PartData) request.getAttribute("partData");
+PartData data = (PartData) request.getAttribute("data");
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
@@ -106,6 +106,7 @@ PartData data = (PartData) request.getAttribute("partData");
 			</tr>
 		</table>
 	</div>
+	
 	<table class="button-table">
 		<tr>
 			<td class="left">
@@ -117,22 +118,13 @@ PartData data = (PartData) request.getAttribute("partData");
 		</tr>
 	</table>
 	<div id="tabs-2">
-<%-- 		<jsp:include page="/extcore/jsp/common/attributes_include.jsp"> --%>
-<%-- 			<jsp:param value="<%=data.getOid()%>" name="oid" /> --%>
-<%-- 			<jsp:param value="part" name="module"/> --%>
-<%-- 			<jsp:param value="view" name="mode" /> --%>
-<%-- 		</jsp:include> --%>
+		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="part" name="module"/>
+		</jsp:include>
 	</div>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png">
-					주 도면
-				</div>
-			</td>
-		</tr>
-	</table>
+	
+	<!-- 	주도면 -->
 	<div id="tabs-3">
 		<jsp:include page="/extcore/jsp/drawing/drawingView_include.jsp">
 			<jsp:param value="part" name="moduleType"/>
@@ -142,6 +134,15 @@ PartData data = (PartData) request.getAttribute("partData");
 			<jsp:param value="epmOid" name="paramName"/>
 		</jsp:include>
 	</div>	
+	
+	<!-- 참조 항목 -->
+	<div id="tabs-4">
+		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	
+		
 </div>
 <script type="text/javascript">
 	function update(mode) {

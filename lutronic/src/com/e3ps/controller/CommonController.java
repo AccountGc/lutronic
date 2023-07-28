@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.iba.IBAUtil;
@@ -178,7 +177,7 @@ public class CommonController {
 	}
 	
 	@Description(value = "품목 속성 보기")
-	@GetMapping(value = "/include_Attributes")
+	@PostMapping(value = "/include_Attributes")
 	public ModelAndView include_Attributes(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String oid = request.getParameter("oid");
 		String module = request.getParameter("module");
@@ -186,8 +185,8 @@ public class CommonController {
 		
 		ModelAndView model = new ModelAndView();
 		Map<String,String> map = CommonHelper.manager.getAttributes(oid, mode);
-		model.setViewName("include:/common/include_Attributes");
-		model.addObject("data", map);
+		model.setViewName("/extcore/jsp/common/attributes_include.jsp");
+		model.addAllObjects(map);
 		model.addObject("module", module);
 		return model;
 	}

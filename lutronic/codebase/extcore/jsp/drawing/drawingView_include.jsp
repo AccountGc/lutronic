@@ -6,6 +6,16 @@
 	String title = request.getParameter("title");
 	String paramName = request.getParameter("paramName");
 %>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				주 도면
+			</div>
+		</td>
+	</tr>
+</table>
 <div id="grid_drawing_Wrap" style="height: 350px; border-top: 1px solid #3180c3;"></div>
 <script type="text/javascript">
 			let myGridID;

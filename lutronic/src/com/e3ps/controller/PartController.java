@@ -28,6 +28,7 @@ import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
+import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.part.beans.PartData;
@@ -176,9 +177,11 @@ public class PartController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		WTPart part = (WTPart)CommonUtil.getObject(oid);
 		PartData partData = new PartData(part);
+		Map<String,String> map = CommonHelper.manager.getAttributes(oid, "view");
 		model.addObject("oid",oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("partData", partData);
+		model.addObject("data", partData);
+		model.addAllObjects(map);
 		model.setViewName("/extcore/jsp/part/part-view.jsp");
 		return model;
 	}

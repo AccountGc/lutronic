@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.message.Message;
+import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
@@ -83,10 +84,12 @@ public class DocumentController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentData docData = new DocumentData(doc);
+		Map<String,String> map = CommonHelper.manager.getAttributes(oid, "view");
 
 		model.setViewName("/extcore/jsp/document/document-view.jsp");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
+		model.addAllObjects(map);
 		return model;
 	}
 //	/**
