@@ -30,6 +30,7 @@ import com.e3ps.development.beans.DevActiveData;
 import com.e3ps.development.beans.DevTaskData;
 import com.e3ps.development.beans.MasterData;
 import com.e3ps.development.service.DevelopmentHelper;
+import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
 
@@ -72,9 +73,19 @@ public class DevelopmentController extends BaseController{
 	@Description(value="개발업무 관리 등록 수행")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public ResultData create(@RequestBody Map<String, Object> params) {
-		//Map<String,String> map = DevelopmentHelper.service.requestDevelopmentMapping(request, response);
-		return DevelopmentHelper.service.create(params);
+	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+//		Map<String,String> map = DevelopmentHelper.service.requestDevelopmentMapping(request, response);
+		Map<String,Object> result = new HashMap<String, Object>();
+		try {
+			DevelopmentHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	@Description(value = "개발업무 검색")
