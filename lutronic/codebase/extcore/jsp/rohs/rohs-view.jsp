@@ -277,7 +277,7 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 					if (isCreated2) {
 						AUIGrid.resize(rohsGridID);
 					} else {
-						createAUIGrid2(columnRohs);
+						createAUIGridRohs1(columnRohs);
 					}
 					break;
 				case "tabs-4":
@@ -285,7 +285,7 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 					if (isCreated3) {
 						AUIGrid.resize(rohs2GridID);
 					} else {
-						createAUIGrid3(columnRohs2);
+						createAUIGridRohs2(columnRohs2);
 					}
 					break;
 				}
@@ -293,9 +293,9 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 		});
 		createAUIGrid1(columnPart);
 		AUIGrid.resize(partGridID);
-		createAUIGrid2(columnRohs);
+		createAUIGridRohs1(columnRohs);
 		AUIGrid.resize(rohsGridID);
-		createAUIGrid3(columnRohs2);
+		createAUIGridRohs2(columnRohs2);
 		AUIGrid.resize(rohs2GridID);
 	});
 
