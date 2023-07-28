@@ -455,36 +455,44 @@ public class DrawingHelper {
 	
 	public JSONArray include_Reference(String oid, String moduleType) throws Exception {
 		List<EpmData> list = new ArrayList<EpmData>();
-		if(StringUtil.checkString(oid)) {
-			if("drawing".equals(moduleType)) {
-				EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
-				List<EPMReferenceLink> vecRef = EpmSearchHelper.service.getReferenceDependency(epm, "references");
-				//System.out.println("StandardDrawingService ::: include_Refence.jsp ::: vecRef.size() = "+vecRef.size());
-				for(EPMReferenceLink link : vecRef){
-					EPMDocumentMaster master = (EPMDocumentMaster)link.getReferences();
-					EPMDocument epmdoc = EpmSearchHelper.service.getLastEPMDocument(master);
-					EpmData ref = new EpmData(epmdoc);
-					ref.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
-					list.add(ref);
+		try {
+			if(StringUtil.checkString(oid)) {
+				if("drawing".equals(moduleType)) {
+					EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
+					List<EPMReferenceLink> vecRef = EpmSearchHelper.service.getReferenceDependency(epm, "references");
+					//System.out.println("StandardDrawingService ::: include_Refence.jsp ::: vecRef.size() = "+vecRef.size());
+					for(EPMReferenceLink link : vecRef){
+						EPMDocumentMaster master = (EPMDocumentMaster)link.getReferences();
+						EPMDocument epmdoc = EpmSearchHelper.service.getLastEPMDocument(master);
+						EpmData ref = new EpmData(epmdoc);
+						ref.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
+						list.add(ref);
+					}
 				}
 			}
-		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		return JSONArray.fromObject(list);
 	}
 	
 	public JSONArray include_ReferenceBy(String oid) throws Exception {
 		List<EpmData> list = new ArrayList<EpmData>();
-		if(StringUtil.checkString(oid)) {
-			EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
-			List<EPMReferenceLink> refList = EpmSearchHelper.service.getEPMReferenceList((EPMDocumentMaster)epm.getMaster());
-			for(EPMReferenceLink link : refList) {
-				EPMDocument epmdoc = link.getReferencedBy();
-				EpmData data = new EpmData(epmdoc);
-				data.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
-				
-				list.add(data);
+		try {
+			if(StringUtil.checkString(oid)) {
+				EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
+				List<EPMReferenceLink> refList = EpmSearchHelper.service.getEPMReferenceList((EPMDocumentMaster)epm.getMaster());
+				for(EPMReferenceLink link : refList) {
+					EPMDocument epmdoc = link.getReferencedBy();
+					EpmData data = new EpmData(epmdoc);
+					data.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
+					
+					list.add(data);
+				}
 			}
-		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		return JSONArray.fromObject(list);
 	}
 }

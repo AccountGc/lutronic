@@ -534,49 +534,52 @@ public class ECOHelper {
 	}
 	
 	public JSONArray getCompletePartList(String oid) throws Exception{
-		if (oid.length() > 0) {
-			EChangeOrder eco = (EChangeOrder)CommonUtil.getObject(oid);
-			List<EOCompletePartLink> list= ECOSearchHelper.service.getCompletePartLink(eco);
-			//( (이 CHANGE (ECO) 자동으로 생성,승인됨이 아닌것 , 작성자  ) || 관리자 ) && ECO
-			String eoType = eco.getEoType();
-			String state = eco.getLifeCycleState().toString();
-			String userName = eco.getCreator().getName();
-			String sessionName = SessionHelper.getPrincipal().getName();
-			
-			boolean isECO = eoType.equals(ECOKey.ECO_CHANGE);
-			boolean isCreate = userName.equals(sessionName);
-			boolean isstate = !state.equals("APPROVED") ;
-			boolean isDelete = ((isCreate && isstate) || CommonUtil.isAdmin()) && isECO;
-			
-			List<Map<String,Object>> listLink = new ArrayList<Map<String,Object>>();
-			for(EOCompletePartLink link : list){
+		List<Map<String,Object>> listLink = new ArrayList<Map<String,Object>>();
+		try {
+			if (oid.length() > 0) {
+				EChangeOrder eco = (EChangeOrder)CommonUtil.getObject(oid);
+				List<EOCompletePartLink> list= ECOSearchHelper.service.getCompletePartLink(eco);
+				//( (이 CHANGE (ECO) 자동으로 생성,승인됨이 아닌것 , 작성자  ) || 관리자 ) && ECO
+				String eoType = eco.getEoType();
+				String state = eco.getLifeCycleState().toString();
+				String userName = eco.getCreator().getName();
+				String sessionName = SessionHelper.getPrincipal().getName();
 				
-				String version = link.getVersion();
-				WTPartMaster master = (WTPartMaster)link.getCompletePart();
-				WTPart part = PartHelper.service.getPart(master.getNumber(),version);
-				ManagedBaseline baseline = ChangeHelper.service.getEOToPartBaseline(eco.getEoNumber(), part.getNumber());
-				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED") ? true : false; 
-				Map<String,Object> map = new HashMap<String,Object>();
+				boolean isECO = eoType.equals(ECOKey.ECO_CHANGE);
+				boolean isCreate = userName.equals(sessionName);
+				boolean isstate = !state.equals("APPROVED") ;
+				boolean isDelete = ((isCreate && isstate) || CommonUtil.isAdmin()) && isECO;
 				
-				map.put("Oid", CommonUtil.getOIDString(part));
-				//System.out.println("========Oid= " + CommonUtil.getOIDString(part));
-				map.put("isDelete", isDelete);
-				map.put("likOid", CommonUtil.getOIDString(link));
-				map.put("Number", part.getNumber());
-				map.put("Name", part.getName());
-				map.put("ver", part.getVersionIdentifier().getValue()+"."+part.getIterationIdentifier().getValue());
-				map.put("State", part.getLifeCycleState().getDisplay(Message.getLocale()));
-				map.put("Creator", part.getCreatorFullName());
-				map.put("CreateDate", DateUtil.getDateString(part.getCreateTimestamp(), "d"));
-				map.put("isApproved", isApproved);
-				map.put("baselineOid", CommonUtil.getOIDString(baseline));
-				listLink.add(map);
-				
+				for(EOCompletePartLink link : list){
+					
+					String version = link.getVersion();
+					WTPartMaster master = (WTPartMaster)link.getCompletePart();
+					WTPart part = PartHelper.service.getPart(master.getNumber(),version);
+					ManagedBaseline baseline = ChangeHelper.service.getEOToPartBaseline(eco.getEoNumber(), part.getNumber());
+					boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED") ? true : false; 
+					Map<String,Object> map = new HashMap<String,Object>();
+					
+					map.put("Oid", CommonUtil.getOIDString(part));
+					//System.out.println("========Oid= " + CommonUtil.getOIDString(part));
+					map.put("isDelete", isDelete);
+					map.put("likOid", CommonUtil.getOIDString(link));
+					map.put("Number", part.getNumber());
+					map.put("Name", part.getName());
+					map.put("ver", part.getVersionIdentifier().getValue()+"."+part.getIterationIdentifier().getValue());
+					map.put("State", part.getLifeCycleState().getDisplay(Message.getLocale()));
+					map.put("Creator", part.getCreatorFullName());
+					map.put("CreateDate", DateUtil.getDateString(part.getCreateTimestamp(), "d"));
+					map.put("isApproved", isApproved);
+					map.put("baselineOid", CommonUtil.getOIDString(baseline));
+					listLink.add(map);
+					
+				}
+				//PJT EDIT START START 20161116
+				Collections.sort(listLink,new NumberAscCompare());
 			}
-			//PJT EDIT START START 20161116
-			Collections.sort(listLink,new NumberAscCompare());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 		//PJT EDIT START END
 		return JSONArray.fromObject(listLink);
 	}

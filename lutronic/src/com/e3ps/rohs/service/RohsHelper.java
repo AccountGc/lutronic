@@ -253,24 +253,26 @@ public class RohsHelper {
 	
 	public JSONArray include_RohsView(String oid, String module, String roleType) throws Exception {
 		List<RohsData> list = null;
-		
-		if(oid.length() > 0){
-			if("rohs".equals(module)){
-				ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-				list = RohsQueryHelper.service.getRepresentToLinkList(rohs,roleType);
-			}else if("part".equals(module)){
-				WTPart part = (WTPart)CommonUtil.getObject(oid);
-				list = RohsQueryHelper.service.getPartToROHSList(part);
+		try {
+			if(oid.length() > 0){
+				if("rohs".equals(module)){
+					ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+					list = RohsQueryHelper.service.getRepresentToLinkList(rohs,roleType);
+				}else if("part".equals(module)){
+					WTPart part = (WTPart)CommonUtil.getObject(oid);
+					list = RohsQueryHelper.service.getPartToROHSList(part);
+				}else {
+					list = new ArrayList<RohsData>();
+				}
 			}else {
 				list = new ArrayList<RohsData>();
 			}
-		}else {
-			list = new ArrayList<RohsData>();
+			//System.out.println("include_RohsView ObjectComarator START =" + list.size());
+			Collections.sort(list, new ObjectComarator());
+			//System.out.println("include_RohsView ObjectComarator end");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		//System.out.println("include_RohsView ObjectComarator START =" + list.size());
-		Collections.sort(list, new ObjectComarator());
-		//System.out.println("include_RohsView ObjectComarator end");
 		return JSONArray.fromObject(list);
 	}
-
 }
