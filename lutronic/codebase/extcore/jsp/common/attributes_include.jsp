@@ -1,10 +1,16 @@
 <%@page import="com.e3ps.doc.beans.DocumentData"%>
+<%@page import="com.e3ps.part.beans.PartData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.Map"%>
 <%
-String map = (String) request.getAttribute("map");
-String module = (String) request.getAttribute("module");
-DocumentData data = (DocumentData) request.getAttribute("docData");
+String module = (String) request.getParameter("module");
+Object data = null;
+switch(module){
+	case "doc": data = (DocumentData) request.getAttribute("data"); break;
+	case "mold": data = (DocumentData) request.getAttribute("data"); break;
+	case "part": data = (PartData) request.getAttribute("data"); break;
+}
+
 %>
 <table class="search-table">
 	<colgroup>
