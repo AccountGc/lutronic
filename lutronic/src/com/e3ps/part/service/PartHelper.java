@@ -1,7 +1,9 @@
 package com.e3ps.part.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.EcrPartLink;
+import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
@@ -26,13 +33,18 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.beans.MasterData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.People;
+import com.e3ps.part.beans.ObjectComarator;
 import com.e3ps.part.beans.PartData;
+import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
+import com.e3ps.rohs.service.RohsQueryHelper;
 
+import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.build.EPMBuildRule;
+import wt.epm.structure.EPMDescribeLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
@@ -52,11 +64,13 @@ import wt.introspection.WTIntrospector;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleTemplate;
 import wt.org.WTUser;
+import wt.part.PartDocHelper;
 import wt.part.PartType;
 import wt.part.QuantityUnit;
 import wt.part.Source;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
+import wt.part.WTPartMaster;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pds.DatabaseInfoUtilities;
 import wt.pom.Transaction;
@@ -982,5 +996,64 @@ ORDER BY A0.modifyStampA2 DESC;
 		map.put("delocIds", delocIds);
 			
 		return map;
+	}
+	
+	public JSONArray include_PartList(String oid, String moduleType) throws Exception {
+		List<PartData> list = new ArrayList<PartData>();
+		if (oid.length() > 0) {
+			QueryResult rt = null;
+			Object obj = (Object) CommonUtil.getObject(oid);
+			if ("doc".equals(moduleType)) {
+				WTDocument doc = (WTDocument) obj;
+				rt = PartDocHelper.service.getAssociatedParts(doc);
+				while (rt.hasMoreElements()) {
+					WTPart part = (WTPart) rt.nextElement();
+					PartData data = new PartData(part);
+					list.add(data);
+				}
+			} else if ("drawing".equals(moduleType)) {
+				EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+				QueryResult qr = PersistenceHelper.manager.navigate(epm, "describes", EPMDescribeLink.class);
+				while (qr.hasMoreElements()) {
+					WTPart part = (WTPart) qr.nextElement();
+					PartData data = new PartData(part);
+					list.add(data);
+				}
+			} else if ("ecr".equals(moduleType)) {
+				EChangeRequest ecr = (EChangeRequest)CommonUtil.getObject(oid);
+				QueryResult qr = PersistenceHelper.manager.navigate(ecr,"part",EcrPartLink.class,false);
+				while(qr.hasMoreElements()){
+					EcrPartLink link = (EcrPartLink)qr.nextElement();
+					String version = link.getVersion();
+					WTPartMaster master = (WTPartMaster)link.getPart();
+					WTPart part = PartHelper.service.getPart(master.getNumber(),version);
+	    			PartData data = new PartData(part);
+	    			
+	    			list.add(data);
+	    		}
+			} else if("eco".equals(moduleType.toLowerCase())){
+				EChangeOrder eco = (EChangeOrder)obj;
+	    		rt = ECOSearchHelper.service.ecoPartLink(eco);
+	    		while( rt.hasMoreElements()){
+	    			Object[] o = (Object[])rt.nextElement();
+					
+					EcoPartLink link = (EcoPartLink)o[0];
+	    			
+	    			WTPartMaster master =  (WTPartMaster)link.getPart();
+	    			String version = link.getVersion();
+	    			
+	    			WTPart part = PartHelper.service.getPart(master.getNumber(),version);
+	    			PartData data = new PartData(part);
+	    			//if(link.isBaseline()) data.setBaseline("checked");
+	    			
+	    			list.add(data);
+	    		}
+			}else if("rohs".equals(moduleType)){
+				ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+				list = RohsQueryHelper.service.getROHSToPartList(rohs);
+				Collections.sort(list, new ObjectComarator());
+			}
+		}
+		return JSONArray.fromObject(list);
 	}
 }

@@ -1,6 +1,9 @@
+<%@page import="com.e3ps.change.service.ECAHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+JSONArray json =  ECAHelper.manager.include_ecaList(oid);
 %>
 <table class="button-table">
 	<tr>
@@ -91,7 +94,7 @@ String oid = request.getParameter("oid");
 			rowCheckToRadio : true
 		}
 		ecaGridID = AUIGrid.create("#grid_eca", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(ecaGridID, <%=json%>);
 	}
 
 </script>

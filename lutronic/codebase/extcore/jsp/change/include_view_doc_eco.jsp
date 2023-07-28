@@ -1,35 +1,34 @@
+<%@page import="com.e3ps.change.service.ChangeHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
-<%@page import="com.e3ps.part.service.PartHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
-String title = request.getParameter("title");
 String moduleType = request.getParameter("moduleType");
-JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
+JSONArray json = ChangeHelper.manager.include_ECOList(oid, moduleType);
 %>
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> <%=title%>
+				<img src="/Windchill/extcore/images/header.png"> 관련 ECO
 			</div>
 		</td>
 		<td align="right">
-			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_PartViewToggle" alt='include_PartView' >
+			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_ECOViewToggle" alt='include_ECOView' >
 		</td>
 	</tr>
 </table>
-<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid_eco" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
-	let partGridID;
-	const columnPart = [ {
-		dataField : "number",
-		headerText : "품목 번호",
+	let ecoGridID;
+	const columnEco = [ {
+		dataField : "eoNumber",
+		headerText : "ECO 번호",
 		dataType : "string",
 		width : 180,
 	}, {
-		dataField : "name",
-		headerText : "품목명",
+		dataField : "eoName",
+		headerText : "ECO 제목",
 		dataType : "string",
 		width : 180,
 		renderer : {
@@ -47,18 +46,13 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 		dataType : "string",
 		width : 180,
 	}, {
-		dataField : "version",
-		headerText : "Rev.",
-		dataType : "string",
-		width : 180,
-	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 180,
 	}, {
-		dataField : "modifyDate",
-		headerText : "수정일",
+		dataField : "eoApproveDate",
+		headerText : "완료일",
 		dataType : "string",
 		width : 180,
 	}, {
@@ -66,7 +60,7 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 		visible : false
 	} ]
 
-	function createAUIGrid1(columnLayout) {
+	function createAUIGrid7(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
@@ -77,12 +71,12 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 			selectionMode : "multipleCells",
 			rowCheckToRadio : true
 		}
-		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
-		AUIGrid.setGridData(partGridID, <%=json%>);
+		ecoGridID = AUIGrid.create("#grid_eco", columnLayout, props);
+		AUIGrid.setGridData(ecoGridID, <%=json%>);
 	}
 	
 	//구성원 접기/펼치기
-	$("#include_PartViewToggle").click(function() {
+	$("#include_ECOViewToggle").click(function() {
 		var divId = $(this).attr('alt');
 		if ( $( "#" + divId ).is( ":hidden" ) ) {
 			$(this).attr("src","/Windchill/jsp/portal/images/Blue_03_s.gif");

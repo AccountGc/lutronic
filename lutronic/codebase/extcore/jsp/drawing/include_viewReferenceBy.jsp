@@ -1,6 +1,9 @@
+<%@page import="com.e3ps.drawing.service.DrawingHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+JSONArray json = DrawingHelper.manager.include_ReferenceBy(oid);
 %>
 <table class="button-table">
 	<tr>
@@ -78,7 +81,7 @@ String oid = request.getParameter("oid");
 			rowCheckToRadio : true
 		}
 		refbyGridID = AUIGrid.create("#grid_refby", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(refbyGridID, <%=json%>);
 	}
 	
 	//구성원 접기/펼치기

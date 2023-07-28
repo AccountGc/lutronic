@@ -185,6 +185,7 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="doc" name="moduleType"/>
 			<jsp:param value="관련 품목" name="title" />
 		</jsp:include>
 	</div>
@@ -192,18 +193,21 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		<!-- 관련 개발업무 -->
 		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="doc" name="moduleType"/>
 		</jsp:include>
 	</div>
 	<div id="tabs-4">
 		<!-- 관련 문서 -->
 		<jsp:include page="/extcore/jsp/document/include_viewDocument.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="doc" name="moduleType"/>
 		</jsp:include>
 	</div>
 	<div id="tabs-5">
 		<!-- 관련 ECO -->
-		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp">
+		<jsp:include page="/extcore/jsp/change/include_view_doc_eco.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="doc" name="moduleType"/>
 		</jsp:include>
 	</div>
 </div>

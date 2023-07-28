@@ -2,6 +2,7 @@ package com.e3ps.development.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.e3ps.common.query.SearchUtil;
@@ -16,6 +17,7 @@ import com.e3ps.development.beans.MasterData;
 import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
+import wt.enterprise.RevisionControlled;
 import wt.fc.PagingQueryResult;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
@@ -314,6 +316,22 @@ public class DevelopmentHelper {
 		}
 		
 		return map;
+	}
+	
+	public JSONArray include_DevelopmentView(String moduleType, String oid) throws Exception {
+		
+		List<DevActiveData> list = null;
+		try {
+			if(oid.length() > 0) {
+				if("doc".equals(moduleType) || "drawing".equals(moduleType) || "part".equals(moduleType)){
+					RevisionControlled rev = (RevisionControlled)CommonUtil.getObject(oid);
+					list = DevelopmentQueryHelper.service.getActiveDataFromRevisionControlled(rev);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return JSONArray.fromObject(list);
 	}
 	
 //	/**
