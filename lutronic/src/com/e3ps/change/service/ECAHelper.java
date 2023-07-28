@@ -26,17 +26,21 @@ public class ECAHelper {
 	
 	public JSONArray include_ecaList(String oid) throws Exception {
 		List<ECAData> list = new ArrayList<ECAData>();
-		if (oid.length() > 0) {
-			ECOChange eo = (ECOChange)CommonUtil.getObject(oid);
-			List<EChangeActivity> ecalist=getECAList(eo);
-			
-			for(EChangeActivity eca :ecalist ){
+		try{
+			if (oid.length() > 0) {
+				ECOChange eo = (ECOChange)CommonUtil.getObject(oid);
+				List<EChangeActivity> ecalist=getECAList(eo);
 				
-				ECAData data = new ECAData(eca);
-				ImageIcon icon = ChangeUtil.getECAStateImg(eca.getFinishDate(), data.getState());
-				data.setIcon(icon);
-				list.add(data);
+				for(EChangeActivity eca :ecalist ){
+					
+					ECAData data = new ECAData(eca);
+					ImageIcon icon = ChangeUtil.getECAStateImg(eca.getFinishDate(), data.getState());
+					data.setIcon(icon);
+					list.add(data);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return JSONArray.fromObject(list);
 	}

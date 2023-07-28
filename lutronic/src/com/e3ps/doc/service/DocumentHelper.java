@@ -524,53 +524,57 @@ public class DocumentHelper {
 	
 	public JSONArray include_DocumentList(String oid, String moduleType) throws Exception {
     	List<DocumentData> list = new ArrayList<DocumentData>();
-    	if(StringUtil.checkString(oid)){
-    		if("part".equals(moduleType)) {
-        		WTPart part = (WTPart)CommonUtil.getObject(oid);
-        		QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
-            	while(qr.hasMoreElements()){ 
-            		WTDocument doc = (WTDocument)qr.nextElement();
-            		DocumentData data = new DocumentData(doc);
-            		//Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
-            		if(VersionHelper.service.isLastVersion(part)){
-            			if(data.isLatest()){
-                			list.add(data);
-                		}
-            		}else{
-            			list.add(data);
-            		}
-            	}
-        	}else if("doc".equals(moduleType)) {
-        		List<DocumentData> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
-        		for(DocumentData data : dataList) {
-        			list.add(data);
-        		}
-        		
-        		dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
-        		for(DocumentData data : dataList) {
-        			list.add(data);
-        		}
-        		
-        	}else if("active".equals(moduleType)) {
-        		devActive m = (devActive)CommonUtil.getObject(oid);
-        		QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
-        		
-        		while(qr.hasMoreElements()){ 
-            		Object p = (Object)qr.nextElement();
-            		if(p instanceof WTDocument) {
-            			DocumentData data = new DocumentData((WTDocument)p);
-                		list.add(data);
-            		}
-        		}
-        	}else if("asm".equals(moduleType)) {
-        		AsmApproval asm = (AsmApproval)CommonUtil.getObject(oid);
-        		List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
-        		for(WTDocument doc : aList){
-        			DocumentData data = new DocumentData(doc);
-            		list.add(data);
-        		}
-        	}
-    	}
+    	try {
+			if(StringUtil.checkString(oid)){
+	    		if("part".equals(moduleType)) {
+	        		WTPart part = (WTPart)CommonUtil.getObject(oid);
+	        		QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
+	            	while(qr.hasMoreElements()){ 
+	            		WTDocument doc = (WTDocument)qr.nextElement();
+	            		DocumentData data = new DocumentData(doc);
+	            		//Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
+	            		if(VersionHelper.service.isLastVersion(part)){
+	            			if(data.isLatest()){
+	                			list.add(data);
+	                		}
+	            		}else{
+	            			list.add(data);
+	            		}
+	            	}
+	        	}else if("doc".equals(moduleType)) {
+	        		List<DocumentData> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
+	        		for(DocumentData data : dataList) {
+	        			list.add(data);
+	        		}
+	        		
+	        		dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
+	        		for(DocumentData data : dataList) {
+	        			list.add(data);
+	        		}
+	        		
+	        	}else if("active".equals(moduleType)) {
+	        		devActive m = (devActive)CommonUtil.getObject(oid);
+	        		QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
+	        		
+	        		while(qr.hasMoreElements()){ 
+	            		Object p = (Object)qr.nextElement();
+	            		if(p instanceof WTDocument) {
+	            			DocumentData data = new DocumentData((WTDocument)p);
+	                		list.add(data);
+	            		}
+	        		}
+	        	}else if("asm".equals(moduleType)) {
+	        		AsmApproval asm = (AsmApproval)CommonUtil.getObject(oid);
+	        		List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
+	        		for(WTDocument doc : aList){
+	        			DocumentData data = new DocumentData(doc);
+	            		list.add(data);
+	        		}
+	        	}
+	    	}
+    	} catch (Exception e) {
+			e.printStackTrace();
+		}	
     	return JSONArray.fromObject(list);
     }
 }
