@@ -150,11 +150,13 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 <%if(data.getDocumentType().equals("금형문서")){%>
 	<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
 		<jsp:param value="<%=data.getOid()%>" name="oid" />
+		<jsp:param value="<%=data%>" name="docData" />
 		<jsp:param value="mold" name="module"/>
 	</jsp:include>
 <%}else{ %>
 	<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
 		<jsp:param value="<%=data.getOid()%>" name="oid" />
+		<jsp:param value="<%=data%>" name="docData" />
 		<jsp:param value="doc" name="module"/>
 	</jsp:include>
 <%} %>
