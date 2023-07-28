@@ -1589,10 +1589,10 @@ public class StandardECOSearchService extends StandardManager implements ECOSear
 			if(eca != null){
 				EChangeOrder eco =  (EChangeOrder) eca.getEo();
 				ECOData data = new ECOData(eco);
-				if(!list_ECONo.contains(data.number)){
+				if(!list_ECONo.contains(data.getEoNumber())){
 					list.add(data);
 				}
-				list_ECONo.add(data.number);
+				list_ECONo.add(data.getEoNumber());
 			}
 		}
 		return list;

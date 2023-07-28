@@ -1,6 +1,10 @@
+<%@page import="com.e3ps.doc.service.DocumentHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+String moduleType = request.getParameter("moduleType");
+JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
 %>
 <table class="button-table">
 	<tr>
@@ -73,7 +77,7 @@ String oid = request.getParameter("oid");
 			rowCheckToRadio : true
 		}
 		docGridID = AUIGrid.create("#grid_doc", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(docGridID, <%=json%>);
 	}
 	
 	//구성원 접기/펼치기

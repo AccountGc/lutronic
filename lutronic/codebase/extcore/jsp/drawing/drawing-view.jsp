@@ -130,6 +130,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<!-- 참조 -->
 		<jsp:include page="/extcore/jsp/drawing/include_viewReference.jsp">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="drawing"  name="moduleType"/>
 		</jsp:include>
 	</div>
 	<div id="tabs-3">
@@ -143,12 +144,14 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
 			<jsp:param value="참조 품목" name="title" />
+			<jsp:param value="drawing" name="moduleType"/>
 		</jsp:include>
 	</div>
 	<div id="tabs-5">
 		<!-- 관련 개발업무 -->
 		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="drawing" name="moduleType"/>
 		</jsp:include>
 	</div>
 </div>

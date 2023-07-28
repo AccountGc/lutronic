@@ -2,12 +2,15 @@ package com.e3ps.drawing.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -15,8 +18,11 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.org.People;
 
+import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
+import wt.epm.EPMDocumentMaster;
+import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -445,5 +451,40 @@ public class DrawingHelper {
 		}
 		
 		return map;
+	}
+	
+	public JSONArray include_Reference(String oid, String moduleType) throws Exception {
+		List<EpmData> list = new ArrayList<EpmData>();
+		if(StringUtil.checkString(oid)) {
+			if("drawing".equals(moduleType)) {
+				EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
+				List<EPMReferenceLink> vecRef = EpmSearchHelper.service.getReferenceDependency(epm, "references");
+				//System.out.println("StandardDrawingService ::: include_Refence.jsp ::: vecRef.size() = "+vecRef.size());
+				for(EPMReferenceLink link : vecRef){
+					EPMDocumentMaster master = (EPMDocumentMaster)link.getReferences();
+					EPMDocument epmdoc = EpmSearchHelper.service.getLastEPMDocument(master);
+					EpmData ref = new EpmData(epmdoc);
+					ref.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
+					list.add(ref);
+				}
+			}
+		}
+		return JSONArray.fromObject(list);
+	}
+	
+	public JSONArray include_ReferenceBy(String oid) throws Exception {
+		List<EpmData> list = new ArrayList<EpmData>();
+		if(StringUtil.checkString(oid)) {
+			EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
+			List<EPMReferenceLink> refList = EpmSearchHelper.service.getEPMReferenceList((EPMDocumentMaster)epm.getMaster());
+			for(EPMReferenceLink link : refList) {
+				EPMDocument epmdoc = link.getReferencedBy();
+				EpmData data = new EpmData(epmdoc);
+				data.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
+				
+				list.add(data);
+			}
+		}
+		return JSONArray.fromObject(list);
 	}
 }

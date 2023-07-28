@@ -1,8 +1,13 @@
+<%@page import="com.e3ps.rohs.service.RohsHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
 String title = request.getParameter("title");
 String roleType = request.getParameter("roleType");
+String module = StringUtil.checkReplaceStr(request.getParameter("module"), "rohs");
+JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 %>
 <table class="button-table">
 	<tr>
@@ -105,7 +110,7 @@ if(roleType.equals("represent")){
 			rowCheckToRadio : true
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(rohsGridID, <%=json%>);
 	}
 	
 	function createAUIGrid3(columnLayout) {
@@ -120,7 +125,7 @@ if(roleType.equals("represent")){
 			rowCheckToRadio : true
 		}
 		rohs2GridID = AUIGrid.create("#grid_rohs2", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(rohs2GridID, <%=json%>);
 	}
 	
 	//구성원 접기/펼치기

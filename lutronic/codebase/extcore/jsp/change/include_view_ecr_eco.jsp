@@ -56,7 +56,7 @@ String oid = request.getParameter("oid");
 		visible : false
 	} ]
 
-	function createAUIGrid1(columnLayout) {
+	function createAUIGrid7(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,

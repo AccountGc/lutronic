@@ -1,7 +1,9 @@
 package com.e3ps.rohs.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,9 +19,11 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.org.People;
+import com.e3ps.part.beans.ObjectComarator;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.beans.RohsData;
 
+import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
@@ -30,6 +34,7 @@ import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
 import wt.org.WTUser;
+import wt.part.WTPart;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
@@ -244,6 +249,28 @@ public class RohsHelper {
 		}
     	return map;
     	
+	}
+	
+	public JSONArray include_RohsView(String oid, String module, String roleType) throws Exception {
+		List<RohsData> list = null;
+		
+		if(oid.length() > 0){
+			if("rohs".equals(module)){
+				ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+				list = RohsQueryHelper.service.getRepresentToLinkList(rohs,roleType);
+			}else if("part".equals(module)){
+				WTPart part = (WTPart)CommonUtil.getObject(oid);
+				list = RohsQueryHelper.service.getPartToROHSList(part);
+			}else {
+				list = new ArrayList<RohsData>();
+			}
+		}else {
+			list = new ArrayList<RohsData>();
+		}
+		//System.out.println("include_RohsView ObjectComarator START =" + list.size());
+		Collections.sort(list, new ObjectComarator());
+		//System.out.println("include_RohsView ObjectComarator end");
+		return JSONArray.fromObject(list);
 	}
 
 }

@@ -2,6 +2,7 @@ package com.e3ps.doc.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.e3ps.common.iba.AttributeKey;
@@ -11,13 +12,21 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.development.devActive;
+import com.e3ps.development.devOutPutLink;
 import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.groupware.workprocess.AsmApproval;
+import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
 import com.e3ps.org.People;
+import com.e3ps.part.service.VersionHelper;
 
+import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.IteratedFolderMemberLink;
@@ -25,6 +34,8 @@ import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
 import wt.org.WTUser;
+import wt.part.WTPart;
+import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -510,4 +521,56 @@ public class DocumentHelper {
 		return map;
 		
 	}
+	
+	public JSONArray include_DocumentList(String oid, String moduleType) throws Exception {
+    	List<DocumentData> list = new ArrayList<DocumentData>();
+    	if(StringUtil.checkString(oid)){
+    		if("part".equals(moduleType)) {
+        		WTPart part = (WTPart)CommonUtil.getObject(oid);
+        		QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
+            	while(qr.hasMoreElements()){ 
+            		WTDocument doc = (WTDocument)qr.nextElement();
+            		DocumentData data = new DocumentData(doc);
+            		//Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
+            		if(VersionHelper.service.isLastVersion(part)){
+            			if(data.isLatest()){
+                			list.add(data);
+                		}
+            		}else{
+            			list.add(data);
+            		}
+            	}
+        	}else if("doc".equals(moduleType)) {
+        		List<DocumentData> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
+        		for(DocumentData data : dataList) {
+        			list.add(data);
+        		}
+        		
+        		dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
+        		for(DocumentData data : dataList) {
+        			list.add(data);
+        		}
+        		
+        	}else if("active".equals(moduleType)) {
+        		devActive m = (devActive)CommonUtil.getObject(oid);
+        		QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
+        		
+        		while(qr.hasMoreElements()){ 
+            		Object p = (Object)qr.nextElement();
+            		if(p instanceof WTDocument) {
+            			DocumentData data = new DocumentData((WTDocument)p);
+                		list.add(data);
+            		}
+        		}
+        	}else if("asm".equals(moduleType)) {
+        		AsmApproval asm = (AsmApproval)CommonUtil.getObject(oid);
+        		List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
+        		for(WTDocument doc : aList){
+        			DocumentData data = new DocumentData(doc);
+            		list.add(data);
+        		}
+        	}
+    	}
+    	return JSONArray.fromObject(list);
+    }
 }
