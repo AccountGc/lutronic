@@ -35,6 +35,7 @@ import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildRule;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.inf.container.WTContained;
 import wt.introspection.ClassInfo;
 import wt.introspection.WTIntrospector;
 import wt.lifecycle.State;
@@ -76,7 +77,9 @@ public class PartData {
 	private String epmOid;
 	private String name;
 	private String state;
+	private String stateKey;
 	private String oid;
+	private String vrOid;
 
 	private String dwgOid;
 	private String model;
@@ -102,11 +105,14 @@ public class PartData {
 	private boolean isApproved;
 	private String version;
 	private String baselineOid;
+	private String iteration;
+	private String PDMLinkProductOid;
 	
     public PartData(final WTPart part) throws Exception {
 //    	super(part);
 //    	setPart(part);
     	setOid(part.getPersistInfo().getObjectIdentifier().toString());
+    	setVrOid(CommonUtil.getVROID(part));
     	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
     	setNumber(part.getNumber());
     	setUnit(part.getDefaultUnit().toString());
@@ -144,6 +150,10 @@ public class PartData {
     	setApproved(false);
     	setVersion(part.getVersionIdentifier().getValue()+"."+part.getIterationIdentifier().getValue());
     	setBaselineOid("");
+    	setIteration(part.getIterationIdentifier().getSeries().getValue());
+    	WTContained wc = (WTContained)part;
+    	setPDMLinkProductOid(CommonUtil.getOIDString(wc.getContainer()));
+    	setStateKey(part.getLifeCycleState().toString());
     }
     
 //	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{
