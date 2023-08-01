@@ -433,7 +433,7 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 					if (isCreated3) {
 						AUIGrid.resize(changePartGridID);
 					} else {
-						createAUIGrid3(columnChangePart);
+						createAUIGridChangePart(columnChangePart);
 					}
 					break;
 				case "tabs-5":
@@ -451,7 +451,7 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 		AUIGrid.resize(ecaGridID);
 		createAUIGrid2(columnComplePart);
 		AUIGrid.resize(complePartGridID);
-		createAUIGrid3(columnChangePart);
+		createAUIGridChangePart(columnChangePart);
 		AUIGrid.resize(changePartGridID);
 		createAUIGrid4(columnEcr);
 		AUIGrid.resize(ecrGridID);

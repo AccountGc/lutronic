@@ -1,12 +1,19 @@
+<%@page import="com.e3ps.change.service.ChangeWfHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+String distribute = StringUtil.checkNull(request.getParameter("distribute"));
+boolean checkDummy = StringUtil.checkReplaceStr(request.getParameter("checkDummy"), "false").equals("true") ? true : false;
+JSONArray json = ChangeWfHelper.manager.wf_CheckPart(oid, checkDummy, distribute);
 %>
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png"> 대상 품목
+				<input type="checkbox" name="checkDummy" id="checkDummy" value="true" checked > 더미숨김
 			</div>
 		</td>
 		<td align="right">
@@ -20,92 +27,75 @@ String oid = request.getParameter("oid");
 	const columnChangePart = [ {
 		dataField : "number",
 		headerText : "품목번호",
-		dataType : "string",
 		width : 180,
-		rowSpan : 2,
 	}, {
-		dataField : "",
 		headerText : "변경전",
-		dataType : "string",
-		width : 180,
-		colSpan : 4,
+		children : [ {
+			dataField : "name",
+			headerText : "품목명",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "state",
+			headerText : "상태",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "version",
+			headerText : "Rev.",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "creator",
+			headerText : "등록자",
+			width : 100,
+			editable : false
+		} ]
 	}, {
-		dataField : "",
 		headerText : "변경후",
-		dataType : "string",
-		width : 180,
-		colSpan : 4,
+		children : [ {
+			dataField : "name",
+			headerText : "품목명",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "state",
+			headerText : "상태",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "version",
+			headerText : "Rev.",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "creator",
+			headerText : "등록자",
+			width : 100,
+			editable : false
+		} ]
 	}, {
-		dataField : "",
 		headerText : "BOM",
-		dataType : "string",
-		width : 180,
-		colSpan : 2,
+		children : [ {
+			dataField : "",
+			headerText : "비교",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "",
+			headerText : "보기",
+			width : 100,
+			editable : false
+		} ]
 	}, {
-		dataField : "name",
-		headerText : "품목명",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "state",
-		headerText : "상태",
-		dataType : "string",
-		width : 180,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/project/info?oid=" + oid);
-				popup(url);
-			}
-		},
-	}, {
-		dataField : "",
-		headerText : "Rev.",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "creator",
-		headerText : "등록자",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "name",
-		headerText : "품목명",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "state",
-		headerText : "상태",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "",
-		headerText : "Rev.",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "creator",
-		headerText : "등록자",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "",
-		headerText : "BOM 비교",
-		dataType : "string",
-		width : 180,
-	}, {
-		dataField : "",
-		headerText : "BOM 보기",
-		dataType : "string",
-		width : 180,
+		dataField : "nextPart",
+		visible : false
 	}, {
 		dataField : "oid",
 		visible : false
 	} ]
 
-	function createAUIGrid3(columnLayout) {
+	function createAUIGridChangePart(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
@@ -117,7 +107,7 @@ String oid = request.getParameter("oid");
 			rowCheckToRadio : true,
 		}
 		changePartGridID = AUIGrid.create("#grid_changePart", columnLayout, props);
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+		AUIGrid.setGridData(changePartGridID, <%=json%>);
 	}
 	
 	$(function() {
