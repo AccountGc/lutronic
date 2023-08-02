@@ -211,6 +211,65 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		</jsp:include>
 	</div>
 </div>
+
+<div class="comment-table">
+	<table class="button-table">
+		<tr>
+			<td class="left">
+				<div class="header">
+					<img src="/Windchill/extcore/images/header.png"> 댓글 0
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<table class="view-table">
+<!-- 		<colgroup> -->
+<!-- 			<col width="100"> -->
+<!-- 			<col width="*"> -->
+<!-- 		</colgroup> -->
+		<tr>
+			<td class="indent5">
+				<strong>테스트1 </strong>: 테스트111111111111111111
+			</td>
+		</tr>
+		<tr>
+			<td class="indent5">
+				<span style="color: green;">ㄴ</span><strong>테스트2 </strong>: 테스트22222222222222
+			</td>
+		</tr>
+		<tr>
+			<td class="indent5 dddd" style="padding-left: 13px;">
+				<span style="color: green;">ㄴ</span><strong>테스트4 </strong>: 테스트444444444444444
+			</td>
+		</tr>
+		<tr>
+			<td class="indent5">
+				<span style="color: green;">ㄴ</span><strong>테스트3 </strong>: 테스트333333333333333333
+			</td>
+		</tr>
+	</table>
+	
+	<table class="view-table">
+		<colgroup>
+			<col width="100">
+			<col width="*">
+		</colgroup>
+		<tr>
+			<th class="lb">댓글</th>
+			<td class="indent5">
+				<textarea rows="5"></textarea>
+			</td>
+		</tr>
+	</table>
+	<table class="button-table">
+		<tr>
+			<td class="right">
+				<input type="button" value="댓글 등록" title="댓글 등록" class="" id="commentBtn">
+			</td>
+		</tr>
+	</table>
+</div>
 	
 <script type="text/javascript">
 	//수정
@@ -319,36 +378,47 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
+				case "tabs-1":
+					$(".comment-table").show();
+					break;
 				case "tabs-2":
 					const isCreated1 = AUIGrid.isCreated(partGridID);
 					if (isCreated1) {
 						AUIGrid.resize(partGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid1(columnPart);
+						$(".comment-table").hide();
 					}
 					break;
 				case "tabs-3":
 					const isCreated2 = AUIGrid.isCreated(devGridID);
 					if (isCreated2) {
 						AUIGrid.resize(devGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid4(columnDev);
+						$(".comment-table").hide();
 					}
 					break;	
 				case "tabs-4":
 					const isCreated3 = AUIGrid.isCreated(docGridID);
 					if (isCreated3) {
 						AUIGrid.resize(docGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid5(columnDoc);
+						$(".comment-table").hide();
 					}
 					break;	
 				case "tabs-5":
 					const isCreated4 = AUIGrid.isCreated(ecoGridID);
 					if (isCreated4) {
 						AUIGrid.resize(ecoGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid7(columnEco);
+						$(".comment-table").hide();
 					}
 					break;	
 				}
