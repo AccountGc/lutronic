@@ -1,13 +1,17 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<%@page import="com.e3ps.common.comments.CommentsData"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.beans.DocumentData"%>
-<%-- <%@page import="e3ps.project.dto.ProjectDTO"%> --%>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentData data = (DocumentData) request.getAttribute("docData");
+List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
@@ -109,7 +113,7 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 			<tr>
 				<th class="lb">상태</th>
 				<td class="indent5"><%=data.getState()%></td>
-				<th>Rev.</th>
+				<th class="lb">Rev.</th>
 				<td class="indent5">
 				</td>
 			</tr>
@@ -217,39 +221,37 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		<tr>
 			<td class="left">
 				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 댓글 0
+					<img src="/Windchill/extcore/images/header.png"> 댓글 <span class="blue"><%=cList.size() %></span>
 				</div>
 			</td>
 		</tr>
 	</table>
 	
-	<table class="view-table">
-<!-- 		<colgroup> -->
-<!-- 			<col width="100"> -->
-<!-- 			<col width="*"> -->
-<!-- 		</colgroup> -->
-		<tr>
-			<td class="indent5">
-				<strong>테스트1 </strong>: 테스트111111111111111111
-			</td>
-		</tr>
-		<tr>
-			<td class="indent5">
-				<span style="color: green;">ㄴ</span><strong>테스트2 </strong>: 테스트22222222222222
-			</td>
-		</tr>
-		<tr>
-			<td class="indent5 dddd" style="padding-left: 13px;">
-				<span style="color: green;">ㄴ</span><strong>테스트4 </strong>: 테스트444444444444444
-			</td>
-		</tr>
-		<tr>
-			<td class="indent5">
-				<span style="color: green;">ㄴ</span><strong>테스트3 </strong>: 테스트333333333333333333
-			</td>
-		</tr>
-	</table>
-	
+	<%
+	for(int i=0; i<cList.size(); i++){
+	%>
+		<table class="view-table">
+			<colgroup>
+				<col width="100">
+				<col width="*">
+				<col width="100">
+			</colgroup>
+			<tr>
+				<th class="lb" style="background-color: lime;"><%=cList.get(i).getCreator() %></th>
+				<td class="indent5" >
+					<textarea rows="5"  readonly="readonly"><%=cList.get(i).getContent() %></textarea>
+				</td>
+				<td align="center">
+					<input type="button" value="답글" title="답글" class="" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+					<input type="button" value="수정" title="수정" class="" id="">
+					<input type="button" value="삭제" title="삭제" class="" id="">
+				</td>
+			</tr>
+		</table>
+		<br>
+	<%
+	}
+	%>
 	<table class="view-table">
 		<colgroup>
 			<col width="100">
@@ -258,19 +260,38 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		<tr>
 			<th class="lb">댓글</th>
 			<td class="indent5">
-				<textarea rows="5"></textarea>
+				<textarea rows="5" id="comments"></textarea>
 			</td>
 		</tr>
 	</table>
 	<table class="button-table">
 		<tr>
 			<td class="right">
-				<input type="button" value="댓글 등록" title="댓글 등록" class="" id="commentBtn">
+				<input type="button" value="댓글 등록" title="댓글 등록" class="" id="commentsBtn">
 			</td>
 		</tr>
 	</table>
 </div>
-	
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      		</div>
+      		<div class="modal-body">
+        	...
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        		<button type="button" class="btn btn-primary">Understood</button>
+      		</div>
+   		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	//수정
 	$("#updateBtn").click(function () {
@@ -296,6 +317,37 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 				self.close();
 			}
 		}, "GET");
+	})
+	
+	//댓글 등록
+	$("#commentsBtn").click(function () {
+		var oid = document.getElementById("oid").value;
+		var comments = $("#comments").val();
+		if(isEmpty($("#comments").val())){
+			alert("댓글을 입력해주세요.");
+			return;
+		}
+		
+		if (!confirm("댓글을 등록 하시겠습니까?")) {
+			return;
+		}
+		
+		var params = {"oid": oid
+								, "comments" : comments};
+		
+		var url = getCallUrl("/doc/createComments");
+		call(url, params, function(data) {
+			if(data.result){
+				alert(data.msg);
+				var docOid = document.getElementById("oid").value;
+				const url = getCallUrl("/doc/view?oid=" + oid);
+			}else{
+				alert(data.msg);
+			}
+		});
+		
+// 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
+// 		document.location.href = url;
 	})
 	
 	//개정
@@ -441,4 +493,17 @@ DocumentData data = (DocumentData) request.getAttribute("docData");
 		AUIGrid.resize(ecoGridID);
 	});
 	
+	//Modal
+	var myModal = document.getElementById('myModal')
+	var myInput = document.getElementById('myInput')
+	
+	myModal.addEventListener('shown.bs.modal', function () {
+	  myInput.focus()
+	})
+	
 </script>
+<style>
+	.lb{
+		text-align: center;
+	}
+</style>

@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.beans.ECOData;
+import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -85,10 +88,12 @@ public class DocumentController extends BaseController {
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentData docData = new DocumentData(doc);
 		Map<String,String> map = CommonHelper.manager.getAttributes(oid, "view");
-
+		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
+		
 		model.setViewName("/extcore/jsp/document/document-view.jsp");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
+		model.addObject("cList", cList);
 		model.addAllObjects(map);
 		return model;
 	}
@@ -113,6 +118,23 @@ public class DocumentController extends BaseController {
 //		model.addObject("docData", docData);
 //		return model;
 //	}
+	
+	@Description(value = "댓글 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/createComments")
+	public Map<String,Object> createComments(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.createComments(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	/**
 	 * 문서 삭제

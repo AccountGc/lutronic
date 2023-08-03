@@ -275,14 +275,14 @@
 				alert("보존기간을 입력하세요.");
 				return;					
 			}
-			if(isEmpty($("#dm").val())){
-				alert("관리자를 입력하세요.");
-				return;					
-			}
-			if(isEmpty($(primarys).val())){
-				alert("첨부파일을 선택하세요.");
-				return;					
-			}
+// 			if(isEmpty($("#dm").val())){
+// 				alert("관리자를 입력하세요.");
+// 				return;					
+// 			}
+// 			if(isEmpty($(primarys).val())){
+// 				alert("첨부파일을 선택하세요.");
+// 				return;					
+// 			}
 			if (!confirm("등록 하시겠습니까?")) {
 				return false;
 			}

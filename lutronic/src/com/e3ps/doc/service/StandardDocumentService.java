@@ -48,6 +48,7 @@ import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.method.MethodContext;
+import wt.org.WTUser;
 import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
@@ -71,6 +72,7 @@ import com.e3ps.change.service.ECAHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.comments.Comments;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -2150,6 +2152,40 @@ public class StandardDocumentService extends StandardManager implements Document
 			trs = null;
 		} catch (Exception e) {
 			e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
+
+	@Override
+	public void createComments(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+	    	
+	    	String oid = StringUtil.checkNull((String) params.get("oid"));
+	    	String comments = StringUtil.checkNull((String) params.get("comments"));
+	    	
+	    	WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+	    	
+	    	Comments com = new Comments();
+	    	com.setWtdocument(doc);
+	    	com.setCDepth(0);
+	    	WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+	    	com.setGroupId(user.getName());
+	    	com.setContent(comments);
+	    	com.setOwner(SessionHelper.manager.getPrincipalReference());
+	    	
+	    	PersistenceHelper.manager.save(com);
+	    	
+	    	trs.commit();
+	    	trs = null;
+	    } catch (Exception e) {
+	    	e.printStackTrace();
 			trs.rollback();
 			throw e;
         } finally {

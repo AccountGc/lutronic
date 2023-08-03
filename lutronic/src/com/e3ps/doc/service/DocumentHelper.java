@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.e3ps.common.comments.Comments;
+import com.e3ps.common.comments.CommentsData;
+import com.e3ps.common.comments.wtDocumentCommentsLink;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -577,4 +580,19 @@ public class DocumentHelper {
 		}	
     	return JSONArray.fromObject(list);
     }
+	
+	public List<CommentsData> commentsList(String oid) throws Exception {
+		List<CommentsData> comList = new ArrayList<CommentsData>(); 
+		
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		QueryResult result = PersistenceHelper.manager.navigate(doc, "comments", wtDocumentCommentsLink.class, false);
+		
+		while (result.hasMoreElements()) {
+			wtDocumentCommentsLink link = (wtDocumentCommentsLink) result.nextElement();
+			Comments com =  link.getComments();
+			CommentsData data = new CommentsData(com);
+			comList.add(data);
+		}
+		return comList;
+	}
 }
