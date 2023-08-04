@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.comments.wtDocumentCommentsLink;
@@ -40,6 +41,8 @@ import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
+import wt.query.OrderBy;
+import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -583,16 +586,75 @@ public class DocumentHelper {
 	
 	public List<CommentsData> commentsList(String oid) throws Exception {
 		List<CommentsData> comList = new ArrayList<CommentsData>(); 
-		
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-		QueryResult result = PersistenceHelper.manager.navigate(doc, "comments", wtDocumentCommentsLink.class, false);
+		QuerySpec qs =  new QuerySpec();
+		int idx = qs.appendClassList(Comments.class, true);
 		
+		qs.appendWhere(new SearchCondition(Comments.class, "wtdocumentReference.key.id", "=", doc.getPersistInfo().getObjectIdentifier().getId()), new int[] {idx});
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cNum"), false), new int[] { idx });
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cStep"), false), new int[] { idx });
+		
+		QueryResult result = PersistenceHelper.manager.find(qs);
 		while (result.hasMoreElements()) {
-			wtDocumentCommentsLink link = (wtDocumentCommentsLink) result.nextElement();
-			Comments com =  link.getComments();
-			CommentsData data = new CommentsData(com);
+			Object[] obj = (Object[]) result.nextElement();
+			CommentsData data = new CommentsData((Comments) obj[0]);
 			comList.add(data);
 		}
 		return comList;
 	}
+	
+	public String getCnum(List<CommentsData> list) throws Exception {
+		String p_num = "";
+		if(list.size()>0) {
+			int c_num = 0;
+			for(CommentsData c : list) {
+				if(c_num<c.getCNum()) {
+					c_num = c.getCNum();
+				}
+			}
+			p_num = Integer.toString(c_num);
+		}
+		
+		return p_num;
+	}
+	
+//	public int findEqualStep(WTDocument doc, int num, int step) throws Exception {
+//		QuerySpec qs =  new QuerySpec();
+//		int idx = qs.appendClassList(Comments.class, true);
+//		
+//		qs.appendWhere(new SearchCondition(Comments.class, "wtdocumentReference.key.id", "=", doc.getPersistInfo().getObjectIdentifier().getId()), new int[] {idx});
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "cNum", "=", num), new int[] {idx});
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "cStep", "=", step), new int[] {idx});
+//		
+//		QueryResult result = PersistenceHelper.manager.find(qs);
+//		int cnt = 0;
+//		while (result.hasMoreElements()) {
+//			cnt++;
+//		}
+//		return cnt;
+//	}
+	
+//	public List<Comments> updateStepList(WTDocument doc, int num, int step) throws Exception {
+//		List<Comments> comList = new ArrayList<Comments>();
+//		QuerySpec qs =  new QuerySpec();
+//		int idx = qs.appendClassList(Comments.class, true);
+//		qs.appendWhere(new SearchCondition(Comments.class, "wtdocumentReference.key.id", "=", doc.getPersistInfo().getObjectIdentifier().getId()), new int[] {idx});
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "cNum", "=", num), new int[] {idx});
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "cStep", ">=", step), new int[] {idx});
+//		
+//		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cNum"), false), new int[] { idx });
+//		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cStep"), false), new int[] { idx });
+//		
+//		QueryResult result = PersistenceHelper.manager.find(qs);
+//		while (result.hasMoreElements()) {
+//			Object[] obj = (Object[]) result.nextElement();
+//			Comments c = (Comments) obj[0];
+//			comList.add(c);
+//		}
+//		return comList;
+//	}
 }

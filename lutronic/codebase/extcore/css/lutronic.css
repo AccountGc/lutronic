@@ -32,6 +32,10 @@ div.include {
 	margin-bottom: 5px;
 }
 
+.mb2 {
+	margin-bottom: 2px;
+}
+
 .ml5 {
 	margin-left: 5px;
 }
@@ -655,7 +659,7 @@ img.edit {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 100%;
+	height: 50%;
 }
 
 .close {

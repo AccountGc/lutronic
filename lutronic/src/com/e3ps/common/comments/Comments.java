@@ -49,12 +49,16 @@ import com.ptc.windchill.annotations.metadata.Serialization;
 serializable=Serialization.EXTERNALIZABLE_BASIC,
 
 properties={
-		@GeneratedProperty(name="cDepth", type=Integer.class),
-
-		@GeneratedProperty(name="groupId", type=String.class), 
-		
-		@GeneratedProperty(name="content", type=String.class,
+		@GeneratedProperty(name="comments", type=String.class,
 		    constraints=@PropertyConstraints(upperLimit=1000)),
+		
+		@GeneratedProperty(name="cNum", type=Integer.class),
+		
+		@GeneratedProperty(name="cStep", type=Integer.class),
+		
+		@GeneratedProperty(name="cLevel", type=Integer.class),
+		
+		@GeneratedProperty(name="deleteYN", type=String.class),
 },
 
 foreignKeys = {

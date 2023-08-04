@@ -89,11 +89,13 @@ public class DocumentController extends BaseController {
 		DocumentData docData = new DocumentData(doc);
 		Map<String,String> map = CommonHelper.manager.getAttributes(oid, "view");
 		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
+		String pnum = DocumentHelper.manager.getCnum(cList);
 		
 		model.setViewName("/extcore/jsp/document/document-view.jsp");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
 		model.addObject("cList", cList);
+		model.addObject("pnum", pnum);
 		model.addAllObjects(map);
 		return model;
 	}
@@ -126,7 +128,7 @@ public class DocumentController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.createComments(params);
-			result.put("msg", SAVE_MSG);
+//			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch(Exception e) {
 			e.printStackTrace();

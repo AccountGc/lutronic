@@ -66,4 +66,6 @@ public interface DocumentService {
 	public void create(Map<String, Object> params) throws Exception;
 	
 	public void createComments(Map<String, Object> params) throws Exception;
+	
+//	public void updateStep(WTDocument doc, int num, int step) throws Exception;
 }

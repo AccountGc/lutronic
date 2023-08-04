@@ -12,6 +12,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentData data = (DocumentData) request.getAttribute("docData");
 List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
+String pnum = (String) request.getAttribute("pnum");
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
@@ -239,12 +240,12 @@ List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 			<tr>
 				<th class="lb" style="background-color: lime;"><%=cList.get(i).getCreator() %></th>
 				<td class="indent5" >
-					<textarea rows="5"  readonly="readonly"><%=cList.get(i).getContent() %></textarea>
+					<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
 				</td>
 				<td align="center">
-					<input type="button" value="답글" title="답글" class="" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-					<input type="button" value="수정" title="수정" class="" id="">
-					<input type="button" value="삭제" title="삭제" class="" id="">
+					<input type="button" value="답글" title="답글" class="mb2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,<%=cList.get(i).getCLevel()%>);">
+					<input type="button" value="수정" title="수정" class="mb2" id="">
+					<input type="button" value="삭제" title="삭제" id="">
 				</td>
 			</tr>
 		</table>
@@ -278,15 +279,14 @@ List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
   	<div class="modal-dialog">
     	<div class="modal-content">
       		<div class="modal-header">
-        		<h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-        		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        		<h5 class="modal-title" id="staticBackdropLabel">답글 등록</h5>
       		</div>
       		<div class="modal-body">
-        	...
+        		<textarea rows="10" id="reply"></textarea>
       		</div>
       		<div class="modal-footer">
-        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        		<button type="button" class="btn btn-primary">Understood</button>
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        		<button type="button" class="btn btn-primary" id="replyBtn">등록</button>
       		</div>
    		</div>
 	</div>
@@ -321,9 +321,16 @@ List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 	
 	//댓글 등록
 	$("#commentsBtn").click(function () {
+		var param_num = "<%=pnum%>";
+		var num;
+		if(isEmpty(param_num)){
+			num = 0;
+		}else{
+			num = Number(param_num) +1;
+		}
 		var oid = document.getElementById("oid").value;
 		var comments = $("#comments").val();
-		if(isEmpty($("#comments").val())){
+		if(isEmpty(comments)){
 			alert("댓글을 입력해주세요.");
 			return;
 		}
@@ -333,21 +340,61 @@ List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 		}
 		
 		var params = {"oid": oid
-								, "comments" : comments};
+								, "comments" : comments
+								, "num" : num
+								, "step" : 0
+								, "level" : 0};
 		
 		var url = getCallUrl("/doc/createComments");
 		call(url, params, function(data) {
 			if(data.result){
-				alert(data.msg);
-				var docOid = document.getElementById("oid").value;
-				const url = getCallUrl("/doc/view?oid=" + oid);
+				alert("댓글이 등록 되었습니다.");
+				location.reload();
 			}else{
 				alert(data.msg);
 			}
 		});
+	})
+	
+	var reNum;
+	var reStep;
+	var reLevel;
+	//Modal 클릭시 데이터 보냄
+	function modalSubmit(num, step, level){
+		reNum = num;
+		reStep = step;
+		reLevel = level;
+		debugger;
+	}
+	
+	//답글 등록
+	$("#replyBtn").click(function () {
+		var oid = document.getElementById("oid").value;
+		var comments = $("#reply").val();
+		if(isEmpty(comments)){
+			alert("답글을 입력해주세요.");
+			return;
+		}
 		
-// 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-// 		document.location.href = url;
+		if (!confirm("답글을 등록 하시겠습니까?")) {
+			return;
+		}
+		
+		var params = {"oid": oid
+								, "comments" : comments
+								, "num" : reNum
+								, "step" : reStep+1
+								, "level" : reLevel+1};
+		
+		var url = getCallUrl("/doc/createComments");
+		call(url, params, function(data) {
+			if(data.result){
+				alert("답글이 등록 되었습니다.");
+				location.reload();
+			}else{
+				alert(data.msg);
+			}
+		});
 	})
 	
 	//개정
@@ -494,12 +541,12 @@ List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 	});
 	
 	//Modal
-	var myModal = document.getElementById('myModal')
-	var myInput = document.getElementById('myInput')
+// 	var myModal = document.getElementById('myModal')
+// 	var myInput = document.getElementById('myInput')
 	
-	myModal.addEventListener('shown.bs.modal', function () {
-	  myInput.focus()
-	})
+// 	myModal.addEventListener('shown.bs.modal', function () {
+// 	  myInput.focus()
+// 	})
 	
 </script>
 <style>

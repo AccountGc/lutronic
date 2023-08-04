@@ -73,6 +73,7 @@ import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.Comments;
+import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -2169,15 +2170,26 @@ public class StandardDocumentService extends StandardManager implements Document
 	    	
 	    	String oid = StringUtil.checkNull((String) params.get("oid"));
 	    	String comments = StringUtil.checkNull((String) params.get("comments"));
+	    	int num = (int) params.get("num");
+	    	int step = (int) params.get("step");
+	    	int level = (int) params.get("level");
 	    	
 	    	WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 	    	
+	    	//step 같은게 있는지 조회
+//	    	int stepCnt = DocumentHelper.manager.findEqualStep(doc, num, step);
+//	    	if(stepCnt>0) {
+//	    		//step +1 처리
+//	    		updateStep(doc, num, step);
+//	    	}
+	    	
 	    	Comments com = new Comments();
 	    	com.setWtdocument(doc);
-	    	com.setCDepth(0);
-	    	WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-	    	com.setGroupId(user.getName());
-	    	com.setContent(comments);
+	    	com.setComments(comments);
+	    	com.setCNum(num);
+	    	com.setCStep(step);
+	    	com.setCLevel(level);
+	    	com.setDeleteYN("N");
 	    	com.setOwner(SessionHelper.manager.getPrincipalReference());
 	    	
 	    	PersistenceHelper.manager.save(com);
@@ -2194,4 +2206,13 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
         }
 	}
+
+//	@Override
+//	public void updateStep(WTDocument doc, int num, int step) throws Exception {
+//		List<Comments> list = DocumentHelper.manager.updateStepList(doc, num, step);
+//		for(Comments c : list) {
+//			c.setCStep(c.getCStep()+1);
+//			PersistenceHelper.manager.modify(c);
+//		}
+//	}
 }

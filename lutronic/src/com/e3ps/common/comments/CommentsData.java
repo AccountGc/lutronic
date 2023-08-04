@@ -10,9 +10,12 @@ import lombok.Setter;
 @Setter
 public class CommentsData {
 	private String oid;
-	private int cDepth;
-	private String groupId;
-	private String content;
+	private String comments;
+	private int cNum;
+	private int cStep;
+	private int cLevel;
+	private String deleteYN;
+	
 	private String creator;
 	private String createDate;
 	private String modifyDate;
@@ -23,9 +26,12 @@ public class CommentsData {
 	
 	public CommentsData(Comments com) {
 		setOid(CommonUtil.getOIDString(com));
-		setCDepth(com.getCDepth());
-		setGroupId(com.getGroupId());
-		setContent(com.getContent());
+		setComments(com.getComments());
+		setCNum(com.getCNum());
+		setCStep(com.getCStep());
+		setCLevel(com.getCLevel());
+		setDeleteYN(com.getDeleteYN());
+		
 		setCreator(com.getOwner().getFullName());
 		setCreateDate(DateUtil.getDateString(com.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(com.getModifyTimestamp(),"a"));
