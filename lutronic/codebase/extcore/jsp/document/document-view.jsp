@@ -243,7 +243,7 @@ String pnum = (String) request.getAttribute("pnum");
 					<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
 				</td>
 				<td align="center">
-					<input type="button" value="답글" title="답글" class="mb2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,<%=cList.get(i).getCLevel()%>);">
+					<input type="button" value="답글" title="답글" class="mb2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>);">
 					<input type="button" value="수정" title="수정" class="mb2" id="">
 					<input type="button" value="삭제" title="삭제" id="">
 				</td>
@@ -358,13 +358,10 @@ String pnum = (String) request.getAttribute("pnum");
 	
 	var reNum;
 	var reStep;
-	var reLevel;
 	//Modal 클릭시 데이터 보냄
-	function modalSubmit(num, step, level){
+	function modalSubmit(num, step){
 		reNum = num;
 		reStep = step;
-		reLevel = level;
-		debugger;
 	}
 	
 	//답글 등록
@@ -383,8 +380,7 @@ String pnum = (String) request.getAttribute("pnum");
 		var params = {"oid": oid
 								, "comments" : comments
 								, "num" : reNum
-								, "step" : reStep+1
-								, "level" : reLevel+1};
+								, "step" : reStep+1};
 		
 		var url = getCallUrl("/doc/createComments");
 		call(url, params, function(data) {

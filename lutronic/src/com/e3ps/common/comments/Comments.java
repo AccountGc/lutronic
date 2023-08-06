@@ -56,7 +56,7 @@ properties={
 		
 		@GeneratedProperty(name="cStep", type=Integer.class),
 		
-		@GeneratedProperty(name="cLevel", type=Integer.class),
+		@GeneratedProperty(name="oPerson", type=String.class),
 		
 		@GeneratedProperty(name="deleteYN", type=String.class),
 },

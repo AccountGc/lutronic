@@ -13,7 +13,7 @@ public class CommentsData {
 	private String comments;
 	private int cNum;
 	private int cStep;
-	private int cLevel;
+	private String oPerson;
 	private String deleteYN;
 	
 	private String creator;
@@ -29,12 +29,10 @@ public class CommentsData {
 		setComments(com.getComments());
 		setCNum(com.getCNum());
 		setCStep(com.getCStep());
-		setCLevel(com.getCLevel());
 		setDeleteYN(com.getDeleteYN());
-		
+		setOPerson(com.getOPerson());
 		setCreator(com.getOwner().getFullName());
 		setCreateDate(DateUtil.getDateString(com.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(com.getModifyTimestamp(),"a"));
 	}
-	
 }
