@@ -2234,7 +2234,9 @@ public class StandardDocumentService extends StandardManager implements Document
 			trs.start();
 
 			Comments com = (Comments) CommonUtil.getObject(oid);
-			if(com.getOPerson()!=null) {
+			
+			int child = DocumentHelper.manager.getCommentsChild(com);
+			if(child>0) {
 				com.setDeleteYN("Y");
 				PersistenceHelper.manager.modify(com);
 			}else {

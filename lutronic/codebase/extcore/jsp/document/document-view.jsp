@@ -235,32 +235,49 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	for(int i=0; i<cList.size(); i++){
 	%>
 		<table class="view-table">
-			<colgroup>
-				<col width="100">
-				<col width="*">
-				<col width="100">
-			</colgroup>
 			<tr>
-				<th class="lb" style="background-color: lime;"><%=cList.get(i).getCreator() %></th>
-				<td class="indent5" >
-					<%if(cList.get(i).getOPerson()!=null){
+				<%
+				if(cList.get(i).getDeleteYN().equals("N")){
+				%>
+					<%
+					if(cList.get(i).getCStep()>0){
+						int w = cList.get(i).getCStep() * 30;
 					%>
+						<td width="<%=w%>px"></td>
+					<%
+					}
+					%>
+					<th class="lb" style="background-color: skyblue;" width="110px"><%=cList.get(i).getCreator() %></th>
+					<td class="indent5" style="padding:0,0,0,5px;">
+						<%
+						if(cList.get(i).getOPerson()!=null){
+						%>
+							<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
+						<%
+						}
+						%>
+						<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
+					</td>
+					<td align="center" style="padding:0,0,0,5px;" width="100px">
+						<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
+						<%if(isAdmin==true || sessionUser.getName().equals(cList.get(i).getId())){
+						%>
+							<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
+							<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
+						<%
+						}
+						%>
+					</td>
+				<%	
+				}else{
+				%>
+					<td class="indent5" colspan="3">
 						<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
-					<%
-					}
-					%>
-					<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
-				</td>
-				<td align="center">
-					<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
-					<%if(isAdmin==true || sessionUser.getName().equals(cList.get(i).getId())){
-					%>
-						<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
-						<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
-					<%
-					}
-					%>
-				</td>
+						<br>삭제된 글입니다.
+					</td>
+				<%	
+				}
+				%>
 			</tr>
 		</table>
 		<br>
@@ -273,7 +290,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<col width="*">
 		</colgroup>
 		<tr>
-			<th class="lb">댓글</th>
+			<th class="lb" width="110px">댓글</th>
 			<td class="indent5">
 				<textarea rows="5" id="comments"></textarea>
 			</td>
@@ -408,7 +425,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		if (!confirm("답글을 등록 하시겠습니까?")) {
 			return;
 		}
-		
+		var oid = document.getElementById("oid").value;
 		var params = {"oid": oid
 								, "comments" : comments
 								, "num" : reNum
@@ -459,7 +476,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		if (!confirm("삭제 하시겠습니까?")) {
 			return;
 		}
-		
 		var url = getCallUrl("/doc/deleteComments?oid=" + oid);
 		call(url, null, function(data) {
 			if (data.result) {
@@ -469,8 +485,8 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				alert(data.msg);
 			}
 		}, "GET");
-		
 	}	
+	
 	//개정
 	$("#reviseBtn").click(function () {
 		var url	= getURLString("doc", "reviseDocumentPopup", "do") + "?oid="+$("#oid").val();
@@ -613,14 +629,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		AUIGrid.resize(docGridID);
 		AUIGrid.resize(ecoGridID);
 	});
-	
-	//Modal
-// 	var myModal = document.getElementById('myModal')
-// 	var myInput = document.getElementById('myInput')
-	
-// 	myModal.addEventListener('shown.bs.modal', function () {
-// 	  myInput.focus()
-// 	})
 	
 </script>
 <style>

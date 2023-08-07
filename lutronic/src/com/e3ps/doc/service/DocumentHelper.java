@@ -618,4 +618,22 @@ public class DocumentHelper {
 		return p_num;
 	}
 	
+	public int getCommentsChild(Comments com) throws Exception {
+		int count = 0;
+		QuerySpec qs =  new QuerySpec();
+		int idx = qs.appendClassList(Comments.class, true);
+		qs.appendWhere(new SearchCondition(Comments.class, "oPerson", "=", com.getOwner().getFullName()), new int[] {idx});
+		qs.appendAnd();
+		qs.appendWhere(new SearchCondition(Comments.class, "cNum", "=", com.getCNum()), new int[] {idx});
+		qs.appendAnd();
+		qs.appendWhere(new SearchCondition(Comments.class, "cStep", ">", com.getCStep()), new int[] {idx});
+		
+		QueryResult result = PersistenceHelper.manager.find(qs);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			count++;
+		}
+		return count;
+	}
+	
 }
