@@ -128,9 +128,42 @@ public class DocumentController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.createComments(params);
-//			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "댓글 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/updateComments")
+	public Map<String,Object> updateComments(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.updateComments(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "댓글 삭제 함수")
+	@ResponseBody
+	@GetMapping(value = "/deleteComments")
+	public Map<String, Object> deleteComments(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.deleteComments(oid);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());

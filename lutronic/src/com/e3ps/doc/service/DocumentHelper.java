@@ -592,6 +592,7 @@ public class DocumentHelper {
 		
 		qs.appendWhere(new SearchCondition(Comments.class, "wtdocumentReference.key.id", "=", doc.getPersistInfo().getObjectIdentifier().getId()), new int[] {idx});
 		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cNum"), false), new int[] { idx });
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "thePersistInfo.createStamp"), false), new int[] { idx });
 		
 		QueryResult result = PersistenceHelper.manager.find(qs);
 		while (result.hasMoreElements()) {

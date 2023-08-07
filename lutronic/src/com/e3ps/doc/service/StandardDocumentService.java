@@ -2200,4 +2200,55 @@ public class StandardDocumentService extends StandardManager implements Document
         }
 	}
 
+	@Override
+	public void updateComments(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+	    	
+	    	String oid = StringUtil.checkNull((String) params.get("oid"));
+	    	String comments = StringUtil.checkNull((String) params.get("comments"));
+	    	
+	    	Comments com = (Comments) CommonUtil.getObject(oid);
+	    	com.setComments(comments);
+	    	
+	    	PersistenceHelper.manager.modify(com);
+	    	
+	    	trs.commit();
+	    	trs = null;
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
+
+	@Override
+	public void deleteComments(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			Comments com = (Comments) CommonUtil.getObject(oid);
+			if(com.getOPerson()!=null) {
+				com.setDeleteYN("Y");
+				PersistenceHelper.manager.modify(com);
+			}else {
+				PersistenceHelper.manager.delete(com);
+			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

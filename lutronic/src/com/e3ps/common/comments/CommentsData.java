@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class CommentsData {
 	private String oid;
+	private String id;
 	private String comments;
 	private int cNum;
 	private int cStep;
@@ -26,6 +27,7 @@ public class CommentsData {
 	
 	public CommentsData(Comments com) {
 		setOid(CommonUtil.getOIDString(com));
+		setId(com.getOwner().getName());
 		setComments(com.getComments());
 		setCNum(com.getCNum());
 		setCStep(com.getCStep());

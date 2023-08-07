@@ -1,3 +1,5 @@
+<%@page import="wt.session.SessionHelper"%>
+<%@page import="wt.org.WTPrincipal"%>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <%@page import="com.e3ps.common.comments.CommentsData"%>
@@ -13,6 +15,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentData data = (DocumentData) request.getAttribute("docData");
 List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 String pnum = (String) request.getAttribute("pnum");
+WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
@@ -240,12 +243,23 @@ String pnum = (String) request.getAttribute("pnum");
 			<tr>
 				<th class="lb" style="background-color: lime;"><%=cList.get(i).getCreator() %></th>
 				<td class="indent5" >
+					<%if(cList.get(i).getOPerson()!=null){
+					%>
+						<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
+					<%
+					}
+					%>
 					<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
 				</td>
 				<td align="center">
-					<input type="button" value="답글" title="답글" class="mb2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,<%=cList.get(i).getCreator()%>);">
-					<input type="button" value="수정" title="수정" class="mb2" id="">
-					<input type="button" value="삭제" title="삭제" id="">
+					<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
+					<%if(isAdmin==true || sessionUser.getName().equals(cList.get(i).getId())){
+					%>
+						<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
+						<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
+					<%
+					}
+					%>
 				</td>
 			</tr>
 		</table>
@@ -268,25 +282,43 @@ String pnum = (String) request.getAttribute("pnum");
 	<table class="button-table">
 		<tr>
 			<td class="right">
-				<input type="button" value="댓글 등록" title="댓글 등록" class="" id="commentsBtn">
+				<input type="button" value="댓글 등록" title="댓글 등록" class="blue" id="commentsBtn">
 			</td>
 		</tr>
 	</table>
 </div>
 
-<!-- Modal -->
+<!-- Modal 등록 -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   	<div class="modal-dialog">
     	<div class="modal-content">
       		<div class="modal-header">
         		<h5 class="modal-title" id="staticBackdropLabel">답글 등록</h5>
       		</div>
-      		<div class="modal-body">
-        		<textarea rows="10" id="reply"></textarea>
+      		<div class="modal-body" style="width:100%;">
+        		<textarea rows="10" id="replyCreate" style="width:100%;"></textarea>
       		</div>
       		<div class="modal-footer">
         		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        		<button type="button" class="btn btn-primary" id="replyBtn">등록</button>
+        		<button type="button" class="btn btn-primary" id="replyCreateBtn">등록</button>
+      		</div>
+   		</div>
+	</div>
+</div>
+
+<!-- Modal 수정 -->
+<div class="modal fade" id="replyUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="staticBackdropLabel">댓글 수정</h5>
+      		</div>
+      		<div class="modal-body" style="width:100%;">
+        		<textarea rows="10" id="replyModify" style="width:100%;"></textarea>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        		<button type="button" class="btn btn-success" id="replyModifyBtn">수정</button>
       		</div>
    		</div>
 	</div>
@@ -366,9 +398,8 @@ String pnum = (String) request.getAttribute("pnum");
 	}
 	
 	//답글 등록
-	$("#replyBtn").click(function () {
-		var oid = document.getElementById("oid").value;
-		var comments = $("#reply").val();
+	$("#replyCreateBtn").click(function () {
+		var comments = $("#replyCreate").val();
 		if(isEmpty(comments)){
 			alert("답글을 입력해주세요.");
 			return;
@@ -395,6 +426,51 @@ String pnum = (String) request.getAttribute("pnum");
 		});
 	})
 	
+	var updateOid;
+	function modalUpSubmit(oid, reply){
+		updateOid = oid;
+		$("#replyModify").val(reply);
+	}
+	
+	//댓글 수정
+	$("#replyModifyBtn").click(function () {
+		var reply = $("#replyModify").val();
+		
+		if (!confirm("수정 하시겠습니까?")) {
+			return;
+		}
+		
+		var params = {"oid": updateOid
+								, "comments" : reply};
+		
+		var url = getCallUrl("/doc/updateComments");
+		call(url, params, function(data) {
+			if(data.result){
+				alert(data.msg);
+				location.reload();
+			}else{
+				alert(data.msg);
+			}
+		});
+	})
+	
+	//댓글 삭제
+	function replyDeleteBtn(oid){
+		if (!confirm("삭제 하시겠습니까?")) {
+			return;
+		}
+		
+		var url = getCallUrl("/doc/deleteComments?oid=" + oid);
+		call(url, null, function(data) {
+			if (data.result) {
+				alert(data.msg);
+				location.reload();
+			} else {
+				alert(data.msg);
+			}
+		}, "GET");
+		
+	}	
 	//개정
 	$("#reviseBtn").click(function () {
 		var url	= getURLString("doc", "reviseDocumentPopup", "do") + "?oid="+$("#oid").val();
