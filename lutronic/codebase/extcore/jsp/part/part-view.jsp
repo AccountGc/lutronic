@@ -1,3 +1,6 @@
+<%@page import="wt.session.SessionHelper"%>
+<%@page import="com.e3ps.common.comments.CommentsData"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.part.beans.PartData"%>
@@ -5,9 +8,14 @@
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%@page import="net.sf.json.JSONArray"%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 PartData data = (PartData) request.getAttribute("data");
+List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
+String pnum = (String) request.getAttribute("pnum");
+WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
@@ -215,6 +223,128 @@ PartData data = (PartData) request.getAttribute("data");
 	</div>
 	<% } %>
 </div>
+
+<div class="comment-table">
+	<table class="button-table">
+		<tr>
+			<td class="left">
+				<div class="header">
+					<img src="/Windchill/extcore/images/header.png"> 댓글 <span class="blue"><%=cList.size() %></span>
+				</div>
+			</td>
+		</tr>
+	</table>
+	
+	<%
+	for(int i=0; i<cList.size(); i++){
+	%>
+		<table class="view-table">
+			<tr>
+				<%
+				if(cList.get(i).getDeleteYN().equals("N")){
+				%>
+					<%
+					if(cList.get(i).getCStep()>0){
+						int w = cList.get(i).getCStep() * 30;
+					%>
+						<td width="<%=w%>px"></td>
+					<%
+					}
+					%>
+					<th class="lb" style="background-color: skyblue;" width="110px"><%=cList.get(i).getCreator() %></th>
+					<td class="indent5" style="padding:0,0,0,5px;">
+						<%
+						if(cList.get(i).getOPerson()!=null){
+						%>
+							<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
+						<%
+						}
+						%>
+						<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
+					</td>
+					<td align="center" style="padding:0,0,0,5px;" width="100px">
+						<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
+						<%if(isAdmin==true || sessionUser.getName().equals(cList.get(i).getId())){
+						%>
+							<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
+							<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
+						<%
+						}
+						%>
+					</td>
+				<%	
+				}else{
+				%>
+					<td class="indent5" colspan="3">
+						<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
+						<br>삭제된 글입니다.
+					</td>
+				<%	
+				}
+				%>
+			</tr>
+		</table>
+		<br>
+	<%
+	}
+	%>
+	<table class="view-table">
+		<colgroup>
+			<col width="100">
+			<col width="*">
+		</colgroup>
+		<tr>
+			<th class="lb" width="110px">댓글</th>
+			<td class="indent5">
+				<textarea rows="5" id="comments"></textarea>
+			</td>
+		</tr>
+	</table>
+	<table class="button-table">
+		<tr>
+			<td class="right">
+				<input type="button" value="댓글 등록" title="댓글 등록" class="blue" id="commentsBtn">
+			</td>
+		</tr>
+	</table>
+</div>
+
+<!-- Modal 등록 -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="staticBackdropLabel">답글 등록</h5>
+      		</div>
+      		<div class="modal-body" style="width:100%;">
+        		<textarea rows="10" id="replyCreate" style="width:100%;"></textarea>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        		<button type="button" class="btn btn-primary" id="replyCreateBtn">등록</button>
+      		</div>
+   		</div>
+	</div>
+</div>
+
+<!-- Modal 수정 -->
+<div class="modal fade" id="replyUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="staticBackdropLabel">댓글 수정</h5>
+      		</div>
+      		<div class="modal-body" style="width:100%;">
+        		<textarea rows="10" id="replyModify" style="width:100%;"></textarea>
+      		</div>
+      		<div class="modal-footer">
+        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        		<button type="button" class="btn btn-success" id="replyModifyBtn">수정</button>
+      		</div>
+   		</div>
+	</div>
+</div>
+
 <script type="text/javascript">
 	function update(mode) {
 		const oid = document.getElementById("oid").value;
@@ -242,6 +372,42 @@ PartData data = (PartData) request.getAttribute("data");
 			}
 		}, "GET");
 	}
+	
+	//댓글 등록
+	$("#commentsBtn").click(function () {
+		var param_num = "<%=pnum%>";
+		var num;
+		if(isEmpty(param_num)){
+			num = 0;
+		}else{
+			num = Number(param_num) +1;
+		}
+		var oid = document.getElementById("oid").value;
+		var comments = $("#comments").val();
+		if(isEmpty(comments)){
+			alert("댓글을 입력해주세요.");
+			return;
+		}
+		
+		if (!confirm("댓글을 등록 하시겠습니까?")) {
+			return;
+		}
+		
+		var params = {"oid": oid
+								, "comments" : comments
+								, "num" : num
+								, "step" : 0};
+		
+		var url = getCallUrl("/part/createComments");
+		call(url, params, function(data) {
+			if(data.result){
+				alert("댓글이 등록 되었습니다.");
+				location.reload();
+			}else{
+				alert(data.msg);
+			}
+		});
+	});
 
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({

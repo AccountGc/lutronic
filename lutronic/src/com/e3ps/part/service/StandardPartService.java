@@ -101,6 +101,7 @@ import com.e3ps.common.beans.VersionData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.comments.Comments;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -5033,5 +5034,50 @@ public class StandardPartService extends StandardManager implements PartService 
 		for (int i = 0; i < changeOids.length; i++) {
 			
 		}
+	}
+
+	@Override
+	public Map<String, Object> listPartAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void createComments(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+	    	
+	    	String oid = StringUtil.checkNull((String) params.get("oid"));
+	    	String comments = StringUtil.checkNull((String) params.get("comments"));
+	    	int num = (int) params.get("num");
+	    	int step = (int) params.get("step");
+	    	String oPerson = StringUtil.checkNull((String) params.get("person"));
+	    	
+	    	WTPart part = (WTPart) CommonUtil.getObject(oid);
+	    	
+	    	Comments com = new Comments();
+	    	com.setWtpart(part);
+	    	com.setComments(comments);
+	    	com.setCNum(num);
+	    	com.setCStep(step);
+	    	com.setOPerson(oPerson);
+	    	com.setDeleteYN("N");
+	    	com.setOwner(SessionHelper.manager.getPrincipalReference());
+	    	
+	    	PersistenceHelper.manager.save(com);
+	    	
+	    	trs.commit();
+	    	trs = null;
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
 	}
 }

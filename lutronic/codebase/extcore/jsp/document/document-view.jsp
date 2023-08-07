@@ -407,7 +407,8 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	var reNum;
 	var reStep;
 	var rePerson;
-	//Modal 클릭시 데이터 보냄
+	
+	//답글 Modal에 데이터 보냄
 	function modalSubmit(num, step, person){
 		reNum = num;
 		reStep = step;
@@ -444,6 +445,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 	
 	var updateOid;
+	//수정 Modal에 데이터 보냄
 	function modalUpSubmit(oid, reply){
 		updateOid = oid;
 		$("#replyModify").val(reply);

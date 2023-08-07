@@ -17,6 +17,8 @@ import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.EcrPartLink;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.comments.Comments;
+import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -1059,5 +1061,24 @@ ORDER BY A0.modifyStampA2 DESC;
 			e.printStackTrace();
 		}	
 		return JSONArray.fromObject(list);
+	}
+	
+	public List<CommentsData> commentsList(String oid) throws Exception {
+		List<CommentsData> comList = new ArrayList<CommentsData>(); 
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		QuerySpec qs =  new QuerySpec();
+		int idx = qs.appendClassList(Comments.class, true);
+		
+		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=", part.getPersistInfo().getObjectIdentifier().getId()), new int[] {idx});
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cNum"), false), new int[] { idx });
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "thePersistInfo.createStamp"), false), new int[] { idx });
+		
+		QueryResult result = PersistenceHelper.manager.find(qs);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			CommentsData data = new CommentsData((Comments) obj[0]);
+			comList.add(data);
+		}
+		return comList;
 	}
 }

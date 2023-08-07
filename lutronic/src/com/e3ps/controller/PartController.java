@@ -25,12 +25,14 @@ import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.beans.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
@@ -178,10 +180,15 @@ public class PartController extends BaseController {
 		WTPart part = (WTPart)CommonUtil.getObject(oid);
 		PartData partData = new PartData(part);
 		Map<String,String> map = CommonHelper.manager.getAttributes(oid, "view");
+		List<CommentsData> cList = PartHelper.manager.commentsList(oid);
+		String pnum = DocumentHelper.manager.getCnum(cList);
+		
 		model.addObject("oid",oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("data", partData);
 		model.addAllObjects(map);
+		model.addObject("cList", cList);
+		model.addObject("pnum", pnum);
 		model.setViewName("/extcore/jsp/part/part-view.jsp");
 		return model;
 	}
@@ -203,6 +210,22 @@ public class PartController extends BaseController {
 //		model.setViewName("popup:/part/viewPart");
 //		return model;
 //	}
+	
+	@Description(value = "댓글 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/createComments")
+	public Map<String,Object> createComments(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			PartHelper.service.createComments(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	/** 품목 삭제
 	 * @param request

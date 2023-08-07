@@ -139,4 +139,5 @@ public interface PartService {
 	Map<String, Object> listPagingAUIPartAction(HttpServletRequest request,
 			HttpServletResponse response) throws Exception;
 
+	public void createComments(Map<String, Object> params) throws Exception;
 }
