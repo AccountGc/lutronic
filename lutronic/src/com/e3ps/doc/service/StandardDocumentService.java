@@ -2172,6 +2172,7 @@ public class StandardDocumentService extends StandardManager implements Document
 	    	String comments = StringUtil.checkNull((String) params.get("comments"));
 	    	int num = (int) params.get("num");
 	    	int step = (int) params.get("step");
+	    	String oPerson = StringUtil.checkNull((String) params.get("person"));
 	    	
 	    	WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 	    	
@@ -2180,6 +2181,7 @@ public class StandardDocumentService extends StandardManager implements Document
 	    	com.setComments(comments);
 	    	com.setCNum(num);
 	    	com.setCStep(step);
+	    	com.setOPerson(oPerson);
 	    	com.setDeleteYN("N");
 	    	com.setOwner(SessionHelper.manager.getPrincipalReference());
 	    	

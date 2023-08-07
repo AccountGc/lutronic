@@ -243,7 +243,7 @@ String pnum = (String) request.getAttribute("pnum");
 					<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
 				</td>
 				<td align="center">
-					<input type="button" value="답글" title="답글" class="mb2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>);">
+					<input type="button" value="답글" title="답글" class="mb2" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,<%=cList.get(i).getCreator()%>);">
 					<input type="button" value="수정" title="수정" class="mb2" id="">
 					<input type="button" value="삭제" title="삭제" id="">
 				</td>
@@ -342,8 +342,7 @@ String pnum = (String) request.getAttribute("pnum");
 		var params = {"oid": oid
 								, "comments" : comments
 								, "num" : num
-								, "step" : 0
-								, "level" : 0};
+								, "step" : 0};
 		
 		var url = getCallUrl("/doc/createComments");
 		call(url, params, function(data) {
@@ -358,10 +357,12 @@ String pnum = (String) request.getAttribute("pnum");
 	
 	var reNum;
 	var reStep;
+	var rePerson;
 	//Modal 클릭시 데이터 보냄
-	function modalSubmit(num, step){
+	function modalSubmit(num, step, person){
 		reNum = num;
 		reStep = step;
+		rePerson = person;
 	}
 	
 	//답글 등록
@@ -380,7 +381,8 @@ String pnum = (String) request.getAttribute("pnum");
 		var params = {"oid": oid
 								, "comments" : comments
 								, "num" : reNum
-								, "step" : reStep+1};
+								, "step" : reStep+1
+								, "person" : rePerson};
 		
 		var url = getCallUrl("/doc/createComments");
 		call(url, params, function(data) {
