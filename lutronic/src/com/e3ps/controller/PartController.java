@@ -226,6 +226,40 @@ public class PartController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "댓글 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/updateComments")
+	public Map<String,Object> updateComments(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			PartHelper.service.updateComments(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "댓글 삭제 함수")
+	@ResponseBody
+	@GetMapping(value = "/deleteComments")
+	public Map<String, Object> deleteComments(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			PartHelper.service.deleteComments(oid);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	/** 품목 삭제
 	 * @param request

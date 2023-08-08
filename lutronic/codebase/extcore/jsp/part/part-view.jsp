@@ -90,7 +90,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">품목번호</th>
 				<td class="indent5"><%=data.getNumber()%></td>
-				<th>품목분류</th>
+				<th class="lb">품목분류</th>
 				<td class="indent5">
 <%-- 					<%=data.getLocation()%> --%>
 				</td>
@@ -105,7 +105,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 <%-- 					<%=data.getLifecycle()%> --%>
 				</td>
-				<th>Rev.</th>
+				<th class="lb">Rev.</th>
 				<td class="indent5">
 <%-- 					<%=data.getVersion()%>.<%=data.getIteration %>(<%=data.getViewName %>) --%>
 				</td>
@@ -113,7 +113,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">등록자</th>
 				<td class="indent5"><%=data.getCreator()%></td>
-				<th>수정자</th>
+				<th class="lb">수정자</th>
 				<td class="indent5">
 <%-- 					<%=data.getModifier()%> --%>
 				</td>
@@ -408,6 +408,91 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 		});
 	});
+	
+	var reNum;
+	var reStep;
+	var rePerson;
+	
+	//답글 Modal에 데이터 보냄
+	function modalSubmit(num, step, person){
+		reNum = num;
+		reStep = step;
+		rePerson = person;
+	}
+	
+	//답글 등록
+	$("#replyCreateBtn").click(function () {
+		var comments = $("#replyCreate").val();
+		if(isEmpty(comments)){
+			alert("답글을 입력해주세요.");
+			return;
+		}
+		
+		if (!confirm("답글을 등록 하시겠습니까?")) {
+			return;
+		}
+		var oid = document.getElementById("oid").value;
+		var params = {"oid": oid
+								, "comments" : comments
+								, "num" : reNum
+								, "step" : reStep+1
+								, "person" : rePerson};
+		
+		var url = getCallUrl("/part/createComments");
+		call(url, params, function(data) {
+			if(data.result){
+				alert("답글이 등록 되었습니다.");
+				location.reload();
+			}else{
+				alert(data.msg);
+			}
+		});
+	})
+	
+	var updateOid;
+	//수정 Modal에 데이터 보냄
+	function modalUpSubmit(oid, reply){
+		updateOid = oid;
+		$("#replyModify").val(reply);
+	}
+	
+	//댓글 수정
+	$("#replyModifyBtn").click(function () {
+		var reply = $("#replyModify").val();
+		
+		if (!confirm("수정 하시겠습니까?")) {
+			return;
+		}
+		
+		var params = {"oid": updateOid
+								, "comments" : reply};
+		
+		var url = getCallUrl("/part/updateComments");
+		call(url, params, function(data) {
+			if(data.result){
+				alert(data.msg);
+				location.reload();
+			}else{
+				alert(data.msg);
+			}
+		});
+	})
+	
+	//댓글 삭제
+	function replyDeleteBtn(oid){
+		if (!confirm("삭제 하시겠습니까?")) {
+			return;
+		}
+		var url = getCallUrl("/part/deleteComments?oid=" + oid);
+		call(url, null, function(data) {
+			if (data.result) {
+				alert(data.msg);
+				location.reload();
+			} else {
+				alert(data.msg);
+			}
+		}, "GET");
+	}
 
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
@@ -416,20 +501,27 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				var tabId = ui.newPanel.prop("id");
 				let isCreated = false;
 				switch (tabId) {
+				case "tabs-1":
+					$(".comment-table").show();
+					break;
 				case "tabs-2":
 					isCreated = AUIGrid.isCreated(drawingGridID);
 					if (isCreated) {
 						AUIGrid.resize(drawingGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGridDrawing(columnsDrawing);
+						$(".comment-table").hide();
 					}
 					break;
 				case "tabs-3":
 					isCreated = AUIGrid.isCreated(refbyGridID);
 					if (isCreated) {
 						AUIGrid.resize(refbyGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid3(columnRefby);
+						$(".comment-table").hide();
 					}
 					break;
 // 				case "tabs-4":
@@ -444,40 +536,50 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					isCreated = AUIGrid.isCreated(docGridID);
 					if (isCreated) {
 						AUIGrid.resize(docGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid5(columnDoc);
+						$(".comment-table").hide();
 					}
 					break;
 				case "tabs-6":
 					isCreated = AUIGrid.isCreated(rohs2GridID);
 					if (isCreated) {
 						AUIGrid.resize(rohs2GridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGridRohs2(columnRohs2);
+						$(".comment-table").hide();
 					}
 					break;
 				case "tabs-7":
 					isCreated = AUIGrid.isCreated(ecoGridID);
 					if (isCreated) {
 						AUIGrid.resize(ecoGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid7(columnEco);
+						$(".comment-table").hide();
 					}
 					break;
 				case "tabs-8":
 					isCreated = AUIGrid.isCreated(devGridID);
 					if (isCreated) {
 						AUIGrid.resize(devGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGrid4(columnDev);
+						$(".comment-table").hide();
 					}
 					break;
 				case "tabs-9":
 					isCreated = AUIGrid.isCreated(adminGridID);
 					if (isCreated) {
 						AUIGrid.resize(adminGridID);
+						$(".comment-table").hide();
 					} else {
 						createAUIGridAdmin(columnsAdmin);
+						$(".comment-table").hide();
 					}
 					break;
 				}

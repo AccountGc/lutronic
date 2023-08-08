@@ -26,6 +26,56 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.EcrPartLink;
+import com.e3ps.change.service.ChangeHelper;
+import com.e3ps.change.service.ECOSearchHelper;
+import com.e3ps.common.beans.BatchDownData;
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.beans.VersionData;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.comments.Comments;
+import com.e3ps.common.content.FileRequest;
+import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.service.CommonHelper;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.POIUtil;
+import com.e3ps.common.util.SequenceDao;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.web.PageControl;
+import com.e3ps.common.web.PageQueryBroker;
+import com.e3ps.common.web.WebUtil;
+import com.e3ps.development.devActive;
+import com.e3ps.development.devOutPutLink;
+import com.e3ps.distribute.util.MakeZIPUtil;
+import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.doc.service.DocumentQueryHelper;
+import com.e3ps.drawing.beans.EpmUtil;
+import com.e3ps.drawing.service.DrawingHelper;
+import com.e3ps.drawing.service.EpmSearchHelper;
+import com.e3ps.drawing.service.EpmUtilHelper;
+import com.e3ps.drawing.util.EpmPublishUtil;
+import com.e3ps.groupware.workprocess.WFItem;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.part.beans.ObjectComarator;
+import com.e3ps.part.beans.PartData;
+import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.util.BomBroker;
+import com.e3ps.part.util.PartUtil;
+import com.e3ps.rohs.PartToRohsLink;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.service.RohsHelper;
+import com.e3ps.rohs.service.RohsQueryHelper;
+
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
 import wt.content.ApplicationData;
@@ -88,55 +138,6 @@ import wt.vc.views.ViewHelper;
 import wt.vc.wip.CheckoutLink;
 import wt.vc.wip.WorkInProgressHelper;
 import wt.vc.wip.Workable;
-
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.EcoPartLink;
-import com.e3ps.change.EcrPartLink;
-import com.e3ps.change.service.ChangeHelper;
-import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.common.beans.BatchDownData;
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.beans.VersionData;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.CodeHelper;
-import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.comments.Comments;
-import com.e3ps.common.content.FileRequest;
-import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.service.CommonHelper;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.POIUtil;
-import com.e3ps.common.util.SequenceDao;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.common.web.WebUtil;
-import com.e3ps.development.devActive;
-import com.e3ps.development.devOutPutLink;
-import com.e3ps.distribute.util.MakeZIPUtil;
-import com.e3ps.doc.service.DocumentQueryHelper;
-import com.e3ps.drawing.beans.EpmUtil;
-import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.drawing.service.EpmUtilHelper;
-import com.e3ps.drawing.util.EpmPublishUtil;
-import com.e3ps.groupware.workprocess.WFItem;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.part.beans.ObjectComarator;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
-import com.e3ps.part.util.BomBroker;
-import com.e3ps.part.util.PartUtil;
-import com.e3ps.rohs.PartToRohsLink;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.service.RohsHelper;
-import com.e3ps.rohs.service.RohsQueryHelper;
 
 
 @SuppressWarnings("serial")
@@ -5079,5 +5080,59 @@ public class StandardPartService extends StandardManager implements PartService 
 				trs.rollback();
 			}
         }
+	}
+
+	@Override
+	public void updateComments(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+	    	
+	    	String oid = StringUtil.checkNull((String) params.get("oid"));
+	    	String comments = StringUtil.checkNull((String) params.get("comments"));
+	    	
+	    	Comments com = (Comments) CommonUtil.getObject(oid);
+	    	com.setComments(comments);
+	    	
+	    	PersistenceHelper.manager.modify(com);
+	    	
+	    	trs.commit();
+	    	trs = null;
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
+
+	@Override
+	public void deleteComments(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			Comments com = (Comments) CommonUtil.getObject(oid);
+			
+			int child = PartHelper.manager.getCommentsChild(com);
+			if(child>0) {
+				com.setDeleteYN("Y");
+				PersistenceHelper.manager.modify(com);
+			}else {
+				PersistenceHelper.manager.delete(com);
+			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }
