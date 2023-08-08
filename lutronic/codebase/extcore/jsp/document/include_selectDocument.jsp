@@ -2,11 +2,37 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
+String title = request.getParameter("title");
+String docOid = request.getParameter("paramName");
+String searchType = request.getParameter("searchType");
+String lifecycle = request.getParameter("lifecycle");
 boolean isCreate = "create".equals(mode);
 %>
-<input type="button" value="추가" title="추가" class="blue" onclick="addDoc();">
-<input type="button" value="삭제" title="삭제" class="red" onclick="deleteDoc();">
-<div id="grid_doc" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> <%= title %>
+			</div>
+		</td>
+	</tr>
+</table>
+<table class="create-table">
+	<colgroup>
+		<col width="150">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th class="lb"><%= title %> <%= "관련 문서".equals(title) ? "*" : "" %></th>
+		<td>
+			<input type="hidden" name="lifecycle"  id="lifecycle"  value="<%= lifecycle %>" />
+			<input type="hidden" name="searchType" id="searchType" value="<%= searchType %>" />
+			<input type="button" value="추가" title="추가" class="blue" onclick="addDoc();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteDoc();">
+			<div id="grid_doc" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 	let docGridID;
 	const columnsDoc = [ {

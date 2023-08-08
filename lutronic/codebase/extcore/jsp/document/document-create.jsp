@@ -176,32 +176,13 @@
 			</td>
 		</tr>
 	</table>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 관련문서
-				</div>
-			</td>
-		</tr>
-	</table>
-	<table class="create-table">
-		<colgroup>
-			<col width="150">
-			<col width="600">
-			<col width="150">
-			<col width="600">
-		</colgroup>
-		<tr>
-			<th class="lb">관련문서</th>
-			<td colspan="3">
-				<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
-					<jsp:param value="" name="oid" />
-					<jsp:param value="create" name="mode" />
-				</jsp:include>
-			</td>
-		</tr>
-	</table>
+	
+	<!-- 	관련 문서 -->
+	<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
+		<jsp:param value="관련 문서" name="title"/>
+		<jsp:param value="" name="oid" />
+	</jsp:include>
+	
 	<table class="button-table">
 		<tr>
 			<td class="center">
