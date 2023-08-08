@@ -1081,4 +1081,27 @@ ORDER BY A0.modifyStampA2 DESC;
 		}
 		return comList;
 	}
+	
+	public int getCommentsChild(Comments com) throws Exception {
+		WTPart part = com.getWtpart();
+		int count = 0;
+		QuerySpec qs =  new QuerySpec();
+		int idx = qs.appendClassList(Comments.class, true);
+		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=", part.getPersistInfo().getObjectIdentifier().getId()), new int[] {idx});
+		qs.appendAnd();
+		qs.appendWhere(new SearchCondition(Comments.class, "oPerson", "=", com.getOwner().getFullName()), new int[] {idx});
+		qs.appendAnd();
+		qs.appendWhere(new SearchCondition(Comments.class, "cNum", "=", com.getCNum()), new int[] {idx});
+		qs.appendAnd();
+		qs.appendWhere(new SearchCondition(Comments.class, "cStep", ">", com.getCStep()), new int[] {idx});
+		qs.appendAnd();
+		qs.appendWhere(new SearchCondition(Comments.class, "deleteYN", "=", "N"), new int[] {idx});
+		
+		QueryResult result = PersistenceHelper.manager.find(qs);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			count++;
+		}
+		return count;
+	}
 }

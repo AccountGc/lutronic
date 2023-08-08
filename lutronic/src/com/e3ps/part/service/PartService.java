@@ -140,4 +140,8 @@ public interface PartService {
 			HttpServletResponse response) throws Exception;
 
 	public void createComments(Map<String, Object> params) throws Exception;
+	
+	public void updateComments(Map<String, Object> params) throws Exception;
+	
+	public void deleteComments(String oid) throws Exception;
 }
