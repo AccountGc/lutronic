@@ -977,30 +977,33 @@ public class StandardCommonService extends StandardManager implements CommonServ
 		IBAUtil.changeIBAValue(toIba, AttributeKey.IBAKey.IBA_DES, des, "string");
 	}
 	
+	/**
+	 *  임시 파일 다운로드 파일명 중복 시 넘버링 메서드
+	 */
 	 public static String getUniqueFileName(String basePath, String originalFileName) {
         String newFileName = originalFileName;
         int dotIndex = originalFileName.lastIndexOf(".");
         String nameWithoutExtension = (dotIndex == -1) ? originalFileName : originalFileName.substring(0, dotIndex);
         String extension = ".zip";
         
+        newFileName = nameWithoutExtension + extension;        	
+        
         File file = new File(basePath, newFileName);
         
-        if(!file.exists()) {
-        	newFileName = nameWithoutExtension + extension;        	
-        }else {
-        	int count = 1;
+    	int count = 1;
         	
-        	while (file.exists()) {
-        		newFileName = nameWithoutExtension + "_" + count + extension;
-        		file = new File(basePath, newFileName);
-        		count++;
-        	}        	
-        }
-        
+    	while (file.exists()) {
+    		newFileName = nameWithoutExtension + "_" + count + extension;
+    		file = new File(basePath, newFileName);
+    		count++;
+    	}        	
 
         return newFileName;
     }
-	
+	 
+	/**
+	 *  임시 파일 일괄 다운로드
+	 */
 	public ResultData zip(HttpServletRequest request,HttpServletResponse response) {
 		ResultData returnData = new ResultData();
 		String where = "D:\\temp";
