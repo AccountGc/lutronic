@@ -313,6 +313,7 @@
 					select : headerMenuSelectHandler
 				});
 				createAUIGrid(columns);
+				createAUIGrid2(columnsPart);
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
