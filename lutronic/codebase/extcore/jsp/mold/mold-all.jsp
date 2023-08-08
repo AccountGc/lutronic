@@ -59,7 +59,6 @@
 		</table>
 
 		<script type="text/javascript">
-
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid4(columnsDoc);
 				AUIGrid.resize(docGridID);
