@@ -170,14 +170,14 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	</div>
 	
 	<!-- 관련 도면 -->
-	<div id="tabs-4">
+<!-- 	<div id="tabs-4"> -->
 <%-- 		<jsp:include page="/extcore/jsp/drawing/drawingView_include.jsp"> --%>
 <%-- 			<jsp:param value="part" name="moduleType"/> --%>
 <%-- 			<jsp:param value="<%=data.getOid() %>" name="oid"/> --%>
 <%-- 			<jsp:param value="관련 도면" name="title"/> --%>
 <%-- 			<jsp:param value="epmOid" name="paramName"/> --%>
 <%-- 		</jsp:include> --%>
-	</div>
+<!-- 	</div> -->
 	
 	<!-- 관련 문서 -->
 	<div id="tabs-5">

@@ -107,7 +107,8 @@ if(roleType.equals("represent")){
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true,
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 		AUIGrid.setGridData(rohsGridID, <%=json%>);
@@ -122,7 +123,8 @@ if(roleType.equals("represent")){
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true,
 		}
 		rohs2GridID = AUIGrid.create("#grid_rohs2", columnLayout, props);
 		AUIGrid.setGridData(rohs2GridID, <%=json%>);

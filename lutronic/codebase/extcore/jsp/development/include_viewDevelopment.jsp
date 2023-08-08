@@ -69,7 +69,8 @@ JSONArray json = DevelopmentHelper.manager.include_DevelopmentView(moduleType, o
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true,
 		}
 		devGridID = AUIGrid.create("#grid_dev", columnLayout, props);
 		AUIGrid.setGridData(devGridID, <%=json%>);

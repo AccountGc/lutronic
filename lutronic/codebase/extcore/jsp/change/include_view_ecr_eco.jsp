@@ -1,9 +1,17 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.change.service.ECOHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
-JSONArray json = ECOHelper.manager.getRequestOrderLinkECOData(oid);
+String moduleType = request.getParameter("moduleType");
+JSONArray json = null;
+if(moduleType.equals("ecr")){
+	json = ECOHelper.manager.getRequestOrderLinkECOData(oid);
+}else{
+	json = PartHelper.manager.include_ChangeECOView(oid, moduleType);
+}
+
 %>
 <table class="button-table">
 	<tr>
@@ -68,9 +76,11 @@ JSONArray json = ECOHelper.manager.getRequestOrderLinkECOData(oid);
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true,
 		}
 		ecoGridID = AUIGrid.create("#grid_eco", columnLayout, props);
+		debugger;
 		AUIGrid.setGridData(ecoGridID, <%=json%>);
 	}
 	

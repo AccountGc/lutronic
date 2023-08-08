@@ -75,7 +75,8 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true,
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 		AUIGrid.setGridData(partGridID, <%=json%>);

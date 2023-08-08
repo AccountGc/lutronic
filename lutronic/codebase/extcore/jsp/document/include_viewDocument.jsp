@@ -74,7 +74,8 @@ JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true,
 		}
 		docGridID = AUIGrid.create("#grid_doc", columnLayout, props);
 		AUIGrid.setGridData(docGridID, <%=json%>);
