@@ -1,6 +1,8 @@
 package com.e3ps.common.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,9 +13,42 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.common.beans.BatchDownData;
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.history.LoginHistory;
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.web.PageQueryBroker;
+import com.e3ps.development.devActive;
+import com.e3ps.development.beans.DevActiveData;
+import com.e3ps.development.service.DevelopmentQueryHelper;
+import com.e3ps.distribute.util.MakeZIPUtil;
+import com.e3ps.doc.key.DocKey;
+import com.e3ps.download.DownloadHistory;
+import com.e3ps.download.service.DownloadHistoryHelper;
+import com.e3ps.drawing.service.DrawingHelper;
+import com.e3ps.groupware.notice.Notice;
+import com.e3ps.groupware.workprocess.WFItem;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.groupware.workprocess.service.WorklistHelper;
+import com.e3ps.org.People;
+import com.e3ps.org.beans.PeopleData;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.service.RohsUtil;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.content.ApplicationData;
@@ -60,39 +95,6 @@ import wt.workflow.engine.WfActivity;
 import wt.workflow.work.WfAssignmentState;
 import wt.workflow.work.WorkItem;
 import wt.workflow.work.WorkflowHelper;
-
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.common.beans.BatchDownData;
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.history.LoginHistory;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.development.devActive;
-import com.e3ps.development.beans.DevActiveData;
-import com.e3ps.development.service.DevelopmentQueryHelper;
-import com.e3ps.distribute.util.MakeZIPUtil;
-import com.e3ps.doc.key.DocKey;
-import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.service.DownloadHistoryHelper;
-import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.workprocess.WFItem;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.groupware.workprocess.service.WorklistHelper;
-import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
-import com.e3ps.rohs.ROHSContHolder;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.service.RohsQueryHelper;
-import com.e3ps.rohs.service.RohsUtil;
 
 @SuppressWarnings("serial")
 public class StandardCommonService extends StandardManager implements CommonService {
@@ -974,6 +976,83 @@ public class StandardCommonService extends StandardManager implements CommonServ
 		String des = IBAUtil.getAttrValue(fromIba, AttributeKey.IBAKey.IBA_DES);
 		IBAUtil.changeIBAValue(toIba, AttributeKey.IBAKey.IBA_DES, des, "string");
 	}
+	
+	 public static String getUniqueFileName(String basePath, String originalFileName) {
+        String newFileName = originalFileName;
+        int dotIndex = originalFileName.lastIndexOf(".");
+        String nameWithoutExtension = (dotIndex == -1) ? originalFileName : originalFileName.substring(0, dotIndex);
+        String extension = ".zip";
+        
+        File file = new File(basePath, newFileName);
+        
+        if(!file.exists()) {
+        	newFileName = nameWithoutExtension + extension;        	
+        }else {
+        	int count = 1;
+        	
+        	while (file.exists()) {
+        		newFileName = nameWithoutExtension + "_" + count + extension;
+        		file = new File(basePath, newFileName);
+        		count++;
+        	}        	
+        }
+        
+
+        return newFileName;
+    }
+	
+	public ResultData zip(HttpServletRequest request,HttpServletResponse response) {
+		ResultData returnData = new ResultData();
+		String where = "D:\\temp";
+		File file_ = new File(where);
+		File[] listFiles = file_.listFiles();
+			
+		FileOutputStream fos = null;
+		ZipOutputStream zipOut = null;
+		FileInputStream fis = null;
+		try {
+	            
+			String defaultDownloadFolderPath = System.getProperty("user.home") + File.separator + "Downloads";
+			String zipFileName = listFiles[0].getName(); 
+			String uniqueFileName = getUniqueFileName(defaultDownloadFolderPath, zipFileName);
+			String zipFilePath = defaultDownloadFolderPath + "/" + uniqueFileName;
+		    fos = new FileOutputStream(zipFilePath);
+		    zipOut = new ZipOutputStream(fos);
+	        
+		    for(File fileToZip :  listFiles) {
+					
+			    fis = new FileInputStream(fileToZip);
+			    ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
+			    zipOut.putNextEntry(zipEntry);
+					                
+			    byte[] bytes = new byte[1024];
+			    int length;
+			    while((length = fis.read(bytes)) >= 0) {
+			       zipOut.write(bytes, 0, length);
+			    }
+		        
+	            fis.close();
+		        zipOut.closeEntry();
+	            
+		    }
+				
+		    zipOut.close();
+		    fos.close();
+		    
+
+		} catch (IOException e) {
+		    e.printStackTrace();
+			returnData.setResult(false);
+			returnData.setMessage(e.getLocalizedMessage());
+		} finally {
+		    try { if(fis != null)fis.close(); } catch (IOException e1) {System.out.println(e1.getMessage());/*ignore*/}
+		    try { if(zipOut != null)zipOut.closeEntry();} catch (IOException e2) {System.out.println(e2.getMessage());/*ignore*/}
+		    try { if(zipOut != null)zipOut.close();} catch (IOException e3) {System.out.println(e3.getMessage());/*ignore*/}
+		    try { if(fos != null)fos.close(); } catch (IOException e4) {System.out.println(e4.getMessage());/*ignore*/}
+		}
+		
+		return returnData;
+   }
 	
 	@Override
 	public ResultData batchSecondaryDown(HttpServletRequest request, HttpServletResponse response) {

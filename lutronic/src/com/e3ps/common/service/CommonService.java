@@ -56,6 +56,8 @@ public interface CommonService {
 	ResultData withDrawAction(String oid, boolean isInit);
 
 	ResultData batchSecondaryDown(HttpServletRequest request,HttpServletResponse response);
+	
+	ResultData zip(HttpServletRequest request,HttpServletResponse response);
 
 
 	

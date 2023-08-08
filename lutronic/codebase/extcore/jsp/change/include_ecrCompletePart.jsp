@@ -37,6 +37,7 @@ String mode = request.getParameter("mode");
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
+			fillColumnSizeMode: true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,

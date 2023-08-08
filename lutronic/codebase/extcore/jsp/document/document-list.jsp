@@ -279,6 +279,7 @@ if(request.getParameter("popup")!=null){
 					headerHeight : 30,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
+					fillColumnSizeMode: true,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,

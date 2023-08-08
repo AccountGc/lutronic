@@ -258,6 +258,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					headerHeight : 30,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
+					fillColumnSizeMode: true,
 					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,

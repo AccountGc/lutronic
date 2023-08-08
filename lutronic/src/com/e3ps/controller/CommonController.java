@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -839,6 +840,22 @@ public class CommonController {
 		ResultData returnData = new ResultData();
 		try {
 			returnData =  CommonHelper.service.batchSecondaryDown(request, response);//.service.batchSecondaryDown(request, response);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return returnData;
+	}
+	
+	/** 임시 파일 일괄 다운로드
+	 * @param request
+	 * @param response
+	 */
+	@ResponseBody
+	@PostMapping(value="/zip")
+	public ResultData zip(HttpServletRequest request, HttpServletResponse response) {
+		ResultData returnData = new ResultData();
+		try {
+			returnData =  CommonHelper.service.zip(request, response);//.service.batchSecondaryDown(request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

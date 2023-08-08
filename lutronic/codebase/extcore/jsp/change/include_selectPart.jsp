@@ -60,6 +60,7 @@ if (isCreate || isUpdate) {
 	function createAUIGrid2(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			fillColumnSizeMode: true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,

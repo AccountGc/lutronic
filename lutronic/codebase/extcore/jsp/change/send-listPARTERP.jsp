@@ -338,6 +338,7 @@
 				const props = {
 					headerHeight : 30,
 					fillColumnSizeMode : true,
+					fillColumnSizeMode: true,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,

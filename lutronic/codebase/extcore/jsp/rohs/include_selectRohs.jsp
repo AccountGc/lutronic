@@ -33,8 +33,9 @@ boolean isCreate = "create".equals(mode);
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
+			fillColumnSizeMode: true,
 			rowNumHeaderText : "번호",
-			showAutoNoDataMessage : false,
+			showAutoNoDataMessage : true,
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",

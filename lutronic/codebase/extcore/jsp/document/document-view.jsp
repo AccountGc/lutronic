@@ -17,6 +17,7 @@ List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 String pnum = (String) request.getAttribute("pnum");
 WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 %>
+<form name="documentViewForm" id="documentViewForm" method="post" >
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
 
@@ -340,7 +341,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
    		</div>
 	</div>
 </div>
-
+</form>
 <script type="text/javascript">
 	//수정
 	$("#updateBtn").click(function () {
@@ -530,9 +531,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 	
 	//일괄 다운로드
-	$("#batchSecondaryDown").click(function() {
-		var form = $("form[name=documentViewForm]").serialize();
-		var url	= getURLString("common", "batchSecondaryDown", "do");
+	function batchSecondaryDown() {
+		const form = $("form[name=documentViewForm]").serialize();
+		const url = getCallUrl("/common/zip");
 		$.ajax({
 			type:"POST",
 			url: url,
@@ -561,7 +562,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				gfn_EndShowProcessing();
 	        }
 		});
-	})
+	}
 	
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({

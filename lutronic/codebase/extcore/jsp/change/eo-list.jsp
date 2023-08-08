@@ -211,6 +211,7 @@
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
+					fillColumnSizeMode: true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
