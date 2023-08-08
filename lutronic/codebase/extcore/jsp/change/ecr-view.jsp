@@ -125,7 +125,6 @@ ECRData dto = (ECRData) request.getAttribute("dto");
 	<div id="tabs-2">
 		<!-- 관련 ECO -->
 		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp" flush="false">
-			<jsp:param value="ecr" name="moduleType"/>
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>

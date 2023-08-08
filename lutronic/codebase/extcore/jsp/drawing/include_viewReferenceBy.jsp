@@ -78,8 +78,7 @@ JSONArray json = DrawingHelper.manager.include_ReferenceBy(oid);
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true,
-			fillColumnSizeMode: true,
+			rowCheckToRadio : true
 		}
 		refbyGridID = AUIGrid.create("#grid_refby", columnLayout, props);
 		AUIGrid.setGridData(refbyGridID, <%=json%>);

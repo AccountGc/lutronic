@@ -69,8 +69,7 @@ JSONArray json = ChangeHelper.manager.include_ECOList(oid, moduleType);
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true,
-			fillColumnSizeMode: true,
+			rowCheckToRadio : true
 		}
 		ecoGridID = AUIGrid.create("#grid_eco", columnLayout, props);
 		AUIGrid.setGridData(ecoGridID, <%=json%>);
