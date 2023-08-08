@@ -58,16 +58,15 @@ boolean isCreate = "create".equals(mode);
 	function createAUIGrid4(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			showRowNumColumn : true,
 			fillColumnSizeMode: true,
-			rowNumHeaderText : "번호",
+			showRowNumColumn : false,
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
-			showStateColumn : true,
-			rowCheckToRadio : true
+			showStateColumn : false,
+			rowCheckToRadio : false
 		}
 		docGridID = AUIGrid.create("#grid_doc", columnLayout, props);
 	}
