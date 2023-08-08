@@ -78,7 +78,8 @@ JSONArray json = ECOHelper.manager.getCompletePartList(oid);
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true,
 		}
 		complePartGridID = AUIGrid.create("#grid_complePart", columnLayout, props);
 		AUIGrid.setGridData(complePartGridID, <%=json%>);

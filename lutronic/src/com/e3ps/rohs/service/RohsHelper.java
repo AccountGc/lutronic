@@ -20,7 +20,11 @@ import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.org.People;
 import com.e3ps.part.beans.ObjectComarator;
+import com.e3ps.part.beans.PartData;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.beans.RoHSHolderData;
 import com.e3ps.rohs.beans.RohsData;
 
 import net.sf.json.JSONArray;
@@ -274,5 +278,225 @@ public class RohsHelper {
 			e.printStackTrace();
 		}
 		return JSONArray.fromObject(list);
+	}
+	
+	public Map<String, Object> listRohsFile(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		ArrayList<RohsData> list = new ArrayList<>();
+    	
+		String fileType = StringUtil.checkNull((String)params.get("fileType"));
+		String publication_Start = StringUtil.checkNull((String)params.get("publication_Start"));
+		String publication_End = StringUtil.checkNull((String)params.get("publication_End"));
+		String fileName = StringUtil.checkNull((String)params.get("fileName"));
+		
+		QuerySpec spec = new QuerySpec();
+		int idx = spec.addClassList(ROHSContHolder.class, true);
+		int idx2 = spec.addClassList(ROHSMaterial.class, false);
+		
+		spec.appendWhere(new SearchCondition(ROHSContHolder.class,"rohsReference.key.id",
+				ROHSMaterial.class,"thePersistInfo.theObjectIdentifier.id"),new int[]{idx,idx2});
+		
+		if(spec.getConditionCount() > 0) { spec.appendAnd(); }
+		spec.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx2});
+       
+    	SearchUtil.addLastVersionCondition(spec, ROHSMaterial.class, idx2);
+		
+		
+		
+		if(fileType.length() > 0) {
+			if(spec.getConditionCount() > 0) {
+				spec.appendAnd();
+			}
+			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.FILE_TYPE, SearchCondition.EQUAL, fileType), new int[] {idx});
+		}
+		
+		if(fileName.length() > 0) {
+			if(spec.getConditionCount() > 0) {
+				spec.appendAnd();
+			}
+			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.FILE_NAME, SearchCondition.LIKE, "%"+fileName.toUpperCase()+"%",false), new int[] {idx});
+		}
+		
+		
+		
+		if(publication_Start.length() > 0) {
+			if(spec.getConditionCount() > 0){
+				spec.appendAnd();
+			}
+			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.GREATER_THAN_OR_EQUAL, publication_Start), new int[] {idx});
+		}
+		
+		
+		if(publication_End.length() > 0) {
+			if(spec.getConditionCount() > 0){
+				spec.appendAnd();
+			}
+			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.LESS_THAN_OR_EQUAL, publication_End), new int[] {idx});
+		}
+		
+		SearchUtil.setOrderBy(spec, ROHSContHolder.class, idx, ROHSContHolder.ROHS_REFERENCE + ".key.id", false);
+		
+		PageQueryUtils pager = new PageQueryUtils(params, spec);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ROHSContHolder holder = (ROHSContHolder) obj[0];
+			
+			RoHSHolderData data = new RoHSHolderData(holder);
+			RohsData rData = new RohsData(data.getRohs());
+			list.add(rData);
+		}
+		map.put("list", list);
+			
+    	return map;
+	}
+	
+	public Map<String, Object> listAUIRoHSPart(Map<String, Object> params) throws Exception {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		List<Map<String,Object>> partRohlist = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> partlist  = new ArrayList<Map<String,Object>>();
+		
+		String partNumber = StringUtil.checkNull((String)params.get("partNumber"));
+		WTPart part = PartHelper.service.getPart(partNumber);
+		String partOid = CommonUtil.getOIDString(part);
+		//WTPart part = (WTPart)CommonUtil.getObject(partOid);
+		if(part == null){
+			return returnMap;
+		}
+		
+		Map<String,Object>  productStateMap = RohsUtil.getProductRoHsState(partOid);
+		returnMap.put("totalState", productStateMap.get("totalState"));
+		returnMap.put("passCount", productStateMap.get("passCount"));
+		returnMap.put("totalCount", productStateMap.get("totalCount"));
+		returnMap.put("greenCount", productStateMap.get("greenCount"));
+		returnMap.put("blackCount", productStateMap.get("blackCount"));
+		returnMap.put("dumyCount", productStateMap.get("dumyCount"));
+		returnMap.put("continueCount", productStateMap.get("continueCount"));
+		returnMap.put("redCount", productStateMap.get("redCount"));
+		returnMap.put("orangeCount", productStateMap.get("orangeCount"));
+		returnMap.put("listCount", productStateMap.get("listCount"));
+		returnMap.put("isDumy_SonPartsCount", productStateMap.get("isDumy_SonPartsCount"));
+		
+		partlist = RohsQueryHelper.service.childPartPutMap(part, partlist,0);
+	    HashMap<String, Integer> stateMap = new HashMap<String, Integer>();
+	    
+	    int totalLevl = 0;
+		for(int i=0; i<partlist.size(); i++){
+			//Map<String,Object> partRohsMap = new HashMap<String, Object>();
+			Map<String,Object> partMap = partlist.get(i);
+			
+			String oid = (String)partMap.get("partOid");
+			int level = (Integer)partMap.get("level");
+			
+			if(totalLevl < level){
+				totalLevl = level;
+			}
+			//String key = String.valueOf(count) + "_"+oid;
+			WTPart supart = (WTPart)CommonUtil.getObject(oid);
+			
+			//System.out.println("1.supart =" + supart.getNumber() +"," + "Level"+level+"="+partMap.get("Level"+level));
+			
+			List<RohsData> rohslist = RohsQueryHelper.service.getPartToROHSList(supart);
+			
+			stateMap = RohsUtil.getRohsState(stateMap,oid);
+			int rohsState = stateMap.get(oid);
+			String state ="검은색";
+			if(rohsState == RohsUtil.STATE_NOT_APPROVED){
+				state ="빨강색";
+			}else if(rohsState ==RohsUtil.STATE_NONE_ROHS){
+				state ="주황색";
+			}else if(rohsState ==RohsUtil.STATE_ALL_APPROVED){
+				state ="녹색";
+			}else if(rohsState ==RohsUtil.STATE_NOT_ROHS){
+				state ="검은색";
+			}
+			
+			if(rohslist.size()>0){
+				for(RohsData rohsData : rohslist){
+					//System.out.println("rohslist.size >0 .supart =" + supart.getNumber());
+					List<ROHSContHolder> holderList = RohsQueryHelper.service.getROHSContHolder(rohsData.getOid());
+					
+					if(holderList.size() > 0){
+						
+						for(ROHSContHolder rohsHolder : holderList){
+							Map<String,Object> partRohsMap = new HashMap<String, Object>();
+							//partRohsMap1 = partMap;
+							partRohsMap.put("rohsNumber", rohsData.getNumber());
+							partRohsMap.put("rohsName", rohsData.getName());
+							partRohsMap.put("rohsState", rohsState);
+							partRohsMap.put("rohsStateName", state);
+							partRohsMap.put("rohslifeState", rohsData.getState());
+							partRohsMap.put("fileName", rohsHolder.getFileName());
+							partRohsMap.put("docType", RohsUtil.getRohsDocTypeName(rohsHolder.getFileType()));
+							
+							partRohsMap = setPartROHMap(partRohsMap, partMap);
+							//System.out.println("holderList.size >0 .supart =" + partRohsMap.get("partNumber") +", getFileName" +partRohsMap.get("fileName"));
+							partRohlist.add(partRohsMap);
+						}
+					}else{
+						//System.out.println("holderList.size =0 .supart =" + supart.getNumber());
+						Map<String,Object> partRohsMap = new HashMap<String, Object>();
+						partRohsMap.put("rohsNumber", rohsData.getNumber());
+						partRohsMap.put("rohsName", rohsData.getName());
+						partRohsMap.put("rohsState", rohsState);
+						partRohsMap.put("rohslifeState", rohsData.getState());
+						partRohsMap.put("rohsStateName", state);
+						partRohsMap = setPartROHMap(partRohsMap, partMap);
+						partRohlist.add(partRohsMap);
+					}
+				}
+			}else{
+				//System.out.println("rohslist.size =0 .supart =" + supart.getNumber());
+				Map<String,Object> partRohsMap = new HashMap<String, Object>();
+			
+				partRohsMap.put("rohsState", rohsState);
+				partRohsMap.put("rohsStateName", state);
+				partRohsMap = setPartROHMap(partRohsMap, partMap);
+				partRohlist.add(partRohsMap);
+			}
+			
+		}
+		
+		returnMap.put("totalLevel", totalLevl);
+		returnMap.put("partRohlist", partRohlist);
+		/*
+		System.out.println("list =" + partRohlist.size());
+		
+		for(int i=0; i<partRohlist.size(); i++){
+			Map<String,Object> partMap2 = partRohlist.get(i);
+			System.out.println("partRohlist.get(i) =" + partRohlist.get(i));
+			//System.out.println(partMap2.get("fileName")+"," + partMap2.get("docType"));
+		}
+		*/
+		return returnMap;
+	}
+	
+	private Map<String,Object> setPartROHMap(Map<String,Object> partRohsMap, Map<String,Object> partMap){
+		partRohsMap.put("partOid", partMap.get("partOid"));
+		partRohsMap.put("partNumber", partMap.get("partNumber"));
+		partRohsMap.put("partName", partMap.get("partName"));
+		partRohsMap.put("partCreator", partMap.get("partCreateDate"));
+		partRohsMap.put("partState", partMap.get("partState"));
+		partRohsMap.put("level", partMap.get("level"));
+		int level =(Integer)partMap.get("level");
+		partRohsMap.put("L"+level, level);
+		return partRohsMap;
+	}
+	
+	public Map<String, Object> listRoHSProduct(Map<String, Object> params) throws Exception {
+		String[] partOids = (String[]) params.get("partOids");
+		Map<String,Object> result = new HashMap<String,Object>();
+		List<PartData> list = new ArrayList<>(); 
+		
+		if(partOids != null) {
+			for(String partOid : partOids) {
+				WTPart part = (WTPart)CommonUtil.getObject(partOid);
+				PartData data = new PartData(part);
+				list.add(data);
+			}
+		}
+		result.put("list", list);
+		
+		return result;
 	}
 }

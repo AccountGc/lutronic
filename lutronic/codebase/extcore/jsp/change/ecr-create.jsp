@@ -137,12 +137,12 @@
 			});
 	
 			$("#createBtn").click(function() {
-				if(isEmpty($("#name").val())) {
+				if(isEmpty($("#eoName").val())) {
 					alert("제목을 입력하세요.");
 					return;
 				}
 				
-				if(isEmpty($("#number").val())) {
+				if(isEmpty($("#eoNumber").val())) {
 					alert("번호를 입력하세요.");
 					return;
 				}

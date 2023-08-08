@@ -247,7 +247,7 @@
 						<a onclick="moveToPage(this, '/rohs/create', '> RoHS > 물질 등록');">물질 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/rohs/view', '> RoHS > 파일 검색');">파일 검색</a>
+						<a onclick="moveToPage(this, '/rohs/listRohsFile', '> RoHS > 파일 검색');">파일 검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/rohs/listAUIRoHSPart', '> RoHS > 부품 현황');">부품 현황</a>
