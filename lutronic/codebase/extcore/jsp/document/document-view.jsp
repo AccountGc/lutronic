@@ -271,10 +271,19 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<%	
 				}else{
 				%>
-					<td class="indent5" colspan="3">
-						<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
-						<br>삭제된 글입니다.
-					</td>
+					<%
+                    if(cList.get(i).getCStep()>0){
+                        int w = cList.get(i).getCStep() * 30;
+                    %>
+                        <td width="<%=w%>px"></td>
+                    <%
+                    }
+                    %>
+                    <td class="indent5" colspan="3">
+                        <span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
+                        <br>삭제된 글입니다.
+                        삭제된 글입니다.
+                    </td>
 				<%	
 				}
 				%>
@@ -633,8 +642,3 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	});
 	
 </script>
-<style>
-	.lb{
-		text-align: center;
-	}
-</style>
