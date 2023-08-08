@@ -37,30 +37,15 @@
 			<td class="indent5"><textarea name="description" id="description" rows="6"></textarea></td>
 		</tr>
 	</table>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 일괄결재 문서
-				</div>
-			</td>
-		</tr>
-	</table>
-	<table class="create-table">
-		<colgroup>
-			<col width="150">
-			<col width="*">
-		</colgroup>
-		<tr>
-			<th class="req lb" >일괄결재 문서</th>
-			<td>
-				<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
-					<jsp:param value="" name="oid" />
-					<jsp:param value="create" name="mode" />
-				</jsp:include>
-			</td>
-		</tr>
-	</table>
+	
+	<!-- 	일괄결재 문서 -->
+	<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
+		<jsp:param value="일괄결재" name="title"/>
+		<jsp:param value="docOid" name="paramName"/>
+		<jsp:param value="" name="searchType"/>
+		<jsp:param value="BATCHAPPROVAL" name="state"/>
+		<jsp:param value="LC_Default_NonWF" name="lifecycle"/>
+	</jsp:include>
 	<script type="text/javascript">
 		function folder() {
 			const location = decodeURIComponent("/Default/문서");
@@ -148,6 +133,8 @@
 
 		// jquery 삭제를 해가는 쪽으로 한다..
 		document.addEventListener("DOMContentLoaded", function() {
+			createAUIGrid4(columnsDoc);
+			AUIGrid.resize(docGridID);
 		});
 
 		window.addEventListener("resize", function() {
