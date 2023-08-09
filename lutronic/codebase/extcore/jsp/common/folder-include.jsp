@@ -9,17 +9,15 @@ String height = request.getParameter("height");
 <div id="_grid_wrap" style="height: <%=height%>px; border-top: 1px solid #3180c3;"></div>
 <script type="text/javascript">
 	let _myGridID;
-	function folder_layout() {
-		return [ {
-			dataField : "name",
-			headerText : "폴더명",
-			dataType : "string",
-			filter : {
-				showIcon : true,
-				inline : true
-			}
-		} ]
-	}
+	const _columns = [ {
+		dataField : "name",
+		headerText : "폴더명",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},				
+	} ]
 
 	function _createAUIGrid(columnLayout) {
 		const props = {
@@ -86,9 +84,4 @@ String height = request.getParameter("height");
 			AUIGrid.setGridData(_myGridID, data.list);
 		});
 	}
-	
-	document.addEventListener("DOMContentLoaded", function() {
-		_createAUIGrid(folder_layout);
-		AUIGrid.resize(_myGridID);
-	});
 </script>

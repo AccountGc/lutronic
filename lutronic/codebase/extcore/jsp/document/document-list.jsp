@@ -35,10 +35,10 @@ if(request.getParameter("popup")!=null){
 			</colgroup>
 			<tr>
 				<th>문서 분류</th>
-				<td class="indent5"><input type="hidden" name="locationName" id="locationName" value="<%//=DocumentHelper.DOCUMENT_ROOT%>"> <span id="locationText"> <%
- //=DocumentHelper.DOCUMENT_ROOT
- %>
-				</span></td>
+				<td>
+					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
+					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
+				</td>
 				<th>버전</th>
 				<td>&nbsp;
 					<div class="pretty p-switch">
@@ -334,6 +334,8 @@ if(request.getParameter("popup")!=null){
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+				_createAUIGrid(_columns);
+				AUIGrid.resize(_myGridID);
 				selectbox("state");
 				finderUser("creator");
 				twindate("created");

@@ -290,7 +290,8 @@
 			});
 			createAUIGrid(columns);
 			AUIGrid.resize(myGridID);
-
+			_createAUIGrid(_columns);
+			AUIGrid.resize(_myGridID);
 		});
 
 		/* function folder() {

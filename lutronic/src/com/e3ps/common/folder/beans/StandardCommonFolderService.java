@@ -424,11 +424,6 @@ public class StandardCommonFolderService extends StandardManager implements Comm
 			treeMap.put("0", deptList);
 			treeMap.put(mainID, topList);
 
-			
-			
-			
-			
-			
 			while (childFolders.hasMoreElements()) {
 			     SubFolder folder = (SubFolder)childFolders.nextElement();
 			     String folderName = folder.getName();
@@ -470,13 +465,10 @@ public class StandardCommonFolderService extends StandardManager implements Comm
 					// 수정된 정보를 Map에 다시 넣어준다.
 					treeMap.put(parentOid, jsonParentData);
 			     
-			     
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
-
 
 		return deptList;
 	}
