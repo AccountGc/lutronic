@@ -31,7 +31,7 @@
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 검토함');">
 							검토함
-							<span class="label label-info float-right"><%//=count.get("agree")%></span>
+							<span class="label label-info float-right"><%//=count.get("check")%></span>
 						</a>
 					</li>
 					<li>
@@ -49,17 +49,19 @@
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listItem?state=ing', '> 나의 업무 > 진행함');">
 							진행함
+							<span class="label label-info float-right"><%//=count.get("ing")%></span>
 						</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listItem?state=complete', '> 나의 업무 > 완료함');">
 							완료함
+							<span class="label label-info float-right"><%//=count.get("complete")%></span>
 						</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listItem?state=rtn', '> 나의 업무 > 반려함');">
 							반려함
-							<span class="label label-info float-right"><%//W=count.get("reject")%></span>
+							<span class="label label-info float-right"><%//W=count.get("rtn")%></span>
 						</a>
 					</li>
 					<li>

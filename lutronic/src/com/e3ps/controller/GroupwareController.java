@@ -487,8 +487,25 @@ public class GroupwareController extends BaseController {
 		}else if("receive".equals(state)){
 			model.addObject("menu","menu6");
 		}
+		model.addObject("state",state);
 		model.setViewName("/extcore/jsp/workprocess/item-list.jsp");
 		return model;
+	}
+	
+	@Description(value = "진행함, 완료함, 수신함 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/listItem")
+	public Map<String,Object> listItem(Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = GroupwareHelper.manager.listItem(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/** 진행중, 완료함, 수신함 리스트 리턴

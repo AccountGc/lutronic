@@ -36,13 +36,13 @@
 			<tr bgcolor="ffffff">
 				<th>변경 비밀번호 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="password" name="field_view" id="field_view" class="width-300">
+					<input type="text" name="field_view" id="field_view" class="width-300">
 				</td>
 			</tr>
 			<tr bgcolor="ffffff">
 				<th>변경 비밀번호 확인 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="password" name="_field_view" id="_field_view" class="width-300">
+					<input type="text" name="_field_view" id="_field_view" class="width-300">
 				</td>
 			</tr>
 		</table>
