@@ -38,7 +38,7 @@
 			</colgroup>
 			<tr>
 				<th>결재방식 <span class="red">*</span></th>
-				<td class="indent5" colspan="3">
+				<td colspan="3">
 					<div class="pretty p-switch">
 						<input type="radio"name="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">
@@ -205,6 +205,8 @@
 				}
 				
 				var params = _data($("#form"));
+				params.lifecycle=params.lifecycle[0];
+				
 				var url = getCallUrl("/mold/create");
 				call(url, params, function(data) {
 					if(data.result){
