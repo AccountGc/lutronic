@@ -19,7 +19,7 @@ if (isCreate || isUpdate) {
 	let ecrGridID;
 	const columnsEcr = [ {
 		dataField : "eoNumber",
-		headerText : "CR/ECRP번호",
+		headerText : "CR/ECPR번호",
 		dataType : "string",
 		width : 180,
 		<%
