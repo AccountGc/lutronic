@@ -3,6 +3,7 @@
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+String state = (String) request.getAttribute("state");
 %>
 <!DOCTYPE html>
 <html>
@@ -20,6 +21,7 @@
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="state" id="state" value="<%=state%>">
 
 		<table class="search-table">
 			<colgroup>
@@ -139,7 +141,7 @@
 						fillColumnSizeMode: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -151,21 +153,26 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
+				let params = new Object();
+				const url = getCallUrl("/groupware/listItem");
 				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
 				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				// 				params = toField(params, field);
 				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
+				AUIGrid.showAjaxLoader(myGridID);
 				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+// 						document.getElementById("sessionid").value = data.sessionid;
+// 						document.getElementById("curPage").value = data.curPage;
+// 						document.getElementById("lastNum").value = data.list.length;
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+// 					parent.closeLayer();
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
@@ -177,13 +184,6 @@
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("state");
-				selectbox("manufacture");
-				selectbox("moldtype");
-				selectbox("deptcode");
-				finderUser("creator");
-				twindate("created");
-				twindate("modified");
 				selectbox("_psize");
 			});
 
