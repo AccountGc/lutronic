@@ -230,16 +230,8 @@
 			const writer = document.getElementById("writer").value;
 			const description = document.getElementById("description").value;
 			const location = document.getElementById("location").value;
-// 			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
-// 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-// 			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
 			const primarys = toArray("primarys");
 
-// 			if (location === "/Default/문서") {
-// 				alert("문서 저장위치를 선택하세요.");
-// 				folder();
-// 				return false;
-// 			}
 			if(isEmpty($("#lifecycle").val())){
 				alert("결재방식을 입력하세요.");
 				return;					
@@ -256,14 +248,10 @@
 				alert("보존기간을 입력하세요.");
 				return;					
 			}
-// 			if(isEmpty($("#dm").val())){
-// 				alert("관리자를 입력하세요.");
-// 				return;					
-// 			}
-// 			if(isEmpty($(primarys).val())){
-// 				alert("첨부파일을 선택하세요.");
-// 				return;					
-// 			}
+			if(isEmpty($("#dm").val())){
+				alert("관리자를 입력하세요.");
+				return;					
+			}
 			if (!confirm("등록 하시겠습니까?")) {
 				return false;
 			}

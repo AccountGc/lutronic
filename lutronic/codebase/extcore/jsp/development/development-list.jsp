@@ -41,15 +41,15 @@
 			</tr>
 			<tr>
 				<th>예상 시작일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+				<td class="indent5"><input type="text" name="developmentStart_Start" id="developmentStart_Start" class="width-100"> ~ <input type="text" name="developmentStart_End" id="developmentStart_End" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 				<th>예상 종료일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+				<td class="indent5"><input type="text" name="developmentEnd_Start" id="developmentEnd_Start" class="width-100"> ~ <input type="text" name="developmentEnd_End" id="developmentEnd_End" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 			</tr>
 			<tr>
 				<th>관리자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+				<td class="indent5"><input type="text" name="dm" id="dm" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
 				<th>상태</th>
 				<td class="indent5"><select name="state" id="state" class="width-200">
 						<option value="">선택</option>
@@ -196,8 +196,8 @@
 			function loadGridData() {
 				 				let params = new Object();
 			 					const url = getCallUrl("/development/list");
-				 				const field = ["_psize","model","name","dm","developmentStart","developmentEnd","createdAt","state"];
-				 				/* params = toField(params, field); */
+				 				const field = ["_psize","model","name","developmentStart_Start","developmentStart_End","developmentEnd_Start","developmentEnd_End", "dm","state"];
+				 				params = toField(params, field);
 				 				AUIGrid.showAjaxLoader(myGridID);
 				 				parent.openLayer();
 				 				call(url, params, function(data) {

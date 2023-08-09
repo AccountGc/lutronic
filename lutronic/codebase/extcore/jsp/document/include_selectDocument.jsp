@@ -23,7 +23,7 @@ boolean isCreate = "create".equals(mode);
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb"><%= title %> <%= "관련 문서".equals(title) ? "*" : "" %></th>
+		<th class="lb <%= "관련 문서".equals(title) ? "req" : "" %>"><%= title %></th>
 		<td>
 			<input type="hidden" name="lifecycle"  id="lifecycle"  value="<%= lifecycle %>" />
 			<input type="hidden" name="searchType" id="searchType" value="<%= searchType %>" />

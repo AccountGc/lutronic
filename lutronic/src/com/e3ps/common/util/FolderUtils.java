@@ -26,7 +26,7 @@ public class FolderUtils {
 		String container = params.get("container");
 		Folder root = null;
 		if ("product".equalsIgnoreCase(container)) {
-			root = FolderTaskLogic.getFolder(location, CommonUtil.getPDMLinkProductContainer());
+			root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 		} else if ("library".equalsIgnoreCase(container)) {
 			root = FolderTaskLogic.getFolder(location, CommonUtil.getWTLibraryContainer());
 		}
