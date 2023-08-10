@@ -169,13 +169,13 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">제품/품목 검색</a>
+						<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">품목 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/part/create', '> 품목관리 > 제품/품목 등록');">제품/품목 등록</a>
+						<a onclick="moveToPage(this, '/part/create', '> 품목관리 > 품목 등록');">품목 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 제품/품목 일괄등록');">제품/품목 일괄등록</a>
+						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 품목 일괄등록');">품목 일괄등록</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/part/bom', '> 품목관리 > BOM EDITOR');">BOM EDITOR</a>
