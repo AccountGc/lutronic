@@ -3,10 +3,6 @@
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-boolean popup = false;
-if(request.getParameter("popup")!=null){
-	popup = true;
-}
 %>
 <!DOCTYPE html>
 <html>
@@ -31,9 +27,9 @@ if(request.getParameter("popup")!=null){
 			</colgroup>
 			<tr>
 				<th>ECO 제목</th>
-				<td class="indent5"><input type="text" name="eoName" id="eoName" class="width-200"></td>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
 				<th>ECO 번호</th>
-				<td class="indent5"><input type="text" name="eoNumber" id="eoNumber" class="width-200"></td>
+				<td class="indent5"><input type="text" name="number" id="number" class="width-200"></td>
 			</tr>
 			<tr>
 				<th>등록자</th>
@@ -59,7 +55,7 @@ if(request.getParameter("popup")!=null){
 				<th>인허가변경</th>
 				<td>&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="licensing"  id="licensing" value="NONE" checked="checked">
+						<input type="radio" name="licensing" value="NONE" checked="checked">
 						<div class="state p-success">
 							<label> <b>선택안됨</b>
 							</label>
@@ -90,7 +86,7 @@ if(request.getParameter("popup")!=null){
 				<th>위험통제</th>
 				<td>&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType"  id="riskType" value="true" checked="NONE">
+						<input type="radio" name="riskType" value="true" checked="NONE">
 						<div class="state p-success">
 							<label> <b>선택안됨</b>
 							</label>
@@ -149,14 +145,8 @@ if(request.getParameter("popup")!=null){
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset">
-					<%
-					if(popup){
-					%>	
-						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-						<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
-					<%
-					}
-					%>
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 					<a href="javascript:onExcelDown();">
 						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					</a>	
@@ -167,7 +157,7 @@ if(request.getParameter("popup")!=null){
 		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
 		<script type="text/javascript">
-			let myEcoGridID;
+			let myGridID;
 			function _layout() {
 				return [ {
 					dataField : "eoNumber",
@@ -242,7 +232,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "state",
 					headerText : "승인일",
 					dataType : "string",
 					width : 100,
@@ -251,7 +241,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "modifyDate",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 200,
@@ -264,31 +254,31 @@ if(request.getParameter("popup")!=null){
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-						headerHeight : 30,
-						showRowNumColumn : true,
-						showRowCheckColumn : true,
-						rowNumHeaderText : "번호",
-						showAutoNoDataMessage : false,
-						selectionMode : "multipleCells",
-						enableMovingColumn : true,
-						enableFilter : true,
-						showInlineFilter : false,
-						useContextMenu : true,
-						enableRowCheckShiftKey : true,
-						enableRightDownFocus : true,
-						filterLayerWidth : 320,
-						filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-						rowCheckToRadio : true,
-						fillColumnSizeMode: true,
+					headerHeight : 30,
+					fillColumnSizeMode: true,
+					showRowNumColumn : true,
+					showRowCheckColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : true,
+					selectionMode : "multipleCells",
+					enableMovingColumn : true,
+					enableFilter : false,
+					showInlineFilter : false,
+					useContextMenu : true,
+					enableRightDownFocus : true,
+					rowCheckToRadio : true,
+					fillColumnSizeMode: true,
+					filterLayerWidth : 320,
+					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
-				myEcoGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myEcoGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myEcoGridID, "vScrollChange", function(event) {
+				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 					vScrollChangeHandler(event);
 				});
-				AUIGrid.bind(myEcoGridID, "hScrollChange", function(event) {
+				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
 			}
@@ -300,19 +290,19 @@ if(request.getParameter("popup")!=null){
 				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = latest; */
-				AUIGrid.showAjaxLoader(myEcoGridID);
+				AUIGrid.showAjaxLoader(myGridID);
 // 				parent.openLayer();
 				call(url, params, function(data) {
-					AUIGrid.removeAjaxLoader(myEcoGridID);
+					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						document.getElementById("sessionid").value = data.sessionid;
 						document.getElementById("curPage").value = data.curPage;
-// 						document.getElementById("lastNum").value = data.list.length;
-						AUIGrid.setGridData(myEcoGridID, data.list);
+						document.getElementById("lastNum").value = data.list.length;
+						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
+					parent.closeLayer();
 				});
 			}
 
@@ -334,7 +324,7 @@ if(request.getParameter("popup")!=null){
 				});
 				createAUIGrid(columns);
 				createAUIGrid2(columnsPart);
-				AUIGrid.resize(myEcoGridID);
+				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
@@ -360,19 +350,18 @@ if(request.getParameter("popup")!=null){
 			})
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myEcoGridID);
+				AUIGrid.resize(myGridID);
 			});
 			
 			function addBtn(){
-				const items = AUIGrid.getCheckedRowItemsAll(myEcoGridID);
+				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
 				if (items.length == 0) {
 					alert("추가할 부품을 선택하세요.");
 					return false;
 				}
-				opener.appendECO(items);
+				opener.append(items);
 				self.close();
 			}
-			
 		</script>
 	</form>
 </body>

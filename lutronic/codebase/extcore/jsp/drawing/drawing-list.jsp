@@ -1,5 +1,6 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
@@ -238,7 +239,21 @@
 		</table>
 
 		<table>
+			<colgroup>
+				<col width="230">
+				<col width="10">
+				<col width="*">
+			</colgroup>
 			<tr>
+				<td valign="top">
+					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
+						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
+						<jsp:param value="product" name="container" />
+						<jsp:param value="list" name="mode" />
+						<jsp:param value="670" name="height" />
+					</jsp:include>
+				</td>
+				<td valign="top">&nbsp;</td>
 				<td valign="top">
 					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>

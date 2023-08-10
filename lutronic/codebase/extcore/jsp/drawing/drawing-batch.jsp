@@ -1,5 +1,6 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");

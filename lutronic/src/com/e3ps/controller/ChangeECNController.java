@@ -7,7 +7,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +40,30 @@ import com.e3ps.change.service.ECNSearchHelper;
 @Controller
 @RequestMapping("/changeECN")
 public class ChangeECNController {
+	
+	@Description(value = "ECN 검색")
+	@GetMapping(value = "/list")
+	public ModelAndView list() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/change/ecn-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "ECN 등록")
+	@GetMapping(value = "/create")
+	public ModelAndView create() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/change/ecn-create.jsp");
+		return model;
+	}
+	
+	@Description(value = "관련 ECO 검색 페이지")
+	@GetMapping(value = "/select_ecoPopup")
+	public ModelAndView select_ecrPopup() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/change/select_ecoPopup.jsp");
+		return model;
+	}
 	
 	/** ECO 검색
 	 * @param request

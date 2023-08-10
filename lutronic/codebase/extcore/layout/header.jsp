@@ -213,6 +213,12 @@
 						<a onclick="moveToPage(this, '/changeECO/create', '> 설계변경 > ECO 등록');">ECO 등록</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/changeECN/list', '> 설계변경 > ECN 검색');">ECN 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/changeECN/create', '> 설계변경 > ECN 등록');">ECN 등록</a>
+					</li>
+					<li>
 						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > CR/ECPR 검색');">CR/ECPR 검색</a>
 					</li>
 					<li>

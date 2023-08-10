@@ -266,7 +266,21 @@ if(request.getParameter("popup")!=null){
 		} else{
 		%>
 		<table>
+			<colgroup>
+				<col width="230">
+				<col width="10">
+				<col width="*">
+			</colgroup>
 			<tr>
+				<td valign="top">
+					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
+						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
+						<jsp:param value="product" name="container" />
+						<jsp:param value="list" name="mode" />
+						<jsp:param value="670" name="height" />
+					</jsp:include>
+				</td>
+				<td valign="top">&nbsp;</td>
 				<td valign="top">
 					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
@@ -454,6 +468,8 @@ if(request.getParameter("popup")!=null){
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+				_createAUIGrid(_columns);
+				AUIGrid.resize(_myGridID);
 				selectbox("state");
 				selectbox("model");
 				selectbox("productmethod");
