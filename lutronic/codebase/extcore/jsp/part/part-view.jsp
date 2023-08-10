@@ -78,6 +78,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<li>
 			<a href="#tabs-10">버전 정보</a>
 		</li>
+		<li>
+			<a href="#tabs-11">환경규제문서</a>
+		</li>
 	</ul>
 	<div id="tabs-1">
 		<table class="view-table">
@@ -229,6 +232,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	<!-- 버전 정보 -->
 	<div id="tabs-10">
 		<jsp:include page="/extcore/jsp/development/include_viewVersionInfo.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
+	
+	<!-- 환경규제문서 -->
+	<div id="tabs-11">
+		<jsp:include page="/extcore/jsp/document/include_environmentalRegulatoryDocument.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
 		</jsp:include>
 	</div>
@@ -602,6 +612,16 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 					break;	
+				case "tabs-11":
+					isCreated = AUIGrid.isCreated(enDocGridID);
+					if (isCreated) {
+						AUIGrid.resize(enDocGridID);
+						$(".comment-table").hide();
+					} else {
+						createAUIGridEnDoc(columnEnDoc);
+						$(".comment-table").hide();
+					}
+					break;	
 				}
 			},
 		});
@@ -616,5 +636,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		AUIGrid.resize(devGridID);
 		AUIGrid.resize(adminGridID);
 		AUIGrid.resize(verGridID);
+		AUIGrid.resize(enDocGridID);
 	});
 </script>

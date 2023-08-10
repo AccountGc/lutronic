@@ -18,7 +18,7 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			</div>
 		</td>
 		<td align="right">
-			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_RohsViewToggle" alt='include_RohsView' >
+<!-- 			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_RohsViewToggle" alt='include_RohsView' > -->
 		</td>
 	</tr>
 </table>

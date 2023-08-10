@@ -1,8 +1,13 @@
 <%@page import="wt.org.WTUser"%>
+<%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+boolean popup = false;
+if(request.getParameter("popup")!=null){
+	popup = true;
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -15,165 +20,194 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
-		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
+<div id="grid_ver" style="height: 300px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<script type="text/javascript">
+	let verGridID;
+	const columnVer = [ {
+		dataField : "seq",
+		headerText : "seq",
+		dataType : "number",
+		width : 180,
+	}, {
+		dataField : "level",
+		headerText : "level",
+		dataType : "number",
+		width : 180,
+	}, {
+		dataField : "number",
+		headerText : "부품번호",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "drawingNum",
+		headerText : "도면번호",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "name",
+		headerText : "부품명",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "version",
+		headerText : "Rev",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "oem",
+		headerText : "OEN info",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "modifier",
+		headerText : "수정자",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "spec",
+		headerText : "사양",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "enDoc1",
+		headerText : "환경규제1번",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "enDoc2",
+		headerText : "환경규제2번",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "enDoc3",
+		headerText : "환경규제3번",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "enDoc4",
+		headerText : "환경규제4번",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "progress",
+		headerText : "진행률",
+		dataType : "string",
+		width : 180,
+	}, {
+		dataField : "oid",
+		visible : false
+	} ]
+
+	function createAUIGridVer(columnLayout) {
+		const props = {
+			headerHeight : 30,
+			showRowNumColumn : true,
+			showRowCheckColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			enableSorting : false,
+			softRemoveRowMode : false,
+			selectionMode : "multipleCells",
+			rowCheckToRadio : false,
+			fillColumnSizeMode: true,
+		}
 		
-		미완
-
-		<script type="text/javascript">
-			let myGridID;
-			function _layout() {
-				return [ {
-					dataField : "name",
-					headerText : "금형번호",
-					dataType : "string",
-					width : 295,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "number",
-					headerText : "금형명",
-					dataType : "string",
-					width : 450,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "description",
-					headerText : "Rev.",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "상태",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "state",
-					headerText : "등록자",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "version",
-					headerText : "등록일",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "수정일",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				} ]
-			}
-
-			function createAUIGrid(columnLayout) {
-				const props = {
-					headerHeight : 30,
-					showRowNumColumn : true,
-					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
-					useContextMenu : true,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-				};
-				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-					hideContextMenu();
-					vScrollChangeHandler(event);
-				});
-				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-					hideContextMenu();
-				});
-			}
-
-			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
-			}
-
-			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
-				const contenxtHeader = genColumnHtml(columns);
-				$("#h_item_ul").append(contenxtHeader);
-				$("#headerMenu").menu({
-					select : headerMenuSelectHandler
-				});
-				createAUIGrid(columns);
-				AUIGrid.resize(myGridID);
-				selectbox("state");
-				finderUser("creator");
-				twindate("created");
-				twindate("modified");
-				selectbox("_psize");
-			});
-
-			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
-
-			document.addEventListener("keydown", function(event) {
-				const keyCode = event.keyCode || event.which;
-				if (keyCode === 13) {
-					loadGridData();
-				}
-			})
-
-			document.addEventListener("click", function(event) {
-				hideContextMenu();
-			})
-
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
-			});
-		</script>
-	</form>
+		verGridID = AUIGrid.create("#grid_ver", columnLayout, props);
+<%-- 		AUIGrid.setGridData(verGridID, <%=json%>); --%>
+		
+		var json = [{
+		    "seq" : 1,
+		    "level" : 0,
+		    "number" : "",
+		    "drawingNum" : "ND",
+		    "name" : "제품",
+		    "version" : "D.3",
+		    "oem" : "",
+		    "state" : "승인됨",
+		    "modifier" : "김준호",
+		    "spec" : "",
+		    "enDoc1" : "",
+		    "enDoc2" : "",
+		    "enDoc3" : "",
+		    "enDoc4" : "",
+		    "progress" : "75%"
+		}, {
+		    "seq" : 2,
+		    "level" : 1,
+		    "number" : "",
+		    "drawingNum" : "	ND",
+		    "name" : "반제품",
+		    "version" : "C.1",
+		    "oem" : "",
+		    "state" : "승인됨",
+		    "modifier" : "박영선",
+		    "spec" : "",
+		    "enDoc1" : "",
+		    "enDoc2" : "",
+		    "enDoc3" : "",
+		    "enDoc4" : "",
+		    "progress" : "50%"
+		}, {
+		    "seq" : 3,
+		    "level" : 1,
+		    "number" : "",
+		    "drawingNum" : "	ND",
+		    "name" : "반제품",
+		    "version" : "E.5",
+		    "oem" : "",
+		    "state" : "승인됨",
+		    "modifier" : "장원정",
+		    "spec" : "",
+		    "enDoc1" : "",
+		    "enDoc2" : "",
+		    "enDoc3" : "",
+		    "enDoc4" : "",
+		    "progress" : "50%"
+		}, {
+		    "seq" : 4,
+		    "level" : 2,
+		    "number" : "",
+		    "drawingNum" : "	ND",
+		    "name" : "나사",
+		    "version" : "F.6",
+		    "oem" : "",
+		    "state" : "승인됨",
+		    "modifier" : "박영선",
+		    "spec" : "",
+		    "enDoc1" : "",
+		    "enDoc2" : "",
+		    "enDoc3" : "",
+		    "enDoc4" : "",
+		    "progress" : "100%"
+		}, {
+		    "seq" : 5,
+		    "level" : 3,
+		    "number" : "",
+		    "drawingNum" : "ND",
+		    "name" : "볼트",
+		    "version" : "G.9",
+		    "oem" : "",
+		    "state" : "승인됨",
+		    "modifier" : "김준호",
+		    "spec" : "",
+		    "enDoc1" : "",
+		    "enDoc2" : "",
+		    "enDoc3" : "",
+		    "enDoc4" : "",
+		    "progress" : "25%"
+		}]
+		AUIGrid.setGridData(verGridID, json);
+	}
+	
+	document.addEventListener("DOMContentLoaded", function() {
+		createAUIGridVer(columnVer);
+		AUIGrid.resize(verGridID);
+	});
+</script>
 </body>
 </html>

@@ -14,7 +14,7 @@ JSONArray json = DevelopmentHelper.manager.include_DevelopmentView(moduleType, o
 			</div>
 		</td>
 		<td align="right">
-			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_DevelopmentViewToggle" alt='include_DevelopmentView' >
+<!-- 			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_DevelopmentViewToggle" alt='include_DevelopmentView' > -->
 		</td>
 	</tr>
 </table>
