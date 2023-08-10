@@ -292,6 +292,23 @@ if(request.getParameter("popup")!=null){
 			let myGridID;
 			function _layout() {
 				return [ {
+					headerText : "변경이력",
+					width : 80,
+					renderer : {
+						type : "IconRenderer",
+						iconPosition : "aisleCenter", // 아이콘 위치
+						iconWidth : 20, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+						iconHeight : 16,
+						iconTableRef : { // icon 값 참조할 테이블 레퍼런스
+							"default" : "/Windchill/extcore/jsp/part/images/button/change_Icon.png" // default
+						},
+						onClick : function(event) {
+							const oid = event.item.oid;
+							const url = getCallUrl("/part/changeList?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					}	
+				}, {
 					dataField : "number",
 					headerText : "품목번호",
 					dataType : "string",

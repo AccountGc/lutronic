@@ -260,6 +260,20 @@ public class PartController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "품목 변경이력 조회")
+	@RequestMapping("/changeList")
+	public ModelAndView changeList(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		PartData partData = new PartData(part);
+		
+		model.addObject("oid",oid);
+		model.addObject("isAdmin", CommonUtil.isAdmin());
+		model.addObject("data", partData);
+		model.setViewName("/extcore/jsp/part/part-changeList.jsp");
+		return model;
+	}
 
 	/** 품목 삭제
 	 * @param request
