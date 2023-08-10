@@ -13,7 +13,7 @@ JSONArray json = DrawingHelper.manager.include_ReferenceBy(oid);
 			</div>
 		</td>
 		<td align="right">
-			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_ReferenceByViewToggle" alt='include_ReferenceByView' >
+<!-- 			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_ReferenceByViewToggle" alt='include_ReferenceByView' > -->
 		</td>
 	</tr>
 </table>

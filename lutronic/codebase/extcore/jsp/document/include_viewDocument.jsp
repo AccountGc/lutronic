@@ -14,7 +14,7 @@ JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
 			</div>
 		</td>
 		<td align="right">
-			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_DocumentViewToggle" alt='include_DocumentView' >
+<!-- 			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_DocumentViewToggle" alt='include_DocumentView' > -->
 		</td>
 	</tr>
 </table>
