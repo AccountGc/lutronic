@@ -10,12 +10,13 @@
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">
 				<div class="dropdown profile-element">
-					<a href="javascript:index();">
-						<span class="block m-t-xs font-bold"><%//=data.getName()%></span>
-						<span class="text-muted text-xs block">
-							<font color="white"><%//=data.getDepartment_name()%>-<%//=data.getDuty() != null ? data.getDuty() : "지정안됨"%></font>
-						</span>
-					</a>
+					<a onclick="moveToPage(this, '/changeECO/ecoCharts', '> 메인');">LUTRONIC</a>
+<!-- 					<a href="javascript:index();"> -->
+<%-- 						<span class="block m-t-xs font-bold"><%//=data.getName()%></span> --%>
+<!-- 						<span class="text-muted text-xs block"> -->
+<%-- 							<font color="white"><%//=data.getDepartment_name()%>-<%//=data.getDuty() != null ? data.getDuty() : "지정안됨"%></font> --%>
+<!-- 						</span> -->
+<!-- 					</a> -->
 				</div>
 			</li>
 			<li>
