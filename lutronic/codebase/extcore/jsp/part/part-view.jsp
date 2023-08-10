@@ -40,7 +40,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			%>
 			<input type="button" value="채번" title="채번"  onclick="">
 			<input type="button" value="채번(새버전)" title="채번(새버전)"  onclick="">
-			<input type="button" value="닫기" title="닫기" class="red" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -75,6 +75,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<a href="#tabs-9">관리자 속성</a>
 		</li>
 		<% } %>
+		<li>
+			<a href="#tabs-10">버전 정보</a>
+		</li>
 	</ul>
 	<div id="tabs-1">
 		<table class="view-table">
@@ -222,6 +225,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		</jsp:include>
 	</div>
 	<% } %>
+	
+	<!-- 버전 정보 -->
+	<div id="tabs-10">
+		<jsp:include page="/extcore/jsp/development/include_viewVersionInfo.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+		</jsp:include>
+	</div>
 </div>
 
 <div class="comment-table">
@@ -582,6 +592,16 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 					break;
+				case "tabs-10":
+					isCreated = AUIGrid.isCreated(verGridID);
+					if (isCreated) {
+						AUIGrid.resize(verGridID);
+						$(".comment-table").hide();
+					} else {
+						createAUIGridVer(columnVer);
+						$(".comment-table").hide();
+					}
+					break;	
 				}
 			},
 		});
@@ -595,5 +615,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		AUIGrid.resize(ecoGridID);
 		AUIGrid.resize(devGridID);
 		AUIGrid.resize(adminGridID);
+		AUIGrid.resize(verGridID);
 	});
 </script>
