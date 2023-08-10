@@ -18,10 +18,25 @@ if (isCreate || isUpdate) {
 <script type="text/javascript">
 	let partGridID;
 	const columnsPart = [ {
-		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
-		width : 180,
+		children : [ {
+			dataField : "numberBefore",
+			headerText : "변경전",
+			width : 100,
+			editable : false
+		}, {
+			dataField : "numberAfter",
+			headerText : "변경후",
+			width : 100,
+			editable : false,
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "등록",
+				onClick : function(event) {
+				},
+			}
+		} ]
 		<%
 			if(isView) {
 		%>
@@ -69,7 +84,7 @@ if (isCreate || isUpdate) {
 			selectionMode : "multipleCells",
 			<%if (isCreate || isUpdate) {%>
 			showRowCheckColumn : true,
-			showStateColumn : true,
+// 			showStateColumn : true,
 			<%}%>
 			rowCheckToRadio : true
 		}
@@ -77,6 +92,13 @@ if (isCreate || isUpdate) {
 		<%if (isView || isUpdate) {%>
 <%-- 		AUIGrid.setGridData(partGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
 		<%}%>
+		var json = {
+		    "numberBefore" : 3010357700,
+		    "name" : "MOUNT_A-MOTOR",
+		    "version" : "A.1",
+		    "bom" : ""
+		}
+		AUIGrid.setGridData(partGridID, json);
 	}
 
 	function insert9() {
