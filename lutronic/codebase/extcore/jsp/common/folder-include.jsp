@@ -27,7 +27,7 @@ String height = request.getParameter("height");
 			rowNumHeaderText : "번호",
 			selectionMode: "multipleCells",
 			enableFilter : true, 
-			showInlineFilter : true,		
+// 			showInlineFilter : true,		
 			displayTreeOpen : true,
 			forceTreeView : true
 		}
