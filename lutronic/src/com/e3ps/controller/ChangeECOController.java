@@ -50,6 +50,13 @@ import wt.part.WTPart;
 @RequestMapping(value = "/changeECO/**")
 public class ChangeECOController extends BaseController {
 	
+	@Description(value = "ECO 차트")
+	@GetMapping(value = "/ecoCharts")
+	public ModelAndView ecoChart() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/change/ecoCharts.jsp");
+		return model;
+	}
 	
 	@Description(value = "ECO 등록")
 	@GetMapping(value = "/create")

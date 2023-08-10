@@ -63,92 +63,8 @@
 		</table>
 
 		<script type="text/javascript">
-			let myGridID;
-			function _layout() {
-				return [ {
-					dataField : "name",
-					headerText : "일괄결재 번호",
-					dataType : "string",
-					width : 180,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "number",
-					headerText : "일괄결재 제목",
-					dataType : "string",
-					width : 180,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "description",
-					headerText : "일괄결재 타입",
-					dataType : "string",
-					width : 380,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "상태",
-					dataType : "string",
-					width : 180,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "등록자",
-					dataType : "string",
-					width : 180,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "등록일",
-					dataType : "string",
-					width : 180,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				} ]
-			}
-
-			function createAUIGrid(columnLayout) {
-				const props = {
-					headerHeight : 30,
-					showRowNumColumn : true,
-					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
-					useContextMenu : true,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-				};
-				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-					hideContextMenu();
-					vScrollChangeHandler(event);
-				});
-				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-					hideContextMenu();
-				});
-			}
-
+			selectbox("attrName");
+			
 			function loadGridData() {
 				// 				let params = new Object();
 				// 				const url = getCallUrl("/doc/list");
@@ -167,18 +83,6 @@
 				// 				});
 			}
 
-			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
-				const contenxtHeader = genColumnHtml(columns);
-				$("#h_item_ul").append(contenxtHeader);
-				$("#headerMenu").menu({
-					select : headerMenuSelectHandler
-				});
-				createAUIGrid(columns);
-				AUIGrid.resize(myGridID);
-				selectbox("attrName");
-			});
-
 			function exportExcel() {
 // 				const exceptColumnFields = [ "primary" ];
 // 				const sessionName = document.getElementById("sessionName").value;
@@ -192,13 +96,6 @@
 				}
 			})
 
-			document.addEventListener("click", function(event) {
-				hideContextMenu();
-			})
-
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
-			});
 		</script>
 	</form>
 </body>
