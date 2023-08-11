@@ -514,7 +514,8 @@ if(request.getParameter("popup")!=null){
 					alert("편집할 부품을 선택하세요.");
 					return false;
 				}
-				const oid = items.oid;
+				console.log(items);
+				const oid = items[0].oid;
 				const url = getCallUrl("/part/bom?oid=" + oid);
 				popup(url, 1600, 800);
 			};
