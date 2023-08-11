@@ -214,8 +214,8 @@ if(request.getParameter("popup")!=null){
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
 					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> 
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
 				</td>
@@ -237,9 +237,6 @@ if(request.getParameter("popup")!=null){
 					<%
 					}
 					%>
-					<a href="javascript:onExcelDown();">
-						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					</a>	
 				</td>
 			</tr>
 		</table>
@@ -304,10 +301,10 @@ if(request.getParameter("popup")!=null){
 					renderer : {
 						type : "IconRenderer",
 						iconPosition : "aisleCenter", // 아이콘 위치
-						iconWidth : 20, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+						iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
 						iconHeight : 16,
 						iconTableRef : { // icon 값 참조할 테이블 레퍼런스
-							"default" : "/Windchill/extcore/jsp/part/images/button/change_Icon.png" // default
+							"default" : "/Windchill/extcore/images/help.gif" // default
 						},
 						onClick : function(event) {
 							const oid = event.item.oid;
@@ -484,7 +481,7 @@ if(request.getParameter("popup")!=null){
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
+				const columns = loadColumnLayout("part-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({

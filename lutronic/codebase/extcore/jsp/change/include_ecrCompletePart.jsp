@@ -13,16 +13,25 @@ String mode = request.getParameter("mode");
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true
+		}
 	}, {
 		dataField : "name",
 		headerText : "품명",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true
+		}
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true
+		}
 	}, {
 		dataField : "bom",
 		headerText : "BOM 보기",
@@ -45,7 +54,8 @@ String mode = request.getParameter("mode");
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
 			showStateColumn : true,
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			enableFilter : true
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 	}

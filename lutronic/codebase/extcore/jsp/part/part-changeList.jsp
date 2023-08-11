@@ -25,6 +25,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				품목 변경이력
 			</div>
 		</td>
+		<td class="right">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
+		</td>
 	</tr>
 </table>
 <div id="grid_partChange" style="height: 645px; border-top: 1px solid #3180c3; margin: 5px;"></div>

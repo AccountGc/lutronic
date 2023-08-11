@@ -40,16 +40,28 @@ boolean isCreate = "create".equals(mode);
 		headerText : "문서번호",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "name",
 		headerText : "문서명",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "oid",
 		visible : false
@@ -66,7 +78,8 @@ boolean isCreate = "create".equals(mode);
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
 			showStateColumn : false,
-			rowCheckToRadio : false
+			rowCheckToRadio : false,
+			enableFilter : true
 		}
 		docGridID = AUIGrid.create("#grid_doc", columnLayout, props);
 	}

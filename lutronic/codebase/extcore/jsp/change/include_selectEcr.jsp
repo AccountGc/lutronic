@@ -22,6 +22,10 @@ if (isCreate || isUpdate) {
 		headerText : "CR/ECPR번호",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 		<%
 			if(isView) {
 		%>
@@ -42,21 +46,37 @@ if (isCreate || isUpdate) {
 		headerText : "CR/ECPR제목",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 	}, {
 		dataField : "writer",
 		headerText : "등록자",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 	}, {
 		dataField : "createDate",
 		headerText : "등록일",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 	}, {
 		dataField : "oid",
 		visible : false
@@ -76,7 +96,8 @@ if (isCreate || isUpdate) {
 			showRowCheckColumn : true,
 			showStateColumn : true,
 			<%}%>
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			enableFilter : true
 		}
 		ecrGridID = AUIGrid.create("#grid_ecr", columnLayout, props);
 		<%if (isView || isUpdate) {%>

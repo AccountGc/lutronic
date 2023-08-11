@@ -221,6 +221,12 @@
 
 		<table class="button-table">
 			<tr>
+				<td class="left">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');"> 
+					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> 
+				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="30">30</option>
@@ -231,9 +237,6 @@
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
-					<a href="javascript:onExcelDown();">
-						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					</a>	
 				</td>
 			</tr>
 		</table>
@@ -404,30 +407,30 @@
 			}
 
 			function loadGridData() {
-				 				let params = new Object();
-				 				const url = getCallUrl("/drawing/list");
+ 				let params = new Object();
+ 				const url = getCallUrl("/drawing/list");
 // 				 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
 				 				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
 				 				params = toField(params, field);
 				 				params.latest = latest; */
-				 				AUIGrid.showAjaxLoader(myGridID);
-				 				parent.openLayer();
-				 				call(url, params, function(data) {
-									AUIGrid.removeAjaxLoader(myGridID);
-									if (data.result) {
-										document.getElementById("sessionid").value = data.sessionid;
-										document.getElementById("curPage").value = data.curPage;
+ 				AUIGrid.showAjaxLoader(myGridID);
+ 				parent.openLayer();
+ 				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						document.getElementById("sessionid").value = data.sessionid;
+						document.getElementById("curPage").value = data.curPage;
 // 										document.getElementById("lastNum").value = data.list.length;
-										AUIGrid.setGridData(myGridID, data.list);
-									} else {
-										alert(data.msg);
-									}
-									parent.closeLayer();
-								});
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
+				const columns = loadColumnLayout("drawing-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({

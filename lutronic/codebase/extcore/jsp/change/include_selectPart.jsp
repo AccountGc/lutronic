@@ -24,11 +24,19 @@ if (isCreate || isUpdate) {
 			dataField : "numberBefore",
 			headerText : "변경전",
 			width : 100,
+			filter : {
+				showIcon : true,
+				inline : true
+			},
 			editable : false
 		}, {
 			dataField : "numberAfter",
 			headerText : "변경후",
 			width : 100,
+			filter : {
+				showIcon : true,
+				inline : true
+			},
 			editable : false,
 			renderer : {
 				type : "ButtonRenderer",
@@ -57,11 +65,19 @@ if (isCreate || isUpdate) {
 		headerText : "품목명",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "bom",
 		headerText : "BOM",
@@ -86,7 +102,8 @@ if (isCreate || isUpdate) {
 			showRowCheckColumn : true,
 // 			showStateColumn : true,
 			<%}%>
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			enableFilter : true,
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 		<%if (isView || isUpdate) {%>

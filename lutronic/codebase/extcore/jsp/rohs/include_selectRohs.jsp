@@ -14,16 +14,28 @@ boolean isCreate = "create".equals(mode);
 		headerText : "물질번호",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 	}, {
 		dataField : "name",
 		headerText : "물질명",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		}
 	}, {
 		dataField : "oid",
 		visible : false
@@ -41,7 +53,8 @@ boolean isCreate = "create".equals(mode);
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
 			showStateColumn : true,
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			enableFilter : true
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 	}

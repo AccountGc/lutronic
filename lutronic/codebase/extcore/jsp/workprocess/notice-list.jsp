@@ -50,6 +50,12 @@
 		
 		<table class="button-table">
 			<tr>
+				<td class="left">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('notice-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('notice-list');"> 
+					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> 
+				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="30">30</option>
@@ -142,7 +148,7 @@
 					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
-					enableFilter : false,
+					enableFilter : true,
 					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
@@ -186,7 +192,7 @@
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
+				const columns = loadColumnLayout("notice-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -242,6 +248,7 @@
 					 }
 				})
 			})
+			
 		</script>
 	</form>
 </body>

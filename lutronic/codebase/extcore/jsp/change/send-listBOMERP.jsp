@@ -103,10 +103,10 @@
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<!-- <img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
-					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();"> -->
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('send-listBOMERP');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('send-listBOMERP');"> 
+					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -118,7 +118,7 @@
 					</select> 
 					<input type="button"   value="ERP 적용 현황체크" title="ERP 적용 현황체크" onclick="loadGridData();">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('document-list');">
+					<input type="button" value="초기화" title="초기화" id="reset">
 				</td>
 			</tr>
 		</table>
@@ -295,7 +295,7 @@
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
+				const columns = loadColumnLayout("send-listBOMERP");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({

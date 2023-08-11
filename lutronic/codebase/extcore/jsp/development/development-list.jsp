@@ -63,15 +63,23 @@
 
 		<table class="button-table">
 			<tr>
-				<td class="left"><img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> <img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');"> <img src="/Windchill/extcore/images/redo.gif"
-					title="테이블 초기화" onclick="resetColumnLayout('document-list');"> <img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> <input type="button" value="등록" title="등록" class="blue" onclick="create();"></td>
-				<td class="right"><select name="_psize" id="_psize">
+				<td class="left">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('development-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('development-list');"> 
+					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> 
+				</td>
+				<td class="right">
+					<select name="_psize" id="_psize">
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
-				</select> <input type="button" value="조회" title="조회" onclick="loadGridData();"></td>
+					</select> 
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
+					<input type="button" value="초기화" title="초기화" id="reset">
+				</td>
 			</tr>
 		</table>
 		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
@@ -194,28 +202,28 @@
 			}
 
 			function loadGridData() {
-				 				let params = new Object();
-			 					const url = getCallUrl("/development/list");
-				 				const field = ["_psize","model","name","developmentStart_Start","developmentStart_End","developmentEnd_Start","developmentEnd_End", "dm","state"];
-				 				params = toField(params, field);
-				 				AUIGrid.showAjaxLoader(myGridID);
-				 				parent.openLayer();
-				 				call(url, params, function(data) {
-									AUIGrid.removeAjaxLoader(myGridID);
-									if (data.result) {
-										document.getElementById("sessionid").value = data.sessionid;
-										document.getElementById("curPage").value = data.curPage;
+ 				let params = new Object();
+					const url = getCallUrl("/development/list");
+ 				const field = ["_psize","model","name","developmentStart_Start","developmentStart_End","developmentEnd_Start","developmentEnd_End", "dm","state"];
+ 				params = toField(params, field);
+ 				AUIGrid.showAjaxLoader(myGridID);
+ 				parent.openLayer();
+ 				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						document.getElementById("sessionid").value = data.sessionid;
+						document.getElementById("curPage").value = data.curPage;
 // 										document.getElementById("lastNum").value = data.list.length;
-										AUIGrid.setGridData(myGridID, data.list);
-									} else {
-										alert(data.msg);
-									}
-									parent.closeLayer();
-								});
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
+				const columns = loadColumnLayout("development-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
