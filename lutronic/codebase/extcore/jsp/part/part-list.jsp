@@ -212,6 +212,13 @@ if(request.getParameter("popup")!=null){
 
 		<table class="button-table">
 			<tr>
+				<td class="left">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');"> 
+					<img src="/Windchill/extcore/images/help.gif" title="메뉴얼 재생" onclick="play('test.mp4');"> 
+					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
+				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="30">30</option>
@@ -500,6 +507,17 @@ if(request.getParameter("popup")!=null){
 				twindate("modified");
 				selectbox("_psize");
 			});
+			
+			function editBOM(){
+				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if (items.length == 0) {
+					alert("편집할 부품을 선택하세요.");
+					return false;
+				}
+				const oid = items.oid;
+				const url = getCallUrl("/part/bom?oid=" + oid);
+				popup(url, 1600, 800);
+			};
 
 			function exportExcel() {
 // 				const exceptColumnFields = [ "primary" ];
