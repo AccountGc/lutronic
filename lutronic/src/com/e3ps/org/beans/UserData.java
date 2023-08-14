@@ -17,6 +17,10 @@ public class UserData {
 	private String woid;
 	private String name;
 	private String id;
+	private String departName;
+	private String duty;
+	private String cellTel;
+	private String email;
 
 	public UserData() throws Exception {
 
@@ -30,6 +34,10 @@ public class UserData {
 			setPoid(people.getPersistInfo().getObjectIdentifier().getStringValue());
 			setName(people.getName());
 			setId(people.getUser().getName());
+			setDepartName(people.getDepartment().getName());
+			setDuty(people.getDuty());
+			setCellTel(people.getCellTel());
+			setEmail(user.getEMail());
 		}
 	}
 

@@ -88,16 +88,25 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "name",
+					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
-					width : 60,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/groupware/userInfoView?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 				}, {
-					dataField : "number",
+					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
 					width : 180,
@@ -105,17 +114,26 @@
 						showIcon : true,
 						inline : true
 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/groupware/userInfoView?oid=" + oid);
+							popup(url, 1600, 800);
+						}
+					},
 				}, {
-					dataField : "description",
+					dataField : "departmentName",
 					headerText : "부서",
 					dataType : "string",
-					width : 380,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "location",
+					dataField : "duty",
 					headerText : "직위",
 					dataType : "string",
 					width : 180,
@@ -131,11 +149,11 @@
 					headerHeight : 30,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
+					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : true,
+					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
@@ -143,7 +161,7 @@
 					fillColumnSizeMode: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -155,21 +173,26 @@
 			}
 
 			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
+				let params = new Object();
+				const url = getCallUrl("/groupware/listCompanyTree");
 				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
 				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				// 				params = toField(params, field);
 				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
+				AUIGrid.showAjaxLoader(myGridID);
 				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						document.getElementById("sessionid").value = data.sessionid;
+						document.getElementById("curPage").value = data.curPage;
+						document.getElementById("lastNum").value = data.list.length;
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+// 					parent.closeLayer();
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

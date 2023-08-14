@@ -31,6 +31,7 @@ import wt.fv.uploadtocache.CachedContentDescriptor;
 import wt.fv.uploadtocache.UploadToCacheHelper;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
+import wt.util.EncodingConverter;
 import wt.util.FileUtil;
 import wt.util.WTAttributeNameIfc;
 import wt.util.WTProperties;
@@ -239,5 +240,21 @@ public class CommonContentHelper {
 			return (Vault) obj[0];
 		}
 		return null;
+	}
+	
+	/**
+	 * 파일볼트 캐쉬키로 File 가져오기
+	 */
+	public File getFileFromCacheId(String cacheId) throws Exception {
+		File vault = null;
+		if (!StringUtil.isNull(cacheId)) {
+			String tmp = cacheId.split("/")[0];
+			EncodingConverter localEncodingConverter = new EncodingConverter();
+			String str = localEncodingConverter.decode(tmp);
+			String[] arrayOfString = str.split(":");
+			String cachePath = arrayOfString[arrayOfString.length - 2] + ":" + arrayOfString[arrayOfString.length - 1];
+			vault = new File(cachePath);
+		}
+		return vault;
 	}
 }

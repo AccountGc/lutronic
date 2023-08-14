@@ -30,7 +30,10 @@ import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.groupware.workprocess.service.WorklistHelper;
+import com.e3ps.org.Department;
 import com.e3ps.org.People;
+import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.beans.UserData;
 
 import wt.enterprise.Master;
 import wt.fc.PagingQueryResult;
@@ -351,5 +354,79 @@ public class GroupwareHelper {
 		}
 		map.put("list", wfList);
 		return map;
+	}
+	
+	public Map<String,Object> listCompanyTree(Map<String,Object> params) throws Exception {
+		int page = StringUtil.getIntParameter((String) params.get("page"), 1);
+		int rows = StringUtil.getIntParameter((String) params.get("rows"), 10);
+		int formPage = StringUtil.getIntParameter((String) params.get("formPage"), 10);
+		String sessionId = (String) params.get("sessionId");
+		
+		PagingQueryResult qr = null;
+		
+		if(StringUtil.checkString(sessionId)) {
+			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
+		}else {
+			String oid = StringUtil.checkNull((String) params.get("oid"));
+			String sortType = StringUtil.checkReplaceStr((String) params.get("sortType"), "false");
+			String name = StringUtil.checkNull((String) params.get("name"));
+			String command = StringUtil.checkNull((String) params.get("command"));
+			
+			Department dept = null;
+			
+			if(oid!=null && oid.length()>0 && !oid.equals("null") && !oid.equals("root") ){
+				dept = (Department)CommonUtil.getObject(oid);
+			}
+			
+			QuerySpec qs = new QuerySpec();
+			
+			int ii = qs.addClassList(People.class,true);
+			int jj = qs.addClassList(WTUser.class,false);
+			int kk = qs.addClassList(Department.class,false);
+
+			qs.appendWhere(new SearchCondition(People.class,"departmentReference.key.id",Department.class,"thePersistInfo.theObjectIdentifier.id"),new int[]{ii,kk});
+			qs.appendAnd();
+
+		    qs.appendWhere(new SearchCondition(People.class,"userReference.key.id",WTUser.class,"thePersistInfo.theObjectIdentifier.id"),new int[]{ii,jj});	
+		    qs.appendAnd();
+		    
+		    qs.appendWhere(new SearchCondition(WTUser.class,WTUser.DISABLED,SearchCondition.IS_FALSE),new int[] {jj});
+		    
+			if(dept!=null){
+				if (qs.getConditionCount() > 0)
+		        	qs.appendAnd();
+				qs.appendWhere(new SearchCondition(Department.class,"thePersistInfo.theObjectIdentifier.id","=",dept.getPersistInfo().getObjectIdentifier().getId()),new int[]{kk});
+			}
+
+			if (name.length() > 0){
+		        if (qs.getConditionCount() > 0)
+		        	qs.appendAnd();
+		        qs.appendWhere(new SearchCondition(People.class, People.NAME, SearchCondition.LIKE, "%" + name + "%"),
+		                         new int[] { ii });
+		    }
+		    
+			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, qs, true);
+		}
+		
+		PageControl control = new PageControl(qr, page, formPage, rows);
+	    int totalPage   = control.getTotalPage();
+	    int startPage   = control.getStartPage();
+	    int endPage     = control.getEndPage();
+	    int listCount   = control.getTopListCount();
+	    int totalCount  = control.getTotalCount();
+	    int currentPage = control.getCurrentPage();
+	    String param    = control.getParam();
+	    int rowCount    = control.getTopListCount();
+		
+	    List<PeopleData> list = new ArrayList<PeopleData>();
+	    Map<String,Object> result = new HashMap<String, Object>();
+	    while(qr.hasMoreElements()) {
+	    	Object[] obj = (Object[])qr.nextElement();
+			PeopleData data = new PeopleData((People) obj[0]);
+			list.add(data);
+	    }
+	    result.put("list", list);
+		
+		return result;
 	}
 }
