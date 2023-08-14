@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.session.SessionHelper;
 import wt.util.WTException;
@@ -47,7 +48,12 @@ import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.org.Department;
 import com.e3ps.org.MailWTobjectLink;
+import com.e3ps.org.People;
+import com.e3ps.org.WTUserPeopleLink;
+import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.beans.UserData;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.beans.RohsData;
@@ -196,6 +202,47 @@ public class GroupwareController extends BaseController {
 		model.addObject("dto", dto);
 		model.setViewName("/extcore/jsp/workprocess/notice-view.jsp");
 		return model;
+	}
+	
+	@Description(value = "사용자정보 상세 페이지")
+	@GetMapping(value =  "/userInfoView")
+	public ModelAndView userInfoView(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		People people = (People)CommonUtil.getObject(oid);
+		PeopleData dto = new PeopleData(people);
+		
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/workprocess/userInfoView.jsp");
+		return model;
+	}
+	
+	@Description(value = "사용자정보 편집 페이지")
+	@GetMapping(value = "/userInfoEdit")
+	public ModelAndView userInfoEdit(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		People people = (People)CommonUtil.getObject(oid);
+		PeopleData dto = new PeopleData(people);
+		
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/workprocess/userInfoEdit.jsp");
+		return model;
+	}
+	
+	@Description(value = "사용자정보 편집 함수")
+	@ResponseBody
+	@PostMapping(value = "/userInfoEdit")
+	public Map<String, Object> userInfoEdit(@RequestBody PeopleData data) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			GroupwareHelper.service.userInfoEdit(data);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/** 공지사항 상세보기
@@ -657,6 +704,22 @@ public class GroupwareController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/workprocess/companyTree-list.jsp");
 		return model;
+	}
+	
+	@Description(value = "조직도 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/listCompanyTree")
+	public Map<String,Object> listCompanyTree(Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = GroupwareHelper.manager.listCompanyTree(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	@Description(value = "관리자 메뉴")

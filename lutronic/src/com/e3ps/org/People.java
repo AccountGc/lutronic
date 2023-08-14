@@ -15,6 +15,7 @@ package com.e3ps.org;
 
 import wt.content.ContentHolder;
 import wt.fc.InvalidAttributeException;
+import wt.fc.Item;
 import wt.util.WTException;
 
 import com.ptc.windchill.annotations.metadata.Cardinality;
@@ -39,7 +40,7 @@ import com.ptc.windchill.annotations.metadata.Serialization;
  * @version   1.0
  **/
 
-@GenAsPersistable(interfaces={ContentHolder.class}, 
+@GenAsPersistable(superClass=Item.class, interfaces={ContentHolder.class}, 
    serializable=Serialization.EXTERNALIZABLE_BASIC,
    properties={
    @GeneratedProperty(name="duty", type=String.class,

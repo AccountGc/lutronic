@@ -1,5 +1,6 @@
 package com.e3ps.groupware.service;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ import org.springframework.web.servlet.ModelAndView;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.enterprise.Master;
 import wt.fc.PagingQueryResult;
@@ -42,6 +45,7 @@ import wt.lifecycle.State;
 import wt.org.WTPrincipalReference;
 import wt.org.WTUser;
 import wt.ownership.OwnershipHelper;
+import wt.pom.Transaction;
 import wt.project.Role;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
@@ -70,6 +74,7 @@ import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.active.ActivityWork;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.content.FileRequest;
+import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.jdf.config.Config;
@@ -1778,5 +1783,43 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 			
 		}
 		
+	}
+
+	@Override
+	public void userInfoEdit(PeopleData data) throws Exception {
+		Transaction trs = new Transaction();
+		ArrayList<String> primarys = data.getPrimarys();
+		try{
+			trs.start();
+			
+			People people = (People) CommonUtil.getObject(data.getOid());
+			people.setCellTel(data.getCellTel());
+			people.setPassword(data.getPassword());
+			PersistenceHelper.manager.modify(people);
+			
+			WTUser user = (WTUser) CommonUtil.getObject(data.getWoid());
+			user.setEMail(data.getEmail());
+			PersistenceHelper.manager.modify(user);
+			
+			for (int i = 0; i < primarys.size(); i++) {
+				String cacheId = (String) primarys.get(i);
+				ApplicationData appData = ApplicationData.newApplicationData(people);
+				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+				System.out.println("path=>>>>>>>>>>>>>"+vault.getPath());
+				appData.setRole(ContentRoleType.PRIMARY);
+				appData = (ApplicationData) ContentServerHelper.service.updateContent(people, appData, vault.getPath());
+			}
+			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
 	}
 }

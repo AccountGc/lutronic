@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import wt.method.RemoteInterface;
 
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.org.beans.PeopleData;
 
 @RemoteInterface
 public interface GroupwareService {
@@ -53,4 +54,5 @@ public interface GroupwareService {
 
 	void batchReceiveAction(Map<String, Object> reqMap) throws Exception;
 
+	void userInfoEdit(PeopleData data) throws Exception;
 }

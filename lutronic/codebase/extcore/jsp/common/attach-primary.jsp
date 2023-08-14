@@ -51,26 +51,27 @@ String oid = request.getParameter("oid");
 				el.parentNode.removeChild(el);
 			}
 		})
-
-// 		new AXReq("/Windchill/plm/content/list", {
-<%-- 			pars : "oid=<%=oid%>&roleType=primary", --%>
-// 			onsucc : function(res) {
-// 				if (!res.e) {
-// 					const form = document.querySelector("form");
-// 					const data = res.primaryFile;
-// 					const len = data.length;
-// 					for (let i = 0; i < len; i++) {
-// 						const primaryTag = document.createElement("input");
-// 						primaryTag.type = "hidden";
-// 						primaryTag.id = data[i].tagId;
-// 						primaryTag.name = "primarys";
-// 						primaryTag.value = data[i].cacheId;
-// 						form.appendChild(primaryTag);
-// 					}
-// 					primary.setUploadedList(data);
-// 				}
-// 			}
-// 		});
+	
+		new AXReq("/Windchill/eSolution/content/list", {
+			pars : "oid=<%=oid%>&roleType=primary",
+			onsucc : function(res) {
+				if (!res.e) {
+					const form = document.querySelector("form");
+					const data = res.primaryFile;
+					const len = data.length;
+					for (let i = 0; i < len; i++) {
+						const primaryTag = document.createElement("input");
+						primaryTag.type = "hidden";
+						primaryTag.id = data[i].tagId;
+						primaryTag.name = "primarys";
+						primaryTag.value = data[i].cacheId;
+						form.appendChild(primaryTag);
+						debugger;
+					}
+					primary.setUploadedList(data);
+				}
+			}
+		});
 	}
 	load();
 </script>
