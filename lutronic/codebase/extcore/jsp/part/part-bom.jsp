@@ -165,7 +165,14 @@ const column = [ {
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			rowCheckToRadio : false,
+			displayTreeOpen : true,
+			forceTreeView : true
 		}
+		
+		props.treeIconFunction = function(rowIndex, isBranch, isOpen, depth, item) {
+			var imgSrc = "/Windchill/extcore/images/icon/part.gif";
+			return imgSrc;
+		};
 		
 		myGridID = AUIGrid.create("#grid_ver", columnLayout, props);
 		AUIGrid.bind(myGridID, "contextMenu", function(event) {
@@ -191,11 +198,49 @@ const column = [ {
 		    "name" : "의료기기",
 		    "location" : "",
 		    "drawingNum" : "ND",
-		    "name" : "제품",
 		    "version" : "D.1",
 		    "state" : "승인됨",
 		    "creator" : "김준호",
-		    "createDate" : "2023-08-10"
+		    "createDate" : "2023-08-10",
+		    "children": [{
+			    "number" : "3410001234",
+			    "name" : "반제품",
+			    "location" : "",
+			    "drawingNum" : "ND",
+			    "version" : "C.1",
+			    "state" : "승인됨",
+			    "creator" : "박영선",
+			    "createDate" : "2023-08-10",
+			    "children": []
+			}, {
+			    "number" : "3410101320",
+			    "name" : "반제품",
+			    "location" : "",
+			    "drawingNum" : "ND",
+			    "version" : "E.5",
+			    "state" : "승인됨",
+			    "creator" : "장원정",
+			    "createDate" : "2023-08-10",
+			    "children": [{
+				    "number" : "5432110501",
+				    "name" : "나사",
+				    "location" : "",
+				    "drawingNum" : "ND",
+				    "version" : "F.6",
+				    "state" : "승인됨",
+				    "creator" : "박영선",
+				    "createDate" : "2023-08-10"
+				}, {
+				    "number" : "6432111103",
+				    "name" : "볼트",
+				    "location" : "",
+				    "drawingNum" : "ND",
+				    "version" : "G.9",
+				    "state" : "승인됨",
+				    "creator" : "김준호",
+				    "createDate" : "2023-08-10"
+				}]
+			}]
 		}]
 		AUIGrid.setGridData(myGridID, json);
 	}
@@ -220,6 +265,7 @@ const column = [ {
 			},
 		});
 	});
+	
 </script>
 </body>
 </html>

@@ -20,7 +20,7 @@ if(request.getParameter("popup")!=null){
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form>
+	<form id="documentForm">
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
@@ -108,6 +108,7 @@ if(request.getParameter("popup")!=null){
 						<option value="300">300</option>
 					</select> 
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
+					<input type="button" value="다운로드" title="다운로드" onclick="download();">
 					<input type="button" value="초기화" title="초기화" id="reset">
 					<%
 					if(popup){
@@ -278,6 +279,7 @@ if(request.getParameter("popup")!=null){
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
+					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					fillColumnSizeMode: false,
 					showAutoNoDataMessage : false,
@@ -363,6 +365,46 @@ if(request.getParameter("popup")!=null){
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			//일괄 다운로드
+			function download() {
+				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if (items.length == 0) {
+					alert("다운로드할 문서를 선택하세요.");
+					return false;
+				}
+				const oid = items[0].oid;
+				console.log(oid);
+				const url = getCallUrl("/content/download?oid=" + oid);
+				$.ajax({
+					type:"GET",
+					url: url,
+					data:oid,
+					dataType:"json",
+					async: true,
+					cache: false,
+					
+					error:function(data){
+						var msg = "데이터 검색오류";
+						alert(msg);
+					},
+					
+					success:function(data){
+						console.log(data.message);
+						if(data.result) {
+							location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
+						}else {
+							alert(data.message);
+						}
+					}
+					,beforeSend: function() {
+						gfn_StartShowProcessing();
+			        }
+					,complete: function() {
+						gfn_EndShowProcessing();
+			        }
+				});
+			}
 		</script>
 	</form>
 </body>
