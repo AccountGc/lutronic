@@ -16,55 +16,11 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import wt.clients.folder.FolderTaskLogic;
-import wt.clients.vc.CheckInOutTaskLogic;
-import wt.content.ContentHolder;
-import wt.doc.DocumentType;
-import wt.doc.WTDocument;
-import wt.doc.WTDocumentMaster;
-import wt.doc.WTDocumentMasterIdentity;
-import wt.enterprise.RevisionControlled;
-import wt.fc.IdentityHelper;
-import wt.fc.PagingQueryResult;
-import wt.fc.PagingSessionHelper;
-import wt.fc.PersistenceHelper;
-import wt.fc.PersistenceServerHelper;
-import wt.fc.QueryResult;
-import wt.fc.ReferenceFactory;
-import wt.fc.WTObject;
-import wt.folder.Folder;
-import wt.folder.FolderEntry;
-import wt.folder.FolderHelper;
-import wt.iba.value.IBAHolder;
-import wt.inf.container.WTContainerRef;
-import wt.lifecycle.LifeCycleHelper;
-import wt.lifecycle.LifeCycleManaged;
-import wt.method.MethodContext;
-import wt.org.WTUser;
-import wt.ownership.Ownership;
-import wt.part.WTPart;
-import wt.part.WTPartDescribeLink;
-import wt.part.WTPartMaster;
-import wt.pdmlink.PDMLinkProduct;
-import wt.pom.DBProperties;
-import wt.pom.Transaction;
-import wt.pom.WTConnection;
-import wt.query.QuerySpec;
-import wt.query.SearchCondition;
-import wt.services.StandardManager;
-import wt.session.SessionHelper;
-import wt.util.WTException;
-import wt.vc.VersionControlHelper;
-import wt.vc.wip.CheckoutLink;
-import wt.vc.wip.WorkInProgressHelper;
 
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
@@ -73,7 +29,6 @@ import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.Comments;
-import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -103,7 +58,46 @@ import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.VersionHelper;
-import com.e3ps.rohs.ROHSMaterial;
+
+import wt.clients.folder.FolderTaskLogic;
+import wt.clients.vc.CheckInOutTaskLogic;
+import wt.content.ApplicationData;
+import wt.content.ContentHolder;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
+import wt.doc.DocumentType;
+import wt.doc.WTDocument;
+import wt.doc.WTDocumentMaster;
+import wt.enterprise.RevisionControlled;
+import wt.fc.PagingQueryResult;
+import wt.fc.PagingSessionHelper;
+import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
+import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
+import wt.fc.WTObject;
+import wt.folder.Folder;
+import wt.folder.FolderEntry;
+import wt.folder.FolderHelper;
+import wt.iba.value.IBAHolder;
+import wt.inf.container.WTContainerRef;
+import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleManaged;
+import wt.method.MethodContext;
+import wt.part.WTPart;
+import wt.part.WTPartDescribeLink;
+import wt.pdmlink.PDMLinkProduct;
+import wt.pom.DBProperties;
+import wt.pom.Transaction;
+import wt.pom.WTConnection;
+import wt.query.QuerySpec;
+import wt.query.SearchCondition;
+import wt.services.StandardManager;
+import wt.session.SessionHelper;
+import wt.util.WTException;
+import wt.vc.VersionControlHelper;
+import wt.vc.wip.CheckoutLink;
+import wt.vc.wip.WorkInProgressHelper;
 
 
 @SuppressWarnings("serial")
@@ -2103,63 +2097,148 @@ public class StandardDocumentService extends StandardManager implements Document
 		}
     }
 
-	@Override
+//	@Override
+//	public void create(Map<String, Object> params) throws Exception {
+//		Transaction trs = new Transaction();
+//		Map<String,String> fileMap = new HashMap<String,String>();
+//		try {
+//			trs.start();
+//			
+//			String[] secondary = (String[]) params.get("SECONDARY");
+//			if(secondary != null) {
+//				for(String attachFile : secondary) {
+//			        String fileName = attachFile.split("/")[1].toUpperCase();
+//			        if(fileMap.get(fileName) == null){
+//			        	fileMap.put(fileName, attachFile);
+//			        }else {
+//			        	fileMap.remove(fileName);
+//			        }
+//				}
+//			}
+//			
+//			WTDocument doc = WTDocument.newWTDocument();
+//			// 문서명
+//			String docName = StringUtil.checkNull((String) params.get("docName"));
+//			doc.setName(docName);
+//			
+//			// 결재 방식
+//			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+//			
+//			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+//			String description = StringUtil.checkNull((String) params.get("description"));
+//			doc.setDescription(description);
+//			doc.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
+//			PersistenceHelper.manager.save(doc);
+//			
+//			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+//            if("LC_Default_NonWF".equals(lifecycle)){
+//            	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, "BATCHAPPROVAL");
+//            	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+//            }
+//            
+//            Map<String,Object> map = new HashMap<String,Object>();
+//            
+//            
+//            map.put("approvalType", approvalType);
+//            map.put("manufacture", manufacture);
+//            CommonHelper.service.changeIBAValues(doc, map);
+//			
+//            trs.commit();
+//			trs = null;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			trs.rollback();
+//			throw e;
+//        } finally {
+//        	if (trs != null) {
+//				trs.rollback();
+//			}
+//        }
+//	}
+    
+    @Override
 	public void create(Map<String, Object> params) throws Exception {
+    	
+    	String location 	= StringUtil.checkNull((String) params.get("location"));
+		String documentName = StringUtil.checkNull((String) params.get("documentName"));
+    	String name 		= StringUtil.checkNull((String) params.get("docName"));
+    	String description 	= StringUtil.checkNull((String) params.get("description"));
+    	
+    	String documentType = StringUtil.checkNull((String) params.get("documentType"));
+    	
+    	DocumentType docType = DocumentType.toDocumentType(documentType);
+		String number = getDocumentNumberSeq(docType.getLongDescription());
+    	
+//		boolean isSelf = (boolean)params.get("isSelf");
+		ArrayList<String> primarys = (ArrayList<String>)params.get("primarys");
+//		ArrayList<Map<String, String>> addRows7 = dto.getAddRows7();
+//		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+//		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+//		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+//		ArrayList<Map<String, Object>> addRows11 = dto.getAddRows11();
 		Transaction trs = new Transaction();
-		Map<String,String> fileMap = new HashMap<String,String>();
 		try {
 			trs.start();
-			
-			String[] secondary = (String[]) params.get("SECONDARY");
-			if(secondary != null) {
-				for(String attachFile : secondary) {
-			        String fileName = attachFile.split("/")[1].toUpperCase();
-			        if(fileMap.get(fileName) == null){
-			        	fileMap.put(fileName, attachFile);
-			        }else {
-			        	fileMap.remove(fileName);
-			        }
+
+			WTDocument document = WTDocument.newWTDocument();
+			document.setName(name);
+			document.setNumber(number);
+			document.setDescription(description);
+
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) document, folder);
+
+			document = (WTDocument) PersistenceHelper.manager.save(document);
+
+			// 도번 추가
+//			for (Map<String, Object> addRow11 : addRows11) {
+//				String oid = (String) addRow11.get("oid");
+//				NumberRule numberRule = (NumberRule) CommonUtils.getObject(oid);
+//				numberRule.setPersist(document.getMaster());
+//				PersistenceHelper.manager.modify(numberRule);
+//				IBAUtils.createIBA(document, "s", "NUMBER_RULE", numberRule.getMaster().getNumber());
+//				IBAUtils.createIBA(document, "s", "NUMBER_RULE_VERSION", String.valueOf(numberRule.getVersion()));
+//			}
+
+			for (int i = 0; i < primarys.size(); i++) {
+				String cacheId = (String) primarys.get(i);
+				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+				ApplicationData applicationData = ApplicationData.newApplicationData(document);
+				if (i == 0) {
+					applicationData.setRole(ContentRoleType.PRIMARY);
+				} else {
+					applicationData.setRole(ContentRoleType.SECONDARY);
 				}
+				PersistenceHelper.manager.save(applicationData);
+				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
 			}
-			
-			WTDocument doc = WTDocument.newWTDocument();
-			// 문서명
-			String docName = StringUtil.checkNull((String) params.get("docName"));
-			doc.setName(docName);
-			
-			// 결재 방식
-			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
-			
-			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
-			String description = StringUtil.checkNull((String) params.get("description"));
-			doc.setDescription(description);
-			doc.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
-			PersistenceHelper.manager.save(doc);
-			
-			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
-            if("LC_Default_NonWF".equals(lifecycle)){
-            	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, "BATCHAPPROVAL");
-            	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
-            }
-            
-            Map<String,Object> map = new HashMap<String,Object>();
-            
-            
-            map.put("approvalType", approvalType);
-            map.put("manufacture", manufacture);
-            CommonHelper.service.changeIBAValues(doc, map);
-			
-            trs.commit();
+
+//			for (Map<String, String> addRow7 : addRows7) {
+//				String oid = addRow7.get("oid");
+//				WTPart part = (WTPart) CommonUtils.getObject(oid);
+//				WTDocumentWTPartLink link = WTDocumentWTPartLink.newWTDocumentWTPartLink(document, part);
+//				PersistenceHelper.manager.save(link);
+//			}
+
+//			if (isSelf) {
+//				WorkspaceHelper.service.self(document.getPersistInfo().getObjectIdentifier().getStringValue());
+//			} else {
+//				// 결재시작
+//				if (approvalRows.size() > 0) {
+//					WorkspaceHelper.service.register(document, agreeRows, approvalRows, receiveRows);
+//				}
+//			}
+
+			trs.commit();
 			trs = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			trs.rollback();
 			throw e;
-        } finally {
-        	if (trs != null) {
+		} finally {
+			if (trs != null)
 				trs.rollback();
-			}
-        }
+		}
 	}
 
 	@Override
