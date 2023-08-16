@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.beans.ECOData;
-import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.message.Message;
@@ -51,9 +49,18 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 등록")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public ResultData createDocumentAction(@RequestBody Map<String, Object> params) {
-		Map<String, Object> map = DocumentHelper.service.requestDocumentMapping(params);
-		return DocumentHelper.service.createDocumentAction(map);
+	public Map<String, Object> create(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 
 	@Description(value = "문서 검색 페이지")

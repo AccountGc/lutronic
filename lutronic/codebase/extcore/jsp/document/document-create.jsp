@@ -34,6 +34,7 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
+	<form id="form">
 	<table class="button-table">
 		<tr>
 			<td class="left">
@@ -248,10 +249,10 @@
 				alert("보존기간을 입력하세요.");
 				return;					
 			}
-			if(isEmpty($("#dm").val())){
-				alert("관리자를 입력하세요.");
-				return;					
-			}
+// 			if(isEmpty($("#dm").val())){
+// 				alert("관리자를 입력하세요.");
+// 				return;					
+// 			}
 			if (!confirm("등록 하시겠습니까?")) {
 				return false;
 			}
@@ -310,5 +311,6 @@
 // 			AUIGrid.resize(myGridID8);
 		});
 	</script>
+	</form>
 </body>
 </html>
