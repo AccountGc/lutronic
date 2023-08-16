@@ -14,7 +14,9 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,8 +53,8 @@ import com.e3ps.org.service.MailUserHelper;
 import com.ptc.core.adapter.server.impl.CollectObjectsWebjectDelegate.OutputType;
 
 @Controller
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping(value = "/admin/**")
+public class AdminController extends BaseController {
 	
 	/*
 	 * 
@@ -828,5 +830,13 @@ public class AdminController {
 			message = Message.get("업로드 실패하였습니다.") + "\n" + e.getLocalizedMessage();
 		}
 		return ControllerUtil.messageAlert(message);
+	}
+	
+	@Description(value = "설계변경 문서 템플릿 등록 페이지")
+	@GetMapping(value = "/ecoTemplate")
+	public ModelAndView ecoTemplate() throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/admin/ecoTemplate.jsp");
+		return model;
 	}
 }
