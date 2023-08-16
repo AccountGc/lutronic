@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="wt.session.SessionHelper"%>
@@ -74,21 +75,6 @@
 					<li>
 <!-- 						<a onclick="javascript:_popup('/groupware/changePassword');">비밀번호 변경</a> -->
 						<a onclick="moveToPage(this, '/groupware/changePassword', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/listWfProcessInfo', '> 나의업무 > 관리자메뉴');">
-							관리자 메뉴
-						</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/changeIBA', '> 나의 업무 > 속성값 변경');">
-							속성값 변경
-						</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 나의 업무 > 도면 재변환');">
-							도면 재변환
-						</a>
 					</li>
 				</ul>
 			</li>
@@ -231,15 +217,6 @@
 					<li>
 						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 설계변경 >PART 전송 현황');">PART 전송 현황</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 설계변경 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/erp/send-listBOMERP', '> 설계변경 >BOM 전송 현황');">BOM 전송 현황</a>
-					</li>
 				</ul>
 			</li>
 			<li>
@@ -330,6 +307,38 @@
 					</li>
 				</ul>
 			</li>
+			<%if(CommonUtil.isAdmin()) {%>
+				<li>
+					<a href="css_animation.html">
+						<i class="fa fa-magic"></i>
+						<span class="nav-label">관리자</span>
+						<span class="fa arrow"></span>
+					</a>
+					<ul class="nav nav-second-level collapse">
+						<li>
+							<a onclick="moveToPage(this, '/groupware/listWfProcessInfo', '> 관리자 > 관리자메뉴');">관리자 메뉴</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/groupware/changeIBA', '> 관리자 > 속성값 변경');">속성값 변경</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 관리자 > 도면 재변환');">도면 재변환</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 관리자 >PART 전송 현황');">PART 전송 현황</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 관리자 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/erp/send-listBOMERP', '> 관리자 >BOM 전송 현황');">BOM 전송 현황</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경 문서 템플릿');">설계변경 문서 템플릿</a>
+						</li>
+					</ul>
+				</li>
+			<%} %>	
 			<!-- <li>
 				<a href="#">
 					<i class="fa fa-sitemap"></i>
