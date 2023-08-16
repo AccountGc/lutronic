@@ -24,15 +24,15 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 		<input type="hidden" name="woid" id="woid" value="<%=dto.getWoid()%>">
 		
 		<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				사용자 정보 변경
-			</div>
-		</td>
-	</tr>
-</table>
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						사용자 정보 변경
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="174">

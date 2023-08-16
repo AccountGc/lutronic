@@ -1,42 +1,31 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title></title>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
-</head>
-<body>
-	<form>
-
-		<div>
-    <div class="left">
-    	<div id="barChart"></div>
-    </div>
-    <div class="right">
-    	<div id="pieChart"></div>
-    </div>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> ECN
+			</div>
+		</td>
+	</tr>
+</table>
+<div class="left">
+	<div id="ecn_barChart"></div>
 </div>
-
+<div class="right">
+	<div id="ecn_pieChart"></div>
+</div>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script type="text/javascript">
 
 	//Create the bar chart
-	Highcharts.chart('barChart', {
+	Highcharts.chart('ecn_barChart', {
  		chart: {
      		type: 'column'
  		},
 		title: {
 		    align: 'left',
-		    text: 'ECO 변경사유'
+		    text: '변경사유'
 		},
 //  subtitle: {
 //      align: 'left',
@@ -80,46 +69,46 @@
 	        data: [
 	            {
 	                name: '원가 절감',
-	                y: 63.06,
+	                y: 13.06,
 	            },
 	            {
 	                name: '영업/마케팅',
-	                y: 19.84,
+	                y: 32.84,
 	            },
 	            {
 	                name: '기능/성능 변경',
-	                y: 4.18,
+	                y: 11.18,
 	            },
 	            {
 	                name: '공정 변경',
-	                y: 10.12,
+	                y: 38.12,
 	            },
 	            {
 	                name: '자재 변경',
-	                y: 22.33,
+	                y: 42.33,
 	            },
 	            {
 	                name: '허가/규제 변경',
-	                y: 30.45,
+	                y: 19.45,
 	            },
 	            {
 	                name: '품질',
-	                y: 40.45,
+	                y: 15.45,
 	            },
 	            {
 	                name: '라벨링',
-	                y: 10.45,
+	                y: 20.45,
 	            },
 	            {
 	                name: '기타',
-	                y: 5.582,
+	                y: 29.582,
 	            }
 	        ]
 	    }]
 	});
 	
 	//Create the pie chart
-	Highcharts.chart('pieChart', {
+	Highcharts.chart('ecn_pieChart', {
 	    chart: {
 	        plotBackgroundColor: null,
 	        plotBorderWidth: null,
@@ -157,37 +146,20 @@
 	        colorByPoint: true,
 	        data: [{
 	            name: '연구소',
-	            y: 70.67,
+	            y: 38.47,
 	            sliced: true,
 	            selected: true
 	        }, {
 	            name: '제조',
-	            y: 14.77
+	            y: 29.12
 	        },  {
 	            name: '생산',
-	            y: 4.86
+	            y: 35.47
 	        }, {
 	            name: '기타',
-	            y: 2.63
+	            y: 12.58
 	        }]
 	    }]
 	});
 
 </script>
-<style>
-    div.left {
-        width: 50%;
-        float: left;
-        box-sizing: border-box;
-        
-    }
-    div.right {
-        width: 50%;
-        float: right;
-        box-sizing: border-box;
-        
-    }
-</style>
-	</form>
-</body>
-</html>
