@@ -5,7 +5,7 @@
 
 <!-- AUIGrid js -->
 <script src="/Windchill/extcore/component/AUIGrid/AUIGrid.js?v=0"></script>
-<script src="/Windchill/extcore/component/AUIGrid/AUIGridLicense.js?v=0"></script>
+<script src="/Windchill/extcore/component/AUIGrid/AUIGridLicense.js?v=1"></script>
 
 <!-- AUIGrid FileSaver js -->
 <script src="/Windchill/extcore/component/AUIGrid/pdfkit/FileSaver.min.js"></script>
