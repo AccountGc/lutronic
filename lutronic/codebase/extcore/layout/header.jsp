@@ -11,7 +11,7 @@
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">
 				<div class="dropdown profile-element">
-					<a onclick="moveToPage(this, '/changeECO/ecoCharts', '> 메인');">LUTRONIC</a>
+					<a onclick="moveToPage(this, '/changeECO/mainPage', '> 메인');">LUTRONIC</a>
 <!-- 					<a href="javascript:index();"> -->
 <%-- 						<span class="block m-t-xs font-bold"><%//=data.getName()%></span> --%>
 <!-- 						<span class="text-muted text-xs block"> -->
