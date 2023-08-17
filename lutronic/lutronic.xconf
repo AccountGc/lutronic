@@ -8,7 +8,7 @@
              value="true"/>
    <Property name="wt.auth.handler" overridable="true"
              targetFile="codebase/wt.properties"
-             value="wt.httpgw.HTTPAuthentication"/>             
+             value="wt.auth.NullAuthentication,wt.httpgw.HTTPAuthentication"/>             
    
    <!-- Vault -->
    <Property name="wt.fv.useVaultsForAllContent" overridable="true"
