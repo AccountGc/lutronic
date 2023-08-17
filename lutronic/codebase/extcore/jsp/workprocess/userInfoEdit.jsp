@@ -90,6 +90,7 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="<%=dto.getOid() %>" name="oid" />
 					</jsp:include>
+					<img alt="" src="" id="sign_preview" width="50%;">
 				</td>
 			</tr>
 		</table>
@@ -148,7 +149,6 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 					alert("서명은 1개만 등록할 수 있습니다.");
 					return;
 				}
-				debugger;
 				
 				if (!confirm("변경 하시겠습니까?")) {
 					return;
