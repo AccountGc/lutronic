@@ -84,7 +84,6 @@ if(request.getParameter("popup")!=null){
 				</select></td>
 			</tr>
 		</table>
-
 		<table class="button-table">
 			<tr>
 				<%
@@ -108,7 +107,7 @@ if(request.getParameter("popup")!=null){
 						<option value="300">300</option>
 					</select> 
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="다운로드" title="다운로드" onclick="download();">
+					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
 					<input type="button" value="초기화" title="초기화" id="reset">
 					<%
 					if(popup){
@@ -373,38 +372,13 @@ if(request.getParameter("popup")!=null){
 					alert("다운로드할 문서를 선택하세요.");
 					return false;
 				}
-				const oid = items[0].oid;
-				console.log(oid);
-				const url = getCallUrl("/content/download?oid=" + oid);
-				$.ajax({
-					type:"GET",
-					url: url,
-					data:oid,
-					dataType:"json",
-					async: true,
-					cache: false,
-					
-					error:function(data){
-						var msg = "데이터 검색오류";
-						alert(msg);
-					},
-					
-					success:function(data){
-						console.log(data.message);
-						if(data.result) {
-							location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-						}else {
-							alert(data.message);
-						}
-					}
-					,beforeSend: function() {
-						gfn_StartShowProcessing();
-			        }
-					,complete: function() {
-						gfn_EndShowProcessing();
-			        }
+				let oids = [];
+				items.forEach((item)=>{
+				    oids.push(item.oid)
 				});
+				document.location.href = "/Windchill/eSolution/content/downloadZIP?oids=" + oids;
 			}
+			
 		</script>
 	</form>
 </body>
