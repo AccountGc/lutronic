@@ -119,9 +119,6 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 				hideContextMenu();
 			})
 
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
-			});
 		</script>
 	</form>
 </body>
