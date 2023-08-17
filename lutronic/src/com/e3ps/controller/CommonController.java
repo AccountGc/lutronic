@@ -846,22 +846,6 @@ public class CommonController {
 		return returnData;
 	}
 	
-	/** 임시 파일 일괄 다운로드
-	 * @param request
-	 * @param response
-	 */
-	@ResponseBody
-	@PostMapping(value="/zip")
-	public ResultData zip(HttpServletRequest request, HttpServletResponse response) {
-		ResultData returnData = new ResultData();
-		try {
-			returnData =  CommonHelper.service.zip(request, response);//.service.batchSecondaryDown(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return returnData;
-	}
-	
 	/** 부품의 BOM에서 ROHS 파일 다운로드
 	 * @param request
 	 * @param response

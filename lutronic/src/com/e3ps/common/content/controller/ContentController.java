@@ -1,6 +1,7 @@
 package com.e3ps.common.content.controller;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -11,11 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 
+import net.sf.json.JSONObject;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
@@ -42,6 +45,7 @@ import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.content.FormatContentHolder;
 import wt.content.URLData;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
@@ -58,28 +62,119 @@ public class ContentController {
 	
 	@Description(value = "파일 다운로드")
 	@GetMapping(value = "/download")
-	public ResponseEntity<byte[]> download(@RequestParam String oid) throws Exception {
-		ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
-		InputStream is = ContentServerHelper.service.findLocalContentStream(data);
-
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		byte[] buffer = new byte[1024];
-		int length;
-		while ((length = is.read(buffer)) != -1) {
-			byteArrayOutputStream.write(buffer, 0, length);
-		}
-
-		byte[] bytes = byteArrayOutputStream.toByteArray();
-		String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
-
+	public ResponseEntity<byte[]> download(@RequestParam String oid) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		headers.setContentLength(bytes.length);
-		headers.setContentDispositionFormData("attachment", name);
+		byte[] bytes = null;
+		
+		try {
+			ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
+			InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+			
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = is.read(buffer)) != -1) {
+				byteArrayOutputStream.write(buffer, 0, length);
+			}
+			
+			bytes = byteArrayOutputStream.toByteArray();
+			String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+			
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			headers.setContentLength(bytes.length);
+			headers.setContentDispositionFormData("attachment", name);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
 	}
+	
+	@Description(value = "zip파일 다운로드")
+	@GetMapping(value = "/downloadZIP")
+    public ResponseEntity<byte[]> downloadZIP(@RequestParam List<String> oids) {
+        HttpHeaders headers = new HttpHeaders();
+        byte[] zipBytes = null;
+        String name = null;
 
+        try {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+
+            for (String oid : oids) {
+	            WTDocument document = (WTDocument) CommonUtil.getObject(oid);
+	            QueryResult result = ContentHelper.service.getContentsByRole(document, ContentRoleType.PRIMARY);
+	            
+	            while (result.hasMoreElements()) {
+	                ApplicationData data = (ApplicationData) result.nextElement();
+	                InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+	
+	                byte[] buffer = new byte[1024];
+	                int length;
+	                
+	                ZipEntry zipEntry = new ZipEntry(data.getFileName());
+	                zipOutputStream.putNextEntry(zipEntry);
+	                
+	                ByteArrayOutputStream entryByteArrayOutputStream = new ByteArrayOutputStream();
+	
+	                while ((length = is.read(buffer)) != -1) {
+	                    entryByteArrayOutputStream.write(buffer, 0, length);
+	                }
+	
+	                entryByteArrayOutputStream.close();
+	                
+	                byte[] entryBytes = entryByteArrayOutputStream.toByteArray();
+	                zipOutputStream.write(entryBytes);
+	
+	                zipOutputStream.closeEntry();
+	            }
+	            
+	            
+	            result.reset();
+				result = ContentHelper.service.getContentsByRole(document, ContentRoleType.SECONDARY);
+				while (result.hasMoreElements()) {
+					ApplicationData data = (ApplicationData) result.nextElement();
+	                InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+	
+	                byte[] buffer = new byte[1024];
+	                int length;
+	                
+	                ZipEntry zipEntry = new ZipEntry(data.getFileName());
+	                zipOutputStream.putNextEntry(zipEntry);
+	                
+	                ByteArrayOutputStream entryByteArrayOutputStream = new ByteArrayOutputStream();
+	
+	                while ((length = is.read(buffer)) != -1) {
+	                    entryByteArrayOutputStream.write(buffer, 0, length);
+	                }
+	
+	                entryByteArrayOutputStream.close();
+	                
+	                byte[] entryBytes = entryByteArrayOutputStream.toByteArray();
+	                zipOutputStream.write(entryBytes);
+	
+	                zipOutputStream.closeEntry();
+				}
+            }
+
+            zipOutputStream.close();
+
+            zipBytes = byteArrayOutputStream.toByteArray();
+            
+            name = URLEncoder.encode("downloaded_files.zip", "UTF-8").replaceAll("\\+", "%20");
+
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentLength(zipBytes.length);
+            headers.setContentDispositionFormData("attachment", name);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(zipBytes, headers, HttpStatus.OK);
+    }
+	
 	@Description(value = "첨부 파일 리스트 가져오기")
 	@ResponseBody
 	@PostMapping(value = "/list")
