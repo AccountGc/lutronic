@@ -89,6 +89,19 @@ public class GroupwareController extends BaseController {
 	public ModelAndView listNotice() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/workprocess/notice-list.jsp");
+		People p = new People();
+		p.setCellTel("010-0000-0000");
+		Department d = (Department) CommonUtil.getObject("com.e3ps.org.Department:144804");
+		p.setDepartment(d);
+		p.setDuty("연구원");
+		p.setDutyCode("DC_14");
+		WTUser u = (WTUser) CommonUtil.getObject("wt.org.WTUser:11");
+		p.setUser(u);
+		System.out.println("5555555555555555555555");
+		p.setName(u.getFullName());
+		System.out.println("666666666666666666666");
+		PersistenceHelper.manager.save(p);
+		System.out.println("777777777777777777777");
 		return model;
 	}
 	
