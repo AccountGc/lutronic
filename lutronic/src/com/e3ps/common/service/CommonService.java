@@ -22,7 +22,7 @@ public interface CommonService {
 	
 	Map<String, String> getAttributes(String oid, String mode) throws Exception;
 
-	List<Map<String, Object>> versionHistory(String oid) throws Exception;
+	Map<String, Object> versionHistory(String oid) throws Exception;
 
 	void createLoginHistoty();
 
@@ -57,7 +57,7 @@ public interface CommonService {
 
 	ResultData batchSecondaryDown(HttpServletRequest request,HttpServletResponse response);
 	
-	ResultData zip(HttpServletRequest request,HttpServletResponse response);
+	ResultData zip(String path);
 
 
 	

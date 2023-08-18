@@ -538,7 +538,8 @@ public class StandardCommonService extends StandardManager implements CommonServ
     }
 	
 	@Override
-	public List<Map<String,Object>> versionHistory(String oid) throws Exception {
+	public Map<String, Object> versionHistory(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		RevisionControlled rc = (RevisionControlled)CommonUtil.getObject(oid);
 		QueryResult qr = null;
@@ -563,7 +564,8 @@ public class StandardCommonService extends StandardManager implements CommonServ
 			
 			list.add(map);
 		}
-		return list;
+		result.put("list", list);
+		return result;
 	}
 	
 	@Override
