@@ -1574,7 +1574,7 @@ public class StandardDocumentService extends StandardManager implements Document
     }
     
     @Override
-    public ResultData reviseUpdate(HttpServletRequest request, HttpServletResponse response)throws Exception {
+    public ResultData reviseUpdate(Map<String, Object> params)throws Exception {
     	ResultData data = new ResultData();
     	String reOid = "";
         Transaction trx = new Transaction();
@@ -1583,12 +1583,12 @@ public class StandardDocumentService extends StandardManager implements Document
 
             ReferenceFactory f = new ReferenceFactory();
             
-            String oid = StringUtil.checkNull(request.getParameter("oid"));
+            String oid = StringUtil.checkNull((String) params.get("oid"));
             if(oid.length() > 0) {
             	
             	WTDocument oldDoc = (WTDocument)f.getReference(oid).getObject();
                 //WTDocument doc = (WTDocument) ObjectUtil.reviseNote(oldDoc, Message.get("문서가 개정되었습니다."));
-            	String lifecycle = StringUtil.checkNull(request.getParameter("lifecycle"));
+            	String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
                 WTDocument doc = (WTDocument)ObjectUtil.revise(oldDoc, lifecycle);
                 
                 doc = (WTDocument)PersistenceHelper.manager.save(doc);

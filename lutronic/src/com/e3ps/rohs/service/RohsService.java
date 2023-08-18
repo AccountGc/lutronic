@@ -30,7 +30,7 @@ public interface RohsService {
 
 	ResultData updateRohsAction(HttpServletRequest request, HttpServletResponse response);
 	
-	ResultData reviseUpdate(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	ResultData reviseUpdate(Map<String, Object> params) throws Exception;
 	
 	Map<String,Object> listRoHSDataAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	

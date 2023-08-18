@@ -37,7 +37,7 @@ public interface DocumentService {
 
 	String delete(String oid) throws Exception;
 
-	ResultData reviseUpdate(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	ResultData reviseUpdate(Map<String, Object> params) throws Exception;
 
 	void createOutPutLink(WTDocument doc, Hashtable hash) throws Exception;
 
