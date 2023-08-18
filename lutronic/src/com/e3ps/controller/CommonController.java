@@ -45,7 +45,7 @@ import wt.vc.views.ViewHelper;
 
 @Controller
 @RequestMapping("/common")
-public class CommonController {
+public class CommonController extends BaseController {
 	
 	/**
 	 * 
@@ -426,27 +426,55 @@ public class CommonController {
 		return list;
 	}
 	
-	/** 버전이력 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/versionHistory")
-	public ModelAndView versionHistory(HttpServletRequest request, HttpServletResponse response,@RequestParam("oid")String oid) throws Exception {
+	@Description(value = "버전이력 페이지 이동")
+	@GetMapping(value = "/versionHistory")
+	public ModelAndView versionHistory(HttpServletRequest request, @RequestParam("oid")String oid) {
 		ModelAndView model = new ModelAndView();
 		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-		//System.out.println("versionHistory distribute =" + distribute);
-		List<Map<String,Object>> list = CommonHelper.service.versionHistory(oid);
-		
-		model.addObject("list", list);
 		model.addObject("distribute", distribute);
-		
-		model.setViewName("popup:/common/versionHistory");
-		
+		model.setViewName("/extcore/jsp/common/versionHistory.jsp");
 		return model;
 	}
+	
+	@Description(value = "버전이력 상세보기")
+	@ResponseBody
+	@PostMapping(value = "/versionHistory")
+	public Map<String, Object> versionHistory(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid = (String) params.get("oid");
+		try {
+			result = CommonHelper.service.versionHistory(oid);	
+			result.put("result", SUCCESS);
+		}catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		
+		return result;
+	}
+	
+//	/** 버전이력 상세보기
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/versionHistory")
+//	public ModelAndView versionHistory(HttpServletRequest request, HttpServletResponse response,@RequestParam("oid")String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
+//		//System.out.println("versionHistory distribute =" + distribute);
+//		List<Map<String,Object>> list = CommonHelper.service.versionHistory(oid);
+//		
+//		model.addObject("list", list);
+//		model.addObject("distribute", distribute);
+//		
+//		model.setViewName("popup:/common/versionHistory");
+//		
+//		return model;
+//	}
 	/** 객체 삭체 시 재확인 페이지
 	 * @param request
 	 * @param response
