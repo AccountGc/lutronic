@@ -29,6 +29,9 @@ import wt.util.WTProperties;
 public class ContentUtils {
 
 	public static String TMP_PATH = "";
+	
+	public static String FILE_PATH = "/Windchill/extcore/lutronic/";
+	
 	static {
 		try {
 			TMP_PATH = WTProperties.getServerProperties().getProperty("wt.temp");
@@ -71,6 +74,7 @@ public class ContentUtils {
 			primary.put("url", "/Windchill/plm/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue());
 			primary.put("fileSize", data.getFileSize());
+			primary.put("filePath", FILE_PATH);
 		}
 		return primary;
 	}

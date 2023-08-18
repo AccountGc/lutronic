@@ -1801,14 +1801,27 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 			user.setEMail(data.getEmail());
 			PersistenceHelper.manager.modify(user);
 			
+			//모든 첨부파일 삭제
+			CommonContentHelper.service.clear(people);
+			
 			for (int i = 0; i < primarys.size(); i++) {
 				String cacheId = (String) primarys.get(i);
 				ApplicationData appData = ApplicationData.newApplicationData(people);
 				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
-				System.out.println("path=>>>>>>>>>>>>>"+vault.getPath());
 				appData.setRole(ContentRoleType.PRIMARY);
+				PersistenceHelper.manager.save(appData);
 				appData = (ApplicationData) ContentServerHelper.service.updateContent(people, appData, vault.getPath());
 			}
+			
+//			if(primarys.size()==0) {
+//				ReferenceFactory rf = new ReferenceFactory();
+//				ContentHolder holder = (ContentHolder) rf.getReference(data.getOid()).getObject();
+//				QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.PRIMARY);
+//				if (result.hasMoreElements()) {
+//					ApplicationData appData = (ApplicationData) result.nextElement();
+//					PersistenceHelper.manager.delete(appData);
+//				}
+//			}
 			
 			trs.commit();
 			trs = null;

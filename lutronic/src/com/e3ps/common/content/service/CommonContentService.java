@@ -69,4 +69,6 @@ public interface CommonContentService {
 
 	ApplicationData attachADDRole(ContentHolder holder, String roleType,
 			String cachFile, String delFileName, boolean b) throws Exception;
+	
+	void clear(ContentHolder holder) throws Exception;
 }
