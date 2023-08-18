@@ -386,30 +386,56 @@ public class CommonController extends BaseController {
 		return CommonUtil.isAdmin();
 	}
 	
-	/** 다운로드 이력 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
-	@RequestMapping("/downloadHistory")
+	@Description(value = "다운로드 이력 상세보기")
+	@GetMapping(value = "/downloadHistory")
 	public ModelAndView downloadHistory(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
-		
-		List<Map<String,Object>> list = null;
-		
-		try {
-			list = CommonHelper.service.downloadHistory(oid);
-		}catch(Exception e ) {
-			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
-		}
-		
 		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/common/downloadHistory");
-		model.addObject("list", list);
-		
+		model.addObject("oid", oid);
+		model.setViewName("/extcore/jsp/common/downloadHistory.jsp");
 		return model;
 	}
+	
+	@Description(value = "다운로드 이력 상세보기")
+	@ResponseBody
+	@PostMapping(value = "/downloadHistory")
+	public Map<String, Object> downloadHistory(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = CommonHelper.service.downloadHistory(params);
+			result.put("result", SUCCESS);
+		}catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		
+		return result;
+	}
+	
+//	/** 다운로드 이력 상세보기
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 */
+//	@RequestMapping("/downloadHistory")
+//	public ModelAndView downloadHistory(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
+//		
+//		List<Map<String,Object>> list = null;
+//		
+//		try {
+//			list = CommonHelper.service.downloadHistory(oid);
+//		}catch(Exception e ) {
+//			e.printStackTrace();
+//			list = new ArrayList<Map<String,Object>>();
+//		}
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("popup:/common/downloadHistory");
+//		model.addObject("list", list);
+//		
+//		return model;
+//	}
 
 	
 	/** parent 코드값과 code type 으로 하위 NumberCode 데이터 리턴

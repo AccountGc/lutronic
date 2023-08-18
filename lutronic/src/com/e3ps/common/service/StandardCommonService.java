@@ -414,7 +414,9 @@ public class StandardCommonService extends StandardManager implements CommonServ
 	}
 	
 	@Override
-	public List<Map<String,Object>> downloadHistory(String oid) throws Exception {
+	public Map<String,Object> downloadHistory(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid = (String) params.get("oid");
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
 		QuerySpec qs = new QuerySpec();
 		int idx = qs.appendClassList(DownloadHistory.class, true);
@@ -437,8 +439,10 @@ public class StandardCommonService extends StandardManager implements CommonServ
 			map.put("count", history.getDCount());
 			
 			list.add(map);
+			result.put("list", list);
 		}
-		return list;
+		
+		return result;
 	}
 	@Override
     public Map<String,String> getAttributes(String oid) throws Exception {
