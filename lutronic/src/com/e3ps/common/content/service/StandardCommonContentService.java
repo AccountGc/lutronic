@@ -900,5 +900,35 @@ public class StandardCommonContentService extends StandardManager implements Com
 			}
 		}
 	}
+
+	@Override
+	public void clear(ContentHolder holder) throws Exception {
+		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.PRIMARY);
+		if (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(holder, item);
+		}
+
+		result.reset();
+		result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.SECONDARY);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(holder, item);
+		}
+		
+		result.reset();
+		result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.THUMBNAIL);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(holder, item);
+		}
+		
+		result.reset();
+		result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.ADDITIONAL_FILES);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(holder, item);
+		}
+	}
 	
 }

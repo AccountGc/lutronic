@@ -7,13 +7,17 @@
 // 주 첨부 파일은 무조건 있어야 한다.
 String oid = request.getParameter("oid");
 Map<String, Object> primary = ContentUtils.getPrimary(oid);
+String filePath = null;
 if (primary != null) {
+	filePath = (String) primary.get("filePath")+primary.get("name");
 %>
 <div>
-	<a href="<%=primary.get("url")%>">
+<%-- 	<a href="<%=primary.get("url")%>"> --%>
 		<span style="position: relative; bottom: 2px;"><%=primary.get("name")%></span>
 		<img src="<%=primary.get("fileIcon")%>" style="position: relative; top: 1px;">
-	</a>
+		<br>
+		<img src="<%=filePath%>" width="20%;">
+<!-- 	</a> -->
 </div>
 <%
 } else {

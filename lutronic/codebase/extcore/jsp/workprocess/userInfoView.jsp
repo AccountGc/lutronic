@@ -88,19 +88,6 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 		</table>
 		
 		<script type="text/javascript">
-			//사인 이미지 미리보기
-			function signView(image) {
-			  	if (image.files && image.files[0]) {
-			    	var reader = new FileReader();
-			    	reader.onload = function(e) {
-			      		document.getElementById('preview').src = e.target.result;
-			    	};
-			    	reader.readAsDataURL(image.files[0]);
-			  	} else {
-			    	document.getElementById('preview').src = "";
-			  	}
-			}
-			
 			//변경페이지 이동
 			$("#update").click(function(){
 				const oid = document.getElementById("oid").value;

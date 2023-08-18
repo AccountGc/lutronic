@@ -90,7 +90,7 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="<%=dto.getOid() %>" name="oid" />
 					</jsp:include>
-					<img alt="" src="" id="sign_preview" width="50%;">
+					<img id="sign_preview" width="20%;">
 				</td>
 			</tr>
 		</table>
@@ -105,19 +105,6 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 		</table>
 
 		<script type="text/javascript">
-			//사인 이미지 미리보기
-			function signView(image) {
-			  	if (image.files && image.files[0]) {
-			    	var reader = new FileReader();
-			    	reader.onload = function(e) {
-			      		document.getElementById('preview').src = e.target.result;
-			    	};
-			    	reader.readAsDataURL(image.files[0]);
-			  	} else {
-			    	document.getElementById('preview').src = "";
-			  	}
-			}
-		
 			//변경하기
 			$("#update").click(function(){
 				var telExp = /^(?:(010-\d{4})|(01[1|6|7|8|9]-\d{3,4}))-(\d{4})$/;
@@ -143,9 +130,9 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 			  	}
 				
 				var params = _data($("#form"));
-				params.primarys = toArray("primarys");
+				params.primarys = fileUpload();
 				
-				if(params.primarys.length>1){
+				if(primary.uploadedList.length>1){
 					alert("서명은 1개만 등록할 수 있습니다.");
 					return;
 				}
@@ -164,9 +151,6 @@ PeopleData dto = (PeopleData) request.getAttribute("dto");
 						alert(data.msg);
 					}
 				});
-// 				var inputFile = $("input[name='sign']");
-// 				var file = inputFile[0].files[0];
-// 				params.file=file;
 				
 			});
 		

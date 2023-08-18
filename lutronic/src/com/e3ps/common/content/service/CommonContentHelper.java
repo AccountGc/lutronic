@@ -44,7 +44,9 @@ public class CommonContentHelper {
 	static {
 		try {
 			if (savePath == null) {
-				savePath = WTProperties.getServerProperties().getProperty("wt.temp") + File.separator + "kekorea";
+//				savePath = WTProperties.getServerProperties().getProperty("wt.temp") + File.separator + "kekorea";
+				savePath = WTProperties.getServerProperties().getProperty("wt.codebase.location") + File.separator
+						+ "extcore" + File.separator + "lutronic";
 				File tempFolder = new File(savePath);
 				if (!tempFolder.exists()) {
 					tempFolder.mkdirs();
@@ -100,6 +102,7 @@ public class CommonContentHelper {
 					obj.put("uploadedPath", data.getUploadedFromPath());
 					obj.put("roleType", roleType);
 					obj.put("cacheId", ccd.getEncodedCCD());
+					obj.put("filePath", ContentUtils.FILE_PATH);
 					array.add(obj);
 				}
 
@@ -224,6 +227,7 @@ public class CommonContentHelper {
 		json.put("tagId", UUID.randomUUID().toString());
 		json.put("cacheId", ccd.getEncodedCCD());
 		json.put("base64", ContentUtils.imageToBase64(file, FileUtil.getExtension(origin)));
+		json.put("filePath", ContentUtils.FILE_PATH);
 		return json;
 	}
 	
