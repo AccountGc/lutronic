@@ -63,7 +63,7 @@
 			<tr>
 				<th>내용</th>
 				<td class="indent5">
-					<input type="text" name="contents" id="contents" class="width-800">
+					<textarea name="contents" id="contents" cols="80" rows="10" class="fm_area" style="width:90%" onKeyUp="common_CheckStrLength(this, 4000)" onChange="common_CheckStrLength(this, 4000)"></textarea>
 				</td>
 			</tr>
 			<tr>

@@ -204,6 +204,38 @@ public class GroupwareController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "공지사항 수정 페이지")
+	@GetMapping(value =  "/updateNotice")
+	public ModelAndView updateNotice(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		Notice notice = (Notice)CommonUtil.getObject(oid);
+		NoticeData noticeData = new NoticeData(notice);
+		
+		model.addObject("menu", "menu1");
+		model.addObject("module", "workprocess");
+		model.addObject("data", noticeData);
+		model.setViewName("/extcore/jsp/workprocess/notice-update.jsp");
+		return model;
+	}
+	
+	@Description(value = "공지사항 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/updateNotice")
+	public Map<String, Object> updateNotice(@RequestBody NoticeData data) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+//			String[] loc = req.getParameterValues("SECONDARY");;
+//			String[] deloc = req.getParameterValues("delocIds");
+//			msg = NoticeHelper.service.modify(hash , loc, deloc);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "사용자정보 상세 페이지")
 	@GetMapping(value =  "/userInfoView")
 	public ModelAndView userInfoView(@RequestParam String oid) throws Exception{
@@ -294,56 +326,56 @@ public class GroupwareController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/updateNotice")
-	public ModelAndView updateNotice(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) throws Exception {
-		Notice notice = (Notice)CommonUtil.getObject(oid);
-		NoticeData noticeData = new NoticeData(notice);
-		
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "workprocess");
-		model.addObject("noticeData", noticeData);
-		model.setViewName("default:/workprocess/updateNotice");
-		return model;
-	}
+//	@RequestMapping("/updateNotice")
+//	public ModelAndView updateNotice(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) throws Exception {
+//		Notice notice = (Notice)CommonUtil.getObject(oid);
+//		NoticeData noticeData = new NoticeData(notice);
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu1");
+//		model.addObject("module", "workprocess");
+//		model.addObject("noticeData", noticeData);
+//		model.setViewName("default:/workprocess/updateNotice");
+//		return model;
+//	}
 	
 	/** 공지사항 수정
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/updateNoticeAction")
-	public ModelAndView updateNoticeAction(HttpServletRequest request, HttpServletResponse response) {
-		String msg = "";
-		try {
-		
-			FileRequest req = new FileRequest(request);
-			
-			String title = req.getParameter("title");
-			String contents = req.getParameter("contents");
-			String oid = req.getParameter("oid");
-			String isPopup = StringUtil.checkNull(req.getParameter("isPopup"));
-			
-			Hashtable<String,String> hash = new Hashtable<String,String>();
-			hash.put("title" , title);
-			if(contents == null) contents = "";
-			hash.put("contents" , contents);
-			hash.put("oid", oid);
-			hash.put("isPopup", isPopup);
-			String[] loc = req.getParameterValues("SECONDARY");;
-			String[] deloc = req.getParameterValues("delocIds");
-			msg = NoticeHelper.service.modify(hash , loc, deloc);
-			
-		}catch (Exception e ){
-			e.printStackTrace();
-			msg = e.getLocalizedMessage();
-			msg = msg.replaceAll("\r\n", "\\\\n");
-			msg = msg.replaceAll("\r", "\\\\n");
-			msg = msg.replaceAll("\n", "\\\\n");
-			msg = Message.get("작업 중 다음과 같은 오류가 발생했습니다. ") + msg;
-		}
-		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
-	}
+//	@RequestMapping("/updateNoticeAction")
+//	public ModelAndView updateNoticeAction(HttpServletRequest request, HttpServletResponse response) {
+//		String msg = "";
+//		try {
+//		
+//			FileRequest req = new FileRequest(request);
+//			
+//			String title = req.getParameter("title");
+//			String contents = req.getParameter("contents");
+//			String oid = req.getParameter("oid");
+//			String isPopup = StringUtil.checkNull(req.getParameter("isPopup"));
+//			
+//			Hashtable<String,String> hash = new Hashtable<String,String>();
+//			hash.put("title" , title);
+//			if(contents == null) contents = "";
+//			hash.put("contents" , contents);
+//			hash.put("oid", oid);
+//			hash.put("isPopup", isPopup);
+//			String[] loc = req.getParameterValues("SECONDARY");;
+//			String[] deloc = req.getParameterValues("delocIds");
+//			msg = NoticeHelper.service.modify(hash , loc, deloc);
+//			
+//		}catch (Exception e ){
+//			e.printStackTrace();
+//			msg = e.getLocalizedMessage();
+//			msg = msg.replaceAll("\r\n", "\\\\n");
+//			msg = msg.replaceAll("\r", "\\\\n");
+//			msg = msg.replaceAll("\n", "\\\\n");
+//			msg = Message.get("작업 중 다음과 같은 오류가 발생했습니다. ") + msg;
+//		}
+//		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
+//	}
 	
 	@Description(value = "작업함 페이지")
 	@GetMapping(value = "/listWorkItem")
