@@ -130,7 +130,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	
 	
 	@Override
-    public ResultData reviseUpdate(HttpServletRequest request, HttpServletResponse response)throws Exception {
+    public ResultData reviseUpdate(Map<String, Object> params)throws Exception {
     	ResultData data = new ResultData();
     	String reOid = "";
         Transaction trx = new Transaction();
@@ -138,8 +138,8 @@ public class StandardRohsService extends StandardManager implements RohsService 
             trx.start();
 
             ReferenceFactory f = new ReferenceFactory();
-            String oid = StringUtil.checkNull(request.getParameter("oid"));
-            String lifecycle = StringUtil.checkNull(request.getParameter("lifecycle"));
+            String oid = StringUtil.checkNull((String) params.get("oid"));
+            String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
             if(oid.length() > 0) {
             	
             	ROHSMaterial oldRohs = (ROHSMaterial)f.getReference(oid).getObject();

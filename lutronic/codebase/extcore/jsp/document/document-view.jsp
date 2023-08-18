@@ -37,13 +37,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%
 			if(data.isLatest()){
 			%>
-				<%
-				if(data.getState().equals("APPROVED")){
-				%>
+<%-- 				<% --%>
+<!-- // 				if(data.getState().equals("APPROVED")){ -->
+<%-- 				%> --%>
 					<input type="button" value="개정" title="개정" id="reviseBtn">
-				<%	
-				}
-				%>
+<%-- 				<%	 --%>
+<!-- // 				} -->
+<%-- 				%> --%>
 				<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
 				<%
 				if(data.isWithDraw()){
@@ -492,8 +492,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	
 	//개정
 	$("#reviseBtn").click(function () {
-		var url	= getURLString("doc", "reviseDocumentPopup", "do") + "?oid="+$("#oid").val();
-		openOtherName(url,"reviseDocumentPopup","350","200","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/doc/reviseDocument?oid=" + oid);
+		popup(url, 400, 200);
 	})
 	
 	//버전이력

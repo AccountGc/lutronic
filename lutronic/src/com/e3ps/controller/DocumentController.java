@@ -106,6 +106,7 @@ public class DocumentController extends BaseController {
 		model.addAllObjects(map);
 		return model;
 	}
+	
 //	/**
 //	 * 문서 상세보기
 //	 * 
@@ -176,6 +177,32 @@ public class DocumentController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+	
+	
+	@Description(value = "문서 개정 페이지")
+	@GetMapping(value = "/reviseDocument")
+	public ModelAndView reviseDocument(@RequestParam("oid") String oid, HttpServletRequest request) {
+		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
+		ModelAndView model = new ModelAndView();
+		model.addObject("oid", oid);
+		model.addObject("module", module);
+		model.setViewName("/extcore/jsp/document/document-revise.jsp");
+		return model;
+	}
+	
+	@Description(value = "문서 개정")
+	@ResponseBody
+	@PostMapping(value = "/reviseDocument")
+	public ResultData reviseDocument(@RequestBody Map<String, Object> params) throws Exception {
+		ResultData data = null;
+		String module = StringUtil.checkReplaceStr((String) params.get("module"), "doc");
+		if ("doc".equals(module)) {
+			data = DocumentHelper.service.reviseUpdate(params);
+		} else if ("rohs".equals(module)) {
+			data = RohsHelper.service.reviseUpdate(params);
+		}
+		return data;
 	}
 
 	/**
@@ -357,27 +384,27 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	/**
-	 * 문서 개정
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@RequestMapping("/reviseDocument")
-	public ResultData reviseDocument(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ResultData data = null;
-		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
-		if ("doc".equals(module)) {
-			data = DocumentHelper.service.reviseUpdate(request, response);
-		} else if ("rohs".equals(module)) {
-			data = RohsHelper.service.reviseUpdate(request, response);
-		}
-		return data;
-	}
+//	/**
+//	 * 문서 개정
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/reviseDocument")
+//	public ResultData reviseDocument(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		ResultData data = null;
+//		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
+//		if ("doc".equals(module)) {
+//			data = DocumentHelper.service.reviseUpdate(request, response);
+//		} else if ("rohs".equals(module)) {
+//			data = RohsHelper.service.reviseUpdate(request, response);
+//		}
+//		return data;
+//	}
 
 	/**
 	 * 관련 문서 보기
@@ -501,16 +528,16 @@ public class DocumentController extends BaseController {
 		return DocumentHelper.service.deleteDocumentLinkAction(request, response);
 	}
 
-	@RequestMapping("/reviseDocumentPopup")
-	public ModelAndView reviseDocumentPopup(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("oid") String oid) {
-		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
-		ModelAndView model = new ModelAndView();
-		model.addObject("oid", oid);
-		model.addObject("module", module);
-		model.setViewName("popup:/document/reviseDocumentPopup");
-		return model;
-	}
+//	@RequestMapping("/reviseDocumentPopup")
+//	public ModelAndView reviseDocumentPopup(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam("oid") String oid) {
+//		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("oid", oid);
+//		model.addObject("module", module);
+//		model.setViewName("popup:/document/reviseDocumentPopup");
+//		return model;
+//	}
 
 	/**
 	 * 일괄 등록 추가 AUI
