@@ -16,7 +16,7 @@ import wt.util.WTException;
 @RemoteInterface
 public interface CommonService {
 
-	List<Map<String, Object>> downloadHistory(String oid) throws Exception;
+	Map<String, Object> downloadHistory(Map<String, Object> params) throws Exception;
 
 	Map<String, String> getAttributes(String oid) throws Exception;
 	
