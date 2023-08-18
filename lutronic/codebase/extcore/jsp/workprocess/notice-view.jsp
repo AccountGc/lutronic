@@ -68,8 +68,7 @@ NoticeData dto = (NoticeData) request.getAttribute("dto");
 	//수정
 	$("#update").click(function () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		openLayer();
+		const url = getCallUrl("/groupware/updateNotice?oid=" + oid);
 		document.location.href = url;
 	})
 	
