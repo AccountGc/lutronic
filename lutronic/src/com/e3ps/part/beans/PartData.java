@@ -108,7 +108,7 @@ public class PartData {
 	private String iteration;
 	private String PDMLinkProductOid;
 	
-    public PartData(final WTPart part) throws Exception {
+    public PartData(WTPart part) throws Exception {
 //    	super(part);
 //    	setPart(part);
     	setOid(part.getPersistInfo().getObjectIdentifier().toString());
@@ -137,8 +137,8 @@ public class PartData {
 //    	setState(part.getLifeCycleState().toString());
     	setState(part.getLifeCycleState().getDisplay(Message.getLocale()));
     	setCreator(part.getCreatorFullName());
-    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
-    	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
+//    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
+//    	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
     	
     	if(epm == null){
 			epm = DrawingHelper.service.getEPMDocument(part);

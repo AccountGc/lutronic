@@ -57,7 +57,6 @@ import com.e3ps.common.web.WebUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.distribute.util.MakeZIPUtil;
-import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.e3ps.drawing.service.DrawingHelper;
@@ -2361,17 +2360,16 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 
 	@Override
-	public Map<String, Object> bomPartList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Map<String, Object> bomPartList(Map<String, Object> params) throws Exception {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		String oid = request.getParameter("oid");
-		String bomType = request.getParameter("bomType");
+		String oid = (String)params.get("oid");
+		String bomType = (String)params.get("bomType");
 		result.put("oid", oid);
 		result.put("bomType", bomType);
 
-		ReferenceFactory rf = new ReferenceFactory();
-		WTPart part = (WTPart) rf.getReference(oid).getObject();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		// part = EulPartHelper.service.getPart(part.getNumber());
 		PartData pd = new PartData(part);
 
@@ -2456,12 +2454,12 @@ public class StandardPartService extends StandardManager implements PartService 
 					PartData data = new PartData(partD);
 					
 					Map<String, String> map = new HashMap<String, String>();
-					map.put("icon", data.icon);
-					map.put("oid", data.oid);
-					map.put("number", data.number);
-					map.put("name", data.name);
-					map.put("state", data.getLifecycle());
-					map.put("version", data.version);
+					map.put("icon", data.getIcon());
+					map.put("oid", data.getOid());
+					map.put("number", data.getNumber());
+					map.put("name", data.getName());
+//					map.put("state", data.getLifecycle());
+					map.put("version", data.getVersion());
 					String partendoid = CommonUtil.getOIDString(partD);
 					if(!sb.toString().contains(partendoid))
 					item.add(map);

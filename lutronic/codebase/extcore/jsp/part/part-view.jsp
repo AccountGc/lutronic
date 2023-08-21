@@ -28,9 +28,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="속성 Clearing" title="속성 Clearing" class="blue" onclick="">
-			<input type="button" value="일괄 수정" title="일괄 수정" onclick="">
-			<input type="button" value="수정" title="수정" onclick="update('modify');">
+			<input type="button" value="상위품목" title="상위품목"  id="upItem">
+			<input type="button" value="하위품목" title="하위품목"  id="downItem">
+			<input type="button" value="END ITEM" title="END ITEM"  id="endItem">
+			<input type="button" value="최신Rev." title="최신Rev." onclick="">
+			<input type="button" value="최신Rev." title="최신Rev." onclick="">
+			<input type="button" value="Rev.이력" title="Rev.이력" onclick="update();">
 			<%
 			if (isAdmin) {
 			%>
@@ -366,9 +369,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 </div>
 
 <script type="text/javascript">
-	function update(mode) {
+	function update() {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
+		const url = getCallUrl("/part/updatePart?oid=" + oid );
 		openLayer();
 		document.location.href = url;
 	}
@@ -638,4 +641,32 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		AUIGrid.resize(verGridID);
 		AUIGrid.resize(enDocGridID);
 	});
+	
+	<%----------------------------------------------------------
+	*                      상위품목 버튼
+	----------------------------------------------------------%>
+	$("#upItem").click(function() {
+		viewBomList("up");
+	})
+	<%----------------------------------------------------------
+	*                      하위품목 버튼
+	----------------------------------------------------------%>
+	$("#downItem").click(function() {
+		viewBomList("down");
+	})
+	<%----------------------------------------------------------
+	*                      END ITEM 버튼
+	----------------------------------------------------------%>
+	$("#endItem").click(function() {
+		viewBomList("end");
+	})
+	
+	<%----------------------------------------------------------
+	*                      Bom Type에 따른 bom 검색
+	----------------------------------------------------------%>
+	function viewBomList(bomType){
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/part/bomPartList?oid=" + oid + "&bomType=" + bomType);
+		popup(url, 800, 400);
+	}
 </script>

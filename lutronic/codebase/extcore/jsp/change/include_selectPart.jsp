@@ -65,6 +65,8 @@ boolean isUpdate = "update".equals(mode);
 				type : "ButtonRenderer",
 				labelText : "부품추가",
 				onClick : function(event) {
+					const url = getCallUrl("/part/list?popup=true");
+					popup(url, 1500, 700);
 				}
 			}
 		} ,{
@@ -73,6 +75,8 @@ boolean isUpdate = "update".equals(mode);
 				type : "ButtonRenderer",
 				labelText : "부품등록",
 				onClick : function(event) {
+					const url = getCallUrl("/part/create?popup=true");
+					popup(url, 1500, 700);
 			}
 		}
 		}]

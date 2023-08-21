@@ -34,6 +34,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.beans.PartData;
+import com.e3ps.part.beans.PartTreeData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
@@ -819,22 +820,61 @@ public class PartController extends BaseController {
 		return model;
 	}
 	
-	/** END ITEM 상세보기
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/bomPartList")
+	@Description(value = "END ITEM 상세보기")
+	@GetMapping(value = "/bomPartList")
 	public ModelAndView bomPartList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView model = new ModelAndView();
 		
-		Map<String,Object> map = PartHelper.service.bomPartList(request,response);
+		String oid = request.getParameter("oid");
+		String bomType = request.getParameter("bomType");
+		String title = null;
 		
-		model.setViewName("popup:/part/bomPartList");
-		model.addAllObjects(map);
+		Map<String,Object> params = new HashMap<>();
+		params.put("oid", oid);
+		params.put("bomType", bomType);
+		
+		ReferenceFactory rf = new ReferenceFactory();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		if ("up".equals(bomType)) {
+			title = Message.get("상위품목");
+		} else if ("down".equals(bomType)) {
+			title = Message.get("하위품목");
+		} else if ("end".equals(bomType)) {
+			title = Message.get("END ITEM");
+		}
+		
+		
+		model.setViewName("/extcore/jsp/part/bomPartList.jsp");
+		model.addObject("oid", oid);
+		model.addObject("bomType", bomType);
+		model.addObject("partNumber", part.getNumber());
+		model.addObject("title", title);
 		return model;
 	}
+	
+	@Description(value = "END ITEM 상세보기")
+	@ResponseBody
+	@PostMapping(value = "/bomPartList")
+	public Map<String, Object> bomPartList(@RequestBody Map<String,Object> params) throws Exception {
+		Map<String,Object> result = PartHelper.service.bomPartList(params);
+		return result;
+	}
+//	/** END ITEM 상세보기
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/bomPartList")
+//	public ModelAndView bomPartList(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		
+//		Map<String,Object> map = PartHelper.service.bomPartList(request,response);
+//		
+//		model.setViewName("popup:/part/bomPartList");
+//		model.addAllObjects(map);
+//		return model;
+//	}
 	
 	/** BOM 상세보기
 	 * @param request

@@ -60,6 +60,7 @@
 			<tr>
 				<th class="req lb">설계변경 부품</th>
 				<td colspan="7">
+					<!-- 	관련 품목 -->
 					<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
