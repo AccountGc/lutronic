@@ -19,6 +19,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
+<input type="hidden" name="bomSelect" id="bomSelect" value="" />
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -31,9 +32,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<input type="button" value="상위품목" title="상위품목"  id="upItem">
 			<input type="button" value="하위품목" title="하위품목"  id="downItem">
 			<input type="button" value="END ITEM" title="END ITEM"  id="endItem">
-			<input type="button" value="최신Rev." title="최신Rev." onclick="">
-			<input type="button" value="최신Rev." title="최신Rev." onclick="">
-			<input type="button" value="Rev.이력" title="Rev.이력" onclick="update();">
+<%-- 			<% if(!data.isLateste()){ %> --%>
+				<input type="button" value="최신Rev." title="최신Rev."  id="latestBtn" value="<%-- data.latestOid() --%>">
+<%-- 			<% } %> --%>
+			<input type="button"  value="Rev.이력"  title="Rev.이력" id="versionBtn">
+			<input type="button"  value="BOM"  title="BOM"  id="auiBom">
+			<input type="button"  value="단계별  BOM"  title="단계별  BOM"  id="auiBom2">
 			<%
 			if (isAdmin) {
 			%>
@@ -642,6 +646,8 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		AUIGrid.resize(enDocGridID);
 	});
 	
+	const oid = document.querySelector("#oid").value;
+	
 	<%----------------------------------------------------------
 	*                      상위품목 버튼
 	----------------------------------------------------------%>
@@ -660,6 +666,66 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	$("#endItem").click(function() {
 		viewBomList("end");
 	})
+	<%----------------------------------------------------------
+	*                      최신버전 버튼
+	----------------------------------------------------------%>
+	$("#latestBtn").click(function () {
+		const loid = this.value;
+		openView(loid);
+	}),
+	<%----------------------------------------------------------
+	*                      버전이력 버튼
+	----------------------------------------------------------%>
+	$("#versionBtn").click(function () {
+		const url = getCallUrl("/common/versionHistory?oid=" + oid);
+		popup(url, 830, 600);
+	}),
+	<%----------------------------------------------------------
+	*                     AUI BOM 버튼
+	----------------------------------------------------------%>
+	$(document).keydown(function(event) {
+		var charCode = (event.which) ? event.which : event.keyCode;
+		if(charCode ==17){
+			$("#bomSelect").val("true");
+		}else{
+			$("#bomSelect").val("false");
+		}
+	})
+	
+	$("#auiBom").click(function() {
+		if($("#bomSelect").val() =="true"){
+			bom2View();
+			$("#bomSelect").val("false");
+		}else{
+			auiBom(oid,'');
+		}
+	});
+	$("#auiBom2").click(function() {
+		if($("#bomSelect").val() =="true"){
+			bom2View();
+			$("#bomSelect").val("false");
+		}else{
+			auiBom2(oid,'');
+		}
+	})
+	<%----------------------------------------------------------
+	*                      BOM 버튼
+	----------------------------------------------------------%>
+	$("#bom").click(function() {
+		const url = getCallUrl("/part/PartTree?oid=" + oid);
+	    popup(url, 1100, 600);
+	    popup(url, 1100, 600);
+	    newwin.focus();
+	})
+	<%----------------------------------------------------------
+	*                      BOM 버튼
+	----------------------------------------------------------%>
+	function bom2View(){
+		const url = getCallUrl("/part/viewPartBom?oid=" + oid);
+	    popup(url, 1100, 600);
+	    newwin.focus();
+	}
+	
 	
 	<%----------------------------------------------------------
 	*                      Bom Type에 따른 bom 검색

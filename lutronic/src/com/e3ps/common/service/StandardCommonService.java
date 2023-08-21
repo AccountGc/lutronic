@@ -560,8 +560,8 @@ public class StandardCommonService extends StandardManager implements CommonServ
 			map.put("iteration", obj.getIterationIdentifier().getSeries().getValue());
 			map.put("creator", obj.getCreatorFullName());
 			map.put("modifier", obj.getModifierFullName());
-			map.put("createDate", obj.getCreateTimestamp());
-			map.put("modifyDate", obj.getModifyTimestamp());
+//			map.put("createDate", obj.getCreateTimestamp());
+//			map.put("modifyDate", obj.getModifyTimestamp());
 			map.put("note", obj.getIterationInfo().getNote());
 			map.put("state", obj.getLifeCycleState().getDisplay());
 			map.put("isApproved", isApproved);
