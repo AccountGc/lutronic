@@ -211,12 +211,7 @@ public class CommonController extends BaseController {
 //		return model;
 //	}
 	
-	/**  픔목 속성 등록/수정
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
+	@Description(value = "픔목 속성 등록/수정")
 	@RequestMapping("/include_createAttributes")
 	public ModelAndView include_createAttributes(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String oid = request.getParameter("oid");
@@ -234,6 +229,29 @@ public class CommonController extends BaseController {
 		model.addAllObjects(map);
 		return model;
 	}
+//	/**  픔목 속성 등록/수정
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/include_createAttributes")
+//	public ModelAndView include_createAttributes(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		String oid = request.getParameter("oid");
+//		String module = request.getParameter("module");
+//		//System.out.println("oid = "+ oid);
+//		//System.out.println("module = "+ module);
+//		ModelAndView model = new ModelAndView();
+//		Map<String,String> map = null;
+//		if(null!=module){
+//			map = CommonHelper.service.getAttributes(oid);
+//		}
+//		//System.out.println("map = "+ (null!=map));
+//		model.setViewName("include:/common/include_createAttributes");
+//		model.addObject("module", module);
+//		model.addAllObjects(map);
+//		return model;
+//	}
 	
 	@ResponseBody
 	@RequestMapping("/documentTypeList")

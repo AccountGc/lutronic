@@ -442,40 +442,100 @@ public class GroupwareController extends BaseController {
 		return model;
 	}
 	
-	/** 결재이력 페이지
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
-	@RequestMapping("/historyWork")
-	public ModelAndView historyWork(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
+
+	@Description(value = "결재이력 페이지")
+	@GetMapping(value = "/workHistory")
+	public ModelAndView workHistory(@RequestParam("oid") String oid) {
 		boolean isAuth = false;
 		List<Map<String,Object>> appList = null;
 		try {
-			appList = GroupwareHelper.service.getApprovalList(oid);
 			isAuth = CommonUtil.isAdmin();
-			WTUser suer = (WTUser) SessionHelper.manager.getPrincipal();
-			String sUserName = suer.getFullName();
-			for (int i = 0; i < appList.size(); i++) {
-				Map<String,Object> map = (Map<String, Object>) appList.get(i);
-				String userName = String.valueOf(map.get("userName"));
-				//if(sUserName.equals(userName)){ isAuth = true; break;}
-			}
-		} catch(Exception e) {
-			appList = new ArrayList<Map<String,Object>>();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		List<Map<String,Object>> mailList = GroupwareHelper.service.getMailList(oid);
 		
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		model.addObject("isAuth", isAuth);
-		model.addObject("appList", appList);
-		model.addObject("mailList", mailList);
-		model.setViewName("popup:/workprocess/historyWork");
+		model.setViewName("/extcore/jsp/workprocess/workHistory.jsp");
 		return model;
 	}
+
+	@Description(value = "결재이력 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/workHistory")
+	public Map<String, Object> workHistory(Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String,Object>> appList = null;
+		List<Map<String,Object>> mailList = null;
+		String oid = (String)params.get("oid");		
+		String listType = (String)params.get("listType");		
+		try {
+			if("appList".equals(listType)) {
+				appList = GroupwareHelper.service.getApprovalList(oid);				
+				for (int i = 0; i < appList.size(); i++) {
+					Map<String,Object> map = (Map<String, Object>) appList.get(i);
+					String userName = String.valueOf(map.get("userName"));
+					//if(sUserName.equals(userName)){ isAuth = true; break;}
+				}
+			}
+			WTUser suer = (WTUser) SessionHelper.manager.getPrincipal();
+			String sUserName = suer.getFullName();
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			appList = new ArrayList<Map<String,Object>>();
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		
+		if("mailList".equals(listType)) {
+			mailList= GroupwareHelper.service.getMailList(oid);
+		}
+		
+		result.put("oid", oid);
+		if("appList".equals(listType)) {
+			result.put("appList", appList);			
+		}else {
+			result.put("mailList", mailList);			
+		}
+		return result;
+	}
+	
+//	/** 결재이력 페이지
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 */
+//	@RequestMapping("/historyWork")
+//	public ModelAndView historyWork(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
+//		boolean isAuth = false;
+//		List<Map<String,Object>> appList = null;
+//		try {
+//			appList = GroupwareHelper.service.getApprovalList(oid);
+//			isAuth = CommonUtil.isAdmin();
+//			WTUser suer = (WTUser) SessionHelper.manager.getPrincipal();
+//			String sUserName = suer.getFullName();
+//			for (int i = 0; i < appList.size(); i++) {
+//				Map<String,Object> map = (Map<String, Object>) appList.get(i);
+//				String userName = String.valueOf(map.get("userName"));
+//				//if(sUserName.equals(userName)){ isAuth = true; break;}
+//			}
+//		} catch(Exception e) {
+//			appList = new ArrayList<Map<String,Object>>();
+//		}
+//		
+//		List<Map<String,Object>> mailList = GroupwareHelper.service.getMailList(oid);
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("oid", oid);
+//		model.addObject("isAuth", isAuth);
+//		model.addObject("appList", appList);
+//		model.addObject("mailList", mailList);
+//		model.setViewName("popup:/workprocess/historyWork");
+//		return model;
+//	}
 	
 	
 	/** 결재이력 의견 수정 액션

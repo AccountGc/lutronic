@@ -6,15 +6,37 @@ boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
 %>
-<%
-if (isCreate || isUpdate) {
-%>
-	<input type="button" value="추가" title="추가" class="blue" onclick="insert9();">
-	<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow9();">
-<%
-}
-%>
-<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> 관련품목
+			</div>
+		</td>
+	</tr>
+</table>
+<table class="create-table">
+	<colgroup>
+		<col width="150">
+		<col width="600">
+		<col width="150">
+		<col width="600">
+	</colgroup>
+	<tr>
+		<th class="lb">관련품목</th>
+		<td colspan="3">
+			<%
+			if (isCreate || isUpdate) {
+			%>
+				<input type="button" value="추가" title="추가" class="blue" onclick="insert9();">
+				<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow9();">
+			<%
+			}
+			%>
+			<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 	let partGridID;
 	const columnsPart = [ {
@@ -32,6 +54,7 @@ if (isCreate || isUpdate) {
 		}, {
 			dataField : "numberAfter",
 			headerText : "변경후",
+			colSpan : 2,
 			width : 100,
 			filter : {
 				showIcon : true,
@@ -40,11 +63,19 @@ if (isCreate || isUpdate) {
 			editable : false,
 			renderer : {
 				type : "ButtonRenderer",
-				labelText : "등록",
+				labelText : "부품추가",
 				onClick : function(event) {
-				},
+				}
 			}
-		} ]
+		} ,{
+			width : 100,
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "부품등록",
+				onClick : function(event) {
+			}
+		}
+		}]
 		<%
 			if(isView) {
 		%>

@@ -346,8 +346,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	//수정
 	$("#updateBtn").click(function () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		openLayer();
+		const url = getCallUrl("/doc/update?oid=" + oid);
 		document.location.href = url;
 	})
 
@@ -513,9 +512,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	
 	//결재이력
 	$("#approveBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("groupware", "historyWork", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
+		popup(url, 830, 600);
 	})
 	
 	//최신버전

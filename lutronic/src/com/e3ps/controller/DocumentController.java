@@ -221,24 +221,13 @@ public class DocumentController extends BaseController {
 
 	}
 
-	/**
-	 * 문서 수정 페이지
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/updateDocument")
-	public ModelAndView updateDocument(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "oid") String oid) throws Exception {
+	@Description(value = "문서 수정 페이지")
+	@GetMapping(value = "/update")
+	public ModelAndView updateDocument(@RequestParam(value = "oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentData docData = new DocumentData(doc);
-
-		model.setViewName("popup:/document/updateDocument");
+		model.setViewName("/extcore/jsp/document/document-update.jsp");
 		model.addObject("docData", docData);
 		return model;
 	}

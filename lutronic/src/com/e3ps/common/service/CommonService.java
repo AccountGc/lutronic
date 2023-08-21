@@ -57,8 +57,4 @@ public interface CommonService {
 
 	ResultData batchSecondaryDown(HttpServletRequest request,HttpServletResponse response);
 	
-	ResultData zip(String path);
-
-
-	
 }

@@ -122,7 +122,7 @@ function loadGridData() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-	const columns = loadColumnLayout("document-list");
+	const columns = loadColumnLayout("downloadHistory");
 	const contenxtHeader = genColumnHtml(columns);
 	createAUIGrid(columns);
 	AUIGrid.resize(myGridID);
