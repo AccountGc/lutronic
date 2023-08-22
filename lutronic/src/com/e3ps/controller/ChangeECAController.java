@@ -1,6 +1,7 @@
 package com.e3ps.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 //import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,13 +10,24 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.ECOChange;
+import com.e3ps.change.EChangeActivity;
+import com.e3ps.change.beans.EADData;
+import com.e3ps.change.beans.ECAData;
+//import com.e3ps.change.beans.EOData;
+//import com.e3ps.change.service.ChangeHelper;
+import com.e3ps.change.service.ChangeUtil;
+import com.e3ps.change.service.ECAHelper;
 import com.e3ps.common.beans.ResultData;
 //import com.e3ps.common.content.FileRequest;
 //import com.e3ps.common.message.Message;
@@ -26,19 +38,11 @@ import com.e3ps.common.util.StringUtil;
 
 import wt.fc.ReferenceFactory;
 //import wt.part.WTPart;
-
-import com.e3ps.change.EChangeActivity;
-import com.e3ps.change.beans.EADData;
-import com.e3ps.change.beans.ECAData;
-//import com.e3ps.change.beans.EOData;
-//import com.e3ps.change.service.ChangeHelper;
-import com.e3ps.change.service.ChangeUtil;
-import com.e3ps.change.service.ECAHelper;
 //import com.e3ps.change.service.ECOHelper;
 
 @Controller
 @RequestMapping("/changeECA")
-public class ChangeECAController {
+public class ChangeECAController extends BaseController {
 	
 	/**	EChangeActivityDefinitionRoot 등록 페이지
 	 * @param request
@@ -169,14 +173,8 @@ public class ChangeECAController {
 		return list;
 	}
 	
-	/**
-	 * ECA별 산출물 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewECA")
+	@Description(value = "ECA별 산출물 ")
+	@GetMapping(value = "/viewECA")
 	public ModelAndView viewECA(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		String oid = request.getParameter("oid");
@@ -184,24 +182,80 @@ public class ChangeECAController {
 		ReferenceFactory rf = new ReferenceFactory();
 		ECOChange eo = (ECOChange)rf.getReference(oid).getObject();
 		
+		ModelAndView model = new ModelAndView();
+		model.addObject("eoNumber", eo.getEoNumber());
+		model.addObject("isAdmin", CommonUtil.isAdmin());
+		model.addObject("distribute",distribute);
+		model.setViewName("/extcore/jsp/change/viewECA.jsp");
+		return model;
+	}
+
+	@Description(value = "ECA별 산출물 ")
+	@ResponseBody
+	@PostMapping(value = "/viewECA")
+	public Map<String, Object> viewECA(@RequestBody Map<String, Object> params) throws Exception {
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid = (String) params.get("oid");
+		String distribute = StringUtil.checkNull((String) params.get("distribute"));
+		ReferenceFactory rf = new ReferenceFactory();
+		
+		ECOChange eo = (ECOChange)CommonUtil.getObject(oid);
+		
 		List<Map<String,Object>> list = null;
 		
 		try {
 			//list = ECAHelper.service.viewECA(eo);
 			list = ECAHelper.service.viewECA_Doc(eo);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
 		} catch(Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 			list = new ArrayList<Map<String,Object>>();
 		}
 		
 		ModelAndView model = new ModelAndView();
-		model.addObject("eoNumber", eo.getEoNumber());
-		model.addObject("admin", CommonUtil.isAdmin());
-		model.addObject("list", list);
-		model.addObject("distribute",distribute);
-		model.setViewName("popup:/change/viewECA");
-		return model;
+		result.put("eoNumber", eo.getEoNumber());
+		result.put("admin", CommonUtil.isAdmin());
+		result.put("list", list);
+		result.put("distribute",distribute);
+		return result;
 	}
+//	/**
+//	 * ECA별 산출물 
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/viewECA")
+//	public ModelAndView viewECA(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		
+//		String oid = request.getParameter("oid");
+//		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
+//		ReferenceFactory rf = new ReferenceFactory();
+//		ECOChange eo = (ECOChange)rf.getReference(oid).getObject();
+//		
+//		List<Map<String,Object>> list = null;
+//		
+//		try {
+//			//list = ECAHelper.service.viewECA(eo);
+//			list = ECAHelper.service.viewECA_Doc(eo);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			list = new ArrayList<Map<String,Object>>();
+//		}
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("eoNumber", eo.getEoNumber());
+//		model.addObject("admin", CommonUtil.isAdmin());
+//		model.addObject("list", list);
+//		model.addObject("distribute",distribute);
+//		model.setViewName("popup:/change/viewECA");
+//		return model;
+//	}
 	
 	
 	/**

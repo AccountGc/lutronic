@@ -1,16 +1,135 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
-<%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
-<%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+String oid = (String) request.getAttribute("oid");
+String eoNumber = (String) request.getAttribute("eoNumber");
+boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+%>
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<title></title>
+<%@include file="/extcore/jsp/common/css.jsp"%>
+<%@include file="/extcore/jsp/common/script.jsp"%>
+<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
+<body>
+<input type="hidden" name="oid" id="oid" value="<%=oid%>">
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">&nbsp;ECA 산출물 [<%= eoNumber %>]
+			</div>
+		</td>
+	</tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" > 
+		<tr height="5">
+			<td>
+				<table class="button-table">
+					<tr>
+						<td class="right">
+							<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
+						</td>
+					</tr>
+				</table>
+				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
+					<tr>
+						<td height=1 width=100%></td>
+					</tr>
+				</table>
+				<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+		</td>
+	</tr>
+</table>
 <script>
+let myGridID;
+function _layout() {
+	return [ {
+		dataField : "number",
+		headerText : "문서번호.",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "name",
+		headerText : "문서명",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "version",
+		headerText : "Rev.",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "creator",
+		headerText : "등록자",
+		dataType : "string",
+		width : 350,
+	}, {
+		dataField : "getLifecycle",
+		headerText : "상태",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "dateSubString",
+		headerText : "등록일",
+		dataType : "string",
+		width : 250,
+	}]
+}
+
+function createAUIGrid(columnLayout) {
+	const props = {
+		headerHeight : 30,
+		showRowNumColumn : true,
+		rowNumHeaderText : "번호",
+		fillColumnSizeMode: false,
+		showAutoNoDataMessage : false,
+		selectionMode : "multipleCells",
+		enableMovingColumn : true,
+		enableFilter : true,
+		showInlineFilter : false,
+		useContextMenu : true,
+		enableRightDownFocus : true,
+		filterLayerWidth : 320,
+		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+	};
+	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+	loadGridData();
+	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
+		hideContextMenu();
+		vScrollChangeHandler(event);
+	});
+	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
+		hideContextMenu();
+	});
+}
+
+function loadGridData() {
+	const params = new Object();
+	const url = getCallUrl("/changeECA/viewECA");
+	const oid = document.querySelector("#oid").value;
+	params.oid = oid;
+	AUIGrid.showAjaxLoader(myGridID);
+	call(url, params, function(data) {
+		AUIGrid.removeAjaxLoader(myGridID);
+		if (data.result) {
+			AUIGrid.setGridData(myGridID, data.list);
+		} else {
+			alert(data.msg);
+		}
+	});
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	const columns = loadColumnLayout("downloadHistory");
+	const contenxtHeader = genColumnHtml(columns);
+// 	createAUIGrid(columns);
+// 	AUIGrid.resize(myGridID);
+});
 $(function() {
 	<%----------------------------------------------------------
 	*                      수정 버튼
@@ -36,190 +155,5 @@ $(function() {
 	
 })
 </script>
-<body>
-
-<table width="100%" border="0" cellpadding="1" cellspacing="1" class="tablehead" align=center style="padding-bottom:10px">
-	<tr> 
-		<td height="30" width="93%" align="center"><B><font color=white></font></B></td>
-	</tr>
-</table>
-
-<table width="100%" border="0" cellpadding="0" cellspacing="3">
-	<tr>
-		<td>
-			<img src='/Windchill/jsp/portal/images/base_design/Sub_Right_ico.gif' width='10' height='9' />
-			<b>ECA ${f:getMessage('산출물')} [<c:out value="${eoNumber }" />]</b>
-		</td>
-		<td>
-			<table border="0" cellpadding="0" cellspacing="4" align="right">
-				<tr>
-					<td>
-						<button type="button" class="btnClose" onclick="self.close();">
-							<span></span>
-							${f:getMessage('닫기')}
-						</button>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-
-
-<table width="100%" border="0%" cellpadding="5" cellspacing="0">
-
-	<c:forEach items="${list }" var="eca">
-		<tr>
-			<td class="tdwhiteL" colspan="5">
-				<img src="/Windchill/jsp/portal/img/bt_01.gif" >
-				<b>
-					<c:out value="${eca.ecaData.name }" /> 
-					<c:if test="${admin }">
-						[<c:out value="${eca.ecaData.oid }" />]
-					</c:if>
-				</b>
-				&nbsp;<!--  isAutoCreate-->
-				<c:if test="${eca.ecaData.isAutoCreate() }">
-					<button type="button" name="DocumentCreate" id="DocumentCreate" class="btnCRUD" value='<c:out value="${eca.ecaData.oid }" />'>
-						<span></span>
-						${f:getMessage('산출물 등록')}
-					</button>
-					<button type="button" name="modifyEca" id="modifyEca" class="btnCRUD" value='<c:out value="${eca.ecaData.oid }" />'>
-						<span></span>
-						${f:getMessage('의견 및 첨부 등록')}
-					</button>
-				</c:if>
-				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center>
-					<tr>
-						<td height=1 width=100%></td>
-					</tr>
-				</table>
-				
-				<table width="100%" border="0" cellpadding="0" cellspacing="0" align=center  !style="tdisplay:none;able-layout:fixed">
-                    <tr>
-                    	<td  class="tdblueM"  width=15%>${f:getMessage('담당 부서')}</td>
-                    	<td class="tdwhiteL">
-                    		<c:out value="${eca.ecaData.getDepartmentName() }" /> 
-                    	</td>
-                    	
-                    	<td  class="tdblueM"  width=15%>${f:getMessage('담당자')}</td>
-                    	<td class="tdwhiteL">
-                    		<c:out value="${eca.ecaData.activeUserName }" /> 
-                    	</td>
-                    	
-                    	<td  class="tdblueM"  width=10%>${f:getMessage('상태')}</td>
-                    	<td class="tdwhiteL">
-                    		<c:out value="${eca.ecaData.stateName }" /> 
-                    	</td>
-                    </tr>
-                    
-                    <tr>
-						<td  class="tdblueM"  width=10%>${f:getMessage('요청 완료일')}</td>
-						<td class="tdwhiteL">
-							<c:out value="${eca.ecaData.finishDate }" /> 
-                    	</td>
-                    	
-                    	<td  class="tdblueM"  width=10%>${f:getMessage('완료일')}</td>
-                    	<td class="tdwhiteL" colspan="3">
-                    		<c:out value="${eca.ecaData.completeDate }" /> 
-                    	</td>
-                    </tr>
-                    
-                    <tr bgcolor="ffffff" height=35>
-                    	<td class="tdblueM">${f:getMessage('첨부파일')}</td>
-						<td class="tdwhiteL" colspan=5>
-							<jsp:include page="/eSolution/content/includeAttachFileView">
-								<jsp:param value="${eca.ecaData.oid }" name="oid"/>
-							</jsp:include>
-						</td>
-					</tr>
-					
-					<tr>
-	                	<td  class="tdblueM"  width=15%>${f:getMessage('의견')}</td>
-	                	<td class="tdwhiteL" colspan=5>
-	                		<c:out value="${eca.ecaData.comments }" /> 
-	                	</td>
-	                </tr>
-	                
-	                <c:if test="${eca.ecaData.activityType eq 'DOCUMENT' }">
-	                	<tr bgcolor="ffffff" height=35>
-							<td class="tdblueM">${f:getMessage('관련 문서')}</td>
-	                		<td class="tdwhiteL" colspan=5>
-	                			<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="table-layout:fixed">
-	                				<tr>
-		                				<td class="tdblueM" width="20%">${f:getMessage('문서번호')}</td>
-	                                    <td class="tdblueM" width="37%" style="word-break:break-all;">${f:getMessage('문서명')}</td>
-	                                    <td class="tdblueM" width="6%">Rev.</td>
-	                                    <td class="tdblueM" width="11%">${f:getMessage('등록자')}</td>
-	                                    <td class="tdblueM" width="13%">${f:getMessage('상태')}</td>
-	                                    <td class="tdblueM" width="9%">${f:getMessage('등록일')}</td>
-	                				</tr>
-	                				
-	                				<c:forEach items="${eca.ecaData.getDocList() }" var="docData">
-	                					<tr>
-	                						<td class="tdwhiteM">
-	                							<c:choose>
-													<c:when test="${distribute eq 'true' }">
-															<c:choose>
-																<c:when test="${docData.isApproved()}">
-																	<a href="javascript:openDistributeView('<c:out value="${docData.oid }" />')">
-																		<c:out value="${docData.number }" />
-																	</a>
-																</c:when>
-																<c:otherwise>
-																	<c:out value="${docData.number }" />
-																</c:otherwise>
-															</c:choose>	
-														</c:when>
-													<c:otherwise>
-														<a href="javascript:openView('<c:out value="${docData.oid }" />')">
-															<c:out value="${docData.number }" />
-														</a>
-													</c:otherwise>
-												</c:choose>	
-	                						
-	                						
-	                						</td>
-	                						
-	                						<td class="tdwhiteM">
-	                							<c:out value="${docData.name }" />
-	                						</td>
-	                						
-	                						<td class="tdwhiteM">
-	                							<c:out value="${docData.version }.${docData.iteration }" />
-	                						</td>
-	                						
-	                						<td class="tdwhiteM">
-	                							<c:out value="${docData.creator }" />
-	                						</td>
-	                						
-	                						<td class="tdwhiteM">
-	                							<c:out value="${docData.getLifecycle() }" />
-	                						</td>
-	                						
-	                						<td class="tdwhiteM">
-	                							<c:out value="${docData.dateSubString(true) }" />
-	                						</td>
-	                					</tr>
-	                				</c:forEach>
-	                			</table>
-	                		</td>
-	                	</tr>
-	                
-	                </c:if>
-                    
-				</table>
-			</td>
-		</tr>
-		
-      	<tr>
-      		<td height="10">&nbsp;</td>
-      	</tr>
-      	
-	</c:forEach>
-
-
-</table>
-
 </body>
 </html>
