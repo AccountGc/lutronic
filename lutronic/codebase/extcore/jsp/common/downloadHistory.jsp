@@ -14,7 +14,7 @@ String distribute = (String) request.getAttribute("distribute");
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-<form name=projectHistory>
+<form name="projectHistory">
 	<input type="hidden" name="oid" id="oid" value="<%= oid %>" />
 	<table width="100%" border="0" cellpadding="0" cellspacing="0" > 
 		<tr height="5">

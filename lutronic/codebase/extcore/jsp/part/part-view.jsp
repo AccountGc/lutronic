@@ -745,63 +745,53 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 	
 	$("#bomE").click(function() {
-		var pdmOid = "${partData.getPDMLinkProductOid()}";
-		var vrOid = "${partData.vrOid}";
-		var str = "/Windchill/netmarkets/jsp/explorer/installmsg.jsp?message=ok"
-				  + "&oid=" + vrOid +
-				  "&containerId=" + pdmOid + "&applet=com.ptc.windchill.explorer.structureexplorer.StructureExplorerApplet&jars=ptcAnnotator.jar,lib/pview.jar,lib/json.jar&appId=ptc.pdm.ProductStructureExplorer&launchEmpty=false&explorerName=%EC%A0%9C%ED%92%88+%EA%B5%AC%EC%A1%B0+%ED%83%90%EC%83%89%EA%B8%B0&ncid="
-		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-	    leftpos = (screen.width - 1000)/ 2;
-	    toppos = (screen.height - 600) / 2 ;
-	    rest = "width=1100,height=600,left=" + leftpos + ',top=' + toppos;
-	    var newwin = window.open( str , "BOMEditor", opts+rest);
-	    newwin.focus();
+		var pdmOid = "<%= data.getPDMLinkProductOid() %>";
+		var vrOid = "<%= data.getVrOid() %>";
+		
+// 		var str = "/Windchill/netmarkets/jsp/explorer/installmsg.jsp?message=ok"
+// 				  + "&oid=" + vrOid +
+// 				  "&containerId=" + pdmOid + "&applet=com.ptc.windchill.explorer.structureexplorer.StructureExplorerApplet&jars=ptcAnnotator.jar,lib/pview.jar,lib/json.jar&appId=ptc.pdm.ProductStructureExplorer&launchEmpty=false&explorerName=%EC%A0%9C%ED%92%88+%EA%B5%AC%EC%A1%B0+%ED%83%90%EC%83%89%EA%B8%B0&ncid="
+// 		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
+// 	    leftpos = (screen.width - 1000)/ 2;
+// 	    toppos = (screen.height - 600) / 2 ;
+// 	    rest = "width=1100,height=600,left=" + leftpos + ',top=' + toppos;
+// 	    var newwin = window.open( str , "BOMEditor", opts+rest);
+// 	    newwin.focus();
 	})
 	
 	$("#Compare").click(function() {
-		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
-		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-		leftpos = (screen.width - 1000)/ 2;
-		toppos = (screen.height - 600) / 2 ;
-		rest = "width=1300,height=600,left=" + leftpos + ',top=' + toppos;
-		var newwin = window.open( str , "compareBOM", opts+rest);
-		newwin.focus();
+// 		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
+// 		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
+// 		leftpos = (screen.width - 1000)/ 2;
+// 		toppos = (screen.height - 600) / 2 ;
+// 		rest = "width=1300,height=600,left=" + leftpos + ',top=' + toppos;
+// 		var newwin = window.open( str , "compareBOM", opts+rest);
+// 		newwin.focus();
 	})
 	
 	$("#orderNumber").click(function() {
-		var str = getURLString("part", "partChange", "do") + "?partOid=" + $("#oid").val();
-		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-		leftpos = (screen.width - 1000)/ 2;
-		toppos = (screen.height - 600) / 2 ;
-		rest = "width=1500,height=600,left=" + leftpos + ',top=' + toppos;
-		var newwin = window.open( str , "viewBOM", opts+rest);
-		newwin.focus();
+		const url = getCallUrl("/part/partChange?oid=" + oid);
+		popup(url, 1500, 600);
 	})
 	
 	$("#orderNumber_NewVersion").click(function() {
-		//var str = getURLString("part", "partChange", "do") + "?partOid=" + $("#oid").val();
-		var str = getURLString("part", "updateAUIPartChange", "do") + "?partOid=" + $("#oid").val();
-		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-		leftpos = (screen.width - 1000)/ 2;
-		toppos = (screen.height - 600) / 2 ;
-		rest = "width=1500,height=600,left=" + leftpos + ',top=' + toppos;
-		var newwin = window.open( str , "viewBOM", opts+rest);
-		newwin.focus();
+		const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
+		popup(url, 1500, 600);
 	})
 	
 	$("#disuse").click(function() {
-		if (confirm("${f:getMessage('폐기하시겠습니까?')}")){ 
+		if (confirm("폐기하시겠습니까?")){ 
 			partStateChange('DEATH');
 		}
 	})
 	
 	$("#restore").click(function() {
-		if (confirm("${f:getMessage('복원하시겠습니까?')}")){ 
+		if (confirm("복원하시겠습니까?")){ 
 			partStateChange('INWORK');
 		}
 	})
 	$('#changeDev').click(function() {
-		if (confirm("${f:getMessage('변경하시겠습니까?')}")){ 
+		if (confirm("변경하시겠습니까?")){ 
 			partStateChange('INWORK');
 		}
 	})
@@ -818,7 +808,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	
 	
 	$("#attributeCleaning").click(function() {
-		if (confirm("${f:getMessage('속성 Clearing 하시겠습니까?')}")){ 
+		if (confirm("속성 Clearing 하시겠습니까?")){ 
 			var form = $("form[name=partViewForm]").serialize();
 			var url	= getURLString("part", "attributeCleaning", "do");
 			$.ajax({
@@ -829,7 +819,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				async: true,
 				cache: false,
 				error: function(data) {
-					alert("${f:getMessage('삭제 오류 발생')}");
+					alert("삭제 오류 발생");
 				},
 				success:function(data){
 					console.log(data);
@@ -843,8 +833,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		}
 	})
 	
-})
-
 function bom2View(){
 	//var str = getURLString("part", "PartTree", "do") + "?oid="+$("#oid").val();
 	var str = getURLString("part", "viewPartBom", "do") + "?oid="+$("#oid").val();
@@ -869,7 +857,7 @@ window.partStateChange = function(state) {
 		async: true,
 		cache: false,
 		error:function(data){
-			var msg = "${f:getMessage('등록 오류')}";
+			var msg = "등록 오류";
 			alert(msg);
 		}
 		,beforeSend: function() {
@@ -880,7 +868,7 @@ window.partStateChange = function(state) {
         }
 		,success: function(data) {
 			if(data.result) {
-				alert("${f:getMessage('상태가 변경되었습니다.')}");
+				alert("상태가 변경되었습니다.");
 				location.reload();
 			}else {
 				alert(data.message);

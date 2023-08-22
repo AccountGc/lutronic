@@ -384,76 +384,106 @@ public class PartController extends BaseController {
 		return PartHelper.service.createAUIPackagePartAction(request, response);
 	}
 	
-	/**  채번 페이지 이동
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/partChange")
-	public ModelAndView partChange(HttpServletRequest request, HttpServletResponse response) {
-		String partOid = request.getParameter("partOid");
+	@Description(value = "채번 페이지 이동")
+	@GetMapping(value = "/partChange")
+	public ModelAndView partChange(@RequestParam String oid) {
 		
 		List<Map<String,Object>> list = null;
 		
-		try {
-			list = PartHelper.service.partChange(partOid);
-		} catch(Exception e) {
-			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
-		}
-		
-		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
+//		try {
+//			list = PartHelper.service.partChange(oid);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			list = new ArrayList<Map<String,Object>>();
+//		}
+//		
+//		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
 		
 		ModelAndView model = new ModelAndView();
-		model.addObject("partOid", partOid);
-		model.addObject("list", list);
-		model.addObject("partType", partType);
-		model.setViewName("popup:/part/partChange");
+		model.addObject("oid", oid);
+//		model.addObject("list", list);
+//		model.addObject("partType", partType);
+		model.setViewName("/extcore/jsp/part/partChange.jsp");
 		return model;
 	}
 	
-	/**
-	 * 채번 페이지 AUI Greid 적용 이동
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/updateAUIPartChange")
-	public ModelAndView updateAUIPartChange(HttpServletRequest request, HttpServletResponse response) {
-		String partOid = request.getParameter("partOid");
-		/*
+	@Description(value = "채번 리스트 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/partChange")
+	public Map<String, Object> partChange(@RequestBody Map<String, Object> params) {
+		
 		List<Map<String,Object>> list = null;
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid = (String) params.get("oid");
 		
 		try {
-			list = PartHelper.service.partChange(partOid);
+			list = PartHelper.service.partChange(oid);
+			result.put("result", SUCCESS);
 		} catch(Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 			list = new ArrayList<Map<String,Object>>();
 		}
-		*/
+		
 		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
 		
-
-		String checkDummy = request.getParameter("checkDummy");
-		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
-		List<Map<String,Object>> list = null;
-		//System.out.println("updateAUIPackagePartAction oid =" + oid);
-		try {
-			list = BomSearchHelper.service.updateAUIPartChangeListGrid(partOid,false);
-		} catch(Exception e) {
-			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
-		}
-
+		result.put("oid", oid);
+		result.put("list", list);
+		result.put("partType", partType);
+		return result;
+	}
+	
+	@Description(value = "채번 페이지 AUI Greid 적용 이동")
+	@GetMapping(value = "/updateAUIPartChange")
+	public ModelAndView updateAUIPartChange(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
-		model.addObject("partOid", partOid);
-		model.addObject("list", list);
-		model.addObject("size", list.size());
-		model.addObject("partType", partType);
-		
-		model.setViewName("popup:/part/updateAUIPartChange");
+		model.addObject("oid", oid);
+		model.setViewName("/extcore/jsp/part/updateAUIPartChange.jsp");
 		return model;
 	}
+//	/**
+//	 * 채번 페이지 AUI Greid 적용 이동
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/updateAUIPartChange")
+//	public ModelAndView updateAUIPartChange(HttpServletRequest request, HttpServletResponse response) {
+//		String partOid = request.getParameter("partOid");
+//		/*
+//		List<Map<String,Object>> list = null;
+//		
+//		try {
+//			list = PartHelper.service.partChange(partOid);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			list = new ArrayList<Map<String,Object>>();
+//		}
+//		 */
+//		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
+//		
+//		
+//		String checkDummy = request.getParameter("checkDummy");
+//		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
+//		List<Map<String,Object>> list = null;
+//		//System.out.println("updateAUIPackagePartAction oid =" + oid);
+//		try {
+//			list = BomSearchHelper.service.updateAUIPartChangeListGrid(partOid,false);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			list = new ArrayList<Map<String,Object>>();
+//		}
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("partOid", partOid);
+//		model.addObject("list", list);
+//		model.addObject("size", list.size());
+//		model.addObject("partType", partType);
+//		
+//		model.setViewName("popup:/part/updateAUIPartChange");
+//		return model;
+//	}
 	
 	/**  채번 페이지 AUI 수정 수행
 	 * @param request
@@ -541,7 +571,7 @@ public class PartController extends BaseController {
 	public ModelAndView updateAUIPackagePart(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
-		model.setViewName("/extcore/jsp:/part/updateAUIPackagePart.jsp");
+		model.setViewName("/extcore/jsp/part/updateAUIPackagePart.jsp");
 		return model;
 	}
 	
@@ -670,8 +700,8 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/updateAUIPackagePartAction")
-	public ResultData updateAUIPackagePartAction(@RequestBody Map<String,Object> param) {
-		return PartHelper.service.updateAUIPackagePartAction(param);
+	public ResultData updateAUIPackagePartAction(@RequestBody Map<String,Object> params) {
+		return PartHelper.service.updateAUIPackagePartAction(params);
 	}
 	
 	/**

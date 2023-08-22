@@ -2854,10 +2854,10 @@ public class StandardPartService extends StandardManager implements PartService 
 		 	map.put("level", data.version);
 		 	
 		 	PartData partData = new PartData(data.part);
-		 	map.put("partName1", partData.getPartName(1));
-		 	map.put("partName2", partData.getPartName(2));
-		 	map.put("partName3", partData.getPartName(3));
-		 	map.put("partName4", partData.getPartName(4));
+//		 	map.put("partName1", partData.getPartName(1));
+//		 	map.put("partName2", partData.getPartName(2));
+//		 	map.put("partName3", partData.getPartName(3));
+//		 	map.put("partName4", partData.getPartName(4));
 		 	
 		 	list.add(map);
 		}
