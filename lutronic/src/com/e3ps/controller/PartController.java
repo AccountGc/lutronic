@@ -536,18 +536,12 @@ public class PartController extends BaseController {
 		return model;
 	}
 	
-	/**
-	 * 일괄 수정 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/updateAUIPackagePart")
-	public ModelAndView updateAUIPackagePart(HttpServletRequest request, HttpServletResponse response) {
-		String oid = request.getParameter("oid");
+	@Description(value = "일괄 수정 ")
+	@GetMapping(value = "/updateAUIPackagePart")
+	public ModelAndView updateAUIPackagePart(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
-		model.setViewName("popup:/part/updateAUIPackagePart");
+		model.setViewName("/extcore/jsp:/part/updateAUIPackagePart.jsp");
 		return model;
 	}
 	
@@ -1153,7 +1147,7 @@ public class PartController extends BaseController {
 	
 	@RequestMapping("/viewPartBom")
 	public ModelAndView viewPartBom(HttpServletRequest request, HttpServletResponse response) {
-
+		
 		String oid = request.getParameter("oid");
 		String baseline = request.getParameter("baseline");
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
@@ -1161,7 +1155,7 @@ public class PartController extends BaseController {
 		String view = request.getParameter("view");
 		
 		View[] views = null;
-
+		
 		Baseline bsobj = null;
 		
 		try {
@@ -1176,11 +1170,11 @@ public class PartController extends BaseController {
 			e.printStackTrace();
 			bsobj = null;
 		}
-
+		
 		if(view==null){
 			view = views[0].getName();
 		}
-
+		
 		List<Map<String,String>> list = null;
 		try {
 			list = ChangeHelper.service.listEulB_IncludeAction(oid, "", "");
