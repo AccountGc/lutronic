@@ -1,6 +1,6 @@
 1. Login From Auth
 	- HTTPServer 홈으로 이동 
-	- ant -f webAppConfig.xml regenWebAppConf -DappName=Windchill -DprotocolAuthOnly=true
+	- ant -f webAppConfig.xml regenWebAppConf -DappName=Windchill -DprotocolAuthOnly=false
 	
 2. Message ResourceBuild
 	- Shell -> ResourceBuild.bat com.e3ps.common.message.**

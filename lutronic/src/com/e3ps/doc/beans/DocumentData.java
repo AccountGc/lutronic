@@ -29,9 +29,9 @@ import wt.session.SessionHelper;
 @Getter
 @Setter
 public class DocumentData {
-	
+
 //	private WTDocument doc;
-	
+
 	private String oid;
 	private String number;
 	private String name;
@@ -71,38 +71,38 @@ public class DocumentData {
 	private String des;
 	private String changeNo;
 	private String changeDate;
-	
+
 	public DocumentData(WTDocument doc) throws Exception {
 //		super();
 //		setDoc(doc);
 		setOid(CommonUtil.getOIDString(doc));
 		setNumber(doc.getNumber());
 		setName(doc.getName());
-		setState(doc.getLifeCycleState().toString());
+		setState(doc.getLifeCycleState().getDisplay());
 		setCreator(doc.getCreatorFullName());
 		setModifier(doc.getModifierFullName());
-		setCreateDate(DateUtil.getDateString(doc.getCreateTimestamp(),"a"));
-		setModifyDate(DateUtil.getDateString(doc.getModifyTimestamp(),"a"));
+		setCreateDate(DateUtil.getDateString(doc.getCreateTimestamp(), "a"));
+		setModifyDate(DateUtil.getDateString(doc.getModifyTimestamp(), "a"));
 		setDescription(doc.getDescription());
 		setDocumentType(doc.getDocType().getDisplay(Message.getLocale()));
-		
+
 		ContentItem item = null;
-		QueryResult result = ContentHelper.service.getContentsByRole ((ContentHolder)doc, ContentRoleType.PRIMARY );
-		while(result.hasMoreElements()) {
-			item = (ContentItem) result.nextElement ();
+		QueryResult result = ContentHelper.service.getContentsByRole((ContentHolder) doc, ContentRoleType.PRIMARY);
+		while (result.hasMoreElements()) {
+			item = (ContentItem) result.nextElement();
 		}
-		
-		if(item != null) {
+
+		if (item != null) {
 			this.icon = CommonUtil.getContentIconStr(item);
 		}
-		
+
 		this.icon2 = BasicTemplateProcessor.getObjectIconImgTag(doc);
 		setLatest(VersionHelper.service.isLastVersion(doc));
-		setLocation(StringUtil.checkNull(doc.getLocation()).replaceAll("/Default",""));
-		
-		String appType =IBAUtil.getAttrValue(doc, IBAKey.IBA_APPROVALTYPE);
-		NumberCode code =NumberCodeHelper.service.getNumberCode("APPROVALTYPE", appType);
-		if(code !=null){
+		setLocation(StringUtil.checkNull(doc.getLocation()).replaceAll("/Default", ""));
+
+		String appType = IBAUtil.getAttrValue(doc, IBAKey.IBA_APPROVALTYPE);
+		NumberCode code = NumberCodeHelper.service.getNumberCode("APPROVALTYPE", appType);
+		if (code != null) {
 			setApprovalType(code.getCode());
 		}
 		setModel(StringUtil.checkNull(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_MODEL)));
@@ -129,36 +129,38 @@ public class DocumentData {
 		setChangeNo(StringUtil.checkNull(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_CHANGENO)));
 		setChangeDate(StringUtil.checkNull(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_CHANGEDATE)));
 	}
-	
+
 	/**
-   * 회수 권한  승인중 && (소유자 || 관리자 ) && 기본 결재 
-   * @return
-   */
-   public boolean isWithDraw(){
-  	   try{
-			return  (state.equals("APPROVING") && ( isOwner() || CommonUtil.isAdmin()));
-  	   }catch(Exception e){
-			e.printStackTrace();
-  	   }
-  	   return false;
-		
-	}
-   
-   /**
-    * Owner 유무 체크
-    * @return
-    */
-	public boolean isOwner(){
-		
-		try{
-			return SessionHelper.getPrincipal().getName().equals(getCreator());
-		}catch(Exception e){
+	 * 회수 권한 승인중 && (소유자 || 관리자 ) && 기본 결재
+	 * 
+	 * @return
+	 */
+	public boolean isWithDraw() {
+		try {
+			return (state.equals("APPROVING") && (isOwner() || CommonUtil.isAdmin()));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		return false;
+
+	}
+
+	/**
+	 * Owner 유무 체크
+	 * 
+	 * @return
+	 */
+	public boolean isOwner() {
+
+		try {
+			return SessionHelper.getPrincipal().getName().equals(getCreator());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
-	
+
 //	public String getDocumentName(int index) {
 //		try {
 //			
@@ -208,9 +210,10 @@ public class DocumentData {
 	public void setIcon(String icon) {
 		this.icon = icon;
 	}
-	
+
 	/**
 	 * 문서와 링크 eca,개발마스터 Activity
+	 * 
 	 * @return
 	 */
 	public String getLinkOid() {
