@@ -1,329 +1,171 @@
-<%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
-<%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
-<%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+String oid = (String) request.getAttribute("oid");
+%>
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<title></title>
+<%@include file="/extcore/jsp/common/css.jsp"%>
+<%@include file="/extcore/jsp/common/script.jsp"%>
+<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
-
-<script type="text/javascript">
-$(document).ready(function() {
-})
-
-$(function() {
-	$("#updatefamily").click(function() {
-		if(validationCheck()) {
-			return;
-		}
-		
-		if (confirm("${f:getMessage('변경하시겠습니까?')}")){
-			
-			var form = $("form[name=updatefamilyPart]").serialize();
-			var url	= getURLString("part", "updatePackagePartAction", "do");
-			
-			$.ajax({
-				type:"POST",
-				url: url,
-				data:form,
-				dataType:"json",
-				async: true,
-				cache: false,
-				error:function(data){
-					var msg = "${f:getMessage('변경 오류')}";
-					alert(msg);
-				},
-
-				success:function(data){
-					if(data.result) {
-						alert("${f:getMessage('변경 성공하였습니다.')}");
-						
-						location.href = getURLString("part", "updatefamilyPart", "do") + "?oid=" + data.oid;
-					}else {
-						alert("${f:getMessage('변경 실패하였습니다.')}\n" + data.message);
-					}
-				}
-				,beforeSend: function() {
-					gfn_StartShowProcessing();
-		        }
-				,complete: function() {
-					gfn_EndShowProcessing();
-		        }
-			});
-		}
-	})
-})
-
-function validationCheck() {
-	var total = $("input[name='number']").length;
-	for(var i=0; i<total; i++) {
-		var number = $("input[name='number']").eq(i).val();
-		
-		if($("#model_"+number).val() == ""){
-			alert("${f:getMessage('프로젝트코드')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#model_"+number).focus();
-			return true;
-		}
-		
-		if($("#deptcode_"+number).val() == ""){
-			alert("${f:getMessage('부서')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#deptcode_"+number).focus();
-			return true;
-		}
-		
-		if($("#productmethod_"+number).val() == ""){
-			alert("${f:getMessage('제작방법')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#productmethod_"+number).focus();
-			return true;
-		}
-		
-		if($("#unit_"+number).val() == ""){
-			alert("${f:getMessage('단위')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#unit_"+number).focus();
-			return true;
-		}
-	}
-	return false;
-}
-</script>
-
 <body>
-
 <form name=updatefamilyPart id=updatefamilyPart  method=post  >
-
-<input type="hidden" name="oid" id="oid" value="<c:out value='${oid }'/>">
-
-<table width="100%" border="0" cellpadding="0" cellspacing="3" >
-	<tr align=center>
-	    <td valign="top" style="padding:0px 0px 0px 0px">
-		    <table width="100%" border="0" cellpadding="1" cellspacing="1" class="tablehead" align=center style="padding-bottom:10px">
-		   		<tr> 
-		   			<td height="30" width="93%" align="center"><B><font color=white>Family ${f:getMessage('테이블')} ${f:getMessage('수정')}</font></B></td>
-		   		</tr>
-			</table>
-			
-		    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
-		    	<tr height="30">
-		    		<td>
-						<table border="0" cellpadding="0" cellspacing="4" align="right">
-							<tr>
-								<td>
-									<button type="button" class="btnCRUD" id="updatefamily">
-										<span></span>
-										${f:getMessage('저장')}
-									</button>
-								</td>
-								
-								<td>
-									<button type="button" class="btnClose" onclick="self.close();" >
-										<span></span>
-										${f:getMessage('닫기')}
-									</button>
-								</td>
-							</tr>
-						</table>
-		    		</td>
-		    	</tr>
-		    </table>
-		</td>
-	</tr>
-	
-	<tr align=center>
-		<td valign="top" style="padding:0px 0px 0px 0px">
-			<table width="100%"  border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
-	    		<tr>
-	    			<td height=1 width=100%></td>
-	    		</tr>
-			</table>
-			
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" align=center  >
-			    <tr height=25>
-			    	<td class="tdblueM" width="4%" rowspan="2"></td>
-		        	<td class="tdblueM" width="8%" rowspan="2">${f:getMessage('품목번호')}</td>
-		        	<td class="tdblueM" width="8%" rowspan="2">${f:getMessage('품목명')}</td>
-		        	
-					<td class="tdblueM" width="10%">${f:getMessage('프로젝트코드')} <span style="color:red;">*</span></td>
-		        	<td class="tdblueM" width="6%">${f:getMessage('부서')} <span style="color:red;">*</span></td>
-	      			<td class="tdblueM" width="12%">MANUFATURER</td>
-	      			<td class="tdblueM" width="8%">${f:getMessage('후처리')}</td>
-	      			<td class="tdblueM" width="*">${f:getMessage('무게')}(g)</td>
-	      		</tr>
-	      		
-	      		<tr>
-		        	<td class="tdblueM" width="">${f:getMessage('제작방법')} <span style="color:red;">*</span></td>
-	      			<td class="tdblueM" width="">${f:getMessage('단위')} <span style="color:red;">*</span></td>
-	      			<td class="tdblueM" width="">${f:getMessage('재질')}</td>
-	      			<td class="tdblueM" width="">${f:getMessage('비고')}</td>
-	      			<td class="tdblueM" width="">${f:getMessage('사양')}</td>
-	    		</tr>
-	
-				<c:forEach items="${list }" var="list">
-	
+	<input type="hidden" name="oid" id="oid" value="<%= oid %>" />
+	<table width="100%" border="0" cellpadding="0" cellspacing="3" >
+		<tr align=center>
+		    <td valign="top" style="padding:0px 0px 0px 0px">
+				<table class="button-table">
 					<tr>
-						<td class="tdwhiteM" rowspan="2">
-							<c:out value='${list.img2 }' escapeXml="false"/>
-							<c:out value='${list.img }' escapeXml="false"/>
-							<c:out value='${list.icon }' escapeXml="false"/>
-						</td>	
-						
-						<td class="tdwhiteL" rowspan="2">
-							<a href="javascript:void(0);" onClick="JavaScript:openView('<c:out value='${list.partOid }'/>');" >
-								<c:out value='${list.number }'/>
-							</a>
-							
-							<input type="hidden" name="oids" value="<c:out value='${list.partOid }'/>"/>
-							<input type="hidden" name="number" value="<c:out value='${list.number }'/>"/>
-						</td>
-						
-						<td class="tdwhiteL" rowspan="2">
-							<c:out value='${list.name }'/>
-						</td>
-						
-						<!-- 프로젝트 코드 -->
-						<td class="tdwhiteL" >
-							<select name="model_<c:out value='${list.number }' />" id="model_<c:out value='${list.number }' />">
-								<option value=''> ${f:getMessage('선택')} </option>
-								<c:forEach items="${model }" var="model">
-									<option value="<c:out value='${model.code }'/>" title=<c:out value="${model.oid }"/>
-										<c:if test="${list.model eq model.code }">
-											selected
-										</c:if>
-									>
-										[<c:out value='${model.code }'/>] <c:out value='${model.name }'/>
-									</option>
-								</c:forEach>
-							</select>
-						</td>
-						
-						<!-- 부서 -->
-						<td class="tdwhiteL" >
-							<select name="deptcode_<c:out value='${list.number }' />" id="deptcode_<c:out value='${list.number }' />">
-								<option value=''> ${f:getMessage('선택')} </option>
-								<c:forEach items="${deptCode }" var="deptCode">
-									<option value="<c:out value='${deptCode.code }'/>" title=<c:out value="${deptCode.oid }"/> 
-										<c:if test="${list.deptcode eq deptCode.code }">
-											selected
-										</c:if>
-									>
-										[<c:out value='${deptCode.code }'/>] <c:out value='${deptCode.name }'/>
-									</option>
-								</c:forEach>
-							</select>
-						</td>
-						
-						<!-- MANUFACTURE -->
-						<td class="tdwhiteL" >
-							<select name="manufacture_<c:out value='${list.number }' />" id="manufacture_<c:out value='${list.number }' />">
-								<option value=''> ${f:getMessage('선택')} </option>
-								<c:forEach items="${manufacture }" var="manufacture">
-									<option value="<c:out value='${manufacture.code }'/>" title=<c:out value="${manufacture.oid }"/>
-										<c:if test="${list.manufacture eq manufacture.code }">
-											selected
-										</c:if>
-									>
-										[<c:out value='${manufacture.code }'/>] <c:out value='${manufacture.name }'/>
-									</option>
-								</c:forEach>
-							</select>
-						</td>
-						
-						<!-- 후처리 -->
-						<td class="tdwhiteL" >
-							<select name="finish_<c:out value='${list.number }' />" id="finish_<c:out value='${list.number }' />">
-								<option value=''> ${f:getMessage('선택')} </option>
-								<c:forEach items="${finish }" var="finish">
-									<option value="<c:out value='${finish.code }'/>" title=<c:out value="${finish.oid }"/>
-										<c:if test="${list.finish eq finish.code }">
-											selected
-										</c:if>
-									>
-										[<c:out value='${finish.code }'/>] <c:out value='${finish.name }'/>
-									</option>
-								</c:forEach>
-							</select>
-						</td>
-						
-						<!-- 무게 -->
-						<td class="tdwhiteL" >
-							<input type="text" name="weight_<c:out value='${list.number }' />" id="weight_<c:out value='${list.number }' />" 
-							value="<c:out value='${list.weight }'/>" class="txt_field" style="width: 95%"/>
+						<td height="30" width="93%" align="center">
+							<div class="header">
+								Family 테이블 수정
+							</div>
 						</td>
 					</tr>
-					
 					<tr>
-						<!-- 제작방법 -->
-						<td class="tdwhiteL" >
-							<select name="productmethod_<c:out value='${list.number }' />" id="productmethod_<c:out value='${list.number }' />">
-								<option value=''> ${f:getMessage('선택')} </option>
-								<c:forEach items="${productmethod }" var="productmethod">
-									<option value="<c:out value='${productmethod.code }'/>" title=<c:out value="${productmethod.oid }"/>
-										<c:if test="${list.productmethod eq productmethod.code }">
-											selected
-										</c:if>
-									>
-										[<c:out value='${productmethod.code }'/>] <c:out value='${productmethod.name }'/>
-									</option>
-								</c:forEach>
-							</select>
+						<td class="right">
+							<input type="button" value="저장" name="updatefamily" id="updatefamily" class="blue"  >
+							<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
 						</td>
-						
-						<!-- 단위 -->
-						<td class="tdwhiteL" >
-							<select name="unit_<c:out value='${list.number }' />" id="unit_<c:out value='${list.number }' />">
-								<option value=''> ${f:getMessage('선택')} </option>
-								<c:forEach items="${unit }" var="unit">
-									<option value="<c:out value='${unit}'/>" title=<c:out value="${unit}"/>
-										<c:if test="${list.unit eq unit }">
-											selected
-										</c:if>
-									>
-										<c:out value='${unit}'/>
-									</option>
-								</c:forEach>
-							</select>
-						</td>
-						
-						<!-- 재질 -->
-						<td class="tdwhiteL" >
-							<select name="mat_<c:out value='${list.number }' />" id="mat_<c:out value='${list.number }' />">
-								<option value=''> ${f:getMessage('선택')} </option>
-								<c:forEach items="${mat }" var="mat">
-									<option value="<c:out value='${mat.code }'/>" title=<c:out value="${mat.oid }"/>
-										<c:if test="${list.mat eq mat.code }">
-											selected
-										</c:if>
-									>
-										[<c:out value='${mat.code }'/>] <c:out value='${mat.name }'/>
-									</option>
-								</c:forEach>
-							</select>
-						</td>
-						
-						<!-- 비고 -->
-						<td class="tdwhiteL" >
-							<input type="text" name="remarks_<c:out value='${list.number }' />" id="remarks_<c:out value='${list.number }' />" class="txt_field" 
-							value="<c:out value='${list.remark }'/>" class="txt_field" style="width: 95%" />
-						</td>
-						
-						<!-- 사양 -->
-						<td class="tdwhiteL" >
-							<input type="text" name="specification_<c:out value='${list.number }' />" id="specification_<c:out value='${list.number }' />" class="txt_field" 
-							value="<c:out value='${list.specification }'/>" class="txt_field" style="width: 95%" />
-						</td>
-						
 					</tr>
-				
-				</c:forEach>
-				
-			</table>
+				</table>
+			</td>
+		</tr>
+		<tr align=center>
+			<td valign="top" style="padding:0px 0px 0px 0px">		
+				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
+					<tr>
+						<td height=1 width=100%></td>
+					</tr>
+				</table>
+				<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
 		</td>
 	</tr>
-	
 </table>
-</form>
+<script>
+let myGridID;
+function _layout() {
+	return [  {
+		dataField : "oid",
+		visible : false
+	},{
+		dataField : "number",
+		headerText : "품목번호.",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "name",
+		headerText : "품목명",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "name",
+		headerText : "프로젝트코드",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "deptcode",
+		headerText : "부서",
+		dataType : "string",
+		width : 350,
+	}, {
+		dataField : "manufacture",
+		headerText : "MANUFATURER",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "finish",
+		headerText : "후처리",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "weight",
+		headerText : "무게",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "productmethod",
+		headerText : "제작방법",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "unit",
+		headerText : "단위",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "mat",
+		headerText : "재질",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "비고",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "사양",
+		dataType : "string",
+		width : 250,
+	}]
+}
 
+function createAUIGrid(columnLayout) {
+	const props = {
+		headerHeight : 30,
+		showRowNumColumn : true,
+		rowNumHeaderText : "번호",
+		fillColumnSizeMode: false,
+		showAutoNoDataMessage : false,
+		selectionMode : "multipleCells",
+		enableMovingColumn : true,
+		enableFilter : true,
+		showInlineFilter : false,
+		useContextMenu : true,
+		enableRightDownFocus : true,
+		filterLayerWidth : 320,
+		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+	};
+	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+	loadGridData();
+	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
+		hideContextMenu();
+		vScrollChangeHandler(event);
+	});
+	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
+		hideContextMenu();
+	});
+}
+
+function loadGridData() {
+	const params = new Object();
+	const url = getCallUrl("/part/updatefamilyPart");
+	const oid = document.querySelector("#oid").value;
+	params.oid = oid;
+	AUIGrid.showAjaxLoader(myGridID);
+	call(url, params, function(data) {
+		AUIGrid.removeAjaxLoader(myGridID);
+		if (data.result) {
+			AUIGrid.setGridData(myGridID, data.list);
+		} else {
+			alert(data.msg);
+		}
+	});
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	const columns = loadColumnLayout("downloadHistory");
+	const contenxtHeader = genColumnHtml(columns);
+// 	createAUIGrid(columns);
+// 	AUIGrid.resize(myGridID);
+});
+</script>
+</form>
 </body>
 </html>

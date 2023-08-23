@@ -205,46 +205,52 @@ public class DocumentController extends BaseController {
 		return data;
 	}
 
-	/**
-	 * 문서 삭제
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
+	@Description(value = "문서 삭제")
 	@ResponseBody
-	@RequestMapping("/deleteDocumentAction")
-	public ResultData deleteDocumentAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		return DocumentHelper.service.deleteDocumentAction(request, response);
-
+	@RequestMapping("/delete")
+	public Map<String, Object> deleteDocumentAction(@RequestBody Map<String, Object> params) {
+		
+		Map<String, Object> result = DocumentHelper.service.deleteDocumentAction(params);
+		if((boolean) result.get("result")) {
+			result.put("oid", result.get("oid"));
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
+		return result;
 	}
 
 	@Description(value = "문서 수정 페이지")
 	@GetMapping(value = "/update")
-	public ModelAndView updateDocument(@RequestParam(value = "oid") String oid) throws Exception {
+	public ModelAndView updateDocument(HttpServletRequest request, @RequestParam(value = "oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentData docData = new DocumentData(doc);
+		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
+		model.addObject("oid", oid);
+		model.addObject("module", module);
 		model.setViewName("/extcore/jsp/document/document-update.jsp");
 		model.addObject("docData", docData);
 		return model;
 	}
 
-	/**
-	 * 문서 수정
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
+	@Description(value = "문서 수정")
 	@ResponseBody
-	@RequestMapping("/updateDocumentAction")
-	public ResultData updateDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Object> map = DocumentHelper.service.requestDocumentMapping(request, response);
-		return DocumentHelper.service.updateDocumentAction(map);
+	@PostMapping(value = "/updateDocumentAction")
+	public Map<String, Object> updateDocumentAction(@RequestBody Map<String, Object> params) {
+		
+		Map<String, Object> result = DocumentHelper.service.updateDocumentAction(params);
+		if((boolean) result.get("result")) {
+			result.put("oid", result.get("oid"));
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
+		return result;
 	}
 
 	@Description(value = "문서 일괄등록")

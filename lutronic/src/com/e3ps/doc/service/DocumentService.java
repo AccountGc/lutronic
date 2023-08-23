@@ -8,6 +8,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.annotation.RequestBody;
+
 import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
 import wt.method.RemoteInterface;
@@ -23,9 +25,9 @@ public interface DocumentService {
 	
 	ResultData createDocumentAction(Map<String, Object> map);
 	
-	ResultData deleteDocumentAction(HttpServletRequest request, HttpServletResponse response);
+	Map<String, Object> deleteDocumentAction(Map<String, Object> params);
 	
-	ResultData updateDocumentAction(Map<String,Object> map);
+	Map<String, Object> updateDocumentAction(Map<String,Object> map);
 	
 	String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 	

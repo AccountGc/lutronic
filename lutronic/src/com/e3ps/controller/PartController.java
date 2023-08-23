@@ -1286,14 +1286,29 @@ public class PartController extends BaseController {
 	}
 	
 	
-	/**  일괄수정  페이지 이동
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/updatefamilyPart")
-	public ModelAndView updatefamilyPart(HttpServletRequest request, HttpServletResponse response) {
-		String oid = request.getParameter("oid");
+	@Description(value = "일괄수정  페이지 이동")
+	@GetMapping(value = "/updatefamilyPart")
+	public ModelAndView updatefamilyPart(@RequestParam String oid) {
+		
+		
+		
+		
+		
+		ModelAndView model = new ModelAndView();
+		model.addObject("oid", oid);
+
+		
+		
+		model.setViewName("/extcore/jsp/part/updatefamilyPart.jsp");
+		return model;
+	}
+	
+	@Description(value = "일괄수정  페이지 리스트 불러오기")
+	@ResponseBody
+	@PostMapping(value = "/updatefamilyPart")
+	public Map<String, Object> updatefamilyPart(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<>();
+		String oid = (String) params.get("oid");
 		
 		List<Map<String,Object>> list = null;
 		
@@ -1312,19 +1327,14 @@ public class PartController extends BaseController {
 		List<NumberCodeData> finish = CodeHelper.service.numberCodeList("FINISH", "", false);
 		List<String> unit = PartHelper.service.getQuantityUnit();
 		
-		ModelAndView model = new ModelAndView();
-		model.addObject("oid", oid);
-		model.addObject("list", list);
-		model.addObject("productmethod", productmethod);
-		model.addObject("deptCode", deptCode);
-		model.addObject("model", modelcode);
-		model.addObject("manufacture", manufacture);
-		model.addObject("mat", mat);
-		model.addObject("finish", finish);
-		model.addObject("unit", unit);
-		
-		model.setViewName("popup:/part/updatefamilyPart");
-		return model;
+		result.put("productmethod", productmethod);
+		result.put("deptCode", deptCode);
+		result.put("model", modelcode);
+		result.put("manufacture", manufacture);
+		result.put("mat", mat);
+		result.put("finish", finish);
+		result.put("unit", unit);
+		result.put("list", list);		return result;
 	}
 	
 	/**  BOM 에서 선택적 부품 첨부 파일 다운로드

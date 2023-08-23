@@ -40,7 +40,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 <%-- 				<% --%>
 <!-- // 				if(data.getState().equals("APPROVED")){ -->
 <%-- 				%> --%>
-					<input type="button" value="개정" title="개정" id="reviseBtn">
+					<input type="button" value="개정" title="개정" id="reviseBtn" onclick="update();">
 <%-- 				<%	 --%>
 <!-- // 				} -->
 <%-- 				%> --%>
@@ -55,7 +55,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<%
 				if(data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")){
 				%>
-					<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
+					<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
 					<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
 				<%	
 				}
@@ -344,11 +344,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 </form>
 <script type="text/javascript">
 	//수정
-	$("#updateBtn").click(function () {
+	function update () {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/doc/update?oid=" + oid);
 		document.location.href = url;
-	})
+	};
 
 	//삭제
 	$("#deleteBtn").click(function () {
@@ -358,14 +358,20 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		}
 	
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		call(url, null, function(data) {
-			alert(data.msg);
+		const url = getCallUrl("/doc/delete");
+		const params = new Object();
+		params.oid = oid;
+		call(url, params, function(data) {
 			if (data.result) {
-	//				opener.loadGridData();
-				self.close();
+				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+					parent.opener.location.reload();
+				}else {
+					parent.opener.$("#sessionId").val("");
+					parent.opener.lfn_Search();
+				}
+				window.close();
 			}
-		}, "GET");
+		});
 	})
 	
 	//댓글 등록

@@ -186,23 +186,23 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 	
 	//버전이력
 	$("#versionBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("common", "versionHistory", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/common/versionHistory?oid=" + oid);
+		popup(url, 830, 600);
 	})
 	
 	//다운로드 이력
 	$("#downloadBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("common", "downloadHistory", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/common/downloadHistory?oid=" + oid);
+		popup(url, 830, 600);
 	})
 	
-	//결재 이력
+	//결재이력
 	$("#approveBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("groupware", "historyWork", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
+		popup(url, 830, 600);
 	})
 	
 	//최신버전

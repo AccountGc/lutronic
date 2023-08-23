@@ -21,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
@@ -540,33 +541,33 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 	
 	@Override
-	public ResultData deleteDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-		ResultData data = new ResultData();
-		String oid = request.getParameter("oid");
+	public Map<String, Object> deleteDocumentAction(Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid = (String) params.get("oid");
 		
 		try {
 			ReferenceFactory f = new ReferenceFactory();
-	        WTDocument wtdoc = (WTDocument) f.getReference(oid).getObject();
+	        WTDocument wtdoc = (WTDocument) CommonUtil.getObject(oid);
 	
 	        if(WorkInProgressHelper.isCheckedOut(wtdoc)) {
-	        	data.setMessage(Message.get("체크아웃되어 있어서 삭제하실 수 없습니다."));
-	        	data.setResult(false);
+	        	result.put("msg", Message.get("체크아웃되어 있어서 삭제하실 수 없습니다."));
+	        	result.put("result", false);
 	        } else {
-				data.setMessage(DocumentHelper.service.delete(oid));
-				data.setResult(true);
+	        	result.put("msg", DocumentHelper.service.delete(oid));
+	        	result.put("result", true);
 				//data.setMessage(Message.get("삭제 되었습니다."));
 	        }
 		} catch(Exception e) {
-			data.setResult(false);
-			data.setMessage(e.getLocalizedMessage());
+			result.put("result", false);
+			result.put("msg", e.getLocalizedMessage());
 			e.printStackTrace();
 		}
-		return data;
+		return result;
 	}
 	
 	@Override
-	public ResultData updateDocumentAction(Map<String,Object> map) {
-		ResultData data = new ResultData();
+	public Map<String, Object> updateDocumentAction(Map<String,Object> map) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		
 		Transaction trx = new Transaction();
 		
@@ -589,7 +590,7 @@ public class StandardDocumentService extends StandardManager implements Document
 	        
 	        ReferenceFactory f = new ReferenceFactory();
 	        if(oid != null){
-	            olddoc = (WTDocument) f.getReference(oid).getObject();
+	            olddoc = (WTDocument) CommonUtil.getObject(oid);
 	            // Working Copy
 	            doc = (WTDocument)getWorkingCopy(olddoc);
 	            doc.setDescription(description);
@@ -655,19 +656,19 @@ public class StandardDocumentService extends StandardManager implements Document
 	        }
 	        trx.commit();
 	        trx = null;
-	        data.setResult(true);
-	        data.setOid(CommonUtil.getOIDString(doc));
+	        result.put("oid", CommonUtil.getOIDString(doc));
+	        result.put("result", true);
         } catch(Exception e) {
         	e.printStackTrace();
-        	data.setResult(false);
-        	data.setMessage(e.getLocalizedMessage());
+        	result.put("result", false);
+        	result.put("msg", e.getLocalizedMessage());
         } finally {
         	if(trx != null) {
         		trx.rollback();
         	}
         }
         
-        return data;
+        return result;
 
 	}
 	
@@ -1602,13 +1603,13 @@ public class StandardDocumentService extends StandardManager implements Document
                 
                 List<DocumentData> useByList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oldDoc, "useBy");
     			for(DocumentData docData : useByList){
-    				DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc, docData.doc);
+    				DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc, docData.getDoc());
     				PersistenceServerHelper.manager.insert(link);
     			}
     			
     			List<DocumentData> usedList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oldDoc, "used");
     			for(DocumentData docData : usedList){
-    				DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(docData.doc, doc);
+    				DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(docData.getDoc(), doc);
     				PersistenceServerHelper.manager.insert(link);
     			}
                 

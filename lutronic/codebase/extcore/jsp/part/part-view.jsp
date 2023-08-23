@@ -797,13 +797,8 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 	
 	$("#updatefamily").click(function() {//updatePackagePart
-		var str = getURLString("part", "updatefamilyPart", "do") + "?oid=" + $("#oid").val();
-		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-		leftpos = (screen.width - 1000)/ 2;
-		toppos = (screen.height - 600) / 2 ;
-		rest = "width=1300,height=600,left=" + leftpos + ',top=' + toppos;
-		var newwin = window.open( str , "updatefamily", opts+rest);
-		newwin.focus();
+		const url = getCallUrl("/part/updatefamilyPart?oid=" + oid);
+		popup(url, 1300, 600);
 	})
 	
 	
