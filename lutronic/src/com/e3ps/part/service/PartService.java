@@ -33,7 +33,7 @@ public interface PartService {
 	
 	ResultData create(Map<String,Object> map);
 	
-	ResultData updatePartAction(Map<String, Object> map);
+	Map<String, Object> updatePartAction(Map<String, Object> params);
 	
 	String createPackagePartAction(HttpServletRequest request, HttpServletResponse response);
 	
@@ -62,7 +62,7 @@ public interface PartService {
 
 	Map<String, String> getAttributes(String oid) throws Exception;
 
-	Map<String, Object> delete(Map<String, String> hash) throws Exception;
+	Map<String, Object> delete(Map<String, Object> params) throws Exception;
 
 	Hashtable modify(Map hash, String[] loc, String[] deloc) throws Exception;
 

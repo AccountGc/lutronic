@@ -58,8 +58,8 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 			%>
 			<input type="button" value="일괄 수정" title="일괄 수정"  id="packageUpdate">
-			<input type="button" value="수정" title="수정"  id="updateBtn">
-			<input type="button" value="삭제" title="삭제" class="red"  id="delBtn">
+			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
+			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
 			<input type="button" value="채번" title="채번"  id="orderNumber">
 			<input type="button" value="채번(새버전)" title="채번(새버전)"  id="orderNumber_NewVersion">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -391,32 +391,37 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 </div>
 
 <script type="text/javascript">
-	function update() {
+	// 수정
+	function update () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/part/updatePart?oid=" + oid );
-		openLayer();
+		const url = getCallUrl("/part/update?oid=" + oid);
 		document.location.href = url;
-	}
-
-	function _delete() {
-
-		if (!confirm("삭제 하시겠습니까?")) {
-			return false;
-		}
-
+	};
+	
+	//삭제
+	$("#deleteBtn").click(function () {
+		
+			if (!confirm("삭제 하시겠습니까?")) {
+				return false;
+			}
+		
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		openLayer();
-		call(url, null, function(data) {
+		const url = getCallUrl("/part/delete");
+		const params = new Object();
+		params.oid = oid;
+		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-// 				opener.loadGridData();
-				self.close();
-			} else {
-				closeLayer();
+				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+					parent.opener.location.reload();
+				}else {
+					parent.opener.$("#sessionId").val("");
+					parent.opener.lfn_Search();
+				}
+				window.close();
 			}
-		}, "GET");
-	}
+		});
+	})
 	
 	//댓글 등록
 	$("#commentsBtn").click(function () {

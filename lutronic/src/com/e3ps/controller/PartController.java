@@ -32,6 +32,7 @@ import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.development.service.DevelopmentHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.beans.PartData;
 import com.e3ps.part.beans.PartTreeData;
@@ -276,54 +277,51 @@ public class PartController extends BaseController {
 		return model;
 	}
 
-	/** 품목 삭제
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
+	@Description(value = "품목 삭제")
 	@ResponseBody
-	@RequestMapping("/deletePartAction")
-	public Map<String,Object> deletePartAction(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
-		Map<String,String> hash = new HashMap<String,String>();
-		
-		hash.put("oid", oid);
-        
-		Map<String,Object> result = PartHelper.service.delete(hash);
-		
+	@RequestMapping("/delete")
+	public Map<String,Object> delete(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String,Object> result = PartHelper.service.delete(params);
+		if((boolean) result.get("result")) {
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
 		return result;
 	}
 
-	/** 품목 수정 페이지
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/updatePart")
-	public ModelAndView updatePart(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
+	@Description(value = "품목 수정 페이지")
+	@GetMapping(value = "/update")
+	public ModelAndView update(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
 		WTPart part = (WTPart)CommonUtil.getObject(oid);
-		PartData partData = new PartData(part);
-		model.addObject("partData", partData);
-		model.setViewName("popup:/part/updatePart");
+		PartData partData = null;
+		try {
+			partData = new PartData(part);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addObject("data", partData);
+		model.setViewName("/extcore/jsp/part/updatePart.jsp");
 		return model;
 	}
 	
-	/** 품목 수정
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
+	@Description(value = "품목 수정")
 	@ResponseBody
-	@RequestMapping("/updatePartAction")
-	public ResultData updatePartAction(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> map = PartHelper.service.requestPartMapping(params);
-		return PartHelper.service.updatePartAction(map);
+	@PostMapping(value = "/update")
+	public Map<String, Object> updatePartAction(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = PartHelper.service.updatePartAction(params);
+		if((boolean) result.get("result")) {
+			result.put("oid", result.get("oid"));
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
+		return result;
 	}
 	
 	/**  일괄등록 페이지 이동

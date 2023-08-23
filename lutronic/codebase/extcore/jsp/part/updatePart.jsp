@@ -1,15 +1,276 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
-<%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
-<%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="com.e3ps.part.beans.PartData"%>
+<%
+String oid = (String) request.getAttribute("oid");
+PartData data = (PartData) request.getAttribute("data");
+%>
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<meta charset="UTF-8">
+<title></title>
+<%@include file="/extcore/jsp/common/css.jsp"%>
+<%@include file="/extcore/jsp/common/script.jsp"%>
+<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
+<body>
+<form name="updateDevelopmentForm" id="updateDevelopmentForm" method="post" >
+<input type="hidden" name="oid" id="oid" value="<%= oid %>" />
+<table width="100%" border="0" cellpadding="0" cellspacing="0" > 
+	<tr height="5">
+		<td>
+			<table class="button-table">
+				<tr>
+					<td class="left">
+						<div class="header">
+							<img src="/Windchill/extcore/images/header.png">&nbsp;개발업무 수정
+						</div>
+					</td>
+					<td class="right">
+						<input type="button" value="수정" name="updateDevBtn" id="updateDevBtn" >
+						<input type="button" value="이전페이지" name="backBtn" id="backBtn" onclick="javascript:history.back();">
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	
+	<tr align="center">
+		<td valign="top" style="padding:0px 0px 0px 0px" colspan="2">
+			<table class="search-table">
+				<colgroup>
+					<col width="180">
+					<col width="180">
+					<col width="*">
+				</colgroup>
+				<tr>
+					<th>품목번호</th>
+					<td class="indent5" colspan="3">
+						<%= data != null ? data.getNumber() : "" %>
+					</td>
+				</tr>
+				<tr>
+					<th>품목분류 <span style="color:red;">*</span></th>
+					<td class="indent5" colspan="3">
+						<span id="locationName">
+							/Default/PART_Drawing
+						</span>
+					</td>
+				</tr>
+				<tr>
+					<th rowspan="4">품목명 <span style="color:red;">*</span></th>
+					<th>대제목</th>
+					<td class="indent5">
+						<input type="text" name="partName1" id="partName1" class="width-300" value="">
+					</td>
+				</tr>
+				<tr>
+					<th>중제목</th>
+					<td class="indent5">
+						<input type="text" name="partName2" id="partName2" class="width-300">
+					</td>
+				</tr>
+				<tr>
+					<th>소제목</th>
+					<td class="indent5">
+						<input type="text" name="partName3" id="partName3" class="width-300">
+					</td>
+				</tr>
+				<tr>
+					<th>사용자 Key in</th>
+					<td class="indent5">
+						<input type="text" name="partName4" id="partName4" class="width-300">
+					</td>
+				</tr>
+				<tr>
+					<td class="tdblueM" id="auto" colspan="3" >
+						<div>
+							<span style="font-weight: bold; vertical-align: middle;" id="displayName">
+								<c:out value="<%= data != null ? data.getName() : "" %>" />
+							</span>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 품목 속성
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table class="search-table">
+			<colgroup>
+				<col width="174">
+				<col width="*">
+				<col width="174">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>프로젝트코드 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="model" id="model" class="width-500">
+				</td>
+				<th>제작방법 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="productmethod" id="productmethod" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>부서 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="deptcode" id="deptcode" class="width-500">
+				</td>
+				<th>단위 <span style="color:red;">*</span></th>
+				<td class="indent5">
+					<input type="text" name="unit" id="unit" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>무게(g)</th>
+				<td class="indent5">
+					<input type="text" name="weight" id="weight" class="width-500">
+				</td>
+				<th>MANUFACTURER</th>
+				<td class="indent5">
+					<input type="text" name="manufacture" id="manufacture" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>재질</th>
+				<td class="indent5">
+					<input type="text" name="mat" id="mat" class="width-500">
+				</td>
+				<th>후처리</th>
+				<td class="indent5">
+					<input type="text" name="finish" id="finish" class="width-500">
+				</td>
+			</tr>
+			<tr>
+				<th>OEM Info.</th>
+				<td class="indent5">
+					<input type="text" name="remarks" id="remarks" class="width-500">
+				</td>
+				<th>사양</th>
+				<td class="indent5">
+					<input type="text" name="specification" id="specification" class="width-500">
+				</td>
+			</tr>
+		</table>
+		<br>
+		<!-- 	주도면 -->
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 주 도면&nbsp;&nbsp;
+						<span class="red">(메카 : CAD파일), (광학/제어/파워/인증 : PDF파일)</span>
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table class="search-table">
+			<colgroup>
+				<col width="180">
+				<col width="*">
+				<col width="180">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>주 도면</th>
+				<td class="indent5" colspan="3">
+				</td>
+			</tr>
+		</table>
+		<br>
+		
+		<!-- 관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
+			<jsp:param value="part" name="moduleType"/>
+			<jsp:param value="<%= data.getOid() %>" name="oid"/>
+			<jsp:param value="관련 문서" name="title"/>
+			<jsp:param value="docOid" name="paramName"/>
+		</jsp:include>
+		<br>
+		
+		
+		<!-- 관련 rohs -->
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table class="search-table">
+			<colgroup>
+				<col width="180">
+				<col width="*">
+				<col width="180">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>관련 RoHS</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+						<jsp:param value="관련 RoHS" name="title"/>
+						<jsp:param name="paramName" value="rohsOid"/>
+						<jsp:param value="<%= data.getOid() %>" name="oid"/>
+						<jsp:param value="part" name="module"/>
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 첨부파일 -->
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 첨부파일
+					</div>
+				</td>
+			</tr>
+		</table>
+		
+		<table class="search-table">
+			<colgroup>
+				<col width="180">
+				<col width="*">
+				<col width="180">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th class="lb">첨부파일</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
+						<jsp:param value="" name="oid" />
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
+		<br>
+		
+		<table class="button-table">
+			<tr>
+				<td class="center">
+					<input type="button" value="등록" title="등록" id="createBtn" class="blue" onclick="create('false');" />
+					<input type="button" value="초기화" title="초기화" id="resetBtn" />
+					<input type="button" value="목록" title="목록" id="listBtn" />
+				</td>
+			</tr>
+		</table>
 <script>
 <%----------------------------------------------------------
 *                      페이지 초기 설정
@@ -106,480 +367,127 @@ $(function () {
 	})
 	
 	<%----------------------------------------------------------
-	*                      수정 버튼
+	*                      수정버튼
 	----------------------------------------------------------%>
-	$("#updateBtn").click(function () {
+	$("#updateBtn").click(function() {
+		const partName1 = document.getElementById("partName1").value;
+		const partType1 = document.getElementById("partType1").value;
+		const partName2 = document.getElementById("partName2").value;
+		const partType2 = document.getElementById("partType2").value;
+		const partName3 = document.getElementById("partName3").value;
+		const partType3 = document.getElementById("partType3").value;
+		const partName4 = document.getElementById("partName4").value;
+		const seq = document.getElementById("seq").value;
+		const etc = document.getElementById("etc").value;
+		const model = document.getElementById("model").value;
+		const productmethod = document.getElementById("productmethod").value;
+		const deptcode = document.getElementById("deptcode").value;
+		const weight = document.getElementById("weight").value;
+		const manufacture = document.getElementById("manufacture").value;
+		const mat = document.getElementById("mat").value;
+		const finish = document.getElementById("finish").value;
+		const remarks = document.getElementById("remarks").value;
+		const specification = document.getElementById("specification").value;
+		const unit = "EA";
+//			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
+//			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+//			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
+		const primarys = toArray("primarys");
+		const wtPartType = document.getElementById("wtPartType").value;
+		const source = document.getElementById("source").value;
+		const lifecycle = document.getElementById("lifecycle").value;
+		const view = document.getElementById("view").value;
+		const fid = document.getElementById("fid").value;
+		const location = document.getElementById("location").value;
 		
-		if($.trim($("#partName1").val()) == ""
-		   && $.trim($("#partName2").val()) == ""
-		   && $.trim($("#partName3").val()) == ""
-		   && $.trim($("#partNameCustom").val()) == "" ) {
-			alert("${f:getMessage('품목명')}${f:getMessage('을(를) 입력하세요.')}");
-			$("#partName1").focus();
-			return;
-		}else if($("#displayName").text().length > 40) {
-			alert("${f:getMessage('품목명')}${f:getMessage('은(는) 40자 이내로 입력하세요.')}");
-			return;
-		}
-		if($("#model").val() == "") {
-			alert("${f:getMessage('프로젝트코드')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#model").focus();
-			return;
-		}
-		
-		if($("#productmethod").val() == "") {
-			alert("${f:getMessage('제작방법')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#productmethod").focus();
-			return;
-		}
-		
-		if($("#deptcode").val() == "") {
-			alert("${f:getMessage('부서')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#deptcode").focus();
-			return;
-		}
-		
-		if($("#unit").val() == "") {
-			alert("${f:getMessage('단위')}${f:getMessage('을(를) 선택하세요.')}");
-			$("#unit").focus();
-			return;
-		}
-		
-		if(confirm("${f:getMessage('수정하시겠습니까?')}")){
-			var form = $("form[name=partModifyForm]").serialize();
-			var url	= getURLString("part", "updatePartAction", "do");
-			$.ajax({
-				type:"POST",
-				url: url,
-				data:form,
-				dataType:"json",
-				async: true,
-				cache: false,
-				error:function(data){
-					var msg = "${f:getMessage('등록 오류')}";
-					alert(msg);
-				},
+		const oid = document.getElementById("oid").value;
+//			const location = document.getElementById("location").value;
+		const docName = document.getElementById("docName");
+		const lifecycle = document.getElementById("lifecycle").value;
+		const description = document.getElementById("description").value;
+		const iterationNote = document.getElementById("iterationNote").value;
+		const primarys = toArray("primarys");
 
-				success:function(data){
-					if(data.result) {
-						alert("${f:getMessage('수정 성공하였습니다.')}");
-						location.href = getURLString("part", "viewPart", "do") + "?oid="+data.oid;
-					}else {
-						alert("${f:getMessage('수정 실패하였습니다.')} :: " + data.message);
-					}
+// 		if($.trim($("#partName1").val()) == ""
+// 			   && $.trim($("#partName2").val()) == ""
+// 			   && $.trim($("#partName3").val()) == ""
+// 			   && $.trim($("#partNameCustom").val()) == "" ) {
+// 				alert("품목명을(를) 입력하세요.");
+// 				$("#partName1").focus();
+// 				return;
+// 			}else if($("#displayName").text().length > 40) {
+// 				alert("품목명은(는) 40자 이내로 입력하세요.");
+// 				return;
+// 			}
+// 			if($("#model").val() == "") {
+// 				alert("프로젝트코드을(를) 선택하세요.");
+// 				$("#model").focus();
+// 				return;
+// 			}
+			
+// 			if($("#productmethod").val() == "") {
+// 				alert("제작방법을(를) 선택하세요.");
+// 				$("#productmethod").focus();
+// 				return;
+// 			}
+			
+// 			if($("#deptcode").val() == "") {
+// 				alert("부서을(를) 선택하세요.");
+// 				$("#deptcode").focus();
+// 				return;
+// 			}
+			
+// 			if($("#unit").val() == "") {
+// 				alert("단위을(를) 선택하세요.");
+// 				$("#unit").focus();
+// 				return;
+// 			}
+			
+		if (confirm("수정하시겠습니까?")){
+			
+			const params = new Object();
+			const url = getCallUrl("/part/create");
+			params.partName1 = "MODULE";
+			params.partType1 = partType1;
+			params.partName2 = "BOARD";
+			params.partType2 = partType2;
+			params.partName3 = "LD DRIVER";
+			params.partType3 = partType3;
+			params.partName4 = "";
+			params.seq = seq;
+			params.etc = etc;
+			params.model = model;
+			params.productmethod = productmethod;
+			params.deptcode = deptcode;
+			params.weight = weight;
+			params.manufacture = manufacture;
+			params.mat = mat;
+			params.finish = finish;
+			params.remarks = remarks;
+			params.specification = specification;
+			params.unit = "ea";
+// 			params.addRows7 = addRows7;
+// 			params.addRows11 = addRows11;
+			params.primarys = primarys;
+			params.wtPartType = wtPartType;
+			params.source = source;
+			params.lifecycle = lifecycle;
+			params.view = view;
+			params.fid = fid;
+			params.location = location;
+			
+			call(url, params, function(data) {
+				if (data.result) {
+					alert("수정 성공하였습니다.");
+					location.href = getCallUrl("/doc/view?oid=" + data.oid);
+				} else {
+					alert("수정 실패하였습니다. \n" + data.msg);
 				}
-				,beforeSend: function() {
-					gfn_StartShowProcessing();
-		        }
-				,complete: function() {
-					gfn_EndShowProcessing();
-		        }
 			});
 		}
 	})
 })
-
-<%----------------------------------------------------------
-*                      NumberCode 리스트 가져오기
-----------------------------------------------------------%>
-window.numberCodeList = function(id, parentCode, value) {
-	var type = "";
-	if(id == 'partType1' || id == 'partType2' || id =='partType3') {
-		type = "PARTTYPE";
-	}else {
-		type = id.toUpperCase();
-	}
-	
-	var data = common_numberCodeList(type, parentCode, false);
-	
-	addSelectList(id, eval(data.responseText), value);
-}
-
-<%----------------------------------------------------------
-*                      selectBodx에 옵션 추가
-----------------------------------------------------------%>
-window.addSelectList = function(id, data, value){
-	$("#"+ id + " option").remove();
-	$("#"+ id).append("<option value='' title='' > ${f:getMessage('선택')} </option>");
-	if(data.length > 0) {
-		for(var i=0; i<data.length; i++) {
-			var html = "<option value='" + data[i].code + "' title='" + data[i].oid + "'";
-			
-			if(data[i].code == value) {
-				html += " selected";
-			}
-			
-			html += " > [" + data[i].code + "] " + data[i].name + "</option>";
-			
-			$("#"+ id).append(html);
-		}
-	}
-}
-
-<%----------------------------------------------------------
-*                      ↑,↓ 입력시
-----------------------------------------------------------%>
-window.movePartNameFocus = function(id,isAdd) {
-	var removeCount = 0;
-	var addCount = 0;
-	var l = $("#" + id + "UL li").length;
-	for(var i=0; i<l; i++){
-		var cls = $("#" + id + "UL li").eq(i).attr('class');
-		if(cls == 'hover') {
-			$("#" + id + "UL li").eq(i).removeClass("hover");
-			removeCount = i;
-			if(isAdd){
-				addCount = (i-1);
-			}else if(!isAdd) {
-				addCount = (i+1);
-			}
-			break;
-		}
-	}
-	if(addCount == l) {
-		addCount = 0;
-	}
-	$("#" + id + "UL li").eq(addCount).addClass("hover");
-	$("#" + id).val($("#" + id + "UL li").eq(addCount).text());
-}
-
-<%----------------------------------------------------------
-*                      품목명 입력시 이름 검색
-----------------------------------------------------------%>
-window.autoSearchPartName = function(id, value) {
-	if($.trim(value) == "") {
-		addSearchList(id, '', true);
-	} else {
-		var codeType = id.toUpperCase();
-		var data = common_autoSearchName(codeType, value);
-		addSearchList(id, eval(data.responseText), false);
-	}
-}
-
-<%----------------------------------------------------------
-*                      품목명 입력시 데이터 리스트 보여주기
-----------------------------------------------------------%>
-window.addSearchList = function(id, data, isRemove) {
-	$("#" + id + "UL li").remove();
-	if(isRemove) {
-		$("#" + this.id + "Search").hide();
-	}else{
-		if(data.length > 0) {
-			$("#" + id + "Search").show();
-			for(var i=0; i<data.length; i++) {
-				$("#" + id + "UL").append("<li title='" + id + "'>" + data[i].name);
-			}
-		}else {
-			$("#" + id + "Search").hide();
-		}
-	}
-}
-
-<%----------------------------------------------------------
-*                      품목명 데이터 마우스 올렸을때
-----------------------------------------------------------%>
-$(document).on("mouseover", 'div > ul > li', function() {
-	var partName = $(this).attr("title");
-	$(this).addClass("hover") ;
-	$("#" + partName).val($(this).text());
-})
-
-<%----------------------------------------------------------
-*                      품목명 데이터 마우스 뺄때
-----------------------------------------------------------%>
-$(document).on("mouseout", 'div > ul > li', function() {
-	$(this).removeClass("hover") ;
-})
 </script>
-
-<style>
-.hover{ 
- 	  cursor: default;
-      background:#dedede;
-}
-</style>
-
-<body>
-
-<form name="partModifyForm" id="partModifyForm" >
-
-<input type="hidden"	name="oid"		id="oid"		value="<c:out value="${partData.oid }" />">
-
-<table width="100%" border="0" cellpadding="0" cellspacing="0" > <!--//여백 테이블-->
-	<tr>
-		<td>
-			<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center" style="padding-bottom:10px">
-			   	<tr> 
-			   		<td height=30 width=93% align=center><B><font color=white>${f:getMessage('품목')} ${f:getMessage('수정')}</font></B></td>
-			   	</tr>
-			</table>
-			<table width="100%" border="0" cellpadding="0" cellspacing="3">
-				<tr>
-					<td>
-						<table border="0" cellpadding="0" cellspacing="4" align="right">
-				        	<tr>
-				            	<td>
-									<button type="button" name="updateBtn" id="updateBtn" class="btnCRUD">
-										<span></span>
-										${f:getMessage('수정')}
-									</button>
-								</td>
-								
-								<td>
-									<button type="button" name="approveBtn" id="approveBtn" class="btnCustom" onclick="javascript:history.back();">
-										<span></span>
-										${f:getMessage('이전페이지')}
-									</button>
-								</td>
-							</tr>
-				        </table>
-				    </td>
-				</tr>
-				<tr align="center">
-					<td valign="top" style="padding:0px 0px 0px 0px" colspan=2></td>
-				</tr>
-			</table>
-			<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
-            	<tr><td height="1" width="100%"></td> </tr>
-            </table>
-            <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="border-left-width: 1px;border-left-style: solid;border-left-color: #e6e6e6;">
-            	<tr>
-					<td width="150"></td>
-					<td width="350"></td>
-					<td width="150"></td>
-					<td width="350"></td>
-				</tr>
-					 
-				<tr bgcolor="ffffff">
-					<td class="tdblueM">
-						${f:getMessage('품목번호')}
-					</td>
-					
-				    <td class="tdwhiteL" colspan="3">
-				    	<c:out value="${partData.number }" />
-				    </td>
-				</tr>
-					           
-                <tr bgcolor="ffffff" height="35">
-					<td class="tdblueM">
-						${f:getMessage('품목')} ${f:getMessage('분류')} <span style="color:red;">*</span>
-					</td>
-					
-					<td class="tdwhiteL" colspan="3">
-						<jsp:include page="/eSolution/folder/include_FolderSelect.do">
-							<jsp:param value="/Default/PART_Drawing" name="root"/>
-							<jsp:param value="/Default${partData.location }" name="folder"/>
-						</jsp:include>
-					</td>
-				</tr>
-
-                <tr>
-                	<td class="tdblueM" >
-                		${f:getMessage('품목명')} <span style="color:red;">*</span>
-                	</td>
-                	
-				    <td class="tdwhiteL25">
-				    
-				    	<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
-					
-							<tr bgcolor="ffffff" height="35">
-							
-								<td class="tdblueM" align="center" height="25" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									${f:getMessage('대제목')}
-								</td>
-								
-								<td class="tdwhiteL25" align="center" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									<input id="partName1" name="partName1" class='partName' type="text" value="<c:out value='${partData.getPartName(1)}'/>" style="width: 95%;">
-									<div id="partName1Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
-										<ul id="partName1UL" style="list-style-type: none; padding-left: 0px;">
-										</ul>
-									</div>
-								</td>
-							
-							</tr>
-						
-							<tr bgcolor="ffffff" height="35">
-							
-								<td class="tdblueM" align="center" height="25" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									${f:getMessage('중제목')}
-								</td>
-								
-								<td class="tdwhiteL25" align="center" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									<input id="partName2" name="partName2" class='partName' type="text" value="<c:out value='${partData.getPartName(2)}'/>" style="width: 95%">
-									<div id="partName2Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
-										<ul id="partName2UL" style="list-style-type: none; padding-left: 0px;">
-										</ul>
-									</div>
-								
-								</td>
-							</tr>
-						
-							<tr bgcolor="ffffff" height="35">
-								<td class="tdblueM" align="center" height="25" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									${f:getMessage('소제목')}
-								</td>
-								
-								<td class="tdwhiteL25" align="center" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									<input id="partName3" name="partName3" class='partName' type="text" value="<c:out value='${partData.getPartName(3)}'/>"  style="width: 95%">
-									<div id="partName3Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
-										<ul id="partName3UL" style="list-style-type: none; padding-left: 0px;">
-										</ul>
-									</div>
-								</td>
-							</tr>
-						
-							<tr bgcolor="ffffff" height="35">
-								<td class="tdblueM" align="center" height="25" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									${f:getMessage('사용자')} Key in
-								</td>
-								
-								<td class="tdwhiteL25" align="center" style="font-size:12px; font-family:Dotum; color:#425E6E;">
-									<input id="partNameCustom" name="partName4" class='partName' type="text" value="<c:out value='${partData.getPartName(4)}'/>"  style="width: 95%; text-transform: uppercase;">
-								</td>
-							</tr>
-					
-						</table>
-					
-					</td>
-					
-					<td class="tdblueM" id="auto" colspan="2" >
-						<div>
-							<span style="font-weight: bold; vertical-align: middle;" id="displayName">
-								<c:out value="${partData.name }" />
-							</span>
-						</div>
-					</td>
-                </tr>
-            </table>
-		</td>
-	</tr>
-</table>
-
-<!-- 속정 정보 -->
-<jsp:include page="/eSolution/common/include_createAttributes.do">
-	<jsp:param value="part" name="module"/>
-	<jsp:param value="${f:getMessage('속성 정보')}" name="title"/>
-	<jsp:param value="${partData.oid }" name="oid"/>
-</jsp:include>
-
-<c:if test="${!partData.isMainEPM() }">
-	<!-- 주 도면 -->
-	<table width="100%" border="0" cellpadding="0" cellspacing="3" >
-		<tr bgcolor="ffffff" height=5>
-			<td colspan="5">&nbsp;</td>
-		</tr>  
-		              
-	    <tr>
-			<td align="left"><img src="/Windchill/jsp/portal/img/bt_01.gif" >
-				<b>
-					${f:getMessage('주 도면')}
-					&nbsp;&nbsp;&nbsp;
-					<font color="red">(메카/광학 : CAD파일)&nbsp;,&nbsp;(제어/파워/인증 : PDF파일)</font>
-				</b>
-			</td>
-		</tr>
-		
-		<tr>
-			<td>
-				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
-		   			<tr>
-		       			<td height="1" width="100%"></td>
-	    			</tr>
-				</table>
-				
-				<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="border-left-width: 1px;border-left-style: solid;border-left-color: #e6e6e6;">
-				
-					<tr>
-						<td width="150"></td>
-						<td width="350"></td>
-						<td width="150"></td>
-						<td width="350"></td>
-					</tr>
-				
-					<!-- SPECIFICATION, UNIT -->
-	              	<tr bgcolor="ffffff" height="35">
-	               		<td class="tdblueM">
-							${f:getMessage('주 도면')}
-						</td>
-						
-						<td class="tdwhiteL" colspan="3">
-							<jsp:include page="/eSolution/content/includeAttachFiles.do" flush="true">
-								<jsp:param name="formId" value="partModifyForm"/>
-								<jsp:param name="command" value="insert"/>
-								<jsp:param name="type" value="PRIMARY"/>
-								<jsp:param name="btnId" value="updateBtn" />
-							</jsp:include>
-						</td>
-					</tr>
-					
-				</table>
-			</td>
-		</tr>
-	</table>
-</c:if>
-
-<!-- 관련 문서 -->
-<jsp:include page="/eSolution/doc/include_DocumentSelect.do">
-	<jsp:param value="part" name="moduleType"/>
-	<jsp:param value="${partData.oid }" name="oid"/>
-	<jsp:param value="${f:getMessage('관련 문서')}" name="title"/>
-	<jsp:param value="docOid" name="paramName"/>
-</jsp:include>
-
-<!-- 관련 rohs -->
-<jsp:include page="/eSolution/rohs/include_RohsSelect.do">
-	<jsp:param value="${f:getMessage('관련')} RoHS" name="title"/>
-	<jsp:param name="paramName" value="rohsOid"/>
-	<jsp:param value="${partData.oid }" name="oid"/>
-	<jsp:param value="part" name="module"/>
-</jsp:include>
-
-<!-- 첨부 파일 -->
-<table width="100%" border="0" cellpadding="0" cellspacing="3" >
-	<tr bgcolor="ffffff" height=5>
-		<td colspan="5">&nbsp;</td>
-	</tr>                
-          <tr>
-		<td align="left"><img src="/Windchill/jsp/portal/img/bt_01.gif" >
-			<b>
-				${f:getMessage('첨부파일')}
-			</b>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
-	   			<tr>
-	       			<td height="1" width="100%"></td>
-    			</tr>
-			</table>
-			
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="border-left-width: 1px;border-left-style: solid;border-left-color: #e6e6e6;">
-			
-				<tr>
-					<td width="150"></td>
-					<td width="350"></td>
-					<td width="150"></td>
-					<td width="350"></td>
-				</tr>
-				
-				<tr bgcolor="ffffff" height=35>
-					<td class="tdblueM">${f:getMessage('첨부파일')}</td>
-					
-					<td class="tdwhiteL" colspan="3">
-						<jsp:include page="/eSolution/content/includeAttachFiles.do" flush="true">
-							<jsp:param name="formId" value="partModifyForm"/>
-							<jsp:param name="type" value="secondary"/>
-							<jsp:param name="oid" value="${partData.oid }"/>
-							<jsp:param name="btnId" value="updateBtn" />
-						</jsp:include>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-
 </form>
 </body>
 </html>

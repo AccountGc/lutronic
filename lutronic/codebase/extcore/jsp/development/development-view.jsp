@@ -22,7 +22,7 @@ MasterData data = (MasterData) request.getAttribute("masterData");
 		<td class="right">
 			<input type="button" value="완료 취소" title="완료 취소" class="blue"  id="cancelDevelopmentBtn">
 			<input type="button" value="완료" title="완료" class="blue"  id="completeDevelopmentBtn">
-			<input type="button" value="수정" title="수정" id="updateBtn">
+			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
 			<%
 			if (isAdmin) {
 			%>

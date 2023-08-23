@@ -603,8 +603,8 @@ public class StandardPartService extends StandardManager implements PartService 
 //	}
 
 	@Override
-	public ResultData updatePartAction(Map<String, Object> map) {
-		ResultData data = new ResultData();
+	public Map<String, Object> updatePartAction(Map<String, Object> params) {
+		Map<String, Object> data = new HashMap<String, Object>();
 		
 		ReferenceFactory rf = new ReferenceFactory();
 		Transaction trx = new Transaction();
@@ -613,7 +613,7 @@ public class StandardPartService extends StandardManager implements PartService 
 		//WTPart oldPart = null;
 		
 		try {
-			String oid = StringUtil.checkNull((String)map.get("oid"));
+			String oid = StringUtil.checkNull((String)params.get("oid"));
 			
 			if(oid.length() > 0) {
 				
@@ -628,7 +628,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				
 				
-				String partName = StringUtil.checkNull((String)map.get("partName"));							// 품목명
+				String partName = StringUtil.checkNull((String)params.get("partName"));							// 품목명
 				
 				if (!oldPartName.equals(partName)) {
 					
@@ -639,7 +639,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				}
 				
 				// 단위 정보 셋팅
-				String unit = StringUtil.checkNull((String)map.get("unit"));									// 단위 (NumberCode)
+				String unit = StringUtil.checkNull((String)params.get("unit"));									// 단위 (NumberCode)
 				updateQuantityUnit(part, unit);
 				
 				part = (WTPart) PersistenceHelper.manager.modify(part);
@@ -647,7 +647,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				
 				// IBA 설정
-				CommonHelper.service.changeIBAValues(part, map);
+				CommonHelper.service.changeIBAValues(part, params);
 			
 				// 체크인
 			
@@ -658,7 +658,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				part = (WTPart) PersistenceHelper.manager.refresh(part);
 
 				// 제품분류에 따라 폴더설정
-				String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
+				String fid = StringUtil.checkNull((String)params.get("fid"));										// 분류체계
 				
 				if (fid.length() > 0) {
 					Folder folder = (Folder)CommonUtil.getObject(fid);
@@ -682,23 +682,23 @@ public class StandardPartService extends StandardManager implements PartService 
 					
 					EpmUtilHelper.service.changeEPMName(epm, partName);
 					
-					CommonHelper.service.changeIBAValues(epm, map);
+					CommonHelper.service.changeIBAValues(epm, params);
 				}else {
 					// 주 도면
-					String primary = StringUtil.checkNull((String)map.get("primary"));
+					String primary = StringUtil.checkNull((String)params.get("primary"));
 					//System.out.println("===============================  " + primary);
 					if(primary.length() > 0) {
-						map.put("oid", CommonUtil.getOIDString(part));
-						map.put("epmfid", fid);
-						map.put("lifecycle", "LC_PART");
-						epm = DrawingHelper.service.createEPM(map);
+						params.put("oid", CommonUtil.getOIDString(part));
+						params.put("epmfid", fid);
+						params.put("lifecycle", "LC_PART");
+						epm = DrawingHelper.service.createEPM(params);
 						EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
 						PersistenceServerHelper.manager.insert(link);
 					}
 				}
 				
 				// 관련 문서
-				String[] docOids = (String[])map.get("docOids");
+				String[] docOids = (String[])params.get("docOids");
 				QueryResult results = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class, false);
 				while (results.hasMoreElements()) {
 					WTPartDescribeLink link = (WTPartDescribeLink) results.nextElement();
@@ -721,30 +721,30 @@ public class StandardPartService extends StandardManager implements PartService 
 					PersistenceServerHelper.manager.remove(link);
 				}
 				
-				String[] rohsOid = (String[])map.get("rohsOid");
+				String[] rohsOid = (String[])params.get("rohsOid");
 				if(rohsOid != null){
 					RohsHelper.service.createROHSToPartLink(part, rohsOid);
 				}
 				
 				// 첨부파일
-				String[] add_secondary = (String[])map.get("secondary");
-				String[] secondary = (String[])map.get("delocIds");
+				String[] add_secondary = (String[])params.get("secondary");
+				String[] secondary = (String[])params.get("delocIds");
 				CommonContentHelper.service.attach(part, null, add_secondary, secondary);
 				
 				//Instance 속성 전파
 				if(partData.isGENERIC()){
-					copyInstanceAttribute(part,map);
+					copyInstanceAttribute(part,params);
 				}
 				trx.commit();
 				trx = null;
 				
-				data.setResult(true);
-				data.setOid(CommonUtil.getOIDString(part));
+				data.put("result", true);
+				data.put("oid", CommonUtil.getOIDString(part));
 			}
 			
 		} catch (Exception e) {
-			data.setResult(false);
-			data.setMessage(e.getLocalizedMessage());
+			data.put("result", false);
+			data.put("msg", e.getLocalizedMessage());
 			e.printStackTrace();
 		} finally {
 			if(trx != null) {
@@ -1943,11 +1943,11 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 
 	@Override
-	public Map<String, Object> delete(Map<String, String> hash) throws Exception {
+	public Map<String, Object> delete(Map<String, Object> params) throws Exception {
 
 		Map<String, Object> rtnVal = new HashMap<String, Object>();
 		Transaction trx = new Transaction();
-		String oid = (String) hash.get("oid");
+		String oid = (String) params.get("oid");
 		boolean isDelete = true;
 
 		boolean result = true;
