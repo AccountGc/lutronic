@@ -30,6 +30,7 @@ import com.e3ps.development.beans.DevActiveData;
 import com.e3ps.development.beans.DevTaskData;
 import com.e3ps.development.beans.MasterData;
 import com.e3ps.development.service.DevelopmentHelper;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
@@ -182,44 +183,54 @@ public class DevelopmentController extends BaseController{
 		return model;
 	}
 	
-	/**  개발업무 관리 삭제 수행
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = " 개발업무 관리 삭제 수행")
 	@ResponseBody
-	@RequestMapping("/deleteDevelopmentAction")
-	public ResultData deleteDevelopmentAction(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) {
-		return DevelopmentHelper.service.deleteDevelopmentAction(oid);
+	@PostMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestBody Map<String, Object> params) {
+		String oid = (String) params.get("oid");
+		Map<String, Object> result = DevelopmentHelper.service.deleteDevelopmentAction(oid);
+		if((boolean) result.get("result")) {
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
+		return result;
 	}
 	
-	/**  개발업무 관리 수정 페이지
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
-	@RequestMapping("/updateDevelopment")
-	public ModelAndView updateDevelopment(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid){
+	@Description(value = "개발업무 관리 수정 페이지")
+	@GetMapping(value = "/update")
+	public ModelAndView updateDevelopment(@RequestParam String oid){
 		ModelAndView model = new ModelAndView();
 		devMaster master = (devMaster)CommonUtil.getObject(oid);
-		MasterData data = new MasterData(master);
+		MasterData data = null;
+		try {
+			data = new MasterData(master);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		model.setViewName("empty:/development/updateDevelopment");
-		model.addObject("masterData", data);
+		model.setViewName("/extcore/jsp/development/updateDevelopment.jsp");
+		model.addObject("data", data);
 		return model;
 	}
 	
-	/**  개발업무 관리 수정 수행
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value="개발업무 관리 수정 수행")
 	@ResponseBody
-	@RequestMapping("/updateDevelopmentAction")
-	public ResultData updateDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
-		//Map<String,String> map = DevelopmentHelper.service.requestDevelopmentMapping(request, response);
-		return DevelopmentHelper.service.updateDevelopmentAction(request, response);
+	@PostMapping(value = "/update")
+	public Map<String, Object> update(@RequestBody Map<String, Object> params) {
+		
+		Map<String, Object> result = DevelopmentHelper.service.updateDevelopmentAction(params);
+		if((boolean) result.get("result")) {
+			result.put("oid", result.get("oid"));
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
+		return result;
 	}
 	
 	

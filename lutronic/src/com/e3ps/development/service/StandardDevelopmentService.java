@@ -212,8 +212,8 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 	}
 	
 	@Override
-	public ResultData deleteDevelopmentAction(String oid) {
-		ResultData data = new ResultData();
+	public Map<String, Object> deleteDevelopmentAction(String oid) {
+		Map<String, Object> data = new HashMap<String, Object>();
 		
 		try {
 			devMaster master = (devMaster)CommonUtil.getObject(oid);
@@ -241,33 +241,33 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 			}
 			
 			PersistenceHelper.manager.delete(master);
-			data.setResult(true);
-			data.setMessage(Message.get("삭제 되었습니다."));
+			data.put("result", true);
+			data.put("msg", Message.get("삭제 되었습니다."));
 		} catch(Exception e) {
 			e.printStackTrace();
-			data.setResult(false);
-			data.setMessage(e.getLocalizedMessage());
+			data.put("result", false);
+			data.put("msg", e.getLocalizedMessage());
 		}
 		return data;
 	}
 	
 	@Override
-	public ResultData updateDevelopmentAction(HttpServletRequest request, HttpServletResponse response) {
-		ResultData data = new ResultData();
+	public Map<String, Object> updateDevelopmentAction(Map<String, Object> params) {
+		Map<String, Object> data = new HashMap<String, Object>();
 		
 		Transaction trx = new Transaction();
 		try{
 			trx.start();
-			String oid = StringUtil.checkNull(request.getParameter("oid"));
+			String oid = StringUtil.checkNull((String) params.get("oid"));
 			
 		 	devMaster master = (devMaster)CommonUtil.getObject(oid);
 		 	
-		 	String model = StringUtil.checkNull(request.getParameter("model"));
-			String developmentStart = StringUtil.checkNull(request.getParameter("developmentStart"));
-			String developmentEnd = StringUtil.checkNull(request.getParameter("developmentEnd"));
-			String description = StringUtil.checkNull(request.getParameter("description"));
-			String dm = StringUtil.checkNull(request.getParameter("dm"));
-			String name = StringUtil.checkNull(request.getParameter("name"));
+		 	String model = StringUtil.checkNull((String) params.get("model"));
+			String developmentStart = StringUtil.checkNull((String) params.get("developmentStart"));
+			String developmentEnd = StringUtil.checkNull((String) params.get("developmentEnd"));
+			String description = StringUtil.checkNull((String) params.get("description"));
+			String dm = StringUtil.checkNull((String) params.get("dm"));
+			String name = StringUtil.checkNull((String) params.get("name"));
 			
 			master.setModel(model);
 			master.setStartDay(developmentStart);
@@ -280,13 +280,13 @@ public class StandardDevelopmentService extends StandardManager implements Devel
 			
 			trx.commit();
 			trx = null;
-			data.setResult(true);
-			data.setOid(CommonUtil.getOIDString(master));
+			data.put("result", true);
+			data.put("oid", CommonUtil.getOIDString(master));
 			
 		} catch(Exception e) {
 			e.printStackTrace();
-			data.setResult(false);
-			data.setMessage(e.getLocalizedMessage());
+			data.put("result", false);
+			data.put("msg", e.getLocalizedMessage());
 		}
 		return data;
 	}

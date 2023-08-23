@@ -208,12 +208,12 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 삭제")
 	@ResponseBody
 	@RequestMapping("/delete")
-	public Map<String, Object> deleteDocumentAction(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> delete(@RequestBody Map<String, Object> params) {
 		
 		Map<String, Object> result = DocumentHelper.service.deleteDocumentAction(params);
 		if((boolean) result.get("result")) {
 			result.put("oid", result.get("oid"));
-			result.put("msg", SAVE_MSG);
+			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
 		} else {
 			result.put("result", FAIL);
@@ -238,13 +238,13 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 수정")
 	@ResponseBody
-	@PostMapping(value = "/updateDocumentAction")
-	public Map<String, Object> updateDocumentAction(@RequestBody Map<String, Object> params) {
+	@PostMapping(value = "/update")
+	public Map<String, Object> update(@RequestBody Map<String, Object> params) {
 		
 		Map<String, Object> result = DocumentHelper.service.updateDocumentAction(params);
 		if((boolean) result.get("result")) {
 			result.put("oid", result.get("oid"));
-			result.put("msg", SAVE_MSG);
+			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
 		} else {
 			result.put("result", FAIL);

@@ -256,7 +256,7 @@ $(function() {
 			const primarys = toArray("primarys");
 			
 			const params = new Object();
-			const url = getCallUrl("/doc/updateDocumentAction");
+			const url = getCallUrl("/doc/update");
 			params.oid = oid;
 // 			params.location = location;
 			params.docName = docName.value;

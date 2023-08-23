@@ -22,9 +22,9 @@ public interface DevelopmentService {
 	
 	Map<String,Object> listDevelopmentAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
-	ResultData deleteDevelopmentAction(String oid);
+	Map<String, Object> deleteDevelopmentAction(String oid);
 	
-	ResultData updateDevelopmentAction(HttpServletRequest request, HttpServletResponse response);
+	Map<String, Object> updateDevelopmentAction(Map<String, Object> params);
 	
 	ResultData editTaskAction(HttpServletRequest request, HttpServletResponse response);
 

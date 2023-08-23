@@ -22,11 +22,11 @@ MasterData data = (MasterData) request.getAttribute("masterData");
 		<td class="right">
 			<input type="button" value="완료 취소" title="완료 취소" class="blue"  id="cancelDevelopmentBtn">
 			<input type="button" value="완료" title="완료" class="blue"  id="completeDevelopmentBtn">
-			<input type="button" value="수정" title="수정" onclick="update('modify');">
+			<input type="button" value="수정" title="수정" id="updateBtn">
 			<%
 			if (isAdmin) {
 			%>
-			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
+			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
 			<%
 			}
 			%>
@@ -100,32 +100,37 @@ MasterData data = (MasterData) request.getAttribute("masterData");
 	</div>
 </div>
 <script type="text/javascript">
-// 	function update(mode) {
+	//수정
+// 	function update () {
 // 		const oid = document.getElementById("oid").value;
-// 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-// 		openLayer();
+// 		const url = getCallUrl("/development/update?oid=" + oid);
 // 		document.location.href = url;
-// 	}
+// 	};
+	
+	//삭제
+	$("#deleteBtn").click(function () {
+	
+		if (!confirm("삭제 하시겠습니까?")) {
+			return false;
+	}
 
-// 	function _delete() {
-
-// 		if (!confirm("삭제 하시겠습니까?")) {
-// 			return false;
-// 		}
-
-// 		const oid = document.getElementById("oid").value;
-// 		const url = getCallUrl("/doc/delete?oid=" + oid);
-// 		openLayer();
-// 		call(url, null, function(data) {
-// 			alert(data.msg);
-// 			if (data.result) {
-// // 				opener.loadGridData();
-// 				self.close();
-// 			} else {
-// 				closeLayer();
-// 			}
-// 		}, "GET");
-// 	}
+	const oid = document.getElementById("oid").value;
+	const url = getCallUrl("/development/delete");
+	const params = new Object();
+	params.oid = oid;
+	call(url, params, function(data) {
+		alert(data.msg);
+		if (data.result) {
+			if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+				parent.opener.location.reload();
+			}else {
+				parent.opener.$("#sessionId").val("");
+				parent.opener.lfn_Search();
+			}
+			window.close();
+		}
+	});
+})
 
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({

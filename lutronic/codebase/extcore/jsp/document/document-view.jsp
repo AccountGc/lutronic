@@ -362,6 +362,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		const params = new Object();
 		params.oid = oid;
 		call(url, params, function(data) {
+			alert(data.msg);
 			if (data.result) {
 				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
 					parent.opener.location.reload();

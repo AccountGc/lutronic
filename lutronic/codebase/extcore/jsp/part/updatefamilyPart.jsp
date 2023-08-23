@@ -35,7 +35,7 @@ String oid = (String) request.getAttribute("oid");
 				</table>
 			</td>
 		</tr>
-		<tr align=center>
+		<tr align="center">
 			<td valign="top" style="padding:0px 0px 0px 0px">		
 				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
 					<tr>
