@@ -5,7 +5,7 @@
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 boolean popup = false;
-if(request.getParameter("popup")!=null){
+if (request.getParameter("popup") != null) {
 	popup = true;
 }
 %>
@@ -17,12 +17,11 @@ if(request.getParameter("popup")!=null){
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js?=33"></script>
 </head>
 <body>
 	<form id="documentForm">
 		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
 
@@ -40,18 +39,22 @@ if(request.getParameter("popup")!=null){
 					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
 				</td>
 				<th>버전</th>
-				<td>&nbsp;
+				<td>
+					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="true" checked="checked">
 						<div class="state p-success">
-							<label> <b>최신버전</b>
+							<label>
+								<b>최신버전</b>
 							</label>
 						</div>
-					</div> &nbsp;
+					</div>
+					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="false">
 						<div class="state p-success">
-							<label> <b>모든버전</b>
+							<label>
+								<b>모든버전</b>
 							</label>
 						</div>
 					</div>
@@ -59,44 +62,62 @@ if(request.getParameter("popup")!=null){
 			</tr>
 			<tr>
 				<th>문서 번호</th>
-				<td class="indent5"><input type="text" name="number" id="number" class="width-200"></td>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-200">
+				</td>
 				<th>문서명</th>
-				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-200">
+				</td>
 			</tr>
 			<tr>
 				<th>등록일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
 				<th>수정일</th>
-				<td class="indent5"><input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="modifiedTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('modifiedFrom', 'modifiedTo')"></td>
+				<td class="indent5">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+				</td>
 			</tr>
 			<tr>
 				<th>등록자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
 				<th>상태</th>
-				<td class="indent5"><select name="state" id="state" class="width-200">
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
-				</select></td>
+					</select>
+				</td>
 			</tr>
 		</table>
 		<table class="button-table">
 			<tr>
 				<%
-				if(!popup){
+				if (!popup) {
 				%>
-					<td class="left">
-						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-						<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
-						<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
-					</td>
+				<td class="left">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
+				</td>
 				<%
 				}
-				%>	
+				%>
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="30">30</option>
@@ -104,15 +125,15 @@ if(request.getParameter("popup")!=null){
 						<option value="100">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
-					</select> 
+					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
 					<input type="button" value="초기화" title="초기화" id="reset">
 					<%
-					if(popup){
-					%>	
-						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-						<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
+					if (popup) {
+					%>
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 					<%
 					}
 					%>
@@ -126,17 +147,16 @@ if(request.getParameter("popup")!=null){
 				<col width="*">
 			</colgroup>
 			<tr>
-				<td valign="top">
-					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
+				<td valign="top"><jsp:include page="/extcore/jsp/common/folder-include.jsp">
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
 						<jsp:param value="670" name="height" />
-					</jsp:include>
-				</td>
+					</jsp:include></td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
 					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
@@ -261,15 +281,6 @@ if(request.getParameter("popup")!=null){
 						showIcon : true,
 						inline : true,
 					},
-				}, {
-						dataField : "oid",
-						headerText : "oid",
-						dataType : "string",
-						width : 100,
-						filter : {
-							showIcon : true,
-							inline : true,
-						},
 				} ]
 			}
 
@@ -291,6 +302,7 @@ if(request.getParameter("popup")!=null){
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
@@ -310,13 +322,13 @@ if(request.getParameter("popup")!=null){
 				params = toField(params, field);
 				params.latest = latest;
 				AUIGrid.showAjaxLoader(myGridID);
-//  				parent.openLayer();
  				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-//							document.getElementById("lastNum").value = data.list.length;
+						createPagingNavigator(data.curPage);
+// 						document.getElementById("curPage").value = data.curPage;
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

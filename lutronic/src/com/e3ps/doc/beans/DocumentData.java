@@ -73,16 +73,14 @@ public class DocumentData {
 	private String changeDate;
 
 	public DocumentData(WTDocument doc) throws Exception {
-//		super();
-//		setDoc(doc);
 		setOid(CommonUtil.getOIDString(doc));
 		setNumber(doc.getNumber());
 		setName(doc.getName());
 		setState(doc.getLifeCycleState().getDisplay());
 		setCreator(doc.getCreatorFullName());
 		setModifier(doc.getModifierFullName());
-		setCreateDate(DateUtil.getDateString(doc.getCreateTimestamp(), "a"));
-		setModifyDate(DateUtil.getDateString(doc.getModifyTimestamp(), "a"));
+		setCreateDate(DateUtil.getDateString(doc.getCreateTimestamp(), "d"));
+		setModifyDate(DateUtil.getDateString(doc.getModifyTimestamp(), "d"));
 		setDescription(doc.getDescription());
 		setDocumentType(doc.getDocType().getDisplay(Message.getLocale()));
 

@@ -294,3 +294,58 @@ function expand() {
 		isExpanded = false;
 	}
 };
+
+/**
+ * 페이징 처리 스크립트
+ */
+
+//let totalRowCount;
+let rowCount = 30;
+let pageButtonCount = 10;
+let currentPage = 1;
+let totalPage;
+function createPagingNavigator(goPage) {
+	let retStr = "";
+	let prevPage = parseInt((goPage - 1) / pageButtonCount) * pageButtonCount;
+	let nextPage = ((parseInt((goPage - 1) / pageButtonCount)) * pageButtonCount) + pageButtonCount + 1;
+	prevPage = Math.max(0, prevPage);
+	nextPage = Math.min(nextPage, totalPage);
+	// 처음
+	retStr += "<a href='javascript:moveToPage(1)'><span class='aui-grid-paging-number aui-grid-paging-first'>first</span></a>";
+
+	// 이전
+	retStr += "<a href='javascript:moveToPage(" + Math.max(1, prevPage) + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
+
+	for (var i = (prevPage + 1), len = (pageButtonCount + prevPage); i <= len; i++) {
+		if (goPage == i) {
+			retStr += "<span class='aui-grid-paging-number aui-grid-paging-number-selected'>" + i + "</span>";
+		} else {
+			retStr += "<a href='javascript:moveToPage(" + i + ")'><span class='aui-grid-paging-number'>";
+			retStr += i;
+			retStr += "</span></a>";
+		}
+
+		if (i >= totalPage) {
+			break;
+		}
+	}
+
+	// 다음
+	retStr += "<a href='javascript:moveToPage(" + nextPage + ")'><span class='aui-grid-paging-number aui-grid-paging-next'>next</span></a>";
+
+	// 마지막
+	retStr += "<a href='javascript:moveToPage(" + totalPage + ")'><span class='aui-grid-paging-number aui-grid-paging-last'>last</span></a>";
+
+	document.getElementById("grid_paging").innerHTML = retStr;
+}
+
+
+/**
+ * 페이지 이동 스크립트
+ */
+function moveToPage(goPage) {
+	createPagingNavigator(goPage);
+	currentPage = goPage;
+	document.getElementById("curPage").value = goPage;
+	loadGridData();
+}
