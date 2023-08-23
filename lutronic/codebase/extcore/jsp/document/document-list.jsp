@@ -17,7 +17,6 @@ if (request.getParameter("popup") != null) {
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js?=33"></script>
 </head>
 <body>
 	<form id="documentForm">
@@ -307,7 +306,6 @@ if (request.getParameter("popup") != null) {
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
