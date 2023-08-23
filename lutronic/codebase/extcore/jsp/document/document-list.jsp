@@ -326,12 +326,10 @@ if (request.getParameter("popup") != null) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
 						createPagingNavigator(data.curPage);
-// 						document.getElementById("curPage").value = data.curPage;
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
 				});
 			}
 
