@@ -22,7 +22,6 @@ if (request.getParameter("popup") != null) {
 	<form id="documentForm">
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -301,7 +300,6 @@ if (request.getParameter("popup") != null) {
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
@@ -315,7 +313,7 @@ if (request.getParameter("popup") != null) {
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = ["_psize","oid","name","number", "state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo"];
+				const field = ["_psize","name","number", "state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo"];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = latest;

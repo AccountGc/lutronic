@@ -20,7 +20,6 @@
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -408,7 +407,7 @@
 			function loadGridData() {
  				let params = new Object();
  				const url = getCallUrl("/drawing/list");
-				const field = ["_psize", "oid", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				const field = ["_psize", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
  				params = toField(params, field);
  				AUIGrid.showAjaxLoader(myGridID);
  				call(url, params, function(data) {

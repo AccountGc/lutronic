@@ -20,7 +20,7 @@ if(request.getParameter("popup")!=null){
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage">
 
 		<table class="search-table">
 			<colgroup>
@@ -284,7 +284,6 @@ if(request.getParameter("popup")!=null){
 						fillColumnSizeMode: true,
 				};
 				myEcoGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myEcoGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myEcoGridID, "vScrollChange", function(event) {
@@ -298,7 +297,7 @@ if(request.getParameter("popup")!=null){
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/changeECO/list");
-				const field = ["_psize","oid","name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
+				const field = ["_psize", "name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myEcoGridID);
 				call(url, params, function(data) {

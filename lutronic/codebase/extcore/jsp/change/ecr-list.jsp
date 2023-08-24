@@ -16,7 +16,7 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage">
 
 		<table class="search-table">
 			<colgroup>
@@ -276,7 +276,7 @@
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/changeECR/list");
-				const field = ["_psize","oid","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
+				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {

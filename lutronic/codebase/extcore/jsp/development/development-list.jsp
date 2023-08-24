@@ -19,7 +19,6 @@
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -190,7 +189,6 @@
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {

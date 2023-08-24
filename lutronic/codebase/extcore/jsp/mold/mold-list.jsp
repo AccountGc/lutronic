@@ -19,7 +19,6 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
 		
 		<table class="search-table">
 			<colgroup>
@@ -272,7 +271,6 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
@@ -286,7 +284,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/mold/list");
-				const field = ["_psize","oid","islastversion","docNumber","docName","predate","postdate","predate_modify","postdate_modify", "creator", "state", "documentType", "preseration", "model", "interalnumber", "deptcode", "writer", "description", "sortValue", "sortCheck", "searchType", "manufacture", "moldtype", "moldnumber", "moldcost"];
+				const field = ["_psize","islastversion","docNumber","docName","predate","postdate","predate_modify","postdate_modify", "creator", "state", "documentType", "preseration", "model", "interalnumber", "deptcode", "writer", "description", "sortValue", "sortCheck", "searchType", "manufacture", "moldtype", "moldnumber", "moldcost"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {

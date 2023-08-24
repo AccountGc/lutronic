@@ -24,7 +24,6 @@ if(request.getParameter("popup")!=null){
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -447,7 +446,6 @@ if(request.getParameter("popup")!=null){
 // 					fillColumnSizeMode: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
@@ -461,7 +459,7 @@ if(request.getParameter("popup")!=null){
 			function loadGridData() {
  				let params = new Object();
  				const url = getCallUrl("/part/list");
- 				const field = ["_psize", "oid", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo", "eoNo"];
+ 				const field = ["_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo", "eoNo"];
  				params = toField(params, field);
  				AUIGrid.showAjaxLoader(myGridID);
  				call(url, params, function(data) {

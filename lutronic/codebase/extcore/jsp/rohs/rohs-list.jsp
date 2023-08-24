@@ -36,7 +36,6 @@ if(request.getParameter("popup")!=null){
 		<input type="hidden" name="sessionid" id="sessionid"> 
 		<input type="hidden" name="lastNum" id="lastNum"> 
 		<input type="hidden" name="curPage" id="curPage"> 
-		<input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -234,7 +233,6 @@ if(request.getParameter("popup")!=null){
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
@@ -248,7 +246,7 @@ if(request.getParameter("popup")!=null){
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
-				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
+				const field = ["_psize","name","number","description","state","creatorOid","createdFrom","createdTo"];
 				params = toField(params, field);
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
