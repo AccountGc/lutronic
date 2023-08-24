@@ -69,7 +69,7 @@ public class EOData {
     	setCreator(eo.getCreatorFullName());
     	setCreateDate(DateUtil.getDateString(eo.getCreateTimestamp(),"a"));
     	setModifyDate(DateUtil.getDateString(eo.getCreateTimestamp(),"a"));
-    	setState(eo.getLifeCycleState().toString());
+    	setState(eo.getLifeCycleState().getDisplay());
     	setEoApproveDate(eo.getEoApproveDate());
 		
     }

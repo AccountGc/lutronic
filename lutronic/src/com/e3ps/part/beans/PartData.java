@@ -135,7 +135,7 @@ public class PartData {
     	}
     	setName(part.getName());
 //    	setState(part.getLifeCycleState().toString());
-    	setState(part.getLifeCycleState().getDisplay(Message.getLocale()));
+    	setState(part.getLifeCycleState().getDisplay());
     	setCreator(part.getCreatorFullName());
 //    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
 //    	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));

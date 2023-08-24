@@ -51,7 +51,7 @@ public class RohsData{
 		setOid(CommonUtil.getOIDString(rohs));
 		setNumber(rohs.getNumber());
 		setName(rohs.getName());
-		setState(rohs.getLifeCycleState().toString());
+		setState(rohs.getLifeCycleState().getDisplay());
 		setCreator(rohs.getCreatorFullName());
 		setModifier(rohs.getModifierFullName());
 		setCreateDate(DateUtil.getDateString(rohs.getCreateTimestamp(),"a"));

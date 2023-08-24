@@ -79,7 +79,7 @@ public class ECOData{
     	}else {
     		setEoTypeDisplay("설계변경");
     	}
-		setState(eco.getLifeCycleState().toString());
+    	setState(eco.getLifeCycleState().getDisplay());
 		setCreator(eco.getCreatorFullName());
 		setCreateDate(DateUtil.getDateString(eco.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(eco.getModifyTimestamp(),"a"));

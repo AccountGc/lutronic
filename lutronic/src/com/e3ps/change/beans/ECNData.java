@@ -25,7 +25,7 @@ public class ECNData extends EOData{
 		setOid(ecn.getPersistInfo().getObjectIdentifier().toString());
 		setNumber(ecn.getEoNumber());
 		setName(ecn.getEoName());
-		setState(ecn.getLifeCycleState().getDisplay(Message.getLocale()));
+		setState(ecn.getLifeCycleState().getDisplay());
 		setCreator(ecn.getCreatorFullName());
 		setCreateDateD(DateUtil.getDateString(ecn.getCreateTimestamp(), "d"));
 	}
