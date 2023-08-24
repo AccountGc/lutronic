@@ -7,3 +7,7 @@
 	
 3. IBA Loader
 	- Shell ->Windchill wt.load.LoadFromFile -d D:\ptc\Windchill_11.1\Windchill\loadFiles\iba\lutronice_iba.xml -u wcadmin -p wcadmin1
+	
+4. ResourceBuild 실행
+	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.code.** -Dbundle.buildLocales=true
+	
