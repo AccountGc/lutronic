@@ -14,6 +14,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.drawing.beans.EpmData;
@@ -21,6 +22,7 @@ import com.e3ps.org.People;
 import com.e3ps.part.service.VersionHelper;
 
 import net.sf.json.JSONArray;
+import wt.clients.folder.FolderTaskLogic;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMDescribeLink;
@@ -29,6 +31,8 @@ import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
+import wt.folder.Folder;
+import wt.folder.FolderHelper;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.FloatValue;
@@ -86,15 +90,18 @@ public class DrawingHelper {
 
 			
 			String temp = "";
-//			Folder folder = null;
-//			if(foid!=null && foid.length() > 0){
-//				folder = (Folder)rf.getReference(foid).getObject();
-//				location = FolderHelper.getFolderPath( folder );
-//				temp = folder.getName();
-//			}else{
-//				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-//				foid="";
-//			}
+			Folder folder = null;
+			if (location == null || location.length() == 0) {
+				location = "/Default/PART_Drawing";
+			}
+			if(foid!=null && foid.length() > 0){
+				folder = (Folder)rf.getReference(foid).getObject();
+				location = FolderHelper.getFolderPath( folder );
+				temp = folder.getName();
+			}else{
+				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+				foid="";
+			}
 			
 			// 최신 이터레이션
 			if(query.getConditionCount() > 0) { query.appendAnd(); }

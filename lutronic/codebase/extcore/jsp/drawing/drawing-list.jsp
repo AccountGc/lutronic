@@ -40,7 +40,7 @@
 				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="true" checked="checked">
+						<input type="radio" id="islastversion"name="islastversion" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>최신버전</b>
@@ -49,7 +49,7 @@
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="">
+						<input type="radio" id="islastversion"name="islastversion" value="">
 						<div class="state p-success">
 							<label>
 								<b>모든버전</b>
@@ -93,17 +93,17 @@
 			<tr>
 				<th>등록일</th>
 				<td class="indent5">
-					<input type="text" name="predate" id="createdFrom" class="width-100">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
 					~
-					<input type="text" name="postdate" id="createdTo" class="width-100">
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
-					<input type="text" name="predate_modify" id="modifiedFrom" class="width-100">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
 					~
-					<input type="text" name="postdate_modify" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
 				</td>
 			</tr>
 			<tr>
@@ -258,6 +258,7 @@
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
 					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
@@ -394,11 +395,11 @@
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
@@ -408,23 +409,19 @@
 			function loadGridData() {
  				let params = new Object();
  				const url = getCallUrl("/drawing/list");
-// 				 				const field = ["_psize","oid","islastversion","cadDivision","cadType","number","name","predate","postdate", "predate_modify", "postdate_modify", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
-				 				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
-				 				params = toField(params, field);
-				 				params.latest = latest; */
+				const field = ["_psize", "oid", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+ 				params = toField(params, field);
  				AUIGrid.showAjaxLoader(myGridID);
- 				parent.openLayer();
  				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-// 										document.getElementById("lastNum").value = data.list.length;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-					parent.closeLayer();
 				});
 			}
 
