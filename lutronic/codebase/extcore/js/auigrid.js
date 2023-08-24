@@ -300,7 +300,7 @@ function expand() {
  */
 
 //let totalRowCount;
-let rowCount = 30;
+//let rowCount = 30;
 let pageButtonCount = 10;
 let currentPage = 1;
 let totalPage;
@@ -316,7 +316,7 @@ function createPagingNavigator(goPage) {
 	// 이전
 	retStr += "<a href='javascript:moveToPage(" + Math.max(1, prevPage) + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
 
-	for (var i = (prevPage + 1), len = (pageButtonCount + prevPage); i <= len; i++) {
+	for (let i = (prevPage + 1), len = (pageButtonCount + prevPage); i <= len; i++) {
 		if (goPage == i) {
 			retStr += "<span class='aui-grid-paging-number aui-grid-paging-number-selected'>" + i + "</span>";
 		} else {
