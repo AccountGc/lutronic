@@ -33,7 +33,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<input type="button" value="하위품목" title="하위품목"  id="downItem">
 			<input type="button" value="END ITEM" title="END ITEM"  id="endItem">
 <%-- 			<% if(!data.isLateste()){ %> --%>
-				<input type="button" value="최신Rev." title="최신Rev."  id="latestBtn" value="<%-- data.latestOid() --%>">
+<%-- 				<input type="button" value="최신Rev." title="최신Rev."  id="latestBtn" value="data.latestOid()"> --%>
 <%-- 			<% } %> --%>
 			<input type="button"  value="Rev.이력"  title="Rev.이력" id="versionBtn">
 			<input type="button"  value="BOM"  title="BOM"  id="auiBom">
@@ -765,13 +765,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 	
 	$("#Compare").click(function() {
-// 		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
-// 		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-// 		leftpos = (screen.width - 1000)/ 2;
-// 		toppos = (screen.height - 600) / 2 ;
-// 		rest = "width=1300,height=600,left=" + leftpos + ',top=' + toppos;
-// 		var newwin = window.open( str , "compareBOM", opts+rest);
-// 		newwin.focus();
+		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
+		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
+		leftpos = (screen.width - 1000)/ 2;
+		toppos = (screen.height - 600) / 2 ;
+		rest = "width=1300,height=600,left=" + leftpos + ',top=' + toppos;
+		var newwin = window.open( str , "compareBOM", opts+rest);
+		newwin.focus();
 	})
 	
 	$("#orderNumber").click(function() {

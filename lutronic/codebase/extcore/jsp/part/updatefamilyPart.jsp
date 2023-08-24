@@ -132,7 +132,7 @@ function createAUIGrid(columnLayout) {
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-	loadGridData();
+// 	loadGridData();
 	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 		hideContextMenu();
@@ -162,8 +162,8 @@ function loadGridData() {
 document.addEventListener("DOMContentLoaded", function() {
 	const columns = loadColumnLayout("downloadHistory");
 	const contenxtHeader = genColumnHtml(columns);
-// 	createAUIGrid(columns);
-// 	AUIGrid.resize(myGridID);
+	createAUIGrid(columns);
+	AUIGrid.resize(myGridID);
 });
 </script>
 </form>

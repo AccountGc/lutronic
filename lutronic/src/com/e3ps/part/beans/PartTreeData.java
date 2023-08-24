@@ -75,17 +75,17 @@ public class PartTreeData implements java.io.Serializable{
         setLevel(level);
         PartData data = new PartData(part);
         
-        setNumber(data.number);
-        setName(data.name);
-        setVersion(data.version);
-        setIteration(data.iteration);
+        setNumber(data.getNumber());
+        setName(data.getName());
+        setVersion(data.getVersion());
+        setIteration(data.getIteration());
         
         if(link!=null){
               double qs = (double)link.getQuantity().getAmount();
               setUnit( link.getQuantity().getUnit().toString());
               setQuantity(qs);
               try{
-                  setItemSeq(data.number);
+                  setItemSeq(data.getNumber());
              }catch(Exception ex){ex.printStackTrace();}
         
         }else {

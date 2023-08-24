@@ -45,6 +45,121 @@ String oid = (String) request.getAttribute("oid");
 	</tr>
 </table>
 <script>
+let myGridID;
+function _layout() {
+	return [ {
+		dataField : "number",
+		headerText : "가도번",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "name",
+		headerText : "품목명",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "number",
+		headerText : "진도번",
+		dataType : "string",
+		width : 120,
+	}, {
+		dataField : "level",
+		headerText : "부품구분",
+		dataType : "string",
+		width : 350,
+	}, {
+		dataField : "count",
+		headerText : "대분류",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "중분류",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "SEQ",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "기타",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "부품명1",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "부품명2",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "부품명3",
+		dataType : "string",
+		width : 250,
+	},{
+		dataField : "count",
+		headerText : "부품명4",
+		dataType : "string",
+		width : 250,
+	}]
+}
+
+function createAUIGrid(columnLayout) {
+	const props = {
+		headerHeight : 30,
+		showRowNumColumn : true,
+		rowNumHeaderText : "번호",
+		fillColumnSizeMode: false,
+		showAutoNoDataMessage : false,
+		selectionMode : "multipleCells",
+		enableMovingColumn : true,
+		enableFilter : true,
+		showInlineFilter : false,
+		useContextMenu : true,
+		enableRightDownFocus : true,
+		filterLayerWidth : 320,
+		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+	};
+	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+	loadGridData();
+	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
+		hideContextMenu();
+		vScrollChangeHandler(event);
+	});
+	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
+		hideContextMenu();
+	});
+}
+
+function loadGridData() {
+	const params = new Object();
+	const url = getCallUrl("/part/partChange");
+	const oid = document.querySelector("#oid").value;
+	params.oid = oid;
+	AUIGrid.showAjaxLoader(myGridID);
+	call(url, params, function(data) {
+		AUIGrid.removeAjaxLoader(myGridID);
+		if (data.result) {
+			AUIGrid.setGridData(myGridID, data.list);
+		} else {
+			alert(data.msg);
+		}
+	});
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	const columns = loadColumnLayout("downloadHistory");
+	const contenxtHeader = genColumnHtml(columns);
+	createAUIGrid(columns);
+	AUIGrid.resize(myGridID);
+});
 </script>
 </form>
 </body>

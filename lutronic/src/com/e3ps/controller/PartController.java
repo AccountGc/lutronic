@@ -432,13 +432,51 @@ public class PartController extends BaseController {
 		return result;
 	}
 	
-	@Description(value = "채번 페이지 AUI Greid 적용 이동")
+	@Description(value = "채번(새버전) 페이지 이동")
 	@GetMapping(value = "/updateAUIPartChange")
 	public ModelAndView updateAUIPartChange(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		model.setViewName("/extcore/jsp/part/updateAUIPartChange.jsp");
 		return model;
+	}
+	
+	@Description(value = "채번(새버전) 페이지 이동")
+	@ResponseBody
+	@PostMapping(value = "/updateAUIPartChange")
+	public Map<String, Object> updateAUIPartChange(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid = (String) params.get("oid");
+		/*
+		List<Map<String,Object>> list = null;
+		
+		try {
+			list = PartHelper.service.partChange(partOid);
+		} catch(Exception e) {
+			e.printStackTrace();
+			list = new ArrayList<Map<String,Object>>();
+		}
+		 */
+		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
+		
+		
+		String checkDummy = (String) params.get("checkDummy");
+		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
+		List<Map<String,Object>> list = null;
+		//System.out.println("updateAUIPackagePartAction oid =" + oid);
+		try {
+			list = BomSearchHelper.service.updateAUIPartChangeListGrid(oid,false);
+		} catch(Exception e) {
+			e.printStackTrace();
+			list = new ArrayList<Map<String,Object>>();
+		}
+		
+		result.put("oid", oid);
+		result.put("list", list);
+		result.put("size", list.size());
+		result.put("partType", partType);
+		
+		return result;
 	}
 //	/**
 //	 * 채번 페이지 AUI Greid 적용 이동
@@ -448,39 +486,7 @@ public class PartController extends BaseController {
 //	 */
 //	@RequestMapping("/updateAUIPartChange")
 //	public ModelAndView updateAUIPartChange(HttpServletRequest request, HttpServletResponse response) {
-//		String partOid = request.getParameter("partOid");
-//		/*
-//		List<Map<String,Object>> list = null;
-//		
-//		try {
-//			list = PartHelper.service.partChange(partOid);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			list = new ArrayList<Map<String,Object>>();
-//		}
-//		 */
-//		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
-//		
-//		
-//		String checkDummy = request.getParameter("checkDummy");
-//		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
-//		List<Map<String,Object>> list = null;
-//		//System.out.println("updateAUIPackagePartAction oid =" + oid);
-//		try {
-//			list = BomSearchHelper.service.updateAUIPartChangeListGrid(partOid,false);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			list = new ArrayList<Map<String,Object>>();
-//		}
-//		
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("partOid", partOid);
-//		model.addObject("list", list);
-//		model.addObject("size", list.size());
-//		model.addObject("partType", partType);
-//		
-//		model.setViewName("popup:/part/updateAUIPartChange");
-//		return model;
+		
 //	}
 	
 	/**  채번 페이지 AUI 수정 수행
