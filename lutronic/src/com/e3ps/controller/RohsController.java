@@ -567,14 +567,15 @@ public class RohsController extends BaseController {
 		return RohsHelper.service.duplicateName(rohsName);
 	}
 	
-	@RequestMapping("/copyRohs")
-	public ModelAndView copyRohs(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception{
+	@Description(value = "물질복사 페이지")
+	@GetMapping(value = "/copyRohs")
+	public ModelAndView copyRohs(@RequestParam String oid) throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-		RohsData rohsData = new RohsData(rohs);
-		model.addObject("rohsData", rohsData);
-		model.setViewName("popup:/rohs/copyRohs");
+		RohsData data = new RohsData(rohs);
+		model.addObject("data", data);
+		model.setViewName("/extcore/jsp/rohs/copyRohs.jsp");
 		return model;
 	}
 	

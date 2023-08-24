@@ -1,16 +1,86 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="com.e3ps.rohs.beans.RohsData"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="wt.org.WTUser"%>
+<%@include file="/extcore/jsp/common/css.jsp"%>
+<%@include file="/extcore/jsp/common/script.jsp"%>
+<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<%
+String oid = (String) request.getAttribute("oid");
+RohsData data = (RohsData) request.getAttribute("data");
+%>
+<!DOCTYPE html>
 <html>
-<%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
-<%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
-<script type="text/javascript" src="/Windchill/jsp/js/common.js"></script>
-<link rel="stylesheet" type="text/css" href="/Windchill/extcore/jsp/css/e3ps.css">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<title></title>
+<%@include file="/extcore/jsp/common/css.jsp"%>
+<%@include file="/extcore/jsp/common/script.jsp"%>
+<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
+<body>
 
+<form name="copyRohsForm" id="copyRohsForm" method="post" >
+
+<input type="hidden" name="oid" id="oid" value="<%= oid %>" />
+
+<input type="hidden" name="docType"			id="docType"				value="$$ROHS"/>
+<input type="hidden" name="location"		id="location"				value="/Default/ROHS" />
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> RoHS 복사
+			</div>
+		</td>
+		<td class="right">
+			<input type="button" value="복사" title="복사" class="" id="copyRohs">
+			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+		</td>
+	</tr>
+</table>
+<table class="search-table">
+	<colgroup>
+		<col width="150">
+		<col width="*">
+		<col width="150">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th>물질 번호<button id="NumberCheck" class="btnSearch" type="button">번호 중복</button></th>
+		<td class="indent5"><input type="text" name="rohsNumber" id="rohsNumber" class="width-200"></td>
+		<th class="req lb">결재방식</th>
+		<td>
+			<div class="pretty p-switch">
+				<input type="radio"name="lifecycle" value="LC_Default" checked="checked">
+				<div class="state p-success">
+					<label> <b>기본결재</b>
+					</label>
+				</div>
+			</div> &nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="lifecycle" value="LC_Default_NonWF">
+				<div class="state p-success">
+					<label> <b>일괄결재</b>
+					</label>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<th class="req lb">물질명<button id="NumberCheck" class="btnSearch" type="button">물질명 중복</button></th>
+		<td class="indent5">
+			<input type="text" name="rohsName" id="rohsName" class="width-200" value="<%= data.getName() %>">
+		</td>
+		<th class="req lb">협력업체</th>
+		<td class="indent5">
+			<select name="manufacture" id="manufacture" class="width-200">
+					<option value="">선택</option>
+					<option value="MF003">MF003</option>
+			</select>
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -23,22 +93,22 @@ $(function() {
 	----------------------------------------------------------%>
 	$('#copyRohs').click(function() {
 		if($.trim($("#rohsName").val()) == '') {
-			alert("${f:getMessage('물질명')}${f:getMessage('을(를) 입력하세요.')}");
+			alert("물질명을(를) 입력하세요.");
 			$("#rohsName").focus();
 			return;
 		}
 		
 		if($("input[name='lifecycle']:checked").length == 0 ){
-			alert("${f:getMessage('결재방식')} ${f:getMessage('을(를) 선택하세요.')}");
+			alert("결재방식을(를) 선택하세요.");
 			return;
 		}
 		
 		if($("#manufacture").val() == '') {
-			alert("${f:getMessage('협력업체')}${f:getMessage('을(를) 선택하세요.')}");
+			alert("협력업체을(를) 선택하세요.");
 			$("#manufacture").focus();
 			return;
 		}
-		if(confirm("${f:getMessage('복사하시겠습니까?')}")){
+		if(confirm("복사하시겠습니까?")){
 			var form = $("form[name=copyRohsForm]").serialize();
 			var url	= getURLString("rohs", "copyRohsAction", "do");
 			$.ajax({
@@ -51,7 +121,7 @@ $(function() {
 
 				success:function(data){
 					if(data.result) {
-						alert('${f:getMessage('복사완료되었습니다.')}');
+						alert('복사완료되었습니다.');
 					}else {
 						alert(data.message);
 					}
@@ -118,7 +188,7 @@ window.numberCodeList = function(id, parentCode1) {
 window.addSelectList = function(id,data){
 	
 	$("#" + id + " option").remove();
-	$("#" + id).append("<option value='' title='' > ${f:getMessage('선택')} </option>");
+	$("#" + id).append("<option value='' title='' >선택</option>");
 	if(data.length > 0) {
 		for(var i=0; i<data.length; i++) {
 			var html = "<option value='" + data[i].code + "'>";
@@ -130,136 +200,6 @@ window.addSelectList = function(id,data){
 }
 
 </script>
-
-<body>
-
-<form name="copyRohsForm" id="copyRohsForm" method="post" >
-
-<input type="hidden" name="oid" id="oid" value="<c:out value="${oid }" />" />
-
-<input type="hidden" name="docType"			id="docType"				value="$$ROHS"/>
-<input type="hidden" name="location"		id="location"				value="/Default/ROHS" />
-
-<table width="100%" border="0" cellpadding="0" cellspacing="0" >
-	<tr height="5">
-		<td>
-			<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center" style="padding-bottom:10px">
-				<tr> 
-					<td height="30" width="99%" align="center"><B><font color="white"><c:out value="${rohsData.number }"/> 복사</font></B></td>
-				</tr>
-			</table>
-			
-			<table width="100%" border="0" cellpadding="0" cellspacing="3">
-				<tr>
-					<td>
-						<img src="/Windchill/jsp/portal/images/base_design/Sub_Right_ico.gif" width="10" height="9" />
-						RoHS${f:getMessage('복사')}
-					</td>
-					
-					<td>
-					
-						<!-- 버튼 테이블 시작 -->
-						<table border="0" cellpadding="0" cellspacing="4" align="right">
-			                <tr>
-			                
-			                	<td>
-									<button type="button" name="copyRohs" id="copyRohs" class="btnCRUD">
-										<span></span>
-										${f:getMessage('복사')}
-									</button>
-								</td>
-								
-		                		<td>
-		                			<button type="button" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
-		                				<span></span>
-		                				${f:getMessage('닫기')}
-		                			</button>
-		                		</td>
-			                
-							</tr>
-			            </table>
-			            <!-- 버튼 테이블 끝 -->
-					</td>
-				</tr>
-				
-				<tr align="center">
-					<td valign="top" style="padding:0px 0px 0px 0px" colspan="2">
-						<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
-								<tr><td height="1" width="100%"></td></tr>
-						</table>
-						
-						<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
-							<col width="150">
-							<col width="350">
-							<col width="150">
-							<col width="350">
-						
-							<tr bgcolor="ffffff" height="35">
-								<td class="tdblueM">
-									${f:getMessage('물질번호')} 
-									<button id="NumberCheck" class="btnSearch" type="button">
-									<span></span>
-									${f:getMessage('번호 중복')}
-									</button>
-								</td>
-								
-								<td class="tdwhiteL">
-									<input name="rohsNumber" id="rohsNumber" class="txt_field" size="85" style="width:90%" maxlength="80"/>
-								</td>
-								
-								<td class="tdblueM">
-									${f:getMessage('결재방식')} <span class="style1">*</span>
-								</td>
-								
-								<td class="tdwhiteL">
-									
-									<input type="radio" name="lifecycle" id="lifecycle" value="LC_Default" >
-										<span></span>
-										${f:getMessage('기본결재')}
-									<input type="radio" name="lifecycle" id="lifecycle" value="LC_Default_NonWF">
-										<span></span>
-										${f:getMessage('일괄결재')}
-								</td>
-							</tr>
-							
-							<tr bgcolor="ffffff" height="35">
-								<td class="tdblueM">
-									${f:getMessage('물질명')}
-									<span class="style1">*</span>
-									<!-- 
-									<button type='button' name='dupName' id='dupName' class='btnCustom' >
-										<span></span>
-										${f:getMessage('중복확인')}
-									</button>
-									 -->
-									<button id="NameCheck" class="btnSearch" type="button">
-										<span></span>
-										${f:getMessage('물질명 중복')}
-									</button>
-								</td>
-								
-								<td class="tdwhiteL">
-									<input name="rohsName" id="rohsName" class="txt_field" size="85" style="width:90%" maxlength="80" value='<c:out value="${rohsData.name }"/>'/>
-								</td>
-								
-								<td class="tdblueM">
-									${f:getMessage('협력업체')} <span class="style1">*</span>
-								</td>
-								
-								<td class="tdwhiteL">
-									<select id='manufacture' name='manufacture' style="width: 95%"> 
-									</select>
-								</td>
-								
-							</tr>
-							
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
 </form>
 </body>
 </html>

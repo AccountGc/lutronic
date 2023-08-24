@@ -76,26 +76,35 @@
 <!-- 						<a onclick="javascript:_popup('/groupware/changePassword');">비밀번호 변경</a> -->
 						<a onclick="moveToPage(this, '/groupware/changePassword', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a>
 					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">
-					<i class="fa fa-envelope"></i>
-					<span class="nav-label">개발업무관리</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/development/list', '> 개발업무관리 > 개발업무 검색');">개발업무 검색</a>
+						<a onclick="moveToPage(this, '/groupware/listWfProcessInfo', '> 관리자 > 관리자메뉴');">관리자 메뉴</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/development/create', '> 개발업무관리 > 개발업무 등록');">개발업무 등록</a>
+						<a onclick="moveToPage(this, '/groupware/changeIBA', '> 관리자 > 속성값 변경');">속성값 변경</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/development/my', '> 개발업무관리 > 나의 개발업무');">나의 개발업무</a>
+						<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 관리자 > 도면 재변환');">도면 재변환</a>
 					</li>
 				</ul>
 			</li>
+<!-- 			<li> -->
+<!-- 				<a href="#"> -->
+<!-- 					<i class="fa fa-envelope"></i> -->
+<!-- 					<span class="nav-label">개발업무관리</span> -->
+<!-- 					<span class="fa arrow"></span> -->
+<!-- 				</a> -->
+<!-- 				<ul class="nav nav-second-level collapse"> -->
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/development/list', '> 개발업무관리 > 개발업무 검색');">개발업무 검색</a> -->
+<!-- 					</li> -->
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/development/create', '> 개발업무관리 > 개발업무 등록');">개발업무 등록</a> -->
+<!-- 					</li> -->
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/development/my', '> 개발업무관리 > 나의 개발업무');">나의 개발업무</a> -->
+<!-- 					</li> -->
+<!-- 				</ul> -->
+<!-- 			</li> -->
 			<li>
 				<a href="#">
 					<i class="fa fa-pie-chart"></i>
@@ -217,6 +226,15 @@
 					<li>
 						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a>
 					</li>
+					<li>
+						<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 관리자 >PART 전송 현황');">PART 전송 현황</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 관리자 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/erp/send-listBOMERP', '> 관리자 >BOM 전송 현황');">BOM 전송 현황</a>
+					</li>
 				</ul>
 			</li>
 			<li>
@@ -316,22 +334,25 @@
 					</a>
 					<ul class="nav nav-second-level collapse">
 						<li>
-							<a onclick="moveToPage(this, '/groupware/listWfProcessInfo', '> 관리자 > 관리자메뉴');">관리자 메뉴</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 코드체계관리');">코드체계관리</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/groupware/changeIBA', '> 관리자 > 속성값 변경');">속성값 변경</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경관리');">설계변경관리</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 관리자 > 도면 재변환');">도면 재변환</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 외부메일관리');">외부메일관리</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 관리자 >PART 전송 현황');">PART 전송 현황</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 접속이력관리');">접속이력관리</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 관리자 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 다운로드 이력관리');">다운로드 이력관리</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/erp/send-listBOMERP', '> 관리자 >BOM 전송 현황');">BOM 전송 현황</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 등록양식관리');">등록양식관리</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > Windchill');">Windchill</a>
 						</li>
 						<li>
 							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경 문서 템플릿');">설계변경 문서 템플릿</a>

@@ -213,8 +213,9 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 	
 	//copy
 	$('#copyRohs').click(function() {
-		var url = getURLString("rohs", "copyRohs", "do") + '?oid='+$('#oid').val();
-		openOtherName(url,"copyRohs","830","300","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/rohs/copyRohs?oid=" + oid);
+		popup(url, 830, 600);
 	})
 	
 	//결재 회수

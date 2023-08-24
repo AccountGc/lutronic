@@ -24,7 +24,7 @@ PartData data = (PartData) request.getAttribute("data");
 				<tr>
 					<td class="left">
 						<div class="header">
-							<img src="/Windchill/extcore/images/header.png">&nbsp;개발업무 수정
+							<img src="/Windchill/extcore/images/header.png">&nbsp;품목 수정
 						</div>
 					</td>
 					<td class="right">
