@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<!DOCTYPE NmLoader SYSTEM "standardX26.dtd">
+<NmLoader>
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>Document</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths />
+		<csvdefinitionPaths />
+		<csvdisplay_name>Document</csvdisplay_name>
+		<csvdescription />
+		<csvdata_type>org</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>
+		</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<!-- START -->
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>APPROVALTYPE</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Document</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>결재방식</csvdisplay_name>
+		<csvdescription>일괄결재 방식</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>APPROVALTYPE</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>DOCUMENTNAME1</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Document</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>문서명1</csvdisplay_name>
+		<csvdescription>문서명1</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>DOCUMENTNAME1</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>DOCUMENTNAME2</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Document</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>문서명2</csvdisplay_name>
+		<csvdescription>문서명2</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>DOCUMENTNAME2</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>INTERALNUMBER</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Document</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>내부문서 번호</csvdisplay_name>
+		<csvdescription>일반문서</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>INTERALNUMBER</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>PRESERATION</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Document</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>보존기간</csvdisplay_name>
+		<csvdescription>일반문서</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>PRESERATION</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<!-- MOLD -->
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>MOLD</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths />
+		<csvdefinitionPaths />
+		<csvdisplay_name>MOLD</csvdisplay_name>
+		<csvdescription />
+		<csvdata_type>org</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>
+		</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>MOLDCOST</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>MOLD</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>금형 개발비</csvdisplay_name>
+		<csvdescription>금형문서</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>MOLDCOST</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>MOLDNUMBER</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>MOLD</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>업체 자체 금형 번호</csvdisplay_name>
+		<csvdescription>금형문서</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>MOLDNUMBER</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>MOLDTYPE</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>MOLD</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>금형 타입</csvdisplay_name>
+		<csvdescription>금형문서</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>MOLDTYPE</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+
+	<!-- PART -->
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>Part</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths />
+		<csvdefinitionPaths />
+		<csvdisplay_name>Part</csvdisplay_name>
+		<csvdescription />
+		<csvdata_type>org</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>
+		</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>APR</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>승인자</csvdisplay_name>
+		<csvdescription>PLM CAD 입력(설변 완료시 자동 생성)</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>APR</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>CHANGEDATE</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>CHANGEDATE</csvdisplay_name>
+		<csvdescription>EO,ECO 진행시 날짜</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>CHANGEDATE</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>CHANGENO</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>CHANGENO</csvdisplay_name>
+		<csvdescription>EO,ECO 진행시 번호</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>CHANGENO</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>CHK</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>검토자</csvdisplay_name>
+		<csvdescription>PLM CAD 입력(설변 완료시 자동 생성)</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>CHK</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>DEPTCODE</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>부서</csvdisplay_name>
+		<csvdescription>PLM 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>DEPTCODE</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>DES</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>DES</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>DES</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>DSGN</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>작성자</csvdisplay_name>
+		<csvdescription>PLM CAD 입력(작성자 - 채번 시점)</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>DSGN</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>ECODATE</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>ECODATE</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>ECODATE</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>ECONO</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>ECONO</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>ECONO</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>FINISH</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>후처리</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>FINISH</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>MANUFACTURE</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>MANUFACTURE</csvdisplay_name>
+		<csvdescription>PLM 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>MANUFACTURE</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>MAT</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>재질</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>MAT</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>MODEL</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>프로젝트 코드</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>MODEL</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>PARTNAME1</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>대제목</csvdisplay_name>
+		<csvdescription>PARTNAME1</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>PARTNAME1</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>PARTNAME2</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>중제목</csvdisplay_name>
+		<csvdescription>PARTNAME2</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>PARTNAME2</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>PARTNAME3</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>소제목</csvdisplay_name>
+		<csvdescription>PARTNAME3</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>PARTNAME3</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>PARTNAME4</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>사용자 Key in</csvdisplay_name>
+		<csvdescription>PARTNAME4</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>PARTNAME4</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>PRODUCTMETHOD</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>PRODUCTMETHOD</csvdisplay_name>
+		<csvdescription>제작방법</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>PRODUCTMETHOD</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>REMARKS</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>OEM No.</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>REMARKS</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>REV</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>개정</csvdisplay_name>
+		<csvdescription>개정</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>REV</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>SPECIFICATION</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>사양</csvdisplay_name>
+		<csvdescription>PLM 입력</csvdescription>
+		<csvdata_type>string</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>SPECIFICATION</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>WEIGHT</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>무게</csvdisplay_name>
+		<csvdescription>PLM CAD 입력</csvdescription>
+		<csvdata_type>float</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>WEIGHT</csvlogicalIdentifier>
+	</csvAttrDefinizer>
+
+</NmLoader>
