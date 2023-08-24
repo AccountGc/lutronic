@@ -118,6 +118,7 @@ if(request.getParameter("popup")!=null){
 			</tr>
 		</table>
 		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		
 		<script type="text/javascript">
@@ -233,11 +234,11 @@ if(request.getParameter("popup")!=null){
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
@@ -247,25 +248,20 @@ if(request.getParameter("popup")!=null){
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
-// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-// 				params = toField(params, field);
-// 				params.latest = latest;
-// 				const field = [ "_psize" ];
-// 				params = toField(params, field);
+				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
+				params = toField(params, field);
+				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
-// 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-						document.getElementById("lastNum").value = data.list.length;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
 				});
 			}
 
