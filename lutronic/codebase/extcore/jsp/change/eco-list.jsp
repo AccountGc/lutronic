@@ -167,7 +167,7 @@ if(request.getParameter("popup")!=null){
 		</table>
 
 		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
-
+		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
 			let myEcoGridID;
 			function _layout() {
@@ -284,11 +284,11 @@ if(request.getParameter("popup")!=null){
 						fillColumnSizeMode: true,
 				};
 				myEcoGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myEcoGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myEcoGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myEcoGridID, "hScrollChange", function(event) {
 					hideContextMenu();
@@ -298,23 +298,19 @@ if(request.getParameter("popup")!=null){
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/changeECO/list");
-// 				const field = ["_psize","oid","name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
-				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				const field = ["_psize","oid","name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
 				params = toField(params, field);
-				params.latest = latest; */
 				AUIGrid.showAjaxLoader(myEcoGridID);
-// 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myEcoGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-// 						document.getElementById("lastNum").value = data.list.length;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myEcoGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
 				});
 			}
 

@@ -39,16 +39,16 @@ public class ECRHelper {
 			String name = StringUtil.checkNull((String)params.get("name"));
 			String number = StringUtil.checkNull((String)params.get("number"));
 			
-			String predate = StringUtil.checkNull((String)params.get("predate"));
-			String postdate = StringUtil.checkNull((String)params.get("postdate"));
+			String createdFrom = StringUtil.checkNull((String)params.get("createdFrom"));
+			String createdTo = StringUtil.checkNull((String)params.get("createdTo"));
 			String creator = StringUtil.checkNull((String)params.get("creator"));
 			String state = StringUtil.checkNull((String)params.get("state"));
 			
 			//ECR 속성
-			String preCreateDate = StringUtil.checkNull((String)params.get("preCreateDate"));
-			String postCreateDate = StringUtil.checkNull((String)params.get("postCreateDate"));
-			String preApproveDate = StringUtil.checkNull((String)params.get("preApproveDate"));
-			String postApproveDate = StringUtil.checkNull((String)params.get("postApproveDate"));
+			String writedFrom = StringUtil.checkNull((String)params.get("writedFrom"));
+			String writedTo = StringUtil.checkNull((String)params.get("writedTo"));
+			String approveFrom = StringUtil.checkNull((String)params.get("approveFrom"));
+			String approveTo = StringUtil.checkNull((String)params.get("approveTo"));
 			
 			String createDepart = StringUtil.checkNull((String)params.get("createDepart"));
 			String writer = StringUtil.checkNull((String)params.get("writer"));
@@ -56,7 +56,7 @@ public class ECRHelper {
 			String proposer = StringUtil.checkNull((String)params.get("proposer"));
 			
 			String[] models = (String[])params.get("model");
-			String[] changeSections = (String[])params.get("changeSection");
+//			String[] changeSections = (String[])params.get("changeSections");
 			
 			//정렬
 			String sortValue = StringUtil.checkNull((String)params.get("sortValue"));
@@ -88,19 +88,19 @@ public class ECRHelper {
 			}
 			
 			//등록일
-			if(predate.length() > 0) {
+			if(createdFrom.length() > 0) {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}//>=
-				qs.appendWhere(new SearchCondition(ecrClass, "thePersistInfo.createStamp", SearchCondition.GREATER_THAN_OR_EQUAL , DateUtil.convertStartDate(predate)), new int[] {ecoIdx});
+				qs.appendWhere(new SearchCondition(ecrClass, "thePersistInfo.createStamp", SearchCondition.GREATER_THAN_OR_EQUAL , DateUtil.convertStartDate(createdFrom)), new int[] {ecoIdx});
 			}
 			
 			//등록일
-			if(postdate.length() > 0) {
+			if(createdTo.length() > 0) {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}//<=
-				qs.appendWhere(new SearchCondition(ecrClass, "thePersistInfo.createStamp", SearchCondition.LESS_THAN_OR_EQUAL , DateUtil.convertEndDate(postdate)), new int[] {ecoIdx});
+				qs.appendWhere(new SearchCondition(ecrClass, "thePersistInfo.createStamp", SearchCondition.LESS_THAN_OR_EQUAL , DateUtil.convertEndDate(createdTo)), new int[] {ecoIdx});
 			}
 			
 			//상태
@@ -122,35 +122,35 @@ public class ECRHelper {
 			}
 			
 			//작성일
-			if(preCreateDate.length() > 0) {
+			if(writedFrom.length() > 0) {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}//>=
-				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.CREATE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , preCreateDate), new int[] {ecoIdx});
+				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.CREATE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , writedFrom), new int[] {ecoIdx});
 			}
 			
 		
-			if(postCreateDate.length() > 0) {
+			if(writedTo.length() > 0) {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}//<=
-				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.CREATE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , postCreateDate), new int[] {ecoIdx});
+				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.CREATE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , writedTo), new int[] {ecoIdx});
 			}
 			
 			//승인일
-			if(preApproveDate.length() > 0) {
+			if(approveFrom.length() > 0) {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}//>=
-				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , preApproveDate), new int[] {ecoIdx});
+				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , approveFrom), new int[] {ecoIdx});
 			}
 			
 		
-			if(postApproveDate.length() > 0) {
+			if(approveTo.length() > 0) {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}//<=
-				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , postApproveDate), new int[] {ecoIdx});
+				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {ecoIdx});
 			}
 			
 			//작성부서
@@ -194,19 +194,19 @@ public class ECRHelper {
 			}
 			
 			//변경구분
-			if(changeSections != null){
-				if( qs.getConditionCount() > 0 ) {
-					qs.appendAnd();
-				}
-				qs.appendOpenParen();
-					for(int i = 0 ;i < changeSections.length ;i++){
-						qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.CHANGE_SECTION, SearchCondition.LIKE, "%"+changeSections[i]+"%", false), new int[] {ecoIdx});
-						if(i== changeSections.length-1) break;
-						qs.appendOr();
-						
-					}
-				qs.appendCloseParen();
-			}
+//			if(changeSections != null){
+//				if( qs.getConditionCount() > 0 ) {
+//					qs.appendAnd();
+//				}
+//				qs.appendOpenParen();
+//					for(int i = 0 ;i < changeSections.length ;i++){
+//						qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.CHANGE_SECTION, SearchCondition.LIKE, "%"+changeSections[i]+"%", false), new int[] {ecoIdx});
+//						if(i== changeSections.length-1) break;
+//						qs.appendOr();
+//						
+//					}
+//				qs.appendCloseParen();
+//			}
 			
 			
 			
@@ -259,7 +259,11 @@ public class ECRHelper {
 			}
 
 			map.put("list", list);
-			//System.out.println(qs.toString());
+			map.put("topListCount", pager.getTotal());
+			map.put("pageSize", pager.getPsize());
+			map.put("total", pager.getTotalSize());
+			map.put("sessionid", pager.getSessionId());
+			map.put("curPage", pager.getCpage());
 		}catch(Exception e){
 			e.printStackTrace();
 		}

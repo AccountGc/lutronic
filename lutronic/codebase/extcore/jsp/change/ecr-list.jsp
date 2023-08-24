@@ -50,11 +50,11 @@
 			</tr>
 			<tr>
 				<th>작성일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('writedFrom', 'writedTo')"></td>
 				<th>승인일</th>
-				<td class="indent5"><input type="text" name="approveForm" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<td class="indent5"><input type="text" name="approveFrom" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('approveFrom', 'approveTo')"></td>
 			</tr>
 			<tr>
 				<th>작성부서</th>
@@ -80,34 +80,34 @@
 			<tr>
 				<th>제안자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
 				<th>변경구분</th>
 				<td>&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="true" checked="NONE">
+						<input type="radio" id="changeSection"name="changeSection" value="true" checked="NONE">
 						<div class="state p-success">
 							<label> <b>선택안됨</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="0">
+						<input type="radio" id="changeSection"name="changeSection" value="0">
 						<div class="state p-success">
 							<label> <b>불필요</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="1">
+						<input type="radio" id="changeSection"name="changeSection" value="1">
 						<div class="state p-success">
 							<label> <b>필요</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="">
+						<input type="radio" id="changeSection"name="changeSection" value="">
 						<div class="state p-success">
 							<label> <b>전체</b>
 							</label>
@@ -139,7 +139,7 @@
 		</table>
 
 		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
-
+		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
@@ -267,7 +267,6 @@
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
@@ -277,23 +276,19 @@
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/changeECR/list");
-// 				const field = ["_psize","oid","name","number", "predate","postdate","creator","state", "preCreateDate", "postCreateDate", "preApproveDate", "postApproveDate", "createDepart", "writer", "proposer", "model", "changeSection", "sortValue", "sortCheck"];
-				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				const field = ["_psize","oid","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
 				params = toField(params, field);
-				params.latest = latest; */
 				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-						document.getElementById("lastNum").value = data.list.length;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-					parent.closeLayer();
 				});
 			}
 

@@ -117,7 +117,7 @@
 		</table>
 
 		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
-
+		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
@@ -226,7 +226,6 @@
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
@@ -236,18 +235,16 @@
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/changeECO/listEO");
-// 				const field = ["_psize","oid","name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
-				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				const field = ["_psize","oid","name","number","eoType","predate","postdate","creator","state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate"];
 				params = toField(params, field);
-				params.latest = latest; */
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-						document.getElementById("lastNum").value = data.list.length;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
