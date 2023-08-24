@@ -94,244 +94,6 @@ public class PartHelper {
 	public static final PartService service = ServiceFactory.getService(PartService.class);
 	public static final PartHelper manager = new PartHelper();
 	
-	public ResultData create(Map<String,Object> map) {
-		ResultData result = new ResultData();
-		Transaction trx = new Transaction();
-		try{
-			
-			trx.start();
-			
-			
-			String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
-			String view = StringUtil.checkNull((String)map.get("view"));									// view
-			String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
-			String wtPartType = StringUtil.checkNull((String)map.get("wtPartType"));
-			String source = StringUtil.checkNull((String)map.get("source"));
-			
-			String partName = StringUtil.checkNull((String)map.get("partName"));							// 품목명
-			String partNumber = StringUtil.checkNull((String)map.get("partNumber"));						// 품목번호
-			
-			String seq = StringUtil.checkNull((String)map.get("seq"));										// SEQ
-
-			if(seq.length() == 0) {
-				seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
-			}else if(seq.length() == 1) {
-				seq = "00" + seq;
-			}else if(seq.length() == 2) {
-				seq = "0" + seq;
-			}
-			
-			String etc = StringUtil.checkNull((String)map.get("etc"));										// etc
-			if(etc.length() == 0) {
-				etc = "00";
-			}else if(etc.length() == 1) {
-				etc = "0" + etc;
-			}
-			partNumber += seq + etc;
-			
-			String unit = StringUtil.checkNull((String)map.get("unit"));									// 단위
-			
-			WTPart part = WTPart.newWTPart();
-			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
-			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
-			part.setContainer(product);
-			
-			part.setNumber(partNumber);
-			part.setName(partName.trim());
-//			part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
-			
-			part.setPartType(PartType.toPartType(wtPartType));
-			part.setSource(Source.toSource(source));
-			
-			// 뷰 셋팅(Design 고정임)
-			ViewHelper.assignToView(part, ViewHelper.service.getView(view));
-
-			// 폴더 셋팅
-			Folder folder = null;
-			if (StringUtil.checkString(fid)) {
-				folder = (Folder) CommonUtil.getObject(fid);
-			} else {
-				folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
-			}
-			FolderHelper.assignLocation((FolderEntry) part, folder);
-
-			// 라이프사이클 셋팅
-			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
-			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
-			
-			part = (WTPart)PersistenceHelper.manager.save(part);
-			
-			// IBA 설정
-			CommonHelper.service.changeIBAValues(part, map);
-			
-			// 주 도면
-			String primary = StringUtil.checkNull((String)map.get("primary"));
-			if(primary.length() > 0) {
-				map.put("oid", CommonUtil.getOIDString(part));
-				map.put("epmfid", fid);
-				EPMDocument epm = DrawingHelper.service.createEPM(map);
-				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
-				PersistenceServerHelper.manager.insert(link);
-			}
-			
-			// 관련 문서 연결
-			String[] docOids = (String[])map.get("docOids");
-			if(docOids != null) {
-				for(String docOid : docOids) {
-					WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
-					WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
-					PersistenceServerHelper.manager.insert(dlink);
-				}
-			}
-			
-			// 관련 ROHS 연결
-			String[] rohsOid = (String[])map.get("rohsOid");
-			if(rohsOid != null){
-				RohsHelper.service.createROHSToPartLink(part, rohsOid);
-			}
-			
-			// 첨부 파일
-			String[] secondary = (String[])map.get("secondary");
-			if(secondary != null) {
-				CommonContentHelper.service.attach(part, null, secondary);
-			}
-			
-			
-			part = createPart(map);
-			
-			trx.commit();
-			trx = null;
-			result.setResult(true);
-			result.setOid(CommonUtil.getOIDString(part));
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.setResult(false);
-			result.setMessage(e.getLocalizedMessage());
-		} finally {
-			if(trx != null) {
-				trx.rollback();
-			}
-		}
-		
-		return result;
-	}
-	
-	public WTPart createPart(Map<String,Object> map) throws Exception {
-		String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
-		String view = StringUtil.checkNull((String)map.get("view"));									// view
-		String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
-		String wtPartType = StringUtil.checkNull((String)map.get("wtPartType"));
-		String source = StringUtil.checkNull((String)map.get("source"));
-		
-		String partName = StringUtil.checkNull((String)map.get("partName"));							// 품목명
-		String partNumber = StringUtil.checkNull((String)map.get("partNumber"));						// 품목번호
-		
-		String seq = StringUtil.checkNull((String)map.get("seq"));										// SEQ
-
-		if(seq.length() == 0) {
-			seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
-		}else if(seq.length() == 1) {
-			seq = "00" + seq;
-		}else if(seq.length() == 2) {
-			seq = "0" + seq;
-		}
-		
-		String etc = StringUtil.checkNull((String)map.get("etc"));										// etc
-		if(etc.length() == 0) {
-			etc = "00";
-		}else if(etc.length() == 1) {
-			etc = "0" + etc;
-		}
-		partNumber += seq + etc;
-		
-		if(partNumber.length() > 10) {
-			throw new Exception(Message.get("허용된 품목번호의 길이가 아닙니다."));
-		}
-		
-		String unit = StringUtil.checkNull((String)map.get("unit"));									// 단위
-		
-		WTPart part = WTPart.newWTPart();
-		PDMLinkProduct product = WCUtil.getPDMLinkProduct();
-		WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
-		part.setContainer(product);
-		
-		part.setNumber(partNumber);
-		part.setName(partName.trim());
-		part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
-		
-		part.setPartType(PartType.toPartType(wtPartType));
-		part.setSource(Source.toSource(source));
-		
-		// 뷰 셋팅(Design 고정임)
-		ViewHelper.assignToView(part, ViewHelper.service.getView(view));
-
-		// 폴더 셋팅
-		Folder folder = null;
-		if (StringUtil.checkString(fid)) {
-			folder = (Folder) CommonUtil.getObject(fid);
-		} else {
-			folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
-		}
-		FolderHelper.assignLocation((FolderEntry) part, folder);
-
-		// 라이프사이클 셋팅
-		LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
-		part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
-		
-		part = (WTPart)PersistenceHelper.manager.save(part);
-		
-		// IBA 설정
-		CommonHelper.service.changeIBAValues(part, map);
-		IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, partName, "string");
-		
-		// 주 도면
-		String primary = StringUtil.checkNull((String)map.get("primary"));
-		if(primary.length() > 0) {
-			map.put("oid", CommonUtil.getOIDString(part));
-			map.put("epmfid", fid);
-			EPMDocument epm = DrawingHelper.service.createEPM(map);
-			EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
-			PersistenceServerHelper.manager.insert(link);
-			
-			IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_DES, partName, "string");
-			/*
-			ResultData data = DrawingHelper.service.createDrawing(map);
-			if(data.result) {
-				String epmOid = data.oid;
-				EPMDocument epm = (EPMDocument)CommonUtil.getObject(epmOid);
-				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
-				PersistenceServerHelper.manager.insert(link);
-			}else {
-				throw new Exception(data.message);
-			}
-			*/
-		}
-		
-		// 관련 문서 연결
-		String[] docOids = (String[])map.get("docOids");
-		if(docOids != null) {
-			for(String docOid : docOids) {
-				WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
-				WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
-				PersistenceServerHelper.manager.insert(dlink);
-			}
-		}
-		
-		// 관련 ROHS 연결
-		String[] rohsOid = (String[])map.get("rohsOid");
-		if(rohsOid != null){
-			RohsHelper.service.createROHSToPartLink(part, rohsOid);
-		}
-		
-		// 첨부 파일
-		String[] secondary = (String[])map.get("secondary");
-		if(secondary != null) {
-			CommonContentHelper.service.attach(part, null, secondary);
-		}
-		
-		return part;
-	}
-	
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
@@ -347,10 +109,10 @@ public class PartHelper {
 			String partNumber = StringUtil.checkNull((String)params.get("partNumber"));
 			partNumber = partNumber.trim();
 			String partName = StringUtil.checkNull((String)params.get("partName"));
-			String predate = StringUtil.checkNull((String)params.get("predate"));
-			String postdate = StringUtil.checkNull((String)params.get("postdate"));
-			String predate_modify = StringUtil.checkNull((String)params.get("predate_modify"));
-			String postdate_modify = StringUtil.checkNull((String)params.get("postdate_modify"));
+			String createdFrom = StringUtil.checkNull((String)params.get("createdFrom"));
+			String createdTo = StringUtil.checkNull((String)params.get("createdTo"));
+			String modifiedFrom = StringUtil.checkNull((String)params.get("modifiedFrom"));
+			String modifiedTo = StringUtil.checkNull((String)params.get("modifiedTo"));
 			String creator = StringUtil.checkNull((String)params.get("creator"));
 			String state = StringUtil.checkNull((String)params.get("state"));
 
@@ -446,31 +208,31 @@ public class PartHelper {
 			}
 
 			// 등록일
-			if (predate.trim().length() > 0) {
+			if (createdFrom.trim().length() > 0) {
 				if (query.getConditionCount() > 0) {
 					query.appendAnd();
 				}
-				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.createStamp", SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate)), new int[] { idx });
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.createStamp", SearchCondition.GREATER_THAN, DateUtil.convertStartDate(createdFrom)), new int[] { idx });
 			}
-			if (postdate.trim().length() > 0) {
+			if (createdTo.trim().length() > 0) {
 				if (query.getConditionCount() > 0) {
 					query.appendAnd();
 				}
-				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.createStamp", SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate)), new int[] { idx });
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.createStamp", SearchCondition.LESS_THAN, DateUtil.convertEndDate(createdTo)), new int[] { idx });
 			}
 
 			// 수정일
-			if (predate_modify.length() > 0) {
+			if (modifiedFrom.length() > 0) {
 				if (query.getConditionCount() > 0) {
 					query.appendAnd();
 				}
-				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.modifyStamp", SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate_modify)), new int[] { idx });
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.modifyStamp", SearchCondition.GREATER_THAN, DateUtil.convertStartDate(modifiedFrom)), new int[] { idx });
 			}
-			if (postdate_modify.length() > 0) {
+			if (modifiedTo.length() > 0) {
 				if (query.getConditionCount() > 0) {
 					query.appendAnd();
 				}
-				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.modifyStamp", SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate_modify)), new int[] { idx });
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.modifyStamp", SearchCondition.LESS_THAN, DateUtil.convertEndDate(modifiedTo)), new int[] { idx });
 			}
 
 			// 등록자
@@ -883,6 +645,11 @@ ORDER BY A0.modifyStampA2 DESC;
 			}
 			
 			map.put("list", list);
+			map.put("topListCount", pager.getTotal());
+			map.put("pageSize", pager.getPsize());
+			map.put("total", pager.getTotalSize());
+			map.put("sessionid", pager.getSessionId());
+			map.put("curPage", pager.getCpage());
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -247,6 +247,129 @@ public class StandardPartService extends StandardManager implements PartService 
 		return map;
 	}
 	
+	@Override
+	public ResultData create(Map<String,Object> map) {
+		ResultData result = new ResultData();
+		Transaction trx = new Transaction();
+		try{
+			
+			trx.start();
+			
+			
+			String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
+			String view = StringUtil.checkNull((String)map.get("view"));									// view
+			String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
+			String wtPartType = StringUtil.checkNull((String)map.get("wtPartType"));
+			String source = StringUtil.checkNull((String)map.get("source"));
+			
+			String partName = StringUtil.checkNull((String)map.get("partName"));							// 품목명
+			String partNumber = StringUtil.checkNull((String)map.get("partNumber"));						// 품목번호
+			
+			String seq = StringUtil.checkNull((String)map.get("seq"));										// SEQ
+
+			if(seq.length() == 0) {
+				seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
+			}else if(seq.length() == 1) {
+				seq = "00" + seq;
+			}else if(seq.length() == 2) {
+				seq = "0" + seq;
+			}
+			
+			String etc = StringUtil.checkNull((String)map.get("etc"));										// etc
+			if(etc.length() == 0) {
+				etc = "00";
+			}else if(etc.length() == 1) {
+				etc = "0" + etc;
+			}
+			partNumber += seq + etc;
+			
+			String unit = StringUtil.checkNull((String)map.get("unit"));									// 단위
+			
+			WTPart part = WTPart.newWTPart();
+			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
+			part.setContainer(product);
+			
+			part.setNumber(partNumber);
+			part.setName(partName.trim());
+//			part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
+			
+			part.setPartType(PartType.toPartType(wtPartType));
+			part.setSource(Source.toSource(source));
+			
+			// 뷰 셋팅(Design 고정임)
+			ViewHelper.assignToView(part, ViewHelper.service.getView(view));
+
+			// 폴더 셋팅
+			Folder folder = null;
+			if (StringUtil.checkString(fid)) {
+				folder = (Folder) CommonUtil.getObject(fid);
+			} else {
+				folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
+			}
+			FolderHelper.assignLocation((FolderEntry) part, folder);
+
+			// 라이프사이클 셋팅
+			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+			
+			part = (WTPart)PersistenceHelper.manager.save(part);
+			
+			// IBA 설정
+			CommonHelper.service.changeIBAValues(part, map);
+			
+			// 주 도면
+			String primary = StringUtil.checkNull((String)map.get("primary"));
+			if(primary.length() > 0) {
+				map.put("oid", CommonUtil.getOIDString(part));
+				map.put("epmfid", fid);
+				EPMDocument epm = DrawingHelper.service.createEPM(map);
+				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
+				PersistenceServerHelper.manager.insert(link);
+			}
+			
+			// 관련 문서 연결
+			String[] docOids = (String[])map.get("docOids");
+			if(docOids != null) {
+				for(String docOid : docOids) {
+					WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
+					WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
+					PersistenceServerHelper.manager.insert(dlink);
+				}
+			}
+			
+			// 관련 ROHS 연결
+			String[] rohsOid = (String[])map.get("rohsOid");
+			if(rohsOid != null){
+				RohsHelper.service.createROHSToPartLink(part, rohsOid);
+			}
+			
+			// 첨부 파일
+			String[] secondary = (String[])map.get("secondary");
+			if(secondary != null) {
+				CommonContentHelper.service.attach(part, null, secondary);
+			}
+			
+			
+			part = createPart(map);
+			
+			trx.commit();
+			trx = null;
+			result.setResult(true);
+			result.setOid(CommonUtil.getOIDString(part));
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setResult(false);
+			result.setMessage(e.getLocalizedMessage());
+		} finally {
+			if(trx != null) {
+				trx.rollback();
+			}
+		}
+		
+		return result;
+	}
+	
 	public WTPart createPart(Map<String,Object> map) throws Exception {
 		String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
 		String view = StringUtil.checkNull((String)map.get("view"));									// view
@@ -362,245 +485,6 @@ public class StandardPartService extends StandardManager implements PartService 
 		
 		return part;
 	}
-	
-	@Override
-	public ResultData create(Map<String,Object> map) {
-		ResultData result = new ResultData();
-		Transaction trx = new Transaction();
-		try{
-			
-			trx.start();
-			
-			
-			String lifecycle = StringUtil.checkNull((String)map.get("lifecycle"));							// LifeCycle
-			String view = StringUtil.checkNull((String)map.get("view"));									// view
-			String fid = StringUtil.checkNull((String)map.get("fid"));										// 분류체계
-			String wtPartType = StringUtil.checkNull((String)map.get("wtPartType"));
-			String source = StringUtil.checkNull((String)map.get("source"));
-			
-			String partName = StringUtil.checkNull((String)map.get("partName"));							// 품목명
-			String partNumber = StringUtil.checkNull((String)map.get("partNumber"));						// 품목번호
-			
-			String seq = StringUtil.checkNull((String)map.get("seq"));										// SEQ
-
-			if(seq.length() == 0) {
-				seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
-			}else if(seq.length() == 1) {
-				seq = "00" + seq;
-			}else if(seq.length() == 2) {
-				seq = "0" + seq;
-			}
-			
-			String etc = StringUtil.checkNull((String)map.get("etc"));										// etc
-			if(etc.length() == 0) {
-				etc = "00";
-			}else if(etc.length() == 1) {
-				etc = "0" + etc;
-			}
-			partNumber += seq + etc;
-			
-			String unit = StringUtil.checkNull((String)map.get("unit"));									// 단위
-			
-			WTPart part = WTPart.newWTPart();
-			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
-			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
-			part.setContainer(product);
-			
-			part.setNumber(partNumber);
-			part.setName(partName.trim());
-			part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
-			
-			part.setPartType(PartType.toPartType(wtPartType));
-			part.setSource(Source.toSource(source));
-			
-			// 뷰 셋팅(Design 고정임)
-			ViewHelper.assignToView(part, ViewHelper.service.getView(view));
-
-			// 폴더 셋팅
-			Folder folder = null;
-			if (StringUtil.checkString(fid)) {
-				folder = (Folder) CommonUtil.getObject(fid);
-			} else {
-				folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
-			}
-			FolderHelper.assignLocation((FolderEntry) part, folder);
-
-			// 라이프사이클 셋팅
-			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
-			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
-			
-			part = (WTPart)PersistenceHelper.manager.save(part);
-			
-			// IBA 설정
-			CommonHelper.service.changeIBAValues(part, map);
-			
-			// 주 도면
-			String primary = StringUtil.checkNull((String)map.get("primary"));
-			if(primary.length() > 0) {
-				map.put("oid", CommonUtil.getOIDString(part));
-				map.put("epmfid", fid);
-				EPMDocument epm = DrawingHelper.service.createEPM(map);
-				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
-				PersistenceServerHelper.manager.insert(link);
-			}
-			
-			// 관련 문서 연결
-			String[] docOids = (String[])map.get("docOids");
-			if(docOids != null) {
-				for(String docOid : docOids) {
-					WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
-					WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
-					PersistenceServerHelper.manager.insert(dlink);
-				}
-			}
-			
-			// 관련 ROHS 연결
-			String[] rohsOid = (String[])map.get("rohsOid");
-			if(rohsOid != null){
-				RohsHelper.service.createROHSToPartLink(part, rohsOid);
-			}
-			
-			// 첨부 파일
-			String[] secondary = (String[])map.get("secondary");
-			if(secondary != null) {
-				CommonContentHelper.service.attach(part, null, secondary);
-			}
-			
-			
-			part = createPart(map);
-			
-			trx.commit();
-			trx = null;
-			result.setResult(true);
-			result.setOid(CommonUtil.getOIDString(part));
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.setResult(false);
-			result.setMessage(e.getLocalizedMessage());
-		} finally {
-			if(trx != null) {
-				trx.rollback();
-			}
-		}
-		
-		return result;
-	}
-
-//	@Override
-//	public Map<String, Object> listPartAction(HttpServletRequest request, HttpServletResponse response)
-//			throws Exception {
-//		//System.out.println("================ listPartAction");
-//		long start = System.currentTimeMillis();
-//		
-//		int page = StringUtil.getIntParameter(request.getParameter("page"), 1);
-//		int rows = StringUtil.getIntParameter(request.getParameter("rows"), 10);
-//		int formPage = StringUtil.getIntParameter(request.getParameter("formPage"), 15);
-//
-//		String sessionId = request.getParameter("sessionId");
-//
-//		PagingQueryResult qr = null;
-//
-//		if (StringUtil.checkString(sessionId)) {
-//			long pagingstart = System.currentTimeMillis();
-//			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-//			long pagingend = System.currentTimeMillis();
-//			//System.out.println("paging " + (pagingend-pagingstart));
-//		} else {
-//			long querystart = System.currentTimeMillis();
-//			QuerySpec query = PartQueryHelper.service.listPartSearchQuery(request, response);
-//			long querymiddle = System.currentTimeMillis();
-//			//System.out.println("query " + (querymiddle-querystart));
-//			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
-//			long queryend = System.currentTimeMillis();
-//			//System.out.println("result " + (queryend-querymiddle));
-//		}
-//		long pagestart = System.currentTimeMillis();
-//		PageControl control = new PageControl(qr, page, formPage, rows);
-//		int totalPage = control.getTotalPage();
-//		int startPage = control.getStartPage();
-//		int endPage = control.getEndPage();
-//		int listCount = control.getTopListCount();
-//		int totalCount = control.getTotalCount();
-//		int currentPage = control.getCurrentPage();
-//		String param = control.getParam();
-//		int rowCount = control.getTopListCount();
-//		long pageend = System.currentTimeMillis();
-//		//System.out.println("result " + (pageend-pagestart));
-//		StringBuffer xmlBuf = new StringBuffer();
-//		xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
-//		xmlBuf.append("<rows>");
-//
-//		Object[] o = null;
-//		WTPart part = null;
-//		PartData data = null;
-//
-//		String select = StringUtil.checkReplaceStr(request.getParameter("select"), "false");
-//		String remarks = "";
-//		long whilestart = System.currentTimeMillis();
-//		while (qr.hasMoreElements()) {
-//			o = (Object[]) qr.nextElement();
-//			part = (WTPart) o[0];
-//			data = new PartData(part);
-//			remarks =  StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder) part, AttributeKey.IBAKey.IBA_REMARKS));
-//			xmlBuf.append("<row id='" + data.oid + "'>");
-//			if ("true".equals(select)) {
-//				xmlBuf.append("<cell><![CDATA[]]></cell>");
-//			}
-//
-//			String bom = "<button type='button' class='btnCustom' onclick=javascript:auiBom('" + data.oid+ "','')><span></span>BOM</buttom>";
-//			
-//			String bom2 = "<button type='button' class='btnCustom' onclick=javascript:auiBom2('" + data.oid+ "','')><span></span>BOM(데이터 요청)</buttom>";
-//
-//			xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.icon + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.number + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[<a href=javascript:openView('" + data.oid + "')>" + data.name + "</a>]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.getLocation() + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.version + "." + data.iteration + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + remarks + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.getLifecycle() + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.creator + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.createDate.substring(0, 10) + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + data.modifyDate.substring(0, 10) + "]]></cell>");
-//			xmlBuf.append("<cell><![CDATA[" + bom+ "]]></cell>");
-//			
-//			if("true".equals(select)) {
-//				String moduleType = request.getParameter("moduleType");
-//				if("ECO".equals(moduleType) || "EO".equals(moduleType)){
-//		        	
-//		        	boolean isSlect = PartSearchHelper.service.isSelectEO(part,moduleType);//data.isSelectEO();
-//		        	xmlBuf.append("<cell><![CDATA[" + !isSlect + "]]></cell>");
-//		        }else {
-//		        	xmlBuf.append("<cell><![CDATA[]]></cell>");
-//		        }
-//			}
-//			
-//			xmlBuf.append("</row>");
-//		}
-//		xmlBuf.append("</rows>");
-//
-//		long whileend = System.currentTimeMillis();
-//		//System.out.println("while " + (whileend-whilestart));
-//		
-//		Map<String, Object> result = new HashMap<String, Object>();
-//
-//		result.put("formPage", formPage);
-//		result.put("rows", rows);
-//		result.put("totalPage", totalPage);
-//		result.put("startPage", startPage);
-//		result.put("endPage", endPage);
-//		result.put("listCount", listCount);
-//		result.put("totalCount", totalCount);
-//		result.put("currentPage", currentPage);
-//		result.put("param", param);
-//		result.put("sessionId", qr.getSessionId() == 0 ? "" : qr.getSessionId());
-//		result.put("xmlString", xmlBuf);
-//		
-//		long end = System.currentTimeMillis();
-//		//System.out.println("result " + (end-start));
-//		
-//		return result;
-//	}
 
 	@Override
 	public Map<String, Object> updatePartAction(Map<String, Object> params) {

@@ -116,7 +116,7 @@ public class PartController extends BaseController {
 		Map<String,Object> result = new HashMap<String, Object>();
 		try {
 			Map<String,Object> map = PartHelper.manager.requestPartMapping(params);
-			PartHelper.manager.create(map);
+			PartHelper.service.create(map);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch(Exception e) {

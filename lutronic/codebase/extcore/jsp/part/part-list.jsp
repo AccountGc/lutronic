@@ -44,7 +44,7 @@ if(request.getParameter("popup")!=null){
 				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="true" checked="checked">
+						<input type="radio"  id="islastversion"  name="islastversion" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>최신Rev.</b>
@@ -53,7 +53,7 @@ if(request.getParameter("popup")!=null){
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="islastversion" value="false">
+						<input type="radio"  id="islastversion" name="islastversion" value="false">
 						<div class="state p-success">
 							<label>
 								<b>모든Rev.</b>
@@ -75,16 +75,16 @@ if(request.getParameter("popup")!=null){
 			<tr>
 				<th>등록일</th>
 				<td class="indent5">
-					<input type="text" name="predate" id="createdFrom" class="width-100">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
 					~
-					<input type="text" name="postdate" id="createdTo" class="width-100">
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
-					<input type="text" name="predate_modify" id="modifiedFrom" class="width-100">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
 					~
-					<input type="text" name="postdate_modify" id="modifiedTo" class="width-100">
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
@@ -286,6 +286,7 @@ if(request.getParameter("popup")!=null){
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
 					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
@@ -357,7 +358,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "islastversion",
+					dataField : "version",
 					headerText : "Rev.",
 					dataType : "string",
 					width : 90,
@@ -366,7 +367,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "version",
+					dataField : "remarks",
 					headerText : "OEM Info.",
 					dataType : "string",
 					width : 100,
@@ -393,7 +394,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 140,
@@ -402,7 +403,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "string",
 					width : 140,
@@ -442,14 +443,14 @@ if(request.getParameter("popup")!=null){
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					rowCheckToRadio : true,
-					fillColumnSizeMode: true,
+// 					fillColumnSizeMode: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				createPagingNavigator(1);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
@@ -457,26 +458,22 @@ if(request.getParameter("popup")!=null){
 			}
 
 			function loadGridData() {
-				 				let params = new Object();
-				 				const url = getCallUrl("/part/list");
-				 				const field = ["_psize","oid","partNumber","partName","predate","predate_modify","creator","state","model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo", "eoNo"];
-				 				/* const latest = !!document.querySelector("input[name=latest]:checked").value; */
-				 				/* params = toField(params, field); */
-				 				/* params.latest = latest; */
-				 				AUIGrid.showAjaxLoader(myGridID);
-// 				 				parent.openLayer();
-				 				call(url, params, function(data) {
-									AUIGrid.removeAjaxLoader(myGridID);
-									if (data.result) {
-										document.getElementById("sessionid").value = data.sessionid;
-										document.getElementById("curPage").value = data.curPage;
-// 										document.getElementById("lastNum").value = data.list.length;
-										AUIGrid.setGridData(myGridID, data.list);
-									} else {
-										alert(data.msg);
-									}
-// 									parent.closeLayer();
-								});
+ 				let params = new Object();
+ 				const url = getCallUrl("/part/list");
+ 				const field = ["_psize", "oid", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo", "eoNo"];
+ 				params = toField(params, field);
+ 				AUIGrid.showAjaxLoader(myGridID);
+ 				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
+						document.getElementById("sessionid").value = data.sessionid;
+						createPagingNavigator(data.curPage);
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
