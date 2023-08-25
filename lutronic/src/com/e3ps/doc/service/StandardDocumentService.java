@@ -21,7 +21,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
@@ -53,6 +52,7 @@ import com.e3ps.development.service.DevelopmentHelper;
 import com.e3ps.development.service.DevelopmentQueryHelper;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.template.DocumentTemplate;
 import com.e3ps.groupware.workprocess.AppPerLink;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
@@ -2332,5 +2332,41 @@ public class StandardDocumentService extends StandardManager implements Document
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 문서 양식 저장 메서드
+	 */
+	@Override
+	public void createTemplate(Map<String, Object> params) throws Exception{
+		Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+	    	
+	    	String docTemplateNumber = StringUtil.checkNull((String) params.get("number"));
+	    	String name =StringUtil.checkNull((String) params.get("name"));
+//	    	NumberCode docTemplateType = (NumberCode) params.get("docTemplateType");
+	    	String description =StringUtil.checkNull((String) params.get("description"));
+	    	
+	    	DocumentTemplate docTemp = new DocumentTemplate();
+	    	
+	    	docTemp.setDocTemplateNumber(docTemplateNumber);
+	    	docTemp.setName(name);
+//	    	docTemp.setDocTemplateType(docTemplateType);
+	    	docTemp.setDescription(description);
+	    	
+	    	PersistenceHelper.manager.save(docTemp);
+	    	
+	    	trs.commit();
+	    	trs = null;
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
 	}
 }

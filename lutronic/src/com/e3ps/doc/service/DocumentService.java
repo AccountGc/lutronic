@@ -72,4 +72,6 @@ public interface DocumentService {
 	public void updateComments(Map<String, Object> params) throws Exception;
 	
 	public void deleteComments(String oid) throws Exception;
+
+	public void createTemplate(Map<String, Object> params) throws Exception;
 }

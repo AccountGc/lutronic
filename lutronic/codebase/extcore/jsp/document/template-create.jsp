@@ -82,6 +82,15 @@
 		</td>
 	</tr>
 </table>
+<table class="button-table">
+	<tr>
+		<td class="center">
+			<input type="button"  value="등록"  title="등록"  class="btnCRUD blue"  id="createBtn" name="createBtn" onclick="create('false');">
+			<input type="button" value="초기화" title="초기화"  class="btnCRUD"  id="resetBtn" name="resetBtn">
+			<input type="button" value="목록" title="목록"  class="btnCRUD"  id="listBtn" name="listBtn">
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 	// 텍스트 편집기
 	var oEditors = [];
@@ -119,10 +128,10 @@
 			alert("문서양식 제목을 입력하세요.");
 			return;					
 		}
-		if(isEmpty($("#dcoTemplateType").val())){
-			alert("문서양식 유형을 입력하세요.");
-			return;					
-		}
+// 		if(isEmpty($("#dcoTemplateType").val())){
+// 			alert("문서양식 유형을 입력하세요.");
+// 			return;					
+// 		}
 		 if(description == '<p>&nbsp;</p>') { //비어있는 경우
 	        alert("내용을 입력해주세요.")
 	        oEditors.getById["editorTxt"].exec("FOCUS")

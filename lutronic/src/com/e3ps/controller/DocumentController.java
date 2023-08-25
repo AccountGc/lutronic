@@ -115,6 +115,22 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "문서 템플릿 리스트 불러오기")
+	@ResponseBody
+	@PostMapping(value = "/template-list")
+	public Map<String, Object> templateList(@RequestBody Map<String, Object> params){
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = DocumentHelper.manager.docTemplateList(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "문세 템플릿 등록 페이지 이동")
 	@GetMapping(value = "/template-create")
 	public ModelAndView templateCreate()throws Exception{
@@ -123,27 +139,22 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 	
-//	/**
-//	 * 문서 상세보기
-//	 * 
-//	 * @param request
-//	 * @param response
-//	 * @param oid
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@RequestMapping("/viewDocument")
-//	public ModelAndView viewDocument(HttpServletRequest request, HttpServletResponse response,
-//			@RequestParam(value = "oid") String oid) throws Exception {
-//		ModelAndView model = new ModelAndView();
-//		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-//		DocumentData docData = new DocumentData(doc);
-//		
-//		model.setViewName("popup:/document/viewDocument");
-//		model.addObject("isAdmin", CommonUtil.isAdmin());
-//		model.addObject("docData", docData);
-//		return model;
-//	}
+	@Description(value = "문서 템플릿 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/template-create")
+	public Map<String, Object> templateCreate(@RequestBody Map<String, Object> params){
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.createTemplate(params);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 	
 	@Description(value = "댓글 등록 함수")
 	@ResponseBody

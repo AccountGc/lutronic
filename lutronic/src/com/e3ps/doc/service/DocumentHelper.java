@@ -19,6 +19,8 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.template.DocumentTemplate;
+import com.e3ps.doc.template.DocumentTemplateData;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
 import com.e3ps.org.People;
@@ -670,6 +672,40 @@ public class DocumentHelper {
 			e.printStackTrace();
 		}
 		return JSONArray.fromObject(list);
+	}
+	
+	public Map<String, Object> docTemplateList(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<DocumentTemplateData> docTemplateList = new ArrayList<DocumentTemplateData>();
+		
+		String number = (String) params.get("number");
+		String name = (String) params.get("name");
+		String dcoTemplateType = (String) params.get("dcoTemplateType");
+		
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(DocumentTemplate.class, true);
+
+		query.setAdvancedQueryEnabled(true);
+		query.setDescendantQuery(false);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult qr = pager.find();
+
+//		QueryResult result = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			DocumentTemplate template = (DocumentTemplate) obj[0];
+			DocumentTemplateData data = new DocumentTemplateData(template);
+			docTemplateList.add(data);
+		}
+
+		result.put("list", docTemplateList);
+		result.put("topListCount", pager.getTotal());
+		result.put("pageSize", pager.getPsize());
+		result.put("total", pager.getTotalSize());
+		result.put("sessionid", pager.getSessionId());
+		result.put("curPage", pager.getCpage());
+		return result;
 	}
 
 	public List<CommentsData> commentsList(String oid) throws Exception {

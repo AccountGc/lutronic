@@ -171,7 +171,7 @@ if (request.getParameter("popup") != null) {
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
-					fillColumnSizeMode: false,
+					fillColumnSizeMode: true,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
@@ -183,7 +183,7 @@ if (request.getParameter("popup") != null) {
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -195,7 +195,7 @@ if (request.getParameter("popup") != null) {
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/doc/template-create");
+				const url = getCallUrl("/doc/template-list");
 				const field = ["number, name, docTemplateType"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
