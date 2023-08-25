@@ -108,8 +108,9 @@
 		const number = document.getElementById("number").value;
 		const name = document.getElementById("name").value;
 		const dcoTemplateType = document.getElementById("dcoTemplateType").value;
-		const description = document.getElementById("description").value;
-
+		oEditors.getById["description"].exec("UPDATE_CONTENTS_FIELD", []);
+	    const description = document.getElementById("description").value;
+	    
 		if(isEmpty($("#number").val())){
 			alert("문서양식 번호를 입력하세요.");
 			return;					
@@ -122,10 +123,11 @@
 			alert("문서양식 유형을 입력하세요.");
 			return;					
 		}
-		if(isEmpty($("#description").val())){
-			alert("문서양식 내용을 입력하세요.");
-			return;					
-		}
+		 if(description == '<p>&nbsp;</p>') { //비어있는 경우
+	        alert("내용을 입력해주세요.")
+	        oEditors.getById["editorTxt"].exec("FOCUS")
+	        return;
+	    }
 		
 		if (!confirm("등록 하시겠습니까?")) {
 			return false;
