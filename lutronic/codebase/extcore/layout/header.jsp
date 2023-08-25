@@ -124,6 +124,12 @@
 					<li>
 						<a onclick="moveToPage(this, '/doc/all', '> 문서 관리 > 문서 일괄결재');">문서 일괄결재</a>
 					</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/template-list', '> 문서 관리 > 문서 템플릿 검색');">문서 템플릿 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/template-create', '> 문서 관리 > 문서 템플릿 등록');">문서 템플릿 등록</a>
+					</li>
 					<!-- <li>
 						<a onclick="moveToPage(this, '/requestDocument/list', '> 문서 관리 > 의뢰서 조회');">의뢰서 조회</a>
 					</li>

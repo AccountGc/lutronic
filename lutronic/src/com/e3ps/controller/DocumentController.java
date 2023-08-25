@@ -107,6 +107,22 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "문세 템플릿 검색 페이지 이동")
+	@GetMapping(value = "/template-list")
+	public ModelAndView templateList()throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/document/template-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "문세 템플릿 등록 페이지 이동")
+	@GetMapping(value = "/template-create")
+	public ModelAndView templateCreate()throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/document/template-create.jsp");
+		return model;
+	}
+	
 //	/**
 //	 * 문서 상세보기
 //	 * 
