@@ -133,7 +133,14 @@ EOSTEP.abbreviatedDisplay=false
 
 #DOCUMNETNAME - DOCUMENTNAME
 DOCUMENTNAME.value=문서명 규칙
-DOCUMENTNAME.order=160
+DOCUMENTNAME.order=170
 DOCUMENTNAME.shortDescription=true
 DOCUMENTNAME.longDescription=DN
 DOCUMENTNAME.abbreviatedDisplay=false
+
+#DOCFORMTYPE - DOCFORMTYPE
+DOCFORMTYPE.value=문서양식
+DOCFORMTYPE.order=180
+DOCFORMTYPE.shortDescription=true
+DOCFORMTYPE.longDescription=DF
+DOCFORMTYPE.abbreviatedDisplay=false
