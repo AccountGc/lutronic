@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,6 +51,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.Department;
 import com.e3ps.org.beans.CompanyState;
 import com.e3ps.org.service.MailUserHelper;
@@ -336,54 +341,109 @@ public class AdminController extends BaseController {
 		return map;
 	}
 	
-	
-	
 	/*
 	 * 
 	 *   코드 체계관리
 	 * 
 	 */
-	@RequestMapping("/admin_numberCode")
-	public ModelAndView admin_numberCode(HttpServletRequest request, HttpServletResponse response) {
-		
-		NumberCodeType[] codeType = NumberCodeType.getNumberCodeTypeSet();
-
-		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
-		
-		for(int i=0; i < codeType.length; i++){	
-			Map<String,String> map = new HashMap<String,String>();
-			map.put("value", codeType[i].toString());
-			map.put("name", codeType[i].getDisplay());
-			map.put("seq", codeType[i].getShortDescription());	//자동이냐(fals),수동이냐(true)
-			map.put("seqNm", codeType[i].getLongDescription());
-			map.put("tree", codeType[i].getAbbreviatedDisplay()); //tree 형태(true)l
-			list.add(map);
-		}
-		
+//	@RequestMapping("/admin_numberCode")
+//	public ModelAndView admin_numberCode(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		NumberCodeType[] codeType = NumberCodeType.getNumberCodeTypeSet();
+//
+//		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+//		
+//		for(int i=0; i < codeType.length; i++){	
+//			Map<String,String> map = new HashMap<String,String>();
+//			map.put("value", codeType[i].toString());
+//			map.put("name", codeType[i].getDisplay());
+//			map.put("seq", codeType[i].getShortDescription());	//자동이냐(fals),수동이냐(true)
+//			map.put("seqNm", codeType[i].getLongDescription());
+//			map.put("tree", codeType[i].getAbbreviatedDisplay()); //tree 형태(true)l
+//			list.add(map);
+//		}
+//		
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("admin:/admin/admin_numberCode");
+//		model.addObject("module", "code");
+//		model.addObject("list",list);
+//		return model;
+//	}
+	
+	@Description(value = "코드 체계관리 페이지")
+	@GetMapping(value = "/numberCodeList")
+	public ModelAndView numberCodeList() throws Exception{
 		ModelAndView model = new ModelAndView();
-		model.setViewName("admin:/admin/admin_numberCode");
-		model.addObject("module", "code");
-		model.addObject("list",list);
+		model.setViewName("/extcore/jsp/admin/adminNumberCode-list.jsp");
 		return model;
 	}
 	
-	@RequestMapping("/admin_numberCodeList")
-	public ModelAndView admin_numberCodeList(HttpServletRequest request, HttpServletResponse response) {
-		String codeType =request.getParameter("codeType");
-		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
-		String parentOid = StringUtil.checkReplaceStr(request.getParameter("parentOid"),"");
-		String title = StringUtil.checkReplaceStr(request.getParameter("title"), codeType);
-		String isSeq = NCodeType.getShortDescription();//자동(true),수동(false);
-		String seqNm = NCodeType.getLongDescription(); //SEQ NM;
-		ModelAndView model = new ModelAndView();
-		model.setViewName("include:/admin/admin_numberCodeList");
-		model.addObject("codeType", codeType);
-		model.addObject("parentOid", parentOid);
-		model.addObject("title", title);
-		model.addObject("isSeq",isSeq);
-		model.addObject("seqNm",seqNm);
-		return model;
+	@Description(value = "코드 대메뉴 함수")
+	@ResponseBody
+	@PostMapping(value = "/numberCode")
+	public Map<String, Object> numberCode() throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			NumberCodeType[] codeType = NumberCodeType.getNumberCodeTypeSet();
+			List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+			for(int i=0; i < codeType.length; i++){	
+				Map<String,String> map = new HashMap<String,String>();
+				map.put("value", codeType[i].toString());
+				ByteBuffer buffer=StandardCharsets.UTF_8.encode(codeType[i].getDisplay()); // 코드명 한글깨짐(변환)
+				String utf8EncodedString = StandardCharsets.UTF_8.decode(buffer).toString();
+				map.put("codeName", utf8EncodedString);
+				map.put("seq", codeType[i].getShortDescription());	//자동이냐(fals),수동이냐(true)
+				map.put("seqNm", codeType[i].getLongDescription());
+				map.put("tree", codeType[i].getAbbreviatedDisplay()); //tree 형태(true)l
+				list.add(map);
+			}
+			result.put("codeList", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
+	
+	@Description(value = "코드 소메뉴 함수")
+	@ResponseBody
+	@PostMapping(value = "/numberCodeTree")
+	public Map<String, Object> numberCodeTree(@RequestBody Map<String, Object> params) throws Exception {
+		String codeType = (String) params.get("codeType");
+		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			List<Map<String, Object>> list = AdminHelper.manager.numberCodeTree(codeType);
+			result.put("treeList", list);
+			result.put("headerType", NCodeType.getDisplay());
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+//	@RequestMapping("/admin_numberCodeList")
+//	public ModelAndView admin_numberCodeList(HttpServletRequest request, HttpServletResponse response) {
+//		String codeType =request.getParameter("codeType");
+//		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
+//		String parentOid = StringUtil.checkReplaceStr(request.getParameter("parentOid"),"");
+//		String title = StringUtil.checkReplaceStr(request.getParameter("title"), codeType);
+//		String isSeq = NCodeType.getShortDescription();//자동(true),수동(false);
+//		String seqNm = NCodeType.getLongDescription(); //SEQ NM;
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("include:/admin/admin_numberCodeList");
+//		model.addObject("codeType", codeType);
+//		model.addObject("parentOid", parentOid);
+//		model.addObject("title", title);
+//		model.addObject("isSeq",isSeq);
+//		model.addObject("seqNm",seqNm);
+//		return model;
+//	}
 	
 	@ResponseBody
 	@RequestMapping("/admin_numberCodeAction")
@@ -515,21 +575,21 @@ public class AdminController extends BaseController {
 		return model;
 	}
 	
-	@ResponseBody
-	@RequestMapping("/admin_numberCodeTreeAction")
-	public List<Map<String,String>> admin_numberCodeTreeAction(HttpServletRequest request, HttpServletResponse response) {
-		String codeType = request.getParameter("codeType");
-		NumberCodeType ctype = NumberCodeType.toNumberCodeType(codeType);
-		List<Map<String,String>> list = null;
-		try {
-			list = AdminHelper.service.admin_numberCodeTree(codeType);
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
+//	@ResponseBody
+//	@RequestMapping("/admin_numberCodeTreeAction")
+//	public List<Map<String,String>> admin_numberCodeTreeAction(HttpServletRequest request, HttpServletResponse response) {
+//		String codeType = request.getParameter("codeType");
+//		NumberCodeType ctype = NumberCodeType.toNumberCodeType(codeType);
+//		List<Map<String,String>> list = null;
+//		try {
+//			list = AdminHelper.service.admin_numberCodeTree(codeType);
+//		} catch(Exception e) {
+//			list = new ArrayList<Map<String,String>>();
+//			e.printStackTrace();
+//		}
+//		
+//		return list;
+//	}
 	
 	/*
 	 * 

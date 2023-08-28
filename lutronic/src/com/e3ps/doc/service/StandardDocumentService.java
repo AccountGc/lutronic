@@ -2256,7 +2256,7 @@ public class StandardDocumentService extends StandardManager implements Document
 	    	
 	    	WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 	    	
-	    	Comments com = new Comments();
+	    	Comments com = Comments.newComments();
 	    	com.setWtdocument(doc);
 	    	com.setComments(comments);
 	    	com.setCNum(num);

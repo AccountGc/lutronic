@@ -340,7 +340,7 @@
 					</a>
 					<ul class="nav nav-second-level collapse">
 						<li>
-							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 코드체계관리');">코드체계관리</a>
+							<a onclick="moveToPage(this, '/admin/numberCodeList', '> 관리자 > 코드체계관리');">코드체계관리</a>
 						</li>
 						<li>
 							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경관리');">설계변경관리</a>
