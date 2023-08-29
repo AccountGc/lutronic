@@ -259,36 +259,49 @@ public class AdminController extends BaseController {
 		return model;
 	}
 	
-	
 	/*
 	 * 
 	 * 외부 메일
 	 * 
 	 */
+//	@RequestMapping("/admin_mail")
+//	public ModelAndView admin_mail(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("admin:/admin/admin_mail");
+//		model.addObject("module", "mail");
+//		return model;
+//	}
 	
-	
-	@RequestMapping("/admin_mail")
-	public ModelAndView admin_mail(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("admin:/admin/admin_mail");
-		model.addObject("module", "mail");
-		return model;
-	}
-	
+	@Description(value = "외부 메일 실행")
 	@ResponseBody
-	@RequestMapping("/admin_mailAction")
-	public Map<String,Object> admin_mailAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> map = null;
-		
+	@PostMapping(value = "/adminMail")
+	public Map<String, Object> adminMail(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			map = AdminHelper.service.admin_mailAction(request, response);
-		} catch(Exception e) {
+			result = AdminHelper.manager.adminMail(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
 			e.printStackTrace();
-			map = new HashMap<String,Object>();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
-		return map;
+		return result;
 	}
+	
+//	@ResponseBody
+//	@RequestMapping("/admin_mailAction")
+//	public Map<String,Object> admin_mailAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> map = null;
+//		
+//		try {
+//			map = AdminHelper.service.admin_mailAction(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			map = new HashMap<String,Object>();
+//		}
+//		
+//		return map;
+//	}
 	
 	@ResponseBody
 	@RequestMapping("/actionMailUser")
@@ -319,6 +332,13 @@ public class AdminController extends BaseController {
 		return msg;
 	}
 	
+	@Description(value = "접속 이력관리 페이지")
+	@GetMapping(value = "/loginHistory")
+	public ModelAndView loginHistory() throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/admin/adminLoginHistory.jsp");
+		return model;
+	}
 	
 	/*
 	 * 
@@ -326,28 +346,44 @@ public class AdminController extends BaseController {
 	 * 
 	 */
 	
-	@RequestMapping("/admin_loginhistory")
-	public ModelAndView admin_loginhistory(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("admin:/admin/admin_loginhistory");
-		model.addObject("module", "loginhistory");
-		return model;
+//	@RequestMapping("/admin_loginhistory")
+//	public ModelAndView admin_loginhistory(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("admin:/admin/admin_loginhistory");
+//		model.addObject("module", "loginhistory");
+//		return model;
+//	}
+	
+	@Description(value = "접속 이력관리 실행")
+	@ResponseBody
+	@PostMapping(value = "/loginHistory")
+	public Map<String, Object> loginHistory(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = AdminHelper.manager.loginHistory(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
-	@ResponseBody
-	@RequestMapping("/admin_loginHistoryAction")
-	public Map<String,Object> admin_loginHistoryAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> map = null;
-		
-		try {
-			map = AdminHelper.service.admin_loginHistoryAction(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-			map = new HashMap<String,Object>();
-		}
-		
-		return map;
-	}
+//	@ResponseBody
+//	@RequestMapping("/admin_loginHistoryAction")
+//	public Map<String,Object> admin_loginHistoryAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> map = null;
+//		
+//		try {
+//			map = AdminHelper.service.admin_loginHistoryAction(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			map = new HashMap<String,Object>();
+//		}
+//		
+//		return map;
+//	}
 	
 	/*
 	 * 

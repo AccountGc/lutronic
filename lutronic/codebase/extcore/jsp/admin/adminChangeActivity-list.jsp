@@ -7,14 +7,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 // NumberCode c = NumberCode.newNumberCode();
-// c.setCode("01");
-// NumberCodeType NCodeType = NumberCodeType.toNumberCodeType("PARTTYPE");
-// c.setCodeType(NCodeType);
-// c.setName("Nd:YAG Laser");
-// NumberCode p= (NumberCode)CommonUtil.getObject("com.e3ps.common.code.NumberCode:156904");
-// c.setParent(p);
-// c.setSort("001");
-// PersistenceHelper.manager.save(c);
 %>
 <!DOCTYPE html>
 <html>
@@ -77,7 +69,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "",
+					dataField : "step",
 					headerText : "단계",
 					dataType : "string",
 					width : 120,
@@ -86,7 +78,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "engName",
+					dataField : "name",
 					headerText : "활동명",
 					dataType : "string",
 					width : 400,
@@ -95,7 +87,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "code",
+					dataField : "activityType",
 					headerText : "활동구분",
 					dataType : "string",
 					width : 120,
@@ -104,7 +96,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "sort",
+					dataField : "departName",
 					headerText : "담당부서",
 					dataType : "string",
 					width : 120,
@@ -113,7 +105,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "description",
+					dataField : "activeUserName",
 					headerText : "담당자",
 					dataType : "string",
 					width : 120,
@@ -124,7 +116,7 @@
 				}, {
 					dataField : "enabled",
 					headerText : "활성화",
-					dataType : "sort",
+					dataType : "string",
 					width : 120,
 					filter : {
 						showIcon : true,

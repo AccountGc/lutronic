@@ -7,14 +7,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 // NumberCode c = NumberCode.newNumberCode();
-// c.setCode("01");
-// NumberCodeType NCodeType = NumberCodeType.toNumberCodeType("PARTTYPE");
-// c.setCodeType(NCodeType);
-// c.setName("Nd:YAG Laser");
-// NumberCode p= (NumberCode)CommonUtil.getObject("com.e3ps.common.code.NumberCode:156904");
-// c.setParent(p);
-// c.setSort("001");
-// PersistenceHelper.manager.save(c);
 %>
 <!DOCTYPE html>
 <html>
@@ -31,38 +23,26 @@
 		<input type="hidden" name="curPage" id="curPage">
 
 		<table class="search-table">
-<!-- 			<colgroup> -->
-<!-- 				<col width="130"> -->
-<!-- 				<col width="*"> -->
-<!-- 				<col width="130"> -->
-<!-- 				<col width="*"> -->
-<!-- 			</colgroup> -->
+			<colgroup>
+				<col width="130">
+				<col width="*">
+				<col width="130">
+				<col width="*">
+				<col width="130">
+				<col width="*">
+			</colgroup>
 			<tr>
-				<th>이름(국문)</th>
+				<th>이름</th>
 				<td>
 					<input type="text" name="name" id="name" class="width-200">
 				</td>
-				<th>이름(영문)</th>
+				<th>이메일</th>
 				<td>
-					<input type="text" name="engName" id="engName" class="width-200">
-				</td>
-				<th>코드</th>
-				<td>
-					<input type="text" name="code" id="code" class="width-200">
-				</td>
-			</tr>
-			<tr>
-				<th>소트</th>
-				<td>
-					<input type="text" name="sort" id="sort" class="width-200">
-				</td>
-				<th>설명</th>
-				<td>
-					<input type="text" name="description" id="description" class="width-200">
+					<input type="text" name="email" id="email" class="width-200">
 				</td>
 				<th>활성화</th>
 				<td>
-					<input type="checkbox" name="enabled" id="enabled">
+					<input type="checkbox" name="enable" id="enable">
 				</td>
 			</tr>
 		</table>
@@ -70,8 +50,8 @@
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('numberCode-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('numberCode-list');"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('mail-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('mail-list');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -81,57 +61,22 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="등록" title="등록" id="create" class="blue">
-					<input type="button" value="수정" title="수정" id="update" style="display: none;">
-					<input type="button" value="삭제" title="삭제" id="delete" style="display: none;">
+					<input type="button" value="등록" title="등록" id="createUser" class="blue">
+					<input type="button" value="수정" title="수정" id="updateUser" style="display: none;">
+					<input type="button" value="삭제" title="삭제" id="deleteUser" style="display: none;">
 					<input type="button" value="초기화" title="초기화" id="reset">
 				</td>
 			</tr>
 		</table>
-		<table>
-			<colgroup>
-				<col width="230">
-				<col width="10">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<td valign="top">
-					<jsp:include page="/extcore/jsp/admin/adminNumberCode.jsp">
-						<jsp:param value="670" name="codeheight" />
-					</jsp:include>
-				</td>
-				<td valign="top">&nbsp;</td>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
-					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-				</td>
-			</tr>
-		</table>
+		<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
 				return [ {
 					dataField : "name",
-					headerText : "이름(국문)",
-					dataType : "string",
-					width : 160,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "engName",
-					headerText : "이름(영문)",
-					dataType : "string",
-					width : 160,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "code",
-					headerText : "코드",
+					headerText : "이름",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -139,17 +84,8 @@
 						inline : true
 					},
 				}, {
-					dataField : "sort",
-					headerText : "소트",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "description",
-					headerText : "설명",
+					dataField : "email",
+					headerText : "이메일",
 					dataType : "string",
 					width : 400,
 					filter : {
@@ -157,7 +93,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "enabled",
+					dataField : "enable",
 					headerText : "활성화",
 					dataType : "string",
 					width : 120,
@@ -197,12 +133,11 @@
 			}
 
 			function loadGridData() {
-				let params = new Object();
-				params.codeType = 'PARTTYPE';
-				const url = getCallUrl("/admin/numberCodeTree");
+				var params = _data($("#form"));
+				var url = getCallUrl("/admin/adminMail");
 				call(url, params, function(data) {
 					if (data.result) {
-						AUIGrid.setGridData(myGridID, data.treeList);
+						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
@@ -210,15 +145,15 @@
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("numberCode-list");
+				const columns = loadColumnLayout("mail-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
 					select : headerMenuSelectHandler
 				});
 				createAUIGrid(columns);
-				createAUIGridCode(codeColumns);
 				selectbox("_psize");
+				selectbox("rootOid");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -234,30 +169,14 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(codeGridID);
 			});
 			
 			$("#reset").click(function() {
-				$("#create").show();
-				$("#update").hide();
-				//$("#delete").hide();
-				if(!isSeq){
-					$("#code").removeAttr("disabled");
-				}
-			});
+				$("#createUser").show();
+				$("#updateUser").hide();
+				$("#deleteUser").hide();
+			})
 			
-			function loadGridData2(type) {
-				let params = new Object();
-				params.codeType = type;
-				const url = getCallUrl("/admin/numberCodeTree");
-				call(url, params, function(data) {
-					if (data.result) {
-						AUIGrid.setGridData(myGridID, data.treeList);
-					} else {
-						alert(data.msg);
-					}
-				});
-			}
 		</script>
 	</form>
 </body>

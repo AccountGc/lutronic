@@ -37,6 +37,10 @@ public class EADData {
 	private String finishDate;
 	private boolean isModify = true;
 	
+	public EADData() {
+		
+	}
+	
 	public EADData(final EChangeActivityDefinition ead) {
 		if(ead == null){
 			return;
@@ -61,5 +65,9 @@ public class EADData {
 		setDescription(StringUtil.checkNull(ead.getDescription()));
 		setViewDescription(WebUtil.getHtml(getDescription()));
 		setModify(true);
+		People pp =UserHelper.service.getPeople(ead.getActiveUser());
+		if(pp != null && pp.getDepartment() != null){
+			setDepartName(pp.getDepartment().getName());
+		}
 	}
 }
