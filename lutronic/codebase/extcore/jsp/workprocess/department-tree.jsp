@@ -9,17 +9,15 @@ String height = request.getParameter("height");
 <div id="_grid_wrap" style="height: <%=height%>px; border-top: 1px solid #3180c3;"></div>
 <script type="text/javascript">
 	let _myGridID;
-	function folder_layout() {
-		return [ {
-			dataField : "name",
-			headerText : "폴더명",
-			dataType : "string",
-			filter : {
-				showIcon : true,
-				inline : true
-			}
-		} ]
-	}
+	const layout = [ {
+		dataField : "name",
+		headerText : "부서명",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		}
+	} ]
 
 	function _createAUIGrid(columnLayout) {
 		const props = {
@@ -27,15 +25,15 @@ String height = request.getParameter("height");
 			headerHeight : 30,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
-			selectionMode: "multipleCells",
-			enableFilter : true, 
-			showInlineFilter : true,		
+			selectionMode : "multipleCells",
+			enableFilter : true,
+			showInlineFilter : true,
 			displayTreeOpen : true,
 			forceTreeView : true
 		}
 		_myGridID = AUIGrid.create("#_grid_wrap", columnLayout, props);
-		loadFolderTree();
-// 		AUIGrid.bind(_myGridID, "selectionChange", auiGridSelectionChangeHandler);
+		loadTree();
+		// 		AUIGrid.bind(_myGridID, "selectionChange", auiGridSelectionChangeHandler);
 		AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
@@ -45,7 +43,6 @@ String height = request.getParameter("height");
 		AUIGrid.showItemsOnDepth(_myGridID, 2);
 	}
 
-	
 	function auiCellClick(event) {
 		const item = event.item;
 		const oid = item.oid;
@@ -54,16 +51,16 @@ String height = request.getParameter("height");
 		document.getElementById("location").value = oid;
 		document.getElementById("locationText").innerText = location;
 	}
-	
+
 	let timerId = null;
 	function auiCellDoubleClick(event) {
-		<%if ("list".equals(mode)) {%>
-		// 500ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
+<%if ("list".equals(mode)) {%>
+	// 500ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
 		if (timerId) {
 			clearTimeout(timerId);
 		}
 
-		timerId = setTimeout(function () {
+		timerId = setTimeout(function() {
 			const primeCell = event.item;
 			const oid = primeCell.oid;
 			const location = primeCell.location;
@@ -71,23 +68,20 @@ String height = request.getParameter("height");
 			document.getElementById("location").value = oid;
 			document.getElementById("locationText").innerText = location;
 			loadGridData();
-		}, 500);  
-		<%}%>
+		}, 500);
+<%}%>
 	}
-	
-	
-	function loadFolderTree() {
-		const location = decodeURIComponent("<%=location%>");
-		const url = getCallUrl("/department/loadFolderTree");
+
+	function loadTree() {
+		const url = getCallUrl("/department/tree");
 		const params = new Object();
-		params.root = "ROOT";
 		call(url, params, function(data) {
 			AUIGrid.setGridData(_myGridID, data.list);
 		});
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
-		_createAUIGrid(folder_layout);
+		_createAUIGrid(layout);
 		AUIGrid.resize(_myGridID);
 	});
 </script>

@@ -9,42 +9,102 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import wt.method.MethodContext;
-import wt.pom.DBProperties;
-import wt.pom.WTConnection;
-import wt.services.StandardManager;
-import wt.util.WTProperties;
-
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
 
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
+import wt.method.MethodContext;
+import wt.pom.DBProperties;
+import wt.pom.Transaction;
+import wt.pom.WTConnection;
+import wt.query.QuerySpec;
+import wt.services.ManagerException;
+import wt.services.StandardManager;
+import wt.session.SessionContext;
+import wt.session.SessionHelper;
+import wt.util.WTProperties;
+
 public class StandardOrgService extends StandardManager implements OrgService {
-	
+
 	public static StandardOrgService newStandardOrgService() throws Exception {
 		final StandardOrgService instance = new StandardOrgService();
 		instance.initialize();
 		return instance;
 	}
-	
-	static String dataStore = "Oracle"; //SQLServer ....
+
+	static String dataStore = "Oracle"; // SQLServer ....
 	static {
-		try{
+		try {
 			dataStore = WTProperties.getLocalProperties().getProperty("wt.db.dataStore");
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			dataStore = "Oracle";
 		}
 	}
-	
+
+	protected synchronized void performStartupProcess() throws ManagerException {
+		super.performStartupProcess();
+		try {
+			
+			System.out.println("루트 부서 생성 시작!");
+			Department department = makeRoot();
+//			inspectUser(department);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
-	public JSONObject getDepartmentTree(Department root) throws Exception{
+	public Department makeRoot() throws Exception {
+		Department department = null;
+		SessionContext prev = SessionContext.newContext();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			SessionHelper.manager.setAdministrator();
+
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(Department.class, true);
+			QuerySpecUtils.toEqualsAnd(query, idx, Department.class, Department.CODE, "ROOT");
+			QueryResult result = PersistenceHelper.manager.find(query);
+			// 루트 부서가 있을 경우
+			if (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				department = (Department) obj[0];
+			} else {
+				// 루트 부서가 없을 경우
+				department = Department.newDepartment();
+				department.setName("루트로닉");
+				department.setCode("ROOT");
+				department.setSort(0);
+				department = (Department) PersistenceHelper.manager.save(department);
+			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+			SessionContext.setContext(prev);
+		}
+		return department;
+	}
+
+	@Override
+	public JSONObject getDepartmentTree(Department root) throws Exception {
 
 		MethodContext methodcontext = null;
 		WTConnection wtconnection = null;
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        
-        JSONObject deptList = new JSONObject();
-        
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		JSONObject deptList = new JSONObject();
+
 		try {
 			methodcontext = MethodContext.getContext();
 			wtconnection = (WTConnection) methodcontext.getConnection();
@@ -53,7 +113,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			StringBuffer sb = null;
 
 			sb = new StringBuffer();
-			
+
 			sb.append("			SELECT LEVEL, 																		");
 			sb.append("				NAME, 																			");
 			sb.append("				classnameA2A2 ||':' ||idA2A2 oid, 												");
@@ -71,7 +131,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			st.setLong(1, root.getPersistInfo().getObjectIdentifier().getId());
 
 			rs = st.executeQuery();
-			
+
 			String rootName = root.getName();
 			String mainID = "1";
 			int mainLevel = 0;
@@ -115,7 +175,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				String sort = rs.getString("SORT");
 				int level = rs.getInt("LEVEL");
 				int isLeaf = rs.getInt("ISLEAF");
-				
+
 				JSONObject jsonData = new JSONObject();
 				jsonData.put("id", id);
 				jsonData.put("text", name);
@@ -123,7 +183,8 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				jsonData.put("level", level);
 				jsonData.put("parentOid", parentOid);
 				jsonData.put("code", code);
-				jsonData.put("pcode", ((Department)CommonUtil.getObject("com.e3ps.org.Department:"+parentOid)).getCode());
+				jsonData.put("pcode",
+						((Department) CommonUtil.getObject("com.e3ps.org.Department:" + parentOid)).getCode());
 				jsonData.put("sort", sort);
 				jsonData.put("isLeaf", isLeaf);
 
@@ -153,24 +214,22 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				treeMap.put(parentOid, jsonParentData);
 
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e);
 		} finally {
-            if ( rs != null ) {
-                rs.close();
-            }
-            if ( st != null ) {
-                st.close();
-            }
-			if (DBProperties.FREE_CONNECTION_IMMEDIATE
-					&& !wtconnection.isTransactionActive()) {
+			if (rs != null) {
+				rs.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+			if (DBProperties.FREE_CONNECTION_IMMEDIATE && !wtconnection.isTransactionActive()) {
 				MethodContext.getContext().freeConnection();
 			}
 		}
-		
+
 		return deptList;
 	}
 

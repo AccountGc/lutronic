@@ -5,8 +5,10 @@
 			<file display-label="DWG" type="dwg" default="true" output-prefix="dwg" />
 		</additional-files>
 		<additional-files name="PART_FILES">
+			<file display-label="STEP" type="step" default="true" output-prefix="step" />
 		</additional-files>
 		<additional-files name="ASM_FILES">
+			<file display-label="STEP" type="step" default="true" output-prefix="step" />
 		</additional-files>
 		<condition name="IS_PART">
 			<attribute name="epmdoc_number" regex=".*\.PRT" />

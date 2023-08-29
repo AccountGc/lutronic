@@ -13,14 +13,14 @@
 
 package com.e3ps.org;
 
-import wt.fc.InvalidAttributeException;
-import wt.util.WTException;
-
 import com.e3ps.common.util.Tree;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;
 import com.ptc.windchill.annotations.metadata.GeneratedProperty;
 import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 import com.ptc.windchill.annotations.metadata.Serialization;
+
+import wt.fc.InvalidAttributeException;
+import wt.util.WTException;
 
 /**
  *
