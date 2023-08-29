@@ -349,7 +349,7 @@
 							<a onclick="moveToPage(this, '/admin/adminMail', '> 관리자 > 외부메일관리');">외부메일관리</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 접속이력관리');">접속이력관리</a>
+							<a onclick="moveToPage(this, '/admin/loginHistory', '> 관리자 > 접속이력관리');">접속이력관리</a>
 						</li>
 						<li>
 							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 다운로드 이력관리');">다운로드 이력관리</a>
