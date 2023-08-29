@@ -219,37 +219,58 @@ public class AdminController extends BaseController {
 		return result;
 	}
 	
+	@Description(value = "다운로드 이력관리 페이지")
+	@GetMapping(value = "/downLoadHistory")
+	public ModelAndView downLoadHistory() throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/admin/adminDownLoadHistory.jsp");
+		return model;
+	}
 	
 	/*
 	 * 
 	 * 다운로드 이력관리
 	 * 
 	 */
+//	@RequestMapping("/admin_downLoadHistory")
+//	public ModelAndView admin_downLoadHistory(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.setViewName("admin:/admin/admin_downLoadHistory");
+//		model.addObject("module", "download");
+//		return model;
+//	}
 	
-	
-	@RequestMapping("/admin_downLoadHistory")
-	public ModelAndView admin_downLoadHistory(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("admin:/admin/admin_downLoadHistory");
-		model.addObject("module", "download");
-		return model;
-	}
-	
+	@Description(value = "다운로드 이력관리 실행")
 	@ResponseBody
-	@RequestMapping("/admin_downLoadHistoryAction")
-	public Map<String,Object> admin_downLoadHistoryAction(HttpServletRequest request, HttpServletResponse response) {
-		
-		Map<String,Object> map = null;
-		
+	@PostMapping(value = "/downLoadHistory")
+	public Map<String, Object> downLoadHistory(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			map = AdminHelper.service.admin_downLoadHistoryAction(request, response);
-		} catch(Exception e) {
-			map = new HashMap<String,Object>();
+//			result = AdminHelper.manager.adminMail(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
 			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-		
-		return map;
+		return result;
 	}
+	
+//	@ResponseBody
+//	@RequestMapping("/admin_downLoadHistoryAction")
+//	public Map<String,Object> admin_downLoadHistoryAction(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		Map<String,Object> map = null;
+//		
+//		try {
+//			map = AdminHelper.service.admin_downLoadHistoryAction(request, response);
+//		} catch(Exception e) {
+//			map = new HashMap<String,Object>();
+//			e.printStackTrace();
+//		}
+//		
+//		return map;
+//	}
 	
 	@Description(value = "외부 메일 페이지")
 	@GetMapping(value = "/adminMail")
