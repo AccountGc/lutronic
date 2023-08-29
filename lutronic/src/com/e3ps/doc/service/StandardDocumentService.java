@@ -2345,15 +2345,22 @@ public class StandardDocumentService extends StandardManager implements Document
 	    	
 	    	String docTemplateNumber = StringUtil.checkNull((String) params.get("number"));
 	    	String name =StringUtil.checkNull((String) params.get("name"));
-//	    	NumberCode docTemplateType = (NumberCode) params.get("docTemplateType");
-	    	String description =StringUtil.checkNull((String) params.get("description"));
+	    	String _docTemplateType = (String) params.get("documentTemplateType");
+	    	ArrayList description =(ArrayList) params.get("description");
 	    	
-	    	DocumentTemplate docTemp = new DocumentTemplate();
+	    	DocumentTemplate docTemp = DocumentTemplate.newDocumentTemplate();
 	    	
 	    	docTemp.setDocTemplateNumber(docTemplateNumber);
 	    	docTemp.setName(name);
-//	    	docTemp.setDocTemplateType(docTemplateType);
+	    	if (!StringUtil.isNull(_docTemplateType)) {
+//	    		NumberCode docTemplateType = NumberCodeHelper.service.getNumberCode(_docTemplateType, "DOCFORMTYPE");
+	    		NumberCode docTemplateType = (NumberCode) CommonUtil.getObject(_docTemplateType);
+	    		docTemp.setDocTemplateType(docTemplateType);
+	    	}
+	    	
 	    	docTemp.setDescription(description);
+	    	System.out.println("===========================>" + description);
+	    	System.out.println("===========================>" + docTemp.getDescription());
 	    	
 	    	PersistenceHelper.manager.save(docTemp);
 	    	

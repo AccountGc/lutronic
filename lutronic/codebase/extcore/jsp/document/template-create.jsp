@@ -19,10 +19,14 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="wt.org.WTPrincipal"%>
 <%@page import="wt.session.SessionHelper"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	ArrayList<NumberCode> documentTemplateTypeList = (ArrayList<NumberCode>) request.getAttribute("documentTemplateTypeList");
+%>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
-<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>">
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,6 +40,7 @@
 </head>
 <body>
 <form id="form">
+<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -61,23 +66,23 @@
 	<tr>
 		<th class="req lb">문서양식 유형</th>
 		<td class="indent5" colspan="3">
-			<select name="dcoTemplateType"  id="dcoTemplateType" class="width-200" >
-					<option value="">선택</option>
-					<option value="$$Document">일반문서</option>
-					<option value="$$Document">개발문서</option>
-					<option value="$$Document">승인원</option>
-					<option value="$$Document">인증문서</option>
-					<option value="$$Document">금형문서</option>
-					<option value="$$Document">개발소스</option>
-					<option value="$$Document">배포자료</option>
-					<option value="$$Document">ROHS</option>
-					<option value="$$Document">기타문서</option>
-			</select></td>
+			<select name="documentTemplateType" id="documentTemplateType" class="width-200" tabindex="11">
+				<option value="">선택</option>
+				<%
+				for (NumberCode documentTemplateType : documentTemplateTypeList) {
+				%>
+				<option value="<%=documentTemplateType.getPersistInfo().getObjectIdentifier().getStringValue() %>"><%=documentTemplateType.getName()%></option>
+<%-- 				<option value="<%=documentTemplateType.getName() %>"><%=documentTemplateType.getName()%></option> --%>
+				<%
+				}
+				%>
+			</select>
+		</td>
 	</tr>
 	<tr>
 		<th class="lb">내용</th>
 		<td colspan="3" class="indent5">
-			<textarea name="description" id="description" rows="6">
+			<textarea name="description" id="description" rows="15">
 			</textarea>
 		</td>
 	</tr>
@@ -91,6 +96,7 @@
 		</td>
 	</tr>
 </table>
+</form>
 <script type="text/javascript">
 	// 텍스트 편집기
 	var oEditors = [];
@@ -110,28 +116,29 @@
 	});
 	
 	document.addEventListener("DOMContentLoaded", function() {
-		selectbox("dcoTemplateType");
+		selectbox("dcumentTemplateType");
 	});
 	
 	function create(isSelf) {
 		const number = document.getElementById("number").value;
 		const name = document.getElementById("name").value;
-		const dcoTemplateType = document.getElementById("dcoTemplateType").value;
+		const documentTemplateType = document.getElementById("documentTemplateType").value;
 		oEditors.getById["description"].exec("UPDATE_CONTENTS_FIELD", []);
-	    const description = document.getElementById("description").value;
+	    let description = [];
+	    description[0] = document.getElementById("description").value;
 	    
-		if(isEmpty($("#number").val())){
+		if(isEmpty(number)){
 			alert("문서양식 번호를 입력하세요.");
 			return;					
 		}
-		if(isEmpty($("#name").val())){
+		if(isEmpty(name)){
 			alert("문서양식 제목을 입력하세요.");
 			return;					
 		}
-// 		if(isEmpty($("#dcoTemplateType").val())){
-// 			alert("문서양식 유형을 입력하세요.");
-// 			return;					
-// 		}
+		if(isEmpty(documentTemplateType)){
+			alert("문서양식 유형을 입력하세요.");
+			return;					
+		}
 		 if(description == '<p>&nbsp;</p>') { //비어있는 경우
 	        alert("내용을 입력해주세요.")
 	        oEditors.getById["editorTxt"].exec("FOCUS")
@@ -144,18 +151,22 @@
 
 		const params = new Object();
 		const url = getCallUrl("/doc/template-create");
+		params.files = fileObject[0];
 		params.number = number;
 		params.name = name;
-		params.dcoTemplateType = dcoTemplateType;
+		params.documentTemplateType = documentTemplateType;
 		params.description = description;
-		call(url, params, function(data) {
-			alert(data.msg);
-			if (data.result) {
-			} else {
-			}
-		});
+		
+		console.log(params.files);
+        
+// 		call(url, params, function(data) {
+// 			alert(data.msg);
+// 			if (data.result) {
+// 				location.href=getCallUrl("/doc/template-list");
+// 			} else {
+// 			}
+// 		});
 	};
 </script>
-</form>
 </body>
 </html>

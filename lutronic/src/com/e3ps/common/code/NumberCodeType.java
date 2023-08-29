@@ -15,25 +15,9 @@ package com.e3ps.common.code;
 
 import com.ptc.windchill.annotations.metadata.GenAsEnumeratedType;
 
-/**
- *
- * @version   1.0
- **/
-
 @GenAsEnumeratedType
 public class NumberCodeType extends _NumberCodeType {
 
-
-
-
-
-
-   /**
-    * Used by sub-classes that need a default constructor.
-    *
-    **/
-   protected NumberCodeType() {
-
-   }
+	public static final NumberCodeType DOCFORMTYPE = toNumberCodeType("DOCFORMTYPE");
 
 }

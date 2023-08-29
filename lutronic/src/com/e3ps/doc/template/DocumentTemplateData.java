@@ -1,5 +1,7 @@
 package com.e3ps.doc.template;
 
+import java.util.ArrayList;
+
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.CommonUtil;
 
@@ -14,7 +16,7 @@ public class DocumentTemplateData {
 	private String docTemplateNumber;
 	private String name;
 	private NumberCode docTemplateType;
-	private String description;
+	private ArrayList description;
 	
 	public DocumentTemplateData() {
 		

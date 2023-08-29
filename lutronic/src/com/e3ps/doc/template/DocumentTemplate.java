@@ -1,10 +1,20 @@
 package com.e3ps.doc.template;
 
+import java.sql.Blob;
+import java.util.ArrayList;
+
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.util.OwnPersistable;
+import com.ptc.windchill.annotations.metadata.Cardinality;
+import com.ptc.windchill.annotations.metadata.ColumnProperties;
+import com.ptc.windchill.annotations.metadata.ColumnType;
+import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;
+import com.ptc.windchill.annotations.metadata.GeneratedForeignKey;
 import com.ptc.windchill.annotations.metadata.GeneratedProperty;
+import com.ptc.windchill.annotations.metadata.MyRole;
+import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 import com.ptc.windchill.annotations.metadata.Serialization;
 
 import wt.content.ContentHolder;
@@ -21,10 +31,17 @@ properties={
 		
 		@GeneratedProperty(name="name", type=String.class),
 		
-		@GeneratedProperty(name="docTemplateType", type=NumberCode.class),
+//		@GeneratedProperty(name="docTemplateType", type=NumberCode.class),
 		
-		@GeneratedProperty(name="description", type=String.class),
+		@GeneratedProperty(name="description", type=ArrayList.class,
+	      columnProperties=@ColumnProperties(columnType=ColumnType.BLOB)),
 		
+},
+foreignKeys={
+	@GeneratedForeignKey(myRoleIsRoleA=false,
+   foreignKeyRole=@ForeignKeyRole(name="docTemplateType", type=com.e3ps.common.code.NumberCode.class,
+      constraints=@PropertyConstraints(required=false)),
+   myRole=@MyRole(name="documentTemplate"))
 })
 public class DocumentTemplate extends _DocumentTemplate{
    static final long serialVersionUID = 1;
