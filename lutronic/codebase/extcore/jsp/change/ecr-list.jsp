@@ -254,7 +254,6 @@
 					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
-					enableFilter : false,
 					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,

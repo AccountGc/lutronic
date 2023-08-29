@@ -1,5 +1,3 @@
-<%@page import="java.net.URLEncoder"%>
-<%@page import="java.nio.charset.StandardCharsets"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="com.e3ps.common.code.NumberCodeType"%>
@@ -17,25 +15,6 @@
 // c.setParent(p);
 // c.setSort("001");
 // PersistenceHelper.manager.save(c);
-NumberCodeType[] codeType = NumberCodeType.getNumberCodeTypeSet();
-for(int i=0; i < 1; i++){	
-	String codename = codeType[i].getDisplay();
-	String charset[] = {"utf-8", "euc-kr", "ksc5601", "iso-8859-1", "8859_1", "ascii"};
-	  
-	for (String before : charset){
-	    for (String after : charset){
-	        if (!before.equals(after)){
-	            out.println(before + " -> " + after + " = " + new String(codename.getBytes(before), after));
-	        }
-	    }
-	}
-//     String string = URLEncoder.encode(codename, "UTF-8");
-//     String string2 = URLEncoder.encode(codename, "EUC-KR");
-//     String string3 = URLEncoder.encode(codename, "ISO-8859-1");
-// 	out.println("111111=>"+string);
-// 	out.println("222222=>"+string2);
-// 	out.println("333333333=>"+string3);
-}
 %>
 <!DOCTYPE html>
 <html>
@@ -47,7 +26,7 @@ for(int i=0; i < 1; i++){
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-	<form id="documentForm">
+	<form id="form">
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
@@ -218,7 +197,16 @@ for(int i=0; i < 1; i++){
 			}
 
 			function loadGridData() {
-				
+				let params = new Object();
+				params.codeType = 'PARTTYPE';
+				const url = getCallUrl("/admin/numberCodeTree");
+				call(url, params, function(data) {
+					if (data.result) {
+						AUIGrid.setGridData(myGridID, data.treeList);
+					} else {
+						alert(data.msg);
+					}
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
@@ -248,6 +236,19 @@ for(int i=0; i < 1; i++){
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(codeGridID);
 			});
+			
+			function loadGridData2(type) {
+				let params = new Object();
+				params.codeType = type;
+				const url = getCallUrl("/admin/numberCodeTree");
+				call(url, params, function(data) {
+					if (data.result) {
+						AUIGrid.setGridData(myGridID, data.treeList);
+					} else {
+						alert(data.msg);
+					}
+				});
+			}
 			
 		</script>
 	</form>
