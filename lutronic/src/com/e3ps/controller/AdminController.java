@@ -251,6 +251,14 @@ public class AdminController extends BaseController {
 		return map;
 	}
 	
+	@Description(value = "외부 메일 페이지")
+	@GetMapping(value = "/adminMail")
+	public ModelAndView adminMail() throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/admin/adminMail.jsp");
+		return model;
+	}
+	
 	
 	/*
 	 * 
@@ -389,12 +397,10 @@ public class AdminController extends BaseController {
 			for(int i=0; i < codeType.length; i++){	
 				Map<String,String> map = new HashMap<String,String>();
 				map.put("value", codeType[i].toString());
-				ByteBuffer buffer=StandardCharsets.UTF_8.encode(codeType[i].getDisplay()); // 코드명 한글깨짐(변환)
-				String utf8EncodedString = StandardCharsets.UTF_8.decode(buffer).toString();
-				map.put("codeName", utf8EncodedString);
+				map.put("codeName", codeType[i].getDisplay());
 				map.put("seq", codeType[i].getShortDescription());	//자동이냐(fals),수동이냐(true)
 				map.put("seqNm", codeType[i].getLongDescription());
-				map.put("tree", codeType[i].getAbbreviatedDisplay()); //tree 형태(true)l
+				map.put("tree", codeType[i].getAbbreviatedDisplay()); //tree 형태(true)
 				list.add(map);
 			}
 			result.put("codeList", list);
@@ -407,7 +413,7 @@ public class AdminController extends BaseController {
 		return result;
 	}
 	
-	@Description(value = "코드 소메뉴 함수")
+	@Description(value = "코드 메뉴별 실행")
 	@ResponseBody
 	@PostMapping(value = "/numberCodeTree")
 	public Map<String, Object> numberCodeTree(@RequestBody Map<String, Object> params) throws Exception {
@@ -415,9 +421,7 @@ public class AdminController extends BaseController {
 		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			List<Map<String, Object>> list = AdminHelper.manager.numberCodeTree(codeType);
-			result.put("treeList", list);
-			result.put("headerType", NCodeType.getDisplay());
+			result = AdminHelper.manager.numberCodeTree(codeType);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -672,39 +676,63 @@ public class AdminController extends BaseController {
 		return ECAHelper.service.createRootDefinitionAction(request);
 	}
 	
+	@Description(value = "설계변경 활동 페이지")
+	@GetMapping(value = "/changeActivityList")
+	public ModelAndView changeActivityList() throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/admin/adminChangeActivity-list.jsp");
+		return model;
+	}
+	
 	/**
 	 * 설계변경 활동 리스트
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/admin_listChangeActivity")
-	public ModelAndView admin_listChangeActivity(HttpServletRequest request, HttpServletResponse response) {
-		
-		String oid = StringUtil.checkNull(request.getParameter("oid"));
-		ModelAndView model = new ModelAndView();
-		model.addObject("oid", oid);
-		model.setViewName("admin:/admin/admin_listChangeActivity");
-		
-		return model;
+//	@RequestMapping("/admin_listChangeActivity")
+//	public ModelAndView admin_listChangeActivity(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		String oid = StringUtil.checkNull(request.getParameter("oid"));
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("oid", oid);
+//		model.setViewName("admin:/admin/admin_listChangeActivity");
+//		
+//		return model;
+//	}
+	
+	@Description(value = "설계변경 활동 실행")
+	@ResponseBody
+	@PostMapping(value = "/changeActivityList")
+	public Map<String, Object> changeActivityList(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = AdminHelper.manager.changeActivityList(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
-	@ResponseBody
-	@RequestMapping("/admin_listChangeActivityAction")
-	public Map<String,Object> admin_listChangeActivityAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> map = new HashMap<String,Object>();
-		try {
-			
-			String rootOid = StringUtil.checkNull(request.getParameter("rootOid"));
-//			System.out.println("admin admin_listChangeActivityAction = "+rootOid);
-			map = ECAHelper.service.listActiveDefinitionAction(request,response);
-			
-		} catch(Exception e) {
-			map = new HashMap<String,Object>();
-			e.printStackTrace();
-		}
-		return map;
-	}
+//	@ResponseBody
+//	@RequestMapping("/admin_listChangeActivityAction")
+//	public Map<String,Object> admin_listChangeActivityAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		try {
+//			
+//			String rootOid = StringUtil.checkNull(request.getParameter("rootOid"));
+////			System.out.println("admin admin_listChangeActivityAction = "+rootOid);
+//			map = ECAHelper.service.listActiveDefinitionAction(request,response);
+//			
+//		} catch(Exception e) {
+//			map = new HashMap<String,Object>();
+//			e.printStackTrace();
+//		}
+//		return map;
+//	}
 	
 	/**	RootDefinition 수정 페이지
 	 * @param request
