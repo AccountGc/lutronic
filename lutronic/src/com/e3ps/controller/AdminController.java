@@ -246,7 +246,7 @@ public class AdminController extends BaseController {
 	public Map<String, Object> downLoadHistory(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = AdminHelper.manager.downLoadHistory(params);
+//			result = AdminHelper.manager.adminMail(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -658,13 +658,13 @@ public class AdminController extends BaseController {
 	 * 
 	 * 
 	 */
-//	@RequestMapping("/admin_Windchill")
-//	public ModelAndView admin_Windchill(HttpServletRequest request, HttpServletResponse response) {
-//		ModelAndView model = new ModelAndView();
-//		model.setViewName("admin:/admin/admin_Windchill");
-//		model.addObject("module", "windchill");
-//		return model;
-//	}
+	@RequestMapping("/admin_Windchill")
+	public ModelAndView admin_Windchill(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("admin:/admin/admin_Windchill");
+		model.addObject("module", "windchill");
+		return model;
+	}
 	
 	//2016.03.02 이태용차장 문의 넘버코드 사라짐 현상으로 인해 로그 추가
 	public void createLog(String log,String fileName) {
@@ -956,21 +956,13 @@ public class AdminController extends BaseController {
 		return map;
 	}
 	
-	@Description(value = "등록 양식 페이지")
-	@GetMapping(value = "/adminPackage")
-	public ModelAndView adminPackage() throws Exception{
+	@RequestMapping("/admin_package")
+	public ModelAndView admin_package(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/admin/adminPackage.jsp");
+		model.setViewName("admin:/admin/admin_package");
+		model.addObject("module", "package");
 		return model;
 	}
-	
-//	@RequestMapping("/admin_package")
-//	public ModelAndView admin_package(HttpServletRequest request, HttpServletResponse response) {
-//		ModelAndView model = new ModelAndView();
-//		model.setViewName("admin:/admin/admin_package");
-//		model.addObject("module", "package");
-//		return model;
-//	}
 	
 	@RequestMapping("/admin_packageAction")
 	public ModelAndView admin_packageAction(HttpServletRequest request, HttpServletResponse response){

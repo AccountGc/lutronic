@@ -2346,16 +2346,16 @@ public class StandardDocumentService extends StandardManager implements Document
 	    	String docTemplateNumber = StringUtil.checkNull((String) params.get("number"));
 	    	String name =StringUtil.checkNull((String) params.get("name"));
 	    	String _docTemplateType = (String) params.get("documentTemplateType");
-	    	ArrayList description =(ArrayList) params.get("description");
+	    	String description =(String) params.get("description");
 	    	
 	    	DocumentTemplate docTemp = DocumentTemplate.newDocumentTemplate();
 	    	
-	    	docTemp.setDocTemplateNumber(docTemplateNumber);
+	    	docTemp.setNumber(docTemplateNumber);
 	    	docTemp.setName(name);
 	    	if (!StringUtil.isNull(_docTemplateType)) {
 //	    		NumberCode docTemplateType = NumberCodeHelper.service.getNumberCode(_docTemplateType, "DOCFORMTYPE");
 	    		NumberCode docTemplateType = (NumberCode) CommonUtil.getObject(_docTemplateType);
-	    		docTemp.setDocTemplateType(docTemplateType);
+	    		docTemp.setTemplateType(docTemplateType);
 	    	}
 	    	
 	    	docTemp.setDescription(description);

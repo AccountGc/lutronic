@@ -22,7 +22,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
-<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>">
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +33,8 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form id="form">
+<form id="form">
+	<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>">
 	<table class="button-table">
 		<tr>
 			<td class="left">
@@ -58,8 +58,8 @@
 					/Default/Document
 				</span>
 			</td>
-			<th class="req lb">결재방식</th>
-			<td>&nbsp;
+			<th class="req">결재방식</th>
+			<td class="indent5">&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" id="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">
@@ -79,7 +79,7 @@
 		<tr>
 			<th class="req lb">문서종류</th>
 			<td class="indent5"><input type="text" name="documentName" id="documentName" class="width-200"></td>
-			<th class="lb">문서명</th>
+			<th class="">문서명</th>
 			<td class="indent5"><input type="text" name="docName" id="docName" class="width-200"></td>
 		</tr>
 		<tr>
@@ -97,7 +97,7 @@
 						<option value="$$Document">ROHS</option>
 						<option value="$$Document">기타문서</option>
 				</select></td>
-			<th class="req lb">보존기간</th>
+			<th class="req">보존기간</th>
 			<td class="indent5"><select name="preseration"  id="preseration" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
@@ -115,7 +115,7 @@
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
 				</select></td>
-			<th class="lb">부서</th>
+			<th class="">부서</th>
 			<td class="indent5"><select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
@@ -127,7 +127,7 @@
 		<tr>
 			<th class="lb">내부 문서번호</th>
 			<td class="indent5"><input type="text" name="interalnumber" id="interalnumber" class="width-200"></td>
-			<th class="lb">작성자</th>
+			<th class="">작성자</th>
 			<td class="indent5"><input type="text" name="writer" id="writer" class="width-200"></td>
 		</tr>
 		<tr>

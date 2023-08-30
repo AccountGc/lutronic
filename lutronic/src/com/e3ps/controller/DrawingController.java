@@ -66,7 +66,7 @@ public class DrawingController extends BaseController{
 	public ModelAndView batch() {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/drawing/drawing-batch.jsp");
-		return model; 
+		return model;
 	}
 	
 	@Description(value = "도면 검색 리스트 리턴")

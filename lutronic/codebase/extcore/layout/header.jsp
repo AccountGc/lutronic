@@ -355,10 +355,10 @@
 							<a onclick="moveToPage(this, '/admin/downLoadHistory', '> 관리자 > 다운로드 이력관리');">다운로드 이력관리</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/admin/adminPackage', '> 관리자 > 등록양식관리');">등록양식관리</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 등록양식관리');">등록양식관리</a>
 						</li>
 						<li>
-							<a onclick="popup('/Windchill', 1600, 800);">Windchill</a>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > Windchill');">Windchill</a>
 						</li>
 						<li>
 							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경 문서 템플릿');">설계변경 문서 템플릿</a>

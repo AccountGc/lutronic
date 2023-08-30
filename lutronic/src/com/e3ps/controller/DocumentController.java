@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.beans.ResultData;
@@ -37,7 +38,9 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.doc.template.SmarteditorVO;
 import com.e3ps.rohs.service.RohsHelper;
+import com.infoengine.util.UrlEncoder;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
@@ -601,6 +604,7 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "문서 양식 사진 업로드 창에 첨부 메서드")
 	@PostMapping(value="/smarteditorMultiImageUpload")
 	public void smarteditorMultiImageUpload(HttpServletRequest request, HttpServletResponse response){
 		try {
@@ -634,7 +638,9 @@ public class DocumentController extends BaseController {
 				//디렉토리 설정 및 업로드	
 				
 				//파일경로
-				String filePath = "경로설정";
+				String defaultPath = request.getSession().getServletContext().getRealPath("/");
+				String filePath = defaultPath + "img" + File.separator + "smarteditor2" + File.separator;
+				System.out.println("=======================>" + filePath);
 				File file = new File(filePath);
 				
 				if(!file.exists()) {
@@ -666,7 +672,7 @@ public class DocumentController extends BaseController {
 				sFileInfo += "&bNewLine=true";
 				// img 태그의 title 속성을 원본파일명으로 적용시켜주기 위함
 				sFileInfo += "&sFileName="+ sFilename;
-				sFileInfo += "&sFileURL="+"경로설정"+sRealFileNm;
+				sFileInfo += "&sFileURL="+filePath+sRealFileNm;
 				PrintWriter printWriter = response.getWriter();
 				printWriter.print(sFileInfo);
 				printWriter.flush();

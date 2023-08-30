@@ -1,7 +1,5 @@
 package com.e3ps.doc.template;
 
-import java.util.ArrayList;
-
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.CommonUtil;
 
@@ -16,7 +14,7 @@ public class DocumentTemplateData {
 	private String docTemplateNumber;
 	private String name;
 	private NumberCode docTemplateType;
-	private ArrayList description;
+	private String description;
 	
 	public DocumentTemplateData() {
 		
@@ -24,9 +22,9 @@ public class DocumentTemplateData {
 	
 	public DocumentTemplateData(DocumentTemplate docTemp) {
 		setOid(CommonUtil.getOIDString(docTemp));
-		setDocTemplateNumber(docTemp.getDocTemplateNumber());
+		setDocTemplateNumber(docTemp.number);
 		setName(docTemp.getName());
-		setDocTemplateType(docTemp.getDocTemplateType());
+		setDocTemplateType(docTemp.templateType);
 		setDescription(docTemp.getDescription());
 	}
 

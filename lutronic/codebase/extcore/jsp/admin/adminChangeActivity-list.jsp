@@ -129,7 +129,7 @@
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					showRowCheckColumn : true,
+					showRowCheckColumn : false,
 // 					rowNumHeaderText : "번호",
 					fillColumnSizeMode: true,
 					showAutoNoDataMessage : true,
@@ -141,8 +141,6 @@
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					rowCheckToRadio : true,
-					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

@@ -17,12 +17,9 @@ import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.history.LoginHistory;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadData;
 import com.e3ps.org.MailUser;
 import com.e3ps.org.People;
 import com.e3ps.org.service.UserHelper;
@@ -31,7 +28,6 @@ import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.org.WTUser;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
@@ -299,93 +295,6 @@ public class AdminHelper {
 		result.put("sessionId"      , qr.getSessionId()==0 ? "" : qr.getSessionId());
 		result.put("list"      , list);
 		
-		return result;
-	}
-	
-	/** 
-	 * 다운로드 이력 리스트
-	 */
-	public Map<String,Object> downLoadHistory(Map<String,Object> params) throws Exception {
-		long start = System.currentTimeMillis();
-		int page = StringUtil.getIntParameter((String) params.get("page"), 1);
-		int rows = StringUtil.getIntParameter((String) params.get("rows"), 10);
-		int formPage = StringUtil.getIntParameter((String) params.get("formPage"), 15);
-		
-		String sessionId = (String) params.get("sessionId");
-		Hashtable<String,String> hash = null;
-		
-		PagingQueryResult qr = null;
-		
-		if(StringUtil.checkString(sessionId)) {
-			
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		}else {
-			
-			String type = StringUtil.checkNull((String) params.get("type"));
-			String userId = StringUtil.checkNull((String) params.get("manager"));
-			String predate = StringUtil.checkNull((String) params.get("createdFrom"));
-			String postdate = StringUtil.checkNull((String) params.get("createdTo"));
-			
-			QuerySpec qs = new QuerySpec();
-			
-			int idx = qs.appendClassList(DownloadHistory.class, true);
-			
-			if(type != null && type.trim().length() > 0 ) {
-				if (qs.getConditionCount() > 0) qs.appendAnd();
-				qs.appendWhere(new SearchCondition(DownloadHistory.class, DownloadHistory.D_OID, SearchCondition.LIKE , "%"+type+"%"), new int[] { idx });
-			}
-			
-			if( userId.length() > 0 ){
-				WTUser user = (WTUser)CommonUtil.getObject(userId);
-				if (qs.getConditionCount() > 0) qs.appendAnd();
-				qs.appendWhere(new SearchCondition(DownloadHistory.class, "userReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(user)), new int[] { idx });
-			}
-			
-			//등록일
-	    	if(predate.length() > 0){
-	    		if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-	    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp" ,SearchCondition.GREATER_THAN,DateUtil.convertStartDate(predate)), new int[]{idx});
-	    	}
-	    	
-	    	if(postdate.length() > 0){
-	    		if(qs.getConditionCount() > 0)qs.appendAnd();
-	    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp",SearchCondition.LESS_THAN,DateUtil.convertEndDate(postdate)), new int[]{idx});
-	    	}
-			qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.createStamp"), true), new int[] { idx });  
-		
-		    qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, qs, true);
-		}
-		PageControl control = new PageControl(qr, page, formPage, rows);
-	    int totalPage   = control.getTotalPage();
-	    int startPage   = control.getStartPage();
-	    int endPage     = control.getEndPage();
-	    int listCount   = control.getTopListCount();
-	    int totalCount  = control.getTotalCount();
-	    int currentPage = control.getCurrentPage();
-	    String param    = control.getParam();
-	    int rowCount    = control.getTopListCount();
-	    long appendstart = System.currentTimeMillis();
-	    
-	    ArrayList<DownloadData> list = new ArrayList<DownloadData>();
-		while(qr.hasMoreElements()){	
-			Object obj[] = (Object[])qr.nextElement();
-			DownloadHistory history = (DownloadHistory)obj[0];
-			DownloadData data = new DownloadData(history);
-			list.add(data);
-		}
-		Map<String,Object> result = new HashMap<String,Object>();
-		
-		result.put("formPage"       , formPage);
-		result.put("rows"           , rows);
-		result.put("totalPage"      , totalPage);
-		result.put("startPage"      , startPage);
-		result.put("endPage"        , endPage);
-		result.put("listCount"      , listCount);
-		result.put("totalCount"     , totalCount);
-		result.put("currentPage"    , currentPage);
-		result.put("param"          , param);
-		result.put("sessionId"      , qr.getSessionId()==0 ? "" : qr.getSessionId());
-		result.put("list"      , list);
 		return result;
 	}
 }
