@@ -60,5 +60,7 @@
 	<classpathentry kind="lib" path="codebase/WEB-INF/lib/cos.jar"/>
 	<classpathentry kind="lib" path="codebase/WEB-INF/lib/json-lib-2.4-jdk15.jar"/>
 	<classpathentry kind="lib" path="codebase/WEB-INF/lib/ezmorph-1.0.6.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/commons-fileupload-1.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
