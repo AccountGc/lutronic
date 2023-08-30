@@ -27,6 +27,8 @@ import com.e3ps.org.MailUser;
 import com.e3ps.org.People;
 import com.e3ps.org.service.UserHelper;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
@@ -45,23 +47,61 @@ public class AdminHelper {
 	/** 
 	 * 코드체계관리 리스트
 	 */
-	public Map<String, Object> numberCodeTree(String codeType) throws Exception {
-		ArrayList<NumberCodeData> list = new ArrayList<>();
-		Map<String,Object> map = new HashMap<String,Object>();
+	public JSONArray numberCodeTree(String codeType) throws Exception {
+		JSONArray list = new JSONArray();
 		QueryResult rt = null;
 		QuerySpec query = new QuerySpec(NumberCode.class);
 		query.appendWhere(new SearchCondition(NumberCode.class, "codeType", "=", codeType), new int[] { 0 });
+		long longOid =0;
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(NumberCode.class,"parentReference.key.id",SearchCondition.EQUAL, longOid),new int[] {0});
 		query.appendOrderBy(new OrderBy(new ClassAttribute(NumberCode.class,NumberCode.CODE),false),new int[]{0});
 		rt = PersistenceHelper.manager.find(query);
 		
+		JSONObject rootNode = new JSONObject();
+		JSONArray array = new JSONArray();
 		while(rt.hasMoreElements()){
 			NumberCode code = (NumberCode)rt.nextElement();
 			NumberCodeData data = new NumberCodeData(code);
-			list.add(data);
+			JSONObject node = new JSONObject();
+			node.put("oid", data.getOid());
+			node.put("name", data.getName());
+			node.put("engName", data.getEngName());
+			node.put("code", data.getCode());
+			node.put("sort", data.getSort());
+			loadTree(code, node, codeType);
+			array.add(node);
 		}
-		map.put("treeList", list);
+		rootNode.put("children", array);
+		list.add(rootNode);
 			
-		return map;
+		return list;
+	}
+	
+	/** 
+	 * 코드체계관리 리스트 재귀함수
+	 */
+	public void loadTree(NumberCode parent, JSONObject parentNode, String codeType) throws Exception {
+		JSONArray children = new JSONArray();
+		QuerySpec query = new QuerySpec(NumberCode.class);
+		query.appendWhere(new SearchCondition(NumberCode.class, "codeType", "=", codeType), new int[] { 0 });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(NumberCode.class,"parentReference.key.id",SearchCondition.EQUAL, parent.getPersistInfo().getObjectIdentifier().getId()),new int[] {0});
+		query.appendOrderBy(new OrderBy(new ClassAttribute(NumberCode.class,NumberCode.CODE),false),new int[]{0});
+		QueryResult rt = PersistenceHelper.manager.find(query);
+		while(rt.hasMoreElements()){
+			NumberCode childcode = (NumberCode)rt.nextElement();
+			NumberCodeData childdata = new NumberCodeData(childcode);
+			JSONObject node = new JSONObject();
+			node.put("oid", childdata.getOid());
+			node.put("name", childdata.getName());
+			node.put("engName", childdata.getEngName());
+			node.put("code", childdata.getCode());
+			node.put("sort", childdata.getSort());
+			loadTree(childcode, node, codeType);
+			children.add(node);
+		}
+		parentNode.put("children", children);
 	}
 	
 	/** 
