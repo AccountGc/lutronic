@@ -150,11 +150,12 @@
 
 		const params = new Object();
 		const url = getCallUrl("/doc/template-create");
-// 		params.files = fileObject[0];
 		params.number = number;
 		params.name = name;
 		params.documentTemplateType = documentTemplateType;
 		params.description = description;
+		
+		console.log(params.files);
         
 		call(url, params, function(data) {
 			alert(data.msg);
