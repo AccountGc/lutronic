@@ -28,6 +28,7 @@
 				<col width="*">
 			</colgroup>
 			<tr>
+<<<<<<< HEAD
 				<th>
 					Excel 업로드 <span style="color:red;">*</span>
 					<br>
@@ -42,12 +43,19 @@
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
+=======
+				<td>
+					<input type="button" value="저장" title="저장" onclick="addBtn();">
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="javascript:self.close();">
+>>>>>>> 8d897c7 (no message)
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
 			let myGridID;
+<<<<<<< HEAD
 			function _layout() {
 				return [ {
 					dataField : "name",
@@ -260,6 +268,39 @@
 					},
 				} ]
 			}
+=======
+			const layout = [ {
+				dataField : "number",
+				headerText : "결과",
+				dataType : "string",
+				width : 120,
+			}, {
+				dataField : "number",
+				headerText : "품목번호",
+				dataType : "string",
+				width : 120,
+			}, {
+				dataField : "number",
+				headerText : "주도면",
+				dataType : "string",
+			}, {
+				dataField : "number",
+				headerText : "주도면",
+				dataType : "string",
+				width : 120,
+				editable : false,
+				renderer : {
+					type : "ButtonRenderer",
+					labelText : "파일선택",
+					onclick : function(rowIndex, columnIndex, value, item) {
+						recentGridItem = item;
+						const oid = item._$uid;
+						const url = getCallUrl("/aui/primary?oid=" + oid + "&method=preView");
+						popup(url, 1000, 300);
+					}
+				},
+			} ]
+>>>>>>> 8d897c7 (no message)
 
 			function createAUIGrid(columnLayout) {
 				const props = {
@@ -270,11 +311,16 @@
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
+<<<<<<< HEAD
 					showInlineFilter : true,
 					useContextMenu : true,
+=======
+					showInlineFilter : false,
+>>>>>>> 8d897c7 (no message)
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					fillColumnSizeMode : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				// 				loadGridData();

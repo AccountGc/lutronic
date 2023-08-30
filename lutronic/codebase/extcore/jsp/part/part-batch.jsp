@@ -15,6 +15,7 @@
 		<table class="button-table">
 			<tr>
 				<td>
+					<input type="button" value="저장" title="저장" class="blue" onclick="addBtn();">
 					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
 					<input type="button" value="삭제" title="삭제" class="red" onclick="javascript:self.close();">
 				</td>
@@ -25,7 +26,7 @@
 			let myGridID;
 			const layout = [ {
 				dataField : "number",
-				headerText : "품목구분<br>(1자리)",
+				headerText : "결과",
 				dataType : "string",
 				width : 120,
 			}, {
@@ -136,7 +137,6 @@
 					enableMovingColumn : true,
 					enableFilter : true,
 					showInlineFilter : false,
-					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
