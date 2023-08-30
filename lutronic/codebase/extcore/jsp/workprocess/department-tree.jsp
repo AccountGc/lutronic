@@ -1,8 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String location = request.getParameter("location");
-String container = request.getParameter("container");
-String mode = request.getParameter("mode");
 String height = request.getParameter("height");
 %>
 <!-- 폴더 그리드 리스트 -->
@@ -29,7 +26,27 @@ String height = request.getParameter("height");
 			enableFilter : true,
 			showInlineFilter : true,
 			displayTreeOpen : true,
-			forceTreeView : true
+			forceTreeView : true,
+			useContextMenu : true,
+			enableRightDownFocus : true,
+			contextMenuItems : [ {
+				label : "선택된 행 이전 부서추가",
+				callback : contextItemHandler
+			}, {
+				label : "선택된 행 이후 부서추가",
+				callback : contextItemHandler
+			}, {
+				label : "선택된 자식 부서추가",
+				callback : contextItemHandler
+			}, {
+				label : "선택된 부서 삭제",
+				callback : contextItemHandler
+			}, {
+				label : "_$line"
+			}, {
+				label : "저장",
+				callback : contextItemHandler
+			} ],
 		}
 		_myGridID = AUIGrid.create("#_grid_wrap", columnLayout, props);
 		loadTree();
@@ -37,6 +54,10 @@ String height = request.getParameter("height");
 		AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
+	}
+
+	function contextItemHandler(event) {
+		alert("수정");
 	}
 
 	function auiReadyHandler() {
@@ -54,8 +75,6 @@ String height = request.getParameter("height");
 
 	let timerId = null;
 	function auiCellDoubleClick(event) {
-<%if ("list".equals(mode)) {%>
-	// 500ms 보다 빠르게 그리드 선택자가 변경된다면 데이터 요청 안함
 		if (timerId) {
 			clearTimeout(timerId);
 		}
@@ -69,13 +88,14 @@ String height = request.getParameter("height");
 			document.getElementById("locationText").innerText = location;
 			loadGridData();
 		}, 500);
-<%}%>
 	}
 
 	function loadTree() {
 		const url = getCallUrl("/department/tree");
 		const params = new Object();
+		AUIGrid.showAjaxLoader(_myGridID);
 		call(url, params, function(data) {
+			AUIGrid.removeAjaxLoader(_myGridID);
 			AUIGrid.setGridData(_myGridID, data.list);
 		});
 	}

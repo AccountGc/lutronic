@@ -19,7 +19,7 @@ if (request.getParameter("popup") != null) {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-	<form id="documentForm">
+	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
@@ -110,8 +110,8 @@ if (request.getParameter("popup") != null) {
 				%>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('');">
 				</td>
 				<%
 				}
@@ -145,12 +145,14 @@ if (request.getParameter("popup") != null) {
 				<col width="*">
 			</colgroup>
 			<tr>
-				<td valign="top"><jsp:include page="/extcore/jsp/common/folder-include.jsp">
+				<td valign="top">
+					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
 						<jsp:param value="670" name="height" />
-					</jsp:include></td>
+					</jsp:include>
+				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
 					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>

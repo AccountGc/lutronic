@@ -39,6 +39,8 @@ import com.ptc.windchill.annotations.metadata.Serialization;
 				@GeneratedProperty(name = "password", type = String.class, constraints = @PropertyConstraints(upperLimit = 30)),
 				@GeneratedProperty(name = "isDisable", type = boolean.class, initialValue = "false"),
 				@GeneratedProperty(name = "sortNum", type = int.class, javaDoc = "0"),
+				@GeneratedProperty(name = "email", type = String.class),
+				@GeneratedProperty(name = "id", type = String.class),
 				@GeneratedProperty(name = "pwChangeDate", type = String.class, constraints = @PropertyConstraints(upperLimit = 10)),
 				@GeneratedProperty(name = "name", type = String.class, constraints = @PropertyConstraints(upperLimit = 100)),
 				@GeneratedProperty(name = "title", type = String.class, javaDoc = "?????"),

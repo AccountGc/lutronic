@@ -18,9 +18,7 @@
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -32,16 +30,17 @@
 			<tr>
 				<th>부서 및 사원 관리</th>
 				<td class="indent5" colspan="3">
-					<span id="locationName">
-						LUTRONIC
-					</span>
+					<span id="locationName"> LUTRONIC </span>
 				</td>
 			</tr>
 			<tr>
 				<th>이름</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="number" id="number" class="width-300">
-					<input type="button" value="검색" title="검색" id="btnSearch">
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-300">
+				</td>
+				<th>아이디</th>
+				<td class="indent5">
+					<input type="text" name="userId" id="userId" class="width-300">
 				</td>
 			</tr>
 		</table>
@@ -49,9 +48,9 @@
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('companyTree-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -60,7 +59,8 @@
 						<option value="100">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
-					</select> 
+					</select>
+					<input type="button" value="검색" title="검색" id="btnSearch">
 				</td>
 			</tr>
 		</table>
@@ -73,12 +73,13 @@
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/workprocess/department-tree.jsp">
-						<jsp:param value="ROOT" name="code"/>
+						<jsp:param value="488" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 480px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 455px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
@@ -140,6 +141,16 @@
 						showIcon : true,
 						inline : true
 					},
+				}, {
+					dataField : "email",
+					headerText : "이메일",
+					dataType : "string",
+					width : 180,
+					style : "aui-left",
+					filter : {
+						showIcon : true,
+						inline : true
+					},
 				} ]
 			}
 
@@ -157,14 +168,13 @@
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					fillColumnSizeMode: true,
+					fillColumnSizeMode : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
-					vScrollChangeHandler(event);
 				});
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
@@ -173,24 +183,20 @@
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/groupware/listCompanyTree");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
+				const url = getCallUrl("/groupware/list");
+				const field = [ "_psize", "name", "userId" ];
+				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-						document.getElementById("lastNum").value = data.list.length;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
 				});
 			}
 
@@ -203,26 +209,10 @@
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("state");
-				selectbox("cadDivision");
-				selectbox("cadType");
-				selectbox("model");
-				selectbox("productmethod");
-				selectbox("deptcode");
-				selectbox("manufacture");
-				selectbox("unit");
-				selectbox("mat");
-				selectbox("finish");
-				finderUser("creator");
-				twindate("created");
-				twindate("modified");
 				selectbox("_psize");
 			});
 
 			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {

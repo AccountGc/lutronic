@@ -5,7 +5,6 @@ import wt.method.RemoteInterface;
 
 import com.e3ps.org.Department;
 
-
 @RemoteInterface
 public interface OrgService {
 
@@ -13,4 +12,5 @@ public interface OrgService {
 
 	public Department makeRoot() throws Exception;
 
+	public void inspectUser(Department department) throws Exception;
 }

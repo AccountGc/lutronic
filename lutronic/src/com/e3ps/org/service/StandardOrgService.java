@@ -12,10 +12,14 @@ import org.json.JSONObject;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
+import com.e3ps.org.People;
+import com.e3ps.org.WTUserPeopleLink;
 
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.method.MethodContext;
+import wt.org.OrganizationServicesMgr;
+import wt.org.WTUser;
 import wt.pom.DBProperties;
 import wt.pom.Transaction;
 import wt.pom.WTConnection;
@@ -46,12 +50,73 @@ public class StandardOrgService extends StandardManager implements OrgService {
 	protected synchronized void performStartupProcess() throws ManagerException {
 		super.performStartupProcess();
 		try {
-			
+
 			System.out.println("루트 부서 생성 시작!");
 			Department department = makeRoot();
-//			inspectUser(department);
+			inspectUser(department);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void inspectUser(Department department) throws Exception {
+		SessionContext prev = SessionContext.newContext();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			SessionHelper.manager.setAdministrator();
+
+			QuerySpec qs = new QuerySpec();
+			int _idx = qs.appendClassList(People.class, true);
+			QuerySpecUtils.toOrderBy(qs, _idx, People.class, People.NAME, true);
+			QueryResult qr = PersistenceHelper.manager.find(qs);
+			while (qr.hasMoreElements()) {
+				Object[] obj = (Object[]) qr.nextElement();
+				People u = (People) obj[0];
+				String id = u.getId();
+				WTUser user = OrganizationServicesMgr.getUser(id);
+				if (user == null) {
+					PersistenceHelper.manager.delete(u);
+				}
+			}
+
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(WTUser.class, true);
+			QuerySpecUtils.toBooleanAnd(query, idx, WTUser.class, WTUser.DISABLED, false);
+			QuerySpecUtils.toBooleanAnd(query, idx, WTUser.class, WTUser.REPAIR_NEEDED, false);
+			QuerySpecUtils.toOrderBy(query, idx, WTUser.class, WTUser.FULL_NAME, false);
+			QueryResult result = PersistenceHelper.manager.find(query);
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				WTUser wtuser = (WTUser) obj[0];
+
+				QueryResult _qr = PersistenceHelper.manager.navigate(wtuser, "people", WTUserPeopleLink.class);
+
+				System.out.println("_qr=" + _qr.size() + ", name = " + wtuser.getName());
+
+				People user = null;
+				if (!_qr.hasMoreElements()) {
+					user = People.newPeople();
+					user.setDepartment(department);
+					user.setUser(wtuser);
+					user.setName(wtuser.getFullName());
+					user.setId(wtuser.getName());
+					user.setEmail(wtuser.getEMail() != null ? wtuser.getEMail() : "");
+					user = (People) PersistenceHelper.manager.save(user);
+				}
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+		} finally {
+			if (trs != null)
+				trs.rollback();
+			SessionContext.setContext(prev);
 		}
 	}
 

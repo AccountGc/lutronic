@@ -9,7 +9,7 @@ function saveColumnLayout(storageID) {
 	const columns = AUIGrid.getColumnLayout(myGridID);
 	const columnJson = JSONfn.stringify(columns);
 	localStorage.setItem(storageID, columnJson);
-	const psize = document.getElementById("psize");
+	const psize = document.getElementById("_psize");
 	if (psize !== null) {
 		localStorage.setItem(storageID + "_psize", psize.value);
 	}
@@ -37,7 +37,7 @@ function loadColumnLayout(storageID) {
  */
 function getLocalStorageValue(storageID) {
 	if (typeof (Storage) != "undefined") {
-		const psize = document.getElementById("psize");
+		const psize = document.getElementById("_psize");
 		if (psize !== null) {
 			psize.value = localStorage.getItem(storageID + "_psize");
 		}
@@ -186,53 +186,6 @@ function genColumnHtml(columns) {
 };
 
 /**
- * LAZY LOAD 공통
- * 리스트 페이지에서 모두 밖으로 제외
- */
-let last = false;
-function vScrollChangeHandler(event) {
-	if (event.position == event.maxPosition) {
-		if (!last) {
-			requestAdditionalData();
-		}
-	}
-}
-
-function requestAdditionalData() {
-	const url = getCallUrl("/aui/appendData");
-	const params = new Object();
-	const curPage = document.getElementById("curPage").value
-	const sessionid = document.getElementById("sessionid").value;
-	const lastNum = document.getElementById("lastNum").value;
-	//	const psize = document.getElementById("psize").value;
-	params.sessionid = sessionid;
-	params.start = Number(lastNum);
-	params.end = (curPage * 50) + 50;
-	AUIGrid.showAjaxLoader(myGridID);
-	if (opener !== null) {
-		openLayer();
-	} else {
-		parent.openLayer();
-	}
-
-	call(url, params, function(data) {
-		if (data.list.length == 0) {
-			last = true;
-		} else {
-			AUIGrid.appendData(myGridID, data.list);
-			document.getElementById("curPage").value = parseInt(curPage) + 1;
-			document.getElementById("lastNum").value = Number(lastNum) + data.list.length;
-		}
-		AUIGrid.removeAjaxLoader(myGridID);
-		if (opener !== null) {
-			closeLayer();
-		} else {
-			parent.closeLayer();
-		}
-	})
-}
-
-/**
  * 엑셀 익스포트
  */
 function exportToExcel(fileName, headerName, sheetName, exceptColumnFields, creator) {
@@ -299,8 +252,6 @@ function expand() {
  * 페이징 처리 스크립트
  */
 
-//let totalRowCount;
-//let rowCount = 30;
 let pageButtonCount = 10;
 let currentPage = 1;
 let totalPage;
