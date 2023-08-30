@@ -21,6 +21,7 @@
 	<form id="form">
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="type" id="type" />
 
 		<table class="search-table">
 			<colgroup>
@@ -38,7 +39,7 @@
 				</td>
 				<th>다운로드일</th>
 				<td>
-					<input type="text" name="datePre" id="datePre" class="width-100"> ~ <input type="text" name="datePost" id="datePost" class="width-100"> 
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> 
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
@@ -170,15 +171,15 @@
 			}
 
 			function loadGridData() {
-// 				var params = _data($("#form"));
-// 				var url = getCallUrl("/admin/loginHistory");
-// 				call(url, params, function(data) {
-// 					if (data.result) {
-// 						AUIGrid.setGridData(myGridID, data.list);
-// 					} else {
-// 						alert(data.msg);
-// 					}
-// 				});
+				var params = _data($("#form"));
+				var url = getCallUrl("/admin/downLoadHistory");
+				call(url, params, function(data) {
+					if (data.result) {
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
@@ -191,7 +192,7 @@
 				createAUIGrid(columns);
 				createAUIGridType(typeColumns);
 				selectbox("_psize");
-				twindate("date");
+				twindate("created");
 				finderUser("tempmanager");
 			});
 
@@ -221,6 +222,22 @@
 					showIcon : true,
 					inline : true
 				},
+				renderer : {
+					type : "LinkRenderer",
+					baseUrl : "javascript",
+					jsCallback : function(rowIndex, columnIndex, value, item) {
+						const menuType = item.menuType;
+						if(menuType=='도면관리'){
+							gotoView('EPMDocument');
+						}else if(menuType=='품목관리'){
+							gotoView('WTPart');
+						}else if(menuType=='설계변경'){
+							gotoView('change');
+						}else if(menuType=='문서관리'){
+							gotoView('WTDocument');
+						}
+					}
+				},
 			} ]
 			
 			function createAUIGridType(columnLayout) {
@@ -234,6 +251,21 @@
 					useContextMenu : true
 				}
 				typeGridID = AUIGrid.create("#grid_type", columnLayout, props);
+				var typeList = [{"menuType" : "도면관리"}
+									,{"menuType" : "품목관리"}
+									,{"menuType" : "설계변경"}
+									,{"menuType" : "문서관리"}];
+				
+				AUIGrid.setGridData(typeGridID, typeList);
+			}
+			
+			function gotoView(type) {
+				$("#type").val(type);
+				$("#sortValue").val("");
+				$("#sortCheck").val("");
+				$("#sessionId").val("");
+				$("#page").val(1);
+				loadGridData();
 			}
 		</script>
 	</form>

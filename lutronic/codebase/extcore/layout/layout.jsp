@@ -95,6 +95,23 @@
 			const panel = window.open("/Windchill/plm" + url, "", "top=" + top + ", left=" + left + ", height=" + popH + ", width=" + popW);
 			return panel;
 		}
+		
+		function popup(url, width, height) {
+			if (width === undefined) {
+				width = screen.availWidth;
+			}
+
+			if (height === undefined) {
+				height = screen.availHeight;
+			}
+
+			let popW = width;
+			let popH = height;
+			let left = (screen.width - popW) / 2;
+			let top = (screen.height - popH) / 2;
+			let panel = window.open(url, "", "top=" + top + ", left=" + left + ", height=" + popH + ", width=" + popW);
+			return panel;
+		}
 	</script>
 </body>
 </html>
