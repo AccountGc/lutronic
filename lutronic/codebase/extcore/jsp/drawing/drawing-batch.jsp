@@ -25,7 +25,7 @@
 			let myGridID;
 			const layout = [ {
 				dataField : "number",
-				headerText : "품목구분<br>(1자리)",
+				headerText : "결과",
 				dataType : "string",
 				width : 120,
 			}, {

@@ -92,7 +92,7 @@ ArrayList<NumberCode> documentTemplateTypeList = (ArrayList<NumberCode>) request
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="btnCRUD blue" id="createBtn" name="createBtn" onclick="create('false');">
-<!-- 					<input type="button" value="목록" title="목록" class="btnCRUD" id="listBtn" name="listBtn"> -->
+					<!-- 					<input type="button" value="목록" title="목록" class="btnCRUD" id="listBtn" name="listBtn"> -->
 				</td>
 			</tr>
 		</table>
@@ -131,7 +131,7 @@ ArrayList<NumberCode> documentTemplateTypeList = (ArrayList<NumberCode>) request
 				alert("문서양식 제목을 입력하세요.");
 				return;
 			}
-			if (isEmpty(documentTemplateType)) {
+			if (isEmpty(templateType)) {
 				alert("문서양식 유형을 입력하세요.");
 				return;
 			}
