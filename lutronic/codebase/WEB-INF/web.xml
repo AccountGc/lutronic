@@ -33,7 +33,7 @@
   <!-- Note: these settings will normally be overwritten by MBeanLoader injection after initial MBeanLoader save -->
   <context-param>
     <param-name>wt.servlet.SessionMonitor.MaxAverageActiveSessionsThreshold</param-name>
-    <param-value>-1</param-value>
+    <param-value>2000</param-value>
   </context-param>
   
   <context-param>

@@ -15,7 +15,7 @@
 		<table class="button-table">
 			<tr>
 				<td>
-					<input type="button" value="저장" title="저장" class="blue" onclick="addBtn();">
+					<input type="button" value="저장" title="저장" onclick="addBtn();">
 					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
 					<input type="button" value="삭제" title="삭제" class="red" onclick="javascript:self.close();">
 				</td>
