@@ -57,6 +57,8 @@ import com.e3ps.org.beans.CompanyState;
 import com.e3ps.org.service.MailUserHelper;
 import com.ptc.core.adapter.server.impl.CollectObjectsWebjectDelegate.OutputType;
 
+import net.sf.json.JSONArray;
+
 @Controller
 @RequestMapping(value = "/admin/**")
 public class AdminController extends BaseController {
@@ -475,10 +477,11 @@ public class AdminController extends BaseController {
 	@PostMapping(value = "/numberCodeTree")
 	public Map<String, Object> numberCodeTree(@RequestBody Map<String, Object> params) throws Exception {
 		String codeType = (String) params.get("codeType");
-		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
+//		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = AdminHelper.manager.numberCodeTree(codeType);
+			JSONArray list = AdminHelper.manager.numberCodeTree(codeType);
+            result.put("treeList", list);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
