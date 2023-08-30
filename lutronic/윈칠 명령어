@@ -10,6 +10,7 @@
 	
 4. ResourceBuild 실행
 	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.code.** -Dbundle.buildLocales=true
+	- Shell -> codebase 이동 ant -f MakeJar.xml 실행
 	
 5. 서비스 등록
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.services.service.90000=com.e3ps.org.service.OrgService/com.e3ps.org.service.StandardOrgService -p
