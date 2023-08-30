@@ -14,27 +14,39 @@ import wt.util.WTException;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.message.Message;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.download.DownloadHistory;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class DownloadData {
 
-	private  String userName ="";
-	private  String userID ="";
-	private  String moduleInfo ="" ;
-	private  int downCount =0;
-	private  String describe;
+	private String oid;
+	private String id;
+	private String userName ="";
+	private String userID ="";
+	private String moduleInfo ="" ;
+	private int downCount =0;
+	private String describe;
 	private Timestamp downTime = null;
 	
+	public DownloadData() {
+		
+	}
+	
 	public DownloadData(DownloadHistory history){
-		WTUser user = history.getUser();
-		this.userName = user.getFullName();
-		this.userID = user.getName();
-		this.describe = history.getDescribe();
-		
-		this.downCount = history.getDCount();
-		this.downTime = history.getPersistInfo().getModifyStamp();
-		this.moduleInfo = this.getModuleInfo( history.getDOid());
-		
+		setOid(CommonUtil.getOIDString(history));
+		setId(history.getPersistInfo().getObjectIdentifier().toString());
+		setUserName(history.getUser().getFullName());
+		setUserID(history.getUser().getName());
+		setDescribe(StringUtil.checkReplaceStr(history.getDescribe(), "-"));
+		setModuleInfo(getModuleInfo(history.getDOid()));
+		setDownCount(history.getDCount());
+		setDownTime(history.getPersistInfo().getModifyStamp());
 	}
 	
 	private String getModuleInfo(String oid){
@@ -67,31 +79,4 @@ public class DownloadData {
 		
 		return targetInfo;
 	}
-	
-	public String getUserName(){
-		return userName;
-	}
-	
-	public String getUserID(){
-		return userID;
-	}
-	
-	public String getModuleInfo(){
-		
-		return moduleInfo;
-	}
-	
-	public int getDownCount(){
-		return downCount;
-	}
-	
-	public Timestamp getDownTime(){
-		return downTime;
-	}
-
-	public String getDescribe() {
-		return describe;
-	}
-	
-	
 }

@@ -334,7 +334,8 @@
     	var tempFile,
     	
 //    	sUploadURL= 'file_uploader_html5.php'; 	//upload URL
-		sUploadURL = 'file_uploader_html5.jsp';
+//		sUploadURL = 'file_uploader_html5.jsp';
+		sUploadURL = getCallUrl("/doc/smarteditorMultiImageUpload");
     	
     	//파일을 하나씩 보내고, 결과를 받음.
     	for(var j=0, k=0; j < nImageInfoCnt; j++) {
