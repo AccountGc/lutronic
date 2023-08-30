@@ -10,7 +10,7 @@
 String codeheight = request.getParameter("codeheight");
 
 // NumberCodeType[] codeType = NumberCodeType.getNumberCodeTypeSet();
-// for(int i=0; i < 1; i++){	
+// for(int i=0; i < 2; i++){	
 // 	String word = codeType[i].getDisplay();
 // }
 %>
@@ -19,7 +19,7 @@ String codeheight = request.getParameter("codeheight");
 <script type="text/javascript">
 	let codeGridID;
 	const codeColumns = [ {
-		dataField : "value",
+		dataField : "codeName",
 		headerText : "코드타입",
 		dataType : "string",
 		filter : {

@@ -22,42 +22,42 @@ ResourceInfo.deprecated=false
 # Entry Contents
 
 #PARTTYPE - 부품분류
-PARTTYPE.value=부품분류
+PARTTYPE.value=%uBD80%uD488%uBD84%uB958
 PARTTYPE.order=10
 PARTTYPE.shortDescription=false
 PARTTYPE.longDescription=XX
 PARTTYPE.abbreviatedDisplay=true
 
 #PARTNAME1 - 부품명1
-PARTNAME1.value=부품명1
+PARTNAME1.value=%uBD80%uD488%uBA851
 PARTNAME1.order=20
 PARTNAME1.shortDescription=true
 PARTNAME1.longDescription=P1
 PARTNAME1.abbreviatedDisplay=false
 
 #PARTNAME2 - 부품명2
-PARTNAME2.value=부품명2
+PARTNAME2.value=%uBD80%uD488%uBA852
 PARTNAME2.order=30
 PARTNAME2.shortDescription=true
 PARTNAME2.longDescription=P2
 PARTNAME2.abbreviatedDisplay=false
 
 #PARTNAME3 - 부품명3
-PARTNAME3.value=부품명3
+PARTNAME3.value=%uBD80%uD488%uBA853
 PARTNAME3.order=40
 PARTNAME3.shortDescription=true
 PARTNAME3.longDescription=P3
 PARTNAME3.abbreviatedDisplay=false
 
 #MAT - 재질
-MAT.value=재질
+MAT.value=%uC7AC%uC9C8
 MAT.order=50
 MAT.shortDescription=true
 MAT.longDescription=MA
 MAT.abbreviatedDisplay=false
 
 #FINISH - 후처리
-FINISH.value=후처리
+FINISH.value=%uD6C4%uCC98%uB9AC
 FINISH.order=60
 FINISH.shortDescription=true
 FINISH.longDescription=FI
@@ -71,39 +71,39 @@ MANUFACTURE.longDescription=MF
 MANUFACTURE.abbreviatedDisplay=false
 
 #DEPTCODE - 부서
-DEPTCODE.value=부서
+DEPTCODE.value=%uBD80%uC11C
 DEPTCODE.order=80
 DEPTCODE.shortDescription=false
 DEPTCODE.longDescription=XX
 DEPTCODE.abbreviatedDisplay=false
 
 #PRODUCTMETHOD - 제작방법
-PRODUCTMETHOD.value=제작방법
+PRODUCTMETHOD.value=%uC81C%uC791%uBC29%uBC95
 PRODUCTMETHOD.order=90
 PRODUCTMETHOD.shortDescription=true
 PRODUCTMETHOD.longDescription=PM
 PRODUCTMETHOD.abbreviatedDisplay=false
 
 #MODEL - 프로젝트 코드
-MODEL.value=프로젝트 코드
+MODEL.value=%uD504%uB85C%uC81D%uD2B8%20%uCF54%uB4DC
 MODEL.order=100
 MODEL.shortDescription=false
 MODEL.longDescription=XX
 MODEL.abbreviatedDisplay=false
 
 #PRESERATION - 보존 기간
-PRESERATION.value=보존 기간
+PRESERATION.value=%uBCF4%uC874%20%uAE30%uAC04
 PRESERATION.order=110
 PRESERATION.shortDescription=true
 PRESERATION.longDescription=PR
 PRESERATION.abbreviatedDisplay=false
 
 #PRODUCTNAME - 제품명
-#PRODUCTNAME.value=제품명
+#PRODUCTNAME.value=%uC81C%uD488%uBA85
 #PRODUCTNAME.order=120
 
 #MOLDTYPE - 금형 타입
-MOLDTYPE.value=금형 타입
+MOLDTYPE.value=%uAE08%uD615%20%uD0C0%uC785
 MOLDTYPE.order=130
 MOLDTYPE.shortDescription=true
 MOLDTYPE.longDescription=MT
@@ -111,35 +111,35 @@ MOLDTYPE.abbreviatedDisplay=false
 
 
 #CHANGESECTION - 변경부분
-CHANGESECTION.value=변경부분
+CHANGESECTION.value=%uBCC0%uACBD%uBD80%uBD84
 CHANGESECTION.order=140
 CHANGESECTION.shortDescription=true
 CHANGESECTION.longDescription=CS
 CHANGESECTION.abbreviatedDisplay=false
 
 #LICENSING - 인허가변경
-LICENSING.value=인허가변경
+LICENSING.value=%uC778%uD5C8%uAC00%uBCC0%uACBD
 LICENSING.order=150
 LICENSING.shortDescription=true
 LICENSING.longDescription=LI
 LICENSING.abbreviatedDisplay=false
 
 #EOSTEP - 설변활동단계
-EOSTEP.value=설변활동단계
+EOSTEP.value=%uC124%uBCC0%uD65C%uB3D9%uB2E8%uACC4
 EOSTEP.order=160
 EOSTEP.shortDescription=true
 EOSTEP.longDescription=ES
 EOSTEP.abbreviatedDisplay=false
 
 #DOCUMNETNAME - DOCUMENTNAME
-DOCUMENTNAME.value=문서명 규칙
+DOCUMENTNAME.value=%uBB38%uC11C%uBA85%20%uADDC%uCE59
 DOCUMENTNAME.order=170
 DOCUMENTNAME.shortDescription=true
 DOCUMENTNAME.longDescription=DN
 DOCUMENTNAME.abbreviatedDisplay=false
 
 #DOCFORMTYPE - DOCFORMTYPE
-DOCFORMTYPE.value=문서양식
+DOCFORMTYPE.value=%uBB38%uC11C%uC591%uC2DD
 DOCFORMTYPE.order=180
 DOCFORMTYPE.shortDescription=true
 DOCFORMTYPE.longDescription=DF
