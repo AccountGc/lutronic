@@ -8,7 +8,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -58,8 +62,8 @@ import com.e3ps.rohs.beans.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 
 @Controller
-@RequestMapping("/distribute")
-public class DistributeController {
+@RequestMapping(value = "/distribute/**")
+public class DistributeController extends BaseController {
 	
 	/** 배포 메인 페이지
 	 * @param request
@@ -242,37 +246,61 @@ public class DistributeController {
 		return list;
 	}
 	
-	@ResponseBody
-	@RequestMapping("/listPagingPartAction")
-	public Map<String,Object> listPagingPartAction(HttpServletRequest request, HttpServletResponse response) {
-		
-		Map<String,Object> map = new HashMap<String,Object>();
-		try {
-			map = PartHelper.service.listPagingAUIPartAction(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-			
-		}
-		return map;
+	@Description(value = "완제품 검색 페이지")
+	@GetMapping(value = "/listProduction")
+	public ModelAndView listProduction() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/distribute/part-list.jsp");
+		return model;
 	}
+	
+	@Description(value = "완제품 검색 실행")
+	@ResponseBody
+	@PostMapping(value = "/listProduction")
+	public Map<String, Object> listProduction(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = null;
+		try {
+			result = PartHelper.manager.listProduction(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+//	@ResponseBody
+//	@RequestMapping("/listPagingPartAction")
+//	public Map<String,Object> listPagingPartAction(HttpServletRequest request, HttpServletResponse response) {
+//		
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		try {
+//			map = PartHelper.service.listPagingAUIPartAction(request, response);
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//			
+//		}
+//		return map;
+//	}
 	
 	/**	완제품검색 페이지
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/listProduction")
-	public ModelAndView listProduction(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu12");
-		model.addObject("module","distribute");
-		model.addObject("folderType","PART");
-		model.addObject("production","true");
-		//model.addObject("folderType","PART");
-		
-		model.setViewName("distribute:/distribute/listPart");
-		return model;
-	}
+//	@RequestMapping("/listProduction")
+//	public ModelAndView listProduction(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu12");
+//		model.addObject("module","distribute");
+//		model.addObject("folderType","PART");
+//		model.addObject("production","true");
+//		//model.addObject("folderType","PART");
+//		
+//		model.setViewName("distribute:/distribute/listPart");
+//		return model;
+//	}
 	
 	/**	EO 검색 페이지
 	 * @param request

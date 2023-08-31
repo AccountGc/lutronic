@@ -20,6 +20,7 @@ import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EoComparator;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.beans.VersionData;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -42,6 +43,7 @@ import com.e3ps.org.People;
 import com.e3ps.part.beans.ObjectComarator;
 import com.e3ps.part.beans.PartDTO;
 import com.e3ps.part.beans.PartData;
+import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.rohs.service.RohsQueryHelper;
@@ -49,6 +51,7 @@ import com.e3ps.rohs.service.RohsQueryHelper;
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
+import wt.enterprise.RevisionControlled;
 import wt.epm.EPMDocument;
 import wt.epm.build.EPMBuildRule;
 import wt.epm.structure.EPMDescribeLink;
@@ -64,6 +67,7 @@ import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.StringDefinition;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
+import wt.iba.value.IBAHolder;
 import wt.iba.value.StringValue;
 import wt.inf.container.WTContainerRef;
 import wt.introspection.ClassInfo;
@@ -960,26 +964,503 @@ public class PartHelper {
 		return JSONArray.fromObject(list);
 	}
 
-	public List<EChangeOrder> getPartTOECOList(WTPart part) throws Exception {
+	public Map<String, Object> listProduction(@RequestBody Map<String, Object> params) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(WTPart.class, true);
+		ReferenceFactory rf = new ReferenceFactory();
+		ArrayList<VersionData> list = new ArrayList<VersionData>();
+		Map<String, Object> map = new HashMap<>();
 
-		List<EChangeOrder> list = new ArrayList<EChangeOrder>();
-		QuerySpec qs = new QuerySpec();
-		QueryResult eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class, true);
+		try {
 
-		while (eolinkQr.hasMoreElements()) {
-			EChangeOrder eo = (EChangeOrder) eolinkQr.nextElement();
-			list.add(eo);
+			String foid = StringUtil.checkNull((String) params.get("fid"));
+			String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
+
+			String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
+			partNumber = partNumber.trim();
+			String partName = StringUtil.checkNull((String) params.get("partName"));
+			String createdFrom = StringUtil.checkNull((String) params.get("createdFrom"));
+			String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
+			String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
+			String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
+			String creator = StringUtil.checkNull((String) params.get("creator"));
+			String state = StringUtil.checkNull((String) params.get("state"));
+
+			String unit = StringUtil.checkNull((String) params.get("unit"));
+
+			String model = StringUtil.checkNull((String) params.get("model")); // 프로젝트 코드 (NumberCode, IBA)
+			String productmethod = StringUtil.checkNull((String) params.get("productmethod")); // 제작방법 (NumberCode, IBA)
+			String deptcode = StringUtil.checkNull((String) params.get("deptcode")); // 부서 (NumberCode, IBA)
+
+			String weight = StringUtil.checkNull((String) params.get("weight")); // 무게 (Key IN, IBA)
+			String manufacture = StringUtil.checkNull((String) params.get("manufacture")); // MANUTACTURE (NumberCode,
+																							// IBA)
+			String mat = StringUtil.checkNull((String) params.get("mat")); // 재질 (NumberCode, IBA)
+			String finish = StringUtil.checkNull((String) params.get("finish")); // 후처리 (NumberCode, IBA)
+			String remarks = StringUtil.checkNull((String) params.get("remarks")); // 비고 (Key IN, IBA)
+			String specification = StringUtil.checkNull((String) params.get("specification")); // 사양 (Key IN, iBA)
+			String ecoNo = StringUtil.checkNull((String) params.get("ecoNo")); // ECO no (Key IN, iBA)
+			String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
+
+			String ecoPostdate = StringUtil.checkNull((String) params.get("ecoPostdate"));
+			String ecoPredate = StringUtil.checkNull((String) params.get("ecoPredate"));
+			String checkDummy = StringUtil.checkNull((String) params.get("checkDummy"));
+
+			// System.out.println("checkDummy = " + checkDummy);
+			// 배포 관련 추가
+			boolean isProduction = StringUtil.checkNull((String) params.get("production")).equals("true") ? true : false;
+			boolean ischeckDummy = StringUtil.checkNull((String) params.get("checkDummy")).equals("true") ? true : false;
+
+			String sortValue = StringUtil.checkNull((String) params.get("sortValue"));
+			String sortCheck = StringUtil.checkNull((String) params.get("sortCheck"));
+
+			String location = StringUtil.checkNull((String) params.get("location"));
+			if (location == null || location.length() == 0) {
+				location = "/Default/PART_Drawing";
+			}
+			if (sortCheck == null) {
+				sortCheck = "true";
+			}
+
+			Folder folder = null;
+			if (foid.length() > 0) {
+				folder = (Folder) rf.getReference(foid).getObject();
+				location = FolderHelper.getFolderPath(folder);
+			} else {
+				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+				foid = "";
+			}
+
+			// 최신 이터레이션
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			query.appendWhere(VersionControlHelper.getSearchCondition(WTPart.class, true), new int[] { idx });
+
+			// 버전 검색
+			if (!StringUtil.checkString(islastversion))
+				islastversion = "true";
+
+			if ("true".equals(islastversion)) {
+				SearchUtil.addLastVersionCondition(query, WTPart.class, idx);
+			}
+
+			// Working Copy 제외
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			query.appendWhere(
+					new SearchCondition(WTPart.class, "checkoutInfo.state", SearchCondition.NOT_EQUAL, "wrk", false),
+					new int[] { idx });
+
+			if (isProduction) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(
+						new SearchCondition(WTPart.class, "master>number", SearchCondition.LIKE, "1_________", false),
+						new int[] { idx });
+			}
+
+			// 품목코드
+			if (partNumber.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "master>number", SearchCondition.LIKE,
+						"%" + partNumber + "%", false), new int[] { idx });
+			}
+
+			// 품명
+			if (partName.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "master>name", SearchCondition.LIKE,
+						"%" + partName + "%", false), new int[] { idx });
+			}
+
+			// 등록일
+			if (createdFrom.trim().length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.createStamp",
+						SearchCondition.GREATER_THAN, DateUtil.convertStartDate(createdFrom)), new int[] { idx });
+			}
+			if (createdTo.trim().length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.createStamp",
+						SearchCondition.LESS_THAN, DateUtil.convertEndDate(createdTo)), new int[] { idx });
+			}
+
+			// 수정일
+			if (modifiedFrom.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.modifyStamp",
+						SearchCondition.GREATER_THAN, DateUtil.convertStartDate(modifiedFrom)), new int[] { idx });
+			}
+			if (modifiedTo.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.modifyStamp",
+						SearchCondition.LESS_THAN, DateUtil.convertEndDate(modifiedTo)), new int[] { idx });
+			}
+
+			// 등록자
+			if (creator.length() > 0) {
+				People people = (People) rf.getReference(creator).getObject();
+				WTUser user = people.getUser();
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.creator.key.id",
+						SearchCondition.EQUAL, CommonUtil.getOIDLongValue(user)), new int[] { idx });
+			}
+
+			// 상태
+			if (state.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "state.state", SearchCondition.EQUAL, state),
+						new int[] { idx });
+			}
+
+			// 단위
+			if (unit.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, WTPart.DEFAULT_UNIT, SearchCondition.EQUAL, unit),
+						new int[] { idx });
+			}
+
+			// EcoDate
+			if (ecoPostdate.length() > 0 || ecoPredate.length() > 0) {
+
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				int _idx = query.appendClassList(StringValue.class, false);
+				query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+				query.appendAnd();
+			    long did = getECODATESeqDefinitionId();
+			    SearchCondition sc = new SearchCondition(StringValue.class, "definitionReference.key.id","=",did);
+			    query.appendWhere(sc, new int[] { _idx });
+			    ClassInfo classinfo = WTIntrospector.getClassInfo(StringValue.class);
+				String task_seqColumnName = DatabaseInfoUtilities.getValidColumnName(classinfo, StringValue.VALUE);
+				RelationalExpression paramRelationalExpression = new KeywordExpression("SUBSTR(" + task_seqColumnName +",INSTR("+task_seqColumnName+ ",',',-1)+1)" ); 
+				
+				if(ecoPredate.length() > 0 ){
+					query.appendAnd();
+					RelationalExpression expression = new wt.query.ConstantExpression(ecoPredate);
+					SearchCondition searchCondition = new SearchCondition(paramRelationalExpression,SearchCondition.GREATER_THAN_OR_EQUAL,expression);
+					query.appendWhere(searchCondition, new int[] { _idx });
+				}
+				RelationalExpression paramRelationalExpression2 = new KeywordExpression("SUBSTR(" + task_seqColumnName +",INSTR("+task_seqColumnName+ ",',',-1)+1)"); 
+				
+				if(ecoPostdate.length() > 0 ){
+					query.appendAnd();
+					RelationalExpression expression = new wt.query.ConstantExpression(ecoPostdate);
+					SearchCondition searchCondition2 = new SearchCondition(paramRelationalExpression2,SearchCondition.LESS_THAN_OR_EQUAL,expression);
+					query.appendWhere(searchCondition2, new int[] { _idx });
+				}
+			}
+			// }
+
+			// 프로젝트 코드
+			if (model.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MODEL);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + model + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				model = "";
+			}
+
+			// 제작방법
+			if (productmethod.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_PRODUCTMETHOD);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + productmethod + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				productmethod = "";
+			}
+
+			// 부서
+			if (deptcode.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_DEPTCODE);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + deptcode + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				deptcode = "";
+			}
+
+			// 무게
+			if (weight.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service
+						.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_WEIGHT);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + weight + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				weight = "";
+			}
+
+			// MANUFACTURE
+			if (manufacture.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MANUFACTURE);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + manufacture + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				manufacture = "";
+			}
+
+			// 재질
+			if (mat.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service
+						.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MAT);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + mat + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				mat = "";
+			}
+
+			// 후처리
+			if (finish.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_FINISH);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + finish + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				finish = "";
+			}
+
+			// 비고
+			if (remarks.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_REMARKS);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + remarks + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				remarks = "";
+			}
+
+			// 사양
+			if (specification.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_SPECIFICATION);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + specification + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				specification = "";
+			}
+			
+			// ecoNo
+			if (ecoNo.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_CHANGENO);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + ecoNo + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				ecoNo = "";
+			}
+			// 사양
+			if (eoNo.length() > 0) {
+				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_ECONO);
+				if (aview != null) {
+					if (query.getConditionCount() > 0) {
+						query.appendAnd();
+					}
+					int _idx = query.appendClassList(StringValue.class, false);
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + eoNo + "%").toUpperCase()), new int[] { _idx });
+				}
+			} else {
+				eoNo = "";
+			}
+			
+			// folder search
+			if (!"/Default/PART_Drawing".equals(location)) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+
+				int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
+				SearchCondition sc1 = new SearchCondition(new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"), SearchCondition.EQUAL, new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+				sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
+				sc1.setOuterJoin(0);
+				query.appendWhere(sc1, new int[] { folder_idx, idx });
+
+				query.appendAnd();
+				ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
+				query.appendOpenParen();
+				query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()), new int[] { folder_idx });
+
+				for (int fi = 0; fi < folders.size(); fi++) {
+					String[] s = (String[]) folders.get(fi);
+					Folder sf = (Folder) rf.getReference(s[2]).getObject();
+					query.appendOr();
+					query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()), new int[] { folder_idx });
+				}
+				query.appendCloseParen();
+			} else {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false), new int[] { idx });
+
+			}
+
+			// sorting
+			if (sortValue.length() > 0) {
+				boolean sort = "true".equals(sortCheck);
+				if (!"creator".equals(sortValue)) {
+					//query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, sortValue), false), new int[] { idx });
+					SearchUtil.setOrderBy(query, WTPart.class, idx, sortValue, "sort", sort);
+				} else {
+					if (query.getConditionCount() > 0)
+						query.appendAnd();
+					int idx_user = query.appendClassList(WTUser.class, false);
+					int idx_people = query.appendClassList(People.class, false);
+
+					ClassAttribute ca = null;
+					ClassAttribute ca2 = null;
+
+					ca = new ClassAttribute(WTPart.class, "iterationInfo.creator.key.id");
+					ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
+
+					SearchCondition sc2 = new SearchCondition(ca, "=", ca2);
+
+					query.appendWhere(sc2, new int[] { idx, idx_user });
+
+					ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
+
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(ca2, "=", ca3), new int[] { idx_user, idx_people });
+					SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort", sort);
+				}
+			} else {
+				query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, WTPart.MODIFY_TIMESTAMP), true), new int[] { idx });
+			}
+
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				WTPart part = (WTPart) obj[0];
+				VersionData data = new VersionData((RevisionControlled) part);
+				data.setNumber(part.getNumber());
+				String remarks2 =  StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder) part, AttributeKey.IBAKey.IBA_REMARKS));
+				data.setRemarks(remarks2);
+				boolean isProduct = PartUtil.isProductCheck(part.getNumber());
+				data.setProduct(isProduct);
+				list.add(data);
+			}
+
+			map.put("list", list);
+			map.put("topListCount", pager.getTotal());
+			map.put("pageSize", pager.getPsize());
+			map.put("total", pager.getTotalSize());
+			map.put("sessionid", pager.getSessionId());
+			map.put("curPage", pager.getCpage());
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		// ECO Type이 CHANGE 제외
-		eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EOCompletePartLink.class, true);
-		while (eolinkQr.hasMoreElements()) {
-			EChangeOrder eo = (EChangeOrder) eolinkQr.nextElement();
-			if (eo.getEoType().equals(ECOKey.ECO_CHANGE))
-				continue;
-			list.add(eo);
-		}
-		Collections.sort(list, new EoComparator());
-		return list;
+		return map;
 	}
 }

@@ -418,7 +418,7 @@
 									<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">품목 검색</a>
 								</li>
 								<li>
-									<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">완제품 검색</a>
+									<a onclick="moveToPage(this, '/distribute/listProduction', '> 품목관리 > 완제품 검색');">완제품 검색</a>
 								</li>
 							</ul>
 						</li>

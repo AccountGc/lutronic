@@ -29,9 +29,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class VersionData {
-	
-	private RevisionControlled rev;
-	
 	private String oid;
 	private String vrOid;
 	private String name;
@@ -43,13 +40,23 @@ public class VersionData {
 	private String modifyDate;
 	private String location;
 	private String stateKey;
+	private String number;
+	private String remarks;
+	private String state;
+	private boolean isLatest;
+	private String latestOid;
+	private String PDMLinkProductOid;
+	private boolean isProduct;
+	
+	public VersionData() {
+		
+	}
 	
 	public VersionData(final RevisionControlled rev) throws Exception {
-		setRev(rev);
 		setOid(rev.getPersistInfo().getObjectIdentifier().toString());
 		setVrOid(CommonUtil.getVROID(rev));
 		setName(rev.getName());
-		setVersion(rev.getVersionIdentifier().getValue());
+		setVersion(rev.getVersionIdentifier().getValue() + "." + rev.getIterationIdentifier().getValue());
 		setIteration(rev.getIterationIdentifier().getSeries().getValue());
 		setCreator(VersionControlHelper.getVersionCreator(rev).getDisplayName());
 		setCreateDate(DateUtil.getDateString(rev.getPersistInfo().getCreateStamp(), "a"));
@@ -57,6 +64,18 @@ public class VersionData {
 		setModifyDate(DateUtil.getDateString(rev.getPersistInfo().getModifyStamp(), "a"));
 		setLocation(rev.getLocation());
 		setStateKey(rev.getLifeCycleState().toString());
+		setState(rev.getLifeCycleState().getDisplay());
+		// 폴더위치
+		setLocation(StringUtil.checkNull(rev.getLocation()).replaceAll("/Default",""));
+		setLatest(VersionHelper.service.isLastVersion(rev));
+		
+		RevisionControlled latestObj = (RevisionControlled)ObjectUtil.getLatestObject((Master)rev.getMaster());
+		setLatestOid(latestObj.getPersistInfo().getObjectIdentifier().toString());
+		
+		WTContained wc = (WTContained)rev;
+		String wcOid = CommonUtil.getOIDString(wc.getContainer());
+		setPDMLinkProductOid(wcOid);
+		
 	}
 	
 	public String dateSubString(boolean isCreateDate) {
@@ -68,46 +87,10 @@ public class VersionData {
 	}
 	
 	/**
-	 * Lifecycle State
-	 * @return
-	 */
-	public String getLifecycle() {
-    	return  rev.getLifeCycleState().getDisplay(Message.getLocale());
-    }
-	
-	/**
-	 * 폴더 위치
-	 * @return
-	 */
-	public String getLocation() {
-		return StringUtil.checkNull(rev.getLocation()).replaceAll("/Default","");
-	}
-	
-	/**
-	 * 최신 버전 유무
-	 * @return
-	 */
-	public boolean isLatest() {
-		return VersionHelper.service.isLastVersion(rev);
-	}
-	
-	
-	public String latestOid() throws Exception {
-		RevisionControlled latestObj = (RevisionControlled)ObjectUtil.getLatestObject((Master)rev.getMaster());
-		return latestObj.getPersistInfo().getObjectIdentifier().toString();
-	}
-	
-	public String getPDMLinkProductOid(){
-		WTContained wc = (WTContained)rev;
-		String wcOid = CommonUtil.getOIDString(wc.getContainer());
-		return wcOid;
-	}
-	
-	/**
 	 * 작업 중 유무 체크
 	 * @return
 	 */
-	public boolean isWorking() {
+	public boolean isWorking(RevisionControlled rev) {
 		return (State.INWORK).equals(rev.getLifeCycleState());
 	}
 	
@@ -115,12 +98,12 @@ public class VersionData {
 	 * 승인됨 유무 체크
 	 * @return
 	 */
-	public boolean isApproved() {
+	public boolean isApproved(RevisionControlled rev) {
 		return (State.toState("APPROVED")).equals(rev.getLifeCycleState());
 	}
     
 
-    public boolean isState(String state) {
+    public boolean isState(String state, RevisionControlled rev) {
     	return (State.toState(state)).equals(rev.getLifeCycleState());
     }
     
@@ -129,11 +112,11 @@ public class VersionData {
      * 회수 권한  승인중 && (소유자 || 관리자 ) && 기본 결재 
      * @return
      */
-    public boolean isWithDraw(){
+    public boolean isWithDraw(RevisionControlled rev){
 		
     	try{
-    		boolean isDefalut = getApprovalTypeCode().equals(AttributeKey.CommonKey.COMMON_DEFAULT);
-			return (isState("APPROVING") && ( isOwner() || CommonUtil.isAdmin()) && isDefalut);
+    		boolean isDefalut = getApprovalTypeCode(rev).equals(AttributeKey.CommonKey.COMMON_DEFAULT);
+			return (isState("APPROVING",rev) && ( isOwner(rev) || CommonUtil.isAdmin()) && isDefalut);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -146,7 +129,7 @@ public class VersionData {
     * Owner 유무 체크
     * @return
     */
-	public boolean isOwner(){
+	public boolean isOwner(RevisionControlled rev){
 		
 		try{
 			return SessionHelper.getPrincipal().getName().equals(rev.getCreatorName());
@@ -161,16 +144,16 @@ public class VersionData {
 	 * 문서,금형,RoHS 에서의 결재 타입 기본 결재,일괄결재
 	 * @return
 	 */
-	public String getApprovalType(){
+	public String getApprovalType(RevisionControlled rev){
 		String approvalType = "";
 		
-		approvalType = getApprovalTypeCode();
+		approvalType = getApprovalTypeCode(rev);
 		approvalType = CommonUtil.getApprovalDisplay(approvalType);
 		
 		return approvalType;
 	}
 	
-	public String getApprovalTypeCode(){
+	public String getApprovalTypeCode(RevisionControlled rev){
 		String approvalTypeCode= "";
 		try {
 			approvalTypeCode = StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder)rev, AttributeKey.IBAKey.IBA_APPROVALTYPE));
