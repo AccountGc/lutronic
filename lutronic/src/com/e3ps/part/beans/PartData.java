@@ -56,7 +56,6 @@ import wt.vc.baseline.BaselineMember;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
-
 /**
  * Part에 관련해서 상세한 정보를 포함하는 Data 클래스
  *
@@ -73,7 +72,7 @@ public class PartData {
 	private String icon;
 	private String baseline;
 	private String unit;
-	private EPMDocument epm;
+//	private EPMDocument epm;
 	private String epmOid;
 	private String name;
 	private String state;
@@ -100,327 +99,111 @@ public class PartData {
 	private String creator;
 	private String createDate;
 	private String modifyDate;
-	
+
 //	private boolean isDelete;
 	private boolean isApproved;
 	private String version;
 	private String baselineOid;
 	private String iteration;
 	private String PDMLinkProductOid;
-	
-    public PartData(WTPart part) throws Exception {
+
+	public PartData(WTPart part) throws Exception {
 //    	super(part);
 //    	setPart(part);
-    	setOid(part.getPersistInfo().getObjectIdentifier().toString());
-    	setVrOid(CommonUtil.getVROID(part));
-    	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
-    	setNumber(part.getNumber());
-    	setUnit(part.getDefaultUnit().toString());
-    	String ecoNumber ="";
-        HashMap map =IBAUtil.getAttributes(part);
-        setModel((String)map.get(AttributeKey.IBAKey.IBA_MODEL));  //프로젝트 코드
-        setProductmethod((String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));//제작방법
-        setDeptcode((String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE));	//부서 코드
-        setManufacture((String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));//MANUFATURER
-        setMat((String)map.get(AttributeKey.IBAKey.IBA_MAT));//재질
-        setFinish((String)map.get(AttributeKey.IBAKey.IBA_FINISH));//재질
-        setRemark((String)map.get(AttributeKey.IBAKey.IBA_REMARKS));//비고
-        setWeight((String)map.get(AttributeKey.IBAKey.IBA_WEIGHT));  //무게
-        setSpecification((String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));//사양
-        ecoNumber =  (String)map.get(AttributeKey.IBAKey.IBA_CHANGENO); //ECO NO
-    	if( ecoNumber != null && ecoNumber.length()> 0 ){
-    		setEcoNo(ecoNumber);
-    	}else{
-    		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
-    	}
-    	setName(part.getName());
+		setOid(part.getPersistInfo().getObjectIdentifier().toString());
+		setVrOid(CommonUtil.getVROID(part));
+		setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
+		setNumber(part.getNumber());
+		setUnit(part.getDefaultUnit().toString());
+		String ecoNumber = "";
+		HashMap map = IBAUtil.getAttributes(part);
+		setModel((String) map.get(AttributeKey.IBAKey.IBA_MODEL)); // 프로젝트 코드
+		setProductmethod((String) map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));// 제작방법
+		setDeptcode((String) map.get(AttributeKey.IBAKey.IBA_DEPTCODE)); // 부서 코드
+		setManufacture((String) map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));// MANUFATURER
+		setMat((String) map.get(AttributeKey.IBAKey.IBA_MAT));// 재질
+		setFinish((String) map.get(AttributeKey.IBAKey.IBA_FINISH));// 재질
+		setRemark((String) map.get(AttributeKey.IBAKey.IBA_REMARKS));// 비고
+		setWeight((String) map.get(AttributeKey.IBAKey.IBA_WEIGHT)); // 무게
+		setSpecification((String) map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));// 사양
+		ecoNumber = (String) map.get(AttributeKey.IBAKey.IBA_CHANGENO); // ECO NO
+		if (ecoNumber != null && ecoNumber.length() > 0) {
+			setEcoNo(ecoNumber);
+		} else {
+			setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
+		}
+		setName(part.getName());
 //    	setState(part.getLifeCycleState().toString());
-    	setState(part.getLifeCycleState().getDisplay());
-    	setCreator(part.getCreatorFullName());
+		setState(part.getLifeCycleState().getDisplay());
+		setCreator(part.getCreatorFullName());
 //    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
 //    	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
-    	
-    	if(epm == null){
-			epm = DrawingHelper.service.getEPMDocument(part);
-			setEpmOid("");
-		}else {
-			setEpmOid(epm.getPersistInfo().getObjectIdentifier().toString());
-		}
-//    	setDelete(false);
-    	setApproved(false);
-    	setVersion(part.getVersionIdentifier().getValue()+"."+part.getIterationIdentifier().getValue());
-    	setBaselineOid("");
-    	setIteration(part.getIterationIdentifier().getSeries().getValue());
-    	WTContained wc = (WTContained)part;
-    	setPDMLinkProductOid(CommonUtil.getOIDString(wc.getContainer()));
-    	setStateKey(part.getLifeCycleState().toString());
-    }
-    
-//	public PartData(final WTPart part,Object obj,boolean isCheckDummy,boolean desc) throws Exception{
-//		super(part);
-//    	setPart(part);
-//    	setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
-//    	setNumber(part.getNumber());
-//    	setUnit(part.getDefaultUnit().toString());
-//    	String ecoNumber ="";
-//        HashMap map =IBAUtil.getAttributes(part);
-//        setModel((String)map.get(AttributeKey.IBAKey.IBA_MODEL));  //프로젝트 코드
-//        setProductmethod((String)map.get(AttributeKey.IBAKey.IBA_PRODUCTMETHOD));//제작방법
-//        setDeptcode((String)map.get(AttributeKey.IBAKey.IBA_DEPTCODE));	//부서 코드
-//        setManufacture((String)map.get(AttributeKey.IBAKey.IBA_MANUFACTURE));//MANUFATURER
-//        setMat((String)map.get(AttributeKey.IBAKey.IBA_MAT));//재질
-//        setFinish((String)map.get(AttributeKey.IBAKey.IBA_FINISH));//재질
-//        setRemark((String)map.get(AttributeKey.IBAKey.IBA_REMARKS));//비고
-//        setWeight((String)map.get(AttributeKey.IBAKey.IBA_WEIGHT));  //무게
-//        setSpecification((String)map.get(AttributeKey.IBAKey.IBA_SPECIFICATION));//사양
-//        ecoNumber =  (String)map.get(AttributeKey.IBAKey.IBA_CHANGENO); //ECO NO
-//    	if( ecoNumber != null && ecoNumber.length()> 0 ){
-//    		setEcoNo(ecoNumber);
-//    	}else{
-//    		setEcoNo(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_ECONO));
-//    	}
-//    	if(obj instanceof Baseline){
-//    		Baseline baseline = (Baseline) obj;
-//    		if (desc) {
-//    			if (baseline != null) {
-//    				this.descPartlist = descentLastPart(part,baseline,isCheckDummy, null);
-//    			}
-//    			/*} else {
-//    			if (baseline != null) {
-//    				list = ancestorPart(part, baseline, null);
-//    			} else {
-//    				list = ancestorPart(part, view, null);
-//    			}*/
-//    		}else{
-//    			if (baseline != null) {
-//    				this.ascPartlist = ancestorPart(part, baseline,isCheckDummy, null);
-//    			} 
-//    		}
-//    	} else {
-//			if (desc) {
-//				View[] views = ViewHelper.service.getAllViews();
-//				this.descPartlist = descentLastPart(part, views[0],isCheckDummy, null);
-//			}else{
-//				View[] views = ViewHelper.service.getAllViews();
-//				this.ascPartlist = ancestorPart(part, views[0],isCheckDummy, null);
-//			}
+
+//    	if(epm == null){
+//			epm = DrawingHelper.service.getEPMDocument(part);
+//			setEpmOid("");
+//		}else {
+//			setEpmOid(epm.getPersistInfo().getObjectIdentifier().toString());
 //		}
-//    	Object o = null;
-//    	if(obj instanceof Baseline){
-//    		Baseline baseline = (Baseline) obj;
-//    	}else{
-//    		View[] views = ViewHelper.service.getAllViews();
-//    	}
-//    	
-//	}
-	
-	/*public int getmaXLevel(WTPart part,Object obj, boolean desc) throws WTException {
-        MethodContext methodcontext = null;
-        WTConnection wtconnection = null;
-
-        PreparedStatement st = null;
-        ResultSet rs = null;
-        
-        String dataStore = "Oracle";
-        
-        try {
-
-            methodcontext = MethodContext.getContext();
-            wtconnection = (WTConnection) methodcontext.getConnection();
-            Connection con = wtconnection.getConnection();
-
-            StringBuffer sql = null;
-
-            try {
-                dataStore = WTProperties.getLocalProperties().getProperty("wt.db.dataStore");
-            }
-            catch ( Exception ex ) {
-                dataStore = "Oracle";
-            }
-            
-            if ( "Oracle".equals(dataStore) ) {
-            	if(desc){
-                
-                 * desc true 일 때....정전개
-                 * select max(DISTINCT level) from WTPARTUSAGELINK link,WTPARTMASTER ms,WTPART c,WTPart p ,WTPARTMASTER pms
-                 where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2
-                 start with link.ida3a5=8042643 connect by prior c.ida2a2=link.ida3a5 ;
-                 
-                   select DISTINCT level l,pms.WTPARTNUMBER from WTPARTUSAGELINK link,WTPARTMASTER ms,WTPART c,WTPart p ,WTPARTMASTER pms
-                 where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2
-                 start with link.ida3a5=8042643 connect by prior c.ida2a2=link.ida3a5 ;
-                 
-                 
-                 
-
-            		sql = new StringBuffer().append("select max(DISTINCT level) from WTPARTUSAGELINK link,WTPARTMASTER ms,WTPART c,WTPart p ,WTPARTMASTER pms ");
-                        
-            		  if (obj instanceof View) {
-            			  View view = (View) obj;
-            			  if(null!=view){
-							qs.appendAnd();
-							qs.appendWhere(new SearchCondition(WTPart.class, "view.key.id",
-									"=", view.getPersistInfo().getObjectIdentifier()
-											.getId()), new int[] { index2 });
-            				sql.append("where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2 ");
-            				sql.append(" and p.idA3view = "+CommonUtil.getOIDLongValue(view))  ;
-            			  }
-            		  }else  if (obj instanceof Baseline) {
-            			  Baseline baseline = (Baseline) obj;
-            			  if (baseline != null) {
-            					int index3 = qs.addClassList(BaselineMember.class, false);
-            					qs.appendAnd();
-            					qs.appendWhere(new SearchCondition(WTPart.class,
-            							"thePersistInfo.theObjectIdentifier.id",
-            							BaselineMember.class, "roleBObjectRef.key.id"),
-            							new int[] { index2, index3 });
-            					qs.appendAnd();
-            					qs.appendWhere(new SearchCondition(BaselineMember.class,
-            							"roleAObjectRef.key.id", "=", baseline.getPersistInfo()
-            									.getObjectIdentifier().getId()),
-            							new int[] { index3 });
-            				  sql.append(",BaselineMember baseline ");
-            				  sql.append("where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2 ");
-            				  sql.append(" and p.ida2a2 = baseline.idA3B5 and baseline.ida2a2 = "+CommonUtil.getOIDLongValue(baseline))  ;
-            				}
-            		  }
-                      sql.append("START WITH IDA3A5=?  ")
-                        .append("connect by prior c.ida2a2=link.ida3a5 ");
-            	}else{
-            		*//*** desc false 역전개
-            		 * select DISTINCT level l,pms.WTPARTNUMBER from WTPARTUSAGELINK link,WTPARTMASTER ms,WTPART c,WTPart p ,WTPARTMASTER pms
-                 where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2
-                 start with link.ida3a5=8042643 connect by prior link.ida3a5=c.ida2a2
-                 
-                 select max(DISTINCT level) from WTPARTUSAGELINK link,WTPARTMASTER ms,WTPART c,WTPart p ,WTPARTMASTER pms
-                 where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2
-                 start with link.ida3a5=8042643 connect by prior link.ida3a5=c.ida2a2
-                 
-            		 *//*
-            		sql = new StringBuffer().append("select max(DISTINCT level) from WTPARTUSAGELINK link,WTPARTMASTER ms,WTPART c,WTPart p ,WTPARTMASTER pms ");
-            		if (obj instanceof View) {
-          			  View view = (View) obj;
-          			  if(null!=view){
-							qs.appendAnd();
-							qs.appendWhere(new SearchCondition(WTPart.class, "view.key.id",
-									"=", view.getPersistInfo().getObjectIdentifier()
-											.getId()), new int[] { index2 });
-          				sql.append("where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2 ");
-          				sql.append(" and p.idA3view = "+CommonUtil.getOIDLongValue(view))  ;
-          			  }
-          		  	}else  if (obj instanceof Baseline) {
-          			  Baseline baseline = (Baseline) obj;
-          			  if (baseline != null) {
-          					int index3 = qs.addClassList(BaselineMember.class, false);
-          					qs.appendAnd();
-          					qs.appendWhere(new SearchCondition(WTPart.class,
-          							"thePersistInfo.theObjectIdentifier.id",
-          							BaselineMember.class, "roleBObjectRef.key.id"),
-          							new int[] { index2, index3 });
-          					qs.appendAnd();
-          					qs.appendWhere(new SearchCondition(BaselineMember.class,
-          							"roleAObjectRef.key.id", "=", baseline.getPersistInfo()
-          									.getObjectIdentifier().getId()),
-          							new int[] { index3 });
-          				  sql.append(",BaselineMember baseline ");
-          				  sql.append("where link.ida3b5 = ms.ida2a2 and ms.ida2a2 = c.IDA3MASTERREFERENCE and link.ida3a5=p.ida2a2 and p.IDA3MASTERREFERENCE=pms.IDA2A2 ");
-          				  sql.append(" and p.ida2a2 = baseline.idA3B5 and baseline.ida2a2 = "+CommonUtil.getOIDLongValue(baseline))  ;
-	          				}
-	          		  }
-                            sql.append("START WITH IDA3A5=?  ");
-                            sql.append("connect by prior link.ida3a5=c.ida2a2 ");
-            	}
-
-            }
-            System.out.println(sql.toString());
-            st = con.prepareStatement(sql.toString());
-            st.setLong(1, part.getPersistInfo().getObjectIdentifier().getId());
-
-            rs = st.executeQuery();
-
-            while ( rs.next() ) {
-                String level = rs.getString(1);
-                System.out.println("maxLevel ="+level);
-                if(null==level)
-                	return 0;
-                else{
-                	return Integer.parseInt(level);
-                }
-            }
-           
-            return 0;
-        }
-        catch ( Exception e ) {
-            e.printStackTrace();
-            throw new WTException(e);
-        }
-        finally {
-            try {
-                if ( rs != null ) {
-                    rs.close();
-                }
-                if ( st != null ) {
-                    st.close();
-                }
-            } catch(Exception e) {
-                throw new WTException(e);
-            }
-            if ( DBProperties.FREE_CONNECTION_IMMEDIATE && !wtconnection.isTransactionActive() ) {
-                MethodContext.getContext().freeConnection();
-            }
-        }
-    }*/
-	private ArrayList<Object[]> descentLastPart(WTPart part,
-			Baseline baseline,boolean isCheckDummy, State state) throws Exception {
-	    	WTPartConfigSpec configSpec = WTPartConfigSpec
-					.newWTPartConfigSpec(WTPartBaselineConfigSpec
-							.newWTPartBaselineConfigSpec(baseline));
-			QueryResult re = wt.part.WTPartHelper.service.getUsesWTParts(part,
-					configSpec);
-			while (re.hasMoreElements()) {
-				Object oo[] = (Object[]) re.nextElement();
-
-				if (!(oo[1] instanceof WTPart)) {
-					continue;
-				}
-				
-				if(isCheckDummy){
-					WTPart p = (WTPart)oo[1];
-						boolean isChange = PartUtil.isChange(p.getNumber());
-				    	if( isChange  ){
-							continue;
-						}
-					}
-						
-				this.descPartlist.add(oo);
-			}
-			return this.descPartlist;
+//    	setDelete(false);
+		setApproved(false);
+		setVersion(part.getVersionIdentifier().getValue() + "." + part.getIterationIdentifier().getValue());
+		setBaselineOid("");
+		setIteration(part.getIterationIdentifier().getSeries().getValue());
+		WTContained wc = (WTContained) part;
+		setPDMLinkProductOid(CommonUtil.getOIDString(wc.getContainer()));
+		setStateKey(part.getLifeCycleState().toString());
 	}
-	private ArrayList<Object[]> descentLastPart(WTPart part, View view,boolean isCheckDummy,
-				State state) throws WTException {
-	    	WTPartConfigSpec configSpec = WTPartConfigSpec
-					.newWTPartConfigSpec(WTPartStandardConfigSpec
-							.newWTPartStandardConfigSpec(view, state));
-			QueryResult re = wt.part.WTPartHelper.service.getUsesWTParts(part,
-					configSpec);
-			while (re.hasMoreElements()) {
-				Object oo[] = (Object[]) re.nextElement();
 
-				if (!(oo[1] instanceof WTPart)) {
+	private ArrayList<Object[]> descentLastPart(WTPart part, Baseline baseline, boolean isCheckDummy, State state)
+			throws Exception {
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartBaselineConfigSpec.newWTPartBaselineConfigSpec(baseline));
+		QueryResult re = wt.part.WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (re.hasMoreElements()) {
+			Object oo[] = (Object[]) re.nextElement();
+
+			if (!(oo[1] instanceof WTPart)) {
+				continue;
+			}
+
+			if (isCheckDummy) {
+				WTPart p = (WTPart) oo[1];
+				boolean isChange = PartUtil.isChange(p.getNumber());
+				if (isChange) {
 					continue;
 				}
-				if(isCheckDummy){
-					WTPart p = (WTPart)oo[1];
-						boolean isChange = PartUtil.isChange(p.getNumber());
-				    	if( isChange  ){
-							continue;
-						}
-					}
-				this.descPartlist.add(oo);
 			}
-			return this.descPartlist;
+
+			this.descPartlist.add(oo);
 		}
-	public ArrayList<Object[]> ancestorPart(WTPart part, View view,boolean isCheckDummy, State state)
+		return this.descPartlist;
+	}
+
+	private ArrayList<Object[]> descentLastPart(WTPart part, View view, boolean isCheckDummy, State state)
+			throws WTException {
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state));
+		QueryResult re = wt.part.WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (re.hasMoreElements()) {
+			Object oo[] = (Object[]) re.nextElement();
+
+			if (!(oo[1] instanceof WTPart)) {
+				continue;
+			}
+			if (isCheckDummy) {
+				WTPart p = (WTPart) oo[1];
+				boolean isChange = PartUtil.isChange(p.getNumber());
+				if (isChange) {
+					continue;
+				}
+			}
+			this.descPartlist.add(oo);
+		}
+		return this.descPartlist;
+	}
+
+	public ArrayList<Object[]> ancestorPart(WTPart part, View view, boolean isCheckDummy, State state)
 			throws WTException {
 		ArrayList<Object[]> v = new ArrayList<Object[]>();
 		try {
@@ -428,70 +211,64 @@ public class PartData {
 			QuerySpec qs = new QuerySpec();
 			int index1 = qs.addClassList(WTPartUsageLink.class, true);
 			int index2 = qs.addClassList(WTPart.class, true);
-			qs.appendWhere(new SearchCondition(WTPartUsageLink.class,
-					"roleBObjectRef.key.id", "=", master.getPersistInfo()
-							.getObjectIdentifier().getId()),
-					new int[] { index1 });
-			SearchCondition sc = new SearchCondition(new ClassAttribute(
-					WTPartUsageLink.class, "roleAObjectRef.key.id"), "=",
-					new ClassAttribute(WTPart.class,
-							"thePersistInfo.theObjectIdentifier.id"));
+			qs.appendWhere(new SearchCondition(WTPartUsageLink.class, "roleBObjectRef.key.id", "=",
+					master.getPersistInfo().getObjectIdentifier().getId()), new int[] { index1 });
+			SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+					"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
 			sc.setFromIndicies(new int[] { index1, index2 }, 0);
 			sc.setOuterJoin(0);
 			qs.appendAnd();
 			qs.appendWhere(sc, new int[] { index1, index2 });
 			qs.appendAnd();
-			qs.appendWhere(new SearchCondition(WTPart.class,
-					"iterationInfo.latest", SearchCondition.IS_TRUE, true),
+			qs.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
 					new int[] { index2 });
 			if (view != null) {
 				qs.appendAnd();
-				qs.appendWhere(new SearchCondition(WTPart.class, "view.key.id",
-						"=", view.getPersistInfo().getObjectIdentifier()
-								.getId()), new int[] { index2 });
+				qs.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
+						view.getPersistInfo().getObjectIdentifier().getId()), new int[] { index2 });
 			}
 			if (state != null) {
 				qs.appendAnd();
-				qs.appendWhere(new SearchCondition(WTPart.class, "state.state",
-						"=", state.toString()), new int[] { index2 });
+				qs.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+						new int[] { index2 });
 			}
 
 			SearchUtil.addLastVersionCondition(qs, WTPart.class, index2);
 
 			ClassInfo classinfo = WTIntrospector.getClassInfo(WTPart.class);
 			PropertyDescriptor dd = classinfo.getPropertyDescriptor("number");
-			
-			
-			qs.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class,"master>number"), true), new int[] { index2 });
-			
+
+			qs.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, "master>number"), true),
+					new int[] { index2 });
+
 			QueryResult re = PersistenceHelper.manager.find(qs);
 			while (re.hasMoreElements()) {
 				Object oo[] = (Object[]) re.nextElement();
-				if(oo[1] instanceof WTPart && isCheckDummy){
-					WTPart p = (WTPart)oo[1];
-						boolean isChange = PartUtil.isChange(p.getNumber());
-				    	if( isChange  ){
-							continue;
-						}
+				if (oo[1] instanceof WTPart && isCheckDummy) {
+					WTPart p = (WTPart) oo[1];
+					boolean isChange = PartUtil.isChange(p.getNumber());
+					if (isChange) {
+						continue;
 					}
+				}
 				v.add(oo);
 			}
-			Comparator comparator =new Comparator<Object[]>(){
+			Comparator comparator = new Comparator<Object[]>() {
 				@Override
 				public int compare(Object[] o1, Object[] o2) {
-					String o1Number =(String) ((WTPart)o1[1]).getNumber();
-					String o2Number =(String) ((WTPart)o2[1]).getNumber();
+					String o1Number = (String) ((WTPart) o1[1]).getNumber();
+					String o2Number = (String) ((WTPart) o2[1]).getNumber();
 					return o1Number.compareTo(o2Number);
 				}
-			};	
-			Collections.sort(v,comparator);
+			};
+			Collections.sort(v, comparator);
 		} catch (Exception ex) {
 			throw new WTException();
 		}
 		return v;
 	}
 
-	public ArrayList<Object[]> ancestorPart(WTPart part, Baseline baseline,boolean isCheckDummy, State state)
+	public ArrayList<Object[]> ancestorPart(WTPart part, Baseline baseline, boolean isCheckDummy, State state)
 			throws WTException {
 		ArrayList<Object[]> v = new ArrayList<Object[]>();
 		try {
@@ -499,14 +276,10 @@ public class PartData {
 			QuerySpec qs = new QuerySpec();
 			int index1 = qs.addClassList(WTPartUsageLink.class, true);
 			int index2 = qs.addClassList(WTPart.class, true);
-			qs.appendWhere(new SearchCondition(WTPartUsageLink.class,
-					"roleBObjectRef.key.id", "=", master.getPersistInfo()
-							.getObjectIdentifier().getId()),
-					new int[] { index1 });
-			SearchCondition sc = new SearchCondition(new ClassAttribute(
-					WTPartUsageLink.class, "roleAObjectRef.key.id"), "=",
-					new ClassAttribute(WTPart.class,
-							"thePersistInfo.theObjectIdentifier.id"));
+			qs.appendWhere(new SearchCondition(WTPartUsageLink.class, "roleBObjectRef.key.id", "=",
+					master.getPersistInfo().getObjectIdentifier().getId()), new int[] { index1 });
+			SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+					"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
 			sc.setFromIndicies(new int[] { index1, index2 }, 0);
 			sc.setOuterJoin(0);
 			qs.appendAnd();
@@ -514,47 +287,44 @@ public class PartData {
 
 			if (state != null) {
 				qs.appendAnd();
-				qs.appendWhere(new SearchCondition(WTPart.class, "state.state",
-						"=", state.toString()), new int[] { index2 });
+				qs.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+						new int[] { index2 });
 			}
 
 			if (baseline != null) {
 				int index3 = qs.addClassList(BaselineMember.class, false);
 				qs.appendAnd();
-				qs.appendWhere(new SearchCondition(WTPart.class,
-						"thePersistInfo.theObjectIdentifier.id",
-						BaselineMember.class, "roleBObjectRef.key.id"),
-						new int[] { index2, index3 });
+				qs.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id",
+						BaselineMember.class, "roleBObjectRef.key.id"), new int[] { index2, index3 });
 				qs.appendAnd();
-				qs.appendWhere(new SearchCondition(BaselineMember.class,
-						"roleAObjectRef.key.id", "=", baseline.getPersistInfo()
-								.getObjectIdentifier().getId()),
-						new int[] { index3 });
+				qs.appendWhere(new SearchCondition(BaselineMember.class, "roleAObjectRef.key.id", "=",
+						baseline.getPersistInfo().getObjectIdentifier().getId()), new int[] { index3 });
 			}
-			qs.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class,"master>number"), true), new int[] { index2 });
-			//System.out.println("###	22222222	==	"+qs);
+			qs.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, "master>number"), true),
+					new int[] { index2 });
+			// System.out.println("### 22222222 == "+qs);
 			QueryResult re = PersistenceHelper.manager.find(qs);
-			
+
 			while (re.hasMoreElements()) {
 				Object oo[] = (Object[]) re.nextElement();
-				if(oo[1] instanceof WTPart && isCheckDummy){
-					WTPart p = (WTPart)oo[1];
-						boolean isChange = PartUtil.isChange(p.getNumber());
-				    	if( isChange  ){
-							continue;
-						}
+				if (oo[1] instanceof WTPart && isCheckDummy) {
+					WTPart p = (WTPart) oo[1];
+					boolean isChange = PartUtil.isChange(p.getNumber());
+					if (isChange) {
+						continue;
 					}
+				}
 				v.add(oo);
 			}
-			Comparator comparator =new Comparator<Object[]>(){
+			Comparator comparator = new Comparator<Object[]>() {
 				@Override
 				public int compare(Object[] o1, Object[] o2) {
-					String o1Number =(String) ((WTPart)o1[1]).getNumber();
-					String o2Number =(String) ((WTPart)o2[1]).getNumber();
+					String o1Number = (String) ((WTPart) o1[1]).getNumber();
+					String o2Number = (String) ((WTPart) o2[1]).getNumber();
 					return o1Number.compareTo(o2Number);
 				}
-			};	
-			Collections.sort(v,comparator);
+			};
+			Collections.sort(v, comparator);
 		} catch (Exception ex) {
 			throw new WTException();
 		}
@@ -592,7 +362,7 @@ public class PartData {
 //		}
 //		return "";
 //	}
-	
+
 //	public String getPartName(int index) {
 //		try {
 //			
@@ -616,9 +386,8 @@ public class PartData {
 //		}
 //		
 //	}
-	
-	
-	 public String getDwgOid() {
+
+	public String getDwgOid() {
 		return dwgOid;
 	}
 
@@ -678,6 +447,7 @@ public class PartData {
 //	    }
 	/**
 	 * 설계 변경 유무 체크
+	 * 
 	 * @return
 	 */
 //	public boolean isSelectEO(){
@@ -685,16 +455,17 @@ public class PartData {
 //		return PartSearchHelper.service.isSelectEO(this.part);
 //    	
 //    }
-	
+
 	/**
 	 * 진채번 유무 체크
+	 * 
 	 * @return
 	 */
 	public boolean isChange() {
 		return PartUtil.isChange(this.number);
 	}
-	
-	//순중량
+
+	// 순중량
 //	public String getWeight(){
 //		String weight ="";
 //		try {
@@ -706,8 +477,8 @@ public class PartData {
 //		return weight;
 //			
 //	}
-	
-	//재질(기본자재)
+
+	// 재질(기본자재)
 //	public String getMat(){
 //		String mat ="";
 //		try {
@@ -726,8 +497,8 @@ public class PartData {
 //		
 //		return mat;
 //	}
-	
-	//사양(SPECIFICATION)
+
+	// 사양(SPECIFICATION)
 //	public String getSpecification(){
 //		String specification ="";
 //		try {
@@ -740,8 +511,8 @@ public class PartData {
 //		
 //		return specification;
 //	}
-	
-	//후처리
+
+	// 후처리
 //	public String getFINISH(){
 //		String finish ="";
 //		try {
@@ -760,8 +531,8 @@ public class PartData {
 //		
 //		return finish;
 //	}
-	
-	//후처리
+
+	// 후처리
 //	public String getModel(){
 //		String model ="";
 //		try {
@@ -780,8 +551,8 @@ public class PartData {
 //		
 //		return model;
 //	}
-	
-	//제작 방법
+
+	// 제작 방법
 //	public String getPRODUCTMETHOD(){
 //		String method ="";
 //		try {
@@ -800,8 +571,8 @@ public class PartData {
 //		
 //		return method;
 //	}
-	
-	//부서 코드
+
+	// 부서 코드
 //	public String getDEPTCODE(){
 //		String departcode ="";
 //		try {
@@ -821,11 +592,10 @@ public class PartData {
 //		return departcode;
 //	}
 	/**
-	 * isGENERIC 유무 체크
-	 * epm.getFamilyTableStatus()  : 0 = Normal
-	 * epm.getFamilyTableStatus()  : 1 = INSTANCE
-	 * epm.getFamilyTableStatus()  : 2 = GENERIC
-	 * epm.getFamilyTableStatus()  : 3 = GENERIC and INSTANCE
+	 * isGENERIC 유무 체크 epm.getFamilyTableStatus() : 0 = Normal
+	 * epm.getFamilyTableStatus() : 1 = INSTANCE epm.getFamilyTableStatus() : 2 =
+	 * GENERIC epm.getFamilyTableStatus() : 3 = GENERIC and INSTANCE
+	 * 
 	 * @return
 	 */
 //	public boolean isGENERIC(){
@@ -858,7 +628,7 @@ public class PartData {
 //		
 //		return isGENERIC;
 //	}
-	
+
 //	public boolean isINSTANCE(){
 //		
 //		boolean isINSTANCE = false;
@@ -888,9 +658,10 @@ public class PartData {
 //		
 //		return isINSTANCE;
 //	}
-	
+
 	/**
-	 * GENERIC 이고 최신 버전 이고  작업중인 경우 수정 
+	 * GENERIC 이고 최신 버전 이고 작업중인 경우 수정
+	 * 
 	 * @return
 	 */
 //	public boolean isFamliyModify(){
@@ -910,16 +681,16 @@ public class PartData {
 //		
 //	}
 	public ArrayList<Object[]> getDescPartlist() {
-		Comparator comparator =new Comparator<Object[]>(){
+		Comparator comparator = new Comparator<Object[]>() {
 			@Override
 			public int compare(Object[] o1, Object[] o2) {
-				String o1Number =(String) ((WTPart)o1[1]).getNumber();
-				String o2Number =(String) ((WTPart)o2[1]).getNumber();
+				String o1Number = (String) ((WTPart) o1[1]).getNumber();
+				String o2Number = (String) ((WTPart) o2[1]).getNumber();
 				return o1Number.compareTo(o2Number);
 			}
-		};	
-		Collections.sort(descPartlist,comparator);
+		};
+		Collections.sort(descPartlist, comparator);
 		return descPartlist;
 	}
-	
+
 }

@@ -57,14 +57,14 @@ import wt.vc.views.ViewHelper;
 @Controller
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
-	
+
 	/**
 	 * 
-	 * 		LUTRONIC 추가 시작
+	 * LUTRONIC 추가 시작
 	 * 
 	 * 
 	 */
-	
+
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() {
@@ -72,7 +72,7 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "품목 등록 페이지")
 	@GetMapping(value = "/create")
 	public ModelAndView create() {
@@ -80,7 +80,7 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-create.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "일괄 등록 페이지")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() {
@@ -88,7 +88,7 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-batch.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "BOM EDITOR 페이지")
 	@GetMapping(value = "/bom")
 	public ModelAndView bom() {
@@ -96,8 +96,10 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-bom.jsp");
 		return model;
 	}
-	
-	/** 품목 단위 리스트 리턴
+
+	/**
+	 * 품목 단위 리스트 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -108,26 +110,28 @@ public class PartController extends BaseController {
 		List<String> list = PartHelper.service.getQuantityUnit();
 		return list;
 	}
-	
+
 	@Description(value = "품목 등록")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public Map<String,Object> create(@RequestBody Map<String, Object> params){
-		Map<String,Object> result = new HashMap<String, Object>();
+	public Map<String, Object> create(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			Map<String,Object> map = PartHelper.manager.requestPartMapping(params);
+			Map<String, Object> map = PartHelper.manager.requestPartMapping(params);
 			PartHelper.service.create(map);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
-	/**  부품 등록시 SEQ 버튼
+
+	/**
+	 * 부품 등록시 SEQ 버튼
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -140,23 +144,23 @@ public class PartController extends BaseController {
 		model.setViewName("popup:/part/searchSeqList");
 		return model;
 	}
-	
+
 	@Description(value = "품목 데이터 검색")
 	@ResponseBody
 	@PostMapping(value = "/list")
-	public Map<String,Object> list(@RequestBody Map<String, Object> params) {
-		Map<String,Object> result = null;
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = null;
 		try {
 			result = PartHelper.manager.list(params);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 //	/** 품목 데이터 검색
 //	 * @param request
 //	 * @param response
@@ -177,15 +181,15 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 상세보기")
 	@RequestMapping("/view")
-	public ModelAndView view(@RequestParam(value="oid") String oid) throws Exception {
+	public ModelAndView view(@RequestParam(value = "oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		PartData partData = new PartData(part);
-		Map<String,String> map = CommonHelper.manager.getAttributes(oid, "view");
+		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
 		List<CommentsData> cList = PartHelper.manager.commentsList(oid);
 		String pnum = DocumentHelper.manager.getCnum(cList);
-		
-		model.addObject("oid",oid);
+
+		model.addObject("oid", oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("data", partData);
 		model.addAllObjects(map);
@@ -212,40 +216,40 @@ public class PartController extends BaseController {
 //		model.setViewName("popup:/part/viewPart");
 //		return model;
 //	}
-	
+
 	@Description(value = "댓글 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/createComments")
-	public Map<String,Object> createComments(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> createComments(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			PartHelper.service.createComments(params);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "댓글 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/updateComments")
-	public Map<String,Object> updateComments(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> updateComments(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			PartHelper.service.updateComments(params);
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "댓글 삭제 함수")
 	@ResponseBody
 	@GetMapping(value = "/deleteComments")
@@ -262,15 +266,15 @@ public class PartController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "품목 변경이력 조회")
 	@RequestMapping("/changeList")
 	public ModelAndView changeList(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		PartData partData = new PartData(part);
-		
-		model.addObject("oid",oid);
+
+		model.addObject("oid", oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("data", partData);
 		model.setViewName("/extcore/jsp/part/part-changeList.jsp");
@@ -280,9 +284,9 @@ public class PartController extends BaseController {
 	@Description(value = "품목 삭제")
 	@ResponseBody
 	@RequestMapping("/delete")
-	public Map<String,Object> delete(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String,Object> result = PartHelper.service.delete(params);
-		if((boolean) result.get("result")) {
+	public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = PartHelper.service.delete(params);
+		if ((boolean) result.get("result")) {
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
 		} else {
@@ -296,7 +300,7 @@ public class PartController extends BaseController {
 	@GetMapping(value = "/update")
 	public ModelAndView update(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		PartData partData = null;
 		try {
 			partData = new PartData(part);
@@ -307,13 +311,13 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/updatePart.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "품목 수정")
 	@ResponseBody
 	@PostMapping(value = "/update")
 	public Map<String, Object> updatePartAction(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = PartHelper.service.updatePartAction(params);
-		if((boolean) result.get("result")) {
+		if ((boolean) result.get("result")) {
 			result.put("oid", result.get("oid"));
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
@@ -323,8 +327,10 @@ public class PartController extends BaseController {
 		}
 		return result;
 	}
-	
-	/**  일괄등록 페이지 이동
+
+	/**
+	 * 일괄등록 페이지 이동
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -333,12 +339,14 @@ public class PartController extends BaseController {
 	public ModelAndView createPackagePart(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu3");
-		model.addObject("module","part");
+		model.addObject("module", "part");
 		model.setViewName("default:/part/createPackagePart");
 		return model;
 	}
-	
-	/**  일괄등록 페이지 이동
+
+	/**
+	 * 일괄등록 페이지 이동
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -347,12 +355,14 @@ public class PartController extends BaseController {
 	public ModelAndView createAUIPackagePart(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu3");
-		model.addObject("module","part");
+		model.addObject("module", "part");
 		model.setViewName("default:/part/createAUIPackagePart");
 		return model;
 	}
-	
-	/**  일괄등록 실행
+
+	/**
+	 * 일괄등록 실행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -362,32 +372,35 @@ public class PartController extends BaseController {
 		String xmlString = "";
 
 		xmlString = PartHelper.service.createPackagePartAction(request, response);
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("xmlString", xmlString);
 		model.setViewName("empty:/part/createPackagePartAction");
 		return model;
 	}
-	
-	/**  일괄등록  AUI 실행
+
+	/**
+	 * 일괄등록 AUI 실행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	//@RequestMapping("/createAUIPackagePartAction")
-	//public ModelAndView createAUIPackagePartAction(@RequestBody Map<String,Object> param) {
+	// @RequestMapping("/createAUIPackagePartAction")
+	// public ModelAndView createAUIPackagePartAction(@RequestBody
+	// Map<String,Object> param) {
 	@ResponseBody
-	@RequestMapping(value = "/createAUIPackagePartAction", method=RequestMethod.POST)
+	@RequestMapping(value = "/createAUIPackagePartAction", method = RequestMethod.POST)
 	public ResultData createAUIPackagePartAction(HttpServletRequest request, HttpServletResponse response) {
 		return PartHelper.service.createAUIPackagePartAction(request, response);
 	}
-	
+
 	@Description(value = "채번 페이지 이동")
 	@GetMapping(value = "/partChange")
 	public ModelAndView partChange(@RequestParam String oid) {
-		
-		List<Map<String,Object>> list = null;
-		
+
+		List<Map<String, Object>> list = null;
+
 //		try {
 //			list = PartHelper.service.partChange(oid);
 //		} catch(Exception e) {
@@ -396,7 +409,7 @@ public class PartController extends BaseController {
 //		}
 //		
 //		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 //		model.addObject("list", list);
@@ -404,34 +417,34 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/partChange.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "채번 리스트 가져오기")
 	@ResponseBody
 	@PostMapping(value = "/partChange")
 	public Map<String, Object> partChange(@RequestBody Map<String, Object> params) {
-		
-		List<Map<String,Object>> list = null;
+
+		List<Map<String, Object>> list = null;
 		Map<String, Object> result = new HashMap<String, Object>();
 		String oid = (String) params.get("oid");
-		
+
 		try {
 			list = PartHelper.service.partChange(oid);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
-			list = new ArrayList<Map<String,Object>>();
+			list = new ArrayList<Map<String, Object>>();
 		}
-		
+
 		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
-		
+
 		result.put("oid", oid);
 		result.put("list", list);
 		result.put("partType", partType);
 		return result;
 	}
-	
+
 	@Description(value = "채번(새버전) 페이지 이동")
 	@GetMapping(value = "/updateAUIPartChange")
 	public ModelAndView updateAUIPartChange(@RequestParam String oid) {
@@ -440,7 +453,7 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/updateAUIPartChange.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "채번(새버전) 페이지 이동")
 	@ResponseBody
 	@PostMapping(value = "/updateAUIPartChange")
@@ -448,34 +461,29 @@ public class PartController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		String oid = (String) params.get("oid");
 		/*
-		List<Map<String,Object>> list = null;
-		
-		try {
-			list = PartHelper.service.partChange(partOid);
-		} catch(Exception e) {
-			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
-		}
+		 * List<Map<String,Object>> list = null;
+		 * 
+		 * try { list = PartHelper.service.partChange(partOid); } catch(Exception e) {
+		 * e.printStackTrace(); list = new ArrayList<Map<String,Object>>(); }
 		 */
 		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
-		
-		
+
 		String checkDummy = (String) params.get("checkDummy");
 		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
-		List<Map<String,Object>> list = null;
-		//System.out.println("updateAUIPackagePartAction oid =" + oid);
+		List<Map<String, Object>> list = null;
+		// System.out.println("updateAUIPackagePartAction oid =" + oid);
 		try {
-			list = BomSearchHelper.service.updateAUIPartChangeListGrid(oid,false);
-		} catch(Exception e) {
+			list = BomSearchHelper.service.updateAUIPartChangeListGrid(oid, false);
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
+			list = new ArrayList<Map<String, Object>>();
 		}
-		
+
 		result.put("oid", oid);
 		result.put("list", list);
 		result.put("size", list.size());
 		result.put("partType", partType);
-		
+
 		return result;
 	}
 //	/**
@@ -486,39 +494,44 @@ public class PartController extends BaseController {
 //	 */
 //	@RequestMapping("/updateAUIPartChange")
 //	public ModelAndView updateAUIPartChange(HttpServletRequest request, HttpServletResponse response) {
-		
+
 //	}
-	
-	/**  채번 페이지 AUI 수정 수행
+
+	/**
+	 * 채번 페이지 AUI 수정 수행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/updateAUIPartChangeAction")
-	public ResultData updateAUIPartChangeAction(@RequestBody Map<String,Object> param) {
+	public ResultData updateAUIPartChangeAction(@RequestBody Map<String, Object> param) {
 		return PartHelper.service.updateAUIPartChangeAction(param);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/updateAUIPartChangeSearchAction")
-	public List<Map<String,Object>> updateAUIPartChangeSearchAction(HttpServletRequest request, HttpServletResponse response) {
+	public List<Map<String, Object>> updateAUIPartChangeSearchAction(HttpServletRequest request,
+			HttpServletResponse response) {
 		String oid = request.getParameter("oid");
 		String checkDummy = request.getParameter("checkDummy");
 		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
-		List<Map<String,Object>> list = null;
-		//System.out.println("updateAUIPackagePartAction oid =" + oid);
+		List<Map<String, Object>> list = null;
+		// System.out.println("updateAUIPackagePartAction oid =" + oid);
 		try {
-			list = BomSearchHelper.service.updateAUIPartChangeListGrid(oid,false);
-		} catch(Exception e) {
+			list = BomSearchHelper.service.updateAUIPartChangeListGrid(oid, false);
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
+			list = new ArrayList<Map<String, Object>>();
 		}
-		
+
 		return list;
 	}
-	
-	/** 채번 수행
+
+	/**
+	 * 채번 수행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -528,8 +541,10 @@ public class PartController extends BaseController {
 	public ResultData actionBom(HttpServletRequest request, HttpServletResponse response) {
 		return PartHelper.service.changeNumber(request);
 	}
-	
-	/**  일괄수정  페이지 이동
+
+	/**
+	 * 일괄수정 페이지 이동
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -537,16 +552,16 @@ public class PartController extends BaseController {
 	@RequestMapping("/updatePackagePart")
 	public ModelAndView updatePackagePart(HttpServletRequest request, HttpServletResponse response) {
 		String oid = request.getParameter("oid");
-		
-		List<Map<String,Object>> list = null;
-		
+
+		List<Map<String, Object>> list = null;
+
 		try {
 			list = PartHelper.service.partBomListGrid(oid);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
+			list = new ArrayList<Map<String, Object>>();
 		}
-		
+
 		List<NumberCodeData> productmethod = CodeHelper.service.numberCodeList("PRODUCTMETHOD", "", false);
 		List<NumberCodeData> deptCode = CodeHelper.service.numberCodeList("DEPTCODE", "", false);
 		List<NumberCodeData> modelcode = CodeHelper.service.numberCodeList("MODEL", "", false);
@@ -554,7 +569,7 @@ public class PartController extends BaseController {
 		List<NumberCodeData> mat = CodeHelper.service.numberCodeList("MAT", "", false);
 		List<NumberCodeData> finish = CodeHelper.service.numberCodeList("FINISH", "", false);
 		List<String> unit = PartHelper.service.getQuantityUnit();
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		model.addObject("list", list);
@@ -565,11 +580,11 @@ public class PartController extends BaseController {
 		model.addObject("mat", mat);
 		model.addObject("finish", finish);
 		model.addObject("unit", unit);
-		
+
 		model.setViewName("popup:/part/updatePackagePart");
 		return model;
 	}
-	
+
 	@Description(value = "일괄 수정 ")
 	@GetMapping(value = "/updateAUIPackagePart")
 	public ModelAndView updateAUIPackagePart(@RequestParam String oid) {
@@ -578,34 +593,36 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/updateAUIPackagePart.jsp");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/updateAUIPackageSearchAction")
-	public List<Map<String,Object>> updateAUIPackageSearchAction(HttpServletRequest request, HttpServletResponse response) {
+	public List<Map<String, Object>> updateAUIPackageSearchAction(HttpServletRequest request,
+			HttpServletResponse response) {
 		String oid = request.getParameter("oid");
 		String checkDummy = request.getParameter("checkDummy");
 		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
-		List<Map<String,Object>> list = null;
-		//System.out.println("updateAUIPackagePartAction oid =" + oid);
+		List<Map<String, Object>> list = null;
+		// System.out.println("updateAUIPackagePartAction oid =" + oid);
 		try {
-			list = BomSearchHelper.service.updateAUIBomListGrid(oid,isCheckDummy);
-		} catch(Exception e) {
+			list = BomSearchHelper.service.updateAUIBomListGrid(oid, isCheckDummy);
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
+			list = new ArrayList<Map<String, Object>>();
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
-	 * 일괄 수정 
+	 * 일괄 수정
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/batchAtttribute")
 	public ModelAndView batchAtttribute(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		List<NumberCodeData> productmethod = CodeHelper.service.numberCodeList("PRODUCTMETHOD", "", false);
 		List<NumberCodeData> deptCode = CodeHelper.service.numberCodeList("DEPTCODE", "", false);
 		List<NumberCodeData> modelcode = CodeHelper.service.numberCodeList("MODEL", "", false);
@@ -613,10 +630,9 @@ public class PartController extends BaseController {
 		List<NumberCodeData> mat = CodeHelper.service.numberCodeList("MAT", "", false);
 		List<NumberCodeData> finish = CodeHelper.service.numberCodeList("FINISH", "", false);
 		List<String> unit = PartHelper.service.getQuantityUnit();
-		
+
 		ModelAndView model = new ModelAndView();
-	
-	
+
 		model.addObject("productmethod", productmethod);
 		model.addObject("deptCode", deptCode);
 		model.addObject("model", modelcode);
@@ -624,58 +640,59 @@ public class PartController extends BaseController {
 		model.addObject("mat", mat);
 		model.addObject("finish", finish);
 		model.addObject("unit", unit);
-		
+
 		model.setViewName("popup:/part/batchAtttribute");
 		return model;
 	}
+
 	/**
-	 * 일괄 채번 수정 
+	 * 일괄 채번 수정
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/batchPartNumber")
 	public ModelAndView batchPartNumber(HttpServletRequest request, HttpServletResponse response) {
-		List<NumberCodeData> gubunList = CodeHelper.service.numberCodeList("PARTTYPE","", false);
-		
+		List<NumberCodeData> gubunList = CodeHelper.service.numberCodeList("PARTTYPE", "", false);
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("gubunList", gubunList);
 		model.setViewName("popup:/part/batchPartNumber");
 		return model;
 	}
-	
-	
-	
+
 	/**
 	 * 일괄 등록
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/batchCreate")
 	public ModelAndView batchCreate(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		String auiId = StringUtil.checkNull(request.getParameter("auiId"));
-		String mode = StringUtil.checkNull(request.getParameter("mode")); //single
-		
-		String title ="일괄 추가 ";
-		if(mode.equals("single")){
-			title = "수정["+auiId+"]";
+		String mode = StringUtil.checkNull(request.getParameter("mode")); // single
+
+		String title = "일괄 추가 ";
+		if (mode.equals("single")) {
+			title = "수정[" + auiId + "]";
 		}
-		//System.out.println("batchCreate auiId =" + auiId);
-		
+		// System.out.println("batchCreate auiId =" + auiId);
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("auiId", auiId);
-		model.addObject("mode",mode);
-		model.addObject("title",title);
-		
-		
+		model.addObject("mode", mode);
+		model.addObject("title", title);
+
 		model.setViewName("popup:/part/batchCreate");
 		return model;
 	}
-	
-	
-	/**  부품 상태 수정
+
+	/**
+	 * 부품 상태 수정
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -685,8 +702,10 @@ public class PartController extends BaseController {
 	public ResultData partStateChange(HttpServletRequest request, HttpServletResponse response) {
 		return PartHelper.service.partStateChange(request, response);
 	}
-	
-	/**  부품 일괄 수정 수행
+
+	/**
+	 * 부품 일괄 수정 수행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -696,28 +715,32 @@ public class PartController extends BaseController {
 	public ResultData updatePackagePartAction(HttpServletRequest request, HttpServletResponse response) {
 		return PartHelper.service.updatePackagePartAction(request, response);
 	}
-	
-	/**  부품 일괄 수정 수행
+
+	/**
+	 * 부품 일괄 수정 수행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/updateAUIPackagePartAction")
-	public ResultData updateAUIPackagePartAction(@RequestBody Map<String,Object> params) {
+	public ResultData updateAUIPackagePartAction(@RequestBody Map<String, Object> params) {
 		return PartHelper.service.updateAUIPackagePartAction(params);
 	}
-	
+
 	/**
 	 * EO에서 완제품 품번 선택
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping("/include_CompletePartSelect")
-	public ModelAndView include_CompletePartSelect(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+	public ModelAndView include_CompletePartSelect(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		String moduleType = request.getParameter("moduleType");
 		String mode = StringUtil.checkReplaceStr(request.getParameter("mode"), "mutil");
 		String oid = StringUtil.checkNull(request.getParameter("oid"));
@@ -728,10 +751,10 @@ public class PartController extends BaseController {
 		boolean isBom = Boolean.valueOf(StringUtil.checkReplaceStr(request.getParameter("isBom"), "false"));
 		boolean selectBom = Boolean.valueOf(StringUtil.checkReplaceStr(request.getParameter("selectBom"), "false"));
 		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		
+
 		List<PartData> list = null;
-		
-		EChangeOrder eco  = (EChangeOrder)CommonUtil.getObject(oid);
+
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 		list = ECOSearchHelper.service.getCompletePartDataList(eco);
 
 		ModelAndView model = new ModelAndView();
@@ -749,25 +772,24 @@ public class PartController extends BaseController {
 
 		return model;
 	}
+
 	/**
 	 * 
-	 * 		LUTRONIC 추가 끝
+	 * LUTRONIC 추가 끝
 	 * 
 	 * 
 	 */
-	
-	
-	
-	
-	
-	/** 관련 품목 추가
+
+	/**
+	 * 관련 품목 추가
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/include_PartSelect")
 	public ModelAndView include_PartList(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		String moduleType = request.getParameter("moduleType");
 		String mode = StringUtil.checkReplaceStr(request.getParameter("mode"), "mutil");
 		String oid = StringUtil.checkNull(request.getParameter("oid"));
@@ -778,7 +800,7 @@ public class PartController extends BaseController {
 		boolean isBom = Boolean.valueOf(StringUtil.checkReplaceStr(request.getParameter("isBom"), "false"));
 		boolean selectBom = Boolean.valueOf(StringUtil.checkReplaceStr(request.getParameter("selectBom"), "false"));
 		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		
+
 		List<PartData> list = null;
 		list = PartHelper.service.include_PartList(oid, moduleType);
 
@@ -797,8 +819,10 @@ public class PartController extends BaseController {
 
 		return model;
 	}
-	
-	/** 관련 품목 보기
+
+	/**
+	 * 관련 품목 보기
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -806,7 +830,7 @@ public class PartController extends BaseController {
 	 */
 	@RequestMapping("/include_PartView")
 	public ModelAndView include_PartView(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		String moduleType = request.getParameter("moduleType");
 		String mode = StringUtil.checkReplaceStr(request.getParameter("mode"), "mutil");
 		String oid = StringUtil.checkNull(request.getParameter("oid"));
@@ -824,13 +848,15 @@ public class PartController extends BaseController {
 		model.addObject("modeulType", moduleType);
 		model.addObject("maxcnt", maxcnt);
 		model.addObject("title", title);
-		model.addObject("distribute",distribute);
+		model.addObject("distribute", distribute);
 		model.addObject("paramName", paramName);
 
 		return model;
 	}
-	
-	/** 품목 검색 팝업
+
+	/**
+	 * 품목 검색 팝업
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -847,20 +873,20 @@ public class PartController extends BaseController {
 		model.setViewName("popup:/part/selectPartPopup");
 		return model;
 	}
-	
+
 	@Description(value = "END ITEM 상세보기")
 	@GetMapping(value = "/bomPartList")
 	public ModelAndView bomPartList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView model = new ModelAndView();
-		
+
 		String oid = request.getParameter("oid");
 		String bomType = request.getParameter("bomType");
 		String title = null;
-		
-		Map<String,Object> params = new HashMap<>();
+
+		Map<String, Object> params = new HashMap<>();
 		params.put("oid", oid);
 		params.put("bomType", bomType);
-		
+
 		ReferenceFactory rf = new ReferenceFactory();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		if ("up".equals(bomType)) {
@@ -870,8 +896,7 @@ public class PartController extends BaseController {
 		} else if ("end".equals(bomType)) {
 			title = Message.get("END ITEM");
 		}
-		
-		
+
 		model.setViewName("/extcore/jsp/part/bomPartList.jsp");
 		model.addObject("oid", oid);
 		model.addObject("bomType", bomType);
@@ -879,12 +904,12 @@ public class PartController extends BaseController {
 		model.addObject("title", title);
 		return model;
 	}
-	
+
 	@Description(value = "END ITEM 상세보기")
 	@ResponseBody
 	@PostMapping(value = "/bomPartList")
-	public Map<String, Object> bomPartList(@RequestBody Map<String,Object> params) throws Exception {
-		Map<String,Object> result = PartHelper.service.bomPartList(params);
+	public Map<String, Object> bomPartList(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = PartHelper.service.bomPartList(params);
 		return result;
 	}
 //	/** END ITEM 상세보기
@@ -903,50 +928,52 @@ public class PartController extends BaseController {
 //		model.addAllObjects(map);
 //		return model;
 //	}
-	
-	/** BOM 상세보기
+
+	/**
+	 * BOM 상세보기
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/PartTree")
 	public ModelAndView PartTree(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		String oid = request.getParameter("oid");
 		String baseline = request.getParameter("baseline");
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
-		
+
 		View[] views = null;
 
 		Baseline bsobj = null;
-		
+
 		try {
 			ReferenceFactory rf = new ReferenceFactory();
-			
+
 			if (baseline != null && baseline.length() > 0) {
 				bsobj = (Baseline) rf.getReference(baseline).getObject();
 			}
-			
+
 			views = ViewHelper.service.getAllViews();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			bsobj = null;
 		}
 
-		if(view==null){
+		if (view == null) {
 			view = views[0].getName();
 		}
 
-		List<Map<String,String>> list = null;
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.listEulB_IncludeAction(oid, "", "");
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("popup:/part/PartTree");
 		model.addObject("oid", oid);
@@ -958,64 +985,67 @@ public class PartController extends BaseController {
 		model.addObject("view", view);
 		return model;
 	}
-	
-	/** BOM 데이터 리스트 리턴
+
+	/**
+	 * BOM 데이터 리스트 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/getPartTreeAction")
-	public Map<String,Object> getPartTreeAction(HttpServletRequest request, HttpServletResponse response){
-		
+	public Map<String, Object> getPartTreeAction(HttpServletRequest request, HttpServletResponse response) {
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		try {
-			map = PartHelper.service.getPartTreeAction(request,response);
+			map = PartHelper.service.getPartTreeAction(request, response);
 			map.put("result", true);
 			map.put("msg", "OK");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			map.put("result", false);
-			map.put("msg",e.getLocalizedMessage());
+			map.put("msg", e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 
 		return map;
 	}
-	
+
 	@RequestMapping("/partTreeCompare")
-	public ModelAndView partTreeCompare(HttpServletRequest request, HttpServletResponse response) throws WTRuntimeException, WTException {
-		
+	public ModelAndView partTreeCompare(HttpServletRequest request, HttpServletResponse response)
+			throws WTRuntimeException, WTException {
+
 		String oid = request.getParameter("oid");
 		String oid2 = request.getParameter("oid2");
 		String baseline = request.getParameter("baseline");
 		String baseline2 = request.getParameter("baseline2");
-		
+
 		String title1 = "";
 		String title2 = "";
-		
+
 		ManagedBaseline bsobj = null;
-		if(baseline!=null && baseline.length()>0){
-		    bsobj = (ManagedBaseline)CommonUtil.getObject(baseline);
+		if (baseline != null && baseline.length() > 0) {
+			bsobj = (ManagedBaseline) CommonUtil.getObject(baseline);
 		}
-		
+
 		ManagedBaseline bsobj2 = null;
-		if(baseline2!=null && baseline2.length()>0){
-		   bsobj2 = (ManagedBaseline)CommonUtil.getObject(baseline2);
+		if (baseline2 != null && baseline2.length() > 0) {
+			bsobj2 = (ManagedBaseline) CommonUtil.getObject(baseline2);
 		}
-		
-		if(bsobj == null) {
+
+		if (bsobj == null) {
 			title1 = "최신BOM 전개";
-		}else {
+		} else {
 			title1 = "Baseline전개  - " + bsobj.getName();
 		}
-		
-		if(bsobj2 == null) {
+
+		if (bsobj2 == null) {
 			title2 = "최신BOM 전개";
-		}else {
+		} else {
 			title2 = "Baseline전개  - " + bsobj2.getName();
 		}
-		//System.out.println("sssssssssss");
+		// System.out.println("sssssssssss");
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		model.addObject("oid2", oid2);
@@ -1026,29 +1056,31 @@ public class PartController extends BaseController {
 		model.setViewName("popup:/part/partTreeCompare");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/getBaseLineCompare")
-	public Map<String,Object> getBaseLineCompare(HttpServletRequest request, HttpServletResponse response){
-		
+	public Map<String, Object> getBaseLineCompare(HttpServletRequest request, HttpServletResponse response) {
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		try {
-			
+
 			map = PartHelper.service.getBaseLineCompare(request, response);
-			
+
 			map.put("result", true);
 
-		}catch(Exception e) {
+		} catch (Exception e) {
 			map.put("result", false);
-			map.put("msg",e.getLocalizedMessage());
+			map.put("msg", e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 
 		return map;
 	}
-	
-	/**	BOM 일괄등록
+
+	/**
+	 * BOM 일괄등록
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1056,31 +1088,32 @@ public class PartController extends BaseController {
 	@RequestMapping("/excelBOMLoad")
 	public ModelAndView excelBOMLoad(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu","menu5");
-		model.addObject("module","part");
+		model.addObject("menu", "menu5");
+		model.addObject("module", "part");
 		model.setViewName("default:/part/excelBOMLoad");
 		return model;
 	}
-	
+
 	@RequestMapping("/excelBomLoadAction")
 	public ModelAndView excelBomLoadAction(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		String xmlString = "";
-		
+
 		try {
 			xmlString = PartHelper.service.excelBomLoadAction(request, response);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("xmlString", xmlString);
 		model.setViewName("empty:/part/excelBOMLoadAction");
 		return model;
 	}
-	
-	
-	/** 대상 품목
+
+	/**
+	 * 대상 품목
+	 * 
 	 * @param request
 	 * @param response
 	 * @param oid
@@ -1088,135 +1121,139 @@ public class PartController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/include_ChangePartView")
-	public ModelAndView include_ChangePartView(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+	public ModelAndView include_ChangePartView(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		List<PartData> list = null;
-		//list = PartHelper.service.include_ChangePartList(oid);
+		// list = PartHelper.service.include_ChangePartList(oid);
 		model.setViewName("popup:/part/include_ChangePartView");
-		//model.addObject("list", list);
-		
+		// model.addObject("list", list);
+
 		return model;
 	}
-	
+
 	@RequestMapping("/partExpand")
 	public ModelAndView partExpand(HttpServletRequest request, HttpServletResponse response) {
 		String partOid = request.getParameter("partOid");
 		String moduleType = StringUtil.checkReplaceStr(request.getParameter("moduleType"), "");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("partOid", partOid);
 		model.addObject("moduleType", moduleType);
 		model.setViewName("popup:/part/partExpand");
 		return model;
 	}
+
 	@RequestMapping("/partAUIExpand")
 	public ModelAndView partAUIExpand(HttpServletRequest request, HttpServletResponse response) {
 		String partOid = request.getParameter("partOid");
 		String moduleType = StringUtil.checkReplaceStr(request.getParameter("moduleType"), "");
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("partOid", partOid);
 		model.addObject("moduleType", moduleType);
 		model.setViewName("popup:/part/partAUIExpand");
 		return model;
 	}
+
 	@ResponseBody
 	@RequestMapping("/partExpandAction")
-	public List<Map<String,Object>> partExpandAction(HttpServletRequest request, HttpServletResponse response) {
+	public List<Map<String, Object>> partExpandAction(HttpServletRequest request, HttpServletResponse response) {
 		String partOid = request.getParameter("partOid");
 		String moduleType = request.getParameter("moduleType");
-		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"),"true");
-		
-		List<Map<String,Object>> list = null;
+		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
+
+		List<Map<String, Object>> list = null;
 		try {
 			list = BomSearchHelper.service.partExpandAUIBomListGrid(partOid, moduleType, desc);
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,Object>>();
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, Object>>();
 			e.printStackTrace();
 		}
 		return list;
 	}
-	
+
 	@RequestMapping("/selectEOPart")
 	public ModelAndView selectEOPart(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("popup:/part/selectEOPart");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/selectEOPartAction")
-	public Map<String,Object> selectEOPartAction(HttpServletRequest request, HttpServletResponse response) {
-		
-		Map<String,Object> map = null;
+	public Map<String, Object> selectEOPartAction(HttpServletRequest request, HttpServletResponse response) {
+
+		Map<String, Object> map = null;
 		try {
 			map = PartHelper.service.selectEOPartAction(request, response);
-		} catch(Exception e) {
-			map = new HashMap<String,Object>();
+		} catch (Exception e) {
+			map = new HashMap<String, Object>();
 			e.printStackTrace();
 		}
 		return map;
 	}
-	
+
 	@RequestMapping("/include_DocumentFilePath")
 	public ModelAndView include_DocumentFilePath(HttpServletRequest request, HttpServletResponse response) {
 		String title = request.getParameter("title");
-		boolean control = Boolean.valueOf(StringUtil.checkReplaceStr(request.getParameter("control"),"true")).booleanValue();
-		
+		boolean control = Boolean.valueOf(StringUtil.checkReplaceStr(request.getParameter("control"), "true"))
+				.booleanValue();
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("title", title);
 		model.addObject("control", control);
 		model.setViewName("include:/part/include_DocumentFilePath");
 		return model;
 	}
-	
+
 	@RequestMapping("/createUserPart")
 	public ModelAndView createUserPart(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu","menu4");
-		model.addObject("module","part");
+		model.addObject("menu", "menu4");
+		model.addObject("module", "part");
 		model.setViewName("default:/part/createUserPart");
 		return model;
 	}
-	
+
 	@RequestMapping("/viewPartBom")
 	public ModelAndView viewPartBom(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		String oid = request.getParameter("oid");
 		String baseline = request.getParameter("baseline");
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
-		
+
 		View[] views = null;
-		
+
 		Baseline bsobj = null;
-		
+
 		try {
 			ReferenceFactory rf = new ReferenceFactory();
-			
+
 			if (baseline != null && baseline.length() > 0) {
 				bsobj = (Baseline) rf.getReference(baseline).getObject();
 			}
-			
+
 			views = ViewHelper.service.getAllViews();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			bsobj = null;
 		}
-		
-		if(view==null){
+
+		if (view == null) {
 			view = views[0].getName();
 		}
-		
-		List<Map<String,String>> list = null;
+
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.listEulB_IncludeAction(oid, "", "");
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("popup:/part/viewPartBom");
 		model.addObject("oid", oid);
@@ -1228,44 +1265,44 @@ public class PartController extends BaseController {
 		model.addObject("view", view);
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/viewPartBomAction")
-	public List<Map<String,Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,Object>> list = null;
+	public List<Map<String, Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, Object>> list = null;
 		try {
 			list = PartHelper.service.viewPartBomAction(request, response);
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,Object>>();
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, Object>>();
 		}
 		return list;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/searchSeqAction")
-	public Map<String,Object> searchSeqAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> map = null;
-		
+	public Map<String, Object> searchSeqAction(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = null;
+
 		try {
-			map = PartHelper.service.searchSeqAction(request,response);
-			
-		}catch(Exception e) {
+			map = PartHelper.service.searchSeqAction(request, response);
+
+		} catch (Exception e) {
 			e.printStackTrace();
-			map = new HashMap<String,Object>();
+			map = new HashMap<String, Object>();
 		}
-		
+
 		return map;
 	}
-	
+
 	@RequestMapping("/include_partLink")
 	public ModelAndView include_partLink(HttpServletRequest request, HttpServletResponse response) {
 		String module = request.getParameter("module");
 		String oid = request.getParameter("oid");
 		String title = StringUtil.checkReplaceStr(request.getParameter("title"), Message.get("관련 품목"));
 		String enabled = StringUtil.checkReplaceStr(request.getParameter("enabled"), "false");
-		
+
 		List<PartData> list = PartHelper.service.include_partLink(module, oid);
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("empty:/part/include_partLink");
 		model.addObject("module", module);
@@ -1274,55 +1311,48 @@ public class PartController extends BaseController {
 		model.addObject("list", list);
 		model.addObject("enabled", Boolean.valueOf(enabled));
 		return model;
-		
+
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/linkPartAction")
 	public ResultData linkPartAction(HttpServletRequest request, HttpServletResponse response) {
 		return PartHelper.service.linkPartAction(request, response);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/deletePartLinkAction")
 	public ResultData deletePartLinkAction(HttpServletRequest request, HttpServletResponse response) {
 		return PartHelper.service.deletePartLinkAction(request, response);
 	}
-	
-	
+
 	@Description(value = "일괄수정  페이지 이동")
 	@GetMapping(value = "/updatefamilyPart")
 	public ModelAndView updatefamilyPart(@RequestParam String oid) {
-		
-		
-		
-		
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 
-		
-		
 		model.setViewName("/extcore/jsp/part/updatefamilyPart.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "일괄수정  페이지 리스트 불러오기")
 	@ResponseBody
 	@PostMapping(value = "/updatefamilyPart")
 	public Map<String, Object> updatefamilyPart(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<>();
 		String oid = (String) params.get("oid");
-		
-		List<Map<String,Object>> list = null;
-		
+
+		List<Map<String, Object>> list = null;
+
 		try {
 			list = PartHelper.service.partInstanceGrid(oid);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,Object>>();
+			list = new ArrayList<Map<String, Object>>();
 		}
-		
+
 		List<NumberCodeData> productmethod = CodeHelper.service.numberCodeList("PRODUCTMETHOD", "", false);
 		List<NumberCodeData> deptCode = CodeHelper.service.numberCodeList("DEPTCODE", "", false);
 		List<NumberCodeData> modelcode = CodeHelper.service.numberCodeList("MODEL", "", false);
@@ -1330,7 +1360,7 @@ public class PartController extends BaseController {
 		List<NumberCodeData> mat = CodeHelper.service.numberCodeList("MAT", "", false);
 		List<NumberCodeData> finish = CodeHelper.service.numberCodeList("FINISH", "", false);
 		List<String> unit = PartHelper.service.getQuantityUnit();
-		
+
 		result.put("productmethod", productmethod);
 		result.put("deptCode", deptCode);
 		result.put("model", modelcode);
@@ -1338,50 +1368,51 @@ public class PartController extends BaseController {
 		result.put("mat", mat);
 		result.put("finish", finish);
 		result.put("unit", unit);
-		result.put("list", list);		return result;
+		result.put("list", list);
+		return result;
 	}
-	
-	/**  BOM 에서 선택적 부품 첨부 파일 다운로드
+
+	/**
+	 * BOM 에서 선택적 부품 첨부 파일 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 */
 	/*
-	@RequestMapping(value="partTreeSelectAttachDown")
-	public ModelAndView partTreeSelectAttachDown(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		
-		try {
-			PartHelper.service.partTreeSelectAttachDown(request, response);
-			
-			
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-				//model.addObject("xmlString", xmlString);
-				model.setViewName("empty:/drawing/createPackageDrawingAction");
-		return model;
-	}
-	*/
-	
+	 * @RequestMapping(value="partTreeSelectAttachDown") public ModelAndView
+	 * partTreeSelectAttachDown(HttpServletRequest request, HttpServletResponse
+	 * response) { ModelAndView model = new ModelAndView();
+	 * 
+	 * try { PartHelper.service.partTreeSelectAttachDown(request, response);
+	 * 
+	 * 
+	 * 
+	 * } catch(Exception e) { e.printStackTrace(); } //model.addObject("xmlString",
+	 * xmlString); model.setViewName("empty:/drawing/createPackageDrawingAction");
+	 * return model; }
+	 */
+
 	@RequestMapping(value = "/partTreeSelectAttachDown")
-	public ModelAndView partTreeSelectAttachDown(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String,Object> param) {
-		
+	public ModelAndView partTreeSelectAttachDown(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Map<String, Object> param) {
+
 		ModelAndView model = new ModelAndView();
-		
+
 		try {
-			PartHelper.service.partTreeSelectAttachDown(request,response,param);
-			//ExcelDownHelper.service.partExcelDown(null, response);
-			
-		} catch(Exception e ){
+			PartHelper.service.partTreeSelectAttachDown(request, response, param);
+			// ExcelDownHelper.service.partExcelDown(null, response);
+
+		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		}
 		model.setViewName("empty:/drawing/createPackageDrawingAction");
 		return model;
 	}
-	
-	/** 속성 Cleaning
+
+	/**
+	 * 속성 Cleaning
+	 * 
 	 * @param request
 	 * @param response
 	 * @param oid
@@ -1390,15 +1421,17 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/attributeCleaning")
-	public ResultData attributeCleaning(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
-		
+	public ResultData attributeCleaning(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "oid") String oid) throws Exception {
+
 		ResultData result = PartHelper.service.attributeCleaning(oid);
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * AUI 그리드 BOM
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1412,56 +1445,56 @@ public class PartController extends BaseController {
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
 		String title = "";
-		String number="";
-		
-		WTPart part =(WTPart)CommonUtil.getObject(oid);
+		String number = "";
+
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		number = part.getNumber();
-		List<Map<String,String>> list = null;
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
-			ManagedBaseline line = (ManagedBaseline)CommonUtil.getObject(baseline);
-			if(line != null){
+			ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
+			if (line != null) {
 				title = line.getName();
-			}else{
-				
+			} else {
+
 				title = number;
-				
+
 			}
-			
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
 		String lastedoid = oid;
 		WTPart lastedpart = part;
-		if(!PartSearchHelper.service.isLastPart(part)){
+		if (!PartSearchHelper.service.isLastPart(part)) {
 			try {
-				lastedpart = (WTPart)ObjectUtil.getLatestObject((Master) part.getMaster());
+				lastedpart = (WTPart) ObjectUtil.getLatestObject((Master) part.getMaster());
 				lastedoid = CommonUtil.getOIDString(lastedpart);
 			} catch (WTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		model.addObject("title",title);
+		model.addObject("title", title);
 		model.addObject("oid", oid);
 		model.addObject("lastedoid", lastedoid);
-		
+
 		model.addObject("number", number);
 		model.addObject("list", list);
 		model.addObject("baseline", baseline);
 		model.addObject("allBaseline", allBaseline);
 		model.addObject("desc", desc);
-		//model.addObject("bsobj", bsobj);
+		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
 		model.setViewName("popup:/part/viewAUIPartBom");
-	
-	
+
 		return model;
 	}
-	
+
 	/**
 	 * AUI 그리드 BOM
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1475,55 +1508,56 @@ public class PartController extends BaseController {
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
 		String title = "";
-		String number="";
-		
-		WTPart part =(WTPart)CommonUtil.getObject(oid);
+		String number = "";
+
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		number = part.getNumber();
-		List<Map<String,String>> list = null;
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
-			ManagedBaseline line = (ManagedBaseline)CommonUtil.getObject(baseline);
-			if(line != null){
+			ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
+			if (line != null) {
 				title = line.getName();
-			}else{
-				
+			} else {
+
 				title = number;
-				
+
 			}
-			
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
 		String lastedoid = oid;
 		WTPart lastedpart = part;
-		if(!PartSearchHelper.service.isLastPart(part)){
+		if (!PartSearchHelper.service.isLastPart(part)) {
 			try {
-				lastedpart = (WTPart)ObjectUtil.getLatestObject((Master) part.getMaster());
+				lastedpart = (WTPart) ObjectUtil.getLatestObject((Master) part.getMaster());
 				lastedoid = CommonUtil.getOIDString(lastedpart);
 			} catch (WTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		model.addObject("title",title);
+		model.addObject("title", title);
 		model.addObject("oid", oid);
 		model.addObject("lastedoid", lastedoid);
-		
+
 		model.addObject("number", number);
 		model.addObject("list", list);
 		model.addObject("baseline", baseline);
 		model.addObject("allBaseline", allBaseline);
 		model.addObject("desc", desc);
-		//model.addObject("bsobj", bsobj);
+		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
 		model.setViewName("popup:/part/viewAUIPartBom2");
-	
-	
+
 		return model;
 	}
+
 	/**
 	 * AUI 그리드 BOM
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1537,56 +1571,56 @@ public class PartController extends BaseController {
 		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
 		String view = request.getParameter("view");
 		String title = "";
-		String number="";
-		
-		WTPart part =(WTPart)CommonUtil.getObject(oid);
+		String number = "";
+
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		number = part.getNumber();
-		List<Map<String,String>> list = null;
+		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
-			ManagedBaseline line = (ManagedBaseline)CommonUtil.getObject(baseline);
-			if(line != null){
+			ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
+			if (line != null) {
 				title = line.getName();
-			}else{
-				
+			} else {
+
 				title = number;
-				
+
 			}
-			
-		} catch(Exception e) {
-			list = new ArrayList<Map<String,String>>();
+
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
 		}
 		String lastedoid = oid;
 		WTPart lastedpart = part;
-		if(!PartSearchHelper.service.isLastPart(part)){
+		if (!PartSearchHelper.service.isLastPart(part)) {
 			try {
-				lastedpart = (WTPart)ObjectUtil.getLatestObject((Master) part.getMaster());
+				lastedpart = (WTPart) ObjectUtil.getLatestObject((Master) part.getMaster());
 				lastedoid = CommonUtil.getOIDString(lastedpart);
 			} catch (WTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		model.addObject("title",title);
+		model.addObject("title", title);
 		model.addObject("oid", oid);
 		model.addObject("lastedoid", lastedoid);
-		
+
 		model.addObject("number", number);
 		model.addObject("list", list);
 		model.addObject("baseline", baseline);
 		model.addObject("allBaseline", allBaseline);
 		model.addObject("desc", desc);
-		//model.addObject("bsobj", bsobj);
+		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
 		model.setViewName("popup:/part/viewAUIPartBom3");
-	
-	
+
 		return model;
 	}
-	
+
 	/**
 	 * AUI BOM Action
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1594,15 +1628,17 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/viewAUIPartBomAction")
-	public List<Map<String, Object>> viewAUIPartBomAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		 
+	public List<Map<String, Object>> viewAUIPartBomAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		List<Map<String, Object>> list = BomSearchHelper.service.getAUIPartTreeAction(request, response);
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * AUI BOM Action
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1610,15 +1646,17 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getAUIBOMRootChildAction")
-	public List<Map<String, Object>> getAUIBOMRootChildAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		 
+	public List<Map<String, Object>> getAUIBOMRootChildAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		List<Map<String, Object>> list = BomSearchHelper.service.getAUIBOMRootChildAction(request, response);
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * AUI BOM Action
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1626,24 +1664,26 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getAUIBOMPartChildAction")
-	public List<Map<String, Object>> getAUIBOMPartChildAction(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		 
+	public List<Map<String, Object>> getAUIBOMPartChildAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		List<Map<String, Object>> list = BomSearchHelper.service.getAUIBOMPartChildAction(request, response);
-		
+
 		return list;
 	}
 	/*
-	@ResponseBody
-	@RequestMapping("/isCheckNumber")
-	public boolean isCheckNumber(HttpServletRequest request, HttpServletResponse response) {
-		
-		String num = request.getParameter("num");
-		boolean chk = PartHelper.service.isDubleCheck(num);
-		return chk;
-	}
-	*/
-	
-	/** 속성 수정
+	 * @ResponseBody
+	 * 
+	 * @RequestMapping("/isCheckNumber") public boolean
+	 * isCheckNumber(HttpServletRequest request, HttpServletResponse response) {
+	 * 
+	 * String num = request.getParameter("num"); boolean chk =
+	 * PartHelper.service.isDubleCheck(num); return chk; }
+	 */
+
+	/**
+	 * 속성 수정
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -1651,28 +1691,28 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/attributeChange")
-	public ResultData attributeChange(HttpServletRequest request, HttpServletResponse response){
+	public ResultData attributeChange(HttpServletRequest request, HttpServletResponse response) {
 		ResultData data = new ResultData();
-		try{
+		try {
 			String oid = request.getParameter("oid");
 			String value = request.getParameter("value");
 			String numberCodeType = request.getParameter("numberCodeType");
-			
-			WTPart part = (WTPart)CommonUtil.getObject(oid);
-			//System.out.println(part.getNumber()+","+oid +" ," + value+ "," +numberCodeType);
-			
-			
+
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+			// System.out.println(part.getNumber()+","+oid +" ," + value+ ","
+			// +numberCodeType);
+
 			IBAUtil.changeIBAValue(part, numberCodeType, value);
-			
+
 			data.setResult(true);
 			data.setMessage("속성이 수정 되었습니다.");
-		}catch(Exception e){
+		} catch (Exception e) {
 			data.setResult(true);
 			data.setMessage("속성 수정시 에러가 발생 하였습니다.");
 			e.printStackTrace();
 		}
-		
+
 		return data;
 	}
-	
+
 }
