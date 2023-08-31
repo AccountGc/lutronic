@@ -141,7 +141,6 @@
 						document.getElementById("sessionid").value = data.sessionid;
 						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
-						debugger;
 					} else {
 						alert(data.msg);
 					}

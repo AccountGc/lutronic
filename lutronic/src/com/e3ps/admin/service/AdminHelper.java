@@ -63,7 +63,8 @@ public class AdminHelper {
 			PagingQueryResult result = pager.find();
 			JSONArray children = new JSONArray();
 			while(result.hasMoreElements()){
-				NumberCode childrenCode = (NumberCode)result.nextElement();
+				Object[] obj = (Object[]) result.nextElement();
+				NumberCode childrenCode = (NumberCode)obj[0];
 				NumberCodeData childrenData = new NumberCodeData(childrenCode);
 				JSONObject node = new JSONObject();
 				node.put("oid", childrenData.getOid());
@@ -142,6 +143,10 @@ public class AdminHelper {
 		if(rootOid.length()==0){
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("list", list);
+			map.put("pageSize", 30);
+			map.put("total", 0);
+			map.put("curPage", 1);
+			map.put("topListCount", 0);
 			return map;
 		}
 		long logRootOid = CommonUtil.getOIDLongValue(rootOid);

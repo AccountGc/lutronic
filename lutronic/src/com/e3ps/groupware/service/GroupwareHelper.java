@@ -53,6 +53,7 @@ public class GroupwareHelper {
 
 	public Map<String, Object> listNotice(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
+		ArrayList<NoticeData> list = new ArrayList<>();
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(Notice.class, true);
