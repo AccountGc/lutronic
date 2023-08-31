@@ -58,6 +58,7 @@ import com.e3ps.org.service.MailUserHelper;
 import com.ptc.core.adapter.server.impl.CollectObjectsWebjectDelegate.OutputType;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/admin/**")
@@ -453,6 +454,8 @@ public class AdminController extends BaseController {
 		try {
 			NumberCodeType[] codeType = NumberCodeType.getNumberCodeTypeSet();
 			List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+			Map<String,Object> parentMap = new HashMap<String,Object>();
+			parentMap.put("codeName", "코드체계");
 			for(int i=0; i < codeType.length; i++){	
 				Map<String,String> map = new HashMap<String,String>();
 				map.put("value", codeType[i].toString());
@@ -462,7 +465,8 @@ public class AdminController extends BaseController {
 				map.put("tree", codeType[i].getAbbreviatedDisplay()); //tree 형태(true)
 				list.add(map);
 			}
-			result.put("codeList", list);
+			parentMap.put("children", list);
+			result.put("codeList", parentMap);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
