@@ -137,7 +137,11 @@
 				var url = getCallUrl("/admin/adminMail");
 				call(url, params, function(data) {
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
+						document.getElementById("sessionid").value = data.sessionid;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
+						debugger;
 					} else {
 						alert(data.msg);
 					}

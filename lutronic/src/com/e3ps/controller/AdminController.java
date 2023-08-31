@@ -480,11 +480,11 @@ public class AdminController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/numberCodeTree")
 	public Map<String, Object> numberCodeTree(@RequestBody Map<String, Object> params) throws Exception {
-		String codeType = (String) params.get("codeType");
+//		String codeType = (String) params.get("codeType");
 //		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			JSONArray list = AdminHelper.manager.numberCodeTree(codeType);
+			JSONArray list = AdminHelper.manager.numberCodeTree(params);
             result.put("treeList", list);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
