@@ -13,6 +13,7 @@ import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.history.LoginHistory;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
@@ -40,8 +41,9 @@ public class AdminHelper {
 	/** 
 	 * 코드체계관리 리스트
 	 */
-	public JSONArray numberCodeTree(String codeType) throws Exception {
+	public JSONArray numberCodeTree(Map<String, Object> params) throws Exception {
 		JSONArray list = new JSONArray();
+		String codeType = (String) params.get("codeType");
 		ArrayList<NumberCode> codeList = numberCodeList(codeType);
 		for(NumberCode code : codeList) {
 			NumberCodeData data = new NumberCodeData(code);
@@ -57,10 +59,11 @@ public class AdminHelper {
 			query.appendAnd();
 			query.appendWhere(new SearchCondition(NumberCode.class,"parentReference.key.id",SearchCondition.EQUAL, code.getPersistInfo().getObjectIdentifier().getId()),new int[] {0});
 			query.appendOrderBy(new OrderBy(new ClassAttribute(NumberCode.class,NumberCode.CODE),false),new int[]{0});
-			QueryResult rt = PersistenceHelper.manager.find(query);
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
 			JSONArray children = new JSONArray();
-			while(rt.hasMoreElements()){
-				NumberCode childrenCode = (NumberCode)rt.nextElement();
+			while(result.hasMoreElements()){
+				NumberCode childrenCode = (NumberCode)result.nextElement();
 				NumberCodeData childrenData = new NumberCodeData(childrenCode);
 				JSONObject node = new JSONObject();
 				node.put("oid", childrenData.getOid());
@@ -72,6 +75,12 @@ public class AdminHelper {
 				children.add(node);
 			}
 			rootNode.put("children", children);
+			rootNode.put("list", list);
+			rootNode.put("topListCount", pager.getTotal());
+			rootNode.put("pageSize", pager.getPsize());
+			rootNode.put("total", pager.getTotalSize());
+			rootNode.put("sessionid", pager.getSessionId());
+			rootNode.put("curPage", pager.getCpage());
 			list.add(rootNode);
 		}
 			
@@ -127,34 +136,16 @@ public class AdminHelper {
 	 * 설계 변경 관리 리스트
 	 */
 	public Map<String,Object> changeActivityList(Map<String, Object> params) throws Exception {
-		Map<String,Object> result = new HashMap<String,Object>();
 		ArrayList<EADData> list = new ArrayList<>();
 		
 		String rootOid = StringUtil.checkNull((String) params.get("rootOid"));
 		if(rootOid.length()==0){
-			result.put("list", list);
-			return result;
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("list", list);
+			return map;
 		}
-		
 		long logRootOid = CommonUtil.getOIDLongValue(rootOid);
-		List<EChangeActivityDefinition> ecadList = getActiveDefinition(logRootOid);
-		for(EChangeActivityDefinition def : ecadList){
-			EADData data = new EADData(def);
-			list.add(data);
-		}
-		
-		result.put("list",list);
-		
-		return result;
-	}
-	
-	/** 
-	 * Root별 활동 리스트
-	 */
-	public List<EChangeActivityDefinition> getActiveDefinition(long rootOid) throws Exception{
-		List<EChangeActivityDefinition> list= new ArrayList<EChangeActivityDefinition>();
-		
-        ClassAttribute classattribute1 = null;
+		ClassAttribute classattribute1 = null;
         ClassAttribute classattribute2 = null;
         SearchCondition sc = null;
 		QuerySpec qs = new QuerySpec();
@@ -173,87 +164,67 @@ public class AdminHelper {
         qs.appendWhere(sc, new int[] {idx1, idx2});
         
 		qs.appendAnd();
-		qs.appendWhere(new SearchCondition(EChangeActivityDefinition.class,"rootReference.key.id","=",rootOid),new int[]{idx1});
+		qs.appendWhere(new SearchCondition(EChangeActivityDefinition.class,"rootReference.key.id","=",logRootOid),new int[]{idx1});
 		
-		
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(
-				cls2, "sort"), false),
-				new int[] { idx2 });
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(
-				EChangeActivityDefinition.class, "sortNumber"), false),
-				new int[] { idx1 });
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(cls2, "sort"), false),new int[] { idx2 });
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeActivityDefinition.class, "sortNumber"), false),new int[] { idx1 });
 		//System.out.println(qs.toString());
-		QueryResult result = PersistenceHelper.manager.find(qs);
+		PageQueryUtils pager = new PageQueryUtils(params, qs);
+		PagingQueryResult result = pager.find();
 
 		while (result.hasMoreElements()) {
 			Object[] o = (Object[]) result.nextElement();
-			list.add((EChangeActivityDefinition) o[0]);
+			EADData data = new EADData((EChangeActivityDefinition) o[0]);
+			list.add(data);
 		}
-
-		return list;
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 	
 	/** 
 	 * 외부 메일 리스트
 	 */
 	public Map<String,Object> adminMail(Map<String, Object> params) throws Exception {
-		int page = StringUtil.getIntParameter((String) params.get("page"), 1);
-		int rows = StringUtil.getIntParameter((String) params.get("rows"), 10);
-		int formPage = StringUtil.getIntParameter((String) params.get("formPage"), 15);
-		
-		String sessionId = (String) params.get("sessionId");
-		Hashtable<String,String> hash = null;
-		
-		PagingQueryResult qr = null;
-		
-		if(StringUtil.checkString(sessionId)) {
-			
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		}else {
-			String command = StringUtil.checkNull((String) params.get("command"));
-		    String oid = StringUtil.checkNull((String) params.get("oid"));    
-		    String name = StringUtil.checkNull((String) params.get("name"));
-		    String email = StringUtil.checkNull((String) params.get("email"));
-		    String enable = StringUtil.checkNull((String) params.get("enable"));
-		    
-			QuerySpec query = new QuerySpec(MailUser.class);
-	        if(command.equals("search")){
-				if(email.length() > 0){
-		        	 if(query.getConditionCount()>0) query.appendAnd();
-		        	 query.appendWhere(new SearchCondition(MailUser.class, MailUser.EMAIL, SearchCondition.LIKE, "%" + email+ "%",true), new int[] { 0 });
-		        }
-		        
-		        if(name.length() > 0){
-		        	if(query.getConditionCount()>0) query.appendAnd();
-		        	query.appendWhere(new SearchCondition(MailUser.class, MailUser.NAME, SearchCondition.EQUAL, "%" + name + "%"), new int[] { 0 });
-		        }
+		String command = StringUtil.checkNull((String) params.get("command"));
+	    String oid = StringUtil.checkNull((String) params.get("oid"));    
+	    String name = StringUtil.checkNull((String) params.get("name"));
+	    String email = StringUtil.checkNull((String) params.get("email"));
+	    String enable = StringUtil.checkNull((String) params.get("enable"));
+	    
+		QuerySpec query = new QuerySpec(MailUser.class);
+        if(command.equals("search")){
+			if(email.length() > 0){
+	        	 if(query.getConditionCount()>0) query.appendAnd();
+	        	 query.appendWhere(new SearchCondition(MailUser.class, MailUser.EMAIL, SearchCondition.LIKE, "%" + email+ "%",true), new int[] { 0 });
 	        }
 	        
-	        if(enable.equals("true")){
+	        if(name.length() > 0){
 	        	if(query.getConditionCount()>0) query.appendAnd();
-	        	query.appendWhere(new SearchCondition(MailUser.class, MailUser.IS_DISABLE, SearchCondition.IS_TRUE), new int[] { 0 });
+	        	query.appendWhere(new SearchCondition(MailUser.class, MailUser.NAME, SearchCondition.EQUAL, "%" + name + "%"), new int[] { 0 });
 	        }
-		    query.appendOrderBy(new OrderBy(new ClassAttribute(MailUser.class,MailUser.NAME),false),new int[]{0});
-		    
-		    qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
-		}
+        }
+        
+        if(enable.equals("true")){
+        	if(query.getConditionCount()>0) query.appendAnd();
+        	query.appendWhere(new SearchCondition(MailUser.class, MailUser.IS_DISABLE, SearchCondition.IS_TRUE), new int[] { 0 });
+        }
+	    query.appendOrderBy(new OrderBy(new ClassAttribute(MailUser.class,MailUser.NAME),false),new int[]{0});
+	    
+	    PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
 		
-		PageControl control = new PageControl(qr, page, formPage, rows);
-	    int totalPage   = control.getTotalPage();
-	    int startPage   = control.getStartPage();
-	    int endPage     = control.getEndPage();
-	    int listCount   = control.getTopListCount();
-	    int totalCount  = control.getTotalCount();
-	    int currentPage = control.getCurrentPage();
-	    String param    = control.getParam();
-	    int rowCount    = control.getTopListCount();
-		
-	    Map<String,Object> map = new HashMap<String,Object>();
 	    List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		while(qr.hasMoreElements()){	
-			Object[] o = (Object[]) qr.nextElement();
+		while(result.hasMoreElements()){	
+			Object[] o = (Object[]) result.nextElement();
 	    	MailUser user = (MailUser) o[0];
 			
+	    	Map<String,Object> map = new HashMap<String,Object>();
 	    	map.put("oid", user.getPersistInfo().getObjectIdentifier().toString());
 	    	map.put("name", user.getName());
 	    	map.put("email", user.getEmail());
@@ -261,82 +232,53 @@ public class AdminHelper {
 	    	list.add(map);
 		}
 		
-		Map<String,Object> result = new HashMap<String,Object>();
-		
-		result.put("formPage"       , formPage);
-		result.put("rows"           , rows);
-		result.put("totalPage"      , totalPage);
-		result.put("startPage"      , startPage);
-		result.put("endPage"        , endPage);
-		result.put("listCount"      , listCount);
-		result.put("totalCount"     , totalCount);
-		result.put("currentPage"    , currentPage);
-		result.put("param"          , param);
-		result.put("sessionId"      , qr.getSessionId()==0 ? "" : qr.getSessionId());
-		result.put("list"      , list);
-		
-		return result;
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 	
 	/** 
 	 * 접속 이력 리스트
 	 */
 	public Map<String,Object> loginHistory(Map<String, Object> params) throws Exception {
-		long start = System.currentTimeMillis();
-		int page = StringUtil.getIntParameter((String) params.get("page"), 1);
-		int rows = StringUtil.getIntParameter((String) params.get("rows"), 10);
-		int formPage = StringUtil.getIntParameter((String) params.get("formPage"), 15);
-		
-		String sessionId = (String) params.get("sessionId");
-		Hashtable<String,String> hash = null;
-		
-		PagingQueryResult qr = null;
-		
-		if(StringUtil.checkString(sessionId)) {
+	    String userName = (String) params.get("userName");
+		String userId = (String) params.get("userId");
 			
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		}else {
-		    String userName = (String) params.get("userName");
-			String userId = (String) params.get("userId");
-				
-			QuerySpec qs = new QuerySpec();
-			
-			int idx = qs.appendClassList(LoginHistory.class, true);
-		    	
-	        if(userName != null && userName.trim().length() > 0) {
-	        	if(qs.getConditionCount() > 0)
-	        		qs.appendAnd();
-	        	qs.appendWhere(new SearchCondition(LoginHistory.class, "name", SearchCondition.LIKE, "%" + userName + "%"), new int[] { idx });
-	        }
-	        
-	        if(userId != null && userId.trim().length() > 0) {
-	        	if(qs.getConditionCount()>0)qs.appendAnd();
-	        	qs.appendWhere(new SearchCondition(LoginHistory.class, "id", SearchCondition.LIKE, "%" + userId + "%"), new int[] { idx });
-	        }
-		    
-		    qs.appendOrderBy(new OrderBy(new ClassAttribute(LoginHistory.class,"thePersistInfo.createStamp"), true), new int[] { idx }); 
-		    long querystart = System.currentTimeMillis();
-		    qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, qs, true);
-		    long queryend = System.currentTimeMillis();
-		    System.out.println("queryResult " + (queryend-querystart));
-		}
+		QuerySpec qs = new QuerySpec();
 		
-		PageControl control = new PageControl(qr, page, formPage, rows);
-	    int totalPage   = control.getTotalPage();
-	    int startPage   = control.getStartPage();
-	    int endPage     = control.getEndPage();
-	    int listCount   = control.getTopListCount();
-	    int totalCount  = control.getTotalCount();
-	    int currentPage = control.getCurrentPage();
-	    String param    = control.getParam();
-	    int rowCount    = control.getTopListCount();
-	    long pageend = System.currentTimeMillis();
+		int idx = qs.appendClassList(LoginHistory.class, true);
+	    	
+        if(userName != null && userName.trim().length() > 0) {
+        	if(qs.getConditionCount() > 0)
+        		qs.appendAnd();
+        	qs.appendWhere(new SearchCondition(LoginHistory.class, "name", SearchCondition.LIKE, "%" + userName + "%"), new int[] { idx });
+        }
+        
+        if(userId != null && userId.trim().length() > 0) {
+        	if(qs.getConditionCount()>0)qs.appendAnd();
+        	qs.appendWhere(new SearchCondition(LoginHistory.class, "id", SearchCondition.LIKE, "%" + userId + "%"), new int[] { idx });
+        }
+	    
+	    qs.appendOrderBy(new OrderBy(new ClassAttribute(LoginHistory.class,"thePersistInfo.createStamp"), true), new int[] { idx }); 
+	    
+	    PageQueryUtils pager = new PageQueryUtils(params, qs);
+		PagingQueryResult result = pager.find();
+	    
+//	    long querystart = System.currentTimeMillis();
+//	    qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, qs, true);
+//	    long queryend = System.currentTimeMillis();
+//	    System.out.println("queryResult " + (queryend-querystart));
 		
-	    Map<String,Object> map = new HashMap<String,Object>();
 	    List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		while(qr.hasMoreElements()){	
-			Object[] o = (Object[]) qr.nextElement();
+		while(result.hasMoreElements()){	
+			Object[] o = (Object[]) result.nextElement();
 	    	LoginHistory history = (LoginHistory) o[0];
+	    	Map<String,Object> map = new HashMap<String,Object>();
 	    	map.put("oid", history.getPersistInfo().getObjectIdentifier().toString());
 			map.put("name", history.getName());
 			map.put("id", history.getId());
@@ -344,107 +286,69 @@ public class AdminHelper {
 	    	list.add(map);
 		}
 	    
-		Map<String,Object> result = new HashMap<String,Object>();
-		
-		result.put("formPage"       , formPage);
-		result.put("rows"           , rows);
-		result.put("totalPage"      , totalPage);
-		result.put("startPage"      , startPage);
-		result.put("endPage"        , endPage);
-		result.put("listCount"      , listCount);
-		result.put("totalCount"     , totalCount);
-		result.put("currentPage"    , currentPage);
-		result.put("param"          , param);
-		result.put("sessionId"      , qr.getSessionId()==0 ? "" : qr.getSessionId());
-		result.put("list"      , list);
-		
-		return result;
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 	
 	/** 
 	 * 다운로드 이력 리스트
 	 */
 	public Map<String,Object> downLoadHistory(Map<String,Object> params) throws Exception {
-		long start = System.currentTimeMillis();
-		int page = StringUtil.getIntParameter((String) params.get("page"), 1);
-		int rows = StringUtil.getIntParameter((String) params.get("rows"), 10);
-		int formPage = StringUtil.getIntParameter((String) params.get("formPage"), 15);
+		String type = StringUtil.checkNull((String) params.get("type"));
+		String userId = StringUtil.checkNull((String) params.get("manager"));
+		String predate = StringUtil.checkNull((String) params.get("createdFrom"));
+		String postdate = StringUtil.checkNull((String) params.get("createdTo"));
 		
-		String sessionId = (String) params.get("sessionId");
-		Hashtable<String,String> hash = null;
+		QuerySpec qs = new QuerySpec();
 		
-		PagingQueryResult qr = null;
+		int idx = qs.appendClassList(DownloadHistory.class, true);
 		
-		if(StringUtil.checkString(sessionId)) {
-			
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		}else {
-			
-			String type = StringUtil.checkNull((String) params.get("type"));
-			String userId = StringUtil.checkNull((String) params.get("manager"));
-			String predate = StringUtil.checkNull((String) params.get("createdFrom"));
-			String postdate = StringUtil.checkNull((String) params.get("createdTo"));
-			
-			QuerySpec qs = new QuerySpec();
-			
-			int idx = qs.appendClassList(DownloadHistory.class, true);
-			
-			if(type != null && type.trim().length() > 0 ) {
-				if (qs.getConditionCount() > 0) qs.appendAnd();
-				qs.appendWhere(new SearchCondition(DownloadHistory.class, DownloadHistory.D_OID, SearchCondition.LIKE , "%"+type+"%"), new int[] { idx });
-			}
-			
-			if( userId.length() > 0 ){
-				WTUser user = (WTUser)CommonUtil.getObject(userId);
-				if (qs.getConditionCount() > 0) qs.appendAnd();
-				qs.appendWhere(new SearchCondition(DownloadHistory.class, "userReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(user)), new int[] { idx });
-			}
-			
-			//등록일
-	    	if(predate.length() > 0){
-	    		if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-	    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp" ,SearchCondition.GREATER_THAN,DateUtil.convertStartDate(predate)), new int[]{idx});
-	    	}
-	    	
-	    	if(postdate.length() > 0){
-	    		if(qs.getConditionCount() > 0)qs.appendAnd();
-	    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp",SearchCondition.LESS_THAN,DateUtil.convertEndDate(postdate)), new int[]{idx});
-	    	}
-			qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.createStamp"), true), new int[] { idx });  
-		
-		    qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, qs, true);
+		if(type != null && type.trim().length() > 0 ) {
+			if (qs.getConditionCount() > 0) qs.appendAnd();
+			qs.appendWhere(new SearchCondition(DownloadHistory.class, DownloadHistory.D_OID, SearchCondition.LIKE , "%"+type+"%"), new int[] { idx });
 		}
-		PageControl control = new PageControl(qr, page, formPage, rows);
-	    int totalPage   = control.getTotalPage();
-	    int startPage   = control.getStartPage();
-	    int endPage     = control.getEndPage();
-	    int listCount   = control.getTopListCount();
-	    int totalCount  = control.getTotalCount();
-	    int currentPage = control.getCurrentPage();
-	    String param    = control.getParam();
-	    int rowCount    = control.getTopListCount();
-	    long appendstart = System.currentTimeMillis();
-	    
+		
+		if( userId.length() > 0 ){
+			WTUser user = (WTUser)CommonUtil.getObject(userId);
+			if (qs.getConditionCount() > 0) qs.appendAnd();
+			qs.appendWhere(new SearchCondition(DownloadHistory.class, "userReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(user)), new int[] { idx });
+		}
+		
+		//등록일
+    	if(predate.length() > 0){
+    		if(qs.getConditionCount() > 0) { qs.appendAnd(); }
+    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp" ,SearchCondition.GREATER_THAN,DateUtil.convertStartDate(predate)), new int[]{idx});
+    	}
+    	
+    	if(postdate.length() > 0){
+    		if(qs.getConditionCount() > 0)qs.appendAnd();
+    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp",SearchCondition.LESS_THAN,DateUtil.convertEndDate(postdate)), new int[]{idx});
+    	}
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.createStamp"), true), new int[] { idx });  
+		
+		PageQueryUtils pager = new PageQueryUtils(params, qs);
+		PagingQueryResult result = pager.find();
+		
 	    ArrayList<DownloadData> list = new ArrayList<DownloadData>();
-		while(qr.hasMoreElements()){	
-			Object obj[] = (Object[])qr.nextElement();
+		while(result.hasMoreElements()){	
+			Object obj[] = (Object[])result.nextElement();
 			DownloadHistory history = (DownloadHistory)obj[0];
 			DownloadData data = new DownloadData(history);
 			list.add(data);
 		}
-		Map<String,Object> result = new HashMap<String,Object>();
-		
-		result.put("formPage"       , formPage);
-		result.put("rows"           , rows);
-		result.put("totalPage"      , totalPage);
-		result.put("startPage"      , startPage);
-		result.put("endPage"        , endPage);
-		result.put("listCount"      , listCount);
-		result.put("totalCount"     , totalCount);
-		result.put("currentPage"    , currentPage);
-		result.put("param"          , param);
-		result.put("sessionId"      , qr.getSessionId()==0 ? "" : qr.getSessionId());
-		result.put("list"      , list);
-		return result;
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 }

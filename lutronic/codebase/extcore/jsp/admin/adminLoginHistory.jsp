@@ -129,6 +129,8 @@
 				var url = getCallUrl("/admin/loginHistory");
 				call(url, params, function(data) {
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

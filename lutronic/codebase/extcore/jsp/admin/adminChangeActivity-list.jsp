@@ -160,6 +160,9 @@
 				var url = getCallUrl("/admin/changeActivityList");
 				call(url, params, function(data) {
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
+						document.getElementById("sessionid").value = data.sessionid;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 						setButtonControl();
 					} else {

@@ -26,14 +26,14 @@ String codeheight = request.getParameter("codeheight");
 			showIcon : true,
 			inline : true
 		},
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const type = item.value;
-				loadGridData2(type);
-			}
-		},
+// 		renderer : {
+// 			type : "LinkRenderer",
+// 			baseUrl : "javascript",
+// 			jsCallback : function(rowIndex, columnIndex, value, item) {
+// 				const type = item.value;
+// 				loadGridData2(type);
+// 			}
+// 		},
 	} ]
 
 	function createAUIGridCode(columnLayout) {
@@ -50,7 +50,7 @@ String codeheight = request.getParameter("codeheight");
 		loadCode();
 // 		AUIGrid.bind(codeGridID, "selectionChange", auiGridSelectionChangeHandler);
 // 		AUIGrid.bind(codeGridID, "cellDoubleClick", auiCellDoubleClick);
-// 		AUIGrid.bind(codeGridID, "cellClick", auiCellClick);
+		AUIGrid.bind(codeGridID, "cellClick", auiCellClick);
 // 		AUIGrid.bind(codeGridID, "ready", auiReadyHandler);
 	}
 
@@ -60,12 +60,10 @@ String codeheight = request.getParameter("codeheight");
 
 	
 	function auiCellClick(event) {
-		const item = event.item;
-		const oid = item.oid;
-		const location = item.location;
-		document.getElementById("oid").value = oid;
-		document.getElementById("location").value = oid;
-		document.getElementById("locationText").innerText = location;
+		const type = event.item.value;
+		if(!isEmpty(type)){
+			loadGridData2(type);
+		}
 	}
 	
 	function loadCode() {
