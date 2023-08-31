@@ -31,11 +31,11 @@
 			</colgroup>
 			<tr>
 				<th>이름</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="userName" id="userName" class="width-200">
 				</td>
 				<th>아이디</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="userId" id="userId" class="width-200">
 				</td>
 			</tr>

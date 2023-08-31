@@ -18,7 +18,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-    <form id="form">
+    <form>
         <input type="hidden" name="sessionid" id="sessionid">
         <input type="hidden" name="curPage" id="curPage">
         <input type="hidden" name="type" id="type" />

@@ -26,7 +26,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
@@ -39,30 +39,47 @@
 <!-- 			</colgroup> -->
 			<tr>
 				<th>이름(국문)</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-200">
 				</td>
 				<th>이름(영문)</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="engName" id="engName" class="width-200">
 				</td>
 				<th>코드</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="code" id="code" class="width-200">
 				</td>
 			</tr>
 			<tr>
 				<th>소트</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="sort" id="sort" class="width-200">
 				</td>
 				<th>설명</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="description" id="description" class="width-200">
 				</td>
 				<th>활성화</th>
-				<td>
-					<input type="checkbox" name="enabled" id="enabled">
+				<td class="indent5">
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="enabled" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>ON</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="enabled" value="false">
+						<div class="state p-success">
+							<label>
+								<b>OFF</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 		</table>
