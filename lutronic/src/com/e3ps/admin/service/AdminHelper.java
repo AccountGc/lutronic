@@ -287,7 +287,7 @@ public class AdminHelper {
 	    	map.put("oid", history.getPersistInfo().getObjectIdentifier().toString());
 			map.put("name", history.getName());
 			map.put("id", history.getId());
-			map.put("createDate", history.getPersistInfo().getCreateStamp());
+			map.put("createDate", DateUtil.getDateString(history.getPersistInfo().getCreateStamp(),"a"));
 	    	list.add(map);
 		}
 	    

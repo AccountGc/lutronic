@@ -363,10 +363,93 @@
 						<li>
 							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경 문서 템플릿');">설계변경 문서 템플릿</a>
 						</li>
-						<li>
-							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 배포관리');">배포관리</a>
-						</li>
 					</ul>
+				</li>
+			<%} %>	
+			<%if(CommonUtil.isAdmin()) {%>
+				<li>
+					<a href="css_animation.html">
+						<i class="fa fa-magic"></i>
+						<span class="nav-label">배포관리</span>
+						<span class="fa arrow"></span>
+					</a>
+					<ul class="nav nav-second-level collapse">
+						<li>
+							<a href="#">
+								<i class="fa fa-magic"></i>
+								<span class="nav-label">나의 업무</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 검토함');">
+										검토함
+										<span class="label label-info float-right"><%//=count.get("check")%></span>
+									</a>
+								</li>
+								<li>
+									<a onclick="moveToPage(this, '/groupware/listItem?state=approval', '> 나의 업무 > 결재함');">
+										결재함
+										<span class="label label-info float-right"><%//=count.get("approval")%></span>
+									</a>
+								</li>
+								<li>
+									<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
+										수신함
+										<span class="label label-info float-right"><%//=count.get("receive")%></span>
+									</a>
+								</li>
+								<li>
+									<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a>
+								</li>
+								<li>
+									<a onclick="moveToPage(this, '/groupware/changePassword', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-desktop"></i>
+								<span class="nav-label">품목검색</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">품목 검색</a>
+								</li>
+								<li>
+									<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">완제품 검색</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#">
+								<i class="fa fa-files-o"></i>
+								<span class="nav-label">설계변경</span>
+								<span class="fa arrow"></span>
+							</a>
+							<ul class="nav nav-second-level collapse">
+								<li>
+									<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a>
+								</li>
+								<li>
+									<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');">
+								<i class="fa fa-pie-chart"></i>
+								<span class="nav-label">문서 검색</span>
+							</a>
+						</li>
+						<li>
+							<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');">
+								<i class="fa fa-files-o"></i>
+								<span class="nav-label">금형 검색</span>
+							</a>
+						</li>
+					</ul>	
 				</li>
 			<%} %>	
 			<!-- <li>

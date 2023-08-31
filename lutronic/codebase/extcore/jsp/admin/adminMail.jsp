@@ -25,24 +25,41 @@
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
-				<col width="*">
+				<col width="200">
 				<col width="130">
-				<col width="*">
+				<col width="200">
 				<col width="130">
-				<col width="*">
+				<col width="200">
 			</colgroup>
 			<tr>
 				<th>이름</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-200">
 				</td>
 				<th>이메일</th>
-				<td>
+				<td class="indent5">
 					<input type="text" name="email" id="email" class="width-200">
 				</td>
 				<th>활성화</th>
 				<td>
-					<input type="checkbox" name="enable" id="enable">
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="enable" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>ON</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="enable" value="false">
+						<div class="state p-success">
+							<label>
+								<b>OFF</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 		</table>

@@ -30,7 +30,7 @@
 			</colgroup>
 			<tr>
 				<th>ROOT :</th>
-				<td>
+				<td class="indent5">
 					<select name="rootOid" id="rootOid" class="width-200">
 						<option value="">선택</option>
 					</select>
