@@ -169,7 +169,7 @@ if(request.getParameter("popup")!=null){
 						}
 					},
 				}, {
-					dataField : "islastversion",
+					dataField : "version",
 					headerText : "Rev.",
 					dataType : "string",
 					width : 350,

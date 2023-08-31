@@ -70,6 +70,7 @@ public class RohsData{
 		}
 		setLatest(VersionHelper.service.isLastVersion(rohs));
 		setDescription(rohs.getDescription());
+		setVersion(rohs.getVersionIdentifier().getValue() + "." + rohs.getIterationIdentifier().getValue());
 	}
 	
 	/**

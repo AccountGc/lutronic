@@ -207,7 +207,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 // 						}
 // 					},
 				}, {
-					dataField : "description",
+					dataField : "version",
 					headerText : "Rev.",
 					dataType : "string",
 					width : 170,

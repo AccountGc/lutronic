@@ -62,6 +62,7 @@ public class EpmData {
 	public String cadName;
 	public String pNum;
 	public String applicationType;
+	private String version;
 	
 	public EpmData(EPMDocument epm) throws Exception {
 //		super(epm);
@@ -115,6 +116,7 @@ public class EpmData {
 		setPNum(pNum);
 		
 		setApplicationType(epm.getOwnerApplication().toString());
+		setVersion(epm.getVersionIdentifier().getValue() + "." + epm.getIterationIdentifier().getValue());
 	}
 	//연관 파트 번호
 	public String getpNum() {

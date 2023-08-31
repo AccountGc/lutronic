@@ -71,6 +71,7 @@ public class DocumentData {
 	private String des;
 	private String changeNo;
 	private String changeDate;
+	private String version;
 
 	public DocumentData(WTDocument doc) throws Exception {
 		setOid(CommonUtil.getOIDString(doc));
@@ -126,6 +127,7 @@ public class DocumentData {
 		setDes(StringUtil.checkNull(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_DES)));
 		setChangeNo(StringUtil.checkNull(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_CHANGENO)));
 		setChangeDate(StringUtil.checkNull(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_CHANGEDATE)));
+		setVersion(doc.getVersionIdentifier().getValue() + "." + doc.getIterationIdentifier().getValue());
 	}
 
 	/**
