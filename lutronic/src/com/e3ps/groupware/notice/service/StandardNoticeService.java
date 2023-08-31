@@ -1,9 +1,18 @@
 package com.e3ps.groupware.notice.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+
+import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.groupware.notice.Notice;
+import com.e3ps.groupware.notice.beans.NoticeData;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -18,14 +27,6 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.session.SessionHelper;
-
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.notice.beans.NoticeData;
 
 @SuppressWarnings("serial")
 public class StandardNoticeService extends StandardManager implements NoticeService {
@@ -126,21 +127,29 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 	}
 	
 	@Override
-	public String modify(Hashtable hash , String[] loc , String[] deloc)throws Exception{
-
+	public Map<String, Object> modify(Map<String, Object> params)throws Exception{
+		Map<String, Object> result = new HashMap<>();
        Transaction trx = new Transaction();
+       String oid = StringUtil.checkNull((String) params.get("oid"));
+       boolean isPopup = StringUtil.checkNull((String) params.get("isPopup")).equals("true");
+       String title = StringUtil.checkNull((String) params.get("title"));
+       String contents = StringUtil.checkNull((String) params.get("contents"));
+       
+       String[] loc = (String[]) params.get("secondary");;
+       String[] deloc = (String[]) params.get("delocIds");
+       
+       String reOid = "";
        try {
     	    trx.start();
-    	    String oid = (String) hash.get("oid");
 			if(oid != null){
 				ReferenceFactory f = new ReferenceFactory();
-				Notice b = (Notice) f.getReference(oid).getObject();
-				boolean isPopup = StringUtil.checkNull(((String)hash.get("isPopup"))).equals("true");
+				System.out.println("=========================>" + oid);
+				Notice b = (Notice) CommonUtil.getObject(oid);
 				//if(isPopup){
 				//	updateIsPopupFalse();
 				//}
-				b.setTitle((String)hash.get("title"));
-				b.setContents((String)hash.get("contents"));
+				b.setTitle(title);
+				b.setContents(contents);
 				b.setIsPopup(isPopup);
 				b = (Notice) PersistenceHelper.manager.modify(b);
 				// 기존 첨부 파일이 삭제 된 여부를 판단 하여 삭제 한다.
@@ -179,17 +188,24 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 						//CommonContentHelper.service.attach(b, loc[i]);
 					}
 				}
+				
+				reOid = b.getPersistInfo().getObjectIdentifier().toString();
 			}
 			trx.commit();
 			trx = null;
+			result.put("oid", reOid);
+	        result.put("result", true);
        } catch(Exception e) {
+    	   e.printStackTrace();
+           result.put("result", false);
+           result.put("msg", e.getLocalizedMessage());
            throw e;
        } finally {
            if(trx!=null){
 				trx.rollback();
 		   }
        }
-		return Message.get("수정 되었습니다.");
+		return result;
 	}
 	
 	@Override
