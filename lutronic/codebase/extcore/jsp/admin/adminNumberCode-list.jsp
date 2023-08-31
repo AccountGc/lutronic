@@ -85,6 +85,7 @@
 					<input type="button" value="수정" title="수정" id="update" style="display: none;">
 					<input type="button" value="삭제" title="삭제" id="delete" style="display: none;">
 					<input type="button" value="초기화" title="초기화" id="reset">
+					<input type="button" value="목록 열기/닫기" title="목록 열기/닫기" id="listBtn">
 				</td>
 			</tr>
 		</table>
@@ -184,6 +185,7 @@
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					displayTreeOpen : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -243,6 +245,18 @@
 				//$("#delete").hide();
 				if(!isSeq){
 					$("#code").removeAttr("disabled");
+				}
+			});
+			
+			// 목록 열기/닫기
+			var isListExpanded = true;
+			$("#listBtn").click(function() {
+				if (!isListExpanded) {
+					AUIGrid.expandAll(myGridID);
+					isListExpanded = true;
+				} else {
+					AUIGrid.collapseAll(myGridID);
+					isListExpanded = false;
 				}
 			});
 			

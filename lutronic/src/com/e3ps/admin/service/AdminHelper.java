@@ -6,15 +6,10 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.beans.EADData;
-import com.e3ps.change.service.ChangeUtil;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.beans.NumberCodeData;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.history.LoginHistory;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -24,8 +19,6 @@ import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.download.DownloadHistory;
 import com.e3ps.download.beans.DownloadData;
 import com.e3ps.org.MailUser;
-import com.e3ps.org.People;
-import com.e3ps.org.service.UserHelper;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -49,32 +42,58 @@ public class AdminHelper {
 	 */
 	public JSONArray numberCodeTree(String codeType) throws Exception {
 		JSONArray list = new JSONArray();
-		QueryResult rt = null;
+		ArrayList<NumberCode> codeList = numberCodeList(codeType);
+		for(NumberCode code : codeList) {
+			NumberCodeData data = new NumberCodeData(code);
+			JSONObject rootNode = new JSONObject();
+			rootNode.put("oid", data.getOid());
+			rootNode.put("name", data.getName());
+			rootNode.put("engName", data.getEngName());
+			rootNode.put("code", data.getCode());
+			rootNode.put("sort", data.getSort());
+			
+			QuerySpec query = new QuerySpec(NumberCode.class);
+			query.appendWhere(new SearchCondition(NumberCode.class, "codeType", "=", codeType), new int[] { 0 });
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(NumberCode.class,"parentReference.key.id",SearchCondition.EQUAL, code.getPersistInfo().getObjectIdentifier().getId()),new int[] {0});
+			query.appendOrderBy(new OrderBy(new ClassAttribute(NumberCode.class,NumberCode.CODE),false),new int[]{0});
+			QueryResult rt = PersistenceHelper.manager.find(query);
+			JSONArray children = new JSONArray();
+			while(rt.hasMoreElements()){
+				NumberCode childrenCode = (NumberCode)rt.nextElement();
+				NumberCodeData childrenData = new NumberCodeData(childrenCode);
+				JSONObject node = new JSONObject();
+				node.put("oid", childrenData.getOid());
+				node.put("name", childrenData.getName());
+				node.put("engName", childrenData.getEngName());
+				node.put("code", childrenData.getCode());
+				node.put("sort", childrenData.getSort());
+				loadTree(childrenCode, node, codeType);
+				children.add(node);
+			}
+			rootNode.put("children", children);
+			list.add(rootNode);
+		}
+			
+		return list;
+	}
+	
+	/** 
+	 * 코드 소메뉴 리스트
+	 */
+	public ArrayList<NumberCode> numberCodeList(String codeType) throws Exception {
+		ArrayList<NumberCode> list = new ArrayList<NumberCode>();
 		QuerySpec query = new QuerySpec(NumberCode.class);
 		query.appendWhere(new SearchCondition(NumberCode.class, "codeType", "=", codeType), new int[] { 0 });
 		long longOid =0;
 		query.appendAnd();
 		query.appendWhere(new SearchCondition(NumberCode.class,"parentReference.key.id",SearchCondition.EQUAL, longOid),new int[] {0});
 		query.appendOrderBy(new OrderBy(new ClassAttribute(NumberCode.class,NumberCode.CODE),false),new int[]{0});
-		rt = PersistenceHelper.manager.find(query);
-		
-		JSONObject rootNode = new JSONObject();
-		JSONArray array = new JSONArray();
+		QueryResult rt = PersistenceHelper.manager.find(query);
 		while(rt.hasMoreElements()){
 			NumberCode code = (NumberCode)rt.nextElement();
-			NumberCodeData data = new NumberCodeData(code);
-			JSONObject node = new JSONObject();
-			node.put("oid", data.getOid());
-			node.put("name", data.getName());
-			node.put("engName", data.getEngName());
-			node.put("code", data.getCode());
-			node.put("sort", data.getSort());
-			loadTree(code, node, codeType);
-			array.add(node);
+			list.add(code);
 		}
-		rootNode.put("children", array);
-		list.add(rootNode);
-			
 		return list;
 	}
 	

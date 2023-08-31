@@ -10,7 +10,7 @@
 String codeheight = request.getParameter("codeheight");
 
 // NumberCodeType[] codeType = NumberCodeType.getNumberCodeTypeSet();
-// for(int i=0; i < 2; i++){	
+// for(int i=0; i < 1; i++){	
 // 	String word = codeType[i].getDisplay();
 // }
 %>
