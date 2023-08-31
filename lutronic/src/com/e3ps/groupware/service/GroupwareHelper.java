@@ -90,6 +90,11 @@ public class GroupwareHelper {
 			}
 
 			map.put("list", list);
+			map.put("topListCount", pager.getTotal());
+			map.put("pageSize", pager.getPsize());
+			map.put("total", pager.getTotalSize());
+			map.put("sessionid", pager.getSessionId());
+			map.put("curPage", pager.getCpage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

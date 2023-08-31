@@ -74,6 +74,7 @@
 			<tr>
 				<td valign="top">
 					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
@@ -179,6 +180,8 @@
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
+						createPagingNavigator(data.curPage);
 						document.getElementById("sessionid").value = data.sessionid;
 						document.getElementById("curPage").value = data.curPage;
 						document.getElementById("lastNum").value = data.list.length;
