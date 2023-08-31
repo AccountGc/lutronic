@@ -204,8 +204,8 @@
 				const url = getCallUrl("/admin/numberCodeTree");
 				call(url, params, function(data) {
 					if (data.result) {
-						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.curPage);
+						totalPage = Math.ceil(data.treeList[0].total / data.treeList[0].pageSize);
+						createPagingNavigator(data.treeList[0].curPage);
 						AUIGrid.setGridData(myGridID, data.treeList);
 					} else {
 						alert(data.msg);

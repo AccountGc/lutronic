@@ -363,6 +363,9 @@
 						<li>
 							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경 문서 템플릿');">설계변경 문서 템플릿</a>
 						</li>
+						<li>
+							<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 배포관리');">배포관리</a>
+						</li>
 					</ul>
 				</li>
 			<%} %>	
