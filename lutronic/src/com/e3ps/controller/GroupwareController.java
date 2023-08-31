@@ -86,7 +86,7 @@ public class GroupwareController extends BaseController {
 	@Description(value = "공지사항 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/listNotice")
-	public Map<String, Object> listNotice(Map<String, Object> params) {
+	public Map<String, Object> listNotice(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = GroupwareHelper.manager.listNotice(params);
