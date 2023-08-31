@@ -171,10 +171,10 @@
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/groupware/listNotice");
-// 				const field = ["_psize","oid","islastversion","docNumber","docName","predate","postdate","predate_modify","postdate_modify", "creator", "state", "documentType", "preseration", "model", "interalnumber", "deptcode", "writer", "description", "sortValue", "sortCheck", "searchType", "manufacture", "moldtype", "moldnumber", "moldcost"];
-				/* const latest = !!document.querySelector("input[name=latest]:checked").value;
+				const field = ["_psize","name","creator"];
+// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
-				params.latest = latest; */
+// 				params.latest = latest;
 				AUIGrid.showAjaxLoader(myGridID);
 // 				parent.openLayer();
 				call(url, params, function(data) {
@@ -234,9 +234,9 @@
 			});
 			
 			$(function() {
-				$("#search").click(function() {
-					resetSearch();
-				})
+			$("#search").click(function() {
+				loadGridData();
+			})
 				
 				$("#create").click(function() {
 // 					document.location =  getURLString("groupware", "createNotice", "do");
