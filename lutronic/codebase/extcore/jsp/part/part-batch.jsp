@@ -14,26 +14,56 @@
 	<form>
 		<table class="button-table">
 			<tr>
-				<td>
-					<input type="button" value="저장" title="저장" onclick="addBtn();">
-					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-					<input type="button" value="삭제" title="삭제" class="red" onclick="javascript:self.close();">
-				</td>
+				<td><input type="button" value="저장" title="저장" onclick="addBtn();"> <input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> <input type="button" value="삭제" title="삭제" class="red" onclick="javascript:self.close();"></td>
 			</tr>
 		</table>
 		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
+			const list = [ "MIRROR", "BOARD", "VVIRE", "LENS", "ADJUST" ];
 			const layout = [ {
 				dataField : "number",
 				headerText : "결과",
 				dataType : "string",
 				width : 120,
 			}, {
-				dataField : "number",
+				dataField : "g",
 				headerText : "대분류<br>(2자리)",
 				dataType : "string",
 				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				editRenderer : {
+					type : "ComboBoxRenderer",
+					autoCompleteMode : true,
+					autoEasyMode : true,
+					matchFromFirst : false,
+					showEditorBtnOver : false,
+					list : list,
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = list.length; i < len; i++) {
+							if (list[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
+				},
 			}, {
 				dataField : "number",
 				headerText : "중분류<br>(2자리)",
@@ -127,6 +157,7 @@
 
 			function createAUIGrid(columnLayout) {
 				const props = {
+					editable : true,
 					headerHeight : 35,
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
