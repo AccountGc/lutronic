@@ -42,16 +42,16 @@
 				<th>팝업 유무</th>
 				<td class="indent5">
 					<div class="pretty p-switch">
-						<input type="radio" name="isPopup" value="true" id="T" checked="checked">
+						<input type="radio" name="isPopup" value="true" id="isPopup"  checked="checked">
 						<div class="state p-success">
-							<label for="T"> <b>팝업 O</b>
+							<label> <b>팝업 O</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="isPopup" value="false" id="F">
+						<input type="radio" name="isPopup" id="isPopup" value="false" >
 						<div class="state p-success">
-							<label for="F"> <b>팝업 X</b>
+							<label> <b>팝업 X</b>
 							</label>
 						</div>
 					</div>
@@ -84,6 +84,15 @@
 
 		<script type="text/javascript">
 			$("#update").click(function() {
+				
+				const oid = document.querySelector("#oid").value;
+				const title = document.querySelector("#title").value;
+				const contents = document.querySelector("#contents").value;
+				const isPopup = document.querySelector("#isPopup").value;
+				const titile = document.querySelector("#title").value;
+				const secondarys = toArray("secondarys");
+				
+				
 				if(isEmpty($("#title").val())) {
 					alert("제목을 입력하세요.");
 					return;
@@ -93,7 +102,14 @@
 					return;
 				}
 				
-				var params = _data($("#form"));
+				let params = new Object();
+				params.oid = oid;
+				params.title = title;
+				params.contents = contents;
+				params.isPopup = isPopup;
+				params.titile = titile;
+				params.secondarys = secondarys;
+				
 				var url = getCallUrl("/groupware/updateNotice");
 				call(url, params, function(data) {
 					if(data.result){

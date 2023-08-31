@@ -216,13 +216,12 @@ public class GroupwareController extends BaseController {
 	@Description(value = "공지사항 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/updateNotice")
-	public Map<String, Object> updateNotice(@RequestBody NoticeData data) {
+	public Map<String, Object> updateNotice(@RequestBody Map<String, Object>params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-//			String[] loc = req.getParameterValues("SECONDARY");;
-//			String[] deloc = req.getParameterValues("delocIds");
-//			msg = NoticeHelper.service.modify(hash , loc, deloc);
-
+			result = NoticeHelper.service.modify(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
