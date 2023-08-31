@@ -1,5 +1,6 @@
 1. Login From Auth
 	- HTTPServer 홈으로 이동 
+	- false 폼인증 해제, true 폼 인증 
 	- ant -f webAppConfig.xml regenWebAppConf -DappName=Windchill -DprotocolAuthOnly=false
 	
 2. Message ResourceBuild
@@ -14,4 +15,7 @@
 	
 5. 서비스 등록
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.services.service.90000=com.e3ps.org.service.OrgService/com.e3ps.org.service.StandardOrgService -p
-	
+
+6. WVS After Service 등록
+	- Shell -> src/com/ptc/wvs/util 이동
+	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase AfterEDRloader.java 실행	

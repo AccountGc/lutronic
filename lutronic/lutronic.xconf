@@ -5,7 +5,7 @@
 	<!-- Form Base Auth -->
    <Property name="wt.auth.form.enabled" overridable="true"
              targetFile="codebase/wt.properties"
-             value="true"/>
+             value="false"/>
    <Property name="wt.auth.handlers" overridable="true"
              targetFile="codebase/wt.properties"
              value="wt.auth.NullAuthentication,wt.httpgw.HTTPAuthentication"/>             
@@ -55,4 +55,12 @@
 	<Property name="publish.usesPublishRules" overridable="true"
              targetFile="codebase/WEB-INF/wvs/wvs.properties"
              value="ARBORTEXT PROE"/>
+             
+    <!-- Publish After Service -->
+   <Property name="publish.afterloadermethod" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="com.ptc.wvs.util.AfterEDRloader/copyToEPM"/>
+   <Property name="publish.afterloadermethod.copyToEPM.Filext" overridable="true"
+             targetFile="codebase/WEB-INF/conf/wvs.properties"
+             value="pdf plt dwg igs stp"/>            
 </Configuration>
