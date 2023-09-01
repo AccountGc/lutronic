@@ -45,14 +45,14 @@
 				<th>팝업 유무</th>
 				<td class="indent5">
 					<div class="pretty p-switch">
-						<input type="radio" name="isPopup" value="true" id="T" checked="checked">
+						<input type="radio" name="isPopup" value="true" id="isPopup" checked="checked">
 						<div class="state p-success">
 							<label for="T"> <b>팝업 O</b>
 							</label>
 						</div>
 					</div> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="isPopup" value="false" id="F">
+						<input type="radio" name="isPopup" value="false" id="isPopup">
 						<div class="state p-success">
 							<label for="F"> <b>팝업 X</b>
 							</label>
@@ -86,101 +86,13 @@
 		</table>
 
 		<script type="text/javascript">
-			let myGridID;
-			function _layout() {
-				return [ {
-					dataField : "name",
-					headerText : "금형번호",
-					dataType : "string",
-					width : 295,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "number",
-					headerText : "금형명",
-					dataType : "string",
-					width : 450,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "description",
-					headerText : "Rev.",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "상태",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "state",
-					headerText : "등록자",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "version",
-					headerText : "등록일",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "수정일",
-					dataType : "string",
-					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				} ]
-			}
-
-			function createAUIGrid(columnLayout) {
-				const props = {
-					headerHeight : 30,
-					showRowNumColumn : true,
-					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : true,
-					useContextMenu : true,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-				};
-				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-					hideContextMenu();
-					vScrollChangeHandler(event);
-				});
-				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-					hideContextMenu();
-				});
-			}
-			
 			$("#createBtn").click(function() {
+				const title = document.querySelector("#title").value;
+				const contents = document.querySelector("#contents").value;
+				const isPopup = document.querySelector("#isPopup").value;
+				const titile = document.querySelector("#title").value;
+				const secondarys = toArray("secondarys");
+				
 				if(isEmpty($("#title").val())) {
 					alert("제목을 입력하세요.");
 					return;
@@ -190,8 +102,14 @@
 					return;
 				}
 				
-				var params = _data($("#form"));
-				var url = getCallUrl("/groupware/createNotice");
+				let params = new Object();
+				params.title = title;
+				params.contents = contents;
+				params.isPopup = isPopup;
+				params.titile = titile;
+				params.secondarys = secondarys;
+				
+				const url = getCallUrl("/groupware/createNotice");
 				call(url, params, function(data) {
 					if(data.result){
 						alert(data.msg);
@@ -204,32 +122,12 @@
 			})
 
 			document.addEventListener("DOMContentLoaded", function() {
-				selectbox("manufacture");
-				selectbox("moldtype");
-				selectbox("deptcode");
 			});
-
-			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
-
-			document.addEventListener("keydown", function(event) {
-				const keyCode = event.keyCode || event.which;
-				if (keyCode === 13) {
-					loadGridData();
-				}
-			})
 
 			document.addEventListener("click", function(event) {
 				hideContextMenu();
 			})
 
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
-			});
-			
 		</script>
 	</form>
 </body>

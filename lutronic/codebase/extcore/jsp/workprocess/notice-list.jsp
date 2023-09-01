@@ -21,66 +21,66 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
-		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
+<form id="noticeSearchForm">
+	<input type="hidden" name="sessionid" id="sessionid">
+	<input type="hidden" name="lastNum" id="lastNum">
+	<input type="hidden" name="curPage" id="curPage">
+	<input type="hidden" name="oid" id="oid">
 
-		<table class="search-table">
-			<colgroup>
-				<col width="174">
-				<col width="*">
-				<col width="174">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>제목</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
-				</td>
-				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
-			</tr>
-		</table>
-		
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('notice-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('notice-list');"> 
-				</td>
-				<td class="right">
-					<select name="_psize" id="_psize">
-						<option value="30">30</option>
-						<option value="50">50</option>
-						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
-					</select>
-					<input type="button" value="검색" title="검색" id="search">
-					<input type="button" value="초기화" title="초기화" id="reset">
-					<input type="button" value="등록" title="등록" id="create" class="blue">
-				</td>
-			</tr>
-		</table>
+	<table class="search-table">
+		<colgroup>
+			<col width="174">
+			<col width="*">
+			<col width="174">
+			<col width="*">
+		</colgroup>
+		<tr>
+			<th>제목</th>
+			<td class="indent5">
+				<input type="text" name="name" id="name" class="width-300">
+			</td>
+			<th>등록자</th>
+			<td class="indent5">
+				<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+				<input type="hidden" name="creatorOid" id="creatorOid">
+				<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+			</td>
+		</tr>
+	</table>
+	
+	<table class="button-table">
+		<tr>
+			<td class="left">
+				<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+				<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('notice-list');"> 
+				<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('notice-list');"> 
+			</td>
+			<td class="right">
+				<select name="_psize" id="_psize">
+					<option value="30">30</option>
+					<option value="50">50</option>
+					<option value="100">100</option>
+					<option value="200">200</option>
+					<option value="300">300</option>
+				</select>
+				<input type="button" value="검색" title="검색" id="search">
+				<input type="button" value="초기화" title="초기화" id="reset">
+				<input type="button" value="등록" title="등록" id="create" class="blue">
+			</td>
+		</tr>
+	</table>
+</form>
+	<table>
+		<tr>
+			<td valign="top">
+				<div id="grid_wrap" style="height: 690px; border-top: 1px solid #3180c3;"></div>
+				<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+				<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+			</td>
+		</tr>
+	</table>
 
-		<table>
-			<tr>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 690px; border-top: 1px solid #3180c3;"></div>
-					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-				</td>
-			</tr>
-		</table>
-
-		<script type="text/javascript">
+<script type="text/javascript">
 			let myGridID;
 			function _layout() {
 				return [ {
@@ -239,7 +239,6 @@
 			})
 				
 				$("#create").click(function() {
-// 					document.location =  getURLString("groupware", "createNotice", "do");
 					const url = getCallUrl("/groupware/createNotice");
 					popup(url, 1500, 700);
 				})
@@ -251,7 +250,12 @@
 				})
 			})
 			
+			// 초기화 버튼
+			document.querySelector("#reset").addEventListener("click", ()=>{
+				document.querySelectorAll("#noticeSearchForm input[type=text]").forEach((input) => {
+					input.value = "";
+				});
+			});
 		</script>
-	</form>
 </body>
 </html>

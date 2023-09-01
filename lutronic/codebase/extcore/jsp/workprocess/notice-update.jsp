@@ -110,7 +110,7 @@
 				params.titile = titile;
 				params.secondarys = secondarys;
 				
-				var url = getCallUrl("/groupware/updateNotice");
+				const url = getCallUrl("/groupware/updateNotice");
 				call(url, params, function(data) {
 					if(data.result){
 						alert(data.msg);

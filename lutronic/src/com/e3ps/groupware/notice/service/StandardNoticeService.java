@@ -1,5 +1,6 @@
 package com.e3ps.groupware.notice.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -18,6 +19,7 @@ import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
 import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
@@ -38,27 +40,31 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 	}
 	
 	@Override
-	public void createNotice(NoticeData data) throws Exception {
+	public void createNotice(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
+		 String oid = StringUtil.checkNull((String) params.get("oid"));
+       boolean isPopup = StringUtil.checkNull((String) params.get("isPopup")).equals("true");
+       String title = StringUtil.checkNull((String) params.get("title"));
+       String contents = StringUtil.checkNull((String) params.get("contents"));
+       
+       ArrayList<String> secondarys = (ArrayList<String>)params.get("secondarys");
 		try{
 			trs.start();
-			Notice b = Notice.newNotice();
-			b.setTitle(data.getTitle());
-			b.setContents(data.getContents());
-			b.setIsPopup(data.isPopup());
-			b.setOwner(SessionHelper.manager.getPrincipalReference());
-			PersistenceHelper.manager.save(b);
+			Notice notice = Notice.newNotice();
+			notice.setTitle(title);
+			notice.setContents(contents);
+			notice.setIsPopup(isPopup);
+			notice.setOwner(SessionHelper.manager.getPrincipalReference());
+			PersistenceHelper.manager.save(notice);
 			
-//			if(loc != null){
-//				for(int i=0; i< loc.length; i++){
-//					String cacheId = loc[i].split("/")[0];
-//			        String fileName = loc[i].split("/")[1];
-//
-//			        CachedContentDescriptor cacheDs = new CachedContentDescriptor(cacheId);
-//
-//			        CommonContentHelper.service.attach(b, cacheDs, fileName, null, ContentRoleType.SECONDARY);
-//				}
-//			}
+			for (int i = 0; i < secondarys.size(); i++) {
+				String cacheId = (String) secondarys.get(i);
+				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+				ApplicationData applicationData = ApplicationData.newApplicationData(notice);
+				applicationData.setRole(ContentRoleType.SECONDARY);
+				PersistenceHelper.manager.save(applicationData);
+				ContentServerHelper.service.updateContent(notice, applicationData, vault.getPath());
+			}
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -136,7 +142,7 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
        String title = StringUtil.checkNull((String) params.get("title"));
        String contents = StringUtil.checkNull((String) params.get("contents"));
        
-       String[] loc = (String[]) params.get("secondary");;
+       ArrayList<String> secondarys = (ArrayList<String>)params.get("secondarys");
        String[] deloc = (String[]) params.get("delocIds");
        
        String reOid = "";
@@ -144,15 +150,14 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
     	    trx.start();
 			if(oid != null){
 				ReferenceFactory f = new ReferenceFactory();
-				System.out.println("=========================>" + oid);
-				Notice b = (Notice) CommonUtil.getObject(oid);
+				Notice notice = (Notice) CommonUtil.getObject(oid);
 				//if(isPopup){
 				//	updateIsPopupFalse();
 				//}
-				b.setTitle(title);
-				b.setContents(contents);
-				b.setIsPopup(isPopup);
-				b = (Notice) PersistenceHelper.manager.modify(b);
+				notice.setTitle(title);
+				notice.setContents(contents);
+				notice.setIsPopup(isPopup);
+				notice = (Notice) PersistenceHelper.manager.modify(notice);
 				// 기존 첨부 파일이 삭제 된 여부를 판단 하여 삭제 한다.
 				// null 인 경우는 전부 삭제 된 경우다..
 				if(deloc != null){
@@ -171,26 +176,24 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 								}
 							}
 		      		    	if(flag){
-		      		    		CommonContentHelper.service.delete(b, oldFile);
+		      		    		CommonContentHelper.service.delete(notice, oldFile);
 		      		    	}
 		      		    }
 		      		}
 				}else{
-					CommonContentHelper.service.delete(b);
+					CommonContentHelper.service.delete(notice);
 				}
 				
-				if(loc != null){
-					for(int i=0; i< loc.length; i++){
-						String cacheId = loc[i].split("/")[0];
-				        String fileName = loc[i].split("/")[1];
-
-				        CachedContentDescriptor cacheDs = new CachedContentDescriptor(cacheId);
-				        b = (Notice) CommonContentHelper.service.attach(b, cacheDs, fileName, null, ContentRoleType.SECONDARY);
-						//CommonContentHelper.service.attach(b, loc[i]);
-					}
+				for (int i = 0; i < secondarys.size(); i++) {
+					String cacheId = (String) secondarys.get(i);
+					File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+					ApplicationData applicationData = ApplicationData.newApplicationData(notice);
+					applicationData.setRole(ContentRoleType.SECONDARY);
+					PersistenceHelper.manager.save(applicationData);
+					ContentServerHelper.service.updateContent(notice, applicationData, vault.getPath());
 				}
 				
-				reOid = b.getPersistInfo().getObjectIdentifier().toString();
+				reOid = notice.getPersistInfo().getObjectIdentifier().toString();
 			}
 			trx.commit();
 			trx = null;
