@@ -131,10 +131,10 @@ public class GroupwareController extends BaseController {
 	@Description(value = "공지사항 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/createNotice")
-	public Map<String, Object> createNotice(@RequestBody NoticeData data) {
+	public Map<String, Object> createNotice(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			NoticeHelper.service.createNotice(data);
+			NoticeHelper.service.createNotice(params);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -288,36 +288,36 @@ public class GroupwareController extends BaseController {
 		return result;
 	}
 
-	/**
-	 * 공지사항 상세보기
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewNotice")
-	public ModelAndView viewNotice(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("oid") String oid) throws Exception {
-
-		NoticeHelper.service.updateCount(oid);
-		boolean isPopup = StringUtil.checkNull(request.getParameter("isPopup")).equals("true");
-		Notice notice = (Notice) CommonUtil.getObject(oid);
-		NoticeData noticeData = new NoticeData(notice);
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "workprocess");
-		model.addObject("noticeData", noticeData);
-		if (isPopup) {
-			model.setViewName("popup:/workprocess/viewPopUpNotice");
-		} else {
-			model.setViewName("default:/workprocess/viewNotice");
-		}
-
-		return model;
-	}
+//	/**
+//	 * 공지사항 상세보기
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/viewNotice")
+//	public ModelAndView viewNotice(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam("oid") String oid) throws Exception {
+//
+//		NoticeHelper.service.updateCount(oid);
+//		boolean isPopup = StringUtil.checkNull(request.getParameter("isPopup")).equals("true");
+//		Notice notice = (Notice) CommonUtil.getObject(oid);
+//		NoticeData noticeData = new NoticeData(notice);
+//
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu1");
+//		model.addObject("module", "workprocess");
+//		model.addObject("noticeData", noticeData);
+//		if (isPopup) {
+//			model.setViewName("popup:/workprocess/viewPopUpNotice");
+//		} else {
+//			model.setViewName("default:/workprocess/viewNotice");
+//		}
+//
+//		return model;
+//	}
 
 //	/**
 //	 * 공지사항 삭제

@@ -29,7 +29,6 @@ $(function() {
 </script>
 
 <body>
-
 <form name="updateNotice" id="updateNotice"  method=post enctype="multipart/form-data">
 
 <input type="hidden" name="oid"  id="oid"	value="<c:out value="${noticeData.oid }"/>" />

@@ -60,7 +60,11 @@ NoticeData dto = (NoticeData) request.getAttribute("dto");
 	</tr>
 	<tr>
 		<th>첨부파일</th>
-		<td colspan="3"></td>
+		<td colspan="3">
+			<jsp:include page="/extcore/jsp/portal/include_attachFileView.jsp">
+				<jsp:param value="<%= dto.getOid() %>" name="oid"/>
+			</jsp:include>
+		</td>
 	</tr>
 </table>
 

@@ -61,7 +61,7 @@ public class GroupwareHelper {
 		try {
 			String nameValue = StringUtil.checkNull((String) params.get("name"));
 			String creator = StringUtil.checkNull((String) params.get("creator"));
-
+			
 			if (nameValue != null && nameValue.trim().length() > 0) {
 				query.appendWhere(new SearchCondition(Notice.class, "title", SearchCondition.LIKE,
 						"%" + nameValue.trim() + "%", false), new int[] { idx });
