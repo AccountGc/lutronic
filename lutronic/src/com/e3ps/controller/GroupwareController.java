@@ -229,6 +229,23 @@ public class GroupwareController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "공지사항 삭제")
+	@ResponseBody
+	@PostMapping(value = "/deleteNotice")
+	public Map<String, Object> deleteNoticeAction(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			NoticeHelper.service.delete(params);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "사용자정보 상세 페이지")
 	@GetMapping(value = "/userInfoView")
@@ -302,22 +319,22 @@ public class GroupwareController extends BaseController {
 		return model;
 	}
 
-	/**
-	 * 공지사항 삭제
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@RequestMapping("/deleteNoticeAction")
-	public String deleteNoticeAction(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("oid") String oid) throws Exception {
-		String msg = NoticeHelper.service.delete(oid);
-		return msg;
-	}
+//	/**
+//	 * 공지사항 삭제
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/deleteNoticeAction")
+//	public String deleteNoticeAction(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam("oid") String oid) throws Exception {
+//		String msg = NoticeHelper.service.delete(oid);
+//		return msg;
+//	}
 
 	/**
 	 * 공지사항 수정 페이지

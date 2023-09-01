@@ -113,7 +113,9 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 	}
 	
 	@Override
-	public String delete(String oid){
+	public void delete(Map<String, Object> params) throws Exception{
+		
+		String oid = StringUtil.checkNull((String)params.get("oid"));
 		try{
 			if(oid != null){
 				ReferenceFactory f = new ReferenceFactory();
@@ -123,7 +125,6 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return Message.get("삭제 되었습니다.");
 	}
 	
 	@Override

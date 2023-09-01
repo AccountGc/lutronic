@@ -79,15 +79,17 @@ NoticeData dto = (NoticeData) request.getAttribute("dto");
 			return false;
 		}
 
+		let params = new Object();
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		call(url, null, function(data) {
+		params.oid = oid;
+		const url = getCallUrl("/groupware/deleteNotice");
+		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-//		 				opener.loadGridData();
+		 				window.opener.loadGridData();
 						self.close();
 			}
-		}, "GET");
+		});
 	})
 			
 	document.addEventListener("DOMContentLoaded", function() {
