@@ -114,7 +114,11 @@ ECRData dto = (ECRData) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th>주 첨부파일</th>
-				<td colspan="3"></td>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
+						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
+					</jsp:include>
+				</td>
 			</tr>
 			<tr>
 				<th>첨부파일</th>
