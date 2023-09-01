@@ -15,7 +15,7 @@ public interface NoticeService {
 
 	String create(Hashtable hash, String[] loc) throws Exception;
 
-	String delete(String oid);
+	void delete(Map<String, Object> params) throws Exception;
 
 	Map<String, Object> modify(Map<String, Object> params) throws Exception;
 
