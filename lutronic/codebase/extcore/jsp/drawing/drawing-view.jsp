@@ -122,7 +122,11 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th>첨부파일</th>
-				<td colspan="3"></td>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
+						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
+					</jsp:include>
+				</td>
 			</tr>
 		</table>
 	</div>

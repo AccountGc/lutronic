@@ -161,9 +161,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="button" value="일괄 다운" title="일괄 다운"  onclick="">
 				</th>
 				<td colspan="3" class="indent5">
-		<%-- 			<jsp:include page="/eSolution/content/includeAttachFileView"> --%>
-		<%-- 				<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
-		<%-- 			</jsp:include> --%>
+					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
+						<jsp:param value="<%= data.getOid() %>" name="oid"/>
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
