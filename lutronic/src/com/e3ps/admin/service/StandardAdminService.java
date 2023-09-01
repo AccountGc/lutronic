@@ -18,6 +18,7 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.org.WTUser;
+import wt.pom.Transaction;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
@@ -1095,6 +1096,43 @@ public class StandardAdminService extends StandardManager implements AdminServic
 			result.put("xmlString"      , xmlBuf);
 			
 			return result;
+	}
+
+	@Override
+	public void numberCodeSave(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> editList = (ArrayList<Map<String, Object>>) params.get("editRow");
+		Transaction trx = new Transaction();
+		try{
+	    	trx.start();
+    	    
+    	    // 수정
+	    	if(editList.size()>0) {
+    			for(Map<String, Object> map : editList) {
+    				String oid = (String) map.get("oid");
+    				String name = (String) map.get("name");
+    				String engName = (String) map.get("engName");
+    				String sort = (String) map.get("sort");
+    				String description = (String) map.get("description");
+    				String enabled = (String) map.get("enabled");
+    				NumberCode code = (NumberCode) CommonUtil.getObject(oid);
+    				code.setName(name);
+    				code.setEngName(engName);
+    				code.setSort(sort);
+    				code.setDescription(description);
+    				code.setDisabled(!"true".equals(enabled));
+    				PersistenceHelper.manager.modify(code);
+    			}
+    		}
+	    	
+    	    trx.commit();
+		    trx = null;
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(trx!=null){
+				trx.rollback();
+			}
+		}
 	}
 	
 }

@@ -480,13 +480,19 @@ public class AdminController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/numberCodeTree")
 	public Map<String, Object> numberCodeTree(@RequestBody Map<String, Object> params) throws Exception {
-//		String codeType = (String) params.get("codeType");
-//		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
+		String codeType = (String) params.get("codeType");
+		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
+//		String parentOid = StringUtil.checkReplaceStr((String) params.get("parentOid"),"");
+		String isSeq = NCodeType.getShortDescription();//자동(true),수동(false);
+		String seqNm = NCodeType.getLongDescription(); //SEQ NM;
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			JSONArray list = AdminHelper.manager.numberCodeTree(params);
             result.put("treeList", list);
 			result.put("result", SUCCESS);
+			result.put("isSeq", isSeq);
+			result.put("seqNm", seqNm);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
@@ -512,6 +518,23 @@ public class AdminController extends BaseController {
 //		model.addObject("seqNm",seqNm);
 //		return model;
 //	}
+	
+	@Description(value = "코드 저장 함수")
+	@ResponseBody
+	@PostMapping(value = "/numberCodeSave")
+	public Map<String, Object> numberCodeSave(@RequestBody Map<String, Object> params) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AdminHelper.service.numberCodeSave(params);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 	
 	@ResponseBody
 	@RequestMapping("/admin_numberCodeAction")

@@ -23,6 +23,7 @@ public class NumberCodeData {
 	public String sort;
 	public boolean enabled;
 	public String description;
+	public String codeType;
 	
 	public NumberCodeData() {
 		
@@ -34,11 +35,12 @@ public class NumberCodeData {
 		setEngName(Ncode.getEngName());
 		setOid(CommonUtil.getOIDString(Ncode));
 		NumberCodeType codeType = Ncode.getCodeType();
-		setSeq(codeType.getShortDescription().equals("true") ? true : false);
-		setSeqNm(codeType.getLongDescription());
+//		setSeq(codeType.getShortDescription().equals("true") ? true : false);
+//		setSeqNm(codeType.getLongDescription());
 		setTree(codeType.getAbbreviatedDisplay().equals("true") ? true : false);
 		setSort(Ncode.getSort());
 		setEnabled(Ncode.isDisabled());
 		setDescription(Ncode.getDescription());
+		setCodeType(codeType.toString());
 	}
 }

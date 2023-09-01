@@ -29,6 +29,9 @@
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="isSeq" id="isSeq">
+		<input type="hidden" name="seqNm" id="seqNm">
 
 		<table class="search-table">
 <!-- 			<colgroup> -->
@@ -64,19 +67,10 @@
 				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="enabled" value="true" checked="checked">
+						<input type="radio" name="enabled" value="true">
 						<div class="state p-success">
 							<label>
-								<b>ON</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="enabled" value="false">
-						<div class="state p-success">
-							<label>
-								<b>OFF</b>
+								<b></b>
 							</label>
 						</div>
 					</div>
@@ -98,11 +92,10 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="등록" title="등록" id="create" class="blue">
-					<input type="button" value="수정" title="수정" id="update" style="display: none;">
-					<input type="button" value="삭제" title="삭제" id="delete" style="display: none;">
+					<input type="button" value="검색" title="검색" id="search">
 					<input type="button" value="초기화" title="초기화" id="reset">
 					<input type="button" value="목록 열기/닫기" title="목록 열기/닫기" id="listBtn">
+					<input type="button" value="저장" title="저장" id="save" class="blue">
 				</td>
 			</tr>
 		</table>
@@ -152,6 +145,7 @@
 					headerText : "코드",
 					dataType : "string",
 					width : 120,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -202,11 +196,22 @@
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					displayTreeOpen : true
+					displayTreeOpen : false,
+					editable: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				AUIGrid.bind(myGridID, "contextMenu", function(event) {
+		            var myContextMenus  = [{
+		               label : "위에 추가"
+		            }, {
+		               label : "아래에 추가"
+		            }, {
+		               label : "삭제"
+// 		               label : "삭제", callback : contextItemHandler
+		            }];
+		            return myContextMenus;
+	         	});
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -214,7 +219,7 @@
 					hideContextMenu();
 				});
 			}
-
+			
 			function loadGridData() {
 				let params = new Object();
 				params.codeType = 'PARTTYPE';
@@ -229,7 +234,28 @@
 					}
 				});
 			}
-
+			
+			function auiCellClickHandler(event) {
+				var item = event.item;
+// 				$("#create").hide();
+// 				$("#update").show();
+// 				//$("#delete").show();
+				
+// 				$("#name").val(item.name);
+// 				$("#engName").val(item.engName);
+// 				$("#code").val(item.code);
+// 				$("#code").attr("disabled","true");
+// 				$("#sort").val(item.sort);
+// 				$("#description").val(item.description);
+				
+// 				if(item.enabled==true) {
+// 					$('input:radio[name="enabled"]').prop("checked", true);
+// 				}else {
+// 					$('input:radio[name="enabled"]').prop("checked", false);
+// 				}
+// 				$("#oid").val(item.oid);
+			}
+			
 			document.addEventListener("DOMContentLoaded", function() {
 				const columns = loadColumnLayout("numberCode-list");
 				const contenxtHeader = genColumnHtml(columns);
@@ -258,17 +284,34 @@
 				AUIGrid.resize(codeGridID);
 			});
 			
-			$("#reset").click(function() {
-				$("#create").show();
-				$("#update").hide();
-				//$("#delete").hide();
-				if(!isSeq){
-					$("#code").removeAttr("disabled");
+			// 저장
+			$("#save").click(function() {
+				// 수정된 행
+				var editedRowItems = AUIGrid.getEditedRowItems(myGridID);
+				var params = new Object();
+				params.editRow = editedRowItems;
+				var codeType = editedRowItems[0].codeType;
+				if (!confirm("저장 하시겠습니까?")) {
+					return;
 				}
+				const url = getCallUrl("/admin/numberCodeSave");
+				call(url, params, function(data) {
+					if (data.result) {
+						alert(data.msg);
+						loadGridData2(codeType);
+					} else {
+						alert(data.msg);
+					}
+				});
+			});
+			
+			// 검색 초기화
+			$("#reset").click(function() {
+				$("input[type=text]").val("");
 			});
 			
 			// 목록 열기/닫기
-			var isListExpanded = true;
+			var isListExpanded = false;
 			$("#listBtn").click(function() {
 				if (!isListExpanded) {
 					AUIGrid.expandAll(myGridID);
