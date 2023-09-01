@@ -53,6 +53,9 @@ public class AdminHelper {
 			rootNode.put("engName", data.getEngName());
 			rootNode.put("code", data.getCode());
 			rootNode.put("sort", data.getSort());
+			rootNode.put("description", data.getDescription());
+			rootNode.put("enabled", data.isEnabled());
+			rootNode.put("codeType", data.getCodeType());
 			
 			QuerySpec query = new QuerySpec(NumberCode.class);
 			query.appendWhere(new SearchCondition(NumberCode.class, "codeType", "=", codeType), new int[] { 0 });
@@ -72,6 +75,9 @@ public class AdminHelper {
 				node.put("engName", childrenData.getEngName());
 				node.put("code", childrenData.getCode());
 				node.put("sort", childrenData.getSort());
+				node.put("description", childrenData.getDescription());
+				node.put("enabled", childrenData.isEnabled());
+				node.put("codeType", childrenData.getCodeType());
 				loadTree(childrenCode, node, codeType);
 				children.add(node);
 			}
@@ -127,6 +133,9 @@ public class AdminHelper {
 			node.put("engName", childdata.getEngName());
 			node.put("code", childdata.getCode());
 			node.put("sort", childdata.getSort());
+			node.put("description", childdata.getDescription());
+			node.put("enabled", childdata.isEnabled());
+			node.put("codeType", childdata.getCodeType());
 			loadTree(childcode, node, codeType);
 			children.add(node);
 		}

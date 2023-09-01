@@ -41,5 +41,7 @@ public interface AdminService {
 
 	Map<String, Object> admin_mailNewAction(HttpServletRequest request,
 			HttpServletResponse response) throws Exception;
+	
+	public void numberCodeSave(Map<String,Object> params) throws Exception;
 
 }
