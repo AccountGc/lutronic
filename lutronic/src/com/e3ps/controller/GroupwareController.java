@@ -86,7 +86,7 @@ public class GroupwareController extends BaseController {
 	@Description(value = "공지사항 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/listNotice")
-	public Map<String, Object> listNotice(Map<String, Object> params) {
+	public Map<String, Object> listNotice(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = GroupwareHelper.manager.listNotice(params);
@@ -131,10 +131,10 @@ public class GroupwareController extends BaseController {
 	@Description(value = "공지사항 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/createNotice")
-	public Map<String, Object> createNotice(@RequestBody NoticeData data) {
+	public Map<String, Object> createNotice(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			NoticeHelper.service.createNotice(data);
+			NoticeHelper.service.createNotice(params);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -229,6 +229,23 @@ public class GroupwareController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "공지사항 삭제")
+	@ResponseBody
+	@PostMapping(value = "/deleteNotice")
+	public Map<String, Object> deleteNoticeAction(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			NoticeHelper.service.delete(params);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "사용자정보 상세 페이지")
 	@GetMapping(value = "/userInfoView")
@@ -271,53 +288,53 @@ public class GroupwareController extends BaseController {
 		return result;
 	}
 
-	/**
-	 * 공지사항 상세보기
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewNotice")
-	public ModelAndView viewNotice(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("oid") String oid) throws Exception {
+//	/**
+//	 * 공지사항 상세보기
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/viewNotice")
+//	public ModelAndView viewNotice(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam("oid") String oid) throws Exception {
+//
+//		NoticeHelper.service.updateCount(oid);
+//		boolean isPopup = StringUtil.checkNull(request.getParameter("isPopup")).equals("true");
+//		Notice notice = (Notice) CommonUtil.getObject(oid);
+//		NoticeData noticeData = new NoticeData(notice);
+//
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu1");
+//		model.addObject("module", "workprocess");
+//		model.addObject("noticeData", noticeData);
+//		if (isPopup) {
+//			model.setViewName("popup:/workprocess/viewPopUpNotice");
+//		} else {
+//			model.setViewName("default:/workprocess/viewNotice");
+//		}
+//
+//		return model;
+//	}
 
-		NoticeHelper.service.updateCount(oid);
-		boolean isPopup = StringUtil.checkNull(request.getParameter("isPopup")).equals("true");
-		Notice notice = (Notice) CommonUtil.getObject(oid);
-		NoticeData noticeData = new NoticeData(notice);
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "workprocess");
-		model.addObject("noticeData", noticeData);
-		if (isPopup) {
-			model.setViewName("popup:/workprocess/viewPopUpNotice");
-		} else {
-			model.setViewName("default:/workprocess/viewNotice");
-		}
-
-		return model;
-	}
-
-	/**
-	 * 공지사항 삭제
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@RequestMapping("/deleteNoticeAction")
-	public String deleteNoticeAction(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("oid") String oid) throws Exception {
-		String msg = NoticeHelper.service.delete(oid);
-		return msg;
-	}
+//	/**
+//	 * 공지사항 삭제
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/deleteNoticeAction")
+//	public String deleteNoticeAction(HttpServletRequest request, HttpServletResponse response,
+//			@RequestParam("oid") String oid) throws Exception {
+//		String msg = NoticeHelper.service.delete(oid);
+//		return msg;
+//	}
 
 	/**
 	 * 공지사항 수정 페이지

@@ -158,9 +158,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
-<%-- 					<jsp:include page="/eSolution/content/includeAttachFileView"> --%>
-<%-- 						<jsp:param value="<%=data.getOid() %>" name="oid"/> --%>
-<%-- 					</jsp:include> --%>
+					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
+						<jsp:param value="<%= data.getOid() %>" name="oid"/>
+					</jsp:include>
 				</td>
 			</tr>
 		</table>

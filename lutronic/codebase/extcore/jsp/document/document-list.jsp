@@ -102,6 +102,51 @@ if (request.getParameter("popup") != null) {
 					</select>
 				</td>
 			</tr>
+			<tr>
+				<th>문서유형</th>
+				<td class="indent5">
+					<select name="documentType" id="documentType" class="width-300">
+						<option value="">선택</option>
+					</select>
+				</td>
+				<th>보존기간</th>
+				<td class="indent5">
+					<select name="preseration" id="preseration" class="width-300">
+						<option value="">선택</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<select name="model" id="model" class="width-300">
+						<option value="">선택</option>
+					</select>
+				</td>
+				<th>부서</th>
+				<td class="indent5">
+					<select name="deptcode" id="deptcode" class="width-300">
+						<option value="">선택</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th>내부 문서번호</th>
+				<td class="indent5">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
+				</td>
+				<th>작성자</th>
+				<td class="indent5">
+					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
+				</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td class="indent5" colspan="3">
+					<textarea name="description" id="description" rows="6" onchange="textAreaLengthCheckName('description', '4000', '문서설명')" style="width:90%"></textarea>
+				</td>
+			</tr>
 		</table>
 		<table class="button-table">
 			<tr>
@@ -315,7 +360,8 @@ if (request.getParameter("popup") != null) {
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = ["_psize","name","number", "state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo"];
+				const field = ["_psize","name","number", "state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo"
+									,"documentType","preseration","model","deptcode","interalnumber","writer","description"];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = latest;
@@ -349,6 +395,11 @@ if (request.getParameter("popup") != null) {
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
+				selectbox("documentType");
+				selectbox("preseration");
+				selectbox("model");
+				selectbox("deptcode");
+				finderUser("writer");
 			});
 
 			function exportExcel() {

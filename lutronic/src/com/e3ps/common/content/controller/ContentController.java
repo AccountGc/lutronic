@@ -1,7 +1,6 @@
 package com.e3ps.common.content.controller;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -26,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,6 +50,7 @@ import wt.epm.EPMDocument;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.fv.uploadtocache.UploadToCacheHelper;
+import wt.httpgw.HTTPServletRequest;
 import wt.org.WTUser;
 import wt.session.SessionHelper;
 import wt.util.WTException;

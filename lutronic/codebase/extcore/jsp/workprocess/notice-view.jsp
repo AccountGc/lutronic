@@ -60,7 +60,11 @@ NoticeData dto = (NoticeData) request.getAttribute("dto");
 	</tr>
 	<tr>
 		<th>첨부파일</th>
-		<td colspan="3"></td>
+		<td colspan="3">
+			<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
+				<jsp:param value="<%= dto.getOid() %>" name="oid"/>
+			</jsp:include>
+		</td>
 	</tr>
 </table>
 
@@ -79,15 +83,17 @@ NoticeData dto = (NoticeData) request.getAttribute("dto");
 			return false;
 		}
 
+		let params = new Object();
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		call(url, null, function(data) {
+		params.oid = oid;
+		const url = getCallUrl("/groupware/deleteNotice");
+		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-//		 				opener.loadGridData();
+		 				window.opener.loadGridData();
 						self.close();
 			}
-		}, "GET");
+		});
 	})
 			
 	document.addEventListener("DOMContentLoaded", function() {

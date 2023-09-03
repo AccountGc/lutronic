@@ -11,11 +11,11 @@ import wt.method.RemoteInterface;
 @RemoteInterface
 public interface NoticeService {
 	
-	public void createNotice(NoticeData data) throws Exception;
+	public void createNotice(Map<String, Object> params) throws Exception;
 
 	String create(Hashtable hash, String[] loc) throws Exception;
 
-	String delete(String oid);
+	void delete(Map<String, Object> params) throws Exception;
 
 	Map<String, Object> modify(Map<String, Object> params) throws Exception;
 
