@@ -49,7 +49,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<input type="button"  value="속성 Clearing"  title="속성 Clearing"  id="attributeCleaning">
 <%-- 			<% } %> --%>
 <%-- 			<% if(data.isFamliyModify()){ %> --%>
-			<input type="button"  value="Family 테이블 수정"  title="Family 테이블 수정"  id="updatefamily">
+<!-- 			<input type="button"  value="Family 테이블 수정"  title="Family 테이블 수정"  id="updatefamily"> -->
 <%-- 			<% } %> --%>
 			<%
 			if (isAdmin) {
