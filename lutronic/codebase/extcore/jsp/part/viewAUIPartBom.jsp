@@ -279,6 +279,7 @@
 				showIcon : true
 			},
 			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
+				
 				var temp = "<a href=javascript:openView('" + item.dwgOid + "') style='line-height:26px;'>" + value + "</a>"
 				return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
 			}
@@ -387,56 +388,48 @@
 		
 	];
 
-
-
+	var auiGridProps = {
+		/********트리 그리드************/
+		softRemoveRowMode : false,
+		showRowCheckColumn : true,
+		// singleRow 선택모드
+		selectionMode : "multipleCells",
+		showSelectionBorder : true,
+		displayTreeOpen : true,
+		// 편집 가능 여부
+		editable : false,
+		// 엑스트라 행 체크박스 칼럼이 트리 의존적인지 여부
+		// 트리 의존적인 경우, 부모를 체크하면 자식도 체크됨.
+		rowCheckDependingTree : true,
+		// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
+		treeColumnIndex : 2,
+		// 필터사용
+		enableFilter : true,
+		// 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
+		flat2tree : true,
+		// 행의 고유 필드명
+		rowIdField : "rowId",
+		// 트리의 고유 필드명
+		treeIdField : "id",
+		// 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
+		treeIdRefField : "parent",
+		enableSorting : false,
+		//fixed 기능 부품 번호
+		fixedColumnCount  : 3,
+	};
+	
+	
+	
+	myBOMGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
+	
+	
+	
 	<%----------------------------------------------------------
 	*                      페이지 초기 설정
 	----------------------------------------------------------%>
 	$(document).ready(function() {
 		
-		//Aui 그리드 설정
-		var auiGridProps = {
-			
-			/********트리 그리드************/
-				softRemoveRowMode : false,
-			
-				showRowCheckColumn : true,
-				// singleRow 선택모드
-				selectionMode : "multipleCells",
-				
-				showSelectionBorder : true,
-				
-				displayTreeOpen : true,
-				// 편집 가능 여부
-				editable : false,
-				
-				// 엑스트라 행 체크박스 칼럼이 트리 의존적인지 여부
-				// 트리 의존적인 경우, 부모를 체크하면 자식도 체크됨.
-				rowCheckDependingTree : true,
-				
-				// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
-				treeColumnIndex : 2,
-				// 필터사용
-				enableFilter : true,
-				
-				// 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
-				flat2tree : true,
-				
-				// 행의 고유 필드명
-				rowIdField : "rowId",
-				// 트리의 고유 필드명
-				treeIdField : "id",
-				
-				// 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
-				treeIdRefField : "parent",
-				
-				enableSorting : false,
-							
-		};
-		//fixed 기능 부품 번호
-		auiGridProps.fixedColumnCount = 3;
-		// 실제로 #grid_wrap 에 그리드 생성
-		myBOMGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
+		
 		
 		//BOM Search
 		viewAUIPartBomAction();
@@ -594,20 +587,17 @@ $(function() {
 	----------------------------------------------------------%>
 	$("#baselineView").change(function() {
 		
-		var tempValue = $('#baselineView option:selected').attr('value')
+		var tempValue = $('#baselineView option:selected').attr('value');
 		if( tempValue.indexOf("WTPart") > 0) {
 			var oid = tempValue;
 			
-			$("#oid").val(oid);
-		
-		    $("#PartTreeForm").attr("action", getURLString("part", "viewAUIPartBom", "do")).submit();
+			$("#PartTreeForm").attr("action", getCallUrl("/part/viewAUIPartBom") + "?oid="+oid).submit();
 		}else{
 			var oid = $('#baselineView option:selected').attr('title');
 			var baseline = $('#baselineView option:selected').attr('value');
-			$("#oid").val(oid);
-			$("#baseline").val(baseline)
 			
-		    $("#PartTreeForm").attr("action", getURLString("part", "viewAUIPartBom", "do")).submit();
+			$("#PartTreeForm").attr("action", getCallUrl("/part/viewAUIPartBom") + "?oid="+oid+ "&baseline="+baseline).submit();
+			
 		}
 			
 		
@@ -732,5 +722,6 @@ function viewBomList(bomType){
     var newwin = window.open( str , "viewBomList", opts+rest);
     newwin.focus();
 }
+
 
 </script>

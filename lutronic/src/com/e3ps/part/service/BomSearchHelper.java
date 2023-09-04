@@ -50,7 +50,7 @@ public class BomSearchHelper {
 		WTPart part = (WTPart) rf.getReference(oid).getObject();
 
 		Baseline bsobj = null;
-		if (baseline2 != null && baseline2.length() > 0) {
+		if (!"null".equals(baseline2) && baseline2.length() > 0) {
 			bsobj = (Baseline) rf.getReference(baseline2).getObject();
 		}
 		if (bsobj != null) {

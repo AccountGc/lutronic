@@ -879,7 +879,7 @@ function getViewURL(oid) {
 	} else if( oid.indexOf("EPMDocument") > 0) {
 		url = getURLString("drawing", "viewDrawing", "do");
 	} else if( oid.indexOf("WTPart") > 0) {
-		url = getURLString("part", "viewPart", "do");
+		url = getCallUrl("/part/viewPart");
 	} else if( oid.indexOf("EChangeOrder") > 0) {
 		url = getURLString("changeECO", "viewECO", "do");
 	} else if( oid.indexOf("EChangeRequest") > 0) { 
