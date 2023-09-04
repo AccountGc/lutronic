@@ -23,6 +23,8 @@ import wt.org.WTUser;
 import wt.session.SessionHelper;
 
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.beans.DocumentData;
@@ -66,9 +68,15 @@ public class MoldController extends BaseController {
 	
 	@Description(value = "금형 등록 페이지")
 	@GetMapping(value = "/create")
-	public ModelAndView create() {
+	public ModelAndView create() throws Exception{
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> moldtypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/mold/mold-create.jsp");
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("moldtypeList", moldtypeList);
+		model.addObject("deptcodeList", deptcodeList);
 		return model;
 	}
 	

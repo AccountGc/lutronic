@@ -19,7 +19,15 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="wt.org.WTPrincipal"%>
 <%@page import="wt.session.SessionHelper"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttribute("documentNameList");
+	ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
+	ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+	ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+%>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
 <!DOCTYPE html>
@@ -100,28 +108,37 @@
 			<th class="req">보존기간</th>
 			<td class="indent5"><select name="preseration"  id="preseration" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode preseration : preserationList) {
+						%>
+						<option value="<%=preseration.getCode() %>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
 				</select></td>
 		</tr>
 		<tr>
 			<th class="lb">프로젝트코드</th>
 			<td class="indent5"><select name="model" id="model" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
+						<%
+						}
+						%>
 				</select></td>
 			<th class="">부서</th>
 			<td class="indent5"><select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
 				</select></td>
 		</tr>
 		<tr>

@@ -76,8 +76,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
+					<input type="button" value="이전페이지" name="backBtn" id="backBtn" onclick="javascript:history.back();">
 					<input type="button" value="수정" title="수정" class="blue" id="update">
-					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 				</td>
 			</tr>
 		</table>

@@ -23,20 +23,19 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.beans.NumberCodeData;
-import com.e3ps.common.code.service.CodeHelper;
+import
+import com.e3ps.common.code.service.NumberCodeHelper; com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.service.CommonHelper;
-import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.service
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.development.service.DevelopmentHelper;
-import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
-import com.e3ps.part.service.BomSearchHelper;
+import com.e3ps.doc.service.DocumentHelpeimport com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
 
@@ -75,9 +74,17 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 등록 페이지")
 	@GetMapping(value = "/create")
-	public ModelAndView create() {
+	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
+		ArrayList<NumberCode> partTypeList = NumberCodeHelper.manager.getArrayCodeList("PARTTYPE");
+		ArrayList<NumberCode> partName1List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME1");
+		ArrayList<NumberCode> partName2List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME2");
+		ArrayList<NumberCode> partName3List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME3");
 		model.setViewName("/extcore/jsp/part/part-create.jsp");
+		model.addObject("partTypeList", partTypeList);
+		model.addObject("partName1List", partName1List);
+		model.addObject("partName2List", partName2List);
+		model.addObject("partName3List", partName3List);
 		return model;
 	}
 
