@@ -2,7 +2,7 @@
 <%
 String oid = request.getParameter("oid");
 %>
-<div id="attachFile" style="display: flex; flex-direction: column; padding: 10px 5px; gap: 3px;"></div>
+<div id="attachSecondaryFile" style="display: flex; flex-direction: column; padding: 10px 5px; gap: 3px;"></div>
 <script>
 	new AXReq("/Windchill/eSolution/content/list", {
 		pars : "oid=<%=oid%>&roleType=secondary",
@@ -13,7 +13,7 @@ String oid = request.getParameter("oid");
 				const len = data.length;
 				console.log(data);
 				for (let i = 0; i < len; i++) {
-					document.querySelector("#attachFile").innerHTML += "<span id='" + data[i]._id_ + "' class='attachFiles' style='cursor: pointer;'>" +  data[i].name + "</span>";
+					document.querySelector("#attachSecondaryFile").innerHTML += "<span id='" + data[i]._id_ + "' class='attachFiles' style='cursor: pointer;'>" +  data[i].name + "</span>";
 				}
 				secondary.setUploadedList(data);
 			}
