@@ -24,18 +24,19 @@ import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.beans.NumberCodeData;
-import
-import com.e3ps.common.code.service.NumberCodeHelper; com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.service
+import com.e3ps.common.service.CommonHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.service.DocumentHelpeimport com.e3ps.part.service.BomSearchHelper;
+import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.part.beans.PartData;
+import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
 
