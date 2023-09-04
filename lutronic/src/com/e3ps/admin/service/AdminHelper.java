@@ -1,22 +1,27 @@
 package com.e3ps.admin.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.beans.EADData;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.service.GenNumberHelper;
 import com.e3ps.common.history.LoginHistory;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.download.DownloadHistory;
 import com.e3ps.download.beans.DownloadData;
 import com.e3ps.org.MailUser;
@@ -24,7 +29,6 @@ import com.e3ps.org.MailUser;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import wt.fc.PagingQueryResult;
-import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
@@ -136,10 +140,50 @@ public class AdminHelper {
 			node.put("description", childdata.getDescription());
 			node.put("enabled", childdata.isEnabled());
 			node.put("codeType", childdata.getCodeType());
-			loadTree(childcode, node, codeType);
+            loadTree(childcode, node, codeType);
 			children.add(node);
 		}
 		parentNode.put("children", children);
+	}
+	
+	/** 
+	 * 코드체계관리 리스트(PART TYPE 제외)
+	 */
+	public Map<String, Object> numberCodeList(Map<String, Object> params) throws Exception {
+		ArrayList<NumberCodeData> list = new ArrayList<NumberCodeData>();
+		String codeType = (String) params.get("codeType");
+		String name = (String) params.get("name");
+		String engName = (String) params.get("engName");
+		String code = (String) params.get("code");
+		String sort = (String) params.get("sort");
+		String description = (String) params.get("description");
+		boolean enabled = params.get("enabled").equals("true")?true:false;
+		
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(NumberCode.class, true);
+		
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, name);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, engName);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, code);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, sort);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, description);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, enabled);
+		
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.CODE_TYPE, false);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		Map<String,Object> map = new HashMap<String,Object>();
+		while(result.hasMoreElements()){
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCodeData data = new NumberCodeData((NumberCode)obj[0]);
+			list.add(data);
+		}
+		map.put("treeList", list);
+		return map;
 	}
 	
 	/** 
@@ -364,5 +408,63 @@ public class AdminHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+	
+	/** 
+	 * 코드 중복 확인
+	 */
+	public Map<String,Object> codeCheck(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> addList = (ArrayList<Map<String, Object>>) params.get("addRow");
+		Map<String,Object> result = new HashMap<String, Object>();
+		if(addList.size()>0) {
+    		for(Map<String, Object> map : addList) {
+				String codeType = (String) map.get("codeType");
+				String parentOid = StringUtil.checkNull((String) map.get("parentOid"));
+				String code = (String) map.get("code");
+				NumberCodeType ctype = NumberCodeType.toNumberCodeType(codeType);
+				boolean isSeq = ctype.getShortDescription().equals("true") ? true : false;
+				if ( !isSeq && GenNumberHelper.manager.checkCode(codeType, parentOid, code.toUpperCase()) ) {	
+					result.put("result", false);
+					result.put("msg", Message.get("입력하신 코드가 이미(PDM) 등록되어 있습니다. 다시 확인 후 등록해 주세요."));
+					return result;
+		        }
+    		}
+    	}
+		result.put("result", true);
+		return result;
+	}
+	
+	//2016.03.02 이태용차장 문의 넘버코드 사라짐 현상으로 인해 로그 추가
+	public void createLog(String log,String fileName) {
+//			System.out.println("========== "+fileName+" ===========");
+		String filePath = "D:\\e3ps\\numbercode";
+		
+		File folder = new File(filePath);
+		
+		if(!folder.isDirectory()){
+			
+			folder.mkdirs();
+		}
+		fileName = fileName.replace(",", "||");
+		fileName  = "NumberCode"+"_"+fileName;
+		//System.out.println("fileName= " + fileName +",isChange =" + isChange);
+		String toDay = com.e3ps.common.util.DateUtil.getCurrentDateString("date");
+		toDay = com.e3ps.common.util.StringUtil.changeString(toDay, "/", "-");
+		String logFileName = fileName+"_" + toDay.concat(".log");
+		String logFilePath = filePath.concat(File.separator).concat(logFileName);
+		File file = new File(logFilePath);
+		
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(file, true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
+		PrintWriter out = new PrintWriter(new BufferedWriter(fw), true);
+		out.write(log);
+		//System.out.println(log);
+		out.write("\n");
+		out.close();
 	}
 }
