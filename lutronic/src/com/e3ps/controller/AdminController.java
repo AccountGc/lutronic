@@ -446,6 +446,30 @@ public class AdminController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "코드 메뉴별 실행")
+	@ResponseBody
+	@PostMapping(value = "/numberCodeList")
+	public Map<String, Object> numberCodeList(@RequestBody Map<String, Object> params) throws Exception {
+		String codeType = (String) params.get("codeType");
+		NumberCodeType NCodeType = NumberCodeType.toNumberCodeType(codeType);
+//		String parentOid = StringUtil.checkReplaceStr((String) params.get("parentOid"),"");
+		String isSeq = NCodeType.getShortDescription();//자동(true),수동(false);
+		String seqNm = NCodeType.getLongDescription(); //SEQ NM;
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = AdminHelper.manager.numberCodeList(params);
+			result.put("result", SUCCESS);
+			result.put("isSeq", isSeq);
+			result.put("seqNm", seqNm);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "코드 대메뉴 함수")
 	@ResponseBody
 	@PostMapping(value = "/numberCode")
@@ -476,7 +500,7 @@ public class AdminController extends BaseController {
 		return result;
 	}
 	
-	@Description(value = "코드 메뉴별 실행")
+	@Description(value = "코드 메뉴별 실행 PARTTYPE 만")
 	@ResponseBody
 	@PostMapping(value = "/numberCodeTree")
 	public Map<String, Object> numberCodeTree(@RequestBody Map<String, Object> params) throws Exception {
@@ -525,9 +549,38 @@ public class AdminController extends BaseController {
 	public Map<String, Object> numberCodeSave(@RequestBody Map<String, Object> params) throws Exception{
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			AdminHelper.service.numberCodeSave(params);
-			result.put("result", SUCCESS);
-			result.put("msg", SAVE_MSG);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map = AdminHelper.manager.codeCheck(params);
+			if((boolean) map.get("result")) {
+				AdminHelper.service.numberCodeSave(params);
+				result.put("result", SUCCESS);
+				result.put("msg", SAVE_MSG);
+			}else {
+				return map;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "코드 삭제 가능한지 체크")
+	@ResponseBody
+	@PostMapping(value = "/removeCodeCheck")
+	public Map<String, Object> removeCodeCheck(@RequestBody Map<String, Object> params) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			String oid = (String) params.get("oid");
+			NumberCode nCode = (NumberCode) CommonUtil.getObject(oid);
+			boolean isUseCheck=CodeHelper.service.isUseCheck(nCode);
+			if(isUseCheck){
+				result.put("result", FAIL);
+				result.put("msg", Message.get("ECO, CR/ECPR에서 사용하고 있는 코드는 삭제 할수 없습니다."));
+	        }else {
+	        	result.put("result", SUCCESS);
+	        }
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

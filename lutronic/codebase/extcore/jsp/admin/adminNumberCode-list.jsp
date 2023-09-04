@@ -28,10 +28,12 @@
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
+		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="oid" id="oid">
 		<input type="hidden" name="isSeq" id="isSeq">
 		<input type="hidden" name="seqNm" id="seqNm">
+		<input type="hidden" name="codeType" id="codeType">
 
 		<table class="search-table">
 <!-- 			<colgroup> -->
@@ -67,10 +69,19 @@
 				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="enabled" value="true">
+						<input type="radio" name="enabled" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
-								<b></b>
+								<b>ON</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="enabled" value="false">
+						<div class="state p-success">
+							<label>
+								<b>OFF</b>
 							</label>
 						</div>
 					</div>
@@ -171,12 +182,16 @@
 				}, {
 					dataField : "enabled",
 					headerText : "활성화",
-					dataType : "string",
+					dataType : "boolean",
 					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
+				}, {
+					dataField : "parentOid",
+					dataType : "string",
+					visible : false
 				} ]
 			}
 
@@ -202,12 +217,9 @@
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.bind(myGridID, "contextMenu", function(event) {
 		            var myContextMenus  = [{
-		               label : "위에 추가"
+		               label : "아래에 추가", callback : contextItemHandler
 		            }, {
-		               label : "아래에 추가"
-		            }, {
-		               label : "삭제"
-// 		               label : "삭제", callback : contextItemHandler
+		               label : "삭제", callback : contextItemHandler
 		            }];
 		            return myContextMenus;
 	         	});
@@ -222,38 +234,33 @@
 			
 			function loadGridData() {
 				let params = new Object();
-				params.codeType = 'PARTTYPE';
-				const url = getCallUrl("/admin/numberCodeTree");
+				if(isEmpty($("#codeType").val())){
+					params.codeType = 'PARTTYPE';
+				}else{
+					params.codeType = $("#codeType").val();
+				}
+				const field = ["name","engName","code","sort","description"];
+				const enabled = $("input[name=enabled]:checked").val();
+				params = toField(params, field);
+				params.enabled = enabled;
+				var url;
+				if(params.codeType=='PARTTYPE'){
+					url = getCallUrl("/admin/numberCodeTree");
+				}else{
+					url = getCallUrl("/admin/numberCodeList");
+				}
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.treeList[0].total / data.treeList[0].pageSize);
 						createPagingNavigator(data.treeList[0].curPage);
 						AUIGrid.setGridData(myGridID, data.treeList);
+						$("#isSeq").val(data.isSeq);
+						$("#seqNm").val(data.seqNm);
+						$("#codeType").val(data.treeList[0].codeType);
 					} else {
 						alert(data.msg);
 					}
 				});
-			}
-			
-			function auiCellClickHandler(event) {
-				var item = event.item;
-// 				$("#create").hide();
-// 				$("#update").show();
-// 				//$("#delete").show();
-				
-// 				$("#name").val(item.name);
-// 				$("#engName").val(item.engName);
-// 				$("#code").val(item.code);
-// 				$("#code").attr("disabled","true");
-// 				$("#sort").val(item.sort);
-// 				$("#description").val(item.description);
-				
-// 				if(item.enabled==true) {
-// 					$('input:radio[name="enabled"]').prop("checked", true);
-// 				}else {
-// 					$('input:radio[name="enabled"]').prop("checked", false);
-// 				}
-// 				$("#oid").val(item.oid);
 			}
 			
 			document.addEventListener("DOMContentLoaded", function() {
@@ -284,16 +291,66 @@
 				AUIGrid.resize(codeGridID);
 			});
 			
+			function contextItemHandler(event) {
+				var code = '';
+				if($("#isSeq").val()){
+					code = $("#seqNm").val();
+				}
+				switch (event.contextIndex) {
+				case 0:
+					var item = new Object();
+					item.name = "",
+					item.engName = "",
+					item.code = code,
+					item.sort = "",
+					item.description = "",
+					item.enabled = "",
+					item.parentOid = event.item.oid,
+					item.codeType = event.item.codeType
+					
+					// item : 삽입하고자 하는 아이템 Object 또는 배열(배열인 경우 다수가 삽입됨)
+					// rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
+					AUIGrid.addRow(myGridID, item, 'selectionDown');
+					break;
+				case 1:
+					removeCodeCheck(event.item.oid, event.rowIndex);
+					break;
+				}
+			};
+			
+			// 삭제가능한 코드인지 체크
+			function removeCodeCheck(oid, rowIndex){
+				var params = new Object();
+				params.oid = oid;
+				const url = getCallUrl("/admin/removeCodeCheck");
+				call(url, params, function(data) {
+					if (data.result) {
+						AUIGrid.removeRow(myGridID, rowIndex);
+					}else{
+						alert(data.msg);
+					}
+				});
+			}
+			
 			// 저장
 			$("#save").click(function() {
+				// 추가된 행
+				var addedRowItems = AUIGrid.getAddedRowItems(myGridID);
 				// 수정된 행
 				var editedRowItems = AUIGrid.getEditedRowItems(myGridID);
+				// 삭제된 행
+				var removedRowItems = AUIGrid.getRemovedItems(myGridID);
+				
 				var params = new Object();
+				params.addRow = addedRowItems;
 				params.editRow = editedRowItems;
-				var codeType = editedRowItems[0].codeType;
+				params.removeRow = removedRowItems;
+				var codeType = $("#codeType").val();
+				
 				if (!confirm("저장 하시겠습니까?")) {
 					return;
 				}
+				
 				const url = getCallUrl("/admin/numberCodeSave");
 				call(url, params, function(data) {
 					if (data.result) {
@@ -303,7 +360,12 @@
 						alert(data.msg);
 					}
 				});
+				
 			});
+			
+			$("#search").click(function() {
+				loadGridData();
+			})
 			
 			// 검색 초기화
 			$("#reset").click(function() {
@@ -324,13 +386,25 @@
 			
 			function loadGridData2(type) {
 				let params = new Object();
+				const field = ["name","engName","code","sort","description"];
+				const enabled = $("input[name=enabled]:checked").val();
+				params = toField(params, field);
+				params.enabled = enabled;
 				params.codeType = type;
-				const url = getCallUrl("/admin/numberCodeTree");
+				var url;
+				if(params.codeType=='PARTTYPE'){
+					url = getCallUrl("/admin/numberCodeTree");
+				}else{
+					url = getCallUrl("/admin/numberCodeList");
+				}
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.treeList);
+						$("#isSeq").val(data.isSeq);
+						$("#seqNm").val(data.seqNm);
+						$("#codeType").val(type);
 					} else {
 						alert(data.msg);
 					}

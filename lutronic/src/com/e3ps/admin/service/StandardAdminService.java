@@ -17,6 +17,7 @@ import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
+import wt.org.WTPrincipal;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.query.ClassAttribute;
@@ -24,15 +25,20 @@ import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTProperties;
 
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.NumberCodeType;
+import com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.code.service.GenNumberHelper;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.history.LoginHistory;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
@@ -1100,10 +1106,51 @@ public class StandardAdminService extends StandardManager implements AdminServic
 
 	@Override
 	public void numberCodeSave(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> addList = (ArrayList<Map<String, Object>>) params.get("addRow");
 		ArrayList<Map<String, Object>> editList = (ArrayList<Map<String, Object>>) params.get("editRow");
+		ArrayList<Map<String, Object>> removeList = (ArrayList<Map<String, Object>>) params.get("removeRow");
+		Map<String, Object> result = new HashMap<String, Object>();
 		Transaction trx = new Transaction();
 		try{
 	    	trx.start();
+	    	// 추가
+	    	if(addList.size()>0) {
+	    		for(Map<String, Object> map : addList) {
+    				String name = (String) map.get("name");
+    				String engName = (String) map.get("engName");
+    				String sort = (String) map.get("sort");
+    				String description = (String) map.get("description");
+    				String enabled = (String) map.get("enabled");
+    				String codeType = (String) map.get("codeType");
+    				String parentOid = StringUtil.checkNull((String) map.get("parentOid"));
+    				String code = (String) map.get("code");
+    				NumberCodeType ctype = NumberCodeType.toNumberCodeType(codeType);
+    				boolean isSeq = ctype.getShortDescription().equals("true") ? true : false;
+    				String seqNm = ctype.getLongDescription();
+    				
+    				String codeNum = "";
+    				NumberCode nCode = NumberCode.newNumberCode();
+               	 	if(isSeq){
+               	 		codeNum=SequenceDao.manager.getNumberCodeSeqNo(codeType, seqNm, "000", "NumberCode", "code");
+               	 		codeNum=seqNm+codeNum;
+               	 	}else{
+               	 		codeNum = code.toUpperCase();
+               	 	}
+	               	 nCode.setName(name);
+	                 nCode.setEngName(engName);
+	                 nCode.setCode(codeNum);
+	                 nCode.setSort(sort);
+	                 nCode.setDescription(description);
+	                 nCode.setCodeType(ctype);
+//	                 nCode.setDisabled(!"true".equals(enabled));
+	                 nCode.setDisabled("true".equals(enabled));
+	                 if(parentOid!= null && parentOid.length()>0){
+	                	 NumberCode pCode = (NumberCode)CommonUtil.getObject(parentOid);
+	                	 nCode.setParent(pCode);
+	                 }
+	                 PersistenceHelper.manager.save(nCode);
+	    		}
+	    	}
     	    
     	    // 수정
 	    	if(editList.size()>0) {
@@ -1119,11 +1166,27 @@ public class StandardAdminService extends StandardManager implements AdminServic
     				code.setEngName(engName);
     				code.setSort(sort);
     				code.setDescription(description);
-    				code.setDisabled(!"true".equals(enabled));
+    				code.setDisabled("true".equals(enabled));
+//    				code.setDisabled(!"true".equals(enabled));
     				PersistenceHelper.manager.modify(code);
     			}
     		}
 	    	
+	    	// 삭제
+	    	if(removeList.size()>0) {
+	    		for(Map<String, Object> map : removeList) {
+	    			String oid = (String) map.get("oid");
+	    			NumberCode nCode = (NumberCode) CommonUtil.getObject(oid);
+    	        	WTPrincipal curUser = SessionHelper.manager.getPrincipal();
+    	        	String userName = curUser.getName();
+    	        	String log = "user : "+userName+", code : "+nCode.getCode()+", oid : "+oid;
+    	        	
+    	        	AdminHelper.manager.createLog(log, "CodeDelete");
+    	        	
+    	        	PersistenceHelper.manager.delete(nCode);
+	    		}
+	    	}
+			
     	    trx.commit();
 		    trx = null;
 		}catch(Exception e){
