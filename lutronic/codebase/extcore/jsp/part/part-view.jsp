@@ -720,8 +720,8 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 // 			bom2View();
 // 			$("#bomSelect").val("false");
 // 		}else{
-			auiBom(oid,'');
-		}
+		auiBom(oid,'');
+// 		}
 	});
 	$("#auiBom2").click(function() {
 		if($("#bomSelect").val() =="true"){

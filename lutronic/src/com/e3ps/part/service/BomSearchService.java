@@ -45,9 +45,6 @@ public interface BomSearchService {
 
 	List<Object[]> ancestorPart(WTPart part, Baseline baseline, State state)
 			throws WTException;
-
-	List<Map<String, Object>> getAUIPartTreeAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
 	
 	List<Map<String, Object>> getAUIBOMRootChildAction(HttpServletRequest request,
 			HttpServletResponse response) throws Exception;
