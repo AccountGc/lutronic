@@ -143,7 +143,6 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
        String contents = StringUtil.checkNull((String) params.get("contents"));
        
        ArrayList<String> secondarys = (ArrayList<String>)params.get("secondarys");
-       String[] deloc = (String[]) params.get("delocIds");
        
        String reOid = "";
        try {
@@ -160,29 +159,8 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 				notice = (Notice) PersistenceHelper.manager.modify(notice);
 				// 기존 첨부 파일이 삭제 된 여부를 판단 하여 삭제 한다.
 				// null 인 경우는 전부 삭제 된 경우다..
-				if(deloc != null){
-					ContentHolder holder = ContentHelper.service.getContents((ContentHolder)f.getReference(oid).getObject());
-				    Vector files = ContentHelper.getContentList(holder);
-		      		if ( files != null ) {
-		      		    for ( int i = 0 ; i < files.size() ; i++ ) {
-		      		    	// 이미 들어 있던 파일을 검색
-		      		    	ApplicationData oldFile = (ApplicationData)files.get(i);
-		      		    	boolean flag = true;
-		      		    	//삭제 된 파일을 찾아 삭제하여 준다.
-		      		    	for(int j=0; j< deloc.length; j++){
-		      		    		String oidNo = deloc[j];
-								if(oidNo.equals(oldFile.getPersistInfo().getObjectIdentifier().toString())){
-									flag = false;
-								}
-							}
-		      		    	if(flag){
-		      		    		CommonContentHelper.service.delete(notice, oldFile);
-		      		    	}
-		      		    }
-		      		}
-				}else{
-					CommonContentHelper.service.delete(notice);
-				}
+				
+				CommonContentHelper.service.delete(notice);
 				
 				for (int i = 0; i < secondarys.size(); i++) {
 					String cacheId = (String) secondarys.get(i);

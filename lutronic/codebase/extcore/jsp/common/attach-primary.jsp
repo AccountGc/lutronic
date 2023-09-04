@@ -49,9 +49,17 @@ String oid = request.getParameter("oid");
 // 				closeLayer();
 			},
 			onDelete : function() {
-				const key = this.file.tagId;
+				const key = this.file._id_;
 				const el = document.getElementById(key);
 				el.parentNode.removeChild(el);
+				
+				const secondarys = document.getElementsByName("secondarys");
+				for (let i = 0; i < secondarys.length; i++) {
+					const tag = secondarys[i];
+					if(tag.id === key){
+						tag.parentNode.removeChild(tag);						
+					}
+				}
 			}
 		})
 	
