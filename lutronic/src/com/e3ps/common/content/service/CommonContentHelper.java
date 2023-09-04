@@ -95,6 +95,7 @@ public class CommonContentHelper {
 							file.getPath());
 
 					JSONObject obj = new JSONObject();
+					obj.put("oid", data.getPersistInfo().getObjectIdentifier().toString());
 					obj.put("_id_", UUID.randomUUID().toString());
 					obj.put("tagId", UUID.randomUUID().toString());
 					obj.put("name", data.getFileName());
@@ -135,6 +136,7 @@ public class CommonContentHelper {
 					CachedContentDescriptor ccd = new CachedContentDescriptor(streamId, folderId, fileSize[0], 0,
 							file.getPath());
 
+					obj.put("oid", data.getPersistInfo().getObjectIdentifier().toString());
 					obj.put("_id_", UUID.randomUUID().toString());
 					obj.put("tagId", UUID.randomUUID().toString());
 					obj.put("name", data.getFileName());
@@ -175,6 +177,7 @@ public class CommonContentHelper {
 					CachedContentDescriptor ccd = new CachedContentDescriptor(streamId, folderId, fileSize[0], 0,
 							file.getPath());
 
+					obj.put("oid", data.getPersistInfo().getObjectIdentifier().toString());
 					obj.put("_id_", UUID.randomUUID().toString());
 					obj.put("tagId", UUID.randomUUID().toString());
 					obj.put("name", data.getFileName());

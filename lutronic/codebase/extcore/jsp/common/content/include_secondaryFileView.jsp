@@ -8,15 +8,21 @@ String oid = request.getParameter("oid");
 		pars : "oid=<%=oid%>&roleType=secondary",
 		onsucc : function(res) {
 			if (!res.e) {
-				const form = document.querySelector("form");
 				const data = res.secondaryFile;
 				const len = data.length;
-				console.log(data);
 				for (let i = 0; i < len; i++) {
-					document.querySelector("#attachSecondaryFile").innerHTML += "<span id='" + data[i]._id_ + "' class='attachFiles' style='cursor: pointer;'>" +  data[i].name + "</span>";
+					document.querySelector("#attachSecondaryFile").innerHTML += "<span id='" + data[i].oid + "' class='attachFiles' style='cursor: pointer; text-decoration: underline;'>" +  data[i].name + "</span>";
 				}
-				secondary.setUploadedList(data);
 			}
 		}
 	});
+	
+	document.addEventListener("click", (e)=>{
+		if(e.target.classList.contains("attachFiles")){
+			const oid = e.target.id;
+			document.location.href = "/Windchill/eSolution/content/download?oid=" + oid;
+		}
+	})
 </script>
+
+
