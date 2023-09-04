@@ -54,7 +54,15 @@ public class DocumentController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
+		ArrayList<NumberCode> documentNameList = NumberCodeHelper.manager.getArrayCodeList("DOCUMENTNAME");
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		model.setViewName("/extcore/jsp/document/document-create.jsp");
+		model.addObject("documentNameList", documentNameList);
+		model.addObject("preserationList", preserationList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("modelList", modelList);
 		return model;
 	}
 

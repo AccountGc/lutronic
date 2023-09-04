@@ -22,6 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.service.ECRHelper;
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.rohs.ROHSMaterial;
@@ -57,9 +59,11 @@ public class RohsController extends BaseController {
 	
 	@Description(value = "물질 등록")
 	@GetMapping(value = "/create")
-	public ModelAndView create() {
+	public ModelAndView create() throws Exception{
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/rohs/rohs-create.jsp");
+		model.addObject("manufactureList", manufactureList);
 		return model;
 	}
 	

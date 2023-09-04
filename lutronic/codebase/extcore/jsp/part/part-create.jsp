@@ -1,5 +1,13 @@
 <%@page import="wt.org.WTUser"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	ArrayList<NumberCode> partTypeList = (ArrayList<NumberCode>) request.getAttribute("partTypeList");
+	ArrayList<NumberCode> partName1List = (ArrayList<NumberCode>) request.getAttribute("partName1List");
+	ArrayList<NumberCode> partName2List = (ArrayList<NumberCode>) request.getAttribute("partName2List");
+	ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribute("partName3List");
+%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
@@ -55,9 +63,16 @@
 				</td>
 				<th rowspan="4">품목명 <span style="color:red;">*</span></th>
 				<th>대제목</th>
-				<td class="indent5">
-					<input type="text" name="partName1" id="partName1" class="width-300">
-				</td>
+				<td class="indent5"><select name="partName1"  id="partName1" class="width-300">
+						<option value="">선택</option>
+						<%
+						for (NumberCode partName1 : partName1List) {
+						%>
+						<option value="<%=partName1.getCode() %>"><%=partName1.getName()%></option>
+						<%
+						}
+						%>
+				</select></td>
 			</tr>
 			<tr>
 				<th>품목구분 <span style="color:red;">*</span></th>
@@ -69,9 +84,16 @@
 					</select>
 				</td>
 				<th>중제목</th>
-				<td class="indent5">
-					<input type="text" name="partName2" id="partName2" class="width-300">
-				</td>
+				<td class="indent5"><select name="partName2"  id="partName2" class="width-300">
+						<option value="">선택</option>
+						<%
+						for (NumberCode partName2 : partName2List) {
+						%>
+						<option value="<%=partName2.getCode() %>"><%=partName2.getName()%></option>
+						<%
+						}
+						%>
+				</select></td>
 			</tr>
 			<tr>
 				<th>대분류 <span style="color:red;">*</span></th>
@@ -83,9 +105,16 @@
 					</select>
 				</td>
 				<th>소제목</th>
-				<td class="indent5">
-					<input type="text" name="partName3" id="partName3" class="width-300">
-				</td>
+				<td class="indent5"><select name="partName3"  id="partName3" class="width-300">
+						<option value="">선택</option>
+						<%
+						for (NumberCode partName3 : partName3List) {
+						%>
+						<option value="<%=partName3.getCode() %>"><%=partName3.getName()%></option>
+						<%
+						}
+						%>
+				</select></td>
 			</tr>
 			<tr>
 				<th>중분류 <span style="color:red;">*</span></th>

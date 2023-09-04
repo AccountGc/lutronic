@@ -1,5 +1,10 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+%>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
 <%-- <input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>"> --%>
@@ -47,7 +52,16 @@
 			</tr>
 			<tr>
 				<th class="lb">작성부서</th>
-				<td class="indent5" ><input type="text" name="createDepart" id="createDepart" class="width-200"></td>
+				<td class="indent5"><select name="deptcode" id="deptcode" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
+				</select></td>
 				<th class="lb">작성자</th>
 				<td class="indent5" ><input type="text" name="writer" id="writer" class="width-200"></td>
 			</tr>

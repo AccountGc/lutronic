@@ -14,7 +14,12 @@
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.rohs.ROHSMaterial"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
+%>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
 <%-- <input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>"> --%>
@@ -83,7 +88,13 @@
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 							<option value="">선택</option>
-							<option value="MF003">MF003</option>
+							<%
+							for (NumberCode manufacture : manufactureList) {
+							%>
+							<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+							<%
+							}
+							%>
 					</select>
 				</td>
 			</tr>
