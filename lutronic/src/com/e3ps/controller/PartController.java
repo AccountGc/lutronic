@@ -1439,6 +1439,7 @@ public class PartController extends BaseController {
 	@RequestMapping("/viewAUIPartBom")
 	public ModelAndView viewAUIPartBom(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
+		
 		String oid = request.getParameter("oid");
 		String baseline = request.getParameter("baseline");
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
@@ -1452,15 +1453,15 @@ public class PartController extends BaseController {
 		List<Map<String, String>> list = null;
 		try {
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
-			ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
-			if (line != null) {
-				title = line.getName();
-			} else {
-
-				title = number;
-
+			title = number;
+			if(!"".equals(baseline)) {
+				ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
+				if (line != null) {
+					title = line.getName();
+				}
 			}
-
+			
+			System.out.println("title          :     "+title);
 		} catch (Exception e) {
 			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
@@ -1628,11 +1629,8 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/viewAUIPartBomAction")
-	public List<Map<String, Object>> viewAUIPartBomAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		List<Map<String, Object>> list = BomSearchHelper.service.getAUIPartTreeAction(request, response);
-
+	public List<Map<String, Object>> viewAUIPartBomAction(@RequestBody Map<String, Object> params) throws Exception {
+		List<Map<String, Object>> list = BomSearchHelper.manager.getAUIPartTreeAction(params);
 		return list;
 	}
 
