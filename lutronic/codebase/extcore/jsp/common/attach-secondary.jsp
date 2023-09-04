@@ -49,16 +49,16 @@ String oid = request.getParameter("oid");
 				const key = this.file._id_;
 				const el = document.getElementById(key);
 				el.parentNode.removeChild(el);
+				
+				const secondarys = document.getElementsByName("secondarys");
+				for (let i = 0; i < secondarys.length; i++) {
+					const tag = secondarys[i];
+					if(tag.id === key){
+						tag.parentNode.removeChild(tag);						
+					}
+				}
 			}
 		})
-		
-// 		let params = new Object();
-<%-- 		const oid = "<%= oid %>"; --%>
-// 		const roleType = "secondary";
-		
-// 		params.oid = oid;
-// 		params.roleType = roleType;
-		
 		
 		new AXReq("/Windchill/eSolution/content/list", {
 			pars : "oid=<%=oid%>&roleType=secondary",
@@ -81,6 +81,10 @@ String oid = request.getParameter("oid");
 		});
 	}
 	load();
+	
+	document.querySelectorAll(".AXUploadBtnsA").forEach((deleteFile) =>{
+		console.log(deleteFile);
+	});
 	
 	
 	//파일 전체 삭제
