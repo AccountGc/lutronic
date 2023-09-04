@@ -7,6 +7,120 @@
 
 <script type="text/javascript" src="/Windchill/jsp/js/dhtmlx/dhtmlx.js" ></script>
 
+
+
+<form name=PartTreeForm id="PartTreeForm" method="post">
+
+<input type="hidden" name="viewName" id="viewName" value="<c:out value='${view }'/>" />
+
+<input type="hidden" name="oid" id="oid" value="<c:out value='${oid }'/>"/>
+
+<input type="hidden" name="oid2" id="oid2"/>
+<input type="hidden" name="baseline2" id="baseline2"/>
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0" >
+
+	<tr align=center>
+	    <td valign="top" style="padding:0px 0px 0px 0px">
+		    <table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
+		   		<tr> 
+		   			<td height="30" width="93%" align="center"><B><font color=white>BOM</font></B></td>
+		   		</tr>
+			</table>
+		    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
+		    	<tr height="30">
+		    		<td width="40%" align="left">
+		    		
+		    			<select name="baseline" id="baseline">
+				    		<option value=''>-
+			    			</option>
+				    		<c:forEach items="${list }" var="baseline">
+				    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
+				    				<c:out value="${baseline.baseName }" />
+				    			</option>
+				    		</c:forEach>
+			    		</select>
+			    		
+			    		<select name="desc" id="desc">
+			    			<option value="true" >정전개</option>
+			    			<option value="false">역전개</option>
+			    		</select>
+			    	</td>
+			    	
+		    		<td>
+						<table border="0" cellpadding="0" cellspacing="4" align="right">
+							<tr>
+								<td>
+									<button type="button" name="upItem" id="upItem" class="btnCustom" style="width: 80px">
+										<span></span>
+										상위품목
+									</button>
+								</td>
+								
+					    		<td>
+					    			<button type="button" name="downItem" id="downItem" class="btnCustom" style="width: 80px">
+										<span></span>
+										하위품목
+									</button>
+								</td>
+								
+					    		<td>
+					    			<button type="button" name="endItem" id="endItem" class="btnCustom" style="width: 90px">
+										<span></span>
+										END ITEM
+									</button>
+								</td>
+								
+								<td>
+									<button type="button" name="excelDown" id="excelDown" class="btnCustom" style="width: 100px">
+										<span></span>
+										Excel Down
+									</button>
+								</td>
+								<td>
+									<button type="button" name="drawingDown" id="drawingDown" class="btnCustom" style="width: 120px">
+										<span></span>
+										도면 일괄 Down
+									</button>
+								</td>
+								<td>
+									<button type="button" name="compare" id="compare" class="btnCustom" style="width: 120px">
+										<span></span>
+										베이스라인 비교
+									</button>
+								</td>
+								
+								
+								<td>
+									<button type="button" name="" id="" class="btnClose" onclick="self.close()" style="width: 50px">
+										<span></span>
+										닫기
+									</button>
+								</td>
+							</tr>
+						</table>
+		    		</td>
+		    	</tr>
+		    </table>
+		</td>
+	</tr>
+	
+	<tr align=center>
+		<td valign="top" style="padding:0px 0px 0px 0px">
+		
+			<table width="100%"  border="0" cellpadding="0" cellspacing="0" class="tablehead" align="center">
+	    		<tr>
+	    			<td height=1 width=100%></td>
+	    		</tr>
+			</table>
+    		<div id="partTree" style="width:100%;"></div>
+		</td>
+	</tr>
+
+</table>
+
+</form>
+
 <script>
 
 var rowId = 0;
@@ -415,115 +529,3 @@ window.duplicationCheck = function(parnetId, number) {
 }
 
 </script>
-
-<form name=PartTreeForm id="PartTreeForm" method="post">
-
-<input type="hidden" name="viewName" id="viewName" value="<c:out value='${view }'/>" />
-
-<input type="hidden" name="oid" id="oid" value="<c:out value='${oid }'/>"/>
-
-<input type="hidden" name="oid2" id="oid2"/>
-<input type="hidden" name="baseline2" id="baseline2"/>
-
-<table width="100%" border="0" cellpadding="0" cellspacing="0" >
-
-	<tr align=center>
-	    <td valign="top" style="padding:0px 0px 0px 0px">
-		    <table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
-		   		<tr> 
-		   			<td height="30" width="93%" align="center"><B><font color=white>BOM</font></B></td>
-		   		</tr>
-			</table>
-		    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
-		    	<tr height="30">
-		    		<td width="40%" align="left">
-		    		
-		    			<select name="baseline" id="baseline">
-				    		<option value=''>-
-			    			</option>
-				    		<c:forEach items="${list }" var="baseline">
-				    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
-				    				<c:out value="${baseline.baseName }" />
-				    			</option>
-				    		</c:forEach>
-			    		</select>
-			    		
-			    		<select name="desc" id="desc">
-			    			<option value="true" >정전개</option>
-			    			<option value="false">역전개</option>
-			    		</select>
-			    	</td>
-			    	
-		    		<td>
-						<table border="0" cellpadding="0" cellspacing="4" align="right">
-							<tr>
-								<td>
-									<button type="button" name="upItem" id="upItem" class="btnCustom" style="width: 80px">
-										<span></span>
-										상위품목
-									</button>
-								</td>
-								
-					    		<td>
-					    			<button type="button" name="downItem" id="downItem" class="btnCustom" style="width: 80px">
-										<span></span>
-										하위품목
-									</button>
-								</td>
-								
-					    		<td>
-					    			<button type="button" name="endItem" id="endItem" class="btnCustom" style="width: 90px">
-										<span></span>
-										END ITEM
-									</button>
-								</td>
-								
-								<td>
-									<button type="button" name="excelDown" id="excelDown" class="btnCustom" style="width: 100px">
-										<span></span>
-										Excel Down
-									</button>
-								</td>
-								<td>
-									<button type="button" name="drawingDown" id="drawingDown" class="btnCustom" style="width: 120px">
-										<span></span>
-										도면 일괄 Down
-									</button>
-								</td>
-								<td>
-									<button type="button" name="compare" id="compare" class="btnCustom" style="width: 120px">
-										<span></span>
-										베이스라인 비교
-									</button>
-								</td>
-								
-								
-								<td>
-									<button type="button" name="" id="" class="btnClose" onclick="self.close()" style="width: 50px">
-										<span></span>
-										닫기
-									</button>
-								</td>
-							</tr>
-						</table>
-		    		</td>
-		    	</tr>
-		    </table>
-		</td>
-	</tr>
-	
-	<tr align=center>
-		<td valign="top" style="padding:0px 0px 0px 0px">
-		
-			<table width="100%"  border="0" cellpadding="0" cellspacing="0" class="tablehead" align="center">
-	    		<tr>
-	    			<td height=1 width=100%></td>
-	    		</tr>
-			</table>
-    		<div id="partTree" style="width:100%;"></div>
-		</td>
-	</tr>
-
-</table>
-
-</form>

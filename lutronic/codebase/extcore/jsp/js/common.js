@@ -1620,7 +1620,7 @@ function viewBaselineBom(partOid){
 ****************************************************************/
 function auiBom(partOid,baselineOid){
 	
-	var str = getURLString("part", "viewAUIPartBom", "do") + "?oid="+partOid+"&baseline="+baselineOid;
+	var str = getCallUrl("/part/viewAUIPartBom") + "?oid="+partOid+"&baseline="+baselineOid;
     var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
     leftpos = (screen.width - 1000)/ 2;
     toppos = (screen.height - 600) / 2 ;
@@ -1630,7 +1630,7 @@ function auiBom(partOid,baselineOid){
 }
 function auiBom2(partOid,baselineOid){
 	
-	var str = getURLString("part", "viewAUIPartBom2", "do") + "?oid="+partOid+"&baseline="+baselineOid;
+	var str = getCallUrl("/part/viewAUIPartBom2") + "?oid="+partOid+"&baseline="+baselineOid;
     var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
     leftpos = (screen.width - 1000)/ 2;
     toppos = (screen.height - 600) / 2 ;

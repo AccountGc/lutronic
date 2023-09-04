@@ -37,7 +37,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 <%-- 			<% } %> --%>
 			<input type="button"  value="Rev.이력"  title="Rev.이력" id="versionBtn">
 			<input type="button"  value="BOM"  title="BOM"  id="auiBom">
-			<input type="button"  value="단계별  BOM"  title="단계별  BOM"  id="auiBom2">
+<!-- 			<input type="button"  value="단계별  BOM"  title="단계별  BOM"  id="auiBom2"> -->
 			<input type="button"  value="BOM Editor"  title="BOM Editor"  id="bomE">
 			<input type="button"  value="Compare"  title="Compare"  id="Compare">
 <%-- 			<% if(!data.isLateste()){ %> --%>
@@ -229,12 +229,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	</div>
 	
 	<!-- 관련 ECO -->
-	<div id="tabs-7">
-		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp">
-			<jsp:param value="part" name="moduleType"/>
-			<jsp:param value="<%=data.getOid() %>" name="oid" />
-		</jsp:include>
-	</div>
+<!-- 	<div id="tabs-7"> -->
+<%-- 		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp"> --%>
+<%-- 			<jsp:param value="part" name="moduleType"/> --%>
+<%-- 			<jsp:param value="<%=data.getOid() %>" name="oid" /> --%>
+<%-- 		</jsp:include> --%>
+<!-- 	</div> -->
 	
 	<!-- 관련 개별 업무 -->
 	<div id="tabs-8">
@@ -716,10 +716,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 	
 	$("#auiBom").click(function() {
-		if($("#bomSelect").val() =="true"){
-			bom2View();
-			$("#bomSelect").val("false");
-		}else{
+// 		if($("#bomSelect").val() =="true"){
+// 			bom2View();
+// 			$("#bomSelect").val("false");
+// 		}else{
 			auiBom(oid,'');
 		}
 	});
