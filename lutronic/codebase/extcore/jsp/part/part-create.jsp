@@ -69,7 +69,7 @@
 				<th>품목구분 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
 					<select id="partType1" name="partType1" style="width: 95%">
-						<option value="1">
+						<option value="">
 							선택
 						</option>
 					</select>
@@ -87,7 +87,7 @@
 				<th>대분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
 					<select id="partType2" name="partType2" style="width: 95%">
-						<option value="01">
+						<option value="">
 							선택
 						</option>
 					</select>
@@ -105,7 +105,7 @@
 				<th>중분류 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="2">
 					<select id="partType3" name="partType3" style="width: 95%">
-						<option value="01">
+						<option value="">
 							선택
 						</option>
 					</select>
@@ -479,6 +479,64 @@
 				$("#partTypeNum").html($("#partType1").val() + $("#partType2").val() + this.value);
 			})
 			
+			<%----------------------------------------------------------
+			*                      SEQ 입력 중
+			----------------------------------------------------------%>
+			$("#seq").keypress(function (event) {
+				if($("#partType3").val() == "" ) {
+					alert("제품분류을(를) 선택하세요.");
+					return false;
+				}else {
+					return common_isNumber(event, this);
+				}
+		    })
+		    
+		    <%----------------------------------------------------------
+			*                      SEQ 입력시
+			----------------------------------------------------------%>
+			$("#seq").keyup(function() {
+				var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
+				$("#seq").val(result);
+			})
+			
+			<%----------------------------------------------------------
+			*                      SEQ 입력 후 focus 이동시
+			----------------------------------------------------------%>
+			$("#seq").focusout(function() {
+				if($("#partType3").val() != "" && $.trim(this.value) ) {
+					$("#seqNum").html(this.value);
+				}
+			})
+		    
+			<%----------------------------------------------------------
+			*                      기타 입력 중
+			----------------------------------------------------------%>
+			$("#etc").keypress(function (event) {
+				if($.trim($("#seq").val()) == "" ) {
+					alert("SEQ을(를) 입력하세요.");
+					return false;
+				}else{
+					return common_isNumber(event, this);
+				}
+		    })
+		    
+			<%----------------------------------------------------------
+			*                      기타 입력시
+			----------------------------------------------------------%>
+			$("#etc").keyup(function() {
+				var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
+				$("#etc").val(result);
+			})
+			
+			<%----------------------------------------------------------
+			*                      기타 입력 후 focus 이동시
+			----------------------------------------------------------%>
+			$("#etc").focusout(function() {
+				if($.trim($("#seq").val()) != "" && $.trim(this.value) ) {
+					$("#etcNum").html(this.value);
+				}
+			})
+	
 			// NumberCode 리스트 가져오기
 			const numberCodeList = (id, parentCode1) => {
 				var type = "";
