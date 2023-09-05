@@ -72,6 +72,23 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
 	}
+	
+	@Description(value = "파트타입 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/partTypeList")
+	public List<NumberCodeData> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
+		String codeType = StringUtil.checkNull((String) params.get("codeType"));
+		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
+		boolean search = (boolean) params.get("search");
+		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
+		try {
+			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid, search);			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(list.size());
+		return list;
+	}
 
 	@Description(value = "품목 등록 페이지")
 	@GetMapping(value = "/create")

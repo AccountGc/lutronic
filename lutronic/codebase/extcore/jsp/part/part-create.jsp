@@ -468,37 +468,86 @@
 				AUIGrid.resize(rohsGridID);
 			});
 			
+			// PartType1 세팅
+			$(document).ready(function () {
+				numberCodeList('partType1', '');
+			})
+			
 			<%----------------------------------------------------------
-			*                      NumberCode 리스트 가져오기
+			*                      제품구분 변경시
 			----------------------------------------------------------%>
-// 			const numberCodeList = (id, parentCode1) => {
-// 				var type = "";
-// 				if(id == 'partType1' || id == 'partType2' || id =='partType3') {
-// 					type = "PARTTYPE";
-// 				}else {
-// 					type = id.toUpperCase();
-// 				}
+			$("#partType1").change(function() {
+				numberCodeList('partType2', $("#partType1 option:selected").attr("title"));
+				$("#partTypeNum").html(this.value);
+			})
+			<%----------------------------------------------------------
+			*                      대분류 변경시
+			----------------------------------------------------------%>
+			$("#partType2").change(function() {
+				numberCodeList('partType3', $("#codeNum").html() + $("#partType2 option:selected").attr("title"));
+				$("#partTypeNum").html($("#partType1").val() + this.value);
+			})
+			<%----------------------------------------------------------
+			*                      중분류 변경시
+			----------------------------------------------------------%>
+			$("#partType3").change(function() {
+				$("#partTypeNum").html($("#partType1").val() + $("#partType2").val() + this.value);
+			})
+			
+			// PartType 리스트 가져오기
+			const numberCodeList = (id, parentCode1) => {
+				var type = "";
+				if(id == 'partType1' || id == 'partType2' || id =='partType3') {
+					type = "PARTTYPE";
+				}else {
+					type = id.toUpperCase();
+				}
 				
-// 				let data = common_numberCodeList(type, parentCode1, false);
+				let data = [];
 				
-// 				addSelectList(id, eval(data.responseText));
-// 			}
+				part_numberCodeList(type, parentCode1, false)
+				    .then(result => {
+				    	addSelectList(id, result);
+				    })
+				    .catch(error => {
+				        console.error(error);
+				    });
+				    
+			}
 
-			<%----------------------------------------------------------
-			*                      selectBodx에 옵션 추가
-			----------------------------------------------------------%>
-// 			const addSelectList = (id,data) => {
-// 				const removeId = "#"+ id + " option";
-// 				document.querySelector(removeId).remove();
-// 				const selectId = "#"+ id;
-// 				document.querySelector(selectId).innerHTML = "<option value='' title='' > 선택 </option>";
-// 				if(data.length > 0) {
-// 					for(var i=0; i<data.length; i++) {
-// 						let value = "<option value='" + data[i].code + "' title='" + data[i].oid + "' > [" + data[i].code + "] " + data[i].name + "</option>";
-// 						document.querySelector(selectId).innerHTML += value;
-// 					}
-// 				}
-// 			}
+			// PartType Select태그 option 추가
+			const addSelectList = (id,data) => {
+				const removeId = "#"+ id + " option";
+				document.querySelector(removeId).remove();
+				const selectId = "#"+ id;
+				document.querySelector(selectId).innerHTML = "<option value='' title='' > 선택 </option>";
+				console.log(document.querySelector(selectId));
+				if(data.length > 0) {
+					for(let i=0; i<data.length; i++) {
+						let value = "<option value='" + data[i].code + "' title='" + data[i].oid + "' > [" + data[i].code + "] " + data[i].name + "</option>";
+						document.querySelector(selectId).innerHTML += value;
+					}
+				}
+			}
+			
+			// PartType 리스트 가져오기
+			function part_numberCodeList(type, parentOid, search) {
+			    const url = getCallUrl("/part/partTypeList");
+			    const params = {
+			        codeType: type,
+			        parentOid: parentOid,
+			        search: search
+			    };
+
+			    return new Promise((resolve, reject) => {
+			        call(url, params, function(dataList) {
+			            const result = dataList.map(data => data); // 복사하지 않고 dataList 그대로 사용할 수 있습니다.
+			            console.log(result); // 데이터를 로그로 출력
+			            resolve(result); // Promise를 이용해 데이터 반환
+			        });
+			    });
+			}
+
 		</script>
 	</form>
 </body>
