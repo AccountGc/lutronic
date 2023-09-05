@@ -18,7 +18,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="type" id="type" />
@@ -86,7 +86,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "name",
+					dataField : "userName",
 					headerText : "이름",
 					dataType : "string",
 					width : 120,
@@ -95,25 +95,25 @@
 						inline : true
 					},
 				}, {
-					dataField : "id",
+					dataField : "userID",
 					headerText : "아이디",
 					dataType : "string",
-					width : 400,
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "moduleInfo",
 					headerText : "해당모듈",
 					dataType : "string",
-					width : 120,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "downCount",
 					headerText : "다운횟수",
 					dataType : "string",
 					width : 120,
@@ -122,7 +122,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "downTime",
 					headerText : "다운시간",
 					dataType : "string",
 					width : 120,
@@ -131,7 +131,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "describe",
 					headerText : "다운사유",
 					dataType : "string",
 					width : 120,
@@ -171,7 +171,9 @@
 			}
 
 			function loadGridData() {
-				var params = _data($("#form"));
+				var params = new Object();
+				const field = ["manager","createdFrom","createdTo","_psize","type"];
+				params = toField(params, field);
 				var url = getCallUrl("/admin/downLoadHistory");
 				call(url, params, function(data) {
 					if (data.result) {
@@ -270,6 +272,14 @@
 				$("#page").val(1);
 				loadGridData();
 			}
+			
+			$("#searchBtn").click(function() {
+				loadGridData();
+			});
+			
+			$("#btnReset").click(function() {
+				$("input[type=text]").val("");
+			});
 		</script>
 	</form>
 </body>

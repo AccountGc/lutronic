@@ -18,7 +18,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
@@ -125,7 +125,9 @@
 			}
 
 			function loadGridData() {
-				var params = _data($("#form"));
+				var params = new Object();
+				const field = ["userName","userId","_psize"];
+				params = toField(params, field);
 				var url = getCallUrl("/admin/loginHistory");
 				call(url, params, function(data) {
 					if (data.result) {
@@ -162,6 +164,15 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+			});
+			
+			$("#searchBtn").click(function() {
+				loadGridData();
+			});
+			
+			// 검색 초기화
+			$("#btnReset").click(function() {
+				$("input[type=text]").val("");
 			});
 		</script>
 	</form>

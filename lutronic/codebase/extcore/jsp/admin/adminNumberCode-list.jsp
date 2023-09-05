@@ -353,7 +353,7 @@
 			// 검색
 			function searchData(){
 				let params = new Object();
-				const field = ["name","engName","code","sort","description","codeType"];
+				const field = ["name","engName","code","sort","description","codeType","_psize"];
 				const enabled = $("input[name=enabled]:checked").val();
 				params = toField(params, field);
 				params.enabled = enabled;
@@ -374,6 +374,7 @@
 			// 검색 초기화
 			$("#reset").click(function() {
 				$("input[type=text]").val("");
+				$('input:radio[name="enabled"]:input[value="true"]').prop('checked',true);
 			});
 			
 			// 목록 열기/닫기
