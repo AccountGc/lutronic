@@ -343,7 +343,7 @@
 		const searchDocumentName = function(id, value) {
 			const codeType = id.toUpperCase();
 				
-			autoSearchDocumentName(codeType, value)
+			autoSearchName(codeType, value)
 				.then(result => {
 					addSearchList(id, result, false);
 				})
@@ -353,12 +353,9 @@
 		}
 		
 		// documentName 가져오기 메서드
-		const autoSearchDocumentName = function(codeType, value) {
+		const autoSearchName = function(codeType, value) {
 			
-			console.log(codeType);
-			console.log(value);
-			
-			const url = getCallUrl("/doc/autoSearchName");
+			const url = getCallUrl("/common/autoSearchName");
 			 const params = {
 				 codeType: codeType,	
 				 value: value
@@ -367,7 +364,6 @@
 			 return new Promise((resolve, reject) => {
 		        call(url, params, function(dataList) {
 		            const result = dataList.map(data => data); 
-		            console.log(result); 
 		            resolve(result); 
 		        });
 		    });
