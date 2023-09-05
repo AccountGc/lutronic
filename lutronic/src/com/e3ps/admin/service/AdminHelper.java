@@ -157,16 +157,16 @@ public class AdminHelper {
 		String code = (String) params.get("code");
 		String sort = (String) params.get("sort");
 		String description = (String) params.get("description");
-		boolean enabled = params.get("enabled").equals("true")?true:false;
+		boolean enabled = (boolean) params.get("enabled");
 		
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(NumberCode.class, true);
 		
 		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, name);
-		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, engName);
-		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, code);
-		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, sort);
-		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, description);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.ENG_NAME, engName);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.SORT, sort);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.DESCRIPTION, description);
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, enabled);
 		
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
@@ -183,6 +183,11 @@ public class AdminHelper {
 			list.add(data);
 		}
 		map.put("treeList", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
 		return map;
 	}
 	

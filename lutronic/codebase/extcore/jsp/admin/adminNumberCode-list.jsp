@@ -103,7 +103,7 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="search">
+					<input type="button" value="검색" title="검색" id="search" onclick="searchData();">
 					<input type="button" value="초기화" title="초기화" id="reset">
 					<input type="button" value="목록 열기/닫기" title="목록 열기/닫기" id="listBtn">
 					<input type="button" value="저장" title="저장" id="save" class="blue">
@@ -234,21 +234,8 @@
 			
 			function loadGridData() {
 				let params = new Object();
-				if(isEmpty($("#codeType").val())){
-					params.codeType = 'PARTTYPE';
-				}else{
-					params.codeType = $("#codeType").val();
-				}
-				const field = ["name","engName","code","sort","description"];
-				const enabled = $("input[name=enabled]:checked").val();
-				params = toField(params, field);
-				params.enabled = enabled;
-				var url;
-				if(params.codeType=='PARTTYPE'){
-					url = getCallUrl("/admin/numberCodeTree");
-				}else{
-					url = getCallUrl("/admin/numberCodeList");
-				}
+				params.codeType = 'PARTTYPE';
+				const url = getCallUrl("/admin/numberCodeTree");
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.treeList[0].total / data.treeList[0].pageSize);
@@ -278,7 +265,7 @@
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
-					loadGridData();
+					searchData();
 				}
 			})
 
@@ -363,9 +350,26 @@
 				
 			});
 			
-			$("#search").click(function() {
-				loadGridData();
-			})
+			// 검색
+			function searchData(){
+				let params = new Object();
+				const field = ["name","engName","code","sort","description","codeType"];
+				const enabled = $("input[name=enabled]:checked").val();
+				params = toField(params, field);
+				params.enabled = enabled;
+				const url = getCallUrl("/admin/numberCodeList");
+				call(url, params, function(data) {
+					if (data.result) {
+						totalPage = Math.ceil(data.treeList[0].total / data.treeList[0].pageSize);
+						createPagingNavigator(data.treeList[0].curPage);
+						AUIGrid.setGridData(myGridID, data.treeList);
+						$("#isSeq").val(data.isSeq);
+						$("#seqNm").val(data.seqNm);
+					} else {
+						alert(data.msg);
+					}
+				});
+			}
 			
 			// 검색 초기화
 			$("#reset").click(function() {
