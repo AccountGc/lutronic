@@ -37,6 +37,8 @@ import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ECOSearchHelper;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -248,8 +250,20 @@ public class DistributeController extends BaseController {
 	
 	@Description(value = "완제품 검색 페이지")
 	@GetMapping(value = "/listProduction")
-	public ModelAndView listProduction() {
+	public ModelAndView listProduction() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
 		model.setViewName("/extcore/jsp/distribute/part-list.jsp");
 		return model;
 	}

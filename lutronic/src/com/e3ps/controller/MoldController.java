@@ -41,9 +41,15 @@ public class MoldController extends BaseController {
 	@Description(value = "금형 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("moldTypeList", moldTypeList);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/jsp/mold/mold-list.jsp");

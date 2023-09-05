@@ -1,6 +1,13 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
+	ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+	ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
@@ -113,6 +120,13 @@ if (request.getParameter("popup") != null) {
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-300">
 						<option value="">선택</option>
+						<%
+						for (NumberCode preseration : preserationList) {
+						%>
+						<option value="<%=preseration.getCode() %>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -121,12 +135,26 @@ if (request.getParameter("popup") != null) {
 				<td class="indent5">
 					<select name="model" id="model" class="width-300">
 						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-300">
 						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>

@@ -32,6 +32,8 @@ import com.e3ps.change.service.ECOHelper;
 import com.e3ps.change.service.ECRHelper;
 import com.e3ps.change.service.ECRSearchHelper;
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 //import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
@@ -45,9 +47,11 @@ public class ChangeECRController extends BaseController {
 	
 	@Description(value = "ECR 등록 페이지")
 	@GetMapping(value = "/create")
-	public ModelAndView createECR(HttpServletRequest request, HttpServletResponse response){
+	public ModelAndView createECR(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/change/ecr-create.jsp");
+		model.addObject("deptcodeList", deptcodeList);
 		return model;
 	}
 	

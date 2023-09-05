@@ -98,7 +98,13 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception{
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
+		model.addObject("preserationList", preserationList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("modelList", modelList);
 		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;
 	}
