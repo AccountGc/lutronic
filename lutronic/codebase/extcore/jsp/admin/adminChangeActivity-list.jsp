@@ -1,3 +1,5 @@
+<%@page import="com.e3ps.change.beans.ROOTData"%>
+<%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="com.e3ps.common.code.NumberCodeType"%>
@@ -6,7 +8,7 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// NumberCode c = NumberCode.newNumberCode();
+List<ROOTData> rootList = (List<ROOTData>) request.getAttribute("rootList");
 %>
 <!DOCTYPE html>
 <html>
@@ -18,7 +20,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
@@ -33,6 +35,15 @@
 				<td class="indent5">
 					<select name="rootOid" id="rootOid" class="width-200">
 						<option value="">선택</option>
+						<%
+						if(rootList.size()>0){
+							for (ROOTData data : rootList) {
+							%>
+							<option value="<%=data.getOid()%>"><%=data.getName()%></option>
+							<%
+							}
+						}
+						%>
 					</select>
 				</td>
 				<td class="right">
@@ -69,7 +80,7 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "step",
+					dataField : "stepName",
 					headerText : "단계",
 					dataType : "string",
 					width : 120,
@@ -87,7 +98,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "activityType",
+					dataField : "activityName",
 					headerText : "활동구분",
 					dataType : "string",
 					width : 120,
@@ -156,7 +167,10 @@
 			}
 
 			function loadGridData() {
-				var params = _data($("#form"));
+				var params = new Object();
+				const field = ["rootOid","_psize"];
+				params = toField(params, field);
+				
 				var url = getCallUrl("/admin/changeActivityList");
 				call(url, params, function(data) {
 					if (data.result) {
