@@ -1120,7 +1120,7 @@ public class StandardAdminService extends StandardManager implements AdminServic
     				String engName = (String) map.get("engName");
     				String sort = (String) map.get("sort");
     				String description = (String) map.get("description");
-    				String enabled = (String) map.get("enabled");
+    				boolean enabled = (boolean) map.get("enabled");
     				String codeType = (String) map.get("codeType");
     				String parentOid = StringUtil.checkNull((String) map.get("parentOid"));
     				String code = (String) map.get("code");
@@ -1160,13 +1160,13 @@ public class StandardAdminService extends StandardManager implements AdminServic
     				String engName = (String) map.get("engName");
     				String sort = (String) map.get("sort");
     				String description = (String) map.get("description");
-    				String enabled = (String) map.get("enabled");
+    				boolean enabled = (boolean) map.get("enabled");
     				NumberCode code = (NumberCode) CommonUtil.getObject(oid);
     				code.setName(name);
     				code.setEngName(engName);
     				code.setSort(sort);
     				code.setDescription(description);
-    				code.setDisabled("true".equals(enabled));
+    				code.setDisabled(enabled);
 //    				code.setDisabled(!"true".equals(enabled));
     				PersistenceHelper.manager.modify(code);
     			}
