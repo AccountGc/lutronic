@@ -125,6 +125,46 @@ public class MoldController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "승인원 검색 페이지")
+	@GetMapping(value = "/ap-list")
+	public ModelAndView apList() throws Exception {
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("moldTypeList", moldTypeList);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("sessionUser", sessionUser);
+		model.setViewName("/extcore/jsp/ap/ap-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "승인원 등록 페이지")
+	@GetMapping(value = "/ap-create")
+	public ModelAndView apCreate() throws Exception{
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> moldtypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/ap/ap-create.jsp");
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("moldtypeList", moldtypeList);
+		model.addObject("deptcodeList", deptcodeList);
+		return model;
+	}
+	
+	@Description(value = "승인원 결재 페이지")
+	@GetMapping(value = "/ap-all")
+	public ModelAndView apAll() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/ap/ap-all.jsp");
+		return model;
+	}
+	
 	/**	문서 상세보기
 	 * @param request
 	 * @param response
