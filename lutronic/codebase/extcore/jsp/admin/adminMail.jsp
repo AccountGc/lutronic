@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.org.MailUser"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="com.e3ps.common.code.NumberCodeType"%>
@@ -6,7 +7,11 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// NumberCode c = NumberCode.newNumberCode();
+// MailUser u = MailUser.newMailUser();
+// u.setEmail("test@gmail.com");
+// u.setIsDisable(true);
+// u.setName("테스트");
+// PersistenceHelper.manager.save(u);
 %>
 <!DOCTYPE html>
 <html>
@@ -18,7 +23,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
@@ -78,10 +83,9 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="등록" title="등록" id="createUser" class="blue">
-					<input type="button" value="수정" title="수정" id="updateUser" style="display: none;">
-					<input type="button" value="삭제" title="삭제" id="deleteUser" style="display: none;">
+					<input type="button" value="검색" title="검색" id="search">
 					<input type="button" value="초기화" title="초기화" id="reset">
+					<input type="button" value="저장" title="저장" id="save" class="blue">
 				</td>
 			</tr>
 		</table>
@@ -150,7 +154,11 @@
 			}
 
 			function loadGridData() {
-				var params = _data($("#form"));
+				var params = new Object();
+				const field = ["name","email","_psize"];
+				params = toField(params, field);
+				const enable = $("input[name=enable]:checked").val();
+				params.enable = enable;
 				var url = getCallUrl("/admin/adminMail");
 				call(url, params, function(data) {
 					if (data.result) {
@@ -191,11 +199,14 @@
 				AUIGrid.resize(myGridID);
 			});
 			
+			$("#search").click(function() {
+				loadGridData();
+			});
+			
 			$("#reset").click(function() {
-				$("#createUser").show();
-				$("#updateUser").hide();
-				$("#deleteUser").hide();
-			})
+				$("input[type=text]").val("");
+				$('input:radio[name="enable"]:input[value="true"]').prop('checked',true);
+			});
 			
 		</script>
 	</form>

@@ -1120,7 +1120,7 @@ public class StandardAdminService extends StandardManager implements AdminServic
     				String engName = (String) map.get("engName");
     				String sort = (String) map.get("sort");
     				String description = (String) map.get("description");
-    				boolean enabled = (boolean) map.get("enabled");
+    				boolean enabled = map.get("enabled").equals("true") ? true : false;
     				String codeType = (String) map.get("codeType");
     				String parentOid = StringUtil.checkNull((String) map.get("parentOid"));
     				String code = (String) map.get("code");
@@ -1160,7 +1160,7 @@ public class StandardAdminService extends StandardManager implements AdminServic
     				String engName = (String) map.get("engName");
     				String sort = (String) map.get("sort");
     				String description = (String) map.get("description");
-    				boolean enabled = (boolean) map.get("enabled");
+    				boolean enabled = map.get("enabled").equals("true") ? true : false;
     				NumberCode code = (NumberCode) CommonUtil.getObject(oid);
     				code.setName(name);
     				code.setEngName(engName);

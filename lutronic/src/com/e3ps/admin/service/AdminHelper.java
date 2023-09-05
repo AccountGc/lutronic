@@ -157,7 +157,7 @@ public class AdminHelper {
 		String code = (String) params.get("code");
 		String sort = (String) params.get("sort");
 		String description = (String) params.get("description");
-		boolean enabled = (boolean) params.get("enabled");
+		boolean enabled = params.get("enabled").equals("true") ? true : false;
 		
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(NumberCode.class, true);
@@ -254,31 +254,19 @@ public class AdminHelper {
 	 * 외부 메일 리스트
 	 */
 	public Map<String,Object> adminMail(Map<String, Object> params) throws Exception {
-		String command = StringUtil.checkNull((String) params.get("command"));
 	    String oid = StringUtil.checkNull((String) params.get("oid"));    
 	    String name = StringUtil.checkNull((String) params.get("name"));
 	    String email = StringUtil.checkNull((String) params.get("email"));
-	    String enable = StringUtil.checkNull((String) params.get("enable"));
+	    boolean enable = params.get("enable").equals("true") ? true : false;
 	    
-		QuerySpec query = new QuerySpec(MailUser.class);
-        if(command.equals("search")){
-			if(email.length() > 0){
-	        	 if(query.getConditionCount()>0) query.appendAnd();
-	        	 query.appendWhere(new SearchCondition(MailUser.class, MailUser.EMAIL, SearchCondition.LIKE, "%" + email+ "%",true), new int[] { 0 });
-	        }
-	        
-	        if(name.length() > 0){
-	        	if(query.getConditionCount()>0) query.appendAnd();
-	        	query.appendWhere(new SearchCondition(MailUser.class, MailUser.NAME, SearchCondition.EQUAL, "%" + name + "%"), new int[] { 0 });
-	        }
-        }
+	    QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(MailUser.class, true);
+		
+		QuerySpecUtils.toLikeAnd(query, idx, MailUser.class, MailUser.NAME, name);
+		QuerySpecUtils.toLikeAnd(query, idx, MailUser.class, MailUser.EMAIL, email);
+		QuerySpecUtils.toBooleanAnd(query, idx, MailUser.class, MailUser.IS_DISABLE, enable);
+		QuerySpecUtils.toOrderBy(query, idx, MailUser.class, MailUser.NAME, false);
         
-        if(enable.equals("true")){
-        	if(query.getConditionCount()>0) query.appendAnd();
-        	query.appendWhere(new SearchCondition(MailUser.class, MailUser.IS_DISABLE, SearchCondition.IS_TRUE), new int[] { 0 });
-        }
-	    query.appendOrderBy(new OrderBy(new ClassAttribute(MailUser.class,MailUser.NAME),false),new int[]{0});
-	    
 	    PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		
@@ -313,7 +301,6 @@ public class AdminHelper {
 		String userId = (String) params.get("userId");
 			
 		QuerySpec qs = new QuerySpec();
-		
 		int idx = qs.appendClassList(LoginHistory.class, true);
 	    	
         if(userName != null && userName.trim().length() > 0) {

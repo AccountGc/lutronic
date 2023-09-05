@@ -15,6 +15,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.download.DownloadHistory;
 
@@ -32,7 +33,7 @@ public class DownloadData {
 	private String moduleInfo ="" ;
 	private int downCount =0;
 	private String describe;
-	private Timestamp downTime = null;
+	private String downTime;
 	
 	public DownloadData() {
 		
@@ -46,7 +47,7 @@ public class DownloadData {
 		setDescribe(StringUtil.checkReplaceStr(history.getDescribe(), "-"));
 		setModuleInfo(getModuleInfo(history.getDOid()));
 		setDownCount(history.getDCount());
-		setDownTime(history.getPersistInfo().getModifyStamp());
+		setDownTime(DateUtil.getDateString(history.getPersistInfo().getModifyStamp(),"a"));
 	}
 	
 	private String getModuleInfo(String oid){
