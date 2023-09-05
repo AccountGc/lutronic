@@ -56,6 +56,14 @@ public class NumberCodeHelper {
 		return list;
 	}
 	
+	/**
+	 * PartType 입력값에 따른 PartTypeList 가져오기
+	 * @param codeType
+	 * @param parentOid
+	 * @param search
+	 * @return
+	 * @throws Exception
+	 */
 	public List<NumberCodeData> getArrayPartTypeList(String codeType, String parentOid, boolean search) throws Exception {
 		ArrayList<NumberCodeData> list = new ArrayList<>();
 		long parentLongOid = 0;
@@ -76,6 +84,29 @@ public class NumberCodeHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode commonCode = (NumberCode) obj[0];
 			NumberCodeData data = new NumberCodeData(commonCode);
+			list.add(data);
+		}
+		return list;
+	}
+	
+	public List<NumberCodeData> autoSearchName(String codeType, String name) throws Exception{
+		ArrayList<NumberCodeData> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		if(query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(new SearchCondition(NumberCode.class, NumberCode.NAME, SearchCondition.LIKE, "%" + name + "%", false), new int[] {idx});
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
+
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode code = (NumberCode) obj[0];
+			NumberCodeData data = new NumberCodeData(code);
 			list.add(data);
 		}
 		return list;

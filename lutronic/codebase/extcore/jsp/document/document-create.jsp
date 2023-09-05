@@ -23,7 +23,6 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-	ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttribute("documentNameList");
 	ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 	ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 	ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -86,7 +85,13 @@
 		</tr>
 		<tr>
 			<th class="req lb">문서종류</th>
-			<td class="indent5"><input type="text" name="documentName" id="documentName" class="width-200"></td>
+			<td class="indent5">
+				<input type="text" name="documentName" id="documentName" class="width-200">
+				<div id="documentNameSearch" style="display: none; border: 1px solid black ; position: absolute; background-color: white; z-index: 1;">
+					<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left; ">
+					</ul>
+				</div>
+			</td>
 			<th class="">문서명</th>
 			<td class="indent5"><input type="text" name="docName" id="docName" class="width-200"></td>
 		</tr>
@@ -306,6 +311,103 @@
 // 			AUIGrid.resize(myGridID11);
 // 			AUIGrid.resize(myGridID8);
 		});
+		
+		// 문서명 키 입력 시 메서드
+		document.querySelector("#documentName").addEventListener('keyup', (event) => {
+			
+			const charCode = (event.which) ? event.which : event.keyCode;
+			
+			if(charCode == 38 || charCode == 40){
+				const searchElem = document.querySelector("#" + event.id + "Search");
+				
+				if(searchElem && !searchElem.hidden){
+					const isAdd = (charCode === 38);
+					moveDocumentNameFocus(this.id, isAdd);
+				}
+			} else if(charCode == 13 || charCode == 27){
+				const searchElem = document.querySelector("#" + event.id + "Search");
+				
+				if(searchElem){
+					searchElem.style.display = "none";
+				}
+			} else {
+				searchDocumentName(event.target.id, event.target.value);
+			}
+		});
+		
+		$("input[name=documentName]").focusout(function () {
+			$("#" + this.id + "Search").hide();
+		})
+		
+		// 문서종류 입력 시 documentName 리스트 출력 메서드
+		const searchDocumentName = function(id, value) {
+			const codeType = id.toUpperCase();
+				
+			autoSearchDocumentName(codeType, value)
+				.then(result => {
+					addSearchList(id, result, false);
+				})
+				.catch(error => {
+					console.error(error);
+				})
+		}
+		
+		// documentName 가져오기 메서드
+		const autoSearchDocumentName = function(codeType, value) {
+			
+			console.log(codeType);
+			console.log(value);
+			
+			const url = getCallUrl("/doc/autoSearchName");
+			 const params = {
+				 codeType: codeType,	
+				 value: value
+		    };
+			 
+			 return new Promise((resolve, reject) => {
+		        call(url, params, function(dataList) {
+		            const result = dataList.map(data => data); 
+		            console.log(result); 
+		            resolve(result); 
+		        });
+		    });
+		}
+
+		<%----------------------------------------------------------
+		*                      문서명 입력시 데이터 리스트 보여주기
+		----------------------------------------------------------%>
+		const addSearchList = function(id, data, isRemove) {
+			$("#" + id + "UL li").remove();
+			if(isRemove) {
+				$("#" + this.id + "Search").hide();
+			}else {
+				if(data.length > 0) {
+					$("#" + id + "Search").show();
+					for(var i=0; i<data.length; i++) {
+						$("#" + id + "UL").append("<li title='" + id + "' class=''>" + data[i].name);
+					}
+				}else {
+					$("#" + id + "Search").hide();
+				}
+			}
+		}
+
+		<%----------------------------------------------------------
+		*                      문서명 데이터 마우스 올렸을때
+		----------------------------------------------------------%>
+		$(document).on("mouseover", 'div > ul > li', function() {
+			var partName = $(this).attr("title");
+			$(this).addClass("hover");
+			$("#" + partName).val($(this).text());
+		})
+
+		<%----------------------------------------------------------
+		*                      문서명 데이터 마우스 뺄때
+		----------------------------------------------------------%>
+		$(document).on("mouseout", 'div > ul > li', function() {
+			$(this).removeClass("hover");
+		})
+		
 	</script>
 	</form>
 </body>

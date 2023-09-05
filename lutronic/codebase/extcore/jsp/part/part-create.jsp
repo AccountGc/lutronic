@@ -541,9 +541,9 @@
 
 			    return new Promise((resolve, reject) => {
 			        call(url, params, function(dataList) {
-			            const result = dataList.map(data => data); // 복사하지 않고 dataList 그대로 사용할 수 있습니다.
-			            console.log(result); // 데이터를 로그로 출력
-			            resolve(result); // Promise를 이용해 데이터 반환
+			            const result = dataList.map(data => data); 
+			            console.log(result); 
+			            resolve(result); 
 			        });
 			    });
 			}
