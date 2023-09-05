@@ -85,6 +85,8 @@
 					</select>
 					<input type="button" value="검색" title="검색" id="search">
 					<input type="button" value="초기화" title="초기화" id="reset">
+					<input type="button" value="추가" title="추가" id="add" class="blue">
+					<input type="button" value="삭제" title="삭제" id="delete" class="red">
 					<input type="button" value="저장" title="저장" id="save" class="blue">
 				</td>
 			</tr>
@@ -129,7 +131,7 @@
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-					showRowCheckColumn : false,
+					showRowCheckColumn : true,
 // 					rowNumHeaderText : "번호",
 					fillColumnSizeMode: true,
 					showAutoNoDataMessage : true,
@@ -141,6 +143,8 @@
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					editable : true,
+					rowCheckToRadio : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -197,6 +201,56 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+			});
+			
+			// 추가
+			$("#add").click(function() {
+				var item = new Object();
+				AUIGrid.addRow(myGridID, item, 'first');
+			});
+			
+			// 삭제
+			$("#delete").click(function() {
+				var items = AUIGrid.getCheckedRowItems(myGridID);
+				if (items.length == 0) {
+					alert("삭제 할 행을 선택하세요.");
+				}
+				for (var i = 0; i < items.length; i++) {
+					AUIGrid.removeRow(myGridID, items[i].rowIndex);
+				}
+			});
+			
+			// 저장
+			$("#save").click(function() {
+				// 추가된 행
+				var addedRowItems = AUIGrid.getAddedRowItems(myGridID);
+				// 수정된 행
+				var editedRowItems = AUIGrid.getEditedRowItems(myGridID);
+				// 삭제된 행
+				var removedRowItems = AUIGrid.getRemovedItems(myGridID);
+				
+				if (addedRowItems.length == 0 && editedRowItems.length == 0 && removedRowItems.length == 0) {
+					return;
+				}
+				
+				if (!confirm("저장 하시겠습니까?")) {
+					return;
+				}
+				
+				var params = new Object();
+				params.addRow = addedRowItems;
+				params.editRow = editedRowItems;
+				params.removeRow = removedRowItems;
+				
+				const url = getCallUrl("/admin/adminMailSave");
+				call(url, params, function(data) {
+					if (data.result) {
+						alert(data.msg);
+						loadGridData();
+					} else {
+						alert(data.msg);
+					}
+				});
 			});
 			
 			$("#search").click(function() {

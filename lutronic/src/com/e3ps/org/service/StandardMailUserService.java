@@ -1,5 +1,6 @@
 package com.e3ps.org.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -7,6 +8,7 @@ import java.util.Vector;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.WTObject;
+import wt.pom.Transaction;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
@@ -286,5 +288,64 @@ public class StandardMailUserService extends StandardManager implements MailUser
 			MailUtil.manager.sendeOutSideMail(wtobject, mailUserMap);
 		}
 		
+	}
+
+	@Override
+	public void adminMailSave(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> addList = (ArrayList<Map<String, Object>>) params.get("addRow");
+		ArrayList<Map<String, Object>> editList = (ArrayList<Map<String, Object>>) params.get("editRow");
+		ArrayList<Map<String, Object>> removeList = (ArrayList<Map<String, Object>>) params.get("removeRow");
+		Transaction trx = new Transaction();
+		try{
+	    	trx.start();
+	    	
+	    	// 추가
+	    	if(addList.size()>0) {
+	    		for(Map<String, Object> map : addList) {
+	    			String name 	 = StringUtil.checkNull((String)map.get("name"));
+	    			String email 	 = StringUtil.checkNull((String)map.get("email"));
+	    			boolean enable = map.get("enable").equals("true") ? true : false;
+	    			
+	    			MailUser user = MailUser.newMailUser();
+	    			user.setName(name);
+	    	        user.setEmail(email);
+	    	        user.setIsDisable(enable);
+	    	        PersistenceHelper.manager.save(user);
+	    		}
+	    	}
+		
+	    	// 수정
+	    	if(editList.size()>0) {
+	    		for(Map<String, Object> map : editList) {
+	    			String oid 		 = StringUtil.checkNull((String)map.get("oid"));
+	    			String name 	 = StringUtil.checkNull((String)map.get("name"));
+	    			String email 	 = StringUtil.checkNull((String)map.get("email"));
+	    			boolean enable = map.get("enable").equals("true") ? true : false;
+	    			MailUser user = (MailUser)CommonUtil.getObject(oid);
+	    			user.setName(name);
+	    	        user.setEmail(email);
+	    	        user.setIsDisable(enable);
+	    	        PersistenceHelper.manager.modify(user);
+	    		}
+	    	}
+	    	
+	    	// 삭제
+	    	if(removeList.size()>0) {
+	    		for(Map<String, Object> map : removeList) {
+	    			String oid = StringUtil.checkNull((String)map.get("oid"));
+	    			MailUser user = (MailUser)CommonUtil.getObject(oid);
+	    			PersistenceHelper.manager.delete(user);
+	    		}
+	    	}
+	    	
+	    	trx.commit();
+		    trx = null;
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			if(trx!=null){
+				trx.rollback();
+			}
+		}
 	}
 }

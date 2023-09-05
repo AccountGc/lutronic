@@ -327,6 +327,23 @@ public class AdminController extends BaseController {
 //		return map;
 //	}
 	
+	@Description(value = "외부 메일 저장")
+	@ResponseBody
+	@PostMapping(value = "/adminMailSave")
+	public Map<String, Object> adminMailSave(@RequestBody Map<String, Object> params) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			MailUserHelper.service.adminMailSave(params);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@ResponseBody
 	@RequestMapping("/actionMailUser")
 	public Map<String,String> actionMailUser(HttpServletRequest request, HttpServletResponse response) {

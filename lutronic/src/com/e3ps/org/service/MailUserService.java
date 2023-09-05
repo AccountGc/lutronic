@@ -29,4 +29,5 @@ public interface MailUserService {
 
 	void sendWTObjectMailUser(WTObject wtobject);
 
+	public void adminMailSave(Map<String, Object> params) throws Exception;
 }

@@ -328,15 +328,19 @@
 				// 삭제된 행
 				var removedRowItems = AUIGrid.getRemovedItems(myGridID);
 				
+				if (addedRowItems.length == 0 && editedRowItems.length == 0 && removedRowItems.length == 0) {
+					return;
+				}
+				
+				if (!confirm("저장 하시겠습니까?")) {
+					return;
+				}
+				
 				var params = new Object();
 				params.addRow = addedRowItems;
 				params.editRow = editedRowItems;
 				params.removeRow = removedRowItems;
 				var codeType = $("#codeType").val();
-				
-				if (!confirm("저장 하시겠습니까?")) {
-					return;
-				}
 				
 				const url = getCallUrl("/admin/numberCodeSave");
 				call(url, params, function(data) {

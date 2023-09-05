@@ -1109,7 +1109,6 @@ public class StandardAdminService extends StandardManager implements AdminServic
 		ArrayList<Map<String, Object>> addList = (ArrayList<Map<String, Object>>) params.get("addRow");
 		ArrayList<Map<String, Object>> editList = (ArrayList<Map<String, Object>>) params.get("editRow");
 		ArrayList<Map<String, Object>> removeList = (ArrayList<Map<String, Object>>) params.get("removeRow");
-		Map<String, Object> result = new HashMap<String, Object>();
 		Transaction trx = new Transaction();
 		try{
 	    	trx.start();
@@ -1143,7 +1142,7 @@ public class StandardAdminService extends StandardManager implements AdminServic
 	                 nCode.setDescription(description);
 	                 nCode.setCodeType(ctype);
 //	                 nCode.setDisabled(!"true".equals(enabled));
-	                 nCode.setDisabled("true".equals(enabled));
+	                 nCode.setDisabled(enabled);
 	                 if(parentOid!= null && parentOid.length()>0){
 	                	 NumberCode pCode = (NumberCode)CommonUtil.getObject(parentOid);
 	                	 nCode.setParent(pCode);
