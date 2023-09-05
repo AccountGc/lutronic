@@ -331,6 +331,24 @@
 					</li>
 				</ul>
 			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-files-o"></i>
+					<span class="nav-label">승인원</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/mold/ap-list', '> 승인원 > 승인원 검색');">승인원 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/mold/ap-create', '> 승인원 > 승인원 등록');">승인원 등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/mold/ap-all', '> 승인원 > 승인원 결재');">승인원 결재</a>
+					</li>
+				</ul>
+			</li>
 			<%if(CommonUtil.isAdmin()) {%>
 				<li>
 					<a href="css_animation.html">
