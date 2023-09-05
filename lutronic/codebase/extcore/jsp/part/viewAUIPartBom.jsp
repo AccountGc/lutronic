@@ -5,7 +5,12 @@
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 <%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
 <%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
+<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<%@include file="/extcore/jsp/common/script.jsp"%>
+<%@include file="/extcore/jsp/common/css.jsp"%>
+
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 
 <style type="text/css">
 /* 계층 트리 아이콘  Windchill/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/plus.gif*/
@@ -95,116 +100,62 @@
 	    <td valign="top" style="padding:0px 0px 0px 0px">
 		    <table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
 		   		<tr> 
-		   			<td height="30" width="93%" align="center"><B><font color=white><%= title %> BOM</font></B></td>
+		   			<td height="30" width="93%" align="center"><B><%= title %> BOM</B></td>
 		   		</tr>
 			</table>
 		    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
 		    	<tr height="30">
 		    		<td width="40%" align="left">
-		    			<table border="0" cellpadding="0" cellspacing="4" align="left">
-		    				<tr>
-								<td valign="bottom">
-					    			<button type="button" name="expand" id="expand" class="btnCustom" style="width: 70px">펼치기</button>
-					    		</td>
-					    		<td valign="bottom">
-									<select id="depthSelect" onchange="showItemsOnDepth()">
-									</select>
-									<select name="desc" id="desc">
-										<option value="true" >정전개</option>
-										<option value="false">역전개</option>
-						    		</select>
-						    	</td>
-						    	<td valign="bottom">
-									<input type="checkbox" name="checkDummy" id="checkDummy" value="true" checked onchange="viewAUIPartBomAction()" > 더미제외
-								</td>
-							</tr>
-						</table>
+						<input type="button" value="펼치기" title="펼치기" id="expand" class="width-80">
+						
+						<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120"></select>
+						
+						<select name="desc" id="desc" class="AXSelect width-100">
+							<option value="true" >정전개</option>
+							<option value="false">역전개</option>
+			    		</select>
+						<input type="checkbox" name="checkDummy" id="checkDummy" value="true"  onchange="viewAUIPartBomAction()" checked> 더미제외
 			    	</td>
-		    		<td>
-						<table border="0" cellpadding="0" cellspacing="4" align="right">
-							<tr>
-								<td>
-									<select name="baselineView" id="baselineView" >
-							    		<option value="" selected="selected" disabled="disabled">-- Baseline 보기 --</option>
-							    		<option value="<c:out value='${lastedoid }'/>"  ><c:out value='${number }'/>[BOM]</option>
-						    			</option>
-							    		<c:forEach items="${list }" var="baseline">
-							    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
-							    				<c:out value="${baseline.baseName }" />
-							    			</option>
-							    		</c:forEach>
-						    		</select>
-								</td>
-								<td>
-									<select name="baseline" id="baseline" >
-							    		<option value="" selected="selected" disabled="disabled">-- Baseline 비교--</option>
-						    			<c:forEach items="${list }" var="baseline">
-							    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
-							    				<c:out value="${baseline.baseName }" />
-							    			</option>
-							    		</c:forEach>
-						    		</select>
-								</td>
-								<td>
-<!-- 									<input type="button" value="상위품목" title="상위품목" id="upItem"> -->
-									<button type="button" name="upItem" id="upItem" class="btnCustom" style="width: 80px">
-										<span></span>
-										상위품목
-									</button>
-								</td>
-								
-					    		<td>
-					    			<button type="button" name="downItem" id="downItem" class="btnCustom" style="width: 80px">
-										<span></span>
-										하위품목
-									</button>
-								</td>
-								
-					    		<td>
-					    			<button type="button" name="endItem" id="endItem" class="btnCustom" style="width: 90px">
-										<span></span>
-										END ITEM
-									</button>
-								</td>
-								<!--
-								<td>
-									<button type="button" name="compare" id="compare" class="btnCustom" style="width: 120px">
-										<span></span>
-										베이스라인 비교
-									</button>
-								</td>
-								-->
-					    		<td>
-					    		<!-- 
-					    			<input type="radio" id="excelDownOption" name="excelDownOption" value="1" checked>:전체
-					    			<input type="radio" id="excelDownOption" name="excelDownOption" value="0">:화면
-					    		 -->
-					    			<button type="button" name="excelDown" id="excelDown" class="btnCustom" style="width: 80px">
-										<span></span>
-										EXCEL
-									</button>
-								</td>
-								
-								<td>
-									<button type="button" name="attachDown" id="attachDown" class="btnCustom" style="width: 50px">
-										<span></span>
-										첨부
-									</button>
-								</td>
-								<td>
-									<button type="button" name="drawingDown" id="drawingDown" class="btnCustom" style="width: 50px">
-										<span></span>
-										도면 
-									</button>
-								</td>
-								<td>
-									<button type="button" name="" id="" class="btnClose" onclick="self.close()" style="width: 50px">
-										<span></span>
-										닫기
-									</button>
-								</td>
-							</tr>
-						</table>
+			    	
+		    		<td  align="right">
+						<select name="baselineView" id="baselineView"  class="AXSelect width-150">
+				    		<option value="" selected="selected" disabled="disabled">-- Baseline 보기 --</option>
+				    		<option value="<c:out value='${lastedoid }'/>"  ><c:out value='${number }'/>[BOM]</option>
+			    			</option>
+				    		<c:forEach items="${list }" var="baseline">
+				    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
+				    				<c:out value="${baseline.baseName }" />
+				    			</option>
+				    		</c:forEach>
+			    		</select>
+			    		
+						<select name="baseline" id="baseline"  class="AXSelect width-150">
+				    		<option value="" selected="selected" disabled="disabled">-- Baseline 비교--</option>
+			    			<c:forEach items="${list }" var="baseline">
+				    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
+				    				<c:out value="${baseline.baseName }" />
+				    			</option>
+				    		</c:forEach>
+			    		</select>
+			    		
+						<input type="button" value="상위품목" title="상위품목" id="upItem">
+						
+						<input type="button" value="하위품목" title="하위품목" id="downItem">
+						
+						<input type="button" value="END ITEM" title="END ITEM" id="endItem">
+						
+						<input type="button" value="EXCEL" title="EXCEL" id="excelDown">
+						
+						<input type="button" value="첨부" title="첨부" id="attachDown">
+						
+						<input type="button" value="도면" title="도면" id="drawingDown">
+						
+						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+									
+<!-- 									<button type="button" name="" id="" class="btnClose" onclick="self.close()" style="width: 50px"> -->
+<!-- 										<span></span> -->
+<!-- 										닫기 -->
+<!-- 									</button> -->
 		    		</td>
 		    	</tr>
 		    </table>
@@ -519,10 +470,10 @@ $(function() {
 	$("#expand").click(function() {
 		if (!isExpand) {
 			AUIGrid.expandAll(myBOMGridID);
-			$("#expand").css("display", "block").text("접기");
+			$("#expand").val("접기")
 			isExpand = true;
 		} else {
-			$("#expand").css("display", "block").text("펼치기");
+			$("#expand").val("펼치기")
 			AUIGrid.collapseAll(myBOMGridID);
 			isExpand = false;
 		}

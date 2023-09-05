@@ -1624,7 +1624,7 @@ function auiBom(partOid,baselineOid){
     var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
     leftpos = (screen.width - 1000)/ 2;
     toppos = (screen.height - 600) / 2 ;
-    rest = "width=1200,height=600,left=" + leftpos + ',top=' + toppos;
+    rest = "width=1400,height=600,left=" + leftpos + ',top=' + toppos;
     var newwin = window.open( str , partOid, opts+rest);
     newwin.focus();
 }

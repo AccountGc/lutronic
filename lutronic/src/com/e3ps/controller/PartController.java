@@ -1486,7 +1486,6 @@ public class PartController extends BaseController {
 				}
 			}
 			
-			System.out.println("title          :     "+title);
 		} catch (Exception e) {
 			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
@@ -1513,7 +1512,7 @@ public class PartController extends BaseController {
 		model.addObject("desc", desc);
 		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
-		model.setViewName("popup:/part/viewAUIPartBom");
+		model.setViewName("/extcore/jsp/part/viewAUIPartBom.jsp");
 
 		return model;
 	}
