@@ -820,6 +820,8 @@ public class AdminController extends BaseController {
 	@GetMapping(value = "/changeActivityList")
 	public ModelAndView changeActivityList() throws Exception{
 		ModelAndView model = new ModelAndView();
+		List<ROOTData> rootList = AdminHelper.manager.getRootDefinition();
+		model.addObject("rootList", rootList);
 		model.setViewName("/extcore/jsp/admin/adminChangeActivity-list.jsp");
 		return model;
 	}

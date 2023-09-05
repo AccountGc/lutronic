@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivityDefinition;
+import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.beans.EADData;
+import com.e3ps.change.beans.ROOTData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.beans.NumberCodeData;
@@ -458,5 +460,26 @@ public class AdminHelper {
 		//System.out.println(log);
 		out.write("\n");
 		out.close();
+	}
+	
+	/** 
+	 * Root별 활동 리스트
+	 */
+	public List<ROOTData> getRootDefinition() throws Exception{
+		List<ROOTData> list= new ArrayList<ROOTData>();
+		
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(EChangeActivityDefinitionRoot.class, true);
+		
+		query.appendOrderBy(new OrderBy(new ClassAttribute(EChangeActivityDefinitionRoot.class, "sortNumber"), false),new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+
+		while (result.hasMoreElements()) {
+			Object[] o = (Object[]) result.nextElement();
+			EChangeActivityDefinitionRoot root = (EChangeActivityDefinitionRoot) o[0];
+			ROOTData data = new ROOTData(root);
+			list.add(data);
+		}
+		return list;
 	}
 }
