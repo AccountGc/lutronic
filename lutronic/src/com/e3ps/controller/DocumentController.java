@@ -29,6 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.message.Message;
@@ -54,16 +56,26 @@ public class DocumentController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> documentNameList = NumberCodeHelper.manager.getArrayCodeList("DOCUMENTNAME");
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		model.setViewName("/extcore/jsp/document/document-create.jsp");
-		model.addObject("documentNameList", documentNameList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		return model;
+	}
+	
+	@Description(value = "DocumentName 데이터 리턴")
+	@ResponseBody
+	@PostMapping(value = "/autoSearchName")
+	public List<NumberCodeData> autoSearchName(@RequestBody Map<String, Object> params) throws Exception{
+		String codeType = StringUtil.checkNull((String) params.get("codeType"));
+		String name = StringUtil.checkNull((String) params.get("value"));
+		System.out.println(codeType);
+		System.out.println(name);
+		List<NumberCodeData> list = NumberCodeHelper.manager.autoSearchName(codeType, name);
+		return list;
 	}
 
 	@Description(value = "문서 등록")
