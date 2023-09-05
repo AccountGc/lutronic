@@ -1243,67 +1243,6 @@ public class StandardBomSearchService extends StandardManager implements BomSear
 		
 		return list;	}
 
-	@Override
-	public List<Map<String, Object>> getAUIBOMRootChildAction(
-			HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-		String oid = request.getParameter("oid");
-		String view = request.getParameter("view");
-		String desc = request.getParameter("desc");
-		String baseline = request.getParameter("baseline");
-		String checkDummy = request.getParameter("checkDummy");
-		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
-		//System.out.println("getAUIPartTreeAction checkDummy = "+ checkDummy);
-		//System.out.println("desc =" + desc);
-		//System.out.println("baseline =" + baseline);
-		//System.out.println("oid =" + oid);
-		ReferenceFactory rf = new ReferenceFactory();
-		WTPart part = (WTPart) rf.getReference(oid).getObject();
-		Baseline bsobj = null;
-		if (baseline != null && baseline.length() > 0) {
-			bsobj = (Baseline) rf.getReference(baseline).getObject();
-		}
-		if (bsobj != null) {
-			QuerySpec qs = new QuerySpec();
-			int ii = qs.addClassList(WTPart.class, true);
-			int jj = qs.addClassList(BaselineMember.class, false);
-			qs.appendWhere(new SearchCondition(BaselineMember.class, "roleBObjectRef.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { jj, ii });
-			qs.appendAnd();
-			qs.appendWhere(new SearchCondition(BaselineMember.class, "roleAObjectRef.key.id", "=", bsobj.getPersistInfo().getObjectIdentifier().getId()), new int[] { jj });
-			qs.appendAnd();
-			qs.appendWhere(new SearchCondition(WTPart.class, "masterReference.key.id", "=", part.getMaster().getPersistInfo().getObjectIdentifier().getId()), new int[] { ii });
-			QueryResult qr = PersistenceHelper.manager.find(qs);
-			if (qr.hasMoreElements()) {
-				Object[] o = (Object[]) qr.nextElement();
-				part = (WTPart) o[0];
-			}
-		}
-
-		View[] views = ViewHelper.service.getAllViews();
-
-		if(view == null){
-			view = views[0].getName();
-		}
-		//MANUFACTURE
-		HashMap<String, String> manuFactureMap = CodeHelper.service.getCodeMap("MANUFACTURE");
-						
-		//PRODUCTMETHOD
-		HashMap<String, String> productMap= CodeHelper.service.getCodeMap("PRODUCTMETHOD");
-		
-		HashMap<String, String> departMap= CodeHelper.service.getCodeMap("DEPTCODE");
-		//PartTreeData root = broker.getOneleveTree(part, bsobj);//
-		HashMap<String, HashMap<String, String>> codeMap = new HashMap<String, HashMap<String,String>>();
-		codeMap.put("manuFactureMap", manuFactureMap);
-		codeMap.put("productMap", productMap);
-		codeMap.put("departMap", departMap);
-		boolean isDesc = !"false".equals(desc);
-		Map<String, Object> map1 = setBoMDate2(null,null, part,bsobj,views[0], 0,  codeMap, isCheckDummy,isDesc);
-		list.add(map1);
-		return list;
-	}
 	
 	@Override
 	public List<Map<String, Object>> getAUIBOMPartChildAction(

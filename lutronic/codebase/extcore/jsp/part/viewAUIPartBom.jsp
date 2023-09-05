@@ -152,10 +152,6 @@
 						
 						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 									
-<!-- 									<button type="button" name="" id="" class="btnClose" onclick="self.close()" style="width: 50px"> -->
-<!-- 										<span></span> -->
-<!-- 										닫기 -->
-<!-- 									</button> -->
 		    		</td>
 		    	</tr>
 		    </table>
@@ -165,11 +161,6 @@
 	<tr align=center>
 		<td valign="top" style="padding:0px 0px 0px 0px">
 		
-			<table width="100%"  border="0" cellpadding="0" cellspacing="0" class="tablehead" align="center">
-	    		<tr>
-	    			<td height=1 width=100%></td>
-	    		</tr>
-			</table>
     		<div id="partTree" style="width:100%;"></div>
 		</td>
 	</tr>
@@ -201,11 +192,6 @@
 	var isExpand = false;
 	//AUIGrid 칼럼 설정
 	var columnLayout = [ 
-		{
-			dataField : "seq",
-			headerText : "seq",
-			width: "5%",
-		}, 
 		{
 			dataField : "level",
 			headerText : "Level",
@@ -353,26 +339,48 @@
 		// 트리 의존적인 경우, 부모를 체크하면 자식도 체크됨.
 		rowCheckDependingTree : true,
 		// 트리 컬럼(즉, 폴딩 아이콘 출력 칼럼) 을 인덱스1번으로 설정함(디폴트 0번임)
-		treeColumnIndex : 2,
+		treeColumnIndex : 1,
 		// 필터사용
 		enableFilter : true,
 		// 일반 데이터를 트리로 표현할지 여부(treeIdField, treeIdRefField 설정 필수)
 		flat2tree : true,
 		// 행의 고유 필드명
-		rowIdField : "rowId",
+// 		rowIdField : "rowId",
 		// 트리의 고유 필드명
-		treeIdField : "id",
-		// 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
-		treeIdRefField : "parent",
+// 		treeIdField : "id",
+// 		// 계층 구조에서 내 부모 행의 treeIdField 참고 필드명
+// 		treeIdRefField : "parent",
 		enableSorting : false,
 		//fixed 기능 부품 번호
-		fixedColumnCount  : 3,
+		fixedColumnCount  : 2,
+		// 트리그리드에서 하위 데이터를 나중에 요청하기 위한 true 설정
+		treeLazyMode: true,	
+		treeLevelIndent : 35, 
 	};
 	
 	
 	
 	myBOMGridID = AUIGrid.create("#grid_wrap", columnLayout, auiGridProps);
 	
+	
+	AUIGrid.bind(myBOMGridID, "treeLazyRequest", function (event) {
+		var item = event.item;
+
+		// 자식 데이터 요청
+		var  params =  {"oid":item.oid};
+		var url	= getCallUrl("/part/viewAUIPartBomChildAction");
+		
+		call(url, params, function(data) {
+			for(var i =0;i<data.length;i++){
+				data[i].level =event.item._$depth+1;
+			}
+			
+			event.response(data);
+		},"POST");
+		
+		
+		
+	});
 	
 	
 	<%----------------------------------------------------------
@@ -420,26 +428,26 @@ function getViews() {
 	});
 }
 
-$(function() {
-	
-	<%----------------------------------------------------------
-	*                      상위품목 버튼
-	----------------------------------------------------------%>
-	$("#upItem").click(function() {
-		viewBomList("up");
-	})
-	<%----------------------------------------------------------
-	*                      하위품목 버튼
-	----------------------------------------------------------%>
-	$("#downItem").click(function() {
-		viewBomList("down");
-	})
-	<%----------------------------------------------------------
-	*                      END ITEM 버튼
-	----------------------------------------------------------%>
-	$("#endItem").click(function() {
-		viewBomList("end");
-	})
+	$(function() {
+		
+		<%----------------------------------------------------------
+		*                      상위품목 버튼
+		----------------------------------------------------------%>
+		$("#upItem").click(function() {
+			viewBomList("up");
+		})
+		<%----------------------------------------------------------
+		*                      하위품목 버튼
+		----------------------------------------------------------%>
+		$("#downItem").click(function() {
+			viewBomList("down");
+		})
+		<%----------------------------------------------------------
+		*                      END ITEM 버튼
+		----------------------------------------------------------%>
+		$("#endItem").click(function() {
+			viewBomList("end");
+		})
 	
 	<%----------------------------------------------------------
 	*                      상세정보 버튼
@@ -592,14 +600,16 @@ function expandAll(){
 		AUIGrid.showAjaxLoader(myBOMGridID);
 		call(url, params, function(data) {
 			var gridData = data;
+			gridData[0].level=1;
 			// 그리드에 데이터 세팅
 			AUIGrid.removeAjaxLoader(myBOMGridID);
 			AUIGrid.setGridData(myBOMGridID, gridData);
 			//2Level까지만 펼치기
-			AUIGrid.showItemsOnDepth(myBOMGridID, 1 );
+// 			AUIGrid.showItemsOnDepth(myBOMGridID, 1 );
 			var totalDepth = AUIGrid.getTreeTotalDepth(myBOMGridID);
 			//alert(totalDepth);
 			//totalDepth = totalDepth -1;
+			
 			setDepthList(totalDepth)
 		},"POST");
 		
@@ -661,18 +671,19 @@ window.mygridCheck = function() {
 	return checkedItems
 }
 
-<%----------------------------------------------------------
-*                      Bom Type에 따른 bom 검색
-----------------------------------------------------------%>
-function viewBomList(bomType){
-	var str = getURLString("part", "bomPartList", "do") + "?oid="+$("#oid").val()+"&bomType="+bomType;
-    var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-    leftpos = (screen.width - 1000)/ 2;
-    toppos = (screen.height - 600) / 2 ;
-    rest = "width=600,height=500,left=" + leftpos + ',top=' + toppos;
-    var newwin = window.open( str , "viewBomList", opts+rest);
-    newwin.focus();
-}
+	<%----------------------------------------------------------
+	*                      Bom Type에 따른 bom 검색
+	----------------------------------------------------------%>
+	function viewBomList(bomType){
+		
+		var str = getCallUrl("/part/bomPartList") + "?oid="+$("#oid").val()+"&bomType="+bomType;
+	    var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
+	    leftpos = (screen.width - 1000)/ 2;
+	    toppos = (screen.height - 600) / 2 ;
+	    rest = "width=600,height=500,left=" + leftpos + ',top=' + toppos;
+	    var newwin = window.open( str , "viewBomList", opts+rest);
+	    newwin.focus();
+	}
 
 
 </script>

@@ -67,20 +67,8 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() throws Exception{
-		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
-		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
-		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
-		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
-		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+	public ModelAndView list() {
 		ModelAndView model = new ModelAndView();
-		model.addObject("modelList", modelList);
-		model.addObject("deptcodeList", deptcodeList);
-		model.addObject("matList", matList);
-		model.addObject("productmethodList", productmethodList);
-		model.addObject("manufactureList", manufactureList);
-		model.addObject("finishList", finishList);
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
 	}
@@ -1670,6 +1658,21 @@ public class PartController extends BaseController {
 		return list;
 	}
 
+	
+    /**
+     * AUI BOM Action
+     * 
+     * @param request
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/viewAUIPartBomChildAction")
+    public List<Map<String, Object>> viewAUIPartBomChildAction(@RequestBody Map<String, Object> params) throws Exception {
+        List<Map<String, Object>> list = BomSearchHelper.manager.viewAUIPartBomChildAction(params);
+        return list;
+    }
 	/**
 	 * AUI BOM Action
 	 * 
@@ -1680,10 +1683,8 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getAUIBOMRootChildAction")
-	public List<Map<String, Object>> getAUIBOMRootChildAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		List<Map<String, Object>> list = BomSearchHelper.service.getAUIBOMRootChildAction(request, response);
+	public List<Map<String, Object>> getAUIBOMRootChildAction(@RequestBody Map<String, Object> params)throws Exception {
+		List<Map<String, Object>> list = BomSearchHelper.manager.getAUIBOMRootChildAction(params);
 
 		return list;
 	}

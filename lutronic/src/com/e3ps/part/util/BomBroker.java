@@ -409,7 +409,7 @@ public PartTreeData getOneleveTreeAsc(WTPart part,Baseline baseline) throws Exce
 			
 			qs.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class,"master>number"), true), new int[] { index2 });
 			
-			//System.out.println("###	qs111111	==	"+qs);
+			System.out.println("###	qs111111	==	"+qs);
 			
 			QueryResult re = PersistenceHelper.manager.find(qs);
 			while (re.hasMoreElements()) {
