@@ -4,12 +4,6 @@
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
-ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
-ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
-ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
-ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 boolean popup = false;
@@ -118,26 +112,12 @@ if(request.getParameter("popup")!=null){
 				<td class="indent5">
 					<select name="model" id="model" class="width-500">
 						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
-						<%
-						}
-						%>
 					</select>
 				</td>
 				<th>제작방법</th>
 				<td class="indent5">
 					<select name="productmethod" id="productmethod" class="width-500">
 						<option value="">선택</option>
-						<%
-						for (NumberCode productmethod : productmethodList) {
-						%>
-						<option value="<%=productmethod.getCode() %>"><%=productmethod.getName()%></option>
-						<%
-						}
-						%>
 					</select>
 				</td>
 			</tr>
@@ -146,13 +126,6 @@ if(request.getParameter("popup")!=null){
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-500">
 						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
 					</select>
 				</td>
 				<th>단위</th>
@@ -175,13 +148,6 @@ if(request.getParameter("popup")!=null){
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-500">
 						<option value="">선택</option>
-						<%
-						for (NumberCode manufacture : manufactureList) {
-						%>
-						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
-						<%
-						}
-						%>
 					</select>
 				</td>
 			</tr>
@@ -190,26 +156,12 @@ if(request.getParameter("popup")!=null){
 				<td class="indent5">
 					<select name="mat" id="mat" class="width-500">
 						<option value="">선택</option>
-						<%
-						for (NumberCode mat : matList) {
-						%>
-						<option value="<%=mat.getCode() %>"><%=mat.getName()%></option>
-						<%
-						}
-						%>
 					</select>
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
 					<select name="finish" id="finish" class="width-500">
 						<option value="">선택</option>
-						<%
-						for (NumberCode finish : finishList) {
-						%>
-						<option value="<%=finish.getCode() %>"><%=finish.getName()%></option>
-						<%
-						}
-						%>
 					</select>
 				</td>
 			</tr>
@@ -513,17 +465,17 @@ if(request.getParameter("popup")!=null){
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
 				selectbox("state");
-				selectbox("model");
-				selectbox("productmethod");
-				selectbox("deptcode");
 				selectbox("unit");
-				selectbox("mat");
-				selectbox("finish");
-				selectbox("manufacture");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
+				numberCodeList('mat');
+				numberCodeList('deptcode');
+				numberCodeList('model');
+				numberCodeList('manufacture');
+				numberCodeList('finish');
+				numberCodeList('productmethod');
 			});
 			
 			function editBOM(){
@@ -542,7 +494,7 @@ if(request.getParameter("popup")!=null){
 // 				const sessionName = document.getElementById("sessionName").value;
 // 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
-
+			
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -566,6 +518,51 @@ if(request.getParameter("popup")!=null){
 				}
 				opener.append(items);
 				self.close();
+			}
+			
+			// NumberCode 리스트 가져오기
+			const numberCodeList = (id, parentCode1) => {
+				const type = id.toUpperCase();
+				
+				let data = [];
+				
+				getNumberCodeList(type, parentCode1, false)
+				    .then(result => {
+				    	addSelectList(id, result);
+				    })
+				    .catch(error => {
+				        console.error(error);
+				    });
+				    
+			}
+				
+			const addSelectList = (id,data) => {
+				const removeId = "#"+ id + " option";
+				document.querySelector(removeId).remove();
+				const selectId = "#"+ id;
+				document.querySelector(selectId).innerHTML = "<option value='' title='' > 선택 </option>";
+				if(data.length > 0) {
+					for(let i=0; i<data.length; i++) {
+						let value = "<option value='" + data[i].code + "' title='" + data[i].oid + "' > [" + data[i].code + "] " + data[i].name + "</option>";
+						document.querySelector(selectId).innerHTML += value;
+					}
+				}
+			}
+			
+			function getNumberCodeList(type, parentOid, search) {
+			    const url = getCallUrl("/common/numberCodeList");
+			    const params = {
+			        codeType: type,
+			        parentOid: parentOid,
+			        search: search
+			    };
+
+			    return new Promise((resolve, reject) => {
+			        call(url, params, function(dataList) {
+			            const result = dataList.map(data => data); 
+			            resolve(result); 
+			        });
+			    });
 			}
 			
 		</script>

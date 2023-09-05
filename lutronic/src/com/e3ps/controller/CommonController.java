@@ -60,6 +60,23 @@ public class CommonController extends BaseController {
 		return list;
 	}
 	
+	@Description(value = "NumberCode 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/numberCodeList")
+	public List<NumberCodeData> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
+		String codeType = StringUtil.checkNull((String) params.get("codeType"));
+		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
+		boolean search = (boolean) params.get("search");
+		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
+		try {
+			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid, search);			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(list.size());
+		return list;
+	}
+	
 	/**
 	 * 
 	 * 		LUTRONIC 추가 시작
@@ -68,22 +85,22 @@ public class CommonController extends BaseController {
 	 */
 	
 	
-	/** NumberCode 데이터 리턴
-	 * @param request
-	 * @param response
-	 * @param type
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/numberCodeList")
-	public List<NumberCodeData> numberCodeList(HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam("codeType") String codeType,
-			@RequestParam("parentOid") String parentOid,
-			@RequestParam("search") String isSearch) {
-		boolean search = ("true").equals(isSearch);
-		List<NumberCodeData> list = CodeHelper.service.numberCodeList(codeType, parentOid, search);
-		return list;
-	}
+//	/** NumberCode 데이터 리턴
+//	 * @param request
+//	 * @param response
+//	 * @param type
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/numberCodeList")
+//	public List<NumberCodeData> numberCodeList(HttpServletRequest request, HttpServletResponse response, 
+//			@RequestParam("codeType") String codeType,
+//			@RequestParam("parentOid") String parentOid,
+//			@RequestParam("search") String isSearch) {
+//		boolean search = ("true").equals(isSearch);
+//		List<NumberCodeData> list = CodeHelper.service.numberCodeList(codeType, parentOid, search);
+//		return list;
+//	}
 	
 	/** NumberCode 데이터 리턴
 	 * @param request

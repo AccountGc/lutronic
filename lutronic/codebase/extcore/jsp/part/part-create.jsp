@@ -574,7 +574,7 @@
 			
 			// PartType 리스트 가져오기
 			function part_numberCodeList(type, parentOid, search) {
-			    const url = getCallUrl("/part/partTypeList");
+			    const url = getCallUrl("/common/numberCodeList");
 			    const params = {
 			        codeType: type,
 			        parentOid: parentOid,
