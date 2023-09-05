@@ -27,6 +27,7 @@ import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -46,6 +47,18 @@ import wt.vc.views.ViewHelper;
 @Controller
 @RequestMapping("/common")
 public class CommonController extends BaseController {
+	
+	@Description(value = "NumberCode 데이터 리턴")
+	@ResponseBody
+	@PostMapping(value = "/autoSearchName")
+	public List<NumberCodeData> autoSearchName(@RequestBody Map<String, Object> params) throws Exception{
+		String codeType = StringUtil.checkNull((String) params.get("codeType"));
+		String name = StringUtil.checkNull((String) params.get("value"));
+		System.out.println(codeType);
+		System.out.println(name);
+		List<NumberCodeData> list = NumberCodeHelper.manager.autoSearchName(codeType, name);
+		return list;
+	}
 	
 	/**
 	 * 
@@ -95,14 +108,14 @@ public class CommonController extends BaseController {
 	 * @param type
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("/autoSearchName")
-	public List<NumberCodeData> autoSearchName(HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam("codeType") String codeType,
-			@RequestParam("name") String name) {
-		List<NumberCodeData> list = CodeHelper.service.autoSearchName(codeType, name);
-		return list;
-	}
+//	@ResponseBody
+//	@RequestMapping("/autoSearchName")
+//	public List<NumberCodeData> autoSearchName(HttpServletRequest request, HttpServletResponse response, 
+//			@RequestParam("codeType") String codeType,
+//			@RequestParam("name") String name) {
+//		List<NumberCodeData> list = CodeHelper.service.autoSearchName(codeType, name);
+//		return list;
+//	}
 	
 	/** NumberCode 데이터 리턴
 	 * @param request

@@ -3,12 +3,6 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-	ArrayList<NumberCode> partTypeList = (ArrayList<NumberCode>) request.getAttribute("partTypeList");
-	ArrayList<NumberCode> partName1List = (ArrayList<NumberCode>) request.getAttribute("partName1List");
-	ArrayList<NumberCode> partName2List = (ArrayList<NumberCode>) request.getAttribute("partName2List");
-	ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribute("partName3List");
-%>
-<%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 %>
@@ -63,16 +57,13 @@
 				</td>
 				<th rowspan="4">품목명 <span style="color:red;">*</span></th>
 				<th>대제목</th>
-				<td class="indent5"><select name="partName1"  id="partName1" class="width-300">
-						<option value="">선택</option>
-						<%
-						for (NumberCode partName1 : partName1List) {
-						%>
-						<option value="<%=partName1.getCode() %>"><%=partName1.getName()%></option>
-						<%
-						}
-						%>
-				</select></td>
+				<td class="indent5">
+					<input id="partName1" name="partName1" class='partName' type="text" style="width: 95%;">
+					<div id="partName1Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
+						<ul id="partName1UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
+						</ul>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<th>품목구분 <span style="color:red;">*</span></th>
@@ -84,16 +75,13 @@
 					</select>
 				</td>
 				<th>중제목</th>
-				<td class="indent5"><select name="partName2"  id="partName2" class="width-300">
-						<option value="">선택</option>
-						<%
-						for (NumberCode partName2 : partName2List) {
-						%>
-						<option value="<%=partName2.getCode() %>"><%=partName2.getName()%></option>
-						<%
-						}
-						%>
-				</select></td>
+				<td class="indent5">
+					<input id="partName2" name="partName2" class='partName' type="text" style="width: 95%">
+					<div id="partName2Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
+						<ul id="partName2UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
+						</ul>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<th>대분류 <span style="color:red;">*</span></th>
@@ -105,16 +93,13 @@
 					</select>
 				</td>
 				<th>소제목</th>
-				<td class="indent5"><select name="partName3"  id="partName3" class="width-300">
-						<option value="">선택</option>
-						<%
-						for (NumberCode partName3 : partName3List) {
-						%>
-						<option value="<%=partName3.getCode() %>"><%=partName3.getName()%></option>
-						<%
-						}
-						%>
-				</select></td>
+				<td class="indent5">
+					<input id="partName3" name="partName3" class='partName' type="text" style="width: 95%">
+					<div id="partName3Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
+						<ul id="partName3UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
+						</ul>
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<th>중분류 <span style="color:red;">*</span></th>
@@ -494,7 +479,7 @@
 				$("#partTypeNum").html($("#partType1").val() + $("#partType2").val() + this.value);
 			})
 			
-			// PartType 리스트 가져오기
+			// NumberCode 리스트 가져오기
 			const numberCodeList = (id, parentCode1) => {
 				var type = "";
 				if(id == 'partType1' || id == 'partType2' || id =='partType3') {
@@ -521,7 +506,6 @@
 				document.querySelector(removeId).remove();
 				const selectId = "#"+ id;
 				document.querySelector(selectId).innerHTML = "<option value='' title='' > 선택 </option>";
-				console.log(document.querySelector(selectId));
 				if(data.length > 0) {
 					for(let i=0; i<data.length; i++) {
 						let value = "<option value='" + data[i].code + "' title='" + data[i].oid + "' > [" + data[i].code + "] " + data[i].name + "</option>";
@@ -542,12 +526,175 @@
 			    return new Promise((resolve, reject) => {
 			        call(url, params, function(dataList) {
 			            const result = dataList.map(data => data); 
-			            console.log(result); 
 			            resolve(result); 
 			        });
 			    });
 			}
 
+			// 품목명 입력 시 
+			$(".partName").keyup(function (event) {
+				var charCode = (event.which) ? event.which : event.keyCode;
+				if((charCode == 38 || charCode == 40) ) {
+					if(!$( "#"+this.id+"Search" ).is( ":hidden" )){
+						var isAdd = false;
+						if(charCode == 38){
+							isAdd = true;
+						}
+						movePartNameFocus(this.id, isAdd);
+					}
+				} else if(charCode == 13 || charCode == 27){
+					$("#" + this.id + "Search").hide();
+				} else if(charCode == 8) {
+					if($.trim($(this).val()) == '') {
+						$("#" + this.id + "Search").hide();
+					} else {
+						autoSearchPartName(this.id, this.value);
+					}
+				} else {
+					autoSearchPartName(this.id, this.value);
+				}
+			})
+			
+			<%----------------------------------------------------------
+			*                      ↑,↓ 입력시
+			----------------------------------------------------------%>
+			const movePartNameFocus = function(id,isAdd) {
+				var removeCount = 0;
+				var addCount = 0;
+				var l = $("#" + id + "UL li").length;
+				for(var i=0; i<l; i++){
+					var cls = $("#" + id + "UL li").eq(i).attr('class');
+					if(cls == 'hover') {
+						$("#" + id + "UL li").eq(i).removeClass("hover");
+						removeCount = i;
+						if(isAdd){
+							addCount = (i-1);
+						}else if(!isAdd) {
+							addCount = (i+1);
+						}
+						break;
+					}
+				}
+				if(addCount == l) {
+					addCount = 0;
+				}
+				$("#" + id + "UL li").eq(addCount).addClass("hover");
+				$("#" + id).val($("#" + id + "UL li").eq(addCount).text());
+			}
+			
+			// partName 입력 시 partName 리스트 출력 메서드
+			const autoSearchPartName = function(id, value) {
+				if($.trim(value) == "") {
+					addSearchList(id, '', true);
+				} else {
+					var codeType = id.toUpperCase();
+					
+					autoSearchName(codeType, value)
+					.then(result => {
+						addSearchList(id, result, false);
+					})
+					.catch(error => {
+						console.error(error);
+					})
+				}
+			}
+			
+			// partName 가져오기 메서드
+			const autoSearchName = function(codeType, value) {
+				
+				const url = getCallUrl("/common/autoSearchName");
+				 const params = {
+					 codeType: codeType,	
+					 value: value
+			    };
+				 
+				 return new Promise((resolve, reject) => {
+			        call(url, params, function(dataList) {
+			            const result = dataList.map(data => data); 
+			            resolve(result); 
+			        });
+			    });
+			}
+			
+			<%----------------------------------------------------------
+			*                      품목명 입력시 데이터 리스트 보여주기
+			----------------------------------------------------------%>
+			const addSearchList = function(id, data, isRemove) {
+				$("#" + id + "UL li").remove();
+				if(isRemove) {
+					$("#" + this.id + "Search").hide();
+				} else{
+					if(data.length > 0) {
+						$("#" + id + "Search").show();
+						for(var i=0; i<data.length; i++) {
+							$("#" + id + "UL").append("<li title='" + id + "'>" + data[i].name);
+						}
+					} else {
+						$("#" + id + "Search").hide();
+					}
+				}
+			}
+			
+			<%----------------------------------------------------------
+			*                      품목명 데이터 마우스 올렸을때
+			----------------------------------------------------------%>
+			$(document).on("mouseover", 'div > ul > li', function() {
+				var partName = $(this).attr("title");
+				
+				$("#" + partName + "UL li").each(function() {
+					var cls = $(this).attr('class');
+					if(cls == 'hover') {
+						$(this).removeClass('hover');
+					}
+				})
+				
+				$(this).addClass("hover") ;
+				$("#" + partName).val($(this).text());
+			})
+			
+			<%----------------------------------------------------------
+			*                      품목명 데이터 마우스 뺄때
+			----------------------------------------------------------%>
+			$(document).on("mouseout", 'div > ul > li', function() {
+				$(this).removeClass("hover") ;
+			})
+			
+			$('#partNameCustom').focusout(function() {
+				$('#partNameCustom').val(this.value.toUpperCase());
+			})
+			
+			$(".partName").focusout(function () {
+				$("#" + this.id + "Search").hide();
+				
+				var name = '';
+				
+				if(!$.trim($('#partName1').val()) == '') {
+					name += $('#partName1').val();
+				}
+				
+				if(!$.trim($('#partName2').val()) == '') {
+					if(!$.trim(name) == '') {
+						name += '_';
+					}
+					name += $('#partName2').val();
+				}
+				
+				if(!$.trim($('#partName3').val()) == '') {
+					if(!$.trim(name) == '') {
+						name += '_';
+					}
+					name += $('#partName3').val();
+				}
+				
+				if(!$.trim($('#partNameCustom').val()) == '') {
+					if(!$.trim(name) == '') {
+						name += '_';
+					}
+					name += $('#partNameCustom').val();
+				}
+				
+				$('#displayName').html(name);
+			})
 		</script>
 	</form>
 </body>
