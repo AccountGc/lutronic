@@ -7,7 +7,7 @@ var AUIGridMessages = {
 	/*
 	 * 그리드에 출력시킬 데이터가 없는 메세지
 	 */
-	noDataMessage: 'No Data to display',
+	noDataMessage: '검색 결과가 없습니다.',
 
 	/*
 	 * 그룹핑 패널 메세지
