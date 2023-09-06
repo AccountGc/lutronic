@@ -232,7 +232,7 @@ public class PartController extends BaseController {
 		model.addAllObjects(map);
 		model.addObject("cList", cList);
 		model.addObject("pnum", pnum);
-		model.setViewName("/extcore/jsp/part/part-view.jsp");
+		model.setViewName("popup:/part/part-view");
 		return model;
 	}
 //	/**	품목 상세보기
@@ -1524,7 +1524,6 @@ public class PartController extends BaseController {
 		model.addObject("desc", desc);
 		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
-//		model.setViewName("/extcore/jsp/part/viewAUIPartBom.jsp");
 		model.setViewName("popup:/part/viewAUIPartBom");
 		return model;
 	}
