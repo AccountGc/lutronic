@@ -240,7 +240,7 @@
 				
 				$("#create").click(function() {
 					const url = getCallUrl("/groupware/createNotice");
-					popup(url, 1500, 700);
+					_popup(url, 1500, 700,"n");
 				})
 				
 				$(document).keypress(function(event) {

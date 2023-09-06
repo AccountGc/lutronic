@@ -124,7 +124,7 @@ public class GroupwareController extends BaseController {
 	@GetMapping(value = "/createNotice")
 	public ModelAndView createNotice() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/workprocess/notice-create.jsp");
+		model.setViewName("popup:/workprocess/notice-create");
 		return model;
 	}
 

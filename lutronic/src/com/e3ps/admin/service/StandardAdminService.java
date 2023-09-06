@@ -11,6 +11,9 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import wt.content.ApplicationData;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
@@ -29,11 +32,13 @@ import wt.session.SessionHelper;
 import wt.util.WTProperties;
 
 import com.e3ps.change.EChangeActivityDefinition;
+import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.GenNumberHelper;
 import com.e3ps.common.content.FileRequest;
+import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.history.LoginHistory;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
@@ -44,6 +49,7 @@ import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.download.DownloadHistory;
 import com.e3ps.download.beans.DownloadData;
+import com.e3ps.groupware.notice.Notice;
 import com.e3ps.org.Department;
 import com.e3ps.org.MailUser;
 import com.e3ps.org.People;
@@ -1119,7 +1125,8 @@ public class StandardAdminService extends StandardManager implements AdminServic
     				String engName = (String) map.get("engName");
     				String sort = (String) map.get("sort");
     				String description = (String) map.get("description");
-    				boolean enabled = map.get("enabled").equals("true") ? true : false;
+    				String strEnabled = (String) map.get("enabled");
+    				boolean enabled = strEnabled.equals("true") ? true : false;
     				String codeType = (String) map.get("codeType");
     				String parentOid = StringUtil.checkNull((String) map.get("parentOid"));
     				String code = (String) map.get("code");
@@ -1141,8 +1148,7 @@ public class StandardAdminService extends StandardManager implements AdminServic
 	                 nCode.setSort(sort);
 	                 nCode.setDescription(description);
 	                 nCode.setCodeType(ctype);
-//	                 nCode.setDisabled(!"true".equals(enabled));
-	                 nCode.setDisabled(enabled);
+	                 nCode.setDisabled(!enabled);
 	                 if(parentOid!= null && parentOid.length()>0){
 	                	 NumberCode pCode = (NumberCode)CommonUtil.getObject(parentOid);
 	                	 nCode.setParent(pCode);
@@ -1159,14 +1165,14 @@ public class StandardAdminService extends StandardManager implements AdminServic
     				String engName = (String) map.get("engName");
     				String sort = (String) map.get("sort");
     				String description = (String) map.get("description");
-    				boolean enabled = map.get("enabled").equals("true") ? true : false;
+    				String strEnabled = (String) map.get("enabled");
+    				boolean enabled = strEnabled.equals("true") ? true : false;
     				NumberCode code = (NumberCode) CommonUtil.getObject(oid);
     				code.setName(name);
     				code.setEngName(engName);
     				code.setSort(sort);
     				code.setDescription(description);
-    				code.setDisabled(enabled);
-//    				code.setDisabled(!"true".equals(enabled));
+    				code.setDisabled(!enabled);
     				PersistenceHelper.manager.modify(code);
     			}
     		}
@@ -1193,6 +1199,42 @@ public class StandardAdminService extends StandardManager implements AdminServic
 		}finally {
 			if(trx!=null){
 				trx.rollback();
+			}
+		}
+	}
+
+	@Override
+	public void createRootDefinition(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		
+		try{
+			trs.start();
+			
+			String name = (String) params.get("name");
+	    	String name_eng = (String) params.get("name_eng");
+	    	String sortNumber = (String) params.get("sortNumber");
+	    	int sort = 0;
+	    	if(sortNumber.length()>0){
+	    		sort = Integer.parseInt(sortNumber);
+	    	}
+	    	String description =StringUtil.checkNull((String) params.get("description"));
+	    	
+	    	EChangeActivityDefinitionRoot def = EChangeActivityDefinitionRoot.newEChangeActivityDefinitionRoot();
+	    	def.setName(name);
+			def.setName_eng(name_eng);
+			def.setSortNumber(sort);
+			def.setDescription(description);
+			PersistenceHelper.manager.save(def);
+			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
 			}
 		}
 	}

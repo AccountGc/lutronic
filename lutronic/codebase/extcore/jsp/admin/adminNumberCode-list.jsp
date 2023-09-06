@@ -1,3 +1,5 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="com.e3ps.common.code.NumberCodeType"%>
@@ -156,7 +158,6 @@
 					headerText : "코드",
 					dataType : "string",
 					width : 120,
-					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -182,7 +183,7 @@
 				}, {
 					dataField : "enabled",
 					headerText : "활성화",
-					dataType : "boolean",
+					dataType : "string",
 					width : 120,
 					filter : {
 						showIcon : true,
@@ -217,6 +218,8 @@
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.bind(myGridID, "contextMenu", function(event) {
 		            var myContextMenus  = [{
+		               label : "같은행에 추가", callback : contextItemHandler
+		            }, {
 		               label : "아래에 추가", callback : contextItemHandler
 		            }, {
 		               label : "삭제", callback : contextItemHandler
@@ -280,18 +283,22 @@
 			
 			function contextItemHandler(event) {
 				var code = '';
-				if($("#isSeq").val()){
-					code = $("#seqNm").val();
+// 				if($("#isSeq").val()){
+// 					code = $("#seqNm").val();
+// 				}
+				var parent = '';
+				if(!isEmpty(event.item._$parent)){
+					parent = event.item.oid;
 				}
 				switch (event.contextIndex) {
 				case 0:
 					var item = new Object();
-					item.name = "",
-					item.engName = "",
-					item.code = code,
-					item.sort = "",
-					item.description = "",
-					item.enabled = "",
+					item.parentOid = parent,
+					item.codeType = event.item.codeType
+					AUIGrid.addRow(myGridID, item, event.rowIndex);
+					break;
+				case 1:
+					var item = new Object();
 					item.parentOid = event.item.oid,
 					item.codeType = event.item.codeType
 					
@@ -299,7 +306,7 @@
 					// rowPos : rowIndex 인 경우 해당 index 에 삽입, first : 최상단, last : 최하단, selectionUp : 선택된 곳 위, selectionDown : 선택된 곳 아래
 					AUIGrid.addRow(myGridID, item, 'selectionDown');
 					break;
-				case 1:
+				case 2:
 					removeCodeCheck(event.item.oid, event.rowIndex);
 					break;
 				}
