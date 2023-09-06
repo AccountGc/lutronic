@@ -914,6 +914,6 @@ function createCDialogWindow(dialogURL, dialogName, w, h, statusBar)
 	function viewBomList(bomType){
 		const oid = document.querySelector("#oid").value;
 		const url = getCallUrl("/part/bomPartList?oid=" + oid + "&bomType=" + bomType);
-		_popup(url, 800, 400,"n");
+		_popup(url, 800, 550,"n");
 	}
 </script>

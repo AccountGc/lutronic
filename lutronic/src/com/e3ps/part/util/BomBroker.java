@@ -336,11 +336,8 @@ public PartTreeData getOneleveTreeAsc(WTPart part,Baseline baseline) throws Exce
 		if (!PersistenceHelper.isPersistent(part))
 			return v;
 		try {
-			WTPartConfigSpec configSpec = WTPartConfigSpec
-					.newWTPartConfigSpec(WTPartStandardConfigSpec
-							.newWTPartStandardConfigSpec(view, state));
-			QueryResult re = wt.part.WTPartHelper.service.getUsesWTParts(part,
-					configSpec);
+			WTPartConfigSpec configSpec = WTPartConfigSpec.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state));
+			QueryResult re = wt.part.WTPartHelper.service.getUsesWTParts(part,configSpec);
 			while (re.hasMoreElements()) {
 				Object oo[] = (Object[]) re.nextElement();
 

@@ -95,6 +95,7 @@ import wt.query.RelationalExpression;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
+import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
 public class PartHelper {
@@ -1484,15 +1485,25 @@ public class PartHelper {
 		BomBroker broker = new BomBroker();
 		ArrayList list = new ArrayList();
 		result.put("partNumber", part.getNumber());
-		String msg = "";
+		String msg= null;
 		String title = "";
+		
+		View[] views = ViewHelper.service.getAllViews();
+		String view = views[0].getName();
+		
+		
 		if ("up".equals(bomType)) {
-			list = broker.ancestorPart(part, broker.getView(), null);
-			msg = Message.get("상위품목이 없습니다.");
+			
+			list = broker.ancestorPart(part, ViewHelper.service.getView(view), null);
+			if(list.size() < 0) {
+				msg = Message.get("상위품목이 없습니다.");
+			}
 			title = Message.get("상위품목");
 		} else if ("down".equals(bomType)) {
-			list = broker.descentLastPart(part, broker.getView(), null);
-			msg = Message.get("하위품목이 없습니다.");
+			list = broker.descentLastPart(part, ViewHelper.service.getView(view), null);
+			if(list.size() < 0) {
+				msg = Message.get("하위품목이 없습니다.");
+			}
 			title = Message.get("하위품목");
 		} else if ("end".equals(bomType)) {
 			PartTreeData root = broker.getTree(part, false, null);
@@ -1504,7 +1515,6 @@ public class PartHelper {
 		result.put("title", title);
 		
 		List<Map<String, String>> item = new ArrayList<Map<String, String>>();
-
 		if (list.size() > 0) {
 			Collections.sort(list, new ObjectComarator());
 			StringBuffer sb = new StringBuffer();
