@@ -98,8 +98,23 @@ public class PartController extends BaseController {
 
 	@Description(value = "일괄 등록 페이지")
 	@GetMapping(value = "/batch")
-	public ModelAndView batch() {
+	public ModelAndView batch() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> partName1List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME1");
+		ArrayList<NumberCode> partName2List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME2");
+		ArrayList<NumberCode> partName3List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME3");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("partName1List", partName1List);
+		model.addObject("partName2List", partName2List);
+		model.addObject("partName3List", partName3List);
+		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		model.setViewName("/extcore/jsp/part/part-batch.jsp");
 		return model;
 	}
