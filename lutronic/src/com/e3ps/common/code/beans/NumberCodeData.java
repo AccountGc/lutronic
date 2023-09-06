@@ -41,7 +41,7 @@ public class NumberCodeData {
 //		setSeqNm(codeType.getLongDescription());
 		setTree(codeType.getAbbreviatedDisplay().equals("true") ? true : false);
 		setSort(Ncode.getSort());
-		setEnabled(Ncode.isDisabled());
+		setEnabled(!Ncode.isDisabled());
 		setDescription(Ncode.getDescription());
 		setCodeType(codeType.toString());
 		setParentOid(StringUtil.checkNull(CommonUtil.getOIDString(Ncode.getParent())));

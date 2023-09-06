@@ -159,7 +159,7 @@ public class AdminHelper {
 		String code = (String) params.get("code");
 		String sort = (String) params.get("sort");
 		String description = (String) params.get("description");
-		boolean enabled = params.get("enabled").equals("true") ? true : false;
+		boolean enabled = params.get("enabled").equals("true") ? false : true;
 		
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(NumberCode.class, true);
@@ -372,17 +372,16 @@ public class AdminHelper {
 			qs.appendWhere(new SearchCondition(DownloadHistory.class, "userReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(user)), new int[] { idx });
 		}
 		
-		//등록일
     	if(predate.length() > 0){
     		if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp" ,SearchCondition.GREATER_THAN,DateUtil.convertStartDate(predate)), new int[]{idx});
+    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.updateStamp" ,SearchCondition.GREATER_THAN,DateUtil.convertStartDate(predate)), new int[]{idx});
     	}
     	
     	if(postdate.length() > 0){
     		if(qs.getConditionCount() > 0)qs.appendAnd();
-    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.createStamp",SearchCondition.LESS_THAN,DateUtil.convertEndDate(postdate)), new int[]{idx});
+    		qs.appendWhere(new SearchCondition(DownloadHistory.class, "thePersistInfo.updateStamp",SearchCondition.LESS_THAN,DateUtil.convertEndDate(postdate)), new int[]{idx});
     	}
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.createStamp"), true), new int[] { idx });  
+		qs.appendOrderBy(new OrderBy(new ClassAttribute(DownloadHistory.class, "thePersistInfo.updateStamp"), true), new int[] { idx });  
 		
 		PageQueryUtils pager = new PageQueryUtils(params, qs);
 		PagingQueryResult result = pager.find();

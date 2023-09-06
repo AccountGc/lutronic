@@ -124,7 +124,8 @@
 				}, {
 					dataField : "downTime",
 					headerText : "다운시간",
-					dataType : "string",
+					dataType : "date",
+					formatString : "yyyy/mm/dd",
 					width : 120,
 					filter : {
 						showIcon : true,
