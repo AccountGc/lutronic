@@ -13,7 +13,16 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
-<body>
+<body>	
+	<table class="button-table">
+		<tr>
+			<td class="left">
+				<div class="header">
+					<img src="/Windchill/extcore/images/header.png"> 도면 재변환
+				</div>
+			</td>
+		</tr>
+	</table>
 	<table class="create-table">
 		<colgroup>
 			<col width="150">

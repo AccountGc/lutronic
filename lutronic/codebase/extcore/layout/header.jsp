@@ -79,12 +79,12 @@
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listWfProcessInfo', '> 관리자 > 관리자메뉴');">관리자 메뉴</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/changeIBA', '> 관리자 > 속성값 변경');">속성값 변경</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 관리자 > 도면 재변환');">도면 재변환</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/groupware/changeIBA', '> 관리자 > 속성값 변경');">속성값 변경</a> -->
+<!-- 					</li> -->
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 관리자 > 도면 재변환');">도면 재변환</a> -->
+<!-- 					</li> -->
 				</ul>
 			</li>
 <!-- 			<li> -->
