@@ -1,6 +1,17 @@
 <%@page import="wt.org.WTUser"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
+ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
+ArrayList<NumberCode> partName1List = (ArrayList<NumberCode>) request.getAttribute("partName1List");
+ArrayList<NumberCode> partName2List = (ArrayList<NumberCode>) request.getAttribute("partName2List");
+ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribute("partName3List");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,6 +32,34 @@
 		<script type="text/javascript">
 			let myGridID;
 			const list = [ "MIRROR", "BOARD", "VVIRE", "LENS", "ADJUST" ];
+			let matList = [{ "code" : "ㅇㅇ", "value" : "개행때문에 안 됨"}];
+<%-- 			<% for(NumberCode mat : matList){ %> --%>
+<%-- 				matList.push({ "code" : "<%= mat.getCode() %>", "value" : "<%= mat.getName() %>"}); --%>
+<%-- 			<% } %> --%>
+			let deptcodeList = [];
+			<% for(NumberCode deptcode : deptcodeList){ %>
+				deptcodeList.push({ "code" : "<%= deptcode.getCode() %>", "value" : "<%= deptcode.getName() %>"});
+			<% } %>
+			let productmethodList = [];
+			<% for(NumberCode productmethod : productmethodList){ %>
+				productmethodList.push({ "code" : "<%= productmethod.getCode() %>", "value" : "<%= productmethod.getName() %>"});
+			<% } %>
+			let modelList = [];
+			<% for(NumberCode model : modelList){ %>
+				modelList.push({ "code" : "<%= model.getCode() %>", "value" : "<%= model.getName() %>"});
+			<% } %>
+			let partName1 = [];
+			<% for(NumberCode partName1 : partName1List){ %>
+				partName1List.push({ "code" : "<%= partName1.getCode() %>", "value" : "<%= partName1.getName() %>"});
+			<% } %>
+			let partName2 = [];
+			<% for(NumberCode partName2 : partName2List){ %>
+				partName1List.push({ "code" : "<%= partName2.getCode() %>", "value" : "<%= partName2.getName() %>"});
+			<% } %>
+			let partName3 = [];
+			<% for(NumberCode partName3 : partName3List){ %>
+				partName1List.push({ "code" : "<%= partName3.getCode() %>", "value" : "<%= partName3.getName() %>"});
+			<% } %>
 			const layout = [ {
 				dataField : "number",
 				headerText : "결과",
@@ -82,24 +121,141 @@
 			}, {
 				headerText : "MAT",
 				children : [ {
-					dataField : "avg08",
+					dataField : "mat",
 					headerText : "재질코드",
 					width : 120,
 				}, {
-					dataField : "sdev08",
+					dataField : "mat",
 					headerText : "재질명",
 					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						var retStr = "";
+						for (var i = 0, len = matList.length; i < len; i++) {
+							if (matList[i]["code"] == value) {
+								retStr = matList[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: matList, 
+						keyField: "code", 
+						valueField: "value" 
+					},
 				} ]
 			}, {
-				dataField : "number",
+				dataField : "partName1",
 				headerText : "품목명<br>(대제목)",
 				dataType : "string",
 				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					for (var i = 0, len = partName1List.length; i < len; i++) {
+						if (partName1List[i]["code"] == value) {
+							retStr = partName1List[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					list: partName1List, 
+					keyField: "code",
+					valueField: "value"
+				},
+			}, {
+				dataField : "number",
+				headerText : "품목명<br>(중제목)",
+				dataType : "string",
+				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					for (var i = 0, len = partName2List.length; i < len; i++) {
+						if (partName2List[i]["code"] == value) {
+							retStr = partName2List[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					list: partName2List, 
+					keyField: "code",
+					valueField: "value"
+				},
 			}, {
 				dataField : "number",
 				headerText : "품목명<br>(소제목)",
 				dataType : "string",
 				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					for (var i = 0, len = partName3List.length; i < len; i++) {
+						if (partName3List[i]["code"] == value) {
+							retStr = partName3List[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					list: partName3List, 
+					keyField: "code",
+					valueField: "value"
+				},
 			}, {
 				dataField : "number",
 				headerText : "품목명<br>(KEY-IN)",
@@ -113,35 +269,119 @@
 			}, {
 				headerText : "부서",
 				children : [ {
-					dataField : "avg08",
+					dataField : "deptcode",
 					headerText : "부서코드",
 					width : 120,
 				}, {
-					dataField : "sdev08",
+					dataField : "deptcode",
 					headerText : "부서명",
 					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						var retStr = "";
+						for (var i = 0, len = deptcodeList.length; i < len; i++) {
+							if (deptcodeList[i]["code"] == value) {
+								retStr = deptcodeList[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: deptcodeList, 
+						keyField: "code",
+						valueField: "value"
+					},
 				} ]
 			}, {
 				headerText : "프로젝트 코드",
 				children : [ {
-					dataField : "avg08",
+					dataField : "model",
 					headerText : "프로젝트 코드",
 					width : 120,
 				}, {
-					dataField : "sdev08",
+					dataField : "model",
 					headerText : "프로젝트 명",
 					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						var retStr = "";
+						for (var i = 0, len = modelList.length; i < len; i++) {
+							if (modelList[i]["code"] == value) {
+								retStr = modelList[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: modelList, 
+						keyField: "code",
+						valueField: "value"
+					},
 				} ]
 			}, {
 				headerText : "제작방법",
 				children : [ {
-					dataField : "avg08",
+					dataField : "productmethod",
 					headerText : "제작방법 코드",
 					width : 120,
 				}, {
-					dataField : "sdev08",
+					dataField : "productmethod",
 					headerText : "제작방법",
 					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						var retStr = "";
+						for (var i = 0, len = productmethodList.length; i < len; i++) {
+							if (productmethodList[i]["code"] == value) {
+								retStr = productmethodList[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: productmethodList, 
+						keyField: "code",
+						valueField: "value"
+					},
 				} ]
 			}, {
 				dataField : "number",
@@ -201,6 +441,7 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
 		</script>
 	</form>
 </html>
