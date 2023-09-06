@@ -36,13 +36,13 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>제목 <span class="red">*</span></th>
+				<th class="lb">제목 <span class="red">*</span></th>
 				<td class="indent5">
 					<input type="text" name="title" id="title" class="width-800">
 				</td>
 			</tr>
 			<tr>
-				<th>팝업 유무</th>
+				<th class="lb">팝업 유무</th>
 				<td class="indent5">
 					<div class="pretty p-switch">
 						<input type="radio" name="isPopup" value="true" id="isPopup" checked="checked">
@@ -61,7 +61,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>내용</th>
+				<th class="lb">내용</th>
 				<td class="indent5">
 					<textarea name="contents" id="contents" cols="80" rows="10" class="fm_area" style="width:90%" onKeyUp="common_CheckStrLength(this, 4000)" onChange="common_CheckStrLength(this, 4000)"></textarea>
 				</td>

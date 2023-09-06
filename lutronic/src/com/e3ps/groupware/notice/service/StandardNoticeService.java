@@ -42,12 +42,11 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 	@Override
 	public void createNotice(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
-		 String oid = StringUtil.checkNull((String) params.get("oid"));
-       boolean isPopup = StringUtil.checkNull((String) params.get("isPopup")).equals("true");
-       String title = StringUtil.checkNull((String) params.get("title"));
-       String contents = StringUtil.checkNull((String) params.get("contents"));
+	    boolean isPopup = StringUtil.checkNull((String) params.get("isPopup")).equals("true");
+	    String title = StringUtil.checkNull((String) params.get("title"));
+	    String contents = StringUtil.checkNull((String) params.get("contents"));
        
-       ArrayList<String> secondarys = (ArrayList<String>)params.get("secondarys");
+        ArrayList<String> secondarys = (ArrayList<String>)params.get("secondarys");
 		try{
 			trs.start();
 			Notice notice = Notice.newNotice();

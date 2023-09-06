@@ -44,4 +44,5 @@ public interface AdminService {
 	
 	public void numberCodeSave(Map<String,Object> params) throws Exception;
 
+	public void createRootDefinition(Map<String, Object> params) throws Exception;
 }

@@ -800,25 +800,42 @@ public class AdminController extends BaseController {
 		out.close();
 	}
 	
-	//루트뢰닉 추가
-	
-	
-	
+	@Description(value = "RootDefinition 등록 페이지")
+	@GetMapping(value = "/createRootDefinition")
+	public ModelAndView createRootDefinition() throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/admin//rootDefinition-create");
+		return model;
+	}
 	
 	/**	RootDefinition 등록 페이지
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/createRootDefinition")
-	public ModelAndView createRootDefinition(HttpServletRequest request, HttpServletResponse response){
-		ModelAndView model = new ModelAndView();
-		
-		model.setViewName("popup:/admin/createRootDefinition");
-		return model;
+//	@RequestMapping("/createRootDefinition")
+//	public ModelAndView createRootDefinition(HttpServletRequest request, HttpServletResponse response){
+//		ModelAndView model = new ModelAndView();
+//		
+//		model.setViewName("popup:/admin/createRootDefinition");
+//		return model;
+//	}
+	
+	@Description(value = "RootDefinition 등록 실행")
+	@ResponseBody
+	@PostMapping(value = "/createRootDefinition")
+	public Map<String, Object> createRootDefinition(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AdminHelper.service.createRootDefinition(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
-	
-	
 	
 	/**	RootDefinition 등록 Action
 	 * @param request
@@ -826,12 +843,12 @@ public class AdminController extends BaseController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@ResponseBody
-	@RequestMapping("/createRootDefinitionAction")
-	public ResultData createRootDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		return ECAHelper.service.createRootDefinitionAction(request);
-	}
+//	@ResponseBody
+//	@RequestMapping("/createRootDefinitionAction")
+//	public ResultData createRootDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		
+//		return ECAHelper.service.createRootDefinitionAction(request);
+//	}
 	
 	@Description(value = "설계변경 활동 페이지")
 	@GetMapping(value = "/changeActivityList")

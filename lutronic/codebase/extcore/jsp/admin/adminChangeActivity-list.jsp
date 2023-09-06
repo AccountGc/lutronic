@@ -229,9 +229,8 @@ List<ROOTData> rootList = (List<ROOTData>) request.getAttribute("rootList");
 			
 			// Root 추가
 			$("#createRootDefinition").click(function() {
-				//alert("test");
-				var url = getURLString("admin", "createRootDefinition", "do");
-				openOtherName(url,"window","500","400","status=no,scrollbars=yes,resizable=yes");
+				const url = getCallUrl("/admin/createRootDefinition");
+				_popup(url, 600, 500, "n");
 			})
 			
 			// Root 수정
