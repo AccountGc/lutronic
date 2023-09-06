@@ -113,37 +113,37 @@
 			<th class="req">보존기간</th>
 			<td class="indent5"><select name="preseration"  id="preseration" class="width-200">
 						<option value="">선택</option>
-<%-- 						<% --%>
-<!-- // 						for (NumberCode preseration : preserationList) { -->
-<%-- 						%> --%>
-<%-- 						<option value="<%=preseration.getCode() %>"><%=preseration.getName()%></option> --%>
-<%-- 						<% --%>
-<!-- // 						} -->
-<%-- 						%> --%>
+						<%
+						for (NumberCode preseration : preserationList) {
+						%>
+						<option value="<%=preseration.getCode() %>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
 				</select></td>
 		</tr>
 		<tr>
 			<th class="lb">프로젝트코드</th>
 			<td class="indent5"><select name="model" id="model" class="width-200">
 						<option value="">선택</option>
-<%-- 						<% --%>
-<!-- // 						for (NumberCode model : modelList) { -->
-<%-- 						%> --%>
-<%-- 						<option value="<%=model.getCode() %>"><%=model.getName()%></option> --%>
-<%-- 						<% --%>
-<!-- // 						} -->
-<%-- 						%> --%>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
+						<%
+						}
+						%>
 				</select></td>
 			<th class="">부서</th>
 			<td class="indent5"><select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
-<%-- 						<% --%>
-<!-- // 						for (NumberCode deptcode : deptcodeList) { -->
-<%-- 						%> --%>
-<%-- 						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option> --%>
-<%-- 						<% --%>
-<!-- // 						} -->
-<%-- 						%> --%>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
 				</select></td>
 		</tr>
 		<tr>
@@ -214,9 +214,10 @@
 		}
 		
 		document.addEventListener("DOMContentLoaded", function() {
-			numberCodeList('model', '');
-			numberCodeList('deptcode', '');
-			numberCodeList('preseration', '');
+			selectbox("model");
+			selectbox("preseration");
+			selectbox("documentType");
+			selectbox("deptcode");
 		});
 
 		function create(isSelf) {
@@ -403,50 +404,6 @@
 			$(this).removeClass("hover");
 		})
 		
-		// NumberCode 리스트 가져오기
-		const numberCodeList = (id, parentCode1) => {
-			const type = id.toUpperCase();
-			
-			let data = [];
-			
-			getNumberCodeList(type, parentCode1, false)
-			    .then(result => {
-			    	addSelectList(id, result);
-			    })
-			    .catch(error => {
-			        console.error(error);
-			    });
-			    
-		}
-			
-		const addSelectList = (id,data) => {
-			const removeId = "#"+ id + " option";
-			document.querySelector(removeId).remove();
-			const selectId = "#"+ id;
-			document.querySelector(selectId).innerHTML = "<option value='' title='' > 선택 </option>";
-			if(data.length > 0) {
-				for(let i=0; i<data.length; i++) {
-					let value = "<option value='" + data[i].code + "' title='" + data[i].oid + "' > [" + data[i].code + "] " + data[i].name + "</option>";
-					document.querySelector(selectId).innerHTML += value;
-				}
-			}
-		}
-		
-		function getNumberCodeList(type, parentOid, search) {
-		    const url = getCallUrl("/common/numberCodeList");
-		    const params = {
-		        codeType: type,
-		        parentOid: parentOid,
-		        search: search
-		    };
-
-		    return new Promise((resolve, reject) => {
-		        call(url, params, function(dataList) {
-		            const result = dataList.map(data => data); 
-		            resolve(result); 
-		        });
-		    });
-		}
 	</script>
 	</form>
 </body>

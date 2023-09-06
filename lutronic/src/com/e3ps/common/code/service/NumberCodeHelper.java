@@ -1,7 +1,9 @@
 package com.e3ps.common.code.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.beans.NumberCodeData;
@@ -64,7 +66,7 @@ public class NumberCodeHelper {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<NumberCodeData> getArrayPartTypeList(String codeType, String parentOid, boolean search) throws Exception {
+	public List<NumberCodeData> getArrayPartTypeList(String codeType, String parentOid) throws Exception {
 		ArrayList<NumberCodeData> list = new ArrayList<>();
 		long parentLongOid = 0;
 		if(StringUtil.checkString(parentOid)) {
@@ -108,6 +110,25 @@ public class NumberCodeHelper {
 			NumberCode code = (NumberCode) obj[0];
 			NumberCodeData data = new NumberCodeData(code);
 			list.add(data);
+		}
+		return list;
+	}
+	
+	public ArrayList<Map<String, Object>> getChildrens(String parentCode, String codeType) throws Exception{
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		NumberCode parent = getNumberCode(parentCode, codeType);
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", parent);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while(result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode numberCode = (NumberCode) obj[0];
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("key",numberCode.getCode());
+			map.put("value",numberCode.getName());
+			list.add(map);
 		}
 		return list;
 	}

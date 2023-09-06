@@ -84,37 +84,15 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
 	}
-	
-	@Description(value = "파트타입 가져오기")
-	@ResponseBody
-	@PostMapping(value = "/partTypeList")
-	public List<NumberCodeData> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
-		String codeType = StringUtil.checkNull((String) params.get("codeType"));
-		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
-		boolean search = (boolean) params.get("search");
-		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
-		try {
-			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid, search);			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		System.out.println(list.size());
-		return list;
-	}
 
 	@Description(value = "품목 등록 페이지")
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> partTypeList = NumberCodeHelper.manager.getArrayCodeList("PARTTYPE");
-		ArrayList<NumberCode> partName1List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME1");
-		ArrayList<NumberCode> partName2List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME2");
-		ArrayList<NumberCode> partName3List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME3");
+		List<NumberCodeData> partType1List = new ArrayList<NumberCodeData>();
+		partType1List = NumberCodeHelper.manager.getArrayPartTypeList("PARTTYPE", "");
 		model.setViewName("/extcore/jsp/part/part-create.jsp");
-		model.addObject("partTypeList", partTypeList);
-		model.addObject("partName1List", partName1List);
-		model.addObject("partName2List", partName2List);
-		model.addObject("partName3List", partName3List);
+		model.addObject("partType1List", partType1List);
 		return model;
 	}
 

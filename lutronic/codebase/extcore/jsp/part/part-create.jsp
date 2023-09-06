@@ -1,8 +1,10 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="com.e3ps.common.code.NumberCode"%>
+<%@page import="com.e3ps.common.code.beans.NumberCodeData"%>
+<%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.getAttribute("partType1List");
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 %>
@@ -72,6 +74,13 @@
 						<option value="">
 							선택
 						</option>
+						<%
+						for (NumberCodeData partType1 : partType1List) {
+						%>
+						<option value="<%= partType1.getOid() %>"><%=partType1.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>중제목</th>
@@ -446,6 +455,24 @@
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
 				document.getElementById("partName1").focus();
+				selectbox("partType1");
+				$("#partType1").bindSelect({
+					onchange: function(){
+						const oid = this.optionValue;
+						console.log(this.optionValue);
+						$("#partType2").bindSelect({
+							ajaxUrl: getCallUrl("/common/getCildrens?parentOid=" + oid),
+							reserveKeys: {
+								options: "list",
+								optionValue: "value",
+								optionText: "name"
+							},
+							setValue: this.optionValue,
+							alwaysOnChange: true,
+						})
+					}
+				})
+				selectbox("partType2");
 			});
 			
 			window.addEventListener("resize", function() {
@@ -454,22 +481,22 @@
 			});
 			
 			// PartType1 세팅
-			$(document).ready(function () {
-				numberCodeList('partType1', '');
-			})
+// 			$(document).ready(function () {
+// 				numberCodeList('partType1', '');
+// 			})
 			
 			<%----------------------------------------------------------
-			*                      제품구분 변경시
+			*                      품목구분 변경시
 			----------------------------------------------------------%>
 			$("#partType1").change(function() {
-				numberCodeList('partType2', $("#partType1 option:selected").attr("title"));
+// 				numberCodeList('partType2', $("#partType1 option:selected").attr("title"));
 				$("#partTypeNum").html(this.value);
 			})
 			<%----------------------------------------------------------
 			*                      대분류 변경시
 			----------------------------------------------------------%>
 			$("#partType2").change(function() {
-				numberCodeList('partType3', $("#codeNum").html() + $("#partType2 option:selected").attr("title"));
+// 				numberCodeList('partType3', $("#codeNum").html() + $("#partType2 option:selected").attr("title"));
 				$("#partTypeNum").html($("#partType1").val() + this.value);
 			})
 			<%----------------------------------------------------------
