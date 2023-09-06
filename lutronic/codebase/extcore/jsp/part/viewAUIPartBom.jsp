@@ -678,15 +678,11 @@ window.mygridCheck = function() {
 	*                      Bom Type에 따른 bom 검색
 	----------------------------------------------------------%>
 	function viewBomList(bomType){
-		
-		var str = getCallUrl("/part/bomPartList") + "?oid="+$("#oid").val()+"&bomType="+bomType;
-	    var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-	    leftpos = (screen.width - 1000)/ 2;
-	    toppos = (screen.height - 600) / 2 ;
-	    rest = "width=600,height=500,left=" + leftpos + ',top=' + toppos;
-	    var newwin = window.open( str , "viewBomList", opts+rest);
-	    newwin.focus();
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/part/bomPartList?oid=" + $("#oid").val() + "&bomType=" + bomType);
+		_popup(url, 800, 550,"n");
 	}
+	
 
 	$(window).resize(function() {
 		AUIGrid.resize("#grid_wrap");
