@@ -48,17 +48,17 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 			<% for(NumberCode model : modelList){ %>
 				modelList.push({ "code" : "<%= model.getCode() %>", "value" : "<%= model.getName() %>"});
 			<% } %>
-			let partName1 = [];
+			let partName1List = [];
 			<% for(NumberCode partName1 : partName1List){ %>
 				partName1List.push({ "code" : "<%= partName1.getCode() %>", "value" : "<%= partName1.getName() %>"});
 			<% } %>
-			let partName2 = [];
+			let partName2List = [];
 			<% for(NumberCode partName2 : partName2List){ %>
-				partName1List.push({ "code" : "<%= partName2.getCode() %>", "value" : "<%= partName2.getName() %>"});
+				partName2List.push({ "code" : "<%= partName2.getCode() %>", "value" : "<%= partName2.getName() %>"});
 			<% } %>
-			let partName3 = [];
+			let partName3List = [];
 			<% for(NumberCode partName3 : partName3List){ %>
-				partName1List.push({ "code" : "<%= partName3.getCode() %>", "value" : "<%= partName3.getName() %>"});
+				partName3List.push({ "code" : "<%= partName3.getCode() %>", "value" : "<%= partName3.getName() %>"});
 			<% } %>
 			const layout = [ {
 				dataField : "number",
