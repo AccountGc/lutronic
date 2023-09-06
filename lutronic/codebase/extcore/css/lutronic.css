@@ -5,6 +5,11 @@ html {
 	font-family: "Noto Sans KR";
 }
 
+body#popup {
+	margin: 10px;
+}
+
+
 /** 테이블 공통 CSS **/
 table {
 	width: 100%;

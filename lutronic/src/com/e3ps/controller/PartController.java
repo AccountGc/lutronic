@@ -68,9 +68,38 @@ public class PartController extends BaseController {
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
+	}
+	
+	@Description(value = "파트타입 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/partTypeList")
+	public List<NumberCodeData> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
+		String codeType = StringUtil.checkNull((String) params.get("codeType"));
+		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
+		boolean search = (boolean) params.get("search");
+		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
+		try {
+			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid, search);			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(list.size());
+		return list;
 	}
 
 	@Description(value = "품목 등록 페이지")
@@ -1495,8 +1524,8 @@ public class PartController extends BaseController {
 		model.addObject("desc", desc);
 		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
-		model.setViewName("/extcore/jsp/part/viewAUIPartBom.jsp");
-
+//		model.setViewName("/extcore/jsp/part/viewAUIPartBom.jsp");
+		model.setViewName("popup:/part/viewAUIPartBom");
 		return model;
 	}
 

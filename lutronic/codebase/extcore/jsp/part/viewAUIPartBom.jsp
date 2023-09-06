@@ -1,75 +1,71 @@
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 <%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
 <%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
 
 
 <style type="text/css">
-/* 계층 트리 아이콘  Windchill/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/plus.gif*/
-.aui-grid-tree-plus-icon {
-	display: inline-block;
-	width:16px;
-	height:16px;
-	border:none;
-	background: url(/Windchill/extcore/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/plus.gif) 50% 50% no-repeat;
-	background-size:16px;
-	vertical-align:bottom;
-	margin: 0 2px 0 0;
-}
-/*평쳤을때 이미지*/
-.aui-grid-tree-minus-icon {
-	display: inline-block;
-	width:16px;
-	height:16px;
-	border:none;
-	background: url(/Windchill/extcore/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/minus.gif) 50% 50% no-repeat;
-	background-size:16px;
-	vertical-align:bottom;
-	margin: 0 2px 0 0;
-}
-/*데이터 앞 이미지*/
-.aui-grid-tree-branch-icon {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	background: url(/Windchill/wtcore/images/part.gif) 50% 50% no-repeat;
-	background-size:16px;
-	vertical-align: bottom;
+	/* 계층 트리 아이콘  Windchill/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/plus.gif*/
+	.aui-grid-tree-plus-icon {
+		display: inline-block;
+		width:16px;
+		height:16px;
+		border:none;
+		background: url(/Windchill/extcore/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/plus.gif) 50% 50% no-repeat;
+		background-size:16px;
+		vertical-align:bottom;
+		margin: 0 2px 0 0;
+	}
+	/*평쳤을때 이미지*/
+	.aui-grid-tree-minus-icon {
+		display: inline-block;
+		width:16px;
+		height:16px;
+		border:none;
+		background: url(/Windchill/extcore/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/minus.gif) 50% 50% no-repeat;
+		background-size:16px;
+		vertical-align:bottom;
+		margin: 0 2px 0 0;
+	}
+	/*데이터 앞 이미지*/
+	.aui-grid-tree-branch-icon {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background: url(/Windchill/wtcore/images/part.gif) 50% 50% no-repeat;
+		background-size:16px;
+		vertical-align: bottom;
+		
+	}
 	
-}
-
-.aui-grid-tree-branch-open-icon {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	background: url(/Windchill/wtcore/images/part.gif) 50% 50% no-repeat;
-	background-size:16px;
-	vertical-align: bottom;
+	.aui-grid-tree-branch-open-icon {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		background: url(/Windchill/wtcore/images/part.gif) 50% 50% no-repeat;
+		background-size:16px;
+		vertical-align: bottom;
+		
+	}
 	
-}
-
-.aui-grid-tree-leaf-icon {
-	display: inline-block;
-	width: 16px;
-	height:16px;
-	background: url(/Windchill/wtcore/images/part.gif) no-repeat;
-	background-size:16px;
-	vertical-align: bottom;
-	margin: 0 2px 0 4px;
-}
-/* 계층 트리 아이콘 끝*/
-.AUI_left {
-	text-align: left;
-}
-
+	.aui-grid-tree-leaf-icon {
+		display: inline-block;
+		width: 16px;
+		height:16px;
+		background: url(/Windchill/wtcore/images/part.gif) no-repeat;
+		background-size:16px;
+		vertical-align: bottom;
+		margin: 0 2px 0 4px;
+	}
+	/* 계층 트리 아이콘 끝*/
+	.AUI_left {
+		text-align: left;
+	}
 </style>
 
 <% 
@@ -94,21 +90,28 @@
 
 <input type="hidden" name="baseline2" id="baseline2" value="<%= baseline %>"/>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0" >
+<table>
 
 	<tr align=center>
 	    <td valign="top" style="padding:0px 0px 0px 0px">
-		    <table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
+		    <table border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
 		   		<tr> 
 		   			<td height="30" width="93%" align="center"><B><%= title %> BOM</B></td>
 		   		</tr>
 			</table>
-		    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
+		    <table  border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
 		    	<tr height="30">
 		    		<td width="40%" align="left">
 						<input type="button" value="펼치기" title="펼치기" id="expand" class="width-80">
 						
-						<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120"></select>
+						<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
+							<option value="expandAll">전체확장</option>
+							<option value="1" selected>1레벨</option>
+							<option value="2">2레벨</option>
+							<option value="3">3레벨</option>
+							<option value="4">4레벨</option>
+							<option value="5">5레벨</option>
+						</select>
 						
 						<select name="desc" id="desc" class="AXSelect width-100">
 							<option value="true" >정전개</option>
@@ -161,13 +164,13 @@
 	<tr align=center>
 		<td valign="top" style="padding:0px 0px 0px 0px">
 		
-    		<div id="partTree" style="width:100%;"></div>
+    		<div id="partTree" ></div>
 		</td>
 	</tr>
 	<tr>
 		
 		<td>
-			<div id="grid_wrap" style="width: 100%; height:500px; margin-top: 2px; border-top: 3px solid #244b9c;">
+			<div id="grid_wrap" style="height:500px; margin-top: 2px; border-top: 3px solid #244b9c;">
 			</div>
 		</td>
 	</tr>
@@ -399,7 +402,7 @@
 		
 		
 		
-		popupAUIResize();
+// 		popupAUIResize();
 	});
 
 <%----------------------------------------------------------
@@ -685,5 +688,8 @@ window.mygridCheck = function() {
 	    newwin.focus();
 	}
 
+	$(window).resize(function() {
+		AUIGrid.resize("#grid_wrap");
+	});
 
 </script>

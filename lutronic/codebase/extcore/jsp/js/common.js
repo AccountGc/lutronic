@@ -1620,13 +1620,8 @@ function viewBaselineBom(partOid){
 ****************************************************************/
 function auiBom(partOid,baselineOid){
 	
-	var str = getCallUrl("/part/viewAUIPartBom") + "?oid="+partOid+"&baseline="+baselineOid;
-    var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-    leftpos = (screen.width - 1000)/ 2;
-    toppos = (screen.height - 600) / 2 ;
-    rest = "width=1400,height=600,left=" + leftpos + ',top=' + toppos;
-    var newwin = window.open( str , partOid, opts+rest);
-    newwin.focus();
+	var url = getCallUrl("/part/viewAUIPartBom") + "?oid="+partOid+"&baseline="+baselineOid;
+	_popup(url, "1400", "600", "n");
 }
 function auiBom2(partOid,baselineOid){
 	
@@ -1637,6 +1632,25 @@ function auiBom2(partOid,baselineOid){
     rest = "width=1200,height=600,left=" + leftpos + ',top=' + toppos;
     var newwin = window.open( str , partOid, opts+rest);
     newwin.focus();
+}
+
+function _popup(url, width, height, opt) {
+	var popW = width;
+	var popH = height;
+	var left = (screen.width - popW) / 2;
+	var top = (screen.height - popH) / 2;
+
+	if (opt == "no" || opt == "n") {
+		opt = "scrollbars=yes resizable=yes";
+	}
+
+	if (opt == "" || opt == undefined || opt == "full" || opt == "f") {
+		popW = screen.width;
+		popH = screen.height;
+		opt = "scrollbars=yes, resizable=yes, fullscreen=yes";
+	}
+	// 중복 생성 방지?
+	window.open(url, "", opt + ", top=" + (top - 50) + ", left=" + left + ", height=" + popH + ", width=" + popW);
 }
 
 /**************************************************************
