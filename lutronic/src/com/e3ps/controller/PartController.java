@@ -934,7 +934,7 @@ public class PartController extends BaseController {
 			title = Message.get("END ITEM");
 		}
 
-		model.setViewName("/extcore/jsp/part/bomPartList.jsp");
+		model.setViewName("popup:/part/bomPartList");
 		model.addObject("oid", oid);
 		model.addObject("bomType", bomType);
 		model.addObject("partNumber", part.getNumber());
@@ -946,7 +946,7 @@ public class PartController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/bomPartList")
 	public Map<String, Object> bomPartList(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = PartHelper.service.bomPartList(params);
+		Map<String, Object> result = PartHelper.manager.bomPartList(params);
 		return result;
 	}
 //	/** END ITEM 상세보기

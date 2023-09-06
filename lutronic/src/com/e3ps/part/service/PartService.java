@@ -66,8 +66,6 @@ public interface PartService {
 
 	Hashtable modify(Map hash, String[] loc, String[] deloc) throws Exception;
 
-	Map<String, Object> bomPartList(Map<String, Object> params) throws Exception;
-
 	Map<String, Object> getPartTreeAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	Map<String, Object> getBaseLineCompare(HttpServletRequest request, HttpServletResponse response) throws Exception;
