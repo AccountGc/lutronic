@@ -8,9 +8,9 @@ String creator = (String) request.getParameter("creator");
 <table class="search-table">
 	<colgroup>
 		<col width="130">
-		<col width="*">
+		<col width="500">
 		<col width="130">
-		<col width="*">
+		<col width="500">
 	</colgroup>
 	<% if("doc".equals(module)){ %>
 	<tr>
