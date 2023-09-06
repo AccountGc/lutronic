@@ -173,7 +173,9 @@ public class BomBroker {
 	}
 
 	public View getView() throws WTException {
-		return ViewHelper.service.getView("Design");
+		View[] views = ViewHelper.service.getAllViews();
+		String view = views[0].getName();
+		return ViewHelper.service.getView(view);
 	}
 
 	public PartTreeData getTree(WTPart part, boolean desc, Baseline baseline, View view)

@@ -102,7 +102,7 @@
 		AUIGrid.showAjaxLoader(myGridID);
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);
-			if (isEmpty(data.msg)) {
+			if (!isEmpty(data.list)) {
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);

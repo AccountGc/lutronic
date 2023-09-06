@@ -95,6 +95,7 @@ import wt.query.RelationalExpression;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
+import wt.vc.baseline.Baseline;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
@@ -1495,25 +1496,22 @@ public class PartHelper {
 		if ("up".equals(bomType)) {
 			
 			list = broker.ancestorPart(part, ViewHelper.service.getView(view), null);
-			if(list.size() < 0) {
-				msg = Message.get("상위품목이 없습니다.");
-			}
+			msg = Message.get("상위품목이 없습니다.");
 			title = Message.get("상위품목");
 		} else if ("down".equals(bomType)) {
 			list = broker.descentLastPart(part, ViewHelper.service.getView(view), null);
-			if(list.size() < 0) {
-				msg = Message.get("하위품목이 없습니다.");
-			}
+			msg = Message.get("하위품목이 없습니다.");
 			title = Message.get("하위품목");
 		} else if ("end".equals(bomType)) {
-			PartTreeData root = broker.getTree(part, false, null);
+            PartTreeData root = broker.getTree(part, false, null);
+//			PartTreeData root = broker.getTree(part, false, null,ViewHelper.service.getView(view));
 			broker.setHtmlForm(root, list);
 			msg = Message.get("END ITEM이 없습니다.");
+			
 			title = Message.get("END ITEM");
 		}
 		result.put("msg", msg);
 		result.put("title", title);
-		
 		List<Map<String, String>> item = new ArrayList<Map<String, String>>();
 		if (list.size() > 0) {
 			Collections.sort(list, new ObjectComarator());
@@ -1542,6 +1540,8 @@ public class PartHelper {
 					}
 					*/
 					WTPart endPart = data.part;
+					System.out.println("endPart                     : " +endPart);
+					System.out.println("part                     : " +part);
 					if(endPart.getNumber().equals(part.getNumber())){
 						continue;
 					}
