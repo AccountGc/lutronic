@@ -44,8 +44,10 @@ import com.e3ps.change.service.ECRHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.NumberCodeType;
+import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.GenNumberHelper;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
@@ -992,28 +994,28 @@ public class AdminController extends BaseController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@ResponseBody
-	@RequestMapping("/deleteRootDefinition")
-	public Map<String,Object> deleteRootDefinition(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		Map<String,Object> map = new HashMap<String,Object>();
-		String oid = request.getParameter("rootOid");
-//		System.out.println("admin deleteRootDefinition oid =" +oid);
-		boolean result = false;
-		String msg = Message.get("삭제 실패하였습니다.");
-		try {
-			msg = ECAHelper.service.deleteRootDefinition(oid);
-			result = true;
-		}catch(Exception e) {
-			result = false;
-			msg = Message.get("삭제 실패하였습니다.");
-			e.printStackTrace();
-		}
-		map.put("result", result);
-		map.put("msg", msg);
-		
-		return map;
-	}
+//	@ResponseBody
+//	@RequestMapping("/deleteRootDefinition")
+//	public Map<String,Object> deleteRootDefinition(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		String oid = request.getParameter("rootOid");
+////		System.out.println("admin deleteRootDefinition oid =" +oid);
+//		boolean result = false;
+//		String msg = Message.get("삭제 실패하였습니다.");
+//		try {
+//			msg = ECAHelper.service.deleteRootDefinition(oid);
+//			result = true;
+//		}catch(Exception e) {
+//			result = false;
+//			msg = Message.get("삭제 실패하였습니다.");
+//			e.printStackTrace();
+//		}
+//		map.put("result", result);
+//		map.put("msg", msg);
+//		
+//		return map;
+//	}
 	
 	/**
 	 * RootDefinition 목록 
@@ -1031,22 +1033,50 @@ public class AdminController extends BaseController {
 		
 	}
 	
+	@Description(value = "ActivityDefinition 등록 페이지")
+	@GetMapping(value = "/createActivityDefinition")
+	public ModelAndView createActivityDefinition(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		// eostep 리스트
+		List<NumberCodeData> stepList = NumberCodeHelper.manager.getArrayPartTypeList("EOSTEP", "");
+		// 활동구분 리스트
+		List<Map<String, String>> typeList = ChangeUtil.getActivityTypeList();
+		model.addObject("stepList", stepList);
+		model.addObject("typeList", typeList);
+		model.setViewName("popup:/admin/activityDefinition-create");
+		return model;
+	}
+	
 	/**	ActivityDefinition 등록 페이지
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/createActivityDefinition")
-	public ModelAndView createActivityDefinition(HttpServletRequest request, HttpServletResponse response){
-		ModelAndView model = new ModelAndView();
-		String oid = request.getParameter("oid");
-		model.addObject("oid", oid);
-		model.setViewName("popup:/admin/createActivityDefinition");
-		
-		return model;
+//	@RequestMapping("/createActivityDefinition")
+//	public ModelAndView createActivityDefinition(HttpServletRequest request, HttpServletResponse response){
+//		ModelAndView model = new ModelAndView();
+//		String oid = request.getParameter("oid");
+//		model.addObject("oid", oid);
+//		model.setViewName("popup:/admin/createActivityDefinition");
+//		
+//		return model;
+//	}
+	
+	@Description(value = "ActivityDefinition 등록 실행")
+	@ResponseBody
+	@PostMapping(value = "/createActivityDefinition")
+	public Map<String, Object> createActivityDefinition(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AdminHelper.service.createActivityDefinition(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
-	
-	
 	
 	/**	ActivityDefinition 등록 Action
 	 * @param request
@@ -1054,11 +1084,28 @@ public class AdminController extends BaseController {
 	 * @return
 	 * @throws Exception 
 	 */
+//	@ResponseBody
+//	@RequestMapping("/createActivityDefinitionAction")
+//	public ResultData createActivityDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		
+//		return ECAHelper.service.createActivityDefinitionAction(request);
+//	}
+	
+	@Description(value = "ActivityDefinition 삭제")
 	@ResponseBody
-	@RequestMapping("/createActivityDefinitionAction")
-	public ResultData createActivityDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		return ECAHelper.service.createActivityDefinitionAction(request);
+	@PostMapping(value = "/deleteActivityDefinition")
+	public Map<String, Object> deleteActivityDefinition(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AdminHelper.service.deleteActivityDefinition(params);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/**	ActivityDefinition 수정 페이지
@@ -1067,7 +1114,7 @@ public class AdminController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/updateActivityDefinition")
-	public ModelAndView updateActivityDefinition(HttpServletRequest request, HttpServletResponse response){
+	public ModelAndView updateActivityDefinition(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView model = new ModelAndView();
 		String oid = request.getParameter("oid");
 		EChangeActivityDefinition def =(EChangeActivityDefinition) CommonUtil.getObject(oid);
@@ -1099,28 +1146,28 @@ public class AdminController extends BaseController {
 	 * @return
 	 * @throws Exception 
 	 */
-	@ResponseBody
-	@RequestMapping("/deleteActivityDefinition")
-	public Map<String,Object> deleteActivityDefinition(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		Map<String,Object> map = new HashMap<String,Object>();
-		String deleteOid = request.getParameter("deleteOid");
-//		System.out.println("admin deleteRootDefinition oid =" +deleteOid);
-		boolean result = false;
-		String msg = Message.get("삭제 실패하였습니다.");
-		try {
-			msg = ECAHelper.service.deleteActivityDefinition(deleteOid);
-			result = true;
-		}catch(Exception e) {
-			result = false;
-			msg = Message.get("삭제 실패하였습니다.");
-			e.printStackTrace();
-		}
-		map.put("result", result);
-		map.put("msg", msg);
-		
-		return map;
-	}
+//	@ResponseBody
+//	@RequestMapping("/deleteActivityDefinition")
+//	public Map<String,Object> deleteActivityDefinition(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		
+//		Map<String,Object> map = new HashMap<String,Object>();
+//		String deleteOid = request.getParameter("deleteOid");
+////		System.out.println("admin deleteRootDefinition oid =" +deleteOid);
+//		boolean result = false;
+//		String msg = Message.get("삭제 실패하였습니다.");
+//		try {
+//			msg = ECAHelper.service.deleteActivityDefinition(deleteOid);
+//			result = true;
+//		}catch(Exception e) {
+//			result = false;
+//			msg = Message.get("삭제 실패하였습니다.");
+//			e.printStackTrace();
+//		}
+//		map.put("result", result);
+//		map.put("msg", msg);
+//		
+//		return map;
+//	}
 	
 	@Description(value = "등록 양식 페이지")
 	@GetMapping(value = "/adminPackage")

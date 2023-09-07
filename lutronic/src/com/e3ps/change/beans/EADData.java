@@ -5,11 +5,14 @@ import wt.org.WTUser;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.service.ChangeUtil;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.beans.NumberCodeData;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.org.People;
+import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.service.PeopleHelper;
 import com.e3ps.org.service.UserHelper;
 
 import lombok.Getter;
@@ -27,7 +30,6 @@ public class EADData {
 	private String stepSort;
 	private String activityType;
 	private String activityName;
-	private WTUser activeUser;
 	private String activeUserOid;
 	private String activeUserName;
 	private String departName;
@@ -41,33 +43,29 @@ public class EADData {
 		
 	}
 	
-	public EADData(final EChangeActivityDefinition ead) {
-		if(ead == null){
-			return;
-		}
+	public EADData(EChangeActivityDefinition ead) throws Exception {
 		setOid(CommonUtil.getOIDString(ead));
 		setRootOid(CommonUtil.getOIDString(ead.getRoot()));
 		setName(StringUtil.checkNull(ead.getName()));
 		setName_eng(StringUtil.checkNull(ead.getName_eng()));
 		setStep(StringUtil.checkNull(ead.getStep()));
-		NumberCode stepCode = NumberCodeHelper.service.getNumberCode("EOSTEP", getStep());
+		NumberCodeData stepCode = NumberCodeHelper.manager.getStepNumberCode("EOSTEP", ead.getStep());
 		if (stepCode != null) {
 			setStepName(stepCode.getName());
 		}
 		setActivityType(StringUtil.checkNull(ead.getActiveType()));
 		setActivityName(ChangeUtil.getActivityName(ead.getActiveType()));
 		if(ead.getActiveUser() != null){
-			setActiveUser(ead.getActiveUser());
 			setActiveUserOid(CommonUtil.getOIDString(ead.getActiveUser()));
 			setActiveUserName(ead.getActiveUser().getFullName());
 		}
 		setSortNumber(ead.getSortNumber());
 		setDescription(StringUtil.checkNull(ead.getDescription()));
-		setViewDescription(WebUtil.getHtml(getDescription()));
+		setViewDescription(WebUtil.getHtml(ead.getDescription()));
 		setModify(true);
-		People pp =UserHelper.service.getPeople(ead.getActiveUser());
-		if(pp != null && pp.getDepartment() != null){
-			setDepartName(pp.getDepartment().getName());
+		PeopleData pp = PeopleHelper.manager.getPeople(ead.getActiveUser());
+		if(pp != null){
+			setDepartName(pp.getDepartmentName());
 		}
 	}
 }
