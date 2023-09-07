@@ -2376,4 +2376,69 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
         }
 	}
+
+	@Override
+	public void createAll(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			
+			String searchType = StringUtil.checkNull((String) params.get("searchType"));
+			String description = StringUtil.checkNull((String) params.get("description"));
+			String number = "";
+			if(searchType.length() > 0){
+				if("DOC".equals(searchType)) {
+					number = "NDBT";
+				}else if("ROHS".equals(searchType)){
+					number = "ROHSBT";
+				}else if("MOLD".equals(searchType)){
+					number = "MMBT";
+				}
+			}
+			String today = DateUtil.getDateString(new Date(), new SimpleDateFormat("yyyyMM"));
+			number = number.concat("-").concat(today).concat("-");
+	        String seqNo = SequenceDao.manager.getSeqNo(number, "000", "WTDocumentMaster", "WTDocumentNumber");
+	        number = number + seqNo;
+	        
+			AsmApproval asm = AsmApproval.newAsmApproval();
+			
+			String appName = StringUtil.checkNull((String) params.get("appName"));
+			asm.setNumber(number);
+			asm.setName(appName);
+			asm.setDescription(description);
+			
+			// 문서 분류쳬게 설정
+	        Folder folder = FolderTaskLogic.getFolder("/Default/AsmApproval", WCUtil.getWTContainerRef());
+	        FolderHelper.assignLocation((FolderEntry)asm, folder);
+			
+	        // 문서 lifeCycle 설정
+	        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+	        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+	        LifeCycleHelper.setLifeCycle(asm, LifeCycleHelper.service.getLifeCycleTemplate("LC_Default", wtContainerRef)); //Lifecycle
+
+	        asm = (AsmApproval) PersistenceHelper.manager.save(asm);
+	        
+	        ArrayList<Map<String, Object>> gridList = (ArrayList<Map<String, Object>>)params.get("gridList");
+			
+			for(Map<String, Object> map : gridList) {
+				String docOid = (String) map.get("oid");
+				WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
+				
+				AppPerLink link = AppPerLink.newAppPerLink(doc, asm);
+				E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, asm.getLifeCycleState().toString());
+				PersistenceServerHelper.manager.insert(link);
+			}
+			
+			trs.commit();
+			trs = null;
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    	trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
 }

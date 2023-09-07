@@ -323,6 +323,22 @@ public class DocumentController extends BaseController {
 		model.setViewName("/extcore/jsp/document/document-all.jsp");
 		return model;
 	}
+	
+	@Description(value = "문서 일괄결재 등록 실행")
+	@ResponseBody
+	@PostMapping(value = "/all")
+	public Map<String,Object> all(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.createAll(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	/**
 	 * 일괄 등록(AUI) 메뉴 이동

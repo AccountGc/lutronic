@@ -465,6 +465,12 @@ if (request.getParameter("popup") != null) {
 				document.location.href = "/Windchill/eSolution/content/downloadZIP?oids=" + oids;
 			}
 			
+			// 일괄결재 그리드 삽입
+			function addBtn(){
+				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				opener.insertGrid(items);
+				self.close();
+			}
 		</script>
 	</form>
 </body>
