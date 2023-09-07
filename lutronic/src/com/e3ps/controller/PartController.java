@@ -89,10 +89,7 @@ public class PartController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
-		List<NumberCodeData> partType1List = new ArrayList<NumberCodeData>();
-		partType1List = NumberCodeHelper.manager.getArrayPartTypeList("PARTTYPE", "");
 		model.setViewName("/extcore/jsp/part/part-create.jsp");
-		model.addObject("partType1List", partType1List);
 		return model;
 	}
 

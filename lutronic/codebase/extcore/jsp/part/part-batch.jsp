@@ -1,7 +1,6 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
-<%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -62,7 +61,7 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 			<% } %>
 			const layout = [ {
 				dataField : "number",
-				headerText : "결과",
+				headerText : "저장위치",
 				dataType : "string",
 				width : 120,
 			}, {
@@ -70,39 +69,6 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 				headerText : "대분류<br>(2자리)",
 				dataType : "string",
 				width : 120,
-				renderer : {
-					type : "IconRenderer",
-					iconWidth : 16,
-					iconHeight : 16,
-					iconPosition : "aisleRight",
-					iconTableRef : {
-						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
-					},
-					onClick : function(event) {
-						AUIGrid.openInputer(event.pid);
-					}
-				},
-				editRenderer : {
-					type : "ComboBoxRenderer",
-					autoCompleteMode : true,
-					autoEasyMode : true,
-					matchFromFirst : false,
-					showEditorBtnOver : false,
-					list : list,
-					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-						let isValid = false;
-						for (let i = 0, len = list.length; i < len; i++) {
-							if (list[i] == newValue) {
-								isValid = true;
-								break;
-							}
-						}
-						return {
-							"validate" : isValid,
-							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-						};
-					}
-				},
 			}, {
 				dataField : "number",
 				headerText : "중분류<br>(2자리)",
@@ -153,6 +119,9 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 					editRenderer : {
 						type: "ComboBoxRenderer",
 						list: matList, 
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 						keyField: "code", 
 						valueField: "value" 
 					},
@@ -187,11 +156,14 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: partName1List, 
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 					keyField: "code",
 					valueField: "value"
 				},
 			}, {
-				dataField : "number",
+				dataField : "partName2",
 				headerText : "품목명<br>(중제목)",
 				dataType : "string",
 				width : 120,
@@ -220,11 +192,14 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: partName2List, 
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 					keyField: "code",
 					valueField: "value"
 				},
 			}, {
-				dataField : "number",
+				dataField : "partName3",
 				headerText : "품목명<br>(소제목)",
 				dataType : "string",
 				width : 120,
@@ -253,6 +228,9 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: partName3List, 
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 					keyField: "code",
 					valueField: "value"
 				},
@@ -301,6 +279,9 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 					editRenderer : {
 						type: "ComboBoxRenderer",
 						list: deptcodeList, 
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 						keyField: "code",
 						valueField: "value"
 					},
@@ -340,6 +321,9 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 					editRenderer : {
 						type: "ComboBoxRenderer",
 						list: modelList, 
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 						keyField: "code",
 						valueField: "value"
 					},
@@ -379,6 +363,9 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 					editRenderer : {
 						type: "ComboBoxRenderer",
 						list: productmethodList, 
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 						keyField: "code",
 						valueField: "value"
 					},

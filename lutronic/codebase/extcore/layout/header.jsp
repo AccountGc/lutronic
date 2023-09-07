@@ -269,10 +269,10 @@
 						<a onclick="moveToPage(this, '/rohs/all', '> RoHS > 물질 일괄결재');">물질 일괄결재</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄결재');">물질 일괄등록</a>
+						<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄등록');">물질 일괄등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄결재');">물질 일괄링크</a>
+						<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄링크');">물질 일괄링크</a>
 					</li>
 				</ul>
 			</li>

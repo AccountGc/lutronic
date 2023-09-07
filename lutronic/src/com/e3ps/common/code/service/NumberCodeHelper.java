@@ -114,22 +114,4 @@ public class NumberCodeHelper {
 		return list;
 	}
 	
-	public ArrayList<Map<String, Object>> getChildrens(String parentCode, String codeType) throws Exception{
-		ArrayList<Map<String, Object>> list = new ArrayList<>();
-		NumberCode parent = getNumberCode(parentCode, codeType);
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(NumberCode.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", parent);
-		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
-		QueryResult result = PersistenceHelper.manager.find(query);
-		while(result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			NumberCode numberCode = (NumberCode) obj[0];
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("key",numberCode.getCode());
-			map.put("value",numberCode.getName());
-			list.add(map);
-		}
-		return list;
-	}
 }

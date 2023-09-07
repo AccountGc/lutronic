@@ -504,4 +504,32 @@ public class RohsHelper {
 		
 		return result;
 	}
+	
+	/**
+	 * 물질 전체 리스트 가져오기
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<RohsData> totalList() throws Exception {
+		ArrayList<RohsData> list = new ArrayList<>();
+		Map<String, Object> params = new HashMap<>();
+    	
+    	QuerySpec query = new QuerySpec();
+    	int idx = query.addClassList(ROHSMaterial.class, true);
+    	ReferenceFactory rf = new ReferenceFactory();
+    	
+    	try {
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				RohsData data = new RohsData((ROHSMaterial) obj[0]);
+				list.add(data);
+			}
+	    }catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return list;
+	}
 }
