@@ -31,12 +31,14 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.rohs.service.RohsHelper;
 import com.infoengine.util.Base64;
 
+import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.part.WTPart;
@@ -66,7 +68,6 @@ public class CommonController extends BaseController {
 	public List<NumberCodeData> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
 		String codeType = StringUtil.checkNull((String) params.get("codeType"));
 		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
-		boolean search = (boolean) params.get("search");
 		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
 		try {
 			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid);			
