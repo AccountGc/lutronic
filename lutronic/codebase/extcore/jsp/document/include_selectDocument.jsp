@@ -125,4 +125,8 @@ boolean isCreate = "create".equals(mode);
 		}
 	}
 	
+	function insertGrid(items){
+		AUIGrid.setGridData(docGridID, items);
+	}
+	
 </script>
