@@ -628,7 +628,7 @@ public class PartController extends BaseController {
 	public ModelAndView updateAUIPackagePart(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
-		model.setViewName("/extcore/jsp/part/updateAUIPackagePart.jsp");
+		model.setViewName("popup:/part/updateAUIPackagePart");
 		return model;
 	}
 
