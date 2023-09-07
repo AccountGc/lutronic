@@ -1447,11 +1447,10 @@ public class PartController extends BaseController {
 	 * @throws Exception
 	 */
 	@ResponseBody
-	@RequestMapping("/attributeCleaning")
-	public ResultData attributeCleaning(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam(value = "oid") String oid) throws Exception {
+	@RequestMapping(value = "/attributeCleaning", method = RequestMethod.POST)
+	public ResultData attributeCleaning(@RequestBody Map<String, Object> param) throws Exception {
 
-		ResultData result = PartHelper.service.attributeCleaning(oid);
+		ResultData result = PartHelper.service.attributeCleaning(param);
 
 		return result;
 	}
