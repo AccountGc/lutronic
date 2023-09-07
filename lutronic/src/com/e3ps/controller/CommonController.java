@@ -522,7 +522,7 @@ public class CommonController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
 		model.addObject("distribute", distribute);
-		model.setViewName("/extcore/jsp/common/versionHistory.jsp");
+		model.setViewName("popup:/common/versionHistory");
 		return model;
 	}
 	
