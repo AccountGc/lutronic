@@ -78,8 +78,30 @@ public class FolderUtils {
 		QueryResult result = FolderHelper.service.findSubFolders(parent);
 		while (result.hasMoreElements()) {
 			SubFolder sub = (SubFolder) result.nextElement();
-			list.add(sub);
 			recurciveFolder(sub, list);
+			list.add(sub);
+		}
+		return list;
+	}
+	
+	/**
+	 * 모든 폴더 가져오기
+	 */
+	public static ArrayList<Folder> loadAllFolder(String location, String container) throws Exception {
+		Folder root = null;
+		if ("product".equalsIgnoreCase(container)) {
+			root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+		} else if ("library".equalsIgnoreCase(container)) {
+			root = FolderTaskLogic.getFolder(location, CommonUtil.getWTLibraryContainer());
+		}
+
+		ArrayList<Folder> list = new ArrayList<>();
+
+		Enumeration result = FolderTaskLogic.getSubFolders(root);
+		while (result.hasMoreElements()) {
+			Folder folder = (Folder) result.nextElement();
+			list.add(folder);
+			recurciveFolder(folder, list);
 		}
 		return list;
 	}

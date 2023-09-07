@@ -33,8 +33,12 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.FolderUtils;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.service.DocumentHelper;
+i
+import com.e3ps.drawing.service.DrawingHelper;mport com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.beans.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
@@ -42,6 +46,7 @@ import com.e3ps.part.service.PartSearchHelper;
 
 import wt.enterprise.Master;
 import wt.fc.ReferenceFactory;
+import wt.folder.Folder;
 import wt.part.WTPart;
 import wt.util.WTException;
 import wt.util.WTRuntimeException;
@@ -96,6 +101,11 @@ public class PartController extends BaseController {
 	@Description(value = "일괄 등록 페이지")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception{
+		
+		String location = DrawingHelper.ROOTLOCATION;
+		String container = "product";
+		
+		ArrayList<Folder> folderList = FolderUtils.loadAllFolder(location, container);
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -104,6 +114,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> partName2List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME2");
 		ArrayList<NumberCode> partName3List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME3");
 		ModelAndView model = new ModelAndView();
+		model.addObject("folderList", folderList);
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("matList", matList);
