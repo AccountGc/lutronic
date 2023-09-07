@@ -235,41 +235,32 @@ List<ROOTData> rootList = (List<ROOTData>) request.getAttribute("rootList");
 			
 			// Root 수정
 			$("#updateRootDefinition").click(function() {
-				var url = getURLString("admin", "updateRootDefinition", "do") + "?oid="+$("#rootOid").val();
-				openOtherName(url,"window","500","400","status=no,scrollbars=yes,resizable=yes");
+				const url = getCallUrl("/admin/updateRootDefinition")+"?oid="+$("#rootOid").val();
+				_popup(url, 600, 500, "n");
 			})
 			
 			// Root 삭제
 			$("#deleteRootDefinition").click(function() {
-				if(documentListGrid.getRowsNum()>0){
-					alert("활동이 있을경우 삭제할 수 없습니다");
+				var gridList = AUIGrid.getGridData(myGridID);
+				if(gridList.length>0){
+					alert("활동이 있을경우 삭제할 수 없습니다.");
 					return;
 				}
 				
-				if (!confirm("삭제하시겠습니까?")){
-					
-					return;
+				if (!confirm("삭제 하시겠습니까?")) {
+					return false;
 				}
-		
-				var form = $("form[name=admin_listChangeActivity]").serialize();
-				var url	= getURLString("admin", "deleteRootDefinition", "do");
-				
-				$.ajax({
-					type:"POST",
-					url: url,
-					data:form,
-					dataType:"json",
-					async: true,
-					cache: false,
-					error: function(data) {
-						alert("삭제 오류 발생");
-					},
-					success:function(data){
-						if(data.result) {
-								location.reload();
-						}else {
-							alert(data.msg);
-						}
+
+				let params = new Object();
+				const oid = $("#rootOid").val();
+				params.oid = oid;
+				const url = getCallUrl("/admin/deleteRootDefinition");
+				call(url, params, function(data) {
+					if(data.result){
+						alert(data.msg);
+						location.reload();
+					}else{
+						alert(data.msg);
 					}
 				});
 			})

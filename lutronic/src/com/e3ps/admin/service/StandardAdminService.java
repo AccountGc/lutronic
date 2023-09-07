@@ -1206,7 +1206,6 @@ public class StandardAdminService extends StandardManager implements AdminServic
 	@Override
 	public void createRootDefinition(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
-		
 		try{
 			trs.start();
 			
@@ -1226,6 +1225,64 @@ public class StandardAdminService extends StandardManager implements AdminServic
 			def.setDescription(description);
 			PersistenceHelper.manager.save(def);
 			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
+	}
+
+	@Override
+	public void updateRootDefinition(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		try{
+			trs.start();
+			
+			String oid = (String) params.get("oid");
+			String name = (String) params.get("name");
+	    	String name_eng = (String) params.get("name_eng");
+	    	String sortNumber = (String) params.get("sortNumber");
+	    	int sort = 0;
+	    	if(sortNumber.length()>0){
+	    		sort = Integer.parseInt(sortNumber);
+	    	}
+	    	String description =StringUtil.checkNull((String) params.get("description"));
+	    	EChangeActivityDefinitionRoot def = (EChangeActivityDefinitionRoot)CommonUtil.getObject(oid);
+	    	def.setName(name);
+			def.setName_eng(name_eng);
+			def.setDescription(description);
+			def.setSortNumber(sort);
+			PersistenceHelper.manager.modify(def);
+			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
+	}
+
+	@Override
+	public void deleteRootDefinition(Map<String, Object> params) throws Exception {
+		String oid = StringUtil.checkNull((String)params.get("oid"));
+		Transaction trs = new Transaction();
+		try{
+			trs.start();
+			if(oid != null){
+				EChangeActivityDefinitionRoot def = (EChangeActivityDefinitionRoot)CommonUtil.getObject(oid);
+				PersistenceHelper.manager.delete(def);
+			}
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

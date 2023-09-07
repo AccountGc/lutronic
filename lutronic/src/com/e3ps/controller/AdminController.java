@@ -52,6 +52,7 @@ import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.org.Department;
 import com.e3ps.org.beans.CompanyState;
 import com.e3ps.org.service.MailUserHelper;
@@ -804,7 +805,7 @@ public class AdminController extends BaseController {
 	@GetMapping(value = "/createRootDefinition")
 	public ModelAndView createRootDefinition() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/admin//rootDefinition-create");
+		model.setViewName("popup:/admin/rootDefinition-create");
 		return model;
 	}
 	
@@ -910,20 +911,49 @@ public class AdminController extends BaseController {
 //		return map;
 //	}
 	
+	@Description(value = "RootDefinition 수정 페이지")
+	@GetMapping(value = "/updateRootDefinition")
+	public ModelAndView updateRootDefinition(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EChangeActivityDefinitionRoot root =(EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
+		ROOTData rootdata = new ROOTData(root);
+		
+		model.addObject("rootdata", rootdata);
+		model.setViewName("popup:/admin/rootDefinition-update");
+		return model;
+	}
+	
 	/**	RootDefinition 수정 페이지
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping("/updateRootDefinition")
-	public ModelAndView updateRootDefinition(HttpServletRequest request, HttpServletResponse response){
-		ModelAndView model = new ModelAndView();
-		String oid = request.getParameter("oid");
-		EChangeActivityDefinitionRoot root =(EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
-		ROOTData rootdata = new ROOTData(root);
-		model.addObject("rootdata", rootdata);
-		model.setViewName("popup:/admin/updateRootDefinition");
-		return model;
+//	@RequestMapping("/updateRootDefinition")
+//	public ModelAndView updateRootDefinition(HttpServletRequest request, HttpServletResponse response){
+//		ModelAndView model = new ModelAndView();
+//		String oid = request.getParameter("oid");
+//		EChangeActivityDefinitionRoot root =(EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
+//		ROOTData rootdata = new ROOTData(root);
+//		model.addObject("rootdata", rootdata);
+//		model.setViewName("popup:/admin/updateRootDefinition");
+//		return model;
+//	}
+	
+	@Description(value = "RootDefinition 수정 실행")
+	@ResponseBody
+	@PostMapping(value = "/updateRootDefinition")
+	public Map<String, Object> updateRootDefinition(@RequestBody Map<String, Object>params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AdminHelper.service.updateRootDefinition(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/**	RootDefinition 수정 Action
@@ -932,11 +962,28 @@ public class AdminController extends BaseController {
 	 * @return
 	 * @throws Exception 
 	 */
+//	@ResponseBody
+//	@RequestMapping("/updateRootDefinitionAction")
+//	public ResultData updateRootDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		
+//		return ECAHelper.service.updateRootDefinitionAction(request);
+//	}
+	
+	@Description(value = "RootDefinition 삭제")
 	@ResponseBody
-	@RequestMapping("/updateRootDefinitionAction")
-	public ResultData updateRootDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		return ECAHelper.service.updateRootDefinitionAction(request);
+	@PostMapping(value = "/deleteRootDefinition")
+	public Map<String, Object> deleteRootDefinition(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			AdminHelper.service.deleteRootDefinition(params);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		}catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/**	RootDefinition 삭제 Action
