@@ -114,22 +114,22 @@ public class NumberCodeHelper {
 		return list;
 	}
 	
-	public ArrayList<Map<String, Object>> getChildrens(String parentCode, String codeType) throws Exception{
-		ArrayList<Map<String, Object>> list = new ArrayList<>();
-		NumberCode parent = getNumberCode(parentCode, codeType);
+	/**
+	 * 코드 & 코드타입으로 코드 객체 찾아오기
+	 */
+	public NumberCodeData getStepNumberCode(String codeType, String code) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", parent);
-		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
-		while(result.hasMoreElements()) {
+		NumberCodeData data = null;
+		if (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			NumberCode numberCode = (NumberCode) obj[0];
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("key",numberCode.getCode());
-			map.put("value",numberCode.getName());
-			list.add(map);
+			data = new NumberCodeData((NumberCode) obj[0]);
 		}
-		return list;
+		return data;
 	}
+	
 }

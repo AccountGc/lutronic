@@ -19,6 +19,8 @@ public class ROOTData {
 	private String description;
 	private String viewDescription;
 	
+	public ROOTData() {}
+	
 	public ROOTData(EChangeActivityDefinitionRoot def) {
 		setOid(CommonUtil.getOIDString(def));
 		setName(StringUtil.checkNull(def.getName()));

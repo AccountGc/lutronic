@@ -152,7 +152,7 @@ List<ROOTData> rootList = (List<ROOTData>) request.getAttribute("rootList");
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					rowCheckToRadio : true,
+					rowCheckToRadio : false,
 					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
@@ -267,52 +267,43 @@ List<ROOTData> rootList = (List<ROOTData>) request.getAttribute("rootList");
 			
 			// 활동 추가 
 			$("#createActivity").click(function() {
-				var url = getURLString("admin", "createActivityDefinition", "do") + "?oid="+$("#rootOid").val();
-				openOtherName(url,"window","500","500","status=no,scrollbars=yes,resizable=yes");
+				const url = getCallUrl("/admin/createActivityDefinition")+"?oid="+$("#rootOid").val();
+				_popup(url, 600, 550, "n");
 			})
 			
 			// 활동 삭제
 			$("#deleteActivity").click(function() {
-				var checked = documentListGrid.getCheckedRows(1);
-				if(checked == '') {
-					alert("선택된 데이터가 없습니다.");
+				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if(items.length==0){
+					alert("선택된 활동이 없습니다.");
 					return;
 				}
 				
 				if (!confirm("삭제하시겠습니까?")){
 					return;
 				}
-				var array = checked.split(",");
-				var returnArr = new Array();
-				var deleteOid ="";
-				for(var i =0; i < array.length; i++) {
-					var oid = array[i];	
-					deleteOid = deleteOid + oid+","
-				}
 				
-				$("#deleteOid").val(deleteOid);
-				
-				var form = $("form[name=admin_listChangeActivity]").serialize();
-				var url	= getURLString("admin", "deleteActivityDefinition", "do");
-				
-				$.ajax({
-					type:"POST",
-					url: url,
-					data:form,
-					dataType:"json",
-					async: true,
-					cache: false,
-					error: function(data) {
-						alert("삭제 오류 발생");
-					},
-					success:function(data){
-						if(data.result) {
-							lfn_Search();
-						}else {
-							alert(data.msg);
-						}
+				let params = new Object();
+				params.activityList = items;
+				const url = getCallUrl("/admin/deleteActivityDefinition");
+				call(url, params, function(data) {
+					if(data.result){
+						alert(data.msg);
+						loadGridData();
+					}else{
+						alert(data.msg);
 					}
 				});
+				
+// 				var array = checked.split(",");
+// 				var returnArr = new Array();
+// 				var deleteOid ="";
+// 				for(var i =0; i < array.length; i++) {
+// 					var oid = array[i];	
+// 					deleteOid = deleteOid + oid+","
+// 				}
+				
+// 				$("#deleteOid").val(deleteOid);
 			})
 			
 			// Root 변경 시

@@ -121,7 +121,7 @@ public interface PartService {
 	ResultData batchBomDrawingDownAction(String oid, String describe,
 			String ecoOid);
 
-	ResultData attributeCleaning(String oid) throws Exception;
+	ResultData attributeCleaning(Map<String, Object> param) throws Exception;
 
 	ResultData batchBomSelectDownAction(String oid,
 			List<Map<String, Object>> itemList, String describe,

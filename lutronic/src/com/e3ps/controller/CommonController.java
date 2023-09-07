@@ -31,12 +31,14 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.rohs.service.RohsHelper;
 import com.infoengine.util.Base64;
 
+import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.part.WTPart;
@@ -66,7 +68,6 @@ public class CommonController extends BaseController {
 	public List<NumberCodeData> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
 		String codeType = StringUtil.checkNull((String) params.get("codeType"));
 		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
-		boolean search = (boolean) params.get("search");
 		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
 		try {
 			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid);			
@@ -75,24 +76,6 @@ public class CommonController extends BaseController {
 		}
 		return list;
 	}
-	
-	@Description(value = "코드의 자식 코드 가져오는 함수")
-	@ResponseBody
-	@GetMapping(value = "/getChildrens")
-	public Map<String, Object> getChildrens(@RequestParam String parentCode, @RequestParam String codeType) throws Exception{
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			ArrayList<Map<String, Object>> childrens = NumberCodeHelper.manager.getChildrens(parentCode, codeType);
-			result.put("list", childrens);
-			result.put("result", SUCCESS);
-		} catch(Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-	
 	/**
 	 * 
 	 * 		LUTRONIC 추가 시작
@@ -522,7 +505,7 @@ public class CommonController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
 		model.addObject("distribute", distribute);
-		model.setViewName("/extcore/jsp/common/versionHistory.jsp");
+		model.setViewName("popup:/common/versionHistory");
 		return model;
 	}
 	

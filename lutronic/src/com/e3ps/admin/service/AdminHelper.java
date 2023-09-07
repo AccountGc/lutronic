@@ -210,33 +210,14 @@ public class AdminHelper {
 			return map;
 		}
 		long logRootOid = CommonUtil.getOIDLongValue(rootOid);
-		ClassAttribute classattribute1 = null;
-        ClassAttribute classattribute2 = null;
-        SearchCondition sc = null;
-		QuerySpec qs = new QuerySpec();
-		Class cls1 = EChangeActivityDefinition.class;
-		Class cls2 = NumberCode.class;
 		
-		int idx1 = qs.addClassList(EChangeActivityDefinition.class, true);
-		int idx2 = qs.addClassList(NumberCode.class, false);
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(EChangeActivityDefinition.class, true);
 		
-		//Join 
-		classattribute1 = new ClassAttribute(cls1,"step" );
-	    classattribute2= new ClassAttribute(cls2, "code");
-		sc = new SearchCondition(classattribute1, "=", classattribute2);
-		sc.setFromIndicies(new int[] {idx1, idx2}, 0);
-        sc.setOuterJoin(0);
-        qs.appendWhere(sc, new int[] {idx1, idx2});
-        
-		qs.appendAnd();
-		qs.appendWhere(new SearchCondition(EChangeActivityDefinition.class,"rootReference.key.id","=",logRootOid),new int[]{idx1});
-		
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(cls2, "sort"), false),new int[] { idx2 });
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeActivityDefinition.class, "sortNumber"), false),new int[] { idx1 });
-		//System.out.println(qs.toString());
-		PageQueryUtils pager = new PageQueryUtils(params, qs);
+		QuerySpecUtils.toEquals(query, idx, EChangeActivityDefinition.class, "rootReference.key.id", logRootOid);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeActivityDefinition.class, EChangeActivityDefinition.SORT_NUMBER, false);
+		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-
 		while (result.hasMoreElements()) {
 			Object[] o = (Object[]) result.nextElement();
 			EADData data = new EADData((EChangeActivityDefinition) o[0]);

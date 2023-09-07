@@ -49,4 +49,8 @@ public interface AdminService {
 	public void updateRootDefinition(Map<String, Object> params) throws Exception;
 	
 	public void deleteRootDefinition(Map<String, Object> params) throws Exception;
+	
+	public void createActivityDefinition(Map<String, Object> params) throws Exception;
+	
+	public void deleteActivityDefinition(Map<String, Object> params) throws Exception;
 }

@@ -4406,12 +4406,14 @@ public class StandardPartService extends StandardManager implements PartService 
 	
 	
 	@Override
-	public ResultData attributeCleaning(String oid) throws Exception {
+	public ResultData attributeCleaning(Map<String, Object> param) throws Exception {
 		ResultData data = new ResultData();
-		
+		String oid =(String) param.get("oid");
+		System.out.println(oid);
 		try{
 			WTPart part= (WTPart)CommonUtil.getObject(oid);
 			//String ver =""
+			System.out.println("part.getVersionIdentifier().getValue()                : "+part.getVersionIdentifier().getValue() );
 			
 			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_REV, part.getVersionIdentifier().getValue() , "string");
 			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, part.getName() , "string");

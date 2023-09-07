@@ -12,7 +12,7 @@
 		<tr>
 			<td class="left">
 				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 공지사항 수정
+					<img src="/Windchill/extcore/images/header.png"> 설계변경 활동 ROOT 수정
 				</div>
 			</td>
 		</tr>
@@ -52,7 +52,7 @@
 		<tr>
 			<td class="center">
 				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-				<input type="button" value="닫기" name="닫기" class="gray" onclick="javascript:history.back();">
+				<input type="button" value="닫기" name="닫기" class="gray" onclick="javascript:self.close();">
 			</td>
 		</tr>
 	</table>

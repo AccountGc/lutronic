@@ -1,30 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String oid = (String) request.getAttribute("oid");
+String oid = (String) request.getParameter("oid");
 String distribute = (String) request.getAttribute("distribute");
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title></title>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
-</head>
-<body>
 <form name=projectHistory>
 	<input type="hidden" name="oid" id="oid" value="<%= oid %>" />
 	<table width="100%" border="0" cellpadding="0" cellspacing="0" > 
 		<tr height="5">
 			<td>
 				<!--//여백 테이블-->
-				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
-					<tr> 
-						<td height=30 width=99% align=center><B><font color=white></font></B></td>
-					</tr>
-				</table>
 				<table class="button-table">
 					<tr>
 						<td class="left">
@@ -37,15 +21,11 @@ String distribute = (String) request.getAttribute("distribute");
 						</td>
 					</tr>
 				</table>
-				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align="center">
-					<tr>
-						<td height=1 width=100%></td>
-					</tr>
-				</table>
-				<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
-		</td>
-	</tr>
-</table>
+				<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div>
+			</td>
+		</tr>
+	</table>
+</form>
 <script>
 let myGridID;
 function _layout() {
@@ -138,6 +118,4 @@ document.addEventListener("DOMContentLoaded", function() {
 	AUIGrid.resize(myGridID);
 });
 </script>
-</form>
-</body>
-</html>
+

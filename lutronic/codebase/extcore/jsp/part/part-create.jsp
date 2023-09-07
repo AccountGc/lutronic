@@ -3,11 +3,6 @@
 <%@page import="com.e3ps.common.code.beans.NumberCodeData"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.getAttribute("partType1List");
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -74,13 +69,6 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 						<option value="">
 							선택
 						</option>
-						<%
-						for (NumberCodeData partType1 : partType1List) {
-						%>
-						<option value="<%= partType1.getOid() %>"><%=partType1.getName()%></option>
-						<%
-						}
-						%>
 					</select>
 				</td>
 				<th>중제목</th>
@@ -455,24 +443,9 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
 				document.getElementById("partName1").focus();
-				selectbox("partType1");
-				$("#partType1").bindSelect({
-					onchange: function(){
-						const oid = this.optionValue;
-						console.log(this.optionValue);
-						$("#partType2").bindSelect({
-							ajaxUrl: getCallUrl("/common/getCildrens?parentOid=" + oid),
-							reserveKeys: {
-								options: "list",
-								optionValue: "value",
-								optionText: "name"
-							},
-							setValue: this.optionValue,
-							alwaysOnChange: true,
-						})
-					}
-				})
-				selectbox("partType2");
+				numberCodeList('partType1', '');
+				selectbox("partType2")
+				selectbox("partType3")
 			});
 			
 			window.addEventListener("resize", function() {
@@ -480,23 +453,18 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				AUIGrid.resize(rohsGridID);
 			});
 			
-			// PartType1 세팅
-// 			$(document).ready(function () {
-// 				numberCodeList('partType1', '');
-// 			})
-			
 			<%----------------------------------------------------------
 			*                      품목구분 변경시
 			----------------------------------------------------------%>
 			$("#partType1").change(function() {
-// 				numberCodeList('partType2', $("#partType1 option:selected").attr("title"));
+				numberCodeList('partType2', $("#partType1 option:selected").attr("title"));
 				$("#partTypeNum").html(this.value);
 			})
 			<%----------------------------------------------------------
 			*                      대분류 변경시
 			----------------------------------------------------------%>
 			$("#partType2").change(function() {
-// 				numberCodeList('partType3', $("#codeNum").html() + $("#partType2 option:selected").attr("title"));
+				numberCodeList('partType3', $("#codeNum").html() + $("#partType2 option:selected").attr("title"));
 				$("#partTypeNum").html($("#partType1").val() + this.value);
 			})
 			<%----------------------------------------------------------
@@ -575,9 +543,10 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				
 				let data = [];
 				
-				part_numberCodeList(type, parentCode1, false)
+				part_numberCodeList(type, parentCode1)
 				    .then(result => {
 				    	addSelectList(id, result);
+				    	selectbox(id);
 				    })
 				    .catch(error => {
 				        console.error(error);
@@ -600,12 +569,11 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 			}
 			
 			// PartType 리스트 가져오기
-			function part_numberCodeList(type, parentOid, search) {
+			function part_numberCodeList(type, parentOid) {
 			    const url = getCallUrl("/common/numberCodeList");
 			    const params = {
 			        codeType: type,
-			        parentOid: parentOid,
-			        search: search
+			        parentOid: parentOid
 			    };
 
 			    return new Promise((resolve, reject) => {

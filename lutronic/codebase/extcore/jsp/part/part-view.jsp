@@ -4,9 +4,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.part.beans.PartData"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%@page import="net.sf.json.JSONArray"%>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -37,7 +34,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 <%-- 			<% } %> --%>
 			<input type="button"  value="Rev.이력"  title="Rev.이력" id="versionBtn">
 			<input type="button"  value="BOM"  title="BOM"  id="auiBom">
-			<input type="button"  value="단계별  BOM"  title="단계별  BOM"  id="auiBom2">
 			<input type="button"  value="BOM Editor"  title="BOM Editor"  id="bomE">
 			<input type="button"  value="Compare"  title="Compare"  id="Compare">
 <%-- 			<% if(!data.isLateste()){ %> --%>
@@ -701,7 +697,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	----------------------------------------------------------%>
 	$("#versionBtn").click(function () {
 		const url = getCallUrl("/common/versionHistory?oid=" + oid);
-		popup(url, 830, 600);
+		_popup(url, 830, 600,"n");
 	}),
 	<%----------------------------------------------------------
 	*                     AUI BOM 버튼
@@ -723,14 +719,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		auiBom(oid,'');
 // 		}
 	});
-	$("#auiBom2").click(function() {
-// 		if($("#bomSelect").val() =="true"){
-// 			bom2View();
-// 			$("#bomSelect").val("false");
-// 		}else{
-			auiBom2(oid,'');
-// 		}
-	})
 	<%----------------------------------------------------------
 	*                      BOM 버튼
 	----------------------------------------------------------%>
@@ -753,25 +741,15 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		var pdmOid = "<%= data.getPDMLinkProductOid() %>";
 		var vrOid = "<%= data.getVrOid() %>";
 		
-// 		var str = "/Windchill/netmarkets/jsp/explorer/installmsg.jsp?message=ok"
-// 				  + "&oid=" + vrOid +
-// 				  "&containerId=" + pdmOid + "&applet=com.ptc.windchill.explorer.structureexplorer.StructureExplorerApplet&jars=ptcAnnotator.jar,lib/pview.jar,lib/json.jar&appId=ptc.pdm.ProductStructureExplorer&launchEmpty=false&explorerName=%EC%A0%9C%ED%92%88+%EA%B5%AC%EC%A1%B0+%ED%83%90%EC%83%89%EA%B8%B0&ncid="
-// 		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-// 	    leftpos = (screen.width - 1000)/ 2;
-// 	    toppos = (screen.height - 600) / 2 ;
-// 	    rest = "width=1100,height=600,left=" + leftpos + ',top=' + toppos;
-// 	    var newwin = window.open( str , "BOMEditor", opts+rest);
-// 	    newwin.focus();
+		var str = "/Windchill/netmarkets/jsp/explorer/installmsg.jsp?message=ok"
+				  + "&oid=" + vrOid +
+				  "&containerId=" + pdmOid + "&applet=com.ptc.windchill.explorer.structureexplorer.StructureExplorerApplet&jars=ptcAnnotator.jar,lib/pview.jar,lib/json.jar&appId=ptc.pdm.ProductStructureExplorer&launchEmpty=false&explorerName=%EC%A0%9C%ED%92%88+%EA%B5%AC%EC%A1%B0+%ED%83%90%EC%83%89%EA%B8%B0&ncid="
+	    _popup(str, 1100, 600,"n");
 	})
 	
 	$("#Compare").click(function() {
 		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
-		var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-		leftpos = (screen.width - 1000)/ 2;
-		toppos = (screen.height - 600) / 2 ;
-		rest = "width=1300,height=600,left=" + leftpos + ',top=' + toppos;
-		var newwin = window.open( str , "compareBOM", opts+rest);
-		newwin.focus();
+		_popup(str, 1300, 600,"n");
 	})
 	
 	$("#orderNumber").click(function() {
@@ -809,27 +787,17 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	
 	$("#attributeCleaning").click(function() {
 		if (confirm("속성 Clearing 하시겠습니까?")){ 
+			
 			var form = $("form[name=partViewForm]").serialize();
-			var url	= getURLString("part", "attributeCleaning", "do");
-			$.ajax({
-				type:"POST",
-				url: url,
-				data:form,
-				dataType:"json",
-				async: true,
-				cache: false,
-				error: function(data) {
-					alert("삭제 오류 발생");
-				},
-				success:function(data){
-					console.log(data);
-					alert(data.message);
-					if(data.result) {
-						
-						location.reload();
-					}
+			var url	= getCallUrl("/part/attributeCleaning");
+			var params = {"oid": $("#oid").val() };
+
+			call(url, params, function(data) {
+				alert(data.message);
+				if(data.result) {
+					location.reload();
 				}
-			});
+			},"POST");
 		}
 	})
 	

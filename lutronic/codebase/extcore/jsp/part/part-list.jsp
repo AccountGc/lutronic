@@ -349,7 +349,7 @@ if(request.getParameter("popup")!=null){
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800,"n");
 						}
 					},
 					filter : {
@@ -367,7 +367,7 @@ if(request.getParameter("popup")!=null){
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800,"n");
 						}
 					},
 					filter : {
