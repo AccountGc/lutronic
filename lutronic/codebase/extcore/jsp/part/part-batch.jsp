@@ -66,10 +66,6 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 				partName3List.push({ "code" : "<%= partName3.getCode() %>", "value" : "<%= partName3.getName() %>"});
 			<% } %>
 			
-			folderList.forEach(folder => {
-				console.log(folder);
-			})
-			
 			const layout = [ {
 				dataField : "location",
 				headerText : "저장위치",
