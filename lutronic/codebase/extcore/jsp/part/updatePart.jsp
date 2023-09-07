@@ -4,17 +4,6 @@
 String oid = (String) request.getAttribute("oid");
 PartData data = (PartData) request.getAttribute("data");
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title></title>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
-</head>
-<body>
 <form name="updateDevelopmentForm" id="updateDevelopmentForm" method="post" >
 <input type="hidden" name="oid" id="oid" value="<%= oid %>" />
 <table width="100%" border="0" cellpadding="0" cellspacing="0" > 
@@ -28,7 +17,6 @@ PartData data = (PartData) request.getAttribute("data");
 						</div>
 					</td>
 					<td class="right">
-						<input type="button" value="수정" name="updateDevBtn" id="updateDevBtn" >
 						<input type="button" value="이전페이지" name="backBtn" id="backBtn" onclick="javascript:history.back();">
 					</td>
 				</tr>
@@ -37,7 +25,7 @@ PartData data = (PartData) request.getAttribute("data");
 	</tr>
 	
 	<tr align="center">
-		<td valign="top" style="padding:0px 0px 0px 0px" colspan="2">
+		<td valign="top" colspan="2">
 			<table class="search-table">
 				<colgroup>
 					<col width="180">
@@ -271,6 +259,8 @@ PartData data = (PartData) request.getAttribute("data");
 				</td>
 			</tr>
 		</table>
+		
+	</form>
 <script>
 <%----------------------------------------------------------
 *                      페이지 초기 설정
@@ -488,6 +478,3 @@ $(function () {
 	})
 })
 </script>
-</form>
-</body>
-</html>

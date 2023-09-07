@@ -719,22 +719,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		auiBom(oid,'');
 // 		}
 	});
-	<%----------------------------------------------------------
-	*                      BOM 버튼
-	----------------------------------------------------------%>
-// 	$("#bom").click(function() {
-// 		const url = getCallUrl("/part/PartTree?oid=" + oid);
-// 	    popup(url, 1100, 600);
-// 	})
-
-// 	$("#bom2").click(function() {
-// 		const url = getCallUrl("/part/viewPartBom?oid=" + oid);
-// 		popup(url, 1100, 600);
-// 	})
 	
 	$("#packageUpdate").click(function() {
 		const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);
-		popup(url, 1500, 600);
+		_popup(url, 1500, 600,"n");
 	})
 	
 	$("#bomE").click(function() {

@@ -2,375 +2,332 @@
 <%
 String oid = (String) request.getAttribute("oid");
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title></title>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
-</head>
-<body>
+
 <form name=updatePackagePart>
 	<input type="hidden" name="oid" id="oid" value="<%= oid %>" />
 	<table width="100%" border="0" cellpadding="0" cellspacing="0" > 
 		<tr height="5">
-			<td>
-				<!--//여백 테이블-->
-				<table width="100%" border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
-					<tr> 
-						<td height=30 width=99% align=center><B><font color=white>품목 일괄 수정</font></B></td>
-					</tr>
-				</table>
-				<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
-		    	<tr height="30">
-		    		<td>
-						<table border="0" cellpadding="0" cellspacing="4" align=left>
-							<tr>
-								<td>
-									<input type="checkbox" name="checkDummy" id="checkDummy" value="true" checked onchange="viewAUIPartBomAction()" > 더미제외
-								</td>
-								<td>
-									<select id="depthSelect" onchange="showItemsOnDepth()">
-									</select>
-								</td>
-								<td>
-									<input type="button" value="필터 초기화" title="필터 초기화"  id="filterInit">
-								</td>
-							</tr>
-						</table>
-		    		</td>
-		    		<td>
-		    			<table border="0" cellpadding="0" cellspacing="4" align=right>
-							<tr>
-								<td>
-									<input type="button" value="속성 일괄 적용" title="속성 일괄 적용"  id="batchAttribute">
-								</td>
-								<td>
-									<input type="button" value="저장" title="저장"  id="updatePack">
-								</td>
-								
-								<td>
-									<input type="button" value="닫기" title="닫기"  onclick="self.close();" >
-								</td>
-							</tr>
-						</table>
-		    		</td>
-		    	</tr>
-		    </table>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
-		</td>
-	</tr>
-</table>
+			<td align=center colspan="2">
+				<B><font>품목 일괄 수정</font></B>
+			</td>
+    	<tr height="30">
+    		<td align=left>
+				<input type="checkbox" name="checkDummy" id="checkDummy" value="true" checked onchange="viewAUIPartBomAction()" > 더미제외
+				<select id="depthSelect" onchange="showItemsOnDepth()">
+				</select>
+				<input type="button" value="필터 초기화" title="필터 초기화"  id="filterInit">
+			</td>
+    		<td align=right>
+				<input type="button" value="속성 일괄 적용" title="속성 일괄 적용"  id="batchAttribute">
+				<input type="button" value="저장" title="저장"  id="updatePack">
+				<input type="button" value="닫기" title="닫기"  onclick="self.close();" >
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+			</td>
+		</tr>
+	</table>
+</form>
 <script type="text/javascript">
-<%----------------------------------------------------------
-*                      AUI Tree 그리드 
-----------------------------------------------------------%>
-let myGridID;
+	<%----------------------------------------------------------
+	*                      AUI Tree 그리드 
+	----------------------------------------------------------%>
+	var  myGridID;
+	
+	// var isExpanded = false;
+	var mdoelValueList = [];
+	var productMethodValueList = [];
+	var deptcodeValueList = [];
+	var unitValueList = [];
+	var manufactureValueList = []; 
+	var matValueList = []; 
+	var finishValueList = []; 
+	
+	var  layout= [{
+				dataField: "rowId",
+				headerText: "rowId",
+				editable : false,
+				width : "3%"
+			},
+			{
+				dataField : "level",
+				headerText : "Level",
+				width: "5%",
+				filter : {
+					showIcon : true
+				},
+				
+			}, 
+		    {
+				dataField : "number",
+				headerText : "부품번호",
+				width: "10%",
+				editable : false,
+				filter : {
+					showIcon : true
+				},
+			}, 
+			{
+				dataField: "name",
+				headerText: "부품명",
+				style: "AUI_left",
+				editable : false,
+				width : "15%",
+				filter : {
+					showIcon : true
+				},
+				renderer : { // HTML 템플릿 렌더러 사용
+					type : "TemplateRenderer"
+				},
+				labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
+					var temp = "<a href=javascript:openView('" + item.oid + "') style='line-height:26px;'>" + value + "</a>"
+					return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
+				}
+			}, 
+			{
+				dataField: "state",
+				headerText: "상태",
+				editable : false,
+				width : "5%",
+				filter : {
+					showIcon : true
+				},
+			}, 
+			{
+				dataField: "model",
+				headerText: "프로젝트 코드 (*)",
+				headerStyle : "AUI_Header_Requisite",
+				style: "AUI_left",
+				width: "10%",
+				filter : {
+					showIcon : true
+				},
+				renderer : {
+		        	type : "DropDownListRenderer",
+		        	list : mdoelValueList,
+		        	keyField : "code",
+		        	valueField : "value"
+		        },
+		        
+		        labelFunction : function( rowIndex, columnIndex, value, item) {
+		        	var reStr = "";
+		        	
+		        	for(var i=0,len=mdoelValueList.length; i<len; i++) {
+		        		
+		        		if(value == mdoelValueList[i].code){
+		        			reStr = mdoelValueList[i].value
+		        			break;
+		        		}
+		        	}
+		        	return reStr;
+		        },
+		        
+			}, 
+			{
+				dataField: "productmethod",
+				headerText: "제작방법 (*)",
+				style: "AUI_left",
+				width: "10%",
+				filter : {
+					showIcon : true
+				},
+				renderer : {
+		        	type : "DropDownListRenderer",
+		        	list : productMethodValueList,
+		        	keyField : "code",
+		        	valueField : "value"
+		        },
+		        
+		        labelFunction : function( rowIndex, columnIndex, value, item) {
+		        	var reStr = "";
+		        	
+		        	for(var i=0,len=productMethodValueList.length; i<len; i++) {
+		        		
+		        		if(value == productMethodValueList[i].code){
+		        			reStr = productMethodValueList[i].value
+		        			break;
+		        		}
+		        	}
+		        	return reStr;
+		        },
+			}, 
+			{
+				dataField: "deptcode",
+				headerText: "부서(*)",
+				style: "AUI_left",
+				width: "5%",
+				filter : {
+					showIcon : true
+				},
+				renderer : {
+		        	type : "DropDownListRenderer",
+		        	list : deptcodeValueList,
+		        	keyField : "code",
+		        	valueField : "value"
+		        },
+		        
+		        labelFunction : function( rowIndex, columnIndex, value, item) {
+		        	var reStr = "";
+		        	
+		        	for(var i=0,len=deptcodeValueList.length; i<len; i++) {
+		        		if(value == deptcodeValueList[i].code){
+		        			reStr = deptcodeValueList[i].value
+		        			break;
+		        		}
+		        	}
+		        	return reStr;
+		        },
+				
+			},
+			{
+				dataField: "unit",
+				headerText: "단위(*)",
+				style: "AUI_left",
+				width: "5%",
+				renderer : {
+		        	type : "DropDownListRenderer",
+		        	list : unitValueList,
+		        	keyField : "code",
+		        	valueField : "value"
+		        },
+		        
+		        labelFunction : function( rowIndex, columnIndex, value, item) {
+		        	var reStr = "";
+		        	
+		        	for(var i=0,len=unitValueList.length; i<len; i++) {
+		        		if(value == unitValueList[i].code){
+		        			reStr = unitValueList[i].value
+		        			break;
+		        		}
+		        	}
+		        	return reStr;
+		        },
+				
+			},
+			{
+				dataField: "manufacture",
+				headerText: "MANUFATURER",
+				style: "AUI_left",
+				filter : {
+					showIcon : true
+				},
+				width: "10%",
+				renderer : {
+		        	type : "DropDownListRenderer",
+		        	list : manufactureValueList,
+		        	keyField : "code",
+		        	valueField : "value"
+		        },
+		        
+		        labelFunction : function( rowIndex, columnIndex, value, item) {
+		        	var reStr = "";
+		        	
+		        	for(var i=0,len=manufactureValueList.length; i<len; i++) {
+		        		if(value == manufactureValueList[i].code){
+		        			reStr = manufactureValueList[i].value
+		        			break;
+		        		}
+		        	}
+		        	return reStr;
+		        },
+				
+				
+			},
+			{
+				dataField: "mat",
+				headerText: "재질 ",
+				style: "AUI_left",
+				filter : {
+					showIcon : true
+				},
+				width: "5%",
+				renderer : {
+		        	type : "DropDownListRenderer",
+		        	list : matValueList,
+		        	keyField : "code",
+		        	valueField : "value"
+		        },
+		        
+		        labelFunction : function( rowIndex, columnIndex, value, item) {
+		        	var reStr = "";
+		        	
+		        	for(var i=0,len=matValueList.length; i<len; i++) {
+		        		if(value == matValueList[i].code){
+		        			reStr = matValueList[i].value
+		        			break;
+		        		}
+		        	}
+		        	return reStr;
+		        },
+				
+				
+			},
+			{
+				dataField: "finish",
+				headerText: "후처리 ",
+				style: "AUI_left",
+				filter : {
+					showIcon : true
+				},
+				width: "10%",
+				renderer : {
+		        	type : "DropDownListRenderer",
+		        	list : finishValueList,
+		        	keyField : "code",
+		        	valueField : "value"
+		        },
+		        
+		        labelFunction : function( rowIndex, columnIndex, value, item) {
+		        	var reStr = "";
+		        	
+		        	for(var i=0,len=finishValueList.length; i<len; i++) {
+		        		if(value == finishValueList[i].code){
+		        			reStr = finishValueList[i].value
+		        			break;
+		        		}
+		        	}
+		        	return reStr;
+		        },
+				
+				
+			},
+			{
+				dataField: "remark",
+				headerText: "OEM Info.",
+				width: "15%",
+				filter : {
+					showIcon : true
+				},
+				
+				
+			},
+			{
+				dataField: "weight",
+				headerText: "무게(g)",
+				width: "8%",
+				filter : {
+					showIcon : true
+				},
+				
+				
+			},
+			{
+				dataField: "specification",
+				headerText: "사양 ",
+				width: "15%",
+				filter : {
+					showIcon : true
+				},
+				
+				
+			},
+			
+		];
 
-var defaultGridHeight = 61;
-var rowHeight = 26;
-var headerHeight = 24;
-var footerHeight = 30;
-// var isExpanded = false;
-var mdoelValueList = [];
-var productMethodValueList = [];
-var deptcodeValueList = [];
-var unitValueList = [];
-var manufactureValueList = []; 
-var matValueList = []; 
-var finishValueList = []; 
-function _layout() {
-	return [ 
-		{
-			dataField: "rowId",
-			headerText: "rowId",
-			editable : false,
-			width : "3%"
-		},
-		{
-			dataField : "level",
-			headerText : "Level",
-			width: "5%",
-			filter : {
-				showIcon : true
-			},
-			
-		}, 
-	    {
-			dataField : "number",
-			headerText : "부품번호",
-			width: "10%",
-			editable : false,
-			filter : {
-				showIcon : true
-			},
-		}, 
-		{
-			dataField: "name",
-			headerText: "부품명",
-			style: "AUI_left",
-			editable : false,
-			width : "15%",
-			filter : {
-				showIcon : true
-			},
-			renderer : { // HTML 템플릿 렌더러 사용
-				type : "TemplateRenderer"
-			},
-			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-				var temp = "<a href=javascript:openView('" + item.oid + "') style='line-height:26px;'>" + value + "</a>"
-				return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-			}
-		}, 
-		{
-			dataField: "state",
-			headerText: "상태",
-			editable : false,
-			width : "5%",
-			filter : {
-				showIcon : true
-			},
-		}, 
-		{
-			dataField: "model",
-			headerText: "프로젝트 코드 (*)",
-			headerStyle : "AUI_Header_Requisite",
-			style: "AUI_left",
-			width: "10%",
-			filter : {
-				showIcon : true
-			},
-			renderer : {
-	        	type : "DropDownListRenderer",
-	        	list : mdoelValueList,
-	        	keyField : "code",
-	        	valueField : "value"
-	        },
-	        
-	        labelFunction : function( rowIndex, columnIndex, value, item) {
-	        	var reStr = "";
-	        	
-	        	for(var i=0,len=mdoelValueList.length; i<len; i++) {
-	        		
-	        		if(value == mdoelValueList[i].code){
-	        			reStr = mdoelValueList[i].value
-	        			break;
-	        		}
-	        	}
-	        	return reStr;
-	        },
-	        
-		}, 
-		{
-			dataField: "productmethod",
-			headerText: "제작방법 (*)",
-			style: "AUI_left",
-			width: "10%",
-			filter : {
-				showIcon : true
-			},
-			renderer : {
-	        	type : "DropDownListRenderer",
-	        	list : productMethodValueList,
-	        	keyField : "code",
-	        	valueField : "value"
-	        },
-	        
-	        labelFunction : function( rowIndex, columnIndex, value, item) {
-	        	var reStr = "";
-	        	
-	        	for(var i=0,len=productMethodValueList.length; i<len; i++) {
-	        		
-	        		if(value == productMethodValueList[i].code){
-	        			reStr = productMethodValueList[i].value
-	        			break;
-	        		}
-	        	}
-	        	return reStr;
-	        },
-		}, 
-		{
-			dataField: "deptcode",
-			headerText: "부서(*)",
-			style: "AUI_left",
-			width: "5%",
-			filter : {
-				showIcon : true
-			},
-			renderer : {
-	        	type : "DropDownListRenderer",
-	        	list : deptcodeValueList,
-	        	keyField : "code",
-	        	valueField : "value"
-	        },
-	        
-	        labelFunction : function( rowIndex, columnIndex, value, item) {
-	        	var reStr = "";
-	        	
-	        	for(var i=0,len=deptcodeValueList.length; i<len; i++) {
-	        		if(value == deptcodeValueList[i].code){
-	        			reStr = deptcodeValueList[i].value
-	        			break;
-	        		}
-	        	}
-	        	return reStr;
-	        },
-			
-		},
-		{
-			dataField: "unit",
-			headerText: "단위(*)",
-			style: "AUI_left",
-			width: "5%",
-			renderer : {
-	        	type : "DropDownListRenderer",
-	        	list : unitValueList,
-	        	keyField : "code",
-	        	valueField : "value"
-	        },
-	        
-	        labelFunction : function( rowIndex, columnIndex, value, item) {
-	        	var reStr = "";
-	        	
-	        	for(var i=0,len=unitValueList.length; i<len; i++) {
-	        		if(value == unitValueList[i].code){
-	        			reStr = unitValueList[i].value
-	        			break;
-	        		}
-	        	}
-	        	return reStr;
-	        },
-			
-		},
-		{
-			dataField: "manufacture",
-			headerText: "MANUFATURER",
-			style: "AUI_left",
-			filter : {
-				showIcon : true
-			},
-			width: "10%",
-			renderer : {
-	        	type : "DropDownListRenderer",
-	        	list : manufactureValueList,
-	        	keyField : "code",
-	        	valueField : "value"
-	        },
-	        
-	        labelFunction : function( rowIndex, columnIndex, value, item) {
-	        	var reStr = "";
-	        	
-	        	for(var i=0,len=manufactureValueList.length; i<len; i++) {
-	        		if(value == manufactureValueList[i].code){
-	        			reStr = manufactureValueList[i].value
-	        			break;
-	        		}
-	        	}
-	        	return reStr;
-	        },
-			
-			
-		},
-		{
-			dataField: "mat",
-			headerText: "재질 ",
-			style: "AUI_left",
-			filter : {
-				showIcon : true
-			},
-			width: "5%",
-			renderer : {
-	        	type : "DropDownListRenderer",
-	        	list : matValueList,
-	        	keyField : "code",
-	        	valueField : "value"
-	        },
-	        
-	        labelFunction : function( rowIndex, columnIndex, value, item) {
-	        	var reStr = "";
-	        	
-	        	for(var i=0,len=matValueList.length; i<len; i++) {
-	        		if(value == matValueList[i].code){
-	        			reStr = matValueList[i].value
-	        			break;
-	        		}
-	        	}
-	        	return reStr;
-	        },
-			
-			
-		},
-		{
-			dataField: "finish",
-			headerText: "후처리 ",
-			style: "AUI_left",
-			filter : {
-				showIcon : true
-			},
-			width: "10%",
-			renderer : {
-	        	type : "DropDownListRenderer",
-	        	list : finishValueList,
-	        	keyField : "code",
-	        	valueField : "value"
-	        },
-	        
-	        labelFunction : function( rowIndex, columnIndex, value, item) {
-	        	var reStr = "";
-	        	
-	        	for(var i=0,len=finishValueList.length; i<len; i++) {
-	        		if(value == finishValueList[i].code){
-	        			reStr = finishValueList[i].value
-	        			break;
-	        		}
-	        	}
-	        	return reStr;
-	        },
-			
-			
-		},
-		{
-			dataField: "remark",
-			headerText: "OEM Info.",
-			width: "15%",
-			filter : {
-				showIcon : true
-			},
-			
-			
-		},
-		{
-			dataField: "weight",
-			headerText: "무게(g)",
-			width: "8%",
-			filter : {
-				showIcon : true
-			},
-			
-			
-		},
-		{
-			dataField: "specification",
-			headerText: "사양 ",
-			width: "15%",
-			filter : {
-				showIcon : true
-			},
-			
-			
-		},
-		
-	];
-}
-
-function createAUIGrid(columnLayout) {
+function createAUIGrid() {
+	
 	const props = {
 		headerHeight : 30,
 		showRowNumColumn : true,
@@ -386,7 +343,7 @@ function createAUIGrid(columnLayout) {
 		filterLayerWidth : 320,
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 	};
-	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+	myGridID = AUIGrid.create("#grid_wrap", layout, props);
 	loadGridData();
 	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
@@ -399,14 +356,14 @@ function createAUIGrid(columnLayout) {
 }
 
 function loadGridData() {
+	debugger;
 	const params = new Object();
 	$("input[type=hidden]").each(function() {
 		if($.trim(this.name) != "") {
-			console.log(this.name +"="+this.value)
 			params[this.name] = this.value;
 		}
 	});
-	var rowList = AUIGrid.getEditedRowItems(myBOMGridID);
+	var rowList = AUIGrid.getEditedRowItems(myGridID);
 	params.rowList = rowList;
 	const url = getCallUrl("/part/updateAUIPackagePartAction");
 	const oid = document.querySelector("#oid").value;
@@ -421,13 +378,11 @@ function loadGridData() {
 		}
 	});
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-	const columns = loadColumnLayout("downloadHistory");
-	const contenxtHeader = genColumnHtml(columns);
-	createAUIGrid(columns);
-	AUIGrid.resize(myGridID);
-});
+	
+	$(document).ready(function() {
+		createAUIGrid();
+		AUIGrid.resize(myGridID);
+	});
 
 <%----------------------------------------------------------
 *                      NumberCode Setup
@@ -466,6 +421,4 @@ function setNumberCodelList(type){ //numberCodeList
 	
 }
 </script>
-</form>
-</body>
-</html>
+

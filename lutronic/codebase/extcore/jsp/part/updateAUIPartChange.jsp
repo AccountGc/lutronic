@@ -2,17 +2,6 @@
 <%
 String oid = (String) request.getAttribute("oid");
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title></title>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
-</head>
-<body>
 <form name="partChange">
 <input type="hidden" name="oid" id="oid" value="<%= oid %>" />
 <input type="hidden" name="checkDummy" id="checkDummy" value="false">
@@ -49,6 +38,7 @@ String oid = (String) request.getAttribute("oid");
 		</td>
 	</tr>
 </table>
+</form>
 <script>
 let myGridID;
 function _layout() {
@@ -419,6 +409,4 @@ document.addEventListener("DOMContentLoaded", function() {
 	AUIGrid.resize(myGridID);
 });
 </script>
-</form>
-</body>
-</html>
+
