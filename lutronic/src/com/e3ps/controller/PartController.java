@@ -452,7 +452,7 @@ public class PartController extends BaseController {
 		model.addObject("oid", oid);
 //		model.addObject("list", list);
 //		model.addObject("partType", partType);
-		model.setViewName("/extcore/jsp/part/partChange.jsp");
+		model.setViewName("popup:/part/partChange");
 		return model;
 	}
 
@@ -488,7 +488,7 @@ public class PartController extends BaseController {
 	public ModelAndView updateAUIPartChange(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
-		model.setViewName("popup:/jsp/part/updateAUIPartChange");
+		model.setViewName("popup:/part/updateAUIPartChange");
 		return model;
 	}
 

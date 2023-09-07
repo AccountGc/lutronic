@@ -742,12 +742,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	
 	$("#orderNumber").click(function() {
 		const url = getCallUrl("/part/partChange?oid=" + oid);
-		popup(url, 1500, 600);
+		_popup(url, 1500, 600,"n");
 	})
 	
 	$("#orderNumber_NewVersion").click(function() {
 		const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
-		popup(url, 1500, 600);
+		_popup(url, 1500, 600,"n");
 	})
 	
 	$("#disuse").click(function() {
