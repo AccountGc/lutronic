@@ -114,4 +114,22 @@ public class NumberCodeHelper {
 		return list;
 	}
 	
+	/**
+	 * 코드 & 코드타입으로 코드 객체 찾아오기
+	 */
+	public NumberCodeData getStepNumberCode(String codeType, String code) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		NumberCodeData data = null;
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			data = new NumberCodeData((NumberCode) obj[0]);
+		}
+		return data;
+	}
+	
 }
