@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +32,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.distribute.util.DistributeUtil;
+import com.e3ps.drawing.util.EpmPublishUtil;
 import com.e3ps.groupware.notice.Notice;
 import com.e3ps.groupware.notice.beans.NoticeData;
 import com.e3ps.groupware.notice.service.NoticeHelper;
@@ -216,7 +218,7 @@ public class GroupwareController extends BaseController {
 	@Description(value = "공지사항 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/updateNotice")
-	public Map<String, Object> updateNotice(@RequestBody Map<String, Object>params) {
+	public Map<String, Object> updateNotice(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = NoticeHelper.service.modify(params);
@@ -229,7 +231,7 @@ public class GroupwareController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "공지사항 삭제")
 	@ResponseBody
 	@PostMapping(value = "/deleteNotice")
@@ -239,7 +241,7 @@ public class GroupwareController extends BaseController {
 			NoticeHelper.service.delete(params);
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
@@ -862,28 +864,31 @@ public class GroupwareController extends BaseController {
 	@GetMapping(value = "/listWfProcessInfo")
 	public ModelAndView listWfProcessInfo() {
 		ModelAndView model = new ModelAndView();
+
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		String[] ibas = AttributeKey.ibas;
+
+		for (String iba : ibas) {
+			Hashtable<String, AttributeData> table = IBAUtil.getIBAAttributes(iba);
+
+			Enumeration<String> eu = table.keys();
+			while (eu.hasMoreElements()) {
+				Map<String, String> map = new HashMap<String, String>();
+				String key = (String) eu.nextElement();
+				AttributeData value = (AttributeData) table.get(key);
+				map.put("key", key);
+				map.put("name", value.displayName);
+				map.put("type", value.dataType);
+
+				list.add(map);
+			}
+		}
+
+		model.addObject("list", list);
 		model.setViewName("/extcore/jsp/workprocess/wfProcessInfo-list.jsp");
 		return model;
 	}
-
-//	@RequestMapping("/wfProcessInfo")
-//	public ModelAndView wfProcessInfo(HttpServletRequest request, HttpServletResponse response) {
-//		
-//		String oid = request.getParameter("oid");
-//		ModelAndView model = new ModelAndView();
-//		if(StringUtil.checkString(oid)) {
-//			model.addObject("oid",oid);
-//			model.setViewName("popup:/workprocess/wfProcessInfo");
-//			model.addObject("isPoup", true);
-//		}else {
-//			model.setViewName("default:/workprocess/wfProcessInfo");
-//			model.addObject("isPoup", false);
-//		}
-//		
-//		model.addObject("menu", "menu10");
-//		model.addObject("module", "workprocess");
-//		return model;
-//	}
 
 	@ResponseBody
 	@RequestMapping("/wfProcessInfoAction")
@@ -960,11 +965,24 @@ public class GroupwareController extends BaseController {
 		return model;
 	}
 
+	@Description(value = "도면 재변환 함수")
 	@ResponseBody
-	@RequestMapping("/multiPublishingAction")
-	public Map<String, String> multiPublishingAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, String> map = GroupwareHelper.service.multiPublishingAction(request, response);
-		return map;
+	@PostMapping(value = "/publish")
+	public Map<String, Object> publish(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String predate = (String) params.get("predate");
+		String postdate = (String) params.get("postdate");
+		try {
+			EpmPublishUtil.multiPublish(predate, postdate, "true");
+			result.put("result", SUCCESS);
+			result.put("msg", "도면 재변환에 성공하였습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/doc/list", "문서 조회 함수");
+		}
+		return result;
 	}
 
 	@RequestMapping("/include_mailUser")

@@ -55,71 +55,81 @@ public class EpmPublishUtil {
 				exception.printStackTrace();
 				flag1 = true;
 			}
-		
+
 		String fileName = "";
-		QueryResult result = ContentHelper.service.getContentsByRole (epm ,ContentRoleType.PRIMARY );
-		if (result.hasMoreElements ()) {
-			ContentItem primaryFile = (ContentItem) result.nextElement ();
-			fileName = ((ApplicationData)primaryFile).getFileName();
+		QueryResult result = ContentHelper.service.getContentsByRole(epm, ContentRoleType.PRIMARY);
+		if (result.hasMoreElements()) {
+			ContentItem primaryFile = (ContentItem) result.nextElement();
+			fileName = ((ApplicationData) primaryFile).getFileName();
 		}
-		
+
 		String authoringType = EpmUtil.getExtension(fileName).toUpperCase();
-		
-		if (authoringType.equals("DSN") || authoringType.equals("BRD") || authoringType.equals("ZIP") || authoringType.equals("PDF")){
+
+		if (authoringType.equals("DSN") || authoringType.equals("BRD") || authoringType.equals("ZIP")
+				|| authoringType.equals("PDF")) {
 			flag1 = false;
 		}
-		//System.out.println("Publish Check ::: flag1"+ flag1+"\tfileName="+fileName);
+		// System.out.println("Publish Check ::: flag1"+ flag1+"\tfileName="+fileName);
 		if (flag1) {
-			//System.out.println("Publish Check222222222222222222 ::: flag1"+ flag1+"\tfileName="+fileName);
+			// System.out.println("Publish Check222222222222222222 ::: flag1"+
+			// flag1+"\tfileName="+fileName);
 			ConfigSpec configspec = null;
 			ConfigSpec configspec1 = null;
 			Publish.doPublish(false, true, epm, configspec, null, false, null, null, 1, null, 2, null);
 		}
 
 	}
-	
+
 	/**
 	 * 입력한 기간에 등록된 도면의 Publishing (변환) 요청
+	 * 
 	 * @param predate
 	 * @param postdate
 	 * @param islastversion
 	 */
 	public static void multiPublish(String predate, String postdate, String islastversion) {
-		try{
+		try {
 			QuerySpec qs = new QuerySpec();
 			int idx = qs.appendClassList(EPMDocument.class, true);
-			
-			if(predate.length() > 0) {
-				if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-				qs.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.createStamp", 
-						SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate)), new int[] {idx});
+
+			if (predate.length() > 0) {
+				if (qs.getConditionCount() > 0) {
+					qs.appendAnd();
+				}
+				qs.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.createStamp",
+						SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate)), new int[] { idx });
 			}
-			if(postdate.length() > 0) {
-				if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-				qs.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.createStamp", 
-						SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate)), new int[] {idx});
+			if (postdate.length() > 0) {
+				if (qs.getConditionCount() > 0) {
+					qs.appendAnd();
+				}
+				qs.appendWhere(new SearchCondition(EPMDocument.class, "thePersistInfo.createStamp",
+						SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate)), new int[] { idx });
 			}
-			
-			//최신 이터레이션
-			if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-			qs.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[]{idx});
-			//버전검색
-			if(!StringUtil.checkString(islastversion)) islastversion = "true";
-			if("true".equals(islastversion)) {
-				SearchUtil.addLastVersionCondition(qs, EPMDocument.class,idx);
+
+			// 최신 이터레이션
+			if (qs.getConditionCount() > 0) {
+				qs.appendAnd();
 			}
-			
+			qs.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[] { idx });
+			// 버전검색
+			if (!StringUtil.checkString(islastversion))
+				islastversion = "true";
+			if ("true".equals(islastversion)) {
+				SearchUtil.addLastVersionCondition(qs, EPMDocument.class, idx);
+			}
+
 			QueryResult qr = PersistenceHelper.manager.find(qs);
-			
-			if(qr != null) {
-				while(qr.hasMoreElements()) {
-					Object[] obj = (Object[])qr.nextElement();
-					EPMDocument epm = (EPMDocument)obj[0];
+
+			if (qr != null) {
+				while (qr.hasMoreElements()) {
+					Object[] obj = (Object[]) qr.nextElement();
+					EPMDocument epm = (EPMDocument) obj[0];
 					EpmPublishUtil.publish(epm);
 				}
 			}
-						
-		}catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

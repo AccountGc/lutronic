@@ -30,27 +30,22 @@ public interface GroupwareService {
 
 	Map<String, Object> listItemAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	List<Map<String, String>> loadApprovalLine(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	List<Map<String, String>> loadApprovalLine(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
 
 	Map<String, String> includeReassing(String workItemOid) throws Exception;
 
 	boolean changePasswordAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	Map<String, Object> listNoticeAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
+	Map<String, Object> listNoticeAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	Map<String, Object> wfProcessInfoAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
+	Map<String, Object> wfProcessInfoAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	ResultData changeIBAAction(HttpServletRequest request, HttpServletResponse response);
 
-	Map<String, String> multiPublishingAction(HttpServletRequest request,
-			HttpServletResponse response);
-
 	List<Map<String, String>> include_mailUser(String workOid);
 
-	String emailUserListAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
+	String emailUserListAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	void batchReceiveAction(Map<String, Object> reqMap) throws Exception;
 

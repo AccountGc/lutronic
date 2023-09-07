@@ -73,13 +73,13 @@
 			cover.close();
 		}
 
-		function logout() {
-			if (!confirm("로그아웃 하시겠습니까?")) {
-				return false;
-			}
-			document.execCommand("ClearAuthenticationCache");
-			document.location.href = "/Windchill/login/logout.jsp";
-		}
+// 		function logout() {
+// 			if (!confirm("로그아웃 하시겠습니까?")) {
+// 				return false;
+// 			}
+// 			document.execCommand("ClearAuthenticationCache");
+// 			document.location.href = "/Windchill/login/logout.jsp";
+// 		}
 
 		function _logout() {
 			document.execCommand("ClearAuthenticationCache");
@@ -91,31 +91,31 @@
 			document.location.href = "/Windchill/eSolution/index";
 		}
 
-		function _popup(url) {
-			const popW = 800;
-			const popH = 200;
-			const left = (screen.width - popW) / 2;
-			const top = (screen.height - popH) / 2;
-			const panel = window.open("/Windchill/plm" + url, "", "top=" + top + ", left=" + left + ", height=" + popH + ", width=" + popW);
-			return panel;
-		}
+// 		function _popup(url) {
+// 			const popW = 800;
+// 			const popH = 200;
+// 			const left = (screen.width - popW) / 2;
+// 			const top = (screen.height - popH) / 2;
+// 			const panel = window.open("/Windchill/plm" + url, "", "top=" + top + ", left=" + left + ", height=" + popH + ", width=" + popW);
+// 			return panel;
+// 		}
 		
-		function popup(url, width, height) {
-			if (width === undefined) {
-				width = screen.availWidth;
-			}
+// 		function popup(url, width, height) {
+// 			if (width === undefined) {
+// 				width = screen.availWidth;
+// 			}
 
-			if (height === undefined) {
-				height = screen.availHeight;
-			}
+// 			if (height === undefined) {
+// 				height = screen.availHeight;
+// 			}
 
-			let popW = width;
-			let popH = height;
-			let left = (screen.width - popW) / 2;
-			let top = (screen.height - popH) / 2;
-			let panel = window.open(url, "", "top=" + top + ", left=" + left + ", height=" + popH + ", width=" + popW);
-			return panel;
-		}
+// 			let popW = width;
+// 			let popH = height;
+// 			let left = (screen.width - popW) / 2;
+// 			let top = (screen.height - popH) / 2;
+// 			let panel = window.open(url, "", "top=" + top + ", left=" + left + ", height=" + popH + ", width=" + popW);
+// 			return panel;
+// 		}
 	</script>
 </body>
 </html>
