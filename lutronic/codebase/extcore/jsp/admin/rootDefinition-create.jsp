@@ -31,7 +31,7 @@
 			</td>
 		</tr>
 		<tr>
-			<th class="lb">영문명 <span class="red">*</span></th>
+			<th class="lb">영문명</th>
 			<td class="indent5">
 				<input type="text" name="name_eng" id="name_eng" class="width-200">
 			</td>
@@ -63,11 +63,6 @@
 		$("#createBtn").click(function() {
 			if(isEmpty($("#name").val())) {
 				alert("Name을 입력하세요.");
-				return;
-			}
-			
-			if(isEmpty($("#name_eng").val())) {
-				alert("영문명을 입력하세요.");
 				return;
 			}
 			
