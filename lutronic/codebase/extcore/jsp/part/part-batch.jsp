@@ -1,6 +1,7 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
+<%@page import="com.e3ps.common.code.beans.NumberCodeData"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@page import="wt.folder.Folder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -13,6 +14,7 @@ ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAtt
 ArrayList<NumberCode> partName1List = (ArrayList<NumberCode>) request.getAttribute("partName1List");
 ArrayList<NumberCode> partName2List = (ArrayList<NumberCode>) request.getAttribute("partName2List");
 ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribute("partName3List");
+ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.getAttribute("partType1List");
 %>
 <!DOCTYPE html>
 <html>
@@ -33,13 +35,15 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
+			let partType2Map = {};
+			let partType3Map = {};
 			let matList =[];
 			<% for(NumberCode mat : matList){ %>
 				matList.push({ "code" : "<%= mat.getCode() %>", "value" : "<%= mat.getName().replaceAll("(\r\n|\r|\n|\n\r)", "") %>"});
 			<% } %>
 			let folderList = [];
 			<% for(Folder folder : folderList){ %>
-				folderList.push({ "code" : "<%= folder.getLocation() %>", "value" : "<%= folder.getLocation() %>/<%= folder.getName() %>"});
+				folderList.push({ "code" : "<%= folder.getLocation() %>", "value" : "<%= folder.getFolderPath() %>"});
 			<% } %>
 			let deptcodeList = [];
 			<% for(NumberCode deptcode : deptcodeList){ %>
@@ -65,12 +69,16 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 			<% for(NumberCode partName3 : partName3List){ %>
 				partName3List.push({ "code" : "<%= partName3.getCode() %>", "value" : "<%= partName3.getName() %>"});
 			<% } %>
+			let partType1List = [];
+			<% for(NumberCodeData partType1 : partType1List){ %>
+				partType1List.push({ "code" : "<%= partType1.getOid() %>", "value" : "[<%= partType1.getCode() %>]<%= partType1.getName() %>"});
+			<% } %>
 			
 			const layout = [ {
 				dataField : "location",
 				headerText : "저장위치",
 				dataType : "string",
-				width : 120,
+				width : 300,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -103,15 +111,205 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 					valueField: "value" 
 				},
 			}, {
-				dataField : "g",
-				headerText : "대분류<br>(2자리)",
-				dataType : "string",
+				dataField : "partType1",
+				headerText : "품목구분<br>(1자리)",
 				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					matchFromFirst : false,
+					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+					list: partType1List, 
+					keyField: "code", 
+					valueField: "value",
+					descendants : [ "partType2" ],
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = partType1List.length; i < len; i++) {
+							if (partType1List[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
+				},
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					for (var i = 0, len = partType1List.length; i < len; i++) {
+						if (partType1List[i]["code"] == value) {
+							retStr = partType1List[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				filter : {
+					showIcon : true,
+					inline : true
+				},
 			}, {
-				dataField : "number",
+				dataField : "partType2",
+				headerText : "대분류<br>(2자리)",
+				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					matchFromFirst : false,
+					showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 보이기
+					keyField: "code", 
+					valueField: "value",
+					descendants : [ "partType3" ],
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						const param = item.partType1;
+						const dd = partType2Map[param];
+						if (dd === undefined)
+							return;
+						let isValid = false;
+						for (let i = 0, len = dd.length; i < len; i++) {
+							if (dd[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					},
+					listFunction : function(rowIndex, columnIndex, item, dataField) {
+						const param = item.partType1;
+						const dd = partType2Map[param];
+						if (dd === undefined) {
+							return [];
+						}
+						let result = [];
+						dd.forEach(d => {
+							result.push({ "code" : d.oid, "value" : "[" + d.code + "]" + d.name});
+						});
+						return result;
+					},
+				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					const param = item.partType1;
+					const dd = partType2Map[param];
+					if (dd === undefined)
+						return value;
+					for (let i = 0, len = dd.length; i < len; i++) {
+						if (dd[i]["oid"] == value) {
+							retStr = "[" + dd[i]["code"] + "]" + dd[i]["name"] ;
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "partType3",
 				headerText : "중분류<br>(2자리)",
 				dataType : "string",
 				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					matchFromFirst : false,
+					showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 보이기
+					keyField: "code", 
+					valueField: "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						const param = item.partType2;
+						const dd = partType3Map[param];
+						if (dd === undefined)
+							return;
+						let isValid = false;
+						for (let i = 0, len = dd.length; i < len; i++) {
+							if (dd[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					},
+					listFunction : function(rowIndex, columnIndex, item, dataField) {
+						const param = item.partType2;
+						const dd = partType3Map[param];
+						if (dd === undefined) {
+							return [];
+						}
+						let result = [];
+						dd.forEach(d => {
+							result.push({ "code" : d.oid, "value" : "[" + d.code + "]" + d.name});
+						});
+						return result;
+					},
+				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					const param = item.partType2;
+					const dd = partType3Map[param];
+					if (dd === undefined)
+						return value;
+					for (let i = 0, len = dd.length; i < len; i++) {
+						if (dd[i]["oid"] == value) {
+							retStr = "[" + dd[i]["code"] + "]" + dd[i]["name"] ;
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				filter : {
+					showIcon : true,
+					inline : true
+				},
 			}, {
 				dataField : "number",
 				headerText : "SEQ<br>(3자리)",
@@ -438,12 +636,84 @@ ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribu
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEndHandler);
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
+// 				AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBegin);
 				auiReadyHandler();
+				AUIGrid.bind(myGridID, "ready", readyHandler);
 			}
 
 			function auiReadyHandler() {
 				AUIGrid.addRow(myGridID, {}, "first");
+			}
+			
+			function readyHandler() {
+				const item = AUIGrid.getGridData(myGridID);
+				for (let i = 0; i < item.length; i++) {
+					if (partType2Map.length === undefined) {
+						const partType = item[i].partType1;
+						const url = getCallUrl("/common/numberCodeList");
+					    const params = {
+					        codeType: 'PARTTYPE',
+					        parentOid: partType
+					    };
+					    return new Promise((resolve, reject) => {
+					        call(url, params, function(dataList) {
+					        	partType2Map[partType] = dataList;
+					        });
+					    });
+					}
+				}
+			}
+			
+// 			function auiCellEditBegin(event) {
+// 				const item = event.item;
+// 			}
+			
+			function auiCellEditEndHandler(event) {
+				const dataField = event.dataField;
+				const item = event.item;
+				const rowIndex = event.rowIndex;
+				
+				if (dataField === "partType1") {
+
+					const partType = item.partType1;
+					const url = getCallUrl("/common/numberCodeList");
+				    const params = {
+				        codeType: 'PARTTYPE',
+				        parentOid: partType
+				    };
+
+				    return new Promise((resolve, reject) => {
+				        call(url, params, function(dataList) {
+				        	partType2Map[partType] = dataList;
+				        	const item = {
+									partType2 : ""
+							}
+				        	AUIGrid.updateRow(myGridID, item, rowIndex);
+				        });
+				    });
+				}
+				
+				if (dataField === "partType2") {
+
+					const partType = item.partType2;
+					const url = getCallUrl("/common/numberCodeList");
+				    const params = {
+				        codeType: 'PARTTYPE',
+				        parentOid: partType
+				    };
+
+				    return new Promise((resolve, reject) => {
+				        call(url, params, function(dataList) {
+				        	partType3Map[partType] = dataList;
+				        	const item = {
+									partType3 : ""
+							}
+				        	AUIGrid.updateRow(myGridID, item, rowIndex);
+				        });
+				    });
+				}
 			}
 
 			function auiKeyDownHandler(event) {

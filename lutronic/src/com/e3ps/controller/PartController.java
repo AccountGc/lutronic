@@ -113,6 +113,8 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> partName1List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME1");
 		ArrayList<NumberCode> partName2List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME2");
 		ArrayList<NumberCode> partName3List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME3");
+		List<NumberCodeData> partType1List = new ArrayList<NumberCodeData>();
+        partType1List = NumberCodeHelper.manager.getArrayPartTypeList("PARTTYPE", "");
 		ModelAndView model = new ModelAndView();
 		model.addObject("folderList", folderList);
 		model.addObject("modelList", modelList);
@@ -122,7 +124,7 @@ public class PartController extends BaseController {
 		model.addObject("partName1List", partName1List);
 		model.addObject("partName2List", partName2List);
 		model.addObject("partName3List", partName3List);
-		model.setViewName("/extcore/jsp/part/part-list.jsp");
+		model.addObject("partType1List", partType1List);
 		model.setViewName("/extcore/jsp/part/part-batch.jsp");
 		return model;
 	}
