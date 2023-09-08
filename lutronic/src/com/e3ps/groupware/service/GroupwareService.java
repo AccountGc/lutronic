@@ -8,10 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
 
-import wt.method.RemoteInterface;
-
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.org.beans.PeopleData;
+
+import wt.method.RemoteInterface;
 
 @RemoteInterface
 public interface GroupwareService {
@@ -35,13 +35,9 @@ public interface GroupwareService {
 
 	Map<String, String> includeReassing(String workItemOid) throws Exception;
 
-	boolean changePasswordAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
 	Map<String, Object> listNoticeAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	Map<String, Object> wfProcessInfoAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	ResultData changeIBAAction(HttpServletRequest request, HttpServletResponse response);
 
 	List<Map<String, String>> include_mailUser(String workOid);
 
@@ -50,4 +46,15 @@ public interface GroupwareService {
 	void batchReceiveAction(Map<String, Object> reqMap) throws Exception;
 
 	void userInfoEdit(PeopleData data) throws Exception;
+
+	/**
+	 * 비밀번호 변경
+	 */
+	public abstract void password(Map<String, String> params) throws Exception;
+
+	/**
+	 * 속성 값 변경
+	 */
+	public abstract void modify(Map<String, String> params) throws Exception;
+
 }

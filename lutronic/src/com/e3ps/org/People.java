@@ -13,10 +13,7 @@
 
 package com.e3ps.org;
 
-import wt.content.ContentHolder;
-import wt.fc.InvalidAttributeException;
-import wt.fc.Item;
-import wt.util.WTException;
+import java.sql.Timestamp;
 
 import com.ptc.windchill.annotations.metadata.Cardinality;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
@@ -26,6 +23,10 @@ import com.ptc.windchill.annotations.metadata.GeneratedProperty;
 import com.ptc.windchill.annotations.metadata.MyRole;
 import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 import com.ptc.windchill.annotations.metadata.Serialization;
+
+import wt.content.ContentHolder;
+import wt.fc.Item;
+import wt.util.WTException;
 
 @GenAsPersistable(superClass = Item.class, interfaces = {
 		ContentHolder.class }, serializable = Serialization.EXTERNALIZABLE_BASIC, properties = {
@@ -41,7 +42,7 @@ import com.ptc.windchill.annotations.metadata.Serialization;
 				@GeneratedProperty(name = "sortNum", type = int.class, javaDoc = "0"),
 				@GeneratedProperty(name = "email", type = String.class),
 				@GeneratedProperty(name = "id", type = String.class),
-				@GeneratedProperty(name = "pwChangeDate", type = String.class, constraints = @PropertyConstraints(upperLimit = 10)),
+				@GeneratedProperty(name = "pwChangeDate", type = Timestamp.class),
 				@GeneratedProperty(name = "name", type = String.class, constraints = @PropertyConstraints(upperLimit = 100)),
 				@GeneratedProperty(name = "title", type = String.class, javaDoc = "?????"),
 				@GeneratedProperty(name = "nameEn", type = String.class, javaDoc = "???"),

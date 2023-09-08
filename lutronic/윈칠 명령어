@@ -19,3 +19,8 @@
 6. WVS After Service 등록
 	- Shell -> src/com/ptc/wvs/util 이동
 	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase AfterEDRloader.java 실행	
+	
+7. State ResourceBuild 실행
+	- Shell -> ResourceBuild.bat wt.lifecycle.**
+	- codebase -> ant -f MakeJar.xml
+	

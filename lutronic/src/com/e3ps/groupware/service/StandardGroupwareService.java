@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -20,6 +19,45 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.servlet.ModelAndView;
+
+import com.e3ps.change.ECOChange;
+import com.e3ps.change.EChangeActivity;
+import com.e3ps.common.active.ActivityWork;
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.content.FileRequest;
+import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.jdf.config.Config;
+import com.e3ps.common.jdf.config.ConfigImpl;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.obj.ObjectUtil;
+import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.DeleteWTObject;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.web.PageControl;
+import com.e3ps.common.web.PageQueryBroker;
+import com.e3ps.common.web.WebUtil;
+import com.e3ps.common.workflow.E3PSWorkflowHelper;
+import com.e3ps.groupware.notice.Notice;
+import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.workprocess.AsmApproval;
+import com.e3ps.groupware.workprocess.WFItem;
+import com.e3ps.groupware.workprocess.WFItemUserLink;
+import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.groupware.workprocess.service.WorklistHelper;
+import com.e3ps.org.Department;
+import com.e3ps.org.MailUser;
+import com.e3ps.org.MailWTobjectLink;
+import com.e3ps.org.People;
+import com.e3ps.org.WTUserPeopleLink;
+import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.org.service.UserHelper;
+import com.e3ps.org.util.PasswordChange;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -56,8 +94,6 @@ import wt.session.SessionHelper;
 import wt.team.Team;
 import wt.team.TeamHelper;
 import wt.team.TeamManaged;
-import wt.util.WTException;
-import wt.util.WTPropertyVetoException;
 import wt.vc.wip.WorkInProgressHelper;
 import wt.vc.wip.Workable;
 import wt.workflow.engine.WfActivity;
@@ -66,50 +102,6 @@ import wt.workflow.engine.WfProcess;
 import wt.workflow.engine.WfState;
 import wt.workflow.work.WorkItem;
 import wt.workflow.work.WorkflowHelper;
-
-import com.e3ps.change.ECOChange;
-import com.e3ps.change.EChangeActivity;
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.service.ECOHelper;
-import com.e3ps.common.active.ActivityWork;
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.content.FileRequest;
-import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.jdf.config.Config;
-import com.e3ps.common.jdf.config.ConfigImpl;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.DeleteWTObject;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.common.web.WebUtil;
-import com.e3ps.common.workflow.E3PSWorkflowHelper;
-import com.e3ps.common.workflow.StandardE3PSWorkflowService;
-import com.e3ps.drawing.util.EpmPublishUtil;
-import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.notice.beans.NoticeData;
-import com.e3ps.groupware.workprocess.AsmApproval;
-import com.e3ps.groupware.workprocess.WFItem;
-import com.e3ps.groupware.workprocess.WFItemUserLink;
-import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.groupware.workprocess.service.WorklistHelper;
-import com.e3ps.org.Department;
-import com.e3ps.org.MailUser;
-import com.e3ps.org.MailWTobjectLink;
-import com.e3ps.org.People;
-import com.e3ps.org.WTUserPeopleLink;
-import com.e3ps.org.beans.PeopleData;
-import com.e3ps.org.service.MailUserHelper;
-import com.e3ps.org.service.UserHelper;
-import com.e3ps.org.util.PasswordChange;
 
 @SuppressWarnings("serial")
 public class StandardGroupwareService extends StandardManager implements GroupwareService {
@@ -1507,43 +1499,40 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 	}
 
 	@Override
-	public boolean changePasswordAction(HttpServletRequest request, HttpServletResponse response) {
-		String id = request.getParameter("id");
-		String passwd = request.getParameter("_field_view").toLowerCase();
-		// String checkAdmin = request.getParameter("checkAdmin");
-		// WTPrincipal oldPrincipal = SessionHelper.manager.getPrincipal(); //지금 view를
-		// 보고있는 사용자 정보 받아오기
-		// String currentId = oldPrincipal.getName();
-		// boolean isMine = currentId.equals(id);
-
-		// System.out.println("ID >>>>>>>>>>> " + id);
-		// System.out.println("PW >>>>>>>>>>> " + passwd);
-
+	public void password(Map<String, String> params) throws Exception {
+		String password = (String) params.get("password");
+		Transaction trs = new Transaction();
 		try {
+			trs.start();
 
-			PasswordChange.changePassword(id, passwd);
+			WTUser sessionUser = CommonUtil.sessionUser();
+			String id = sessionUser.getName();
 
-			QueryResult qr = PersistenceHelper.manager.navigate(
-					(WTUser) wt.org.OrganizationServicesMgr.getPrincipal(id), "people", WTUserPeopleLink.class);
+			// 관리자 아이디 변경 Administrator -> wcadmin
+			if ("Administrator".equals(id)) {
+				id = "wcadmin";
+			}
 
-			if (qr.hasMoreElements()) {
-				People people = (People) qr.nextElement();
+			PasswordChange.changePassword(id, password);
 
-				// 오늘날짜 가져오기
-				Calendar cal = Calendar.getInstance();
-				int year = cal.get(Calendar.YEAR);
-				int month = cal.get(Calendar.MONTH) + 1;
-				int date = cal.get(Calendar.DATE);
+			QueryResult result = PersistenceHelper.manager.navigate(sessionUser, "people", WTUserPeopleLink.class);
 
-				String stringChangeDate = year + "/" + month + "/" + date;
-				people.setPwChangeDate(stringChangeDate);
-
+			if (result.hasMoreElements()) {
+				People people = (People) result.nextElement();
+				Timestamp today = new Timestamp(new Date().getTime());
+				people.setPwChangeDate(today);
 				PersistenceHelper.manager.modify(people);
 			}
-			return true;
+
+			trs.commit();
+			trs = null;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 
@@ -1716,54 +1705,31 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 	}
 
 	@Override
-	public ResultData changeIBAAction(HttpServletRequest request, HttpServletResponse response) {
+	public void modify(Map<String, String> params) throws Exception {
+		String oid = params.get("oid");
+		String attrName = params.get("attrName");
+		String value = params.get("value");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
 
-		ResultData data = new ResultData();
+			IBAHolder holder = (IBAHolder) CommonUtil.getObject(oid);
 
-		String oid = StringUtil.checkNull(request.getParameter("oid"));
-		String attrName = StringUtil.checkNull(request.getParameter("attrName"));
-		String attrValue = StringUtil.checkNull(request.getParameter("attrValue"));
-		String type = StringUtil.checkNull(request.getParameter("type"));
+			String attrValue = value.split("&")[0];
+			String type = value.split("&")[1];
 
-		if (oid.length() > 0) {
-			try {
+			IBAUtil.changeIBAValue(holder, attrName, attrValue, type);
 
-				Object obj = (Object) CommonUtil.getObject(oid);
-				if (obj != null) {
-
-					IBAHolder iba = (IBAHolder) obj;
-					IBAUtil.changeIBAValue(iba, attrName, attrValue, type);
-
-					/*
-					 * if(obj instanceof EPMDocument) { EPMDocument epm = (EPMDocument)obj;
-					 * if(attrName.equals("SeqCheck")){
-					 * 
-					 * IBAUtil.changeIBAValue(epm, AttributeKey.EPMKey.IBA_SEQCHECK, "Y",
-					 * "boolean"); }else{ IBAUtil.changeIBAValue(epm, attrName, attrValue,
-					 * "string"); }
-					 * 
-					 * msg = Message.get("변경이 완료되었습니다."); result = "S"; }else if(obj instanceof
-					 * WTPart) { WTPart part = (WTPart)obj; if(attrName.equals("SeqCheck")){
-					 * 
-					 * IBAUtil.changeIBAValue(part, AttributeKey.EPMKey.IBA_SEQCHECK, "Y",
-					 * "boolean"); }else{ IBAUtil.changeIBAValue(part, attrName, attrValue,
-					 * "string"); } msg = Message.get("변경이 완료되었습니다."); result = "S"; }else { msg =
-					 * Message.get("대상 객체가 아닙니다."); result = "F"; }
-					 */
-					data.setResult(true);
-				} else {
-					data.setResult(false);
-					data.setMessage("OID " + Message.get("값을 확인 바랍니다."));
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				data.setResult(false);
-				data.setMessage(e.getLocalizedMessage());
-			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
-
-		return data;
 	}
 
 	@Override

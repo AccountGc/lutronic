@@ -17,7 +17,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 </head>
 <body>
 	<form>
-		<input type="hidden" name="oid" id="oid">
+
 
 		<table class="button-table">
 			<tr>
@@ -29,77 +29,70 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 				</td>
 			</tr>
 		</table>
-		<table class="search-table">
-			<colgroup>
-				<col width="130">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>OID</th>
-				<td class="indent5">
-					<input type="button" name="delete" id="delete" value="삭제" class="red">
-				</td>
-			</tr>
-			<tr>
-				<th>라이프사이클 템플릿</th>
-				<td class="indent5">
-					새 라이프 사이클 템플릿
-					<input type="text" name="lifecycle" id="lifecycle" class="width-300">
-					<input type='button' name='reassign' id='reassign' value='reassign'>
-				</td>
-			</tr>
-			<tr>
-				<th>상태</th>
-				<td>
-					TERMINATE :&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="terminate" value="true" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>TRUE</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="terminate" value="false">
-						<div class="state p-success">
-							<label>
-								<b>FALSE</b>
-							</label>
-						</div>
-					</div>
-					<input type='button' name='statechange' id='statechange' value='상태변경'>
-				</td>
-			</tr>
-		</table>
 
-		<br>
+		<div id="layer">
+			<table class="create-table">
+				<colgroup>
+					<col width="174">
+					<col width="*">
+				</colgroup>
+				<tr>
+					<th>OID</th>
+					<td class="indent5">
+						<input type="text" name="value" id="value" class="width-300">
+						<input type="button" name="info" id="info" value="제출" class="red" onclick="info();">
+					</td>
+				</tr>
+			</table>
+		</div>
 
-		<table class="search-table">
-			<colgroup>
-				<col width="130">
-				<col width="*">
-				<col width="130">
-				<col width="*">
-				<col width="130">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>이름</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
-				</td>
-				<th>상태</th>
-				<td class="indent5">
-					<input type="text" name="state" id="state" class="width-300">
-				</td>
-				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="createdTime" id="createdTime" class="width-300">
-				</td>
-			</tr>
-		</table>
+		<div id="msg">
+			<table class="create-table">
+				<colgroup>
+					<col width="130">
+					<col width="*">
+				</colgroup>
+				<tr>
+					<th>OID</th>
+					<td class="indent5">
+						<input type="button" name="delete" id="delete" value="삭제" class="red">
+					</td>
+				</tr>
+				<tr>
+					<th>라이프사이클 템플릿</th>
+					<td class="indent5">
+						새 라이프 사이클 템플릿
+						<input type="text" name="lifecycle" id="lifecycle" class="width-300">
+						<input type="button" name="reassign" id="reassign" value="재지정" class="blue">
+					</td>
+				</tr>
+				<tr>
+					<th>상태</th>
+					<td>
+						TERMINATE :&nbsp;
+						<div class="pretty p-switch">
+							<input type="radio" name="terminate" value="true" checked="checked">
+							<div class="state p-success">
+								<label>
+									<b>TRUE</b>
+								</label>
+							</div>
+						</div>
+						&nbsp;
+						<div class="pretty p-switch">
+							<input type="radio" name="terminate" value="false">
+							<div class="state p-success">
+								<label>
+									<b>FALSE</b>
+								</label>
+							</div>
+						</div>
+						<input type='button' name='statechange' id='statechange' value='상태변경'>
+					</td>
+				</tr>
+			</table>
+		</div>
+
 		<br>
 
 		<!-- 속성값 변경 -->
@@ -113,7 +106,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 				</td>
 			</tr>
 		</table>
-		<table class="search-table">
+		<table class="create-table">
 			<colgroup>
 				<col width="174">
 				<col width="*">
@@ -132,7 +125,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 						<%
 						for (Map<String, String> map : list) {
 						%>
-						<option value="<%=map.get("key")%>"><%=map.get("name") %></option>
+						<option value="<%=map.get("key")%>&<%=map.get("type")%>"><%=map.get("name")%></option>
 						<%
 						}
 						%>
@@ -151,7 +144,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 			<tr>
 				<td class="center">
 					<input type="button" value="변경" title="변경" class="blue" onclick="modify();">
-					<input type="button" value="초기화" title="초기화">
+					<input type="button" value="초기화" title="초기화" onclick="_reset();">
 				</td>
 			</tr>
 		</table>
@@ -179,7 +172,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
 					~
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제">
 				</td>
 			</tr>
 		</table>
@@ -191,49 +184,78 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 			</tr>
 		</table>
 
-		<!-- 패스워드 변경 -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						비밀번호 변경
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>변경 비밀번호</th>
-				<td class="indent5">
-					<input type="password" name="password" class="width-200">
-				</td>
-			</tr>
-			<tr>
-				<th>변경 비밀번호 확인</th>
-				<td class="indent5">
-					<input type="password" name="repassword" class="width-200">
-				</td>
-			</tr>
-		</table>
-		<table class="button-table">
-			<tr>
-				<td class="center">
-					<input type="button" value="수정" title="수정" class="blue" onclick="update();">
-					<input type="button" value="뒤로" title="뒤로" onclick="history.go(-1);">
-				</td>
-			</tr>
-		</table>
 
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("attrName");
 				twindate("created");
+				document.getElementById("msg").style.display = "none";
+				// 				document.getElementById("layer").style.display = "none";
 			})
+
+			function info() {
+				const value = document.getElementById("value");
+				if (value.value === "") {
+					alert("OID 값을 입력하세요.");
+					value.focus();
+					return false;
+				}
+			}
+
+			function _reset() {
+				const oid = document.getElementById("oid");
+				const attrName = document.getElementById("attrName");
+				const attrValue = document.getElementById("attrValue");
+				oid.value = "";
+				attrValue.value = "";
+				$("#attrName").bindSelectSetValue("");
+			}
+
+			function modify() {
+				const oid = document.getElementById("oid");
+				const attrName = document.getElementById("attrName").value;
+				const attrValue = document.getElementById("attrValue");
+
+				if (oid.value === "") {
+					alert("OID 값을 입력하세요.");
+					oid.focus();
+					return false;
+				}
+
+				if (oid.value.indexOf("WTPart") <= -1 && oid.value.indexOf("EPMDocument") <= -1 && oid.value.indexOf("WTDocument") <= -1) {
+					alert("부품 & 도면 & 문서의 OID 값만 입력이 가능합니다.\n예시) wt.epm.EPMDocument:1111");
+					oid.value = "";
+					oid.focus();
+					return false;
+				}
+
+				if (attrName === "") {
+					alert("속성명을 선택하세요.");
+					return false;
+				}
+
+				if (attrValue === "") {
+					alert("속성값을 입력하세요.");
+					attrValue.focus();
+					return false;
+				}
+
+				const url = getCallUrl("/groupware/modify");
+				const params = {
+					oid : oid.value,
+					value : attrValue.value,
+					attrName : attrName
+				};
+				parent.openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						document.location.reload();
+					} else {
+						parent.closeLayer();
+					}
+				})
+			}
 
 			function publish() {
 				const createdFrom = document.getElementById("createdFrom").value;

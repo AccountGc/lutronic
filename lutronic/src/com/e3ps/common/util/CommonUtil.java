@@ -72,6 +72,14 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	static final boolean SERVER = wt.method.RemoteMethodServer.ServerFlag;
 
 	/**
+	 * 세션 사용자 가져오기
+	 */
+	public static WTUser sessionUser() throws Exception {
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		return sessionUser;
+	}
+
+	/**
 	 * 라이브러리 컨테이너 가져오기
 	 */
 	public static WTContainerRef getWTLibraryContainer() throws Exception {

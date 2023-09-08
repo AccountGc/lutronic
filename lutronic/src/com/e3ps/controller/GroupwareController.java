@@ -788,68 +788,28 @@ public class GroupwareController extends BaseController {
 	}
 
 	@Description(value = "비밀번호 변경 페이지")
-	@GetMapping(value = "/changePassword")
-	public ModelAndView changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@GetMapping(value = "/password")
+	public ModelAndView password() throws Exception {
 		ModelAndView model = new ModelAndView();
-		String id = request.getParameter("id");
-
-		if (!StringUtil.checkString(id)) {
-			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-
-			id = user.getName();
-			if (id.equals("Administrator"))
-				id = "wcadmin";
-		}
-
-		String isPop = request.getParameter("isPop");
-		model.addObject("id", id);
-		model.addObject("isPop", isPop);
-		model.setViewName("/extcore/jsp/workprocess/popup-changePassword.jsp");
-
-//        String viewName = "default:/workprocess/changePassword";
-//        if("true".equals(isPop)) {
-//            viewName = "popup:/workprocess/changePassword";
-//        }
-//        
-//        model.setViewName(viewName);
-
-//		model.setViewName("popup:/workprocess/popup-changePassword");
+		model.setViewName("/extcore/jsp/workprocess/password.jsp");
 		return model;
 	}
 
-	/**
-	 * 비밀번호 변경
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/changePasswordAction")
-	public ModelAndView changePasswordAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		String id = request.getParameter("id");
-		String isPop = request.getParameter("isPop");
-
-		boolean result = GroupwareHelper.service.changePasswordAction(request, response);
-
-		String msg = "";
-		String viewName = "";
-
-		if (result) {
-			msg = id + Message.get("비밀번호가 변경 되었습니다.");
-			viewName = "/Windchill/login/index.html";
-		} else {
-			msg = id + Message.get("비밀번호 변경을 실패했습니다.");
-			viewName = "/Windchill/" + CommonUtil.getOrgName() + "/groupware/changePassword.do";
+	@Description(value = "비밀번호 변경 함수")
+	@PostMapping(value = "/password")
+	@ResponseBody
+	public Map<String, Object> password(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			GroupwareHelper.service.password(params);
+			result.put("msg", "비밀번호가 변경 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-
-		if ("false".equals(isPop)) {
-			return ControllerUtil.redirect(viewName, msg + " " + Message.get("로그인을 다시해 주시기 바랍니다."));
-		} else {
-			return ControllerUtil.close(msg);
-		}
+		return result;
 	}
 
 	@Description(value = "조직도 페이지")
@@ -877,8 +837,8 @@ public class GroupwareController extends BaseController {
 	}
 
 	@Description(value = "관리자 메뉴")
-	@GetMapping(value = "/listWfProcessInfo")
-	public ModelAndView listWfProcessInfo() {
+	@GetMapping(value = "/manage")
+	public ModelAndView manage() throws Exception {
 		ModelAndView model = new ModelAndView();
 
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
@@ -902,14 +862,13 @@ public class GroupwareController extends BaseController {
 		}
 
 		model.addObject("list", list);
-		model.setViewName("/extcore/jsp/workprocess/wfProcessInfo-list.jsp");
+		model.setViewName("/extcore/jsp/workprocess/manage.jsp");
 		return model;
 	}
 
 	@ResponseBody
 	@RequestMapping("/wfProcessInfoAction")
 	public Map<String, Object> wfProcessInfoAction(HttpServletRequest request, HttpServletResponse response) {
-
 		Map<String, Object> map = null;
 		try {
 			map = GroupwareHelper.service.wfProcessInfoAction(request, response);
@@ -923,54 +882,21 @@ public class GroupwareController extends BaseController {
 		return map;
 	}
 
-	@Description(value = "속성값 변경 페이지")
-	@GetMapping(value = "/changeIBA")
-	public ModelAndView changeIBA() throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/workprocess/changeIBA-list.jsp");
-		return model;
-	}
-
-	/**
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/changeIBA")
-	public ModelAndView changeIBA(HttpServletRequest request, HttpServletResponse response) {
-
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-
-		String[] ibas = AttributeKey.ibas;
-
-		for (String iba : ibas) {
-			Hashtable<String, AttributeData> table = IBAUtil.getIBAAttributes(iba);
-
-			Enumeration<String> eu = table.keys();
-			while (eu.hasMoreElements()) {
-				Map<String, String> map = new HashMap<String, String>();
-				String key = (String) eu.nextElement();
-				AttributeData value = (AttributeData) table.get(key);
-				map.put("key", key);
-				map.put("name", value.displayName);
-				map.put("type", value.dataType);
-
-				list.add(map);
-			}
-		}
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu13");
-		model.addObject("module", "workprocess");
-		model.setViewName("default:/workprocess/changeIBA");
-		model.addObject("list", list);
-		return model;
-	}
-
+	@Description(value = "속성 변경 함수")
+	@RequestMapping(value = "/modify")
 	@ResponseBody
-	@RequestMapping("/changeIBAAction")
-	public ResultData changeIBAAction(HttpServletRequest request, HttpServletResponse response) {
-		return GroupwareHelper.service.changeIBAAction(request, response);
+	public Map<String, Object> modify(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			GroupwareHelper.service.modify(params);
+			result.put("msg", "속성 값이 변경 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 
 	@Description(value = "도면 재변환")
