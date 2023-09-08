@@ -37,24 +37,6 @@
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 검토함');">
-							검토함
-							<span class="label label-info float-right"><%//=count.get("check")%></span>
-						</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=approval', '> 나의 업무 > 결재함');">
-							결재함
-							<span class="label label-info float-right"><%//=count.get("approval")%></span>
-						</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
-							수신함
-							<span class="label label-info float-right"><%//=count.get("receive")%></span>
-						</a>
-					</li>
-					<li>
 						<a onclick="moveToPage(this, '/groupware/listItem?state=ing', '> 나의 업무 > 진행함');">
 							진행함
 							<span class="label label-info float-right"><%//=count.get("ing")%></span>
@@ -67,9 +49,9 @@
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=rtn', '> 나의 업무 > 반려함');">
-							반려함
-							<span class="label label-info float-right"><%//W=count.get("rtn")%></span>
+						<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
+							수신함
+							<span class="label label-info float-right"><%//=count.get("receive")%></span>
 						</a>
 					</li>
 					<li>
