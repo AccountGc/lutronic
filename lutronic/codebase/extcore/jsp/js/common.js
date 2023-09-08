@@ -849,7 +849,7 @@ function openView(oid, width, height, auth) {
 		}else if( oid.indexOf("WTDocument") > 0){
 			popup(url, 1180, 800);		
 		}else if( oid.indexOf("WTPart") > 0){
-			popup(url, 1180, 800);		
+			_popup(url, 1180, 800,"n");		
 		}else if( oid.indexOf("EChangeNotify") > 0){
 			popup(url, 1180, 800);
 		}else if( oid.indexOf("DistributeCompany") > 0){

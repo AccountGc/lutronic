@@ -219,7 +219,7 @@
 				showIcon : true
 			},
 			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-				
+				debugger;
 				var temp = "<a href=javascript:openView('" + item.dwgOid + "') style='line-height:26px;'>" + value + "</a>"
 				return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
 			}
