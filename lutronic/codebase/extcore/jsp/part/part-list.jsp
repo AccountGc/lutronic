@@ -335,7 +335,7 @@ if(request.getParameter("popup")!=null){
 						onClick : function(event) {
 							const oid = event.item.oid;
 							const url = getCallUrl("/part/changeList?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800,"n");
 						}
 					}	
 				}, {
@@ -534,7 +534,7 @@ if(request.getParameter("popup")!=null){
 				}
 				const oid = items[0].oid;
 				const url = getCallUrl("/part/bom?oid=" + oid);
-				popup(url, 1600, 800);
+				_popup(url, 1600, 800,"n");
 			};
 
 			function exportExcel() {

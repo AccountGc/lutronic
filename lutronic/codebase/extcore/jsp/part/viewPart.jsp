@@ -6,7 +6,6 @@
 <%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
 
 <html>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <script>
 $(function () {
