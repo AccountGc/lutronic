@@ -81,8 +81,9 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 		<tr>
 			<th class="lb">담당자 <span class="red">*</span></th>
 			<td class="indent5">
-				<input type="text" name="activeUserName" id="activeUserName" class="width-200">
+				<input type="text" name="activeUserName" id="activeUserName" data-multi="false" class="width-200">
 				<input type="hidden" name="activeUser" id="activeUser">
+				<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 			</td>
 		</tr>
 		<tr>
@@ -156,6 +157,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 		document.addEventListener("DOMContentLoaded", function() {
 			selectbox("eoStep");
 			selectbox("activeType");
+			finderUser("activeUserName");
 		});
 
 		document.addEventListener("click", function(event) {

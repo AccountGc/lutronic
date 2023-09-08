@@ -10,9 +10,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.e3ps.change.ECOChange;
+import com.e3ps.change.EChangeActivity;
+import com.e3ps.common.jdf.config.Config;
+import com.e3ps.common.jdf.config.ConfigImpl;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -36,16 +42,22 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.fc.WTObject;
+import wt.inf.container.WTContainerHelper;
+import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
 import wt.org.WTUser;
+import wt.ownership.OwnershipHelper;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
+import wt.workflow.engine.WfActivity;
+import wt.workflow.engine.WfEngineHelper;
 import wt.workflow.engine.WfProcess;
+import wt.workflow.work.WorkItem;
 
 public class GroupwareHelper {
 	public static final GroupwareService service = ServiceFactory.getService(GroupwareService.class);
@@ -430,5 +442,171 @@ public class GroupwareHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+	
+	public Map<String, Object> listWorkItem(Map<String, Object> params) throws Exception {
+		boolean isDistribute = StringUtil.checkNull((String) params.get("distribute")).equals("true");
+		boolean isAdmin = CommonUtil.isAdmin();
+		String sessionId = (String) params.get("sessionId");
+		String userId = StringUtil.checkNull((String) params.get("userOid"));
+		String fullname = StringUtil.checkNull((String) params.get("tempnewUser"));
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		try {
+			QuerySpec query = new QuerySpec();
+			Class target = WorkItem.class;
+			int idx = query.addClassList(target, false);
+
+			query.appendSelect(new ClassAttribute(target, "thePersistInfo.theObjectIdentifier.classname"),
+					new int[] { idx }, false);
+			query.appendSelect(new ClassAttribute(target, "thePersistInfo.theObjectIdentifier.id"), new int[] { idx },
+					false);
+			query.appendSelect(new ClassAttribute(target, "primaryBusinessObject.key.classname"), new int[] { idx },
+					false);
+			query.appendSelect(new ClassAttribute(target, "source.key.classname"), new int[] { idx }, false);
+			query.appendSelect(new ClassAttribute(target, "source.key.id"), new int[] { idx }, false);
+			query.appendSelect(new ClassAttribute(target, "thePersistInfo.createStamp"), new int[] { idx }, false);
+			query.appendSelect(new ClassAttribute(target, "taskURLPathInfo"), new int[] { idx }, false);
+
+			query.appendOrderBy(new OrderBy(new ClassAttribute(target, "thePersistInfo.createStamp"), true),
+					new int[] { idx });
+
+			if (!"".equals(userId)) {
+				People people = (People) CommonUtil.getObject(userId);
+				fullname = people.getUser().getFullName();
+
+				SearchCondition where = OwnershipHelper.getSearchCondition(target, (WTUser) people.getUser(), true);
+				query.appendWhere(where, new int[] { idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(target, "status", "=", "POTENTIAL"), new int[] { idx });
+			} else {
+				if (!isAdmin) {
+					SearchCondition where = OwnershipHelper.getSearchCondition(target,
+							SessionHelper.manager.getPrincipal(), true);
+					query.appendWhere(where, new int[] { idx });
+					query.appendAnd();
+					query.appendWhere(new SearchCondition(target, "status", "=", "POTENTIAL"), new int[] { idx });
+				} else {
+					query.appendWhere(new SearchCondition(target, "status", "=", "POTENTIAL"), new int[] { idx });
+				}
+			}
+
+			ReferenceFactory rf = new ReferenceFactory();
+			LifeCycleManaged pbo = null;
+			String viewOid = "";
+			String oid = "";
+
+			String[] objName = null;
+			String order = (String) params.get("order");
+
+			// 2016.03.07 row id 가 중복일 경우 오류방지를 위해 index 추가
+			int index = 0;
+			Object obj[] = null;
+			PageQueryUtils pager = new PageQueryUtils(params, query);
+			PagingQueryResult result = pager.find();
+			Map<String, Object> data = new HashMap<String, Object>();
+			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+			while (result.hasMoreElements()) {
+
+				index++;
+
+				obj = (Object[]) result.nextElement();
+				oid = obj[0] + ":" + obj[1];
+
+				WorkItem item = (WorkItem) rf.getReference(oid).getObject();
+				WfActivity activity = (WfActivity) item.getSource().getObject();
+				try {
+					pbo = (LifeCycleManaged) item.getPrimaryBusinessObject().getObject();
+				} catch (Exception e) {
+					PersistenceHelper.manager.delete(item);
+					continue;
+				}
+
+				viewOid = pbo.getPersistInfo().getObjectIdentifier().toString();
+
+				if (pbo instanceof EChangeActivity) {
+					EChangeActivity eca = (EChangeActivity) pbo;
+					ECOChange eco = (ECOChange) eca.getEo();
+					viewOid = CommonUtil.getOIDString(eco);
+				}
+
+				WTObject wobj = (WTObject) item.getPrimaryBusinessObject().getObject();
+				try {
+					if (WorklistHelper.service.getWorkItemName(wobj) != null) {
+						objName = WorklistHelper.service.getWorkItemName(wobj);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				String objName0 = "객체 구분 없음";
+				String objName1 = "객체 번호 없음";
+				String objName2 = "객체 이름 없음";
+
+				if (objName != null) {
+					objName0 = objName[0];
+					objName1 = objName[1];
+					objName2 = objName[2];
+				}
+
+				Config conf = ConfigImpl.getInstance();
+				String productName = conf.getString("product.context.name");
+				String orgName = conf.getString("org.context.name");
+
+				WTContainerRef containerRef = null;
+				containerRef = WTContainerHelper.service.getByPath(
+						"/wt.inf.container.OrgContainer=" + orgName + "/wt.pdmlink.PDMLinkProduct=" + productName);
+
+				QueryResult qrResult = WfEngineHelper.service.getAssociatedProcesses((Persistable) wobj, null, containerRef);
+
+				String wfProcessOid = "";
+				WfProcess wfprocess = null;
+
+				if (qrResult.hasMoreElements()) {
+					wfprocess = (WfProcess) qrResult.nextElement();
+
+					/*
+					 * wfProcessOid =
+					 * wfprocess.getPersistInfo().getObjectIdentifier().getStringValue(); String
+					 * processState = wfprocess.getState().getFullDisplay();
+					 * System.out.println("processState="+processState);
+					 * if("종료됨".equals(processState)) continue;
+					 */
+				}
+				data.put("objName0", objName0);
+				data.put("activityName", activity.getName());
+				if (isDistribute) {
+					data.put("objName2", objName1+"["+objName2+"]");
+				}else {
+					data.put("objName2", objName1+"["+objName2+"]");
+				}
+				if ("수신".equals(activity.getName())) {
+					String worker = WorklistHelper.service.getCreatorName(wobj);
+					data.put("worker", worker);
+				} else {
+					data.put("creatorName", activity.getParentProcess().getCreator().getFullName());
+				}
+
+				if (wfProcessOid == null || wfProcessOid.equals("") || wfProcessOid == "") {
+					data.put("state", pbo.getLifeCycleState().getDisplay(Message.getLocale()));
+				} else {
+					data.put("state", pbo.getLifeCycleState().getDisplay(Message.getLocale()));
+				}
+				data.put("createDate", DateUtil.getDateString(item.getPersistInfo().getCreateStamp(), "d"));
+				data.put("name", ((WTUser) OwnershipHelper.getOwner(item)).getFullName());
+				data.put("oid", oid);
+				list.add(data);
+			}
+
+			resultMap.put("list", list);
+			resultMap.put("topListCount", pager.getTotal());
+			resultMap.put("pageSize", pager.getPsize());
+			resultMap.put("total", pager.getTotalSize());
+			resultMap.put("sessionid", pager.getSessionId());
+			resultMap.put("curPage", pager.getCpage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return resultMap;
 	}
 }

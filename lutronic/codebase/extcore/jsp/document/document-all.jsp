@@ -74,10 +74,11 @@
 			const field = ["appName","description"];
 			params = toField(params, field);
 			params.searchType = "DOC";
+			params.gridList = gridList;
 			const url = getCallUrl("/doc/all");
 			call(url, params, function(data) {
 				if(data.result){
-					alert(data.msg);
+					alert("등록 되었습니다.");
 					location.reload();
 				}else{
 					alert(data.msg);

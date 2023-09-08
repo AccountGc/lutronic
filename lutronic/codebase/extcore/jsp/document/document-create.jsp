@@ -278,11 +278,13 @@
 // 			toRegister(params, addRows8);
 // 			openLayer();
 			call(url, params, function(data) {
-				alert(data.msg);
 				if (data.result) {
 // 					opener.loadGridData();
 // 					self.close();
+					alert("등록 되었습니다.");
+					location.reload();
 				} else {
+					alert(data.msg);
 // 					closeLayer();
 				}
 			});

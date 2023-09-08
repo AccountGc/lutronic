@@ -407,6 +407,22 @@ public class GroupwareController extends BaseController {
 		model.setViewName("/extcore/jsp/workprocess/workItem-list.jsp");
 		return model;
 	}
+	
+	@Description(value = "작업함 실행")
+	@ResponseBody
+	@PostMapping(value = "/listWorkItem")
+	public Map<String, Object> listWorkItem(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = GroupwareHelper.manager.listWorkItem(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	/**
 	 * 작업함 리스트 리턴
@@ -415,18 +431,18 @@ public class GroupwareController extends BaseController {
 	 * @param response
 	 * @return
 	 */
-	@ResponseBody
-	@RequestMapping("/listWorkItemAction")
-	public Map<String, Object> listWorkItemAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Object> result = null;
-		try {
-			result = GroupwareHelper.service.listWorkItemAction(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result = new HashMap<String, Object>();
-		}
-		return result;
-	}
+//	@ResponseBody
+//	@RequestMapping("/listWorkItemAction")
+//	public Map<String, Object> listWorkItemAction(HttpServletRequest request, HttpServletResponse response) {
+//		Map<String, Object> result = null;
+//		try {
+//			result = GroupwareHelper.service.listWorkItemAction(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			result = new HashMap<String, Object>();
+//		}
+//		return result;
+//	}
 
 	/**
 	 * 결재 상세화면

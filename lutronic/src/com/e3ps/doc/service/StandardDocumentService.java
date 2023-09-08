@@ -2181,13 +2181,32 @@ public class StandardDocumentService extends StandardManager implements Document
 		try {
 			trs.start();
 
+			// 문서 기본 정보 설정
 			WTDocument document = WTDocument.newWTDocument();
-			document.setName(name);
+	    	if("$$MMDocument".equals(documentType)) {
+	    		document.setName(name);
+	    	}else {
+	    		if(name.length() > 0) {
+	    			document.setName(documentName + "-" + name);
+	    		}else {
+	    			document.setName(documentName);
+	    		}
+	    	}
 			document.setNumber(number);
 			document.setDescription(description);
 
+			// 문서 분류체계 설정
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) document, folder);
+			
+			// 문서 Container 설정
+	        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+	        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+	        document.setContainer(e3psProduct);
+	        
+	        // 문서 lifeCycle 설정
+	        String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+	        LifeCycleHelper.setLifeCycle(document, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
 
 			document = (WTDocument) PersistenceHelper.manager.save(document);
 
@@ -2213,6 +2232,22 @@ public class StandardDocumentService extends StandardManager implements Document
 				PersistenceHelper.manager.save(applicationData);
 				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
 			}
+			
+			//관련 부품            
+//	        String[] partOids 	= (String[]) map.get("partOids"); 
+//	        updateDocumentToPartLink(doc, partOids, false);
+	        
+			// 관련 문서
+//	        String[] docOids 	= (String[]) map.get("docOids"); 
+//	        updateDocumentToDocumentLink(doc, docOids, false);
+			
+			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+	        if("LC_Default_NonWF".equals(lifecycle)){
+	        	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) document, "BATCHAPPROVAL");
+	        	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+	        }
+	        params.put("approvalType", approvalType);
+	        CommonHelper.service.changeIBAValues(document, params);
 
 //			for (Map<String, String> addRow7 : addRows7) {
 //				String oid = addRow7.get("oid");
