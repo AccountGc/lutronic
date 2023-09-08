@@ -818,10 +818,6 @@ public class PartHelper {
 		map.put("wtPartType", wtPartType);
 		map.put("source", source);
 		map.put("partName", partName);
-		map.put("partName1", partName1);
-		map.put("partName2", partName2);
-		map.put("partName3", partName3);
-		map.put("partName4", partName4);
 		map.put("partNumber", partNumber);
 		map.put("seq", seq);
 		map.put("etc", etc);

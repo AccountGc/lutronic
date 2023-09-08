@@ -1,8 +1,16 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="com.e3ps.common.code.beans.NumberCodeData"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
+ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
+ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
+ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -109,7 +117,7 @@
 				</td>
 				<th>사용자 Key in</th>
 				<td class="indent5">
-					<input type="text" name="partName4" id="partName4" class="width-300">
+					<input type="text" name="partNameCustom" id="partNameCustom" class="width-300">
 				</td>
 			</tr>
 			<tr>
@@ -159,21 +167,54 @@
 			<tr>
 				<th>프로젝트코드 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="model" id="model" class="width-500">
+					<select name="model" id="model" class="width-500">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>제작방법 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="productmethod" id="productmethod" class="width-500">
+					<select name="productmethod" id="productmethod" class="width-500">
+						<option value="">선택</option>
+						<%
+						for (NumberCode productmethod : productmethodList) {
+						%>
+						<option value="<%=productmethod.getCode() %>"><%=productmethod.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
 				<th>부서 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="deptcode" id="deptcode" class="width-500">
+					<select name="deptcode" id="deptcode" class="width-500">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>단위 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="unit" id="unit" class="width-500">
+					<select name="unit" id="unit" class="width-500">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -183,17 +224,44 @@
 				</td>
 				<th>MANUFACTURER</th>
 				<td class="indent5">
-					<input type="text" name="manufacture" id="manufacture" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-500">
+						<option value="">선택</option>
+						<%
+						for (NumberCode manufacture : manufactureList) {
+						%>
+						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
 				<th>재질</th>
 				<td class="indent5">
-					<input type="text" name="mat" id="mat" class="width-500">
+					<select name="mat" id="mat" class="width-500">
+						<option value="">선택</option>
+						<%
+						for (NumberCode mat : matList) {
+						%>
+						<option value="<%=mat.getCode() %>"><%=mat.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<input type="text" name="finish" id="finish" class="width-500">
+					<select name="finish" id="finish" class="width-500">
+						<option value="">선택</option>
+						<%
+						for (NumberCode finish : finishList) {
+						%>
+						<option value="<%=finish.getCode() %>"><%=finish.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -316,7 +384,7 @@
 				const partType2 = document.getElementById("partType2").value;
 				const partName3 = document.getElementById("partName3").value;
 				const partType3 = document.getElementById("partType3").value;
-				const partName4 = document.getElementById("partName4").value;
+				const partNameCustom = document.getElementById("partNameCustom").value;
 				const seq = document.getElementById("seq").value;
 				const etc = document.getElementById("etc").value;
 				const model = document.getElementById("model").value;
@@ -340,10 +408,6 @@
 				const fid = document.getElementById("fid").value;
 				const location = document.getElementById("location").value;
 
-				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
-					alert("품목명을 입력하세요.");
-					return;					
-				}
 				if(isEmpty($("#partType1").val())){
 					alert("품목구분을 입력하세요.");
 					return;					
@@ -354,6 +418,18 @@
 				}
 				if(isEmpty($("#partType3").val())){
 					alert("중분류를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partNameCustom").val())){
+					alert("품목명을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#seq").val())){
+					alert("SEQ를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#etc").val())){
+					alert("기타를 입력하세요.");
 					return;					
 				}
 				if(isEmpty($("#model").val())){
@@ -378,13 +454,13 @@
 				
 				const params = new Object();
 				const url = getCallUrl("/part/create");
-				params.partName1 = "MODULE";
+				params.partName1 = partName1;
 				params.partType1 = partType1;
-				params.partName2 = "BOARD";
+				params.partName2 = partName2;
 				params.partType2 = partType2;
-				params.partName3 = "LD DRIVER";
+				params.partName3 = partName3;
 				params.partType3 = partType3;
-				params.partName4 = "";
+				params.partNameCustom = partNameCustom;
 				params.seq = seq;
 				params.etc = etc;
 				params.model = model;
@@ -444,8 +520,20 @@
 				AUIGrid.resize(rohsGridID);
 				document.getElementById("partName1").focus();
 				numberCodeList('partType1', '');
-				selectbox("partType2")
-				selectbox("partType3")
+				selectbox("partType2");
+				selectbox("partType3");
+				selectbox("state");
+				selectbox("model");
+				selectbox("productmethod");
+				selectbox("deptcode");
+				selectbox("unit");
+				selectbox("mat");
+				selectbox("finish");
+				selectbox("manufacture");
+				finderUser("creator");
+				twindate("created");
+				twindate("modified");
+				selectbox("_psize");
 			});
 			
 			window.addEventListener("resize", function() {

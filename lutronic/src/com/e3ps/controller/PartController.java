@@ -93,7 +93,19 @@ public class PartController extends BaseController {
 	@Description(value = "품목 등록 페이지")
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
 		model.setViewName("/extcore/jsp/part/part-create.jsp");
 		return model;
 	}
