@@ -506,4 +506,59 @@ public class BomSearchHelper {
 		
 	   	return map;
 	}
+	
+	/**
+	 * bomEditor 조회
+	 */
+	public List<Map<String, Object>> bomEditorList(	Map<String, Object> param) throws Exception {
+
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		String oid = (String) param.get("oid");
+
+		ReferenceFactory rf = new ReferenceFactory();
+		WTPart part = (WTPart) rf.getReference(oid).getObject();
+
+		Baseline bsobj = null;
+
+		BomBroker broker = new BomBroker();
+		
+		View[] views = ViewHelper.service.getAllViews();
+
+		String view = views[0].getName();
+		//MANUFACTURE
+		HashMap<String, String> manuFactureMap = CodeHelper.service.getCodeMap("MANUFACTURE");
+						
+		//PRODUCTMETHOD
+		HashMap<String, String> productMap= CodeHelper.service.getCodeMap("PRODUCTMETHOD");
+		
+		HashMap<String, String> departMap= CodeHelper.service.getCodeMap("DEPTCODE");
+		//PartTreeData root = broker.getOneleveTree(part, bsobj);//
+		PartTreeData root = broker.getTree(part, true, bsobj, ViewHelper.service.getView(view));
+		
+		HashMap<String, HashMap<String, String>> codeMap = new HashMap<String, HashMap<String,String>>();
+		codeMap.put("manuFactureMap", manuFactureMap);
+		codeMap.put("productMap", productMap);
+		codeMap.put("departMap", departMap);
+		root.setLocationOid("T"+0);
+		
+		
+		Map<String, Object> map1 = setBoMDate(null,root,0,codeMap);
+		list.add(map1);
+		
+		//getDhtmlXPartData(root,rowNum2);
+		
+		
+		
+		int idx =1;
+		
+//		partAUITreeSetting(root, list, idx,isCheckDummy);
+//		int seq =1;
+//		for(Map<String, Object>  mapData : list ){
+//			mapData.put("seq", seq);
+//			seq++;
+//		}
+		return list;
+	}
+	
 }

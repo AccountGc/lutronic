@@ -1761,4 +1761,57 @@ public class PartController extends BaseController {
 		return data;
 	}
 
+	/**
+	 * BOMEditor 팝업 화면
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/bomEditor")
+	public ModelAndView bomEditor(@RequestParam String oid) {
+		ModelAndView model = new ModelAndView();
+		try {
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+			String number = part.getNumber();
+			List<Map<String, String>> list = null;
+			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
+			String title = number;
+			
+			String lastedoid = oid;
+			WTPart lastedpart = part;
+			if (!PartSearchHelper.service.isLastPart(part)) {
+					lastedpart = (WTPart) ObjectUtil.getLatestObject((Master) part.getMaster());
+					lastedoid = CommonUtil.getOIDString(lastedpart);
+			}
+			
+			model.addObject("title", title);
+			model.addObject("oid", oid);
+			model.addObject("lastedoid", lastedoid);
+
+			model.addObject("number", number);
+			model.addObject("list", list);
+			model.setViewName("popup:/part/bomEditor");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return model;
+	}
+	
+	/**
+	 * AUI BOM Action
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/bomEditorList")
+	public List<Map<String, Object>> bomEditorList(@RequestBody Map<String, Object> params) throws Exception {
+		List<Map<String, Object>> list = BomSearchHelper.manager.bomEditorList(params);
+		return list;
+	}
 }
