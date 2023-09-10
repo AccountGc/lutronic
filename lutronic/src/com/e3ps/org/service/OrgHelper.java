@@ -1,7 +1,12 @@
 package com.e3ps.org.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
+import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -82,4 +87,26 @@ public class OrgHelper {
 		return null;
 	}
 
+	public ArrayList<Map<String, String>> finder(Map<String, String> params) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		String value = params.get("value");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+		query.appendOpenParen();
+		QuerySpecUtils.toBooleanAnd(query, idx, People.class, People.IS_DISABLE, false);
+		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.NAME, value);
+		QuerySpecUtils.toLikeOr(query, idx, People.class, People.ID, value);
+		query.appendCloseParen();
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			People people = (People) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("oid", people.getUser().getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("name", people.getName());
+			list.add(map);
+		}
+		return list;
+	}
 }

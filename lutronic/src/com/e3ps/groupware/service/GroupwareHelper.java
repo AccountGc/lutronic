@@ -1,5 +1,6 @@
 package com.e3ps.groupware.service;
 
+import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 
 import com.e3ps.change.ECOChange;
 import com.e3ps.change.EChangeActivity;
@@ -22,6 +24,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
 import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
@@ -34,6 +37,10 @@ import com.e3ps.groupware.workprocess.service.WorklistHelper;
 import com.e3ps.org.People;
 import com.e3ps.org.beans.PeopleData;
 
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentHolder;
+import wt.content.ContentItem;
 import wt.enterprise.Master;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
@@ -45,6 +52,7 @@ import wt.fc.WTObject;
 import wt.inf.container.WTContainerHelper;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleManaged;
+import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.ownership.OwnershipHelper;
@@ -57,6 +65,7 @@ import wt.session.SessionHelper;
 import wt.workflow.engine.WfActivity;
 import wt.workflow.engine.WfEngineHelper;
 import wt.workflow.engine.WfProcess;
+import wt.workflow.engine.WfState;
 import wt.workflow.work.WorkItem;
 
 public class GroupwareHelper {
@@ -73,7 +82,7 @@ public class GroupwareHelper {
 		try {
 			String nameValue = StringUtil.checkNull((String) params.get("name"));
 			String creator = StringUtil.checkNull((String) params.get("creator"));
-			
+
 			if (nameValue != null && nameValue.trim().length() > 0) {
 				query.appendWhere(new SearchCondition(Notice.class, "title", SearchCondition.LIKE,
 						"%" + nameValue.trim() + "%", false), new int[] { idx });
@@ -443,7 +452,7 @@ public class GroupwareHelper {
 		map.put("curPage", pager.getCpage());
 		return map;
 	}
-	
+
 	public Map<String, Object> listWorkItem(Map<String, Object> params) throws Exception {
 		boolean isDistribute = StringUtil.checkNull((String) params.get("distribute")).equals("true");
 		boolean isAdmin = CommonUtil.isAdmin();
@@ -504,7 +513,7 @@ public class GroupwareHelper {
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
 			Map<String, Object> data = new HashMap<String, Object>();
-			List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 			while (result.hasMoreElements()) {
 
 				index++;
@@ -556,7 +565,8 @@ public class GroupwareHelper {
 				containerRef = WTContainerHelper.service.getByPath(
 						"/wt.inf.container.OrgContainer=" + orgName + "/wt.pdmlink.PDMLinkProduct=" + productName);
 
-				QueryResult qrResult = WfEngineHelper.service.getAssociatedProcesses((Persistable) wobj, null, containerRef);
+				QueryResult qrResult = WfEngineHelper.service.getAssociatedProcesses((Persistable) wobj, null,
+						containerRef);
 
 				String wfProcessOid = "";
 				WfProcess wfprocess = null;
@@ -575,9 +585,9 @@ public class GroupwareHelper {
 				data.put("objName0", objName0);
 				data.put("activityName", activity.getName());
 				if (isDistribute) {
-					data.put("objName2", objName1+"["+objName2+"]");
-				}else {
-					data.put("objName2", objName1+"["+objName2+"]");
+					data.put("objName2", objName1 + "[" + objName2 + "]");
+				} else {
+					data.put("objName2", objName1 + "[" + objName2 + "]");
 				}
 				if ("수신".equals(activity.getName())) {
 					String worker = WorklistHelper.service.getCreatorName(wobj);
@@ -608,5 +618,68 @@ public class GroupwareHelper {
 		}
 
 		return resultMap;
+	}
+
+	public Map<String, Object> info(Map<String, String> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		String oid = (String) params.get("oid");
+
+		if (oid.indexOf(":") <= -1) {
+			map.put("msg", "OID 값의 형식이 맞지 않습니다.");
+			return map;
+		}
+
+		ReferenceFactory rf = new ReferenceFactory();
+		Persistable per = rf.getReference(oid).getObject();
+
+		if (!(per instanceof LifeCycleManaged)) {
+			map.put("msg", "라이프사이클 객체가 아닙니다.");
+			return map;
+		}
+
+		if (per instanceof LifeCycleManaged) {
+			LifeCycleManaged lcm = (LifeCycleManaged) per;
+			LifeCycleTemplate lct = (LifeCycleTemplate) lcm.getLifeCycleTemplate().getObject();
+
+			map.put("state", lcm.getLifeCycleState().getDisplay());
+			map.put("oid", oid);
+			map.put("name", lct.getName());
+
+			QueryResult qr = WfEngineHelper.service.getAssociatedProcesses(per, null, WCUtil.getWTContainerRef());
+
+			List<Map<String, String>> workflow = new ArrayList<>();
+			while (qr.hasMoreElements()) {
+				WfProcess wfprocess = (WfProcess) qr.nextElement();
+				Map<String, String> data = new HashMap<>();
+				data.put("oid", wfprocess.getPersistInfo().getObjectIdentifier().getStringValue());
+				data.put("name", wfprocess.getName());
+				data.put("state", wfprocess.getState().getDisplay());
+				data.put("createdTime", wfprocess.getCreateTimestamp().toString());
+				workflow.add(data);
+			}
+
+			List<Map<String, String>> content = new ArrayList<>();
+			if (per instanceof ContentHolder) {
+				ContentHolder holder = (ContentHolder) per;
+				Vector vector = ContentHelper.getContentListAll(holder);
+				for (int i = 0; i < vector.size(); i++) {
+					ContentItem item = (ContentItem) vector.get(i);
+					if (item instanceof ApplicationData) {
+						ApplicationData app = (ApplicationData) item;
+						Map<String, String> data = new HashMap<>();
+						URL url = ContentHelper.getDownloadURL(holder, app);
+						data.put("url", url.toString());
+						data.put("name", app.getFileName());
+						content.add(data);
+					}
+				}
+			}
+			map.put("workflow", workflow);
+			map.put("content", content);
+		}
+
+		// 라이프사이클 정보
+
+		return map;
 	}
 }

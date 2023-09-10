@@ -44,9 +44,9 @@ function call(url, params, callBack, methodType) {
 				alert("에러코드 : " + status + ", 호출 URL : " + url + ", 존재하지 않는 호출 주소 !!");
 			}
 
-//			if (opener !== undefined) {
-//				closeLayer();
-//			}
+			//			if (opener !== undefined) {
+			//				closeLayer();
+			//			}
 		}
 	})
 }
@@ -189,7 +189,7 @@ function finderUser(id) {
 		onsearch: function(id, obj, callBack) {
 			const value = document.getElementById(id).value;
 			const params = new Object();
-			const url = getCallUrl("/org/keyValue");
+			const url = getCallUrl("/org/finder");
 			params.value = value;
 			params.obj = obj;
 			call(url, params, function(data) {
@@ -287,10 +287,10 @@ function toValue(id) {
 // TABLE ID 값 한번에 처리
 function toField(params, arr) {
 	for (let i = 0; i < arr.length; i++) {
-		if(document.getElementById(arr[i]) != null){
-			params[arr[i]] = document.getElementById(arr[i]).value;			
-		}else{
-			console.log(arr[i-1]);
+		if (document.getElementById(arr[i]) != null) {
+			params[arr[i]] = document.getElementById(arr[i]).value;
+		} else {
+			console.log(arr[i - 1]);
 			console.log(arr[i]);
 		}
 	}

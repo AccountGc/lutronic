@@ -23,4 +23,6 @@
 7. State ResourceBuild 실행
 	- Shell -> ResourceBuild.bat wt.lifecycle.**
 	- codebase -> ant -f MakeJar.xml
-	
+
+8. Workflow 가져오기
+	- Shell -> xconfmanager -t codebase/wt.properties -s wt.ixb.import.allowCrossReleaseImport=true -p	

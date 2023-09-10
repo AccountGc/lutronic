@@ -45,6 +45,7 @@ import com.e3ps.rohs.service.RohsHelper;
 import com.infoengine.util.UrlEncoder;
 
 import wt.clients.folder.FolderTaskLogic;
+import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.folder.Folder;
 
@@ -65,7 +66,7 @@ public class DocumentController extends BaseController {
 		model.addObject("modelList", modelList);
 		return model;
 	}
-	
+
 	@Description(value = "문서 등록")
 	@ResponseBody
 	@PostMapping(value = "/create")
@@ -85,14 +86,16 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() throws Exception{
+	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
 		ModelAndView model = new ModelAndView();
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
+		model.addObject("docTypeList", docTypeList);
 		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;
 	}
@@ -120,10 +123,10 @@ public class DocumentController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentData docData = new DocumentData(doc);
-		Map<String,String> map = CommonHelper.manager.getAttributes(oid, "view");
+		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
 		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
 		String pnum = DocumentHelper.manager.getCnum(cList);
-		
+
 		model.setViewName("/extcore/jsp/document/document-view.jsp");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
@@ -132,19 +135,19 @@ public class DocumentController extends BaseController {
 		model.addAllObjects(map);
 		return model;
 	}
-	
+
 	@Description(value = "문세 템플릿 검색 페이지 이동")
 	@GetMapping(value = "/template-list")
-	public ModelAndView templateList()throws Exception{
+	public ModelAndView templateList() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/document/template-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "문서 템플릿 리스트 불러오기")
 	@ResponseBody
 	@PostMapping(value = "/template-list")
-	public Map<String, Object> templateList(@RequestBody Map<String, Object> params){
+	public Map<String, Object> templateList(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = DocumentHelper.manager.docTemplateList(params);
@@ -156,67 +159,67 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "문세 템플릿 등록 페이지 이동")
 	@GetMapping(value = "/template-create")
-	public ModelAndView templateCreate()throws Exception{
+	public ModelAndView templateCreate() throws Exception {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> documentTemplateTypeList = NumberCodeHelper.manager.getArrayCodeList("DOCFORMTYPE");
 		model.setViewName("/extcore/jsp/document/template-create.jsp");
 		model.addObject("documentTemplateTypeList", documentTemplateTypeList);
 		return model;
 	}
-	
+
 	@Description(value = "문서 템플릿 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/template-create")
-	public Map<String, Object> templateCreate(@RequestBody Map<String, Object> params){
+	public Map<String, Object> templateCreate(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.createTemplate(params);
 			result.put("result", SUCCESS);
 			result.put("msg", SAVE_MSG);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "댓글 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/createComments")
-	public Map<String,Object> createComments(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> createComments(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.createComments(params);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "댓글 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/updateComments")
-	public Map<String,Object> updateComments(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> updateComments(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.updateComments(params);
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "댓글 삭제 함수")
 	@ResponseBody
 	@GetMapping(value = "/deleteComments")
@@ -233,8 +236,7 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
-	
-	
+
 	@Description(value = "문서 개정 페이지")
 	@GetMapping(value = "/reviseDocument")
 	public ModelAndView reviseDocument(@RequestParam("oid") String oid, HttpServletRequest request) {
@@ -245,7 +247,7 @@ public class DocumentController extends BaseController {
 		model.setViewName("/extcore/jsp/document/document-revise.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "문서 개정")
 	@ResponseBody
 	@PostMapping(value = "/reviseDocument")
@@ -264,9 +266,9 @@ public class DocumentController extends BaseController {
 	@ResponseBody
 	@RequestMapping("/delete")
 	public Map<String, Object> delete(@RequestBody Map<String, Object> params) {
-		
+
 		Map<String, Object> result = DocumentHelper.service.deleteDocumentAction(params);
-		if((boolean) result.get("result")) {
+		if ((boolean) result.get("result")) {
 			result.put("oid", result.get("oid"));
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
@@ -279,7 +281,8 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 수정 페이지")
 	@GetMapping(value = "/update")
-	public ModelAndView updateDocument(HttpServletRequest request, @RequestParam(value = "oid") String oid) throws Exception {
+	public ModelAndView updateDocument(HttpServletRequest request, @RequestParam(value = "oid") String oid)
+			throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentData docData = new DocumentData(doc);
@@ -295,9 +298,9 @@ public class DocumentController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/update")
 	public Map<String, Object> update(@RequestBody Map<String, Object> params) {
-		
+
 		Map<String, Object> result = DocumentHelper.service.updateDocumentAction(params);
-		if((boolean) result.get("result")) {
+		if ((boolean) result.get("result")) {
 			result.put("oid", result.get("oid"));
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
@@ -310,29 +313,29 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 일괄등록")
 	@GetMapping(value = "/batch")
-	public ModelAndView batch() throws Exception{
+	public ModelAndView batch() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/document/document-batch.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "문서 일괄결재")
 	@GetMapping(value = "/all")
-	public ModelAndView all() throws Exception{
+	public ModelAndView all() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/document/document-all.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "문서 일괄결재 등록 실행")
 	@ResponseBody
 	@PostMapping(value = "/all")
-	public Map<String,Object> all(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> all(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.createAll(params);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
@@ -633,84 +636,84 @@ public class DocumentController extends BaseController {
 		model.setViewName("popup:/document/batchDocumentCreate");
 		return model;
 	}
-	
-	@Description(value = "문서 양식 사진 업로드 창에 첨부 메서드")
-	@PostMapping(value="/smarteditorMultiImageUpload")
-	public void smarteditorMultiImageUpload(HttpServletRequest request, HttpServletResponse response){
-		try {
-			//파일정보
-			String sFileInfo = "";
-			//파일명을 받는다 - 일반 원본파일명
-			String sFilename = request.getHeader("file-name");
-			//파일 확장자
-			String sFilenameExt = sFilename.substring(sFilename.lastIndexOf(".")+1);
-			//확장자를소문자로 변경
-			sFilenameExt = sFilenameExt.toLowerCase();
-				
-			//이미지 검증 배열변수
-			String[] allowFileArr = {"jpg","png","bmp","gif"};
 
-			//확장자 체크
+	@Description(value = "문서 양식 사진 업로드 창에 첨부 메서드")
+	@PostMapping(value = "/smarteditorMultiImageUpload")
+	public void smarteditorMultiImageUpload(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			// 파일정보
+			String sFileInfo = "";
+			// 파일명을 받는다 - 일반 원본파일명
+			String sFilename = request.getHeader("file-name");
+			// 파일 확장자
+			String sFilenameExt = sFilename.substring(sFilename.lastIndexOf(".") + 1);
+			// 확장자를소문자로 변경
+			sFilenameExt = sFilenameExt.toLowerCase();
+
+			// 이미지 검증 배열변수
+			String[] allowFileArr = { "jpg", "png", "bmp", "gif" };
+
+			// 확장자 체크
 			int nCnt = 0;
-			for(int i=0; i<allowFileArr.length; i++) {
-				if(sFilenameExt.equals(allowFileArr[i])){
+			for (int i = 0; i < allowFileArr.length; i++) {
+				if (sFilenameExt.equals(allowFileArr[i])) {
 					nCnt++;
 				}
 			}
 
-			//이미지가 아니라면
-			if(nCnt == 0) {
+			// 이미지가 아니라면
+			if (nCnt == 0) {
 				PrintWriter print = response.getWriter();
-				print.print("NOTALLOW_"+sFilename);
+				print.print("NOTALLOW_" + sFilename);
 				print.flush();
 				print.close();
 			} else {
-				//디렉토리 설정 및 업로드	
-				
-				//파일경로
+				// 디렉토리 설정 및 업로드
+
+				// 파일경로
 				String defaultPath = request.getSession().getServletContext().getRealPath("/");
 				String filePath = defaultPath + "img" + File.separator + "smarteditor2" + File.separator;
 				System.out.println("=======================>" + filePath);
 				File file = new File(filePath);
-				
-				if(!file.exists()) {
+
+				if (!file.exists()) {
 					file.mkdirs();
 				}
-				
+
 				String sRealFileNm = "";
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-				String today= formatter.format(new java.util.Date());
-				sRealFileNm = today+UUID.randomUUID().toString() + sFilename.substring(sFilename.lastIndexOf("."));
+				String today = formatter.format(new java.util.Date());
+				sRealFileNm = today + UUID.randomUUID().toString() + sFilename.substring(sFilename.lastIndexOf("."));
 				String rlFileNm = filePath + sRealFileNm;
-				
-				///////////////// 서버에 파일쓰기 ///////////////// 
+
+				///////////////// 서버에 파일쓰기 /////////////////
 				InputStream inputStream = request.getInputStream();
-				OutputStream outputStream=new FileOutputStream(rlFileNm);
+				OutputStream outputStream = new FileOutputStream(rlFileNm);
 				int numRead;
 				byte bytes[] = new byte[Integer.parseInt(request.getHeader("file-size"))];
-				while((numRead = inputStream.read(bytes,0,bytes.length)) != -1){
-					outputStream.write(bytes,0,numRead);
+				while ((numRead = inputStream.read(bytes, 0, bytes.length)) != -1) {
+					outputStream.write(bytes, 0, numRead);
 				}
-				if(inputStream != null) {
+				if (inputStream != null) {
 					inputStream.close();
 				}
 				outputStream.flush();
 				outputStream.close();
-				
+
 				///////////////// 이미지 /////////////////
 				// 정보 출력
 				sFileInfo += "&bNewLine=true";
 				// img 태그의 title 속성을 원본파일명으로 적용시켜주기 위함
-				sFileInfo += "&sFileName="+ sFilename;
-				sFileInfo += "&sFileURL="+filePath+sRealFileNm;
+				sFileInfo += "&sFileName=" + sFilename;
+				sFileInfo += "&sFileURL=" + filePath + sRealFileNm;
 				PrintWriter printWriter = response.getWriter();
 				printWriter.print(sFileInfo);
 				printWriter.flush();
 				printWriter.close();
-			}	
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

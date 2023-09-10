@@ -3217,7 +3217,8 @@ button, button:hover {
 	position: absolute;
 	width: 18px;
 	height: 18px;
-	background: #b9b9b9;
+/*	background: #b9b9b9;*/
+	background: red;
 	border: 1px solid #b9b9b9
 }
 

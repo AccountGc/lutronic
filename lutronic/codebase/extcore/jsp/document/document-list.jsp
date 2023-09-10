@@ -1,16 +1,16 @@
+<%@page import="wt.doc.DocumentType"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-	ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
-	ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
-	ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 %>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 boolean popup = false;
 if (request.getParameter("popup") != null) {
 	popup = true;
@@ -114,6 +114,13 @@ if (request.getParameter("popup") != null) {
 				<td class="indent5">
 					<select name="documentType" id="documentType" class="width-300">
 						<option value="">선택</option>
+						<%
+						for (DocumentType docType : docTypeList) {
+						%>
+						<option value="<%=docType.toString()%>"><%=docType.getDisplay()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>보존기간</th>
@@ -123,7 +130,7 @@ if (request.getParameter("popup") != null) {
 						<%
 						for (NumberCode preseration : preserationList) {
 						%>
-						<option value="<%=preseration.getCode() %>"><%=preseration.getName()%></option>
+						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
 						<%
 						}
 						%>
@@ -138,7 +145,7 @@ if (request.getParameter("popup") != null) {
 						<%
 						for (NumberCode model : modelList) {
 						%>
-						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
 						<%
 						}
 						%>
@@ -151,7 +158,7 @@ if (request.getParameter("popup") != null) {
 						<%
 						for (NumberCode deptcode : deptcodeList) {
 						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
@@ -172,7 +179,7 @@ if (request.getParameter("popup") != null) {
 			<tr>
 				<th>내용</th>
 				<td class="indent5" colspan="3">
-					<textarea name="description" id="description" rows="6" onchange="textAreaLengthCheckName('description', '4000', '문서설명')" style="width:90%"></textarea>
+					<textarea name="description" id="description" rows="6" onchange="textAreaLengthCheckName('description', '4000', '문서설명')" style="width: 90%"></textarea>
 				</td>
 			</tr>
 		</table>

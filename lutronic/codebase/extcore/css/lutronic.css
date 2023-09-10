@@ -490,7 +490,7 @@ a:hover {
 }
 
 /** PASSWORD CSS **/
-.create-table td input[type='password'] {
+.create-table td input[type='password'], .search-table td input[type='password'] {
 	border: 1px solid #a6a6a6;
 	background: #fff;
 	color: #333;

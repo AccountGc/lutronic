@@ -24,7 +24,7 @@
 				</td>
 			</tr>
 		</table>
-		<table class="create-table">
+		<table class="search-table">
 			<colgroup>
 				<col width="150">
 				<col width="*">

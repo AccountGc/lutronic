@@ -31,7 +31,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 		</table>
 
 		<div id="layer">
-			<table class="create-table">
+			<table class="search-table">
 				<colgroup>
 					<col width="174">
 					<col width="*">
@@ -40,14 +40,22 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 					<th>OID</th>
 					<td class="indent5">
 						<input type="text" name="value" id="value" class="width-300">
-						<input type="button" name="info" id="info" value="제출" class="red" onclick="info();">
+					</td>
+				</tr>
+			</table>
+			<table class="button-table">
+				<tr>
+					<td class="center">
+						<input type="button" value="제출" class="red" onclick="info();">
 					</td>
 				</tr>
 			</table>
 		</div>
 
+
+
 		<div id="msg">
-			<table class="create-table">
+			<table class="search-table">
 				<colgroup>
 					<col width="130">
 					<col width="*">
@@ -55,7 +63,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 				<tr>
 					<th>OID</th>
 					<td class="indent5">
-						<input type="button" name="delete" id="delete" value="삭제" class="red">
+						<input type="button" value="삭제" class="red">
 					</td>
 				</tr>
 				<tr>
@@ -63,7 +71,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 					<td class="indent5">
 						새 라이프 사이클 템플릿
 						<input type="text" name="lifecycle" id="lifecycle" class="width-300">
-						<input type="button" name="reassign" id="reassign" value="재지정" class="blue">
+						<input type="button" value="재지정" title="재지정" class="blue">
 					</td>
 				</tr>
 				<tr>
@@ -87,7 +95,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 								</label>
 							</div>
 						</div>
-						<input type='button' name='statechange' id='statechange' value='상태변경'>
+						<input type="button" value="상태변경" title="상태변경" class="blue">
 					</td>
 				</tr>
 			</table>
@@ -106,7 +114,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 				</td>
 			</tr>
 		</table>
-		<table class="create-table">
+		<table class="search-table">
 			<colgroup>
 				<col width="174">
 				<col width="*">
@@ -161,7 +169,7 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 				</td>
 			</tr>
 		</table>
-		<table class="create-table">
+		<table class="search-table">
 			<colgroup>
 				<col width="150">
 				<col width="*">
@@ -194,12 +202,33 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 			})
 
 			function info() {
-				const value = document.getElementById("value");
-				if (value.value === "") {
+				const oid = document.getElementById("value");
+				if (oid.value === "") {
 					alert("OID 값을 입력하세요.");
 					value.focus();
 					return false;
 				}
+
+				if (oid.value.indexOf("WTPart") <= -1 && oid.value.indexOf("EPMDocument") <= -1 && oid.value.indexOf("WTDocument") <= -1) {
+					alert("부품 & 도면 & 문서의 OID 값만 입력이 가능합니다.\n예시) wt.epm.EPMDocument:1111");
+					oid.value = "";
+					oid.focus();
+					return false;
+				}
+
+				const url = getCallUrl("/groupware/info");
+				const params = {
+					oid : oid.value
+				}
+				parent.openLayer();
+				call(url, params, function(data) {
+					if (data.result) {
+						console.log(data);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				})
 			}
 
 			function _reset() {

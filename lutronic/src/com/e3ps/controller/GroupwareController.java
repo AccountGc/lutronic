@@ -407,7 +407,7 @@ public class GroupwareController extends BaseController {
 		model.setViewName("/extcore/jsp/workprocess/workItem-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "작업함 실행")
 	@ResponseBody
 	@PostMapping(value = "/listWorkItem")
@@ -880,6 +880,22 @@ public class GroupwareController extends BaseController {
 		}
 
 		return map;
+	}
+
+	@Description(value = "객체 정보 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/info")
+	public Map<String, Object> info(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			result = GroupwareHelper.manager.info(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 
 	@Description(value = "속성 변경 함수")
