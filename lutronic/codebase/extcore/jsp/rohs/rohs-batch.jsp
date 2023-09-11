@@ -20,7 +20,11 @@
 	<form>
 		<table class="button-table">
 			<tr>
-				<td><input type="button" value="저장" title="저장" onclick="addBtn();"> <input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> <input type="button" value="삭제" title="삭제" class="red" onclick="javascript:self.close();"></td>
+				<td>
+					<input type="button" value="저장" title="저장" onclick="saveBtn();"> 
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> 
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+				</td>
 			</tr>
 		</table>
 		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
@@ -37,10 +41,11 @@
 				rohsList.push({ "code" : "<%= rohs.getNumber() %>", "value" : "<%= rohs.getName() %>"});
 			<% } %>
 			const layout = [{
-				dataField : "g",
+				dataField : "lifecycleName",
 				headerText : "결재방식",
 				dataType : "string",
 				width : 120,
+				cellMerge: true,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -73,10 +78,11 @@
 					valueField: "value" 
 				},
 			}, {
-				dataField : "manufacture",
+				dataField : "manufactureName",
 				headerText : "협력업체",
 				dataType : "string",
 				width : 120,
+				cellMerge: true,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -93,6 +99,7 @@
 					var retStr = "";
 					for (var i = 0, len = manufactureList.length; i < len; i++) {
 						if (manufactureList[i]["code"] == value) {
+                            AUIGrid.setCellValue(myGridID, rowIndex, "manufacture", value);
 							retStr = manufactureList[i]["value"];
 							break;
 						}
@@ -113,14 +120,17 @@
 				headerText : "협력업체코드",
 				dataType : "string",
 				width : 120,
+				cellMerge: true,
 			}, {
-				dataField : "rohs",
+				dataField : "rohsNumber",
 				headerText : "물질번호",
 				width : 120,
+				cellMerge: true,
 			}, {
-				dataField : "rohs",
+				dataField : "rohsName",
 				headerText : "물질명",
 				width : 120,
+				cellMerge: true,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -153,12 +163,13 @@
 					valueField: "value" 
 				},
 			}, {
-				dataField : "number",
+				dataField : "relatedRohs",
 				headerText : "관련물질",
 				dataType : "string",
 				width : 120,
+				cellMerge: true,
 			}, {
-				dataField : "file",
+				dataField : "fileTypeName",
 				headerText : "파일구분",
 				dataType : "string",
 				width : 120,
@@ -194,17 +205,17 @@
 					valueField: "value" 
 				},
 			}, {
-				dataField : "file",
+				dataField : "fileType",
 				headerText : "파일구분코드",
 				dataType : "string",
 				width : 120,
 			}, {
-				dataField : "number",
+				dataField : "publicationDate",
 				headerText : "발행일",
 				dataType : "string",
 				width : 120,
 			}, {
-				dataField : "number",
+				dataField : "fileName",
 				headerText : "파일명",
 				dataType : "string",
 				width : 120,
@@ -227,6 +238,7 @@
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					fillColumnSizeMode: true,
+					enableCellMerge: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
@@ -258,6 +270,104 @@
 				AUIGrid.resize(myGridID);
 			});
 			
+			// 추가
+			function addBtn(){
+				var gridList = AUIGrid.getGridData(myGridID);
+				var rowList = [];
+				for(var i=0; i<3; i++){
+					for(var j=0; j<gridList.length; j++){
+						rowList[i] = {
+								lifecycleName : gridList[j].lifecycleName,
+								manufactureName : gridList[j].manufactureName,
+								manufacture : gridList[j].manufacture,
+								rohsNumber : gridList[j].rohsNumber,
+								rohsName : gridList[j].rohsName,
+								relatedRohs : gridList[j].relatedRohs
+						}
+					}
+				}
+				AUIGrid.addRow(myGridID, rowList, 'selectionDown');
+			}
+			
+			// 저장
+			function saveBtn(){
+				var gridList = AUIGrid.getGridData(myGridID);
+				for(var i=0; i<gridList.length; i++){
+					if(isEmpty(gridList[i].lifecycleName)){
+						alert("선택된 결재방식이 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].manufactureName)){
+						alert("선택된 협력업체가 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].manufacture)){
+						alert("입력된 협력업체코드가 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].rohsNumber)){
+						alert("입력된 물질번호가 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].rohsName)){
+						alert("선택된 물질명이 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].relatedRohs)){
+						alert("입력된 관련물질이 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].lifecycleName)){
+						alert("선택된 파일구분이 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].fileType)){
+						alert("입력된 파일구분코드가 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].publicationDate)){
+						alert("입력된 발행일이 없습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].fileName)){
+						alert("입력된 파일명이 없습니다.");
+						return;
+					}
+				}
+				
+				if (!confirm("저장하시겠습니까?")){
+					return;
+				}
+				
+				let params = new Object();
+				params.gridList = gridList;
+// 				const url = getCallUrl("/rohs/deleteRootDefinition");
+			}
+			
+			// 삭제
+			function deleteBtn(){
+				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if(items.length==0){
+					alert("선택된 물질이 없습니다.");
+					return;
+				}
+				
+				if (!confirm("삭제하시겠습니까?")){
+					return;
+				}
+				
+// 				let params = new Object();
+// 				params.activityList = items;
+// 				const url = getCallUrl("/admin/deleteActivityDefinition");
+// 				call(url, params, function(data) {
+// 					if(data.result){
+// 						alert(data.msg);
+// 						loadGridData();
+// 					}else{
+// 						alert(data.msg);
+// 					}
+// 				});
+			}
 		</script>
 	</form>
 </html>
