@@ -34,8 +34,10 @@ import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.groupware.workprocess.service.WorklistHelper;
+import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.service.OrgHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -65,7 +67,6 @@ import wt.session.SessionHelper;
 import wt.workflow.engine.WfActivity;
 import wt.workflow.engine.WfEngineHelper;
 import wt.workflow.engine.WfProcess;
-import wt.workflow.engine.WfState;
 import wt.workflow.work.WorkItem;
 
 public class GroupwareHelper {
@@ -419,18 +420,40 @@ public class GroupwareHelper {
 		return map;
 	}
 
-	public Map<String, Object> list(Map<String, Object> params) throws Exception {
+	public Map<String, Object> organization(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PeopleData> list = new ArrayList<PeopleData>();
 
 		String name = (String) params.get("name");
 		String userId = (String) params.get("userId");
+		String oid = (String) params.get("oid"); // 부서 OID
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(People.class, true);
 
 		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.ID, userId);
+
+		Department department = (Department) CommonUtil.getObject(oid);
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		query.appendOpenParen();
+		SearchCondition sc = new SearchCondition(People.class, "departmentReference.key.id", "=",
+				department.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+
+		ArrayList<Department> departments = OrgHelper.manager.getSubDepartment(department, new ArrayList<Department>());
+		for (int i = 0; i < departments.size(); i++) {
+			Department sub = (Department) departments.get(i);
+			query.appendOr();
+			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(People.class, "departmentReference.key.id", "=", sfid),
+					new int[] { idx });
+		}
+		query.appendCloseParen();
 
 		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, true);
 
@@ -453,7 +476,7 @@ public class GroupwareHelper {
 		return map;
 	}
 
-	public Map<String, Object> listWorkItem(Map<String, Object> params) throws Exception {
+	public Map<String, Object> workItem(Map<String, Object> params) throws Exception {
 		boolean isDistribute = StringUtil.checkNull((String) params.get("distribute")).equals("true");
 		boolean isAdmin = CommonUtil.isAdmin();
 		String sessionId = (String) params.get("sessionId");

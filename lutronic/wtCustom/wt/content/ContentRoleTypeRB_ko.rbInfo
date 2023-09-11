@@ -86,3 +86,15 @@ ECR.shortDescription=ECR
 
 ECO.value=ECO
 ECO.shortDescription=ECO
+
+TR.value=시험성적서
+TR.shortDescription=시험성적서
+
+GUARANTEE.value=보증서
+GUARANTEE.shortDescription=보증서
+
+MSDS.value=MSDS 성분분석표
+MSDS.shortDescription=MSDS 성분분석표
+
+XRF.value=XRF분석 성적서
+XRF.shortDescription=XRF분석 성적서

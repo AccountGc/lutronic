@@ -30,20 +30,14 @@ String oid = request.getParameter("oid");
 				roleType : "roleType",
 				cacheId : "cacheId",
 			},
-			onStart : function() {
-// 				openLayer();
-			},
-			onComplete : function() {
+			onUpload : function() {
 				const form = document.querySelector("form");
-				for (let i = 0; i < this.length; i++) {
-					const secondaryTag = document.createElement("input");
-					secondaryTag.type = "hidden";
-					secondaryTag.name = "secondarys";
-					secondaryTag.value = this[i].cacheId;
-					secondaryTag.id = this[i]._id_;
-					form.appendChild(secondaryTag);
-				}
-// 				closeLayer();
+				const secondaryTag = document.createElement("input");
+				secondaryTag.type = "hidden";
+				secondaryTag.name = "secondarys";
+				secondaryTag.value = this.cacheId;
+				secondaryTag.id = this._id_;
+				form.appendChild(secondaryTag);
 			},
 			onDelete : function() {
 				const key = this.file._id_;
@@ -81,11 +75,6 @@ String oid = request.getParameter("oid");
 		});
 	}
 	load();
-	
-	document.querySelectorAll(".AXUploadBtnsA").forEach((deleteFile) =>{
-		console.log(deleteFile);
-	});
-	
 	
 	//파일 전체 삭제
 	function deleteAllFiles() {

@@ -31,7 +31,7 @@
 		<script type="text/javascript">
 			let myGridID;
 			const lifecycleList = [{"code": "LC_Default", "value": "기본결재"}, {"code": "LC_Default_NonWF", "value": "일괄결재"}];
-			const fileDivision = [{"code": "TR", "value": "시험성적서"}, {"code": "DOC", "value": "보증서"}, {"code": "MSDS", "value": "MSDS, 성분분석표"}, {"code": "XRF", "value": "XRF분석 성적서"}];
+			const fileDivision = [{"code": "TR", "value": "시험성적서"}, {"code": "DOC", "value": "보증서"}, {"code": "MSDS", "value": "MSDS 성분분석표"}, {"code": "XRF", "value": "XRF분석 성적서"}];
 			let manufactureList = [];
 			<% for(NumberCode manufacture : manufactureList){ %>
 				manufactureList.push({ "code" : "<%= manufacture.getCode() %>", "value" : "<%= manufacture.getName() %>"});

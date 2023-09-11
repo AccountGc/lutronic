@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.column.DocumentColumn;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.comments.wtDocumentCommentsLink;
@@ -74,7 +75,7 @@ public class DocumentHelper {
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		ArrayList<DocumentData> list = new ArrayList<>();
+		ArrayList<DocumentColumn> list = new ArrayList<>();
 
 		boolean latest = (boolean) params.get("latest");
 		String oid = (String) params.get("oid");
@@ -145,7 +146,7 @@ public class DocumentHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTDocument document = (WTDocument) obj[0];
-			DocumentData data = new DocumentData(document);
+			DocumentColumn data = new DocumentColumn(document);
 			list.add(data);
 		}
 

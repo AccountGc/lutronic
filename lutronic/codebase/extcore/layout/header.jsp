@@ -32,7 +32,7 @@
 						<a onclick="moveToPage(this, '/groupware/listNotice', '> 나의 업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listWorkItem', '> 나의 업무 > 작업함');">
+						<a onclick="moveToPage(this, '/groupware/workItem', '> 나의 업무 > 작업함');">
 							작업함
 							<span class="label label-info float-right"><%//=count.get("check")%></span>
 						</a>
@@ -59,7 +59,7 @@
 						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의 업무 > 일괄결재 검색');">일괄결재 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a>
+						<a onclick="moveToPage(this, '/groupware/organization', '> 나의 업무 > 조직도');">조직도</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/password', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a>

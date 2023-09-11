@@ -30,8 +30,6 @@ import wt.session.SessionHelper;
 @Setter
 public class DocumentData {
 
-//	private WTDocument doc;
-
 	private String oid;
 	private String number;
 	private String name;

@@ -39,8 +39,10 @@ import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.org.Department;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
+import com.e3ps.org.beans.DepartmentHelper;
 import com.e3ps.org.beans.PeopleData;
 import com.e3ps.org.service.MailUserHelper;
 
@@ -401,8 +403,8 @@ public class GroupwareController extends BaseController {
 //	}
 
 	@Description(value = "작업함 페이지")
-	@GetMapping(value = "/listWorkItem")
-	public ModelAndView listWorkItem() throws Exception {
+	@GetMapping(value = "/workItem")
+	public ModelAndView workItem() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/workprocess/workItem-list.jsp");
 		return model;
@@ -410,11 +412,11 @@ public class GroupwareController extends BaseController {
 
 	@Description(value = "작업함 실행")
 	@ResponseBody
-	@PostMapping(value = "/listWorkItem")
-	public Map<String, Object> listWorkItem(@RequestBody Map<String, Object> params) throws Exception {
+	@PostMapping(value = "/workItem")
+	public Map<String, Object> workItem(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = GroupwareHelper.manager.listWorkItem(params);
+			result = GroupwareHelper.manager.workItem(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -813,20 +815,22 @@ public class GroupwareController extends BaseController {
 	}
 
 	@Description(value = "조직도 페이지")
-	@GetMapping(value = "/listCompanyTree")
-	public ModelAndView listCompanyTree() {
+	@GetMapping(value = "/organization")
+	public ModelAndView organization() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/workprocess/companyTree-list.jsp");
+		Department root = DepartmentHelper.manager.getRoot();
+		model.addObject("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+		model.setViewName("/extcore/jsp/workprocess/organization-list.jsp");
 		return model;
 	}
 
 	@Description(value = "조직도 조회 함수")
 	@ResponseBody
-	@PostMapping(value = "/list")
-	public Map<String, Object> list(Map<String, Object> params) throws Exception {
+	@PostMapping(value = "/organization")
+	public Map<String, Object> organization(Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = GroupwareHelper.manager.list(params);
+			result = GroupwareHelper.manager.organization(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

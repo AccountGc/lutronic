@@ -25,4 +25,12 @@
 	- codebase -> ant -f MakeJar.xml
 
 8. Workflow 가져오기
-	- Shell -> xconfmanager -t codebase/wt.properties -s wt.ixb.import.allowCrossReleaseImport=true -p	
+	- Shell -> xconfmanager -t codebase/wt.properties -s wt.ixb.import.allowCrossReleaseImport=true -p
+	
+9. 상태값 추가
+	- Shell -> ResourceBuild.bat wt.lifecycle.** 
+	- codebase -> ant -f MakeJar.xml
+	
+10. 첨부파일 타입 추가
+	- Shell -> ResourceBuild.bat wt.content.** 
+	- codebase -> ant -f MakeJar.xml	

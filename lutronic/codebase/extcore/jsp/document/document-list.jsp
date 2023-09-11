@@ -353,7 +353,7 @@ if (request.getParameter("popup") != null) {
 						inline : true,
 					},
 				}, {
-					dataField : "modifyDate",
+					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,

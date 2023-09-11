@@ -2,8 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+String oid = (String) request.getAttribute("oid");
 %>
 <!DOCTYPE html>
 <html>
@@ -30,7 +29,8 @@
 			<tr>
 				<th>부서 및 사원 관리</th>
 				<td class="indent5" colspan="3">
-					<span id="locationName"> LUTRONIC </span>
+					<input type="hidden" name="oid" id="oid" value="<%=oid%>">
+					<span id="locationName">LUTRONIC </span>
 				</td>
 			</tr>
 			<tr>
@@ -49,8 +49,8 @@
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('companyTree-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('organization-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('organization-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -183,8 +183,8 @@
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/groupware/list");
-				const field = [ "_psize", "name", "userId" ];
+				const url = getCallUrl("/groupware/organization");
+				const field = [ "_psize", "name", "userId", "oid" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {
@@ -192,7 +192,6 @@
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -201,7 +200,8 @@
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("companyTree-list");
+				toFocus("name");
+				const columns = loadColumnLayout("organization-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({

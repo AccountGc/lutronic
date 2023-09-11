@@ -62,5 +62,25 @@
              value="com.ptc.wvs.util.AfterEDRloader/copyToEPM"/>
    <Property name="publish.afterloadermethod.copyToEPM.Filext" overridable="true"
              targetFile="codebase/WEB-INF/conf/wvs.properties"
-             value="pdf plt dwg igs stp"/>            
+             value="pdf plt dwg igs stp"/>
+             
+	<!-- Workflow Task Add -->
+   <Property name="wt.clients.workflow.tasks.task.7" overridable="true"
+             targetFile="codebase/wt.properties"
+             value="AddParticipant"/>
+   <Property name="wt.clients.workflow.tasks.task.8" overridable="true"
+             targetFile="codebase/wt.properties"
+             value="DefaultProcess"/>
+   <Property name="wt.clients.workflow.tasks.task.9" overridable="true"
+             targetFile="codebase/wt.properties"
+             value="DefaultProcessNoLine"/>
+   <Property name="wt.clients.workflow.tasks.task.10" overridable="true"
+             targetFile="codebase/wt.properties"
+             value="ECAProcess"/>	                    
+
+	<!-- Add TaskMap -->
+	<Property name="wt.services.applicationcontext.WTServiceProviderFromProperties.customPropertyFiles"
+	         overridable="true"
+	         targetFile="codebase/wt.properties"
+	         value="htmltemplate.properties,htmlcomponent.properties,wt/change2/change2.properties,com/ptc/windchill/cadx/propfiles/HTML.properties,com/ptc/windchill/cadx/propfiles/picker.properties,com/ptc/windchill/uwgm/caddoc.properties,com/ptc/core/foundation/admin/admin.properties,com/ptc/windchill/enterprise/prefs/prefs.properties,com/ptc/core/HTMLtemplateutil/copyToClipboard.properties,com/ptc/core/htmlcomp/htmlcomp.properties,com/ptc/windchill/uwgm/cadx.properties,wt/dataops/html.properties,com/ptc/netmarkets/wp/wphtmlcomp.properties,com/ptc/windchill/enterprise/revise/revise.properties,com/ptc/windchill/enterprise/baseline/baseline.properties,com/ptc/windchill/enterprise/doc/doc.properties,com/ptc/windchill/cadx/propfiles/caddoc.properties,com/ptc/windchill/pdmlink/templateutil/HTML.properties,com/ptc/windchill/pdmlink/workflow/workflow.properties,com/ptc/windchill/pdmlink/lifecycle/lifecycle.properties,com/ptc/windchill/pdmlink/change/change.properties,com/ptc/windchill/pdmlink/search/HTMLsearch.properties,com/ptc/windchill/pdmlink/doc/doc.properties,com/ptc/windchill/pdmlink/org/org.properties,com/ptc/windchill/pdmlink/folder/folder.properties,com/ptc/windchill/pdmlink/container/container.properties,com/ptc/windchill/pdmlink/product/product.properties,com/ptc/windchill/pdmlink/library/library.properties,com/ptc/windchill/pdmlink/caddoc/caddoc.properties,com/ptc/windchill/pdmlink/share/share.properties,com/ptc/windchill/pdmlink/part/part.properties,com/ptc/windchill/pdmlink/vc/vc.properties,com/e3ps/taskMap.properties"/>	                  
 </Configuration>

@@ -9538,7 +9538,10 @@ button, button:hover {
 	position: relative;
 	border: 1px solid #b1b1b1;
 	background: #f7f7f7;
-	overflow: auto
+	overflow: auto;
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 5px;
 }
 
 .AXUpload5QueueBox_list.allowDrop {

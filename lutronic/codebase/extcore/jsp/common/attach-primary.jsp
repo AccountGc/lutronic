@@ -5,17 +5,16 @@ String mode = request.getParameter("mode");
 String row = request.getParameter("row");
 %>
 <div class="AXUpload5" id="primary_layer"></div>
-<div class="AXUpload5QueueBox_list" id="uploadQueueBox1" style="height: 150px;"></div>
 <%
-if(mode!=null){
+if (mode != null) {
 %>
-	<table class="button-table">
-		<tr>
-			<td class="center">
-				<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> 
-			</td>
-		</tr>
-	</table>
+<table class="button-table">
+	<tr>
+		<td class="center">
+			<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+		</td>
+	</tr>
+</table>
 <%
 }
 %>
@@ -25,14 +24,12 @@ if(mode!=null){
 	const primary = new AXUpload5();
 	function load() {
 		primary.setConfig({
-			isSingleUpload : false,
+			isSingleUpload : true,
 			targetID : "primary_layer",
 			uploadFileName : "primary",
 			buttonTxt : "파일 선택",
 			uploadMaxFileSize : (1024 * 1024 * 1024),
 			uploadUrl : getCallUrl("/content/upload"),
-			dropBoxID : "uploadQueueBox1",
-			queueBoxID : "uploadQueueBox1",
 			uploadPars : {
 				roleType : "primary"
 			},
@@ -47,39 +44,25 @@ if(mode!=null){
 				roleType : "roleType",
 				cacheId : "cacheId",
 			},
-			onStart : function() {
-// 				openLayer();
-			},
-			onComplete : function() {
+			onUpload : function() {
 				const form = document.querySelector("form");
-				for (let i = 0; i < this.length; i++) {
-					const primaryTag = document.createElement("input");
-					primaryTag.type = "hidden";
-					primaryTag.name = "primarys";
-					primaryTag.value = this[i].cacheId;
-					primaryTag.id = this[i].tagId;
-					form.appendChild(primaryTag);
-					var uploadPath = this[i].filePath + this[i].saveName;
-					if(i==0){
-						sendName = this[i].name;
-					}else{
-						sendName += "/"+this[i].name;
-					}
-				}
-// 				closeLayer();
+				const primaryTag = document.createElement("input");
+				primaryTag.type = "hidden";
+				primaryTag.name = "primarys";
+				primaryTag.value = this.cacheId;
+				primaryTag.id = this._id_;
+				form.appendChild(primaryTag);
 			},
 			onDelete : function() {
 				const key = this.file._id_;
 				const el = document.getElementById(key);
 				el.parentNode.removeChild(el);
 				
-				const secondarys = document.getElementsByName("secondarys");
-				for (let i = 0; i < secondarys.length; i++) {
-					const tag = secondarys[i];
+				const primarys = document.getElementsByName("primarys");
+					const tag = primarys[0];
 					if(tag.id === key){
-						tag.parentNode.removeChild(tag);						
+						tag.parentNode.removeChild(tag);
 					}
-				}
 			}
 		})
 	
@@ -100,24 +83,24 @@ if(mode!=null){
 					}
 					primary.setUploadedList(data);
 					imgurl = data[0].filePath + data[0].name;
-					$("#sign_preview").attr("src",imgurl);
+					$("#sign_preview").attr("src", imgurl);
 				}
 			}
 		});
 	}
 	load();
-	
+
 	//이미지 미리보기
-	function signPreview(uploadPath){
-		$("#sign_preview").attr("src",uploadPath);
+	function signPreview(uploadPath) {
+		$("#sign_preview").attr("src", uploadPath);
 	}
-	
+
 	//파일 전체 삭제
 	function deleteAllFiles() {
 		if (!confirm("전체 삭제 하시겠습니까?")) {
 			return;
 		}
-		
+
 		const primarys = document.getElementsByName("primarys");
 		for (var i = primarys.length - 1; i >= 0; i--) {
 			const tag = primarys[i];
@@ -130,15 +113,16 @@ if(mode!=null){
 			l.eq(idx).hide();
 		})
 	}
-	
+
 	//첨부파일 업로드 시
-	function fileUpload(){
-		var file=[];
-		for(var i=0; i<primary.uploadedList.length; i++){
+	function fileUpload() {
+		var file = [];
+		for (var i = 0; i < primary.uploadedList.length; i++) {
 			file[i] = primary.uploadedList[i].cacheId;
 		}
 		return file;
 	}
+	
 	
 	//물질 일괄등록으로 전송
 	function addBtn(){

@@ -109,4 +109,21 @@ public class OrgHelper {
 		}
 		return list;
 	}
+
+	/**
+	 * 모든 하위 부서 가져오기
+	 */
+	public ArrayList<Department> getSubDepartment(Department parent, ArrayList<Department> list) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, Department.class, "parentReference.key.id", parent);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			Department child = (Department) obj[0];
+			list.add(child);
+			getSubDepartment(child, list);
+		}
+		return list;
+	}
 }

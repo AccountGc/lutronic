@@ -127,7 +127,7 @@ public class DocumentController extends BaseController {
 		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
 		String pnum = DocumentHelper.manager.getCnum(cList);
 
-		model.setViewName("/extcore/jsp/document/document-view.jsp");
+		model.setViewName("popup:/document/document-view.jsp");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
 		model.addObject("cList", cList);

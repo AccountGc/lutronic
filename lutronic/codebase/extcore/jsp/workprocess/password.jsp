@@ -53,7 +53,7 @@
 
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", function() {
-				document.getElementById("password").focus();
+				toFocus("password");
 			})
 
 			function update() {
@@ -92,7 +92,7 @@
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						alert("로그인 페이지 이동 시키기!!");"
+						alert("로그인 페이지 이동 시키기!!");
 					} else {
 						parent.closeLayer();
 					}

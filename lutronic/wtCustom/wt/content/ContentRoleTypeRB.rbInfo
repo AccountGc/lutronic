@@ -86,3 +86,15 @@ ECR.shortDescription=ECR
 
 ECO.value=ECO
 ECO.shortDescription=ECO
+
+TR.value=TR
+TR.shortDescription=TR
+
+GUARANTEE.value=GUARANTEE
+GUARANTEE.shortDescription=GUARANTEE
+
+MSDS.value=MSDS
+MSDS.shortDescription=MSDS
+
+XRF.value=XRF
+XRF.shortDescription=XRF
