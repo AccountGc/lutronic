@@ -155,23 +155,19 @@ String state = (String) request.getAttribute("state");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/groupware/listItem");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
+				const field = ["_psize","state"];
+				params = toField(params, field);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
-// 						document.getElementById("sessionid").value = data.sessionid;
-// 						document.getElementById("curPage").value = data.curPage;
-// 						document.getElementById("lastNum").value = data.list.length;
+						debugger;
+						totalPage = Math.ceil(data.total / data.pageSize);
+						document.getElementById("sessionid").value = data.sessionid;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
 				});
 			}
 

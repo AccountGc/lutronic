@@ -32,67 +32,31 @@
 						<a onclick="moveToPage(this, '/groupware/listNotice', '> 나의 업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 검토함');">
-							검토함
-							<span class="label label-info float-right">
-								<%
-								//=count.get("check")
-								%>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=approval', '> 나의 업무 > 결재함');">
-							결재함
-							<span class="label label-info float-right">
-								<%
-								//=count.get("approval")
-								%>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
-							수신함
-							<span class="label label-info float-right">
-								<%
-								//=count.get("receive")
-								%>
-							</span>
+						<a onclick="moveToPage(this, '/groupware/listWorkItem', '> 나의 업무 > 작업함');">
+							작업함
+							<span class="label label-info float-right"><%//=count.get("check")%></span>
 						</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listItem?state=ing', '> 나의 업무 > 진행함');">
 							진행함
-							<span class="label label-info float-right">
-								<%
-								//=count.get("ing")
-								%>
-							</span>
+							<span class="label label-info float-right"><%//=count.get("ing")%></span>
 						</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listItem?state=complete', '> 나의 업무 > 완료함');">
 							완료함
-							<span class="label label-info float-right">
-								<%
-								//=count.get("complete")
-								%>
-							</span>
+							<span class="label label-info float-right"><%//=count.get("complete")%></span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=rtn', '> 나의 업무 > 반려함');">
-							반려함
-							<span class="label label-info float-right">
-								<%
-								//W=count.get("rtn")
-								%>
-							</span>
+						<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
+							수신함
+							<span class="label label-info float-right"><%//=count.get("receive")%></span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의 업무 > 일괄결재');">일괄결재</a>
+						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의 업무 > 일괄결재 검색');">일괄결재 검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a>

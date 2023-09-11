@@ -2170,13 +2170,7 @@ public class StandardDocumentService extends StandardManager implements Document
     	DocumentType docType = DocumentType.toDocumentType(documentType);
 		String number = getDocumentNumberSeq(docType.getLongDescription());
     	
-//		boolean isSelf = (boolean)params.get("isSelf");
 		ArrayList<String> primarys = (ArrayList<String>)params.get("primarys");
-//		ArrayList<Map<String, String>> addRows7 = dto.getAddRows7();
-//		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-//		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-//		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-//		ArrayList<Map<String, Object>> addRows11 = dto.getAddRows11();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -2210,16 +2204,6 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			document = (WTDocument) PersistenceHelper.manager.save(document);
 
-			// 도번 추가
-//			for (Map<String, Object> addRow11 : addRows11) {
-//				String oid = (String) addRow11.get("oid");
-//				NumberRule numberRule = (NumberRule) CommonUtils.getObject(oid);
-//				numberRule.setPersist(document.getMaster());
-//				PersistenceHelper.manager.modify(numberRule);
-//				IBAUtils.createIBA(document, "s", "NUMBER_RULE", numberRule.getMaster().getNumber());
-//				IBAUtils.createIBA(document, "s", "NUMBER_RULE_VERSION", String.valueOf(numberRule.getVersion()));
-//			}
-
 			for (int i = 0; i < primarys.size(); i++) {
 				String cacheId = (String) primarys.get(i);
 				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
@@ -2234,12 +2218,12 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 			
 			//관련 부품            
-//	        String[] partOids 	= (String[]) map.get("partOids"); 
-//	        updateDocumentToPartLink(doc, partOids, false);
+	        String[] partOids 	= (String[]) params.get("partOids"); 
+	        updateDocumentToPartLink(document, partOids, false);
 	        
 			// 관련 문서
-//	        String[] docOids 	= (String[]) map.get("docOids"); 
-//	        updateDocumentToDocumentLink(doc, docOids, false);
+	        String[] docOids 	= (String[]) params.get("docOids"); 
+	        updateDocumentToDocumentLink(document, docOids, false);
 			
 			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
 	        if("LC_Default_NonWF".equals(lifecycle)){
@@ -2249,21 +2233,10 @@ public class StandardDocumentService extends StandardManager implements Document
 	        params.put("approvalType", approvalType);
 	        CommonHelper.service.changeIBAValues(document, params);
 
-//			for (Map<String, String> addRow7 : addRows7) {
-//				String oid = addRow7.get("oid");
-//				WTPart part = (WTPart) CommonUtils.getObject(oid);
-//				WTDocumentWTPartLink link = WTDocumentWTPartLink.newWTDocumentWTPartLink(document, part);
-//				PersistenceHelper.manager.save(link);
-//			}
-
-//			if (isSelf) {
-//				WorkspaceHelper.service.self(document.getPersistInfo().getObjectIdentifier().getStringValue());
-//			} else {
-//				// 결재시작
-//				if (approvalRows.size() > 0) {
-//					WorkspaceHelper.service.register(document, agreeRows, approvalRows, receiveRows);
-//				}
-//			}
+	        // 산출물 직접 등록(개발업무 관리,설계 변경 관리) 문서 직접등록 시 링크 생성
+//	        String linkType = (String)params.get("linkType");
+//	        String parentOid = (String)params.get("parentOid");
+//	        createLinkDocument(document,linkType,parentOid);
 
 			trs.commit();
 			trs = null;
