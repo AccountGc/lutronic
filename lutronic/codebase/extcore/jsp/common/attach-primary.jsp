@@ -1,11 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+String mode = request.getParameter("mode");
+String row = request.getParameter("row");
 %>
 <div class="AXUpload5" id="primary_layer"></div>
 <div class="AXUpload5QueueBox_list" id="uploadQueueBox1" style="height: 150px;"></div>
+<%
+if(mode!=null){
+%>
+	<table class="button-table">
+		<tr>
+			<td class="center">
+				<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> 
+			</td>
+		</tr>
+	</table>
+<%
+}
+%>
 <script type="text/javascript">
 	var imgurl;
+	var sendName;
 	const primary = new AXUpload5();
 	function load() {
 		primary.setConfig({
@@ -44,7 +60,11 @@ String oid = request.getParameter("oid");
 					primaryTag.id = this[i].tagId;
 					form.appendChild(primaryTag);
 					var uploadPath = this[i].filePath + this[i].saveName;
-					signPreview(uploadPath);
+					if(i==0){
+						sendName = this[i].name;
+					}else{
+						sendName += "/"+this[i].name;
+					}
 				}
 // 				closeLayer();
 			},
@@ -118,5 +138,15 @@ String oid = request.getParameter("oid");
 			file[i] = primary.uploadedList[i].cacheId;
 		}
 		return file;
+	}
+	
+	//물질 일괄등록으로 전송
+	function addBtn(){
+		var params = new Object();
+		params.file = fileUpload();
+		params.row = "<%=row%>";
+		params.fileName = sendName;
+		self.close();
+		opener.addFile(params);
 	}
 </script>

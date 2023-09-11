@@ -68,7 +68,7 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
-	@Description(value = "물질 일괄등록")
+	@Description(value = "물질 일괄등록 페이지")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception{
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
@@ -77,6 +77,31 @@ public class RohsController extends BaseController {
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("rohsList", rohsList);
 		model.setViewName("/extcore/jsp/rohs/rohs-batch.jsp");
+		return model;
+	}
+	
+	@Description(value = "물질 일괄등록 실행")
+	@ResponseBody
+	@PostMapping(value = "/batch")
+	public Map<String,Object> batch(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			RohsHelper.service.batch(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "물질 일괄등록 첨부파일 페이지")
+	@GetMapping(value = "/attachFile")
+	public ModelAndView attachFile() throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/common/attach-primary");
 		return model;
 	}
 	
