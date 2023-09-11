@@ -294,16 +294,6 @@ List<ROOTData> rootList = (List<ROOTData>) request.getAttribute("rootList");
 						alert(data.msg);
 					}
 				});
-				
-// 				var array = checked.split(",");
-// 				var returnArr = new Array();
-// 				var deleteOid ="";
-// 				for(var i =0; i < array.length; i++) {
-// 					var oid = array[i];	
-// 					deleteOid = deleteOid + oid+","
-// 				}
-				
-// 				$("#deleteOid").val(deleteOid);
 			})
 			
 			// Root 변경 시

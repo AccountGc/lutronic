@@ -27,6 +27,7 @@ import wt.content.ContentHelper;
 import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
@@ -59,6 +60,7 @@ import wt.vc.VersionControlHelper;
 import wt.vc.views.ViewHelper;
 import wt.vc.wip.WorkInProgressHelper;
 
+import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.beans.BatchDownData;
 import com.e3ps.common.beans.ResultData;
@@ -2371,4 +2373,75 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			}
         }
 	}
+
+	@Override
+	public void batch(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		ArrayList<String> primarys = (ArrayList<String>) params.get("primarys");
+		try {
+			trs.start();
+			ArrayList<Map<String, Object>> gridList = (ArrayList<Map<String, Object>>) params.get("gridList");
+			if(gridList.size()>0) {
+	    		for(Map<String, Object> map : gridList) {
+	    			ROHSMaterial rohs = ROHSMaterial.newROHSMaterial();
+	    			String rohsNumber = (String) map.get("rohsNumber");
+	    			rohs.setNumber(rohsNumber);
+	    			String rohsName = (String) map.get("rohsName");
+	    			rohs.setName(rohsName);
+	    			String lifecycle = (String) map.get("lifecycleName");
+	    			// 물질 Container 설정
+	    	        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+	    	        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+	    	        rohs.setContainer(e3psProduct);
+	    	        // 물질 lifeCycle 설정
+	    			LifeCycleHelper.setLifeCycle(rohs, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef));
+	    			
+	    			rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
+	    			
+	    			String manufacture = (String) map.get("manufacture");
+	    			
+	    			Map<String,Object> commonMap = new HashMap<String,Object>();
+	                
+	    			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+	                if("LC_Default_NonWF".equals(lifecycle)){
+	                	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) rohs, "BATCHAPPROVAL");
+	                	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+	                }
+	                commonMap.put("approvalType", approvalType);
+	                commonMap.put("manufacture", manufacture);
+	    			CommonHelper.service.changeIBAValues(rohs, commonMap);
+	    			
+	    			for (int i = 0; i < primarys.size(); i++) {
+	    				String roleType = StringUtil.checkNull((String) params.get("roleType"));
+	    				System.out.println("1111111111111111111111111111=>"+roleType);
+	    				String file = primarys.get(i);
+	    				System.out.println("2222222222222222222222=>"+file);
+				        String fileType = StringUtil.checkNull((String) params.get("fileType"));
+				        String date = StringUtil.checkNull((String) params.get("publicationDate"));
+				        String fileName = file.split("/")[1];
+				        
+				        HashMap<String, Object> filemap = new HashMap<String, Object>();
+				        map.put("roleType", roleType);
+				        map.put("file", file);
+				        map.put("fileName", fileName);
+				        map.put("fileType", fileType);
+				        map.put("publicationDate", date);
+				        
+				        createROHSContHolder(rohs, filemap);
+	    			}
+	    		}
+	    	}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
+	}
+
 }
