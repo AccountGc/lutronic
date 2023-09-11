@@ -10,12 +10,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 %>
-<%
-boolean popup = false;
-if (request.getParameter("popup") != null) {
-	popup = true;
-}
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -185,17 +179,11 @@ if (request.getParameter("popup") != null) {
 		</table>
 		<table class="button-table">
 			<tr>
-				<%
-				if (!popup) {
-				%>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('');">
 				</td>
-				<%
-				}
-				%>
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="30">30</option>
@@ -207,14 +195,6 @@ if (request.getParameter("popup") != null) {
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
 					<input type="button" value="초기화" title="초기화" id="reset">
-					<%
-					if (popup) {
-					%>
-					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
-					<%
-					}
-					%>
 				</td>
 			</tr>
 		</table>
@@ -361,6 +341,17 @@ if (request.getParameter("popup") != null) {
 						showIcon : true,
 						inline : true,
 					},
+				}, {
+					dataField : "primary",
+					headerText : "주 첨부파일",
+					width : 100,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
 				} ]
 			}
 
@@ -470,13 +461,6 @@ if (request.getParameter("popup") != null) {
 				    oids.push(item.oid)
 				});
 				document.location.href = "/Windchill/eSolution/content/downloadZIP?oids=" + oids;
-			}
-			
-			// 일괄결재 그리드 삽입
-			function addBtn(){
-				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				opener.insertGrid(items);
-				self.close();
 			}
 		</script>
 	</form>
