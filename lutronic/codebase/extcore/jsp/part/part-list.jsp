@@ -10,12 +10,6 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-boolean popup = false;
-if(request.getParameter("popup")!=null){
-	popup = true;
-}
 %>
 <!DOCTYPE html>
 <html>
@@ -25,16 +19,27 @@ if(request.getParameter("popup")!=null){
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
+
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						품목 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>
+				<col width="130">
+				<col width="*">
 				<col width="130">
 				<col width="*">
 				<col width="130">
@@ -43,48 +48,54 @@ if(request.getParameter("popup")!=null){
 			<tr>
 				<th>품목분류</th>
 				<td class="indent5">
-					<span id="locationName">
-	        			/Default/PART_Drawing
-	        		</span>
+					<input type="hidden" name="oid" id="oid">
+					<input type="hidden" name="location" id="location">
+					<span id="locationText">/Default/PART_Drawing </span>
 				</td>
-				<th>Rev.</th>
-				<td class="indent5">
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio"  id="islastversion"  name="islastversion" value="true" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>최신Rev.</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio"  id="islastversion" name="islastversion" value="false">
-						<div class="state p-success">
-							<label>
-								<b>모든Rev.</b>
-							</label>
-						</div>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th>품목번호</th>
-				<td class="indent5">
-					<input type="text" name="partNumber" id="partNumber" class="width-500">
-				</td>
-				<th>품목명</th>
-				<td class="indent5">
-					<input type="text" name="partName" id="partName" class="width-500">
-				</td>
-			</tr>
-			<tr>
 				<th>등록자</th>
 				<td class="indent5">
 					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>품목번호</th>
+				<td class="indent5">
+					<input type="text" name="partNumber" id="partNumber" class="width-300">
+				</td>
+				<th>품목명</th>
+				<td class="indent5">
+					<input type="text" name="partName" id="partName" class="width-300">
+				</td>
+				<th>수정일</th>
+				<td class="indent5">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<select name="model" id="model" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>상태</th>
 				<td class="indent5">
@@ -96,80 +107,64 @@ if(request.getParameter("popup")!=null){
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-			</tr>
-			<tr>
-				<th>프로젝트코드</th>
-				<td class="indent5" colspan="3">
-					<select name="model" id="model" class="width-500">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+				<th>REV</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>최신REV</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="">
+						<div class="state p-success">
+							<label>
+								<b>모든REV</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
-		</table>
-		<table class="search-table" id="hiddenTable" style="display: none;">
-			<colgroup>
-				<col width="130">
-				<col width="*">
-				<col width="130">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
-				<th>수정일</th>
-				<td class="indent5">
-					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
-				</td>
-			</tr>
-			
-			<tr>
-				
+			<tr class="hidden">
 				<th>제작방법</th>
 				<td class="indent5">
-					<select name="productmethod" id="productmethod" class="width-500">
+					<select name="productmethod" id="productmethod" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode productmethod : productmethodList) {
 						%>
-						<option value="<%=productmethod.getCode() %>"><%=productmethod.getName()%></option>
+						<option value="<%=productmethod.getCode()%>"><%=productmethod.getName()%></option>
 						<%
 						}
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>부서</th>
 				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-500">
+					<select name="deptcode" id="deptcode" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
 						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
 					</select>
 				</td>
+				<th>사양</th>
+				<td class="indent5">
+					<input type="text" name="specification" id="specification" class="width-300">
+				</td>
+			</tr>
+			<tr class="hidden">
 				<th>단위</th>
 				<td class="indent5">
-					<select name="unit" id="unit" class="width-500">
+					<select name="unit" id="unit" class="width-300">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -177,35 +172,33 @@ if(request.getParameter("popup")!=null){
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>무게</th>
 				<td class="indent5">
-					<input type="text" name="weight" id="weight" class="width-500">
+					<input type="text" name="weight" id="weight" class="width-300">
 				</td>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode manufacture : manufactureList) {
 						%>
-						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
 						<%
 						}
 						%>
 					</select>
 				</td>
 			</tr>
-			<tr>
+			<tr class="hidden">
 				<th>재질</th>
 				<td class="indent5">
-					<select name="mat" id="mat" class="width-500">
+					<select name="mat" id="mat" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode mat : matList) {
 						%>
-						<option value="<%=mat.getCode() %>"><%=mat.getName()%></option>
+						<option value="<%=mat.getCode()%>"><%=mat.getName()%></option>
 						<%
 						}
 						%>
@@ -213,47 +206,42 @@ if(request.getParameter("popup")!=null){
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<select name="finish" id="finish" class="width-500">
+					<select name="finish" id="finish" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode finish : finishList) {
 						%>
-						<option value="<%=finish.getCode() %>"><%=finish.getName()%></option>
+						<option value="<%=finish.getCode()%>"><%=finish.getName()%></option>
 						<%
 						}
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>OEM Info.</th>
 				<td class="indent5">
-					<input type="text" name="remarks" id="remarks" class="width-500">
-				</td>
-				<th>사양</th>
-				<td class="indent5">
-					<input type="text" name="specification" id="specification" class="width-500">
+					<input type="text" name="remarks" id="remarks" class="width-300">
 				</td>
 			</tr>
-			<tr>
+			<tr class="hidden">
 				<th>ECO No.</th>
 				<td class="indent5">
-					<input type="text" name="ecoNo" id="ecoNo" class="width-500">
+					<input type="text" name="ecoNo" id="ecoNo" class="width-300">
 				</td>
 				<th>Eo No.</th>
-				<td class="indent5">
-					<input type="text" name="eoNo" id="eoNo" class="width-500">
+				<td class="indent5" colspan="3">
+					<input type="text" name="eoNo" id="eoNo" class="width-300">
 				</td>
 			</tr>
 		</table>
-		<input type="button"  id="spreadBtn" value="펼치기">
-		<table class="button-table" >
+
+		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
+					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -265,47 +253,10 @@ if(request.getParameter("popup")!=null){
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn">
 					<input type="button" value="초기화" title="초기화" id="btnReset">
-					<%
-					if(popup){
-					%>	
-						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-						<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
-					<%
-					}
-					%>
 				</td>
 			</tr>
 		</table>
 
-		<%
-		if(popup){
-		%>	
-			<table>
-			<colgroup>
-				<col width="230">
-				<col width="10">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<td valign="top">
-					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
-						<jsp:param value="product" name="container" />
-						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
-					</jsp:include>
-				</td>
-				<td valign="top">&nbsp;</td>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-				</td>
-			</tr>
-		</table>
-		<%
-		} else{
-		%>
 		<table>
 			<colgroup>
 				<col width="230">
@@ -318,22 +269,52 @@ if(request.getParameter("popup")!=null){
 						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
+						<jsp:param value="633" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
 		</table>
-		<% } %>
+
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "_3d",
+					headerText : "3D",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "ImageRenderer",
+						altField : null,
+						onClick : function(event) {
+						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "_2d",
+					headerText : "2D",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "ImageRenderer",
+						altField : null,
+						onClick : function(event) {
+						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
 					headerText : "변경이력",
 					width : 80,
 					renderer : {
@@ -347,9 +328,13 @@ if(request.getParameter("popup")!=null){
 						onClick : function(event) {
 							const oid = event.item.oid;
 							const url = getCallUrl("/part/changeList?oid=" + oid);
-							_popup(url, 1600, 800,"n");
+							_popup(url, 1600, 800, "n");
 						}
-					}	
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
 				}, {
 					dataField : "number",
 					headerText : "품목번호",
@@ -361,7 +346,7 @@ if(request.getParameter("popup")!=null){
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
-							_popup(url, 1600, 800,"n");
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {
@@ -372,6 +357,7 @@ if(request.getParameter("popup")!=null){
 					dataField : "name",
 					headerText : "품목명",
 					dataType : "string",
+					style : "aui-left",
 					width : 380,
 					renderer : {
 						type : "LinkRenderer",
@@ -379,7 +365,7 @@ if(request.getParameter("popup")!=null){
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
-							_popup(url, 1600, 800,"n");
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {
@@ -441,7 +427,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "modifyDate",
+					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "string",
 					width : 140,
@@ -458,9 +444,6 @@ if(request.getParameter("popup")!=null){
 						showIcon : true,
 						inline : true
 					},
-				}, {
-					dataField : "oid",
-					visible : false
 				} ]
 			}
 
@@ -480,8 +463,6 @@ if(request.getParameter("popup")!=null){
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					rowCheckToRadio : true,
-// 					fillColumnSizeMode: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -495,12 +476,13 @@ if(request.getParameter("popup")!=null){
 			}
 
 			function loadGridData() {
- 				let params = new Object();
- 				const url = getCallUrl("/part/list");
- 				const field = ["_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo", "eoNo"];
- 				params = toField(params, field);
- 				AUIGrid.showAjaxLoader(myGridID);
- 				call(url, params, function(data) {
+				let params = new Object();
+				const url = getCallUrl("/part/list");
+				const field = [ "_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
+						"ecoNo", "eoNo" ];
+				params = toField(params, field);
+				AUIGrid.showAjaxLoader(myGridID);
+				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -514,6 +496,7 @@ if(request.getParameter("popup")!=null){
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("partNumber");
 				const columns = loadColumnLayout("part-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -537,8 +520,8 @@ if(request.getParameter("popup")!=null){
 				twindate("created");
 				twindate("modified");
 			});
-			
-			function editBOM(){
+
+			function editBOM() {
 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
 				if (items.length == 0) {
 					alert("편집할 부품을 선택하세요.");
@@ -546,14 +529,8 @@ if(request.getParameter("popup")!=null){
 				}
 				const oid = items[0].oid;
 				const url = getCallUrl("/part/bom?oid=" + oid);
-				_popup(url, 1600, 800,"n");
+				_popup(url, 1600, 800, "n");
 			};
-
-			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
@@ -569,56 +546,48 @@ if(request.getParameter("popup")!=null){
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
-			function addBtn(){
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("추가할 부품을 선택하세요.");
-					return false;
-				}
-				opener.append(items);
-				self.close();
-			}
-			
-			document.querySelector("#spreadBtn").addEventListener("click", (e)=>{
-				const hiddenTable = document.querySelector("#hiddenTable");
-				const state = e.target.value;
-			
-				switch(state){
-						case "펼치기" : 
-							e.target.value = "접기"; 
-							hiddenTable.style.display="table"; 
-							selectbox("state");
-							selectbox("model");
-							selectbox("productmethod");
-							selectbox("deptcode");
-							selectbox("unit");
-							selectbox("mat");
-							selectbox("finish");
-							selectbox("manufacture");
-							selectbox("_psize");
-							finderUser("creator");
-							twindate("created");
-							twindate("modified");
-							break;
-						case "접기" : 
-							e.target.value = "펼치기"; 
-							hiddenTable.style.display="none"; 
-							selectbox("state");
-							selectbox("model");
-							selectbox("productmethod");
-							selectbox("deptcode");
-							selectbox("unit");
-							selectbox("mat");
-							selectbox("finish");
-							selectbox("manufacture");
-							selectbox("_psize");
-							finderUser("creator");
-							twindate("created");
-							twindate("modified");
-							break;
+
+			function spread(target) {
+				const e = document.querySelectorAll('.hidden');
+				// 버근가..
+				for (let i = 0; i < e.length; i++) {
+					const el = e[i];
+					const style = window.getComputedStyle(el);
+					console.log(el);
+					const display = style.getPropertyValue("display");
+					if (display === "none") {
+						el.style.display = "table-row";
+						target.value = "접기";
+						selectbox("state");
+						selectbox("model");
+						selectbox("productmethod");
+						selectbox("deptcode");
+						selectbox("unit");
+						selectbox("mat");
+						selectbox("finish");
+						selectbox("manufacture");
+						selectbox("_psize");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
+					} else {
+						el.style.display = "none";
+						target.value = "펼치기";
+						selectbox("state");
+						selectbox("model");
+						selectbox("productmethod");
+						selectbox("deptcode");
+						selectbox("unit");
+						selectbox("mat");
+						selectbox("finish");
+						selectbox("manufacture");
+						selectbox("_psize");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
 					}
-			});
+				}
+			}
 		</script>
 	</form>
 </body>

@@ -49,7 +49,7 @@ String height = request.getParameter("height");
 		const oid = item.oid;
 		const location = item.location;
 		document.getElementById("oid").value = oid;
-		document.getElementById("location").value = oid;
+		document.getElementById("location").value = location;
 		document.getElementById("locationText").innerText = location;
 	}
 	

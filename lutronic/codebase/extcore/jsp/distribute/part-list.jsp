@@ -13,7 +13,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 boolean popup = false;
-if(request.getParameter("popup")!=null){
+if (request.getParameter("popup") != null) {
 	popup = true;
 }
 %>
@@ -43,15 +43,13 @@ if(request.getParameter("popup")!=null){
 			<tr>
 				<th>품목분류</th>
 				<td class="indent5">
-					<span id="locationName">
-	        			/Default/PART_Drawing
-	        		</span>
+					<span id="locationName"> /Default/PART_Drawing </span>
 				</td>
 				<th>Rev.</th>
 				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio"  id="islastversion"  name="islastversion" value="true" checked="checked">
+						<input type="radio" id="islastversion" name="islastversion" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>최신Rev.</b>
@@ -60,7 +58,7 @@ if(request.getParameter("popup")!=null){
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio"  id="islastversion" name="islastversion" value="false">
+						<input type="radio" id="islastversion" name="islastversion" value="false">
 						<div class="state p-success">
 							<label>
 								<b>모든Rev.</b>
@@ -121,7 +119,7 @@ if(request.getParameter("popup")!=null){
 						<%
 						for (NumberCode model : modelList) {
 						%>
-						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
 						<%
 						}
 						%>
@@ -134,7 +132,7 @@ if(request.getParameter("popup")!=null){
 						<%
 						for (NumberCode productmethod : productmethodList) {
 						%>
-						<option value="<%=productmethod.getCode() %>"><%=productmethod.getName()%></option>
+						<option value="<%=productmethod.getCode()%>"><%=productmethod.getName()%></option>
 						<%
 						}
 						%>
@@ -149,7 +147,7 @@ if(request.getParameter("popup")!=null){
 						<%
 						for (NumberCode deptcode : deptcodeList) {
 						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
@@ -178,7 +176,7 @@ if(request.getParameter("popup")!=null){
 						<%
 						for (NumberCode manufacture : manufactureList) {
 						%>
-						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
 						<%
 						}
 						%>
@@ -193,7 +191,7 @@ if(request.getParameter("popup")!=null){
 						<%
 						for (NumberCode mat : matList) {
 						%>
-						<option value="<%=mat.getCode() %>"><%=mat.getName()%></option>
+						<option value="<%=mat.getCode()%>"><%=mat.getName()%></option>
 						<%
 						}
 						%>
@@ -206,7 +204,7 @@ if(request.getParameter("popup")!=null){
 						<%
 						for (NumberCode finish : finishList) {
 						%>
-						<option value="<%=finish.getCode() %>"><%=finish.getName()%></option>
+						<option value="<%=finish.getCode()%>"><%=finish.getName()%></option>
 						<%
 						}
 						%>
@@ -238,9 +236,9 @@ if(request.getParameter("popup")!=null){
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
 				</td>
 				<td class="right">
@@ -254,10 +252,10 @@ if(request.getParameter("popup")!=null){
 					<input type="button" value="검색" title="검색" id="searchBtn">
 					<input type="button" value="초기화" title="초기화" id="btnReset">
 					<%
-					if(popup){
-					%>	
-						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-						<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
+					if (popup) {
+					%>
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 					<%
 					}
 					%>
@@ -266,33 +264,7 @@ if(request.getParameter("popup")!=null){
 		</table>
 
 		<%
-		if(popup){
-		%>	
-			<table>
-			<colgroup>
-				<col width="230">
-				<col width="10">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<td valign="top">
-					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
-						<jsp:param value="product" name="container" />
-						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
-					</jsp:include>
-				</td>
-				<td valign="top">&nbsp;</td>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
-					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-				</td>
-			</tr>
-		</table>
-		<%
-		} else{
+		if (popup) {
 		%>
 		<table>
 			<colgroup>
@@ -317,7 +289,35 @@ if(request.getParameter("popup")!=null){
 				</td>
 			</tr>
 		</table>
-		<% } %>
+		<%
+		} else {
+		%>
+		<table>
+			<colgroup>
+				<col width="230">
+				<col width="10">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<td valign="top">
+					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
+						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
+						<jsp:param value="product" name="container" />
+						<jsp:param value="list" name="mode" />
+						<jsp:param value="670" name="height" />
+					</jsp:include>
+				</td>
+				<td valign="top">&nbsp;</td>
+				<td valign="top">
+					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+				</td>
+			</tr>
+		</table>
+		<%
+		}
+		%>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
@@ -337,7 +337,7 @@ if(request.getParameter("popup")!=null){
 							const url = getCallUrl("/part/changeList?oid=" + oid);
 							popup(url, 1600, 800);
 						}
-					}	
+					}
 				}, {
 					dataField : "number",
 					headerText : "품목번호",
@@ -385,7 +385,7 @@ if(request.getParameter("popup")!=null){
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "REV.",
 					dataType : "string",
 					width : 90,
 					filter : {
@@ -429,7 +429,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "modifyDate",
+					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "string",
 					width : 140,
@@ -446,9 +446,6 @@ if(request.getParameter("popup")!=null){
 						showIcon : true,
 						inline : true
 					},
-				}, {
-					dataField : "oid",
-					visible : false
 				} ]
 			}
 
@@ -469,7 +466,7 @@ if(request.getParameter("popup")!=null){
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					rowCheckToRadio : true,
-// 					fillColumnSizeMode: true,
+				// 					fillColumnSizeMode: true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -483,12 +480,13 @@ if(request.getParameter("popup")!=null){
 			}
 
 			function loadGridData() {
- 				let params = new Object();
- 				const url = getCallUrl("/distribute/listProduction");
- 				const field = ["_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo", "eoNo"];
- 				params = toField(params, field);
- 				AUIGrid.showAjaxLoader(myGridID);
- 				call(url, params, function(data) {
+				let params = new Object();
+				const url = getCallUrl("/distribute/listProduction");
+				const field = [ "_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
+						"ecoNo", "eoNo" ];
+				params = toField(params, field);
+				AUIGrid.showAjaxLoader(myGridID);
+				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -525,8 +523,8 @@ if(request.getParameter("popup")!=null){
 				twindate("modified");
 				selectbox("_psize");
 			});
-			
-			function editBOM(){
+
+			function editBOM() {
 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
 				if (items.length == 0) {
 					alert("편집할 부품을 선택하세요.");
@@ -538,9 +536,9 @@ if(request.getParameter("popup")!=null){
 			};
 
 			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+				// 				const exceptColumnFields = [ "primary" ];
+				// 				const sessionName = document.getElementById("sessionName").value;
+				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {
@@ -557,8 +555,8 @@ if(request.getParameter("popup")!=null){
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
-			function addBtn(){
+
+			function addBtn() {
 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
 				if (items.length == 0) {
 					alert("추가할 부품을 선택하세요.");
@@ -567,7 +565,6 @@ if(request.getParameter("popup")!=null){
 				opener.append(items);
 				self.close();
 			}
-			
 		</script>
 	</form>
 </body>

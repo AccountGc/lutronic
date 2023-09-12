@@ -120,6 +120,10 @@ table.search-table th {
 	border-left: 1px solid #a6a6a6;
 	padding-bottom: 4px;
 	min-width: 100px;
+	width: 130px;
+	max-width: 130px;
+	min-width: 130px;
+	;
 }
 
 table.search-table td {
@@ -490,7 +494,8 @@ a:hover {
 }
 
 /** PASSWORD CSS **/
-.create-table td input[type='password'], .search-table td input[type='password'] {
+.create-table td input[type='password'],
+.search-table td input[type='password'] {
 	border: 1px solid #a6a6a6;
 	background: #fff;
 	color: #333;
@@ -504,7 +509,10 @@ a:hover {
 
 
 /** INPUT CSS **/
-.create-table td input[type='text'], .search-table td input[type='text'], .button-table td input[type='text'], .view-table td input[type='text'] {
+.create-table td input[type='text'],
+.search-table td input[type='text'],
+.button-table td input[type='text'],
+.view-table td input[type='text'] {
 	border: 1px solid #a6a6a6;
 	background: #fff;
 	color: #333;
@@ -520,7 +528,8 @@ input[type='text']:read-only {
 	background-color: #ebebeb !important;
 }
 
-.create-table td input[type='number'], .search-table td input[type='number'] {
+.create-table td input[type='number'],
+.search-table td input[type='number'] {
 	border: 1px solid #a6a6a6;
 	background: #fff;
 	color: #333;
@@ -533,7 +542,8 @@ input[type='text']:read-only {
 }
 
 /** SELECT CSS **/
-.create-table td select, .search-table td select {
+.create-table td select,
+.search-table td select {
 	-webkit-border-radius: 2px 5px 5px;
 	-moz-border-radius: 2px 5px 5px;
 	border-radius: 2px 5px 5px;
@@ -696,5 +706,10 @@ img.edit {
 }
 
 span.red {
-    color: red;
+	color: red;
+}
+
+/** TR 태그 숨기기 **/
+tr.hidden {
+	display: none;
 }

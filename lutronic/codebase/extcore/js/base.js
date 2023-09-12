@@ -289,9 +289,6 @@ function toField(params, arr) {
 	for (let i = 0; i < arr.length; i++) {
 		if (document.getElementById(arr[i]) != null) {
 			params[arr[i]] = document.getElementById(arr[i]).value;
-		} else {
-			console.log(arr[i - 1]);
-			console.log(arr[i]);
 		}
 	}
 	return params;
