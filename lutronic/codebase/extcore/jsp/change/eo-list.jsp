@@ -110,6 +110,7 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select> 
+					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('document-list');">
 				</td>
@@ -298,6 +299,11 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+			});
+			
+			// 등록
+			$("#createBtn").click(function(){
+				location.href = getCallUrl("/changeECO/createEO");
 			});
 		</script>
 	</form>

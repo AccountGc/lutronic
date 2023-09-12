@@ -33,6 +33,15 @@ public class IndexController extends BaseController{
 		model.setViewName("default:/index");
 		return model;
 	}
+	
+	@Description(value = "메인 페이지")
+	@GetMapping(value = "/mainPage")
+	public ModelAndView mainPage() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/change/mainPage.jsp");
+		return model;
+	}
+	
 
 	@Description(value = "헤더 페이지")
 	@GetMapping(value = "/header")
