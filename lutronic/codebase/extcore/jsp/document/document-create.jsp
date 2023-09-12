@@ -292,7 +292,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			params.primary = primarys;
 			params.secondarys = toArray("secondarys");
 			parent.openLayer();
-			console.log(params);
 			call(url, params, function(data) {
 				alert(data.msg);
 				if (data.result) {

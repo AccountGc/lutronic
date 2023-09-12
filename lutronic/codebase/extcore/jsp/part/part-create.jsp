@@ -117,7 +117,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>사용자 Key in</th>
 				<td class="indent5">
-					<input type="text" name="partNameCustom" id="partNameCustom" class="width-300">
+					<input type="text" name="partName4" id="partName4" class="width-300">
 				</td>
 			</tr>
 			<tr>
@@ -384,7 +384,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				const partType2 = document.getElementById("partType2").value;
 				const partName3 = document.getElementById("partName3").value;
 				const partType3 = document.getElementById("partType3").value;
-				const partNameCustom = document.getElementById("partNameCustom").value;
+				const partName4 = document.getElementById("partName4").value;
 				const seq = document.getElementById("seq").value;
 				const etc = document.getElementById("etc").value;
 				const model = document.getElementById("model").value;
@@ -420,7 +420,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					alert("중분류를 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partNameCustom").val())){
+				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
 					alert("품목명을 입력하세요.");
 					return;					
 				}
@@ -460,7 +460,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				params.partType2 = partType2;
 				params.partName3 = partName3;
 				params.partType3 = partType3;
-				params.partNameCustom = partNameCustom;
+				params.partName4 = partName4;
 				params.seq = seq;
 				params.etc = etc;
 				params.model = model;
@@ -800,8 +800,8 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				$(this).removeClass("hover") ;
 			})
 			
-			$('#partNameCustom').focusout(function() {
-				$('#partNameCustom').val(this.value.toUpperCase());
+			$('#partName4').focusout(function() {
+				$('#partName4').val(this.value.toUpperCase());
 			})
 			
 			$(".partName").focusout(function () {
@@ -827,11 +827,11 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					name += $('#partName3').val();
 				}
 				
-				if(!$.trim($('#partNameCustom').val()) == '') {
+				if(!$.trim($('#partName4').val()) == '') {
 					if(!$.trim(name) == '') {
 						name += '_';
 					}
-					name += $('#partNameCustom').val();
+					name += $('#partName4').val();
 				}
 				
 				$('#displayName').html(name);

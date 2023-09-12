@@ -36,18 +36,20 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				</td>
 			</tr>
 		</table>
+		<input type="file" id="file" style="visibility:hidden;"></input>
 		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
 			let partType2Map = {};
 			let partType3Map = {};
 			let matList =[];
+			let recentGridItem = null;
 			<% for(NumberCode mat : matList){ %>
 				matList.push({ "code" : "<%= mat.getCode() %>", "value" : "<%= mat.getName().replaceAll("(\r\n|\r|\n|\n\r)", "") %>"});
 			<% } %>
 			let folderList = [];
 			<% for(Folder folder : folderList){ %>
-				folderList.push({ "code" : "<%= folder.getLocation() %>", "value" : "<%= folder.getFolderPath() %>"});
+				folderList.push({ "code" : "<%= folder.getFolderPath()  %>", "value" : "<%= folder.getFolderPath() %>"});
 			<% } %>
 			let deptcodeList = [];
 			<% for(NumberCode deptcode : deptcodeList){ %>
@@ -77,7 +79,7 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 			<% for(NumberCodeData partType1 : partType1List){ %>
 				partType1List.push({ "code" : "<%= partType1.getOid() %>", "value" : "[<%= partType1.getCode() %>]<%= partType1.getName() %>"});
 			<% } %>
-			
+
 			const layout = [ {
 				dataField : "location",
 				headerText : "저장위치",
@@ -350,7 +352,6 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 						var retStr = "";
 						for (var i = 0, len = matList.length; i < len; i++) {
 							if (matList[i]["code"] == value) {
-								const rowIndex = AUIGrid.getRowCount();
 		                        AUIGrid.setCellValue(myGridID, rowIndex, "mat", value);
 								retStr = matList[i]["value"];
 								break;
@@ -512,7 +513,6 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 						var retStr = "";
 						for (var i = 0, len = deptcodeList.length; i < len; i++) {
 							if (deptcodeList[i]["code"] == value) {
-								const rowIndex = AUIGrid.getRowCount();
 								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode", value);
 								retStr = deptcodeList[i]["value"];
 								break;
@@ -556,7 +556,6 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 						var retStr = "";
 						for (var i = 0, len = modelList.length; i < len; i++) {
 							if (modelList[i]["code"] == value) {
-								const rowIndex = AUIGrid.getRowCount();
 								AUIGrid.setCellValue(myGridID, rowIndex, "model", value);
 								retStr = modelList[i]["value"];
 								break;
@@ -600,7 +599,6 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 						var retStr = "";
 						for (var i = 0, len = productmethodList.length; i < len; i++) {
 							if (productmethodList[i]["code"] == value) {
-								const rowIndex = AUIGrid.getRowCount();
 								AUIGrid.setCellValue(myGridID, rowIndex, "productmethod", value);
 								retStr = productmethodList[i]["value"];
 								break;
@@ -624,14 +622,48 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				dataType : "string",
 				width : 120,
 			}, {
-				dataField : "primary",
 				headerText : "주도면",
-				dataType : "string",
-				width : 120,
+				children : [ {
+					dataField : "primaryName",
+					headerText : "주도면 파일명",
+					width: 160,
+					styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (typeof value == "undefined" || value == "") {
+							return null;
+						}
+						return "my-file-selected";
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						if (typeof value == "undefined" || value == "") {
+							return "선택 파일 없음";
+						}
+						return value;
+					},
+				}, {
+					dataField : "primary",
+					headerText : "주도면",
+					width: 160,
+					editable : false,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "파일선택",
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.id;
+							const url = getCallUrl("/common/attachPrimary?oid=" + oid + "&method=attach");
+							_popup(url, 800, 400,"n");
+						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}]
 			}, ]
 
 			function createAUIGrid(columnLayout) {
 				const props = {
+					rowIdField: "id",
 					editable : true,
 					headerHeight : 35,
 					showRowNumColumn : true,
@@ -749,117 +781,103 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				AUIGrid.resize(myGridID);
 			});
 			
+			function attach(data) {
+				
+				AUIGrid.updateRowsById(myGridID, {
+					id : recentGridItem.id,
+					primary : data[0].cacheId,
+				});
+				
+				AUIGrid.updateRowsById(myGridID, {
+					id: recentGridItem.id,
+					primaryName: data[0].name
+				});
+			}
+			
 			function batch(){
-				const rowCount = AUIGrid.getRowCount() + 1;
+				const partList = AUIGrid.getGridData(myGridID);
 				
-				for(let i = 0; i < rowCount; i++){
-					const location = AUIGrid.getCellFormatValue(myGridID, i, "location");
+				
+				for(let i = 0; i < partList.length; i++){
 					
-					const partType1 = AUIGrid.getCellFormatValue(myGridID, i, "partType1");
-					const partType2 = AUIGrid.getCellFormatValue(myGridID, i, "partType2");
-					const partType3 = AUIGrid.getCellFormatValue(myGridID, i, "partType3");
-					const seq = AUIGrid.getCellFormatValue(myGridID, i, "seq");
-					const etc = AUIGrid.getCellFormatValue(myGridID, i, "etc");
+					const rowNum = i + 1;
 					
-					const mat = AUIGrid.getCellFormatValue(myGridID, i, "mat");
-					
-					const partName1 = AUIGrid.getCellFormatValue(myGridID, i, "partName1");
-					const partName2 = AUIGrid.getCellFormatValue(myGridID, i, "partName2");
-					const partName3 = AUIGrid.getCellFormatValue(myGridID, i, "partName3");
-					const partName4 = AUIGrid.getCellFormatValue(myGridID, i, "partName4");
-					
-					const unit = "EA";
-					const deptcode = AUIGrid.getCellFormatValue(myGridID, i, "deptcode");
-					const model = AUIGrid.getCellFormatValue(myGridID, i, "model");
-					const productmethod = AUIGrid.getCellFormatValue(myGridID, i, "productmethod");
-					const specification = AUIGrid.getCellFormatValue(myGridID, i, "specification");
-					
-					console.log(location);
-					console.log(partType1);
-					console.log(partType2);
-					console.log(partType3);
-					console.log(seq);
-					console.log(etc);
-					console.log(mat);
-					console.log(partName1);
-					console.log(partName2);
-					console.log(partName3);
-					console.log(partName4);
-					console.log(unit);
-					console.log(deptcode);
-					console.log(model);
-					console.log(productmethod);
-					console.log(specification);
-					
-					if(isEmpty(location)){
-						alert(i + "행의 품목에 저장위치를 입력하세요.");
+					if(isEmpty(partList[i].location)){
+						alert(rowNum + "행의 품목에 저장위치를 입력하세요.");
 						return;
 					}
 					
-					if(isEmpty(partType1)){
-						alert(i + "행의 품목에 품목구분을 입력하세요.");
+					if(isEmpty(partList[i].partType1)){
+						alert(rowNum + "행의 품목에 품목구분을 입력하세요.");
 						return;
 					}
-					if(isEmpty(partType2)){
-						alert(i + "행의 품목에 대분류를 입력하세요.");
+					if(isEmpty(partList[i].partType2)){
+						alert(rowNum + "행의 품목에 대분류를 입력하세요.");
 						return;
 					}
-					if(isEmpty(partType3)){
-						alert(i + "행의 품목에 중분류를 입력하세요.");
-						return;
-					}
-					
-					if(isEmpty(partName1)){
-						alert(i + "행의 품목에 품목명(대제목)을 입력하세요.");
-						return;
-					}
-					if(isEmpty(partName2)){
-						alert(i + "행의 품목에 품목명(중제목)을 입력하세요.");
-						return;
-					}
-					if(isEmpty(partName3)){
-						alert(i + "행의 품목에 품목명(소제목)을 입력하세요.");
-						return;
-					}
-					if(isEmpty(partName4)){
-						alert(i + "행의 품목에 품목명(KEY-IN)을 입력하세요.");
+					if(isEmpty(partList[i].partType3)){
+						alert(rowNum + "행의 품목에 중분류를 입력하세요.");
 						return;
 					}
 					
-					if(isEmpty(unit)){
-						alert(i + "행의 품목에 단위를 입력하세요.");
+					if(isEmpty(partList[i].partName1)){
+						alert(rowNum + "행의 품목에 품목명(대제목)을 입력하세요.");
 						return;
 					}
-					if(isEmpty(deptcode)){
-						alert(i + "행의 품목에 부서를 입력하세요.");
+					if(isEmpty(partList[i].partName2)){
+						alert(rowNum + "행의 품목에 품목명(중제목)을 입력하세요.");
 						return;
 					}
-					if(isEmpty(model)){
-						alert(i + "행의 품목에 프로젝트 코드를 입력하세요.");
+					if(isEmpty(partList[i].partName3)){
+						alert(rowNum + "행의 품목에 품목명(소제목)을 입력하세요.");
 						return;
 					}
-					if(isEmpty(productmethod)){
-						alert(i + "행의 품목에 제작방법을 입력하세요.");
-						return;
-					}
-					if(isEmpty(specification)){
-						alert(i + "행의 품목에 사양을 입력하세요.");
+					if(isEmpty(partList[i].partName4)){
+						alert(rowNum + "행의 품목에 품목명(KEY-IN)을 입력하세요.");
 						return;
 					}
 					
+					if(isEmpty(partList[i].unit)){
+						alert(rowNum + "행의 품목에 단위를 입력하세요.");
+						return;
+					}
+					if(isEmpty(partList[i].deptcode)){
+						alert(rowNum + "행의 품목에 부서를 입력하세요.");
+						return;
+					}
+					if(isEmpty(partList[i].model)){
+						alert(rowNum + "행의 품목에 프로젝트 코드를 입력하세요.");
+						return;
+					}
+					if(isEmpty(partList[i].productmethod)){
+						alert(rowNum + "행의 품목에 제작방법을 입력하세요.");
+						return;
+					}
+					if(isEmpty(partList[i].specification)){
+						alert(rowNum + "행의 품목에 사양을 입력하세요.");
+						return;
+					}
+					
+					if(isEmpty(partList[i].primary)){
+						alert(rowNum + "행의 품목에 주도면을 첨부해주세요.");
+						return;
+					}
 				}
-				
 				
 				if (!confirm("등록 하시겠습니까?")) {
 					return false;
 				}
 				
-// 				call(url, params, function(data) {
-// 					alert(data.msg);
-// 					if (data.result) {
-// 					} else {
-// 					}
-// 				});
+				
+				const url = getCallUrl("/part/batch");
+				let params = new Object();
+				params.partList = partList;
+				
+				console.log(params.partList);
+				
+				call(url, params, function(data) {
+					alert(data.msg);
+				});
 			}
 		</script>
 	</form>

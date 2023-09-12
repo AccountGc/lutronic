@@ -819,8 +819,11 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		String primaryFile 		= StringUtil.checkNull((String) hash.get("primary"));
 		String descript 		= StringUtil.checkNull((String) hash.get("descript"));
 		String unit				= StringUtil.checkNull((String) hash.get("unit"));
+		String location				= StringUtil.checkNull((String) hash.get("location"));
 		
-        String fileName = primaryFile.split("/")[1];
+		int dotIndex = primaryFile.lastIndexOf(".");
+		
+        String fileName = primaryFile.substring(0, dotIndex);
 		
 		if (primaryFile.length() == 0) {
 			primaryFile = "";
@@ -2326,5 +2329,11 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			}
 		}
 		
+	}
+
+	@Override
+	public List<EpmData> include_DrawingList(String oid, String moduleType, String epmType) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
