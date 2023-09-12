@@ -21,7 +21,7 @@
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 문서 정보
+						<img src="/Windchill/extcore/images/header.png"> ECO 등록
 					</div>
 				</td>
 			</tr>
@@ -159,7 +159,7 @@
 				<td class="center">
 					<input type="button"  value="등록"  title="등록"  class="blue"  id="createBtn">
 					<input type="button" value="초기화" title="초기화"  class="btnCRUD"  id="resetBtn">
-					<input type="button" value="목록" title="목록"  class="btnCRUD"  id="listBtn">
+					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
 				</td>
 			</tr>
 		</table>

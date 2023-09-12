@@ -12,7 +12,7 @@
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">
 				<div class="dropdown profile-element">
-					<a onclick="moveToPage(this, '/changeECO/mainPage', '> 메인');">LUTRONIC</a>
+					<a onclick="moveToPage(this, '/mainPage', '> 메인');">LUTRONIC</a>
 					<!-- 					<a href="javascript:index();"> -->
 					<%-- 						<span class="block m-t-xs font-bold"><%//=data.getName()%></span> --%>
 					<!-- 						<span class="text-muted text-xs block"> -->
@@ -197,28 +197,34 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
+						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
+					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a> -->
+<!-- 					</li> -->
+					<li>
+						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > CR 검색');">CR 검색</a>
+					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">CR 등록</a> -->
+<!-- 					</li> -->
+					<li>
+						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > ECPR 검색');">ECPR 검색</a>
+					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">ECPR 등록</a> -->
+<!-- 					</li> -->
+					<li>
 						<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/changeECO/create', '> 설계변경 > ECO 등록');">ECO 등록</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/changeECO/create', '> 설계변경 > ECO 등록');">ECO 등록</a> -->
+<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/changeECN/list', '> 설계변경 > ECN 검색');">ECN 검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/changeECN/create', '> 설계변경 > ECN 등록');">ECN 등록</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > CR/ECPR 검색');">CR/ECPR 검색</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">CR/ECPR 등록</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 관리자 >PART 전송 현황');">PART 전송 현황</a>
