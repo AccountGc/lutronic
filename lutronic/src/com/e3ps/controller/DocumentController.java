@@ -320,20 +320,20 @@ public class DocumentController extends BaseController {
 	}
 
 	@Description(value = "문서 일괄결재")
-	@GetMapping(value = "/all")
-	public ModelAndView all() throws Exception {
+	@GetMapping(value = "/register")
+	public ModelAndView register() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/document/document-all.jsp");
+		model.setViewName("/extcore/jsp/document/document-register.jsp");
 		return model;
 	}
 
 	@Description(value = "문서 일괄결재 등록 실행")
 	@ResponseBody
-	@PostMapping(value = "/all")
-	public Map<String, Object> all(@RequestBody Map<String, Object> params) {
+	@PostMapping(value = "/register")
+	public Map<String, Object> register(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			DocumentHelper.service.createAll(params);
+			DocumentHelper.service.register(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

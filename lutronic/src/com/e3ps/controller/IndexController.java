@@ -11,20 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.util.FolderUtils;
-import com.e3ps.common.util.WCUtil;
 
 import net.sf.json.JSONArray;
-import org.json.JSONObject;
-import wt.folder.Folder;
-import wt.folder.FolderHelper;
 import wt.org.WTUser;
 import wt.session.SessionHelper;
-import wt.util.WTException;
 
 @Controller
-public class IndexController extends BaseController{
+public class IndexController extends BaseController {
 
 	@Description(value = "메인 페이지")
 	@GetMapping(value = "/index")
@@ -39,6 +33,7 @@ public class IndexController extends BaseController{
 	public ModelAndView header() throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/layout/header.jsp");
 		return model;
 	}
@@ -50,12 +45,12 @@ public class IndexController extends BaseController{
 		model.setViewName("/extcore/layout/footer.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "폴더 트리 구조 가져오기")
 	@PostMapping(value = "/loadFolderTree")
 	@ResponseBody
 	public Map<String, Object> loadFolderTree(@RequestBody Map<String, String> params) throws Exception {
-		
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			JSONArray list = FolderUtils.loadFolderTree(params);
@@ -67,6 +62,6 @@ public class IndexController extends BaseController{
 			result.put("msg", e.toString());
 		}
 		return result;
-		
+
 	}
 }

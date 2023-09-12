@@ -20,21 +20,21 @@ import com.e3ps.doc.beans.DocumentData;
 
 @RemoteInterface
 public interface DocumentService {
-	
-	Map<String,Object> requestDocumentMapping(Map<String, Object> params);
-	
+
+	Map<String, Object> requestDocumentMapping(Map<String, Object> params);
+
 	ResultData createDocumentAction(Map<String, Object> map);
-	
+
 	Map<String, Object> deleteDocumentAction(Map<String, Object> params);
-	
-	Map<String, Object> updateDocumentAction(Map<String,Object> map);
-	
+
+	Map<String, Object> updateDocumentAction(Map<String, Object> map);
+
 	String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
-	
+
 	ResultData approvalPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
-	
+
 	List<DocumentData> include_documentLink(String module, String oid);
-	
+
 	Map<String, Object> listDocumentAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	String delete(String oid) throws Exception;
@@ -47,33 +47,38 @@ public interface DocumentService {
 
 	WTDocument getLastDocument(String number) throws Exception;
 
-	Map<String, Object> createDocumentLinkAction(HttpServletRequest request, HttpServletResponse respose) throws Exception;
+	Map<String, Object> createDocumentLinkAction(HttpServletRequest request, HttpServletResponse respose)
+			throws Exception;
 
 	Vector<WTPartDescribeLink> getWTPartDescribeLink(RevisionControlled rc, boolean isLast);
-	
+
 	ResultData linkDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
 	ResultData deleteDocumentLinkAction(HttpServletRequest request, HttpServletResponse response);
 
-	List<Map<String, Object>> listAUIDocumentAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
-
-	ResultData createAUIPackageDocumentAction(HttpServletRequest request,
-			HttpServletResponse response);
-
-	Map<String, Object> listPagingAUIDocumentAction(
-			HttpServletRequest request, HttpServletResponse response)
+	List<Map<String, Object>> listAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
-	
+
+	ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
+
+	Map<String, Object> listPagingAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
+
 	public void create(Map<String, Object> params) throws Exception;
-	
+
 	public void createComments(Map<String, Object> params) throws Exception;
-	
+
 	public void updateComments(Map<String, Object> params) throws Exception;
-	
+
 	public void deleteComments(String oid) throws Exception;
 
 	public void createTemplate(Map<String, Object> params) throws Exception;
-	
-	public void createAll(Map<String, Object> params) throws Exception;
+
+
+	/**
+	 * 문서 일괄 결재 등록
+	 * 
+	 * @param params
+	 */
+	public abstract void register(Map<String, Object> params) throws Exception;
 }

@@ -344,13 +344,26 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 				}, {
 					dataField : "primary",
 					headerText : "주 첨부파일",
+					dataType : "string",
 					width : 100,
 					renderer : {
 						type : "TemplateRenderer"
 					},
 					filter : {
-						showIcon : true,
-						inline : true
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "secondary",
+					headerText : "첨부파일",
+					dataType : "string",
+					width : 100,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
 					},
 				} ]
 			}
@@ -361,7 +374,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
-					fillColumnSizeMode: false,
+					fillColumnSizeMode : false,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
@@ -386,13 +399,12 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = ["_psize","name","number", "state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo"
-									,"documentType","preseration","model","deptcode","interalnumber","writer","description"];
+				const field = [ "_psize", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = latest;
 				AUIGrid.showAjaxLoader(myGridID);
- 				call(url, params, function(data) {
+				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -448,7 +460,6 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
 			//일괄 다운로드
 			function download() {
 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);

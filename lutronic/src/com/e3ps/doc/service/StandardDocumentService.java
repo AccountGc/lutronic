@@ -100,7 +100,6 @@ import wt.vc.VersionControlHelper;
 import wt.vc.wip.CheckoutLink;
 import wt.vc.wip.WorkInProgressHelper;
 
-@SuppressWarnings("serial")
 public class StandardDocumentService extends StandardManager implements DocumentService {
 
 	public static final String DOC_LifeCycle = "LC_Default";
@@ -2411,7 +2410,7 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 
 	@Override
-	public void createAll(Map<String, Object> params) throws Exception {
+	public void register(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();

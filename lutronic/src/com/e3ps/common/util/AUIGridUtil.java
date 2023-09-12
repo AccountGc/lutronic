@@ -13,18 +13,74 @@ public class AUIGridUtil {
 
 	}
 
+	/**
+	 * 그리드에서 주 첨부파일 표시
+	 */
 	public static String primary(ContentHolder holder) throws Exception {
 		String template = "";
 		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.PRIMARY);
 		if (result.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) result.nextElement();
 			String ext = FileUtil.getExtension(data.getFileName());
-//			String icon = getAUIGridFileIcon(ext);
-			String icon = "";
+			String icon = getFileIcon(ext);
 			String url = "/Windchill/eSolution/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
-			template += "<a href=" + url + "><img src=" + icon + " style='position: relative; top: 2px;'></a>";
+			template += "<a href=" + url + "><img src=" + icon + "></a>";
 		}
 		return template;
+	}
+
+	/**
+	 * 그리드에서 첨부파일 표시
+	 */
+	public static String secondary(ContentHolder holder) throws Exception {
+		String template = "";
+		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.SECONDARY);
+		while (result.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) result.nextElement();
+			String ext = FileUtil.getExtension(data.getFileName());
+			String icon = getFileIcon(ext);
+			String url = "/Windchill/eSolution/content/download?oid="
+					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
+			template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
+		}
+		return template;
+	}
+
+	/**
+	 * 첨부파일 다운로드 표기할 아이콘
+	 */
+	private static String getFileIcon(String ext) throws Exception {
+		String icon = "/Windchill/extcore/images/fileicon/file_generic.gif";
+		if (ext.equalsIgnoreCase("pdf")) {
+			icon = "/Windchill/extcore/images/fileicon/file_pdf.gif";
+		} else if (ext.equalsIgnoreCase("xls") || ext.equalsIgnoreCase("xlsx") || ext.equalsIgnoreCase("csv")) {
+			icon = "/Windchill/extcore/images/fileicon/file_excel.gif";
+		} else if (ext.equalsIgnoreCase("ppt") || ext.equalsIgnoreCase("pptx")) {
+			icon = "/Windchill/extcore/images/fileicon/file_ppoint.gif";
+		} else if (ext.equalsIgnoreCase("doc") || ext.equalsIgnoreCase("docs")) {
+			icon = "/Windchill/extcore/images/fileicon/file_msword.gif";
+		} else if (ext.equalsIgnoreCase("html") || ext.equalsIgnoreCase("htm")) {
+			icon = "/Windchill/extcore/images/fileicon/file_html.gif";
+		} else if (ext.equalsIgnoreCase("gif")) {
+			icon = "/Windchill/extcore/images/fileicon/file_gif.gif";
+		} else if (ext.equalsIgnoreCase("png")) {
+			icon = "/Windchill/extcore/images/fileicon/file_png.gif";
+		} else if (ext.equalsIgnoreCase("bmp")) {
+			icon = "/Windchill/extcore/images/fileicon/file_bmp.gif";
+		} else if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")) {
+			icon = "/Windchill/extcore/images/fileicon/file_jpg.jpg";
+		} else if (ext.equalsIgnoreCase("zip") || ext.equalsIgnoreCase("rar") || ext.equalsIgnoreCase("jar")) {
+			icon = "/Windchill/extcore/images/fileicon/file_zip.gif";
+		} else if (ext.equalsIgnoreCase("tar") || ext.equalsIgnoreCase("gz")) {
+			icon = "/Windchill/extcore/images/fileicon/file_zip.gif";
+		} else if (ext.equalsIgnoreCase("exe")) {
+			icon = "/Windchill/extcore/images/fileicon/file_exe.gif";
+		} else if (ext.equalsIgnoreCase("dwg")) {
+			icon = "/Windchill/extcore/images/fileicon/file_dwg.gif";
+		} else if (ext.equalsIgnoreCase("xml")) {
+			icon = "/Windchill/extcore/images/fileicon/file_xml.png";
+		}
+		return icon;
 	}
 }

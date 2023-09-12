@@ -2,6 +2,8 @@ package com.e3ps.column;
 
 import java.sql.Timestamp;
 
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -37,10 +39,18 @@ public class DocumentColumn {
 	public DocumentColumn(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(doc.getNumber());
+		setInteralnumber(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_INTERALNUMBER));
+		setModel(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_MODEL));
 		setName(doc.getName());
+		setLocation(doc.getLocation());
+		setVersion(doc.getVersionIdentifier().getSeries().getValue() + "."
+				+ doc.getIterationIdentifier().getSeries().getValue());
+		setState(doc.getLifeCycleState().getDisplay());
+		setWriter("");
+		setCreator(doc.getCreatorName());
 		setCreateDate(doc.getCreateTimestamp());
 		setModifiedDate(doc.getModifyTimestamp());
-
 		setPrimary(AUIGridUtil.primary(doc));
+		setSecondary(AUIGridUtil.secondary(doc));
 	}
 }

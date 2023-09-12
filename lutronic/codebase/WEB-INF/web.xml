@@ -844,7 +844,7 @@
     <url-pattern>/app/*</url-pattern>
     <url-pattern>/gwt/*</url-pattern>
     <!-- add lutronic -->
-    <url-pattern>/eSolution/*</url-pattern>
+    <url-pattern>/plm/*</url-pattern>
   </servlet-mapping>
   
   <servlet-mapping>

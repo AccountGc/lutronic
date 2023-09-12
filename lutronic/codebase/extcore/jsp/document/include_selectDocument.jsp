@@ -12,7 +12,8 @@ boolean isCreate = "create".equals(mode);
 	<tr>
 		<td class="left">
 			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> <%= title %>
+				<img src="/Windchill/extcore/images/header.png">
+				<%=title%>
 			</div>
 		</td>
 	</tr>
@@ -23,88 +24,74 @@ boolean isCreate = "create".equals(mode);
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb <%= "관련 문서".equals(title) ? "req" : "" %>"><%= title %></th>
+		<th class="lb <%="관련 문서".equals(title) ? "req" : ""%>"><%=title%></th>
 		<td>
-			<input type="hidden" name="lifecycle"  id="lifecycle"  value="<%= lifecycle %>" />
-			<input type="hidden" name="searchType" id="searchType" value="<%= searchType %>" />
-			<input type="button" value="추가" title="추가" class="blue" onclick="addDoc();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteDoc();">
-			<div id="grid_doc" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div style="margin-top: 5px;">
+				<input type="hidden" name="lifecycle" id="lifecycle" value="<%=lifecycle%>" />
+				<input type="hidden" name="searchType" id="searchType" value="<%=searchType%>" />
+				<input type="button" value="추가" title="추가" class="blue" onclick="append();">
+				<input type="button" value="삭제" title="삭제" class="red" onclick="remove();">
+			</div>
+			<div id="grid90" style="height: 300px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <script type="text/javascript">
-	let docGridID;
-	const columnsDoc = [ {
+	let myGridID90;
+	const columns90 = [ {
 		dataField : "number",
 		headerText : "문서번호",
 		dataType : "string",
 		width : 180,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "name",
 		headerText : "문서명",
 		dataType : "string",
-		width : 180,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		style : "aui-left"
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		width : 180,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "oid",
 		visible : false
 	} ]
 
-	function createAUIGrid4(columnLayout) {
+	function createAUIGrid90(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode: true,
 			showRowNumColumn : false,
 			showAutoNoDataMessage : false,
-			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
 			showStateColumn : false,
-			rowCheckToRadio : false,
-			enableFilter : true
 		}
-		docGridID = AUIGrid.create("#grid_doc", columnLayout, props);
+		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
 	}
 
-	function addDoc() {
-		const url = getCallUrl("/doc/list?popup=true");
-		popup(url, 1500, 700);
+	function append() {
+		const url = getCallUrl("/doc/append");
+		_popup(url, 1500, 700);
 	}
-	
-	function append(items){
+
+	function append(items) {
 		var arr = [];
-		var count=0;
+		var count = 0;
 		var data = AUIGrid.getGridData(docGridID);
-		for (var i=0; i<items.length; i++){
-			var a=0;
-			if(data.length==0){
+		for (var i = 0; i < items.length; i++) {
+			var a = 0;
+			if (data.length == 0) {
 				arr[i] = items[i];
-			}else{
-				for(var j=0; j<data.length; j++){
-					if(data[j].oid == items[i].oid){
+			} else {
+				for (var j = 0; j < data.length; j++) {
+					if (data[j].oid == items[i].oid) {
 						a++;
 					}
 				}
 			}
-			if(a==0){
+			if (a == 0) {
 				arr[count] = items[i];
 				count++;
 			}
@@ -124,9 +111,8 @@ boolean isCreate = "create".equals(mode);
 			AUIGrid.removeRow(docGridID, rowIndex);
 		}
 	}
-	
-	function insertGrid(items){
+
+	function insertGrid(items) {
 		AUIGrid.setGridData(docGridID, items);
 	}
-	
 </script>

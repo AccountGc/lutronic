@@ -5,9 +5,9 @@
 <tiles-definitions>
 	<definition name="layout" template="/extcore/layout/layout.jsp">
 		<put-attribute name="title" value="LUTRONIC PDM SYSTEM"></put-attribute>
-		<put-attribute name="header" value="/eSolution/header"></put-attribute>
+		<put-attribute name="header" value="/plm/header"></put-attribute>
 		<put-attribute name="body" value=""></put-attribute>
-		<put-attribute name="footer" value="/eSolution/footer"></put-attribute>
+		<put-attribute name="footer" value="/plm/footer"></put-attribute>
 	</definition>
 
 
