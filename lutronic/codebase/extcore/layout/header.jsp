@@ -197,25 +197,25 @@
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
+						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO</a>
 					</li>
 <!-- 					<li> -->
 <!-- 						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a> -->
 <!-- 					</li> -->
 					<li>
-						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > CR 검색');">CR 검색</a>
+						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > CR 검색');">CR</a>
 					</li>
 <!-- 					<li> -->
 <!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">CR 등록</a> -->
 <!-- 					</li> -->
 					<li>
-						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > ECPR 검색');">ECPR 검색</a>
+						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > ECPR 검색');">ECPR</a>
 					</li>
 <!-- 					<li> -->
 <!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">ECPR 등록</a> -->
 <!-- 					</li> -->
 					<li>
-						<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a>
+						<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO</a>
 					</li>
 <!-- 					<li> -->
 <!-- 						<a onclick="moveToPage(this, '/changeECO/create', '> 설계변경 > ECO 등록');">ECO 등록</a> -->
