@@ -80,22 +80,6 @@ if(request.getParameter("popup")!=null){
 				</td>
 			</tr>
 			<tr>
-				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
-				<th>수정일</th>
-				<td class="indent5">
-					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
-				</td>
-			</tr>
-			<tr>
 				<th>등록자</th>
 				<td class="indent5">
 					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -115,7 +99,7 @@ if(request.getParameter("popup")!=null){
 			</tr>
 			<tr>
 				<th>프로젝트코드</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<select name="model" id="model" class="width-500">
 						<option value="">선택</option>
 						<%
@@ -127,6 +111,34 @@ if(request.getParameter("popup")!=null){
 						%>
 					</select>
 				</td>
+			</tr>
+		</table>
+		<table class="search-table" id="hiddenTable" style="display: none;">
+			<colgroup>
+				<col width="130">
+				<col width="*">
+				<col width="130">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+				<th>수정일</th>
+				<td class="indent5">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+				</td>
+			</tr>
+			
+			<tr>
+				
 				<th>제작방법</th>
 				<td class="indent5">
 					<select name="productmethod" id="productmethod" class="width-500">
@@ -234,8 +246,8 @@ if(request.getParameter("popup")!=null){
 				</td>
 			</tr>
 		</table>
-
-		<table class="button-table">
+		<input type="button"  id="spreadBtn" value="펼치기">
+		<table class="button-table" >
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
@@ -520,10 +532,10 @@ if(request.getParameter("popup")!=null){
 				selectbox("mat");
 				selectbox("finish");
 				selectbox("manufacture");
+				selectbox("_psize");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
-				selectbox("_psize");
 			});
 			
 			function editBOM(){
@@ -568,6 +580,45 @@ if(request.getParameter("popup")!=null){
 				self.close();
 			}
 			
+			document.querySelector("#spreadBtn").addEventListener("click", (e)=>{
+				const hiddenTable = document.querySelector("#hiddenTable");
+				const state = e.target.value;
+			
+				switch(state){
+						case "펼치기" : 
+							e.target.value = "접기"; 
+							hiddenTable.style.display="table"; 
+							selectbox("state");
+							selectbox("model");
+							selectbox("productmethod");
+							selectbox("deptcode");
+							selectbox("unit");
+							selectbox("mat");
+							selectbox("finish");
+							selectbox("manufacture");
+							selectbox("_psize");
+							finderUser("creator");
+							twindate("created");
+							twindate("modified");
+							break;
+						case "접기" : 
+							e.target.value = "펼치기"; 
+							hiddenTable.style.display="none"; 
+							selectbox("state");
+							selectbox("model");
+							selectbox("productmethod");
+							selectbox("deptcode");
+							selectbox("unit");
+							selectbox("mat");
+							selectbox("finish");
+							selectbox("manufacture");
+							selectbox("_psize");
+							finderUser("creator");
+							twindate("created");
+							twindate("modified");
+							break;
+					}
+			});
 		</script>
 	</form>
 </body>

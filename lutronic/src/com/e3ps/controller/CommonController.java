@@ -50,6 +50,16 @@ import wt.vc.views.ViewHelper;
 @RequestMapping("/common")
 public class CommonController extends BaseController {
 	
+	@Description(value = "주 첨부파일 팝업창")
+	@GetMapping(value = "/attachPrimary")
+	public ModelAndView attachPrimary(@RequestParam String oid, @RequestParam String method) throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/common/pop-attach-primary");
+		model.addObject("oid", oid);
+		model.addObject("method", method);
+		return model;
+	}
+	
 	@Description(value = "NumberCode 데이터 리턴")
 	@ResponseBody
 	@PostMapping(value = "/autoSearchName")

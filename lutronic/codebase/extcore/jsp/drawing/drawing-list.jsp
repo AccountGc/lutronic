@@ -58,16 +58,16 @@
 				</td>
 			</tr>
 			<tr>
-				<th>CAD 구분</th>
-				<td class="indent5">
-					<select name="cadDivision" id="cadDivision" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
+<!-- 				<th>CAD 구분</th> -->
+<!-- 				<td class="indent5"> -->
+<!-- 					<select name="cadDivision" id="cadDivision" class="width-200"> -->
+<!-- 						<option value="">선택</option> -->
+<!-- 						<option value="INWORK">작업 중</option> -->
+<!-- 						<option value="UNDERAPPROVAL">승인 중</option> -->
+<!-- 						<option value="APPROVED">승인됨</option> -->
+<!-- 						<option value="RETURN">반려됨</option> -->
+<!-- 					</select> -->
+<!-- 				</td> -->
 				<th>CAD 타입</th>
 				<td class="indent5">
 					<select name="cadType" id="cadType" class="width-200">
@@ -78,17 +78,43 @@
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>도면번호</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-500">
 				</td>
+			</tr>
+			<tr>
 				<th>도면명</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-500">
 				</td>
+				<th>등록자</th>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
 			</tr>
+			<tr>
+				<th>프로젝트코드</th>
+					<td class="indent5" colspan="3">
+						<select name="model" id="model" class="width-500">
+							<option value="">선택</option>
+							<option value="INWORK">작업 중</option>
+							<option value="UNDERAPPROVAL">승인 중</option>
+							<option value="APPROVED">승인됨</option>
+							<option value="RETURN">반려됨</option>
+						</select>
+					</td>
+			</tr>
+		</table>
+		<table class="search-table"  id="hiddenTable" style="display: none;">
+			<colgroup>
+				<col width="130">
+				<col width="*">
+				<col width="130">
+				<col width="*">
+			</colgroup>
 			<tr>
 				<th>등록일</th>
 				<td class="indent5">
@@ -106,27 +132,9 @@
 				</td>
 			</tr>
 			<tr>
-				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>프로젝트코드</th>
-				<td class="indent5">
-					<select name="model" id="model" class="width-500">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -217,7 +225,7 @@
 				</td>
 			</tr>
 		</table>
-
+		<input type="button"  id="spreadBtn" value="펼치기">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -467,6 +475,50 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+			});
+			
+			document.querySelector("#spreadBtn").addEventListener("click", (e)=>{
+				const hiddenTable = document.querySelector("#hiddenTable");
+				const state = e.target.value;
+				
+				switch(state){
+					case "펼치기" : 
+						e.target.value = "접기"; 
+						hiddenTable.style.display="table"; 
+						selectbox("state");
+						selectbox("cadDivision");
+						selectbox("cadType");
+						selectbox("model");
+						selectbox("productmethod");
+						selectbox("deptcode");
+						selectbox("manufacture");
+						selectbox("unit");
+						selectbox("mat");
+						selectbox("finish");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
+						selectbox("_psize");
+						break;
+					case "접기" : 
+						e.target.value = "펼치기"; 
+						hiddenTable.style.display="none"; 
+						selectbox("state");
+						selectbox("cadDivision");
+						selectbox("cadType");
+						selectbox("model");
+						selectbox("productmethod");
+						selectbox("deptcode");
+						selectbox("manufacture");
+						selectbox("unit");
+						selectbox("mat");
+						selectbox("finish");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
+						selectbox("_psize");
+						break;
+				}
 			});
 		</script>
 	</form>

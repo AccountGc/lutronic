@@ -140,6 +140,23 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-batch.jsp");
 		return model;
 	}
+	
+	@Description(value = "일괄등록 실행")
+	@ResponseBody
+	@PostMapping(value = "/batch")
+	public Map<String, Object> batch(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			PartHelper.service.batch(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "BOM EDITOR 페이지")
 	@GetMapping(value = "/bom")
@@ -169,8 +186,7 @@ public class PartController extends BaseController {
 	public Map<String, Object> create(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			Map<String, Object> map = PartHelper.manager.requestPartMapping(params);
-			PartHelper.service.create(map);
+			PartHelper.service.create(params);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {

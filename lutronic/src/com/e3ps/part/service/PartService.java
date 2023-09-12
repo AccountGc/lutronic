@@ -29,9 +29,9 @@ public interface PartService {
 	 * 
 	 */
 	
-	Map<String, Object> requestPartMapping(Map<String, Object> params);
+//	Map<String, Object> requestPartMapping(Map<String, Object> params);
 	
-	ResultData create(Map<String,Object> map);
+	void create(Map<String,Object> map) throws Exception;
 	
 	Map<String, Object> updatePartAction(Map<String, Object> params);
 	
@@ -142,4 +142,6 @@ public interface PartService {
 	public void updateComments(Map<String, Object> params) throws Exception;
 	
 	public void deleteComments(String oid) throws Exception;
+
+	void batch(Map<String, Object> params) throws Exception;
 }
