@@ -427,7 +427,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			for(Map<String, Object> part : partList) {
 				
 				String fid = StringUtil.checkNull((String) params.get("fid"));
-				
+				System.out.println("=========================>" + fid);
 				String location = StringUtil.checkNull((String) part.get("location")); // 폴더 경로
 				
 				String partType1Oid = StringUtil.checkNull((String) part.get("partType1")); // 품목구분 (NumberCode)
