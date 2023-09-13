@@ -427,7 +427,6 @@ public class StandardPartService extends StandardManager implements PartService 
 			for(Map<String, Object> part : partList) {
 				
 				String fid = StringUtil.checkNull((String) params.get("fid"));
-				System.out.println("=========================>" + fid);
 				String location = StringUtil.checkNull((String) part.get("location")); // 폴더 경로
 				
 				String partType1Oid = StringUtil.checkNull((String) part.get("partType1")); // 품목구분 (NumberCode)
@@ -516,13 +515,6 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				// 주 도면
 				if(primary.length() > 0) {
-//					File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-//					ApplicationData applicationData = ApplicationData.newApplicationData(_part);
-//					applicationData.setRole(ContentRoleType.PRIMARY);
-//					PersistenceHelper.manager.save(applicationData);
-//					ContentServerHelper.service.updateContent(_part, applicationData, vault.getPath());
-					
-					
 					part.put("oid", CommonUtil.getOIDString(_part));
 					part.put("epmfid", fid);
 					EPMDocument epm = DrawingHelper.service.createEPM(part);
