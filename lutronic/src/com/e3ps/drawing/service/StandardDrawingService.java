@@ -27,6 +27,7 @@ import wt.content.ContentHelper;
 import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.epm.E3PSRENameObject;
 import wt.epm.EPMApplicationType;
@@ -902,7 +903,11 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		
 		// ��÷�� ����
 		if (!newFileName.equals("")) {
-			CommonContentHelper.service.attachPrimary(epm, newFileName);
+			File vault = CommonContentHelper.manager.getFileFromCacheId(primaryFile);
+			ApplicationData applicationData = ApplicationData.newApplicationData(epm);
+			applicationData.setRole(ContentRoleType.PRIMARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(epm, applicationData, vault.getPath());
 		}
 		
 		EpmPublishUtil.publish(epm); 
