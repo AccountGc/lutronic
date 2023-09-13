@@ -36,11 +36,13 @@ import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.beans.DocumentData;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.doc.template.SmarteditorVO;
+import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.rohs.service.RohsHelper;
 import com.infoengine.util.UrlEncoder;
 
@@ -314,8 +316,20 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 일괄등록")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception {
+		
+		String container = "document";
+		String location = DocumentHelper.DOCUMENT_ROOT;
+		
+		ArrayList<Folder> folderList = FolderUtils.loadAllFolder(location, container);
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> documentNameList = NumberCodeHelper.manager.getArrayCodeList("DOCUMENTNAME");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/document/document-batch.jsp");
+		model.addObject("folderList", folderList);
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("documentNameList", documentNameList);
 		return model;
 	}
 

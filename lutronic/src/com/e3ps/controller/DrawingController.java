@@ -21,20 +21,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.development.beans.DevTaskData;
-import com.e3ps.development.service.DevelopmentHelper;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.groupware.notice.beans.NoticeData;
-import com.e3ps.groupware.notice.service.NoticeHelper;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.beans.RohsData;
 
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
@@ -47,8 +43,20 @@ public class DrawingController extends BaseController{
 	
 	@Description(value = "도면 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() {
+	public ModelAndView list() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
 		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
 		return model;
 	}
@@ -63,7 +71,7 @@ public class DrawingController extends BaseController{
 	
 	@Description(value = "일괄 등록 페이지")
 	@GetMapping(value = "/batch")
-	public ModelAndView batch() {
+	public ModelAndView batch() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/drawing/drawing-batch.jsp");
 		return model;
