@@ -30,6 +30,8 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>문서 분류</th>
@@ -37,8 +39,115 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
 				</td>
+				<th>문서 번호</th>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-300">
+				</td>
+				<th>문서명</th>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-300">
+				</td>
+			</tr>
+			<tr>
+				<th>문서유형</th>
+				<td class="indent5">
+					<select name="documentType" id="documentType" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (DocumentType docType : docTypeList) {
+						%>
+						<option value="<%=docType.toString()%>"><%=docType.getDisplay()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>등록자</th>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+				<th>작성자</th>
+				<td class="indent5">
+					<input type="text" name="writer" id="writer" data-multi="false" class="width-300">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
+				</td>
+				<th>수정일</th>
+				<td class="indent5">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<select name="model" id="model" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>부서</th>
+				<td class="indent5">
+					<select name="deptcode" id="deptcode" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>내부 문서번호</th>
+				<td class="indent5">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
+				</td>
+			</tr>
+			<tr>
+				<th>보존기간</th>
+				<td class="indent5">
+					<select name="preseration" id="preseration" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode preseration : preserationList) {
+						%>
+						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
 				<th>버전</th>
-				<td>
+				<td colspan="3">
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="true" checked="checked">
@@ -60,119 +169,8 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 				</td>
 			</tr>
 			<tr>
-				<th>문서 번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-200">
-				</td>
-				<th>문서명</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-200">
-				</td>
-			</tr>
-			<tr>
-				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
-				<th>수정일</th>
-				<td class="indent5">
-					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
-				</td>
-			</tr>
-			<tr>
-				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
-				<th>상태</th>
-				<td class="indent5">
-					<select name="state" id="state" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>문서유형</th>
-				<td class="indent5">
-					<select name="documentType" id="documentType" class="width-300">
-						<option value="">선택</option>
-						<%
-						for (DocumentType docType : docTypeList) {
-						%>
-						<option value="<%=docType.toString()%>"><%=docType.getDisplay()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<th>보존기간</th>
-				<td class="indent5">
-					<select name="preseration" id="preseration" class="width-300">
-						<option value="">선택</option>
-						<%
-						for (NumberCode preseration : preserationList) {
-						%>
-						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>프로젝트코드</th>
-				<td class="indent5">
-					<select name="model" id="model" class="width-300">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<th>부서</th>
-				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-300">
-						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
-				</td>
-				<th>작성자</th>
-				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
-				</td>
-			</tr>
-			<tr>
 				<th>내용</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<textarea name="description" id="description" rows="6" onchange="textAreaLengthCheckName('description', '4000', '문서설명')" style="width: 90%"></textarea>
 				</td>
 			</tr>

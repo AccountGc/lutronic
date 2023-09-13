@@ -39,51 +39,38 @@ if (request.getParameter("popup") != null) {
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>품목분류</th>
 				<td class="indent5">
-					<span id="locationName"> /Default/PART_Drawing </span>
+					<input type="hidden" name="oid" id="oid">
+					<input type="hidden" name="location" id="location">
+					<span id="locationText">/Default/PART_Drawing </span>
 				</td>
-				<th>Rev.</th>
+				<th>등록자</th>
 				<td class="indent5">
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" id="islastversion" name="islastversion" value="true" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>최신Rev.</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" id="islastversion" name="islastversion" value="false">
-						<div class="state p-success">
-							<label>
-								<b>모든Rev.</b>
-							</label>
-						</div>
-					</div>
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
-			</tr>
-			<tr>
-				<th>품목번호</th>
-				<td class="indent5">
-					<input type="text" name="partNumber" id="partNumber" class="width-500">
-				</td>
-				<th>품목명</th>
-				<td class="indent5">
-					<input type="text" name="partName" id="partName" class="width-500">
-				</td>
-			</tr>
-			<tr>
 				<th>등록일</th>
 				<td class="indent5">
 					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
 					~
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>품목번호</th>
+				<td class="indent5">
+					<input type="text" name="partNumber" id="partNumber" class="width-300">
+				</td>
+				<th>품목명</th>
+				<td class="indent5">
+					<input type="text" name="partName" id="partName" class="width-300">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -94,11 +81,18 @@ if (request.getParameter("popup") != null) {
 				</td>
 			</tr>
 			<tr>
-				<th>등록자</th>
+				<th>프로젝트코드</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+					<select name="model" id="model" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>상태</th>
 				<td class="indent5">
@@ -110,24 +104,32 @@ if (request.getParameter("popup") != null) {
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-			</tr>
-			<tr>
-				<th>프로젝트코드</th>
-				<td class="indent5">
-					<select name="model" id="model" class="width-500">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+				<th>REV</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>최신REV</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="">
+						<div class="state p-success">
+							<label>
+								<b>모든REV</b>
+							</label>
+						</div>
+					</div>
 				</td>
+			</tr>
+			<tr class="hidden">
 				<th>제작방법</th>
 				<td class="indent5">
-					<select name="productmethod" id="productmethod" class="width-500">
+					<select name="productmethod" id="productmethod" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode productmethod : productmethodList) {
@@ -138,11 +140,9 @@ if (request.getParameter("popup") != null) {
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>부서</th>
 				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-500">
+					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
@@ -153,9 +153,15 @@ if (request.getParameter("popup") != null) {
 						%>
 					</select>
 				</td>
+				<th>사양</th>
+				<td class="indent5">
+					<input type="text" name="specification" id="specification" class="width-300">
+				</td>
+			</tr>
+			<tr class="hidden">
 				<th>단위</th>
 				<td class="indent5">
-					<select name="unit" id="unit" class="width-500">
+					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -163,15 +169,13 @@ if (request.getParameter("popup") != null) {
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>무게</th>
 				<td class="indent5">
-					<input type="text" name="weight" id="weight" class="width-500">
+					<input type="text" name="weight" id="weight" class="width-300">
 				</td>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode manufacture : manufactureList) {
@@ -183,10 +187,10 @@ if (request.getParameter("popup") != null) {
 					</select>
 				</td>
 			</tr>
-			<tr>
+			<tr class="hidden">
 				<th>재질</th>
 				<td class="indent5">
-					<select name="mat" id="mat" class="width-500">
+					<select name="mat" id="mat" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode mat : matList) {
@@ -199,7 +203,7 @@ if (request.getParameter("popup") != null) {
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<select name="finish" id="finish" class="width-500">
+					<select name="finish" id="finish" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode finish : finishList) {
@@ -210,25 +214,19 @@ if (request.getParameter("popup") != null) {
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>OEM Info.</th>
 				<td class="indent5">
-					<input type="text" name="remarks" id="remarks" class="width-500">
-				</td>
-				<th>사양</th>
-				<td class="indent5">
-					<input type="text" name="specification" id="specification" class="width-500">
+					<input type="text" name="remarks" id="remarks" class="width-300">
 				</td>
 			</tr>
-			<tr>
+			<tr class="hidden">
 				<th>ECO No.</th>
 				<td class="indent5">
-					<input type="text" name="ecoNo" id="ecoNo" class="width-500">
+					<input type="text" name="ecoNo" id="ecoNo" class="width-300">
 				</td>
 				<th>Eo No.</th>
-				<td class="indent5">
-					<input type="text" name="eoNo" id="eoNo" class="width-500">
+				<td class="indent5" colspan="3">
+					<input type="text" name="eoNo" id="eoNo" class="width-300">
 				</td>
 			</tr>
 		</table>
@@ -240,6 +238,7 @@ if (request.getParameter("popup") != null) {
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
+					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -564,6 +563,48 @@ if (request.getParameter("popup") != null) {
 				}
 				opener.append(items);
 				self.close();
+			}
+			
+			function spread(target) {
+				const e = document.querySelectorAll('.hidden');
+				// 버근가..
+				for (let i = 0; i < e.length; i++) {
+					const el = e[i];
+					const style = window.getComputedStyle(el);
+					console.log(el);
+					const display = style.getPropertyValue("display");
+					if (display === "none") {
+						el.style.display = "table-row";
+						target.value = "접기";
+						selectbox("state");
+						selectbox("model");
+						selectbox("productmethod");
+						selectbox("deptcode");
+						selectbox("unit");
+						selectbox("mat");
+						selectbox("finish");
+						selectbox("manufacture");
+						selectbox("_psize");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
+					} else {
+						el.style.display = "none";
+						target.value = "펼치기";
+						selectbox("state");
+						selectbox("model");
+						selectbox("productmethod");
+						selectbox("deptcode");
+						selectbox("unit");
+						selectbox("mat");
+						selectbox("finish");
+						selectbox("manufacture");
+						selectbox("_psize");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
+					}
+				}
 			}
 		</script>
 	</form>

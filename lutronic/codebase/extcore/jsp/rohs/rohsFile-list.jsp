@@ -39,6 +39,8 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>파일구분</th>
@@ -51,15 +53,13 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
+				<th>파일명</th>
+				<td class="indent5" colspan="3"><input type="text" name="fileName" id="fileName" class="width-300"></td>
 				<th>발행일자</th>
 				<td class="indent5"><input type="text" name="publication_Start" id="publication_Start" class="width-100"> ~ 
 					<input type="text" name="publication_End" id="publication_End" class="width-100"> 
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
-			</tr>
-			<tr>
-				<th>파일명</th>
-				<td class="indent5" colspan="3"><input type="text" name="fileName" id="fileName" class="width-200"></td>
 			</tr>
 		</table>
 

@@ -54,7 +54,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
@@ -132,7 +132,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr class="hidden">
 				<th>제작방법</th>
 				<td class="indent5">
-					<select name="productmethod" id="productmethod" class="width-300">
+					<select name="productmethod" id="productmethod" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode productmethod : productmethodList) {
@@ -145,7 +145,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>부서</th>
 				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-300">
+					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
@@ -164,7 +164,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr class="hidden">
 				<th>단위</th>
 				<td class="indent5">
-					<select name="unit" id="unit" class="width-300">
+					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -178,7 +178,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-300">
+					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode manufacture : manufactureList) {
@@ -193,7 +193,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr class="hidden">
 				<th>재질</th>
 				<td class="indent5">
-					<select name="mat" id="mat" class="width-300">
+					<select name="mat" id="mat" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode mat : matList) {
@@ -206,7 +206,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<select name="finish" id="finish" class="width-300">
+					<select name="finish" id="finish" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode finish : finishList) {
