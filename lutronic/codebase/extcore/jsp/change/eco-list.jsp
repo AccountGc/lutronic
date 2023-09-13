@@ -28,26 +28,28 @@ if(request.getParameter("popup")!=null){
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>ECO 제목</th>
-				<td class="indent5"><input type="text" name="eoName" id="eoName" class="width-200"></td>
+				<td class="indent5"><input type="text" name="eoName" id="eoName" class="width-300"></td>
 				<th>ECO 번호</th>
-				<td class="indent5"><input type="text" name="eoNumber" id="eoNumber" class="width-200"></td>
-			</tr>
-			<tr>
-				<th>등록자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+				<td class="indent5"><input type="text" name="eoNumber" id="eoNumber" class="width-300"></td>
 				<th>상태</th>
-				<td class="indent5"><select name="state" id="state" class="width-200">
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
-				</select></td>
+					</select>
+				</td>
 			</tr>
 			<tr>
+				<th>등록자</th>
+				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
 				<th>등록일</th>
 				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
@@ -118,17 +120,15 @@ if(request.getParameter("popup")!=null){
 						</div>
 					</div>
 				</td>
-			</tr>
-			<tr>
 				<th class="req lb">제품명</th>
-				<td colspan="3">
+				<td>
 					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
 					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
 				</td>
 			</tr>
 			<tr>
 				<th class="req lb">완제품 품목</th>
-				<td colspan="3">
+				<td colspan="5">
 					<jsp:include page="/extcore/jsp/change/include_ecrCompletePart.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -373,7 +373,7 @@ if(request.getParameter("popup")!=null){
 			
 			// 등록
 			$("#createBtn").click(function(){
-				location.href = getCallUrl("/changeECO/createEO");
+				location.href = getCallUrl("/changeECO/create");
 			});
 			
 		</script>

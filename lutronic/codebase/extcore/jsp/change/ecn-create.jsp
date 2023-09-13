@@ -14,9 +14,8 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="cmd" id="cmd" value="save" />
-		<input type=hidden name="eoType" value="CHANGE">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -38,7 +37,7 @@
 			</colgroup>
 			<tr>
 				<th class="req lb">ECN 제목</th>
-				<td class="indent5" colspan="7"><input type="text" name="eoName" id="eoName" class="width-200"></td>
+				<td class="indent5" colspan="7"><input type="text" name="name" id="name" class="width-200"></td>
 			</tr>
 			<tr>
 				<th class="lb">관련 ECO</th>
@@ -78,39 +77,20 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="등록"  title="등록"  class="blue"  id="createBtn">
-					<input type="button" value="초기화" title="초기화"  class="btnCRUD"  id="resetBtn">
-					<input type="button" value="목록" title="목록"  class="btnCRUD"  id="listBtn">
+					<input type="button"  value="기안"  title="기안"  class="blue"  id="createBtn">
+					<input type="button" value="초기화" title="초기화" id="resetBtn">
+					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button"  value="임시저장"  title="임시저장"  id="exBtn">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			function folder() {
-				const location = decodeURIComponent("/Default/문서");
-				const url = getCallUrl("/folder?location=" + location + "&container=product&method=setNumber&multi=false");
-				popup(url, 500, 600);
-			}
-	
-			function setNumber(item) {
-				const url = getCallUrl("/doc/setNumber");
-				const params = new Object();
-				params.loc = item.location;
-				call(url, params, function(data) {
-					document.getElementById("loc").innerHTML = item.location;
-					document.getElementById("location").value = item.location;
-					document.getElementById("number").value = data.number;
-				})
-			}
-			
-			document.addEventListener("DOMContentLoaded", function() {
-				selectbox("model");
-				selectbox("preseration");
-				selectbox("documentType");
-				selectbox("deptcode");
-			});
-	
 			$("#createBtn").click(function() {
-				if(isEmpty($("#eoName").val())) {
+				const name = document.getElementById("name").value;
+				const eoCommentA = document.getElementById("eoCommentA").value;
+				const eoCommentB = document.getElementById("eoCommentB").value;
+				
+				if(isEmpty($("#name").val())) {
 					alert("제목을 입력하세요.");
 					return;
 				}
@@ -119,36 +99,29 @@
 					return;
 				}
 				
-				var params = _data($("#form"));
-				var url = getCallUrl("/changeECO/create");
+				const params = new Object();
+				params.name = name;
+				params.eoCommentA = eoCommentA;
+				params.eoCommentB = eoCommentB;
+				
+				var url = getCallUrl("/changeECN/create");
 				call(url, params, function(data) {
 					if(data.result){
 						alert(data.msg);
-						location.href = getCallUrl("/changeECO/list");
+						location.href = getCallUrl("/changeECN/list");
 					}else{
 						alert(data.msg);
 					}
 				});
 			})
 			
-			$("#listBtn").click(function() {
-				location.href = getCallUrl("/changeECO/list");
-			});
-	
-			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
-				// DOM이 로드된 후 실행할 코드 작성
 				createAUIGrid1(columnsEco);
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(ecoGridID);
-// 				document.getElementById("name").focus();
 			});
 	
-			window.addEventListener("resize", function() {
-				AUIGrid.resize(partGridID);
-				AUIGrid.resize(ecoGridID);
-			});
 		</script>
 	</form>	
 </body>

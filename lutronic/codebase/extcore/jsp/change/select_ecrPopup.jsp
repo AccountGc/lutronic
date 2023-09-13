@@ -1,8 +1,7 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+String eoType = request.getParameter("eoType");
 %>
 <!DOCTYPE html>
 <html>
@@ -16,7 +15,11 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="lastNum" id="lastNum"> 
+		<input type="hidden" name="curPage" id="curPage"> 
+		<input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="eoType" id="eoType" value="<%=eoType%>">
 
 		<table class="search-table">
 			<colgroup>
@@ -26,9 +29,9 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>CR/ECPR 제목</th>
+				<th><%=eoType%> 제목</th>
 				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
-				<th>CR/ECPR 번호</th>
+				<th><%=eoType%> 번호</th>
 				<td class="indent5"><input type="text" name="number" id="number" class="width-200"></td>
 			</tr>
 			<tr>
@@ -40,13 +43,15 @@
 			</tr>
 			<tr>
 				<th>상태</th>
-				<td class="indent5" colspan="3"><select name="state" id="state" class="width-200" >
+				<td class="indent5" colspan="3">
+					<select name="state" id="state" class="width-200" >
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
-				</select></td>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<th>작성일</th>
@@ -143,7 +148,7 @@
 			function _layout() {
 				return [ {
 					dataField : "eoNumber",
-					headerText : "CR/ECPR 번호",
+					headerText : "<%=eoType%> 번호",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -152,7 +157,7 @@
 					},
 				}, {
 					dataField : "eoName",
-					headerText : "CR/ECPR 제목",
+					headerText : "<%=eoType%> 제목",
 					dataType : "string",
 					width : 120,
 					filter : {

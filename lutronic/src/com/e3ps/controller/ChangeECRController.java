@@ -47,11 +47,13 @@ public class ChangeECRController extends BaseController {
 	
 	@Description(value = "ECR 등록 페이지")
 	@GetMapping(value = "/create")
-	public ModelAndView createECR(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView createECR() throws Exception{
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/change/ecr-create.jsp");
 		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("sectionList", sectionList);
 		return model;
 	}
 	

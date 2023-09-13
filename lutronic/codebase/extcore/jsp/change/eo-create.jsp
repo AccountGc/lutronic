@@ -14,7 +14,7 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="cmd" id="cmd" value="save" />
 		<table class="button-table">
 			<tr>
@@ -117,25 +117,18 @@
 				})
 			}
 			
-			document.addEventListener("DOMContentLoaded", function() {
-				selectbox("model");
-				selectbox("preseration");
-				selectbox("documentType");
-				selectbox("deptcode");
-			});
-	
 			$("#createBtn").click(function() {
 				if(isEmpty($("#eoName").val())) {
 					alert("제목을 입력하세요.");
 					return;
 				}
 				
-// 				if($("#model").val() == "") {
+// 				if(isEmpty($("#model").val())) {
 // 					alert("제품명을 선택하세요.");
 // 					return;
 // 				}
 				
-// 				if($("#completeOid").val() == "") {
+// 				if(isEmpty($("#completeOid").val())) {
 // 					alert("완제품 품번을 선택하세요.");
 // 					return;
 // 				}
@@ -144,7 +137,10 @@
 					return;
 				}
 				
-				var params = _data($("#form"));
+				var params = new Object();
+				const field = ["eoName","eoType","eoCommentA","eoCommentB","eoCommentC"];
+				params = toField(params, field);
+				
 				var url = getCallUrl("/changeECO/createEO");
 				call(url, params, function(data) {
 					if(data.result){

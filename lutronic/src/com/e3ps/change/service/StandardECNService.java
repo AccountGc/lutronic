@@ -10,6 +10,7 @@ import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
+import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.session.SessionHelper;
 
@@ -129,5 +130,56 @@ public class StandardECNService extends StandardManager implements ECNService {
 		}
 		return list;
 		
+	}
+
+
+
+	@Override
+	public void create(ECNData data) throws Exception {
+		Transaction trs = new Transaction();
+	    try{
+	    	trs.start();
+	    	
+	    	EChangeNotice ecn = EChangeNotice.newEChangeNotice();
+			ecn.setEoNumber(data.getNumber());
+			ecn.setEoName(data.getName());
+			ecn.setEoCommentA(data.getEoCommentA());
+			ecn.setEoCommentB(data.getEoCommentB());
+			
+			FolderHelper.assignLocation(ecn, FolderTaskLogic.getFolder((String) "/Default/설계변경/ECN", WCUtil.getWTContainerRef()));
+			LifeCycleHelper.setLifeCycle(ecn,LifeCycleHelper.service.getLifeCycleTemplate((String) "LC_ECN",WCUtil.getWTContainerRef()));
+			ecn.setContainer(WCUtil.getPDMLinkProduct());
+			PersistenceHelper.manager.save(ecn);
+			
+			/*ECN 활동 Start*/
+			
+//			Vector<EChangeActivityDefinition> ecaVec=ChangeHelper.service.getEOActivityDefinition(ecnType,"STEP1");
+//			String stae ="FOLLOWING_ACTIVITY"; //후속조치
+//			for(int i = 0 ; i < ecaVec.size() ; i++){
+//				
+//				EChangeActivityDefinition ead = ecaVec.get(i);
+//				
+//				EChangeActivity changeActivity = null;//ECAHelper.service.createECA(ecn, ead, _eco.getWorker(), "/Default/EO/ECN/ECA",DateUtil.getToDay());
+//				if(changeActivity == null) throw new Exception(_eco.getEoNumber() + " = ECN CREATE : " + Message.get("ECA 생성시 오류가 발생 했습니다."));
+//				LifeCycleHelper.service.setLifeCycleState(changeActivity, State.toState("INWORK"), false);
+//			}
+//			
+//			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)ecn, State.toState(stae));
+			
+			/*ECN 활동 END*/
+//			SessionHelper.manager.setAdministrator();
+			
+	    	trs.commit();
+	    	trs = null;
+	    	
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+			trs.rollback();
+			throw e;
+        } finally {
+        	if (trs != null) {
+				trs.rollback();
+			}
+        }
 	}
 }

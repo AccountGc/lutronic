@@ -459,43 +459,12 @@ public class StandardECRService extends StandardManager implements ECRService {
 	public void create(ECRData data) throws Exception {
 		Transaction trs = new Transaction();
 	    try{
-	    	
 	    	trs.start();
-			
-//			String name = StringUtil.checkNull(req.getParameter("name"));
-//			String number = StringUtil.checkNull(req.getParameter("number"));
-//			String createDate = StringUtil.checkNull(req.getParameter("createDate"));
-//			String approveDate = StringUtil.checkNull(req.getParameter("approveDate"));
-//			
-//			String createDepart = StringUtil.checkNull(req.getParameter("createDepart"));
-//			String writer = StringUtil.checkNull(req.getParameter("writer"));
-//			
-//			String[] models = req.getParameterValues("model");
-//			
-//			String proposer = StringUtil.checkNull(req.getParameter("proposer"));
-//			String[] changeSections = req.getParameterValues("changeSection");
-//			String eoCommentA = StringUtil.checkNull(req.getParameter("eoCommentA"));
-//			String eoCommentB = StringUtil.checkNull(req.getParameter("eoCommentB"));
-//			String eoCommentC = StringUtil.checkNull(req.getParameter("eoCommentC"));
-//			String[] secondarys = req.getParameterValues("SECONDARY");
-//			
-//			
-//			String model = ChangeUtil.getArrayList(models);
-//			String changeSection = ChangeUtil.getArrayList(changeSections);
-			
-//			String number = "ECR-" +DateUtil.getCurrentDateString("year")+"-"+DateUtil.getCurrentDateString("month")+ "-";
-//			String seqNo = SequenceDao.manager.getSeqNo(number, "00000", "EChangeRequest", EChangeRequest.EO_NUMBER);
-			
-			//number = number + seqNo;
-			
-			
-			
-			
 			EChangeRequest ecr = null;
 			ecr = EChangeRequest.newEChangeRequest();
 			ecr.setEoName(data.getEoName());
 			ecr.setEoNumber(data.getEoNumber());
-			
+			ecr.setEoType(data.getEoType());
 			ecr.setCreateDate(data.getCreateDate());
 			ecr.setWriter(data.getWriter());
 			ecr.setApproveDate(data.getApproveDate());

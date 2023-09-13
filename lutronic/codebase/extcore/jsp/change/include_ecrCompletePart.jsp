@@ -14,7 +14,8 @@ String mode = request.getParameter("mode");
 		dataType : "string",
 		width : 180,
 		filter : {
-			showIcon : true
+			showIcon : true,
+			inline : true
 		}
 	}, {
 		dataField : "name",
@@ -22,7 +23,8 @@ String mode = request.getParameter("mode");
 		dataType : "string",
 		width : 180,
 		filter : {
-			showIcon : true
+			showIcon : true,
+			inline : true
 		}
 	}, {
 		dataField : "version",
@@ -30,7 +32,8 @@ String mode = request.getParameter("mode");
 		dataType : "string",
 		width : 180,
 		filter : {
-			showIcon : true
+			showIcon : true,
+			inline : true
 		}
 	}, {
 		dataField : "bom",
@@ -53,7 +56,6 @@ String mode = request.getParameter("mode");
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
-			showStateColumn : true,
 			rowCheckToRadio : true,
 			enableFilter : true
 		}

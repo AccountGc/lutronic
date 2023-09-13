@@ -199,32 +199,17 @@
 					<li>
 						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a> -->
-<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/changeECR/list?eoType=CR', '> 설계변경 > CR 검색');">CR</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">CR 등록</a> -->
-<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/changeECR/list?eoType=ECPR', '> 설계변경 > ECPR 검색');">ECPR</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">ECPR 등록</a> -->
-<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/changeECO/create', '> 설계변경 > ECO 등록');">ECO 등록</a> -->
-<!-- 					</li> -->
 					<li>
-						<a onclick="moveToPage(this, '/changeECN/list', '> 설계변경 > ECN 검색');">ECN 검색</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/changeECN/create', '> 설계변경 > ECN 등록');">ECN 등록</a>
+						<a onclick="moveToPage(this, '/changeECN/list', '> 설계변경 > ECN 검색');">ECN</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 관리자 >PART 전송 현황');">PART 전송 현황</a>

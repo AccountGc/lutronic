@@ -145,8 +145,10 @@ public class StandardECOService extends StandardManager implements ECOService {
 			String model = ChangeUtil.getArrayList(models);
 			//EO-1605-0001
 			//String number = "E" +DateUtil.getCurrentDateString("ym");
-			String eoTypeNumber = "E";
-			if(eoType.equals("DEV"))  eoTypeNumber = "D";
+			String eoTypeNumber = "E";	//양산
+			if(eoType.equals("DEV")) {
+				eoTypeNumber = "D";	//개발
+			}
 			String number = eoTypeNumber +DateUtil.getCurrentDateString("ym");
 			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
 			
