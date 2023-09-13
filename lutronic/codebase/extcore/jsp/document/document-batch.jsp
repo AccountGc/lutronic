@@ -23,9 +23,9 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 		<table class="button-table">
 			<tr>
 				<td>
-					<input type="button" value="저장" title="저장" onclick="addBtn();">
+					<input type="button" value="저장" title="저장" onclick="batch();">
 					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-					<input type="button" value="삭제" title="삭제" class="red" onclick="javascript:self.close();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 				</td>
 			</tr>
 		</table>
@@ -374,6 +374,26 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			// 추가
+			function addBtn(){
+				AUIGrid.addRow(myGridID, {}, 'last');
+			}
+			
+			// 삭제
+			function deleteBtn(){
+				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if(items.length==0){
+					alert("선택된 물질이 없습니다.");
+					return;
+				}
+				
+				if (!confirm("삭제하시겠습니까?")){
+					return;
+				}
+				
+				AUIGrid.removeCheckedRows(myGridID);
+			}
 		</script>
 	</form>
 </html>
