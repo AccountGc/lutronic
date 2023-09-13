@@ -514,8 +514,8 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			})
 			
 			document.addEventListener("DOMContentLoaded", function() {
-				createAUIGrid4(columnsDoc);
-				AUIGrid.resize(docGridID);
+				createAUIGrid90(columns90);
+				AUIGrid.resize(myGridID90);
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
 				document.getElementById("partName1").focus();

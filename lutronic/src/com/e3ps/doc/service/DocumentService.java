@@ -65,6 +65,8 @@ public interface DocumentService {
 			throws Exception;
 
 	public void create(Map<String, Object> params) throws Exception;
+	
+	public void batch(Map<String, Object> params) throws Exception;
 
 	public void createComments(Map<String, Object> params) throws Exception;
 

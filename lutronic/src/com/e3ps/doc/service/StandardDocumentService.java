@@ -2474,4 +2474,113 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 		}
 	}
+
+	@Override
+	public void batch(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> documentList = (ArrayList<Map<String, Object>>) params.get("documentList");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for(Map<String, Object> doc : documentList) {
+				String location = StringUtil.checkNull((String) doc.get("location"));
+				String name = StringUtil.checkNull((String) doc.get("docName"));
+				String documentName = StringUtil.checkNull((String) doc.get("documentName"));
+				String lifecycle = StringUtil.checkNull((String) doc.get("lifecycle"));
+				String documentType = StringUtil.checkNull((String) doc.get("documentType"));
+				DocumentType docType = DocumentType.toDocumentType(documentType);
+				String model = StringUtil.checkNull((String) doc.get("model"));
+				String writer = StringUtil.checkNull((String) doc.get("writer"));
+				String interalnumber = StringUtil.checkNull((String) doc.get("interalnumber"));
+				String preseration = StringUtil.checkNull((String) doc.get("preseration"));
+				String division = StringUtil.checkNull((String) doc.get("division"));
+				
+				
+//				String description = StringUtil.checkNull((String) doc.get("description"));
+//				String number = getDocumentNumberSeq(docType.getLongDescription());
+				
+//				String[] partOids = (String[]) doc.get("partOids");
+//				String[] docOids = (String[]) doc.get("docOids");
+				
+//				String primary = (String) doc.get("primary");
+//				ArrayList<String> secondarys = (ArrayList<String>) doc.get("secondarys");
+				
+				// 문서 기본 정보 설정
+				WTDocument document = WTDocument.newWTDocument();
+				if ("$$MMDocument".equals(documentType)) {
+					document.setName(name);
+				} else {
+					if (name.length() > 0) {
+						document.setName(documentName + "-" + name);
+					} else {
+						document.setName(documentName);
+					}
+				}
+//				document.setNumber(number);
+//				document.setDescription(description);
+				document.setDocType(docType);
+				
+				// 문서 분류체계 설정
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) document, folder);
+				
+				// 문서 Container 설정
+				PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+				WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+				document.setContainer(e3psProduct);
+				
+				// 문서 lifeCycle 설정
+				LifeCycleHelper.setLifeCycle(document,
+						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); // Lifecycle
+				
+				document = (WTDocument) PersistenceHelper.manager.save(document);
+				
+//				if (StringUtil.checkString(primary)) {
+//					File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+//					ApplicationData applicationData = ApplicationData.newApplicationData(document);
+//					applicationData.setRole(ContentRoleType.PRIMARY);
+//					PersistenceHelper.manager.save(applicationData);
+//					ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
+//				}
+				
+//				for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
+//					String cacheId = (String) secondarys.get(i);
+//					File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+//					ApplicationData applicationData = ApplicationData.newApplicationData(document);
+//					applicationData.setRole(ContentRoleType.SECONDARY);
+//					PersistenceHelper.manager.save(applicationData);
+//					ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
+//				}
+				
+				// 관련 부품
+//				updateDocumentToPartLink(document, partOids, false);
+				
+				// 관련 문서
+//				updateDocumentToDocumentLink(document, docOids, false);
+				
+				String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
+				if ("LC_Default_NonWF".equals(lifecycle)) {
+					E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) document, "BATCHAPPROVAL");
+					approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+				}
+				doc.put("approvalType", approvalType);
+				CommonHelper.service.changeIBAValues(document, doc);
+				
+				// 산출물 직접 등록(개발업무 관리,설계 변경 관리) 문서 직접등록 시 링크 생성
+//	        String linkType = (String)params.get("linkType");
+//	        String parentOid = (String)params.get("parentOid");
+//	        createLinkDocument(document,linkType,parentOid);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

@@ -94,48 +94,48 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 					valueField: "value" 
 				},
 			}, {
+				dataField : "documentName",
 				headerText : "문서 종류",
-				children : [{
-					dataField : "documentName",
-					headerText : "문서명",
-					width : 120,
-				}, {
-					dataField : "documentNameList",
-					headerText : "문서 종류",
-					width : 120,
-					renderer : {
-						type : "IconRenderer",
-						iconWidth : 16,
-						iconHeight : 16,
-						iconPosition : "aisleRight",
-						iconTableRef : {
-							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
-						},
-						onClick : function(event) {
-							AUIGrid.openInputer(event.pid);
+				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					for (var i = 0, len = documentNameList.length; i < len; i++) {
+						if (documentNameList[i]["code"] == value) {
+							AUIGrid.setCellValue(myGridID, rowIndex, "documentName", value);
+							retStr = documentNameList[i]["value"];
+							break;
 						}
-					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = documentNameList.length; i < len; i++) {
-							if (documentNameList[i]["code"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "documentName", value);
-								retStr = documentNameList[i]["value"];
-								break;
-							}
-						}
-						return retStr == "" ? value : retStr;
-					},
-					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: documentNameList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code",
-						valueField: "value"
-					},
-				} ]
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					list: documentNameList, 
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+					keyField: "code",
+					valueField: "value"
+				},
+			}, {
+				dataField : "docName",
+				headerText : "문서명",
+				width : 120,
+				dataType : "string",
+				width : 120,
+				cellMerge: true,
 			}, {
 				dataField : "lifecycle",
 				headerText : "결재 방식",
@@ -321,7 +321,7 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				width : 120,
 				cellMerge: true,
 			}, {
-				dataField : "part",
+				dataField : "partOids",
 				headerText : "관련부품",
 				dataType : "string",
 				width : 120,
@@ -393,6 +393,77 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				}
 				
 				AUIGrid.removeCheckedRows(myGridID);
+			}
+			
+			function batch(){
+				const documentList = AUIGrid.getGridData(myGridID);
+				
+				
+				for(let i = 0; i < documentList.length; i++){
+					
+					const rowNum = i + 1;
+					
+// 					if(isEmpty(documentList[i].location)){
+// 						alert(rowNum + "행의 문서에 저장위치를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].docName)){
+// 						alert(rowNum + "행의 문서에 문서명을 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].documentName)){
+// 						alert(rowNum + "행의 문서에 문서종류를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].lifecycle)){
+// 						alert(rowNum + "행의 문서에 결재방식을 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].documentType)){
+// 						alert(rowNum + "행의 문서에 문서분류를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].model)){
+// 						alert(rowNum + "행의 문서에 프로젝트 코드를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].writer)){
+// 						alert(rowNum + "행의 문서에 작성자를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].interalnumber)){
+// 						alert(rowNum + "행의 문서에 내부 문서번호를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].preseration)){
+// 						alert(rowNum + "행의 문서에 보존기간을 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].division)){
+// 						alert(rowNum + "행의 문서에 분류체계를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].partOids)){
+// 						alert(rowNum + "행의 문서에 관련부품를 입력하세요.");
+// 						return;
+// 					}
+				}
+				
+				
+				if (!confirm("등록 하시겠습니까?")) {
+					return false;
+				}
+				
+				
+				const url = getCallUrl("/doc/batch");
+				let params = new Object();
+				params.documentList = documentList;
+				
+				console.log(params.documentList);
+				
+				call(url, params, function(data) {
+					alert(data.msg);
+				});
 			}
 		</script>
 	</form>
