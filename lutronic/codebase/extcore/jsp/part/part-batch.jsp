@@ -31,12 +31,13 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 			<tr>
 				<td>
 					<input type="button" value="저장" title="저장" onclick="batch();">
-					<input type="button" value="추가" title="추가" class="blue" onclick=""> 
-					<input type="button" value="삭제" title="삭제" class="red" onclick="">
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 				</td>
 			</tr>
 		</table>
 		<input type="file" id="file" style="visibility:hidden;"></input>
+		<input type="hidden" name="fid"	 id="fid"  value="">
 		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
@@ -802,6 +803,9 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 					
 					const rowNum = i + 1;
 					
+					const fid = document.querySelector("#fid").value;
+					partList[i].fid = fid;
+					
 					if(isEmpty(partList[i].location)){
 						alert(rowNum + "행의 품목에 저장위치를 입력하세요.");
 						return;
@@ -878,6 +882,26 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				call(url, params, function(data) {
 					alert(data.msg);
 				});
+			}
+			
+			// 추가
+			function addBtn(){
+				AUIGrid.addRow(myGridID, {}, 'last');
+			}
+			
+			// 삭제
+			function deleteBtn(){
+				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if(items.length==0){
+					alert("선택된 물질이 없습니다.");
+					return;
+				}
+				
+				if (!confirm("삭제하시겠습니까?")){
+					return;
+				}
+				
+				AUIGrid.removeCheckedRows(myGridID);
 			}
 		</script>
 	</form>
