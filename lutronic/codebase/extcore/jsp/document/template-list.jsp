@@ -29,20 +29,20 @@ if (request.getParameter("popup") != null) {
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>문서양식 번호</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-200">
+					<input type="text" name="number" id="number" class="width-300">
 				</td>
 				<th>문서양식 제목</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-200">
+					<input type="text" name="name" id="name" class="width-300">
 				</td>
-			</tr>
-			<tr>
 				<th>문서양식 유형</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" >
 					<select name="dcoTemplateType" id="dcoTemplateType" class="width-200">
 						<option value="">선택</option>
 					<option value="$$Document">일반문서</option>
