@@ -72,7 +72,7 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() throws Exception{
+	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -112,11 +112,11 @@ public class PartController extends BaseController {
 
 	@Description(value = "일괄 등록 페이지")
 	@GetMapping(value = "/batch")
-	public ModelAndView batch() throws Exception{
-		
+	public ModelAndView batch() throws Exception {
+
 		String location = DrawingHelper.ROOTLOCATION;
 		String container = "product";
-		
+
 		ArrayList<Folder> folderList = FolderUtils.loadAllFolder(location, container);
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
@@ -126,7 +126,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> partName2List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME2");
 		ArrayList<NumberCode> partName3List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME3");
 		List<NumberCodeData> partType1List = new ArrayList<NumberCodeData>();
-        partType1List = NumberCodeHelper.manager.getArrayPartTypeList("PARTTYPE", "");
+		partType1List = NumberCodeHelper.manager.getArrayPartTypeList("PARTTYPE", "");
 		ModelAndView model = new ModelAndView();
 		model.addObject("folderList", folderList);
 		model.addObject("modelList", modelList);
@@ -140,7 +140,7 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-batch.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "일괄등록 실행")
 	@ResponseBody
 	@PostMapping(value = "/batch")
@@ -217,7 +217,7 @@ public class PartController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/list")
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = null;
+		Map<String, Object> result = new HashMap<>();
 		try {
 			result = PartHelper.manager.list(params);
 			result.put("result", SUCCESS);
@@ -266,7 +266,10 @@ public class PartController extends BaseController {
 		model.setViewName("popup:/part/part-view");
 		return model;
 	}
-	/**	품목 상세보기
+
+	/**
+	 * 품목 상세보기
+	 * 
 	 * @param request
 	 * @param response
 	 * @param oid
@@ -274,11 +277,12 @@ public class PartController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/viewPart")
-	public ModelAndView viewPart(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
+	public ModelAndView viewPart(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value = "oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		PartData partData = new PartData(part);
-		model.addObject("oid",oid);
+		model.addObject("oid", oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("partData", partData);
 		model.setViewName("popup:/part/viewPart");
@@ -1506,7 +1510,7 @@ public class PartController extends BaseController {
 	@RequestMapping("/viewAUIPartBom")
 	public ModelAndView viewAUIPartBom(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		
+
 		String oid = request.getParameter("oid");
 		String baseline = request.getParameter("baseline");
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
@@ -1521,13 +1525,13 @@ public class PartController extends BaseController {
 		try {
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
 			title = number;
-			if(!"".equals(baseline)) {
+			if (!"".equals(baseline)) {
 				ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
 				if (line != null) {
 					title = line.getName();
 				}
 			}
-			
+
 		} catch (Exception e) {
 			list = new ArrayList<Map<String, String>>();
 			e.printStackTrace();
@@ -1699,21 +1703,22 @@ public class PartController extends BaseController {
 		return list;
 	}
 
-	
-    /**
-     * AUI BOM Action
-     * 
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @ResponseBody
-    @RequestMapping(value = "/viewAUIPartBomChildAction")
-    public List<Map<String, Object>> viewAUIPartBomChildAction(@RequestBody Map<String, Object> params) throws Exception {
-        List<Map<String, Object>> list = BomSearchHelper.manager.viewAUIPartBomChildAction(params);
-        return list;
-    }
+	/**
+	 * AUI BOM Action
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/viewAUIPartBomChildAction")
+	public List<Map<String, Object>> viewAUIPartBomChildAction(@RequestBody Map<String, Object> params)
+			throws Exception {
+		List<Map<String, Object>> list = BomSearchHelper.manager.viewAUIPartBomChildAction(params);
+		return list;
+	}
+
 	/**
 	 * AUI BOM Action
 	 * 
@@ -1724,7 +1729,8 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getAUIBOMRootChildAction")
-	public List<Map<String, Object>> getAUIBOMRootChildAction(@RequestBody Map<String, Object> params)throws Exception {
+	public List<Map<String, Object>> getAUIBOMRootChildAction(@RequestBody Map<String, Object> params)
+			throws Exception {
 		List<Map<String, Object>> list = BomSearchHelper.manager.getAUIBOMRootChildAction(params);
 
 		return list;
@@ -1807,14 +1813,14 @@ public class PartController extends BaseController {
 			List<Map<String, String>> list = null;
 			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
 			String title = number;
-			
+
 			String lastedoid = oid;
 			WTPart lastedpart = part;
 			if (!PartSearchHelper.service.isLastPart(part)) {
-					lastedpart = (WTPart) ObjectUtil.getLatestObject((Master) part.getMaster());
-					lastedoid = CommonUtil.getOIDString(lastedpart);
+				lastedpart = (WTPart) ObjectUtil.getLatestObject((Master) part.getMaster());
+				lastedoid = CommonUtil.getOIDString(lastedpart);
 			}
-			
+
 			model.addObject("title", title);
 			model.addObject("oid", oid);
 			model.addObject("lastedoid", lastedoid);
@@ -1822,14 +1828,14 @@ public class PartController extends BaseController {
 			model.addObject("number", number);
 			model.addObject("list", list);
 			model.setViewName("popup:/part/bomEditor");
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return model;
 	}
-	
+
 	/**
 	 * AUI BOM Action
 	 * 

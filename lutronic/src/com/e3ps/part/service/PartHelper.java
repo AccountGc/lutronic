@@ -85,76 +85,18 @@ public class PartHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
 
-		String foid = StringUtil.checkNull((String) params.get("fid"));
-		String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
-
-		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
-		partNumber = partNumber.trim();
-		String partName = StringUtil.checkNull((String) params.get("partName"));
-		String createdFrom = StringUtil.checkNull((String) params.get("createdFrom"));
-		String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
-		String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
-		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
-		String creator = StringUtil.checkNull((String) params.get("creator"));
-		String state = StringUtil.checkNull((String) params.get("state"));
-
-		String unit = StringUtil.checkNull((String) params.get("unit"));
-
-		String model = StringUtil.checkNull((String) params.get("model")); // 프로젝트 코드 (NumberCode, IBA)
-		String productmethod = StringUtil.checkNull((String) params.get("productmethod")); // 제작방법 (NumberCode, IBA)
-		String deptcode = StringUtil.checkNull((String) params.get("deptcode")); // 부서 (NumberCode, IBA)
-
-		String weight = StringUtil.checkNull((String) params.get("weight")); // 무게 (Key IN, IBA)
-		String manufacture = StringUtil.checkNull((String) params.get("manufacture")); // MANUTACTURE (NumberCode,
-																						// IBA)
-		String mat = StringUtil.checkNull((String) params.get("mat")); // 재질 (NumberCode, IBA)
-		String finish = StringUtil.checkNull((String) params.get("finish")); // 후처리 (NumberCode, IBA)
-		String remarks = StringUtil.checkNull((String) params.get("remarks")); // 비고 (Key IN, IBA)
-		String specification = StringUtil.checkNull((String) params.get("specification")); // 사양 (Key IN, iBA)
-		String ecoNo = StringUtil.checkNull((String) params.get("ecoNo")); // ECO no (Key IN, iBA)
-		String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
-
-		String ecoPostdate = StringUtil.checkNull((String) params.get("ecoPostdate"));
-		String ecoPredate = StringUtil.checkNull((String) params.get("ecoPredate"));
-		String checkDummy = StringUtil.checkNull((String) params.get("checkDummy"));
-
-		// System.out.println("checkDummy = " + checkDummy);
-		// 배포 관련 추가
-		boolean isProduction = StringUtil.checkNull((String) params.get("production")).equals("true") ? true : false;
-		boolean ischeckDummy = StringUtil.checkNull((String) params.get("checkDummy")).equals("true") ? true : false;
-
-		String sortValue = StringUtil.checkNull((String) params.get("sortValue"));
-		String sortCheck = StringUtil.checkNull((String) params.get("sortCheck"));
-
-		String location = StringUtil.checkNull((String) params.get("location"));
-		if (location == null || location.length() == 0) {
-			location = "/Default/PART_Drawing";
-		}
-		if (sortCheck == null) {
-			sortCheck = "true";
-		}
-
-//		Folder folder = null;
-//		if (foid.length() > 0) {
-//			folder = (Folder) rf.getReference(foid).getObject();
-//			location = FolderHelper.getFolderPath(folder);
-//		} else {
-//			folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-//			foid = "";
-//		}
-
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
 
 		QuerySpecUtils.toCI(query, idx, WTPart.class);
-		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
-		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, modifiedFrom,
-				modifiedTo);
-		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creator);
-		QuerySpecUtils.toState(query, idx, WTPart.class, state);
-		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
+//		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
+//		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
+//		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);
+//		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, modifiedFrom,
+//				modifiedTo);
+//		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creator);
+//		QuerySpecUtils.toState(query, idx, WTPart.class, state);
+//		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
 		// EcoDate
 //		if (ecoPostdate.length() > 0 || ecoPredate.length() > 0) {
 //			// AttributeDefDefaultView aview =
@@ -200,17 +142,17 @@ public class PartHelper {
 //		}
 		// }
 
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MODEL, model);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_PRODUCTMETHOD, productmethod);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_DEPTCODE, deptcode);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_WEIGHT, weight);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MANUFACTURE, manufacture);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MAT, mat);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_FINISH, finish);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_REMARKS, remarks);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_SPECIFICATION, specification);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_CHANGENO, ecoNo);
-		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MODEL, model);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_PRODUCTMETHOD, productmethod);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_DEPTCODE, deptcode);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_WEIGHT, weight);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MANUFACTURE, manufacture);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MAT, mat);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_FINISH, finish);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_REMARKS, remarks);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_SPECIFICATION, specification);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_CHANGENO, ecoNo);
+//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
 
 		// folder search
 //		if (!"/Default/PART_Drawing".equals(location)) {
@@ -252,7 +194,7 @@ public class PartHelper {
 //					new int[] { idx });
 //
 //		}
-
+		System.out.println(query);
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -396,20 +338,20 @@ public class PartHelper {
 		return count;
 	}
 
-	public JSONArray include_ChangeECOView(String oid, String moduleType) throws Exception {
-		List<ECOData> list = new ArrayList<ECOData>();
-		if (StringUtil.checkString(oid)) {
-			if ("part".equals(moduleType)) {
-				WTPart part = (WTPart) CommonUtil.getObject(oid);
-				List<EChangeOrder> eolist = getPartTOECOList(part);
-				for (EChangeOrder eco : eolist) {
-					ECOData data = new ECOData(eco);
-					list.add(data);
-				}
-			}
-		}
-		return JSONArray.fromObject(list);
-	}
+//	public JSONArray include_ChangeECOView(String oid, String moduleType) throws Exception {
+//		List<ECOData> list = new ArrayList<ECOData>();
+//		if (StringUtil.checkString(oid)) {
+//			if ("part".equals(moduleType)) {
+//				WTPart part = (WTPart) CommonUtil.getObject(oid);
+//				List<EChangeOrder> eolist = getPartTOECOList(part);
+//				for (EChangeOrder eco : eolist) {
+//					ECOData data = new ECOData(eco);
+//					list.add(data);
+//				}
+//			}
+//		}
+//		return JSONArray.fromObject(list);
+//	}
 
 	public Map<String, Object> listProduction(@RequestBody Map<String, Object> params) throws Exception {
 		QuerySpec query = new QuerySpec();
