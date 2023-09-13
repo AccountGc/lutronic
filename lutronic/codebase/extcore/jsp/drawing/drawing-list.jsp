@@ -1,9 +1,15 @@
 <%@page import="wt.org.WTUser"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
+ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
+ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
+ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 %>
 <!DOCTYPE html>
 <html>
@@ -83,10 +89,13 @@
 				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>CAD 타입</th>
@@ -136,20 +145,26 @@
 				<td class="indent5">
 					<select name="productmethod" id="productmethod" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode productmethod : productmethodList) {
+						%>
+						<option value="<%=productmethod.getCode()%>"><%=productmethod.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -173,10 +188,13 @@
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode manufacture : manufactureList) {
+						%>
+						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -185,20 +203,26 @@
 				<td class="indent5">
 					<select name="mat" id="mat" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode mat : matList) {
+						%>
+						<option value="<%=mat.getCode()%>"><%=mat.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
 					<select name="finish" id="finish" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode finish : finishList) {
+						%>
+						<option value="<%=finish.getCode()%>"><%=finish.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>사양</th>
