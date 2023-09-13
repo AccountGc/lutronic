@@ -192,13 +192,50 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 			</tr>
 		</table>
 
+		<!-- 기안자 변경 -->
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						기안자 변경
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="search-table">
+			<colgroup>
+				<col width="174">
+				<col width="*">
+				<col width="174">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th>OID</th>
+				<td class="indent5">
+					<input type="text" name="oid" id="oid" class="width-300">
+				</td>
+				<th>사용자</th>
+				<td class="indent5">
+					<input type="text" name="oid" id="oid" class="width-300">
+				</td>
+			</tr>
+		</table>
+		<table class="button-table">
+			<tr>
+				<td class="center">
+					<input type="button" value="기안자 변경" title="기안자 변경" class="blue" onclick="apply();">
+				</td>
+			</tr>
+		</table>
+
+
 
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("attrName");
 				twindate("created");
 				document.getElementById("msg").style.display = "none";
-				// 				document.getElementById("layer").style.display = "none";
 			})
 
 			function info() {

@@ -1,10 +1,14 @@
 package com.e3ps.common.util;
 
+import com.ptc.wvs.server.util.PublishUtils;
+
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
 import wt.content.ContentRoleType;
 import wt.fc.QueryResult;
+import wt.representation.Representable;
+import wt.representation.Representation;
 import wt.util.FileUtil;
 
 public class AUIGridUtil {
@@ -43,6 +47,70 @@ public class AUIGridUtil {
 			String url = "/Windchill/eSolution/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
 			template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
+		}
+		return template;
+	}
+
+	/**
+	 * 그리드에서 STEP 표시
+	 */
+	public static String step(ContentHolder holder) throws Exception {
+		String template = "";
+		Representable representable = PublishUtils.findRepresentable(holder);
+		Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+		if (representation != null) {
+			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.SECONDARY);
+			while (result.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) result.nextElement();
+				String ext = FileUtil.getExtension(data.getFileName());
+				String icon = getFileIcon(ext);
+				String url = "/Windchill/eSolution/content/download?oid="
+						+ data.getPersistInfo().getObjectIdentifier().getStringValue();
+				template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
+			}
+		}
+		return template;
+	}
+
+	/**
+	 * 그리드에서 PDF 표시
+	 */
+	public static String pdf(ContentHolder holder) throws Exception {
+		String template = "";
+		Representable representable = PublishUtils.findRepresentable(holder);
+		Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+		if (representation != null) {
+			QueryResult result = ContentHelper.service.getContentsByRole(representation,
+					ContentRoleType.ADDITIONAL_FILES);
+			while (result.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) result.nextElement();
+				String ext = FileUtil.getExtension(data.getFileName());
+				String icon = getFileIcon(ext);
+				String url = "/Windchill/eSolution/content/download?oid="
+						+ data.getPersistInfo().getObjectIdentifier().getStringValue();
+				template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
+			}
+		}
+		return template;
+	}
+
+	/**
+	 * 그리드에서 DFX 표시
+	 */
+	public static String dxf(ContentHolder holder) throws Exception {
+		String template = "";
+		Representable representable = PublishUtils.findRepresentable(holder);
+		Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+		if (representation != null) {
+			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.SECONDARY);
+			while (result.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) result.nextElement();
+				String ext = FileUtil.getExtension(data.getFileName());
+				String icon = getFileIcon(ext);
+				String url = "/Windchill/eSolution/content/download?oid="
+						+ data.getPersistInfo().getObjectIdentifier().getStringValue();
+				template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
+			}
 		}
 		return template;
 	}

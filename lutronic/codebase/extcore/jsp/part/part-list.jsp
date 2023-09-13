@@ -247,7 +247,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					<select name="_psize" id="_psize">
 						<option value="30">30</option>
 						<option value="50">50</option>
-						<option value="100">100</option>
+						<option value="100" selected="selected">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
@@ -309,6 +309,42 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						altField : null,
 						onClick : function(event) {
 						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "step",
+					headerText : "STEP",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "dxf",
+					headerText : "DXF",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "PDF",
+					headerText : "pdf",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
 					},
 					filter : {
 						showIcon : false,
@@ -487,7 +523,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						// 						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -519,6 +555,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
+				$("#_psize").bindSelectSetValue(100);
 			});
 
 			function editBOM() {

@@ -6,9 +6,9 @@ import com.ptc.wvs.server.util.PublishUtils;
 import wt.content.ContentRoleType;
 import wt.representation.Representable;
 
-public class ThumbnailUtils {
+public class ThumbnailUtil {
 
-	private ThumbnailUtils() {
+	private ThumbnailUtil() {
 
 	}
 

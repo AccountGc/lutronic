@@ -6,50 +6,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.EcrPartLink;
 import com.e3ps.change.beans.ECOData;
-import com.e3ps.change.beans.EoComparator;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.column.PartColumn;
-import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.beans.VersionData;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.comments.CommentsData;
-import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.development.beans.MasterData;
-import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.People;
 import com.e3ps.part.beans.ObjectComarator;
-import com.e3ps.part.beans.PartDTO;
 import com.e3ps.part.beans.PartData;
 import com.e3ps.part.beans.PartTreeData;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.rohs.service.RohsQueryHelper;
 
 import net.sf.json.JSONArray;
@@ -57,15 +43,15 @@ import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
 import wt.epm.EPMDocument;
+import wt.epm.build.EPMBuildHistory;
 import wt.epm.build.EPMBuildRule;
 import wt.epm.structure.EPMDescribeLink;
+import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
-import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
-import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.StringDefinition;
@@ -73,22 +59,13 @@ import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.IBAHolder;
 import wt.iba.value.StringValue;
-import wt.inf.container.WTContainerRef;
 import wt.introspection.ClassInfo;
 import wt.introspection.WTIntrospector;
-import wt.lifecycle.LifeCycleHelper;
-import wt.lifecycle.LifeCycleTemplate;
 import wt.org.WTUser;
 import wt.part.PartDocHelper;
-import wt.part.PartType;
-import wt.part.QuantityUnit;
-import wt.part.Source;
 import wt.part.WTPart;
-import wt.part.WTPartDescribeLink;
 import wt.part.WTPartMaster;
-import wt.pdmlink.PDMLinkProduct;
 import wt.pds.DatabaseInfoUtilities;
-import wt.pom.Transaction;
 import wt.query.ClassAttribute;
 import wt.query.KeywordExpression;
 import wt.query.OrderBy;
@@ -97,7 +74,6 @@ import wt.query.RelationalExpression;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
-import wt.vc.baseline.Baseline;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
@@ -295,7 +271,6 @@ public class PartHelper {
 		map.put("curPage", pager.getCpage());
 		return map;
 	}
-
 
 	public static long getECODATESeqDefinitionId() {
 		StringDefinition itemSeqDefinition = null;
@@ -1105,4 +1080,41 @@ public class PartHelper {
 		result.put("list", item);
 		return result;
 	}
+
+	/**
+	 * 품목과 연관된 3D 캐드 가져오기
+	 */
+	public EPMDocument getEPMDocument(WTPart part) throws Exception {
+		EPMDocument epm = null;
+		if (part == null) {
+			return epm;
+		}
+
+		QueryResult result = null;
+		if (VersionControlHelper.isLatestIteration(part)) {
+			result = PersistenceHelper.manager.navigate(part, "buildSource", EPMBuildRule.class);
+		} else {
+			result = PersistenceHelper.manager.navigate(part, "builtBy", EPMBuildHistory.class);
+		}
+		if (result.hasMoreElements()) {
+			epm = (EPMDocument) result.nextElement();
+		}
+		return epm;
+	}
+
+	/**
+	 * 1품 1도인 업체에서만 사용가능
+	 */
+	public EPMDocument getEPMDocument2D(EPMDocument epm) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EPMReferenceLink.class, true);
+		QuerySpecUtils.toEquals(query, idx, EPMReferenceLink.class, "roleAObjectRef.key.id", epm);
+		QuerySpecUtils.toEquals(query, idx, EPMReferenceLink.class, "referenceType", "DRAWING");
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if(result.hasMoreElements()) {
+			Object[] obj = (Object[])result.nextElement();
+			EPMReferenceLink link = (EPMReferenceLink) obj[0];
+			return link.getReferencedBy();
+		}
+		return null;
 }
