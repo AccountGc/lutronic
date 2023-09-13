@@ -332,6 +332,23 @@ public class DocumentController extends BaseController {
 		model.addObject("documentNameList", documentNameList);
 		return model;
 	}
+	
+	@Description(value = "문서 등록")
+	@ResponseBody
+	@PostMapping(value = "/batch")
+	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.batch(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "문서 일괄결재")
 	@GetMapping(value = "/register")

@@ -101,7 +101,7 @@ public class StandardCommonContentService extends StandardManager implements Com
 		try {
 			trx.start();
 			
-			File file = CommonContentHelper.manager.getFileFromCacheId(loc);
+			File file = new File(loc);
 			String downloadFile = "";
 			String newfile = "";
 			ApplicationData applicationdata = ApplicationData.newApplicationData(holder);
@@ -113,12 +113,6 @@ public class StandardCommonContentService extends StandardManager implements Com
 			if (desc != null) {
 				applicationdata.setDescription(desc);
 			}
-			
-			System.out.println("===================>" + loc);
-			System.out.println("===================>" + holder);
-			System.out.println("===================>" + applicationdata);
-			System.out.println("===================>" + file);
-			System.out.println("===================>" + file.getPath());
 			
 			ContentServerHelper.service.updateContent(holder, applicationdata, file.getPath());
 			

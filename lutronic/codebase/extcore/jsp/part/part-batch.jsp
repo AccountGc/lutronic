@@ -877,8 +877,6 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 				let params = new Object();
 				params.partList = partList;
 				
-				console.log(params.partList);
-				
 				call(url, params, function(data) {
 					alert(data.msg);
 				});
