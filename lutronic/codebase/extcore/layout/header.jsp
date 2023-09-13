@@ -203,13 +203,13 @@
 <!-- 						<a onclick="moveToPage(this, '/changeECO/createEO', '> 설계변경 >EO 등록');">EO 등록</a> -->
 <!-- 					</li> -->
 					<li>
-						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > CR 검색');">CR</a>
+						<a onclick="moveToPage(this, '/changeECR/list?eoType=CR', '> 설계변경 > CR 검색');">CR</a>
 					</li>
 <!-- 					<li> -->
 <!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">CR 등록</a> -->
 <!-- 					</li> -->
 					<li>
-						<a onclick="moveToPage(this, '/changeECR/list', '> 설계변경 > ECPR 검색');">ECPR</a>
+						<a onclick="moveToPage(this, '/changeECR/list?eoType=ECPR', '> 설계변경 > ECPR 검색');">ECPR</a>
 					</li>
 <!-- 					<li> -->
 <!-- 						<a onclick="moveToPage(this, '/changeECR/create', '> 설계변경 > CR/ECPR 등록');">ECPR 등록</a> -->

@@ -20,4 +20,4 @@
 		</ul>
 	</nav>
 </div>
-<iframe src="/Windchill/eSolution/mainPage" id="content"></iframe>
+<iframe src="/Windchill/plm/mainPage" id="content"></iframe>
