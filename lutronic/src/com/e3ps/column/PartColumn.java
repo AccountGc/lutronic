@@ -58,21 +58,20 @@ public class PartColumn {
 		setCreator(part.getCreatorName());
 		setCreateDate(part.getCreateTimestamp());
 		setModifiedDate(part.getModifyTimestamp());
-//		setAttach(part);
+		setAttach(part);
 	}
 
-//	private void setAttach(WTPart part) throws Exception {
-//		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
-//		System.out.println("epm" + epm);
-//		// 3D 캐드 세팅..
-//		if (epm != null) {
-//			setStep(AUIGridUtil.step(epm));
-//			EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
-//			System.out.println("epm2D=" + epm2D);
-//			if (epm2D != null) {
-//				setPdf(AUIGridUtil.pdf(epm2D));
-//				setDxf(AUIGridUtil.dxf(epm2D));
-//			}
-//		}
-//	}
+	private void setAttach(WTPart part) throws Exception {
+		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+		// 3D 캐드 세팅..
+		if (epm != null) {
+			setStep(AUIGridUtil.step(epm));
+			EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
+			System.out.println("epm2D=" + epm2D);
+			if (epm2D != null) {
+				setPdf(AUIGridUtil.pdf(epm2D));
+				setDxf(AUIGridUtil.dxf(epm2D));
+			}
+		}
+	}
 }

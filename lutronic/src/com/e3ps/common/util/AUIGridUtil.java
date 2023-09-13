@@ -27,7 +27,7 @@ public class AUIGridUtil {
 			ApplicationData data = (ApplicationData) result.nextElement();
 			String ext = FileUtil.getExtension(data.getFileName());
 			String icon = getFileIcon(ext);
-			String url = "/Windchill/eSolution/content/download?oid="
+			String url = "/Windchill/plm/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
 			template += "<a href=" + url + "><img src=" + icon + "></a>";
 		}
@@ -44,7 +44,7 @@ public class AUIGridUtil {
 			ApplicationData data = (ApplicationData) result.nextElement();
 			String ext = FileUtil.getExtension(data.getFileName());
 			String icon = getFileIcon(ext);
-			String url = "/Windchill/eSolution/content/download?oid="
+			String url = "/Windchill/plm/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
 			template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
 		}
@@ -56,18 +56,17 @@ public class AUIGridUtil {
 	 */
 	public static String step(ContentHolder holder) throws Exception {
 		String template = "";
-		Representable representable = PublishUtils.findRepresentable(holder);
-		Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
-		if (representation != null) {
-			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.SECONDARY);
-			while (result.hasMoreElements()) {
-				ApplicationData data = (ApplicationData) result.nextElement();
-				String ext = FileUtil.getExtension(data.getFileName());
-				String icon = getFileIcon(ext);
-				String url = "/Windchill/eSolution/content/download?oid="
-						+ data.getPersistInfo().getObjectIdentifier().getStringValue();
-				template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
+		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.SECONDARY);
+		while (result.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) result.nextElement();
+			String ext = FileUtil.getExtension(data.getFileName());
+			if (!"stp".equalsIgnoreCase(ext)) {
+				continue;
 			}
+			String icon = getFileIcon(ext);
+			String url = "/Windchill/plm/content/download?oid="
+					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
+			template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
 		}
 		return template;
 	}
@@ -86,7 +85,10 @@ public class AUIGridUtil {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				String ext = FileUtil.getExtension(data.getFileName());
 				String icon = getFileIcon(ext);
-				String url = "/Windchill/eSolution/content/download?oid="
+				if ("pdf".equalsIgnoreCase(ext)) {
+					continue;
+				}
+				String url = "/Windchill/plm/content/download?oid="
 						+ data.getPersistInfo().getObjectIdentifier().getStringValue();
 				template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
 			}
@@ -106,8 +108,11 @@ public class AUIGridUtil {
 			while (result.hasMoreElements()) {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				String ext = FileUtil.getExtension(data.getFileName());
+				if ("dxf".equalsIgnoreCase(ext)) {
+					continue;
+				}
 				String icon = getFileIcon(ext);
-				String url = "/Windchill/eSolution/content/download?oid="
+				String url = "/Windchill/plm/content/download?oid="
 						+ data.getPersistInfo().getObjectIdentifier().getStringValue();
 				template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
 			}

@@ -87,8 +87,8 @@ public class PartHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
-
-		QuerySpecUtils.toCI(query, idx, WTPart.class);
+//
+//		QuerySpecUtils.toCI(query, idx, WTPart.class);
 //		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 //		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
 //		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);
@@ -194,7 +194,6 @@ public class PartHelper {
 //					new int[] { idx });
 //
 //		}
-		System.out.println(query);
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -1050,13 +1049,14 @@ public class PartHelper {
 	public EPMDocument getEPMDocument2D(EPMDocument epm) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EPMReferenceLink.class, true);
-		QuerySpecUtils.toEquals(query, idx, EPMReferenceLink.class, "roleAObjectRef.key.id", epm);
-		QuerySpecUtils.toEquals(query, idx, EPMReferenceLink.class, "referenceType", "DRAWING");
+		QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "roleAObjectRef.key.id", epm);
+		QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "referenceType", "DRAWING");
 		QueryResult result = PersistenceHelper.manager.find(query);
-		if(result.hasMoreElements()) {
-			Object[] obj = (Object[])result.nextElement();
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
 			EPMReferenceLink link = (EPMReferenceLink) obj[0];
 			return link.getReferencedBy();
 		}
 		return null;
+	}
 }

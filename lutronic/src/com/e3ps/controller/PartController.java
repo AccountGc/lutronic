@@ -55,20 +55,10 @@ import wt.vc.baseline.ManagedBaseline;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
-/**
- * @author Administrator
- *
- */
 @Controller
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
-	/**
-	 * 
-	 * LUTRONIC 추가 시작
-	 * 
-	 * 
-	 */
 
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
