@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.e3ps.column.DocumentColumn;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -41,6 +42,7 @@ import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
+import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -531,5 +533,18 @@ public class RohsHelper {
 			e.printStackTrace();
 		}
     	return list;
+	}
+	
+	public ROHSMaterial getRohs(String number) throws Exception {
+		QuerySpec query = new QuerySpec();
+    	int idx = query.addClassList(ROHSMaterial.class, true);
+    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, number);
+    	QueryResult result = PersistenceHelper.manager.find(query);
+    	ROHSMaterial rohs = null;
+    	while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			rohs = (ROHSMaterial) obj[0];
+		}
+    	return rohs;
 	}
 }

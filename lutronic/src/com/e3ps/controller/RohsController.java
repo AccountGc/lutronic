@@ -101,7 +101,7 @@ public class RohsController extends BaseController {
 	@GetMapping(value = "/attachFile")
 	public ModelAndView attachFile() throws Exception{
 		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/common/attach-primary");
+		model.setViewName("popup:/common/attach-multi");
 		return model;
 	}
 	
