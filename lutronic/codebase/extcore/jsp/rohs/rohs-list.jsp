@@ -43,12 +43,42 @@ if(request.getParameter("popup")!=null){
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>물질명</th>
-				<td class="indent5"><input type="text" name="rohsName" id="rohsName" class="width-200"></td>
+				<td class="indent5">
+					<input type="text" name="rohsName" id="rohsName" class="width-300">
+				</td>
 				<th>물질 번호</th>
-				<td class="indent5"><input type="text" name="rohsNumber" id="rohsNumber" class="width-200"></td>
+				<td class="indent5">
+					<input type="text" name="rohsNumber" id="rohsNumber" class="width-300">
+				</td>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>등록자</th>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>상태</th>
+				<td class="indent5">
+					<select name="state" id="state" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+				<th>수정일</th>
+				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 			</tr>
 			<tr>
 				<th>협력업체</th>
@@ -62,28 +92,8 @@ if(request.getParameter("popup")!=null){
 					</select>
 				</td>
 				<th>설명</th>
-				<td class="indent5"><input type="text" name="description" id="description" class="width-200"></td>
-			</tr>
-			<tr>
-				<th>등록일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
-				<th>수정일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
-			</tr>
-			<tr>
-				<th>등록자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
-				<th>상태</th>
-				<td class="indent5">
-					<select name="state" id="state" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
+				<td class="indent5" colspan="3">
+					<input type="text" name="description" id="description" class="width-300">
 				</td>
 			</tr>
 		</table>

@@ -27,6 +27,8 @@
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>도면분류</th>
@@ -34,6 +36,68 @@
 					<span id="locationName">
 						/Default/PART_Drawing
 					</span>
+				</td>
+				<th>등록자</th>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+			</tr>
+<!-- 				<th>CAD 구분</th> -->
+<!-- 				<td class="indent5"> -->
+<!-- 					<select name="cadDivision" id="cadDivision" class="width-200"> -->
+<!-- 						<option value="">선택</option> -->
+<!-- 						<option value="INWORK">작업 중</option> -->
+<!-- 						<option value="UNDERAPPROVAL">승인 중</option> -->
+<!-- 						<option value="APPROVED">승인됨</option> -->
+<!-- 						<option value="RETURN">반려됨</option> -->
+<!-- 					</select> -->
+<!-- 				</td> -->
+			<tr>
+				<th>도면번호</th>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-300">
+				</td>
+				<th>도면명</th>
+				<td class="indent5" >
+					<input type="text" name="name" id="name" class="width-300">
+				</td>
+				<th>수정일</th>
+				<td class="indent5">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<select name="model" id="model" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
+				<th>CAD 타입</th>
+				<td class="indent5">
+					<select name="cadType" id="cadType" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
 				</td>
 				<th>Rev.</th>
 				<td class="indent5">
@@ -57,81 +121,7 @@
 					</div>
 				</td>
 			</tr>
-			<tr>
-<!-- 				<th>CAD 구분</th> -->
-<!-- 				<td class="indent5"> -->
-<!-- 					<select name="cadDivision" id="cadDivision" class="width-200"> -->
-<!-- 						<option value="">선택</option> -->
-<!-- 						<option value="INWORK">작업 중</option> -->
-<!-- 						<option value="UNDERAPPROVAL">승인 중</option> -->
-<!-- 						<option value="APPROVED">승인됨</option> -->
-<!-- 						<option value="RETURN">반려됨</option> -->
-<!-- 					</select> -->
-<!-- 				</td> -->
-				<th>CAD 타입</th>
-				<td class="indent5">
-					<select name="cadType" id="cadType" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
-				<th>도면번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-500">
-				</td>
-			</tr>
-			<tr>
-				<th>도면명</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-500">
-				</td>
-				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
-			</tr>
-			<tr>
-				<th>프로젝트코드</th>
-					<td class="indent5" colspan="3">
-						<select name="model" id="model" class="width-500">
-							<option value="">선택</option>
-							<option value="INWORK">작업 중</option>
-							<option value="UNDERAPPROVAL">승인 중</option>
-							<option value="APPROVED">승인됨</option>
-							<option value="RETURN">반려됨</option>
-						</select>
-					</td>
-			</tr>
-		</table>
-		<table class="search-table"  id="hiddenTable" style="display: none;">
-			<colgroup>
-				<col width="130">
-				<col width="*">
-				<col width="130">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
-				<th>수정일</th>
-				<td class="indent5">
-					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
-				</td>
-			</tr>
-			<tr>
+			<tr class="hidden">
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
@@ -144,7 +134,7 @@
 				</td>
 				<th>제작방법</th>
 				<td class="indent5">
-					<select name="productmethod" id="productmethod" class="width-500">
+					<select name="productmethod" id="productmethod" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -152,21 +142,9 @@
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-			</tr>
-			<tr>
 				<th>부서</th>
 				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-500">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
-				<th>단위</th>
-				<td class="indent5">
-					<select name="unit" id="unit" class="width-500">
+					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -175,15 +153,25 @@
 					</select>
 				</td>
 			</tr>
-			<tr>
+			<tr class="hidden">
+				<th>단위</th>
+				<td class="indent5">
+					<select name="unit" id="unit" class="width-200">
+						<option value="">선택</option>
+						<option value="INWORK">작업 중</option>
+						<option value="UNDERAPPROVAL">승인 중</option>
+						<option value="APPROVED">승인됨</option>
+						<option value="RETURN">반려됨</option>
+					</select>
+				</td>
 				<th>무게</th>
 				<td class="indent5">
-					<input type="text" name="weight1" id="weight1" class="width-200"> ~ 
-					<input type="text" name="weight2" id="weight2" class="width-200">
+					<input type="text" name="weight1" id="weight1" class="width-100"> ~ 
+					<input type="text" name="weight2" id="weight2" class="width-100">
 				</td>
 				<th>Manufacturer</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -192,10 +180,10 @@
 					</select>
 				</td>
 			</tr>
-			<tr>
+			<tr class="hidden">
 				<th>재질</th>
 				<td class="indent5">
-					<select name="mat" id="mat" class="width-500">
+					<select name="mat" id="mat" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -205,7 +193,7 @@
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<select name="finish" id="finish" class="width-500">
+					<select name="finish" id="finish" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -213,25 +201,25 @@
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-			</tr>
-			<tr>
-				<th>비고</th>
-				<td class="indent5">
-					<input type="text" name="remarks" id="remarks" class="width-500">
-				</td>
 				<th>사양</th>
 				<td class="indent5">
-					<input type="text" name="specification" id="specification" class="width-500">
+					<input type="text" name="specification" id="specification" class="width-300">
+				</td>
+			</tr>
+			<tr class="hidden">
+				<th>비고</th>
+				<td class="indent5" colspan="5">
+					<input type="text" name="remarks" id="remarks" class="width-300">
 				</td>
 			</tr>
 		</table>
-		<input type="button"  id="spreadBtn" value="펼치기">
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
+					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -246,7 +234,6 @@
 				</td>
 			</tr>
 		</table>
-
 		<table>
 			<colgroup>
 				<col width="230">
@@ -477,49 +464,47 @@
 				AUIGrid.resize(myGridID);
 			});
 			
-			document.querySelector("#spreadBtn").addEventListener("click", (e)=>{
-				const hiddenTable = document.querySelector("#hiddenTable");
-				const state = e.target.value;
-				
-				switch(state){
-					case "펼치기" : 
-						e.target.value = "접기"; 
-						hiddenTable.style.display="table"; 
+			function spread(target) {
+				const e = document.querySelectorAll('.hidden');
+				// 버근가..
+				for (let i = 0; i < e.length; i++) {
+					const el = e[i];
+					const style = window.getComputedStyle(el);
+					console.log(el);
+					const display = style.getPropertyValue("display");
+					if (display === "none") {
+						el.style.display = "table-row";
+						target.value = "접기";
 						selectbox("state");
-						selectbox("cadDivision");
-						selectbox("cadType");
 						selectbox("model");
 						selectbox("productmethod");
 						selectbox("deptcode");
-						selectbox("manufacture");
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
+						selectbox("manufacture");
+						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
-						selectbox("_psize");
-						break;
-					case "접기" : 
-						e.target.value = "펼치기"; 
-						hiddenTable.style.display="none"; 
+					} else {
+						el.style.display = "none";
+						target.value = "펼치기";
 						selectbox("state");
-						selectbox("cadDivision");
-						selectbox("cadType");
 						selectbox("model");
 						selectbox("productmethod");
 						selectbox("deptcode");
-						selectbox("manufacture");
 						selectbox("unit");
 						selectbox("mat");
 						selectbox("finish");
+						selectbox("manufacture");
+						selectbox("_psize");
 						finderUser("creator");
 						twindate("created");
 						twindate("modified");
-						selectbox("_psize");
-						break;
+					}
 				}
-			});
+			}
 		</script>
 	</form>
 </body>

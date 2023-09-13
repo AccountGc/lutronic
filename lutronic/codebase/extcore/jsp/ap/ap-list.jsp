@@ -31,40 +31,33 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>금형 번호</th>
 				<td class="indent5">
-					<input type="text" name="docNumber" id="docNumber" class="width-500">
+					<input type="text" name="docNumber" id="docNumber" class="width-300">
 				</td>
 				<th>금형명</th>
 				<td class="indent5">
-					<input type="text" name="docName" id="docName" class="width-500">
+					<input type="text" name="docName" id="docName" class="width-300">
+				</td>
+				<th>금형타입</th>
+				<td class="indent5">
+					<select name="moldtype" id="moldtype" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode moldType : moldTypeList) {
+						%>
+						<option value="<%=moldType.getCode() %>"><%=moldType.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
-				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="predate" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="postdate" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
-				<th>수정일</th>
-				<td class="indent5">
-					<input type="text" name="predate_modify" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="postdate_modify" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
-			</tr>
-			<tr>
-				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
@@ -75,8 +68,64 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
+				<th>등록자</th>
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>등록일</th>
+				<td class="indent5">
+					<input type="text" name="predate" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="postdate" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
 			</tr>
 			<tr>
+				<th>Manufacturer</th>
+				<td class="indent5">
+					<select name="manufacture" id="manufacture" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode manufacture : manufactureList) {
+						%>
+						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>부서</th>
+				<td class="indent5">
+					<select name="deptcode" id="deptcode" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>수정일</th>
+				<td class="indent5">
+					<input type="text" name="predate_modify" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="postdate_modify" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
+			</tr>
+			<tr>
+				<th>업체자체금형번호</th>
+				<td class="indent5">
+					<input type="text" name="moldnumber" id="moldnumber" class="width-300">
+				</td>
+				<th>내부 문서번호</th>
+				<td class="indent5">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
+				</td>
 				<th>Rev.</th>
 				<td class="indent5" colspan="3">
 					&nbsp;
@@ -100,60 +149,9 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				</td>
 			</tr>
 			<tr>
-				<th>Manufacturer</th>
-				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode manufacture : manufactureList) {
-						%>
-						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<th>금형타입</th>
-				<td class="indent5">
-					<select name="moldtype" id="moldtype" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode moldType : moldTypeList) {
-						%>
-						<option value="<%=moldType.getCode() %>"><%=moldType.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th>업체자체금형번호</th>
-				<td class="indent5">
-					<input type="text" name="moldnumber" id="moldnumber" class="width-500">
-				</td>
 				<th>금형개발비</th>
-				<td class="indent5">
-					<input type="text" name="moldcost" id="moldcost" class="width-500">
-				</td>
-			</tr>
-			<tr>
-				<th>내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-500">
-				</td>
-				<th>부서</th>
-				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+				<td class="indent5" colspan="5">
+					<input type="text" name="moldcost" id="moldcost" class="width-300">
 				</td>
 			</tr>
 		</table>
