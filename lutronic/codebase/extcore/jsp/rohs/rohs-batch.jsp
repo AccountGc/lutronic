@@ -215,6 +215,11 @@
 				dataType : "string",
 				width : 120,
 				editable : false
+			}, {
+				dataField : "secondary",
+				dataType : "string",
+				width : 120,
+				visible : false
 			}]
 
 			function createAUIGrid(columnLayout) {
@@ -240,6 +245,7 @@
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
 				auiReadyHandler();
 				AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
+// 				AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 			}
 			
 			function auiReadyHandler() {
@@ -264,7 +270,7 @@
 			
 			function auiCellClickHandler(event){
 				if(event.dataField=='fileName'){
-					const url = getCallUrl("/rohs/attachFile"+"?mode=rohs"+"&row="+event.rowIndex);
+					const url = getCallUrl("/rohs/attachFile"+"?row="+event.rowIndex+"&method=addFile");
 					_popup(url, 600, 500, "n");
 				}
 			}
@@ -279,10 +285,19 @@
 			});
 			
 			// 파일 추가
-			function addFile(params){
-				var file = params.file;
-				var fileName = params.fileName;
-				AUIGrid.setCellValue(myGridID, params.row, "fileName", fileName);
+			function addFile(data){
+				var fileName = "";
+				const arr = new Array();
+				for (let i = 0; i < data.length; i++) {
+					if(i==0){
+						fileName = data[i].name;
+					}else{
+						fileName += "/"+data[i].name;
+					}
+					arr.push(data[i].cacheId+"/"+data[i].saveName);
+				}
+				AUIGrid.setCellValue(myGridID, data.row, "secondary", arr);
+				AUIGrid.setCellValue(myGridID, data.row, "fileName", fileName);
 			}
 			
 			// 파일명 입력됨
@@ -347,16 +362,9 @@
 						return;
 					}
 				}
-				
 				let params = new Object();
 				params.gridList = gridList;
-				params.primarys = toArray("primarys");
-				params.roleType = 'ROHS';
-				
-				if(primary.uploadedList.length>20){
-					alert("첨부파일은 20개 미만으로 등록할 수 있습니다.");
-					return;
-				}
+				debugger;
 				
 				if (!confirm("저장하시겠습니까?")){
 					return;
@@ -375,27 +383,7 @@
 			
 			// 삭제
 			function deleteBtn(){
-				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if(items.length==0){
-					alert("선택된 물질이 없습니다.");
-					return;
-				}
-				
-				if (!confirm("삭제하시겠습니까?")){
-					return;
-				}
-				
-// 				let params = new Object();
-// 				params.activityList = items;
-// 				const url = getCallUrl("/admin/deleteActivityDefinition");
-// 				call(url, params, function(data) {
-// 					if(data.result){
-// 						alert(data.msg);
-// 						loadGridData();
-// 					}else{
-// 						alert(data.msg);
-// 					}
-// 				});
+				AUIGrid.removeCheckedRows(myGridID);
 			}
 		</script>
 	</form>
