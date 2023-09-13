@@ -860,7 +860,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		if (StringUtil.checkString(fid)) {
 			folder = (Folder) CommonUtil.getObject(fid);
 		} else {
-			folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
+			folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());					
 		}
 		FolderHelper.assignLocation((FolderEntry)epm, folder);
 		

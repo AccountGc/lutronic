@@ -91,7 +91,9 @@ public class FolderUtils {
 		Folder root = null;
 		if ("product".equalsIgnoreCase(container)) {
 			root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-		} else if ("library".equalsIgnoreCase(container)) {
+		} else if ("document".equalsIgnoreCase(container)) {
+			root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+		}else if ("library".equalsIgnoreCase(container)) {
 			root = FolderTaskLogic.getFolder(location, CommonUtil.getWTLibraryContainer());
 		}
 
