@@ -10,23 +10,28 @@ import wt.org.WTUser;
 
 @Getter
 @Setter
-public class ECNData extends EOData{
-	
+public class ECNData{
 	private String oid;
 	private String number;
 	private String name;
 	private String state;
 	private String creator;
-	private String createDateD;
+	private String createDate;
+	private String eoCommentA;
+	private String eoCommentB;
+	
+	public ECNData() {
+		
+	}
 	
 	public ECNData(final EChangeNotice ecn) {
-		super(ecn);
-		
 		setOid(ecn.getPersistInfo().getObjectIdentifier().toString());
 		setNumber(ecn.getEoNumber());
 		setName(ecn.getEoName());
 		setState(ecn.getLifeCycleState().getDisplay());
 		setCreator(ecn.getCreatorFullName());
-		setCreateDateD(DateUtil.getDateString(ecn.getCreateTimestamp(), "d"));
+		setCreateDate(DateUtil.getDateString(ecn.getCreateTimestamp(), "d"));
+		setEoCommentA(ecn.getEoCommentA());
+		setEoCommentB(ecn.getEoCommentB());
 	}
 }	

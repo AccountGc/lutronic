@@ -3,6 +3,7 @@
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+String eoType = request.getParameter("eoType");
 %>
 <!DOCTYPE html>
 <html>
@@ -16,7 +17,10 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="lastNum" id="lastNum"> 
+		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="eoType" id="eoType" value="<%=eoType%>">
 
 		<table class="search-table">
 			<colgroup>
@@ -24,67 +28,60 @@
 				<col width="*">
 				<col width="130">
 				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
-				<th>CR/ECPR 제목</th>
-				<td class="indent5"><input type="text" name="name" id="name" class="width-200"></td>
-				<th>CR/ECPR 번호</th>
-				<td class="indent5"><input type="text" name="number" id="number" class="width-200"></td>
-			</tr>
-			<tr>
-				<th>등록일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
-				<th>등록자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
-			</tr>
-			<tr>
+				<th><%=eoType %> 제목</th>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
+				<th><%=eoType %> 번호</th>
+				<td class="indent5"><input type="text" name="number" id="number" class="width-300"></td>
 				<th>상태</th>
-				<td class="indent5" colspan="3"><select name="state" id="state" class="width-200" >
+				<td class="indent5">
+					<select name="state" id="state" class="width-200" >
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
 						<option value="APPROVED">승인됨</option>
 						<option value="RETURN">반려됨</option>
-				</select></td>
+					</select>
+				</td>
 			</tr>
 			<tr>
-				<th>작성일</th>
-				<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('writedFrom', 'writedTo')"></td>
+				<th>등록자</th>
+				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+				<th>등록일</th>
+				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 				<th>승인일</th>
 				<td class="indent5"><input type="text" name="approveFrom" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('approveFrom', 'approveTo')"></td>
 			</tr>
 			<tr>
-				<th>작성부서</th>
-				<td class="indent5">
-					<input type="text" name="createDepart" id="createDepart" data-multi="false" class="width-200">
-					<!-- <input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"> -->
-				</td>
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<!-- <input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"> -->
+					<input type="hidden" name="writerOid" id="writerOid"> 
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
-			</tr>
-			<tr>
-				<th class="req lb">제품명</th>
-				<td colspan="3">
-					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
-					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
+				<th>작성부서</th>
+				<td class="indent5">
+					<input type="text" name="createDepart" id="createDepart" data-multi="false" class="width-200">
 				</td>
+				<th>작성일</th>
+				<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('writedFrom', 'writedTo')"></td>
+				
 			</tr>
 			<tr>
 				<th>제안자</th>
 				<td class="indent5">
 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+					<input type="hidden" name="proposerOid" id="proposerOid"> 
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
 				<th>변경구분</th>
-				<td>&nbsp;
+				<td colspan="3">&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" id="changeSection"name="changeSection" value="true" checked="NONE">
 						<div class="state p-success">
@@ -115,6 +112,14 @@
 					</div>
 				</td>
 			</tr>
+			<tr>
+				<th class="req lb">제품명</th>
+				<td colspan="5">
+					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
+					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
+				</td>
+			</tr>
+			
 		</table>
 
 		<table class="button-table">
@@ -132,6 +137,7 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select> 
+					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('document-list');">
 				</td>
@@ -145,7 +151,7 @@
 			function _layout() {
 				return [ {
 					dataField : "eoNumber",
-					headerText : "CR/ECPR 번호",
+					headerText : "<%=eoType %> 번호",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -163,7 +169,7 @@
 					},
 				}, {
 					dataField : "eoName",
-					headerText : "CR/ECPR 제목",
+					headerText : "<%=eoType %> 제목",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -275,7 +281,7 @@
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/changeECR/list");
-				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
+				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection", "eoType"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {
@@ -302,8 +308,11 @@
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
+				finderUser("writer");
+				finderUser("proposer");
 				twindate("created");
-				twindate("modified");
+				twindate("approve");
+				twindate("writed");
 				selectbox("_psize");
 			});
 
@@ -335,6 +344,12 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+			});
+			
+			// 등록
+			$("#createBtn").click(function(){
+				var type = $("#eoType").val();
+				location.href = getCallUrl("/changeECR/create?eoType="+type);
 			});
 		</script>
 	</form>

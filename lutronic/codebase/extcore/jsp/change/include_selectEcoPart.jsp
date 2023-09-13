@@ -259,9 +259,9 @@ if (isCreate || isUpdate) {
 			selectionMode : "multipleCells",
 			<%if (isCreate || isUpdate) {%>
 			showRowCheckColumn : true,
-			showStateColumn : true,
 			<%}%>
-			rowCheckToRadio : true
+			rowCheckToRadio : true,
+			fillColumnSizeMode: true
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 		<%if (isView || isUpdate) {%>

@@ -28,6 +28,7 @@ public class ECRData{
     private Vector<NumberCode> changeCode = null;
     private String eoName;
     private String eoNumber;
+    private String eoType;
     private String model;
     private String modelDisplay;
     public Vector<NumberCode> modelCode = null;
@@ -58,6 +59,7 @@ public class ECRData{
     	setChangeCode(getChangeCode());
     	setEoName(ecr.getEoName());
     	setEoNumber(ecr.getEoNumber());
+    	setEoType(ecr.getEoType());
     	setModel(ecr.getModel());
     	setModelCode(ChangeUtil.getNumberCodeVec(ecr.getModel(), "MODEL"));
     	setModelDisplay(ChangeUtil.getCodeListDisplay(getModelCode()));

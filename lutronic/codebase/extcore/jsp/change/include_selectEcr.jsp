@@ -5,6 +5,7 @@ String mode = request.getParameter("mode");
 boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
+String eoType = request.getParameter("eoType");
 %>
 <%
 if (isCreate || isUpdate) {
@@ -19,7 +20,7 @@ if (isCreate || isUpdate) {
 	let ecrGridID;
 	const columnsEcr = [ {
 		dataField : "eoNumber",
-		headerText : "CR/ECPR번호",
+		headerText : "<%=eoType%> 번호",
 		dataType : "string",
 		width : 180,
 		filter : {
@@ -43,7 +44,7 @@ if (isCreate || isUpdate) {
 		%>
 	}, {
 		dataField : "eoName",
-		headerText : "CR/ECPR제목",
+		headerText : "<%=eoType%> 제목",
 		dataType : "string",
 		width : 180,
 		filter : {
@@ -106,7 +107,8 @@ if (isCreate || isUpdate) {
 	}
 
 	function addECR() {
-		const url = getCallUrl("/changeECO/select_ecrPopup");
+		var type = "<%=eoType%>";
+		const url = getCallUrl("/changeECO/select_ecrPopup?eoType="+type);
 		popup(url, 1500, 700);
 	}
 	

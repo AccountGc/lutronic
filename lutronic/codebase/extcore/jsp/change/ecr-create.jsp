@@ -4,6 +4,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+	ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
+	String eoType = request.getParameter("eoType");
 %>
 <!-- AUIGrid -->
 <%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
@@ -19,14 +21,14 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="cmd"		id="cmd"		 	value="save"     />
-		<input type="hidden" name="eoType"		id="eoType"		 	value="ECR"     />
+		<input type="hidden" name="eoType"		id="eoType"		 	value="<%=eoType %>"     />
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 문서 정보
+						<img src="/Windchill/extcore/images/header.png"> <%=eoType %> 등록
 					</div>
 				</td>
 			</tr>
@@ -39,9 +41,9 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="req lb">CR/ECPR 제목</th>
+				<th class="req lb"><%=eoType %> 제목</th>
 				<td class="indent5" ><input type="text" name="eoName" id="eoName" class="width-200"></td>
-				<th class="req lb">CR/ECPR 번호</th>
+				<th class="req lb"><%=eoType %> 번호</th>
 				<td class="indent5"><input type="text" name="eoNumber" id="eoNumber" class="width-200"></td>
 			</tr>
 			<tr>
@@ -52,7 +54,8 @@
 			</tr>
 			<tr>
 				<th class="lb">작성부서</th>
-				<td class="indent5"><select name="deptcode" id="deptcode" class="width-200">
+				<td class="indent5">
+					<select name="createDepart" id="createDepart" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
@@ -61,9 +64,14 @@
 						<%
 						}
 						%>
-				</select></td>
+					</select>
+				</td>
 				<th class="lb">작성자</th>
-				<td class="indent5" ><input type="text" name="writer" id="writer" class="width-200"></td>
+				<td class="indent5">
+					<input type="text" name="writer" id="writer" data-multi="false" class="width-200"> 
+					<input type="hidden" name="creatorOid" id="creatorOid"> 
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
 			</tr>
 			<tr>
 				<th class="req lb">제품명</th>
@@ -74,9 +82,24 @@
 			</tr>
 			<tr>
 				<th class="lb">제안자</th>
-				<td class="indent5" ><input type="text" name="createDepart" id="createDepart" class="width-200"></td>
+				<td class="indent5">
+					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> 
+					<input type="hidden" name="creatorOid" id="creatorOid"> 
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
 				<th class="lb">변경구분</th>
-				<td class="indent5" ><input type="text" name="writer" id="writer" class="width-200"></td>
+				<td class="indent5" >
+					<select name="changeSection" id="changeSection" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode section : sectionList) {
+						%>
+						<option value="<%=section.getCode() %>"><%=section.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">변경사유</th>
@@ -87,11 +110,12 @@
 				<td class="indent5" colspan="3"><textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea></td>
 			</tr>
 			<tr>
-				<th class="lb">관련 CR/ECPR</th>
+				<th class="lb">관련 <%=eoType%></th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/change/include_selectEcr.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
+						<jsp:param value="<%=eoType%>" name="eoType" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -119,38 +143,39 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="등록"  title="등록"  class="blue"  id="createBtn">
+					<input type="button"  value="기안"  title="기안"  class="blue"  id="createBtn">
 					<input type="button" value="초기화" title="초기화" id="resetBtn">
-					<input type="button" value="목록" title="목록" id="listBtn">
+					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button"  value="임시저장"  title="임시저장"  id="exBtn">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			function folder() {
-				const location = decodeURIComponent("/Default/문서");
-				const url = getCallUrl("/folder?location=" + location + "&container=product&method=setNumber&multi=false");
-				popup(url, 500, 600);
-			}
-	
-			function setNumber(item) {
-				const url = getCallUrl("/doc/setNumber");
-				const params = new Object();
-				params.loc = item.location;
-				call(url, params, function(data) {
-					document.getElementById("loc").innerHTML = item.location;
-					document.getElementById("location").value = item.location;
-					document.getElementById("number").value = data.number;
-				})
-			}
-			
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("model");
 				selectbox("preseration");
 				selectbox("documentType");
-				selectbox("deptcode");
+				selectbox("createDepart");
+				selectbox("changeSection");
+				finderUser("writer");
+				finderUser("proposer");
 			});
 	
 			$("#createBtn").click(function() {
+				const eoType = document.getElementById("eoType").value;
+				const eoName = document.getElementById("eoName").value;
+				const eoNumber = document.getElementById("eoNumber").value;
+				const createDate = document.getElementById("createDate").value;
+				const approveDate = document.getElementById("approveDate").value;
+				const createDepart = document.getElementById("createDepart").value;
+				const writer = document.getElementById("writer").value;
+				const proposer = document.getElementById("proposer").value;
+				const changeSection = document.getElementById("changeSection").value;
+				const eoCommentA = document.getElementById("eoCommentA").value;
+				const eoCommentB = document.getElementById("eoCommentB").value;
+				const eoCommentC = document.getElementById("eoCommentC").value;
+// 				const primarys = document.getElementsByName("primarys")[0].value;
+				
 				if(isEmpty($("#eoName").val())) {
 					alert("제목을 입력하세요.");
 					return;
@@ -170,12 +195,27 @@
 					return;
 				}
 				
-				var params = _data($("#form"));
+				const params = new Object();
+				params.eoType = eoType;
+				params.eoName = eoName;
+				params.eoNumber = eoNumber;
+				params.createDate = createDate;
+				params.approveDate = approveDate;
+				params.createDepart = createDepart;
+				params.writer = writer;
+				params.proposer = proposer;
+				params.changeSection = changeSection;
+				params.eoCommentA = eoCommentA;
+				params.eoCommentB = eoCommentB;
+				params.eoCommentC = eoCommentC;
+// 				params.primary = primarys;
+				params.secondarys = toArray("secondarys");
+				
 				var url = getCallUrl("/changeECR/create");
 				call(url, params, function(data) {
 					if(data.result){
 						alert(data.msg);
-						location.href = getCallUrl("/changeECR/list");
+						location.href = getCallUrl("/changeECR/list?eoType="+$("#eoType").val());
 					}else{
 						alert(data.msg);
 					}
@@ -215,6 +255,7 @@
 				AUIGrid.resize(myGridID11);
 				AUIGrid.resize(myGridID8);
 			});
+			
 		</script>
 	</form>	
 </body>

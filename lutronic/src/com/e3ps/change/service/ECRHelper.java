@@ -9,6 +9,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.beans.ECRData;
+import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -38,6 +39,7 @@ public class ECRHelper {
 		try{
 			String name = StringUtil.checkNull((String)params.get("name"));
 			String number = StringUtil.checkNull((String)params.get("number"));
+			String eoType = StringUtil.checkNull((String)params.get("eoType"));
 			
 			String createdFrom = StringUtil.checkNull((String)params.get("createdFrom"));
 			String createdTo = StringUtil.checkNull((String)params.get("createdTo"));
@@ -193,6 +195,14 @@ public class ECRHelper {
 				qs.appendCloseParen();
 			}
 			
+			//CR/ECPR 구분
+			if(eoType.length() > 0) {
+				if( qs.getConditionCount() > 0 ) {
+					qs.appendAnd();
+				}
+				qs.appendWhere(new SearchCondition(ecrClass, EChangeRequest.EO_TYPE, SearchCondition.EQUAL, eoType, false), new int[] {ecoIdx});
+			}
+			
 			//변경구분
 //			if(changeSections != null){
 //				if( qs.getConditionCount() > 0 ) {
@@ -207,10 +217,6 @@ public class ECRHelper {
 //					}
 //				qs.appendCloseParen();
 //			}
-			
-			
-			
-			
 			
 			if(sortValue != null && sortValue.length() > 0) {
 				if("true".equals(sortCheck)){
