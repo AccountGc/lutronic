@@ -78,6 +78,7 @@ public class ChangeECRController extends BaseController {
 	 * @param request
 	 * @param response
 	 * @return
+	 * @throws Exception 
 	 */
 //	@ResponseBody
 //	@RequestMapping("/createECRtAction")
@@ -89,8 +90,10 @@ public class ChangeECRController extends BaseController {
 	
 	@Description(value = "ECR 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() {
+	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		model.addObject("sectionList", sectionList);
 		model.setViewName("/extcore/jsp/change/ecr-list.jsp");
 		return model;
 	}

@@ -5,6 +5,8 @@ import java.util.Vector;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.service.ChangeUtil;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
@@ -44,7 +46,7 @@ public class ECRData{
     	
     }
 
-	public ECRData(EChangeRequest ecr) {
+	public ECRData(EChangeRequest ecr) throws Exception {
 //    	super(ecr);
     	
 //    	setEcr(getEcr());
@@ -54,9 +56,9 @@ public class ECRData{
     	setCreateDepart(StringUtil.checkNull(ecr.getCreateDepart()));
     	setWriter(StringUtil.checkNull(ecr.getWriter()));
     	setCreator(ecr.getCreatorFullName());
-    	setChangeSection(StringUtil.checkNull(ecr.getChangeSection()));
+    	NumberCodeData data = NumberCodeHelper.manager.getStepNumberCode("CHANGESECTION", ecr.getChangeSection());
+    	setChangeSection(data.getName());
     	setProposer(StringUtil.checkNull(ecr.getProposer()));
-    	setChangeCode(getChangeCode());
     	setEoName(ecr.getEoName());
     	setEoNumber(ecr.getEoNumber());
     	setEoType(ecr.getEoType());
@@ -65,7 +67,7 @@ public class ECRData{
     	setModelDisplay(ChangeUtil.getCodeListDisplay(getModelCode()));
     	setCreateDate(DateUtil.getDateString(ecr.getCreateTimestamp(),"a"));
     	setModifyDate(DateUtil.getDateString(ecr.getModifyTimestamp(),"a"));
-    	setState(ecr.getLifeCycleState().toString());
+    	setState(ecr.getLifeCycleState().getDisplay());
     	setEoCommentA(ecr.getEoCommentA());
     	setEoCommentB(ecr.getEoCommentB());
     	setEoCommentC(ecr.getEoCommentC());
