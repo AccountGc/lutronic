@@ -135,7 +135,7 @@
 					dataField : "eoNumber",
 					headerText : "EO 번호",
 					dataType : "string",
-					width : 120,
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -153,7 +153,7 @@
 					dataField : "eoName",
 					headerText : "EO 제목",
 					dataType : "string",
-					width : 120,
+					width : 250,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -180,7 +180,7 @@
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 350,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -195,17 +195,17 @@
 						inline : true
 					},
 				}, {
-					dataField : "approveDate",
-					headerText : "승인일",
+					dataField : "createDate",
+					headerText : "등록일",
 					dataType : "string",
-					width : 350,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
-					headerText : "등록일",
+					dataField : "approveDate",
+					headerText : "승인일",
 					dataType : "string",
 					width : 200,
 					filter : {
