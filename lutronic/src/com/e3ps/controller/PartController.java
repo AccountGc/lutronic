@@ -62,7 +62,7 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() throws Exception {
+	public ModelAndView list(@RequestParam(value = "popup", required = false) boolean popup, @RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -76,7 +76,13 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
-		model.setViewName("/extcore/jsp/part/part-list.jsp");
+		model.addObject("popup", popup);
+		model.addObject("parentRowIndex", parentRowIndex);
+		if(popup) {
+			model.setViewName("popup:/part/part-list");			
+		}else {
+			model.setViewName("/extcore/jsp/part/part-list.jsp");
+		}
 		return model;
 	}
 

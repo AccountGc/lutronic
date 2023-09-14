@@ -146,8 +146,8 @@ public class RohsController extends BaseController {
 		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
 		RohsData dto = new RohsData(rohs);
 		
-//		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
-//		model.addObject("list", list);
+		List<Map<String,Object>> list = RohsHelper.manager.getRohsContent(oid);
+		model.addObject("list", list);
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);

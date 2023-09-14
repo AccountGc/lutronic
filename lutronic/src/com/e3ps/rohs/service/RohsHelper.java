@@ -29,6 +29,7 @@ import com.e3ps.rohs.beans.RoHSHolderData;
 import com.e3ps.rohs.beans.RohsData;
 
 import net.sf.json.JSONArray;
+import wt.content.ApplicationData;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
@@ -546,5 +547,30 @@ public class RohsHelper {
 			rohs = (ROHSMaterial) obj[0];
 		}
     	return rohs;
+	}
+	
+	public List<Map<String,Object>> getRohsContent(String oid) throws Exception {
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		
+		List<ROHSContHolder> holderList = RohsQueryHelper.service.getROHSContHolder(oid);
+		
+		for(ROHSContHolder holder : holderList){
+			
+			ApplicationData data = holder.getApp();
+			String url="/Windchill/plm/content/download?oid="+CommonUtil.getOIDString(data);
+			
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("fileDown", url);
+			map.put("fileType", RohsUtil.getRohsDocTypeName(holder.getFileType()));
+			map.put("fileDate", holder.getPublicationDate());
+			map.put("fileAppOid", CommonUtil.getOIDString(data));
+			map.put("fileOid", CommonUtil.getOIDString(holder));
+			map.put("fileRole", data.getRole().toString());
+			map.put("fileTypeCode", holder.getFileType());
+			map.put("fileName", holder.getFileName());
+			list.add(map);
+		}
+		return list;
 	}
 }

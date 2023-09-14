@@ -2449,20 +2449,23 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	}
 	
 	private void createAttach(ROHSMaterial rohs, Map<String,String> aMap, String secondary, int count) throws Exception {
-		ROHSContHolder holder = ROHSContHolder.newROHSContHolder();
 		String roleType = "ROHS" + count;
+		String cacheId = secondary;
 		String fileType = (String)aMap.get("fileType");
 		String publicationDate = (String)aMap.get("publicationDate");
-
-		ApplicationData app = CommonContentHelper.service.attachADDRole((ContentHolder)rohs, roleType, secondary,  false);
-		
-		String fileName = app.getFileName().toUpperCase();
+		File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+		ApplicationData applicationData = ApplicationData.newApplicationData(rohs);
+		ContentRoleType contentroleType = ContentRoleType.toContentRoleType(roleType);
+		applicationData.setRole(contentroleType);
+		PersistenceHelper.manager.save(applicationData);
+		ContentServerHelper.service.updateContent(rohs, applicationData, vault.getPath());
+		ROHSContHolder holder = ROHSContHolder.newROHSContHolder();
+		String fileName = applicationData.getFileName().toUpperCase();
 		holder.setFileName(fileName);
 		holder.setFileType(fileType);
 		holder.setPublicationDate(publicationDate);
-		holder.setApp(app);
+		holder.setApp(applicationData);
 		holder.setRohs(rohs);
-
 		PersistenceHelper.manager.save(holder);
 	}
 	

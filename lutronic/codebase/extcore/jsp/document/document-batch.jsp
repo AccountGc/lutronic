@@ -262,6 +262,49 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				width : 120,
 				cellMerge: true,
 			}, {
+				headerText : "부서",
+				children : [ {
+					dataField : "deptcode",
+					headerText : "부서코드",
+					width : 120,
+				}, {
+					dataField : "deptcodeName",
+					headerText : "부서명",
+					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						var retStr = "";
+						for (var i = 0, len = deptcodeList.length; i < len; i++) {
+							if (deptcodeList[i]["code"] == value) {
+								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode", value);
+								retStr = deptcodeList[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: deptcodeList, 
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+						keyField: "code",
+						valueField: "value"
+					},
+				} ]
+			}, {
 				dataField : "interalnumber",
 				headerText : "내부 문서번호",
 				width : 120,
@@ -321,10 +364,30 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				width : 120,
 				cellMerge: true,
 			}, {
-				dataField : "partOids",
-				headerText : "관련부품",
-				dataType : "string",
-				width : 120,
+				headerText : "관련품목",
+				children : [ {
+					dataField : "partOids",
+					dataType : "string",
+					visible : false
+				},{
+					dataField : "partNumber",
+					headerText : "품목번호",
+					width: 160,
+				}, {
+					dataField : "part",
+					headerText : "관련품목",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "부품추가",
+						onClick : function(event) {
+							const parentRowIndex = event.rowIndex;
+							const url = getCallUrl("/part/list?popup=true&parentRowIndex=" + parentRowIndex);
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
 			}]
 
 			function createAUIGrid(columnLayout) {
@@ -395,6 +458,13 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				AUIGrid.removeCheckedRows(myGridID);
 			}
 			
+			// 품목 번호 할당 메서드
+			function setPartNumber(partOids, partNumber, parentRowIndex){
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "partOids", partOids);
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "partNumber", partNumber);
+			}
+			
+			
 			function batch(){
 				const documentList = AUIGrid.getGridData(myGridID);
 				
@@ -431,6 +501,10 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 // 						alert(rowNum + "행의 문서에 작성자를 입력하세요.");
 // 						return;
 // 					}
+// 					if(isEmpty(documentList[i].deptcode)){
+// 						alert(rowNum + "행의 문서에 부서를 입력하세요.");
+// 						return;
+// 					}
 // 					if(isEmpty(documentList[i].interalnumber)){
 // 						alert(rowNum + "행의 문서에 내부 문서번호를 입력하세요.");
 // 						return;
@@ -444,7 +518,7 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 // 						return;
 // 					}
 // 					if(isEmpty(documentList[i].partOids)){
-// 						alert(rowNum + "행의 문서에 관련부품를 입력하세요.");
+// 						alert(rowNum + "행의 문서에 관련품목를 입력하세요.");
 // 						return;
 // 					}
 				}

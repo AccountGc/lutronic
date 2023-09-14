@@ -152,7 +152,7 @@ if(request.getParameter("popup")!=null){
 						}
 					},
 				}, {
-					dataField : "manufacture",
+					dataField : "manufactureDisplay",
 					headerText : "협력업체",
 					dataType : "string",
 					width : 120,

@@ -364,7 +364,6 @@
 				}
 				let params = new Object();
 				params.gridList = gridList;
-				debugger;
 				
 				if (!confirm("저장하시겠습니까?")){
 					return;
