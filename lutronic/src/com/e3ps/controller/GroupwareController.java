@@ -814,33 +814,7 @@ public class GroupwareController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "조직도 페이지")
-	@GetMapping(value = "/organization")
-	public ModelAndView organization() throws Exception {
-		ModelAndView model = new ModelAndView();
-		boolean isAdmin = CommonUtil.isAdmin();
-		Department root = DepartmentHelper.manager.getRoot();
-		model.addObject("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
-		model.addObject("isAdmin", isAdmin);
-		model.setViewName("/extcore/jsp/workprocess/organization-list.jsp");
-		return model;
-	}
 
-	@Description(value = "조직도 조회 함수")
-	@ResponseBody
-	@PostMapping(value = "/organization")
-	public Map<String, Object> organization(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result = GroupwareHelper.manager.organization(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
 
 	@Description(value = "관리자 메뉴")
 	@GetMapping(value = "/manage")

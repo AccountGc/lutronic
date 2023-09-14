@@ -36,53 +36,58 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PeopleData{
+public class PeopleData {
 	private String woid;
 
-    private String oid = "";
-    private String id = "";
-    private String name = "";
-    private String name_en = "";
-    private String email = "";
-    private String duty = "";
-    private String dutycode = "";
-    private String gradeName = "";
-    private String gradeCode = "";
-    private String cccCode = "";
-    private String cellTel = "";
-    private String homeTel = "";
-    private String officeTel = "";
-    private String address = "";
-    private String departmentName = "";
-    private String password = "";
-    private String imgUrl = CompanyState.defautlURL.toString();
-    
-    public boolean isDiable = false;
-    
-    private ArrayList<String> primarys = new ArrayList<String>();
-    
-    public PeopleData() throws Exception{
-    	
-    }
-    
-    public PeopleData(People people) throws Exception{
-    	setOid(people.getPersistInfo().getObjectIdentifier().getStringValue());
-    	setId(people.getUser().getName());
-    	setName(people.getName());
-    	setName_en(people.getNameEn());
-    	setEmail(people.getUser().getEMail());
-    	setDuty(people.getDuty());
-    	setDutycode(people.getDutyCode());
-    	setCellTel(people.getCellTel());
-    	setPassword(people.getPassword());
-    	setDepartmentName(people.getDepartment().getName());
-    	QueryResult qr = PersistenceHelper.manager.navigate(people, "user", WTUserPeopleLink.class);
+	private String oid = "";
+	private String id = "";
+	private String name = "";
+	private String name_en = "";
+	private String email = "";
+	private String duty = "";
+	private String dutycode = "";
+	private String gradeName = "";
+	private String gradeCode = "";
+	private String cccCode = "";
+	private String cellTel = "";
+	private String homeTel = "";
+	private String officeTel = "";
+	private String address = "";
+	private String departmentName = "";
+	private String password = "";
+	private String imgUrl = CompanyState.defautlURL.toString();
+	private String auth;
+
+	public boolean isDiable = false;
+
+	private ArrayList<String> primarys = new ArrayList<String>();
+
+	public PeopleData() throws Exception {
+
+	}
+
+	public PeopleData(People people) throws Exception {
+		setOid(people.getPersistInfo().getObjectIdentifier().getStringValue());
+		setId(people.getUser().getName());
+		setName(people.getName());
+		setName_en(people.getNameEn());
+		setEmail(people.getUser().getEMail());
+		setDuty(people.getDuty());
+		setDutycode(people.getDutyCode());
+		setCellTel(people.getCellTel());
+
+		if (people.getAuth() != null) {
+			setAuth(String.join(",", people.getAuth()));
+		}
+		setPassword(people.getPassword());
+		setDepartmentName(people.getDepartment().getName());
+		QueryResult qr = PersistenceHelper.manager.navigate(people, "user", WTUserPeopleLink.class);
 		if (qr.hasMoreElements()) {
 			WTUser user = (WTUser) qr.nextElement();
 			setWoid(user.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
-    }
-   
+	}
+
 //    public PeopleData() throws Exception{
 //        this(SessionHelper.manager.getPrincipal());
 //    }
@@ -238,6 +243,5 @@ public class PeopleData{
 //    	return this.people.getChief();
 //    	
 //    }
-
 
 }

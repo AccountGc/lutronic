@@ -61,11 +61,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						<option value="300">300</option>
 					</select>
 					<%
-						if(isAdmin) {
+					if (isAdmin) {
 					%>
-					input type="button" value="검색" title="검색" id="btnSearch">
+					<input type="button" value="저장" title="저장" class="red" onclick="save();">
 					<%
-						}
+					}
 					%>
 					<input type="button" value="검색" title="검색">
 				</td>
@@ -94,28 +94,28 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		<script type="text/javascript">
 			let myGridID;
 			const auths = [ {
-				key : "1",
+				key : "나의업무",
 				value : "나의업무"
 			}, {
-				key : "2",
+				key : "문서관리",
 				value : "문서관리"
 			}, {
-				key : "3",
+				key : "품목관리",
 				value : "품목관리"
 			}, {
-				key : "4",
+				key : "도면관리",
 				value : "도면관리"
 			}, {
-				key : "5",
+				key : "설계변경",
 				value : "설계변경"
 			}, {
-				key : "6",
+				key : "RoHS",
 				value : "RoHS"
 			}, {
-				key : "7",
+				key : "금형관리",
 				value : "금형관리"
 			}, {
-				key : "8",
+				key : "기타문서관리",
 				value : "기타문서관리"
 			} ];
 			function _layout() {
@@ -134,7 +134,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/groupware/userInfoView?oid=" + oid);
+							const url = getCallUrl("/org/userInfoView?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
@@ -153,7 +153,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/groupware/userInfoView?oid=" + oid);
+							const url = getCallUrl("/org/userInfoView?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
@@ -263,7 +263,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/groupware/organization");
+				const url = getCallUrl("/org/organization");
 				const field = [ "_psize", "name", "userId", "oid" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
@@ -277,6 +277,30 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						alert(data.msg);
 					}
 				});
+			}
+
+			function save() {
+				const editRows = AUIGrid.getEditedRowItems(myGridID);
+				if (editRows.length === 0) {
+					alert("변경 사항이 없습니다.");
+					return false;
+				}
+				const url = getCallUrl("/org/save");
+				const params = {
+					editRows : editRows
+				}
+				if (!confirm("저장 하시겠습니까?")) {
+					return false;
+				}
+
+				parent.openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						document.location.reload();
+					}
+					parent.closeLayer();
+				})
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

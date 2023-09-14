@@ -3,7 +3,9 @@ package com.e3ps.org.service;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
@@ -296,6 +299,41 @@ public class StandardOrgService extends StandardManager implements OrgService {
 		}
 
 		return deptList;
+	}
+
+	@Override
+	public void save(ArrayList<LinkedHashMap<String, Object>> editRows) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (LinkedHashMap<String, Object> edit : editRows) {
+				String oid = (String) edit.get("oid");
+				String auth = (String) edit.get("auth");
+				ArrayList<String> auths = new ArrayList<>();
+
+				if (StringUtil.checkString(auth)) {
+					String[] array = auth.split(",");
+					for (String el : array) {
+						auths.add(el);
+					}
+				}
+				People people = (People) CommonUtil.getObject(oid);
+				people.setAuth(auths);
+				PersistenceHelper.manager.modify(people);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
 	}
 
 }

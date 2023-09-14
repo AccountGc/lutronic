@@ -5,7 +5,14 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<Integer> auth = (ArrayList<Integer>) request.getAttribute("auth");
+boolean isWork = (boolean) request.getAttribute("isWork");
+boolean isDoc = (boolean) request.getAttribute("isDoc");
+boolean isPart = (boolean) request.getAttribute("isPart");
+boolean isEpm = (boolean) request.getAttribute("isEpm");
+boolean isChange = (boolean) request.getAttribute("isChange");
+boolean isMold = (boolean) request.getAttribute("isMold");
+boolean isRohs = (boolean) request.getAttribute("isRohs");
+boolean isEtc = (boolean) request.getAttribute("isEtc");
 %>
 <nav class="navbar-default navbar-static-side" role="navigation">
 	<div class="sidebar-collapse">
@@ -21,6 +28,9 @@ ArrayList<Integer> auth = (ArrayList<Integer>) request.getAttribute("auth");
 					<!-- 					</a> -->
 				</div>
 			</li>
+			
+			<%
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-magic"></i>
@@ -75,7 +85,7 @@ ArrayList<Integer> auth = (ArrayList<Integer>) request.getAttribute("auth");
 						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의업무 > 일괄결재 검색');">일괄결재 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/organization', '> 나의업무 > 조직도');">조직도</a>
+						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
@@ -275,7 +285,7 @@ ArrayList<Integer> auth = (ArrayList<Integer>) request.getAttribute("auth");
 			<li>
 				<a href="#">
 					<i class="fa fa-files-o"></i>
-					<span class="nav-label">승인원</span>
+					<span class="nav-label">기타문서관리</span>
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">

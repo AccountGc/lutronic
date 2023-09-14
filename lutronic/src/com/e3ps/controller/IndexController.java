@@ -44,8 +44,33 @@ public class IndexController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		People people = CommonUtil.sessionPeople();
 		WTUser sessionUser = CommonUtil.sessionUser();
-		ArrayList<Integer> auth = people.getAuth();
-		model.addObject("auth", auth);
+		ArrayList<String> auth = people.getAuth();
+		boolean isWork = false;
+		boolean isDoc = false;
+		boolean isPart = false;
+		boolean isEpm = false;
+		boolean isRohs = false;
+		boolean isMold = false;
+		boolean isChange = false;
+		boolean isEtc = false;
+		if (auth != null) {
+			isWork = auth.contains("나의업무");
+			isDoc = auth.contains("문서관리");
+			isPart = auth.contains("품목관리");
+			isEpm = auth.contains("도면관리");
+			isRohs = auth.contains("RoHS");
+			isMold = auth.contains("금형관리");
+			isChange = auth.contains("설계변경");
+			isEtc = auth.contains("기타문서관리");
+		}
+		model.addObject("isWork", isWork);
+		model.addObject("isDoc", isDoc);
+		model.addObject("isPart", isPart);
+		model.addObject("isEpm", isEpm);
+		model.addObject("isRohs", isRohs);
+		model.addObject("isMold", isMold);
+		model.addObject("isChange", isChange);
+		model.addObject("isEtc", isEtc);
 		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/layout/header.jsp");
 		return model;
