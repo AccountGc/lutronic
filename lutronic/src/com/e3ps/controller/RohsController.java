@@ -68,6 +68,39 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "RoHS 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			RohsHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "물질 중복체크")
+	@ResponseBody
+	@PostMapping(value = "/rohsCheck")
+	public Map<String, Object> rohsCheck(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result.put("count", RohsHelper.manager.rohsCheck(params));
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "물질 일괄등록 페이지")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception{
@@ -139,6 +172,22 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "rohs 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/list")
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = RohsHelper.manager.list(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "rohs 상세 페이지")
 	@GetMapping(value =  "/view")
 	public ModelAndView view(@RequestParam String oid) throws Exception{
@@ -176,22 +225,6 @@ public class RohsController extends BaseController {
 //		model.addObject("list", list);
 //		return model;
 //	}
-	@Description(value = "RoHS 등록 함수")
-	@ResponseBody
-	@PostMapping(value = "/create")
-	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			RohsHelper.service.create(params);
-			result.put("msg", SAVE_MSG);
-			result.put("result", SUCCESS);
-		} catch(Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
 	
 	/**	rohs 등록
 	 * @param request
@@ -202,22 +235,6 @@ public class RohsController extends BaseController {
 	@RequestMapping("/createRohsAction")
 	public ResultData createRohsAction(HttpServletRequest request, HttpServletResponse response) {
 		return RohsHelper.service.createRohsAction(request, response);
-	}
-	
-	@Description(value = "rohs 조회 함수")
-	@ResponseBody
-	@PostMapping(value = "/list")
-	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result = RohsHelper.manager.list(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
 	}
 	
 //	/** rohs 검색

@@ -20,9 +20,6 @@
 <%
 	ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 %>
-<!-- AUIGrid -->
-<%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
-<%-- <input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT %>"> --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +31,7 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="docType"			id="docType"				value="$$ROHS"/>
 		<input type="hidden" name="location"		id="location"				value="/Default/ROHS" />
 		<table class="button-table">
@@ -48,19 +45,19 @@
 		</table>
 		<table class="create-table">
 			<colgroup>
-				<col width="150">
+				<col width="174">
 				<col width="*">
-				<col width="150">
+				<col width="174">
 				<col width="*">
 			</colgroup>
 			<tr>
 				<th class="lb">물질번호</th>
 				<td class="indent5">
-					<input type="text" name="rohsNumber" id="rohsNumber" class="width-200">
+					<input type="text" name="rohsNumber" id="rohsNumber" class="width-400">
 					&nbsp;<input type="button" value="번호 중복" title="번호 중복" id="NumberCheck">
 				</td>
 				<th class="req lb">결재방식</th>
-				<td>
+				<td class="indent5">
 					<div class="pretty p-switch">
 						<input type="radio"name="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">
@@ -80,12 +77,12 @@
 			<tr>
 				<th class="req lb">물질명</th>
 				<td class="indent5">
-					<input type="text" name="rohsName" id="rohsName" class="width-200">
+					<input type="text" name="rohsName" id="rohsName" class="width-400">
 					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" id="NameCheck">
 				</td>
 				<th class="req lb">협력업체</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-200">
+					<select name="manufacture" id="manufacture" class="width-500">
 							<option value="">선택</option>
 							<%
 							for (NumberCode manufacture : manufactureList) {
@@ -107,6 +104,17 @@
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">파일구분</th>
+				<td class="indent5">
+					<select name="fileType" id="fileType" class="width-500">
+							<option value="">선택</option>
+					</select>
+				</td>
+				<th class="lb">발행일</th>
+				<td class="indent5">
 				</td>
 			</tr>
 		</table>
@@ -207,11 +215,18 @@
 					return;
 				}
 				
+				let params = new Object();
+				params.number = $("#rohsNumber").val();
+				params.state = $('input[name=lifecycle]:checked').val();
+				params.name = $("#rohsName").val();
+				params.manufacture = $("#manufacture").val();
+				params.description = $("#description").val();
+				const secondarys = toArray("secondarys");
+				params.secondarys = secondarys;
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
 				
-				var params = _data($("#form"));
 				var url = getCallUrl("/rohs/create");
 				call(url, params, function(data) {
 					if(data.result){
@@ -226,30 +241,62 @@
 			$("#listBtn").click(function() {
 				location.href = getCallUrl("/rohs/list");
 			});
+			
+			$("#NumberCheck").click(function() {
+				var params = new Object();
+				if(isEmpty($("#rohsNumber").val())){
+					alert("입력된 물질번호가 없습니다.");
+					return;
+				}
+				params.rohsNumber = $("#rohsNumber").val();
+				var url = getCallUrl("/rohs/rohsCheck");
+				call(url, params, function(data) {
+					if(data.result){
+						if(data.count==0){
+							alert("등록 가능한 번호입니다.");
+						}else{
+							alert("이미 등록된 번호입니다.");
+							$("#rohsNumber").val("");
+						}
+					}else{
+						alert(data.msg);
+					}
+				});
+			});
+			
+			$("#NameCheck").click(function() {
+				var params = new Object();
+				if(isEmpty($("#rohsName").val())){
+					alert("입력된 물질명이 없습니다.");
+					return;
+				}
+				params.rohsName = $("#rohsName").val();
+				var url = getCallUrl("/rohs/rohsCheck");
+				call(url, params, function(data) {
+					if(data.result){
+						if(data.count==0){
+							alert("등록 가능한 물질명입니다.");
+						}else{
+							alert("이미 등록된 물질명입니다.");
+							$("#rohsName").val("");
+						}
+					}else{
+						alert(data.msg);
+					}
+				});
+			});
 	
-			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("manufacture");
-				// DOM이 로드된 후 실행할 코드 작성
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
-	// 			createAUIGrid7(columns7);
-	// 			createAUIGrid11(columns11);
-	// 			createAUIGrid8(columns8);
-	// 			AUIGrid.resize(myGridID7);
-	// 			AUIGrid.resize(myGridID11);
-	// 			AUIGrid.resize(myGridID8);
-				document.getElementById("name").focus();
 			});
 	
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(rohsGridID);
-	// 			AUIGrid.resize(myGridID7);
-	// 			AUIGrid.resize(myGridID11);
-	// 			AUIGrid.resize(myGridID8);
 			});
 			
 		</script>

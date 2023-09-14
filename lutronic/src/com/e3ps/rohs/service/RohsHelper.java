@@ -539,7 +539,7 @@ public class RohsHelper {
 	public ROHSMaterial getRohs(String number) throws Exception {
 		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
-    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, number);
+    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, number.toUpperCase());
     	QueryResult result = PersistenceHelper.manager.find(query);
     	ROHSMaterial rohs = null;
     	while (result.hasMoreElements()) {
@@ -572,5 +572,22 @@ public class RohsHelper {
 			list.add(map);
 		}
 		return list;
+	}
+	
+	public int rohsCheck(Map<String, Object> params) throws Exception {
+		String rohsNumber = (String) params.get("rohsNumber");
+		String rohsName = (String) params.get("rohsName");
+		QuerySpec query = new QuerySpec();
+    	int idx = query.addClassList(ROHSMaterial.class, true);
+    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, rohsNumber.toUpperCase());
+    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
+    	QueryResult result = PersistenceHelper.manager.find(query);
+    	int count = 0;
+    	while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ROHSMaterial rohs = (ROHSMaterial) obj[0];
+			count++;
+		}
+    	return count;
 	}
 }

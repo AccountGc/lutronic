@@ -12,7 +12,7 @@ String mode = request.getParameter("mode");
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
-		width : 180,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true

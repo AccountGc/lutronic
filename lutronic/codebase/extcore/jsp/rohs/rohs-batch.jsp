@@ -345,22 +345,22 @@
 // 						alert("입력된 관련물질이 없습니다.");
 // 						return;
 // 					}
-					if(isEmpty(gridList[i].fileTypeName)){
-						alert("선택된 파일구분이 없습니다.");
-						return;
-					}
-					if(isEmpty(gridList[i].fileType)){
-						alert("입력된 파일구분코드가 없습니다.");
-						return;
-					}
-					if(isEmpty(gridList[i].publicationDate)){
-						alert("입력된 발행일이 없습니다.");
-						return;
-					}
-					if(isEmpty(gridList[i].fileName)){
-						alert("입력된 파일명이 없습니다.");
-						return;
-					}
+// 					if(isEmpty(gridList[i].fileTypeName)){
+// 						alert("선택된 파일구분이 없습니다.");
+// 						return;
+// 					}
+// 					if(isEmpty(gridList[i].fileType)){
+// 						alert("입력된 파일구분코드가 없습니다.");
+// 						return;
+// 					}
+// 					if(isEmpty(gridList[i].publicationDate)){
+// 						alert("입력된 발행일이 없습니다.");
+// 						return;
+// 					}
+// 					if(isEmpty(gridList[i].fileName)){
+// 						alert("입력된 파일명이 없습니다.");
+// 						return;
+// 					}
 				}
 				let params = new Object();
 				params.gridList = gridList;
