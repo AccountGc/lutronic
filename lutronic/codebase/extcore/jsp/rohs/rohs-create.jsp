@@ -35,8 +35,7 @@
 </head>
 <body>
 	<form id="form">
-<!-- 		<input type="hidden" name="docType"			id="docType"				value="$$ROHS"/> -->
-		<input type="hidden" name="docType"			id="docType"				value="$$Document"/>
+		<input type="hidden" name="docType"			id="docType"				value="$$ROHS"/>
 		<input type="hidden" name="location"		id="location"				value="/Default/ROHS" />
 		<table class="button-table">
 			<tr>

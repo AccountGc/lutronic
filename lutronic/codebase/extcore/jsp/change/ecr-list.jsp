@@ -1,9 +1,10 @@
+<%@page import="com.e3ps.common.code.NumberCode"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 String eoType = request.getParameter("eoType");
+ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 %>
 <!DOCTYPE html>
 <html>
@@ -81,35 +82,17 @@ String eoType = request.getParameter("eoType");
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>변경구분</th>
-				<td colspan="3">&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" id="changeSection"name="changeSection" value="true" checked="NONE">
-						<div class="state p-success">
-							<label> <b>선택안됨</b>
-							</label>
-						</div>
-					</div> &nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" id="changeSection"name="changeSection" value="0">
-						<div class="state p-success">
-							<label> <b>불필요</b>
-							</label>
-						</div>
-					</div> &nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" id="changeSection"name="changeSection" value="1">
-						<div class="state p-success">
-							<label> <b>필요</b>
-							</label>
-						</div>
-					</div> &nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" id="changeSection"name="changeSection" value="">
-						<div class="state p-success">
-							<label> <b>전체</b>
-							</label>
-						</div>
-					</div>
+				<td colspan="3">
+					<select name="changeSection" id="changeSection" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode section : sectionList) {
+						%>
+						<option value="<%=section.getCode() %>"><%=section.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -119,7 +102,6 @@ String eoType = request.getParameter("eoType");
 					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
 				</td>
 			</tr>
-			
 		</table>
 
 		<table class="button-table">
@@ -186,7 +168,7 @@ String eoType = request.getParameter("eoType");
 						}
 					},
 				}, {
-					dataField : "model",
+					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
 					width : 120,
@@ -314,6 +296,7 @@ String eoType = request.getParameter("eoType");
 				twindate("approve");
 				twindate("writed");
 				selectbox("_psize");
+				selectbox("changeSection");
 			});
 
 			function exportExcel() {
