@@ -5,7 +5,7 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-
+ArrayList<Integer> auth = (ArrayList<Integer>) request.getAttribute("auth");
 %>
 <nav class="navbar-default navbar-static-side" role="navigation">
 	<div class="sidebar-collapse">
@@ -24,132 +24,94 @@
 			<li>
 				<a href="#">
 					<i class="fa fa-magic"></i>
-					<span class="nav-label">나의 업무</span>
+					<span class="nav-label">나의업무</span>
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listNotice', '> 나의 업무 > 공지사항');">공지사항</a>
+						<a onclick="moveToPage(this, '/groupware/listNotice', '> 나의업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/workItem', '> 나의 업무 > 작업함');">
+						<a onclick="moveToPage(this, '/groupware/workItem', '> 나의업무 > 작업함');">
 							작업함
-							<span class="label label-info float-right"><%//=count.get("check")%></span>
+							<span class="label label-info float-right">
+								<%
+								//=count.get("check")
+								%>
+							</span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=ing', '> 나의 업무 > 진행함');">
+						<a onclick="moveToPage(this, '/groupware/listItem?state=ing', '> 나의업무 > 진행함');">
 							진행함
-							<span class="label label-info float-right"><%//=count.get("ing")%></span>
+							<span class="label label-info float-right">
+								<%
+								//=count.get("ing")
+								%>
+							</span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=complete', '> 나의 업무 > 완료함');">
+						<a onclick="moveToPage(this, '/groupware/listItem?state=complete', '> 나의업무 > 완료함');">
 							완료함
-							<span class="label label-info float-right"><%//=count.get("complete")%></span>
+							<span class="label label-info float-right">
+								<%
+								//=count.get("complete")
+								%>
+							</span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
+						<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의업무 > 수신함');">
 							수신함
-							<span class="label label-info float-right"><%//=count.get("receive")%></span>
+							<span class="label label-info float-right">
+								<%
+								//=count.get("receive")
+								%>
+							</span>
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의 업무 > 일괄결재 검색');">일괄결재 검색</a>
+						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의업무 > 일괄결재 검색');">일괄결재 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/organization', '> 나의 업무 > 조직도');">조직도</a>
+						<a onclick="moveToPage(this, '/groupware/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/password', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a>
+						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/manage', '> 관리자 > 관리자메뉴');">관리자 메뉴</a>
+						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a>
 					</li>
-					<!-- 					<li> -->
-					<!-- 						<a onclick="moveToPage(this, '/groupware/changeIBA', '> 관리자 > 속성값 변경');">속성값 변경</a> -->
-					<!-- 					</li> -->
-					<!-- 					<li> -->
-					<!-- 						<a onclick="moveToPage(this, '/groupware/multiPublishing', '> 관리자 > 도면 재변환');">도면 재변환</a> -->
-					<!-- 					</li> -->
 				</ul>
 			</li>
-			<!-- 			<li> -->
-			<!-- 				<a href="#"> -->
-			<!-- 					<i class="fa fa-envelope"></i> -->
-			<!-- 					<span class="nav-label">개발업무관리</span> -->
-			<!-- 					<span class="fa arrow"></span> -->
-			<!-- 				</a> -->
-			<!-- 				<ul class="nav nav-second-level collapse"> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/development/list', '> 개발업무관리 > 개발업무 검색');">개발업무 검색</a> -->
-			<!-- 					</li> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/development/create', '> 개발업무관리 > 개발업무 등록');">개발업무 등록</a> -->
-			<!-- 					</li> -->
-			<!-- 					<li> -->
-			<!-- 						<a onclick="moveToPage(this, '/development/my', '> 개발업무관리 > 나의 개발업무');">나의 개발업무</a> -->
-			<!-- 					</li> -->
-			<!-- 				</ul> -->
-			<!-- 			</li> -->
 			<li>
 				<a href="#">
 					<i class="fa fa-pie-chart"></i>
-					<span class="nav-label">문서 관리</span>
+					<span class="nav-label">문서관리</span>
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');">문서 검색</a>
+						<a onclick="moveToPage(this, '/doc/list', '> 문서관리 > 문서 검색');">문서 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/create', '> 문서 관리 > 문서 등록');">문서 등록</a>
+						<a onclick="moveToPage(this, '/doc/create', '> 문서관리 > 문서 등록');">문서 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/batch', '> 문서 관리 > 문서 일괄등록');">문서 일괄등록</a>
+						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄등록');">문서 일괄등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/register', '> 문서 관리 > 문서 일괄결재');">문서 일괄결재</a>
+						<a onclick="moveToPage(this, '/doc/register', '> 문서관리 > 문서 일괄결재');">문서 일괄결재</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/template-list', '> 문서 관리 > 문서 템플릿 검색');">문서 템플릿 검색</a>
+						<a onclick="moveToPage(this, '/doc/template-list', '> 문서관리 > 문서 템플릿 검색');">문서 템플릿 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/template-create', '> 문서 관리 > 문서 템플릿 등록');">문서 템플릿 등록</a>
+						<a onclick="moveToPage(this, '/doc/template-create', '> 문서관리 > 문서 템플릿 등록');">문서 템플릿 등록</a>
 					</li>
-					<!-- <li>
-						<a onclick="moveToPage(this, '/requestDocument/list', '> 문서 관리 > 의뢰서 조회');">의뢰서 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/meeting/list', '> 문서 관리 > 회의록 조회');">회의록 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/doc/register', '> 문서 관리 > 문서 결재');">문서 결재</a>
-					</li> -->
 				</ul>
 			</li>
-			<!-- <li>
-				<a href="metrics.html">
-					<i class="fa fa-pie-chart"></i>
-					<span class="nav-label">작번 관리</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/project/list', '> 작번 관리 > 작번 조회');">작번 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/project/my', '> 작번 관리 > 나의 작번');">나의 작번</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/template/list', '> 작번 관리 > 템플릿 조회');">템플릿 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/issue/list', '> 작번 관리 > 특이사항 조회');">특이사항 조회</a>
-					</li>
-				</ul>
-			</li> -->
 			<li>
 				<a href="#">
 					<i class="fa fa-desktop"></i>

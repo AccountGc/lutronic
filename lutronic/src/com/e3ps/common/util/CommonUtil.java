@@ -31,6 +31,8 @@ import com.e3ps.common.jdf.config.ConfigEx;
 import com.e3ps.common.jdf.config.ConfigExImpl;
 import com.e3ps.common.jdf.config.ConfigImpl;
 import com.e3ps.common.message.Message;
+import com.e3ps.org.People;
+import com.e3ps.org.WTUserPeopleLink;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHolder;
@@ -77,6 +79,19 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	public static WTUser sessionUser() throws Exception {
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		return sessionUser;
+	}
+
+	/**
+	 * 세션 사용자 PEOPLE 객체 가져오기
+	 */
+	public static People sessionPeople() throws Exception {
+		WTUser sessionUser = sessionUser();
+		QueryResult result = PersistenceHelper.manager.navigate(sessionUser, "people", WTUserPeopleLink.class);
+		if (result.hasMoreElements()) {
+			People people = (People) result.nextElement();
+			return people;
+		}
+		return null;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.e3ps.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,11 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
+import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import wt.org.WTUser;
-import wt.session.SessionHelper;
 
 @Controller
 public class IndexController extends BaseController {
@@ -27,7 +29,7 @@ public class IndexController extends BaseController {
 		model.setViewName("default:/index");
 		return model;
 	}
-	
+
 	@Description(value = "메인 페이지")
 	@GetMapping(value = "/mainPage")
 	public ModelAndView mainPage() {
@@ -35,13 +37,15 @@ public class IndexController extends BaseController {
 		model.setViewName("/extcore/jsp/change/mainPage.jsp");
 		return model;
 	}
-	
 
 	@Description(value = "헤더 페이지")
 	@GetMapping(value = "/header")
 	public ModelAndView header() throws Exception {
 		ModelAndView model = new ModelAndView();
-		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		People people = CommonUtil.sessionPeople();
+		WTUser sessionUser = CommonUtil.sessionUser();
+		ArrayList<Integer> auth = people.getAuth();
+		model.addObject("auth", auth);
 		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/layout/header.jsp");
 		return model;

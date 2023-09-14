@@ -818,8 +818,10 @@ public class GroupwareController extends BaseController {
 	@GetMapping(value = "/organization")
 	public ModelAndView organization() throws Exception {
 		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
 		Department root = DepartmentHelper.manager.getRoot();
 		model.addObject("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+		model.addObject("isAdmin", isAdmin);
 		model.setViewName("/extcore/jsp/workprocess/organization-list.jsp");
 		return model;
 	}

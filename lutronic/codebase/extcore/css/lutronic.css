@@ -121,9 +121,8 @@ table.search-table th {
 	padding-bottom: 4px;
 	min-width: 100px;
 	width: 130px;
-	max-width: 130px;
-	min-width: 130px;
-	;
+/*	max-width: 130px;*/
+/*	min-width: 130px;*/
 }
 
 table.search-table td {

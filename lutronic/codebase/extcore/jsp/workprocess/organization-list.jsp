@@ -3,6 +3,7 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
 String oid = (String) request.getAttribute("oid");
+boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 %>
 <!DOCTYPE html>
 <html>
@@ -59,7 +60,14 @@ String oid = (String) request.getAttribute("oid");
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="btnSearch">
+					<%
+						if(isAdmin) {
+					%>
+					input type="button" value="검색" title="검색" id="btnSearch">
+					<%
+						}
+					%>
+					<input type="button" value="검색" title="검색">
 				</td>
 			</tr>
 		</table>
@@ -85,24 +93,30 @@ String oid = (String) request.getAttribute("oid");
 		</table>
 		<script type="text/javascript">
 			let myGridID;
-			const auth = [ {
+			const auths = [ {
 				key : "1",
-				value : "나의 업무"
+				value : "나의업무"
 			}, {
 				key : "2",
-				value : "문서 관리"
+				value : "문서관리"
 			}, {
 				key : "3",
-				value : "품목 관리"
+				value : "품목관리"
 			}, {
 				key : "4",
-				value : "나의 업무"
+				value : "도면관리"
 			}, {
 				key : "5",
-				value : "나의 업무"
+				value : "설계변경"
 			}, {
 				key : "6",
-				value : "나의 업무"
+				value : "RoHS"
+			}, {
+				key : "7",
+				value : "금형관리"
+			}, {
+				key : "8",
+				value : "기타문서관리"
 			} ];
 			function _layout() {
 				return [ {
@@ -166,16 +180,15 @@ String oid = (String) request.getAttribute("oid");
 						showEditorBtnOver : false,
 						multipleMode : true,
 						showCheckAll : true,
-						list : auth,
+						list : auths,
 						keyField : "key",
 						valueField : "value",
 					},
 					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 						let retStr = "";
-						console.log(auth);
-						for (let i = 0, len = auth.length; i < len; i++) {
-							if (auth[i]["key"] == value) {
-								retStr = auth[i]["value"];
+						for (let i = 0, len = auths.length; i < len; i++) {
+							if (auths[i]["key"] == value) {
+								retStr = auths[i]["value"];
 								break;
 							}
 						}
@@ -211,7 +224,7 @@ String oid = (String) request.getAttribute("oid");
 					dataField : "email",
 					headerText : "이메일",
 					dataType : "string",
-					width : 180,
+					width : 250,
 					style : "aui-left",
 					filter : {
 						showIcon : true,
