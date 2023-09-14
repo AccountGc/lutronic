@@ -226,16 +226,35 @@ public class StandardDocumentService extends StandardManager implements Document
 		doc = (WTDocument) PersistenceHelper.manager.save(doc);
 
 		String primary = StringUtil.checkNull((String) map.get("primary"));
-		String[] secondary = (String[]) map.get("secondary");
+		ArrayList<String> secondarys = (ArrayList<String>) map.get("secondary");
 
-		CommonContentHelper.service.attach((ContentHolder) doc, primary, secondary);
+//		CommonContentHelper.service.attach((ContentHolder) doc, primary, secondary);
+		if(primary.length() > 0) {
+			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+			ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+			applicationData.setRole(ContentRoleType.PRIMARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());			
+		}
+		
+		if(secondarys.size() > 0) {
+			for(String secondary : secondarys) {
+				File vault = CommonContentHelper.manager.getFileFromCacheId(secondary);
+				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+				applicationData.setRole(ContentRoleType.SECONDARY);
+				PersistenceHelper.manager.save(applicationData);
+				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());							
+			}
+		}
 
 		// 관련 부품
-		String[] partOids = (String[]) map.get("partOids");
+		ArrayList<String> _partOids = (ArrayList<String>) map.get("partOids");
+		String[] partOids = _partOids.toArray(new String[_partOids.size()]);
 		updateDocumentToPartLink(doc, partOids, false);
 
 		// 관련 문서
-		String[] docOids = (String[]) map.get("docOids");
+		ArrayList<String> _docOids = (ArrayList<String>) map.get("docOids");
+		String[] docOids = _docOids.toArray(new String[_docOids.size()]);
 		updateDocumentToDocumentLink(doc, docOids, false);
 
 		String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
@@ -2475,6 +2494,10 @@ public class StandardDocumentService extends StandardManager implements Document
 		}
 	}
 
+	
+	/**
+	 *  문서 일괄등록 메서드
+	 */
 	@Override
 	public void batch(Map<String, Object> params) throws Exception {
 
@@ -2484,234 +2507,16 @@ public class StandardDocumentService extends StandardManager implements Document
 			trx.start();
 			boolean totalValidation = true;
 
-			Map<String, String> fileMap = new HashMap<String, String>();
-			String[] secondary = (String[]) params.get("secondary");
-			if (secondary != null) {
-				for (String attachFile : secondary) {
-					String fileName = attachFile.split("/")[1].toUpperCase();
-					if (fileMap.get(fileName) == null) {
-						fileMap.put(fileName, attachFile);
-					} else {
-						fileMap.remove(fileName);
-					}
-				}
-			}
-			
 			ArrayList<Map<String, Object>> documentList = (ArrayList<Map<String, Object>>) params.get("documentList");
 
 			for (Map<String, Object> document : documentList) {
 
-				// 문서 생성
-				Map<String, Object> mapDoc = new HashMap<String, Object>();
-				boolean validation = true;
-				String msg = "";
-				String id = (String) document.get("id");
-				String state = (String) document.get("state");
-
-				if ("S".equals(state)) {
-					continue;
-				}
-
-				String documentName = (String) document.get("documentName");
-				String docName = (String) document.get("docName");
-				String lifecycle = (String) document.get("lifecycle");
-				String documentType = (String) document.get("documentType");
-				String model = (String) document.get("model");
-				String writer = (String) document.get("writer");
-				String interalnumber = (String) document.get("interalnumber");
-				String deptcode = (String) document.get("deptcode");
-				String preseration = (String) document.get("preseration");
-				String location = (String) document.get("location");
-				String folder = (String) document.get("folder");
-				String fileName = (String) document.get("fileName");
-				String attachmentFileName1 = StringUtil.checkNull((String) document.get("attachmentFileName1"));
-				String attachmentFileName2 = StringUtil.checkNull((String) document.get("attachmentFileName2"));
-				String attachmentFileName3 = StringUtil.checkNull((String) document.get("attachmentFileName3"));
-				String attachmentFileName4 = StringUtil.checkNull((String) document.get("attachmentFileName4"));
-				String attachmentFileName5 = StringUtil.checkNull((String) document.get("attachmentFileName5"));
-
-				String partNumber = (String) document.get("partNumber");
-				String description = (String) document.get("description");
-
-				mapDoc.put("documentName", documentName);
-				mapDoc.put("docName", docName);
-				mapDoc.put("lifecycle", lifecycle);
-				mapDoc.put("documentType", documentType);
-				mapDoc.put("description", description);
-				mapDoc.put("model", model);
-				mapDoc.put("writer", writer);
-				mapDoc.put("interalnumber", interalnumber);
-				mapDoc.put("deptcode", deptcode);
-				mapDoc.put("preseration", preseration);
-				mapDoc.put("location", location);
-				mapDoc.put("documentName", documentName);
-				mapDoc.put("location", location);
-				mapDoc.put("linkType", "");
-
-				// 파일명
-				String primary = "";
-//				if (fileName.length() == 0) {
-//					msg = Message.get("파일이 입력되지 않았습니다.");
-//					validation = false;
-//					totalValidation = false;
-//					continue;
-//				} else {
-//					if (fileMap.get(fileName.toUpperCase()) == null) {
-//						msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-//						validation = false;
-//						totalValidation = false;
-//						continue;
-//					} else {
-//						primary = fileMap.get(fileName.toUpperCase());
-//						fileMap.remove(fileName.toUpperCase());
-//					}
-//				}
-//				mapDoc.put("fileName", fileName);
-//				mapDoc.put("primary", primary);
-				StringBuffer sendarys = new StringBuffer();
-//				// 파일명
-//				if (!attachmentFileName1.isEmpty()) {
-//					if (attachmentFileName1.length() == 0) {
-//						msg = Message.get("파일이 입력되지 않았습니다.");
-//						validation = false;
-//						totalValidation = false;
-//						continue;
-//					} else {
-//						if (fileMap.get(attachmentFileName1.toUpperCase()) == null) {
-//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-//							validation = false;
-//							totalValidation = false;
-//							continue;
-//						} else {
-//							sendarys.append(fileMap.get(attachmentFileName1.toUpperCase()) + "@");
-//							fileMap.remove(attachmentFileName1.toUpperCase());
-//						}
-//					}
-//					mapDoc.put("attachmentFileName1", attachmentFileName1);
-//				}
-//				// 파일명
-//				if (!attachmentFileName2.isEmpty()) {
-//					if (attachmentFileName2.length() == 0) {
-//						msg = Message.get("파일이 입력되지 않았습니다.");
-//						validation = false;
-//						totalValidation = false;
-//						continue;
-//					} else {
-//						if (fileMap.get(attachmentFileName2.toUpperCase()) == null) {
-//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-//							validation = false;
-//							totalValidation = false;
-//							continue;
-//						} else {
-//							sendarys.append(fileMap.get(attachmentFileName2.toUpperCase()) + "@");
-//							fileMap.remove(attachmentFileName2.toUpperCase());
-//						}
-//					}
-//					mapDoc.put("attachmentFileName2", attachmentFileName2);
-//				}
-//				// 파일명
-//				if (!attachmentFileName3.isEmpty()) {
-//					if (attachmentFileName3.length() == 0) {
-//						msg = Message.get("파일이 입력되지 않았습니다.");
-//						validation = false;
-//						totalValidation = false;
-//						continue;
-//					} else {
-//						if (fileMap.get(attachmentFileName3.toUpperCase()) == null) {
-//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-//							validation = false;
-//							totalValidation = false;
-//							continue;
-//						} else {
-//							sendarys.append(fileMap.get(attachmentFileName3.toUpperCase()) + "@");
-//							fileMap.remove(attachmentFileName3.toUpperCase());
-//						}
-//					}
-//					mapDoc.put("attachmentFileName3", attachmentFileName3);
-//				}
-//				// 파일명
-//				if (!attachmentFileName4.isEmpty()) {
-//					if (attachmentFileName4.length() == 0) {
-//						msg = Message.get("파일이 입력되지 않았습니다.");
-//						validation = false;
-//						totalValidation = false;
-//						continue;
-//					} else {
-//						if (fileMap.get(attachmentFileName4.toUpperCase()) == null) {
-//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-//							validation = false;
-//							totalValidation = false;
-//							continue;
-//						} else {
-//							sendarys.append(fileMap.get(attachmentFileName4.toUpperCase()) + "@");
-//							fileMap.remove(attachmentFileName4.toUpperCase());
-//						}
-//					}
-//					mapDoc.put("attachmentFileName4", attachmentFileName4);
-//				}
-//				// 파일명
-//				if (!attachmentFileName5.isEmpty()) {
-//					if (attachmentFileName5.length() == 0) {
-//						msg = Message.get("파일이 입력되지 않았습니다.");
-//						validation = false;
-//						totalValidation = false;
-//						continue;
-//					} else {
-//						if (fileMap.get(attachmentFileName5.toUpperCase()) == null) {
-//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-//							validation = false;
-//							totalValidation = false;
-//							continue;
-//						} else {
-//							sendarys.append(fileMap.get(attachmentFileName5.toUpperCase()) + "@");
-//							fileMap.remove(attachmentFileName5.toUpperCase());
-//						}
-//					}
-//					mapDoc.put("attachmentFileName5", attachmentFileName5);
-//				}
-				String sendarsStr = sendarys.toString();
-				if (sendarsStr.endsWith("|")) {
-					sendarsStr = sendarsStr.substring(0, sendarsStr.length() - 1);
-				}
-				if (null != sendarsStr && sendarsStr.length() > 0) {
-					String[] sendarsArray = sendarsStr.split("@");
-					mapDoc.put("secondary", sendarsArray);
-				}
-				// 관련부품
-				boolean checkPart = true;
-				String[] partOids = null;
-				if (partNumber.length() > 0) {
-					String[] partNumbers = partNumber.split(",");
-					partOids = new String[partNumbers.length];
-
-					for (int j = 0; j < partNumbers.length; j++) {
-						WTPart part = PartHelper.service.getPart(partNumbers[j]);
-						if (part == null) {
-							checkPart = false;
-							// +","+part);
-							msg = Message.get(partNumbers[j] + "의 부품이 존재하지 않습니다.");
-							validation = false;
-							totalValidation = false;
-							break;
-						} else {
-							partOids[j] = CommonUtil.getOIDString(part);
-						}
-					}
-				}
-
-				if (!checkPart) {
-					continue;
-				}
-
-				mapDoc.put("partNumber", partNumber);
-				mapDoc.put("partOids", partOids);
+				document.put("linkType", "");
 
 				try {
-					WTDocument newDoc = createAction(mapDoc);
-					// System.out.println(id+" newDoc =" + newDoc);
+					WTDocument newDoc = createAction(document);
 				} catch (Exception e) {
 					e.printStackTrace();
-					// e.getLocalizedMessage());
 					totalValidation = false;
 					e.printStackTrace();
 				}

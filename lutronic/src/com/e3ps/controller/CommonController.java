@@ -50,6 +50,16 @@ import wt.vc.views.ViewHelper;
 @RequestMapping("/common")
 public class CommonController extends BaseController {
 	
+	@Description(value = "주 도면 팝업창")
+	@GetMapping(value = "/attachPrimaryDrawing")
+	public ModelAndView attachPrimaryDrawing(@RequestParam String oid, @RequestParam String method) throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/common/pop-attach-primary-drawing");
+		model.addObject("oid", oid);
+		model.addObject("method", method);
+		return model;
+	}
+	
 	@Description(value = "주 첨부파일 팝업창")
 	@GetMapping(value = "/attachPrimary")
 	public ModelAndView attachPrimary(@RequestParam String oid, @RequestParam String method) throws Exception {
