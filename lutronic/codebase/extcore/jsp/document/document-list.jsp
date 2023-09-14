@@ -9,6 +9,8 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
+boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAttribute("popup") : false; 
+int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 %>
 <!DOCTYPE html>
 <html>
@@ -181,6 +183,9 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('');">
+					<% if(popup){ %>
+						<input type="button" value="추가" title="추가"  onclick="add();">						
+					<% } %>
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -471,6 +476,28 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 				});
 				document.location.href = "/Windchill/eSolution/content/downloadZIP?oids=" + oids;
 			}
+
+			<% if(popup){ %>
+				function add(){
+					const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+					if (items.length == 0) {
+						alert("첨부할 문서를 선택하세요.");
+						return false;
+					}
+					
+					let docOids = [];
+					let interalnumber = [];
+					
+					for(let i = 0; i < items.length; i++){
+						docOids.push(items[i].oid);
+						interalnumber.push(items[i].number);
+					}
+					
+					opener.setDoc(docOids, interalnumber, <%= parentRowIndex %>);
+					self.close();
+				}
+			<% } %>
+			
 		</script>
 	</form>
 </body>

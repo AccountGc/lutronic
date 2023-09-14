@@ -88,7 +88,7 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() throws Exception {
+	public ModelAndView list(@RequestParam(value = "popup", required = false) boolean popup, @RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
@@ -98,7 +98,13 @@ public class DocumentController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
-		model.setViewName("/extcore/jsp/document/document-list.jsp");
+		model.addObject("popup", popup);
+		model.addObject("parentRowIndex", parentRowIndex);
+		if(popup) {
+			model.setViewName("popup:/document/document-list");			
+		}else {
+			model.setViewName("/extcore/jsp/document/document-list.jsp");
+		}
 		return model;
 	}
 
