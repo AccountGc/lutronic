@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="com.e3ps.rohs.beans.RohsData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
@@ -8,6 +10,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 RohsData dto = (RohsData) request.getAttribute("dto");
+List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute("list");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -75,6 +78,9 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 		<li>
 			<a href="#tabs-4">관련 물질</a>
 		</li>
+		<li>
+			<a href="#tabs-5">파일 구분</a>
+		</li>
 	</ul>
 	<div id="tabs-1">
 		<!-- 기본 정보 -->
@@ -99,7 +105,7 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 				<th>상태</th>
 				<td><%=dto.getState()%></td>
 				<th>Rev.</th>
-				<td></td>
+				<td><%=dto.getVersion()%></td>
 			</tr>
 			<tr>
 				<th>등록자</th>
@@ -153,6 +159,25 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 			<jsp:param value="관련 물질" name="title"/>
 		</jsp:include>
 	</div>
+	<div id="tabs-5">
+		<!-- 파일 구분 -->
+		<table class="view-table">
+			<colgroup>
+				<col width="150">
+				<col width="*">
+			</colgroup>
+			<%
+			for(Map<String,Object> file : list){
+			%>
+				<tr>
+					<th><%=file.get("fileType") %></th>
+					<td><a href="<%=file.get("fileDown")%>"><%=file.get("fileName") %></a></td>
+				</tr>
+			<%	
+			}
+			%>
+		</table>
+	</div>		
 </div>
 
 <script type="text/javascript">
@@ -308,8 +333,5 @@ RohsData dto = (RohsData) request.getAttribute("dto");
 		AUIGrid.resize(partGridID);
 		AUIGrid.resize(rohsGridID);
 		AUIGrid.resize(rohs2GridID);
-// 				AUIGrid.resize(myGridID7);
-// 				AUIGrid.resize(myGridID);
-// 				AUIGrid.resize(myGridID100);
 	});
 </script>
