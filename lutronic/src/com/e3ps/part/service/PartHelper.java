@@ -43,6 +43,7 @@ import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
 import wt.epm.EPMDocument;
+import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildHistory;
 import wt.epm.build.EPMBuildRule;
 import wt.epm.structure.EPMDescribeLink;
@@ -1047,9 +1048,10 @@ public class PartHelper {
 	 * 1품 1도인 업체에서만 사용가능
 	 */
 	public EPMDocument getEPMDocument2D(EPMDocument epm) throws Exception {
+		EPMDocumentMaster m = (EPMDocumentMaster) epm.getMaster();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EPMReferenceLink.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "roleAObjectRef.key.id", epm);
+		QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "roleBObjectRef.key.id", m);
 		QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "referenceType", "DRAWING");
 		QueryResult result = PersistenceHelper.manager.find(query);
 		if (result.hasMoreElements()) {

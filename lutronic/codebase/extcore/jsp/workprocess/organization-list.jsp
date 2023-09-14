@@ -12,7 +12,6 @@ String oid = (String) request.getAttribute("oid");
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -86,12 +85,32 @@ String oid = (String) request.getAttribute("oid");
 		</table>
 		<script type="text/javascript">
 			let myGridID;
+			const auth = [ {
+				key : "1",
+				value : "나의 업무"
+			}, {
+				key : "2",
+				value : "문서 관리"
+			}, {
+				key : "3",
+				value : "품목 관리"
+			}, {
+				key : "4",
+				value : "나의 업무"
+			}, {
+				key : "5",
+				value : "나의 업무"
+			}, {
+				key : "6",
+				value : "나의 업무"
+			} ];
 			function _layout() {
 				return [ {
 					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
-					width : 180,
+					width : 120,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -109,7 +128,8 @@ String oid = (String) request.getAttribute("oid");
 					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
-					width : 180,
+					width : 120,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -124,10 +144,56 @@ String oid = (String) request.getAttribute("oid");
 						}
 					},
 				}, {
+					dataField : "auth",
+					headerText : "메뉴권한",
+					dataType : "string",
+					style : "aui-left",
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					editRenderer : {
+						type : "DropDownListRenderer",
+						showEditorBtn : false,
+						showEditorBtnOver : false,
+						multipleMode : true,
+						showCheckAll : true,
+						list : auth,
+						keyField : "key",
+						valueField : "value",
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						console.log(auth);
+						for (let i = 0, len = auth.length; i < len; i++) {
+							if (auth[i]["key"] == value) {
+								retStr = auth[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "departmentName",
 					headerText : "부서",
 					dataType : "string",
-					width : 180,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -136,7 +202,7 @@ String oid = (String) request.getAttribute("oid");
 					dataField : "duty",
 					headerText : "직위",
 					dataType : "string",
-					width : 180,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -169,6 +235,7 @@ String oid = (String) request.getAttribute("oid");
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					fillColumnSizeMode : true,
+					editable : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

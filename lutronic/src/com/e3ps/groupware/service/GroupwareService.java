@@ -57,4 +57,9 @@ public interface GroupwareService {
 	 */
 	public abstract void modify(Map<String, String> params) throws Exception;
 
+	/**
+	 * 기안자 변경
+	 */
+	public void apply(Map<String, String> params) throws Exception;
+
 }

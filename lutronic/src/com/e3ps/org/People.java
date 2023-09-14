@@ -14,6 +14,7 @@
 package com.e3ps.org;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 import com.ptc.windchill.annotations.metadata.Cardinality;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
@@ -46,6 +47,7 @@ import wt.util.WTException;
 				@GeneratedProperty(name = "name", type = String.class, constraints = @PropertyConstraints(upperLimit = 100)),
 				@GeneratedProperty(name = "title", type = String.class, javaDoc = "?????"),
 				@GeneratedProperty(name = "nameEn", type = String.class, javaDoc = "???"),
+				@GeneratedProperty(name = "auth", type = ArrayList.class),
 				@GeneratedProperty(name = "chief", type = Boolean.class, initialValue = "false") }, foreignKeys = {
 						@GeneratedForeignKey(name = "WTUserPeopleLink", foreignKeyRole = @ForeignKeyRole(name = "user", type = wt.org.WTUser.class, constraints = @PropertyConstraints(required = true)), myRole = @MyRole(name = "people", cardinality = Cardinality.ZERO_TO_ONE)),
 						@GeneratedForeignKey(name = "DepartmentPeopleLink", foreignKeyRole = @ForeignKeyRole(name = "department", type = com.e3ps.org.Department.class), myRole = @MyRole(name = "people")) })

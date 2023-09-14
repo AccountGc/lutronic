@@ -827,7 +827,7 @@ public class GroupwareController extends BaseController {
 	@Description(value = "조직도 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/organization")
-	public Map<String, Object> organization(Map<String, Object> params) throws Exception {
+	public Map<String, Object> organization(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = GroupwareHelper.manager.organization(params);
@@ -1085,4 +1085,20 @@ public class GroupwareController extends BaseController {
 		return returnData;
 	}
 
+	@Description(value = "기안자 변경 함수")
+	@PostMapping(value = "/apply")
+	@ResponseBody
+	public Map<String, Object> apply(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			GroupwareHelper.service.apply(params);
+			result.put("msg", "기안자가 변경 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

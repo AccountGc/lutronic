@@ -129,7 +129,7 @@ public class DocumentController extends BaseController {
 		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
 		String pnum = DocumentHelper.manager.getCnum(cList);
 
-		model.setViewName("popup:/document/document-view.jsp");
+		model.setViewName("popup:/document/document-view");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
 		model.addObject("cList", cList);
@@ -316,10 +316,10 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 일괄등록")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception {
-		
+
 		String container = "document";
 		String location = DocumentHelper.DOCUMENT_ROOT;
-		
+
 		ArrayList<Folder> folderList = FolderUtils.loadAllFolder(location, container);
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
@@ -332,7 +332,7 @@ public class DocumentController extends BaseController {
 		model.addObject("documentNameList", documentNameList);
 		return model;
 	}
-	
+
 	@Description(value = "문서 등록")
 	@ResponseBody
 	@PostMapping(value = "/batch")

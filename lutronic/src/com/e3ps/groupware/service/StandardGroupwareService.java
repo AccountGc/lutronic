@@ -73,6 +73,7 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.fc.WTObject;
+import wt.fc.WTReference;
 import wt.iba.value.IBAHolder;
 import wt.inf.container.WTContainerHelper;
 import wt.inf.container.WTContainerRef;
@@ -80,6 +81,7 @@ import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.State;
+import wt.org.OrganizationServicesServerHelper;
 import wt.org.WTPrincipalReference;
 import wt.org.WTUser;
 import wt.ownership.OwnershipHelper;
@@ -94,6 +96,10 @@ import wt.session.SessionHelper;
 import wt.team.Team;
 import wt.team.TeamHelper;
 import wt.team.TeamManaged;
+import wt.vc.Iterated;
+import wt.vc.StandardVersionControlService;
+import wt.vc.VersionControlHelper;
+import wt.vc.VersionControlServerHelper;
 import wt.vc.wip.WorkInProgressHelper;
 import wt.vc.wip.Workable;
 import wt.workflow.engine.WfActivity;
@@ -1848,6 +1854,49 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 			if (trs != null) {
 				trs.rollback();
 			}
+		}
+	}
+
+	@Override
+	public void apply(Map<String, String> params) throws Exception {
+		String oid = params.get("oid");
+		String creatorOid = params.get("creatorOid");
+		ReferenceFactory rf = new ReferenceFactory();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTReference ref = rf.getReference(oid);
+			System.out.println("ref=" + ref);
+			if (ref == null) {
+				throw new Exception("해당 OID에 일치하는 객체가 없습니다.");
+			}
+
+			Persistable persistable = ref.getObject();
+			if (!(persistable instanceof Iterated)) {
+				throw new Exception("작성자를 구현한 객체가 아닙니다.");
+			}
+
+			// 사용자 변경은 안되는거로... 기안자 의미가 있어야함 
+			Iterated iterated = (Iterated) persistable;
+			iterated = (Iterated) PersistenceHelper.manager.refresh(iterated);
+
+			System.out.println(PersistenceHelper.isPersistent(iterated));
+
+			WTUser user = (WTUser) CommonUtil.getObject(creatorOid);
+
+			WTPrincipalReference principalReference = WTPrincipalReference.newWTPrincipalReference(user);
+			VersionControlHelper.assignIterationCreator(iterated, principalReference);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }

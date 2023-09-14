@@ -67,8 +67,8 @@ public class PartColumn {
 		if (epm != null) {
 			setStep(AUIGridUtil.step(epm));
 			EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
-			System.out.println("epm2D=" + epm2D);
 			if (epm2D != null) {
+				set_2d(ThumbnailUtil.thumbnailSmall(epm2D));
 				setPdf(AUIGridUtil.pdf(epm2D));
 				setDxf(AUIGridUtil.dxf(epm2D));
 			}

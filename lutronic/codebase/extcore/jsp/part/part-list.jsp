@@ -339,8 +339,8 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						inline : false
 					},
 				}, {
-					dataField : "PDF",
-					headerText : "pdf",
+					dataField : "pdf",
+					headerText : "PDF",
 					dataType : "string",
 					width : 60,
 					renderer : {
@@ -380,7 +380,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
+							const oid = item.part_oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
@@ -590,7 +590,6 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				for (let i = 0; i < e.length; i++) {
 					const el = e[i];
 					const style = window.getComputedStyle(el);
-					console.log(el);
 					const display = style.getPropertyValue("display");
 					if (display === "none") {
 						el.style.display = "table-row";

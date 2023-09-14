@@ -85,7 +85,7 @@ public class AUIGridUtil {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				String ext = FileUtil.getExtension(data.getFileName());
 				String icon = getFileIcon(ext);
-				if ("pdf".equalsIgnoreCase(ext)) {
+				if (!"pdf".equalsIgnoreCase(ext)) {
 					continue;
 				}
 				String url = "/Windchill/plm/content/download?oid="
@@ -108,7 +108,7 @@ public class AUIGridUtil {
 			while (result.hasMoreElements()) {
 				ApplicationData data = (ApplicationData) result.nextElement();
 				String ext = FileUtil.getExtension(data.getFileName());
-				if ("dxf".equalsIgnoreCase(ext)) {
+				if (!"dxf".equalsIgnoreCase(ext)) {
 					continue;
 				}
 				String icon = getFileIcon(ext);
