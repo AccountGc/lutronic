@@ -60,6 +60,16 @@ public class CommonController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "첨부파일 팝업창")
+	@GetMapping(value = "/attachSecondary")
+	public ModelAndView attachSecondary(@RequestParam String oid, @RequestParam String method) throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/common/pop-attach-secondary");
+		model.addObject("oid", oid);
+		model.addObject("method", method);
+		return model;
+	}
+	
 	@Description(value = "NumberCode 데이터 리턴")
 	@ResponseBody
 	@PostMapping(value = "/autoSearchName")

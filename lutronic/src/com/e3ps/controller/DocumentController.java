@@ -333,7 +333,7 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "문서 등록")
+	@Description(value = "문서 일괄등록")
 	@ResponseBody
 	@PostMapping(value = "/batch")
 	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {

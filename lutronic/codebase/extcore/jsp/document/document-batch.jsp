@@ -358,11 +358,43 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				width : 120,
 				cellMerge: true,
 			}, {
-				dataField : "fileName",
-				headerText : "파일명",
-				dataType : "string",
-				width : 120,
-				cellMerge: true,
+				headerText : "첨부파일",
+				children : [ {
+					dataField : "secondaryName",
+					headerText : "파일명",
+					width: 160,
+					styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (typeof value == "undefined" || value == "") {
+							return null;
+						}
+						return "my-file-selected";
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						if (typeof value == "undefined" || value == "") {
+							return "선택 파일 없음";
+						}
+						return value;
+					},
+				}, {
+					dataField : "secondary",
+					headerText : "파일",
+					width: 160,
+					editable : false,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "파일선택",
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.id;
+							const url = getCallUrl("/common/attachSecondary?oid=" + oid + "&method=attach");
+							_popup(url, 800, 400,"n");
+						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}]
 			}, {
 				headerText : "관련품목",
 				children : [ {
@@ -463,7 +495,22 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "partOids", partOids);
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "partNumber", partNumber);
 			}
-			
+						
+			function attach(data) {
+				
+				for(let i = 0; i < data.length; i++){
+					AUIGrid.updateRowsById(myGridID, {
+						id : recentGridItem.id,
+						secondary : data[0].cacheId,
+					});
+					
+					AUIGrid.updateRowsById(myGridID, {
+						id: recentGridItem.id,
+						secondaryName: data[0].name
+					});
+				}
+			}
+						
 			
 			function batch(){
 				const documentList = AUIGrid.getGridData(myGridID);
