@@ -99,7 +99,6 @@
 				<td colspan="5">
 					<jsp:include page="/extcore/jsp/change/include_ecrCompletePart.jsp">
 						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -288,12 +287,6 @@
 				twindate("approve");
 				selectbox("_psize");
 			});
-
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;

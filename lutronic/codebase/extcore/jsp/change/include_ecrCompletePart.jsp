@@ -21,7 +21,7 @@ String mode = request.getParameter("mode");
 		dataField : "name",
 		headerText : "품명",
 		dataType : "string",
-		width : 180,
+		width : 300,
 		filter : {
 			showIcon : true,
 			inline : true

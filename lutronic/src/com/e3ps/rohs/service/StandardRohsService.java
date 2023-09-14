@@ -2284,7 +2284,8 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			trs.start();
 			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
 	    	String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
-			DocumentType docType = DocumentType.toDocumentType("$$Document");
+	    	
+			DocumentType docType = DocumentType.toDocumentType((String) params.get("docType"));
 			String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
 			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
 			String description = StringUtil.checkNull((String) params.get("description"));

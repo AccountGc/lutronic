@@ -57,7 +57,11 @@ public class EOData {
     	setEoNumber(eo.getEoNumber());
     	setOid(CommonUtil.getOIDString(eo));
     	setModel(eo.getModel());
-    	setEoType(eo.getEoType());
+    	if(eo.getEoType().equals("DEV")) {
+    		setEoType("개발");
+    	}else {
+    		setEoType("양산");
+    	}
     	setCommentA(eo.getEoCommentA());
     	setCommentB(eo.getEoCommentB());
     	setCommentC(eo.getEoCommentC());
