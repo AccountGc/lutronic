@@ -353,12 +353,38 @@
 // 						return;
 // 					}
 				}
-				let params = new Object();
-				params.gridList = gridList;
-				
+				// 물질명 중복체크
+				nameCheck(gridList);
+			}
+			
+			function nameCheck(list){
+				var arr = new Array();
+				for(var i=0; i<list.length; i++){
+					arr.push(list[i].rohsName);
+				}
+				var params = new Object();
+				params.list = arr;
+				var url = getCallUrl("/rohs/rohsNameCheck");
+				call(url, params, function(data) {
+					if(data.result){
+						if(data.duplicate!=""){
+							alert("' "+data.duplicate+" '"+"은/는 이미 등록된 물질명 입니다.");
+						}else{
+							// 저장 처리
+							save(list);
+						}
+					}else{
+						alert(data.msg);
+					}
+				});
+			}
+			
+			function save(list){
 				if (!confirm("저장하시겠습니까?")){
 					return;
 				}
+				let params = new Object();
+				params.gridList = list;
 				
 				const url = getCallUrl("/rohs/batch");
 				call(url, params, function(data) {

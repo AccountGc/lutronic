@@ -72,9 +72,9 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		<li>
 			<a href="#tabs-2">관련 품목</a>
 		</li>
-		<li>
-			<a href="#tabs-3">관련 대표 물질</a>
-		</li>
+<!-- 		<li> -->
+<!-- 			<a href="#tabs-3">관련 대표 물질</a> -->
+<!-- 		</li> -->
 		<li>
 			<a href="#tabs-4">관련 물질</a>
 		</li>
@@ -135,14 +135,14 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 			<jsp:param value="rohs" name="moduleType"/>
 		</jsp:include>
 	</div>
-	<div id="tabs-3">
+<!-- 	<div id="tabs-3"> -->
 		<!-- 관련 대표 물질 -->
-		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="represent" name="roleType"/>
-			<jsp:param value="관련 대표 물질" name="title"/>
-		</jsp:include>
-	</div>
+<%-- 		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false"> --%>
+<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
+<%-- 			<jsp:param value="represent" name="roleType"/> --%>
+<%-- 			<jsp:param value="관련 대표 물질" name="title"/> --%>
+<%-- 		</jsp:include> --%>
+<!-- 	</div> -->
 	<div id="tabs-4">
 		<!-- 관련 물질 -->
 		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
@@ -159,13 +159,21 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 				<col width="*">
 			</colgroup>
 			<%
-			for(Map<String,Object> file : list){
-			%>
+			if(list.size()>0){
+				for(Map<String,Object> file : list){
+				%>
+					<tr>
+						<th><%=file.get("fileType") %></th>
+						<td><a href="<%=file.get("fileDown")%>"><%=file.get("fileName") %></a></td>
+					</tr>
+				<%	
+				}
+			}else{
+			%>	
 				<tr>
-					<th><%=file.get("fileType") %></th>
-					<td><a href="<%=file.get("fileDown")%>"><%=file.get("fileName") %></a></td>
+					<td colspan="2" class="center">데이터가 없습니다.</td>
 				</tr>
-			<%	
+			<%
 			}
 			%>
 		</table>

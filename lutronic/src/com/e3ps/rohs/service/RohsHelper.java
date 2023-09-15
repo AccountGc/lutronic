@@ -539,7 +539,7 @@ public class RohsHelper {
 	public ROHSMaterial getRohs(String name) throws Exception {
 		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
-    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, name);
+    	QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, name);
     	QueryResult result = PersistenceHelper.manager.find(query);
     	ROHSMaterial rohs = null;
     	while (result.hasMoreElements()) {
@@ -575,7 +575,7 @@ public class RohsHelper {
 		String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
 		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
-    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
+    	QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
     	QueryResult result = PersistenceHelper.manager.find(query);
     	int count = 0;
     	while (result.hasMoreElements()) {
@@ -600,5 +600,23 @@ public class RohsHelper {
 			list.add(map);
 		}
 		return list;
+	}
+	
+	public String rohsNameCheck(Map<String, Object> params) throws Exception {
+		ArrayList<String> list = (ArrayList<String>) params.get("list");
+		String duplicate = "";
+		for(String rohsName : list) {
+			QuerySpec query = new QuerySpec();
+	    	int idx = query.addClassList(ROHSMaterial.class, true);
+	    	QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
+	    	QueryResult result = PersistenceHelper.manager.find(query);
+	    	while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				ROHSMaterial rohs = (ROHSMaterial) obj[0];
+				return rohs.getName();
+			}
+		}
+		
+    	return duplicate;
 	}
 }
