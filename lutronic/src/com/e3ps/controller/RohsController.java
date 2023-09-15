@@ -132,6 +132,22 @@ public class RohsController extends BaseController {
 		return result;
 	}
 	
+	@Description(value = "물질 중복체크")
+	@ResponseBody
+	@PostMapping(value = "/rohsNameCheck")
+	public Map<String, Object> rohsNameCheck(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result.put("duplicate", RohsHelper.manager.rohsNameCheck(params));
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "물질 일괄등록 첨부파일 페이지")
 	@GetMapping(value = "/attachFile")
 	public ModelAndView attachFile() throws Exception{
