@@ -2316,35 +2316,27 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	        rohs.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
 	        rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
 	        
-//	        String[] roleTypes = request.getParameterValues("roleType");
-//	        if(roleTypes != null) {
-//		        for(String roleType: roleTypes) {
-//			        String file = StringUtil.checkNull(request.getParameter(roleType));
-//			        String fileType = StringUtil.checkNull(request.getParameter(roleType + "_fileType"));
-//			        String date = StringUtil.checkNull(request.getParameter(roleType + "_date"));
-//			        if(date.length()>0 && !isDateValid(date)){
-//			        	throw new Exception("발행일자 날짜 형식이 맞지 않습니다.");
-//			        }
-//			        String fileName = file.split("/")[1];
-//			        
-//			        HashMap<String, Object> map = new HashMap<String, Object>();
-//			        map.put("roleType", roleType);
-//			        map.put("file", file);
-//			        map.put("fileName", fileName);
-//			        map.put("fileType", fileType);
-//			        map.put("publicationDate", date);
-//			        
-//			        createROHSContHolder(rohs, map);
-//		        }
-//	        }
+	        ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
+	        Map<String,String> rohsMap = new HashMap<String,String>();
+	        String fileType = (String) params.get("fileType");
+			String publicationDate = (String) params.get("publicationDate");
+			rohsMap.put("fileType", fileType);
+			rohsMap.put("publicationDate", publicationDate);
+	        int attachCount = 1;
+			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
+				if(attachCount<=20) {
+					createAttach(rohs, rohsMap, secondarys.get(i), attachCount);
+				}
+				attachCount++;
+			}
 	        
             //관련 부품            
 //	        String[] partOids = request.getParameterValues("partOid");
 //			createROHSToPartLink(rohs, partOids);
 			
 			//관련 물질
-//			String[] rohsOids = request.getParameterValues("rohsOid");
-//			createROHSToROHSLink(rohs, rohsOids);
+			List<Map<String, Object>> rohsList = (List<Map<String, Object>>) params.get("rohsList");
+			createROHSToROHSLink(rohs, rohsList);
 			
 	        
             String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
@@ -2362,8 +2354,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
             
             trs.commit();
 			trs = null;
-//            result.setResult(true);
-//            result.setOid(CommonUtil.getOIDString(rohs));
 		} catch (Exception e) {
 			e.printStackTrace();
 			trs.rollback();
@@ -2373,6 +2363,18 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				trs.rollback();
 			}
         }
+	}
+	
+	public void createROHSToROHSLink(ROHSMaterial rohs, List<Map<String, Object>> rohsList) throws WTException{
+		
+		if(rohsList.size()>0){
+			for(Map<String, Object> map : rohsList){
+				String oid = (String) map.get("oid");
+				ROHSMaterial composition = (ROHSMaterial)CommonUtil.getObject(oid);
+				RepresentToLink link = RepresentToLink.newRepresentToLink(rohs, composition);
+				PersistenceHelper.manager.save(link);
+			}
+		}
 	}
 
 	@Override

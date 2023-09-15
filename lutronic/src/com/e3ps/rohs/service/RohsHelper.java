@@ -575,8 +575,8 @@ public class RohsHelper {
 	}
 	
 	public int rohsCheck(Map<String, Object> params) throws Exception {
-		String rohsNumber = (String) params.get("rohsNumber");
-		String rohsName = (String) params.get("rohsName");
+		String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
+		String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
 		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
     	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, rohsNumber.toUpperCase());
@@ -589,5 +589,21 @@ public class RohsHelper {
 			count++;
 		}
     	return count;
+	}
+	
+	public List<Map<String,String>> rohsFileType() {
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		String[] fileCode = AttributeKey.RohsKey.ROHS_CODE;
+		String[] fileName = AttributeKey.RohsKey.ROHS_NAME;
+		
+		for(int i=0; i < fileCode.length; i++) {
+			Map<String,String> map = new HashMap<String,String>();
+			
+			map.put("code", fileCode[i]);
+			map.put("name", fileName[i]);
+			
+			list.add(map);
+		}
+		return list;
 	}
 }

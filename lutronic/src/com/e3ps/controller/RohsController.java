@@ -62,9 +62,11 @@ public class RohsController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception{
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		List<Map<String,String>> typeList = RohsHelper.manager.rohsFileType();
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/rohs/rohs-create.jsp");
 		model.addObject("manufactureList", manufactureList);
+		model.addObject("typeList", typeList);
 		return model;
 	}
 	

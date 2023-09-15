@@ -79,7 +79,7 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 			<a href="#tabs-4">관련 물질</a>
 		</li>
 		<li>
-			<a href="#tabs-5">파일 구분</a>
+			<a href="#tabs-5">첨부파일</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -125,14 +125,6 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 				<th>설명</th>
 				<td><%=dto.getDescription()%></td>
 			</tr>
-			<tr>
-				<th>첨부파일</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
-						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 	</div>
 	<div id="tabs-2">
@@ -160,7 +152,7 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		</jsp:include>
 	</div>
 	<div id="tabs-5">
-		<!-- 파일 구분 -->
+		<!-- 첨부 파일 -->
 		<table class="view-table">
 			<colgroup>
 				<col width="150">

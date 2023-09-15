@@ -241,6 +241,7 @@ if(request.getParameter("popup")!=null){
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					showRowCheckColumn : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -310,6 +311,16 @@ if(request.getParameter("popup")!=null){
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function addBtn(){
+				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+				if (items.length == 0) {
+					alert("추가할 물질을 선택하세요.");
+					return false;
+				}
+				opener.append(items);
+				self.close();
+			}
 			
 		</script>
 	</form>

@@ -158,6 +158,7 @@ boolean isUpdate = "update".equals(mode);
 		popup(url, 1500, 700);
 	}
 	
+	// 중복 제거후 추가
 	function append(items){
 		var arr = [];
 		var count=0;
