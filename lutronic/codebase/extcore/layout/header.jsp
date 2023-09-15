@@ -299,19 +299,19 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 <!-- 						<a onclick="moveToPage(this, '/mold/ap-all', '> 승인원 > 승인원 결재');">승인원 결재</a> -->
 <!-- 					</li> -->
 						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 생산본부 문서 > 생산본부 문서검색);">생산본부 문서검색</a>
+							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 병리연구 문서 > 병리연구 문서검색);">병리연구 문서검색</a>
+							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 임상개발 문서 > 임상개발 문서검색);">임상개발 문서검색</a>
+							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> RA팀 문서 > RA팀 문서검색);">RA팀 문서검색</a>
+							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
 						</li>
 						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 화장품 문서 > 화장품 문서검색);">화장품 문서검색</a>
+							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 화장품 문서검색');">화장품 문서검색</a>
 						</li>
 				</ul>
 			</li>
