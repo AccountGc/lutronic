@@ -69,15 +69,35 @@
 			</tr>
 			<tr>
 				<th class="lb">인허가변경</th>
-				<td colspan="3">
-					<div id='licensing'></div>	
+				<td colspan="3">&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="licensing"  id="licensing" value="NONE" checked="checked">
+						<div class="state p-success">
+							<label> <b>N/A</b>
+							</label>
+						</div>
+					</div> &nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="licensing" value="0">
+						<div class="state p-success">
+							<label> <b>불필요</b>
+							</label>
+						</div>
+					</div> &nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="licensing" value="1">
+						<div class="state p-success">
+							<label> <b>필요</b>
+							</label>
+						</div>
+					</div>
 				</td>
 				<th>위험통제</th>
 				<td colspan="3"> &nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="riskType" value="">
 						<div class="state p-success">
-							<label> <b>해제</b>
+							<label> <b>N/A</b>
 							</label>
 						</div>
 					</div>

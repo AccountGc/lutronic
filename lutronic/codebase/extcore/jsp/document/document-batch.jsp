@@ -23,7 +23,7 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 		<table class="button-table">
 			<tr>
 				<td>
-					<input type="button" value="저장" title="저장" onclick="batch();">
+					<input type="button" value="등록" title="등록" onclick="batch();">
 					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
 					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 				</td>
@@ -306,9 +306,8 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				} ]
 			}, {
 				dataField : "interalnumber",
-				headerText : "내부 문서번호",
-				width : 120,
-				cellMerge: true,
+				headerText : "내부문서 번호",
+				width: 160,
 			}, {
 				headerText : "보존기간",
 				children : [ {
@@ -358,6 +357,44 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				width : 120,
 				cellMerge: true,
 			}, {
+				headerText : "주 첨부파일",
+				children : [ {
+					dataField : "primaryName",
+					headerText : "파일명",
+					width: 160,
+					styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (typeof value == "undefined" || value == "") {
+							return null;
+						}
+						return "my-file-selected";
+					},
+					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+						if (typeof value == "undefined" || value == "") {
+							return "선택 파일 없음";
+						}
+						return value;
+					},
+				}, {
+					dataField : "primary",
+					headerText : "주 첨부파일",
+					width: 160,
+					editable : false,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "파일선택",
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.id;
+							const url = getCallUrl("/common/attachPrimary?oid=" + oid + "&method=attachPrimary");
+							_popup(url, 800, 400,"n");
+						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}]
+			}, {
 				headerText : "첨부파일",
 				children : [ {
 					dataField : "secondaryName",
@@ -386,7 +423,7 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
 							const oid = item.id;
-							const url = getCallUrl("/common/attachSecondary?oid=" + oid + "&method=attach");
+							const url = getCallUrl("/common/attachSecondary?oid=" + oid + "&method=attachSecondary");
 							_popup(url, 800, 400,"n");
 						}
 					},
@@ -491,27 +528,53 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 			}
 			
 			// 품목 번호 할당 메서드
-			function setPartNumber(partOids, partNumber, parentRowIndex){
+			function setPart(partOids, partNumber, parentRowIndex){
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "partOids", partOids);
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "partNumber", partNumber);
 			}
 						
-			function attach(data) {
+			// 주 첨부파일
+			function attachPrimary(data) {
 				
 				for(let i = 0; i < data.length; i++){
 					AUIGrid.updateRowsById(myGridID, {
 						id : recentGridItem.id,
-						secondary : data[0].cacheId,
+						primary : data[0].cacheId,
 					});
 					
 					AUIGrid.updateRowsById(myGridID, {
 						id: recentGridItem.id,
-						secondaryName: data[0].name
+						primaryName: data[0].name
 					});
 				}
 			}
 						
-			
+			// 첨부파일
+			function attachSecondary(data) {
+				
+				for(let i = 0; i < data.length; i++){
+					let cacheId = [];
+					let name = [];
+					
+					for(let i = 0; i < data.length; i++){
+						cacheId.push(data[i].cacheId);
+						name.push(data[i].name);
+					}
+					
+					
+					AUIGrid.updateRowsById(myGridID, {
+						id : recentGridItem.id,
+						secondary : cacheId,
+					});
+					
+					AUIGrid.updateRowsById(myGridID, {
+						id: recentGridItem.id,
+						secondaryName: name
+					});
+				}
+			}
+						
+			// 등록
 			function batch(){
 				const documentList = AUIGrid.getGridData(myGridID);
 				

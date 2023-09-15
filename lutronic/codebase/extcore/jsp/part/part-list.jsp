@@ -635,7 +635,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 				function add(){
 					const items = AUIGrid.getCheckedRowItemsAll(myGridID);
 					if (items.length == 0) {
-						alert("편집할 품목을 선택하세요.");
+						alert("첨부할 품목을 선택하세요.");
 						return false;
 					}
 					
@@ -643,15 +643,11 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 					let partNumber = [];
 					
 					for(let i = 0; i < items.length; i++){
-						console.log(items[i]);
 						partOids.push(items[i].part_oid);
 						partNumber.push(items[i].number);
 					}
 					
-					partOids = partOids.join();
-					partNumber = partNumber.join();
-					
-					opener.setPartNumber(partOids, partNumber, <%= parentRowIndex %>);
+					opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
 					self.close();
 				}
 			<% } %>

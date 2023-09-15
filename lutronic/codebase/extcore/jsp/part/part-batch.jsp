@@ -651,7 +651,7 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
 							const oid = item.id;
-							const url = getCallUrl("/common/attachPrimary?oid=" + oid + "&method=attach");
+							const url = getCallUrl("/common/attachPrimaryDrawing?oid=" + oid + "&method=attach");
 							_popup(url, 800, 400,"n");
 						}
 					},
