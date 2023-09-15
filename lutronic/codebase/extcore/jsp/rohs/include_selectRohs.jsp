@@ -52,7 +52,6 @@ boolean isCreate = "create".equals(mode);
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
-			showStateColumn : true,
 			rowCheckToRadio : true,
 			enableFilter : true
 		}
