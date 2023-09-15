@@ -536,10 +536,10 @@ public class RohsHelper {
     	return list;
 	}
 	
-	public ROHSMaterial getRohs(String number) throws Exception {
+	public ROHSMaterial getRohs(String name) throws Exception {
 		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
-    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, number.toUpperCase());
+    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, name);
     	QueryResult result = PersistenceHelper.manager.find(query);
     	ROHSMaterial rohs = null;
     	while (result.hasMoreElements()) {
@@ -551,12 +551,9 @@ public class RohsHelper {
 	
 	public List<Map<String,Object>> getRohsContent(String oid) throws Exception {
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
 		
 		List<ROHSContHolder> holderList = RohsQueryHelper.service.getROHSContHolder(oid);
-		
 		for(ROHSContHolder holder : holderList){
-			
 			ApplicationData data = holder.getApp();
 			String url="/Windchill/plm/content/download?oid="+CommonUtil.getOIDString(data);
 			
@@ -575,11 +572,9 @@ public class RohsHelper {
 	}
 	
 	public int rohsCheck(Map<String, Object> params) throws Exception {
-		String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
 		String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
 		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
-    	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, rohsNumber.toUpperCase());
     	QuerySpecUtils.toLikeAnd(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
     	QueryResult result = PersistenceHelper.manager.find(query);
     	int count = 0;

@@ -2286,17 +2286,12 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	    	String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
 	    	
 			DocumentType docType = DocumentType.toDocumentType((String) params.get("docType"));
-			String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
 			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
 			String description = StringUtil.checkNull((String) params.get("description"));
 			// 문서 기본 정보 설정
 			rohs = ROHSMaterial.newROHSMaterial();
 			rohs.setName(rohsName);
-			if("".equals(rohsNumber)){
-				rohs.setNumber(getRohsNumberSeq(manufacture));
-			}else{
-				rohs.setNumber(rohsNumber);
-			}
+			rohs.setNumber(getRohsNumberSeq(manufacture));
 			
 	        rohs.setDocType(docType);
 			rohs.setDescription(description);
@@ -2331,8 +2326,8 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			}
 	        
             //관련 부품            
-//	        String[] partOids = request.getParameterValues("partOid");
-//			createROHSToPartLink(rohs, partOids);
+			List<Map<String, Object>> partList = (List<Map<String, Object>>) params.get("partList");
+			createROHSToPartLink(rohs, partList);
 			
 			//관련 물질
 			List<Map<String, Object>> rohsList = (List<Map<String, Object>>) params.get("rohsList");
@@ -2365,6 +2360,31 @@ public class StandardRohsService extends StandardManager implements RohsService 
         }
 	}
 	
+	public void createROHSToPartLink(RevisionControlled rv, List<Map<String, Object>> partList) throws WTException{
+		
+		if(rv instanceof ROHSMaterial){
+			if(partList.size()>0){
+				for(Map<String, Object> map : partList){
+					String oid = (String) map.get("part_oid");
+					WTPart part = (WTPart)CommonUtil.getObject(oid);
+					PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, (ROHSMaterial)rv);
+					PersistenceHelper.manager.save(link);
+				}
+			}
+			
+		}else{
+			if(partList.size()>0){
+				for(Map<String, Object> map : partList){
+					String oid = (String) map.get("part_oid");
+					ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+					PartToRohsLink link = PartToRohsLink.newPartToRohsLink((WTPart)rv, rohs);
+					PersistenceHelper.manager.save(link);
+				}
+			}
+			
+		}
+	}
+	
 	public void createROHSToROHSLink(ROHSMaterial rohs, List<Map<String, Object>> rohsList) throws WTException{
 		
 		if(rohsList.size()>0){
@@ -2385,8 +2405,9 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			ArrayList<Map<String, Object>> gridList = (ArrayList<Map<String, Object>>) params.get("gridList");
     		for(Map<String, Object> map : gridList) {
     			ArrayList<String> secondarys = (ArrayList<String>) map.get("secondary");
-    			String rohsNumber = (String) map.get("rohsNumber");
-    			ROHSMaterial rm = RohsHelper.manager.getRohs(rohsNumber);
+    			String manufacture = (String) map.get("manufacture");
+    			String rohsName = (String) map.get("rohsName");
+    			ROHSMaterial rm = RohsHelper.manager.getRohs(rohsName);
     			
     			Map<String,String> rohsMap = new HashMap<String,String>();
     			String fileType = (String) map.get("fileType");
@@ -2395,8 +2416,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
     			rohsMap.put("publicationDate", publicationDate);
     			if(rm==null) {
     				ROHSMaterial rohs = ROHSMaterial.newROHSMaterial();
-        			rohs.setNumber(rohsNumber);
-        			String rohsName = (String) map.get("rohsName");
+    				rohs.setNumber(getRohsNumberSeq(manufacture));
         			rohs.setName(rohsName);
         			String lifecycle = (String) map.get("lifecycleName");
         			// 물질 Container 설정
@@ -2407,9 +2427,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
         			LifeCycleHelper.setLifeCycle(rohs, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef));
         			
         			rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
-        			
-        			String manufacture = (String) map.get("manufacture");
-        			
         			Map<String,Object> commonMap = new HashMap<String,Object>();
                     
         			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default

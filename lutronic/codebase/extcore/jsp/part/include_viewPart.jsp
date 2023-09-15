@@ -37,8 +37,8 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 			baseUrl : "javascript",
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
-				const url = getCallUrl("/project/info?oid=" + oid);
-				popup(url);
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
 			}
 		},
 	}, {

@@ -63,7 +63,7 @@ boolean isCreate = "create".equals(mode);
 		popup(url, 1500, 700);
 	}
 	
-	function append(items){
+	function rohsAppend(items){
 		var arr = [];
 		var count=0;
 		var data = AUIGrid.getGridData(rohsGridID);

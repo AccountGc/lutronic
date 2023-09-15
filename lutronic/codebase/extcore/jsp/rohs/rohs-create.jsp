@@ -53,11 +53,19 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="lb">물질번호</th>
-				<td class="indent5">
-					<input type="text" name="rohsNumber" id="rohsNumber" class="width-400">
-					&nbsp;<input type="button" value="번호 중복" title="번호 중복" id="NumberCheck">
+				<th class="req lb">물질명</th>
+				<td class="indent5" colspan="3">
+					<input type="text" name="rohsName" id="rohsName" class="width-400">
+					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" id="NameCheck">
+					<input type="hidden" id="duplicationChk" value="F">
 				</td>
+<!-- 				<th class="lb">물질번호</th> -->
+<!-- 				<td class="indent5"> -->
+<!-- 					<input type="text" name="rohsNumber" id="rohsNumber" class="width-400"> -->
+<!-- 					&nbsp;<input type="button" value="번호 중복" title="번호 중복" id="NumberCheck"> -->
+<!-- 				</td> -->
+			</tr>
+			<tr>
 				<th class="req lb">결재방식</th>
 				<td class="indent5">
 					<div class="pretty p-switch">
@@ -74,13 +82,6 @@
 							</label>
 						</div>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<th class="req lb">물질명</th>
-				<td class="indent5">
-					<input type="text" name="rohsName" id="rohsName" class="width-400">
-					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" id="NameCheck">
 				</td>
 				<th class="req lb">협력업체</th>
 				<td class="indent5">
@@ -169,9 +170,16 @@
 			</tr>
 		</table>
 		<script type="text/javascript">
+			var nameChk;
+		
 			$("#createBtn").click(function() {
 				if(isEmpty($("#rohsName").val())) {
 					alert("물질명을 입력하세요.");
+					return;
+				}
+				
+				if($("#duplicationChk").val()=="F" || nameChk!=$("#rohsName").val()){
+					alert("물질명 중복체크 해주세요.");
 					return;
 				}
 				
@@ -193,7 +201,8 @@
 				params.fileType = $("#fileType").val();
 				params.publicationDate = $("#publicationDate").val();
 				params.rohsList = AUIGrid.getGridData(rohsGridID);
-				
+				params.partList = AUIGrid.getGridData(partGridID);
+				debugger;
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
@@ -213,28 +222,6 @@
 				location.href = getCallUrl("/rohs/list");
 			});
 			
-			$("#NumberCheck").click(function() {
-				var params = new Object();
-				if(isEmpty($("#rohsNumber").val())){
-					alert("입력된 물질번호가 없습니다.");
-					return;
-				}
-				params.rohsNumber = $("#rohsNumber").val();
-				var url = getCallUrl("/rohs/rohsCheck");
-				call(url, params, function(data) {
-					if(data.result){
-						if(data.count==0){
-							alert("등록 가능한 번호입니다.");
-						}else{
-							alert("이미 등록된 번호입니다.");
-							$("#rohsNumber").val("");
-						}
-					}else{
-						alert(data.msg);
-					}
-				});
-			});
-			
 			$("#NameCheck").click(function() {
 				var params = new Object();
 				if(isEmpty($("#rohsName").val())){
@@ -247,6 +234,8 @@
 					if(data.result){
 						if(data.count==0){
 							alert("등록 가능한 물질명입니다.");
+							$("#duplicationChk").val("S");
+							nameChk = $("#rohsName").val();
 						}else{
 							alert("이미 등록된 물질명입니다.");
 							$("#rohsName").val("");

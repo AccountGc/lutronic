@@ -34,6 +34,7 @@ public class RohsData{
 	private String number;
 	private String name;
 	private String state;
+	private String stateDisplay;
 	private String manufacture;
 	private String manufactureDisplay;
 	private String approvalType;
@@ -51,7 +52,8 @@ public class RohsData{
 		setOid(CommonUtil.getOIDString(rohs));
 		setNumber(rohs.getNumber());
 		setName(rohs.getName());
-		setState(rohs.getLifeCycleState().getDisplay());
+		setState(rohs.getLifeCycleState().toString());
+		setStateDisplay(rohs.getLifeCycleState().getDisplay());
 		setCreator(rohs.getCreatorFullName());
 		setModifier(rohs.getModifierFullName());
 		setCreateDate(DateUtil.getDateString(rohs.getCreateTimestamp(),"a"));

@@ -122,11 +122,6 @@
 				width : 120,
 				cellMerge: true,
 			}, {
-				dataField : "rohsNumber",
-				headerText : "물질번호",
-				width : 120,
-				cellMerge: true,
-			}, {
 				dataField : "rohsName",
 				headerText : "물질명",
 				width : 120,
@@ -331,10 +326,6 @@
 					}
 					if(isEmpty(gridList[i].manufacture)){
 						alert("입력된 협력업체코드가 없습니다.");
-						return;
-					}
-					if(isEmpty(gridList[i].rohsNumber)){
-						alert("입력된 물질번호가 없습니다.");
 						return;
 					}
 					if(isEmpty(gridList[i].rohsName)){

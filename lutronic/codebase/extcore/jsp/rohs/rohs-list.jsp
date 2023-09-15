@@ -188,7 +188,7 @@ if(request.getParameter("popup")!=null){
 						inline : true
 					},
 				}, {
-					dataField : "state",
+					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
@@ -318,7 +318,7 @@ if(request.getParameter("popup")!=null){
 					alert("추가할 물질을 선택하세요.");
 					return false;
 				}
-				opener.append(items);
+				opener.rohsAppend(items);
 				self.close();
 			}
 			

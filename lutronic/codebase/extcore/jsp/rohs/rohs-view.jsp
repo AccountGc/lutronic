@@ -103,7 +103,7 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 			</tr>
 			<tr>
 				<th>상태</th>
-				<td><%=dto.getState()%></td>
+				<td><%=dto.getStateDisplay()%></td>
 				<th>Rev.</th>
 				<td><%=dto.getVersion()%></td>
 			</tr>

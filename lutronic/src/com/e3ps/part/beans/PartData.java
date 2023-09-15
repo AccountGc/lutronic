@@ -137,7 +137,7 @@ public class PartData {
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorFullName());
 //    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
-//    	setModifyDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
+    	setModifyDate(DateUtil.getDateString(part.getModifyTimestamp(),"a"));
 
 //    	if(epm == null){
 //			epm = DrawingHelper.service.getEPMDocument(part);

@@ -67,8 +67,8 @@ if(roleType.equals("represent")){
 				baseUrl : "javascript",
 				jsCallback : function(rowIndex, columnIndex, value, item) {
 					const oid = item.oid;
-					const url = getCallUrl("/project/info?oid=" + oid);
-					popup(url);
+					const url = getCallUrl("/rohs/view?oid=" + oid);
+					popup(url, 1600, 800);
 				}
 			},
 		}, {

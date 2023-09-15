@@ -646,8 +646,12 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 						partOids.push(items[i].part_oid);
 						partNumber.push(items[i].number);
 					}
-					
-					opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
+					var parentRow = <%= parentRowIndex %>;
+					if(parentRow<0){
+						opener.append(items);
+					}else{
+						opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
+					}
 					self.close();
 				}
 			<% } %>

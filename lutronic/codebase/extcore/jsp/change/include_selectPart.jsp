@@ -40,61 +40,14 @@ boolean isUpdate = "update".equals(mode);
 <script type="text/javascript">
 	let partGridID;
 	const columnsPart = [ {
+		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
-		children : [ {
-			dataField : "numberBefore",
-			headerText : "변경전",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-			editable : false
-		}, {
-			dataField : "numberAfter",
-			headerText : "변경후",
-			colSpan : 2,
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-			editable : false,
-			renderer : {
-				type : "ButtonRenderer",
-				labelText : "부품추가",
-				onClick : function(event) {
-					const url = getCallUrl("/part/list?popup=true");
-					popup(url, 1500, 700);
-				}
-			}
-		} ,{
-			width : 100,
-			renderer : {
-				type : "ButtonRenderer",
-				labelText : "부품등록",
-				onClick : function(event) {
-					const url = getCallUrl("/part/create?popup=true");
-					popup(url, 1500, 700);
-			}
-		}
-		}]
-		<%
-			if(isView) {
-		%>
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/project/info?oid=" + oid);
-				popup(url);
-			}
+		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
 		},
-		<%
-			}
-		%>
 	}, {
 		dataField : "name",
 		headerText : "품목명",
@@ -144,13 +97,6 @@ boolean isUpdate = "update".equals(mode);
 		<%if (isView || isUpdate) {%>
 <%-- 		AUIGrid.setGridData(partGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
 		<%}%>
-		var json = {
-		    "numberBefore" : 3010357700,
-		    "name" : "MOUNT_A-MOTOR",
-		    "version" : "A.1",
-		    "bom" : ""
-		}
-		AUIGrid.setGridData(partGridID, json);
 	}
 
 	function insert9() {
