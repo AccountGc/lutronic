@@ -184,8 +184,7 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 	//수정
 	$("#updateBtn").click(function () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		openLayer();
+		const url = getCallUrl("/rohs/update?oid=" + oid);
 		document.location.href = url;
 	})
 	
