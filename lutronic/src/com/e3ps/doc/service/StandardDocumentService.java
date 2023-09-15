@@ -249,13 +249,17 @@ public class StandardDocumentService extends StandardManager implements Document
 
 		// 관련 부품
 		ArrayList<String> _partOids = (ArrayList<String>) map.get("partOids");
-		String[] partOids = _partOids.toArray(new String[_partOids.size()]);
-		updateDocumentToPartLink(doc, partOids, false);
+		if(_partOids != null) {
+			String[] partOids = _partOids.toArray(new String[_partOids.size()]);
+			updateDocumentToPartLink(doc, partOids, false);			
+		}
 
 		// 관련 문서
 		ArrayList<String> _docOids = (ArrayList<String>) map.get("docOids");
-		String[] docOids = _docOids.toArray(new String[_docOids.size()]);
-		updateDocumentToDocumentLink(doc, docOids, false);
+		if(_docOids != null) {
+			String[] docOids = _docOids.toArray(new String[_docOids.size()]);
+			updateDocumentToDocumentLink(doc, docOids, false);			
+		}
 
 		String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
 		if ("LC_Default_NonWF".equals(lifecycle)) {
