@@ -305,30 +305,9 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 					},
 				} ]
 			}, {
-				headerText : "내부문서",
-				children : [ {
-					dataField : "docOids",
-					dataType : "string",
-					visible : false
-				},{
-					dataField : "interalnumber",
-					headerText : "내부문서 번호",
-					width: 160,
-				}, {
-					dataField : "document",
-					headerText : "내부문서",
-					dataType : "string",
-					width : 120,
-					renderer : {
-						type : "ButtonRenderer",
-						labelText : "문서추가",
-						onClick : function(event) {
-							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/doc/list?popup=true&parentRowIndex=" + parentRowIndex);
-							_popup(url, 1800, 900, "n");
-						}
-					}
-				}]
+				dataField : "interalnumber",
+				headerText : "내부문서 번호",
+				width: 160,
 			}, {
 				headerText : "보존기간",
 				children : [ {
@@ -554,12 +533,6 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "partNumber", partNumber);
 			}
 						
-			// 내부 문서 할당 메서드
-			function setDoc(docOids, interalnumber, parentRowIndex){
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "docOids", docOids);
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "interalnumber", interalnumber);
-			}
-						
 			// 주 첨부파일
 			function attachPrimary(data) {
 				
@@ -656,10 +629,6 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 // 					}
 // 					if(isEmpty(documentList[i].partOids)){
 // 						alert(rowNum + "행의 문서에 관련품목를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].docOids)){
-// 						alert(rowNum + "행의 문서에 내부문서를 입력하세요.");
 // 						return;
 // 					}
 				}
