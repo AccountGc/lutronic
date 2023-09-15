@@ -33,10 +33,10 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th><%=eoType %> 제목</th>
-				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
 				<th><%=eoType %> 번호</th>
 				<td class="indent5"><input type="text" name="number" id="number" class="width-300"></td>
+				<th><%=eoType %> 제목</th>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200" >

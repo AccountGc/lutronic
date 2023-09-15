@@ -30,10 +30,10 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>EO 제목</th>
-				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
 				<th>EO 번호</th>
 				<td class="indent5"><input type="text" name="number" id="number" class="width-300"></td>
+				<th>EO 제목</th>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200" >

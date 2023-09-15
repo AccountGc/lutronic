@@ -32,10 +32,10 @@ if(request.getParameter("popup")!=null){
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>ECO 제목</th>
-				<td class="indent5"><input type="text" name="eoName" id="eoName" class="width-300"></td>
 				<th>ECO 번호</th>
 				<td class="indent5"><input type="text" name="eoNumber" id="eoNumber" class="width-300"></td>
+				<th>ECO 제목</th>
+				<td class="indent5"><input type="text" name="eoName" id="eoName" class="width-300"></td>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
@@ -63,7 +63,7 @@ if(request.getParameter("popup")!=null){
 					<div class="pretty p-switch">
 						<input type="radio" name="licensing"  id="licensing" value="NONE" checked="checked">
 						<div class="state p-success">
-							<label> <b>선택안됨</b>
+							<label> <b>N/A</b>
 							</label>
 						</div>
 					</div> &nbsp;
@@ -94,7 +94,7 @@ if(request.getParameter("popup")!=null){
 					<div class="pretty p-switch">
 						<input type="radio" name="riskType"  id="riskType" value="true" checked="NONE">
 						<div class="state p-success">
-							<label> <b>선택안됨</b>
+							<label> <b>N/A</b>
 							</label>
 						</div>
 					</div> &nbsp;
