@@ -44,20 +44,6 @@ public class RohsController extends BaseController {
 		return RohsHelper.service.rohsFileType();
 	}
 	
-//	/**	rohs 등록 페이지
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping("/createRohs")
-//	public ModelAndView createRohs(HttpServletRequest request, HttpServletResponse response) {
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("menu", "menu2");
-//		model.addObject("module","rohs");
-//		model.setViewName("default:/rohs/createRohs");
-//		return model;
-//	}
-	
 	@Description(value = "물질 등록")
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception{
@@ -70,7 +56,7 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
-	@Description(value = "RoHS 등록 함수")
+	@Description(value = "물질 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
 	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
@@ -87,6 +73,69 @@ public class RohsController extends BaseController {
 		return result;
 	}
 	
+	@Description(value = "물질검색")
+	@GetMapping(value = "/list")
+	public ModelAndView list() throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("sessionUser", sessionUser);
+		model.setViewName("/extcore/jsp/rohs/rohs-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "물질 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/list")
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = RohsHelper.manager.list(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "물질 상세 페이지")
+	@GetMapping(value =  "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		RohsData dto = new RohsData(rohs);
+		
+		List<Map<String,Object>> list = RohsHelper.manager.getRohsContent(oid);
+		model.addObject("list", list);
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/rohs/rohs-view.jsp");
+		return model;
+	}
+	
+	@Description(value = "물질 수정 페이지")
+	@GetMapping(value =  "/update")
+	public ModelAndView update(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		RohsData data = new RohsData(rohs);
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		List<Map<String,String>> typeList = RohsHelper.manager.rohsFileType();
+		
+		List<Map<String,Object>> contentList = RohsHelper.manager.getRohsContent(oid);
+		
+		model.addObject("data", data);
+		model.addObject("contentList", contentList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("typeList", typeList);
+		model.setViewName("/extcore/jsp/rohs/rohs-update.jsp");
+		return model;
+	}
+	
 	@Description(value = "물질 중복체크")
 	@ResponseBody
 	@PostMapping(value = "/rohsCheck")
@@ -94,6 +143,22 @@ public class RohsController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result.put("count", RohsHelper.manager.rohsCheck(params));
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "물질 중복체크")
+	@ResponseBody
+	@PostMapping(value = "/rohsNameCheck")
+	public Map<String, Object> rohsNameCheck(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result.put("duplicate", RohsHelper.manager.rohsNameCheck(params));
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -132,22 +197,6 @@ public class RohsController extends BaseController {
 		return result;
 	}
 	
-	@Description(value = "물질 중복체크")
-	@ResponseBody
-	@PostMapping(value = "/rohsNameCheck")
-	public Map<String, Object> rohsNameCheck(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result.put("duplicate", RohsHelper.manager.rohsNameCheck(params));
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-	
 	@Description(value = "물질 일괄등록 첨부파일 페이지")
 	@GetMapping(value = "/attachFile")
 	public ModelAndView attachFile() throws Exception{
@@ -163,115 +212,6 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-link.jsp");
 		return model;
 	}
-	
-//	/** rohs 검색 페이지
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping("/listRohs")
-//	public ModelAndView listRohs(HttpServletRequest request, HttpServletResponse response) {
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("menu", "menu1");
-//		model.addObject("module","rohs");
-//		model.setViewName("default:/rohs/listRohs");
-//		return model;
-//	}
-	
-	@Description(value = "물질검색")
-	@GetMapping(value = "/list")
-	public ModelAndView list() throws Exception {
-		ModelAndView model = new ModelAndView();
-		boolean isAdmin = CommonUtil.isAdmin();
-		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
-		model.addObject("isAdmin", isAdmin);
-		model.addObject("sessionUser", sessionUser);
-		model.setViewName("/extcore/jsp/rohs/rohs-list.jsp");
-		return model;
-	}
-	
-	@Description(value = "rohs 조회 함수")
-	@ResponseBody
-	@PostMapping(value = "/list")
-	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result = RohsHelper.manager.list(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-	
-	@Description(value = "rohs 상세 페이지")
-	@GetMapping(value =  "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception{
-		ModelAndView model = new ModelAndView();
-		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-		RohsData dto = new RohsData(rohs);
-		
-		List<Map<String,Object>> list = RohsHelper.manager.getRohsContent(oid);
-		model.addObject("list", list);
-		boolean isAdmin = CommonUtil.isAdmin();
-		model.addObject("isAdmin", isAdmin);
-		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/rohs/rohs-view.jsp");
-		return model;
-	}
-	
-//	/**	rohs 상세보기
-//	 * @param request
-//	 * @param response
-//	 * @param oid
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@RequestMapping("/viewRohs")
-//	public ModelAndView viewRohs(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-//		ModelAndView model = new ModelAndView();
-//		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-//		RohsData rohsData = new RohsData(rohs);
-//		
-//		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
-//		
-//		model.setViewName("popup:/rohs/viewRohs");
-//		model.addObject("isAdmin", CommonUtil.isAdmin());
-//		model.addObject("rohsData", rohsData);
-//		model.addObject("list", list);
-//		return model;
-//	}
-	
-	/**	rohs 등록
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/createRohsAction")
-	public ResultData createRohsAction(HttpServletRequest request, HttpServletResponse response) {
-		return RohsHelper.service.createRohsAction(request, response);
-	}
-	
-//	/** rohs 검색
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping("/listRohsAction")
-//	public Map<String,Object> listRohsAction(HttpServletRequest request, HttpServletResponse response){
-//		Map<String,Object> result = null;
-//		try {
-//			result = RohsHelper.service.listRohsAction(request, response);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return result;
-//	}
 	
 	@Description(value = "파일검색 페이지")
 	@GetMapping(value = "/listRohsFile")
@@ -352,6 +292,85 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-all.jsp");
 		return model;
 	}
+	
+//	/**	rohs 등록 페이지
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/createRohs")
+//	public ModelAndView createRohs(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu2");
+//		model.addObject("module","rohs");
+//		model.setViewName("default:/rohs/createRohs");
+//		return model;
+//	}
+	
+//	/** rohs 검색 페이지
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/listRohs")
+//	public ModelAndView listRohs(HttpServletRequest request, HttpServletResponse response) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("menu", "menu1");
+//		model.addObject("module","rohs");
+//		model.setViewName("default:/rohs/listRohs");
+//		return model;
+//	}
+	
+//	/**	rohs 상세보기
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping("/viewRohs")
+//	public ModelAndView viewRohs(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
+//		ModelAndView model = new ModelAndView();
+//		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+//		RohsData rohsData = new RohsData(rohs);
+//		
+//		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
+//		
+//		model.setViewName("popup:/rohs/viewRohs");
+//		model.addObject("isAdmin", CommonUtil.isAdmin());
+//		model.addObject("rohsData", rohsData);
+//		model.addObject("list", list);
+//		return model;
+//	}
+	
+	/**	rohs 등록
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/createRohsAction")
+	public ResultData createRohsAction(HttpServletRequest request, HttpServletResponse response) {
+		return RohsHelper.service.createRohsAction(request, response);
+	}
+	
+//	/** rohs 검색
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/listRohsAction")
+//	public Map<String,Object> listRohsAction(HttpServletRequest request, HttpServletResponse response){
+//		Map<String,Object> result = null;
+//		try {
+//			result = RohsHelper.service.listRohsAction(request, response);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return result;
+//	}
 	
 //	@ResponseBody
 //	@RequestMapping("/listRoHSDataAction")

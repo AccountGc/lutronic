@@ -202,7 +202,7 @@
 				params.publicationDate = $("#publicationDate").val();
 				params.rohsList = AUIGrid.getGridData(rohsGridID);
 				params.partList = AUIGrid.getGridData(partGridID);
-				debugger;
+				
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
