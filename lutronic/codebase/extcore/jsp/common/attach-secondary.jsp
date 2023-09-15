@@ -54,25 +54,25 @@ String oid = request.getParameter("oid");
 			}
 		})
 		
-		new AXReq("/Windchill/eSolution/content/list", {
-			pars : "oid=<%=oid%>&roleType=secondary",
-			onsucc : function(res) {
-				if (!res.e) {
-					const form = document.querySelector("form");
-					const data = res.secondaryFile;
-					const len = data.length;
-					for (let i = 0; i < len; i++) {
-						const secondaryTag = document.createElement("input");
-						secondaryTag.type = "hidden";
-						secondaryTag.id = data[i]._id_;
-						secondaryTag.name = "secondarys";
-						secondaryTag.value = data[i].cacheId;
-						form.appendChild(secondaryTag);
-					}
-					secondary.setUploadedList(data);
-				}
-			}
-		});
+// 		new AXReq("/Windchill/eSolution/content/list", {
+<%-- 			pars : "oid=<%=oid%>&roleType=secondary", --%>
+// 			onsucc : function(res) {
+// 				if (!res.e) {
+// 					const form = document.querySelector("form");
+// 					const data = res.secondaryFile;
+// 					const len = data.length;
+// 					for (let i = 0; i < len; i++) {
+// 						const secondaryTag = document.createElement("input");
+// 						secondaryTag.type = "hidden";
+// 						secondaryTag.id = data[i]._id_;
+// 						secondaryTag.name = "secondarys";
+// 						secondaryTag.value = data[i].cacheId;
+// 						form.appendChild(secondaryTag);
+// 					}
+// 					secondary.setUploadedList(data);
+// 				}
+// 			}
+// 		});
 	}
 	load();
 	

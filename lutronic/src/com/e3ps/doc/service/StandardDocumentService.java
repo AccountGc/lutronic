@@ -184,7 +184,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		return map;
 	}
 
-	public WTDocument createAction(Map<String, Object> map) throws Exception {
+	public void createAction(Map<String, Object> map) throws Exception {
 		String location = StringUtil.checkNull((String) map.get("location"));
 		String documentName = StringUtil.checkNull((String) map.get("documentName"));
 		String docName = StringUtil.checkNull((String) map.get("docName"));
@@ -280,38 +280,36 @@ public class StandardDocumentService extends StandardManager implements Document
 		 * DevelopmentHelper.service.createDocumentToDevelopmentLink(doc, parentOid); }
 		 * }
 		 */
-
-		return doc;
 	}
 
-	@Override
-	public ResultData createDocumentAction(Map<String, Object> map) {
-		ResultData result = new ResultData();
-
-		Transaction trx = new Transaction();
-		WTDocument doc = null;
-
-		try {
-			trx.start();
-
-			doc = createAction(map);
-
-			trx.commit();
-			trx = null;
-			result.setResult(true);
-			result.setOid(CommonUtil.getOIDString(doc));
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.setResult(false);
-			result.setMessage(e.getLocalizedMessage());
-		} finally {
-			if (trx != null) {
-				trx.rollback();
-			}
-		}
-
-		return result;
-	}
+//	@Override
+//	public ResultData createDocumentAction(Map<String, Object> map) {
+//		ResultData result = new ResultData();
+//
+//		Transaction trx = new Transaction();
+//		WTDocument doc = null;
+//
+//		try {
+//			trx.start();
+//
+//			doc = createAction(map);
+//
+//			trx.commit();
+//			trx = null;
+//			result.setResult(true);
+//			result.setOid(CommonUtil.getOIDString(doc));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			result.setResult(false);
+//			result.setMessage(e.getLocalizedMessage());
+//		} finally {
+//			if (trx != null) {
+//				trx.rollback();
+//			}
+//		}
+//
+//		return result;
+//	}
 
 	private String getDocumentNumberSeq(String longDescription) throws Exception {
 
@@ -688,678 +686,678 @@ public class StandardDocumentService extends StandardManager implements Document
 
 	}
 
-	@Override
-	public String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
+//	@Override
+//	public String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
+//
+//		Transaction trx = new Transaction();
+//		boolean validation = true;
+//		int failCount = 0;
+//
+//		Map<String, String> fileMap = new HashMap<String, String>();
+//
+//		StringBuffer xmlBuf = new StringBuffer();
+//		xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
+//		xmlBuf.append("<rows>");
+//
+//		try {
+//			trx.start();
+//
+//			FileRequest req = new FileRequest(request);
+//			String excelFile = req.getFileLocation("excelFile");
+//
+//			File file = new File(excelFile);
+//			XSSFWorkbook workbook = POIUtil.getWorkBook(file);
+//			XSSFSheet sheet = POIUtil.getSheet(workbook, 0);
+//
+//			String[] secondary = req.getParameterValues("SECONDARY");
+//
+//			if (secondary != null) {
+//				for (String attachFile : secondary) {
+//					String fileName = attachFile.split("/")[1].toUpperCase();
+//					if (fileMap.get(fileName) == null) {
+//						// System.out.println("attachFile add secondary ="+attachFile);
+//
+//						fileMap.put(fileName, attachFile);
+//					} else {
+//						fileMap.remove(fileName);
+//					}
+//				}
+//			}
+//
+//			List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+//
+//			for (int i = 1; i < POIUtil.getSheetRow(sheet); i++) {
+//				Map<String, Object> map = new HashMap<String, Object>();
+//				XSSFRow row = sheet.getRow(i);
+//
+//				validation = true;
+//				String fail = "";
+//
+//				// NO
+//				String no = StringUtil.checkNull(POIUtil.getRowStringValue(row, 0));
+//
+//				if (no.length() > 0) {
+//
+//					map.put("index", (i + 1));
+//
+//					// 문서 종류
+//					String documentName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 1));
+//					if (documentName.length() == 0) {
+//						validation = false;
+//						fail = Message.get("문서 종류가 없습니다.");
+//					}
+//					map.put("documentName", documentName);
+//
+//					// 문서명
+//					String docName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 2));
+//					map.put("docName", docName);
+//
+//					// 결재 방식
+//					String lifecycleName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 3));
+//					String lifecycle = "";
+//					if (lifecycleName.length() == 0) {
+//						validation = false;
+//						fail = Message.get("결재방식이 없습니다.");
+//					} else {
+//						if ("기본결재".equals(lifecycleName)) {
+//							lifecycle = "LC_Default";
+//						} else if ("일괄결재".equals(lifecycleName)) {
+//							lifecycle = "LC_Default_NonWF";
+//						}
+//					}
+//					map.put("lifecycleName", lifecycleName);
+//					map.put("lifecycle", lifecycle);
+//
+//					// 문서분류, 문서 코드
+//					String documentTypeName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 4));
+//					String documentType = StringUtil.checkNull(POIUtil.getRowStringValue(row, 5));
+//					if (documentType.length() == 0) {
+//						validation = false;
+//						fail = Message.get("문서분류가 없습니다.");
+//					} else {
+//						DocumentType type = DocumentType.toDocumentType(documentType);
+//						if (type == null) {
+//							validation = false;
+//							fail = Message.get("등록되지 않은 문서 분류입니다.");
+//						}
+//					}
+//					map.put("documentTypeName", documentTypeName);
+//					map.put("documentType", documentType);
+//
+//					// 프로젝트명, 프로젝트코드
+//					String modelName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 6));
+//					String model = StringUtil.checkNull(POIUtil.getRowStringValue(row, 7));
+//					if (model.length() > 0) {
+//						NumberCode code = NumberCodeHelper.service.getNumberCode("MODEL", model);
+//						if (code == null) {
+//							validation = false;
+//							fail = Message.get("등록되지 않은 프로젝트 코드입니다.");
+//						}
+//					}
+//					map.put("modelName", modelName);
+//					map.put("model", model);
+//
+//					// 작성자
+//					String writer = StringUtil.checkNull(POIUtil.getRowStringValue(row, 8));
+//					map.put("writer", writer);
+//
+//					// 내부 문서 번호
+//					String interalnumber = StringUtil.checkNull(POIUtil.getRowStringValue(row, 9));
+//					map.put("interalnumber", interalnumber);
+//
+//					// 부서명, 부서코드
+//					String deptcodeName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 10));
+//					String deptcode = StringUtil.checkNull(POIUtil.getRowStringValue(row, 11));
+//					if (deptcode.length() > 0) {
+//						NumberCode code = NumberCodeHelper.service.getNumberCode("DEPTCODE", deptcode);
+//						if (code == null) {
+//							validation = false;
+//							fail = Message.get("등록되지 않은 부서 코드입니다.");
+//						}
+//					}
+//					map.put("deptcodeName", deptcodeName);
+//					map.put("deptcode", deptcode);
+//
+//					// 보존기간
+//					String preserationName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 12));
+//					String preseration = StringUtil.checkNull(POIUtil.getRowStringValue(row, 13));
+//					if (preseration.length() == 0) {
+//						validation = false;
+//						fail = Message.get("보존기간이 없습니다.");
+//					} else {
+//						NumberCode code = NumberCodeHelper.service.getNumberCode("PRESERATION", preseration);
+//						if (code == null) {
+//							validation = false;
+//							fail = Message.get("등록되지 않은 보존기간 코드입니다.");
+//						}
+//					}
+//					map.put("preserationName", preserationName);
+//					map.put("preseration", preseration);
+//
+//					// 분류체계
+//					String location = StringUtil.checkNull(POIUtil.getRowStringValue(row, 14));
+//					if (location.length() == 0) {
+//						validation = false;
+//						fail = Message.get("문서분류가 없습니다.");
+//					} else {
+//						if ("/Default/Document".equals(location.trim())) {
+//							validation = false;
+//							fail = Message.get("최상위 문서분류에는 등록할 수 없습니다.");
+//						} else {
+//							Folder folder = FolderTaskLogic.getFolder(location.trim(), WCUtil.getWTContainerRef());
+//							if (folder == null) {
+//								validation = false;
+//								fail = Message.get("등록되지 않은 문서분류입니다.");
+//							}
+//						}
+//					}
+//					map.put("location", location);
+//
+//					// 파일명
+//					String fileName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 15));
+//					String primary = "";
+//					if (fileName.length() == 0) {
+//						validation = false;
+//						fail = Message.get("파일이 입력되지 않았습니다.");
+//					} else {
+//						if (fileMap.get(fileName.toUpperCase()) == null) {
+//							validation = false;
+//							map.put("validation", false);
+//							fail = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
+//						} else {
+//							primary = fileMap.get(fileName.toUpperCase());
+//							fileMap.remove(fileName.toUpperCase());
+//						}
+//					}
+//					map.put("fileName", fileName);
+//					map.put("primary", primary);
+//
+//					// 관련부품
+//					String partNumber = StringUtil.checkNull(POIUtil.getRowStringValue(row, 16));
+//					String[] partOids = null;
+//					if (partNumber.length() > 0) {
+//						String[] partNumbers = partNumber.split(",");
+//						partOids = new String[partNumbers.length];
+//						for (int j = 0; j < partNumbers.length; j++) {
+//							WTPart part = PartHelper.service.getPart(partNumbers[j]);
+//							if (part == null) {
+//								validation = false;
+//								fail = Message.get("해당 부품이 존재하지 않습니다.");
+//							} else {
+//								partOids[j] = CommonUtil.getOIDString(part);
+//							}
+//						}
+//					}
+//					map.put("partNumber", partNumber);
+//					map.put("partOids", partOids);
+//
+//					map.put("validation", true);
+//					map.put("linkType", "");
+//
+//					String oid = "";
+//					String fontColor = "";
+//					String lineValidation = "";
+//
+//					if (validation) {
+//						try {
+//							WTDocument document = createAction(map);
+//							oid = CommonUtil.getOIDString(document);
+//							fontColor = "black";
+//							lineValidation = "true";
+//							documentName = document.getName();
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//							fontColor = "red";
+//							lineValidation = "fail";
+//							fail = e.getLocalizedMessage();
+//							failCount = failCount + 1;
+//							documentName = documentName + (docName != "" ? "-" + docName : "");
+//						}
+//
+//					} else {
+//						fontColor = "red";
+//						lineValidation = "fail";
+//						failCount = failCount + 1;
+//						documentName = documentName + (docName != "" ? "-" + docName : "");
+//					}
+//
+//					map.put("oid", oid);
+//					map.put("fontColor", fontColor);
+//					map.put("lineValidation", lineValidation);
+//					map.put("fail", fail);
+//
+//					resultList.add(map);
+//				}
+//			}
+//
+//			for (Map<String, Object> map : resultList) {
+//
+//				int index = (Integer) map.get("index");
+//				String documentName = (String) map.get("documentName");
+//				String docName = (String) map.get("docName");
+//				String documentTypeName = (String) map.get("documentTypeName");
+//				String lifecycleName = (String) map.get("lifecycleName");
+//				String documentType = (String) map.get("documentType");
+//				String modelName = (String) map.get("modelName");
+//				String model = (String) map.get("model");
+//				String interalnumber = (String) map.get("interalnumber");
+//				String deptcodeName = (String) map.get("deptcodeName");
+//				String deptcode = (String) map.get("deptcode");
+//				String preserationName = (String) map.get("preserationName");
+//				String preseration = (String) map.get("preseration");
+//				String location = (String) map.get("location");
+//				String fileName = (String) map.get("fileName");
+//				String partNumber = (String) map.get("partNumber");
+//				String fontColor = (String) map.get("fontColor");
+//				String lineValidation = (String) map.get("lineValidation");
+//				String fail = (String) map.get("fail");
+//
+//				if (failCount == 0) {
+//					String oid = (String) map.get("oid");
+//					documentName = "<a href=javascript:openView('" + oid + "')>" + documentName + "</a>";
+//				}
+//
+//				xmlBuf.append("<row id='" + index + "'>");
+//				xmlBuf.append("<cell><![CDATA[" + index + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + documentName + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + WebUtil.getHtml(docName) + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + lifecycleName + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + documentTypeName + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + documentType + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + modelName + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + model + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + interalnumber + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + deptcodeName + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + deptcode + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + preserationName + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + preseration + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + location.replaceAll("/Default/Document", "") + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + fileName + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[" + partNumber + "]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[<font color='" + fontColor + "'>" + lineValidation + "</font>]]></cell>");
+//				xmlBuf.append("<cell><![CDATA[<font color='" + fontColor + "'>" + fail + "</font>]]></cell>");
+//				xmlBuf.append("</row>");
+//			}
+//
+//			if (failCount == 0) {
+//				trx.commit();
+//				trx = null;
+//			} else {
+//				trx.rollback();
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			xmlBuf.append("<row id='error'>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[<font color='red'>fail</font>]]></cell>");
+//			xmlBuf.append("<cell><![CDATA[<font color='red'>" + e.getLocalizedMessage() + "</font>]]></cell>");
+//			xmlBuf.append("</row>");
+//		} finally {
+//			if (trx != null) {
+//				trx.rollback();
+//			}
+//		}
+//
+//		xmlBuf.append("</rows>");
+//		return xmlBuf.toString();
+//	}
 
-		Transaction trx = new Transaction();
-		boolean validation = true;
-		int failCount = 0;
-
-		Map<String, String> fileMap = new HashMap<String, String>();
-
-		StringBuffer xmlBuf = new StringBuffer();
-		xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
-		xmlBuf.append("<rows>");
-
-		try {
-			trx.start();
-
-			FileRequest req = new FileRequest(request);
-			String excelFile = req.getFileLocation("excelFile");
-
-			File file = new File(excelFile);
-			XSSFWorkbook workbook = POIUtil.getWorkBook(file);
-			XSSFSheet sheet = POIUtil.getSheet(workbook, 0);
-
-			String[] secondary = req.getParameterValues("SECONDARY");
-
-			if (secondary != null) {
-				for (String attachFile : secondary) {
-					String fileName = attachFile.split("/")[1].toUpperCase();
-					if (fileMap.get(fileName) == null) {
-						// System.out.println("attachFile add secondary ="+attachFile);
-
-						fileMap.put(fileName, attachFile);
-					} else {
-						fileMap.remove(fileName);
-					}
-				}
-			}
-
-			List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
-
-			for (int i = 1; i < POIUtil.getSheetRow(sheet); i++) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				XSSFRow row = sheet.getRow(i);
-
-				validation = true;
-				String fail = "";
-
-				// NO
-				String no = StringUtil.checkNull(POIUtil.getRowStringValue(row, 0));
-
-				if (no.length() > 0) {
-
-					map.put("index", (i + 1));
-
-					// 문서 종류
-					String documentName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 1));
-					if (documentName.length() == 0) {
-						validation = false;
-						fail = Message.get("문서 종류가 없습니다.");
-					}
-					map.put("documentName", documentName);
-
-					// 문서명
-					String docName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 2));
-					map.put("docName", docName);
-
-					// 결재 방식
-					String lifecycleName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 3));
-					String lifecycle = "";
-					if (lifecycleName.length() == 0) {
-						validation = false;
-						fail = Message.get("결재방식이 없습니다.");
-					} else {
-						if ("기본결재".equals(lifecycleName)) {
-							lifecycle = "LC_Default";
-						} else if ("일괄결재".equals(lifecycleName)) {
-							lifecycle = "LC_Default_NonWF";
-						}
-					}
-					map.put("lifecycleName", lifecycleName);
-					map.put("lifecycle", lifecycle);
-
-					// 문서분류, 문서 코드
-					String documentTypeName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 4));
-					String documentType = StringUtil.checkNull(POIUtil.getRowStringValue(row, 5));
-					if (documentType.length() == 0) {
-						validation = false;
-						fail = Message.get("문서분류가 없습니다.");
-					} else {
-						DocumentType type = DocumentType.toDocumentType(documentType);
-						if (type == null) {
-							validation = false;
-							fail = Message.get("등록되지 않은 문서 분류입니다.");
-						}
-					}
-					map.put("documentTypeName", documentTypeName);
-					map.put("documentType", documentType);
-
-					// 프로젝트명, 프로젝트코드
-					String modelName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 6));
-					String model = StringUtil.checkNull(POIUtil.getRowStringValue(row, 7));
-					if (model.length() > 0) {
-						NumberCode code = NumberCodeHelper.service.getNumberCode("MODEL", model);
-						if (code == null) {
-							validation = false;
-							fail = Message.get("등록되지 않은 프로젝트 코드입니다.");
-						}
-					}
-					map.put("modelName", modelName);
-					map.put("model", model);
-
-					// 작성자
-					String writer = StringUtil.checkNull(POIUtil.getRowStringValue(row, 8));
-					map.put("writer", writer);
-
-					// 내부 문서 번호
-					String interalnumber = StringUtil.checkNull(POIUtil.getRowStringValue(row, 9));
-					map.put("interalnumber", interalnumber);
-
-					// 부서명, 부서코드
-					String deptcodeName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 10));
-					String deptcode = StringUtil.checkNull(POIUtil.getRowStringValue(row, 11));
-					if (deptcode.length() > 0) {
-						NumberCode code = NumberCodeHelper.service.getNumberCode("DEPTCODE", deptcode);
-						if (code == null) {
-							validation = false;
-							fail = Message.get("등록되지 않은 부서 코드입니다.");
-						}
-					}
-					map.put("deptcodeName", deptcodeName);
-					map.put("deptcode", deptcode);
-
-					// 보존기간
-					String preserationName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 12));
-					String preseration = StringUtil.checkNull(POIUtil.getRowStringValue(row, 13));
-					if (preseration.length() == 0) {
-						validation = false;
-						fail = Message.get("보존기간이 없습니다.");
-					} else {
-						NumberCode code = NumberCodeHelper.service.getNumberCode("PRESERATION", preseration);
-						if (code == null) {
-							validation = false;
-							fail = Message.get("등록되지 않은 보존기간 코드입니다.");
-						}
-					}
-					map.put("preserationName", preserationName);
-					map.put("preseration", preseration);
-
-					// 분류체계
-					String location = StringUtil.checkNull(POIUtil.getRowStringValue(row, 14));
-					if (location.length() == 0) {
-						validation = false;
-						fail = Message.get("문서분류가 없습니다.");
-					} else {
-						if ("/Default/Document".equals(location.trim())) {
-							validation = false;
-							fail = Message.get("최상위 문서분류에는 등록할 수 없습니다.");
-						} else {
-							Folder folder = FolderTaskLogic.getFolder(location.trim(), WCUtil.getWTContainerRef());
-							if (folder == null) {
-								validation = false;
-								fail = Message.get("등록되지 않은 문서분류입니다.");
-							}
-						}
-					}
-					map.put("location", location);
-
-					// 파일명
-					String fileName = StringUtil.checkNull(POIUtil.getRowStringValue(row, 15));
-					String primary = "";
-					if (fileName.length() == 0) {
-						validation = false;
-						fail = Message.get("파일이 입력되지 않았습니다.");
-					} else {
-						if (fileMap.get(fileName.toUpperCase()) == null) {
-							validation = false;
-							map.put("validation", false);
-							fail = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-						} else {
-							primary = fileMap.get(fileName.toUpperCase());
-							fileMap.remove(fileName.toUpperCase());
-						}
-					}
-					map.put("fileName", fileName);
-					map.put("primary", primary);
-
-					// 관련부품
-					String partNumber = StringUtil.checkNull(POIUtil.getRowStringValue(row, 16));
-					String[] partOids = null;
-					if (partNumber.length() > 0) {
-						String[] partNumbers = partNumber.split(",");
-						partOids = new String[partNumbers.length];
-						for (int j = 0; j < partNumbers.length; j++) {
-							WTPart part = PartHelper.service.getPart(partNumbers[j]);
-							if (part == null) {
-								validation = false;
-								fail = Message.get("해당 부품이 존재하지 않습니다.");
-							} else {
-								partOids[j] = CommonUtil.getOIDString(part);
-							}
-						}
-					}
-					map.put("partNumber", partNumber);
-					map.put("partOids", partOids);
-
-					map.put("validation", true);
-					map.put("linkType", "");
-
-					String oid = "";
-					String fontColor = "";
-					String lineValidation = "";
-
-					if (validation) {
-						try {
-							WTDocument document = createAction(map);
-							oid = CommonUtil.getOIDString(document);
-							fontColor = "black";
-							lineValidation = "true";
-							documentName = document.getName();
-						} catch (Exception e) {
-							e.printStackTrace();
-							fontColor = "red";
-							lineValidation = "fail";
-							fail = e.getLocalizedMessage();
-							failCount = failCount + 1;
-							documentName = documentName + (docName != "" ? "-" + docName : "");
-						}
-
-					} else {
-						fontColor = "red";
-						lineValidation = "fail";
-						failCount = failCount + 1;
-						documentName = documentName + (docName != "" ? "-" + docName : "");
-					}
-
-					map.put("oid", oid);
-					map.put("fontColor", fontColor);
-					map.put("lineValidation", lineValidation);
-					map.put("fail", fail);
-
-					resultList.add(map);
-				}
-			}
-
-			for (Map<String, Object> map : resultList) {
-
-				int index = (Integer) map.get("index");
-				String documentName = (String) map.get("documentName");
-				String docName = (String) map.get("docName");
-				String documentTypeName = (String) map.get("documentTypeName");
-				String lifecycleName = (String) map.get("lifecycleName");
-				String documentType = (String) map.get("documentType");
-				String modelName = (String) map.get("modelName");
-				String model = (String) map.get("model");
-				String interalnumber = (String) map.get("interalnumber");
-				String deptcodeName = (String) map.get("deptcodeName");
-				String deptcode = (String) map.get("deptcode");
-				String preserationName = (String) map.get("preserationName");
-				String preseration = (String) map.get("preseration");
-				String location = (String) map.get("location");
-				String fileName = (String) map.get("fileName");
-				String partNumber = (String) map.get("partNumber");
-				String fontColor = (String) map.get("fontColor");
-				String lineValidation = (String) map.get("lineValidation");
-				String fail = (String) map.get("fail");
-
-				if (failCount == 0) {
-					String oid = (String) map.get("oid");
-					documentName = "<a href=javascript:openView('" + oid + "')>" + documentName + "</a>";
-				}
-
-				xmlBuf.append("<row id='" + index + "'>");
-				xmlBuf.append("<cell><![CDATA[" + index + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + documentName + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + WebUtil.getHtml(docName) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + lifecycleName + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + documentTypeName + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + documentType + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + modelName + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + model + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + interalnumber + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + deptcodeName + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + deptcode + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + preserationName + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + preseration + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + location.replaceAll("/Default/Document", "") + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + fileName + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + partNumber + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[<font color='" + fontColor + "'>" + lineValidation + "</font>]]></cell>");
-				xmlBuf.append("<cell><![CDATA[<font color='" + fontColor + "'>" + fail + "</font>]]></cell>");
-				xmlBuf.append("</row>");
-			}
-
-			if (failCount == 0) {
-				trx.commit();
-				trx = null;
-			} else {
-				trx.rollback();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			xmlBuf.append("<row id='error'>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[]]></cell>");
-			xmlBuf.append("<cell><![CDATA[<font color='red'>fail</font>]]></cell>");
-			xmlBuf.append("<cell><![CDATA[<font color='red'>" + e.getLocalizedMessage() + "</font>]]></cell>");
-			xmlBuf.append("</row>");
-		} finally {
-			if (trx != null) {
-				trx.rollback();
-			}
-		}
-
-		xmlBuf.append("</rows>");
-		return xmlBuf.toString();
-	}
-
-	@Override
-	public ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-
-		Transaction trx = new Transaction();
-		ResultData data = new ResultData();
-		List<Map<String, String>> returnList = new ArrayList<Map<String, String>>();
-
-		try {
-			trx.start();
-			boolean totalValidation = true;
-			FileRequest req = new FileRequest(request);
-
-			Map<String, String> fileMap = new HashMap<String, String>();
-			String[] secondary = req.getParameterValues("SECONDARY");
-			// System.out.println("SECONDARY =" + secondary);
-			if (secondary != null) {
-				for (String attachFile : secondary) {
-					String fileName = attachFile.split("/")[1].toUpperCase();
-					// System.out.println("fileName = " + fileName);
-					if (fileMap.get(fileName) == null) {
-						fileMap.put(fileName, attachFile);
-					} else {
-						fileMap.remove(fileName);
-					}
-				}
-			}
-
-			JSONArray item_json = new JSONArray(req.getParameter("rowList"));
-
-			// System.out.println("item_json.length() = " + item_json.length());
-
-			for (int i = 0; i < item_json.length(); i++) {
-
-				Map<String, String> returnMap = new HashMap<String, String>();
-				// 문서 생성
-				Map<String, Object> mapDoc = new HashMap<String, Object>();
-				boolean validation = true;
-				String msg = "";
-				JSONObject item = item_json.getJSONObject(i);
-				// System.out.println("item =" + item);
-				String id = (String) item.get("id");
-				String state = (String) item.get("state");
-
-				if (state.equals("S")) {
-					continue;
-				}
-
-				String documentName = (String) item.get("documentName");
-				String docName = (String) item.get("docName");
-				String lifecycle = (String) item.get("lifecycle");
-				String documentType = (String) item.get("documentType");
-				String model = (String) item.get("model");
-				String writer = (String) item.get("writer");
-				String interalnumber = (String) item.get("interalnumber");
-				String deptcode = (String) item.get("deptcode");
-				String preseration = (String) item.get("preseration");
-				String location = (String) item.get("location");
-				String folder = (String) item.get("folder");
-				String fileName = (String) item.get("fileName");
-				String attachmentFileName1 = StringUtil.checkNull((String) item.get("attachmentFileName1"));
-				String attachmentFileName2 = StringUtil.checkNull((String) item.get("attachmentFileName2"));
-				String attachmentFileName3 = StringUtil.checkNull((String) item.get("attachmentFileName3"));
-				String attachmentFileName4 = StringUtil.checkNull((String) item.get("attachmentFileName4"));
-				String attachmentFileName5 = StringUtil.checkNull((String) item.get("attachmentFileName5"));
-
-				String partNumber = (String) item.get("partNumber");
-				String description = (String) item.get("description");
-
-				mapDoc.put("documentName", documentName);
-				mapDoc.put("docName", docName);
-				mapDoc.put("lifecycle", lifecycle);
-				mapDoc.put("documentType", documentType);
-				mapDoc.put("description", description);
-				mapDoc.put("model", model);
-				mapDoc.put("writer", writer);
-				mapDoc.put("interalnumber", interalnumber);
-				mapDoc.put("deptcode", deptcode);
-				mapDoc.put("preseration", preseration);
-				mapDoc.put("location", location);
-				mapDoc.put("documentName", documentName);
-				mapDoc.put("location", location);
-				mapDoc.put("linkType", "");
-
-				// 파일명
-				String primary = "";
-				if (fileName.length() == 0) {
-					msg = Message.get("파일이 입력되지 않았습니다.");
-					validation = false;
-					totalValidation = false;
-					returnMap.put("state", "F");
-					returnMap.put("id", id);
-					returnMap.put("msg", msg);
-					returnList.add(returnMap);
-					continue;
-				} else {
-					if (fileMap.get(fileName.toUpperCase()) == null) {
-						msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-						validation = false;
-						totalValidation = false;
-						returnMap.put("state", "F");
-						returnMap.put("id", id);
-						returnMap.put("msg", msg);
-						returnList.add(returnMap);
-						continue;
-					} else {
-						primary = fileMap.get(fileName.toUpperCase());
-						fileMap.remove(fileName.toUpperCase());
-					}
-				}
-				mapDoc.put("fileName", fileName);
-				mapDoc.put("primary", primary);
-				StringBuffer sendarys = new StringBuffer();
-				// 파일명
-				if (!attachmentFileName1.isEmpty()) {
-					if (attachmentFileName1.length() == 0) {
-						msg = Message.get("파일이 입력되지 않았습니다.");
-						validation = false;
-						totalValidation = false;
-						returnMap.put("state", "F");
-						returnMap.put("id", id);
-						returnMap.put("msg", msg);
-						returnList.add(returnMap);
-						continue;
-					} else {
-						if (fileMap.get(attachmentFileName1.toUpperCase()) == null) {
-							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-							validation = false;
-							totalValidation = false;
-							returnMap.put("state", "F");
-							returnMap.put("id", id);
-							returnMap.put("msg", msg);
-							returnList.add(returnMap);
-							continue;
-						} else {
-							sendarys.append(fileMap.get(attachmentFileName1.toUpperCase()) + "@");
-							fileMap.remove(attachmentFileName1.toUpperCase());
-						}
-					}
-					mapDoc.put("attachmentFileName1", attachmentFileName1);
-				}
-				// 파일명
-				if (!attachmentFileName2.isEmpty()) {
-					if (attachmentFileName2.length() == 0) {
-						msg = Message.get("파일이 입력되지 않았습니다.");
-						validation = false;
-						totalValidation = false;
-						returnMap.put("state", "F");
-						returnMap.put("id", id);
-						returnMap.put("msg", msg);
-						returnList.add(returnMap);
-						continue;
-					} else {
-						if (fileMap.get(attachmentFileName2.toUpperCase()) == null) {
-							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-							validation = false;
-							totalValidation = false;
-							returnMap.put("state", "F");
-							returnMap.put("id", id);
-							returnMap.put("msg", msg);
-							returnList.add(returnMap);
-							continue;
-						} else {
-							sendarys.append(fileMap.get(attachmentFileName2.toUpperCase()) + "@");
-							fileMap.remove(attachmentFileName2.toUpperCase());
-						}
-					}
-					mapDoc.put("attachmentFileName2", attachmentFileName2);
-				}
-				// 파일명
-				if (!attachmentFileName3.isEmpty()) {
-					if (attachmentFileName3.length() == 0) {
-						msg = Message.get("파일이 입력되지 않았습니다.");
-						validation = false;
-						totalValidation = false;
-						returnMap.put("state", "F");
-						returnMap.put("id", id);
-						returnMap.put("msg", msg);
-						returnList.add(returnMap);
-						continue;
-					} else {
-						if (fileMap.get(attachmentFileName3.toUpperCase()) == null) {
-							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-							validation = false;
-							totalValidation = false;
-							returnMap.put("state", "F");
-							returnMap.put("id", id);
-							returnMap.put("msg", msg);
-							returnList.add(returnMap);
-							continue;
-						} else {
-							sendarys.append(fileMap.get(attachmentFileName3.toUpperCase()) + "@");
-							fileMap.remove(attachmentFileName3.toUpperCase());
-						}
-					}
-					mapDoc.put("attachmentFileName3", attachmentFileName3);
-				}
-				// 파일명
-				if (!attachmentFileName4.isEmpty()) {
-					if (attachmentFileName4.length() == 0) {
-						msg = Message.get("파일이 입력되지 않았습니다.");
-						validation = false;
-						totalValidation = false;
-						returnMap.put("state", "F");
-						returnMap.put("id", id);
-						returnMap.put("msg", msg);
-						returnList.add(returnMap);
-						continue;
-					} else {
-						if (fileMap.get(attachmentFileName4.toUpperCase()) == null) {
-							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-							validation = false;
-							totalValidation = false;
-							returnMap.put("state", "F");
-							returnMap.put("id", id);
-							returnMap.put("msg", msg);
-							returnList.add(returnMap);
-							continue;
-						} else {
-							sendarys.append(fileMap.get(attachmentFileName4.toUpperCase()) + "@");
-							fileMap.remove(attachmentFileName4.toUpperCase());
-						}
-					}
-					mapDoc.put("attachmentFileName4", attachmentFileName4);
-				}
-				// 파일명
-				if (!attachmentFileName5.isEmpty()) {
-					if (attachmentFileName5.length() == 0) {
-						msg = Message.get("파일이 입력되지 않았습니다.");
-						validation = false;
-						totalValidation = false;
-						returnMap.put("state", "F");
-						returnMap.put("id", id);
-						returnMap.put("msg", msg);
-						returnList.add(returnMap);
-						continue;
-					} else {
-						if (fileMap.get(attachmentFileName5.toUpperCase()) == null) {
-							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
-							validation = false;
-							totalValidation = false;
-							returnMap.put("state", "F");
-							returnMap.put("id", id);
-							returnMap.put("msg", msg);
-							returnList.add(returnMap);
-							continue;
-						} else {
-							sendarys.append(fileMap.get(attachmentFileName5.toUpperCase()) + "@");
-							fileMap.remove(attachmentFileName5.toUpperCase());
-						}
-					}
-					mapDoc.put("attachmentFileName5", attachmentFileName5);
-				}
-				String sendarsStr = sendarys.toString();
-				if (sendarsStr.endsWith("|")) {
-					sendarsStr = sendarsStr.substring(0, sendarsStr.length() - 1);
-				}
-				// System.out.println("sendarsStr="+sendarsStr);
-				if (null != sendarsStr && sendarsStr.length() > 0) {
-					String[] sendarsArray = sendarsStr.split("@");
-					mapDoc.put("secondary", sendarsArray);
-				}
-				// System.out.println("fileName =" + fileName +",primary =" + primary);
-				// 관련부품
-				boolean checkPart = true;
-				String[] partOids = null;
-				if (partNumber.length() > 0) {
-					String[] partNumbers = partNumber.split(",");
-					partOids = new String[partNumbers.length];
-
-					for (int j = 0; j < partNumbers.length; j++) {
-						WTPart part = PartHelper.service.getPart(partNumbers[j]);
-						// System.out.println("partNumbers+["+j+"]" + partNumbers[j] +","+part);
-						if (part == null) {
-							checkPart = false;
-							// System.out.println("Part is Null partNumbers+["+j+"]" + partNumbers[j]
-							// +","+part);
-							msg = Message.get(partNumbers[j] + "의 부품이 존재하지 않습니다.");
-							validation = false;
-							totalValidation = false;
-							returnMap.put("state", "F");
-							returnMap.put("id", id);
-							returnMap.put("msg", msg);
-							returnList.add(returnMap);
-							break;
-						} else {
-							partOids[j] = CommonUtil.getOIDString(part);
-						}
-					}
-				}
-
-				if (!checkPart) {
-					continue;
-				}
-
-				mapDoc.put("partNumber", partNumber);
-				mapDoc.put("partOids", partOids);
-
-				try {
-					WTDocument newDoc = createAction(mapDoc);
-					// System.out.println(id+" newDoc =" + newDoc);
-					returnMap.put("number", newDoc.getNumber());
-					returnMap.put("oid", CommonUtil.getOIDString(newDoc));
-					returnMap.put("msg", "등록 성공");
-					returnMap.put("state", "S");
-					returnMap.put("id", id);
-					returnList.add(returnMap);
-				} catch (Exception e) {
-					e.printStackTrace();
-					// System.out.println("ERRROR : " + e.getMessage() +"::::"+
-					// e.getLocalizedMessage());
-					totalValidation = false;
-					e.printStackTrace();
-					returnMap.put("number", "");
-					returnMap.put("oid", "");
-					returnMap.put("msg", e.getMessage());
-					returnMap.put("state", "F");
-					returnMap.put("id", id);
-					returnList.add(returnMap);
-				}
-
-			}
-
-			data.setReturnList(returnList);
-
-			if (totalValidation) {
-				trx.commit();
-				trx = null;
-				data.setResult(true);
-			} else {
-				data.setResult(false);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (trx != null) {
-				trx.rollback();
-				trx = null;
-			}
-		}
-		return data;
-	}
+//	@Override
+//	public ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
+//
+//		Transaction trx = new Transaction();
+//		ResultData data = new ResultData();
+//		List<Map<String, String>> returnList = new ArrayList<Map<String, String>>();
+//
+//		try {
+//			trx.start();
+//			boolean totalValidation = true;
+//			FileRequest req = new FileRequest(request);
+//
+//			Map<String, String> fileMap = new HashMap<String, String>();
+//			String[] secondary = req.getParameterValues("SECONDARY");
+//			// System.out.println("SECONDARY =" + secondary);
+//			if (secondary != null) {
+//				for (String attachFile : secondary) {
+//					String fileName = attachFile.split("/")[1].toUpperCase();
+//					// System.out.println("fileName = " + fileName);
+//					if (fileMap.get(fileName) == null) {
+//						fileMap.put(fileName, attachFile);
+//					} else {
+//						fileMap.remove(fileName);
+//					}
+//				}
+//			}
+//
+//			JSONArray item_json = new JSONArray(req.getParameter("rowList"));
+//
+//			// System.out.println("item_json.length() = " + item_json.length());
+//
+//			for (int i = 0; i < item_json.length(); i++) {
+//
+//				Map<String, String> returnMap = new HashMap<String, String>();
+//				// 문서 생성
+//				Map<String, Object> mapDoc = new HashMap<String, Object>();
+//				boolean validation = true;
+//				String msg = "";
+//				JSONObject item = item_json.getJSONObject(i);
+//				// System.out.println("item =" + item);
+//				String id = (String) item.get("id");
+//				String state = (String) item.get("state");
+//
+//				if (state.equals("S")) {
+//					continue;
+//				}
+//
+//				String documentName = (String) item.get("documentName");
+//				String docName = (String) item.get("docName");
+//				String lifecycle = (String) item.get("lifecycle");
+//				String documentType = (String) item.get("documentType");
+//				String model = (String) item.get("model");
+//				String writer = (String) item.get("writer");
+//				String interalnumber = (String) item.get("interalnumber");
+//				String deptcode = (String) item.get("deptcode");
+//				String preseration = (String) item.get("preseration");
+//				String location = (String) item.get("location");
+//				String folder = (String) item.get("folder");
+//				String fileName = (String) item.get("fileName");
+//				String attachmentFileName1 = StringUtil.checkNull((String) item.get("attachmentFileName1"));
+//				String attachmentFileName2 = StringUtil.checkNull((String) item.get("attachmentFileName2"));
+//				String attachmentFileName3 = StringUtil.checkNull((String) item.get("attachmentFileName3"));
+//				String attachmentFileName4 = StringUtil.checkNull((String) item.get("attachmentFileName4"));
+//				String attachmentFileName5 = StringUtil.checkNull((String) item.get("attachmentFileName5"));
+//
+//				String partNumber = (String) item.get("partNumber");
+//				String description = (String) item.get("description");
+//
+//				mapDoc.put("documentName", documentName);
+//				mapDoc.put("docName", docName);
+//				mapDoc.put("lifecycle", lifecycle);
+//				mapDoc.put("documentType", documentType);
+//				mapDoc.put("description", description);
+//				mapDoc.put("model", model);
+//				mapDoc.put("writer", writer);
+//				mapDoc.put("interalnumber", interalnumber);
+//				mapDoc.put("deptcode", deptcode);
+//				mapDoc.put("preseration", preseration);
+//				mapDoc.put("location", location);
+//				mapDoc.put("documentName", documentName);
+//				mapDoc.put("location", location);
+//				mapDoc.put("linkType", "");
+//
+//				// 파일명
+//				String primary = "";
+//				if (fileName.length() == 0) {
+//					msg = Message.get("파일이 입력되지 않았습니다.");
+//					validation = false;
+//					totalValidation = false;
+//					returnMap.put("state", "F");
+//					returnMap.put("id", id);
+//					returnMap.put("msg", msg);
+//					returnList.add(returnMap);
+//					continue;
+//				} else {
+//					if (fileMap.get(fileName.toUpperCase()) == null) {
+//						msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
+//						validation = false;
+//						totalValidation = false;
+//						returnMap.put("state", "F");
+//						returnMap.put("id", id);
+//						returnMap.put("msg", msg);
+//						returnList.add(returnMap);
+//						continue;
+//					} else {
+//						primary = fileMap.get(fileName.toUpperCase());
+//						fileMap.remove(fileName.toUpperCase());
+//					}
+//				}
+//				mapDoc.put("fileName", fileName);
+//				mapDoc.put("primary", primary);
+//				StringBuffer sendarys = new StringBuffer();
+//				// 파일명
+//				if (!attachmentFileName1.isEmpty()) {
+//					if (attachmentFileName1.length() == 0) {
+//						msg = Message.get("파일이 입력되지 않았습니다.");
+//						validation = false;
+//						totalValidation = false;
+//						returnMap.put("state", "F");
+//						returnMap.put("id", id);
+//						returnMap.put("msg", msg);
+//						returnList.add(returnMap);
+//						continue;
+//					} else {
+//						if (fileMap.get(attachmentFileName1.toUpperCase()) == null) {
+//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
+//							validation = false;
+//							totalValidation = false;
+//							returnMap.put("state", "F");
+//							returnMap.put("id", id);
+//							returnMap.put("msg", msg);
+//							returnList.add(returnMap);
+//							continue;
+//						} else {
+//							sendarys.append(fileMap.get(attachmentFileName1.toUpperCase()) + "@");
+//							fileMap.remove(attachmentFileName1.toUpperCase());
+//						}
+//					}
+//					mapDoc.put("attachmentFileName1", attachmentFileName1);
+//				}
+//				// 파일명
+//				if (!attachmentFileName2.isEmpty()) {
+//					if (attachmentFileName2.length() == 0) {
+//						msg = Message.get("파일이 입력되지 않았습니다.");
+//						validation = false;
+//						totalValidation = false;
+//						returnMap.put("state", "F");
+//						returnMap.put("id", id);
+//						returnMap.put("msg", msg);
+//						returnList.add(returnMap);
+//						continue;
+//					} else {
+//						if (fileMap.get(attachmentFileName2.toUpperCase()) == null) {
+//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
+//							validation = false;
+//							totalValidation = false;
+//							returnMap.put("state", "F");
+//							returnMap.put("id", id);
+//							returnMap.put("msg", msg);
+//							returnList.add(returnMap);
+//							continue;
+//						} else {
+//							sendarys.append(fileMap.get(attachmentFileName2.toUpperCase()) + "@");
+//							fileMap.remove(attachmentFileName2.toUpperCase());
+//						}
+//					}
+//					mapDoc.put("attachmentFileName2", attachmentFileName2);
+//				}
+//				// 파일명
+//				if (!attachmentFileName3.isEmpty()) {
+//					if (attachmentFileName3.length() == 0) {
+//						msg = Message.get("파일이 입력되지 않았습니다.");
+//						validation = false;
+//						totalValidation = false;
+//						returnMap.put("state", "F");
+//						returnMap.put("id", id);
+//						returnMap.put("msg", msg);
+//						returnList.add(returnMap);
+//						continue;
+//					} else {
+//						if (fileMap.get(attachmentFileName3.toUpperCase()) == null) {
+//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
+//							validation = false;
+//							totalValidation = false;
+//							returnMap.put("state", "F");
+//							returnMap.put("id", id);
+//							returnMap.put("msg", msg);
+//							returnList.add(returnMap);
+//							continue;
+//						} else {
+//							sendarys.append(fileMap.get(attachmentFileName3.toUpperCase()) + "@");
+//							fileMap.remove(attachmentFileName3.toUpperCase());
+//						}
+//					}
+//					mapDoc.put("attachmentFileName3", attachmentFileName3);
+//				}
+//				// 파일명
+//				if (!attachmentFileName4.isEmpty()) {
+//					if (attachmentFileName4.length() == 0) {
+//						msg = Message.get("파일이 입력되지 않았습니다.");
+//						validation = false;
+//						totalValidation = false;
+//						returnMap.put("state", "F");
+//						returnMap.put("id", id);
+//						returnMap.put("msg", msg);
+//						returnList.add(returnMap);
+//						continue;
+//					} else {
+//						if (fileMap.get(attachmentFileName4.toUpperCase()) == null) {
+//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
+//							validation = false;
+//							totalValidation = false;
+//							returnMap.put("state", "F");
+//							returnMap.put("id", id);
+//							returnMap.put("msg", msg);
+//							returnList.add(returnMap);
+//							continue;
+//						} else {
+//							sendarys.append(fileMap.get(attachmentFileName4.toUpperCase()) + "@");
+//							fileMap.remove(attachmentFileName4.toUpperCase());
+//						}
+//					}
+//					mapDoc.put("attachmentFileName4", attachmentFileName4);
+//				}
+//				// 파일명
+//				if (!attachmentFileName5.isEmpty()) {
+//					if (attachmentFileName5.length() == 0) {
+//						msg = Message.get("파일이 입력되지 않았습니다.");
+//						validation = false;
+//						totalValidation = false;
+//						returnMap.put("state", "F");
+//						returnMap.put("id", id);
+//						returnMap.put("msg", msg);
+//						returnList.add(returnMap);
+//						continue;
+//					} else {
+//						if (fileMap.get(attachmentFileName5.toUpperCase()) == null) {
+//							msg = Message.get("파일이 첨부되지 않았거나, 파일명이 중복되었습니다.");
+//							validation = false;
+//							totalValidation = false;
+//							returnMap.put("state", "F");
+//							returnMap.put("id", id);
+//							returnMap.put("msg", msg);
+//							returnList.add(returnMap);
+//							continue;
+//						} else {
+//							sendarys.append(fileMap.get(attachmentFileName5.toUpperCase()) + "@");
+//							fileMap.remove(attachmentFileName5.toUpperCase());
+//						}
+//					}
+//					mapDoc.put("attachmentFileName5", attachmentFileName5);
+//				}
+//				String sendarsStr = sendarys.toString();
+//				if (sendarsStr.endsWith("|")) {
+//					sendarsStr = sendarsStr.substring(0, sendarsStr.length() - 1);
+//				}
+//				// System.out.println("sendarsStr="+sendarsStr);
+//				if (null != sendarsStr && sendarsStr.length() > 0) {
+//					String[] sendarsArray = sendarsStr.split("@");
+//					mapDoc.put("secondary", sendarsArray);
+//				}
+//				// System.out.println("fileName =" + fileName +",primary =" + primary);
+//				// 관련부품
+//				boolean checkPart = true;
+//				String[] partOids = null;
+//				if (partNumber.length() > 0) {
+//					String[] partNumbers = partNumber.split(",");
+//					partOids = new String[partNumbers.length];
+//
+//					for (int j = 0; j < partNumbers.length; j++) {
+//						WTPart part = PartHelper.service.getPart(partNumbers[j]);
+//						// System.out.println("partNumbers+["+j+"]" + partNumbers[j] +","+part);
+//						if (part == null) {
+//							checkPart = false;
+//							// System.out.println("Part is Null partNumbers+["+j+"]" + partNumbers[j]
+//							// +","+part);
+//							msg = Message.get(partNumbers[j] + "의 부품이 존재하지 않습니다.");
+//							validation = false;
+//							totalValidation = false;
+//							returnMap.put("state", "F");
+//							returnMap.put("id", id);
+//							returnMap.put("msg", msg);
+//							returnList.add(returnMap);
+//							break;
+//						} else {
+//							partOids[j] = CommonUtil.getOIDString(part);
+//						}
+//					}
+//				}
+//
+//				if (!checkPart) {
+//					continue;
+//				}
+//
+//				mapDoc.put("partNumber", partNumber);
+//				mapDoc.put("partOids", partOids);
+//
+//				try {
+//					WTDocument newDoc = createAction(mapDoc);
+//					// System.out.println(id+" newDoc =" + newDoc);
+//					returnMap.put("number", newDoc.getNumber());
+//					returnMap.put("oid", CommonUtil.getOIDString(newDoc));
+//					returnMap.put("msg", "등록 성공");
+//					returnMap.put("state", "S");
+//					returnMap.put("id", id);
+//					returnList.add(returnMap);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					// System.out.println("ERRROR : " + e.getMessage() +"::::"+
+//					// e.getLocalizedMessage());
+//					totalValidation = false;
+//					e.printStackTrace();
+//					returnMap.put("number", "");
+//					returnMap.put("oid", "");
+//					returnMap.put("msg", e.getMessage());
+//					returnMap.put("state", "F");
+//					returnMap.put("id", id);
+//					returnList.add(returnMap);
+//				}
+//
+//			}
+//
+//			data.setReturnList(returnList);
+//
+//			if (totalValidation) {
+//				trx.commit();
+//				trx = null;
+//				data.setResult(true);
+//			} else {
+//				data.setResult(false);
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (trx != null) {
+//				trx.rollback();
+//				trx = null;
+//			}
+//		}
+//		return data;
+//	}
 
 	@Override
 	public ResultData approvalPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
@@ -2200,101 +2198,120 @@ public class StandardDocumentService extends StandardManager implements Document
 
 	@Override
 	public void create(Map<String, Object> params) throws Exception {
+		
+		Transaction trx = new Transaction();
+		WTDocument doc = null;
 
-		String location = StringUtil.checkNull((String) params.get("location"));
-		String documentName = StringUtil.checkNull((String) params.get("documentName"));
-		String name = StringUtil.checkNull((String) params.get("docName"));
-		String description = StringUtil.checkNull((String) params.get("description"));
-
-		String documentType = StringUtil.checkNull((String) params.get("documentType"));
-
-		DocumentType docType = DocumentType.toDocumentType(documentType);
-		String number = getDocumentNumberSeq(docType.getLongDescription());
-
-		String primary = (String) params.get("primary");
-		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
-		Transaction trs = new Transaction();
 		try {
-			trs.start();
+			trx.start();
 
-			// 문서 기본 정보 설정
-			WTDocument document = WTDocument.newWTDocument();
-			if ("$$MMDocument".equals(documentType)) {
-				document.setName(name);
-			} else {
-				if (name.length() > 0) {
-					document.setName(documentName + "-" + name);
-				} else {
-					document.setName(documentName);
-				}
-			}
-			document.setNumber(number);
-			document.setDescription(description);
+			createAction(params);
 
-			// 문서 분류체계 설정
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) document, folder);
-
-			// 문서 Container 설정
-			PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
-			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
-			document.setContainer(e3psProduct);
-
-			// 문서 lifeCycle 설정
-			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
-			LifeCycleHelper.setLifeCycle(document,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); // Lifecycle
-
-			document = (WTDocument) PersistenceHelper.manager.save(document);
-
-			if (StringUtil.checkString(primary)) {
-				File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-				ApplicationData applicationData = ApplicationData.newApplicationData(document);
-				applicationData.setRole(ContentRoleType.PRIMARY);
-				PersistenceHelper.manager.save(applicationData);
-				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
-			}
-
-			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
-				String cacheId = (String) secondarys.get(i);
-				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
-				ApplicationData applicationData = ApplicationData.newApplicationData(document);
-				applicationData.setRole(ContentRoleType.SECONDARY);
-				PersistenceHelper.manager.save(applicationData);
-				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
-			}
-
-			// 관련 부품
-			String[] partOids = (String[]) params.get("partOids");
-			updateDocumentToPartLink(document, partOids, false);
-
-			// 관련 문서
-			String[] docOids = (String[]) params.get("docOids");
-			updateDocumentToDocumentLink(document, docOids, false);
-
-			String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
-			if ("LC_Default_NonWF".equals(lifecycle)) {
-				E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) document, "BATCHAPPROVAL");
-				approvalType = AttributeKey.CommonKey.COMMON_BATCH;
-			}
-			params.put("approvalType", approvalType);
-			CommonHelper.service.changeIBAValues(document, params);
-
-			// 산출물 직접 등록(개발업무 관리,설계 변경 관리) 문서 직접등록 시 링크 생성
-//	        String linkType = (String)params.get("linkType");
-//	        String parentOid = (String)params.get("parentOid");
-//	        createLinkDocument(document,linkType,parentOid);
-
-			trs.commit();
-			trs = null;
+			trx.commit();
+			trx = null;
 		} catch (Exception e) {
 			e.printStackTrace();
-			trs.rollback();
-			throw e;
 		} finally {
-			if (trs != null)
-				trs.rollback();
+			if (trx != null) {
+				trx.rollback();
+			}
 		}
+//
+//
+//		String location = StringUtil.checkNull((String) params.get("location"));
+//		String documentName = StringUtil.checkNull((String) params.get("documentName"));
+//		String name = StringUtil.checkNull((String) params.get("docName"));
+//		String description = StringUtil.checkNull((String) params.get("description"));
+//
+//		String documentType = StringUtil.checkNull((String) params.get("documentType"));
+//
+//		DocumentType docType = DocumentType.toDocumentType(documentType);
+//		String number = getDocumentNumberSeq(docType.getLongDescription());
+//
+//		String primary = (String) params.get("primary");
+//		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
+//		Transaction trs = new Transaction();
+//		try {
+//			trs.start();
+//
+//			// 문서 기본 정보 설정
+//			WTDocument document = WTDocument.newWTDocument();
+//			if ("$$MMDocument".equals(documentType)) {
+//				document.setName(name);
+//			} else {
+//				if (name.length() > 0) {
+//					document.setName(documentName + "-" + name);
+//				} else {
+//					document.setName(documentName);
+//				}
+//			}
+//			document.setNumber(number);
+//			document.setDescription(description);
+//
+//			// 문서 분류체계 설정
+//			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+//			FolderHelper.assignLocation((FolderEntry) document, folder);
+//
+//			// 문서 Container 설정
+//			PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+//			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+//			document.setContainer(e3psProduct);
+//
+//			// 문서 lifeCycle 설정
+//			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+//			LifeCycleHelper.setLifeCycle(document,
+//					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); // Lifecycle
+//
+//			document = (WTDocument) PersistenceHelper.manager.save(document);
+//
+//			if (StringUtil.checkString(primary)) {
+//				File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+//				ApplicationData applicationData = ApplicationData.newApplicationData(document);
+//				applicationData.setRole(ContentRoleType.PRIMARY);
+//				PersistenceHelper.manager.save(applicationData);
+//				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
+//			}
+//
+//			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
+//				String cacheId = (String) secondarys.get(i);
+//				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+//				ApplicationData applicationData = ApplicationData.newApplicationData(document);
+//				applicationData.setRole(ContentRoleType.SECONDARY);
+//				PersistenceHelper.manager.save(applicationData);
+//				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
+//			}
+//
+//			// 관련 부품
+//			String[] partOids = (String[]) params.get("partOids");
+//			updateDocumentToPartLink(document, partOids, false);
+//
+//			// 관련 문서
+//			String[] docOids = (String[]) params.get("docOids");
+//			updateDocumentToDocumentLink(document, docOids, false);
+//
+//			String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
+//			if ("LC_Default_NonWF".equals(lifecycle)) {
+//				E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) document, "BATCHAPPROVAL");
+//				approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+//			}
+//			params.put("approvalType", approvalType);
+//			CommonHelper.service.changeIBAValues(document, params);
+//
+//			// 산출물 직접 등록(개발업무 관리,설계 변경 관리) 문서 직접등록 시 링크 생성
+////	        String linkType = (String)params.get("linkType");
+////	        String parentOid = (String)params.get("parentOid");
+////	        createLinkDocument(document,linkType,parentOid);
+//
+//			trs.commit();
+//			trs = null;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			trs.rollback();
+//			throw e;
+//		} finally {
+//			if (trs != null)
+//				trs.rollback();
+//		}
 	}
 
 	@Override
@@ -2518,7 +2535,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				document.put("linkType", "");
 
 				try {
-					WTDocument newDoc = createAction(document);
+					createAction(document);
 				} catch (Exception e) {
 					e.printStackTrace();
 					totalValidation = false;
