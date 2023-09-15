@@ -282,21 +282,81 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
+<!-- 			<li> -->
+<!-- 				<a href="#"> -->
+<!-- 					<i class="fa fa-files-o"></i> -->
+<!-- 					<span class="nav-label">기타문서관리</span> -->
+<!-- 					<span class="fa arrow"></span> -->
+<!-- 				</a> -->
+<!-- 				<ul class="nav nav-second-level collapse"> -->
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/mold/ap-list', '> 승인원 > 승인원 검색');">승인원 검색</a> -->
+<!-- 					</li> -->
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/mold/ap-create', '> 승인원 > 승인원 등록');">승인원 등록</a> -->
+<!-- 					</li> -->
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/mold/ap-all', '> 승인원 > 승인원 결재');">승인원 결재</a> -->
+<!-- 					</li> -->
+<!-- 				</ul> -->
+<!-- 			</li> -->
 			<li>
 				<a href="#">
 					<i class="fa fa-files-o"></i>
-					<span class="nav-label">기타문서관리</span>
+					<span class="nav-label">생산본부 문서</span>
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/mold/ap-list', '> 승인원 > 승인원 검색');">승인원 검색</a>
+						<a onclick="moveToPage(this, '/doc/list', '> 생산본부 문서 > 생산본부 문서검색);">생산본부 문서검색</a>
 					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-files-o"></i>
+					<span class="nav-label">병리연구 문서</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/mold/ap-create', '> 승인원 > 승인원 등록');">승인원 등록</a>
+						<a onclick="moveToPage(this, '/doc/list', '> 병리연구 문서 > 병리연구 문서검색);">병리연구 문서검색</a>
 					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-files-o"></i>
+					<span class="nav-label">임상개발 문서</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/mold/ap-all', '> 승인원 > 승인원 결재');">승인원 결재</a>
+						<a onclick="moveToPage(this, '/doc/list', '> 임상개발 문서 > 임상개발 문서검색);">임상개발 문서검색</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-files-o"></i>
+					<span class="nav-label">RA팀 문서</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/doc/list', '> RA팀 문서 > RA팀 문서검색);">RA팀 문서검색</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-files-o"></i>
+					<span class="nav-label">화장품 문서</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/doc/list', '> 화장품 문서 > 화장품 문서검색);">화장품 문서검색</a>
 					</li>
 				</ul>
 			</li>
