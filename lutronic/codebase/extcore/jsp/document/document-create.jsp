@@ -105,25 +105,24 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<td class="indent5">
 					<select name="documentType" id="documentType" class="width-200">
 						<option value="">선택</option>
-						<option value="$$Document">일반문서</option>
-						<option value="$$Document">개발문서</option>
-						<option value="$$Document">승인원</option>
-						<option value="$$Document">인증문서</option>
-						<option value="$$Document">금형문서</option>
-						<option value="$$Document">개발소스</option>
-						<option value="$$Document">배포자료</option>
-						<option value="$$Document">ROHS</option>
-						<option value="$$Document">기타문서</option>
+						<option value="$$NDDocument">일반문서</option>
+						<option value="$$RDDocument">개발문서</option>
+						<option value="$$APDocument">승인원</option>
+						<option value="$$RADocument">인증문서</option>
+						<option value="$$MMDocument">금형문서</option>
+						<option value="$$DSDocument">개발소스</option>
+						<option value="$$DDDocument">배포자료</option>
+						<option value="$$ROHS">ROHS</option>
+						<option value="$$ETDocument">기타문서</option>
 					</select>
 				</td>
 				<th class="req">보존기간</th>
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
-						<option value="">선택</option>
 						<%
 						for (NumberCode preseration : preserationList) {
 						%>
-						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
+						<option value="<%=preseration.getCode()%>" <% if("영구".equals(preseration.getName())){ %> selected <% } %>><%=preseration.getName()%></option>
 						<%
 						}
 						%>
