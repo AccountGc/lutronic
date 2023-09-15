@@ -2204,6 +2204,8 @@ public class StandardDocumentService extends StandardManager implements Document
 
 		try {
 			trx.start();
+			
+			params.put("linkType", "");
 
 			createAction(params);
 
