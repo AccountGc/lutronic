@@ -29,7 +29,7 @@ boolean isCreate = "create".equals(mode);
 			<div style="margin-top: 5px;">
 				<input type="hidden" name="lifecycle" id="lifecycle" value="<%=lifecycle%>" />
 				<input type="hidden" name="searchType" id="searchType" value="<%=searchType%>" />
-				<input type="button" value="추가" title="추가" class="blue" onclick="append();">
+				<input type="button" value="추가" title="추가" class="blue" onclick="getAppendDoc();">
 				<input type="button" value="삭제" title="삭제" class="red" onclick="remove();">
 			</div>
 			<div id="grid90" style="height: 300px; border-top: 1px solid #3180c3; margin: 5px;"></div>
@@ -42,7 +42,6 @@ boolean isCreate = "create".equals(mode);
 		dataField : "number",
 		headerText : "문서번호",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "name",
 		headerText : "문서명",
@@ -52,7 +51,6 @@ boolean isCreate = "create".equals(mode);
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "oid",
 		visible : false
@@ -71,36 +69,31 @@ boolean isCreate = "create".equals(mode);
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
 	}
 
-	function append() {
-		const url = getCallUrl("/doc/append");
-		_popup(url, 1500, 700);
+	// 추가 버튼 클릭 시 팝업창 메서드
+	function getAppendDoc() {
+		const popup = true;
+		const url = getCallUrl("/doc/list?popup=" + popup);
+		_popup(url, 1800, 900, "n");
 	}
-
-	function append(items) {
-		var arr = [];
-		var count = 0;
-		var data = AUIGrid.getGridData(docGridID);
-		for (var i = 0; i < items.length; i++) {
-			var a = 0;
-			if (data.length == 0) {
-				arr[i] = items[i];
-			} else {
-				for (var j = 0; j < data.length; j++) {
-					if (data[j].oid == items[i].oid) {
-						a++;
+	
+	// 팝업 데이터 가져오는 메서드
+	function setAppendDoc(items){
+		const data = AUIGrid.getGridData(myGridID90);
+		
+		if(data.length != 0){
+			for(let i = 0; i < items.length; i++){
+				for(let j = 0; j < data.length; j++){
+					if(data[j].oid == items[i].oid){
+						items.splice(i, 1);
 					}
 				}
-			}
-			if (a == 0) {
-				arr[count] = items[i];
-				count++;
-			}
+			}			
 		}
-		AUIGrid.addRow(docGridID, arr);
+		AUIGrid.addRow(myGridID90, items);
 	}
 
-	function deleteDoc() {
-		const checked = AUIGrid.getCheckedRowItems(docGridID);
+	function remove() {
+		const checked = AUIGrid.getCheckedRowItems(myGridID90);
 		if (checked.length === 0) {
 			alert("삭제할 행을 선택하세요.");
 			return false;
@@ -108,11 +101,7 @@ boolean isCreate = "create".equals(mode);
 
 		for (let i = checked.length - 1; i >= 0; i--) {
 			const rowIndex = checked[i].rowIndex;
-			AUIGrid.removeRow(docGridID, rowIndex);
+			AUIGrid.removeRow(myGridID90, rowIndex);
 		}
-	}
-
-	function insertGrid(items) {
-		AUIGrid.setGridData(docGridID, items);
 	}
 </script>

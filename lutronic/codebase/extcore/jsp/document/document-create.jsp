@@ -62,7 +62,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			<tr>
 				<th class="req lb">문서분류</th>
 				<td class="indent5">
-					<span id="locationName"> /Default/Document </span>
+					<span id="location"> /Default/Document </span>
 				</td>
 				<th class="req">결재방식</th>
 				<td class="indent5">
@@ -205,8 +205,9 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create('false');">
-					<input type="button" value="목록" title="목록">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="">
 				</td>
 			</tr>
 		</table>
@@ -237,6 +238,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 		});
 
 		function create(isSelf) {
+			const location = document.getElementById("location").value;
 			const lifecycle = document.getElementById("lifecycle").value;
 			const documentName = document.getElementById("documentName").value;
 			const docName = document.getElementById("docName");
@@ -247,27 +249,38 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			const interalnumber = document.getElementById("interalnumber").value;
 			const writer = document.getElementById("writer").value;
 			const description = document.getElementById("description").value;
-			const location = document.getElementById("location").value;
-			const primarys = document.getElementsByName("primarys")[0].value;
-
-			if(isEmpty($("#lifecycle").val())){
-				alert("결재방식을 입력하세요.");
-				return;					
+			const _primary = toArray("primary");
+			const primary = _primary[0];
+			const secondary = toArray("secondarys");
+			let docOids = [];
+			const appendDoc = AUIGrid.getGridData(myGridID90);
+			if(appendDoc.length > 0){
+				for(let i = 0; i < appendDoc.length; i++){
+					docOids.push(appendDoc[i].oid)
+				}
 			}
-			if(isEmpty($("#documentName").val())){
-				alert("문서종류를 입력하세요.");
-				return;					
+			let partOids = [];
+			const appendPart = AUIGrid.getGridData(partGridID);
+			if(appendPart.length > 0){
+				for(let i = 0; i < appendPart.length; i++){
+					partOids.push(appendPart[i].part_oid);
+				}
 			}
-			if(isEmpty($("#documentType").val())){
-				alert("문서유형을 입력하세요.");
-				return;					
-			}
-			if(isEmpty($("#preseration").val())){
-				alert("보존기간을 입력하세요.");
-				return;					
-			}
-// 			if(isEmpty($("#dm").val())){
-// 				alert("관리자를 입력하세요.");
+			
+// 			if(isEmpty($("#lifecycle").val())){
+// 				alert("결재방식을 입력하세요.");
+// 				return;					
+// 			}
+// 			if(isEmpty($("#documentName").val())){
+// 				alert("문서종류를 입력하세요.");
+// 				return;					
+// 			}
+// 			if(isEmpty($("#documentType").val())){
+// 				alert("문서유형을 입력하세요.");
+// 				return;					
+// 			}
+// 			if(isEmpty($("#preseration").val())){
+// 				alert("보존기간을 입력하세요.");
 // 				return;					
 // 			}
 			if (!confirm("등록 하시겠습니까?")) {
@@ -288,8 +301,11 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			params.description = description;
 			params.location = location;
 			params.documentType = documentType;
-			params.primary = primarys;
-			params.secondarys = toArray("secondarys");
+			params.primary = primary;
+			params.secondary = secondary;
+			params.docOids = docOids;
+			params.partOids = partOids;
+			debugger;
 			parent.openLayer();
 			call(url, params, function(data) {
 				alert(data.msg);
@@ -305,8 +321,8 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			// DOM이 로드된 후 실행할 코드 작성
 			createAUIGrid2(columnsPart);
 			AUIGrid.resize(partGridID);
-			createAUIGrid4(columnsDoc);
-			AUIGrid.resize(docGridID);
+			createAUIGrid90(columns90);
+			AUIGrid.resize(myGridID90);
 			document.getElementById("docName").focus();
 		});
 

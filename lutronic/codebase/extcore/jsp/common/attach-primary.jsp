@@ -33,7 +33,7 @@ String oid = request.getParameter("oid");
 				const form = document.querySelector("form");
 				const primaryTag = document.createElement("input");
 				primaryTag.type = "hidden";
-				primaryTag.name = "primarys";
+				primaryTag.name = "primary";
 				primaryTag.value = this.cacheId;
 				primaryTag.id = this._id_;
 				form.appendChild(primaryTag);
@@ -43,60 +43,41 @@ String oid = request.getParameter("oid");
 				const el = document.getElementById(key);
 				el.parentNode.removeChild(el);
 				
-				const primarys = document.getElementsByName("primarys");
-					const tag = primarys[0];
+				const primary = document.getElementsByName("primary");
+					const tag = primary[0];
 					if(tag.id === key){
 						tag.parentNode.removeChild(tag);
 					}
 			}
 		})
 	
-		new AXReq("/Windchill/eSolution/content/list", {
-			pars : "oid=<%=oid%>&roleType=primary",
-			onsucc : function(res) {
-				if (!res.e) {
-					const form = document.querySelector("form");
-					const data = res.primaryFile;
-					const len = data.length;
-					for (let i = 0; i < len; i++) {
-						const primaryTag = document.createElement("input");
-						primaryTag.type = "hidden";
-						primaryTag.id = data[i].tagId;
-						primaryTag.name = "primarys";
-						primaryTag.value = data[i].cacheId;
-						form.appendChild(primaryTag);
-					}
-					primary.setUploadedList(data);
-					imgurl = data[0].filePath + data[0].name;
-					$("#sign_preview").attr("src", imgurl);
-				}
-			}
-		});
+// 		new AXReq("/Windchill/eSolution/content/list", {
+<%-- 			pars : "oid=<%=oid%>&roleType=primary", --%>
+// 			onsucc : function(res) {
+// 				if (!res.e) {
+// 					const form = document.querySelector("form");
+// 					const data = res.primaryFile;
+// 					const len = data.length;
+// 					for (let i = 0; i < len; i++) {
+// 						const primaryTag = document.createElement("input");
+// 						primaryTag.type = "hidden";
+// 						primaryTag.id = data[i].tagId;
+// 						primaryTag.name = "primary";
+// 						primaryTag.value = data[i].cacheId;
+// 						form.appendChild(primaryTag);
+// 					}
+// 					primary.setUploadedList(data);
+// 					imgurl = data[0].filePath + data[0].name;
+// 					$("#sign_preview").attr("src", imgurl);
+// 				}
+// 			}
+// 		});
 	}
 	load();
 
 	//이미지 미리보기
 	function signPreview(uploadPath) {
 		$("#sign_preview").attr("src", uploadPath);
-	}
-
-	//파일 전체 삭제
-	function deleteAllFiles() {
-		if (!confirm("전체 삭제 하시겠습니까?")) {
-			return;
-		}
-
-		const primarys = document.getElementsByName("primarys");
-		for (var i = primarys.length - 1; i >= 0; i--) {
-			const tag = primarys[i];
-			tag.parentNode.removeChild(tag);
-		}
-		var l = $("form:eq(0)").find("div.readyselect");
-		$.each(l, function(idx) {
-			var fid = l.eq(idx).attr("id");
-			primary.removeUploadedList(fid);
-			l.eq(idx).hide();
-		})
 	}
 
 	//첨부파일 업로드 시

@@ -10,7 +10,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAttribute("popup") : false; 
-int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 %>
 <!DOCTYPE html>
 <html>
@@ -485,15 +484,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 						return false;
 					}
 					
-					let docOids = [];
-					let interalnumber = [];
-					
-					for(let i = 0; i < items.length; i++){
-						docOids.push(items[i].oid);
-						interalnumber.push(items[i].number);
-					}
-					
-					opener.setDoc(docOids, interalnumber, <%= parentRowIndex %>);
+					opener.setAppendDoc(items);
 					self.close();
 				}
 			<% } %>

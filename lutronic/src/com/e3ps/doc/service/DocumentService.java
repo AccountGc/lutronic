@@ -23,13 +23,13 @@ public interface DocumentService {
 
 	Map<String, Object> requestDocumentMapping(Map<String, Object> params);
 
-	ResultData createDocumentAction(Map<String, Object> map);
+//	ResultData createDocumentAction(Map<String, Object> map);
 
 	Map<String, Object> deleteDocumentAction(Map<String, Object> params);
 
 	Map<String, Object> updateDocumentAction(Map<String, Object> map);
 
-	String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
+//	String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
 	ResultData approvalPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
@@ -59,7 +59,7 @@ public interface DocumentService {
 	List<Map<String, Object>> listAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
 
-	ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
+//	ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
 	Map<String, Object> listPagingAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;

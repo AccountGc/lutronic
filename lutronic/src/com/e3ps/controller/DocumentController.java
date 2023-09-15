@@ -88,7 +88,7 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list(@RequestParam(value = "popup", required = false) boolean popup, @RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
+	public ModelAndView list(@RequestParam(value = "popup", required = false) boolean popup) throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
@@ -99,7 +99,6 @@ public class DocumentController extends BaseController {
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("popup", popup);
-		model.addObject("parentRowIndex", parentRowIndex);
 		if(popup) {
 			model.setViewName("popup:/document/document-list");			
 		}else {
@@ -396,36 +395,36 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	/**
-	 * 일괄 등록 수행
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createPackageDocumentAction")
-	public ModelAndView createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-		String xmlString = DocumentHelper.service.createPackageDocumentAction(request, response);
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("xmlString", xmlString);
-		model.setViewName("empty:/document/createPackageDocumentAction");
-		return model;
-	}
-
-	/**
-	 * 일괄 등록 AUI 수행
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-
-	@ResponseBody
-	@RequestMapping(value = "/createAUIPackageDocumentAction", method = RequestMethod.POST)
-	public ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-		return DocumentHelper.service.createAUIPackageDocumentAction(request, response);
-	}
+//	/**
+//	 * 일괄 등록 수행
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//	@RequestMapping("/createPackageDocumentAction")
+//	public ModelAndView createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
+//		String xmlString = DocumentHelper.service.createPackageDocumentAction(request, response);
+//
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("xmlString", xmlString);
+//		model.setViewName("empty:/document/createPackageDocumentAction");
+//		return model;
+//	}
+//
+//	/**
+//	 * 일괄 등록 AUI 수행
+//	 * 
+//	 * @param request
+//	 * @param response
+//	 * @return
+//	 */
+//
+//	@ResponseBody
+//	@RequestMapping(value = "/createAUIPackageDocumentAction", method = RequestMethod.POST)
+//	public ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
+//		return DocumentHelper.service.createAUIPackageDocumentAction(request, response);
+//	}
 
 	/**
 	 * 관련 문서 추가
