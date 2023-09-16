@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.org.People"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.ArrayList"%>
@@ -13,6 +14,13 @@ boolean isChange = (boolean) request.getAttribute("isChange");
 boolean isMold = (boolean) request.getAttribute("isMold");
 boolean isRohs = (boolean) request.getAttribute("isRohs");
 boolean isEtc = (boolean) request.getAttribute("isEtc");
+
+// 기타 문서 권한처리
+boolean isRa = (boolean) request.getAttribute("isRa");
+boolean isProduction = (boolean) request.getAttribute("isProduction");
+boolean isCosmetic = (boolean) request.getAttribute("isCosmetic");
+boolean isPathological = (boolean) request.getAttribute("isPathological");
+boolean isClinical = (boolean) request.getAttribute("isClinical");
 %>
 <nav class="navbar-default navbar-static-side" role="navigation">
 	<div class="sidebar-collapse">
@@ -28,8 +36,8 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					<!-- 					</a> -->
 				</div>
 			</li>
-			
 			<%
+			if (isWork) {
 			%>
 			<li>
 				<a href="#">
@@ -39,7 +47,7 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listNotice', '> 나의업무 > 공지사항');">공지사항</a>
+						<a onclick="moveToPage(this, '/notice/list', '> 나의업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/workItem', '> 나의업무 > 작업함');">
@@ -95,6 +103,10 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isDoc) {
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-pie-chart"></i>
@@ -122,6 +134,10 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isPart) {
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-desktop"></i>
@@ -143,6 +159,10 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isEpm) {
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-edit"></i>
@@ -161,6 +181,10 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isChange) {
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-files-o"></i>
@@ -194,6 +218,10 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isRohs) {
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-sitemap"></i>
@@ -227,43 +255,10 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
-
-			<!-- <li>
-				<a href="#">
-					<i class="fa fa-files-o"></i>
-					<span class="nav-label">BOM 관리</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/partlist/list', '> BOM 관리 > 수배표 조회');">수배표 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/tbom/list', '> BOM 관리 > T-BOM 조회');">T-BOM 조회</a>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="#">
-					<i class="fa fa-sitemap"></i>
-					<span class="nav-label">한국 생산</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/korea/list', '> 한국 생산 > 한국 생산');">한국 생산</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/configSheet/list', '> 한국 생산 > CONFIG SHEET 조회');">CONFIG SHEET 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/cip/list', '> 한국 생산 > CIP 조회');">CIP 조회</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/history/list', '> 한국 생산 > 이력 관리 조회');">이력 관리 조회</a>
-					</li>
-				</ul>
-			</li> -->
+			<%
+			}
+			if (isMold) {
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-files-o"></i>
@@ -282,6 +277,10 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isEtc) {
+			%>
 			<li>
 				<a href="#">
 					<i class="fa fa-files-o"></i>
@@ -289,33 +288,25 @@ boolean isEtc = (boolean) request.getAttribute("isEtc");
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/mold/ap-list', '> 승인원 > 승인원 검색');">승인원 검색</a> -->
-<!-- 					</li> -->
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/mold/ap-create', '> 승인원 > 승인원 등록');">승인원 등록</a> -->
-<!-- 					</li> -->
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/mold/ap-all', '> 승인원 > 승인원 결재');">승인원 결재</a> -->
-<!-- 					</li> -->
-						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
-						</li>
-						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
-						</li>
-						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
-						</li>
-						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
-						</li>
-						<li>
-							<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 화장품 문서검색');">화장품 문서검색</a>
-						</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 화장품 문서검색');">화장품 문서검색</a>
+					</li>
 				</ul>
 			</li>
 			<%
+			}
 			if (CommonUtil.isAdmin()) {
 			%>
 			<li>

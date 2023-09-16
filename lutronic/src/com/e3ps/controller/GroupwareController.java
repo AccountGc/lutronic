@@ -79,31 +79,6 @@ public class GroupwareController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "공지사항 검색 페이지")
-	@GetMapping(value = "/listNotice")
-	public ModelAndView listNotice() throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/workprocess/notice-list.jsp");
-		return model;
-	}
-
-	@Description(value = "공지사항 조회 함수")
-	@ResponseBody
-	@PostMapping(value = "/listNotice")
-	public Map<String, Object> listNotice(@RequestBody Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result = GroupwareHelper.manager.listNotice(params);
-			result.put("result", SUCCESS);
-//			result = GroupwareHelper.service.listNoticeAction(request,response);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
 	/**
 	 * 팝업 대상 공지사항
 	 * 
@@ -124,30 +99,7 @@ public class GroupwareController extends BaseController {
 		return returnData;
 	}
 
-	@Description(value = "공지사항 등록 페이지")
-	@GetMapping(value = "/createNotice")
-	public ModelAndView createNotice() throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/workprocess/notice-create");
-		return model;
-	}
-
-	@Description(value = "공지사항 등록 함수")
-	@ResponseBody
-	@PostMapping(value = "/createNotice")
-	public Map<String, Object> createNotice(@RequestBody Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			NoticeHelper.service.createNotice(params);
-			result.put("msg", SAVE_MSG);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
+	
 
 	/**
 	 * 공지사항 등록
@@ -188,69 +140,7 @@ public class GroupwareController extends BaseController {
 //		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
 //	}
 
-	@Description(value = "공지사항 상세 페이지")
-	@GetMapping(value = "/viewNotice")
-	public ModelAndView viewNotice(@RequestParam String oid) throws Exception {
-		NoticeHelper.service.updateCount(oid);
-		Notice notice = (Notice) CommonUtil.getObject(oid);
-		NoticeData dto = new NoticeData(notice);
-
-		ModelAndView model = new ModelAndView();
-		boolean isAdmin = CommonUtil.isAdmin();
-		model.addObject("isAdmin", isAdmin);
-		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/workprocess/notice-view.jsp");
-		return model;
-	}
-
-	@Description(value = "공지사항 수정 페이지")
-	@GetMapping(value = "/updateNotice")
-	public ModelAndView updateNotice(@RequestParam String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		Notice notice = (Notice) CommonUtil.getObject(oid);
-		NoticeData noticeData = new NoticeData(notice);
-
-		model.addObject("menu", "menu1");
-		model.addObject("module", "workprocess");
-		model.addObject("data", noticeData);
-		model.setViewName("/extcore/jsp/workprocess/notice-update.jsp");
-		return model;
-	}
-
-	@Description(value = "공지사항 수정 함수")
-	@ResponseBody
-	@PostMapping(value = "/updateNotice")
-	public Map<String, Object> updateNotice(@RequestBody Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result = NoticeHelper.service.modify(params);
-			result.put("msg", MODIFY_MSG);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
-	@Description(value = "공지사항 삭제")
-	@ResponseBody
-	@PostMapping(value = "/deleteNotice")
-	public Map<String, Object> deleteNoticeAction(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			NoticeHelper.service.delete(params);
-			result.put("msg", DELETE_MSG);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
+	
 	@Description(value = "사용자정보 상세 페이지")
 	@GetMapping(value = "/userInfoView")
 	public ModelAndView userInfoView(@RequestParam String oid) throws Exception {
@@ -813,8 +703,6 @@ public class GroupwareController extends BaseController {
 		}
 		return result;
 	}
-
-
 
 	@Description(value = "관리자 메뉴")
 	@GetMapping(value = "/manage")

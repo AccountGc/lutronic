@@ -327,20 +327,4 @@ public class DepartmentHelper {
 		return spec;
 	}
 
-	/**
-	 * 최상위 부서 가져오기
-	 */
-	public Department getRoot() throws Exception {
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(Department.class, true);
-		QuerySpecUtils.toEquals(query, idx, Department.class, Department.CODE, "ROOT");
-		QueryResult result = PersistenceHelper.manager.find(query);
-		Department department = null;
-		if (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			department = (Department) obj[0];
-			return department;
-		}
-		return null;
-	}
 }

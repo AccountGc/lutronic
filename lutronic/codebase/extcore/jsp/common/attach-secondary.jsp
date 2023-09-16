@@ -54,34 +54,34 @@ String oid = request.getParameter("oid");
 			}
 		})
 		
-// 		new AXReq("/Windchill/eSolution/content/list", {
-<%-- 			pars : "oid=<%=oid%>&roleType=secondary", --%>
-// 			onsucc : function(res) {
-// 				if (!res.e) {
-// 					const form = document.querySelector("form");
-// 					const data = res.secondaryFile;
-// 					const len = data.length;
-// 					for (let i = 0; i < len; i++) {
-// 						const secondaryTag = document.createElement("input");
-// 						secondaryTag.type = "hidden";
-// 						secondaryTag.id = data[i]._id_;
-// 						secondaryTag.name = "secondarys";
-// 						secondaryTag.value = data[i].cacheId;
-// 						form.appendChild(secondaryTag);
-// 					}
-// 					secondary.setUploadedList(data);
-// 				}
-// 			}
-// 		});
+		new AXReq("/Windchill/plm/content/list", {
+			pars : "oid=<%=oid%>&roleType=secondary",
+			onsucc : function(res) {
+				if (!res.e) {
+					const form = document.querySelector("form");
+					const data = res.secondaryFile;
+					const len = data.length;
+					for (let i = 0; i < len; i++) {
+						const secondaryTag = document.createElement("input");
+						secondaryTag.type = "hidden";
+						secondaryTag.id = data[i]._id_;
+						secondaryTag.name = "secondarys";
+						secondaryTag.value = data[i].cacheId;
+						form.appendChild(secondaryTag);
+					}
+					secondary.setUploadedList(data);
+				}
+			}
+		});
 	}
 	load();
-	
+
 	//파일 전체 삭제
 	function deleteAllFiles() {
 		if (!confirm("전체 삭제 하시겠습니까?")) {
 			return;
 		}
-		
+
 		const secondarys = document.getElementsByName("secondarys");
 		for (let i = secondarys.length - 1; i >= 0; i--) {
 			const tag = secondarys[i];
@@ -95,11 +95,11 @@ String oid = request.getParameter("oid");
 			l.eq(idx).hide();
 		})
 	}
-	
+
 	//첨부파일 업로드 시
-	function fileUpload(){
-		var file=[];
-		for(var i=0; i<secondary.uploadedList.length; i++){
+	function fileUpload() {
+		var file = [];
+		for (var i = 0; i < secondary.uploadedList.length; i++) {
 			file[i] = secondary.uploadedList[i].cacheId;
 		}
 		return file;

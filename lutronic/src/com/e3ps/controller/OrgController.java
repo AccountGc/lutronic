@@ -18,11 +18,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.org.Department;
-import com.e3ps.org.beans.DepartmentHelper;
 import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.org.service.OrgHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.sf.json.JSONArray;
 
 @Controller
 @RequestMapping(value = "/org/**")
@@ -51,6 +53,8 @@ public class OrgController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		Department root = DepartmentHelper.manager.getRoot();
+		ArrayList<Map<String, String>> list = DepartmentHelper.manager.getAllDepartmentList();
+		model.addObject("list", JSONArray.fromObject(list));
 		model.addObject("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		model.addObject("isAdmin", isAdmin);
 		model.setViewName("/extcore/jsp/workprocess/organization-list.jsp");

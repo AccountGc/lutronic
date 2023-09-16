@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.Department;
 import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
@@ -43,8 +45,10 @@ public class IndexController extends BaseController {
 	public ModelAndView header() throws Exception {
 		ModelAndView model = new ModelAndView();
 		People people = CommonUtil.sessionPeople();
+		Department department = people.getDepartment();
+		String department_name = department.getName();
 		WTUser sessionUser = CommonUtil.sessionUser();
-		ArrayList<String> auth = people.getAuth();
+		String auths = people.getAuth();
 		boolean isWork = false;
 		boolean isDoc = false;
 		boolean isPart = false;
@@ -53,16 +57,33 @@ public class IndexController extends BaseController {
 		boolean isMold = false;
 		boolean isChange = false;
 		boolean isEtc = false;
-		if (auth != null) {
-			isWork = auth.contains("나의업무");
-			isDoc = auth.contains("문서관리");
-			isPart = auth.contains("품목관리");
-			isEpm = auth.contains("도면관리");
-			isRohs = auth.contains("RoHS");
-			isMold = auth.contains("금형관리");
-			isChange = auth.contains("설계변경");
-			isEtc = auth.contains("기타문서관리");
+		if (StringUtil.checkString(auths)) {
+			isWork = auths.contains("나의업무");
+			isDoc = auths.contains("문서관리");
+			isPart = auths.contains("품목관리");
+			isEpm = auths.contains("도면관리");
+			isRohs = auths.contains("RoHS");
+			isMold = auths.contains("금형관리");
+			isChange = auths.contains("설계변경");
+			isEtc = auths.contains("기타문서관리");
 		}
+
+		// 기타 문서 권한처리
+		boolean isRa = false;
+		boolean isProduction = false;
+		boolean isCosmetic = false;
+		boolean isPathological = false;
+		boolean isClinical = false;
+		if ("".equals(department_name)) {
+
+		}
+
+		model.addObject("isRa", isRa);
+		model.addObject("isProduction", isProduction);
+		model.addObject("isPathological", isPathological);
+		model.addObject("isCosmetic", isCosmetic);
+		model.addObject("isClinical", isClinical);
+
 		model.addObject("isWork", isWork);
 		model.addObject("isDoc", isDoc);
 		model.addObject("isPart", isPart);

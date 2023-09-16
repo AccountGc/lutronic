@@ -9,30 +9,16 @@
 
 package com.e3ps.org.beans;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Vector;
 
-import wt.content.ApplicationData;
-import wt.content.ContentHelper;
-import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
-import wt.fc.ReferenceFactory;
-import wt.org.WTPrincipalReference;
-import wt.org.WTUser;
-import wt.session.SessionHelper;
-import wt.util.WTException;
-import wt.util.WTPropertyVetoException;
-
-import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.org.Department;
-import com.e3ps.org.DepartmentPeopleLink;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
+import wt.org.WTUser;
 
 @Getter
 @Setter
@@ -53,10 +39,12 @@ public class PeopleData {
 	private String homeTel = "";
 	private String officeTel = "";
 	private String address = "";
-	private String departmentName = "";
 	private String password = "";
 	private String imgUrl = CompanyState.defautlURL.toString();
 	private String auth;
+
+	private String department_name;
+	private String department_oid;
 
 	public boolean isDiable = false;
 
@@ -75,12 +63,13 @@ public class PeopleData {
 		setDuty(people.getDuty());
 		setDutycode(people.getDutyCode());
 		setCellTel(people.getCellTel());
-
-		if (people.getAuth() != null) {
-			setAuth(String.join(",", people.getAuth()));
-		}
+		setAuth(people.getAuth());
 		setPassword(people.getPassword());
-		setDepartmentName(people.getDepartment().getName());
+
+		if (people.getDepartment() != null) {
+			setDepartment_name(people.getDepartment().getName());
+			setDepartment_oid(people.getDepartment().getPersistInfo().getObjectIdentifier().getStringValue());
+		}
 		QueryResult qr = PersistenceHelper.manager.navigate(people, "user", WTUserPeopleLink.class);
 		if (qr.hasMoreElements()) {
 			WTUser user = (WTUser) qr.nextElement();

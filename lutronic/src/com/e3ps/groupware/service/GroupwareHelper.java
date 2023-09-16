@@ -73,57 +73,7 @@ public class GroupwareHelper {
 	public static final GroupwareService service = ServiceFactory.getService(GroupwareService.class);
 	public static final GroupwareHelper manager = new GroupwareHelper();
 
-	public Map<String, Object> listNotice(Map<String, Object> params) throws Exception {
-		Map<String, Object> map = new HashMap<>();
-		ArrayList<NoticeData> list = new ArrayList<>();
-
-		QuerySpec query = new QuerySpec();
-		int idx = query.addClassList(Notice.class, true);
-
-		try {
-			String nameValue = StringUtil.checkNull((String) params.get("name"));
-			String creator = StringUtil.checkNull((String) params.get("creator"));
-
-			if (nameValue != null && nameValue.trim().length() > 0) {
-				query.appendWhere(new SearchCondition(Notice.class, "title", SearchCondition.LIKE,
-						"%" + nameValue.trim() + "%", false), new int[] { idx });
-			}
-
-			if (creator != null && creator.length() > 0) {
-				ReferenceFactory rf = new ReferenceFactory();
-				People people = (People) rf.getReference(creator).getObject();
-				WTUser user = people.getUser();
-
-				if (query.getConditionCount() > 0)
-					query.appendAnd();
-				query.appendWhere(new SearchCondition(Notice.class, "owner.key", "=",
-						PersistenceHelper.getObjectIdentifier(user)), new int[] { idx });
-			}
-
-			query.appendOrderBy(new OrderBy(new ClassAttribute(Notice.class, "thePersistInfo.createStamp"), true),
-					new int[] { idx });
-
-			PageQueryUtils pager = new PageQueryUtils(params, query);
-			PagingQueryResult result = pager.find();
-			while (result.hasMoreElements()) {
-				Object[] obj = (Object[]) result.nextElement();
-				NoticeData data = new NoticeData((Notice) obj[0]);
-				list.add(data);
-			}
-
-			map.put("list", list);
-			map.put("topListCount", pager.getTotal());
-			map.put("pageSize", pager.getPsize());
-			map.put("total", pager.getTotalSize());
-			map.put("sessionid", pager.getSessionId());
-			map.put("curPage", pager.getCpage());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return map;
-
-	}
-
+	
 	public Map<String, Object> listItem(Map<String, Object> params) throws Exception {
 		int page = StringUtil.getIntParameter((String) params.get("page"), 1);
 		int rows = StringUtil.getIntParameter((String) params.get("rows"), 10);

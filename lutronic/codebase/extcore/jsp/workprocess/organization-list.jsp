@@ -1,8 +1,10 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
 String oid = (String) request.getAttribute("oid");
+JSONArray list = (JSONArray) request.getAttribute("list");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 %>
 <!DOCTYPE html>
@@ -80,12 +82,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/workprocess/department-tree.jsp">
-						<jsp:param value="488" name="height" />
+						<jsp:param value="698" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 455px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 665px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -93,6 +95,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</table>
 		<script type="text/javascript">
 			let myGridID;
+			const list = <%=list%>;
+			const duty = [ "사장", "부사장" ];
 			const auths = [ {
 				key : "나의업무",
 				value : "나의업무"
@@ -203,10 +207,42 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						inline : true
 					},
 				}, {
-					dataField : "departmentName",
+					dataField : "department_name",
 					headerText : "부서",
 					dataType : "string",
-					width : 120,
+					width : 150,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					editRenderer : {
+						type : "DropDownListRenderer",
+						showEditorBtn : false,
+						showEditorBtnOver : false,
+						multipleMode : false,
+						showCheckAll : false,
+						list : list,
+						keyField : "oid",
+						valueField : "name",
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = list.length; i < len; i++) {
+							if (list[i]["oid"] == value) {
+								retStr = list[i]["name"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -215,7 +251,27 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					dataField : "duty",
 					headerText : "직위",
 					dataType : "string",
-					width : 100,
+					width : 130,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					editRenderer : {
+						type : "DropDownListRenderer",
+						showEditorBtn : false,
+						showEditorBtnOver : false,
+						multipleMode : false,
+						showCheckAll : false,
+						list : duty,
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -272,6 +328,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
+						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
