@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 
 import wt.lifecycle.State;
 import wt.method.RemoteInterface;

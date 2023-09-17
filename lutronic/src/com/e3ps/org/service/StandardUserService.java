@@ -37,7 +37,7 @@ import com.e3ps.groupware.workprocess.ApprovalLineTemplate;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 
 @SuppressWarnings("serial")
 public class StandardUserService extends StandardManager implements UserService {
@@ -425,7 +425,7 @@ public class StandardUserService extends StandardManager implements UserService 
 		
 	    while(qr.hasMoreElements()){
 			Object[] o = (Object[])qr.nextElement();
-			PeopleData pd = new PeopleData(o);
+			PeopleDTO pd = new PeopleDTO(o);
 			
 			xmlBuf.append("<row id='"+ pd.peopleOID +"'>");
 			xmlBuf.append("<cell><![CDATA[]]></cell>" );
@@ -678,7 +678,7 @@ public class StandardUserService extends StandardManager implements UserService 
 	    
 	    while(qr.hasMoreElements()) {
 	    	Object[] obj = (Object[])qr.nextElement();
-			PeopleData data = new PeopleData(obj[0]);
+			PeopleDTO data = new PeopleDTO(obj[0]);
 			
 			String name = "";
 			String deptName = "";

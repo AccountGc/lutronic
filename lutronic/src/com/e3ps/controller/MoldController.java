@@ -27,10 +27,10 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.rohs.service.RohsQueryHelper;
 
@@ -108,7 +108,7 @@ public class MoldController extends BaseController {
 	public ModelAndView view(@RequestParam String oid) throws Exception{
 		ModelAndView model = new ModelAndView();
 		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
-		DocumentData dto = new DocumentData(doc);
+		DocumentDTO dto = new DocumentDTO(doc);
 		
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
@@ -253,12 +253,12 @@ public class MoldController extends BaseController {
 		String state = StringUtil.checkReplaceStr(request.getParameter("state"),"");
 		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"),"");
 		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
-		List<DocumentData> list = null;
+		List<DocumentDTO> list = null;
 		try {
 			list = DocumentHelper.service.include_DocumentList(oid,moduleType);
 		} catch(Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<DocumentData>();
+			list = new ArrayList<DocumentDTO>();
 		}
 		ModelAndView model = new ModelAndView();
 		model.setViewName("include:/mold/include_OtherDocumentSelect");

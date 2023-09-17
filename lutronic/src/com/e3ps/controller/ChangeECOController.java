@@ -29,7 +29,7 @@ import com.e3ps.change.service.ECOHelper;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.change.service.ECRHelper;
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.message.Message;
@@ -39,7 +39,7 @@ import com.e3ps.common.util.StringUtil;
 //import com.e3ps.doc.beans.DocumentData;
 //import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmUtil;
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.rohs.service.RohsHelper;
 
@@ -344,8 +344,8 @@ public class ChangeECOController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/ecaList")
-	public List<NumberCodeData> numberCodeList(HttpServletRequest request, HttpServletResponse response, @RequestParam("type") String type) {
-		List<NumberCodeData> list = CodeHelper.service.topCodeToList(type);
+	public List<NumberCodeDTO> numberCodeList(HttpServletRequest request, HttpServletResponse response, @RequestParam("type") String type) {
+		List<NumberCodeDTO> list = CodeHelper.service.topCodeToList(type);
 		return list;
 	}
 	

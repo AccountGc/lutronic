@@ -15,7 +15,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.migration.service.MigrationHelper;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.ptc.core.foundation.associativity.common.BOMHelper;

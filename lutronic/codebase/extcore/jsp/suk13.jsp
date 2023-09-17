@@ -25,7 +25,7 @@
 <%@page import="java.util.HashMap"%>
 <%@page import="com.e3ps.change.service.ChangeHelper"%>
 <%@page import="wt.vc.baseline.ManagedBaseline"%>
-<%@page import="com.e3ps.part.beans.PartData"%>
+<%@page import="com.e3ps.part.dto.PartData"%>
 <%@page import="com.e3ps.change.service.ChangeWfHelper"%>
 <%@page import="wt.vc.views.ViewReference"%>
 <%@page import="com.e3ps.common.message.Message"%>
@@ -39,7 +39,7 @@
 <%@page import="com.e3ps.change.service.ChangeUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.change.service.ECOSearchHelper"%>
-<%@page import="com.e3ps.org.beans.PeopleData"%>
+<%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.change.EChangeOrder"%>
 <%@page import="com.e3ps.groupware.workprocess.service.WFItemHelper"%>

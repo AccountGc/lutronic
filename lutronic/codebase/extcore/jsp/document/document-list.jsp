@@ -9,7 +9,6 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
-boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAttribute("popup") : false; 
 %>
 <!DOCTYPE html>
 <html>
@@ -36,7 +35,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 			</colgroup>
 			<tr>
 				<th>문서 분류</th>
-				<td>
+				<td class="indent5">
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
 				</td>
@@ -65,7 +64,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
@@ -88,9 +87,9 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
-				<th>작성자</th>
+				<th>수정자</th>
 				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-300">
+					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>수정일</th>
@@ -148,7 +147,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 					</select>
 				</td>
 				<th>버전</th>
-				<td colspan="3">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="true" checked="checked">
@@ -168,11 +167,9 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 						</div>
 					</div>
 				</td>
-			</tr>
-			<tr>
 				<th>내용</th>
-				<td class="indent5" colspan="5">
-					<textarea name="description" id="description" rows="6" onchange="textAreaLengthCheckName('description', '4000', '문서설명')" style="width: 90%"></textarea>
+				<td class="indent5">
+					<input type="text" name="description" id="description" class="width-300">
 				</td>
 			</tr>
 		</table>
@@ -180,11 +177,8 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('');">
-					<% if(popup){ %>
-						<input type="button" value="추가" title="추가"  onclick="add();">						
-					<% } %>
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -194,9 +188,8 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
-					<input type="button" value="초기화" title="초기화" id="reset">
 				</td>
 			</tr>
 		</table>
@@ -212,12 +205,12 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
+						<jsp:param value="593" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 560px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -237,7 +230,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/doc/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {
@@ -266,6 +259,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 					dataField : "name",
 					headerText : "문서명",
 					dataType : "string",
+					style : "aui-left",
 					width : 350,
 					renderer : {
 						type : "LinkRenderer",
@@ -273,7 +267,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/doc/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {
@@ -326,7 +320,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
@@ -376,7 +370,6 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
-					fillColumnSizeMode : false,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
@@ -401,11 +394,12 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "_psize", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
+				const field = [ "_psize", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = latest;
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -416,10 +410,12 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("number");
 				const columns = loadColumnLayout("document-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -462,6 +458,7 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
 			//일괄 다운로드
 			function download() {
 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
@@ -475,20 +472,6 @@ boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAtt
 				});
 				document.location.href = "/Windchill/eSolution/content/downloadZIP?oids=" + oids;
 			}
-
-			<% if(popup){ %>
-				function add(){
-					const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-					if (items.length == 0) {
-						alert("첨부할 문서를 선택하세요.");
-						return false;
-					}
-					
-					opener.setAppendDoc(items);
-					self.close();
-				}
-			<% } %>
-			
 		</script>
 	</form>
 </body>

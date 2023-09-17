@@ -23,7 +23,7 @@ import com.e3ps.common.util.AuthHandler;
 import com.e3ps.common.util.JExcelUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.erp.beans.BomData;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.ptc.core.foundation.associativity.common.BOMHelper;

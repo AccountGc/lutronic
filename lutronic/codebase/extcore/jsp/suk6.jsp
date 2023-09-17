@@ -4,7 +4,7 @@
 <%@page import="com.e3ps.change.service.ChangeUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.change.service.ECOSearchHelper"%>
-<%@page import="com.e3ps.org.beans.PeopleData"%>
+<%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.change.EChangeOrder"%>
 <%@page import="com.e3ps.groupware.workprocess.service.WFItemHelper"%>

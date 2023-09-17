@@ -35,7 +35,7 @@ import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.key.ChangeKey;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey;
@@ -43,11 +43,11 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.part.util.PartUtil;
@@ -97,7 +97,7 @@ public class StandardChangeWfService extends StandardManager implements ChangeWf
 		boolean isState = true;
 		if(docList.size() ==0 ) isState = false;
 		
-		List<DocumentData> docLink = new ArrayList<DocumentData>(); 
+		List<DocumentDTO> docLink = new ArrayList<DocumentDTO>(); 
 		
 		for(int i = 0 ; i <docList.size() ; i++){
 			DocumentActivityLink link = docList.get(i);
@@ -110,7 +110,7 @@ public class StandardChangeWfService extends StandardManager implements ChangeWf
 			
 			if(!doc.getLifeCycleState().toString().equals("APPROVED")) isState = false;
 			
-			DocumentData docData = new DocumentData(doc);
+			DocumentDTO docData = new DocumentDTO(doc);
 			//docData.setEtcOid(link.getPersistInfo().getObjectIdentifier().toString());
 			
 			docLink.add(docData);

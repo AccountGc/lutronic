@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.service.ECOHelper;
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
@@ -83,22 +83,22 @@ public class CommonController extends BaseController {
 	@Description(value = "NumberCode 데이터 리턴")
 	@ResponseBody
 	@PostMapping(value = "/autoSearchName")
-	public List<NumberCodeData> autoSearchName(@RequestBody Map<String, Object> params) throws Exception{
+	public List<NumberCodeDTO> autoSearchName(@RequestBody Map<String, Object> params) throws Exception{
 		String codeType = StringUtil.checkNull((String) params.get("codeType"));
 		String name = StringUtil.checkNull((String) params.get("value"));
 		System.out.println(codeType);
 		System.out.println(name);
-		List<NumberCodeData> list = NumberCodeHelper.manager.autoSearchName(codeType, name);
+		List<NumberCodeDTO> list = NumberCodeHelper.manager.autoSearchName(codeType, name);
 		return list;
 	}
 	
 	@Description(value = "NumberCode 가져오기")
 	@ResponseBody
 	@PostMapping(value = "/numberCodeList")
-	public List<NumberCodeData> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
+	public List<NumberCodeDTO> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
 		String codeType = StringUtil.checkNull((String) params.get("codeType"));
 		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
-		List<NumberCodeData> list = new ArrayList<NumberCodeData>();
+		List<NumberCodeDTO> list = new ArrayList<NumberCodeDTO>();
 		try {
 			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid);			
 		}catch(Exception e) {
@@ -139,12 +139,12 @@ public class CommonController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/numberParentCodeList")
-	public List<NumberCodeData> numberParentCodeList(HttpServletRequest request, HttpServletResponse response, 
+	public List<NumberCodeDTO> numberParentCodeList(HttpServletRequest request, HttpServletResponse response, 
 			@RequestParam("codeType") String codeType,
 			@RequestParam("pCode") String pCode,
 			@RequestParam("search") String isSearch) {
 		boolean search = ("true").equals(isSearch);
-		List<NumberCodeData> list = CodeHelper.service.numberParentCodeList(codeType, pCode, search);
+		List<NumberCodeDTO> list = CodeHelper.service.numberParentCodeList(codeType, pCode, search);
 		return list;
 	}
 	
@@ -524,8 +524,8 @@ public class CommonController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/childNumberCodeList")
-	public List<NumberCodeData> childNumberCodeList(HttpServletRequest request, HttpServletResponse response, @RequestParam("type") String type, @RequestParam("parentCode") String parentCode)	 {
-		List<NumberCodeData> list = CodeHelper.service.childNumberCodeList(type,parentCode);
+	public List<NumberCodeDTO> childNumberCodeList(HttpServletRequest request, HttpServletResponse response, @RequestParam("type") String type, @RequestParam("parentCode") String parentCode)	 {
+		List<NumberCodeDTO> list = CodeHelper.service.childNumberCodeList(type,parentCode);
 		return list;
 	}
 	

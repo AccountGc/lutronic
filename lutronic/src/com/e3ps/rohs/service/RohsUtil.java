@@ -36,14 +36,14 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 
 public class RohsUtil {
 	

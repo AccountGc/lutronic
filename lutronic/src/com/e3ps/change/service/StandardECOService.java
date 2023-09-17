@@ -101,14 +101,14 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.distribute.util.MakeZIPUtil;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.drawing.util.EpmPublishUtil;
 import com.e3ps.erp.service.ERPHelper;
 import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.part.util.PartUtil;
@@ -1832,9 +1832,9 @@ public class StandardECOService extends StandardManager implements ECOService {
 				
 				ECAData ecaData = (ECAData) dmap.get("ecaData");
 				
-				List<DocumentData> documentList = ecaData.getDocList();
+				List<DocumentDTO> documentList = ecaData.getDocList();
 				
-				for(DocumentData docData : documentList) {
+				for(DocumentDTO docData : documentList) {
 					if(row > startRow) {
 						POIUtil.copyRow(workbook, sheet, (row-1), 1);
 					}
@@ -2166,9 +2166,9 @@ public class StandardECOService extends StandardManager implements ECOService {
 	
 				ECAData ecaData = (ECAData) dmap.get("ecaData");
 				
-				List<DocumentData> documentList = ecaData.getDocList();
+				List<DocumentDTO> documentList = ecaData.getDocList();
 				
-				for(DocumentData docData : documentList) {
+				for(DocumentDTO docData : documentList) {
 				
 					POIUtil.copyRow(workbook, sheet, (row-1), 1);
 

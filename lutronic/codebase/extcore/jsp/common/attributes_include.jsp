@@ -1,4 +1,4 @@
-<%@page import="com.e3ps.doc.beans.DocumentData"%>
+<%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.Map"%>
 <%

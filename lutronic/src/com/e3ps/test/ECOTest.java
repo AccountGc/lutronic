@@ -10,11 +10,11 @@ import com.e3ps.common.iba.AttributeKey;
 
 import wt.iba.value.IBAHolder;
 
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.util.PartUtil;
 
 import wt.folder.Folder;
 
-import com.e3ps.part.beans.PartData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.util.EpmPublishUtil;
 

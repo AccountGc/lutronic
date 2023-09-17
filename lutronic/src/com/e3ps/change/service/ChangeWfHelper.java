@@ -14,7 +14,7 @@ import com.e3ps.change.service.StandardChangeWfService.NumberAscCompare;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.part.util.PartUtil;

@@ -15,8 +15,8 @@ import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EOData;
-import com.e3ps.doc.beans.DocumentData;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.part.dto.PartData;
 
 import wt.doc.WTDocument;
 import wt.fc.QueryResult;

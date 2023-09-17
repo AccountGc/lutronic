@@ -8,7 +8,7 @@ import java.util.Map;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -118,9 +118,9 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 	}
 
 	@Override
-	public List<NoticeData> getPopUpNotice() {
+	public List<NoticeDTO> getPopUpNotice() {
 
-		List<NoticeData> returnData = new ArrayList<NoticeData>();
+		List<NoticeDTO> returnData = new ArrayList<NoticeDTO>();
 
 		try {
 			QuerySpec query = new QuerySpec();
@@ -131,7 +131,7 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 			while (rt.hasMoreElements()) {
 				Object[] o = (Object[]) rt.nextElement();
 				Notice notice = (Notice) o[0];
-				NoticeData data = new NoticeData(notice);
+				NoticeDTO data = new NoticeDTO(notice);
 				String oid = CommonUtil.getOIDString(notice);
 				returnData.add(data);
 

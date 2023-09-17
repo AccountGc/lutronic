@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 
 import wt.doc.WTDocument;
 import wt.query.QuerySpec;
@@ -43,7 +43,7 @@ public interface DocumentQueryService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<DocumentData> getDocumentListToLinkRoleName(String documentOid, String roleName) throws Exception;
+	List<DocumentDTO> getDocumentListToLinkRoleName(String documentOid, String roleName) throws Exception;
 
 	/**	 DocumentData 리스트를 리턴 ( WTDocument )
 	 * @param document
@@ -51,5 +51,5 @@ public interface DocumentQueryService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<DocumentData> getDocumentListToLinkRoleName(WTDocument document, String roleName) throws Exception;
+	List<DocumentDTO> getDocumentListToLinkRoleName(WTDocument document, String roleName) throws Exception;
 }

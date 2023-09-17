@@ -6,13 +6,13 @@
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
-<%@page import="com.e3ps.doc.beans.DocumentData"%>
+<%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-DocumentData data = (DocumentData) request.getAttribute("docData");
+DocumentDTO data = (DocumentDTO) request.getAttribute("docData");
 List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 String pnum = (String) request.getAttribute("pnum");
 WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();

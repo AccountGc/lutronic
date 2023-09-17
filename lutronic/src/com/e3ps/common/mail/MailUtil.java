@@ -49,7 +49,7 @@ import com.e3ps.common.jdf.config.ConfigImpl;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.groupware.workprocess.service.WorklistHelper;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 
 
 public class MailUtil {
@@ -482,18 +482,18 @@ public class MailUtil {
 			String creatorName = "";
 			if (pbo instanceof WTPart){
 				WTPart part = (WTPart)pbo;
-				PeopleData creator = new PeopleData(part.getCreator());
+				PeopleDTO creator = new PeopleDTO(part.getCreator());
 				creatorName = StringUtil.checkNull(creator.name);
 				description = "";
 	        }else if(pbo instanceof ECOChange){
 	        	ECOChange eo = (ECOChange)pbo;
-	        	PeopleData creator = new PeopleData(eo.getCreator());
+	        	PeopleDTO creator = new PeopleDTO(eo.getCreator());
 				creatorName = StringUtil.checkNull(creator.name);
 				description = StringUtil.checkNull(eo.getEoCommentA());
 				workName = "수신";
 	        }else if(pbo instanceof WTDocument){
 	        	WTDocument doc = (WTDocument)pbo;
-	        	PeopleData creator = new PeopleData(doc.getCreator());
+	        	PeopleDTO creator = new PeopleDTO(doc.getCreator());
 				creatorName = StringUtil.checkNull(creator.name);
 				description = StringUtil.checkNull(doc.getDescription());
 	        }
@@ -573,7 +573,7 @@ public class MailUtil {
 				workName ="문서";
 				viewString = "["+doc.getNumber()+"] "+doc.getName();
 				subject = "["+doc.getNumber()+"] "+doc.getName() +" 의 문서가 승인 되었습니다.";
-				PeopleData creator = new PeopleData(doc.getCreator());
+				PeopleDTO creator = new PeopleDTO(doc.getCreator());
 				creatorName = StringUtil.checkNull(creator.name);
 				description = StringUtil.checkNull(doc.getDescription());
 			}else if(obj instanceof EChangeRequest || obj instanceof EChangeOrder ){
@@ -581,7 +581,7 @@ public class MailUtil {
 				workName ="설변";
 				viewString = "["+eo.getEoNumber()+"] "+eo.getEoName();
 				subject = "["+eo.getEoNumber()+"] "+eo.getEoName() +" 의 설변이 완료 되었습니다.";
-				PeopleData creator = new PeopleData(eo.getCreator());
+				PeopleDTO creator = new PeopleDTO(eo.getCreator());
 				creatorName = StringUtil.checkNull(creator.name);
 				description = StringUtil.checkNull(eo.getEoCommentA());
 			}else{

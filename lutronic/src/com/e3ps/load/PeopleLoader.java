@@ -25,7 +25,7 @@ import com.e3ps.common.util.JExcelUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.CompanyState;
+import com.e3ps.org.dto.CompanyState;
 import com.e3ps.org.service.UserHelper;
 
 

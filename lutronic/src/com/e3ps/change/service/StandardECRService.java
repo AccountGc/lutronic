@@ -36,7 +36,7 @@ import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.org.People;

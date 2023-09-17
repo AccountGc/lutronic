@@ -5,21 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.column.DocumentColumn;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.comments.CommentsData;
-import com.e3ps.common.comments.wtDocumentCommentsLink;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.template.DocumentTemplate;
 import com.e3ps.doc.template.DocumentTemplateData;
 import com.e3ps.groupware.workprocess.AsmApproval;
@@ -45,7 +45,6 @@ import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
-import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -78,7 +77,7 @@ public class DocumentHelper {
 		ArrayList<DocumentColumn> list = new ArrayList<>();
 
 		boolean latest = (boolean) params.get("latest");
-		String oid = (String) params.get("oid");
+		String location = (String) params.get("location");
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
 		String creatorOid = (String) params.get("creatorOid");
@@ -108,29 +107,36 @@ public class DocumentHelper {
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, modifiedFrom,
 				modifiedTo);
 
-//		Folder folder = null;
-//		if (!StringUtil.isNull(oid)) {
-//			folder = (Folder) CommonUtil.getObject(oid);
-//		} else {
-//			folder = FolderTaskLogic.getFolder(DOCUMENT_ROOT, CommonUtil.getPDMLinkProductContainer());
-//		}
+		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+		if (folder != null) {
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+			ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+			SearchCondition fsc = new SearchCondition(fca, "=",
+					new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
+			fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+			fsc.setOuterJoin(0);
+			query.appendWhere(fsc, new int[] { f_idx, idx });
+			query.appendAnd();
 
-//		if (folder != null) {
-//			if (query.getConditionCount() > 0) {
-//				query.appendAnd();
-//			}
-//			int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
-//			ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-//			SearchCondition fsc = new SearchCondition(fca, "=",
-//					new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
-//			fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
-//			fsc.setOuterJoin(0);
-//			query.appendWhere(fsc, new int[] { f_idx, idx });
-//			query.appendAnd();
-//			long fid = folder.getPersistInfo().getObjectIdentifier().getId();
-//			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
-//					new int[] { f_idx });
-//		}
+			query.appendOpenParen();
+			long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+					new int[] { f_idx });
+
+			ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
+			for (int i = 0; i < folders.size(); i++) {
+				Folder sub = (Folder) folders.get(i);
+				query.appendOr();
+				long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+				query.appendWhere(
+						new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
+						new int[] { f_idx });
+			}
+			query.appendCloseParen();
+		}
 
 		// 최신 이터레이션.
 		if (latest) {
@@ -141,8 +147,6 @@ public class DocumentHelper {
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-
-//		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTDocument document = (WTDocument) obj[0];
@@ -161,7 +165,7 @@ public class DocumentHelper {
 
 	public Map<String, Object> listMoldAction(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		ArrayList<DocumentData> list = new ArrayList<>();
+		ArrayList<DocumentDTO> list = new ArrayList<>();
 
 		QuerySpec query = new QuerySpec();
 //    	int idx = query.addClassList(WTDocument.class, true);
@@ -601,7 +605,7 @@ public class DocumentHelper {
 			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				WTDocument document = (WTDocument) obj[0];
-				DocumentData data = new DocumentData(document);
+				DocumentDTO data = new DocumentDTO(document);
 				list.add(data);
 			}
 
@@ -619,7 +623,7 @@ public class DocumentHelper {
 	}
 
 	public JSONArray include_DocumentList(String oid, String moduleType) throws Exception {
-		List<DocumentData> list = new ArrayList<DocumentData>();
+		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
 		try {
 			if (StringUtil.checkString(oid)) {
 				if ("part".equals(moduleType)) {
@@ -627,7 +631,7 @@ public class DocumentHelper {
 					QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
 					while (qr.hasMoreElements()) {
 						WTDocument doc = (WTDocument) qr.nextElement();
-						DocumentData data = new DocumentData(doc);
+						DocumentDTO data = new DocumentDTO(doc);
 						// Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
 						if (VersionHelper.service.isLastVersion(part)) {
 							if (data.isLatest()) {
@@ -638,14 +642,14 @@ public class DocumentHelper {
 						}
 					}
 				} else if ("doc".equals(moduleType)) {
-					List<DocumentData> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid,
+					List<DocumentDTO> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid,
 							"used");
-					for (DocumentData data : dataList) {
+					for (DocumentDTO data : dataList) {
 						list.add(data);
 					}
 
 					dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
-					for (DocumentData data : dataList) {
+					for (DocumentDTO data : dataList) {
 						list.add(data);
 					}
 
@@ -656,7 +660,7 @@ public class DocumentHelper {
 					while (qr.hasMoreElements()) {
 						Object p = (Object) qr.nextElement();
 						if (p instanceof WTDocument) {
-							DocumentData data = new DocumentData((WTDocument) p);
+							DocumentDTO data = new DocumentDTO((WTDocument) p);
 							list.add(data);
 						}
 					}
@@ -664,7 +668,7 @@ public class DocumentHelper {
 					AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
 					List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
 					for (WTDocument doc : aList) {
-						DocumentData data = new DocumentData(doc);
+						DocumentDTO data = new DocumentDTO(doc);
 						list.add(data);
 					}
 				}
@@ -674,15 +678,15 @@ public class DocumentHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
-	
+
 	public Map<String, Object> docTemplateList(Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<DocumentTemplateData> docTemplateList = new ArrayList<DocumentTemplateData>();
-		
+
 		String number = (String) params.get("number");
 		String name = (String) params.get("name");
 		String dcoTemplateType = (String) params.get("dcoTemplateType");
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(DocumentTemplate.class, true);
 

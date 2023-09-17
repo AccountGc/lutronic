@@ -1,7 +1,7 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.text.DateFormat"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="com.e3ps.org.beans.PeopleData"%>
+<%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.org.Department"%>
 <%@page import="com.e3ps.part.util.PartUtil"%>
@@ -54,9 +54,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<%!
-
-public List<Map<String,Object>> approveUserSearch(String userKey,JspWriter out) throws Exception {
+<%!public List<Map<String,Object>> approveUserSearch(String userKey,JspWriter out) throws Exception {
 	 long startTime = System.currentTimeMillis();
 	    
 	    DateFormat df = new SimpleDateFormat("HH:mm:ss"); 
@@ -108,7 +106,7 @@ public List<Map<String,Object>> approveUserSearch(String userKey,JspWriter out) 
 				people = (People)o[0];
 				user = (WTUser)o[1]; 
 				dept1 = (Department)o[2]; 
-				PeopleData data = new PeopleData(people);
+				PeopleDTO data = new PeopleDTO(people);
 				
 				Map<String,Object> map = new HashMap<String,Object>();
 				map.put("userOid", data.wtuserOID);
@@ -140,8 +138,7 @@ public List<Map<String,Object>> approveUserSearch(String userKey,JspWriter out) 
         out.println("<br>lTime"+df.format(lTime));
 		
 		return list;
-}
-%>
+}%>
 
 <% 
 List<Map<String,Object>> res = approveUserSearch("",out);

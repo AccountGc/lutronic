@@ -1,5 +1,5 @@
 <%@page import="java.util.Map"%>
-<%@page import="com.e3ps.common.code.beans.NumberCodeData"%>
+<%@page import="com.e3ps.common.code.dto.NumberCodeDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -8,7 +8,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 String oid = request.getParameter("oid");
-List<NumberCodeData> stepList = (List<NumberCodeData>) request.getAttribute("stepList");
+List<NumberCodeDTO> stepList = (List<NumberCodeDTO>) request.getAttribute("stepList");
 List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttribute("typeList");
 %>
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
@@ -51,8 +51,8 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 					<option value="">선택</option>
 					<%
 					if(stepList.size()>0){
-						for (NumberCodeData data : stepList) {
-						%>
+									for (NumberCodeDTO data : stepList) {
+					%>
 						<option value="<%=data.getCode()%>"><%=data.getName()%></option>
 						<%
 						}

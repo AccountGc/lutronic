@@ -6,7 +6,7 @@ import java.util.List;
 import wt.part.WTPart;
 
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.part.util.BomBroker;

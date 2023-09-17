@@ -1,5 +1,5 @@
 <%@page import="com.e3ps.change.beans.ROOTData"%>
-<%@page import="com.e3ps.groupware.notice.beans.NoticeData"%>
+<%@page import="com.e3ps.groupware.notice.dto.NoticeDTO"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%

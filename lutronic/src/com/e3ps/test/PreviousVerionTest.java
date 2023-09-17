@@ -1,7 +1,7 @@
 package com.e3ps.test;
 
 import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
 
 import wt.part.WTPart;

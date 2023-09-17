@@ -16,7 +16,7 @@
 <%@page import="com.e3ps.common.db.DBConnectionManager"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.HashMap"%>
-<%@page import="com.e3ps.part.beans.PartData"%>
+<%@page import="com.e3ps.part.dto.PartData"%>
 <%@page contentType="text/html; charset=UTF-8"%>
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 

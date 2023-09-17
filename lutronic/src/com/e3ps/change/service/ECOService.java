@@ -21,7 +21,7 @@ import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EOData;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.content.FileRequest;
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 
 @RemoteInterface
 public interface ECOService {

@@ -10,7 +10,7 @@ import wt.part.WTPart;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.erp.beans.BomData;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 
 public class ObjectComarator implements Comparator{
 	

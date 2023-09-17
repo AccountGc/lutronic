@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.drawing.beans.EpmData;
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentType;

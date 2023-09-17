@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="com.e3ps.org.People"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="java.util.Map"%>
@@ -21,19 +22,20 @@ boolean isProduction = (boolean) request.getAttribute("isProduction");
 boolean isCosmetic = (boolean) request.getAttribute("isCosmetic");
 boolean isPathological = (boolean) request.getAttribute("isPathological");
 boolean isClinical = (boolean) request.getAttribute("isClinical");
+
+PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 %>
 <nav class="navbar-default navbar-static-side" role="navigation">
 	<div class="sidebar-collapse">
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">
 				<div class="dropdown profile-element">
-					<a onclick="moveToPage(this, '/mainPage', '> 메인');">LUTRONIC</a>
-					<!-- 					<a href="javascript:index();"> -->
-					<%-- 						<span class="block m-t-xs font-bold"><%//=data.getName()%></span> --%>
-					<!-- 						<span class="text-muted text-xs block"> -->
-					<%-- 							<font color="white"><%//=data.getDepartment_name()%>-<%//=data.getDuty() != null ? data.getDuty() : "지정안됨"%></font> --%>
-					<!-- 						</span> -->
-					<!-- 					</a> -->
+					<a href="javascript:index();">
+						<span class="block m-t-xs font-bold"><%=dto.getName()%></span>
+						<span class="text-muted text-xs block">
+							<font color="white"><%=dto.getDepartment_name()%>-<%=dto.getDuty()%></font>
+						</span>
+					</a>
 				</div>
 			</li>
 			<%
@@ -93,6 +95,9 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의업무 > 일괄결재 검색');">일괄결재 검색</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/temp/list', '> 나의업무 > 임시저장함');">임시저장함</a>
+					</li>
+					<li>
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
@@ -125,12 +130,6 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/doc/register', '> 문서관리 > 문서 일괄결재');">문서 일괄결재</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/doc/template-list', '> 문서관리 > 문서 템플릿 검색');">문서 템플릿 검색</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/doc/template-create', '> 문서관리 > 문서 템플릿 등록');">문서 템플릿 등록</a>
 					</li>
 				</ul>
 			</li>
@@ -289,19 +288,22 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/create', '> 기타문서관리 > 기타문서등록');">기타문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 기타문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType=pathological', '> 기타문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType='clinical, '> 기타문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 기타문서관리 > 화장품 문서검색');">화장품 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType=ra', '> 기타문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/etc/list?docType=cosmetic', '> 기타문서관리 > 화장품 문서검색');">화장품 문서검색</a>
 					</li>
 				</ul>
 			</li>
@@ -317,7 +319,7 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/admin/numberCodeList', '> 관리자 > 코드체계관리');">코드체계관리</a>
+						<a onclick="moveToPage(this, '/code/list', '> 관리자 > 코드체계관리');">코드체계관리</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/admin/changeActivityList', '> 관리자 > 설계변경관리');">설계변경관리</a>
@@ -338,7 +340,7 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 						<a onclick="popup('/Windchill', 1600, 800);">Windchill</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/admin/ecoTemplate', '> 관리자 > 설계변경 문서 템플릿');">설계변경 문서 템플릿</a>
+						<a onclick="moveToPage(this, '/form/list', '> 관리자 > 문서 템플릿관리');">문서 템플릿관리</a>
 					</li>
 				</ul>
 			</li>
@@ -447,45 +449,6 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 			<%
 			}
 			%>
-			<!-- <li>
-				<a href="#">
-					<i class="fa fa-sitemap"></i>
-					<span class="nav-label">시스템 로그</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/erp/list', '> ERP 로그 > ERP 로그');">ERP 로그</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/system/list', '> 에러 로그 > 에러 로그');">에러 로그</a>
-					</li>
-				</ul>
-			</li>
-			<li>
-				<a href="css_animation.html">
-					<i class="fa fa-magic"></i>
-					<span class="nav-label">관리자</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/commonCode/list', '> 관리자 > 코드 관리');">코드 관리</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/specCode/list', '> 관리자 > 이력 관리 컬럼');">이력 관리 컬럼</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/configSheetCode/list', '> 관리자 > CONFIG SHEET 카테고리');">CONFIG SHEET 카테고리</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/numberRuleCode/list', '> 관리자 > KEK 도번 관리');">KEK 도번 관리</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/meeting/template', '> 관리자 > 회의록 템플릿');">회의록 템플릿</a>
-					</li>
-				</ul>
-			</li> -->
 		</ul>
 	</div>
 </nav>

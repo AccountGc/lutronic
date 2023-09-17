@@ -11,23 +11,20 @@ import wt.method.RemoteInterface;
 @RemoteInterface
 public interface AdminService {
 
-	Map<String, Object> admin_listCompanyAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
 	void admin_actionDepartment(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	boolean admin_actionChief(String userOid) throws Exception;
 
-	Map<String, Object> admin_downLoadHistoryAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	Map<String, Object> admin_downLoadHistoryAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
 
 	Map<String, Object> admin_mailAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	Map<String, Object> admin_loginHistoryAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	Map<String, Object> admin_loginHistoryAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
 
-	Map<String, Object> admin_changeActivityAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	Map<String, Object> admin_numberCodeAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	List<Map<String, String>> admin_numberCodeTree(String codeType) throws Exception;
+	Map<String, Object> admin_changeActivityAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
 
 	Map<String, List<Map<String, String>>> admin_getDutyListAction(String duty) throws Exception;
 
@@ -39,18 +36,15 @@ public interface AdminService {
 
 	void admin_packageAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	Map<String, Object> admin_mailNewAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
-	
-	public void numberCodeSave(Map<String,Object> params) throws Exception;
+	Map<String, Object> admin_mailNewAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	public void createRootDefinition(Map<String, Object> params) throws Exception;
-	
+
 	public void updateRootDefinition(Map<String, Object> params) throws Exception;
-	
+
 	public void deleteRootDefinition(Map<String, Object> params) throws Exception;
-	
+
 	public void createActivityDefinition(Map<String, Object> params) throws Exception;
-	
+
 	public void deleteActivityDefinition(Map<String, Object> params) throws Exception;
 }

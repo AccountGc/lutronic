@@ -39,8 +39,8 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.People;
-import com.e3ps.part.beans.ObjectComarator;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.ObjectComarator;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.VersionHelper;
 import com.e3ps.part.util.PartUtil;
@@ -48,7 +48,7 @@ import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 
 @SuppressWarnings("serial")
 public class StandardRohsQueryService extends StandardManager implements RohsQueryService {

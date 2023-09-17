@@ -83,7 +83,7 @@ public class FolderUtils {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 모든 폴더 가져오기
 	 */
@@ -93,7 +93,7 @@ public class FolderUtils {
 			root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 		} else if ("document".equalsIgnoreCase(container)) {
 			root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-		}else if ("library".equalsIgnoreCase(container)) {
+		} else if ("library".equalsIgnoreCase(container)) {
 			root = FolderTaskLogic.getFolder(location, CommonUtil.getWTLibraryContainer());
 		}
 
@@ -106,5 +106,18 @@ public class FolderUtils {
 			recurciveFolder(folder, list);
 		}
 		return list;
+	}
+
+	/**
+	 * 하위 폴더 리스트 가져오기
+	 */
+	public static ArrayList<Folder> getSubFolders(Folder root, ArrayList<Folder> folders) throws Exception {
+		QueryResult result = FolderHelper.service.findSubFolders(root);
+		while (result.hasMoreElements()) {
+			SubFolder sub = (SubFolder) result.nextElement();
+			folders.add(sub);
+			getSubFolders(sub, folders);
+		}
+		return folders;
 	}
 }

@@ -11,7 +11,7 @@ import wt.session.SessionServerHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.PartHelper;
 
 public class PartUtil {

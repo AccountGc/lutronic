@@ -37,7 +37,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.doc.DocLocation;
 import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.org.People;
 
 @SuppressWarnings("serial")
@@ -578,14 +578,14 @@ public class StandardDocumentQueryService extends StandardManager implements Doc
 	}
 	
 	@Override
-	public List<DocumentData> getDocumentListToLinkRoleName(String documentOid, String roleName) throws Exception {
+	public List<DocumentDTO> getDocumentListToLinkRoleName(String documentOid, String roleName) throws Exception {
 		WTDocument document = (WTDocument)CommonUtil.getObject(documentOid);
 		return getDocumentListToLinkRoleName(document, roleName);
 	}
 	
 	@Override
-	public List<DocumentData> getDocumentListToLinkRoleName(WTDocument document, String roleName) throws Exception {
-		List<DocumentData> list = new ArrayList<DocumentData>();
+	public List<DocumentDTO> getDocumentListToLinkRoleName(WTDocument document, String roleName) throws Exception {
+		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
 		
 		List<DocumentToDocumentLink> linkList = getDocumentToDocumentLinks(document, roleName);
 		for(DocumentToDocumentLink link : linkList) {
@@ -596,7 +596,7 @@ public class StandardDocumentQueryService extends StandardManager implements Doc
 				doc = link.getUseBy();
 			}
 			
-			DocumentData data = new DocumentData(doc);
+			DocumentDTO data = new DocumentDTO(doc);
 			list.add(data);
 		}
 		return list;

@@ -1,7 +1,7 @@
 package com.e3ps.org.service;
 
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -14,15 +14,15 @@ public class PeopleHelper {
 	public static final PeopleService service = ServiceFactory.getService(PeopleService.class);
 	public static final PeopleHelper manager = new PeopleHelper();
 	
-	public PeopleData getPeople(WTUser user) throws Exception {
+	public PeopleDTO getPeople(WTUser user) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(People.class, true);
 		query.appendWhere(new SearchCondition(People.class, "userReference.key.id", "=", user.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx });
 		QueryResult qr = PersistenceHelper.manager.find(query);
-		PeopleData data = null;
+		PeopleDTO data = null;
 		if (qr.hasMoreElements()) {
 			Object[] obj = (Object[]) qr.nextElement();
-			data = new PeopleData((People) obj[0]);
+			data = new PeopleDTO((People) obj[0]);
 		}
 		return data;
 	}

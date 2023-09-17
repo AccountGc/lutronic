@@ -27,8 +27,7 @@ import com.e3ps.change.EOEul;
 import com.e3ps.change.service.ChangeWfHelper;
 import com.e3ps.change.service.ECAHelper;
 import com.e3ps.change.service.ECOHelper;
-//import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.message.Message;
@@ -145,7 +144,7 @@ public class ChangeWFController {
 			list = new ArrayList<Map<String,String>>();
 		}
 		
-		List<NumberCodeData> apply = CodeHelper.service.topCodeToList("APPLY");
+		List<NumberCodeDTO> apply = CodeHelper.service.topCodeToList("APPLY");
 		
 		ModelAndView model = new ModelAndView();
 		model.addObject("list", list);

@@ -18,7 +18,7 @@ import wt.session.SessionHelper;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.UserHelper;
 
 @Controller
@@ -40,7 +40,7 @@ public class UserController {
 	@RequestMapping("/getUserData")
 	public Map<String,String> getUserData(HttpServletRequest request, HttpServletResponse response) throws Exception  {
 		WTUser user = (WTUser)SessionHelper.manager.getPrincipal();
-		PeopleData data = new PeopleData(user);
+		PeopleDTO data = new PeopleDTO(user);
 		Map<String,String> map = new HashMap<String,String>();
 		map.put("name", user.getFullName());
 		map.put("wtOid", data.wtuserOID);

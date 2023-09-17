@@ -8,7 +8,7 @@
 <%@page import="wt.lifecycle.LifeCycleManaged"%>
 <%@page import="wt.lifecycle.LifeCycleHelper"%>
 <%@page import="com.e3ps.part.util.PartUtil"%>
-<%@page import="com.e3ps.part.beans.PartData"%>
+<%@page import="com.e3ps.part.dto.PartData"%>
 <%@page import="com.e3ps.part.service.PartSearchHelper"%>
 <%@page import="com.e3ps.common.iba.AttributeKey"%>
 <%@page import="org.apache.tools.ant.taskdefs.Basename"%>

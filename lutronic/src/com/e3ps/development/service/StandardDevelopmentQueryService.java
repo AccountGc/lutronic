@@ -30,7 +30,7 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devMaster;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.development.devTask;
-import com.e3ps.development.beans.DevActiveData;
+import com.e3ps.development.dto.DevActiveData;
 import com.e3ps.org.People;
 
 public class StandardDevelopmentQueryService extends StandardManager implements DevelopmentQueryService {

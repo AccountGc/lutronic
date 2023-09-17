@@ -6,12 +6,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 
 import wt.enterprise.RevisionControlled;
 import wt.part.WTPart;

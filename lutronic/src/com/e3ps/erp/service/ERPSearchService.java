@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.erp.beans.BOMERPData;
 import com.e3ps.erp.beans.PARTERPData;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 
 import wt.fc.WTObject;
 import wt.method.RemoteInterface;

@@ -1,4 +1,4 @@
-<%@page import="com.e3ps.rohs.beans.RohsData"%>
+<%@page import="com.e3ps.rohs.dto.RohsData"%>
 <%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.service.CommonHelper"%>
 <%@page import="java.util.HashMap"%>

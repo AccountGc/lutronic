@@ -66,22 +66,22 @@ import com.e3ps.common.util.JExcelUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devMaster;
-import com.e3ps.development.beans.DevActiveData;
-import com.e3ps.development.beans.MasterData;
+import com.e3ps.development.dto.DevActiveData;
+import com.e3ps.development.dto.MasterData;
 import com.e3ps.development.service.DevelopmentQueryHelper;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.download.DownloadHistory;
 import com.e3ps.download.beans.DownloadData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.People;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartExcelHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartQueryHelper;
 import com.e3ps.part.service.PartService;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsQueryHelper;
 
 @SuppressWarnings("serial")
@@ -163,7 +163,7 @@ public class StandardExcelDownService extends StandardManager implements ExcelDo
 		while(result.hasMoreElements()) {
 			Object[] o = (Object[]) result.nextElement();
 			WTDocument doc = (WTDocument) o[0];
-			DocumentData data = new DocumentData(doc);
+			DocumentDTO data = new DocumentDTO(doc);
 			
 			String[] string = new String[ExcelDownData.documentTitle.length];
 			
@@ -319,7 +319,7 @@ public class StandardExcelDownService extends StandardManager implements ExcelDo
 		while(result.hasMoreElements()) {
 			Object[] o = (Object[]) result.nextElement();
 			WTDocument doc = (WTDocument) o[0];
-			DocumentData data = new DocumentData(doc);
+			DocumentDTO data = new DocumentDTO(doc);
 			
 			String[] string = new String[ExcelDownData.moldTitle.length];
 			

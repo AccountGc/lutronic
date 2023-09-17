@@ -16,7 +16,7 @@ import wt.method.RemoteInterface;
 import wt.part.WTPartDescribeLink;
 
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 
 @RemoteInterface
 public interface DocumentService {
@@ -33,7 +33,7 @@ public interface DocumentService {
 
 	ResultData approvalPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
-	List<DocumentData> include_documentLink(String module, String oid);
+	List<DocumentDTO> include_documentLink(String module, String oid);
 
 	Map<String, Object> listDocumentAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
@@ -43,7 +43,7 @@ public interface DocumentService {
 
 	void createOutPutLink(WTDocument doc, Hashtable hash) throws Exception;
 
-	List<DocumentData> include_DocumentList(String oid, String moduleType) throws Exception;
+	List<DocumentDTO> include_DocumentList(String oid, String moduleType) throws Exception;
 
 	WTDocument getLastDocument(String number) throws Exception;
 

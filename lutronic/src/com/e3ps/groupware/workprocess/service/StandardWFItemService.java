@@ -66,7 +66,7 @@ import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.WFObjectWFItemLink;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.UserHelper;
 
 @SuppressWarnings("serial")
@@ -653,7 +653,7 @@ public class StandardWFItemService extends StandardManager implements WFItemServ
 			//System.out.println("owner=" + item.getOwnership().getOwner().getFullName());
 			WFItemUserLink link = WFItemUserLink.newWFItemUserLink(user, item);
 
-			PeopleData pData = new PeopleData(user);
+			PeopleDTO pData = new PeopleDTO(user);
 			link.setDepartmentName(pData.departmentName);
 			link.setActivityName(activity);
 			link.setProcessOrder(order);

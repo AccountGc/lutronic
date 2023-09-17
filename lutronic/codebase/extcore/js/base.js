@@ -9,7 +9,11 @@ function getCallUrl(url) {
 /**
  * AJAX 호출 메소드
  */
-function call(url, params, callBack, methodType) {
+function call(url, params, callBack, methodType, async) {
+
+	if (async == null) {
+		async = true;
+	}
 
 	if (methodType == null) {
 		methodType = "POST";
@@ -26,7 +30,7 @@ function call(url, params, callBack, methodType) {
 		dataType: "JSON",
 		crossDomain: true,
 		data: params,
-		async: true,
+		async: async,
 		contentType: "application/json; charset=UTF-8",
 		beforeSend: function() {
 		},
@@ -207,7 +211,7 @@ function finderUser(id) {
 			onclick: function() { // {Function} - 파인더 버튼 클릭 이벤트 콜백함수 (optional)
 				const multi = document.getElementById(id).dataset.multi;
 				const url = getCallUrl("/org/popup?multi=" + multi + "&openerId=" + id);
-				popup(url, 1300, 600);
+				_popup(url, 1300, 600, "n");
 			}
 		},
 	})
@@ -239,6 +243,7 @@ function inputUser(openerId, data) {
 	const item = data.item;
 	input.value = item.name;
 	el.value = item.woid;
+	self.close();
 }
 
 // 결재 라인 세팅
@@ -299,16 +304,7 @@ function download(oid) {
 	document.location.href = "/Windchill/plm/content/download?oid=" + oid;
 }
 
-// 첨부파일 일괄삭제
-//function deleteAllFiles() {
-//	const primarys = document.getElementsByName("primarys");
-//	for (let i = primarys.length - 1; i >= 0; i--) {
-//		const primary = primarys[i];
-//		primary.parentNode.removeChild(primary);
-//	}
-//	const secondarys = document.getElementsByName("secondarys");
-//	for (let i = secondarys.length - 1; i >= 0; i--) {
-//		const secondary = secondarys[i];
-//		secondary.parentNode.removeChild(secondary);
-//	}
-//}
+// 콘솔 로그
+function logger(data) {
+	console.log(data);
+}

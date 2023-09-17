@@ -25,10 +25,10 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.People;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;

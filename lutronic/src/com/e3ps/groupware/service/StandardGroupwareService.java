@@ -42,7 +42,7 @@ import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
@@ -54,7 +54,7 @@ import com.e3ps.org.MailUser;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.org.service.UserHelper;
 import com.e3ps.org.util.PasswordChange;
@@ -175,7 +175,7 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 		while (qr.hasMoreElements()) {
 			Object[] o = (Object[]) qr.nextElement();
 			Notice notice = (Notice) o[0];
-			NoticeData data = new NoticeData(notice);
+			NoticeDTO data = new NoticeDTO(notice);
 
 			xmlBuf.append("<row id='" + data.oid + "'>");
 			xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
@@ -701,7 +701,7 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 		ReferenceFactory rf = new ReferenceFactory();
 		String userOid = (String) workItem.getOwnership().getOwner().getObjectId().toString();
 		WTUser us = (WTUser) rf.getReference(userOid).getObject();
-		PeopleData pd = new PeopleData(us);
+		PeopleDTO pd = new PeopleDTO(us);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("deptName", pd.departmentName);
 		map.put("name", workItem.getOwnership().getOwner().getFullName());
@@ -1491,7 +1491,7 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 				if (link.getProcessOrder() == 0) {
 					drafter = link.getApprover();
 					WTUser user = (WTUser) link.getRoleAObject();
-					PeopleData data = new PeopleData(user);
+					PeopleDTO data = new PeopleDTO(user);
 					drafter = data.peopleOID;
 				}
 			}
@@ -1807,7 +1807,7 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 	}
 
 	@Override
-	public void userInfoEdit(PeopleData data) throws Exception {
+	public void userInfoEdit(PeopleDTO data) throws Exception {
 		Transaction trs = new Transaction();
 		ArrayList<String> primarys = data.getPrimarys();
 		try {

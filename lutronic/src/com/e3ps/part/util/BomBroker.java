@@ -30,7 +30,7 @@ import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
 import com.e3ps.common.query.SearchUtil;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 
 public class BomBroker {
 

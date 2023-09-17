@@ -1,6 +1,6 @@
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
-<%@page import="com.e3ps.rohs.beans.RohsData"%>
+<%@page import="com.e3ps.rohs.dto.RohsData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@include file="/extcore/jsp/common/css.jsp"%>

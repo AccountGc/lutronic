@@ -17,8 +17,8 @@ import wt.query.QuerySpec;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.beans.BatchDownData;
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartData;
+import com.e3ps.part.dto.PartTreeData;
 
 @RemoteInterface
 public interface PartService {

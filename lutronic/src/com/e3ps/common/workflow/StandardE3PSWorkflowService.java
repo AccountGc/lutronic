@@ -48,7 +48,7 @@ import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 
 @SuppressWarnings("serial")
 public class StandardE3PSWorkflowService extends StandardManager implements E3PSWorkflowService {
@@ -228,7 +228,7 @@ public class StandardE3PSWorkflowService extends StandardManager implements E3PS
 
 					// 새로운 객체 생성.
 					WFItemUserLink newlink = WFItemUserLink.newWFItemUserLink(newUser, wfitem);
-					PeopleData pData = new PeopleData(newUser);
+					PeopleDTO pData = new PeopleDTO(newUser);
 					newlink.setDepartmentName(pData.departmentName);
 					newlink.setActivityName(link.getActivityName());
 					newlink.setProcessOrder(order);

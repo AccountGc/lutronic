@@ -20,9 +20,9 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.UserHelper;
 
 import lombok.Getter;
@@ -53,7 +53,7 @@ public class ECAData{
     private String departmentName;
     private boolean isAutoCreate=false;
     private boolean isModify = false;
-    private List<DocumentData> docList;
+    private List<DocumentDTO> docList;
     
 	public ECAData(final EChangeActivity eca) {
 		setOid(CommonUtil.getOIDString(eca));

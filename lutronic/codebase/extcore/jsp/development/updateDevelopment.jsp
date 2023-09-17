@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="com.e3ps.development.beans.MasterData"%>
+<%@page import="com.e3ps.development.dto.MasterData"%>
 <%
 String oid = (String) request.getAttribute("oid");
 MasterData data = (MasterData) request.getAttribute("data");

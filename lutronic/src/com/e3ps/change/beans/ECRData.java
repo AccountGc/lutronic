@@ -5,7 +5,7 @@ import java.util.Vector;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.service.ChangeUtil;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.beans.NumberCodeData;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -56,7 +56,7 @@ public class ECRData{
     	setCreateDepart(StringUtil.checkNull(ecr.getCreateDepart()));
     	setWriter(StringUtil.checkNull(ecr.getWriter()));
     	setCreator(ecr.getCreatorFullName());
-    	NumberCodeData data = NumberCodeHelper.manager.getStepNumberCode("CHANGESECTION", ecr.getChangeSection());
+    	NumberCodeDTO data = NumberCodeHelper.manager.getStepNumberCode("CHANGESECTION", ecr.getChangeSection());
     	setChangeSection(data.getName());
     	setProposer(StringUtil.checkNull(ecr.getProposer()));
     	setEoName(ecr.getEoName());

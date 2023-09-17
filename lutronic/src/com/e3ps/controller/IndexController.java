@@ -17,6 +17,8 @@ import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
+import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 
 import net.sf.json.JSONArray;
 import wt.org.WTUser;
@@ -45,10 +47,9 @@ public class IndexController extends BaseController {
 	public ModelAndView header() throws Exception {
 		ModelAndView model = new ModelAndView();
 		People people = CommonUtil.sessionPeople();
-		Department department = people.getDepartment();
-		String department_name = department.getName();
-		WTUser sessionUser = CommonUtil.sessionUser();
-		String auths = people.getAuth();
+		PeopleDTO dto = new PeopleDTO(people);
+		String department_name = dto.getDepartment_name();
+		String auths = dto.getAuth();
 		boolean isWork = false;
 		boolean isDoc = false;
 		boolean isPart = false;
@@ -92,7 +93,7 @@ public class IndexController extends BaseController {
 		model.addObject("isMold", isMold);
 		model.addObject("isChange", isChange);
 		model.addObject("isEtc", isEtc);
-		model.addObject("sessionUser", sessionUser);
+		model.addObject("dto", dto);
 		model.setViewName("/extcore/layout/header.jsp");
 		return model;
 	}

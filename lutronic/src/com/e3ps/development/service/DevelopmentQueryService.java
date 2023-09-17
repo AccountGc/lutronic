@@ -13,7 +13,7 @@ import wt.query.QuerySpec;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.development.devTask;
-import com.e3ps.development.beans.DevActiveData;
+import com.e3ps.development.dto.DevActiveData;
 
 @RemoteInterface
 public interface DevelopmentQueryService {

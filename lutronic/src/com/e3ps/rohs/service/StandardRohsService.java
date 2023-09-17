@@ -89,9 +89,9 @@ import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.distribute.util.MakeZIPUtil;
 import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.part.beans.ObjectComarator;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.ObjectComarator;
+import com.e3ps.part.dto.PartData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.VersionHelper;
 import com.e3ps.part.util.BomBroker;
@@ -100,8 +100,8 @@ import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
-import com.e3ps.rohs.beans.RoHSHolderData;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RoHSHolderData;
+import com.e3ps.rohs.dto.RohsData;
 
 
 @SuppressWarnings("serial")

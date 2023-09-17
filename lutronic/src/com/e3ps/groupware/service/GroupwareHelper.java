@@ -29,14 +29,14 @@ import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.groupware.workprocess.service.WorklistHelper;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.OrgHelper;
 
 import wt.content.ApplicationData;
@@ -372,7 +372,7 @@ public class GroupwareHelper {
 
 	public Map<String, Object> organization(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		ArrayList<PeopleData> list = new ArrayList<PeopleData>();
+		ArrayList<PeopleDTO> list = new ArrayList<PeopleDTO>();
 
 		String name = (String) params.get("name");
 		String userId = (String) params.get("userId");
@@ -413,7 +413,7 @@ public class GroupwareHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			People people = (People) obj[0];
-			PeopleData data = new PeopleData(people);
+			PeopleDTO data = new PeopleDTO(people);
 			list.add(data);
 		}
 

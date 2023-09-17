@@ -52,7 +52,7 @@ import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.common.workflow.StandardE3PSWorkflowService;
 import com.e3ps.common.workflow.WorkProcessHelper;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.e3ps.drawing.service.DrawingHelper;
@@ -62,11 +62,11 @@ import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.groupware.workprocess.service.WorklistHelper;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.org.service.PeopleHelper;
 import com.e3ps.org.service.UserHelper;
-import com.e3ps.part.beans.PartData;
+import com.e3ps.part.dto.PartData;
 import com.sun.xml.rpc.processor.modeler.j2ee.xml.exceptionMappingType;
 
 import wt.admin.AdministrativeDomain;
@@ -756,7 +756,7 @@ public class StandardECAService extends StandardManager implements ECAService {
 
 								// 새로운 객체 생성.
 								WFItemUserLink newlink = WFItemUserLink.newWFItemUserLink(user, wfitem);
-								PeopleData pData = new PeopleData(user);
+								PeopleDTO pData = new PeopleDTO(user);
 								newlink.setDepartmentName(pData.departmentName);
 								newlink.setActivityName(link.getActivityName());
 								newlink.setProcessOrder(order);
@@ -1037,9 +1037,9 @@ public class StandardECAService extends StandardManager implements ECAService {
 	 * @return
 	 */
 	@Override
-	public List<DocumentData> getECADocumentData(EChangeActivity eca){
+	public List<DocumentDTO> getECADocumentData(EChangeActivity eca){
 		
-		List<DocumentData> list = new ArrayList<DocumentData>();
+		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
 		try{
 			QueryResult rt = PersistenceHelper.manager.navigate(eca, "doc",DocumentActivityLink.class);
 			
@@ -1049,7 +1049,7 @@ public class StandardECAService extends StandardManager implements ECAService {
 				WTDocument doc =DocumentHelper.service.getLastDocument(master.getNumber());
 				
 				if(doc != null){
-					DocumentData data = new DocumentData(doc);
+					DocumentDTO data = new DocumentDTO(doc);
 					list.add(data);
 				}
 			}
@@ -1086,7 +1086,7 @@ public class StandardECAService extends StandardManager implements ECAService {
 		for(EChangeActivity eca : ecaList) {
 			ECAData ecaData = new ECAData(eca);
 			
-			List<DocumentData> docList = new ArrayList<DocumentData>();
+			List<DocumentDTO> docList = new ArrayList<DocumentDTO>();
 			
 			if(eca.getActiveType().equals("DOCUMENT")){
 				docList = ECAHelper.service.getECADocumentData(eca);
@@ -1581,7 +1581,7 @@ public class StandardECAService extends StandardManager implements ECAService {
 			if(eca.getActiveType().equals("DOCUMENT")){
 				
 				ECAData ecaData = new ECAData(eca);
-				List<DocumentData> docList = new ArrayList<DocumentData>();
+				List<DocumentDTO> docList = new ArrayList<DocumentDTO>();
 
 				docList = ECAHelper.service.getECADocumentData(eca);
 				

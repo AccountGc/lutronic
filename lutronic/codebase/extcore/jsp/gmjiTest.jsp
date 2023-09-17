@@ -17,14 +17,14 @@
 <%@page import="wt.iba.value.IBAHolder"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="com.e3ps.part.util.PartUtil"%>
-<%@page import="com.e3ps.part.beans.PartTreeData"%>
-<%@page import="com.e3ps.part.beans.ObjectComarator"%>
+<%@page import="com.e3ps.part.dto.PartTreeData"%>
+<%@page import="com.e3ps.part.dto.ObjectComarator"%>
 <%@page import="java.util.Collections"%>
 <%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.message.Message"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.part.util.BomBroker"%>
-<%@page import="com.e3ps.part.beans.PartData"%>
+<%@page import="com.e3ps.part.dto.PartData"%>
 <%@page import="wt.part.WTPart"%>
 <%@page import="wt.fc.ReferenceFactory"%>
 <%@page import="java.util.HashMap"%>

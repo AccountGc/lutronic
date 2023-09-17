@@ -1,10 +1,10 @@
-<%@page import="com.e3ps.org.beans.PeopleData"%>
+<%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
-<%@page import="com.e3ps.org.beans.UserData"%>
+<%@page import="com.e3ps.org.dto.UserData"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-PeopleData dto = (PeopleData) request.getAttribute("dto");
+PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 %>
 <!DOCTYPE html>
 <html>

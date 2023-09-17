@@ -32,7 +32,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<th>부서 및 사원 관리</th>
 				<td class="indent5" colspan="3">
 					<input type="hidden" name="oid" id="oid" value="<%=oid%>">
-					<span id="locationName">LUTRONIC </span>
+					<span id="locationName">루트로닉</span>
 				</td>
 			</tr>
 			<tr>
@@ -69,7 +69,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					<%
 					}
 					%>
-					<input type="button" value="검색" title="검색">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
@@ -202,10 +202,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						showIcon : true,
 						inline : true
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "department_name",
 					headerText : "부서",
@@ -303,7 +299,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					fillColumnSizeMode : true,
 					editable : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
@@ -323,9 +318,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				const field = [ "_psize", "name", "userId", "oid" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						// 페이징처리..
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
 						createPagingNavigator(data.curPage);
@@ -333,6 +330,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 

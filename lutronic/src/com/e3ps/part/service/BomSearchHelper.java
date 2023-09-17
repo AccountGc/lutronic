@@ -14,8 +14,8 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 

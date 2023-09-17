@@ -2,35 +2,34 @@
 	- HTTPServer 홈으로 이동 
 	- false 폼인증 해제, true 폼 인증 
 	- ant -f webAppConfig.xml regenWebAppConf -DappName=Windchill -DprotocolAuthOnly=false
-	
-2. Message ResourceBuild
-	- Shell -> ResourceBuild.bat com.e3ps.common.message.**
-	
-3. IBA Loader
+
+2. IBA Loader
 	- Shell -> Windchill wt.load.LoadFromFile -d D:\ptc\Windchill_11.1\Windchill\loadFiles\iba\lutronice_iba.xml -u wcadmin -p wcadmin1
 	
-4. ResourceBuild 실행
+3. ResourceBuild 실행
+	- 한글 깨질시 해당 위치로 가저 에디터 플러스로 XXRB_ko 파일 오픈 하여, 문서 인코딩을 ANSI로 변경한후 아래 명령어 실행
+	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.message.** -Dbundle.buildLocales=true
 	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.code.** -Dbundle.buildLocales=true
 	- Shell -> codebase 이동 ant -f MakeJar.xml 실행
 	
-5. 서비스 등록
+4. 서비스 등록
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.services.service.90000=com.e3ps.org.service.OrgService/com.e3ps.org.service.StandardOrgService -p
 
-6. WVS After Service 등록
+5. WVS After Service 등록
 	- Shell -> src/com/ptc/wvs/util 이동
 	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase AfterEDRloader.java 실행	
 	
-7. State ResourceBuild 실행
+6. State ResourceBuild 실행
 	- Shell -> ResourceBuild.bat wt.lifecycle.**
 	- codebase -> ant -f MakeJar.xml
 
-8. Workflow 가져오기
+7. Workflow 가져오기
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.ixb.import.allowCrossReleaseImport=true -p
 	
-9. 상태값 추가
+8. 상태값 추가
 	- Shell -> ResourceBuild.bat wt.lifecycle.** 
 	- codebase -> ant -f MakeJar.xml
 	
-10. 첨부파일 타입 추가
+9. 첨부파일 타입 추가
 	- Shell -> ResourceBuild.bat wt.content.** 
 	- codebase -> ant -f MakeJar.xml	

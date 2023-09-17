@@ -51,7 +51,7 @@ import com.e3ps.development.devOutPutLink;
 import com.e3ps.development.service.DevelopmentHelper;
 import com.e3ps.development.service.DevelopmentQueryHelper;
 import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.template.DocumentTemplate;
 import com.e3ps.groupware.workprocess.AppPerLink;
 import com.e3ps.groupware.workprocess.AsmApproval;
@@ -361,7 +361,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		while (qr.hasMoreElements()) {
 			Object[] o = (Object[]) qr.nextElement();
 			WTDocument doc = (WTDocument) o[0];
-			DocumentData data = new DocumentData(doc);
+			DocumentDTO data = new DocumentDTO(doc);
 
 			xmlBuf.append("<row id='" + data.oid + "'>");
 			if ("true".equals(select)) {
@@ -435,7 +435,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			Map<String, Object> result = new HashMap<String, Object>();
 			Object[] o = (Object[]) qr.nextElement();
 			WTDocument doc = (WTDocument) o[0];
-			DocumentData data = new DocumentData(doc);
+			DocumentDTO data = new DocumentDTO(doc);
 
 			int kk = 0;
 			if (verMap.containsKey(data.number)) {
@@ -511,7 +511,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		while (qr.hasMoreElements()) {
 			Object[] o = (Object[]) qr.nextElement();
 			WTDocument doc = (WTDocument) o[0];
-			DocumentData data = new DocumentData(doc);
+			DocumentDTO data = new DocumentDTO(doc);
 			Map<String, Object> result = new HashMap<String, Object>();
 
 			int kk = 0;
@@ -1424,8 +1424,8 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 
 	@Override
-	public List<DocumentData> include_documentLink(String module, String oid) {
-		List<DocumentData> list = new ArrayList<DocumentData>();
+	public List<DocumentDTO> include_documentLink(String module, String oid) {
+		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
 
 		try {
 			if (StringUtil.checkString(oid)) {
@@ -1439,7 +1439,7 @@ public class StandardDocumentService extends StandardManager implements Document
 						String linkOid = CommonUtil.getOIDString(link);
 
 						if (rc instanceof WTDocument) {
-							DocumentData data = new DocumentData((WTDocument) rc);
+							DocumentDTO data = new DocumentDTO((WTDocument) rc);
 							data.setLinkOid(linkOid);
 							list.add(data);
 						}
@@ -1454,7 +1454,7 @@ public class StandardDocumentService extends StandardManager implements Document
 						String linkOid = CommonUtil.getOIDString(link);
 						WTDocument doc = DocumentHelper.service.getLastDocument(master.getNumber());
 
-						DocumentData data = new DocumentData(doc);
+						DocumentDTO data = new DocumentDTO(doc);
 						data.setLinkOid(linkOid);
 						list.add(data);
 
@@ -1615,16 +1615,16 @@ public class StandardDocumentService extends StandardManager implements Document
 					PersistenceServerHelper.manager.insert(link);
 				}
 
-				List<DocumentData> useByList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oldDoc,
+				List<DocumentDTO> useByList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oldDoc,
 						"useBy");
-				for (DocumentData docData : useByList) {
+				for (DocumentDTO docData : useByList) {
 					DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc,
 							docData.getDoc());
 					PersistenceServerHelper.manager.insert(link);
 				}
 
-				List<DocumentData> usedList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oldDoc, "used");
-				for (DocumentData docData : usedList) {
+				List<DocumentDTO> usedList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oldDoc, "used");
+				for (DocumentDTO docData : usedList) {
 					DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(docData.getDoc(),
 							doc);
 					PersistenceServerHelper.manager.insert(link);
@@ -1659,15 +1659,15 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 
 	@Override
-	public List<DocumentData> include_DocumentList(String oid, String moduleType) throws Exception {
-		List<DocumentData> list = new ArrayList<DocumentData>();
+	public List<DocumentDTO> include_DocumentList(String oid, String moduleType) throws Exception {
+		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
 		if (StringUtil.checkString(oid)) {
 			if ("part".equals(moduleType)) {
 				WTPart part = (WTPart) CommonUtil.getObject(oid);
 				QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
 				while (qr.hasMoreElements()) {
 					WTDocument doc = (WTDocument) qr.nextElement();
-					DocumentData data = new DocumentData(doc);
+					DocumentDTO data = new DocumentDTO(doc);
 					// Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
 					if (VersionHelper.service.isLastVersion(part)) {
 						if (data.isLatest()) {
@@ -1678,13 +1678,13 @@ public class StandardDocumentService extends StandardManager implements Document
 					}
 				}
 			} else if ("doc".equals(moduleType)) {
-				List<DocumentData> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
-				for (DocumentData data : dataList) {
+				List<DocumentDTO> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
+				for (DocumentDTO data : dataList) {
 					list.add(data);
 				}
 
 				dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
-				for (DocumentData data : dataList) {
+				for (DocumentDTO data : dataList) {
 					list.add(data);
 				}
 
@@ -1695,7 +1695,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				while (qr.hasMoreElements()) {
 					Object p = (Object) qr.nextElement();
 					if (p instanceof WTDocument) {
-						DocumentData data = new DocumentData((WTDocument) p);
+						DocumentDTO data = new DocumentDTO((WTDocument) p);
 						list.add(data);
 					}
 				}
@@ -1703,7 +1703,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
 				List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
 				for (WTDocument doc : aList) {
-					DocumentData data = new DocumentData(doc);
+					DocumentDTO data = new DocumentDTO(doc);
 					list.add(data);
 				}
 			}
@@ -1784,7 +1784,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		while (qr.hasMoreElements()) {
 			Object[] o = (Object[]) qr.nextElement();
 			WTDocument doc = (WTDocument) o[0];
-			DocumentData data = new DocumentData(doc);
+			DocumentDTO data = new DocumentDTO(doc);
 			xmlBuf.append("<row id='" + data.oid + "'>");
 			xmlBuf.append("<cell><![CDATA[]]></cell>");
 			xmlBuf.append("<cell><![CDATA[" + data.number + "]]></cell>");

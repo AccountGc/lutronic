@@ -30,10 +30,10 @@ import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 

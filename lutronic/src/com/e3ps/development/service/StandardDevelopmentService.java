@@ -26,9 +26,9 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devMaster;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.development.devTask;
-import com.e3ps.development.beans.DevActiveData;
-import com.e3ps.development.beans.DevTaskData;
-import com.e3ps.development.beans.MasterData;
+import com.e3ps.development.dto.DevActiveData;
+import com.e3ps.development.dto.DevTaskData;
+import com.e3ps.development.dto.MasterData;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;

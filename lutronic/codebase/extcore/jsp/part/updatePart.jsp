@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="com.e3ps.part.beans.PartData"%>
+<%@page import="com.e3ps.part.dto.PartData"%>
 <%
 String oid = (String) request.getAttribute("oid");
 PartData data = (PartData) request.getAttribute("data");

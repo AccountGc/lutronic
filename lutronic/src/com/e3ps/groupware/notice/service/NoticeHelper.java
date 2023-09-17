@@ -7,7 +7,7 @@ import java.util.Map;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 
 import wt.fc.PagingQueryResult;
 import wt.query.QuerySpec;
@@ -19,7 +19,7 @@ public class NoticeHelper {
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		ArrayList<NoticeData> list = new ArrayList<>();
+		ArrayList<NoticeDTO> list = new ArrayList<>();
 
 		String name = (String) params.get("name");
 		String creatorOid = (String) params.get("creatorOid");
@@ -35,7 +35,7 @@ public class NoticeHelper {
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			NoticeData data = new NoticeData((Notice) obj[0]);
+			NoticeDTO data = new NoticeDTO((Notice) obj[0]);
 			list.add(data);
 		}
 

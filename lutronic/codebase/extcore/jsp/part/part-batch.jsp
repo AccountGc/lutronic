@@ -1,7 +1,7 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
-<%@page import="com.e3ps.common.code.beans.NumberCodeData"%>
+<%@page import="com.e3ps.common.code.dto.NumberCodeDTO"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@page import="wt.folder.Folder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -14,7 +14,7 @@ ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAtt
 ArrayList<NumberCode> partName1List = (ArrayList<NumberCode>) request.getAttribute("partName1List");
 ArrayList<NumberCode> partName2List = (ArrayList<NumberCode>) request.getAttribute("partName2List");
 ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribute("partName3List");
-ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.getAttribute("partType1List");
+ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getAttribute("partType1List");
 %>
 <!DOCTYPE html>
 <html>
@@ -45,39 +45,39 @@ ArrayList<NumberCodeData> partType1List = (ArrayList<NumberCodeData>) request.ge
 			let partType3Map = {};
 			let matList =[];
 			let recentGridItem = null;
-			<% for(NumberCode mat : matList){ %>
-				matList.push({ "code" : "<%= mat.getCode() %>", "value" : "<%= mat.getName().replaceAll("(\r\n|\r|\n|\n\r)", "") %>"});
-			<% } %>
+			<%for(NumberCode mat : matList){%>
+				matList.push({ "code" : "<%=mat.getCode()%>", "value" : "<%=mat.getName().replaceAll("(\r\n|\r|\n|\n\r)", "")%>"});
+			<%}%>
 			let folderList = [];
-			<% for(Folder folder : folderList){ %>
-				folderList.push({ "code" : "<%= folder.getFolderPath()  %>", "value" : "<%= folder.getFolderPath() %>"});
-			<% } %>
+			<%for(Folder folder : folderList){%>
+				folderList.push({ "code" : "<%=folder.getFolderPath()%>", "value" : "<%=folder.getFolderPath()%>"});
+			<%}%>
 			let deptcodeList = [];
-			<% for(NumberCode deptcode : deptcodeList){ %>
-				deptcodeList.push({ "code" : "<%= deptcode.getCode() %>", "value" : "<%= deptcode.getName() %>"});
-			<% } %>
+			<%for(NumberCode deptcode : deptcodeList){%>
+				deptcodeList.push({ "code" : "<%=deptcode.getCode()%>", "value" : "<%=deptcode.getName()%>"});
+			<%}%>
 			let productmethodList = [];
-			<% for(NumberCode productmethod : productmethodList){ %>
-				productmethodList.push({ "code" : "<%= productmethod.getCode() %>", "value" : "<%= productmethod.getName() %>"});
-			<% } %>
+			<%for(NumberCode productmethod : productmethodList){%>
+				productmethodList.push({ "code" : "<%=productmethod.getCode()%>", "value" : "<%=productmethod.getName()%>"});
+			<%}%>
 			let modelList = [];
-			<% for(NumberCode model : modelList){ %>
-				modelList.push({ "code" : "<%= model.getCode() %>", "value" : "<%= model.getName() %>"});
-			<% } %>
+			<%for(NumberCode model : modelList){%>
+				modelList.push({ "code" : "<%=model.getCode()%>", "value" : "<%=model.getName()%>"});
+			<%}%>
 			let partName1List = [];
-			<% for(NumberCode partName1 : partName1List){ %>
-				partName1List.push({ "code" : "<%= partName1.getCode() %>", "value" : "<%= partName1.getName() %>"});
-			<% } %>
+			<%for(NumberCode partName1 : partName1List){%>
+				partName1List.push({ "code" : "<%=partName1.getCode()%>", "value" : "<%=partName1.getName()%>"});
+			<%}%>
 			let partName2List = [];
-			<% for(NumberCode partName2 : partName2List){ %>
-				partName2List.push({ "code" : "<%= partName2.getCode() %>", "value" : "<%= partName2.getName() %>"});
-			<% } %>
+			<%for(NumberCode partName2 : partName2List){%>
+				partName2List.push({ "code" : "<%=partName2.getCode()%>", "value" : "<%=partName2.getName()%>"});
+			<%}%>
 			let partName3List = [];
-			<% for(NumberCode partName3 : partName3List){ %>
-				partName3List.push({ "code" : "<%= partName3.getCode() %>", "value" : "<%= partName3.getName() %>"});
-			<% } %>
+			<%for(NumberCode partName3 : partName3List){%>
+				partName3List.push({ "code" : "<%=partName3.getCode()%>", "value" : "<%=partName3.getName()%>"});
+			<%}%>
 			let partType1List = [];
-			<% for(NumberCodeData partType1 : partType1List){ %>
+			<%for(NumberCodeDTO partType1 : partType1List){%>
 				partType1List.push({ "code" : "<%= partType1.getOid() %>", "value" : "[<%= partType1.getCode() %>]<%= partType1.getName() %>"});
 			<% } %>
 

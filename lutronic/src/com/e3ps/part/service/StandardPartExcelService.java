@@ -21,9 +21,9 @@ import wt.vc.views.View;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.part.beans.ExcelData;
-import com.e3ps.part.beans.PartData;
-import com.e3ps.part.beans.PartTreeData;
+import com.e3ps.part.dto.ExcelData;
+import com.e3ps.part.dto.PartData;
+import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 

@@ -1,7 +1,7 @@
 package com.e3ps;
 
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.org.beans.UserHelper;
+import com.e3ps.org.dto.UserHelper;
 
 import wt.org.WTUser;
 

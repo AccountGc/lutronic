@@ -9,7 +9,7 @@
 <%@page import="wt.doc.WTDocumentMaster"%>
 <%@page import="com.e3ps.rohs.ROHSMaterial"%>
 <%@page import="wt.query.QuerySpec"%>
-<%@page import="com.e3ps.rohs.beans.RohsData"%>
+<%@page import="com.e3ps.rohs.dto.RohsData"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>

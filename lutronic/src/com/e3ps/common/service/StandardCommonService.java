@@ -34,7 +34,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.development.devActive;
-import com.e3ps.development.beans.DevActiveData;
+import com.e3ps.development.dto.DevActiveData;
 import com.e3ps.development.service.DevelopmentQueryHelper;
 import com.e3ps.distribute.util.MakeZIPUtil;
 import com.e3ps.doc.key.DocKey;
@@ -46,7 +46,7 @@ import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.groupware.workprocess.service.WorklistHelper;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsUtil;
 
@@ -429,7 +429,7 @@ public class StandardCommonService extends StandardManager implements CommonServ
 			DownloadHistory history = (DownloadHistory)obj[0];
 			WTUser user = history.getUser();
 			String downTime = DateUtil.getTimeFormat(history.getPersistInfo().getModifyStamp(), "yyyy-MM-dd HH:mm:ss");
-			PeopleData pd = new PeopleData(user);
+			PeopleDTO pd = new PeopleDTO(user);
 			
 			Map<String,Object> map = new HashMap<String,Object>();
 			map.put("dept", pd.departmentName);
@@ -828,7 +828,7 @@ public class StandardCommonService extends StandardManager implements CommonServ
 			Object[] o = (Object[])result.nextElement();
 			
 			People people = (People)o[0];
-			PeopleData data = new PeopleData(people);
+			PeopleDTO data = new PeopleDTO(people);
 			
 			Map<String,String> map = new HashMap<String,String>();
 			

@@ -10,8 +10,8 @@ import wt.doc.WTDocument;
 import wt.method.RemoteInterface;
 
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.development.beans.DevActiveData;
-import com.e3ps.development.beans.DevTaskData;
+import com.e3ps.development.dto.DevActiveData;
+import com.e3ps.development.dto.DevTaskData;
 
 @RemoteInterface
 public interface DevelopmentService {

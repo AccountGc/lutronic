@@ -1,4 +1,4 @@
-<%@page import="com.e3ps.groupware.notice.beans.NoticeData"%>
+<%@page import="com.e3ps.groupware.notice.dto.NoticeDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@include file="/extcore/jsp/common/css.jsp"%>
@@ -6,7 +6,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-NoticeData data = (NoticeData) request.getAttribute("data");
+NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
 <table class="button-table">

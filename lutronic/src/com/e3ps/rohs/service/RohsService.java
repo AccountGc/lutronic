@@ -14,7 +14,7 @@ import wt.util.WTException;
 import com.e3ps.change.beans.ECRData;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.beans.RohsData;
+import com.e3ps.rohs.dto.RohsData;
 
 @RemoteInterface
 public interface RohsService {

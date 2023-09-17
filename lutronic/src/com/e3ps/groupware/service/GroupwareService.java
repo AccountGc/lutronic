@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 
 import wt.method.RemoteInterface;
 
@@ -45,7 +45,7 @@ public interface GroupwareService {
 
 	void batchReceiveAction(Map<String, Object> reqMap) throws Exception;
 
-	void userInfoEdit(PeopleData data) throws Exception;
+	void userInfoEdit(PeopleDTO data) throws Exception;
 
 	/**
 	 * 비밀번호 변경

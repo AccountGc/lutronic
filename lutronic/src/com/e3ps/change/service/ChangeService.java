@@ -12,7 +12,7 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.beans.EADData;
 import com.e3ps.change.beans.ECOData;
-import com.e3ps.doc.beans.DocumentData;
+import com.e3ps.doc.dto.DocumentDTO;
 
 import wt.method.RemoteInterface;
 import wt.vc.baseline.ManagedBaseline;

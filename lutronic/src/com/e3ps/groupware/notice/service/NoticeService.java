@@ -4,7 +4,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import com.e3ps.groupware.notice.beans.NoticeData;
+import com.e3ps.groupware.notice.dto.NoticeDTO;
 
 import wt.method.RemoteInterface;
 
@@ -31,6 +31,6 @@ public interface NoticeService {
 ㄴ	 */
 	public abstract void updateCount(String oid) throws Exception;
 
-	List<NoticeData> getPopUpNotice();
+	List<NoticeDTO> getPopUpNotice();
 
 }

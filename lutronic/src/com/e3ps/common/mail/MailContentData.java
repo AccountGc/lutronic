@@ -3,7 +3,7 @@ package com.e3ps.common.mail;
 import wt.doc.WTDocument;
 import wt.fc.WTObject;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.beans.PeopleData;
+import com.e3ps.org.dto.PeopleDTO;
 
 public class MailContentData {
 
@@ -23,7 +23,7 @@ public class MailContentData {
             name = doc.getName();
             type = "문서";
             try {
-                PeopleData creator = new PeopleData(doc.getCreator().getObject());
+                PeopleDTO creator = new PeopleDTO(doc.getCreator().getObject());
                 creatorName = StringUtil.checkNull(creator.name);
                 creatorDept = StringUtil.checkNull(creator.departmentName);
             } catch (Exception e) {

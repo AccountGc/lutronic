@@ -104,9 +104,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					inline : true
 				},
 			}, {
-				dataField : "createDate",
+				dataField : "createdDate",
 				headerText : "등록일",
-				dataType : "string",
+				dataType : "date",
 				width : 170,
 				filter : {
 					showIcon : true,
