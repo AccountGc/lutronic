@@ -405,7 +405,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
+							const oid = item.part_oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}

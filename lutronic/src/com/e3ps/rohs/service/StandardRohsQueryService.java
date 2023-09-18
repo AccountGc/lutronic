@@ -391,7 +391,7 @@ public class StandardRohsQueryService extends StandardManager implements RohsQue
 	public List<RohsData> getPartToROHSList(WTPart part) throws Exception{
 		
 		
-		return getPartROHSList(part,  VersionHelper.service.isLastVersion(part));
+		return getPartROHSList(part,  CommonUtil.isLatestVersion(part));
 		
 		/*
 		List<RohsData> list = new ArrayList<RohsData>();

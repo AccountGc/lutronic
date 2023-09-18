@@ -633,7 +633,7 @@ public class DocumentHelper {
 						WTDocument doc = (WTDocument) qr.nextElement();
 						DocumentDTO data = new DocumentDTO(doc);
 						// Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
-						if (VersionHelper.service.isLastVersion(part)) {
+						if (CommonUtil.isLatestVersion(part)) {
 							if (data.isLatest()) {
 								list.add(data);
 							}
