@@ -32,7 +32,7 @@ boolean isCreate = "create".equals(mode);
 				<input type="button" value="추가" title="추가" class="blue" onclick="getAppendDoc();">
 				<input type="button" value="삭제" title="삭제" class="red" onclick="remove();">
 			</div>
-			<div id="grid90" style="height: 300px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid90" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -72,7 +72,7 @@ boolean isCreate = "create".equals(mode);
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function getAppendDoc() {
 		const popup = true;
-		const url = getCallUrl("/doc/list?popup=" + popup);
+		const url = getCallUrl("/doc/listPopup");
 		_popup(url, 1800, 900, "n");
 	}
 	

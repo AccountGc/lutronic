@@ -305,7 +305,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			params.secondary = secondary;
 			params.docOids = docOids;
 			params.partOids = partOids;
-			debugger;
 			parent.openLayer();
 			call(url, params, function(data) {
 				alert(data.msg);

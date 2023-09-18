@@ -46,16 +46,15 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		
 		<table class="search-table">
 			<colgroup>
-				<col width="130">
-				<col width="130">
-				<col width="130">
-				<col width="130">
-				<col width="130">
-				<col width="130">
+				<col width="150">
+				<col width="*">
+				<col width="150">
+				<col width="150">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>품목분류 <span style="color:red;">*</span></th>
-				<td class="indent5" colspan="2">
+				<td class="indent5">
 					<span id="locationName">
 						/Default/PART_Drawing
 					</span>
@@ -72,7 +71,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			</tr>
 			<tr>
 				<th>품목구분 <span style="color:red;">*</span></th>
-				<td class="indent5" colspan="2">
+				<td class="indent5">
 					<select id="partType1" name="partType1" style="width: 95%">
 						<option value="">
 							선택
@@ -90,7 +89,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			</tr>
 			<tr>
 				<th>대분류 <span style="color:red;">*</span></th>
-				<td class="indent5" colspan="2">
+				<td class="indent5">
 					<select id="partType2" name="partType2" style="width: 95%">
 						<option value="">
 							선택
@@ -108,7 +107,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			</tr>
 			<tr>
 				<th>중분류 <span style="color:red;">*</span></th>
-				<td class="indent5" colspan="2">
+				<td class="indent5">
 					<select id="partType3" name="partType3" style="width: 95%">
 						<option value="">
 							선택
@@ -122,7 +121,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			</tr>
 			<tr>
 				<th>SEQ <br><span style="color:red;">(3자리)</span></th>
-				<td class="indent5" colspan="2">
+				<td class="indent5">
 					<input type="text" name="seq" id="seq" class="width-200">
 					<input type="button" id="seqList" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" onclick="loadGridData();">
 				</td>
@@ -140,7 +139,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			</tr>
 			<tr>
 				<th>기타 <br><span style="color:red;">(2자리)</span></th>
-				<td class="indent5" colspan="5">
+				<td class="indent5" colspan="4">
 					<input type="text" name="etc" id="etc" class="width-200">
 				</td>
 			</tr>
@@ -159,9 +158,9 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		
 		<table class="search-table">
 			<colgroup>
-				<col width="174">
+				<col width="150">
 				<col width="*">
-				<col width="174">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
@@ -289,14 +288,12 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		
 		<table class="search-table">
 			<colgroup>
-				<col width="180">
-				<col width="*">
-				<col width="180">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
 				<th>주 도면</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" >
 				</td>
 			</tr>
 		</table>
@@ -314,14 +311,12 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		
 		<table class="search-table">
 			<colgroup>
-				<col width="180">
-				<col width="*">
-				<col width="180">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -349,14 +344,12 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		
 		<table class="search-table">
 			<colgroup>
-				<col width="180">
-				<col width="*">
-				<col width="180">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
 				<th>관련 RoHS</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" >
 					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />

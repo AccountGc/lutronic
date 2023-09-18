@@ -452,7 +452,7 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						labelText : "부품추가",
 						onClick : function(event) {
 							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/part/list?popup=true&parentRowIndex=" + parentRowIndex);
+							const url = getCallUrl("/part/listPopup?parentRowIndex=" + parentRowIndex);
 							_popup(url, 1800, 900, "n");
 						}
 					}
@@ -647,6 +647,9 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				
 				call(url, params, function(data) {
 					alert(data.msg);
+					if (data.result) {
+						document.location.href = getCallUrl("/doc/list");
+					}
 				});
 			}
 		</script>

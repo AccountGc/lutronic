@@ -102,6 +102,22 @@ public class DocumentController extends BaseController {
 		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;
 	}
+	
+	@Description(value = "관련 문서 팝업 페이지")
+	@GetMapping(value = "/listPopup")
+	public ModelAndView listPopup() throws Exception {
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
+		ModelAndView model = new ModelAndView();
+		model.addObject("preserationList", preserationList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("modelList", modelList);
+		model.addObject("docTypeList", docTypeList);
+        model.setViewName("popup:/document/document-list-popup");            
+		return model;
+	}
 
 	@Description(value = "문서 조회 함수")
 	@ResponseBody

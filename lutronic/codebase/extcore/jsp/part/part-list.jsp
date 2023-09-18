@@ -11,8 +11,6 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
-boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAttribute("popup") : false; 
-int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 %>
 <!DOCTYPE html>
 <html>
@@ -245,9 +243,6 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
 					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
-					<% if(popup){ %>
-						<input type="button" value="추가" title="추가"  onclick="add();">						
-					<% } %>
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -630,32 +625,6 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 					}
 				}
 			}
-			
-			<% if(popup){ %>
-				function add(){
-					const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-					if (items.length == 0) {
-						alert("첨부할 품목을 선택하세요.");
-						return false;
-					}
-					
-					let partOids = [];
-					let partNumber = [];
-					
-					for(let i = 0; i < items.length; i++){
-						partOids.push(items[i].part_oid);
-						partNumber.push(items[i].number);
-					}
-					var parentRow = <%= parentRowIndex %>;
-					if(parentRow<0){
-						opener.append(items);
-					}else{
-						opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
-					}
-					self.close();
-				}
-			<% } %>
-			
 		</script>
 	</form>
 </body>

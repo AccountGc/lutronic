@@ -63,7 +63,7 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list(@RequestParam(value = "popup", required = false) boolean popup, @RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
+	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -77,13 +77,28 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
-		model.addObject("popup", popup);
+		model.setViewName("/extcore/jsp/part/part-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "관련 품목 팝업 페이지")
+	@GetMapping(value = "/listPopup")
+	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
 		model.addObject("parentRowIndex", parentRowIndex);
-		if(popup) {
-			model.setViewName("popup:/part/part-list");			
-		}else {
-			model.setViewName("/extcore/jsp/part/part-list.jsp");
-		}
+		model.setViewName("popup:/part/part-list-popup");			
 		return model;
 	}
 

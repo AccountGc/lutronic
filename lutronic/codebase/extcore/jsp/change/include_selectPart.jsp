@@ -100,8 +100,8 @@ boolean isUpdate = "update".equals(mode);
 	}
 
 	function insert9() {
-		const url = getCallUrl("/part/list?popup=true");
-		popup(url, 1500, 700);
+		const url = getCallUrl("/part/listPopup");
+		_popup(url, 1500, 700, "n");
 	}
 	
 	// 중복 제거후 추가

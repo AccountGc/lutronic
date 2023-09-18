@@ -13,7 +13,6 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.part.service.VersionHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -94,7 +93,7 @@ public class DocumentDTO {
 		}
 
 		this.icon2 = BasicTemplateProcessor.getObjectIconImgTag(doc);
-		setLatest(VersionHelper.service.isLastVersion(doc));
+		setLatest(CommonUtil.isLatestVersion(doc));
 		setLocation(StringUtil.checkNull(doc.getLocation()).replaceAll("/Default", ""));
 
 		String appType = IBAUtil.getAttrValue(doc, IBAKey.IBA_APPROVALTYPE);

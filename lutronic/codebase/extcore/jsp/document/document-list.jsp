@@ -399,7 +399,6 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 				params = toField(params, field);
 				params.latest = latest;
 				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
