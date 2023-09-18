@@ -64,7 +64,7 @@ String mode = request.getParameter("mode");
 
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup90() {
-		const url = getCallUrl("/doc/popup");
+		const url = getCallUrl("/doc/listPopup");
 		_popup(url, 1800, 900, "n");
 	}
 

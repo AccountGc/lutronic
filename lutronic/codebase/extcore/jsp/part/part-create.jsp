@@ -29,7 +29,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		<input type="hidden" name="oid" id="oid">
 		<input type="hidden" name="wtPartType"		id="wtPartType"		 	value="separable"     />
 		<input type="hidden" name="source"			id="source"	      		value="make"            />
-		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_Default"  />
+		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
 		<input type="hidden" name="view"			id="view"        		value="Design" />
 		<input type="hidden" name="fid" 			id="fid"				value="" >
 		<input type="hidden" name="location" 		id="location" 				value="/Default/PART_Drawing">
@@ -327,9 +327,9 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		<br>
 		
 		<!-- 관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
-			<jsp:param value="관련 문서" name="title"/>
-			<jsp:param value="docOid" name="paramName"/>
+		<jsp:include page="/extcore/jsp/document/document-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
 		</jsp:include>
 		<br>
 		
@@ -391,16 +391,31 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				const remarks = document.getElementById("remarks").value;
 				const specification = document.getElementById("specification").value;
 				const unit = "EA";
-//	 			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
-//	 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-//	 			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
-				const primarys = toArray("primarys");
+// 				const primarys = toArray("primarys");
+// 				const primary = primarys[0].cacheId;
+				const secondary = toArray("secondarys");
 				const wtPartType = document.getElementById("wtPartType").value;
 				const source = document.getElementById("source").value;
 				const lifecycle = document.getElementById("lifecycle").value;
 				const view = document.getElementById("view").value;
 				const fid = document.getElementById("fid").value;
 				const location = document.getElementById("location").value;
+				
+	            let docOids = [];
+	            const appendDoc = AUIGrid.getGridData(myGridID90);
+	            if(appendDoc.length > 0){
+	                for(let i = 0; i < appendDoc.length; i++){
+	                    docOids.push(appendDoc[i].oid)
+	                }
+	            }
+	            
+	            let rohsOids = [];
+	            const appendRohs = AUIGrid.getGridData(rohsGridID);
+	            if(appendDoc.length > 0){
+	                for(let i = 0; i < appendRohs.length; i++){
+	                	rohsOids.push(appendRohs[i].oid)
+	                }
+	            }
 
 // 				if(isEmpty($("#partType1").val())){
 // 					alert("품목구분을 입력하세요.");
@@ -467,20 +482,17 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				params.remarks = remarks;
 				params.specification = specification;
 				params.unit = "ea";
-//	 			params.addRows7 = addRows7;
-//	 			params.addRows11 = addRows11;
-				params.primarys = primarys;
+// 				params.primary = primary;
+				params.secondary = secondary;
 				params.wtPartType = wtPartType;
 				params.source = source;
 				params.lifecycle = lifecycle;
 				params.view = view;
 				params.fid = fid;
 				params.location = location;
+				params.docOids = docOids;
+				params.rohsOids = rohsOids;
 				
-				console.log(params);
-				
-//	 			toRegister(params, addRows8);
-//	 			openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
