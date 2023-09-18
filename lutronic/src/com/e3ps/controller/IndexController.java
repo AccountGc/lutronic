@@ -17,7 +17,6 @@ import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
-import com.e3ps.org.beans.PeopleData;
 import com.e3ps.org.dto.PeopleDTO;
 
 import net.sf.json.JSONArray;
@@ -50,23 +49,23 @@ public class IndexController extends BaseController {
 		PeopleDTO dto = new PeopleDTO(people);
 		String department_name = dto.getDepartment_name();
 		String auths = dto.getAuth();
-		boolean isWork = CommonUtil.isAdmin();
-		boolean isDoc = CommonUtil.isAdmin();
-		boolean isPart = CommonUtil.isAdmin();
-		boolean isEpm = CommonUtil.isAdmin();
-		boolean isRohs = CommonUtil.isAdmin();
-		boolean isMold = CommonUtil.isAdmin();
-		boolean isChange = CommonUtil.isAdmin();
-		boolean isEtc = CommonUtil.isAdmin();
+		boolean isWork = false;
+		boolean isDoc = false;
+		boolean isPart = false;
+		boolean isEpm = false;
+		boolean isRohs = false;
+		boolean isMold = false;
+		boolean isChange = false;
+		boolean isEtc = false;
 		if (StringUtil.checkString(auths)) {
-			isWork = auths.contains("나의업무");
-			isDoc = auths.contains("문서관리");
-			isPart = auths.contains("품목관리");
-			isEpm = auths.contains("도면관리");
-			isRohs = auths.contains("RoHS");
-			isMold = auths.contains("금형관리");
-			isChange = auths.contains("설계변경");
-			isEtc = auths.contains("기타문서관리");
+			isWork = auths.contains("나의업무") || CommonUtil.isAdmin();
+			isDoc = auths.contains("문서관리") || CommonUtil.isAdmin();
+			isPart = auths.contains("품목관리") || CommonUtil.isAdmin();
+			isEpm = auths.contains("도면관리") || CommonUtil.isAdmin();
+			isRohs = auths.contains("RoHS") || CommonUtil.isAdmin();
+			isMold = auths.contains("금형관리") || CommonUtil.isAdmin();
+			isChange = auths.contains("설계변경") || CommonUtil.isAdmin();
+			isEtc = auths.contains("기타문서관리") || CommonUtil.isAdmin();
 		}
 
 		// 기타 문서 권한처리
