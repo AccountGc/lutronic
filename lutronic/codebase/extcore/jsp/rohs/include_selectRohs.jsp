@@ -13,7 +13,6 @@ boolean isCreate = "create".equals(mode);
 		dataField : "number",
 		headerText : "물질번호",
 		dataType : "string",
-		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -22,7 +21,6 @@ boolean isCreate = "create".equals(mode);
 		dataField : "name",
 		headerText : "물질명",
 		dataType : "string",
-		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -31,7 +29,6 @@ boolean isCreate = "create".equals(mode);
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
-		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -44,23 +41,19 @@ boolean isCreate = "create".equals(mode);
 	function createAUIGrid6(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			showRowNumColumn : true,
-			fillColumnSizeMode: true,
-			rowNumHeaderText : "번호",
-			showAutoNoDataMessage : true,
-			enableSorting : false,
+			showRowNumColumn : false,
+			showAutoNoDataMessage : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			showRowCheckColumn : true,
-			rowCheckToRadio : true,
-			enableFilter : true
+			showStateColumn : false,
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 	}
 
 	function addRohs() {
-		const url = getCallUrl("/rohs/list?popup=true");
-		popup(url, 1500, 700);
+		const url = getCallUrl("/rohs/listPopup");
+		_popup(url, 1500, 700, "n");
 	}
 	
 	function rohsAppend(items){

@@ -191,6 +191,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 			</select>
 			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
 			<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>

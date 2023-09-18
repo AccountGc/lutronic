@@ -246,6 +246,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 			</select>
 			<input type="button" value="검색" title="검색" id="searchBtn">
 			<input type="button" value="초기화" title="초기화" id="btnReset">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>

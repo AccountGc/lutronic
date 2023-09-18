@@ -16,10 +16,6 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-boolean popup = false;
-if(request.getParameter("popup")!=null){
-	popup = true;
-}
 %>
 <!DOCTYPE html>
 <html>
@@ -115,14 +111,6 @@ if(request.getParameter("popup")!=null){
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
-					<%
-					if(popup){
-					%>	
-						<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-						<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
-					<%
-					}
-					%>
 				</td>
 			</tr>
 		</table>
@@ -311,16 +299,6 @@ if(request.getParameter("popup")!=null){
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
-			function addBtn(){
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("추가할 물질을 선택하세요.");
-					return false;
-				}
-				opener.rohsAppend(items);
-				self.close();
-			}
 			
 		</script>
 	</form>
