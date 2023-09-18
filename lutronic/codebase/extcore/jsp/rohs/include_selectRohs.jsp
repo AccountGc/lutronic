@@ -1,8 +1,14 @@
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.rohs.service.RohsHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
+String module = request.getParameter("module");
+String roleType = request.getParameter("roleType");
 boolean isCreate = "create".equals(mode);
+boolean isUpdate = "update".equals(mode);
+JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 %>
 <input type="button" value="추가" title="추가" class="blue" onclick="addRohs();">
 <input type="button" value="삭제" title="삭제" class="red" onclick="deleteRohs();">
@@ -49,6 +55,9 @@ boolean isCreate = "create".equals(mode);
 			showStateColumn : false,
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
+		<%if (isUpdate) {%>
+			AUIGrid.setGridData(rohsGridID, <%=json%>);
+		<%}%>
 	}
 
 	function addRohs() {

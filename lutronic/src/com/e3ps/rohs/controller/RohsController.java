@@ -149,6 +149,23 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "물질 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/update")
+	public Map<String,Object> update(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			RohsHelper.service.update(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "물질 중복체크")
 	@ResponseBody
 	@PostMapping(value = "/rohsCheck")

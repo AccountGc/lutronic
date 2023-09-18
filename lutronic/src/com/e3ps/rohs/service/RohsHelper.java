@@ -650,4 +650,18 @@ public class RohsHelper {
 		}
 		return list;
 	}
+	
+	public ROHSContHolder getRohsContHolder(ROHSMaterial rohs) throws Exception {
+		ROHSContHolder ch = null;
+		QuerySpec qs = new QuerySpec();
+		int idx= qs.addClassList(ROHSContHolder.class, true);
+		qs.appendWhere(new SearchCondition(ROHSContHolder.class, "rohsReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(rohs)), new int[] {idx});
+		QueryResult result = PersistenceHelper.manager.find(qs);
+    	while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ch = (ROHSContHolder) obj[0];
+			return ch;
+		}
+    	return ch;
+	}
 }

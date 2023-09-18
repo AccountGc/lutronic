@@ -1,10 +1,15 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
+<%@page import="com.e3ps.rohs.service.RohsHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
+String moduleType = request.getParameter("moduleType");
 boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
+JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 %>
 <table class="button-table">
 	<tr>
@@ -95,7 +100,7 @@ boolean isUpdate = "update".equals(mode);
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 		<%if (isView || isUpdate) {%>
-<%-- 		AUIGrid.setGridData(partGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+			AUIGrid.setGridData(partGridID, <%=json%>);
 		<%}%>
 	}
 

@@ -2488,5 +2488,168 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		holder.setRohs(rohs);
 		PersistenceHelper.manager.save(holder);
 	}
-	
+
+	@Override
+	public void update(Map<String, Object> params) throws Exception {
+		Transaction trx = new Transaction();
+		ROHSMaterial new_material = null;
+		try {
+			trx.start();
+			String oid = StringUtil.checkNull((String) params.get("oid"));
+			
+			if(oid.length() > 0) {
+			
+				ROHSMaterial old_material = (ROHSMaterial)CommonUtil.getObject(oid);
+				new_material = (ROHSMaterial) RohsUtil.getWorkingCopy(old_material);
+				new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
+				String description = StringUtil.checkNull((String) params.get("description"));
+				new_material.setDescription(description);
+				new_material = (ROHSMaterial)PersistenceHelper.manager.modify(new_material);
+				/**
+				 * 
+				 *   첨부파일 관련 작업 수행
+				 *   
+				 */
+				ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
+				
+//				if(secondarys != null) {
+//					for(String secondary : secondarys) {
+//						/**
+//						 * 
+//						 *   기존 첨부파일 유지
+//						 *   
+//						 */
+//						if(delocIds.length() > 0) {
+//							String appOid = StringUtil.checkNull(request.getParameter(roleType+"_AppOid"));
+//							
+//							/**
+//							 * 
+//							 *   기존 첨부파일(ApplicationData)를 복사해서 새로운 ROHSContHolder 생성
+//							 *   
+//							 */
+//							if(appOid.length() > 0){
+//								// RoleType 에 따른 ROHSContHolder 카피
+//								
+//								String file = CommonContentHelper.service.copyApplicationData(appOid);
+//								String fileType = StringUtil.checkNull(request.getParameter(roleType + "_fileType"));
+//								String date = StringUtil.checkNull(request.getParameter(roleType + "_date"));
+//								
+//								String fileName = file.split("/")[1];
+//						        
+//						        ROHSContHolder holder = ROHSContHolder.newROHSContHolder();
+//						        
+//						        ApplicationData app = CommonContentHelper.service.attachADDRole((ContentHolder)new_material, roleType, file,  false);
+//						        
+//						        holder.setFileName(fileName);
+//						        holder.setFileType(fileType);
+//						        holder.setPublicationDate(date);
+//						        holder.setApp(app);
+//						        holder.setRohs(new_material);
+//						        
+//						        PersistenceHelper.manager.save(holder);
+//						        
+//					        /**
+//							 *   이 부분에 도달하면 버그가 발생한것입니다.
+//							 */	
+//							}else {
+//								// RoleType 에 따른 ROHSContHolder 삭제
+//								//System.out.println("이 부분에 도달하면 버그가 발생한것입니다.");
+//							}
+//						/**
+//						 * 
+//						 *   새로운 첨부파일 생성
+//						 *   
+//						 */	
+//						}else {
+//							// 신규 생성
+//							String file = StringUtil.checkNull(request.getParameter(roleType));
+//							String fileType = StringUtil.checkNull(request.getParameter(roleType + "_fileType"));
+//							String date = StringUtil.checkNull(request.getParameter(roleType + "_date"));
+//
+//							if(file.length() > 0){
+//								String fileName = file.split("/")[1];
+//								
+//								ROHSContHolder holder = ROHSContHolder.newROHSContHolder();
+//								
+//								ApplicationData app = CommonContentHelper.service.attachADDRole((ContentHolder)new_material, roleType, file,  false);
+//								
+//								holder.setFileName(fileName);
+//								holder.setFileType(fileType);
+//								holder.setPublicationDate(date);
+//								holder.setApp(app);
+//								holder.setRohs(new_material);
+//								
+//								PersistenceHelper.manager.save(holder);
+//								
+//							}
+//							
+//						}
+//					}
+//				}
+				
+				new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
+				
+				/**
+				 * 
+				 *   CheckOut 상태 검사
+				 *   
+				 */
+				if(WorkInProgressHelper.isCheckedOut(new_material)){
+					//System.out.println("CheckOut 상태입니다.......................");
+					new_material = (ROHSMaterial) WorkInProgressHelper.service.checkin(new_material, "");
+				}
+				
+				/**
+				 * 
+				 *   관련 부품 관련 작업 수행
+				 *   
+				 */
+				
+				// 관련 부품 링크 삭제
+				deleteROHSToPartLink(new_material);
+				
+				// 관련 부품 링크 생성
+				List<Map<String, Object>> partList = (List<Map<String, Object>>) params.get("partList");
+				createROHSToPartLink(new_material, partList);
+				
+				/**
+				 * 
+				 *   관련 물질 관련 작업 수행
+				 */
+				/* 관련 물질 링크 삭제 */
+				deleteROHSToROHSLink(new_material);
+				
+				/* 관련 물질 링크 생성*/
+				List<Map<String, Object>> rohsList = (List<Map<String, Object>>) params.get("rohsList");
+				createROHSToROHSLink(new_material, rohsList);
+				
+	            Map<String,Object> map = new HashMap<String,Object>();
+	            String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+	            map.put("manufacture", manufacture);
+	            CommonHelper.service.changeIBAValues(new_material, map);
+	            
+            	String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
+	            
+	            if (rohsName.length() > 0 && !new_material.getName().equals(rohsName)) {
+		            WTDocumentMaster docMaster = (WTDocumentMaster)(new_material.getMaster());
+	                WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity)docMaster.getIdentificationObject();
+	                identity.setNumber(new_material.getNumber());
+	                identity.setName(rohsName);
+	                docMaster = (WTDocumentMaster)IdentityHelper.service.changeIdentity(docMaster, identity);
+	            }
+	            new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
+			}
+			
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
+        } finally {
+        	if (trx != null) {
+        		trx.rollback();
+			}
+        }
+	}
 }
