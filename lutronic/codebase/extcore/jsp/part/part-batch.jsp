@@ -879,6 +879,9 @@ ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getA
 				
 				call(url, params, function(data) {
 					alert(data.msg);
+					if (data.result) {
+	 					document.location.href = getCallUrl("/part/list");
+					}
 				});
 			}
 			
