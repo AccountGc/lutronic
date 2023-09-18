@@ -16,16 +16,6 @@ boolean isMold = (boolean) request.getAttribute("isMold");
 boolean isRohs = (boolean) request.getAttribute("isRohs");
 boolean isEtc = (boolean) request.getAttribute("isEtc");
 
-
-isWork = true;
-isDoc = true;
-isPart = true;
-isEpm = true;
-isRohs = true;
-isMold = true;
-isChange = true;
-isEtc = true;
-
 // 기타 문서 권한처리
 boolean isRa = (boolean) request.getAttribute("isRa");
 boolean isProduction = (boolean) request.getAttribute("isProduction");
