@@ -114,6 +114,7 @@
 			    	</td>
 			    	
 		    		<td  align="right">
+		    			<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();">
 						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 									
 		    		</td>
@@ -343,13 +344,19 @@
 	AUIGrid.bind(myBOMGridID, "contextMenu", function(event) {
 		AUIGrid.setSelectionByIndex(myBOMGridID, event.rowIndex, event.columnIndex);
 		var menus = [ {
-			label : "최상위 신규 단품 추가",
+			label : "체크인",
 			callback : contextItemHandler
 		}, {
-			label : "신규 자재 추가",
+			label : "체크아웃",
+			callback : contextItemHandler
+		}, {
+			label : "체크아웃 취소",
 			callback : contextItemHandler
 		}, {
 			label : "기존부품 추가",
+			callback : contextItemHandler
+		}, {
+			label : "교체",
 			callback : contextItemHandler
 		}, {
 			label : "_$line"
@@ -394,10 +401,13 @@
 		var rowIndex = event.rowIndex;
 		switch (event.contextIndex) {
 		case 0:
-			var root = AUIGrid.getItemByRowIndex(myBOMGridID, 0);
-			console.log(root);
-// 			var url = "/Windchill/platform/part/top?partTypeCd=" + item.partTypeCd + "&rowId=" + root._$uid + "&poid=" + root.oid + "&callBack=_top";
-// 			_popup(url, 1100, 380, "n");
+			var url	= getCallUrl("/part/partCheckIn");
+			call(url, item, function(data) {
+				if(!isEmpty(data.msg)){
+					alert(data.msg);	
+				}
+				viewAUIPartBomAction();
+			},"POST");
 			break;
 		case 1:
 // 			var url = "/Windchill/platform/part/append?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&callBack=_child";
@@ -407,26 +417,38 @@
 // 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
 // 			_popup(url, "", "", "f");
 			break;
+		case 3:
+// 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
+// 			_popup(url, "", "", "f");
+			break;
 		case 4:
+// 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
+// 			_popup(url, "", "", "f");
+			break;	
+		
+			
+			
+			
+		case 6:
 			AUIGrid.outdentTreeDepth(myBOMGridID);
 			break;
-		case 5:
+		case 7:
 			AUIGrid.indentTreeDepth(myBOMGridID);
 			var parentItem = AUIGrid.getParentItemByRowId(myBOMGridID, item.uid);
 			break;
-		case 6:
+		case 8:
 			AUIGrid.moveRowsToUp(myBOMGridID);
 			break;
-		case 7:
+		case 9:
 			AUIGrid.moveRowsToDown(myBOMGridID);
 			break;
-		case 9:
+		case 11:
 			AUIGrid.undo(myBOMGridID);
 			break;
-		case 10:
+		case 12:
 			AUIGrid.redo(myBOMGridID);
 			break;
-		case 11:
+		case 13:
 			AUIGrid.removeRow(myBOMGridID, "selectedIndex");
 			break;
 		}

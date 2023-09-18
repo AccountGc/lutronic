@@ -721,17 +721,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	})
 	
 	$("#bomE").click(function() {
-<%-- 		var pdmOid = "<%= data.getPDMLinkProductOid() %>"; --%>
-<%-- 		var vrOid = "<%= data.getVrOid() %>"; --%>
-		debugger;
-		
 		var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
 		_popup(url, "1400", "600", "n");
 		
-// 		var str = "/Windchill/netmarkets/jsp/explorer/installmsg.jsp?message=ok"
-// 				  + "&oid=" + vrOid +
-// 				  "&containerId=" + pdmOid + "&applet=com.ptc.windchill.explorer.structureexplorer.StructureExplorerApplet&jars=ptcAnnotator.jar,lib/pview.jar,lib/json.jar&appId=ptc.pdm.ProductStructureExplorer&launchEmpty=false&explorerName=%EC%A0%9C%ED%92%88+%EA%B5%AC%EC%A1%B0+%ED%83%90%EC%83%89%EA%B8%B0&ncid="
-// 	    _popup(str, 1100, 600,"n");
 	})
 	
 	$("#Compare").click(function() {

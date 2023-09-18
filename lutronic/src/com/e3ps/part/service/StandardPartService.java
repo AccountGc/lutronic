@@ -268,9 +268,15 @@ public class StandardPartService extends StandardManager implements PartService 
 			String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
 			String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
 
-			String partType1 = StringUtil.checkNull((String) params.get("partType1")); // 품목구분 (NumberCode)
-			String partType2 = StringUtil.checkNull((String) params.get("partType2")); // 대 분류 (NumberCode)
-			String partType3 = StringUtil.checkNull((String) params.get("partType3")); // 중 분류 (NumberCode)
+			String partType1Oid = StringUtil.checkNull((String) params.get("partType1")); // 품목구분 (NumberCode)
+			String partType2Oid = StringUtil.checkNull((String) params.get("partType2")); // 대 분류 (NumberCode)
+			String partType3Oid = StringUtil.checkNull((String) params.get("partType3")); // 중 분류 (NumberCode)
+			NumberCode partType1Code = (NumberCode)CommonUtil.getObject(partType1Oid);
+			String partType1 = partType1Code.getCode();
+			NumberCode partType2Code = (NumberCode)CommonUtil.getObject(partType2Oid);
+			String partType2 = partType2Code.getCode();
+			NumberCode partType3Code = (NumberCode)CommonUtil.getObject(partType3Oid);
+			String partType3= partType3Code.getCode();
 			String seq = StringUtil.checkNull((String) params.get("seq")); // SEQ
 			String etc = StringUtil.checkNull((String) params.get("etc")); // 기타
 
@@ -360,14 +366,10 @@ public class StandardPartService extends StandardManager implements PartService 
 			part = (WTPart)PersistenceHelper.manager.save(part);
 			
 			// 라이프사이클 셋팅
-//			System.out.println("============================>" + lifecycle);
-//			System.out.println("============================>" + wtContainerRef);
-//			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
-//			System.out.println("============================>" + tmpLifeCycle);
-//			LifeCycleHelper.service.reassign(part, tmpLifeCycle.getLifeCycleTemplateReference(), wtContainerRef);
-//			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
-//			
-//			part = (WTPart)PersistenceHelper.manager.save(part);
+			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+			
+			part = (WTPart)PersistenceHelper.manager.save(part);
 			
 			// IBA 설정
 			CommonHelper.service.changeIBAValues(part, params);
@@ -5085,5 +5087,31 @@ public class StandardPartService extends StandardManager implements PartService 
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+	
+	@Override
+	public Map<String, Object> partCheckIn(Map<String,Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid =(String) params.get("oid");
+		
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		//////////////////////////////////////////////////
+		// 체크인
+		
+		if (WorkInProgressHelper.isCheckedOut(part)) {
+			part = (WTPart) WorkInProgressHelper.service.checkin(part, Message.get("BOM Editor에서 체크인 되었습니다"));
+			result.put("msg", "체크인 하였습니다.");
+		}else{
+			result.put("msg", "체크아웃 후 가능합니다.");
+		}
+		
+		try {
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.toString());
+			
+		}
+		
+		return result;
 	}
 }

@@ -10,29 +10,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import com.e3ps.common.beans.VersionData;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.AttributeKey.IBAKey;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.part.util.PartUtil;
 
 import lombok.Getter;
 import lombok.Setter;
 import wt.enterprise.BasicTemplateProcessor;
 import wt.epm.EPMDocument;
-import wt.epm.EPMDocumentMaster;
-import wt.epm.build.EPMBuildRule;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.inf.container.WTContained;
@@ -54,7 +44,6 @@ import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
 //import com.e3ps.common.web.CommonWebHelper;
 import wt.vc.views.View;
-import wt.vc.views.ViewHelper;
 
 /**
  * Part에 관련해서 상세한 정보를 포함하는 Data 클래스
@@ -67,12 +56,12 @@ import wt.vc.views.ViewHelper;
 @Getter
 @Setter
 public class PartData {
-//	public WTPart part;
+	public WTPart part;
 	private String number;
 	private String icon;
 	private String baseline;
 	private String unit;
-//	private EPMDocument epm;
+	private EPMDocument epm;
 	private String epmOid;
 	private String name;
 	private String state;
@@ -106,15 +95,19 @@ public class PartData {
 	private String baselineOid;
 	private String iteration;
 	private String PDMLinkProductOid;
+	private boolean last;
 
 	public PartData(WTPart part) throws Exception {
 //    	super(part);
-//    	setPart(part);
+    	setPart(part);
 		setOid(part.getPersistInfo().getObjectIdentifier().toString());
 		setVrOid(CommonUtil.getVROID(part));
 		setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
 		setNumber(part.getNumber());
 		setUnit(part.getDefaultUnit().toString());
+		
+		setLast(CommonUtil.isLatestVersion(part));
+		
 		String ecoNumber = "";
 		HashMap map = IBAUtil.getAttributes(part);
 		setModel((String) map.get(AttributeKey.IBAKey.IBA_MODEL)); // 프로젝트 코드
@@ -598,36 +591,36 @@ public class PartData {
 	 * 
 	 * @return
 	 */
-//	public boolean isGENERIC(){
-//		
-//		boolean isGENERIC = false;
-//		int status;
-//		try{
-//			if(epm != null){
-//				
-//				status = epm.getFamilyTableStatus();
-//				//System.out.println("getFamilyTableStatus1 =" +status );
-//				if(status == 2 || status == 3){
-//					isGENERIC = true;
-//				}
-//			}else{
-//				epm = DrawingHelper.service.getEPMDocument(this.part);
-//				if(epm != null){
-//					status = epm.getFamilyTableStatus();
-//					//System.out.println("getFamilyTableStatus2 =" +status );
-//					if(status == 2 || status == 3){
-//						isGENERIC = true;
-//					}
-//				}
-//				
-//			}
-//			//System.out.println("======= isGENERIC ============" + epm + ":" + isGENERIC);
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		
-//		return isGENERIC;
-//	}
+	public boolean isGENERIC(){
+		
+		boolean isGENERIC = false;
+		int status;
+		try{
+			if(epm != null){
+				
+				status = epm.getFamilyTableStatus();
+				//System.out.println("getFamilyTableStatus1 =" +status );
+				if(status == 2 || status == 3){
+					isGENERIC = true;
+				}
+			}else{
+				epm = DrawingHelper.service.getEPMDocument(this.part);
+				if(epm != null){
+					status = epm.getFamilyTableStatus();
+					//System.out.println("getFamilyTableStatus2 =" +status );
+					if(status == 2 || status == 3){
+						isGENERIC = true;
+					}
+				}
+				
+			}
+			//System.out.println("======= isGENERIC ============" + epm + ":" + isGENERIC);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return isGENERIC;
+	}
 
 //	public boolean isINSTANCE(){
 //		
@@ -664,22 +657,32 @@ public class PartData {
 	 * 
 	 * @return
 	 */
-//	public boolean isFamliyModify(){
-//		//System.out.println("======= isFamliyModify ============");
-//		return (isGENERIC() && isLatest() && isWorking());
-//	}
+	public boolean isFamliyModify(){
+		//System.out.println("======= isFamliyModify ============");
+		return (isGENERIC() && this.isLast()&& isWorking());
+	}
+	
+	
+	 public boolean isWorking(){
+			return  ("INWORK").equals(this.getState());
+			
+		}
+	 
+	 public String getLocation() {
+		return part.getLocation();
+	}
 //	
 //	/**
 //	 * 속성 clearing 
 //	 */
-//	public boolean isClearing(){
-//		String ver = this.version;
-//		
-//		boolean isClearing = ver.equals("A") && this.isState("INWORK");
-//		
-//		return isClearing;
-//		
-//	}
+	public boolean isClearing(){
+		String ver = this.version;
+		
+		boolean isClearing = ver.equals("A") && "INWORK".equals(this.getState());
+		
+		return isClearing;
+		
+	}
 	public ArrayList<Object[]> getDescPartlist() {
 		Comparator comparator = new Comparator<Object[]>() {
 			@Override

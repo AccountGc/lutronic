@@ -1862,4 +1862,21 @@ public class PartController extends BaseController {
 		List<Map<String, Object>> list = BomSearchHelper.manager.bomEditorList(params);
 		return list;
 	}
+	
+	
+	/**
+	 * 부품 체크인
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/partCheckIn")
+	public Map<String, Object> partCheckIn(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result =PartHelper.service.partCheckIn(params);
+		return list;
+	}
+	
 }

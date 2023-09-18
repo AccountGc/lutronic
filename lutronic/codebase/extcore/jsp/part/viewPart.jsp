@@ -5,7 +5,6 @@
 <%@ taglib prefix="c"		uri="http://java.sun.com/jsp/jstl/core"			%>
 <%@ taglib prefix="fn"		uri="http://java.sun.com/jsp/jstl/functions"	%>
 
-<html>
 
 <script>
 $(function () {
@@ -361,7 +360,6 @@ function viewBomList(bomType){
 }
 </script>
 
-<body>
 
 <form method="post" name="partViewForm" action="">
 
@@ -410,7 +408,7 @@ function viewBomList(bomType){
 									END ITEM
 								</button>
 							</td>
-							<c:if test="${!partData.isLatest() }">
+							<c:if test="${!partData.isLast() }">
 			                    <td>
 			                    	<button type="button" name="latestBtn" id="latestBtn" class="btnCustom" value="<c:out value='${partData.latestOid() }'/>">
 										<span></span>
@@ -438,7 +436,7 @@ function viewBomList(bomType){
 										단계별  BOM
 								</button>
 		                    </td>
-		                    <c:if test="${partData.isLatest() }">
+		                    <c:if test="${partData.isLast() }">
 			                    <td>
 			                    	<button type="button" name="bomE" id="bomE" class="btnCustom">
 										<span></span>
@@ -457,8 +455,8 @@ function viewBomList(bomType){
 						<table border="0" cellpadding="0" cellspacing="4" align="right">
 			                <tr>
 			                
-			                	<c:if test='${partData.isLatest()}'>
-				                	<c:if test='${partData.isState("DEATH") && isAdmin }'>
+			                	<c:if test='${partData.isLast()}'>
+				                	<c:if test='${"DEATH" eq partData.getStateKey()  && isAdmin }'>
 				                		
 					                	<td>
 					                		<button type="button" name="restore" id="restore" class="btnCRUD">
@@ -536,7 +534,7 @@ function viewBomList(bomType){
 					                    
 			                    	</c:if>
 			                    	
-			                    	<c:if test='${partData.isState("DEV_APPROVED")}'>
+			                    	<c:if test='${"DEV_APPROVED" eq partData.getStateKey()}'>
 		                    			<td>
 					                    	<button type="button" name="changeDev" id="changeDev" class="btnCRUD">
 												<span></span>
@@ -618,9 +616,9 @@ function viewBomList(bomType){
                     </td>
                    
                     <td class="tdwhiteL" align="center" rowspan="7">
-                    	<jsp:include page="/eSolution/drawing/thumbview.do" flush="true">
-							<jsp:param name="oid" value='${partData.getEpmOid() }'/>
-						</jsp:include>
+<%--                     	<jsp:include page="/eSolution/drawing/thumbview.do" flush="true"> --%>
+<%-- 							<jsp:param name="oid" value='${partData.getEpmOid() }'/> --%>
+<%-- 						</jsp:include> --%>
 					</td>
                 </tr>
                 
@@ -785,5 +783,3 @@ function viewBomList(bomType){
 
 </form>
 
-</body>
-</html>

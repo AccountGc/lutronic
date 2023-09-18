@@ -45,6 +45,7 @@ public interface PartService {
 	
 	ResultData updatePackagePartAction(HttpServletRequest request, HttpServletResponse response);
 	
+	
 	/**
 	 * 
 	 * 
@@ -144,4 +145,6 @@ public interface PartService {
 	public void deleteComments(String oid) throws Exception;
 
 	void batch(Map<String, Object> params) throws Exception;
+	
+	public  Map<String, Object> partCheckIn(Map<String, Object> params) throws Exception;
 }
