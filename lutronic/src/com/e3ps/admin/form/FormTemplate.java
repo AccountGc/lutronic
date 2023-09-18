@@ -1,11 +1,9 @@
 package com.e3ps.admin.form;
 
-import com.google.gwt.i18n.client.LocalizableResource.Generate;
 import com.ptc.windchill.annotations.metadata.ColumnProperties;
 import com.ptc.windchill.annotations.metadata.ColumnType;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;
 import com.ptc.windchill.annotations.metadata.GeneratedProperty;
-import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 
 import wt.fc.WTObject;
 import wt.ownership.Ownable;
@@ -19,7 +17,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "description", type = String.class, columnProperties = @ColumnProperties(columnType = ColumnType.BLOB)),
 
-				@GeneratedProperty(name = "formType", type = String.class)
+				@GeneratedProperty(name = "formType", type = String.class),
+
+				@GeneratedProperty(name = "version", type = Integer.class)
 
 		}
 

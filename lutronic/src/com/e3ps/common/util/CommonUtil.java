@@ -48,6 +48,8 @@ import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.fc.WTObject;
 import wt.fc.WTReference;
+import wt.fc.collections.WTHashSet;
+import wt.fc.collections.WTValuedHashMap;
 import wt.httpgw.URLFactory;
 import wt.iba.value.IBAHolder;
 import wt.inf.container.WTContainerRef;
@@ -65,6 +67,7 @@ import wt.util.WTContext;
 import wt.util.WTException;
 import wt.util.WTProperties;
 import wt.vc.Iterated;
+import wt.vc.VersionControlHelper;
 import wt.vc.VersionForeignKey;
 import wt.vc.VersionReference;
 
@@ -334,17 +337,10 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		return enableCheckPW;
 	}
 
-	/**
-	 * 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 Admin 占쌓룹에 占쏙옙占쏙옙 占실억옙 占쌍댐옙占쏙옙占쏙옙 占싯아놂옙占쏙옙 <br>
-	 */
 	public static boolean isAdmin() throws Exception {
 		return isMember("Administrators");
 	}
 
-	/**
-	 * 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 Parameter占쏙옙 占싼억옙占� group 占쏙옙占쏙옙 占쌓룹에 占쏙옙占쏙옙 占실억옙
-	 * 占쌍댐옙占쏙옙占쏙옙 占싯아놂옙占쏙옙 <br>
-	 */
 	public static boolean isMember(String group) throws Exception {
 		WTUser user = (wt.org.WTUser) SessionHelper.manager.getPrincipal();
 		return isMember(group, user);
@@ -791,4 +787,30 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 
 		return list;
 	}
+
+	/**
+	 * 최신버전의 객체인지 확인
+	 */
+	public static boolean isLatestVersion(String oid) throws Exception {
+		ReferenceFactory rf = new ReferenceFactory();
+		Persistable persistable = (Persistable) rf.getReference(oid).getObject();
+		return isLatestVersion(persistable);
+	}
+
+	/**
+	 * 최신버전의 객체인지 확인
+	 */
+	public static boolean isLatestVersion(Persistable persistable) throws Exception {
+		WTHashSet set = new WTHashSet();
+		set.add(persistable);
+
+		WTValuedHashMap map = (WTValuedHashMap) VersionControlHelper.service.getLatestRevisions(set);
+		VersionReference reference = (VersionReference) map.get(persistable);
+
+		boolean isLatestRevision = reference.references(persistable);
+		boolean isLatestIteration = VersionControlHelper.isLatestIteration((Iterated) persistable);
+
+		return (isLatestIteration && isLatestRevision);
+	}
+
 }
