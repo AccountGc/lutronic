@@ -1,42 +1,18 @@
 package com.e3ps.drawing.beans;
 
-import java.util.Vector;
-
-import com.e3ps.common.beans.VersionData;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.WebUtil;
 import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.drawing.service.EpmSearchHelper;
-import com.e3ps.groupware.workprocess.WFItem;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.VersionHelper;
-import com.e3ps.part.util.PartUtil;
-import com.ptc.wvs.server.util.FileHelper;
-import com.ptc.wvs.server.util.PublishUtils;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.content.ApplicationData;
-import wt.content.ContentHelper;
-import wt.content.ContentHolder;
-import wt.content.ContentItem;
-import wt.content.ContentRoleType;
 import wt.enterprise.BasicTemplateProcessor;
-import wt.enterprise.Master;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
-import wt.fc.QueryResult;
-import wt.fc.ReferenceFactory;
 import wt.lifecycle.State;
 import wt.part.WTPart;
-import wt.representation.Representable;
-import wt.representation.Representation;
-import wt.util.WTException;
 
 @Getter
 @Setter
@@ -84,11 +60,11 @@ public class EpmData {
 		//수정 가능여부
 		boolean wgm = false;
 		wgm = epm.getOwnerApplication().toString().equals("EPM") ? true : false;
-		if((State.INWORK).equals(epm.getLifeCycleState()) && VersionHelper.service.isLastVersion(epm) && ! wgm) {
+		if((State.INWORK).equals(epm.getLifeCycleState()) && CommonUtil.isLatestVersion(epm) && ! wgm) {
 			setUpdate(true);
 		}
 		//최신객체여부
-		setLatest(VersionHelper.service.isLastVersion(epm));
+		setLatest(CommonUtil.isLatestVersion(epm));
 		
 		setLocation(StringUtil.checkNull(epm.getLocation()).replaceAll("/Default",""));
 		setState(epm.getLifeCycleState().toString());

@@ -531,7 +531,7 @@ public class DrawingHelper {
 			map.put("distribute", distribute);
 			if("part".equals(moduleType)) {
 				WTPart part = (WTPart)CommonUtil.getObject(oid);
-				boolean lastVer = VersionHelper.service.isLastVersion(part);
+				boolean lastVer = CommonUtil.isLatestVersion(part);
 				if("main".equals(epmType)) {
 					EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
 					if(epm != null) {
