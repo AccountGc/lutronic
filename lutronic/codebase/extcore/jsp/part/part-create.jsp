@@ -29,7 +29,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 		<input type="hidden" name="oid" id="oid">
 		<input type="hidden" name="wtPartType"		id="wtPartType"		 	value="separable"     />
 		<input type="hidden" name="source"			id="source"	      		value="make"            />
-		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
+		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_Default"  />
 		<input type="hidden" name="view"			id="view"        		value="Design" />
 		<input type="hidden" name="fid" 			id="fid"				value="" >
 		<input type="hidden" name="location" 		id="location" 				value="/Default/PART_Drawing">
@@ -62,7 +62,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				<th rowspan="4">품목명 <span style="color:red;">*</span></th>
 				<th>대제목</th>
 				<td class="indent5">
-					<input id="partName1" name="partName1" class='partName' type="text" style="width: 95%;">
+					<input id="partName1" name="partName1" class='partName width-200' type="text" >
 					<div id="partName1Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
 						<ul id="partName1UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 						</ul>
@@ -72,7 +72,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>품목구분 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select id="partType1" name="partType1" style="width: 95%">
+					<select id="partType1" name="partType1"  class="width-200">
 						<option value="">
 							선택
 						</option>
@@ -80,7 +80,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>중제목</th>
 				<td class="indent5">
-					<input id="partName2" name="partName2" class='partName' type="text" style="width: 95%">
+					<input id="partName2" name="partName2" class='partName width-200' type="text" >
 					<div id="partName2Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
 						<ul id="partName2UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 						</ul>
@@ -90,7 +90,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>대분류 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select id="partType2" name="partType2" style="width: 95%">
+					<select id="partType2" name="partType2"  class="width-200">
 						<option value="">
 							선택
 						</option>
@@ -98,7 +98,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>소제목</th>
 				<td class="indent5">
-					<input id="partName3" name="partName3" class='partName' type="text" style="width: 95%">
+					<input id="partName3" name="partName3" class='partName width-200' type="text" >
 					<div id="partName3Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
 						<ul id="partName3UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 						</ul>
@@ -108,7 +108,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>중분류 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select id="partType3" name="partType3" style="width: 95%">
+					<select id="partType3" name="partType3"  class="width-200">
 						<option value="">
 							선택
 						</option>
@@ -116,7 +116,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>사용자 Key in</th>
 				<td class="indent5">
-					<input type="text" name="partName4" id="partName4" class="width-300">
+					<input type="text" name="partName4" id="partName4"  class="width-200">
 				</td>
 			</tr>
 			<tr>
@@ -166,7 +166,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>프로젝트코드 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-500">
+					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode model : modelList) {
@@ -179,7 +179,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>제작방법 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select name="productmethod" id="productmethod" class="width-500">
+					<select name="productmethod" id="productmethod" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode productmethod : productmethodList) {
@@ -194,7 +194,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>부서 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-500">
+					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
@@ -207,7 +207,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>단위 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<select name="unit" id="unit" class="width-500">
+					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -219,11 +219,11 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>무게(g)</th>
 				<td class="indent5">
-					<input type="text" name="weight" id="weight" class="width-500">
+					<input type="text" name="weight" id="weight" class="width-200">
 				</td>
 				<th>MANUFACTURER</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode manufacture : manufactureList) {
@@ -238,7 +238,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>재질</th>
 				<td class="indent5">
-					<select name="mat" id="mat" class="width-500">
+					<select name="mat" id="mat" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode mat : matList) {
@@ -251,7 +251,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>후처리</th>
 				<td class="indent5">
-					<select name="finish" id="finish" class="width-500">
+					<select name="finish" id="finish" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (NumberCode finish : finishList) {
@@ -266,14 +266,15 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>OEM Info.</th>
 				<td class="indent5">
-					<input type="text" name="remarks" id="remarks" class="width-500">
+					<input type="text" name="remarks" id="remarks" class="width-200">
 				</td>
 				<th>사양</th>
 				<td class="indent5">
-					<input type="text" name="specification" id="specification" class="width-500">
+					<input type="text" name="specification" id="specification" class="width-200">
 				</td>
 			</tr>
 		</table>
+		
 		<br>
 		<table class="button-table">
 			<tr>
@@ -285,7 +286,6 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 			</tr>
 		</table>
-		
 		<table class="search-table">
 			<colgroup>
 				<col width="150">
@@ -294,6 +294,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>주 도면</th>
 				<td class="indent5" >
+					
 				</td>
 			</tr>
 		</table>
@@ -401,46 +402,46 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				const fid = document.getElementById("fid").value;
 				const location = document.getElementById("location").value;
 
-				if(isEmpty($("#partType1").val())){
-					alert("품목구분을 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#partType2").val())){
-					alert("대분류를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#partType3").val())){
-					alert("중분류를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
-					alert("품목명을 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#seq").val())){
-					alert("SEQ를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#etc").val())){
-					alert("기타를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#model").val())){
-					alert("프로젝트 코드를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#productmethod").val())){
-					alert("제작방법을 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#deptcode").val())){
-					alert("부서를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#unit").val())){
-					alert("단위를 입력하세요.");
-					return;					
-				}
+// 				if(isEmpty($("#partType1").val())){
+// 					alert("품목구분을 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#partType2").val())){
+// 					alert("대분류를 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#partType3").val())){
+// 					alert("중분류를 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
+// 					alert("품목명을 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#seq").val())){
+// 					alert("SEQ를 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#etc").val())){
+// 					alert("기타를 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#model").val())){
+// 					alert("프로젝트 코드를 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#productmethod").val())){
+// 					alert("제작방법을 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#deptcode").val())){
+// 					alert("부서를 입력하세요.");
+// 					return;					
+// 				}
+// 				if(isEmpty($("#unit").val())){
+// 					alert("단위를 입력하세요.");
+// 					return;					
+// 				}
 				if (!confirm("등록 하시겠습니까?")) {
 					return false;
 				}
@@ -476,15 +477,14 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				params.fid = fid;
 				params.location = location;
 				
+				console.log(params);
+				
 //	 			toRegister(params, addRows8);
 //	 			openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-//	 					opener.loadGridData();
-//	 					self.close();
-					} else {
-//	 					closeLayer();
+	 					document.location.href = getCallUrl("/part/list");
 					}
 				});
 			};
