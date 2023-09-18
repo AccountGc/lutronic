@@ -23,6 +23,7 @@ import com.e3ps.org.People;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RoHSHolderData;
@@ -618,5 +619,35 @@ public class RohsHelper {
 		}
 		
     	return duplicate;
+	}
+	
+	public List<PartData> getROHSToPartList(ROHSMaterial rohs) throws Exception{
+		return getROHSToPartList(rohs, CommonUtil.isLatestVersion(CommonUtil.getOIDString(rohs)));
+	}
+	
+	public List<PartData> getROHSToPartList(ROHSMaterial rohs,boolean islastversion) throws Exception{
+		List<PartData> list = new ArrayList<PartData>();
+		String vr = CommonUtil.getVROID(rohs);
+		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
+		
+		QuerySpec qs = new QuerySpec();
+		int idx1= qs.addClassList(WTPart.class, true);
+        int idx2 = qs.addClassList(PartToRohsLink.class, true);
+        
+        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
+    	qs.appendWhere(VersionControlHelper.getSearchCondition(WTPart.class, true), new int[]{idx1});
+       
+    	if(islastversion) {
+        	SearchUtil.addLastVersionCondition(qs, WTPart.class, idx1);
+		}
+    	SearchUtil.setOrderBy(qs, WTPart.class, idx1, WTPart.NUMBER, false);
+		
+		QueryResult rt =PersistenceHelper.manager.navigate(rohs,"part", qs,true);
+		while(rt.hasMoreElements()){
+			WTPart part = (WTPart)rt.nextElement();
+			PartData data = new PartData(part);
+			list.add(data);
+		}
+		return list;
 	}
 }

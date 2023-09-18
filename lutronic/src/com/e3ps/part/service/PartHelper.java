@@ -36,6 +36,7 @@ import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.rohs.service.RohsQueryHelper;
 
 import net.sf.json.JSONArray;
@@ -282,7 +283,7 @@ public class PartHelper {
 					}
 				} else if ("rohs".equals(moduleType)) {
 					ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
-					list = RohsQueryHelper.service.getROHSToPartList(rohs);
+					list = RohsHelper.manager.getROHSToPartList(rohs);
 					Collections.sort(list, new ObjectComarator());
 				}
 			}

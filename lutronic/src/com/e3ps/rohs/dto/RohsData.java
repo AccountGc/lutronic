@@ -4,26 +4,14 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.WebUtil;
-import com.e3ps.part.service.VersionHelper;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.service.RohsHelper;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.doc.WTDocument;
-import wt.epm.EPMDocument;
-import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
-import wt.part.WTPart;
-import wt.query.QuerySpec;
-import wt.query.SearchCondition;
 import wt.session.SessionHelper;
-import wt.vc.VersionControlHelper;
 
 @Getter
 @Setter
@@ -70,7 +58,7 @@ public class RohsData{
 		if(code2 !=null){
 			setApprovalType(code2.getCode());
 		}
-		setLatest(VersionHelper.service.isLastVersion(rohs));
+		setLatest(CommonUtil.isLatestVersion(rohs));
 		setDescription(rohs.getDescription());
 		setVersion(rohs.getVersionIdentifier().getValue() + "." + rohs.getIterationIdentifier().getValue());
 	}
