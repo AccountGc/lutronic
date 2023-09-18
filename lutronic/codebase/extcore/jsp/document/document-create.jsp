@@ -1,47 +1,31 @@
-<%@page import="wt.doc.DocumentType"%>
-<%@page import="wt.ownership.Ownership"%>
-<%@page import="com.e3ps.common.util.SequenceDao"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
-<%@page import="com.e3ps.common.util.DateUtil"%>
-<%@page import="com.e3ps.rohs.ROHSMaterial"%>
-<%@page import="wt.fc.PersistenceHelper"%>
-<%@page import="wt.folder.FolderEntry"%>
-<%@page import="wt.folder.FolderHelper"%>
-<%@page import="wt.clients.folder.FolderTaskLogic"%>
-<%@page import="wt.folder.Folder"%>
-<%@page import="wt.inf.container.WTContainerHelper"%>
-<%@page import="wt.inf.container.WTContainerRef"%>
-<%@page import="wt.org.OrganizationServicesHelper"%>
-<%@page import="wt.org.WTOrganization"%>
-<%@page import="wt.doc.WTDocument"%>
-<%@page import="com.e3ps.common.util.StringUtil"%>
+<%@page import="com.e3ps.admin.form.FormTemplate"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
-<%@page import="wt.org.WTPrincipal"%>
-<%@page import="wt.session.SessionHelper"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
 %>
-<!-- AUIGrid -->
-<%-- <%@include file="/extcore/jsp/common/aui/auigrid.jsp"%> --%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
 </head>
 <body>
-	<form id="form">
-		<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
+	<form>
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -58,14 +42,45 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<col width="*">
 				<col width="150">
 				<col width="*">
+				<col width="150">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th class="req lb">문서분류</th>
+				<td class="indent5" colspan="3">
+					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
+					<span id="locationText"> /Default/문서 </span>
+					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
+				</td>
+				<th class="req">문서 템플릿</th>
 				<td class="indent5">
-					<span id="location"> /Default/Document </span>
+					<select name="formType" id="formType" class="width-200" onchange="loadForm();">
+						<option value=-"">선택</option>
+						<%
+						for (FormTemplate formType : form) {
+						%>
+						<option value="<%=formType.getPersistInfo().getObjectIdentifier().getStringValue()%>"><%=formType.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th class="req lb">문서명</th>
+				<td class="indent5">
+					<input type="text" name="docName" id="docName" class="width-300">
+				</td>
+				<th class="req">문서종류</th>
+				<td class="indent5">
+					<input type="text" name="documentName" id="documentName" class="width-300">
+					<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
+						<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
+						</ul>
+					</div>
 				</td>
 				<th class="req">결재방식</th>
-				<td class="indent5">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" id="lifecycle" value="LC_Default" checked="checked">
@@ -84,20 +99,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 							</label>
 						</div>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<th class="req lb">문서종류</th>
-				<td class="indent5">
-					<input type="text" name="documentName" id="documentName" class="width-200">
-					<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
-						<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
-						</ul>
-					</div>
-				</td>
-				<th class="">문서명</th>
-				<td class="indent5">
-					<input type="text" name="docName" id="docName" class="width-200">
 				</td>
 			</tr>
 			<tr>
@@ -122,15 +123,13 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						<%
 						for (NumberCode preseration : preserationList) {
 						%>
-						<option value="<%=preseration.getCode()%>" <% if("영구".equals(preseration.getName())){ %> selected <% } %>><%=preseration.getName()%></option>
+						<option value="<%=preseration.getCode()%>" <%if ("영구".equals(preseration.getName())) {%> selected <%}%>><%=preseration.getName()%></option>
 						<%
 						}
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
-				<th class="lb">프로젝트코드</th>
+				<th>프로젝트코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -143,7 +142,9 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						%>
 					</select>
 				</td>
-				<th class="">부서</th>
+			</tr>
+			<tr>
+				<th class="lb">부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
@@ -156,26 +157,24 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
-				<th class="lb">내부 문서번호</th>
+				<th>내부 문서번호</th>
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
 				</td>
-				<th class="">작성자</th>
+				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" class="width-200">
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">문서설명</th>
-				<td colspan="3" class="indent5">
-					<textarea name="description" id="description" rows="6"></textarea>
+				<td colspan="5" class="indent5">
+					<textarea name="description" id="description" rows="15"></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="req lb">주 첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -183,7 +182,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -197,9 +196,9 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 		</jsp:include>
 
 		<!-- 	관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
-			<jsp:param value="관련 문서" name="title" />
+		<jsp:include page="/extcore/jsp/document/document-include.jsp">
 			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
 		</jsp:include>
 
 		<table class="button-table">
@@ -212,217 +211,50 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			</tr>
 		</table>
 		<script type="text/javascript">
-	
-		function folder() {
-			const location = decodeURIComponent("/Default/문서");
-			const url = getCallUrl("/folder?location=" + location + "&container=product&method=setNumber&multi=false");
-			popup(url, 500, 600);
-		}
-
-		function setNumber(item) {
-			const url = getCallUrl("/doc/setNumber");
-			const params = new Object();
-			params.loc = item.location;
-			call(url, params, function(data) {
-				document.getElementById("loc").innerHTML = item.location;
-				document.getElementById("location").value = item.location;
-				document.getElementById("number").value = data.number;
-			})
-		}
-		
-		document.addEventListener("DOMContentLoaded", function() {
-			selectbox("model");
-			selectbox("preseration");
-			selectbox("documentType");
-			selectbox("deptcode");
-		});
-
-		function create(isSelf) {
-			const location = document.getElementById("location").value;
-			const lifecycle = document.getElementById("lifecycle").value;
-			const documentName = document.getElementById("documentName").value;
-			const docName = document.getElementById("docName");
-			const documentType = document.getElementById("documentType").value;
-			const preseration = document.getElementById("preseration").value;
-			const model = document.getElementById("model").value;
-			const deptcode = document.getElementById("deptcode").value;
-			const interalnumber = document.getElementById("interalnumber").value;
-			const writer = document.getElementById("writer").value;
-			const description = document.getElementById("description").value;
-			const _primary = toArray("primary");
-			const primary = _primary[0];
-			const secondary = toArray("secondarys");
-			let docOids = [];
-			const appendDoc = AUIGrid.getGridData(myGridID90);
-			if(appendDoc.length > 0){
-				for(let i = 0; i < appendDoc.length; i++){
-					docOids.push(appendDoc[i].oid)
+			const oEditors = [];
+			nhn.husky.EZCreator.createInIFrame({
+				oAppRef : oEditors,
+				elPlaceHolder : "description", //textarea ID 입력
+				sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
+				fCreator : "createSEditor2",
+				htParams : {
+					// 툴바 사용 여부 (true:사용/ false:사용하지 않음) 
+					bUseToolbar : true,
+					// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음) 
+					bUseVerticalResizer : false,
+					// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음) 
+					bUseModeChanger : false
 				}
-			}
-			let partOids = [];
-			const appendPart = AUIGrid.getGridData(partGridID);
-			if(appendPart.length > 0){
-				for(let i = 0; i < appendPart.length; i++){
-					partOids.push(appendPart[i].part_oid);
-				}
-			}
-			
-// 			if(isEmpty($("#lifecycle").val())){
-// 				alert("결재방식을 입력하세요.");
-// 				return;					
-// 			}
-// 			if(isEmpty($("#documentName").val())){
-// 				alert("문서종류를 입력하세요.");
-// 				return;					
-// 			}
-// 			if(isEmpty($("#documentType").val())){
-// 				alert("문서유형을 입력하세요.");
-// 				return;					
-// 			}
-// 			if(isEmpty($("#preseration").val())){
-// 				alert("보존기간을 입력하세요.");
-// 				return;					
-// 			}
-			if (!confirm("등록 하시겠습니까?")) {
-				return false;
-			}
-
-			const params = new Object();
-			const url = getCallUrl("/doc/create");
-			params.lifecycle = lifecycle;
-			params.documentName = documentName;
-			params.docName = docName.value;
-			params.preseration = preseration;
-			params.model = model;
-			params.deptcode = deptcode;
-			params.interalnumber = interalnumber;
-			params.writer = writer;
-			params.self = JSON.parse(isSelf);
-			params.description = description;
-			params.location = location;
-			params.documentType = documentType;
-			params.primary = primary;
-			params.secondary = secondary;
-			params.docOids = docOids;
-			params.partOids = partOids;
-			parent.openLayer();
-			call(url, params, function(data) {
-				alert(data.msg);
-				if (data.result) {
-					document.location.href = getCallUrl("/doc/list");
-				}
-				parent.closeLayer();
 			});
-		};
 
-		// jquery 삭제를 해가는 쪽으로 한다..
-		document.addEventListener("DOMContentLoaded", function() {
-			// DOM이 로드된 후 실행할 코드 작성
-			createAUIGrid2(columnsPart);
-			AUIGrid.resize(partGridID);
-			createAUIGrid90(columns90);
-			AUIGrid.resize(myGridID90);
-			document.getElementById("docName").focus();
-		});
-
-		window.addEventListener("resize", function() {
-			AUIGrid.resize(partGridID);
-			AUIGrid.resize(docGridID);
-		});
-		
-		// 문서명 키 입력 시 메서드
-		document.querySelector("#documentName").addEventListener('keyup', (event) => {
-			
-			const charCode = (event.which) ? event.which : event.keyCode;
-			
-			if(charCode == 38 || charCode == 40){
-				const searchElem = document.querySelector("#" + event.id + "Search");
-				
-				if(searchElem && !searchElem.hidden){
-					const isAdd = (charCode === 38);
-					moveDocumentNameFocus(this.id, isAdd);
-				}
-			} else if(charCode == 13 || charCode == 27){
-				const searchElem = document.querySelector("#" + event.id + "Search");
-				
-				if(searchElem){
-					searchElem.style.display = "none";
-				}
-			} else {
-				searchDocumentName(event.target.id, event.target.value);
+			function folder() {
+				const location = decodeURIComponent("/Default/문서");
+				const url = getCallUrl("/folder/popup?location=" + location);
+				_popup(url, 500, 600, "n");
 			}
-		});
-		
-		$("input[name=documentName]").focusout(function () {
-			$("#" + this.id + "Search").hide();
-		})
-		
-		// 문서종류 입력 시 documentName 리스트 출력 메서드
-		const searchDocumentName = function(id, value) {
-			const codeType = id.toUpperCase();
-				
-			autoSearchName(codeType, value)
-				.then(result => {
-					addSearchList(id, result, false);
-				})
-				.catch(error => {
-					console.error(error);
-				})
-		}
-		
-		// documentName 가져오기 메서드
-		const autoSearchName = function(codeType, value) {
-			
-			const url = getCallUrl("/common/autoSearchName");
-			 const params = {
-				 codeType: codeType,	
-				 value: value
-		    };
-			 
-			 return new Promise((resolve, reject) => {
-		        call(url, params, function(dataList) {
-		            const result = dataList.map(data => data); 
-		            resolve(result); 
-		        });
-		    });
-		}
 
-		<%----------------------------------------------------------
-		*                      문서명 입력시 데이터 리스트 보여주기
-		----------------------------------------------------------%>
-		const addSearchList = function(id, data, isRemove) {
-			$("#" + id + "UL li").remove();
-			if(isRemove) {
-				$("#" + this.id + "Search").hide();
-			}else {
-				if(data.length > 0) {
-					$("#" + id + "Search").show();
-					for(var i=0; i<data.length; i++) {
-						$("#" + id + "UL").append("<li title='" + id + "' class=''>" + data[i].name);
-					}
-				}else {
-					$("#" + id + "Search").hide();
-				}
+			function loadForm() {
+				const oid = document.getElementById("formType").value;
+				document.getElementById("description").value = "123123";
 			}
-		}
 
-		<%----------------------------------------------------------
-		*                      문서명 데이터 마우스 올렸을때
-		----------------------------------------------------------%>
-		$(document).on("mouseover", 'div > ul > li', function() {
-			var partName = $(this).attr("title");
-			$(this).addClass("hover");
-			$("#" + partName).val($(this).text());
-		})
+			// 문서 등록
+			function create(temp) {
 
-		<%----------------------------------------------------------
-		*                      문서명 데이터 마우스 뺄때
-		----------------------------------------------------------%>
-		$(document).on("mouseout", 'div > ul > li', function() {
-			$(this).removeClass("hover");
-		})
-		
-	</script>
+			}
+
+			document.addEventListener("DOMContentLoaded", function() {
+				selectbox("formType");
+				selectbox("preseration");
+				selectbox("documentType");
+				selectbox("model");
+				selectbox("deptcode");
+				createAUIGrid90(columns90);
+			});
+
+			window.addEventListener("resize", function() {
+			});
+		</script>
 	</form>
 </body>
 </html>

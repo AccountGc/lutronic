@@ -5,6 +5,7 @@ import java.util.Map;
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.NumberCodeType;
+import com.e3ps.common.util.CommonUtil;
 
 import wt.fc.PersistenceHelper;
 import wt.ownership.Ownership;
@@ -40,7 +41,8 @@ public class StandardFormTemplateService extends StandardManager implements Form
 			form.setOwnership(ownership);
 			form.setNumber(number);
 			form.setDescription(description);
-			form.setFormType("테스트");
+			form.setFormType(formType);
+			form.setVersion(1);
 			PersistenceHelper.manager.save(form);
 
 		} catch (Exception e) {
@@ -91,6 +93,57 @@ public class StandardFormTemplateService extends StandardManager implements Form
 			if (trs != null)
 				trs.rollback();
 			SessionContext.setContext(prev);
+		}
+	}
+
+	@Override
+	public void modify(Map<String, Object> params) throws Exception {
+		String name = (String) params.get("name");
+		String number = (String) params.get("number");
+		String description = (String) params.get("description");
+		String formType = (String) params.get("formType");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			FormTemplate form = (FormTemplate) CommonUtil.getObject(oid);
+			form.setName(name);
+			form.setNumber(number);
+			form.setDescription(description);
+			form.setFormType(formType);
+			form.setVersion(form.getVersion() + 1);
+			PersistenceHelper.manager.modify(form);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void delete(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			FormTemplate form = (FormTemplate)CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(form)
+			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }

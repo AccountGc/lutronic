@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.doc.service.EtcHelper;
 
 import wt.doc.DocumentType;
@@ -67,7 +68,6 @@ public class EtcController extends BaseController {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
-//			ErrorLogHelper.service.create(e.toString(), "/doc/list", "문서 조회 함수");
 		}
 		return result;
 	}
@@ -84,8 +84,25 @@ public class EtcController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("formType", formType);
-		model.setViewName("/extcore/jsp/doc/etc/etc-create.jsp");
+		model.setViewName("/extcore/jsp/document/etc/etc-create.jsp");
 		return model;
+	}
+
+	@Description(value = "기타 문서 등록")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String, Object> create(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EtcHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 
 }

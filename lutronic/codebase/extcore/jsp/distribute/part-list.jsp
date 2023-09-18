@@ -275,7 +275,6 @@ if (request.getParameter("popup") != null) {
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
 						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
-						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
 						<jsp:param value="670" name="height" />
 					</jsp:include>

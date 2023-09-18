@@ -35,4 +35,8 @@
 	- codebase -> ant -f MakeJar.xml
 	
 10. 문서양식로더
-	- Shell -> com.e3ps.admin.form.loader.FormTemplateLoader
+	- Shell -> java com.e3ps.admin.form.loader.FormTemplateLoader
+	
+11. 문서컬럼 추가
+	- Shell -> AddColumns.bat wt.doc.WTDocument InlineBLOB=1
+	- Shell -> codebase -> ant -f MakeJar.xml

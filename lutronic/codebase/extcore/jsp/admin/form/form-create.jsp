@@ -9,6 +9,11 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>

@@ -32,7 +32,7 @@ String height = request.getParameter("height");
 			forceTreeView : true
 		}
 		_myGridID = AUIGrid.create("#_grid_wrap", columnLayout, props);
-		loadFolderTree();
+		tree();
 // 		AUIGrid.bind(_myGridID, "selectionChange", auiGridSelectionChangeHandler);
 		AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
@@ -74,12 +74,12 @@ String height = request.getParameter("height");
 	}
 	
 	
-	function loadFolderTree() {
+	function tree() {
 		const location = decodeURIComponent("<%=location%>");
-		const url = getCallUrl("/loadFolderTree");
-		const params = new Object();
-		params.location = location;
-		params.container = "<%=container%>";
+		const url = getCallUrl("/folder/tree");
+		const params = {
+			location : location
+		}
 		call(url, params, function(data) {
 			AUIGrid.setGridData(_myGridID, data.list);
 		});

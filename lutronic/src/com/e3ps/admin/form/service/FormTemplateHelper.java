@@ -13,6 +13,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
 
@@ -53,5 +54,20 @@ public class FormTemplateHelper {
 		return map;
 	}
 
-
+	/**
+	 * 문서 양식 템플릿 배열
+	 */
+	public ArrayList<FormTemplate> array() throws Exception {
+		ArrayList<FormTemplate> list = new ArrayList<FormTemplate>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(FormTemplate.class, true);
+		QuerySpecUtils.toOrderBy(query, idx, FormTemplate.class, FormTemplate.NAME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			FormTemplate form = (FormTemplate) obj[0];
+			list.add(form);
+		}
+		return list;
+	}
 }

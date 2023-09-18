@@ -17,4 +17,13 @@ public interface FormTemplateService {
 	 */
 	public abstract void loader() throws Exception;
 
+	/**
+	 * 문서 양식 수정
+	 */
+	public abstract void modify(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 문서 양식 삭제
+	 */
+	public abstract void delete(String oid) throws Exception;
 }

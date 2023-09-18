@@ -6447,7 +6447,8 @@ button, button:hover {
 	border-radius: 2px;
 	background: #fff;
 	box-shadow: 0 1px #e9eced;
-	overflow: hidden
+	overflow: hidden;
+	height: 350px !important; 
 }
 
 .AXselectExpandBox .selectExpandScroll {

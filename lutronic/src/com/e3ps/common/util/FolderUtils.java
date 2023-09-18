@@ -21,15 +21,9 @@ public class FolderUtils {
 	/**
 	 * 폴더 구조 트리로 가져오기
 	 */
-	public static JSONArray loadFolderTree(Map<String, String> params) throws Exception {
+	public static JSONArray tree(Map<String, String> params) throws Exception {
 		String location = params.get("location");
-		String container = params.get("container");
-		Folder root = null;
-		if ("product".equalsIgnoreCase(container)) {
-			root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-		} else if ("library".equalsIgnoreCase(container)) {
-			root = FolderTaskLogic.getFolder(location, CommonUtil.getWTLibraryContainer());
-		}
+		Folder root = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 
 		JSONArray list = new JSONArray();
 		JSONObject rootNode = new JSONObject();
@@ -45,7 +39,7 @@ public class FolderUtils {
 			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("location", child.getFolderPath());
 			node.put("name", child.getName());
-			loadFolderTree(child, node);
+			tree(child, node);
 			children.add(node);
 		}
 		rootNode.put("children", children);
@@ -56,7 +50,7 @@ public class FolderUtils {
 	/**
 	 * 폴더 구조 트리로 가져오기 재귀함수
 	 */
-	private static void loadFolderTree(Folder parent, JSONObject parentNode) throws Exception {
+	private static void tree(Folder parent, JSONObject parentNode) throws Exception {
 		JSONArray children = new JSONArray();
 		Enumeration result = FolderTaskLogic.getSubFolders(parent);
 		while (result.hasMoreElements()) {
@@ -65,7 +59,7 @@ public class FolderUtils {
 			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("location", child.getFolderPath());
 			node.put("name", child.getName());
-			loadFolderTree(child, node);
+			tree(child, node);
 			children.add(node);
 		}
 		parentNode.put("children", children);

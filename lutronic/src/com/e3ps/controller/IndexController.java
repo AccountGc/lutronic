@@ -104,23 +104,4 @@ public class IndexController extends BaseController {
 		model.setViewName("/extcore/layout/footer.jsp");
 		return model;
 	}
-
-	@Description(value = "폴더 트리 구조 가져오기")
-	@PostMapping(value = "/loadFolderTree")
-	@ResponseBody
-	public Map<String, Object> loadFolderTree(@RequestBody Map<String, String> params) throws Exception {
-
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			JSONArray list = FolderUtils.loadFolderTree(params);
-			result.put("list", list);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-
-	}
 }

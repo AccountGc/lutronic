@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.admin.form.FormTemplate;
+import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
@@ -63,10 +65,12 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		model.setViewName("/extcore/jsp/document/document-create.jsp");
+		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
+		model.addObject("form", form);
+		model.setViewName("/extcore/jsp/document/document-create.jsp");
 		return model;
 	}
 
@@ -102,7 +106,7 @@ public class DocumentController extends BaseController {
 		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "관련 문서 팝업 페이지")
 	@GetMapping(value = "/listPopup")
 	public ModelAndView listPopup() throws Exception {
@@ -115,7 +119,7 @@ public class DocumentController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
-        model.setViewName("popup:/document/document-list-popup");            
+		model.setViewName("popup:/document/document-list-popup");
 		return model;
 	}
 
