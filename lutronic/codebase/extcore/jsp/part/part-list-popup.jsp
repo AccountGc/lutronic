@@ -13,8 +13,10 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAttribute("popup") : false; 
 int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
-String callback = request.getParameter("callback") != null ? request.getParameter("callback") :"";
+String callback = request.getParameter("callback") != null ? request.getParameter("callback") :"append";
 String rowId = request.getParameter("rowId") != null ? request.getParameter("rowId") :"";
+String radio = request.getParameter("radio") != null ? request.getParameter("radio") :"N";
+
 
 %>
 <input type="hidden" name="sessionid" id="sessionid">
@@ -506,6 +508,10 @@ String rowId = request.getParameter("rowId") != null ? request.getParameter("row
 			showInlineFilter : false,
 			useContextMenu : true,
 			enableRowCheckShiftKey : true,
+			<% if("Y".equals(radio)){%>
+				rowCheckToRadio : true,
+			<%} %>
+			
 			enableRightDownFocus : true,
 			filterLayerWidth : 320,
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
@@ -651,15 +657,21 @@ String rowId = request.getParameter("rowId") != null ? request.getParameter("row
 		}
 		var parentRow = <%= parentRowIndex %>;
 		var callback  = "<%= callback %>";
-		if(callback!=""){
-			opener.<%= callback %>(items,"<%= rowId %>");
-		}else{
-			if(parentRow<0){
-				opener.append(items);
+		
+		<% if("Y".equals(radio)){%>
+			opener.<%= callback %>(items[0],"<%= rowId %>");
+		<%}else{%>
+			if(callback!="append"){
+				opener.<%= callback %>(items,"<%= rowId %>");
 			}else{
-				opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
+				if(parentRow<0){
+					opener.append(items);
+				}else{
+					opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
+				}
 			}
-		}
+		<%}%>
+		
 		
 		self.close();
 	}
