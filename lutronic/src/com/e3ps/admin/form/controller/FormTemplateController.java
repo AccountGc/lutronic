@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.admin.form.service.FormTemplateService;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.groupware.notice.service.NoticeHelper;
@@ -77,4 +80,22 @@ public class FormTemplateController extends BaseController {
 		}
 		return result;
 	}
+
+	@Description(value = "문서 템플릿 양식 가져오기")
+	@ResponseBody
+	@GetMapping(value = "/html")
+	public Map<String, Object> html(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			FormTemplate form = (FormTemplate) CommonUtil.getObject(oid);
+			result.put("html", form.getDescription());
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 }

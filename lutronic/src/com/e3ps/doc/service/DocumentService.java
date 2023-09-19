@@ -35,10 +35,6 @@ public interface DocumentService {
 
 	List<DocumentDTO> include_documentLink(String module, String oid);
 
-	Map<String, Object> listDocumentAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	String delete(String oid) throws Exception;
-
 	ResultData reviseUpdate(Map<String, Object> params) throws Exception;
 
 	void createOutPutLink(WTDocument doc, Hashtable hash) throws Exception;
@@ -64,8 +60,6 @@ public interface DocumentService {
 	Map<String, Object> listPagingAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
 
-	public void create(Map<String, Object> params) throws Exception;
-	
 	public void batch(Map<String, Object> params) throws Exception;
 
 	public void createComments(Map<String, Object> params) throws Exception;
@@ -74,13 +68,20 @@ public interface DocumentService {
 
 	public void deleteComments(String oid) throws Exception;
 
-	public void createTemplate(Map<String, Object> params) throws Exception;
-
-
 	/**
 	 * 문서 일괄 결재 등록
 	 * 
 	 * @param params
 	 */
 	public abstract void register(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 문서 등록
+	 */
+	public void create(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 문서 삭제
+	 */
+	public abstract void delete(String oid) throws Exception;
 }

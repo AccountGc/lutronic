@@ -229,36 +229,36 @@ public class StandardDocumentService extends StandardManager implements Document
 		ArrayList<String> secondarys = (ArrayList<String>) map.get("secondary");
 
 //		CommonContentHelper.service.attach((ContentHolder) doc, primary, secondary);
-		if(primary.length() > 0) {
+		if (primary.length() > 0) {
 			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
 			ApplicationData applicationData = ApplicationData.newApplicationData(doc);
 			applicationData.setRole(ContentRoleType.PRIMARY);
 			PersistenceHelper.manager.save(applicationData);
-			ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());			
+			ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
 		}
-		
-		if(secondarys.size() > 0) {
-			for(String secondary : secondarys) {
+
+		if (secondarys.size() > 0) {
+			for (String secondary : secondarys) {
 				File vault = CommonContentHelper.manager.getFileFromCacheId(secondary);
 				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
 				applicationData.setRole(ContentRoleType.SECONDARY);
 				PersistenceHelper.manager.save(applicationData);
-				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());							
+				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
 			}
 		}
 
 		// 관련 부품
 		ArrayList<String> _partOids = (ArrayList<String>) map.get("partOids");
-		if(_partOids != null) {
+		if (_partOids != null) {
 			String[] partOids = _partOids.toArray(new String[_partOids.size()]);
-			updateDocumentToPartLink(doc, partOids, false);			
+			updateDocumentToPartLink(doc, partOids, false);
 		}
 
 		// 관련 문서
 		ArrayList<String> _docOids = (ArrayList<String>) map.get("docOids");
-		if(_docOids != null) {
+		if (_docOids != null) {
 			String[] docOids = _docOids.toArray(new String[_docOids.size()]);
-			updateDocumentToDocumentLink(doc, docOids, false);			
+			updateDocumentToDocumentLink(doc, docOids, false);
 		}
 
 		String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
@@ -321,102 +321,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		number = number + seqNo;
 
 		return number;
-	}
-
-	@Override
-	public Map<String, Object> listDocumentAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		int page = StringUtil.getIntParameter(request.getParameter("page"), 1);
-		int rows = StringUtil.getIntParameter(request.getParameter("rows"), 10);
-		int formPage = StringUtil.getIntParameter(request.getParameter("formPage"), 15);
-
-		String sessionId = request.getParameter("sessionId");
-
-		PagingQueryResult qr = null;
-
-		if (StringUtil.checkString(sessionId)) {
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		} else {
-			QuerySpec query = DocumentQueryHelper.service.getListQuery(request, response);
-			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
-		}
-
-		PageControl control = new PageControl(qr, page, formPage, rows);
-		int totalPage = control.getTotalPage();
-		int startPage = control.getStartPage();
-		int endPage = control.getEndPage();
-		int listCount = control.getTopListCount();
-		int totalCount = control.getTotalCount();
-		int currentPage = control.getCurrentPage();
-		String param = control.getParam();
-		int rowCount = control.getTopListCount();
-
-		StringBuffer xmlBuf = new StringBuffer();
-		xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
-		xmlBuf.append("<rows>");
-
-		String select = StringUtil.checkReplaceStr(request.getParameter("select"), "false");
-
-		while (qr.hasMoreElements()) {
-			Object[] o = (Object[]) qr.nextElement();
-			WTDocument doc = (WTDocument) o[0];
-			DocumentDTO data = new DocumentDTO(doc);
-
-			xmlBuf.append("<row id='" + data.oid + "'>");
-			if ("true".equals(select)) {
-				xmlBuf.append("<cell><![CDATA[]]></cell>");
-			}
-
-			if (data.getDocumentType().equals("금형문서")) {
-				xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.number + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[<a href=javascript:openView('" + data.oid + "')>" + data.name
-						+ "</a>]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.version + "." + data.iteration + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.getLifecycle() + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.creator + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.createDate.substring(0, 10) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.modifyDate.substring(0, 10) + "]]></cell>");
-			} else {
-				xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.number + "]]></cell>");
-				xmlBuf.append(
-						"<cell><![CDATA[" + data.getIBAValue(AttributeKey.IBAKey.IBA_INTERALNUMBER) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.getIBAValue(AttributeKey.IBAKey.IBA_MODEL) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[<a href=javascript:openView('" + data.oid + "')>" + data.name
-						+ "</a>]]></cell>");
-				xmlBuf.append(
-						"<cell><![CDATA[" + data.location.substring(("/Default/Document").length()) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.version + "." + data.iteration + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.getLifecycle() + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.getIBAValue(AttributeKey.IBAKey.IBA_DSGN) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.creator + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.createDate.substring(0, 10) + "]]></cell>");
-				xmlBuf.append("<cell><![CDATA[" + data.modifyDate.substring(0, 10) + "]]></cell>");
-			}
-
-			xmlBuf.append("</row>");
-
-		}
-		xmlBuf.append("</rows>");
-
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		result.put("formPage", formPage);
-		result.put("rows", rows);
-		result.put("totalPage", totalPage);
-		result.put("startPage", startPage);
-		result.put("endPage", endPage);
-		result.put("listCount", listCount);
-		result.put("totalCount", totalCount);
-		result.put("currentPage", currentPage);
-		result.put("param", param);
-		result.put("sessionId", qr.getSessionId() == 0 ? "" : qr.getSessionId());
-		result.put("xmlString", xmlBuf);
-
-		return result;
-
 	}
 
 	/**
@@ -2198,122 +2102,52 @@ public class StandardDocumentService extends StandardManager implements Document
 
 	@Override
 	public void create(Map<String, Object> params) throws Exception {
-		
-		Transaction trx = new Transaction();
-		WTDocument doc = null;
+		String name = (String) params.get("name");
+		String location = (String) params.get("location");
+		String description = (String) params.get("description");
+		String documentType = (String) params.get("documentType");
+		String lifecycle = (String) params.get("lifecycle");
+		String primary = (String) params.get("primary");
+		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
 
+		Transaction trs = new Transaction();
 		try {
-			trx.start();
-			
-			params.put("linkType", "");
+			trs.start();
+			DocumentType docType = DocumentType.toDocumentType(documentType);
+			String number = getDocumentNumberSeq(docType.getLongDescription());
+			WTDocument doc = WTDocument.newWTDocument();
+			doc.setDocType(docType);
+			doc.setName(name);
+			doc.setNumber(number);
+			doc.getTypeInfoWTDocument().setPtc_rht_1(description);
 
-			createAction(params);
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) doc, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(doc,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
-			trx.commit();
-			trx = null;
+			PersistenceHelper.manager.save(doc);
+
+			if (StringUtil.checkString(primary)) {
+				File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+				applicationData.setRole(ContentRoleType.PRIMARY);
+				PersistenceHelper.manager.save(applicationData);
+				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
+			}
+
+			trs.commit();
+			trs = null;
 		} catch (Exception e) {
 			e.printStackTrace();
+			trs.rollback();
+			;
+			throw e;
 		} finally {
-			if (trx != null) {
-				trx.rollback();
-			}
+			if (trs != null)
+				trs.rollback();
 		}
-//
-//
-//		String location = StringUtil.checkNull((String) params.get("location"));
-//		String documentName = StringUtil.checkNull((String) params.get("documentName"));
-//		String name = StringUtil.checkNull((String) params.get("docName"));
-//		String description = StringUtil.checkNull((String) params.get("description"));
-//
-//		String documentType = StringUtil.checkNull((String) params.get("documentType"));
-//
-//		DocumentType docType = DocumentType.toDocumentType(documentType);
-//		String number = getDocumentNumberSeq(docType.getLongDescription());
-//
-//		String primary = (String) params.get("primary");
-//		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
-//		Transaction trs = new Transaction();
-//		try {
-//			trs.start();
-//
-//			// 문서 기본 정보 설정
-//			WTDocument document = WTDocument.newWTDocument();
-//			if ("$$MMDocument".equals(documentType)) {
-//				document.setName(name);
-//			} else {
-//				if (name.length() > 0) {
-//					document.setName(documentName + "-" + name);
-//				} else {
-//					document.setName(documentName);
-//				}
-//			}
-//			document.setNumber(number);
-//			document.setDescription(description);
-//
-//			// 문서 분류체계 설정
-//			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-//			FolderHelper.assignLocation((FolderEntry) document, folder);
-//
-//			// 문서 Container 설정
-//			PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
-//			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
-//			document.setContainer(e3psProduct);
-//
-//			// 문서 lifeCycle 설정
-//			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
-//			LifeCycleHelper.setLifeCycle(document,
-//					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); // Lifecycle
-//
-//			document = (WTDocument) PersistenceHelper.manager.save(document);
-//
-//			if (StringUtil.checkString(primary)) {
-//				File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-//				ApplicationData applicationData = ApplicationData.newApplicationData(document);
-//				applicationData.setRole(ContentRoleType.PRIMARY);
-//				PersistenceHelper.manager.save(applicationData);
-//				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
-//			}
-//
-//			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
-//				String cacheId = (String) secondarys.get(i);
-//				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
-//				ApplicationData applicationData = ApplicationData.newApplicationData(document);
-//				applicationData.setRole(ContentRoleType.SECONDARY);
-//				PersistenceHelper.manager.save(applicationData);
-//				ContentServerHelper.service.updateContent(document, applicationData, vault.getPath());
-//			}
-//
-//			// 관련 부품
-//			String[] partOids = (String[]) params.get("partOids");
-//			updateDocumentToPartLink(document, partOids, false);
-//
-//			// 관련 문서
-//			String[] docOids = (String[]) params.get("docOids");
-//			updateDocumentToDocumentLink(document, docOids, false);
-//
-//			String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
-//			if ("LC_Default_NonWF".equals(lifecycle)) {
-//				E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) document, "BATCHAPPROVAL");
-//				approvalType = AttributeKey.CommonKey.COMMON_BATCH;
-//			}
-//			params.put("approvalType", approvalType);
-//			CommonHelper.service.changeIBAValues(document, params);
-//
-//			// 산출물 직접 등록(개발업무 관리,설계 변경 관리) 문서 직접등록 시 링크 생성
-////	        String linkType = (String)params.get("linkType");
-////	        String parentOid = (String)params.get("parentOid");
-////	        createLinkDocument(document,linkType,parentOid);
-//
-//			trs.commit();
-//			trs = null;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			trs.rollback();
-//			throw e;
-//		} finally {
-//			if (trs != null)
-//				trs.rollback();
-//		}
 	}
 
 	@Override
@@ -2408,49 +2242,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		}
 	}
 
-	/**
-	 * 문서 양식 저장 메서드
-	 */
-	@Override
-	public void createTemplate(Map<String, Object> params) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			String docTemplateNumber = StringUtil.checkNull((String) params.get("number"));
-			String name = StringUtil.checkNull((String) params.get("name"));
-			String _docTemplateType = (String) params.get("documentTemplateType");
-			String description = (String) params.get("description");
-
-			DocumentTemplate docTemp = DocumentTemplate.newDocumentTemplate();
-
-			docTemp.setNumber(docTemplateNumber);
-			docTemp.setName(name);
-			if (!StringUtil.isNull(_docTemplateType)) {
-//	    		NumberCode docTemplateType = NumberCodeHelper.service.getNumberCode(_docTemplateType, "DOCFORMTYPE");
-				NumberCode docTemplateType = (NumberCode) CommonUtil.getObject(_docTemplateType);
-				docTemp.setTemplateType(docTemplateType);
-			}
-
-			docTemp.setDescription(description);
-			System.out.println("===========================>" + description);
-			System.out.println("===========================>" + docTemp.getDescription());
-
-			PersistenceHelper.manager.save(docTemp);
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null) {
-				trs.rollback();
-			}
-		}
-	}
-
 	@Override
 	public void register(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
@@ -2517,9 +2308,8 @@ public class StandardDocumentService extends StandardManager implements Document
 		}
 	}
 
-	
 	/**
-	 *  문서 일괄등록 메서드
+	 * 문서 일괄등록 메서드
 	 */
 	@Override
 	public void batch(Map<String, Object> params) throws Exception {

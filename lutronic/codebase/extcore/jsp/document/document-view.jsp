@@ -1,23 +1,20 @@
+<%@page import="com.e3ps.common.util.CommonUtil"%>
+<%@page import="wt.doc.WTDocument"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTPrincipal"%>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <%@page import="com.e3ps.common.comments.CommentsData"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO data = (DocumentDTO) request.getAttribute("docData");
+
 List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 String pnum = (String) request.getAttribute("pnum");
 WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 %>
-<form name="documentViewForm" id="documentViewForm" method="post" >
 <input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
 
@@ -26,45 +23,41 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				<% if(data.getDocumentType().equals("금형문서")){ %>
-					금형 상세보기
-				<% }else{ %>
-					문서 상세보기
-				<% } %>
+				문서 상세보기
 			</div>
 		</td>
 		<td class="right">
 			<%
-			if(data.isLatest()){
+			if (data.isLatest()) {
 			%>
-<%-- 				<% --%>
-<!-- // 				if(data.getState().equals("APPROVED")){ -->
-<%-- 				%> --%>
-					<input type="button" value="개정" title="개정" id="reviseBtn" onclick="update();">
-<%-- 				<%	 --%>
-<!-- // 				} -->
-<%-- 				%> --%>
-				<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-				<%
-				if(data.isWithDraw()){
-				%>
-					<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
-				<%	
-				}
-				%>
-				<%
-				if(data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")){
-				%>
-					<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
-					<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
-				<%	
-				}
-				%>
+			<%-- 				<% --%>
+			<!-- // 				if(data.getState().equals("APPROVED")){ -->
+			<%-- 				%> --%>
+			<input type="button" value="개정" title="개정" id="reviseBtn" onclick="update();">
+			<%-- 				<%	 --%>
+			<!-- // 				} -->
+			<%-- 				%> --%>
+			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
 			<%
-			}else{
+			if (data.isWithDraw()) {
 			%>
-				<input type="button" value="최신Rev." title="최신Rev." id="lastestBtn">
-			<%	
+			<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
+			<%
+			}
+			%>
+			<%
+			if (data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")) {
+			%>
+			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
+			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+			<%
+			}
+			%>
+			<%
+			} else {
+			%>
+			<input type="button" value="최신Rev." title="최신Rev." id="lastestBtn">
+			<%
 			}
 			%>
 			<input type="button" value="Rev.이력" title="Rev.이력" id="versionBtn">
@@ -102,25 +95,36 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="350">
 			</colgroup>
 			<tr>
-				<% if(data.getDocumentType().equals("금형문서")){ %>
+				<%
+				if (data.getDocumentType().equals("금형문서")) {
+				%>
 				<th class="lb">금형번호</th>
-				<% }else{ %>
+				<%
+				} else {
+				%>
 				<th class="lb">문서번호</th>
-				<% } %>
+				<%
+				}
+				%>
 				<td class="indent5"><%=data.getNumber()%></td>
-				<% if(data.getDocumentType().equals("금형문서")){ %>
+				<%
+				if (data.getDocumentType().equals("금형문서")) {
+				%>
 				<th class="lb">금형분류</th>
-				<% }else{ %>
+				<%
+				} else {
+				%>
 				<th class="lb">문서분류</th>
-				<% } %>
+				<%
+				}
+				%>
 				<td class="indent5"><%=data.getLocation()%></td>
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
 				<td class="indent5"><%=data.getState()%></td>
 				<th class="lb">Rev.</th>
-				<td class="indent5">
-				</td>
+				<td class="indent5"></td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
@@ -130,9 +134,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
-				<td class="indent5"><%=data.getCreateDate()%></td>
+				<td class="indent5"><%=data.getCreatedDate()%></td>
 				<th class="lb">수정일</th>
-				<td class="indent5"><%=data.getModifyDate()%></td>
+				<td class="indent5"><%=data.getModifiedDate()%></td>
 			</tr>
 			<tr>
 				<th class="lb">문서유형</th>
@@ -150,72 +154,80 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<th class="lb">주 첨부파일</th>
 				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
-						<jsp:param value="<%= data.getOid() %>" name="oid"/>
+						<jsp:param value="<%=data.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">첨부파일
+				<th class="lb">
+					첨부파일
 					<br>
-					<input type="button" value="일괄 다운" title="일괄 다운"  onclick="">
+					<input type="button" value="일괄 다운" title="일괄 다운" onclick="">
 				</th>
 				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
-						<jsp:param value="<%= data.getOid() %>" name="oid"/>
+						<jsp:param value="<%=data.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
 		</table>
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 속성
+						<img src="/Windchill/extcore/images/header.png">
+						속성
 					</div>
 				</td>
 			</tr>
 		</table>
-		<%if(data.getDocumentType().equals("금형문서")){%>
-			<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
-				<jsp:param value="<%=data.getOid()%>" name="oid" />
-				<jsp:param value="mold" name="module"/>
-			</jsp:include>
-		<%}else{ %>
-			<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
-				<jsp:param value="<%=data.getOid()%>" name="oid" />
-				<jsp:param value="<%=data.getCreator()%>" name="creator" />
-				<jsp:param value="doc" name="module"/>
-			</jsp:include>
-		<%} %>
+		<%
+		if (data.getDocumentType().equals("금형문서")) {
+		%>
+		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="mold" name="module" />
+		</jsp:include>
+		<%
+		} else {
+		%>
+		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="<%=data.getCreator()%>" name="creator" />
+			<jsp:param value="doc" name="module" />
+		</jsp:include>
+		<%
+		}
+		%>
 	</div>
 	<div id="tabs-2">
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
-			<jsp:param value="<%=data.getOid() %>" name="oid" />
-			<jsp:param value="doc" name="moduleType"/>
+			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="doc" name="moduleType" />
 			<jsp:param value="관련 품목" name="title" />
 		</jsp:include>
 	</div>
 	<div id="tabs-3">
 		<!-- 관련 개발업무 -->
 		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
-			<jsp:param value="<%=data.getOid() %>" name="oid" />
-			<jsp:param value="doc" name="moduleType"/>
+			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="doc" name="moduleType" />
 		</jsp:include>
 	</div>
 	<div id="tabs-4">
 		<!-- 관련 문서 -->
 		<jsp:include page="/extcore/jsp/document/include_viewDocument.jsp">
-			<jsp:param value="<%=data.getOid() %>" name="oid" />
-			<jsp:param value="doc" name="moduleType"/>
+			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="doc" name="moduleType" />
 		</jsp:include>
 	</div>
 	<div id="tabs-5">
 		<!-- 관련 ECO -->
 		<jsp:include page="/extcore/jsp/change/include_view_doc_eco.jsp">
-			<jsp:param value="<%=data.getOid() %>" name="oid" />
-			<jsp:param value="doc" name="moduleType"/>
+			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="doc" name="moduleType" />
 		</jsp:include>
 	</div>
 </div>
@@ -225,62 +237,68 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<tr>
 			<td class="left">
 				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 댓글 <span class="blue"><%=cList.size() %></span>
+					<img src="/Windchill/extcore/images/header.png">
+					댓글
+					<span class="blue"><%=cList.size()%></span>
 				</div>
 			</td>
 		</tr>
 	</table>
-	
+
 	<%
-	for(int i=0; i<cList.size(); i++){
+	for (int i = 0; i < cList.size(); i++) {
 	%>
-		<table class="view-table">
-			<tr>
+	<table class="view-table">
+		<tr>
+			<%
+			if (cList.get(i).getDeleteYN().equals("N")) {
+			%>
+			<%
+			if (cList.get(i).getCStep() > 0) {
+				int w = cList.get(i).getCStep() * 30;
+			%>
+			<td width="<%=w%>px"></td>
+			<%
+			}
+			%>
+			<th class="lb" style="background-color: skyblue;" width="110px"><%=cList.get(i).getCreator()%></th>
+			<td class="indent5" style="padding: 0, 0, 0, 5px;">
 				<%
-				if(cList.get(i).getDeleteYN().equals("N")){
+				if (cList.get(i).getOPerson() != null) {
 				%>
-					<%
-					if(cList.get(i).getCStep()>0){
-						int w = cList.get(i).getCStep() * 30;
-					%>
-						<td width="<%=w%>px"></td>
-					<%
-					}
-					%>
-					<th class="lb" style="background-color: skyblue;" width="110px"><%=cList.get(i).getCreator() %></th>
-					<td class="indent5" style="padding:0,0,0,5px;">
-						<%
-						if(cList.get(i).getOPerson()!=null){
-						%>
-							<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
-						<%
-						}
-						%>
-						<textarea rows="5"  readonly="readonly"><%=cList.get(i).getComments() %></textarea>
-					</td>
-					<td align="center" style="padding:0,0,0,5px;" width="100px">
-						<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
-						<%if(isAdmin==true || sessionUser.getName().equals(cList.get(i).getId())){
-						%>
-							<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
-							<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
-						<%
-						}
-						%>
-					</td>
-				<%	
-				}else{
-				%>
-					<td class="indent5" colspan="3">
-						<span class="btn-link">⤷@<%=cList.get(i).getOPerson()%></span>
-						<br>삭제된 글입니다.
-					</td>
-				<%	
+				<span class="btn-link">
+					⤷@<%=cList.get(i).getOPerson()%></span>
+				<%
 				}
 				%>
-			</tr>
-		</table>
-		<br>
+				<textarea rows="5" readonly="readonly"><%=cList.get(i).getComments()%></textarea>
+			</td>
+			<td align="center" style="padding: 0, 0, 0, 5px;" width="100px">
+				<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
+				<%
+				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
+				%>
+				<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
+				<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
+				<%
+				}
+				%>
+			</td>
+			<%
+			} else {
+			%>
+			<td class="indent5" colspan="3">
+				<span class="btn-link">
+					⤷@<%=cList.get(i).getOPerson()%></span>
+				<br>
+				삭제된 글입니다.
+			</td>
+			<%
+			}
+			%>
+		</tr>
+	</table>
+	<br>
 	<%
 	}
 	%>
@@ -307,40 +325,39 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 <!-- Modal 등록 -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  	<div class="modal-dialog">
-    	<div class="modal-content">
-      		<div class="modal-header">
-        		<h5 class="modal-title" id="staticBackdropLabel">답글 등록</h5>
-      		</div>
-      		<div class="modal-body" style="width:100%;">
-        		<textarea rows="10" id="replyCreate" style="width:100%;"></textarea>
-      		</div>
-      		<div class="modal-footer">
-        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        		<button type="button" class="btn btn-primary" id="replyCreateBtn">등록</button>
-      		</div>
-   		</div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="staticBackdropLabel">답글 등록</h5>
+			</div>
+			<div class="modal-body" style="width: 100%;">
+				<textarea rows="10" id="replyCreate" style="width: 100%;"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-primary" id="replyCreateBtn">등록</button>
+			</div>
+		</div>
 	</div>
 </div>
 
 <!-- Modal 수정 -->
 <div class="modal fade" id="replyUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  	<div class="modal-dialog">
-    	<div class="modal-content">
-      		<div class="modal-header">
-        		<h5 class="modal-title" id="staticBackdropLabel">댓글 수정</h5>
-      		</div>
-      		<div class="modal-body" style="width:100%;">
-        		<textarea rows="10" id="replyModify" style="width:100%;"></textarea>
-      		</div>
-      		<div class="modal-footer">
-        		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-        		<button type="button" class="btn btn-success" id="replyModifyBtn">수정</button>
-      		</div>
-   		</div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="staticBackdropLabel">댓글 수정</h5>
+			</div>
+			<div class="modal-body" style="width: 100%;">
+				<textarea rows="10" id="replyModify" style="width: 100%;"></textarea>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				<button type="button" class="btn btn-success" id="replyModifyBtn">수정</button>
+			</div>
+		</div>
 	</div>
 </div>
-</form>
 <script type="text/javascript">
 	//수정
 	function update () {
@@ -640,8 +657,3 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	});
 	
 </script>
-<style>
-	.lb{
-		text-align: center;
-	}
-</style>

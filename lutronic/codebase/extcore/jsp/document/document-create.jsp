@@ -83,7 +83,7 @@ iframe {
 				<td>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="lifecycle" id="lifecycle" value="LC_Default" checked="checked">
+						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>기본결재</b>
@@ -92,7 +92,7 @@ iframe {
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="lifecycle" id="lifecycle" value="LC_Default_NonWF">
+						<input type="radio" name="lifecycle" value="LC_Default_NonWF">
 						<div class="state p-success">
 							<label>
 								<b>일괄결재</b>
@@ -169,7 +169,7 @@ iframe {
 			<tr>
 				<th class="lb">문서설명</th>
 				<td colspan="5" class="indent5">
-					<textarea name="description" id="description" rows="15"></textarea>
+					<textarea name="description" id="description" rows="30"></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -206,7 +206,7 @@ iframe {
 				<td class="center">
 					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
 					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -224,7 +224,11 @@ iframe {
 					bUseVerticalResizer : false,
 					// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음) 
 					bUseModeChanger : false
-				}
+				},
+				fOnAppLoad : function() {
+					//기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
+					// 					oEditors.getById["description"].exec("PASTE_HTML", [ "기존 DB에 저장된 내용을 에디터에 적용할 문구" ]);
+				},
 			});
 
 			function folder() {
@@ -235,11 +239,50 @@ iframe {
 
 			function loadForm() {
 				const oid = document.getElementById("formType").value;
-				document.getElementById("description").value = "123123";
+				const url = getCallUrl("/form/html?oid=" + oid);
+				parent.openLayer();
+				call(url, null, function(data) {
+					if (data.result) {
+						oEditors.getById["description"].exec("PASTE_HTML", [ data.html ]);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				}, "GET");
 			}
 
 			// 문서 등록
 			function create(temp) {
+				const location = document.getElementById("location");
+				const name = document.getElementById("docName");
+				const documentType = document.getElementById("documentType");
+				oEditors.getById["description"].exec("UPDATE_CONTENTS_FIELD", []);
+				const description = document.getElementById("description");
+				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
+				const secondarys = toArray("secondarys");
+				const primary = document.querySelector("input[name=primary]").value;
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
+				}
+				const url = getCallUrl("/doc/create");
+				const params = {
+					name : name.value,
+					lifecycle : lifecycle,
+					documentType : documentType.value,
+					description : description.value,
+					secondarys : secondarys,
+					primary : primary.value,
+					location : location.value
+				};
+				logger(params);
+				parent.openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						document.location.href = getCallUrl("/doc/list");
+					}
+					parent.closeLayer();
+				});
 
 			}
 

@@ -150,11 +150,11 @@ public class DocumentController extends BaseController {
 		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
 		String pnum = DocumentHelper.manager.getCnum(cList);
 
-		model.setViewName("popup:/document/document-view");
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("docData", docData);
 		model.addObject("cList", cList);
 		model.addObject("pnum", pnum);
+		model.setViewName("popup:/document/document-view");
 		model.addAllObjects(map);
 		return model;
 	}
