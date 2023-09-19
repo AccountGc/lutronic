@@ -56,7 +56,7 @@ import wt.vc.views.View;
 @Getter
 @Setter
 public class PartData {
-	public WTPart part;
+//	public WTPart part;
 	private String number;
 	private String icon;
 	private String baseline;
@@ -96,13 +96,14 @@ public class PartData {
 	private String iteration;
 	private String PDMLinkProductOid;
 	private boolean last;
+	private String location;
 
 	public PartData(WTPart part) throws Exception {
 //    	super(part);
-    	setPart(part);
+//    	setPart(part);
 		setOid(part.getPersistInfo().getObjectIdentifier().toString());
 		setVrOid(CommonUtil.getVROID(part));
-		setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
+//		setIcon(BasicTemplateProcessor.getObjectIconImgTag(part));
 		setNumber(part.getNumber());
 		setUnit(part.getDefaultUnit().toString());
 		
@@ -146,6 +147,7 @@ public class PartData {
 		WTContained wc = (WTContained) part;
 		setPDMLinkProductOid(CommonUtil.getOIDString(wc.getContainer()));
 		setStateKey(part.getLifeCycleState().toString());
+		setLocation(part.getLocation());
 	}
 
 	private ArrayList<Object[]> descentLastPart(WTPart part, Baseline baseline, boolean isCheckDummy, State state)
@@ -591,7 +593,7 @@ public class PartData {
 	 * 
 	 * @return
 	 */
-	public boolean isGENERIC(){
+	public boolean isGENERIC(WTPart part){
 		
 		boolean isGENERIC = false;
 		int status;
@@ -604,7 +606,7 @@ public class PartData {
 					isGENERIC = true;
 				}
 			}else{
-				epm = DrawingHelper.service.getEPMDocument(this.part);
+				epm = DrawingHelper.service.getEPMDocument(part);
 				if(epm != null){
 					status = epm.getFamilyTableStatus();
 					//System.out.println("getFamilyTableStatus2 =" +status );
@@ -657,9 +659,9 @@ public class PartData {
 	 * 
 	 * @return
 	 */
-	public boolean isFamliyModify(){
+	public boolean isFamliyModify(WTPart part){
 		//System.out.println("======= isFamliyModify ============");
-		return (isGENERIC() && this.isLast()&& isWorking());
+		return (isGENERIC(part) && this.isLast()&& isWorking());
 	}
 	
 	
@@ -668,9 +670,6 @@ public class PartData {
 			
 		}
 	 
-	 public String getLocation() {
-		return part.getLocation();
-	}
 //	
 //	/**
 //	 * 속성 clearing 

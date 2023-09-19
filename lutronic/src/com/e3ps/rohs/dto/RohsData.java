@@ -6,6 +6,7 @@ import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
@@ -61,12 +62,12 @@ public class RohsData{
 			setApprovalType(code2.getCode());
 		}
 		setLatest(CommonUtil.isLatestVersion(rohs));
-		setDescription(rohs.getDescription());
+		setDescription(StringUtil.checkNull(rohs.getDescription()));
 		setVersion(rohs.getVersionIdentifier().getValue() + "." + rohs.getIterationIdentifier().getValue());
 		ROHSContHolder ch = RohsHelper.manager.getRohsContHolder(rohs);
 		if(ch!=null) {
-			setFileType(ch.getFileType());
-			setPublicationDate(ch.getPublicationDate());
+			setFileType(StringUtil.checkNull(ch.getFileType()));
+			setPublicationDate(StringUtil.checkNull(ch.getPublicationDate()));
 		}
 	}
 	

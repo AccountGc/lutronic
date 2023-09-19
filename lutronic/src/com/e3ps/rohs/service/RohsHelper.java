@@ -627,28 +627,34 @@ public class RohsHelper {
 	
 	public List<PartData> getROHSToPartList(ROHSMaterial rohs,boolean islastversion) throws Exception{
 		List<PartData> list = new ArrayList<PartData>();
-		String vr = CommonUtil.getVROID(rohs);
-		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
-		
-		QuerySpec qs = new QuerySpec();
-		int idx1= qs.addClassList(WTPart.class, true);
-        int idx2 = qs.addClassList(PartToRohsLink.class, true);
-        
-        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-    	qs.appendWhere(VersionControlHelper.getSearchCondition(WTPart.class, true), new int[]{idx1});
-       
-    	if(islastversion) {
-        	SearchUtil.addLastVersionCondition(qs, WTPart.class, idx1);
-		}
-    	SearchUtil.setOrderBy(qs, WTPart.class, idx1, WTPart.NUMBER, false);
-		
-		QueryResult rt =PersistenceHelper.manager.navigate(rohs,"part", qs,true);
-		while(rt.hasMoreElements()){
-			WTPart part = (WTPart)rt.nextElement();
+		QueryResult result = PersistenceHelper.manager.navigate(rohs, "part", PartToRohsLink.class);
+		while(result.hasMoreElements()){
+			WTPart part = (WTPart)result.nextElement();
 			PartData data = new PartData(part);
 			list.add(data);
 		}
 		return list;
+//		String vr = CommonUtil.getVROID(rohs);
+//		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
+//		
+//		QuerySpec qs = new QuerySpec();
+//		int idx1= qs.addClassList(WTPart.class, true);
+//        
+//        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
+//    	qs.appendWhere(VersionControlHelper.getSearchCondition(WTPart.class, true), new int[]{idx1});
+//       
+//    	if(islastversion) {
+//        	SearchUtil.addLastVersionCondition(qs, WTPart.class, idx1);
+//		}
+//    	SearchUtil.setOrderBy(qs, WTPart.class, idx1, WTPart.NUMBER, false);
+//		
+//		QueryResult rt =PersistenceHelper.manager.navigate(rohs,"part", qs,true);
+//		while(rt.hasMoreElements()){
+//			WTPart part = (WTPart)rt.nextElement();
+//			PartData data = new PartData(part);
+//			list.add(data);
+//		}
+//		return list;
 	}
 	
 	public ROHSContHolder getRohsContHolder(ROHSMaterial rohs) throws Exception {
@@ -663,5 +669,25 @@ public class RohsHelper {
 			return ch;
 		}
     	return ch;
+	}
+	
+	public List<ROHSContHolder> getROHSContHolder(ROHSMaterial rohs) throws Exception {
+		List<ROHSContHolder> list = new ArrayList<ROHSContHolder>();
+		
+		QuerySpec qs = new QuerySpec();
+		int idx = qs.addClassList(ROHSContHolder.class, true);
+		
+		qs.appendWhere(new SearchCondition(ROHSContHolder.class,"rohsReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(rohs)), new int[]{idx});
+		
+		QueryResult rt = PersistenceHelper.manager.find(qs);
+		
+		while(rt.hasMoreElements()){
+			
+			Object[] oo = (Object[]) rt.nextElement();
+			ROHSContHolder rholder = (ROHSContHolder)oo[0];
+			list.add(rholder);
+		}
+		
+		return list;
 	}
 }

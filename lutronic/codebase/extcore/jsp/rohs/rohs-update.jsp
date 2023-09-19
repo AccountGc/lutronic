@@ -84,6 +84,7 @@
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="<%=data.getOid() %>" name="oid" />
+						<jsp:param value="rohs" name="moduleType"/>
 					</jsp:include>
 				</td>
 			</tr>
@@ -185,6 +186,18 @@
 					return;
 				}
 				
+				const secondarys = toArray("secondarys");
+				if(secondarys.length>0){
+					if(isEmpty($("#fileType").val())) {
+						alert("파일구분을 선택하세요.");
+						return;
+					}
+					if(isEmpty($("#publicationDate").val())) {
+						alert("발행일을 입력하세요.");
+						return;
+					}
+				}
+				
 				if (!confirm("수정 하시겠습니까?")) {
 					return;
 				}
@@ -193,7 +206,6 @@
 				params.oid = $("#oid").val();
 				params.description = $("#description").val();
 				params.manufacture = $("#manufacture").val();
-				const secondarys = toArray("secondarys");
 				params.secondary = secondarys;
 				params.fileType = $("#fileType").val();
 				params.publicationDate = $("#publicationDate").val();

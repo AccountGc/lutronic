@@ -166,6 +166,13 @@ public class RohsController extends BaseController {
 		return result;
 	}
 	
+	@Description(value = "물질 삭제")
+    @GetMapping(value = "/delete")
+	@ResponseBody
+    public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+        return RohsHelper.service.delete(oid);
+    }
+	
 	@Description(value = "물질 중복체크")
 	@ResponseBody
 	@PostMapping(value = "/rohsCheck")
