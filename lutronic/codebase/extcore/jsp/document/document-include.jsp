@@ -1,7 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
+String moduleType = request.getParameter("moduleType");
+boolean isView = "view".equals(mode);
+boolean isCreate = "create".equals(mode);
+boolean isUpdate = "update".equals(mode);
+JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
 %>
 <table class="button-table">
 	<tr>
@@ -23,8 +30,14 @@ String mode = request.getParameter("mode");
 		<td class="indent5 pt5">
 			<%-- 				<input type="hidden" name="lifecycle" id="lifecycle" value="<%=lifecycle%>" /> --%>
 			<%-- 				<input type="hidden" name="searchType" id="searchType" value="<%=searchType%>" /> --%>
+			<%
+			if (isCreate || isUpdate) {
+			%>
 			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow90();">
+			<%
+			}
+			%>
 			<div id="grid90" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
@@ -52,14 +65,24 @@ String mode = request.getParameter("mode");
 	function createAUIGrid90(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			showRowNumColumn : false,
+			fillColumnSizeMode: true,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
+			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			showRowCheckColumn : true,
-			showStateColumn : false,
+			<%if (isCreate || isUpdate) {%>
+				showRowCheckColumn : true,
+//	 			showStateColumn : true,
+			<%}%>
+			rowCheckToRadio : true,
+			enableFilter : true,
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
+		<%if (isView || isUpdate) {%>
+			AUIGrid.setGridData(myGridID90, <%=json%>);
+		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
@@ -71,7 +94,6 @@ String mode = request.getParameter("mode");
 	// 팝업 데이터 가져오는 메서드
 	function setAppendDoc(items) {
 		const data = AUIGrid.getGridData(myGridID90);
-
 		if (data.length != 0) {
 			for (let i = 0; i < items.length; i++) {
 				for (let j = 0; j < data.length; j++) {

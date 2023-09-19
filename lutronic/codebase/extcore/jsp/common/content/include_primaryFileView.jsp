@@ -11,7 +11,6 @@ String oid = request.getParameter("oid");
 				const form = document.querySelector("form");
 				const data = res.primaryFile;
 				const len = data.length;
-				console.log(data);
 				for (let i = 0; i < len; i++) {
 					document.querySelector("#attachPrimaryFile").innerHTML += "<span id='" + data[i].oid + "' class='attachPrimaryFiles' style='cursor: pointer; text-decoration: underline;'>" +  data[i].name + "</span>";
 				}

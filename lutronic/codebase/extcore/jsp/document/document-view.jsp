@@ -143,7 +143,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">설명</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly"><%=data.getDescription() != null ? data.getDescription() : ""%></textarea>
+					<textarea rows="5" readonly="readonly"><%= data.getDescription() == null ? "" : data.getDescription() %></textarea>
 				</td>
 			</tr>
 			<tr>

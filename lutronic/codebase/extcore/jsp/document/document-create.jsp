@@ -250,6 +250,7 @@ iframe {
 				selectbox("model");
 				selectbox("deptcode");
 				createAUIGrid90(columns90);
+				createAUIGrid2(columnsPart);
 			});
 
 			window.addEventListener("resize", function() {

@@ -1,6 +1,8 @@
 <%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="com.e3ps.rohs.service.RohsHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
+<%@page import="java.util.List"%>
+<%@page import="com.e3ps.part.dto.PartDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
@@ -9,7 +11,7 @@ String moduleType = request.getParameter("moduleType");
 boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
-JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
+List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 %>
 <table class="button-table">
 	<tr>
@@ -100,7 +102,19 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 		<%if (isView || isUpdate) {%>
-			AUIGrid.setGridData(partGridID, <%=json%>);
+			let dataList = [];
+			<% for(PartDTO part : partList) { %>
+				var data = new Object();
+				data.number = "<%= part.getNumber() %>"
+				data.name = "<%= part.getName() %>"
+				data.state = "<%= part.getState() %>"
+				data.version = "<%= part.getVersion() %>"
+				data.creator = "<%= part.getCreator() %>"
+				data.modifyDate = "<%= part.getModifyDate() %>"
+				data.oid = "<%= part.getOid() %>"
+				dataList.push(data);
+			<% } %>
+			AUIGrid.setGridData(partGridID, dataList);
 		<%}%>
 	}
 
@@ -111,26 +125,22 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 	
 	// 중복 제거후 추가
 	function append(items){
-		var arr = [];
-		var count=0;
-		var data = AUIGrid.getGridData(partGridID);
-		for (var i=0; i<items.length; i++){
-			var a=0;
-			if(data.length==0){
-				arr[i] = items[i];
-			}else{
-				for(var j=0; j<data.length; j++){
-					if(data[j].oid == items[i].oid){
-						a++;
+		const data = AUIGrid.getGridData(partGridID);
+		if (data.length != 0) {
+			for (let i = 0; i < items.length; i++) {
+				for (let j = 0; j < data.length; j++) {
+					<%if (isUpdate) {%>
+					if (data[j].oid == items[i].part_oid) {
+					<% } %>
+					<%if (isCreate) {%>
+					if (data[j].oid == items[i].oid) {
+					<% } %>
+						items.splice(i, 1);
 					}
 				}
 			}
-			if(a==0){
-				arr[count] = items[i];
-				count++;
-			}
 		}
-		AUIGrid.addRow(partGridID, arr);
+		AUIGrid.addRow(partGridID, items);
 	}
 
 	function deleteRow9() {
