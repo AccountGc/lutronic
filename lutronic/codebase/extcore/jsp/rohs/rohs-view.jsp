@@ -195,13 +195,18 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		}
 
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/rohs/delete?oid=" + oid);
-		call(url, null, function(data) {
+		const url = getCallUrl("/rohs/delete");
+		let params = new Object();
+		params.oid = oid;
+		call(url, params, function(data) {
 			if (data.result) {
+				alert(data.msg);
 				opener.loadGridData();
 				self.close();
+			}else{
+				alert(data.msg);
 			}
-		}, "GET");
+		});
 	})
 			
 	//개정

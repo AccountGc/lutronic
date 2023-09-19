@@ -61,7 +61,6 @@ String moduleType = request.getParameter("moduleType");
 			new AXReq("/Windchill/plm/content/rohsList", {
 				pars : "oid=<%=oid%>",
 				onsucc : function(res) {
-						debugger;
 					if (!res.e) {
 						const form = document.querySelector("form");
 						const data = res.secondaryFile;

@@ -167,9 +167,10 @@ public class RohsController extends BaseController {
 	}
 	
 	@Description(value = "물질 삭제")
-    @GetMapping(value = "/delete")
 	@ResponseBody
-    public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+	@PostMapping(value = "/delete")
+    public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
         return RohsHelper.service.delete(oid);
     }
 	

@@ -1177,12 +1177,19 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				if (isDelete) {
 					WFItemHelper.service.deleteWFItem(rohs);
 					PersistenceHelper.manager.delete(rohs);
+					msg = Message.get("삭제되었습니다.");
 				}
-                trx.commit();
             }
-            trx = null;
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
         } finally {
-            if(trx!=null) trx.rollback();
+        	if (trx != null) {
+        		trx.rollback();
+			}
         }
         
         rtnVal.put("result", result);
@@ -2552,7 +2559,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				 */
 				
 				// 관련 부품 링크 삭제
-				deleteROHSToPartLink(new_material);
+				deleteROHSToPartLink(old_material);
 				
 				// 관련 부품 링크 생성
 				List<Map<String, Object>> partList = (List<Map<String, Object>>) params.get("partList");
@@ -2563,7 +2570,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				 *   관련 물질 관련 작업 수행
 				 */
 				/* 관련 물질 링크 삭제 */
-				deleteROHSToROHSLink(new_material);
+				deleteROHSToROHSLink(old_material);
 				
 				/* 관련 물질 링크 생성*/
 				List<Map<String, Object>> rohsList = (List<Map<String, Object>>) params.get("rohsList");
