@@ -13,6 +13,9 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAttribute("popup") : false; 
 int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
+String callback = request.getParameter("callback") != null ? request.getParameter("callback") :"";
+String rowId = request.getParameter("rowId") != null ? request.getParameter("rowId") :"";
+
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -474,7 +477,20 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 				showIcon : true,
 				inline : true
 			},
-		} ]
+		},{
+			dataField : "version",
+			headerText: "version",
+			visible : false
+		},{
+			dataField : "dwgNo",
+			headerText: "dwgNo",
+			visible : false
+		}, {
+			dataField: "modifier",
+			headerText: "modifier",
+			visible : false
+		}, 
+		]
 	}
 
 	function createAUIGrid(columnLayout) {
@@ -634,11 +650,17 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 			partNumber.push(items[i].number);
 		}
 		var parentRow = <%= parentRowIndex %>;
-		if(parentRow<0){
-			opener.append(items);
+		var callback  = "<%= callback %>";
+		if(callback!=""){
+			opener.<%= callback %>(items,"<%= rowId %>");
 		}else{
-			opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
+			if(parentRow<0){
+				opener.append(items);
+			}else{
+				opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
+			}
 		}
+		
 		self.close();
 	}
 	
