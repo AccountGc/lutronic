@@ -585,4 +585,13 @@ public class ContentController {
 		
 		return model;
 	}
+	
+	@Description(value = "물질 첨부 파일 리스트 가져오기")
+    @ResponseBody
+    @PostMapping(value = "/rohsList")
+    public JSONObject rohsList(HttpServletRequest param) throws Exception {
+        String oid = (String) param.getParameter("oid");
+        JSONObject list = CommonContentHelper.manager.rohsList(oid);
+        return list;
+    }
 }
