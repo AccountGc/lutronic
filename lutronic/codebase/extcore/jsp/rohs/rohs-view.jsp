@@ -190,17 +190,15 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 	
 	//삭제
 	$("#deleteBtn").click(function () {
-
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
 
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
+		const url = getCallUrl("/rohs/delete?oid=" + oid);
 		call(url, null, function(data) {
-			alert(data.msg);
 			if (data.result) {
-//		 				opener.loadGridData();
+				opener.loadGridData();
 				self.close();
 			}
 		}, "GET");
@@ -322,15 +320,15 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		});
 		createAUIGrid1(columnPart);
 		AUIGrid.resize(partGridID);
-		createAUIGridRohs1(columnRohs);
-		AUIGrid.resize(rohsGridID);
+// 		createAUIGridRohs1(columnRohs);
+// 		AUIGrid.resize(rohsGridID);
 		createAUIGridRohs2(columnRohs2);
 		AUIGrid.resize(rohs2GridID);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(partGridID);
-		AUIGrid.resize(rohsGridID);
+// 		AUIGrid.resize(rohsGridID);
 		AUIGrid.resize(rohs2GridID);
 	});
 </script>
