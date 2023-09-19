@@ -14,7 +14,7 @@ JSONArray json = ChangeHelper.manager.include_ECOList(oid, moduleType);
 			</div>
 		</td>
 		<td align="right">
-			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_ECOViewToggle" alt='include_ECOView' >
+<!-- 			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_ECOViewToggle" alt='include_ECOView' > -->
 		</td>
 	</tr>
 </table>

@@ -67,6 +67,7 @@ import com.e3ps.drawing.util.EpmPublishUtil;
 import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.part.dto.ObjectComarator;
+import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
@@ -1900,8 +1901,8 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 
 	@Override
-	public List<PartData> include_PartList(String oid, String moduleType) throws Exception {
-		List<PartData> list = new ArrayList<PartData>();
+	public List<PartDTO> include_PartList(String oid, String moduleType) throws Exception {
+		List<PartDTO> list = new ArrayList<PartDTO>();
 		if (oid.length() > 0) {
 			QueryResult rt = null;
 			Object obj = (Object) CommonUtil.getObject(oid);
@@ -1910,7 +1911,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				rt = PartDocHelper.service.getAssociatedParts(doc);
 				while (rt.hasMoreElements()) {
 					WTPart part = (WTPart) rt.nextElement();
-					PartData data = new PartData(part);
+					PartDTO data = new PartDTO(part);
 					list.add(data);
 				}
 			} else if ("drawing".equals(moduleType)) {
@@ -1918,7 +1919,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				QueryResult qr = PersistenceHelper.manager.navigate(epm, "describes", EPMDescribeLink.class);
 				while (qr.hasMoreElements()) {
 					WTPart part = (WTPart) qr.nextElement();
-					PartData data = new PartData(part);
+					PartDTO data = new PartDTO(part);
 					list.add(data);
 				}
 			} else if ("ecr".equals(moduleType)) {
@@ -1929,7 +1930,7 @@ public class StandardPartService extends StandardManager implements PartService 
 					String version = link.getVersion();
 					WTPartMaster master = (WTPartMaster)link.getPart();
 					WTPart part = PartHelper.service.getPart(master.getNumber(),version);
-	    			PartData data = new PartData(part);
+					PartDTO data = new PartDTO(part);
 	    			
 	    			list.add(data);
 	    		}
@@ -1945,7 +1946,7 @@ public class StandardPartService extends StandardManager implements PartService 
 	    			String version = link.getVersion();
 	    			
 	    			WTPart part = PartHelper.service.getPart(master.getNumber(),version);
-	    			PartData data = new PartData(part);
+	    			PartDTO data = new PartDTO(part);
 	    			//if(link.isBaseline()) data.setBaseline("checked");
 	    			
 	    			list.add(data);
