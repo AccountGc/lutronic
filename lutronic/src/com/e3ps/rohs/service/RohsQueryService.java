@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSContHolder;
@@ -53,7 +54,7 @@ public interface RohsQueryService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<PartData> getROHSToPartList(ROHSMaterial rohs) throws Exception;
+	List<PartDTO> getROHSToPartList(ROHSMaterial rohs) throws Exception;
 	
 	/**
 	 * Part에서 연관 ROHS
@@ -81,7 +82,7 @@ public interface RohsQueryService {
 	List<RohsData> getPartROHSList(WTPart part, boolean islastversion)
 			throws Exception;
 
-	List<PartData> getROHSToPartList(ROHSMaterial rohs, boolean islastversion)
+	List<PartDTO> getROHSToPartList(ROHSMaterial rohs, boolean islastversion)
 			throws Exception;
 
 	boolean duplicateLink(String partOid, String rohsOid) throws Exception;

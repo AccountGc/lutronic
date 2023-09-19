@@ -103,12 +103,12 @@ String module = (String) request.getAttribute("module");
 				<td class="indent5"><input type="text" name="docName" id="docName" class="width-200" value="<%-- docData.getDocumentName(2) --%>"></td>
 			<% } else{ %>
 				<th class="req lb">문서명</th>
-				<td class="indent5"><input type="text" name="docName" id="docName" class="width-200"  value="<%= docData.getName() %>"></td>
+				<td class="indent5" colspan="3"><input type="text" name="docName" id="docName" class="width-200"  value="<%= docData.getName() %>"></td>
 			<% } %>
 		</tr>
 		<tr>
 			<th class="lb">문서설명</th>
-			<td colspan="3" class="indent5"><textarea name="description" id="description" rows="6"></textarea></td>
+			<td colspan="3" class="indent5"><textarea name="description" id="description" rows="6"><%= docData.getDescription() == null ? "" : docData.getDescription() %></textarea></td>
 		</tr>
 		<tr>
 			<th class="lb">수정사유</th>
@@ -118,7 +118,8 @@ String module = (String) request.getAttribute("module");
 			<th class="req lb">주 첨부파일</th>
 			<td class="indent5" colspan="3">
 				<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
-					<jsp:param value="" name="oid" />
+					<jsp:param value="<%= oid %>" name="oid" />
+					<jsp:param value="modify" name="mode" />
 				</jsp:include>
 			</td>
 		</tr>
@@ -126,7 +127,8 @@ String module = (String) request.getAttribute("module");
 			<th class="lb">첨부파일</th>
 			<td class="indent5" colspan="3">
 				<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
-					<jsp:param value="" name="oid" />
+					<jsp:param value="<%= oid %>" name="oid" />
+					<jsp:param value="modify" name="mode" />
 				</jsp:include>
 			</td>
 		</tr>
@@ -166,16 +168,25 @@ String module = (String) request.getAttribute("module");
 	
 	<!-- 	관련 품목 -->
 	<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
-		<jsp:param value="" name="oid" />
-		<jsp:param value="create" name="mode" />
+		<jsp:param value="<%= oid %>"  name="oid" />
+		<jsp:param value="update" name="mode" />
+		<jsp:param value="doc" name="moduleType" />
 	</jsp:include>
 	
 	<!-- 	관련 문서 -->
-	<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
-		<jsp:param value="관련 문서" name="title"/>
-		<jsp:param value="" name="oid" />
+	<jsp:include page="/extcore/jsp/document/document-include.jsp">
+		<jsp:param value="<%= oid %>"  name="oid" />
+		<jsp:param value="update" name="mode" />
+		<jsp:param value="doc" name="moduleType" />
 	</jsp:include>
 <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function() {
+	createAUIGrid90(columns90);
+	createAUIGrid2(columnsPart);
+});
+
+
 function revise(){
 	if(confirm("개정하시겠습니까?")){
 		const oid = document.getElementById("oid").value;

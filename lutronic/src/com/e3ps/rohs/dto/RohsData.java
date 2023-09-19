@@ -6,6 +6,8 @@ import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
 
@@ -33,6 +35,8 @@ public class RohsData{
 	private String version;
 	private boolean isLatest;
 	private String description;
+	private String fileType;
+	private String publicationDate;
 	
 	public RohsData(ROHSMaterial rohs) throws Exception {
 //		super(rohs);
@@ -46,12 +50,11 @@ public class RohsData{
 		setModifier(rohs.getModifierFullName());
 		setCreateDate(DateUtil.getDateString(rohs.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(rohs.getModifyTimestamp(),"a"));
-//		setCreateDate(DateUtil.getTimeFormat(rohs.getCreateTimestamp(),"yyyy-MM-dd"));
-//		setModifyDate(DateUtil.getTimeFormat(rohs.getModifyTimestamp(),"yyyy-MM-dd"));
 		String manufa =IBAUtil.getAttrValue(rohs, IBAKey.IBA_MANUFACTURE);
 		NumberCode code =NumberCodeHelper.service.getNumberCode("MANUFACTURE", manufa);
 		if(code !=null){
 			setManufactureDisplay(code.getName());
+			setManufacture(code.getCode());
 		}
 		String appType =IBAUtil.getAttrValue(rohs, IBAKey.IBA_APPROVALTYPE);
 		NumberCode code2 =NumberCodeHelper.service.getNumberCode("APPROVALTYPE", appType);
@@ -59,8 +62,13 @@ public class RohsData{
 			setApprovalType(code2.getCode());
 		}
 		setLatest(CommonUtil.isLatestVersion(rohs));
-		setDescription(rohs.getDescription());
+		setDescription(StringUtil.checkNull(rohs.getDescription()));
 		setVersion(rohs.getVersionIdentifier().getValue() + "." + rohs.getIterationIdentifier().getValue());
+		ROHSContHolder ch = RohsHelper.manager.getRohsContHolder(rohs);
+		if(ch!=null) {
+			setFileType(StringUtil.checkNull(ch.getFileType()));
+			setPublicationDate(StringUtil.checkNull(ch.getPublicationDate()));
+		}
 	}
 	
 	/**

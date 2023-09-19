@@ -1,11 +1,13 @@
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.part.service.PartHelper"%>
+<%@page import="java.util.List"%>
+<%@page import="com.e3ps.part.dto.PartDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
 String title = request.getParameter("title");
 String moduleType = request.getParameter("moduleType");
-JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
+List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 %>
 <table class="button-table">
 	<tr>
@@ -15,7 +17,7 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 			</div>
 		</td>
 		<td align="right">
-			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_PartViewToggle" alt='include_PartView' >
+<!-- 			<img src="/Windchill/jsp/portal/images/Blue_03_s.gif" style="height: 12px; cursor: pointer;" id="include_PartViewToggle" alt='include_PartView' > -->
 		</td>
 	</tr>
 </table>
@@ -78,8 +80,20 @@ JSONArray json = PartHelper.manager.include_PartList(oid, moduleType);
 			rowCheckToRadio : true,
 			fillColumnSizeMode: true,
 		}
+		let dataList = [];
+		<% for(PartDTO part : partList) { %>
+			var data = new Object();
+			data.number = "<%= part.getNumber() %>"
+			data.name = "<%= part.getName() %>"
+			data.state = "<%= part.getState() %>"
+			data.version = "<%= part.getVersion() %>"
+			data.creator = "<%= part.getCreator() %>"
+			data.modifyDate = "<%= part.getModifyDate() %>"
+			data.oid = "<%= part.getOid() %>"
+			dataList.push(data);
+		<% } %>
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
-		AUIGrid.setGridData(partGridID, <%=json%>);
+		AUIGrid.setGridData(partGridID, dataList);
 	}
 	
 	//구성원 접기/펼치기

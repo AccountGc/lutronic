@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+String mode = request.getParameter("mode");
+String moduleType = request.getParameter("moduleType");
 %>
 <div class="AXUpload5" id="secondary_layer"></div>
 <div class="AXUpload5QueueBox_list" id="uploadQueueBox2" style=""></div>
 <script type="text/javascript">
+	var moduleType = "<%=moduleType%>";
 	const secondary = new AXUpload5();
 	function load() {
 		secondary.setConfig({
@@ -54,28 +57,52 @@ String oid = request.getParameter("oid");
 			}
 		})
 		
-		new AXReq("/Windchill/plm/content/list", {
-			pars : "oid=<%=oid%>&roleType=secondary",
-			onsucc : function(res) {
-				if (!res.e) {
-					const form = document.querySelector("form");
-					const data = res.secondaryFile;
-					const len = data.length;
-					for (let i = 0; i < len; i++) {
-						const secondaryTag = document.createElement("input");
-						secondaryTag.type = "hidden";
-						secondaryTag.id = data[i]._id_;
-						secondaryTag.name = "secondarys";
-						secondaryTag.value = data[i].cacheId;
-						form.appendChild(secondaryTag);
+		if(moduleType!=null && moduleType=="rohs"){
+			new AXReq("/Windchill/plm/content/rohsList", {
+				pars : "oid=<%=oid%>",
+				onsucc : function(res) {
+					if (!res.e) {
+						const form = document.querySelector("form");
+						const data = res.secondaryFile;
+						const len = data.length;
+						for (let i = 0; i < len; i++) {
+							const secondaryTag = document.createElement("input");
+							secondaryTag.type = "hidden";
+							secondaryTag.id = data[i]._id_;
+							secondaryTag.name = "secondarys";
+							secondaryTag.value = data[i].cacheId;
+							form.appendChild(secondaryTag);
+						}
+						secondary.setUploadedList(data);
 					}
-					secondary.setUploadedList(data);
 				}
-			}
-		});
+			});
+		}else{
+			<% if("modify".equals(mode)){ %>
+			new AXReq("/Windchill/plm/content/list", {
+				pars : "oid=<%=oid%>&roleType=secondary",
+				onsucc : function(res) {
+					if (!res.e) {
+						const form = document.querySelector("form");
+						const data = res.secondaryFile;
+						const len = data.length;
+						for (let i = 0; i < len; i++) {
+							const secondaryTag = document.createElement("input");
+							secondaryTag.type = "hidden";
+							secondaryTag.id = data[i]._id_;
+							secondaryTag.name = "secondarys";
+							secondaryTag.value = data[i].cacheId;
+							form.appendChild(secondaryTag);
+						}
+						secondary.setUploadedList(data);
+					}
+				}
+			});
+			<% } %>
+		}
 	}
 	load();
-
+	
 	//파일 전체 삭제
 	function deleteAllFiles() {
 		if (!confirm("전체 삭제 하시겠습니까?")) {

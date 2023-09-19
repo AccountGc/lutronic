@@ -114,6 +114,7 @@
 			    	</td>
 			    	
 		    		<td  align="right">
+		    			<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();">
 						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 									
 		    		</td>
@@ -203,7 +204,7 @@
 			}
 		}, 
 		{
-			dataField: "rev",
+			dataField : "version",
 			headerText: "REV",
 			width: "5%"
 		}, 
@@ -343,13 +344,19 @@
 	AUIGrid.bind(myBOMGridID, "contextMenu", function(event) {
 		AUIGrid.setSelectionByIndex(myBOMGridID, event.rowIndex, event.columnIndex);
 		var menus = [ {
-			label : "최상위 신규 단품 추가",
+			label : "체크인",
 			callback : contextItemHandler
 		}, {
-			label : "신규 자재 추가",
+			label : "체크아웃",
+			callback : contextItemHandler
+		}, {
+			label : "체크아웃 취소",
 			callback : contextItemHandler
 		}, {
 			label : "기존부품 추가",
+			callback : contextItemHandler
+		}, {
+			label : "교체",
 			callback : contextItemHandler
 		}, {
 			label : "_$line"
@@ -394,44 +401,107 @@
 		var rowIndex = event.rowIndex;
 		switch (event.contextIndex) {
 		case 0:
-			var root = AUIGrid.getItemByRowIndex(myBOMGridID, 0);
-			console.log(root);
-// 			var url = "/Windchill/platform/part/top?partTypeCd=" + item.partTypeCd + "&rowId=" + root._$uid + "&poid=" + root.oid + "&callBack=_top";
-// 			_popup(url, 1100, 380, "n");
+			var url	= getCallUrl("/part/partCheckIn");
+			call(url, item, function(data) {
+				if(!isEmpty(data.msg)){
+					alert(data.msg);	
+				}
+				viewAUIPartBomAction();
+			},"POST");
 			break;
 		case 1:
-// 			var url = "/Windchill/platform/part/append?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&callBack=_child";
-// 			_popup(url, 1100, 380, "n");
+			var url	= getCallUrl("/part/partCheckOut");
+			call(url, item, function(data) {
+				if(!isEmpty(data.msg)){
+					alert(data.msg);	
+				}
+				viewAUIPartBomAction();
+			},"POST");
 			break;
 		case 2:
-// 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
-// 			_popup(url, "", "", "f");
+			var url	= getCallUrl("/part/partUndoCheckOut");
+			call(url, item, function(data) {
+				if(!isEmpty(data.msg)){
+					alert(data.msg);	
+				}
+				viewAUIPartBomAction();
+			},"POST");
+			break;
+		case 3:
+			var url = getCallUrl("/part/listPopup?callback=appendChild&rowId=" + item._$uid);
+			_popup(url, 1500, 700, "n");
 			break;
 		case 4:
+			var url = getCallUrl("/part/listPopup?callback=change&rowId=" + item._$uid+"&radio=Y" );
+			_popup(url, 1500, 700, "n");
+			break;	
+		case 6:
 			AUIGrid.outdentTreeDepth(myBOMGridID);
 			break;
-		case 5:
+		case 7:
 			AUIGrid.indentTreeDepth(myBOMGridID);
 			var parentItem = AUIGrid.getParentItemByRowId(myBOMGridID, item.uid);
 			break;
-		case 6:
+		case 8:
 			AUIGrid.moveRowsToUp(myBOMGridID);
 			break;
-		case 7:
+		case 9:
 			AUIGrid.moveRowsToDown(myBOMGridID);
 			break;
-		case 9:
+		case 11:
 			AUIGrid.undo(myBOMGridID);
 			break;
-		case 10:
+		case 12:
 			AUIGrid.redo(myBOMGridID);
 			break;
-		case 11:
+		case 13:
 			AUIGrid.removeRow(myBOMGridID, "selectedIndex");
 			break;
 		}
 	};
 
+	// 기존부품 추가
+	function appendChild(items,rowId){
+		
+		var updateRow = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId)[0].children;
+		var level = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId)[0].level;
+		if(updateRow ==undefined){
+			updateRow=[];
+		}
+		for(var i =0; i<updateRow.length;i++){
+			if(item.oid == node.oid){
+				alert("중복된 부품이 있습니다.");
+				return;
+			}
+		}
+		
+		for(var i =0; i<items.length;i++){
+			var item = items[i];
+			item.level =level+1;
+		}
+		AUIGrid.addTreeRow(myBOMGridID, items, rowId, "last");
+	}
+	
+	// 교체 
+	function change(item,rowId){
+		item.oid= item.part_oid;
+		var selectItem = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId);
+		var index = AUIGrid.rowIdToIndex(myBOMGridID,rowId);
+		var url	= getCallUrl("/part/bomEditorList");
+		call(url, item, function(data) {
+			debugger;
+			var gridData = data;
+			gridData[0].level=selectItem[0].level;
+			
+			AUIGrid.addRow(myBOMGridID, gridData[0],index);
+// 			AUIGrid.updateRow(myBOMGridID, gridData[0], index);
+			AUIGrid.refresh(myBOMGridID)
+// 			AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
+			
+		});		
+		
+	}
+	
 	
 	
 	<%----------------------------------------------------------
@@ -661,7 +731,7 @@ function expandAll(){
 			//alert(totalDepth);
 			//totalDepth = totalDepth -1;
 			
-			setDepthList(totalDepth)
+			setDepthList(totalDepth);
 		},"POST");
 		
 	}

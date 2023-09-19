@@ -42,7 +42,7 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 				}
 				%>
 				<%
-				if(dto.getState().equals("INWORK") || dto.getState().equals("BATCHAPPROVAL") || dto.getState().equals("REWORK")){
+				if(dto.getState().equals("INWORK") || dto.getState().equals("REWORK")){
 				%>
 					<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 					<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
@@ -190,20 +190,23 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 	
 	//삭제
 	$("#deleteBtn").click(function () {
-
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
 
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		call(url, null, function(data) {
-			alert(data.msg);
+		const url = getCallUrl("/rohs/delete");
+		let params = new Object();
+		params.oid = oid;
+		call(url, params, function(data) {
 			if (data.result) {
-//		 				opener.loadGridData();
+				alert(data.msg);
+				opener.loadGridData();
 				self.close();
+			}else{
+				alert(data.msg);
 			}
-		}, "GET");
+		});
 	})
 			
 	//개정
@@ -322,15 +325,15 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		});
 		createAUIGrid1(columnPart);
 		AUIGrid.resize(partGridID);
-		createAUIGridRohs1(columnRohs);
-		AUIGrid.resize(rohsGridID);
+// 		createAUIGridRohs1(columnRohs);
+// 		AUIGrid.resize(rohsGridID);
 		createAUIGridRohs2(columnRohs2);
 		AUIGrid.resize(rohs2GridID);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(partGridID);
-		AUIGrid.resize(rohsGridID);
+// 		AUIGrid.resize(rohsGridID);
 		AUIGrid.resize(rohs2GridID);
 	});
 </script>

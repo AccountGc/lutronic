@@ -34,12 +34,11 @@ import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
-import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.service.DrawingHelper;
-import com.e3ps.drawing.service.DrawingHelper;
+import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
@@ -885,7 +884,7 @@ public class PartController extends BaseController {
 		boolean selectBom = Boolean.valueOf(StringUtil.checkReplaceStr(request.getParameter("selectBom"), "false"));
 		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
 
-		List<PartData> list = null;
+		List<PartDTO> list = null;
 		list = PartHelper.service.include_PartList(oid, moduleType);
 
 		ModelAndView model = new ModelAndView();
@@ -1862,4 +1861,51 @@ public class PartController extends BaseController {
 		List<Map<String, Object>> list = BomSearchHelper.manager.bomEditorList(params);
 		return list;
 	}
+	
+	
+	/**
+	 * 부품 체크인
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/partCheckIn")
+	public Map<String, Object> partCheckIn(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result =PartHelper.service.partCheckIn(params);
+		return result;
+	}
+	
+	/**
+	 * 부품 체크 아웃
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/partCheckOut")
+	public Map<String, Object> partCheckOut(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result =PartHelper.service.partCheckOut(params);
+		return result;
+	}
+	
+	/**
+	 * 부품 체크 아웃 취소
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/partUndoCheckOut")
+	public Map<String, Object> partUndoCheckOut(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result =PartHelper.service.partUndoCheckOut(params);
+		return result;
+	}
+	
 }

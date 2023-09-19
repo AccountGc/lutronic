@@ -1,6 +1,6 @@
 package com.e3ps.rohs.service;
 
-import java.io.File;
+import java.io.File; 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,57 +20,14 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import wt.clients.folder.FolderTaskLogic;
-import wt.content.ApplicationData;
-import wt.content.ContentHelper;
-import wt.content.ContentHolder;
-import wt.content.ContentItem;
-import wt.content.ContentRoleType;
-import wt.content.ContentServerHelper;
-import wt.doc.DocumentType;
-import wt.doc.WTDocument;
-import wt.doc.WTDocumentMaster;
-import wt.doc.WTDocumentMasterIdentity;
-import wt.enterprise.RevisionControlled;
-import wt.fc.IdentityHelper;
-import wt.fc.PagingQueryResult;
-import wt.fc.PagingSessionHelper;
-import wt.fc.PersistenceHelper;
-import wt.fc.PersistenceServerHelper;
-import wt.fc.QueryResult;
-import wt.fc.ReferenceFactory;
-import wt.folder.Folder;
-import wt.folder.FolderEntry;
-import wt.folder.FolderHelper;
-import wt.inf.container.WTContainerRef;
-import wt.lifecycle.LifeCycleHelper;
-import wt.lifecycle.LifeCycleManaged;
-import wt.org.WTUser;
-import wt.ownership.Ownership;
-import wt.part.WTPart;
-import wt.pdmlink.PDMLinkProduct;
-import wt.pom.Transaction;
-import wt.query.QuerySpec;
-import wt.query.SearchCondition;
-import wt.services.StandardManager;
-import wt.session.SessionHelper;
-import wt.util.WTException;
-import wt.vc.VersionControlHelper;
-import wt.vc.views.ViewHelper;
-import wt.vc.wip.WorkInProgressHelper;
-
-import com.e3ps.change.EChangeActivityDefinition;
-import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.beans.BatchDownData;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
-import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.query.SearchUtil;
@@ -93,7 +49,6 @@ import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.VersionHelper;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
@@ -102,6 +57,42 @@ import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
+
+import wt.clients.folder.FolderTaskLogic;
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentHolder;
+import wt.content.ContentItem;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
+import wt.doc.DocumentType;
+import wt.doc.WTDocumentMaster;
+import wt.doc.WTDocumentMasterIdentity;
+import wt.enterprise.RevisionControlled;
+import wt.fc.IdentityHelper;
+import wt.fc.PagingQueryResult;
+import wt.fc.PagingSessionHelper;
+import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
+import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
+import wt.folder.Folder;
+import wt.folder.FolderEntry;
+import wt.folder.FolderHelper;
+import wt.inf.container.WTContainerRef;
+import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleManaged;
+import wt.ownership.Ownership;
+import wt.part.WTPart;
+import wt.pdmlink.PDMLinkProduct;
+import wt.pom.Transaction;
+import wt.query.QuerySpec;
+import wt.query.SearchCondition;
+import wt.services.StandardManager;
+import wt.session.SessionHelper;
+import wt.util.WTException;
+import wt.vc.VersionControlHelper;
+import wt.vc.wip.WorkInProgressHelper;
 
 
 @SuppressWarnings("serial")
@@ -1186,12 +1177,19 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				if (isDelete) {
 					WFItemHelper.service.deleteWFItem(rohs);
 					PersistenceHelper.manager.delete(rohs);
+					msg = Message.get("삭제되었습니다.");
 				}
-                trx.commit();
             }
-            trx = null;
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
         } finally {
-            if(trx!=null) trx.rollback();
+        	if (trx != null) {
+        		trx.rollback();
+			}
         }
         
         rtnVal.put("result", result);
@@ -2313,8 +2311,8 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	        
 	        ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
 	        Map<String,String> rohsMap = new HashMap<String,String>();
-	        String fileType = (String) params.get("fileType");
-			String publicationDate = (String) params.get("publicationDate");
+	        String fileType =  StringUtil.checkNull((String) params.get("fileType"));
+			String publicationDate =  StringUtil.checkNull((String) params.get("publicationDate"));
 			rohsMap.put("fileType", fileType);
 			rohsMap.put("publicationDate", publicationDate);
 	        int attachCount = 1;
@@ -2375,7 +2373,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		}else{
 			if(partList.size()>0){
 				for(Map<String, Object> map : partList){
-					String oid = (String) map.get("part_oid");
+					String oid = (String) map.get("oid");
 					ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
 					PartToRohsLink link = PartToRohsLink.newPartToRohsLink((WTPart)rv, rohs);
 					PersistenceHelper.manager.save(link);
@@ -2410,8 +2408,8 @@ public class StandardRohsService extends StandardManager implements RohsService 
     			ROHSMaterial rm = RohsHelper.manager.getRohs(rohsName);
     			
     			Map<String,String> rohsMap = new HashMap<String,String>();
-    			String fileType = (String) map.get("fileType");
-    			String publicationDate = (String) map.get("publicationDate");
+    			String fileType = StringUtil.checkNull((String) map.get("fileType"));
+    			String publicationDate = StringUtil.checkNull((String) map.get("publicationDate"));
     			rohsMap.put("fileType", fileType);
     			rohsMap.put("publicationDate", publicationDate);
     			if(rm==null) {
@@ -2488,5 +2486,123 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		holder.setRohs(rohs);
 		PersistenceHelper.manager.save(holder);
 	}
-	
+
+	@Override
+	public void update(Map<String, Object> params) throws Exception {
+		Transaction trx = new Transaction();
+		ROHSMaterial new_material = null;
+		try {
+			trx.start();
+			String oid = StringUtil.checkNull((String) params.get("oid"));
+			
+			if(oid.length() > 0) {
+			
+				ROHSMaterial old_material = (ROHSMaterial)CommonUtil.getObject(oid);
+				new_material = (ROHSMaterial) RohsUtil.getWorkingCopy(old_material);
+				new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
+				String description = StringUtil.checkNull((String) params.get("description"));
+				new_material.setDescription(description);
+				new_material = (ROHSMaterial)PersistenceHelper.manager.modify(new_material);
+				/**
+				 * 
+				 *   첨부파일 관련 작업 수행
+				 *   
+				 */
+				ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
+				
+				if(secondarys != null) {
+					int count = 1;	
+					for(String secondary : secondarys) {
+						/**
+						 * 
+						 *   새로운 첨부파일 생성
+						 *   
+						 */	
+						String roleType = "ROHS" + count;
+						String cacheId = secondary;
+						String fileType =  StringUtil.checkNull((String)params.get("fileType"));
+						String publicationDate =  StringUtil.checkNull((String)params.get("publicationDate"));
+						File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+						ApplicationData applicationData = ApplicationData.newApplicationData(new_material);
+						ContentRoleType contentroleType = ContentRoleType.toContentRoleType(roleType);
+						applicationData.setRole(contentroleType);
+						PersistenceHelper.manager.save(applicationData);
+						ContentServerHelper.service.updateContent(new_material, applicationData, vault.getPath());
+						ROHSContHolder holder = ROHSContHolder.newROHSContHolder();
+						String fileName = applicationData.getFileName().toUpperCase();
+						holder.setFileName(fileName);
+						holder.setFileType(fileType);
+						holder.setPublicationDate(publicationDate);
+						holder.setApp(applicationData);
+						holder.setRohs(new_material);
+						PersistenceHelper.manager.save(holder);
+						count++;
+					}
+				}
+				
+				new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
+				
+				/**
+				 * 
+				 *   CheckOut 상태 검사
+				 *   
+				 */
+				if(WorkInProgressHelper.isCheckedOut(new_material)){
+					//System.out.println("CheckOut 상태입니다.......................");
+					new_material = (ROHSMaterial) WorkInProgressHelper.service.checkin(new_material, "");
+				}
+				
+				/**
+				 * 
+				 *   관련 부품 관련 작업 수행
+				 *   
+				 */
+				
+				// 관련 부품 링크 삭제
+				deleteROHSToPartLink(old_material);
+				
+				// 관련 부품 링크 생성
+				List<Map<String, Object>> partList = (List<Map<String, Object>>) params.get("partList");
+				createROHSToPartLink(new_material, partList);
+				
+				/**
+				 * 
+				 *   관련 물질 관련 작업 수행
+				 */
+				/* 관련 물질 링크 삭제 */
+				deleteROHSToROHSLink(old_material);
+				
+				/* 관련 물질 링크 생성*/
+				List<Map<String, Object>> rohsList = (List<Map<String, Object>>) params.get("rohsList");
+				createROHSToROHSLink(new_material, rohsList);
+				
+	            Map<String,Object> map = new HashMap<String,Object>();
+	            String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+	            map.put("manufacture", manufacture);
+	            CommonHelper.service.changeIBAValues(new_material, map);
+	            
+            	String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
+	            
+	            if (rohsName.length() > 0 && !new_material.getName().equals(rohsName)) {
+		            WTDocumentMaster docMaster = (WTDocumentMaster)(new_material.getMaster());
+	                WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity)docMaster.getIdentificationObject();
+	                identity.setNumber(new_material.getNumber());
+	                identity.setName(rohsName);
+	                docMaster = (WTDocumentMaster)IdentityHelper.service.changeIdentity(docMaster, identity);
+	            }
+	            new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
+			}
+			
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
+        } finally {
+        	if (trx != null) {
+        		trx.rollback();
+			}
+        }
+	}
 }

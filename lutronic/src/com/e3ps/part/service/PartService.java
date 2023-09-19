@@ -8,17 +8,15 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.common.beans.BatchDownData;
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.part.dto.PartDTO;
+import com.e3ps.part.dto.PartData;
 
 import wt.method.RemoteInterface;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
-
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.common.beans.BatchDownData;
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.part.dto.PartData;
-import com.e3ps.part.dto.PartTreeData;
 
 @RemoteInterface
 public interface PartService {
@@ -45,6 +43,7 @@ public interface PartService {
 	
 	ResultData updatePackagePartAction(HttpServletRequest request, HttpServletResponse response);
 	
+	
 	/**
 	 * 
 	 * 
@@ -58,7 +57,7 @@ public interface PartService {
 
 	Vector<String> getQuantityUnit();
 
-	List<PartData> include_PartList(String oid, String moduleType) throws Exception;
+	List<PartDTO> include_PartList(String oid, String moduleType) throws Exception;
 
 	Map<String, String> getAttributes(String oid) throws Exception;
 
@@ -144,4 +143,11 @@ public interface PartService {
 	public void deleteComments(String oid) throws Exception;
 
 	void batch(Map<String, Object> params) throws Exception;
+	
+	public  Map<String, Object> partCheckIn(Map<String, Object> params) throws Exception;
+	
+	public  Map<String, Object> partCheckOut(Map<String, Object> params) throws Exception;
+	
+	public  Map<String, Object> partUndoCheckOut(Map<String, Object> params) throws Exception;
+	
 }

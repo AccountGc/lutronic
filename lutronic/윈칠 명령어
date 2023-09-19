@@ -38,3 +38,6 @@
 10. 문서컬럼 추가
 	- Shell -> AddColumns.bat wt.doc.WTDocument InlineBLOB=1
 	- Shell -> codebase -> ant -f MakeJar.xml
+	
+	
+tools model_uninstall -Dmodel_uninstall.filter=com.e3ps.doc.template.DocumentTemplate

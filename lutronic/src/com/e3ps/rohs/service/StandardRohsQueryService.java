@@ -9,10 +9,26 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.People;
+import com.e3ps.part.dto.ObjectComarator;
+import com.e3ps.part.dto.PartDTO;
+import com.e3ps.part.dto.PartData;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.util.PartUtil;
+import com.e3ps.rohs.PartToRohsLink;
+import com.e3ps.rohs.ROHSContHolder;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.RepresentToLink;
+import com.e3ps.rohs.dto.RohsData;
+
 import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
-import wt.epm.EPMDocument;
-import wt.epm.structure.EPMVariantLink;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -31,24 +47,6 @@ import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
-
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.People;
-import com.e3ps.part.dto.ObjectComarator;
-import com.e3ps.part.dto.PartData;
-import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.VersionHelper;
-import com.e3ps.part.util.PartUtil;
-import com.e3ps.rohs.PartToRohsLink;
-import com.e3ps.rohs.ROHSContHolder;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.RepresentToLink;
-import com.e3ps.rohs.dto.RohsData;
 
 @SuppressWarnings("serial")
 public class StandardRohsQueryService extends StandardManager implements RohsQueryService {
@@ -341,8 +339,8 @@ public class StandardRohsQueryService extends StandardManager implements RohsQue
 	}
 	
 	@Override
-	public List<PartData> getROHSToPartList(ROHSMaterial rohs) throws Exception{
-		return getROHSToPartList(rohs, VersionHelper.service.isLastVersion(rohs));
+	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs) throws Exception{
+		return getROHSToPartList(rohs, CommonUtil.isLatestVersion(rohs));
 		/*
 		List<PartData> list = new ArrayList<PartData>();
 		String vr = CommonUtil.getVROID(rohs);
@@ -359,10 +357,10 @@ public class StandardRohsQueryService extends StandardManager implements RohsQue
 	}
 	
 	@Override
-	public List<PartData> getROHSToPartList(ROHSMaterial rohs,boolean islastversion) throws Exception{
+	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs,boolean islastversion) throws Exception{
 		
 		
-		List<PartData> list = new ArrayList<PartData>();
+		List<PartDTO> list = new ArrayList<PartDTO>();
 		String vr = CommonUtil.getVROID(rohs);
 		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
 		
@@ -381,7 +379,7 @@ public class StandardRohsQueryService extends StandardManager implements RohsQue
 		QueryResult rt =PersistenceHelper.manager.navigate(rohs,"part", qs,true);
 		while(rt.hasMoreElements()){
 			WTPart part = (WTPart)rt.nextElement();
-			PartData data = new PartData(part);
+			PartDTO data = new PartDTO(part);
 			list.add(data);
 		}
 		return list;

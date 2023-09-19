@@ -44,6 +44,7 @@ import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
+import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -66,6 +67,7 @@ import com.e3ps.drawing.util.EpmPublishUtil;
 import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.part.dto.ObjectComarator;
+import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
@@ -84,7 +86,6 @@ import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.enterprise.BasicTemplateProcessor;
 import wt.enterprise.RevisionControlled;
-import wt.epm.E3PSRENameObject;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildHistory;
@@ -268,15 +269,9 @@ public class StandardPartService extends StandardManager implements PartService 
 			String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
 			String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
 
-			String partType1Oid = StringUtil.checkNull((String) params.get("partType1")); // 품목구분 (NumberCode)
-			String partType2Oid = StringUtil.checkNull((String) params.get("partType2")); // 대 분류 (NumberCode)
-			String partType3Oid = StringUtil.checkNull((String) params.get("partType3")); // 중 분류 (NumberCode)
-			NumberCode partType1Code = (NumberCode)CommonUtil.getObject(partType1Oid);
-			String partType1 = partType1Code.getCode();
-			NumberCode partType2Code = (NumberCode)CommonUtil.getObject(partType2Oid);
-			String partType2 = partType2Code.getCode();
-			NumberCode partType3Code = (NumberCode)CommonUtil.getObject(partType3Oid);
-			String partType3= partType3Code.getCode();
+			String partType1 = StringUtil.checkNull((String) params.get("partType1")); // 품목구분 (NumberCode)
+			String partType2 = StringUtil.checkNull((String) params.get("partType2")); // 대 분류 (NumberCode)
+			String partType3 = StringUtil.checkNull((String) params.get("partType3")); // 중 분류 (NumberCode)
 			String seq = StringUtil.checkNull((String) params.get("seq")); // SEQ
 			String etc = StringUtil.checkNull((String) params.get("etc")); // 기타
 
@@ -296,16 +291,16 @@ public class StandardPartService extends StandardManager implements PartService 
 			String primary = StringUtil.checkNull((String) params.get("primary"));
 
 			// 관련 문서
-			String[] docOids = (String[]) params.get("docOid");
+			ArrayList<String> _docOids = (ArrayList<String>) params.get("docOids");
 
 			// 관련 RoHs
-			String[] rohsOid = (String[]) params.get("rohsOid");
+			ArrayList<String> _rohsOids = (ArrayList<String>) params.get("rohsOids");
 
 			// 첨부파일
-			String[] secondary = (String[]) params.get("SECONDARY");
+			ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
 
 			// 첨부 추가
-			String[] delocIds = (String[]) params.get("delocIds");
+//			String[] delocIds = (String[]) params.get("delocIds");
 
 			String partName = "";
 			String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
@@ -363,7 +358,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 			FolderHelper.assignLocation((FolderEntry) part, folder);
 			
-			part = (WTPart)PersistenceHelper.manager.save(part);
+//			part = (WTPart)PersistenceHelper.manager.save(part);
 			
 			// 라이프사이클 셋팅
 			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
@@ -385,7 +380,8 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 			
 			// 관련 문서 연결
-			if(docOids != null) {
+			if(_docOids != null) {
+				String[] docOids = _docOids.toArray(new String[_docOids.size()]);
 				for(String docOid : docOids) {
 					WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
 					WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
@@ -394,13 +390,21 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 			
 			// 관련 ROHS 연결
-			if(rohsOid != null){
-				RohsHelper.service.createROHSToPartLink(part, rohsOid);
+			if(_rohsOids != null){
+				String[] rohsOids = _rohsOids.toArray(new String[_rohsOids.size()]);
+				RohsHelper.service.createROHSToPartLink(part, rohsOids);					
 			}
 			
 			// 첨부 파일
-			if(secondary != null) {
-				CommonContentHelper.service.attach(part, null, secondary);
+			if(secondarys != null) {
+				for(String secondary : secondarys) {
+					File vault = CommonContentHelper.manager.getFileFromCacheId(secondary);
+					ApplicationData applicationData = ApplicationData.newApplicationData(part);
+					applicationData.setRole(ContentRoleType.SECONDARY);
+					PersistenceHelper.manager.save(applicationData);
+					ContentServerHelper.service.updateContent(part, applicationData, vault.getPath());							
+				}
+//				CommonContentHelper.service.attach(part, null, secondary);
 			}
 						
 			trx.commit();
@@ -1897,8 +1901,8 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 
 	@Override
-	public List<PartData> include_PartList(String oid, String moduleType) throws Exception {
-		List<PartData> list = new ArrayList<PartData>();
+	public List<PartDTO> include_PartList(String oid, String moduleType) throws Exception {
+		List<PartDTO> list = new ArrayList<PartDTO>();
 		if (oid.length() > 0) {
 			QueryResult rt = null;
 			Object obj = (Object) CommonUtil.getObject(oid);
@@ -1907,7 +1911,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				rt = PartDocHelper.service.getAssociatedParts(doc);
 				while (rt.hasMoreElements()) {
 					WTPart part = (WTPart) rt.nextElement();
-					PartData data = new PartData(part);
+					PartDTO data = new PartDTO(part);
 					list.add(data);
 				}
 			} else if ("drawing".equals(moduleType)) {
@@ -1915,7 +1919,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				QueryResult qr = PersistenceHelper.manager.navigate(epm, "describes", EPMDescribeLink.class);
 				while (qr.hasMoreElements()) {
 					WTPart part = (WTPart) qr.nextElement();
-					PartData data = new PartData(part);
+					PartDTO data = new PartDTO(part);
 					list.add(data);
 				}
 			} else if ("ecr".equals(moduleType)) {
@@ -1926,7 +1930,7 @@ public class StandardPartService extends StandardManager implements PartService 
 					String version = link.getVersion();
 					WTPartMaster master = (WTPartMaster)link.getPart();
 					WTPart part = PartHelper.service.getPart(master.getNumber(),version);
-	    			PartData data = new PartData(part);
+					PartDTO data = new PartDTO(part);
 	    			
 	    			list.add(data);
 	    		}
@@ -1942,7 +1946,7 @@ public class StandardPartService extends StandardManager implements PartService 
 	    			String version = link.getVersion();
 	    			
 	    			WTPart part = PartHelper.service.getPart(master.getNumber(),version);
-	    			PartData data = new PartData(part);
+	    			PartDTO data = new PartDTO(part);
 	    			//if(link.isBaseline()) data.setBaseline("checked");
 	    			
 	    			list.add(data);
@@ -5088,4 +5092,84 @@ public class StandardPartService extends StandardManager implements PartService 
 				trs.rollback();
 		}
 	}
+	
+	@Override
+	public Map<String, Object> partCheckIn(Map<String,Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid =(String) params.get("oid");
+		
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		//////////////////////////////////////////////////
+		// 체크인
+		
+		if (WorkInProgressHelper.isCheckedOut(part)) {
+			part = (WTPart) WorkInProgressHelper.service.checkin(part, Message.get("BOM Editor에서 체크인 되었습니다"));
+			result.put("msg", "체크인 하였습니다.");
+		}else{
+			result.put("msg", "체크아웃 후 가능합니다.");
+		}
+		
+		try {
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.toString());
+			
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public Map<String, Object> partCheckOut(Map<String,Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid =(String) params.get("oid");
+		
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		//////////////////////////////////////////////////
+		// 체크인
+		if (!WorkInProgressHelper.isCheckedOut(part)) {
+			
+			if (!CheckInOutTaskLogic.isCheckedOut(part)) {
+				CheckoutLink checkoutlink = WorkInProgressHelper.service.checkout(part, CheckInOutTaskLogic.getCheckoutFolder(), "부품 체크 아웃");
+			}
+			
+			part = (WTPart) WorkInProgressHelper.service.workingCopyOf(part);
+			result.put("msg", "체크아웃 하였습니다.");
+		}else{
+			result.put("msg", "체크아웃 중입니다.");
+		}
+		
+		try {
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.toString());
+			
+		}
+		
+		return result;
+	}
+	
+	@Override
+	public Map<String, Object> partUndoCheckOut(Map<String,Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid =(String) params.get("oid");
+		
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		// 체크인
+		if (!WorkInProgressHelper.isCheckedOut(part)) {
+			result.put("msg", "체크아웃 중이 아닙니다.");
+		}else{
+			ObjectUtil.undoCheckout(part);
+			result.put("msg", "체크아웃 취소 하였습니다.");
+		}
+		
+		try {
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.toString());
+		}
+		
+		return result;
+	}
+	
 }

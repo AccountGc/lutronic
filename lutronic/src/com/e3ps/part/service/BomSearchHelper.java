@@ -255,6 +255,7 @@ public class BomSearchHelper {
 	   	map.put("dwgNo", dwgNo);
 	   	map.put("name", name);
 	   	map.put("rev", rev);
+	   	map.put("version", child.version);
 	   	map.put("remarks", remarks); //OEM Info.
 	   	map.put("modifier", modifier);
 	   	map.put("spec", spec); //
@@ -515,7 +516,7 @@ public class BomSearchHelper {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		String oid = (String) param.get("oid");
-
+		
 		ReferenceFactory rf = new ReferenceFactory();
 		WTPart part = (WTPart) rf.getReference(oid).getObject();
 
