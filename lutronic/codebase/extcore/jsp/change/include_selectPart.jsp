@@ -119,6 +119,17 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	}
 
 	function insert9() {
+		<%
+		if(moduleType.equals("rohs")){
+		%>
+			var grid = AUIGrid.getGridData(partGridID);
+			if(grid.length>0){
+				alert("품목을 하나이상 추가할 수 없습니다.");
+				return false;
+			}
+		<%
+		}
+		%>
 		const url = getCallUrl("/part/listPopup");
 		_popup(url, 1500, 700, "n");
 	}
