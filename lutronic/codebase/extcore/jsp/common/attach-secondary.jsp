@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+String mode = request.getParameter("mode");
 %>
 <div class="AXUpload5" id="secondary_layer"></div>
 <div class="AXUpload5QueueBox_list" id="uploadQueueBox2" style=""></div>
@@ -53,7 +54,7 @@ String oid = request.getParameter("oid");
 				}
 			}
 		})
-		
+		<% if("modify".equals(mode)){ %>
 		new AXReq("/Windchill/plm/content/list", {
 			pars : "oid=<%=oid%>&roleType=secondary",
 			onsucc : function(res) {
@@ -73,9 +74,10 @@ String oid = request.getParameter("oid");
 				}
 			}
 		});
+		<% } %>
 	}
 	load();
-
+	
 	//파일 전체 삭제
 	function deleteAllFiles() {
 		if (!confirm("전체 삭제 하시겠습니까?")) {

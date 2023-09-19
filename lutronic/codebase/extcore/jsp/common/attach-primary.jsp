@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+String mode = request.getParameter("mode");
 %>
 <div class="AXUpload5" id="primary_layer"></div>
 <script type="text/javascript">
@@ -50,28 +51,29 @@ String oid = request.getParameter("oid");
 					}
 			}
 		})
-	
-// 		new AXReq("/Windchill/eSolution/content/list", {
-<%-- 			pars : "oid=<%=oid%>&roleType=primary", --%>
-// 			onsucc : function(res) {
-// 				if (!res.e) {
-// 					const form = document.querySelector("form");
-// 					const data = res.primaryFile;
-// 					const len = data.length;
-// 					for (let i = 0; i < len; i++) {
-// 						const primaryTag = document.createElement("input");
-// 						primaryTag.type = "hidden";
-// 						primaryTag.id = data[i].tagId;
-// 						primaryTag.name = "primary";
-// 						primaryTag.value = data[i].cacheId;
-// 						form.appendChild(primaryTag);
-// 					}
-// 					primary.setUploadedList(data);
-// 					imgurl = data[0].filePath + data[0].name;
-// 					$("#sign_preview").attr("src", imgurl);
-// 				}
-// 			}
-// 		});
+		<% if("modify".equals(mode)){ %>
+		new AXReq("/Windchill/plm/content/list", {
+			pars : "oid=<%=oid%>&roleType=primary",
+			onsucc : function(res) {
+				if (!res.e) {
+					const form = document.querySelector("form");
+					const data = res.primaryFile;
+					const len = data.length;
+					for (let i = 0; i < len; i++) {
+						const primaryTag = document.createElement("input");
+						primaryTag.type = "hidden";
+						primaryTag.id = data[i].tagId;
+						primaryTag.name = "primary";
+						primaryTag.value = data[i].cacheId;
+						form.appendChild(primaryTag);
+					}
+					primary.setUploadedList(data);
+					imgurl = data[0].filePath + data[0].name;
+					$("#sign_preview").attr("src", imgurl);
+				}
+			}
+		});
+		<% } %>
 	}
 	load();
 
