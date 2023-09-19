@@ -150,5 +150,6 @@ public interface PartService {
 	
 	public  Map<String, Object> partCheckOut(Map<String, Object> params) throws Exception;
 	
+	public  Map<String, Object> partUndoCheckOut(Map<String, Object> params) throws Exception;
 	
 }

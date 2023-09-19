@@ -1894,4 +1894,19 @@ public class PartController extends BaseController {
 		return result;
 	}
 	
+	/**
+	 * 부품 체크 아웃 취소
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/partUndoCheckOut")
+	public Map<String, Object> partUndoCheckOut(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result =PartHelper.service.partUndoCheckOut(params);
+		return result;
+	}
+	
 }

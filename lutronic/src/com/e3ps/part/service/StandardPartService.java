@@ -44,6 +44,7 @@ import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
+import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -5132,7 +5133,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 			
 			part = (WTPart) WorkInProgressHelper.service.workingCopyOf(part);
-			
+			result.put("msg", "체크아웃 하였습니다.");
 		}else{
 			result.put("msg", "체크아웃 중입니다.");
 		}
@@ -5146,4 +5147,28 @@ public class StandardPartService extends StandardManager implements PartService 
 		
 		return result;
 	}
+	
+	@Override
+	public Map<String, Object> partUndoCheckOut(Map<String,Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid =(String) params.get("oid");
+		
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		// 체크인
+		if (!WorkInProgressHelper.isCheckedOut(part)) {
+			result.put("msg", "체크아웃 중이 아닙니다.");
+		}else{
+			ObjectUtil.undoCheckout(part);
+			result.put("msg", "체크아웃 취소 하였습니다.");
+		}
+		
+		try {
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.toString());
+		}
+		
+		return result;
+	}
+	
 }
