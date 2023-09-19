@@ -428,17 +428,13 @@
 			},"POST");
 			break;
 		case 3:
-			var url = getCallUrl("/part/listPopup?callback=appendChild&rowId=" + item._$uid );
+			var url = getCallUrl("/part/listPopup?callback=appendChild&rowId=" + item._$uid);
 			_popup(url, 1500, 700, "n");
 			break;
 		case 4:
-// 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
-// 			_popup(url, "", "", "f");
+			var url = getCallUrl("/part/listPopup?callback=change&rowId=" + item._$uid+"&radio=Y" );
+			_popup(url, 1500, 700, "n");
 			break;	
-		
-			
-			
-			
 		case 6:
 			AUIGrid.outdentTreeDepth(myBOMGridID);
 			break;
@@ -464,7 +460,7 @@
 		}
 	};
 
-	// 중복 제거후 추가
+	// 기존부품 추가
 	function appendChild(items,rowId){
 		
 		var updateRow = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId)[0].children;
@@ -485,6 +481,27 @@
 		}
 		AUIGrid.addTreeRow(myBOMGridID, items, rowId, "last");
 	}
+	
+	// 교체 
+	function change(item,rowId){
+		item.oid= item.part_oid;
+		var selectItem = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId);
+		var index = AUIGrid.rowIdToIndex(myBOMGridID,rowId);
+		var url	= getCallUrl("/part/bomEditorList");
+		call(url, item, function(data) {
+			debugger;
+			var gridData = data;
+			gridData[0].level=selectItem[0].level;
+			
+			AUIGrid.addRow(myBOMGridID, gridData[0],index);
+// 			AUIGrid.updateRow(myBOMGridID, gridData[0], index);
+			AUIGrid.refresh(myBOMGridID)
+// 			AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
+			
+		});		
+		
+	}
+	
 	
 	
 	<%----------------------------------------------------------
@@ -714,7 +731,7 @@ function expandAll(){
 			//alert(totalDepth);
 			//totalDepth = totalDepth -1;
 			
-			setDepthList(totalDepth)
+			setDepthList(totalDepth);
 		},"POST");
 		
 	}

@@ -516,7 +516,7 @@ public class BomSearchHelper {
 		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		String oid = (String) param.get("oid");
-
+		
 		ReferenceFactory rf = new ReferenceFactory();
 		WTPart part = (WTPart) rf.getReference(oid).getObject();
 
