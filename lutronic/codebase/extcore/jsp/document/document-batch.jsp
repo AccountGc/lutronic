@@ -457,6 +457,31 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						}
 					}
 				}]
+			}, {
+				headerText : "관련문서",
+				children : [ {
+					dataField : "docOids",
+					dataType : "string",
+					visible : false
+				},{
+					dataField : "docNumber",
+					headerText : "문서번호",
+					width: 160,
+				}, {
+					dataField : "document",
+					headerText : "관련문서",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "문서추가",
+						onClick : function(event) {
+							const parentRowIndex = event.rowIndex;
+							const url = getCallUrl("/doc/listPopup?parentRowIndex=" + parentRowIndex);
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
 			}]
 
 			function createAUIGrid(columnLayout) {
@@ -527,10 +552,16 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				AUIGrid.removeCheckedRows(myGridID);
 			}
 			
-			// 품목 번호 할당 메서드
+			// 관련 품목 할당 메서드
 			function setPart(partOids, partNumber, parentRowIndex){
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "partOids", partOids);
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "partNumber", partNumber);
+			}
+						
+			// 관련 문서 할당 메서드
+			function setDoc(docOids, docNumber, parentRowIndex){
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "docOids", docOids);
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "docNumber", docNumber);
 			}
 						
 			// 주 첨부파일
@@ -629,6 +660,10 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 // 					}
 // 					if(isEmpty(documentList[i].partOids)){
 // 						alert(rowNum + "행의 문서에 관련품목를 입력하세요.");
+// 						return;
+// 					}
+// 					if(isEmpty(documentList[i].docOids)){
+// 						alert(rowNum + "행의 문서에 관련문서를 입력하세요.");
 // 						return;
 // 					}
 				}

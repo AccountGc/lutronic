@@ -143,10 +143,9 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="기안"  title="기안"  class="blue"  id="createBtn">
-					<input type="button" value="초기화" title="초기화" id="resetBtn">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
-					<input type="button"  value="임시저장"  title="임시저장"  id="exBtn">
+					<input type="button" value="기안" title="기안" class="red" id="createBtn">
+					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
+					<input type="button" value="임시저장" title="임시저장" class=""  id="exBtn">
 				</td>
 			</tr>
 		</table>

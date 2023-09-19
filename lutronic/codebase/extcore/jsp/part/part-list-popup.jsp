@@ -11,7 +11,6 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
-boolean popup = request.getAttribute("popup") != null ? (boolean) request.getAttribute("popup") : false; 
 int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 String callback = request.getParameter("callback") != null ? request.getParameter("callback") :"";
 String rowId = request.getParameter("rowId") != null ? request.getParameter("rowId") :"";

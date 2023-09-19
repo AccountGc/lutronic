@@ -9,6 +9,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
+int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -481,7 +482,19 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
             return false;
         }
         
-        opener.setAppendDoc(items);
+        let docOids = [];
+		let docNumber = [];
+		for(let i = 0; i < items.length; i++){
+			docOids.push(items[i].oid);
+			docNumber.push(items[i].number);
+		}
+		var parentRow = <%= parentRowIndex %>;
+		if(parentRow<0){
+			opener.setAppendDoc(items);
+		}else{
+			opener.setDoc(docOids, docNumber, <%= parentRowIndex %>);
+		}
+		
         self.close();
     }
 </script>
