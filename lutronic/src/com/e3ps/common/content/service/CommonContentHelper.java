@@ -106,46 +106,6 @@ public class CommonContentHelper {
 					obj.put("filePath", ContentUtils.FILE_PATH);
 					array.add(obj);
 				}
-
-				result.reset();
-				result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.SECONDARY);
-				while (result.hasMoreElements()) {
-					ApplicationData data = (ApplicationData) result.nextElement();
-					JSONObject obj = new JSONObject();
-
-					InputStream is = ContentServerHelper.service.findLocalContentStream(data);
-
-					File file = new File(savePath + File.separator + data.getFileName());
-					OutputStream outputStream = new FileOutputStream(file);
-					byte[] buffer = new byte[1024];
-					int length;
-					while ((length = is.read(buffer)) > 0) {
-						outputStream.write(buffer, 0, length);
-					}
-					outputStream.close();
-
-					CacheDescriptor localCacheDescriptor = UploadToCacheHelper.service.getCacheDescriptor(1, true);
-					long folderId = localCacheDescriptor.getFolderId();
-					long streamId = localCacheDescriptor.getStreamIds()[0];
-
-					InputStream[] streams = new InputStream[1];
-					streams[0] = new FileInputStream(file);
-					long[] fileSize = new long[1];
-					fileSize[0] = file.length();
-
-					CachedContentDescriptor ccd = new CachedContentDescriptor(streamId, folderId, fileSize[0], 0,
-							file.getPath());
-
-					obj.put("oid", data.getPersistInfo().getObjectIdentifier().toString());
-					obj.put("_id_", UUID.randomUUID().toString());
-					obj.put("tagId", UUID.randomUUID().toString());
-					obj.put("name", data.getFileName());
-					obj.put("fileSize", data.getFileSize());
-					obj.put("uploadedPath", data.getUploadedFromPath());
-					obj.put("roleType", roleType);
-					obj.put("cacheId", ccd.getEncodedCCD());
-					array.add(obj);
-				}
 				list.put("primaryFile", array);
 			} else if ("s".equalsIgnoreCase(roleType) || "secondary".equalsIgnoreCase(roleType)) {
 				JSONArray array = new JSONArray();

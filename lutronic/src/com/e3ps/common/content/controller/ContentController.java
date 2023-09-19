@@ -179,9 +179,9 @@ public class ContentController {
 	@Description(value = "첨부 파일 리스트 가져오기")
 	@ResponseBody
 	@PostMapping(value = "/list")
-	public JSONObject list(HttpServletRequest param) throws Exception {
-		String oid = (String) param.getParameter("oid");
-		String roleType = (String) param.getParameter("roleType");
+	public JSONObject list(HttpServletRequest request) throws Exception {
+		String oid = (String) request.getParameter("oid");
+		String roleType = (String) request.getParameter("roleType");
 		JSONObject list = CommonContentHelper.manager.list(oid, roleType);
 		return list;
 	}
