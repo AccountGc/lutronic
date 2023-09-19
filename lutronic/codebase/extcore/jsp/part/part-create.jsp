@@ -294,7 +294,9 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>주 도면</th>
 				<td class="indent5" >
-					
+					<jsp:include page="/extcore/jsp/common/attach-primary-drawing.jsp">
+						<jsp:param value="" name="oid" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
