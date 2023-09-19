@@ -22,15 +22,15 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.beans.ECOData;
-import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ChangeWfHelper;
 import com.e3ps.change.service.ECOHelper;
 import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.change.service.ECRHelper;
 import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
@@ -39,9 +39,6 @@ import com.e3ps.common.util.StringUtil;
 //import com.e3ps.doc.beans.DocumentData;
 //import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmUtil;
-import com.e3ps.groupware.notice.dto.NoticeDTO;
-import com.e3ps.groupware.notice.service.NoticeHelper;
-import com.e3ps.rohs.service.RohsHelper;
 
 import wt.part.WTPart;
 //import wt.vc.baseline.ManagedBaseline;
@@ -88,8 +85,10 @@ public class ChangeECOController extends BaseController {
 	
 	@Description(value = "ECO 검색")
 	@GetMapping(value = "/list")
-	public ModelAndView list() {
+	public ModelAndView list() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
 		model.setViewName("/extcore/jsp/change/eco-list.jsp");
 		return model;
 	}
