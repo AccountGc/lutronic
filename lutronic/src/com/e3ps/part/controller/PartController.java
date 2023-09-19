@@ -1876,7 +1876,22 @@ public class PartController extends BaseController {
 	@RequestMapping(value = "/partCheckIn")
 	public Map<String, Object> partCheckIn(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result =PartHelper.service.partCheckIn(params);
-		return list;
+		return result;
+	}
+	
+	/**
+	 * 부품 체크 아웃
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/partCheckOut")
+	public Map<String, Object> partCheckOut(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result =PartHelper.service.partCheckOut(params);
+		return result;
 	}
 	
 }

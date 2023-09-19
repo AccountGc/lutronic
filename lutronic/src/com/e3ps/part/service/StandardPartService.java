@@ -5116,4 +5116,34 @@ public class StandardPartService extends StandardManager implements PartService 
 		
 		return result;
 	}
+	
+	@Override
+	public Map<String, Object> partCheckOut(Map<String,Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String oid =(String) params.get("oid");
+		
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		//////////////////////////////////////////////////
+		// 체크인
+		if (!WorkInProgressHelper.isCheckedOut(part)) {
+			
+			if (!CheckInOutTaskLogic.isCheckedOut(part)) {
+				CheckoutLink checkoutlink = WorkInProgressHelper.service.checkout(part, CheckInOutTaskLogic.getCheckoutFolder(), "부품 체크 아웃");
+			}
+			
+			part = (WTPart) WorkInProgressHelper.service.workingCopyOf(part);
+			
+		}else{
+			result.put("msg", "체크아웃 중입니다.");
+		}
+		
+		try {
+		} catch(Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.toString());
+			
+		}
+		
+		return result;
+	}
 }

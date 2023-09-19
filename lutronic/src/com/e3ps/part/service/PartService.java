@@ -147,4 +147,8 @@ public interface PartService {
 	void batch(Map<String, Object> params) throws Exception;
 	
 	public  Map<String, Object> partCheckIn(Map<String, Object> params) throws Exception;
+	
+	public  Map<String, Object> partCheckOut(Map<String, Object> params) throws Exception;
+	
+	
 }

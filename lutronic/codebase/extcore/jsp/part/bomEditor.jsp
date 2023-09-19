@@ -410,8 +410,13 @@
 			},"POST");
 			break;
 		case 1:
-// 			var url = "/Windchill/platform/part/append?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&callBack=_child";
-// 			_popup(url, 1100, 380, "n");
+			var url	= getCallUrl("/part/partCheckOut");
+			call(url, item, function(data) {
+				if(!isEmpty(data.msg)){
+					alert(data.msg);	
+				}
+				viewAUIPartBomAction();
+			},"POST");
 			break;
 		case 2:
 // 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
