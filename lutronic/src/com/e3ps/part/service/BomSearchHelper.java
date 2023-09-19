@@ -255,6 +255,7 @@ public class BomSearchHelper {
 	   	map.put("dwgNo", dwgNo);
 	   	map.put("name", name);
 	   	map.put("rev", rev);
+	   	map.put("version", child.version);
 	   	map.put("remarks", remarks); //OEM Info.
 	   	map.put("modifier", modifier);
 	   	map.put("spec", spec); //

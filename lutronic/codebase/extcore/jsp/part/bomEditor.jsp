@@ -204,7 +204,7 @@
 			}
 		}, 
 		{
-			dataField: "rev",
+			dataField : "version",
 			headerText: "REV",
 			width: "5%"
 		}, 
@@ -428,8 +428,8 @@
 			},"POST");
 			break;
 		case 3:
-// 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
-// 			_popup(url, "", "", "f");
+			var url = getCallUrl("/part/listPopup?callback=appendChild&rowId=" + item._$uid );
+			_popup(url, 1500, 700, "n");
 			break;
 		case 4:
 // 			var url = "/Windchill/platform/part/exist?partTypeCd=" + item.partTypeCd + "&rowId=" + item._$uid + "&poid=" + item.oid + "&box=2&callBack=_child2";
@@ -464,6 +464,27 @@
 		}
 	};
 
+	// 중복 제거후 추가
+	function appendChild(items,rowId){
+		
+		var updateRow = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId)[0].children;
+		var level = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId)[0].level;
+		if(updateRow ==undefined){
+			updateRow=[];
+		}
+		for(var i =0; i<updateRow.length;i++){
+			if(item.oid == node.oid){
+				alert("중복된 부품이 있습니다.");
+				return;
+			}
+		}
+		
+		for(var i =0; i<items.length;i++){
+			var item = items[i];
+			item.level =level+1;
+		}
+		AUIGrid.addTreeRow(myBOMGridID, items, rowId, "last");
+	}
 	
 	
 	<%----------------------------------------------------------
