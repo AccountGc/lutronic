@@ -10,12 +10,9 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO data = (DocumentDTO) request.getAttribute("docData");
-
 List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 String pnum = (String) request.getAttribute("pnum");
-WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 %>
-<input type="hidden" name="isAdmin" id="isAdmin" value="<%=isAdmin%>">
 <input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
 
 <table class="button-table">
@@ -27,39 +24,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</div>
 		</td>
 		<td class="right">
-			<%
-			if (data.isLatest()) {
-			%>
-			<%-- 				<% --%>
-			<!-- // 				if(data.getState().equals("APPROVED")){ -->
-			<%-- 				%> --%>
 			<input type="button" value="개정" title="개정" id="reviseBtn" onclick="update();">
-			<%-- 				<%	 --%>
-			<!-- // 				} -->
-			<%-- 				%> --%>
 			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-			<%
-			if (data.isWithDraw()) {
-			%>
 			<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
-			<%
-			}
-			%>
-			<%
-			if (data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")) {
-			%>
 			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
-			<%
-			}
-			%>
-			<%
-			} else {
-			%>
 			<input type="button" value="최신Rev." title="최신Rev." id="lastestBtn">
-			<%
-			}
-			%>
 			<input type="button" value="Rev.이력" title="Rev.이력" id="versionBtn">
 			<input type="button" value="다운로드이력" title="다운로드이력" id="downloadBtn">
 			<input type="button" value="결재이력" title="결재이력" id="approveBtn">
@@ -95,36 +65,16 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="350">
 			</colgroup>
 			<tr>
-				<%
-				if (data.getDocumentType().equals("금형문서")) {
-				%>
-				<th class="lb">금형번호</th>
-				<%
-				} else {
-				%>
 				<th class="lb">문서번호</th>
-				<%
-				}
-				%>
 				<td class="indent5"><%=data.getNumber()%></td>
-				<%
-				if (data.getDocumentType().equals("금형문서")) {
-				%>
-				<th class="lb">금형분류</th>
-				<%
-				} else {
-				%>
 				<th class="lb">문서분류</th>
-				<%
-				}
-				%>
 				<td class="indent5"><%=data.getLocation()%></td>
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
 				<td class="indent5"><%=data.getState()%></td>
-				<th class="lb">Rev.</th>
-				<td class="indent5"></td>
+				<th class="lb">REV</th>
+				<td class="indent5"><%=data.getVersion()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
@@ -142,18 +92,22 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<th class="lb">문서유형</th>
 				<td class="indent5"><%=data.getDocumentType()%></td>
 				<th class="lb">결재방식</th>
-				<td class="indent5"><%=data.getApprovalType()%></td>
+				<td class="indent5">
+					<%
+					//=data.getApprovalType()
+					%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">설명</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly"><%= data.getDescription() == null ? "" : data.getDescription() %></textarea>
+					<textarea rows="5" readonly="readonly"><%=data.getDescription() == null ? "" : data.getDescription()%></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">주 첨부파일</th>
-				<td colspan="3" class="indent5">
-					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=data.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
@@ -161,11 +115,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">
 					첨부파일
-					<br>
-					<input type="button" value="일괄 다운" title="일괄 다운" onclick="">
+					<!-- 					<input type="button" value="일괄 다운" title="일괄 다운" onclick=""> -->
 				</th>
-				<td colspan="3" class="indent5">
-					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=data.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
@@ -276,12 +229,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<td align="center" style="padding: 0, 0, 0, 5px;" width="100px">
 				<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
 				<%
-				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
+// 				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
 				%>
 				<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
 				<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
 				<%
-				}
+// 				}
 				%>
 			</td>
 			<%
@@ -511,47 +464,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 		}, "GET");
 	}	
-	
-	//개정
-	$("#reviseBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/doc/reviseDocument?oid=" + oid);
-		popup(url, 400, 200);
-	})
-	
-	//버전이력
-	$("#versionBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/versionHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//다운로드 이력
-	$("#downloadBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/downloadHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//결재이력
-	$("#approveBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//최신버전
-	$("#lastestBtn").click(function() {
-		var oid = this.value;
-		openView(oid);
-	})
-	
-	//결재 회수
-	$("#withDrawBtn").click(function() {
-		
-		var url	= getURLString("common", "withDrawPopup", "do") + "?oid="+$("#oid").val();
-		openOtherName(url,"withDrawBtn","400","220","status=no,scrollbars=yes,resizable=yes");
-	})
 	
 	//일괄 다운로드
 	function batchSecondaryDown() {

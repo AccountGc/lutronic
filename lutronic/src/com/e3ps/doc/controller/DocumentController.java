@@ -109,7 +109,8 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "관련 문서 팝업 페이지")
 	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
+	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false) Integer parentRowIndex)
+			throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
@@ -143,20 +144,20 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 상세보기")
 	@GetMapping(value = "/view")
-	public ModelAndView view(@RequestParam(value = "oid") String oid) throws Exception {
+	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-		DocumentDTO docData = new DocumentDTO(doc);
-		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
+		boolean isAdmin = CommonUtil.isAdmin();
+		DocumentDTO dto = new DocumentDTO(oid);
+//		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
 		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
 		String pnum = DocumentHelper.manager.getCnum(cList);
 
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("docData", docData);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
 		model.addObject("cList", cList);
 		model.addObject("pnum", pnum);
+//		model.addAllObjects(map);
 		model.setViewName("popup:/document/document-view");
-		model.addAllObjects(map);
 		return model;
 	}
 

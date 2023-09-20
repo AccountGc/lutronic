@@ -1,29 +1,12 @@
 package com.e3ps.doc.dto;
 
-import java.util.Vector;
+import java.util.HashMap;
 
-import com.e3ps.change.service.ChangeUtil;
-import com.e3ps.common.beans.VersionData;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.iba.AttributeKey.IBAKey;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.StringUtil;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.content.ContentHelper;
-import wt.content.ContentHolder;
-import wt.content.ContentItem;
-import wt.content.ContentRoleType;
 import wt.doc.WTDocument;
-import wt.enterprise.BasicTemplateProcessor;
-import wt.fc.QueryResult;
-import wt.session.SessionHelper;
 
 @Getter
 @Setter
@@ -36,26 +19,47 @@ public class DocumentDTO {
 	private String location;
 	private String documentType;
 	private boolean latest;
+	private String state;
+	private String version;
+	private String iteration;
 	private String creator;
 	private String createdDate;
 	private String modifier;
 	private String modifiedDate;
 
+	// IBA
+	private String writer;
+	
+	
+	private HashMap<String, String> attr = new HashMap<String, String>();
+
 	public DocumentDTO() {
 
+	}
+
+	public DocumentDTO(String oid) throws Exception {
+		this((WTDocument) CommonUtil.getObject(oid));
 	}
 
 	public DocumentDTO(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(doc.getName());
 		setNumber(doc.getNumber());
-		setDescription(doc.getTypeInfoWTDocument().getPtc_rht_1());
+		setDescription(
+				doc.getDescription() == null ? doc.getTypeInfoWTDocument().getPtc_rht_1() : doc.getDescription());
 		setLocation(doc.getLocation());
 		setDocumentType(doc.getDocType().getDisplay());
 		setLatest(CommonUtil.isLatestVersion(doc));
+		setState(doc.getLifeCycleState().getDisplay());
+		setVersion(doc.getVersionIdentifier().getSeries().getValue());
+		setIteration(doc.getIterationIdentifier().getSeries().getValue());
 		setCreator(doc.getCreatorFullName());
 		setCreatedDate(doc.getCreateTimestamp().toString().substring(0, 10));
 		setModifiedDate(doc.getModifierFullName());
 		setModifiedDate(doc.getModifyTimestamp().toString().substring(0, 10));
+	}
+	
+	public void setIBAAttribute(WTDocument doc) throws Exception {
+		
 	}
 }
