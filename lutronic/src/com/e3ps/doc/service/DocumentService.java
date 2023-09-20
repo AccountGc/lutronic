@@ -83,5 +83,5 @@ public interface DocumentService {
 	/**
 	 * 문서 삭제
 	 */
-	public abstract void delete(String oid) throws Exception;
+	public abstract String delete(String oid) throws Exception;
 }
