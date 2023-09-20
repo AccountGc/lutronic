@@ -173,18 +173,7 @@
 		{
 		    dataField: "dwgNo",
 		    headerText: "도면번호",
-		    width: "7%",//dwgOid
-			renderer : { // HTML 템플릿 렌더러 사용
-				type : "TemplateRenderer"
-			},
-			filter : {
-				showIcon : true
-			},
-			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-				
-				var temp = "<a href=javascript:openView('" + item.dwgOid + "') style='line-height:26px;'>" + value + "</a>"
-				return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-			}
+		    width: "7%",
 		}, 
 		
 		{
@@ -192,16 +181,6 @@
 			headerText: "부품명",
 			style: "AUI_left",
 			width : "15%",
-			filter : {
-				showIcon : true
-			},
-			renderer : { // HTML 템플릿 렌더러 사용
-				type : "TemplateRenderer"
-			},
-			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-				var temp = "<a href=javascript:openView('" + item.oid + "') style='line-height:26px;'>" + value + "</a>"
-				return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-			}
 		}, 
 		{
 			dataField : "version",
@@ -344,13 +323,13 @@
 	AUIGrid.bind(myBOMGridID, "contextMenu", function(event) {
 		AUIGrid.setSelectionByIndex(myBOMGridID, event.rowIndex, event.columnIndex);
 		var menus = [ {
-			label : "체크인",
-			callback : contextItemHandler
-		}, {
 			label : "체크아웃",
 			callback : contextItemHandler
 		}, {
 			label : "체크아웃 취소",
+			callback : contextItemHandler
+		}, {
+			label : "체크인",
 			callback : contextItemHandler
 		}, {
 			label : "기존부품 추가",
@@ -401,15 +380,6 @@
 		var rowIndex = event.rowIndex;
 		switch (event.contextIndex) {
 		case 0:
-			var url	= getCallUrl("/part/partCheckIn");
-			call(url, item, function(data) {
-				if(!isEmpty(data.msg)){
-					alert(data.msg);	
-				}
-				viewAUIPartBomAction();
-			},"POST");
-			break;
-		case 1:
 			var url	= getCallUrl("/part/partCheckOut");
 			call(url, item, function(data) {
 				if(!isEmpty(data.msg)){
@@ -418,7 +388,7 @@
 				viewAUIPartBomAction();
 			},"POST");
 			break;
-		case 2:
+		case 1:
 			var url	= getCallUrl("/part/partUndoCheckOut");
 			call(url, item, function(data) {
 				if(!isEmpty(data.msg)){
@@ -426,6 +396,16 @@
 				}
 				viewAUIPartBomAction();
 			},"POST");
+			break;
+		case 2:
+			var url	= getCallUrl("/part/partCheckIn");
+			call(url, item, function(data) {
+				if(!isEmpty(data.msg)){
+					alert(data.msg);	
+				}
+				viewAUIPartBomAction();
+			},"POST");
+			
 			break;
 		case 3:
 			var url = getCallUrl("/part/listPopup?callback=appendChild&rowId=" + item._$uid);
@@ -489,14 +469,16 @@
 		var index = AUIGrid.rowIdToIndex(myBOMGridID,rowId);
 		var url	= getCallUrl("/part/bomEditorList");
 		call(url, item, function(data) {
-			debugger;
+// 			debugger;
 			var gridData = data;
 			gridData[0].level=selectItem[0].level;
 			
-			AUIGrid.addRow(myBOMGridID, gridData[0],index);
-// 			AUIGrid.updateRow(myBOMGridID, gridData[0], index);
-			AUIGrid.refresh(myBOMGridID)
+// 			AUIGrid.addRow(myBOMGridID, gridData[0],index);
+// 			AUIGrid.updateRow(myBOMGridID, {}, index);
+			AUIGrid.updateRow(myBOMGridID, gridData[0], index);
+// 			AUIGrid.refresh(myBOMGridID)
 // 			AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
+// 			AUIGrid.showItemsOnDepth(myBOMGridID, gridData[0].level );
 			
 		});		
 		
