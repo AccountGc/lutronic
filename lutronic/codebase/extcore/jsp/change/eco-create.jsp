@@ -135,7 +135,7 @@
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="7">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -241,7 +241,7 @@
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(ecrGridID);
-				document.getElementById("name").focus();
+				document.getElementById("eoName").focus();
 			});
 	
 			window.addEventListener("resize", function() {

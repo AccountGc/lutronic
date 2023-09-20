@@ -291,17 +291,31 @@ public class DrawingController extends BaseController{
 //		return model;
 //	}
 	
-	/** 도면 삭제
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
+//	/** 도면 삭제
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/deleteDrwaingAction")
+//	public Map<String,Object> deleteDrwaingAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) {
+//		Map<String,Object> map = DrawingHelper.service.delete(oid);
+//		return map;
+//	}
+	@Description(value = "도면 삭제")
 	@ResponseBody
-	@RequestMapping("/deleteDrwaingAction")
+	@PostMapping(value = "/delete")
 	public Map<String,Object> deleteDrwaingAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) {
-		Map<String,Object> map = DrawingHelper.service.delete(oid);
-		return map;
+		Map<String,Object> result = DrawingHelper.service.delete(oid);
+		if ((boolean) result.get("result")) {
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
+		return result;
 	}
 	
 	/** 도면 선택 페이지

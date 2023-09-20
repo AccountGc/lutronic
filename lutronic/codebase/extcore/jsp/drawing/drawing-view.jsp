@@ -72,17 +72,17 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<table class="view-table">
 			<colgroup>
 				<col width="150">
-				<col width="350">
+				<col width="*">
 				<col width="150">
-				<col width="350">
+				<col width="*">
 			</colgroup>
 			<tr>
-				<th>도면명</th>
-				<td colspan="3"><%=dto.getName()%></td>
+				<th>도면번호</th>
+				<td colspan="3"><%=dto.getNumber()%></td>
 			</tr>
 			<tr>
-				<th>도면번호</th>
-				<td><%=dto.getNumber()%></td>
+				<th>도면명</th>
+				<td><%=dto.getName()%></td>
 				<th>도면분류</th>
 				<td><%=dto.getLocation()%></td>
 			</tr>
@@ -171,20 +171,27 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 	
 	//삭제
 	$("#deleteBtn").click(function () {
-
+	
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
-
+	
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		call(url, null, function(data) {
+		const url = getCallUrl("/drawing/delete");
+		const params = new Object();
+		params.oid = oid;
+		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-//		 				opener.loadGridData();
-				self.close();
+				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+					parent.opener.location.reload();
+				}else {
+					parent.opener.$("#sessionId").val("");
+					parent.opener.lfn_Search();
+				}
+				window.close();
 			}
-		}, "GET");
+		});
 	})
 			
 	//개정
