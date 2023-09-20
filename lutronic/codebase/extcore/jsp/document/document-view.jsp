@@ -39,19 +39,19 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%-- 				%> --%>
 			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
 			<%
-			if (data.isWithDraw()) {
+// 			if (data.isWithDraw()) {
 			%>
 			<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
 			<%
-			}
+// 			}
 			%>
 			<%
-			if (data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")) {
+// 			if (data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
 			<%
-			}
+// 			}
 			%>
 			<%
 			} else {
@@ -122,7 +122,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
-				<td class="indent5"><%=data.getState()%></td>
+				<td class="indent5">
+<%-- 					<%=data.getState()%> --%>
+				</td>
 				<th class="lb">Rev.</th>
 				<td class="indent5"></td>
 			</tr>
@@ -142,7 +144,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<th class="lb">문서유형</th>
 				<td class="indent5"><%=data.getDocumentType()%></td>
 				<th class="lb">결재방식</th>
-				<td class="indent5"><%=data.getApprovalType()%></td>
+				<td class="indent5">
+<%-- 					<%=data.getApprovalType()%> --%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">설명</th>
