@@ -58,12 +58,12 @@
 				<td class="indent5" colspan="7"><textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea></td>
 			</tr>
 			<tr>
-				<th class="req lb">설계변경 부품</th>
-				<td colspan="7">
+				<td colspan="8">
 					<!-- 	관련 품목 -->
 					<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
+						<jsp:param value="eco" name="moduleType" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -135,7 +135,7 @@
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="7">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -241,7 +241,7 @@
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(ecrGridID);
-				document.getElementById("name").focus();
+				document.getElementById("eoName").focus();
 			});
 	
 			window.addEventListener("resize", function() {

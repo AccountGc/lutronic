@@ -36,6 +36,8 @@ import com.e3ps.drawing.service.EpmSearchHelper;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMReferenceLink;
+import wt.org.WTUser;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 
 @Controller
@@ -51,6 +53,8 @@ public class DrawingController extends BaseController{
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String,String>> cadTypeList = DrawingHelper.manager.cadTypeList();
+		WTUser sessionUser  = (WTUser) SessionHelper.manager.getPrincipal();
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -58,6 +62,8 @@ public class DrawingController extends BaseController{
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
+		model.addObject("sessionUser", sessionUser);
+		model.addObject("cadTypeList", cadTypeList);
 		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
 		return model;
 	}
@@ -287,17 +293,31 @@ public class DrawingController extends BaseController{
 //		return model;
 //	}
 	
-	/** 도면 삭제
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 */
+//	/** 도면 삭제
+//	 * @param request
+//	 * @param response
+//	 * @param oid
+//	 * @return
+//	 */
+//	@ResponseBody
+//	@RequestMapping("/deleteDrwaingAction")
+//	public Map<String,Object> deleteDrwaingAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) {
+//		Map<String,Object> map = DrawingHelper.service.delete(oid);
+//		return map;
+//	}
+	@Description(value = "도면 삭제")
 	@ResponseBody
-	@RequestMapping("/deleteDrwaingAction")
+	@PostMapping(value = "/delete")
 	public Map<String,Object> deleteDrwaingAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) {
-		Map<String,Object> map = DrawingHelper.service.delete(oid);
-		return map;
+		Map<String,Object> result = DrawingHelper.service.delete(oid);
+		if ((boolean) result.get("result")) {
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} else {
+			result.put("result", FAIL);
+			result.put("msg", (String) result.get("msg"));
+		}
+		return result;
 	}
 	
 	/** 도면 선택 페이지

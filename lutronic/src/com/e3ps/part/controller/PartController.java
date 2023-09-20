@@ -1729,7 +1729,27 @@ public class PartController extends BaseController {
 		List<Map<String, Object>> list = BomSearchHelper.manager.viewAUIPartBomChildAction(params);
 		return list;
 	}
-
+	
+	/**
+	 * AUI BOM Action
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/viewAUIPartBomChildAction2")
+	public Map<String, Object> viewAUIPartBomChildAction2(@RequestBody Map<String, Object> params)throws Exception {
+		
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("list", BomSearchHelper.manager.viewAUIPartBomChildAction(params));
+		result.put("grideItem", params.get("grideItem"));
+		
+		
+		return result;
+	}
+	
 	/**
 	 * AUI BOM Action
 	 * 

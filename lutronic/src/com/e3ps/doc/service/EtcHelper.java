@@ -27,11 +27,11 @@ public class EtcHelper {
 	public static final EtcService service = ServiceFactory.getService(EtcService.class);
 	public static final EtcHelper manager = new EtcHelper();
 
-	public static final String RA = "/Default/기타문서관리/RA팀";
-	public static final String PRODUCTION = "/Default/기타문서관리/생산본부";
-	public static final String PATHOLOGICAL = "/Default/기타문서관리/병리연구";
-	public static final String CLINICAL = "/Default/기타문서관리/임상개발";
-	public static final String COSMETIC = "/Default/기타문서관리/화장품";
+	public static final String RA = "/Default/RA팀 문서관리/RA팀";
+	public static final String PRODUCTION = "/Default/생산본부 문서관리/생산본부";
+	public static final String PATHOLOGICAL = "/Default/병리연구 문서관리/병리연구";
+	public static final String CLINICAL = "/Default/임상개발 문서관리/임상개발";
+	public static final String COSMETIC = "/Default/화장품 문서관리/화장품";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();

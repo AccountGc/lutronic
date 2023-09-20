@@ -7,6 +7,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO data = (DocumentDTO) request.getAttribute("docData");
@@ -26,9 +28,30 @@ String pnum = (String) request.getAttribute("pnum");
 		<td class="right">
 			<input type="button" value="개정" title="개정" id="reviseBtn" onclick="update();">
 			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
+<<<<<<< HEAD
 			<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
 			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+=======
+			<%
+// 			if (data.isWithDraw()) {
+			%>
+			<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
+			<%
+// 			}
+			%>
+			<%
+// 			if (data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")) {
+			%>
+			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
+			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+			<%
+// 			}
+			%>
+			<%
+			} else {
+			%>
+>>>>>>> b01afe442dc9530130ff043d4cf1f74c57f6e6d1
 			<input type="button" value="최신Rev." title="최신Rev." id="lastestBtn">
 			<input type="button" value="Rev.이력" title="Rev.이력" id="versionBtn">
 			<input type="button" value="다운로드이력" title="다운로드이력" id="downloadBtn">
@@ -72,9 +95,17 @@ String pnum = (String) request.getAttribute("pnum");
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
+<<<<<<< HEAD
 				<td class="indent5"><%=data.getState()%></td>
 				<th class="lb">REV</th>
 				<td class="indent5"><%=data.getVersion()%></td>
+=======
+				<td class="indent5">
+<%-- 					<%=data.getState()%> --%>
+				</td>
+				<th class="lb">Rev.</th>
+				<td class="indent5"></td>
+>>>>>>> b01afe442dc9530130ff043d4cf1f74c57f6e6d1
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
@@ -93,9 +124,13 @@ String pnum = (String) request.getAttribute("pnum");
 				<td class="indent5"><%=data.getDocumentType()%></td>
 				<th class="lb">결재방식</th>
 				<td class="indent5">
+<<<<<<< HEAD
 					<%
 					//=data.getApprovalType()
 					%>
+=======
+<%-- 					<%=data.getApprovalType()%> --%>
+>>>>>>> b01afe442dc9530130ff043d4cf1f74c57f6e6d1
 				</td>
 			</tr>
 			<tr>

@@ -96,7 +96,7 @@
 		    	<tr height="30">
 		    		<td width="40%" align="left">
 						<input type="button" value="펼치기" title="펼치기" id="expand" class="width-80">
-						
+						<input type="button" value="접기" title="접기" id="folding" class="width-80">
 						<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
 							<option value="expandAll">전체확장</option>
 							<option value="1" selected>1레벨</option>
@@ -173,18 +173,7 @@
 		{
 		    dataField: "dwgNo",
 		    headerText: "도면번호",
-		    width: "7%",//dwgOid
-			renderer : { // HTML 템플릿 렌더러 사용
-				type : "TemplateRenderer"
-			},
-			filter : {
-				showIcon : true
-			},
-			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-				
-				var temp = "<a href=javascript:openView('" + item.dwgOid + "') style='line-height:26px;'>" + value + "</a>"
-				return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-			}
+		    width: "7%",
 		}, 
 		
 		{
@@ -192,16 +181,6 @@
 			headerText: "부품명",
 			style: "AUI_left",
 			width : "15%",
-			filter : {
-				showIcon : true
-			},
-			renderer : { // HTML 템플릿 렌더러 사용
-				type : "TemplateRenderer"
-			},
-			labelFunction : function (rowIndex, columnIndex, value, headerText, item ) { // HTML 템플릿 작성
-				var temp = "<a href=javascript:openView('" + item.oid + "') style='line-height:26px;'>" + value + "</a>"
-				return temp; // HTML 템플릿 반환..그대도 innerHTML 속성값으로 처리됨
-			}
 		}, 
 		{
 			dataField : "version",
@@ -344,13 +323,13 @@
 	AUIGrid.bind(myBOMGridID, "contextMenu", function(event) {
 		AUIGrid.setSelectionByIndex(myBOMGridID, event.rowIndex, event.columnIndex);
 		var menus = [ {
-			label : "체크인",
-			callback : contextItemHandler
-		}, {
 			label : "체크아웃",
 			callback : contextItemHandler
 		}, {
 			label : "체크아웃 취소",
+			callback : contextItemHandler
+		}, {
+			label : "체크인",
 			callback : contextItemHandler
 		}, {
 			label : "기존부품 추가",
@@ -401,15 +380,6 @@
 		var rowIndex = event.rowIndex;
 		switch (event.contextIndex) {
 		case 0:
-			var url	= getCallUrl("/part/partCheckIn");
-			call(url, item, function(data) {
-				if(!isEmpty(data.msg)){
-					alert(data.msg);	
-				}
-				viewAUIPartBomAction();
-			},"POST");
-			break;
-		case 1:
 			var url	= getCallUrl("/part/partCheckOut");
 			call(url, item, function(data) {
 				if(!isEmpty(data.msg)){
@@ -418,7 +388,7 @@
 				viewAUIPartBomAction();
 			},"POST");
 			break;
-		case 2:
+		case 1:
 			var url	= getCallUrl("/part/partUndoCheckOut");
 			call(url, item, function(data) {
 				if(!isEmpty(data.msg)){
@@ -426,6 +396,16 @@
 				}
 				viewAUIPartBomAction();
 			},"POST");
+			break;
+		case 2:
+			var url	= getCallUrl("/part/partCheckIn");
+			call(url, item, function(data) {
+				if(!isEmpty(data.msg)){
+					alert(data.msg);	
+				}
+				viewAUIPartBomAction();
+			},"POST");
+			
 			break;
 		case 3:
 			var url = getCallUrl("/part/listPopup?callback=appendChild&rowId=" + item._$uid);
@@ -489,14 +469,16 @@
 		var index = AUIGrid.rowIdToIndex(myBOMGridID,rowId);
 		var url	= getCallUrl("/part/bomEditorList");
 		call(url, item, function(data) {
-			debugger;
+// 			debugger;
 			var gridData = data;
 			gridData[0].level=selectItem[0].level;
 			
-			AUIGrid.addRow(myBOMGridID, gridData[0],index);
-// 			AUIGrid.updateRow(myBOMGridID, gridData[0], index);
-			AUIGrid.refresh(myBOMGridID)
+// 			AUIGrid.addRow(myBOMGridID, gridData[0],index);
+// 			AUIGrid.updateRow(myBOMGridID, {}, index);
+			AUIGrid.updateRow(myBOMGridID, gridData[0], index);
+// 			AUIGrid.refresh(myBOMGridID)
 // 			AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
+// 			AUIGrid.showItemsOnDepth(myBOMGridID, gridData[0].level );
 			
 		});		
 		
@@ -594,23 +576,66 @@ function getViews() {
 	*/
 	
 	<%----------------------------------------------------------
-	*                     모두 펼치기
+	*                     펼치기
 	----------------------------------------------------------%>
 	$("#expand").click(function() {
-		if (!isExpand) {
+		var grideData =AUIGrid.getGridData(myBOMGridID);
+		var check =0;
+		
+		for(var i =0;i<grideData.length;i++){
+			if(!isEmpty(grideData[i].children) && !grideData[i].children){
+				check++;
+			}
+		}
+		if(check ==0){
 			AUIGrid.expandAll(myBOMGridID);
-			$("#expand").val("접기")
-			isExpand = true;
-		} else {
-			$("#expand").val("펼치기")
-			AUIGrid.collapseAll(myBOMGridID);
-			isExpand = false;
+		}else{
+			
+			var allUpdateCheck =0;
+			for(var i =0;i<grideData.length;i++){
+				if(!isEmpty(grideData[i].children) && !grideData[i].children){
+					
+					var params =  {"oid":grideData[i].oid
+										 , "grideItem" : grideData[i]};
+					var url	= getCallUrl("/part/viewAUIPartBomChildAction2");
+					call(url, params, function(data) {
+						var list = data.list;
+						var grideItem = data.grideItem;
+						allUpdateCheck++;
+						for(var j =0;j<list.length;j++){
+							list[j].level =grideItem._$depth+1;
+						}
+						grideItem.children =list;
+						
+						AUIGrid.updateRow(myBOMGridID, grideItem, AUIGrid.rowIdToIndex(myBOMGridID,grideItem._$uid));
+						
+						if(check==allUpdateCheck){
+							finishExpand();
+						}
+						
+					},"POST");
+				}
+			}
+		}
+	});
+	
+	<%----------------------------------------------------------
+	*                     접기
+	----------------------------------------------------------%>
+	$("#folding").click(function() {
+		var dept =AUIGrid.getTreeTotalDepth(myBOMGridID);
+		if(dept!=1){
+			AUIGrid.showItemsOnDepth(myBOMGridID, dept-1 );
 		}
 		
-		
-		$("#depthSelect option:eq(0)").attr("selected","selected");
-		
-	})
+// 		AUIGrid.collapseAll(myBOMGridID);
+	});
+	
+	
+	function finishExpand(){
+		AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
+		AUIGrid.expandAll(myBOMGridID);
+	}
 	<%----------------------------------------------------------
 	*                     엑셀 다운로드
 	----------------------------------------------------------%>

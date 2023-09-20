@@ -19,12 +19,12 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.org.People;
-import com.e3ps.part.service.VersionHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
+import wt.epm.EPMDocumentType;
 import wt.epm.structure.EPMDescribeLink;
 import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
@@ -70,7 +70,7 @@ public class DrawingHelper {
 			String postdate         = StringUtil.checkNull((String)params.get("postdate"));	
 			String predate_modify 	= StringUtil.checkNull((String)params.get("predate_modify"));
 			String postdate_modify  = StringUtil.checkNull((String)params.get("postdate_modify"));
-			String creator 		    = StringUtil.checkNull((String)params.get("creator"));
+			String creator 		    = StringUtil.checkNull((String)params.get("creatorOid"));
 			String state 	        = StringUtil.checkNull((String)params.get("state"));	
 			String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
 			String sortValue 	    = StringUtil.checkNull((String)params.get("sortValue"));
@@ -104,11 +104,13 @@ public class DrawingHelper {
 			}
 			
 			// 최신 이터레이션
-			if(query.getConditionCount() > 0) { query.appendAnd(); }
-			query.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[]{idx});
+			if("true".equals(islastversion)) {
+				if(query.getConditionCount() > 0) { query.appendAnd(); }
+				query.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[]{idx});
+			}
 			
 			// 버전 검색
-			if(!StringUtil.checkString(islastversion)) islastversion = "true";
+//			if(!StringUtil.checkString(islastversion)) islastversion = "true";
 			if("true".equals(islastversion)) {
 				SearchUtil.addLastVersionCondition(query, EPMDocument.class, idx);;
 			}
@@ -134,10 +136,8 @@ public class DrawingHelper {
 			
 			//�ۼ���
 			if(creator.length()>0){
-				People people = (People)rf.getReference(creator).getObject();
-				WTUser user = people.getUser();
 				if(query.getConditionCount() > 0) { query.appendAnd(); }
-				query.appendWhere(new SearchCondition(EPMDocument.class,"iterationInfo.creator.key","=", PersistenceHelper.getObjectIdentifier( user )), new int[]{idx});
+				query.appendWhere(new SearchCondition(EPMDocument.class,"iterationInfo.creator.key.id","=", CommonUtil.getOIDLongValue(creator)), new int[]{idx});
 			} else creator = "";
 			
 			//���°˻�
@@ -583,5 +583,20 @@ public class DrawingHelper {
 		}
 		
     	return JSONArray.fromObject(list);
+	}
+	
+	public List<Map<String,String>> cadTypeList(){
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		EPMDocumentType[] appType = EPMDocumentType.getEPMDocumentTypeSet();
+		
+		for(EPMDocumentType type : appType) {
+			if(!type.isSelectable()) continue;
+			Map<String,String> map = new HashMap<String,String>();
+			map.put("code", type.toString());
+			map.put("name", type.getDisplay(Message.getLocale()));
+			list.add(map);
+		}
+		
+		return list;
 	}
 }

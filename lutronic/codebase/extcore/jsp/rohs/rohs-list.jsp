@@ -73,7 +73,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					</select>
 				</td>
 				<th>수정일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="createdTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+				<td class="indent5"><input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="modifiedTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 			</tr>
 			<tr>
@@ -245,7 +245,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
-				const field = ["_psize","name","number","description","state","creatorOid","createdFrom","createdTo"];
+				const field = ["_psize","rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
 				params = toField(params, field);
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);

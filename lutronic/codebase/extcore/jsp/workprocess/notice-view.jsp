@@ -34,7 +34,9 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 		<th class="lb">등록자</th>
 		<td class="indent5"><%=data.getCreator()%></td>
 		<th>등록일</th>
-		<td class="indent5"><%=data.getCreateDate()%></td>
+		<td class="indent5">
+<%-- 			<%=data.getCreateDate()%> --%>
+		</td>
 	</tr>
 	<tr>
 		<th class="lb">조회수</th>
