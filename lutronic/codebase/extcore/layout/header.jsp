@@ -281,29 +281,92 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 			if (isEtc) {
 			%>
 			<li>
-				<a href="#">
-					<i class="fa fa-files-o"></i>
-					<span class="nav-label">기타문서관리</span>
+				<a href="css_animation.html">
+					<i class="fa fa-magic"></i>
+					<span class="nav-label">생산본부 문서관리</span>
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create', '> 기타문서관리 > 기타문서등록');">기타문서등록</a>
+						<a onclick="moveToPage(this, '/etc/create', '> 생산본부 문서관리 > 생산본부 문서등록');">생산본부 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 기타문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=pathological', '> 기타문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서결재');">생산본부 문서결재</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="css_animation.html">
+					<i class="fa fa-magic"></i>
+					<span class="nav-label">병리연구 문서관리</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/etc/create', '> 병리연구 문서관리 > 병리연구 문서등록');">병리연구 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType='clinical, '> 기타문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType=pathological', '> 병리연구 문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=ra', '> 기타문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 병리연구 문서관리 > 병리연구 문서결재');">병리연구 문서결재</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="css_animation.html">
+					<i class="fa fa-magic"></i>
+					<span class="nav-label">임상개발 문서관리</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/etc/create', '> 임상개발 문서관리 > 임상개발 문서등록');">임상개발 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=cosmetic', '> 기타문서관리 > 화장품 문서검색');">화장품 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?docType='clinical, '> 임상개발  문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 임상개발 문서관리 > 임상개발 문서결재');">임상개발 문서결재</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="css_animation.html">
+					<i class="fa fa-magic"></i>
+					<span class="nav-label">RA팀 문서관리</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/etc/create', '> RA팀 문서관리 > RA팀 문서등록');">RA팀 문서등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/etc/list?docType=ra', '> RA팀 문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/etc/list?docType=production', '> RA팀 문서관리 > RA팀 문서결재');">RA팀 문서결재</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="css_animation.html">
+					<i class="fa fa-magic"></i>
+					<span class="nav-label">화장품 문서관리</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/etc/create', '> 화장품 문서관리 > RA팀 문서등록');">화장품 문서등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/etc/list?docType=cosmetic', '> 화장품 문서관리 >  문서검색');">화장품 문서검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 화장품 문서관리 > 화장품 문서결재');">화장품 문서결재</a>
 					</li>
 				</ul>
 			</li>
