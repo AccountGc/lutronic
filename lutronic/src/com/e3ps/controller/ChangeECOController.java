@@ -93,6 +93,16 @@ public class ChangeECOController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "관련 ECO 팝업 페이지")
+	@GetMapping(value = "/listPopup")
+	public ModelAndView listPopup() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.setViewName("popup:/change/eco-list-popup");
+		return model;
+	}
+	
 	@Description(value = "ECO 검색")
 	@ResponseBody
 	@PostMapping(value = "/list")
@@ -220,6 +230,14 @@ public class ChangeECOController extends BaseController {
 	public ModelAndView listEO() {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/change/eo-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "관련 EO 팝업 페이지")
+	@GetMapping(value = "/listEOPopup")
+	public ModelAndView listEOPopup() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/change/eo-list-popup");
 		return model;
 	}
 	
