@@ -70,7 +70,7 @@ public class DrawingHelper {
 			String postdate         = StringUtil.checkNull((String)params.get("postdate"));	
 			String predate_modify 	= StringUtil.checkNull((String)params.get("predate_modify"));
 			String postdate_modify  = StringUtil.checkNull((String)params.get("postdate_modify"));
-			String creator 		    = StringUtil.checkNull((String)params.get("creator"));
+			String creator 		    = StringUtil.checkNull((String)params.get("creatorOid"));
 			String state 	        = StringUtil.checkNull((String)params.get("state"));	
 			String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
 			String sortValue 	    = StringUtil.checkNull((String)params.get("sortValue"));
@@ -104,11 +104,13 @@ public class DrawingHelper {
 			}
 			
 			// 최신 이터레이션
-			if(query.getConditionCount() > 0) { query.appendAnd(); }
-			query.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[]{idx});
+			if("true".equals(islastversion)) {
+				if(query.getConditionCount() > 0) { query.appendAnd(); }
+				query.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[]{idx});
+			}
 			
 			// 버전 검색
-			if(!StringUtil.checkString(islastversion)) islastversion = "true";
+//			if(!StringUtil.checkString(islastversion)) islastversion = "true";
 			if("true".equals(islastversion)) {
 				SearchUtil.addLastVersionCondition(query, EPMDocument.class, idx);;
 			}
@@ -134,10 +136,8 @@ public class DrawingHelper {
 			
 			//�ۼ���
 			if(creator.length()>0){
-				People people = (People)rf.getReference(creator).getObject();
-				WTUser user = people.getUser();
 				if(query.getConditionCount() > 0) { query.appendAnd(); }
-				query.appendWhere(new SearchCondition(EPMDocument.class,"iterationInfo.creator.key","=", PersistenceHelper.getObjectIdentifier( user )), new int[]{idx});
+				query.appendWhere(new SearchCondition(EPMDocument.class,"iterationInfo.creator.key.id","=", CommonUtil.getOIDLongValue(creator)), new int[]{idx});
 			} else creator = "";
 			
 			//���°˻�

@@ -108,7 +108,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<th>위험통제</th>
 				<td> &nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="" checked="checked">>
+						<input type="radio" name="riskType" value="" checked="checked">
 						<div class="state p-success">
 							<label> <b>전체</b>
 							</label>
