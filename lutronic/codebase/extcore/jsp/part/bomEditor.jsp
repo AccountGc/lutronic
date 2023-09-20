@@ -114,7 +114,7 @@
 			    	</td>
 			    	
 		    		<td  align="right">
-		    			<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();">
+<!-- 		    			<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();"> -->
 						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 									
 		    		</td>
