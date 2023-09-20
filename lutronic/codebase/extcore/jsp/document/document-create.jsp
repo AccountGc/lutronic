@@ -200,6 +200,18 @@ iframe {
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
+		
+		<!-- 	관련 EO -->
+		<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+		</jsp:include>
+		
+		<!-- 	관련 ECO -->
+		<jsp:include page="/extcore/jsp/change/eco_include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+		</jsp:include>
 
 		<table class="button-table">
 			<tr>
@@ -294,6 +306,8 @@ iframe {
 				selectbox("deptcode");
 				createAUIGrid90(columns90);
 				createAUIGrid2(columnsPart);
+				createAUIGridEco(columnsEco);
+				createAUIGridEO(columnsEo);
 			});
 
 			window.addEventListener("resize", function() {
