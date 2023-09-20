@@ -576,7 +576,7 @@ function getViews() {
 	*/
 	
 	<%----------------------------------------------------------
-	*                     모두 펼치기
+	*                     펼치기
 	----------------------------------------------------------%>
 	$("#expand").click(function() {
 		var grideData =AUIGrid.getGridData(myBOMGridID);
@@ -618,6 +618,19 @@ function getViews() {
 			}
 		}
 	});
+	
+	<%----------------------------------------------------------
+	*                     접기
+	----------------------------------------------------------%>
+	$("#folding").click(function() {
+		var dept =AUIGrid.getTreeTotalDepth(myBOMGridID);
+		if(dept!=1){
+			AUIGrid.showItemsOnDepth(myBOMGridID, dept-1 );
+		}
+		
+// 		AUIGrid.collapseAll(myBOMGridID);
+	});
+	
 	
 	function finishExpand(){
 		AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
