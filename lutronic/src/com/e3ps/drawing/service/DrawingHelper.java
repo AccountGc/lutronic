@@ -24,6 +24,7 @@ import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
+import wt.epm.EPMDocumentType;
 import wt.epm.structure.EPMDescribeLink;
 import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
@@ -582,5 +583,20 @@ public class DrawingHelper {
 		}
 		
     	return JSONArray.fromObject(list);
+	}
+	
+	public List<Map<String,String>> cadTypeList(){
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		EPMDocumentType[] appType = EPMDocumentType.getEPMDocumentTypeSet();
+		
+		for(EPMDocumentType type : appType) {
+			if(!type.isSelectable()) continue;
+			Map<String,String> map = new HashMap<String,String>();
+			map.put("code", type.toString());
+			map.put("name", type.getDisplay(Message.getLocale()));
+			list.add(map);
+		}
+		
+		return list;
 	}
 }

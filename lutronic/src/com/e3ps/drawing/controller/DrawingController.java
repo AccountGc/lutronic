@@ -53,6 +53,7 @@ public class DrawingController extends BaseController{
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String,String>> cadTypeList = DrawingHelper.manager.cadTypeList();
 		WTUser sessionUser  = (WTUser) SessionHelper.manager.getPrincipal();
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
@@ -62,6 +63,7 @@ public class DrawingController extends BaseController{
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
 		model.addObject("sessionUser", sessionUser);
+		model.addObject("cadTypeList", cadTypeList);
 		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
 		return model;
 	}

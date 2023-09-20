@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
@@ -12,6 +14,7 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
+List<Map<String,String>> cadTypeList = (List<Map<String,String>>) request.getAttribute("cadTypeList");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 String userOid = CommonUtil.getOIDString(sessionUser);
 String userNm = sessionUser.getFullName();
@@ -107,10 +110,13 @@ String userNm = sessionUser.getFullName();
 				<td class="indent5">
 					<select name="cadType" id="cadType" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (Map<String,String> cadType : cadTypeList) {
+						%>
+						<option value="<%=cadType.get("code")%>"><%=cadType.get("name")%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>Rev.</th>
@@ -259,7 +265,7 @@ String userNm = sessionUser.getFullName();
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
+					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
 		</table>
@@ -534,6 +540,25 @@ String userNm = sessionUser.getFullName();
 					}
 				}
 			}
+			
+			// 초기화
+			$("#btnReset").click(function(){
+				$("input[type=text]").val("");
+				var creator = "<%=userNm%>";
+				var creatorOid = "<%=userOid%>";
+				$("#creator").val(creator);
+				$("#creatorOid").val(creatorOid);
+				$("#model option:eq(0)").prop("selected",true);
+				$("#cadType option:eq(0)").prop("selected",true);
+				$('input:radio[name="islastversion"]:input[value="true"]').prop('checked',true);
+				$("#state option:eq(0)").prop("selected",true);
+				$("#productmethod option:eq(0)").prop("selected",true);
+				$("#deptcode option:eq(0)").prop("selected",true);
+				$("#unit option:eq(0)").prop("selected",true);
+				$("#manufacture option:eq(0)").prop("selected",true);
+				$("#mat option:eq(0)").prop("selected",true);
+				$("#finish option:eq(0)").prop("selected",true);
+			});
 		</script>
 	</form>
 </body>
