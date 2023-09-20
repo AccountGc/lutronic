@@ -19,7 +19,6 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.org.People;
-import com.e3ps.part.service.VersionHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
