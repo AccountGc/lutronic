@@ -166,7 +166,7 @@
 				const field = ["rootOid","_psize"];
 				params = toField(params, field);
 				
-				var url = getCallUrl("/groupwareworkItem");
+				var url = getCallUrl("/groupware/workItem");
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
