@@ -13,9 +13,11 @@ import wt.doc.WTDocument;
 public class DocumentDTO {
 
 	private String oid;
+	private WTDocument doc;
 	private String number;
 	private String name;
 	private String description;
+	private String content;
 	private String location;
 	private String documentType;
 	private boolean latest;
@@ -29,8 +31,16 @@ public class DocumentDTO {
 
 	// IBA
 	private String writer;
-	
-	
+	private String model;
+	private String preseration;
+	private String interalnumber;
+	private String dept;
+
+	// auth
+	private boolean _delete = false;
+	private boolean _modify = false;
+	private boolean _revise = false;
+
 	private HashMap<String, String> attr = new HashMap<String, String>();
 
 	public DocumentDTO() {
@@ -43,14 +53,11 @@ public class DocumentDTO {
 
 	public DocumentDTO(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
+		setDoc(doc);
 		setName(doc.getName());
 		setNumber(doc.getNumber());
-<<<<<<< HEAD
-		setDescription(
-				doc.getDescription() == null ? doc.getTypeInfoWTDocument().getPtc_rht_1() : doc.getDescription());
-=======
-		setDescription(doc.getTypeInfoWTDocument().getPtc_str_1());
->>>>>>> b01afe442dc9530130ff043d4cf1f74c57f6e6d1
+		setDescription(doc.getDescription());
+		setContent(doc.getTypeInfoWTDocument().getPtc_rht_1());
 		setLocation(doc.getLocation());
 		setDocumentType(doc.getDocType().getDisplay());
 		setLatest(CommonUtil.isLatestVersion(doc));
@@ -59,11 +66,36 @@ public class DocumentDTO {
 		setIteration(doc.getIterationIdentifier().getSeries().getValue());
 		setCreator(doc.getCreatorFullName());
 		setCreatedDate(doc.getCreateTimestamp().toString().substring(0, 10));
-		setModifiedDate(doc.getModifierFullName());
+		setModifier(doc.getModifierFullName());
 		setModifiedDate(doc.getModifyTimestamp().toString().substring(0, 10));
 	}
-	
-	public void setIBAAttribute(WTDocument doc) throws Exception {
-		
+
+	private void setIBAAttribute(WTDocument doc) throws Exception {
+		// IBAUtil .. 수정해야
 	}
+
+	private void setAuth(WTDocument doc) throws Exception {
+		// 개정 권한 - (최신버전 && 승인됨)
+		if (check("APPROVED") && isLatest()) {
+			set_revise(true);
+		}
+		// 삭제, 수정 권한 - (최신버전 && (작업중 || 일괄결재중 || 재작업)) 
+		if(isLatest() && (check("INWORK") || check("BATCHAPPROVAL") || check("REWORK")) {
+			set_delete(true);
+			set_modify(true);
+		}
+	}
+
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(String state) throws Exception {
+		boolean check = false;
+		String compare = getDoc().getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
+	}
+
 }

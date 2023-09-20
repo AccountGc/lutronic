@@ -98,6 +98,7 @@ public class StandardFormTemplateService extends StandardManager implements Form
 
 	@Override
 	public void modify(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
 		String description = (String) params.get("description");
@@ -132,9 +133,9 @@ public class StandardFormTemplateService extends StandardManager implements Form
 		try {
 			trs.start();
 
-			FormTemplate form = (FormTemplate)CommonUtil.getObject(oid);
-			PersistenceHelper.manager.delete(form)
-			
+			FormTemplate form = (FormTemplate) CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(form);
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

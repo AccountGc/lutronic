@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
+import com.e3ps.admin.form.dto.FormTemplateDTO;
 import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.admin.form.service.FormTemplateService;
 import com.e3ps.common.code.NumberCode;
@@ -98,4 +99,61 @@ public class FormTemplateController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "문서 템플릿 정보 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		FormTemplateDTO dto = new FormTemplateDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/admin/form/form-view.jsp");
+		return model;
+	}
+
+	@Description(value = "문서 템플릿 수정 페이지")
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		FormTemplateDTO dto = new FormTemplateDTO(oid);
+		ArrayList<NumberCode> formType = NumberCodeHelper.manager.getArrayCodeList("DOCFORMTYPE");
+		model.addObject("dto", dto);
+		model.addObject("formType", formType);
+		model.setViewName("/extcore/jsp/admin/form/form-modify.jsp");
+		return model;
+	}
+
+	@Description(value = "문서 템플릿 삭제")
+	@ResponseBody
+	@GetMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			FormTemplateHelper.service.delete(oid);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "문서 템플릿 수정")
+	@ResponseBody
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			FormTemplateHelper.service.modify(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

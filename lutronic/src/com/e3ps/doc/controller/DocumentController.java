@@ -21,22 +21,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.dto.NumberCodeDTO;
-import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.message.Message;
-import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
@@ -44,10 +39,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.doc.template.SmarteditorVO;
-import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.rohs.service.RohsHelper;
-import com.infoengine.util.UrlEncoder;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.DocumentType;
@@ -289,17 +281,17 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "문서 삭제")
 	@ResponseBody
-	@RequestMapping("/delete")
-	public Map<String, Object> delete(@RequestBody Map<String, Object> params) {
-
-		Map<String, Object> result = DocumentHelper.service.deleteDocumentAction(params);
-		if ((boolean) result.get("result")) {
-			result.put("oid", result.get("oid"));
+	@GetMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = DocumentHelper.service.delete(oid);
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("result", FAIL);
-			result.put("msg", (String) result.get("msg"));
+			result.put("msg", e.toString());
 		}
 		return result;
 	}

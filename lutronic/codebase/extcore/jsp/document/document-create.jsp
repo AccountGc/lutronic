@@ -122,8 +122,9 @@ iframe {
 					<select name="preseration" id="preseration" class="width-200">
 						<%
 						for (NumberCode preseration : preserationList) {
+							// 코드로 처리
 						%>
-						<option value="<%=preseration.getCode()%>" <%if ("영구".equals(preseration.getName())) {%> selected <%}%>><%=preseration.getName()%></option>
+						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
 						<%
 						}
 						%>
@@ -167,9 +168,15 @@ iframe {
 				</td>
 			</tr>
 			<tr>
+				<th class="lb">내용</th>
+				<td colspan="5" class="indent5">
+					<textarea name="content" id="content" rows="30"></textarea>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">문서설명</th>
 				<td colspan="5" class="indent5">
-					<textarea name="description" id="description" rows="30"></textarea>
+					<textarea name="description" id="description" rows="5"></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -200,13 +207,13 @@ iframe {
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
-		
+
 		<!-- 	관련 EO -->
 		<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
-		
+
 		<!-- 	관련 ECO -->
 		<jsp:include page="/extcore/jsp/change/eco_include.jsp">
 			<jsp:param value="" name="oid" />
@@ -226,7 +233,7 @@ iframe {
 			const oEditors = [];
 			nhn.husky.EZCreator.createInIFrame({
 				oAppRef : oEditors,
-				elPlaceHolder : "description", //textarea ID 입력
+				elPlaceHolder : "content", //textarea ID 입력
 				sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
 				fCreator : "createSEditor2",
 				htParams : {
@@ -255,7 +262,7 @@ iframe {
 				parent.openLayer();
 				call(url, null, function(data) {
 					if (data.result) {
-						oEditors.getById["description"].exec("PASTE_HTML", [ data.html ]);
+						oEditors.getById["content"].exec("PASTE_HTML", [ data.html ]);
 					} else {
 						alert(data.msg);
 					}
@@ -265,10 +272,12 @@ iframe {
 
 			// 문서 등록
 			function create(temp) {
+				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
 				const name = document.getElementById("docName");
 				const documentType = document.getElementById("documentType");
-				oEditors.getById["description"].exec("UPDATE_CONTENTS_FIELD", []);
+				oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
+				const content = document.getElementById("content");
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
@@ -282,11 +291,11 @@ iframe {
 					lifecycle : lifecycle,
 					documentType : documentType.value,
 					description : description.value,
+					content : content.value,
 					secondarys : secondarys,
 					primary : primary.value,
 					location : location.value
 				};
-				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -304,6 +313,7 @@ iframe {
 				selectbox("documentType");
 				selectbox("model");
 				selectbox("deptcode");
+				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid2(columnsPart);
 				createAUIGridEco(columnsEco);

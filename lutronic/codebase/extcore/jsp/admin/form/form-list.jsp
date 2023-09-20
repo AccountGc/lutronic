@@ -109,7 +109,7 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 					jsCallback : function(rowIndex, columnIndex, value, item) {
 						const oid = item.oid;
 						const url = getCallUrl("/form/view?oid=" + oid);
-						_popup(url, 1600, 550, "n");
+						document.location.href = url;
 					}
 				},
 			}, {
@@ -127,8 +127,17 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 					jsCallback : function(rowIndex, columnIndex, value, item) {
 						const oid = item.oid;
 						const url = getCallUrl("/form/view?oid=" + oid);
-						_popup(url, 1600, 550, "n");
+						document.location.href = url;
 					}
+				},
+			}, {
+				dataField : "version",
+				headerText : "버전",
+				dataType : "numeric",
+				width : 100,
+				filter : {
+					showIcon : true,
+					inline : true
 				},
 			}, {
 				dataField : "creator",
@@ -143,7 +152,7 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 				dataField : "createdDate",
 				headerText : "등록일",
 				dataType : "date",
-				width : 170,
+				width : 100,
 				filter : {
 					showIcon : true,
 					inline : true

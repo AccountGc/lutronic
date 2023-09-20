@@ -1,21 +1,21 @@
-<%@page import="com.e3ps.common.util.CommonUtil"%>
-<%@page import="wt.doc.WTDocument"%>
-<%@page import="wt.session.SessionHelper"%>
-<%@page import="wt.org.WTPrincipal"%>
 <%@page import="com.e3ps.common.comments.CommentsData"%>
 <%@page import="java.util.List"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-DocumentDTO data = (DocumentDTO) request.getAttribute("docData");
+DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
 String pnum = (String) request.getAttribute("pnum");
 %>
-<input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
+<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
+
+<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 
 <table class="button-table">
 	<tr>
@@ -26,37 +26,15 @@ String pnum = (String) request.getAttribute("pnum");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="개정" title="개정" id="reviseBtn" onclick="update();">
-			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-<<<<<<< HEAD
-			<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
-			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
-			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
-=======
-			<%
-// 			if (data.isWithDraw()) {
-			%>
-			<input type="button" value="결재회수" title="결재회수" id="withDrawBtn">
-			<%
-// 			}
-			%>
-			<%
-// 			if (data.getState().equals("INWORK") || data.getState().equals("BATCHAPPROVAL") || data.getState().equals("REWORK")) {
-			%>
-			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
-			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
-			<%
-// 			}
-			%>
-			<%
-			} else {
-			%>
->>>>>>> b01afe442dc9530130ff043d4cf1f74c57f6e6d1
-			<input type="button" value="최신Rev." title="최신Rev." id="lastestBtn">
-			<input type="button" value="Rev.이력" title="Rev.이력" id="versionBtn">
-			<input type="button" value="다운로드이력" title="다운로드이력" id="downloadBtn">
-			<input type="button" value="결재이력" title="결재이력" id="approveBtn">
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="개정" title="개정">
+			<input type="button" value="결재회수" title="결재회수">
+			<input type="button" value="수정" title="수정" class="blue">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
+			<input type="button" value="최신Rev." title="최신Rev.">
+<!-- 			<input type="button" value="Rev.이력" title="Rev.이력"> -->
+<!-- 			<input type="button" value="다운로드이력" title="다운로드이력"> -->
+<!-- 			<input type="button" value="결재이력" title="결재이력"> -->
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -66,84 +44,62 @@ String pnum = (String) request.getAttribute("pnum");
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">관련 품목</a>
+			<a href="#tabs-2">관련 객체</a>
 		</li>
 		<li>
-			<a href="#tabs-3">관련 개발업무</a>
-		</li>
-		<li>
-			<a href="#tabs-4">관련 문서</a>
-		</li>
-		<li>
-			<a href="#tabs-5">관련 ECO</a>
+			<a href="#tabs-3">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
 		<!-- 기본 정보 -->
 		<table class="view-table">
 			<colgroup>
-				<col width="150">
-				<col width="350">
-				<col width="150">
-				<col width="350">
+				<col width="130">
+				<col width="*">
+				<col width="130">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th class="lb">문서번호</th>
-				<td class="indent5"><%=data.getNumber()%></td>
-				<th class="lb">문서분류</th>
-				<td class="indent5"><%=data.getLocation()%></td>
+				<td class="indent5"><%=dto.getNumber()%></td>
+				<th>문서분류</th>
+				<td class="indent5"><%=dto.getLocation()%></td>
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
-<<<<<<< HEAD
-				<td class="indent5"><%=data.getState()%></td>
-				<th class="lb">REV</th>
-				<td class="indent5"><%=data.getVersion()%></td>
-=======
-				<td class="indent5">
-<%-- 					<%=data.getState()%> --%>
-				</td>
-				<th class="lb">Rev.</th>
-				<td class="indent5"></td>
->>>>>>> b01afe442dc9530130ff043d4cf1f74c57f6e6d1
+				<td class="indent5"><%=dto.getState()%></td>
+				<th>REV</th>
+				<td class="indent5"><%=dto.getVersion()%>.<%=dto.getIteration()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
-				<td class="indent5"><%=data.getCreator()%></td>
-				<th class="lb">수정자</th>
-				<td class="indent5"><%=data.getModifier()%></td>
+				<td class="indent5"><%=dto.getCreator()%></td>
+				<th>수정자</th>
+				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
-				<td class="indent5"><%=data.getCreatedDate()%></td>
-				<th class="lb">수정일</th>
-				<td class="indent5"><%=data.getModifiedDate()%></td>
+				<td class="indent5"><%=dto.getCreatedDate()%></td>
+				<th>수정일</th>
+				<td class="indent5"><%=dto.getModifiedDate()%></td>
 			</tr>
 			<tr>
 				<th class="lb">문서유형</th>
-				<td class="indent5"><%=data.getDocumentType()%></td>
-				<th class="lb">결재방식</th>
-				<td class="indent5">
-<<<<<<< HEAD
-					<%
-					//=data.getApprovalType()
-					%>
-=======
-<%-- 					<%=data.getApprovalType()%> --%>
->>>>>>> b01afe442dc9530130ff043d4cf1f74c57f6e6d1
-				</td>
+				<td class="indent5"><%=dto.getDocumentType()%></td>
+				<th>결재방식</th>
+				<td class="indent5"></td>
 			</tr>
 			<tr>
 				<th class="lb">설명</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly"><%=data.getDescription() == null ? "" : data.getDescription()%></textarea>
+					<textarea rows="5" readonly="readonly" id="description" rows="30"><%=dto.getDescription() == null ? "" : dto.getDescription()%></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">주 첨부파일</th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
-						<jsp:param value="<%=data.getOid()%>" name="oid" />
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -154,7 +110,7 @@ String pnum = (String) request.getAttribute("pnum");
 				</th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
-						<jsp:param value="<%=data.getOid()%>" name="oid" />
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -170,29 +126,11 @@ String pnum = (String) request.getAttribute("pnum");
 				</td>
 			</tr>
 		</table>
-		<%
-		if (data.getDocumentType().equals("금형문서")) {
-		%>
-		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
-			<jsp:param value="<%=data.getOid()%>" name="oid" />
-			<jsp:param value="mold" name="module" />
-		</jsp:include>
-		<%
-		} else {
-		%>
-		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
-			<jsp:param value="<%=data.getOid()%>" name="oid" />
-			<jsp:param value="<%=data.getCreator()%>" name="creator" />
-			<jsp:param value="doc" name="module" />
-		</jsp:include>
-		<%
-		}
-		%>
 	</div>
 	<div id="tabs-2">
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
-			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="doc" name="moduleType" />
 			<jsp:param value="관련 품목" name="title" />
 		</jsp:include>
@@ -200,21 +138,7 @@ String pnum = (String) request.getAttribute("pnum");
 	<div id="tabs-3">
 		<!-- 관련 개발업무 -->
 		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
-			<jsp:param value="<%=data.getOid()%>" name="oid" />
-			<jsp:param value="doc" name="moduleType" />
-		</jsp:include>
-	</div>
-	<div id="tabs-4">
-		<!-- 관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include_viewDocument.jsp">
-			<jsp:param value="<%=data.getOid()%>" name="oid" />
-			<jsp:param value="doc" name="moduleType" />
-		</jsp:include>
-	</div>
-	<div id="tabs-5">
-		<!-- 관련 ECO -->
-		<jsp:include page="/extcore/jsp/change/include_view_doc_eco.jsp">
-			<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="doc" name="moduleType" />
 		</jsp:include>
 	</div>
@@ -264,12 +188,12 @@ String pnum = (String) request.getAttribute("pnum");
 			<td align="center" style="padding: 0, 0, 0, 5px;" width="100px">
 				<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
 				<%
-// 				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
+				// 				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
 				%>
 				<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
 				<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
 				<%
-// 				}
+				// 				}
 				%>
 			</td>
 			<%
@@ -347,6 +271,24 @@ String pnum = (String) request.getAttribute("pnum");
 	</div>
 </div>
 <script type="text/javascript">
+
+const oEditors = [];
+nhn.husky.EZCreator.createInIFrame({
+	oAppRef : oEditors,
+	elPlaceHolder : "description", //textarea ID 입력
+	sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
+	fCreator : "createSEditor2",
+	htParams : {
+		bUseToolbar : false,
+		bUseVerticalResizer : false,
+		bUseModeChanger : false
+	},
+	fOnAppLoad : function(){
+			oEditors.getById["description"].exec("DISABLE_WYSIWYG");
+			oEditors.getById["description"].exec("DISABLE_ALL_UI");
+	},
+});
+
 	//수정
 	function update () {
 		const oid = document.getElementById("oid").value;
@@ -355,29 +297,23 @@ String pnum = (String) request.getAttribute("pnum");
 	};
 
 	//삭제
-	$("#deleteBtn").click(function () {
-	
-		if (!confirm("삭제 하시겠습니까?")) {
+	function _delete() {
+		const oid = document.getElementById("oid").value;
+		if(!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
-	
-		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete");
-		const params = new Object();
-		params.oid = oid;
-		call(url, params, function(data) {
+		const url = getCallUrl("/doc/delete?oid="+oid);
+		openLayer();
+		call(url, null, function(data) {
 			alert(data.msg);
-			if (data.result) {
-				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
-					parent.opener.location.reload();
-				}else {
-					parent.opener.$("#sessionId").val("");
-					parent.opener.lfn_Search();
-				}
-				window.close();
+			if(data.result) {
+				self.close();
+				opener.loadGridData();
+			} else {
+				closeLayer();
 			}
-		});
-	})
+		}, "GET");
+	}
 	
 	//댓글 등록
 	$("#commentsBtn").click(function () {
@@ -560,26 +496,6 @@ String pnum = (String) request.getAttribute("pnum");
 						$(".comment-table").hide();
 					} else {
 						createAUIGrid4(columnDev);
-						$(".comment-table").hide();
-					}
-					break;	
-				case "tabs-4":
-					const isCreated3 = AUIGrid.isCreated(docGridID);
-					if (isCreated3) {
-						AUIGrid.resize(docGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGrid5(columnDoc);
-						$(".comment-table").hide();
-					}
-					break;	
-				case "tabs-5":
-					const isCreated4 = AUIGrid.isCreated(ecoGridID);
-					if (isCreated4) {
-						AUIGrid.resize(ecoGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGrid7(columnEco);
 						$(".comment-table").hide();
 					}
 					break;	

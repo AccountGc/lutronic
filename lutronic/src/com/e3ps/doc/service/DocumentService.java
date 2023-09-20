@@ -25,8 +25,6 @@ public interface DocumentService {
 
 //	ResultData createDocumentAction(Map<String, Object> map);
 
-	Map<String, Object> deleteDocumentAction(Map<String, Object> params);
-
 	Map<String, Object> updateDocumentAction(Map<String, Object> map);
 
 //	String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
@@ -83,5 +81,5 @@ public interface DocumentService {
 	/**
 	 * 문서 삭제
 	 */
-	public abstract String delete(String oid) throws Exception;
+	public abstract Map<String, Object> delete(String oid) throws Exception;
 }

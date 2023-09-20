@@ -32,6 +32,7 @@ import com.e3ps.common.comments.Comments;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.query.SearchUtil;
@@ -460,31 +461,6 @@ public class StandardDocumentService extends StandardManager implements Document
 
 		return map;
 
-	}
-
-	@Override
-	public Map<String, Object> deleteDocumentAction(Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		String oid = (String) params.get("oid");
-
-		try {
-			ReferenceFactory f = new ReferenceFactory();
-			WTDocument wtdoc = (WTDocument) CommonUtil.getObject(oid);
-
-			if (WorkInProgressHelper.isCheckedOut(wtdoc)) {
-				result.put("msg", Message.get("체크아웃되어 있어서 삭제하실 수 없습니다."));
-				result.put("result", false);
-			} else {
-				result.put("msg", DocumentHelper.service.delete(oid));
-				result.put("result", true);
-				// data.setMessage(Message.get("삭제 되었습니다."));
-			}
-		} catch (Exception e) {
-			result.put("result", false);
-			result.put("msg", e.getLocalizedMessage());
-			e.printStackTrace();
-		}
-		return result;
 	}
 
 	@Override
@@ -1432,11 +1408,11 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 
 	@Override
-	public synchronized String delete(String oid) throws Exception {
-
-		Transaction trx = new Transaction();
+	public Map<String, Object> delete(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		Transaction trs = new Transaction();
 		try {
-			trx.start();
+			trs.start();
 			if (oid != null) {
 				ReferenceFactory f = new ReferenceFactory();
 				WTDocument wtdoc = (WTDocument) f.getReference(oid).getObject();
@@ -1480,15 +1456,19 @@ public class StandardDocumentService extends StandardManager implements Document
 				WFItemHelper.service.deleteWFItem(wtdoc);
 				PersistenceHelper.manager.delete(wtdoc);
 
-				trx.commit();
 			}
-			trx = null;
-		} finally {
-			if (trx != null)
-				trx.rollback();
-		}
 
-		return Message.get("삭제 되었습니다");
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+		return result;
 	}
 
 	@Override
@@ -2105,6 +2085,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String name = (String) params.get("name");
 		String location = (String) params.get("location");
 		String description = (String) params.get("description");
+		String content = (String)params.get("content");
 		String documentType = (String) params.get("documentType");
 		String lifecycle = (String) params.get("lifecycle");
 		String primary = (String) params.get("primary");
@@ -2119,7 +2100,8 @@ public class StandardDocumentService extends StandardManager implements Document
 			doc.setDocType(docType);
 			doc.setName(name);
 			doc.setNumber(number);
-			doc.getTypeInfoWTDocument().setPtc_rht_1(description);
+			doc.setDescription(description);
+			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
 
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) doc, folder);
@@ -2137,17 +2119,50 @@ public class StandardDocumentService extends StandardManager implements Document
 				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
 			}
 
+			for (int i = 0; i < secondarys.size(); i++) {
+				String cacheId = secondarys.get(i);
+				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+				applicationData.setRole(ContentRoleType.SECONDARY);
+				PersistenceHelper.manager.save(applicationData);
+				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
+			}
+
+			setIBAAttributes(doc, params);
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			trs.rollback();
-			;
 			throw e;
 		} finally {
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 문서 IBA 속성값 세팅 함수
+	 */
+	private void setIBAAttributes(WTDocument doc, Map<String, Object> params) throws Exception {
+		// 내부 문서 번호
+		String interalnumber = (String) params.get("interalnumber");
+
+		IBAUtil.changeIBAValue(doc, interalnumber, interalnumber, interalnumber)
+		
+		// 프로젝트 코드
+		String model = (String) params.get("model");
+
+		// 부서
+		String deptcode = (String) params.get("deptcode");
+
+		// 보존기간
+		String preseration = (String) params.get("preseration");
+
+		// 작성자
+		String writer = (String) params.get("writer");
+
 	}
 
 	@Override
