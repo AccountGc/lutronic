@@ -7,21 +7,31 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
-String moduleType = request.getParameter("moduleType");
+String moduleType="";
+if(request.getParameter("moduleType")!=null){
+	moduleType = request.getParameter("moduleType");
+}
 boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
 List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 %>
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> 관련품목
-			</div>
-		</td>
-	</tr>
-</table>
+<%
+if(moduleType=="" && !moduleType.equals("eco")){
+%>
+	<table class="button-table">
+		<tr>
+			<td class="left">
+				<div class="header">
+					<img src="/Windchill/extcore/images/header.png"> 관련품목
+				</div>
+			</td>
+		</tr>
+	</table>
+<%	
+}
+%>
+
 <table class="create-table">
 	<colgroup>
 		<col width="150">
@@ -30,7 +40,20 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		<col width="600">
 	</colgroup>
 	<tr>
-		<th class="lb">관련품목</th>
+		<th class="lb">
+			<%
+			if(moduleType=="" && !moduleType.equals("eco")){
+			%>
+				관련품목
+			<%	
+			}else{
+			%>
+				설계변경 부품
+			<%	
+			}
+			%>
+			
+		</th>
 		<td colspan="3">
 			<%
 			if (isCreate || isUpdate) {
@@ -119,17 +142,15 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	}
 
 	function insert9() {
-		<%
-		if(moduleType.equals("rohs")){
-		%>
+		var moduleType = "<%=moduleType%>";
+		if(moduleType=="rohs"){
 			var grid = AUIGrid.getGridData(partGridID);
 			if(grid.length>0){
 				alert("품목을 하나이상 추가할 수 없습니다.");
 				return false;
 			}
-		<%
 		}
-		%>
+			
 		const url = getCallUrl("/part/listPopup");
 		_popup(url, 1500, 700, "n");
 	}
