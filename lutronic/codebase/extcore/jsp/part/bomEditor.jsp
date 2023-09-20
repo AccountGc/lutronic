@@ -96,7 +96,7 @@
 		    	<tr height="30">
 		    		<td width="40%" align="left">
 						<input type="button" value="펼치기" title="펼치기" id="expand" class="width-80">
-						
+						<input type="button" value="접기" title="접기" id="folding" class="width-80">
 						<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
 							<option value="expandAll">전체확장</option>
 							<option value="1" selected>1레벨</option>
@@ -114,7 +114,7 @@
 			    	</td>
 			    	
 		    		<td  align="right">
-<!-- 		    			<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();"> -->
+		    			<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();">
 						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 									
 		    		</td>
@@ -579,20 +579,50 @@ function getViews() {
 	*                     모두 펼치기
 	----------------------------------------------------------%>
 	$("#expand").click(function() {
-		if (!isExpand) {
-			AUIGrid.expandAll(myBOMGridID);
-			$("#expand").val("접기")
-			isExpand = true;
-		} else {
-			$("#expand").val("펼치기")
-			AUIGrid.collapseAll(myBOMGridID);
-			isExpand = false;
+		var grideData =AUIGrid.getGridData(myBOMGridID);
+		var check =0;
+		
+		for(var i =0;i<grideData.length;i++){
+			if(!isEmpty(grideData[i].children) && !grideData[i].children){
+				check++;
+			}
 		}
-		
-		
-		$("#depthSelect option:eq(0)").attr("selected","selected");
-		
-	})
+		if(check ==0){
+			AUIGrid.expandAll(myBOMGridID);
+		}else{
+			
+			var allUpdateCheck =0;
+			for(var i =0;i<grideData.length;i++){
+				if(!isEmpty(grideData[i].children) && !grideData[i].children){
+					
+					var params =  {"oid":grideData[i].oid
+										 , "grideItem" : grideData[i]};
+					var url	= getCallUrl("/part/viewAUIPartBomChildAction2");
+					call(url, params, function(data) {
+						var list = data.list;
+						var grideItem = data.grideItem;
+						allUpdateCheck++;
+						for(var j =0;j<list.length;j++){
+							list[j].level =grideItem._$depth+1;
+						}
+						grideItem.children =list;
+						
+						AUIGrid.updateRow(myBOMGridID, grideItem, AUIGrid.rowIdToIndex(myBOMGridID,grideItem._$uid));
+						
+						if(check==allUpdateCheck){
+							finishExpand();
+						}
+						
+					},"POST");
+				}
+			}
+		}
+	});
+	
+	function finishExpand(){
+		AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
+		AUIGrid.expandAll(myBOMGridID);
+	}
 	<%----------------------------------------------------------
 	*                     엑셀 다운로드
 	----------------------------------------------------------%>
