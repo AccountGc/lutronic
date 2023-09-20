@@ -70,14 +70,14 @@ public class RohsHelper {
     		}
     		
     		String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
-    		String rohsNumber 		= StringUtil.checkNull((String) params.get("number"));
-    		String rohsName 		= StringUtil.checkNull((String) params.get("name"));
+    		String rohsNumber 		= StringUtil.checkNull((String) params.get("rohsNumber"));
+    		String rohsName 		= StringUtil.checkNull((String) params.get("rohsName"));
     		String description		= StringUtil.checkNull((String) params.get("description"));
-    		String predate 			= StringUtil.checkNull((String) params.get("predate"));
-    		String postdate 		= StringUtil.checkNull((String) params.get("postdate"));
-    		String predate_modify	= StringUtil.checkNull((String) params.get("predate_modify"));
-    		String postdate_modify	= StringUtil.checkNull((String) params.get("postdate_modify"));
-    		String creator 			= StringUtil.checkNull((String) params.get("creator"));
+    		String predate 			= StringUtil.checkNull((String) params.get("createdFrom"));
+    		String postdate 		= StringUtil.checkNull((String) params.get("createdTo"));
+    		String predate_modify	= StringUtil.checkNull((String) params.get("modifiedFrom"));
+    		String postdate_modify	= StringUtil.checkNull((String) params.get("modifiedTo"));
+    		String creator 			= StringUtil.checkNull((String) params.get("creatorOid"));
     		String state 			= StringUtil.checkNull((String) params.get("state"));
     		String manufacture 		= StringUtil.checkNull((String) params.get("manufacture"));
     		String sortValue 		= StringUtil.checkNull((String) params.get("sortValue"));

@@ -35,6 +35,7 @@ public class EpmData {
 	public boolean isLatest = false;
 	public String location;
 	public String state;
+	private String stateDisplay;
 	public String cadName;
 	public String pNum;
 	public String applicationType;
@@ -68,6 +69,7 @@ public class EpmData {
 		
 		setLocation(StringUtil.checkNull(epm.getLocation()).replaceAll("/Default",""));
 		setState(epm.getLifeCycleState().toString());
+		setStateDisplay(epm.getLifeCycleState().getDisplay());
     	EPMDocumentMaster master = (EPMDocumentMaster)epm.getMaster();
     	String cadName = master.getCADName();
 		setCadName(cadName);

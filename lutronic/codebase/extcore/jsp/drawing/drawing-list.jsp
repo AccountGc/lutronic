@@ -1,3 +1,5 @@
+<%@page import="com.e3ps.common.util.CommonUtil"%>
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
@@ -10,6 +12,9 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
+WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+String userOid = CommonUtil.getOIDString(sessionUser);
+String userNm = sessionUser.getFullName();
 %>
 <!DOCTYPE html>
 <html>
@@ -45,8 +50,8 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
-					<input type="hidden" name="creatorOid" id="creatorOid">
+					<input type="text" name="creator" id="creator" value="<%=userNm%>" data-multi="false" class="width-300">
+					<input type="hidden" name="creatorOid" id="creatorOid" value="<%=userOid%>">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>등록일</th>
@@ -358,7 +363,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						inline : true
 					},
 				}, {
-					dataField : "state",
+					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
@@ -426,7 +431,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			function loadGridData() {
  				let params = new Object();
  				const url = getCallUrl("/drawing/list");
-				const field = ["_psize", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				const field = ["_psize", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
  				params = toField(params, field);
  				AUIGrid.showAjaxLoader(myGridID);
  				call(url, params, function(data) {

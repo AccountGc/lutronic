@@ -36,6 +36,8 @@ import com.e3ps.drawing.service.EpmSearchHelper;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMReferenceLink;
+import wt.org.WTUser;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 
 @Controller
@@ -51,6 +53,7 @@ public class DrawingController extends BaseController{
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		WTUser sessionUser  = (WTUser) SessionHelper.manager.getPrincipal();
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -58,6 +61,7 @@ public class DrawingController extends BaseController{
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
+		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
 		return model;
 	}
