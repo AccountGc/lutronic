@@ -2363,7 +2363,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		if(rv instanceof ROHSMaterial){
 			if(partList.size()>0){
 				for(Map<String, Object> map : partList){
-					String oid = (String) map.get("part_oid");
+					String oid = (String) map.get("oid");
 					WTPart part = (WTPart)CommonUtil.getObject(oid);
 					PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, (ROHSMaterial)rv);
 					PersistenceHelper.manager.save(link);
@@ -2559,7 +2559,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				 */
 				
 				// 관련 부품 링크 삭제
-				deleteROHSToPartLink(old_material);
+				deleteROHSToPartLink(new_material);
 				
 				// 관련 부품 링크 생성
 				List<Map<String, Object>> partList = (List<Map<String, Object>>) params.get("partList");
@@ -2570,7 +2570,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				 *   관련 물질 관련 작업 수행
 				 */
 				/* 관련 물질 링크 삭제 */
-				deleteROHSToROHSLink(old_material);
+				deleteROHSToROHSLink(new_material);
 				
 				/* 관련 물질 링크 생성*/
 				List<Map<String, Object>> rohsList = (List<Map<String, Object>>) params.get("rohsList");

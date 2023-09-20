@@ -134,24 +134,15 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		_popup(url, 1500, 700, "n");
 	}
 	
-	// 중복 제거후 추가
 	function append(items){
-		const data = AUIGrid.getGridData(partGridID);
-		if (data.length != 0) {
-			for (let i = 0; i < items.length; i++) {
-				for (let j = 0; j < data.length; j++) {
-					<%if (isUpdate) {%>
-					if (data[j].oid == items[i].part_oid) {
-					<% } %>
-					<%if (isCreate) {%>
-					if (data[j].oid == items[i].oid) {
-					<% } %>
-						items.splice(i, 1);
-					}
-				}
-			}
+		var data = new Object();
+		for(var i=0; i<items.length; i++){
+			data.oid = items[i].part_oid;
+			data.name = items[i].name;
+			data.number = items[i].number;
+			data.version = items[i].version;
 		}
-		AUIGrid.addRow(partGridID, items);
+		AUIGrid.addRow(partGridID, data);
 	}
 
 	function deleteRow9() {
