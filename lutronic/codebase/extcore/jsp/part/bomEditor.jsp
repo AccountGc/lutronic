@@ -95,8 +95,6 @@
 		    <table  border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
 		    	<tr height="30">
 		    		<td width="40%" align="left">
-						<input type="button" value="펼치기" title="펼치기" id="expand" class="width-80">
-						<input type="button" value="접기" title="접기" id="folding" class="width-80">
 						<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
 							<option value="expandAll">전체확장</option>
 							<option value="1" selected>1레벨</option>
@@ -576,140 +574,6 @@ function getViews() {
 	*/
 	
 	<%----------------------------------------------------------
-	*                     펼치기
-	----------------------------------------------------------%>
-	$("#expand").click(function() {
-		var grideData =AUIGrid.getGridData(myBOMGridID);
-		var check =0;
-		
-		for(var i =0;i<grideData.length;i++){
-			if(!isEmpty(grideData[i].children) && !grideData[i].children){
-				check++;
-			}
-		}
-		if(check ==0){
-			AUIGrid.expandAll(myBOMGridID);
-		}else{
-			
-			var allUpdateCheck =0;
-			for(var i =0;i<grideData.length;i++){
-				if(!isEmpty(grideData[i].children) && !grideData[i].children){
-					
-					var params =  {"oid":grideData[i].oid
-										 , "grideItem" : grideData[i]};
-					var url	= getCallUrl("/part/viewAUIPartBomChildAction2");
-					call(url, params, function(data) {
-						var list = data.list;
-						var grideItem = data.grideItem;
-						allUpdateCheck++;
-						for(var j =0;j<list.length;j++){
-							list[j].level =grideItem._$depth+1;
-						}
-						grideItem.children =list;
-						
-						AUIGrid.updateRow(myBOMGridID, grideItem, AUIGrid.rowIdToIndex(myBOMGridID,grideItem._$uid));
-						
-						if(check==allUpdateCheck){
-							finishExpand();
-						}
-						
-					},"POST");
-				}
-			}
-		}
-	});
-	
-	<%----------------------------------------------------------
-	*                     접기
-	----------------------------------------------------------%>
-	$("#folding").click(function() {
-		var dept =AUIGrid.getTreeTotalDepth(myBOMGridID);
-		if(dept!=1){
-			AUIGrid.showItemsOnDepth(myBOMGridID, dept-1 );
-		}
-		
-// 		AUIGrid.collapseAll(myBOMGridID);
-	});
-	
-	
-	function finishExpand(){
-		AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
-		AUIGrid.expandAll(myBOMGridID);
-	}
-	<%----------------------------------------------------------
-	*                     엑셀 다운로드
-	----------------------------------------------------------%>
-	$("#excelDown").click(function() {
-		
-		//alert($("#excelDownOption").val());
-		//if( $("#excelDownOption").val() =="1"){
-			expandAll();
-		//}
-		var excelName="<c:out value='${baseName}'/>";
-		var fileName= "<c:out value='${number}'/>";
-		exportAUIBOMExcel(fileName+excelName)
-	})
-	
-	<%----------------------------------------------------------
-	*                     부품 첨부 파일 다운로드
-	----------------------------------------------------------%>
-	$("#attachDown").click(function() {
-		attachDown();
-		//alert("필터는 최기화 됩니다.");
-		//batchDownLoad('BOM')
-	})
-	$("#drawingDown").click(function() {
-		//attachDown();
-		//alert("필터는 최기화 됩니다.");
-		drawingDown();
-	})
-	
-	<%----------------------------------------------------------
-	*                    Baseline 비교
-	----------------------------------------------------------%>
-	$("#baseline").change(function() {
-		/*
-	    if($("input[name='baseCheck']:checked").length == 0) {
-	    	alert("비교할 BOM이 선택 되지 않았습니다.");
-	    	return;
-	    }
-	    
-	    var ss = $("input[name='baseCheck']:checked").attr("value").split("$");
-	    
-	    $("#oid2").val(ss[0]);
-	    $("#baseline2").val(ss[1]);
-	    
-	    $("#PartTreeForm").attr("action", getURLString("part", "partTreeCompare", "do")).submit();
-	    */
-	    
-	    var oid = $("#oid2").val($('#baseline option:selected').attr('title'));
-	    //$("#baseline2").val($('#baseline').val());
-	    $("#PartTreeForm").attr("action", getURLString("part", "partTreeCompare", "do")).submit();
-	    
-	})
-	<%----------------------------------------------------------
-	*                    Baseline 보기
-	----------------------------------------------------------%>
-	$("#baselineView").change(function() {
-		
-		var tempValue = $('#baselineView option:selected').attr('value');
-		if( tempValue.indexOf("WTPart") > 0) {
-			var oid = tempValue;
-			
-			$("#PartTreeForm").attr("action", getCallUrl("/part/viewAUIPartBom") + "?oid="+oid).submit();
-		}else{
-			var oid = $('#baselineView option:selected').attr('title');
-			var baseline = $('#baselineView option:selected').attr('value');
-			
-			$("#PartTreeForm").attr("action", getCallUrl("/part/viewAUIPartBom") + "?oid="+oid+ "&baseline="+baseline).submit();
-			
-		}
-			
-		
-		
-	})
-	
-	<%----------------------------------------------------------
 	*                      정전개 / 역전개 변경시
 	----------------------------------------------------------%>
 	$("#desc").change(function() {
@@ -751,12 +615,10 @@ function expandAll(){
 			AUIGrid.removeAjaxLoader(myBOMGridID);
 			AUIGrid.setGridData(myBOMGridID, gridData);
 			//2Level까지만 펼치기
-// 			AUIGrid.showItemsOnDepth(myBOMGridID, 1 );
 			var totalDepth = AUIGrid.getTreeTotalDepth(myBOMGridID);
 			//alert(totalDepth);
 			//totalDepth = totalDepth -1;
 			
-			setDepthList(totalDepth);
 		},"POST");
 		
 	}
@@ -765,27 +627,168 @@ function expandAll(){
 *                      선택한 Depth 만큼 펴칠기
 ----------------------------------------------------------%>
 function showItemsOnDepth(event) {
-	var depthSelect = document.getElementById("depthSelect");
-	var  depth = depthSelect.value;
+	var  depth = $("#depthSelect").val();
+	var check =0;
 	
-	// 해당 depth 까지 오픈함
+	if(depth=="expandAll"){
+		
+		var grideData =AUIGrid.getItemsByValue(myBOMGridID,"_$depth",1);
+		
+		for(var j =0;j<grideData.length;j++){
+			if(!isEmpty(grideData[j].children) && !grideData[j].children){
+				check++;
+			}
+		}
+			
+		if(check !=0){
+			var allUpdateCheck =0;
+			for(var j =0;j<grideData.length;j++){
+				if(!isEmpty(grideData[j].children) && !grideData[j].children){
+						
+					var params =  {"oid":grideData[j].oid
+										 , "grideItem" : grideData[j]};
+					var url	= getCallUrl("/part/viewAUIPartBomChildAction2");
+					call(url, params, function(data) {
+						var list = data.list;
+						var grideItem = data.grideItem;
+						for(var k =0;k<list.length;k++){
+							list[k].level =grideItem._$depth+1;
+						}
+						grideItem.children =list;
+						if(!isEmpty(grideItem.children)){
+							grideItem=findChildren(grideItem);
+							
+						}
+						allUpdateCheck++;
+						AUIGrid.updateRow(myBOMGridID, grideItem, AUIGrid.rowIdToIndex(myBOMGridID,grideItem._$uid));
+						
+						if(check==allUpdateCheck){
+							finishExpandAll();
+						}
+							
+					},"POST",false);
+				}
+			}
+		}else{
+			AUIGrid.expandAll(myBOMGridID);
+		}
+	}else{
+		for(var i=0;i<Number(depth);i++){
+			var grideData =AUIGrid.getItemsByValue(myBOMGridID,"_$depth",i+1);
+			
+			for(var j =0;j<grideData.length;j++){
+				if(!isEmpty(grideData[j].children) && !grideData[j].children){
+					check++;
+				}
+			}
+				
+			if(check !=0){
+				var allUpdateCheck =0;
+				for(var j =0;j<grideData.length;j++){
+					if(!isEmpty(grideData[j].children) && !grideData[j].children){
+							
+						var params =  {"oid":grideData[j].oid
+											 , "grideItem" : grideData[j]};
+						var url	= getCallUrl("/part/viewAUIPartBomChildAction2");
+						call(url, params, function(data) {
+							var list = data.list;
+							var grideItem = data.grideItem;
+							for(var k =0;k<list.length;k++){
+								list[k].level =grideItem._$depth+1;
+							}
+							grideItem.children =list;
+							if(!isEmpty(grideItem.children)&& Number(depth)-1!=grideItem._$depth){
+								grideItem=findDeptChildren(grideItem,depth);
+								
+							}
+								
+							allUpdateCheck++;
+							AUIGrid.updateRow(myBOMGridID, grideItem, AUIGrid.rowIdToIndex(myBOMGridID,grideItem._$uid));
+							
+							if(check==allUpdateCheck){
+								finishOnDepth(depth);
+							}
+								
+						},"POST",false);
+						
+						
+					}
+				}
+			}else{
+				AUIGrid.showItemsOnDepth(myBOMGridID, Number(depth) );
+			}
+		}
+	}
+	
+	
+	
+	
+}
+
+function findChildren(parentGrideItem){
+	var childrenList =parentGrideItem.children;
+	for(var i =0; i< childrenList.length;i++){
+		if(childrenList[i].children ==undefined){
+			var params =  {"oid":childrenList[i].oid
+					 , "grideItem" : childrenList[i]};
+			var url	= getCallUrl("/part/viewAUIPartBomChildAction2");
+			call(url, params, function(data) {
+				var list = data.list;
+				var grideItem = data.grideItem;
+				for(var j =0;j<list.length;j++){
+					list[j].level =grideItem.level+1;
+				}
+				grideItem.children =list;
+				if(!isEmpty(grideItem.children)){
+					grideItem=findChildren(grideItem);
+				}
+				parentGrideItem.children[i]=grideItem;
+			},"POST",false);
+		}
+	}
+	
+	return parentGrideItem;
+	
+}
+
+
+function findDeptChildren(parentGrideItem,depth){
+	var childrenList =parentGrideItem.children;
+	for(var i =0; i< childrenList.length;i++){
+		if(childrenList[i].children ==undefined){
+			var params =  {"oid":childrenList[i].oid
+					 , "grideItem" : childrenList[i]};
+			var url	= getCallUrl("/part/viewAUIPartBomChildAction2");
+			call(url, params, function(data) {
+				var list = data.list;
+				var grideItem = data.grideItem;
+				for(var j =0;j<list.length;j++){
+					list[j].level =grideItem.level+1;
+				}
+				grideItem.children =list;
+				if(!isEmpty(grideItem.children) &&  Number(depth)-1!=grideItem._$depth){
+					grideItem=findDeptChildren(grideItem,depth);
+				}
+				parentGrideItem.children[i]=grideItem;
+			},"POST",false);
+		}
+	}
+	
+	return parentGrideItem;
+	
+}
+
+function finishExpandAll(depth){
+	AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
+	AUIGrid.expandAll(myBOMGridID);
+}
+
+
+
+function finishOnDepth(depth){
+	AUIGrid.setGridData(myBOMGridID, AUIGrid.getTreeGridData(myBOMGridID));
 	AUIGrid.showItemsOnDepth(myBOMGridID, Number(depth) );
 }
-
-<%----------------------------------------------------------
-*                     동적으로 Level 표시
-----------------------------------------------------------%>
-function setDepthList(totalDepth){
-	$("#depthSelect").empty();
-	$("#depthSelect").append("<option value='default' selected='selected' disabled='disabled'>특정 계층 선택</option>");
-	
-	for(var i=1; i<=totalDepth; i++) {
-		var temp = i;
-		$("#depthSelect").append("<option value='" +i + "'> Level " +(temp-1)+ "</option>");
-	}
-	selectbox("depthSelect");
-}
-
 <%----------------------------------------------------------
 *                     부품 첨부 파일 다운로드
 ----------------------------------------------------------%>
