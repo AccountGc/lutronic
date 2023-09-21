@@ -29,6 +29,7 @@ import com.e3ps.common.util.CommonUtil;
 
 //import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeNotice;
+import com.e3ps.change.EChangeOrder;
 //import com.e3ps.change.EChangeOrder;
 //import com.e3ps.change.beans.ECAData;
 import com.e3ps.change.beans.ECNData;
@@ -79,7 +80,7 @@ public class ChangeECNController extends BaseController {
 		return model;
 	}
 	
-	@Description(value = "ECO 등록 함수")
+	@Description(value = "ECN 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
 	public Map<String,Object> create(@RequestBody ECNData data) {
@@ -101,6 +102,18 @@ public class ChangeECNController extends BaseController {
 	public ModelAndView select_ecrPopup() {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/change/select_ecoPopup.jsp");
+		return model;
+	}
+	
+	@Description(value = "ECN 상세 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		EChangeNotice ecn = (EChangeNotice)CommonUtil.getObject(oid);
+		ECNData data = new ECNData(ecn);
+		
+		model.addObject("data", data);
+		model.setViewName("popup:/change/ecn-view");
 		return model;
 	}
 	

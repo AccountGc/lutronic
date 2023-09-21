@@ -15,6 +15,7 @@ public class ECNData{
 	private String number;
 	private String name;
 	private String state;
+	private String stateDisplay;
 	private String creator;
 	private String createDate;
 	private String eoCommentA;
@@ -28,7 +29,8 @@ public class ECNData{
 		setOid(ecn.getPersistInfo().getObjectIdentifier().toString());
 		setNumber(ecn.getEoNumber());
 		setName(ecn.getEoName());
-		setState(ecn.getLifeCycleState().getDisplay());
+		setState(ecn.getLifeCycleState().toString());
+		setStateDisplay(ecn.getLifeCycleState().getDisplay());
 		setCreator(ecn.getCreatorFullName());
 		setCreateDate(DateUtil.getDateString(ecn.getCreateTimestamp(), "d"));
 		setEoCommentA(ecn.getEoCommentA());

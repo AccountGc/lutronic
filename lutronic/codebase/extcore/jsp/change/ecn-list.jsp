@@ -101,7 +101,7 @@
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/changeECO/view?oid=" + oid);
+							const url = getCallUrl("/changeECN/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
@@ -119,12 +119,12 @@
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/changeECO/view?oid=" + oid);
+							const url = getCallUrl("/changeECN/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
 				}, {
-					dataField : "state",
+					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
 					width : 120,
