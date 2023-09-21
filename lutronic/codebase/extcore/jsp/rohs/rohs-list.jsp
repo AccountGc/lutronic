@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="wt.fc.QueryResult"%>
 <%@page import="java.util.HashMap"%>
@@ -16,6 +17,7 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 %>
 <!DOCTYPE html>
 <html>
@@ -81,10 +83,13 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (NumberCode manufacture : manufactureList) {
+						%>
+						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>설명</th>
@@ -110,7 +115,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
+					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
 		</table>
@@ -300,6 +305,15 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				AUIGrid.resize(myGridID);
 			});
 			
+			// 초기화
+			$("#btnReset").click(function(){
+				$("input[type=text]").val("");
+				$("#creatorOid").val("");
+				$("#state option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_state_AX_SelectText").text("선택");
+				$("#manufacture option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_manufacture_AX_SelectText").text("선택");
+			});
 		</script>
 	</form>
 </body>

@@ -5,6 +5,7 @@
 <%
 String eoType = request.getParameter("eoType");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 %>
 <!DOCTYPE html>
 <html>
@@ -82,7 +83,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>변경구분</th>
-				<td colspan="3">
+				<td class="indent5">
 					<select name="changeSection" id="changeSection" class="width-200">
 						<option value="">선택</option>
 						<%
@@ -94,12 +95,18 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 						%>
 					</select>
 				</td>
-			</tr>
-			<tr>
-				<th class="req lb">제품명</th>
-				<td colspan="5">
-					<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
-					<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
+				<th class="req lb">프로젝트 코드</th>
+				<td class="indent5" >
+					<select name="model" id="model" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 		</table>
@@ -297,6 +304,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				twindate("writed");
 				selectbox("_psize");
 				selectbox("changeSection");
+				selectbox("model");
 			});
 
 			function exportExcel() {

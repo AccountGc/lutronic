@@ -136,10 +136,8 @@ public class RohsHelper {
 	    	
 	    	//등록자
 	    	if(creator.length() > 0){
-	    		People people = (People)rf.getReference(creator).getObject();
-	    		WTUser user = people.getUser();
 	    		if(query.getConditionCount() > 0) { query.appendAnd(); } 
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class,"iterationInfo.creator.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(user)), new int[]{idx});
+	    		query.appendWhere(new SearchCondition(ROHSMaterial.class,"iterationInfo.creator.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(creator)), new int[]{idx});
 	    	}
 	    	
 	    	//상태
