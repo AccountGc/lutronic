@@ -227,16 +227,20 @@ public class ChangeECOController extends BaseController {
 
 	@Description(value = "EO 검색 페이지")
 	@GetMapping(value = "/listEO")
-	public ModelAndView listEO() {
+	public ModelAndView listEO() throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
 		model.setViewName("/extcore/jsp/change/eo-list.jsp");
 		return model;
 	}
 	
 	@Description(value = "관련 EO 팝업 페이지")
 	@GetMapping(value = "/listEOPopup")
-	public ModelAndView listEOPopup() {
+	public ModelAndView listEOPopup() throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
 		model.setViewName("popup:/change/eo-list-popup");
 		return model;
 	}

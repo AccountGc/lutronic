@@ -69,7 +69,7 @@ public class ECOHelper {
 			
 			String licensing = StringUtil.checkNull((String) params.get("licensing"));
 			
-			String[] models = (String[]) params.get("model");
+			String model = StringUtil.checkNull((String)params.get("model"));
 			
 			String sortCheck =StringUtil.checkNull((String) params.get("sortCheck"));
 			String sortValue =StringUtil.checkNull((String) params.get("sortValue"));
@@ -193,18 +193,11 @@ public class ECOHelper {
 			}
 			
 			//제품명
-			if(models != null){
+			if(model.length() > 0){
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}
-				qs.appendOpenParen();
-					for(int i = 0 ;i < models.length ;i++){
-						qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.MODEL, SearchCondition.LIKE, "%"+models[i]+"%", false), new int[] {ecoIdx});
-						if(i== models.length-1) break;
-						qs.appendOr();
-						
-					}
-				qs.appendCloseParen();
+				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.MODEL, SearchCondition.EQUAL, model, false), new int[] {ecoIdx});
 			}
 			
 			String[] completeParts = (String[]) params.get("completeParts");
@@ -311,7 +304,7 @@ public class ECOHelper {
 			
 			String licensing = StringUtil.checkNull((String)params.get("licensing"));
 			
-			String[] models = (String[])params.get("model");
+			String model = StringUtil.checkNull((String)params.get("model"));  
 			
 			String sortCheck =StringUtil.checkNull((String)params.get("sortCheck"));
 			String sortValue =StringUtil.checkNull((String)params.get("sortValue"));
@@ -438,18 +431,11 @@ public class ECOHelper {
 			
 			
 			//제품명
-			if(models != null){
+			if (model.length() > 0) {
 				if( qs.getConditionCount() > 0 ) {
 					qs.appendAnd();
 				}
-				qs.appendOpenParen();
-					for(int i = 0 ;i < models.length ;i++){
-						qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.MODEL, SearchCondition.LIKE, "%"+models[i]+"%", false), new int[] {ecoIdx});
-						if(i== models.length-1) break;
-						qs.appendOr();
-						
-					}
-				qs.appendCloseParen();
+				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.MODEL, SearchCondition.EQUAL, model, false), new int[] {ecoIdx});
 			}
 			
 			String[] completeParts = (String[])params.get("completeParts");
