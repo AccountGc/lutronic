@@ -86,14 +86,14 @@
 				<th class="req lb">협력업체</th>
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-500">
-							<option value="">선택</option>
-							<%
-							for (NumberCode manufacture : manufactureList) {
-							%>
-							<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
-							<%
-							}
-							%>
+						<option value="">선택</option>
+						<%
+						for (NumberCode manufacture : manufactureList) {
+						%>
+						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
