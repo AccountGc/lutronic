@@ -28,6 +28,7 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
@@ -81,9 +82,11 @@ public class RohsController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		List<Map<String,String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
 		model.addObject("manufactureList", manufactureList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/rohs/rohs-list.jsp");
 		return model;
 	}
