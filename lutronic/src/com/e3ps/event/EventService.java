@@ -2,7 +2,6 @@ package com.e3ps.event;
 
 import wt.method.RemoteInterface;
 import wt.org.WTUser;
-import wt.org.WTUser;
 
 @RemoteInterface
 public interface EventService {

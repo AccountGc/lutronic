@@ -16,50 +16,37 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.service.ECAHelper;
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.Comments;
-import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.POIUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.common.web.WebUtil;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.development.service.DevelopmentHelper;
 import com.e3ps.development.service.DevelopmentQueryHelper;
+import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
+import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.doc.template.DocumentTemplate;
 import com.e3ps.groupware.workprocess.AppPerLink;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.VersionHelper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -185,133 +172,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		return map;
 	}
 
-	public void createAction(Map<String, Object> map) throws Exception {
-		String location = StringUtil.checkNull((String) map.get("location"));
-		String documentName = StringUtil.checkNull((String) map.get("documentName"));
-		String docName = StringUtil.checkNull((String) map.get("docName"));
-		String description = StringUtil.checkNull((String) map.get("description"));
-
-		String documentType = StringUtil.checkNull((String) map.get("documentType"));
-
-		DocumentType docType = DocumentType.toDocumentType(documentType);
-		String number = getDocumentNumberSeq(docType.getLongDescription());
-
-		// 문서 기본 정보 설정
-		WTDocument doc = WTDocument.newWTDocument();
-		if ("$$MMDocument".equals(documentType)) {
-			doc.setName(docName);
-		} else {
-			if (docName.length() > 0) {
-				doc.setName(documentName + "-" + docName);
-			} else {
-				doc.setName(documentName);
-			}
-		}
-		doc.setDescription(description);
-		doc.setNumber(number);
-		doc.setDocType(docType);
-
-		// 문서 분류쳬게 설정
-		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-		FolderHelper.assignLocation((FolderEntry) doc, folder);
-
-		// 문서 Container 설정
-		PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
-		WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
-		doc.setContainer(e3psProduct);
-
-		// 문서 lifeCycle 설정
-		String lifecycle = StringUtil.checkNull((String) map.get("lifecycle"));
-		LifeCycleHelper.setLifeCycle(doc, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); // Lifecycle
-
-		doc = (WTDocument) PersistenceHelper.manager.save(doc);
-
-		String primary = StringUtil.checkNull((String) map.get("primary"));
-		ArrayList<String> secondarys = (ArrayList<String>) map.get("secondary");
-
-//		CommonContentHelper.service.attach((ContentHolder) doc, primary, secondary);
-		if (primary.length() > 0) {
-			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-			ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-			applicationData.setRole(ContentRoleType.PRIMARY);
-			PersistenceHelper.manager.save(applicationData);
-			ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
-		}
-
-		if (secondarys.size() > 0) {
-			for (String secondary : secondarys) {
-				File vault = CommonContentHelper.manager.getFileFromCacheId(secondary);
-				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-				applicationData.setRole(ContentRoleType.SECONDARY);
-				PersistenceHelper.manager.save(applicationData);
-				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
-			}
-		}
-
-		// 관련 부품
-		ArrayList<String> _partOids = (ArrayList<String>) map.get("partOids");
-		if (_partOids != null) {
-			String[] partOids = _partOids.toArray(new String[_partOids.size()]);
-			updateDocumentToPartLink(doc, partOids, false);
-		}
-
-		// 관련 문서
-		ArrayList<String> _docOids = (ArrayList<String>) map.get("docOids");
-		if (_docOids != null) {
-			String[] docOids = _docOids.toArray(new String[_docOids.size()]);
-			updateDocumentToDocumentLink(doc, docOids, false);
-		}
-
-		String approvalType = AttributeKey.CommonKey.COMMON_DEFAULT; // 일괄결재 Batch,기본결재 Default
-		if ("LC_Default_NonWF".equals(lifecycle)) {
-			E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, "BATCHAPPROVAL");
-			approvalType = AttributeKey.CommonKey.COMMON_BATCH;
-		}
-		map.put("approvalType", approvalType);
-		CommonHelper.service.changeIBAValues(doc, map);
-
-		// 산출물 직접 등록(개발업무 관리,설계 변경 관리) 문서 직접등록 시 링크 생성
-		String linkType = (String) map.get("linkType");
-		String parentOid = (String) map.get("parentOid");
-		createLinkDocument(doc, linkType, parentOid);
-
-		/*
-		 * if(linkType.length() > 0){ if("active".equals(linkType)) {
-		 * 
-		 * DevelopmentHelper.service.createDocumentToDevelopmentLink(doc, parentOid); }
-		 * }
-		 */
-	}
-
-//	@Override
-//	public ResultData createDocumentAction(Map<String, Object> map) {
-//		ResultData result = new ResultData();
-//
-//		Transaction trx = new Transaction();
-//		WTDocument doc = null;
-//
-//		try {
-//			trx.start();
-//
-//			doc = createAction(map);
-//
-//			trx.commit();
-//			trx = null;
-//			result.setResult(true);
-//			result.setOid(CommonUtil.getOIDString(doc));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			result.setResult(false);
-//			result.setMessage(e.getLocalizedMessage());
-//		} finally {
-//			if (trx != null) {
-//				trx.rollback();
-//			}
-//		}
-//
-//		return result;
-//	}
-
 	private String getDocumentNumberSeq(String longDescription) throws Exception {
 
 		String today = DateUtil.getDateString(new Date(), new SimpleDateFormat("yyyyMM"));
@@ -322,145 +182,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		number = number + seqNo;
 
 		return number;
-	}
-
-	/**
-	 * AUI 리스트
-	 */
-	@Override
-	public List<Map<String, Object>> listAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		QuerySpec query = DocumentQueryHelper.service.getListQuery(request, response);
-		QueryResult qr = PersistenceHelper.manager.find(query);
-
-		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
-		HashMap<String, String> verMap = new HashMap<String, String>();
-		while (qr.hasMoreElements()) {
-			Map<String, Object> result = new HashMap<String, Object>();
-			Object[] o = (Object[]) qr.nextElement();
-			WTDocument doc = (WTDocument) o[0];
-			DocumentDTO data = new DocumentDTO(doc);
-
-			int kk = 0;
-			if (verMap.containsKey(data.number)) {
-
-				kk = verMap.get(data.number).compareTo(data.version);
-				if (kk > 0) {
-					continue;
-				} else {
-					verMap.put(data.number, data.version);
-				}
-			} else {
-				verMap.put(data.number, data.version);
-			}
-
-			result.put("number", data.number);
-			result.put("interNumber", data.getIBAValue(AttributeKey.IBAKey.IBA_INTERALNUMBER));
-			result.put("model", data.getIBAValue(AttributeKey.IBAKey.IBA_MODEL));
-			result.put("name", data.name);
-			result.put("oid", data.oid);
-			result.put("location", data.getLocation());
-			result.put("version", data.version);
-			result.put("rev", data.version + "." + data.iteration);
-			result.put("state", data.getLifecycle());
-			result.put("creator", data.creator);
-			result.put("createDate", data.createDate.substring(0, 10));
-			result.put("modifyDate", data.modifyDate.substring(0, 10));
-
-			resultList.add(result);
-		}
-
-		return resultList;
-
-	}
-
-	@Override
-	public Map<String, Object> listPagingAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		Map<String, Object> map = new HashMap<>();
-
-		int page = StringUtil.getIntParameter((String) request.getParameter("page"), 1);
-		int rows = StringUtil.getIntParameter((String) request.getParameter("rows"), 10);
-		int formPage = StringUtil.getIntParameter((String) request.getParameter("formPage"), 15);
-
-		String sessionId = (String) request.getParameter("sessionId");
-
-		PagingQueryResult qr = null;
-
-		if (StringUtil.checkString(sessionId)) {
-
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		} else {
-			QuerySpec query = DocumentQueryHelper.service.getListQuery(request, response);
-
-			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
-
-		}
-
-		PageControl control = new PageControl(qr, page, formPage, rows);
-		int totalPage = control.getTotalPage();
-		int startPage = control.getStartPage();
-		int endPage = control.getEndPage();
-		int listCount = control.getTopListCount();
-		int totalCount = control.getTotalCount();
-		int currentPage = control.getCurrentPage();
-		String param = control.getParam();
-		int rowCount = control.getTopListCount();
-		long sessionIdLong = control.getSessionId();
-
-		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
-
-		HashMap<String, String> verMap = new HashMap<String, String>();
-		while (qr.hasMoreElements()) {
-			Object[] o = (Object[]) qr.nextElement();
-			WTDocument doc = (WTDocument) o[0];
-			DocumentDTO data = new DocumentDTO(doc);
-			Map<String, Object> result = new HashMap<String, Object>();
-
-			int kk = 0;
-			if (verMap.containsKey(data.number)) {
-
-				kk = verMap.get(data.number).compareTo(data.version);
-				if (kk > 0) {
-					continue;
-				} else {
-					verMap.put(data.number, data.version);
-				}
-			} else {
-				verMap.put(data.number, data.version);
-			}
-
-			result.put("number", data.number);
-			result.put("interNumber", data.getIBAValue(AttributeKey.IBAKey.IBA_INTERALNUMBER));
-			result.put("model", data.getIBAValue(AttributeKey.IBAKey.IBA_MODEL));
-			result.put("name", data.name);
-			result.put("oid", data.oid);
-			result.put("location", data.getLocation());
-			result.put("version", data.version);
-			result.put("rev", data.version + "." + data.iteration);
-			result.put("state", data.getLifecycle());
-			result.put("creator", data.creator);
-			result.put("createDate", data.createDate.substring(0, 10));
-			result.put("modifyDate", data.modifyDate.substring(0, 10));
-
-			resultList.add(result);
-		}
-
-		map.put("list", resultList);
-		map.put("totalPage", totalPage);
-		map.put("startPage", startPage);
-		map.put("endPage", endPage);
-		map.put("listCount", listCount);
-		map.put("totalCount", totalCount);
-		map.put("currentPage", currentPage);
-		map.put("param", param);
-		map.put("rowCount", rowCount);
-		map.put("sessionId", sessionIdLong);
-
-		return map;
-
 	}
 
 	@Override
@@ -1413,50 +1134,41 @@ public class StandardDocumentService extends StandardManager implements Document
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			if (oid != null) {
-				ReferenceFactory f = new ReferenceFactory();
-				WTDocument wtdoc = (WTDocument) f.getReference(oid).getObject();
 
-				/*
-				 * // DescribeLink를 삭제한다. QuerySpec spec = new QuerySpec(); int index0 =
-				 * spec.addClassList(WTPartDescribeLink.class, true); int index1 =
-				 * spec.addClassList(WTDocument.class, false);
-				 * 
-				 * ClassAttribute ca0 = new ClassAttribute(WTPartDescribeLink.class,
-				 * "roleBObjectRef.key.id"); ClassAttribute ca1 = new
-				 * ClassAttribute(WTDocument.class, "thePersistInfo.theObjectIdentifier.id");
-				 * SearchCondition sc = new SearchCondition(ca0, "=", ca1); spec.appendWhere(sc,
-				 * new int[]{index0, index1}); spec.appendAnd(); spec.appendWhere(new
-				 * SearchCondition(WTDocument.class, "master>number", "=", wtdoc.getNumber()),
-				 * new int[]{index1});
-				 * 
-				 * QueryResult qr = PersistenceHelper.manager.find(spec); while
-				 * (qr.hasMoreElements()) { Object[] o = (Object[]) qr.nextElement();
-				 * WTPartDescribeLink link = (WTPartDescribeLink) o[0];
-				 * PersistenceServerHelper.manager.remove(link); }
-				 * 
-				 * // DocumentUnitLink를 삭제한다.
-				 */
+			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-				QueryResult results = PersistenceHelper.manager.navigate(wtdoc, "describes", WTPartDescribeLink.class,
-						false);
-				if (results.size() > 0) {
-					throw new Exception(Message.get("관련 품목") + Message.get("이(가) 있을 때 삭제할 수 없습니다."));
-				}
-
-				List<DocumentToDocumentLink> used = DocumentQueryHelper.service.getDocumentToDocumentLinks(wtdoc,
-						"used");
-				List<DocumentToDocumentLink> useBy = DocumentQueryHelper.service.getDocumentToDocumentLinks(wtdoc,
-						"useBy");
-
-				if (used.size() > 0 || useBy.size() > 0) {
-					throw new Exception(Message.get("관련 문서") + Message.get("이(가) 있을 때 삭제할 수 없습니다."));
-				}
-
-				WFItemHelper.service.deleteWFItem(wtdoc);
-				PersistenceHelper.manager.delete(wtdoc);
-
+			// true 연결 있음
+			if (DocumentHelper.manager.connect(doc, DocumentECOLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 ECO가 있습니다.");
+				return result;
 			}
+
+			if (DocumentHelper.manager.connect(doc, DocumentEOLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 EO가 있습니다.");
+				return result;
+			}
+
+			if (DocumentHelper.manager.connect(doc, DocumentCRLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 CR이 있습니다.");
+				return result;
+			}
+
+			if (DocumentHelper.manager.connect(doc, DocumentECPRLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 ECPR이 있습니다.");
+				return result;
+			}
+
+			if (DocumentHelper.manager.connect(doc, WTPartDescribeLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 품목이 있습니다.");
+				return result;
+			}
+
+			PersistenceHelper.manager.delete(doc);
 
 			trs.commit();
 			trs = null;
@@ -2081,15 +1793,18 @@ public class StandardDocumentService extends StandardManager implements Document
 //	}
 
 	@Override
-	public void create(Map<String, Object> params) throws Exception {
-		String name = (String) params.get("name");
-		String location = (String) params.get("location");
-		String description = (String) params.get("description");
-		String content = (String)params.get("content");
-		String documentType = (String) params.get("documentType");
-		String lifecycle = (String) params.get("lifecycle");
-		String primary = (String) params.get("primary");
-		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
+	public void create(DocumentDTO dto) throws Exception {
+		String name = dto.getName();
+		String location = dto.getLocation();
+		String description = dto.getDescription();
+		String content = dto.getContent();
+		String documentType = dto.getDocumentType();
+		String lifecycle = dto.getLifecycle();
+		String primary = dto.getPrimary();
+		ArrayList<String> secondarys = dto.getSecondarys();
+
+		// 그리드 배열로 받아서 처리한다. 숫자로 그리드 아이디 구분
+		ArrayList<Map<String, String>> addRows80 = dto.getAddRows80();
 
 		Transaction trs = new Transaction();
 		try {
@@ -2128,7 +1843,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
 			}
 
-			setIBAAttributes(doc, params);
+			setIBAAttributes(doc, dto);
 
 			trs.commit();
 			trs = null;
@@ -2145,24 +1860,27 @@ public class StandardDocumentService extends StandardManager implements Document
 	/**
 	 * 문서 IBA 속성값 세팅 함수
 	 */
-	private void setIBAAttributes(WTDocument doc, Map<String, Object> params) throws Exception {
+	private void setIBAAttributes(WTDocument doc, DocumentDTO dto) throws Exception {
 		// 내부 문서 번호
-		String interalnumber = (String) params.get("interalnumber");
-
-		IBAUtil.changeIBAValue(doc, interalnumber, interalnumber, interalnumber)
-		
+		String interalnumber = dto.getInteralnumber();
+		// IBA 키값 어떻게 할지...
+		dto.setIBAValue(doc, interalnumber, "INTERALNUMBER");
 		// 프로젝트 코드
-		String model = (String) params.get("model");
-
+		String model = dto.getModel();
+		dto.setIBAValue(doc, model, "MODEL");
 		// 부서
-		String deptcode = (String) params.get("deptcode");
-
+		String deptcode = dto.getDeptcode();
+		dto.setIBAValue(doc, model, "DEPTCODE");
 		// 보존기간
-		String preseration = (String) params.get("preseration");
+		String preseration = dto.getPreseration();
+		dto.setIBAValue(doc, model, "PRESERATION");
 
 		// 작성자
-		String writer = (String) params.get("writer");
+		String writer = dto.getWriter();
+		dto.setIBAValue(doc, model, "WRITER");
 
+		// 결재 유형
+		// approvaltype
 	}
 
 	@Override
@@ -2362,6 +2080,42 @@ public class StandardDocumentService extends StandardManager implements Document
 				trx.rollback();
 				trx = null;
 			}
+		}
+	}
+
+	@Override
+	public void revise(DocumentDTO dto) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			
+			trs.commit();
+			trs = null;
+		} catch(Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;)
+		} finally {
+			if(trs != null)
+				trs.rollback();)
+		}
+	}
+
+	@Override
+	public void modify(DocumentDTO dto) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }

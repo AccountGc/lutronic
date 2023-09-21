@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
+import wt.vc.VersionControlHelper;
 
 @Getter
 @Setter
@@ -43,7 +44,7 @@ public class DocumentColumn {
 		setModel(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_MODEL));
 		setName(doc.getName());
 		setLocation(doc.getLocation());
-		setVersion(doc.getVersionIdentifier().getSeries().getValue() + "."
+		setVersion(VersionControlHelper.getVersionDisplayIdentifier(doc) + "."
 				+ doc.getIterationIdentifier().getSeries().getValue());
 		setState(doc.getLifeCycleState().getDisplay());
 		setWriter("");

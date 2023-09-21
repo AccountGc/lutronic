@@ -223,7 +223,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					dataField : "number",
 					headerText : "문서번호",
 					dataType : "string",
-					width : 120,
+					width : 180,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -278,6 +278,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					dataField : "location",
 					headerText : "문서분류",
 					dataType : "string",
+					style : "aui-left",
 					width : 250,
 					filter : {
 						showIcon : true,
@@ -285,9 +286,9 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev",
+					headerText : "REV",
 					dataType : "string",
-					width : 350,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -296,7 +297,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -314,7 +315,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 80,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -341,7 +342,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					dataField : "primary",
 					headerText : "주 첨부파일",
 					dataType : "string",
-					width : 100,
+					width : 80,
 					renderer : {
 						type : "TemplateRenderer"
 					},

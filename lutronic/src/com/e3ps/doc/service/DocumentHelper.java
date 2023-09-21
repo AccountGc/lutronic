@@ -18,17 +18,17 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
+import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
+import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.template.DocumentTemplate;
 import com.e3ps.doc.template.DocumentTemplateData;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
-import com.e3ps.org.People;
-import com.e3ps.part.service.VersionHelper;
-
-import net.sf.json.JSONArray;
-import wt.clients.folder.FolderTaskLogic;
+import com.e3ps.org.People;clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
@@ -642,8 +642,7 @@ public class DocumentHelper {
 						}
 					}
 				} else if ("doc".equals(moduleType)) {
-					List<DocumentDTO> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid,
-							"used");
+					List<DocumentDTO> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
 					for (DocumentDTO data : dataList) {
 						list.add(data);
 					}
@@ -774,4 +773,40 @@ public class DocumentHelper {
 		return count;
 	}
 
+	/**
+	 * 문서 링크 관계 확인 ( true : 연결, false : 미연결 )
+	 */
+	public boolean connect(WTDocument doc, Class<?> target) throws Exception {
+		boolean isConnect = false;
+
+		Class<?> clz = target.getClass();
+		if (clz == DocumentEOLink.class) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "eo", DocumentECOLink.class);
+			isConnect = qr.size() > 0;
+		} else if (clz == DocumentECOLink.class) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "eco", DocumentECOLink.class);
+			isConnect = qr.size() > 0;
+		} else if (clz == DocumentECPRLink.class) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "ecpr", DocumentECPRLink.class);
+			isConnect = qr.size() > 0;
+		} else if (clz == DocumentCRLink.class) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "cr", DocumentCRLink.class);
+			isConnect = qr.size() > 0;
+		} else if (clz == WTPartDescribeLink.class) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "describes", WTPartDescribeLink.class);
+			isConnect = qr.size() > 0;
+		}
+		return isConnect;
+	}
+
+	/**
+	 * 문서 관련 객체들 가져올 함수 AUI용
+	 */
+	public Map<String, ArrayList<Map<String, String>>> a(WTDocument doc) throws Exception {
+		Map<String, ArrayList<Map<String, String>>> result = new HashMap<>();
+		
+		// 그리드 아이디에 맞게 배열 생성 한다.
+
+		return result;
+	}
 }

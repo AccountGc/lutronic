@@ -1,12 +1,22 @@
 package com.e3ps.doc.dto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.QuerySpecUtils;
 
 import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
+import wt.iba.definition.StringDefinition;
+import wt.iba.definition.StringDefinitionReference;
+import wt.iba.value.IBAHolderReference;
+import wt.iba.value.StringValue;
+import wt.query.QuerySpec;
 
 @Getter
 @Setter
@@ -34,7 +44,8 @@ public class DocumentDTO {
 	private String model;
 	private String preseration;
 	private String interalnumber;
-	private String dept;
+	private String deptcode;
+	private String approvaltype;
 
 	// auth
 	private boolean _delete = false;
@@ -42,6 +53,13 @@ public class DocumentDTO {
 	private boolean _revise = false;
 
 	private HashMap<String, String> attr = new HashMap<String, String>();
+
+	// 변수용
+	private String lifecycle;
+	private String primary;
+	private ArrayList<String> secondarys = new ArrayList<>();
+	private ArrayList<Map<String, String>> addRows80 = new ArrayList<>();
+	private boolean temp;
 
 	public DocumentDTO() {
 
@@ -98,4 +116,34 @@ public class DocumentDTO {
 		return check;
 	}
 
+	/**
+	 * IBA 값 가져오기 함수
+	 */
+	public StringDefinition getSd(String name) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(StringDefinition.class, true);
+		QuerySpecUtils.toEquals(query, idx, StringDefinition.class, StringDefinition.NAME, name);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			StringDefinition sd = (StringDefinition) obj[0];
+			return sd;
+		}
+		return null;
+	}
+
+	/**
+	 * IBA 속성값 설정
+	 */
+	public void setIBAValue(WTDocument doc, String value, String name) throws Exception {
+		StringDefinition sd = getSd(name);
+		StringValue sv = new StringValue();
+		if (sd == null) {
+			return;
+		}
+		sv.setValue(value);
+		sv.setDefinitionReference((StringDefinitionReference) sd.getAttributeDefinitionReference());
+		sv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(doc)));
+		PersistenceHelper.manager.save(sv);
+	}
 }

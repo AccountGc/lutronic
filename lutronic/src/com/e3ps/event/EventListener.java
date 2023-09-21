@@ -1,9 +1,10 @@
 package com.e3ps.event;
 
-import com.ptc.windchill.bac.specfile.jaxb.WTUser;
+import com.e3ps.org.service.OrgHelper;
 
 import wt.events.KeyedEvent;
 import wt.fc.PersistenceManagerEvent;
+import wt.org.WTUser;
 import wt.services.ServiceEventListenerAdapter;
 
 public class EventListener extends ServiceEventListenerAdapter {
@@ -24,13 +25,14 @@ public class EventListener extends ServiceEventListenerAdapter {
 		Object target = keyedEvent.getEventTarget();
 		String type = keyedEvent.getEventType();
 
-		if(target instanceof WTUser) {
-			if(type.equals("POST_STORE")) {
-				
-			} else if(type.equals("POST_MODIFY")) {
-				
+		if (target instanceof WTUser) {
+			WTUser wtUser = (WTUser) target;
+			if (type.equals("POST_STORE")) {
+				EventHelper.service.create(wtUser);
+			} else if (type.equals("POST_MODIFY")) {
+				EventHelper.service.modify(wtUser);
 			}
 		}
-		
+
 	}
 }

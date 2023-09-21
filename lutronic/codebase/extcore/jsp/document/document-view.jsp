@@ -26,14 +26,14 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="개정" title="개정">
+			<input type="button" value="개정" title="개정" onclick="update('revise');">
 			<input type="button" value="결재회수" title="결재회수">
-			<input type="button" value="수정" title="수정" class="blue">
+			<input type="button" value="수정" title="수정" class="blue" onclick="update('mode');">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<input type="button" value="최신Rev." title="최신Rev.">
-<!-- 			<input type="button" value="Rev.이력" title="Rev.이력"> -->
-<!-- 			<input type="button" value="다운로드이력" title="다운로드이력"> -->
-<!-- 			<input type="button" value="결재이력" title="결재이력"> -->
+			<!-- 			<input type="button" value="Rev.이력" title="Rev.이력"> -->
+			<!-- 			<input type="button" value="다운로드이력" title="다운로드이력"> -->
+			<!-- 			<input type="button" value="결재이력" title="결재이력"> -->
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -90,15 +90,21 @@ iframe {
 				<td class="indent5"></td>
 			</tr>
 			<tr>
+				<th class="lb">내용</th>
+				<td colspan="5" class="indent5">
+					<textarea name="content" id="content" rows="30"><%=dto.getContent()%></textarea>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">설명</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="description" rows="30"><%=dto.getDescription() == null ? "" : dto.getDescription()%></textarea>
+					<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() == null ? "" : dto.getDescription()%></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">주 첨부파일</th>
 				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
+					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
@@ -275,7 +281,7 @@ iframe {
 const oEditors = [];
 nhn.husky.EZCreator.createInIFrame({
 	oAppRef : oEditors,
-	elPlaceHolder : "description", //textarea ID 입력
+	elPlaceHolder : "content", //textarea ID 입력
 	sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
 	fCreator : "createSEditor2",
 	htParams : {
@@ -284,15 +290,15 @@ nhn.husky.EZCreator.createInIFrame({
 		bUseModeChanger : false
 	},
 	fOnAppLoad : function(){
-			oEditors.getById["description"].exec("DISABLE_WYSIWYG");
-			oEditors.getById["description"].exec("DISABLE_ALL_UI");
+			oEditors.getById["content"].exec("DISABLE_WYSIWYG");
+			oEditors.getById["content"].exec("DISABLE_ALL_UI");
 	},
 });
 
-	//수정
-	function update () {
+	//수정 및 개정
+	function update(mode) {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid);
+		const url = getCallUrl("/doc/update?oid=" + oid + "&mode="+mode);
 		document.location.href = url;
 	};
 

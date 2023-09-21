@@ -29,7 +29,8 @@ public interface OrgService {
 	public abstract void save(ArrayList<LinkedHashMap<String, Object>> editRows) throws Exception;
 
 	/**
-	 * 윈칠 사용자 로더 - 개발용
+	 * 윈칠 사용자 로더 -> 개발용
 	 */
-	public abstract void loader(String path) throws Exception;
+	public abstract void loaderUser(String path) throws Exception;
+
 }

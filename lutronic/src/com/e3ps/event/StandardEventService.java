@@ -1,5 +1,7 @@
 package com.e3ps.event;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;

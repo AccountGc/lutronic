@@ -6,9 +6,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Vector;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,6 +27,7 @@ import com.e3ps.org.WTUserPeopleLink;
 
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.load.LoadUser;
 import wt.method.MethodContext;
 import wt.org.OrganizationServicesMgr;
 import wt.org.WTUser;
@@ -336,15 +343,43 @@ public class StandardOrgService extends StandardManager implements OrgService {
 	}
 
 	@Override
-	public void loader(String path) throws Exception {
+	public void loaderUser(String path) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			File file = new File(path);
 
-			
-			
+			Workbook workbook = new XSSFWorkbook(file);
+			Sheet sheet = workbook.getSheetAt(0);
+
+			int rows = sheet.getPhysicalNumberOfRows(); // 시트의 행 개수 가져오기
+
+			// 모든 행(row)을 순회하면서 데이터 가져오기
+			for (int i = 1; i < rows; i++) {
+				Row row = sheet.getRow(i);
+
+				String email = row.getCell(7).getStringCellValue();
+				String name = row.getCell(12).getStringCellValue();
+				String last = row.getCell(15).getStringCellValue();
+				String id = row.getCell(17).getStringCellValue();
+
+				Hashtable hash = new Hashtable();
+				hash.put("newUser", id);
+				hash.put("webServerID", id);
+				hash.put("fullName", name);
+				hash.put("Last", last);
+				hash.put("Email", email);
+				hash.put("Locale", "ko");
+				hash.put("Organization", "lutronic");
+				hash.put("password", "changeme");
+				hash.put("ignore", "x");
+				boolean success = LoadUser.createUser(hash, new Hashtable(), new Vector());
+				if (!success) {
+					System.out.println("실패한 유저 = " + id);
+				}
+			}
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -355,7 +390,5 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			if (trs != null)
 				trs.rollback();
 		}
-
 	}
-
 }

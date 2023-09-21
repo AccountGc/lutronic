@@ -69,10 +69,10 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 등록")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public Map<String, Object> create(@RequestBody Map<String, Object> params) throws Exception {
+	public Map<String, Object> create(@RequestBody DocumentDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			DocumentHelper.service.create(params);
+			DocumentHelper.service.create(dto);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -99,6 +99,22 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
+	@Description(value = "문서 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/list")
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = DocumentHelper.manager.list(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "관련 문서 팝업 페이지")
 	@GetMapping(value = "/listPopup")
 	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false) Integer parentRowIndex)
@@ -115,23 +131,6 @@ public class DocumentController extends BaseController {
 		model.addObject("parentRowIndex", parentRowIndex);
 		model.setViewName("popup:/document/document-list-popup");
 		return model;
-	}
-
-	@Description(value = "문서 조회 함수")
-	@ResponseBody
-	@PostMapping(value = "/list")
-	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result = DocumentHelper.manager.list(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-//			ErrorLogHelper.service.create(e.toString(), "/doc/list", "문서 조회 함수");
-		}
-		return result;
 	}
 
 	@Description(value = "문서 상세보기")
@@ -153,21 +152,34 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "문세 템플릿 검색 페이지 이동")
-	@GetMapping(value = "/template-list")
-	public ModelAndView templateList() throws Exception {
+	@Description(value = "문서 수정 및 개정 페이지")
+	@GetMapping(value = "/update")
+	public ModelAndView update(@RequestParam String oid, @RequestParam String mode) throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/document/template-list.jsp");
+		boolean isAdmin = CommonUtil.isAdmin();
+		DocumentDTO dto = new DocumentDTO(oid);
+//		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
+		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
+		String pnum = DocumentHelper.manager.getCnum(cList);
+
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.addObject("mode", mode);
+		model.addObject("cList", cList);
+		model.addObject("pnum", pnum);
+//		model.addAllObjects(map);
+		model.setViewName("popup:/document/document-update");
 		return model;
 	}
 
-	@Description(value = "문서 템플릿 리스트 불러오기")
+	@Description(value = "문서 수정")
 	@ResponseBody
-	@PostMapping(value = "/template-list")
-	public Map<String, Object> templateList(@RequestBody Map<String, Object> params) {
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody DocumentDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = DocumentHelper.manager.docTemplateList(params);
+			DocumentHelper.service.modify(dto);
+			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -177,25 +189,15 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "문세 템플릿 등록 페이지 이동")
-	@GetMapping(value = "/template-create")
-	public ModelAndView templateCreate() throws Exception {
-		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> documentTemplateTypeList = NumberCodeHelper.manager.getArrayCodeList("DOCFORMTYPE");
-		model.setViewName("/extcore/jsp/document/template-create.jsp");
-		model.addObject("documentTemplateTypeList", documentTemplateTypeList);
-		return model;
-	}
-
-	@Description(value = "문서 템플릿 등록 함수")
+	@Description(value = "문서 개정")
 	@ResponseBody
-	@PostMapping(value = "/template-create")
-	public Map<String, Object> templateCreate(@RequestBody Map<String, Object> params) {
+	@PostMapping(value = "/revise")
+	public Map<String, Object> revise(@RequestBody DocumentDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			DocumentHelper.service.createTemplate(params);
+			DocumentHelper.service.revise(dto);
+			result.put("msg", REVISE_MSG);
 			result.put("result", SUCCESS);
-			result.put("msg", SAVE_MSG);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
@@ -254,17 +256,6 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "문서 개정 페이지")
-	@GetMapping(value = "/reviseDocument")
-	public ModelAndView reviseDocument(@RequestParam("oid") String oid, HttpServletRequest request) {
-		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
-		ModelAndView model = new ModelAndView();
-		model.addObject("oid", oid);
-		model.addObject("module", module);
-		model.setViewName("/extcore/jsp/document/document-revise.jsp");
-		return model;
-	}
-
 	@Description(value = "문서 개정")
 	@ResponseBody
 	@PostMapping(value = "/reviseDocument")
@@ -292,38 +283,6 @@ public class DocumentController extends BaseController {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
-	@Description(value = "문서 수정 페이지")
-	@GetMapping(value = "/update")
-	public ModelAndView updateDocument(HttpServletRequest request, @RequestParam(value = "oid") String oid)
-			throws Exception {
-		ModelAndView model = new ModelAndView();
-		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-		DocumentDTO docData = new DocumentDTO(doc);
-		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
-		model.addObject("oid", oid);
-		model.addObject("module", module);
-		model.setViewName("/extcore/jsp/document/document-update.jsp");
-		model.addObject("docData", docData);
-		return model;
-	}
-
-	@Description(value = "문서 수정")
-	@ResponseBody
-	@PostMapping(value = "/update")
-	public Map<String, Object> update(@RequestBody Map<String, Object> params) {
-
-		Map<String, Object> result = DocumentHelper.service.updateDocumentAction(params);
-		if ((boolean) result.get("result")) {
-			result.put("oid", result.get("oid"));
-			result.put("msg", MODIFY_MSG);
-			result.put("result", SUCCESS);
-		} else {
-			result.put("result", FAIL);
-			result.put("msg", (String) result.get("msg"));
 		}
 		return result;
 	}

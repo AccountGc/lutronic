@@ -34,6 +34,11 @@ iframe {
 						문서 정보
 					</div>
 				</td>
+				<td class="right">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
 			</tr>
 		</table>
 		<table class="create-table">
@@ -213,13 +218,13 @@ iframe {
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
-		
- 		<!-- 	관련 CR --> 
+
+		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
-		
+
 		<!-- 	관련 ECPR -->
 		<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
 			<jsp:param value="" name="oid" />
@@ -232,15 +237,6 @@ iframe {
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
 
-		<table class="button-table">
-			<tr>
-				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
-				</td>
-			</tr>
-		</table>
 		<script type="text/javascript">
 			const oEditors = [];
 			nhn.husky.EZCreator.createInIFrame({
@@ -294,6 +290,12 @@ iframe {
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
 				const primary = document.querySelector("input[name=primary]").value;
+				const model = document.getElementById("model").value;
+				const writer = document.getElementById("writer").value;
+				const interalnumber = document.getElementById("interalnumber").value;
+				const deptcode = document.getElementById("deptcode").value;
+				const preseration = document.getElementById("preseration").value;
+
 				if (!confirm("등록하시겠습니까?")) {
 					return false;
 				}
@@ -305,8 +307,12 @@ iframe {
 					description : description.value,
 					content : content.value,
 					secondarys : secondarys,
-					primary : primary.value,
-					location : location.value
+					primary : primary,
+					location : location.value,
+					model : model,
+					interalnumber : interalnumber,
+					writer : writer,
+					preseration : preseration
 				};
 				parent.openLayer();
 				call(url, params, function(data) {

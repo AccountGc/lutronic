@@ -8,15 +8,13 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.bind.annotation.RequestBody;
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.doc.dto.DocumentDTO;
 
 import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
 import wt.method.RemoteInterface;
 import wt.part.WTPartDescribeLink;
-
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.doc.dto.DocumentDTO;
 
 @RemoteInterface
 public interface DocumentService {
@@ -50,14 +48,6 @@ public interface DocumentService {
 
 	ResultData deleteDocumentLinkAction(HttpServletRequest request, HttpServletResponse response);
 
-	List<Map<String, Object>> listAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception;
-
-//	ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
-
-	Map<String, Object> listPagingAUIDocumentAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception;
-
 	public void batch(Map<String, Object> params) throws Exception;
 
 	public void createComments(Map<String, Object> params) throws Exception;
@@ -76,10 +66,21 @@ public interface DocumentService {
 	/**
 	 * 문서 등록
 	 */
-	public abstract void create(Map<String, Object> params) throws Exception;
+	public abstract void create(DocumentDTO dto) throws Exception;
 
 	/**
 	 * 문서 삭제
 	 */
 	public abstract Map<String, Object> delete(String oid) throws Exception;
+
+	/**
+	 * 문서 개정
+	 */
+	public abstract void revise(DocumentDTO dto) throws Exception;
+
+	/**
+	 * 문서 수정
+	 */
+	public abstract void modify(DocumentDTO dto) throws Exception;
+
 }
