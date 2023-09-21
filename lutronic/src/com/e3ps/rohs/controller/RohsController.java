@@ -80,8 +80,10 @@ public class RohsController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
+		model.addObject("manufactureList", manufactureList);
 		model.setViewName("/extcore/jsp/rohs/rohs-list.jsp");
 		return model;
 	}
