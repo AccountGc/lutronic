@@ -549,15 +549,24 @@ String userNm = sessionUser.getFullName();
 				$("#creator").val(creator);
 				$("#creatorOid").val(creatorOid);
 				$("#model option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_model_AX_SelectText").text("선택");
 				$("#cadType option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_cadType_AX_SelectText").text("선택");
 				$('input:radio[name="islastversion"]:input[value="true"]').prop('checked',true);
 				$("#state option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_state_AX_SelectText").text("선택");
 				$("#productmethod option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_productmethod_AX_SelectText").text("선택");
 				$("#deptcode option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_deptcode_AX_SelectText").text("선택");
 				$("#unit option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_unit_AX_SelectText").text("선택");
 				$("#manufacture option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_manufacture_AX_SelectText").text("선택");
 				$("#mat option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_mat_AX_SelectText").text("선택");
 				$("#finish option:eq(0)").prop("selected",true);
+				$("#AXselect_AX_finish_AX_SelectText").text("선택");
 			});
 		</script>
 	</form>
