@@ -8,8 +8,10 @@ String moduleType = request.getParameter("moduleType");
 JSONArray json = null;
 if(moduleType.equals("ecr")){
 	json = ECOHelper.manager.getRequestOrderLinkECOData(oid);
+}else if(moduleType.equals("ecn")){
+	
 }else{
-	json = PartHelper.manager.include_ChangeECOView(oid, moduleType);
+	json = ECOHelper.manager.include_ChangeECOView(oid, moduleType);
 }
 
 %>

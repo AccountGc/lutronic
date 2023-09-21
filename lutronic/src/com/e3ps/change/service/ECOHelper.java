@@ -13,9 +13,11 @@ import com.e3ps.change.ECOChange;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EOData;
+import com.e3ps.change.beans.EoComparator;
 import com.e3ps.change.service.StandardChangeWfService.NumberAscCompare;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.message.Message;
@@ -615,6 +617,41 @@ public class ECOHelper {
 			RequestOrderLink link = (RequestOrderLink)rt.nextElement();
 			list.add(link);
 		}
+		return list;
+	}
+	
+	public JSONArray include_ChangeECOView(String oid, String moduleType) throws Exception {
+		List<ECOData> list = new ArrayList<ECOData>();
+		if (StringUtil.checkString(oid)) {
+			if ("part".equals(moduleType)) {
+				WTPart part = (WTPart) CommonUtil.getObject(oid);
+				List<EChangeOrder> eolist = getPartTOECOList(part);
+				for (EChangeOrder eco : eolist) {
+					ECOData data = new ECOData(eco);
+					list.add(data);
+				}
+			}
+		}
+		return JSONArray.fromObject(list);
+	}
+	
+	public List<EChangeOrder> getPartTOECOList(WTPart part) throws Exception {
+		List<EChangeOrder> list = new ArrayList<EChangeOrder>();
+		QueryResult eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class,true);
+		
+		while(eolinkQr.hasMoreElements()){
+			EChangeOrder eo = (EChangeOrder)eolinkQr.nextElement();
+			list.add(eo);
+		}
+		
+		//ECO Type이 CHANGE 제외
+		eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco",EOCompletePartLink.class,true);
+		while(eolinkQr.hasMoreElements()){
+			EChangeOrder eo = (EChangeOrder)eolinkQr.nextElement();
+			if(eo.getEoType().equals(ECOKey.ECO_CHANGE)) continue;
+			list.add(eo);
+		}
+		Collections.sort(list, new EoComparator());
 		return list;
 	}
 }
