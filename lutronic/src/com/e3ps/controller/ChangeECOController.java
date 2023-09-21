@@ -227,7 +227,7 @@ public class ChangeECOController extends BaseController {
 
 	@Description(value = "EO 검색 페이지")
 	@GetMapping(value = "/listEO")
-	public ModelAndView listEO() throws Exception {
+	public ModelAndView listEO() throws Exception{
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
@@ -237,7 +237,7 @@ public class ChangeECOController extends BaseController {
 	
 	@Description(value = "관련 EO 팝업 페이지")
 	@GetMapping(value = "/listEOPopup")
-	public ModelAndView listEOPopup() throws Exception {
+	public ModelAndView listEOPopup() throws Exception{
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);

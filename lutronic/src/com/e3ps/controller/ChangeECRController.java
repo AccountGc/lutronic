@@ -92,10 +92,10 @@ public class ChangeECRController extends BaseController {
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		model.addObject("sectionList", sectionList);
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		model.addObject("modelList", modelList);
+		model.addObject("sectionList", sectionList);
 		model.setViewName("/extcore/jsp/change/ecr-list.jsp");
 		return model;
 	}
