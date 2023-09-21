@@ -213,6 +213,18 @@ iframe {
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
+		
+ 		<!-- 	관련 CR --> 
+		<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+		</jsp:include>
+		
+		<!-- 	관련 ECPR -->
+		<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+		</jsp:include>
 
 		<!-- 	관련 ECO -->
 		<jsp:include page="/extcore/jsp/change/eco_include.jsp">
@@ -318,6 +330,8 @@ iframe {
 				createAUIGrid2(columnsPart);
 				createAUIGridEco(columnsEco);
 				createAUIGridEO(columnsEo);
+				createAUIGridECPR(columnsEcpr);
+				createAUIGridCR(columnsCr);
 			});
 
 			window.addEventListener("resize", function() {

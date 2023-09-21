@@ -5,22 +5,36 @@ String mode = request.getParameter("mode");
 boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
-String eoType = request.getParameter("eoType");
 %>
-<%
-if (isCreate || isUpdate) {
-%>
-	<input type="button" value="추가" title="추가" class="blue" onclick="addECR();">
-	<input type="button" value="삭제" title="삭제" class="red" onclick="delECR();">
-<%
-}
-%>
-<div id="grid_ecr" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				관련 CR
+			</div>
+		</td>
+	</tr>
+</table>
+<table class="create-table">
+	<colgroup>
+		<col width="150">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th class="lb">관련 CR</th>
+		<td class="indent5 pt5">
+			<input type="button" value="추가" title="추가" class="blue" onclick="addCR();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="delCR();">
+			<div id="grid_cr" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
-	let ecrGridID;
-	const columnsEcr = [ {
+	let crGridID;
+	const columnsCr = [ {
 		dataField : "eoNumber",
-		headerText : "<%=eoType%> 번호",
+		headerText : "CR 번호",
 		dataType : "string",
 		width : 180,
 		filter : {
@@ -44,7 +58,7 @@ if (isCreate || isUpdate) {
 		%>
 	}, {
 		dataField : "eoName",
-		headerText : "<%=eoType%> 제목",
+		headerText : "CR 제목",
 		dataType : "string",
 		width : 180,
 		filter : {
@@ -83,7 +97,7 @@ if (isCreate || isUpdate) {
 		visible : false
 	} ]
 
-	function createAUIGrid1(columnLayout) {
+	function createAUIGridCR(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
@@ -100,22 +114,21 @@ if (isCreate || isUpdate) {
 			rowCheckToRadio : true,
 			enableFilter : true
 		}
-		ecrGridID = AUIGrid.create("#grid_ecr", columnLayout, props);
+		crGridID = AUIGrid.create("#grid_cr", columnLayout, props);
 		<%if (isView || isUpdate) {%>
-<%-- 		AUIGrid.setGridData(ecrGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
+<%-- 		AUIGrid.setGridData(crGridID, <%=ProjectHelper.manager.jsonAuiProject(oid)%>); --%>
 		<%}%>
 	}
 
-	function addECR() {
-		var type = "<%=eoType%>";
-		const url = getCallUrl("/changeECO/select_ecrPopup?eoType="+type);
-		popup(url, 1500, 700);
+	function addCR() {
+		const url = getCallUrl("/changeCR/listPopup");
+		_popup(url, 1500, 700,"n");
 	}
 	
 	function append(items){
 		var arr = [];
 		var count=0;
-		var data = AUIGrid.getGridData(ecrGridID);
+		var data = AUIGrid.getGridData(crGridID);
 		for (var i=0; i<items.length; i++){
 			var a=0;
 			if(data.length==0){
@@ -132,11 +145,11 @@ if (isCreate || isUpdate) {
 				count++;
 			}
 		}
-		AUIGrid.addRow(ecrGridID, arr);
+		AUIGrid.addRow(crGridID, arr);
 	}
 
-	function delECR() {
-		const checked = AUIGrid.getCheckedRowItems(ecrGridID);
+	function delCR() {
+		const checked = AUIGrid.getCheckedRowItems(crGridID);
 		if (checked.length === 0) {
 			alert("삭제할 행을 선택하세요.");
 			return false;
@@ -144,7 +157,7 @@ if (isCreate || isUpdate) {
 
 		for (let i = checked.length - 1; i >= 0; i--) {
 			const rowIndex = checked[i].rowIndex;
-			AUIGrid.removeRow(ecrGridID, rowIndex);
+			AUIGrid.removeRow(crGridID, rowIndex);
 		}
 	}
 	

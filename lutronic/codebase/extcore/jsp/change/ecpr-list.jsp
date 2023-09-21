@@ -3,7 +3,6 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String eoType = request.getParameter("eoType");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 %>
@@ -22,7 +21,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 		<input type="hidden" name="sessionid" id="sessionid"> 
 		<input type="hidden" name="lastNum" id="lastNum"> 
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="eoType" id="eoType" value="<%=eoType%>">
 
 		<table class="search-table">
 			<colgroup>
@@ -34,9 +32,9 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th><%=eoType %> 번호</th>
+				<th>ECPR 번호</th>
 				<td class="indent5"><input type="text" name="number" id="number" class="width-300"></td>
-				<th><%=eoType %> 제목</th>
+				<th>ECPR 제목</th>
 				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
 				<th>상태</th>
 				<td class="indent5">
@@ -140,7 +138,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			function _layout() {
 				return [ {
 					dataField : "eoNumber",
-					headerText : "<%=eoType %> 번호",
+					headerText : "ECPR 번호",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -158,7 +156,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					},
 				}, {
 					dataField : "eoName",
-					headerText : "<%=eoType %> 제목",
+					headerText : "ECPR 제목",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -270,7 +268,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/changeECR/list");
-				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection", "eoType"];
+				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {
@@ -339,8 +337,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			
 			// 등록
 			$("#createBtn").click(function(){
-				var type = $("#eoType").val();
-				location.href = getCallUrl("/changeECR/create?eoType="+type);
+				location.href = getCallUrl("/changeCR/create");
 			});
 		</script>
 	</form>

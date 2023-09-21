@@ -195,10 +195,10 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/changeECR/list?eoType=CR', '> 설계변경 > CR 검색');">CR</a>
+						<a onclick="moveToPage(this, '/changeCR/list', '> 설계변경 > CR 검색');">CR</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/changeECR/list?eoType=ECPR', '> 설계변경 > ECPR 검색');">ECPR</a>
+						<a onclick="moveToPage(this, '/changeECPR/list', '> 설계변경 > ECPR 검색');">ECPR</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO</a>
