@@ -62,7 +62,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			</tr>
 			<tr>
 				<th class="req lb">프로젝트 코드</th>
-				<td>
+				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<%

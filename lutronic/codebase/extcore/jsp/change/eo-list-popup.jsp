@@ -1,8 +1,11 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
 <input type="hidden" name="lastNum" id="lastNum"> 
@@ -71,10 +74,18 @@
 	</td>
 </tr>
 <tr>
-	<th class="req lb">제품명</th>
-	<td colspan="3">
-		<input type="button" value="추가" title="추가" class="blue"  id="addNumberCode" name="addNumberCode" >
-		<input type="button" value="삭제" title="삭제" class="red"   id="delNumberCode" name="delNumberCode"  >
+	<th class="req lb">프로젝트 코드</th>
+	<td class="indent5" colspan="3">
+		<select name="model" id="model" class="width-200">
+			<option value="">선택</option>
+			<%
+			for (NumberCode model : modelList) {
+			%>
+			<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+			<%
+			}
+			%>
+		</select>
 	</td>
 	<th>승인일</th>
 	<td class="indent5">
@@ -250,14 +261,14 @@ function loadGridData() {
 	});
 }
 
-document.querySelector("#addNumberCode").addEventListener("click", () => {
-	const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
-	popup(url, 1500, 700);
-});
+// document.querySelector("#addNumberCode").addEventListener("click", () => {
+// 	const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
+// 	popup(url, 1500, 700);
+// });
 
-document.querySelector("#delNumberCode").addEventListener("click", () => {
+// document.querySelector("#delNumberCode").addEventListener("click", () => {
 	
-});
+// });
 
 document.addEventListener("DOMContentLoaded", function() {
 	const columns = loadColumnLayout("eo-list");
@@ -275,6 +286,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	twindate("created");
 	twindate("approve");
 	selectbox("_psize");
+	selectbox("model");
 });
 
 document.addEventListener("keydown", function(event) {
