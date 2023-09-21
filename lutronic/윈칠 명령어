@@ -14,6 +14,7 @@
 	
 4. 서비스 등록
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.services.service.90000=com.e3ps.org.service.OrgService/com.e3ps.org.service.StandardOrgService -p
+	- Shell -> xconfmanager -t codebase/wt.properties -s wt.services.service.91000=com.e3ps.event.EventService/com.e3ps.event.StandardEventService -p
 
 5. WVS After Service 등록
 	- Shell -> src/com/ptc/wvs/util 이동

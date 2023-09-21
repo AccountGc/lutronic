@@ -363,7 +363,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 							"default" : "/Windchill/extcore/images/help.gif" // default
 						},
 						onClick : function(event) {
-							const oid = event.item.oid;
+							const oid = event.item.part_oid;
 							const url = getCallUrl("/part/changeList?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}

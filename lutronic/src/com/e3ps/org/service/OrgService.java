@@ -27,4 +27,9 @@ public interface OrgService {
 	 * 조직도 그리드 저장 함수
 	 */
 	public abstract void save(ArrayList<LinkedHashMap<String, Object>> editRows) throws Exception;
+
+	/**
+	 * 윈칠 사용자 로더 - 개발용
+	 */
+	public abstract void loader(String path) throws Exception;
 }

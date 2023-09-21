@@ -1,5 +1,6 @@
 package com.e3ps.org.service;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,7 +54,6 @@ public class StandardOrgService extends StandardManager implements OrgService {
 	protected synchronized void performStartupProcess() throws ManagerException {
 		super.performStartupProcess();
 		try {
-
 			System.out.println("루트 부서 생성 시작!");
 			Department department = makeRoot();
 			inspectUser(department);
@@ -96,8 +96,6 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				WTUser wtuser = (WTUser) obj[0];
 
 				QueryResult _qr = PersistenceHelper.manager.navigate(wtuser, "people", WTUserPeopleLink.class);
-
-				System.out.println("_qr=" + _qr.size() + ", name = " + wtuser.getName());
 
 				People user = null;
 				if (!_qr.hasMoreElements()) {
@@ -324,6 +322,29 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				PersistenceHelper.manager.modify(people);
 			}
 
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
+	}
+
+	@Override
+	public void loader(String path) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			File file = new File(path);
+
+			
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

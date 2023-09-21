@@ -102,7 +102,7 @@ iframe {
 			}
 			const url = getCallUrl("/form/delete?oid=" + oid);
 			parent.openLayer();
-			call(url, params, function(data) {
+			call(url, null, function(data) {
 				alert(data.msg);
 				if (data.result) {
 					document.location.href = getCallUrl("/form/list");

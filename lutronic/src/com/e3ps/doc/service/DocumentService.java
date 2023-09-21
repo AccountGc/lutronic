@@ -76,7 +76,7 @@ public interface DocumentService {
 	/**
 	 * 문서 등록
 	 */
-	public void create(Map<String, Object> params) throws Exception;
+	public abstract void create(Map<String, Object> params) throws Exception;
 
 	/**
 	 * 문서 삭제
