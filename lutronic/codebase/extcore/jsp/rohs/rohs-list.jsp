@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="wt.fc.QueryResult"%>
@@ -18,6 +19,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 %>
 <!DOCTYPE html>
 <html>
@@ -68,10 +70,13 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (Map<String,String> lifecycle : lifecycleList) {
+						%>
+						<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>수정일</th>

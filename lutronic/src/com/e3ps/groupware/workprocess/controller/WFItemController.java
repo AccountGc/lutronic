@@ -15,7 +15,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 
 @Controller
-@RequestMapping("/WFItem")
+@RequestMapping(value = "/WFItem/**")
 public class WFItemController {
 	/*
 	public String[] projectStateValue = {StateFlag.TASK_STATE_READY, 
