@@ -190,7 +190,14 @@
 			headerText: "OEM Info.",
 			width: "10%"
 		}, 
-		
+		{
+			dataField: "checkOutSts",
+			headerText: "체크아웃 상태",
+			width: "8%",
+			filter : {
+				showIcon : true
+			},
+		}, 
 		{
 			dataField: "state",
 			headerText: "상태",

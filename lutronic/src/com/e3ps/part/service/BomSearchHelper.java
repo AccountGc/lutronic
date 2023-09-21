@@ -32,6 +32,7 @@ import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
+import wt.vc.wip.WorkInProgressHelper;
 
 public class BomSearchHelper {
 	public static final BomSearchService service = ServiceFactory.getService(BomSearchService.class);
@@ -225,6 +226,7 @@ public class BomSearchHelper {
 	   	//System.out.println(number +","+id+","+pOid);
 	   	String lineImg = "";
 	   	String line = "";
+	   	String checkOutSts =WorkInProgressHelper.isCheckedOut(cPart)?"체크아웃 중":"";
 	   	for(int j=1; j< child.level; j++){
 	    	
 			String empty = lineStack[j];
@@ -267,6 +269,7 @@ public class BomSearchHelper {
 		map.put("manufacture", manufacture);
 		map.put("productmethod", productmethod);
 		map.put("count", count);
+		map.put("checkOutSts", checkOutSts);
 		
 		if(count==0)
 			map.put("children", new ArrayList());
