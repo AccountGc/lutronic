@@ -208,10 +208,10 @@ iframe {
 		</jsp:include>
 
 		<!-- 	관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/document-include.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
-		</jsp:include>
+<%-- 		<jsp:include page="/extcore/jsp/document/document-include.jsp"> --%>
+<%-- 			<jsp:param value="" name="oid" /> --%>
+<%-- 			<jsp:param value="create" name="mode" /> --%>
+<%-- 		</jsp:include> --%>
 
 		<!-- 	관련 EO -->
 		<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
@@ -220,22 +220,85 @@ iframe {
 		</jsp:include>
 
 		<!-- 	관련 CR -->
-		<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
-		</jsp:include>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						관련 CR
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="create-table">
+			<colgroup>
+				<col width="150">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th class="lb">관련 CR</th>
+				<td class="indent5 pt5">
+					<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
 
 		<!-- 	관련 ECPR -->
-		<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
-		</jsp:include>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						관련 ECPR
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="create-table">
+			<colgroup>
+				<col width="150">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th class="lb">관련 ECPR</th>
+				<td class="indent5 pt5">
+					<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
 
 		<!-- 	관련 ECO -->
-		<jsp:include page="/extcore/jsp/change/eco_include.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
-		</jsp:include>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						관련 ECO
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="create-table">
+			<colgroup>
+				<col width="150">
+				<col width="*">
+			</colgroup>
+			<tr>
+				<th class="lb">관련 ECO</th>
+				<td class="indent5 pt5">
+					<jsp:include page="/extcore/jsp/change/eco_include.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
+		</table>
 
 		<script type="text/javascript">
 			const oEditors = [];
@@ -332,7 +395,7 @@ iframe {
 				selectbox("model");
 				selectbox("deptcode");
 				$("#preseration").bindSelectSetValue("PR001");
-				createAUIGrid90(columns90);
+// 				createAUIGrid90(columns90);
 				createAUIGrid2(columnsPart);
 				createAUIGridEco(columnsEco);
 				createAUIGridEO(columnsEo);

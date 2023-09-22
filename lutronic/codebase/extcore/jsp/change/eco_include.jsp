@@ -6,30 +6,9 @@ boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
 %>
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 ECO
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 ECO</th>
-		<td class="indent5 pt5">
-			<input type="button" value="추가" title="추가" class="blue" onclick="insertEco();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteEco();">
-			<div id="grid_eco" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-		</td>
-	</tr>
-</table>
+<input type="button" value="추가" title="추가" class="blue" onclick="insertEco();">
+<input type="button" value="삭제" title="삭제" class="red" onclick="deleteEco();">
+<div id="grid_eco" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let ecoGridID;
 	const columnsEco = [ {

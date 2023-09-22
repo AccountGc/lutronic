@@ -6,30 +6,11 @@ boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
 %>
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 CR
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 CR</th>
-		<td class="indent5 pt5">
-			<input type="button" value="추가" title="추가" class="blue" onclick="addCR();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="delCR();">
-			<div id="grid_cr" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-		</td>
-	</tr>
-</table>
+
+<input type="button" value="추가" title="추가" class="blue" onclick="addCR();">
+<input type="button" value="삭제" title="삭제" class="red" onclick="delCR();">
+<div id="grid_cr" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+		
 <script type="text/javascript">
 	let crGridID;
 	const columnsCr = [ {
