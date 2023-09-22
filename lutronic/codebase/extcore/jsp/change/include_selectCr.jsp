@@ -125,27 +125,19 @@ boolean isUpdate = "update".equals(mode);
 		_popup(url, 1500, 700,"n");
 	}
 	
-	function append(items){
-		var arr = [];
-		var count=0;
-		var data = AUIGrid.getGridData(crGridID);
-		for (var i=0; i<items.length; i++){
-			var a=0;
-			if(data.length==0){
-				arr[i] = items[i];
-			}else{
-				for(var j=0; j<data.length; j++){
-					if(data[j].oid == items[i].oid){
-						a++;
+	// 팝업 데이터 가져오는 메서드
+	function setAppendCR(items) {
+		const data = AUIGrid.getGridData(crGridID);
+		if (data.length != 0) {
+			for (let i = 0; i < items.length; i++) {
+				for (let j = 0; j < data.length; j++) {
+					if (data[j].oid == items[i].oid) {
+						items.splice(i, 1);
 					}
 				}
 			}
-			if(a==0){
-				arr[count] = items[i];
-				count++;
-			}
 		}
-		AUIGrid.addRow(crGridID, arr);
+		AUIGrid.addRow(crGridID, items);
 	}
 
 	function delCR() {

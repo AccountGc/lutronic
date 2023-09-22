@@ -5,6 +5,7 @@
 <%
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
 <input type="hidden" name="lastNum" id="lastNum"> 
@@ -103,6 +104,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecr-list');">
 			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+			<input type="button" value="추가" title="추가"  onclick="add();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -112,7 +114,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<option value="200">200</option>
 				<option value="300">300</option>
 			</select> 
-			<input type="button" value="등록" title="등록" class="blue" id="createBtn">
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
 			<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('document-list');">
 		</td>
@@ -323,8 +324,27 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 		AUIGrid.resize(myGridID);
 	});
 	
-	// 등록
-	$("#createBtn").click(function(){
-		location.href = getCallUrl("/changeECPR/create");
-	});
+	// 추가 버튼
+	function add(){
+	       const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+	       if (items.length == 0) {
+	           alert("첨부할 EO를 선택하세요.");
+	           return false;
+	       }
+	       
+	       let ecprOids = [];
+			let ecprNumber = [];
+			for(let i = 0; i < items.length; i++){
+				ecprOids.push(items[i].oid);
+				ecprNumber.push(items[i].number);
+			}
+			var parentRow = <%= parentRowIndex %>;
+			if(parentRow<0){
+				opener.setAppendECPR(items);
+			}else{
+				opener.setECPR(ecprOids, ecprNumber, <%= parentRowIndex %>);
+			}
+				
+	       	self.close();
+	   }
 </script>

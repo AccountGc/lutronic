@@ -4,6 +4,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 %>
 <input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage">
 
@@ -136,7 +137,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 		<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('eco-list');">
 		<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
-		<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
+		<input type="button" value="추가" title="추가" class="blue" onclick="add();">
 	</td>
 	<td class="right">
 		<select name="_psize" id="_psize">
@@ -344,26 +345,26 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				AUIGrid.resize(myEcoGridID);
 			});
 			
-			function addBtn(){
-				const items = AUIGrid.getCheckedRowItemsAll(myEcoGridID);
-				if (items.length == 0) {
-					alert("추가할 부품을 선택하세요.");
-					return false;
-				}
-				opener.appendECO(items);
-				self.close();
-			}
-			
 			function add(){
-		        const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+		        const items = AUIGrid.getCheckedRowItemsAll(myEcoGridID);
 		        if (items.length == 0) {
 		            alert("첨부할 ECO를 선택하세요.");
 		            return false;
 		        }
 		        
+		        let ecoOids = [];
+				let ecoNumber = [];
 				for(let i = 0; i < items.length; i++){
-					opener.setAppendECO(items);
-		        	self.close();
+					ecoOids.push(items[i].oid);
+					ecoNumber.push(items[i].eoNumber);
 				}
+				var parentRow = <%= parentRowIndex %>;
+				if(parentRow<0){
+					opener.setAppendECO(items);
+				}else{
+					opener.setECO(ecoOids, ecoNumber, <%= parentRowIndex %>);
+				}
+				
+	        	self.close();
 		    }
 		</script>

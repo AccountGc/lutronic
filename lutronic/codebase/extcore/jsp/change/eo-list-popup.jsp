@@ -6,6 +6,7 @@
 // boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 // WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
 <input type="hidden" name="lastNum" id="lastNum"> 
@@ -312,9 +313,19 @@ function add(){
            return false;
        }
        
-	for(let i = 0; i < items.length; i++){
-		opener.setAppendEO(items);
+		let eoOids = [];
+		let eoNumber = [];
+		for(let i = 0; i < items.length; i++){
+			eoOids.push(items[i].oid);
+			eoNumber.push(items[i].number);
+		}
+		var parentRow = <%= parentRowIndex %>;
+		if(parentRow<0){
+			opener.setAppendECPR(items);
+		}else{
+			opener.setECPR(eoOids, eoNumber, <%= parentRowIndex %>);
+		}
+			
        	self.close();
-	}
    }
 </script>

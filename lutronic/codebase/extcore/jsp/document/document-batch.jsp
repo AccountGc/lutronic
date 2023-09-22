@@ -482,6 +482,106 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						}
 					}
 				}]
+			}, {
+				headerText : "관련EO",
+				children : [ {
+					dataField : "eoOids",
+					dataType : "string",
+					visible : false
+				},{
+					dataField : "eoNumber",
+					headerText : "EO번호",
+					width: 160,
+				}, {
+					dataField : "eo",
+					headerText : "관련EO",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "EO추가",
+						onClick : function(event) {
+							const parentRowIndex = event.rowIndex;
+							const url = getCallUrl("/changeECO/listEOPopup?parentRowIndex=" + parentRowIndex);
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
+			}, {
+				headerText : "관련CR",
+				children : [ {
+					dataField : "crOids",
+					dataType : "string",
+					visible : false
+				},{
+					dataField : "crNumber",
+					headerText : "CR번호",
+					width: 160,
+				}, {
+					dataField : "cr",
+					headerText : "관련CR",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "CR추가",
+						onClick : function(event) {
+							const parentRowIndex = event.rowIndex;
+							const url = getCallUrl("/changeCR/listPopup?parentRowIndex=" + parentRowIndex);
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
+			}, {
+				headerText : "관련ECPR",
+				children : [ {
+					dataField : "ecprOids",
+					dataType : "string",
+					visible : false
+				},{
+					dataField : "ecprNumber",
+					headerText : "ECPR번호",
+					width: 160,
+				}, {
+					dataField : "ecpr",
+					headerText : "관련CR",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "ECPR추가",
+						onClick : function(event) {
+							const parentRowIndex = event.rowIndex;
+							const url = getCallUrl("/changeECPR/listPopup?parentRowIndex=" + parentRowIndex);
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
+			}, {
+				headerText : "관련ECO",
+				children : [ {
+					dataField : "ecoOids",
+					dataType : "string",
+					visible : false
+				},{
+					dataField : "ecoNumber",
+					headerText : "ECO번호",
+					width: 160,
+				}, {
+					dataField : "eco",
+					headerText : "관련ECO",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "ECO추가",
+						onClick : function(event) {
+							const parentRowIndex = event.rowIndex;
+							const url = getCallUrl("/changeECO/listPopup?parentRowIndex=" + parentRowIndex);
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
 			}]
 
 			function createAUIGrid(columnLayout) {
@@ -562,6 +662,30 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 			function setDoc(docOids, docNumber, parentRowIndex){
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "docOids", docOids);
 				AUIGrid.setCellValue(myGridID, parentRowIndex, "docNumber", docNumber);
+			}
+						
+			// 관련 EO 할당 메서드
+			function setEO(eoOids, eoNumber, parentRowIndex){
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoOids", eoOids);
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoNumber", eoNumber);
+			}
+						
+			// 관련 CR 할당 메서드
+			function setCR(crOids, crNumber, parentRowIndex){
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "crOids", crOids);
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "crNumber", crNumber);
+			}
+						
+			// 관련 ECPR 할당 메서드
+			function setECPR(ecprOids, ecprNumber, parentRowIndex){
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprOids", ecprOids);
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprNumber", ecprNumber);
+			}
+						
+			// 관련 ECO 할당 메서드
+			function setECO(ecoOids, ecoNumber, parentRowIndex){
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoOids", ecoOids);
+				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoNumber", ecoNumber);
 			}
 						
 			// 주 첨부파일

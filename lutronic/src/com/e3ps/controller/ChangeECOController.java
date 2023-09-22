@@ -95,10 +95,11 @@ public class ChangeECOController extends BaseController {
 	
 	@Description(value = "관련 ECO 팝업 페이지")
 	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup() throws Exception{
+	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false) Integer parentRowIndex) throws Exception{
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
+		model.addObject("parentRowIndex", parentRowIndex);
 		model.setViewName("popup:/change/eco-list-popup");
 		return model;
 	}
