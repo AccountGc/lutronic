@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.iba.AttributeKey;
@@ -24,11 +25,13 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.doc.template.DocumentTemplate;
 import com.e3ps.doc.template.DocumentTemplateData;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
-import com.e3ps.org.People;clients.folder.FolderTaskLogic;
+import com.e3ps.org.People;
+
+import net.sf.json.JSONArray;
+import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
@@ -687,7 +690,7 @@ public class DocumentHelper {
 		String dcoTemplateType = (String) params.get("dcoTemplateType");
 
 		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(DocumentTemplate.class, true);
+		int idx = query.appendClassList(FormTemplate.class, true);
 
 		query.setAdvancedQueryEnabled(true);
 		query.setDescendantQuery(false);
@@ -698,7 +701,7 @@ public class DocumentHelper {
 //		QueryResult result = PersistenceHelper.manager.find(query);
 		while (qr.hasMoreElements()) {
 			Object[] obj = (Object[]) qr.nextElement();
-			DocumentTemplate template = (DocumentTemplate) obj[0];
+			FormTemplate template = (FormTemplate) obj[0];
 			DocumentTemplateData data = new DocumentTemplateData(template);
 			docTemplateList.add(data);
 		}
