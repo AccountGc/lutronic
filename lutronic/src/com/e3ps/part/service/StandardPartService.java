@@ -49,6 +49,8 @@ import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.POIUtil;
+import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
@@ -66,6 +68,7 @@ import com.e3ps.drawing.service.EpmUtilHelper;
 import com.e3ps.drawing.util.EpmPublishUtil;
 import com.e3ps.groupware.workprocess.WFItem;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
@@ -3888,96 +3891,33 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 	
 	@Override
-	public Map<String, Object> searchSeqAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int page = StringUtil.getIntParameter(request.getParameter("page"), 1);
-		int rows = StringUtil.getIntParameter(request.getParameter("rows"), 10);
-		int formPage = StringUtil.getIntParameter(request.getParameter("formPage"), 15);
+	public Map<String, Object> searchSeqAction(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		ArrayList<PartColumn> list = new ArrayList<>();
 
-		String sessionId = request.getParameter("sessionId");
+		String sessionId = (String) params.get("sessionId");
 
-		PagingQueryResult qr = null;
-
-		if (StringUtil.checkString(sessionId)) {
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		} else {
-			QuerySpec query = PartQueryHelper.service.searchSeqAction(request, response);
-			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
+		QuerySpec query = PartQueryHelper.service.searchSeqAction(params);
+		int idx = query.addClassList(WTPart.class, true);
+		
+		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			WTPart part = (WTPart) obj[0];
+			PartColumn data = new PartColumn(part);
+			list.add(data);
 		}
 
-		PageControl control = new PageControl(qr, page, formPage, rows);
-		int totalPage = control.getTotalPage();
-		int startPage = control.getStartPage();
-		int endPage = control.getEndPage();
-		int listCount = control.getTopListCount();
-		int totalCount = control.getTotalCount();
-		int currentPage = control.getCurrentPage();
-		String param = control.getParam();
-		int rowCount = control.getTopListCount();
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
 
-		StringBuffer xmlBuf = new StringBuffer();
-		xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
-		xmlBuf.append("<rows>");
-
-		Object[] o = null;
-		WTPart part = null;
-		PartData data = null;
-
-		String select = StringUtil.checkReplaceStr(request.getParameter("select"), "false");
-		String remarks =  "";
-		while (qr.hasMoreElements()) {
-			o = (Object[]) qr.nextElement();
-			part = (WTPart) o[0];
-			data = new PartData(part);
-			remarks =  StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder) part, AttributeKey.IBAKey.IBA_REMARKS));
-			xmlBuf.append("<row id='" + data.oid + "'>");
-			if ("true".equals(select)) {
-				xmlBuf.append("<cell><![CDATA[]]></cell>");
-			}
-
-			String bom = "<button type='button' class='btnCustom' onclick=javascript:viewBom('" + data.oid
-					+ "')><span></span>BOM</buttom>";
-
-			xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.icon + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.number + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[<a href=javascript:openView('" + data.oid + "')>" + data.name + "</a>]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.getLocation() + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.version + "." + data.iteration + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.getLifecycle() + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.creator + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.createDate.substring(0, 10) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.modifyDate.substring(0, 10) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + remarks+ "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + bom + "]]></cell>");
-			
-			if("true".equals(select)) {
-				String moduleType = request.getParameter("moduleType");
-				if("ECO".equals(moduleType) || "EO".equals(moduleType)){
-		        	
-		        	boolean isSlect = PartSearchHelper.service.isSelectEO(part,moduleType);//data.isSelectEO();
-		        	xmlBuf.append("<cell><![CDATA[" + !isSlect + "]]></cell>");
-		        } 
-			}
-			
-			xmlBuf.append("</row>");
-		}
-		xmlBuf.append("</rows>");
-
-		Map<String, Object> result = new HashMap<String, Object>();
-
-		result.put("formPage", formPage);
-		result.put("rows", rows);
-		result.put("totalPage", totalPage);
-		result.put("startPage", startPage);
-		result.put("endPage", endPage);
-		result.put("listCount", listCount);
-		result.put("totalCount", totalCount);
-		result.put("currentPage", currentPage);
-		result.put("param", param);
-		result.put("sessionId", qr.getSessionId() == 0 ? "" : qr.getSessionId());
-		result.put("xmlString", xmlBuf);
-
-		return result;
+		return map;
 	}
 	
 	@Override

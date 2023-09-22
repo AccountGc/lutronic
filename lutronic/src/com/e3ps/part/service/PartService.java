@@ -88,8 +88,7 @@ public interface PartService {
 
 	List<Map<String,Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	Map<String, Object> searchSeqAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
+	Map<String, Object> searchSeqAction(Map<String, Object> params) throws Exception;
 
 	List<PartData> include_partLink(String module, String oid);
 

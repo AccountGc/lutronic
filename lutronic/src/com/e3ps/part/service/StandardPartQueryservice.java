@@ -1,9 +1,19 @@
 package com.e3ps.part.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.e3ps.common.folder.beans.CommonFolderHelper;
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
+import com.e3ps.org.People;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.fc.PersistenceHelper;
@@ -21,30 +31,14 @@ import wt.introspection.WTIntrospector;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.pds.DatabaseInfoUtilities;
-import wt.pds.WhereCondition;
 import wt.query.ClassAttribute;
-import wt.query.CompositeWhereExpression;
-import wt.query.ConstantExpression;
 import wt.query.KeywordExpression;
-import wt.query.LogicalOperator;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.RelationalExpression;
-import wt.query.SQLFunction;
 import wt.query.SearchCondition;
-import wt.query.WhereExpression;
 import wt.services.StandardManager;
 import wt.vc.VersionControlHelper;
-
-import com.e3ps.common.folder.beans.CommonFolderHelper;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
-import com.e3ps.groupware.workprocess.WFItemUserLink;
-import com.e3ps.org.People;
 
 
 @SuppressWarnings("serial")
@@ -1166,17 +1160,17 @@ ORDER BY A0.modifyStampA2 DESC;
 	    		return itemSeqDefinition.getPersistInfo().getObjectIdentifier().getId();
 	    }
 	@Override
-	public QuerySpec searchSeqAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public QuerySpec searchSeqAction(Map<String, Object> params) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
 		ReferenceFactory rf = new ReferenceFactory();
 
-		String partNumber = StringUtil.checkNull(request.getParameter("partNumber"));
+		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
 		
-		String sortValue = StringUtil.checkNull(request.getParameter("sortValue"));
-		String sortCheck = StringUtil.checkNull(request.getParameter("sortCheck"));
+		String sortValue = StringUtil.checkNull((String) params.get("sortValue"));
+		String sortCheck = StringUtil.checkNull((String) params.get("sortCheck"));
 
-		String location = StringUtil.checkNull(request.getParameter("location"));
+		String location = StringUtil.checkNull((String) params.get("location"));
 		if (location == null || location.length() == 0) {
 			location = "/Default/PART_Drawing";
 		}

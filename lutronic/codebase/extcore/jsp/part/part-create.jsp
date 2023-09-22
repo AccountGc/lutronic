@@ -2,6 +2,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
+<%@page import="wt.part.QuantityUnit"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -10,6 +11,7 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
+QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>
 <html>
@@ -23,16 +25,11 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
-		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
 		<input type="hidden" name="wtPartType"		id="wtPartType"		 	value="separable"     />
 		<input type="hidden" name="source"			id="source"	      		value="make"            />
 		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
 		<input type="hidden" name="view"			id="view"        		value="Design" />
 		<input type="hidden" name="fid" 			id="fid"				value="" >
-		<input type="hidden" name="location" 		id="location" 				value="/Default/PART_Drawing">
 		
 		<table class="button-table">
 			<tr>
@@ -55,9 +52,11 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			<tr>
 				<th>품목분류 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<span id="locationName">
+					<input type="hidden" name="location"  id="location"  value="/Default/PART_Drawing">
+					<span id="locationText">
 						/Default/PART_Drawing
 					</span>
+					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 				</td>
 				<th rowspan="4">품목명 <span style="color:red;">*</span></th>
 				<th>대제목</th>
@@ -116,14 +115,14 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				</td>
 				<th>사용자 Key in</th>
 				<td class="indent5">
-					<input type="text" name="partName4" id="partName4"  class="width-200">
+					<input type="text"  class="partName width-200" name="partName4" id="partName4" >
 				</td>
 			</tr>
 			<tr>
 				<th>SEQ <br><span style="color:red;">(3자리)</span></th>
 				<td class="indent5">
 					<input type="text" name="seq" id="seq" class="width-200">
-					<input type="button" id="seqList" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" onclick="loadGridData();">
+					<input type="button" id="seqList" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" >
 				</td>
 				<td class="indent5" colspan="3">
 					<div id="partTypeNum" style="padding-left: 45%;font-weight:bold; vertical-align:middle; float: left;"></div>
@@ -132,7 +131,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						<div id="etcNum" style="font-weight:bold; vertical-align:middle; float: left;"></div>
 					</div>
 					<br>
-					<div>
+					<div style="text-align: center;">
 						<span style="font-weight: bold; vertical-align: middle;" id="displayName"></span>
 					</div>
 				</td>
@@ -209,10 +208,13 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				<td class="indent5">
 					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (QuantityUnit unit : unitList) {
+						%>
+						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -392,9 +394,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				const finish = document.getElementById("finish").value;
 				const remarks = document.getElementById("remarks").value;
 				const specification = document.getElementById("specification").value;
-				const unit = "EA";
-// 				const primarys = toArray("primarys");
-// 				const primary = primarys[0].cacheId;
+				const unit =  document.getElementById("unit").value;
 				const secondary = toArray("secondarys");
 				const wtPartType = document.getElementById("wtPartType").value;
 				const source = document.getElementById("source").value;
@@ -419,46 +419,51 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 	                }
 	            }
 
-// 				if(isEmpty($("#partType1").val())){
-// 					alert("품목구분을 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#partType2").val())){
-// 					alert("대분류를 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#partType3").val())){
-// 					alert("중분류를 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
-// 					alert("품목명을 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#seq").val())){
-// 					alert("SEQ를 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#etc").val())){
-// 					alert("기타를 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#model").val())){
-// 					alert("프로젝트 코드를 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#productmethod").val())){
-// 					alert("제작방법을 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#deptcode").val())){
-// 					alert("부서를 입력하세요.");
-// 					return;					
-// 				}
-// 				if(isEmpty($("#unit").val())){
-// 					alert("단위를 입력하세요.");
-// 					return;					
-// 				}
+				if(isEmpty($("#location").val())){
+					alert("품목구분을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partType1").val())){
+					alert("품목구분을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partType2").val())){
+					alert("대분류를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partType3").val())){
+					alert("중분류를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
+					alert("품목명을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#seq").val())){
+					alert("SEQ를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#etc").val())){
+					alert("기타를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#model").val())){
+					alert("프로젝트 코드를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#productmethod").val())){
+					alert("제작방법을 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#deptcode").val())){
+					alert("부서를 입력하세요.");
+					return;					
+				}
+				if(isEmpty($("#unit").val())){
+					alert("단위를 입력하세요.");
+					return;					
+				}
+				
 				if (!confirm("등록 하시겠습니까?")) {
 					return false;
 				}
@@ -484,7 +489,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				params.remarks = remarks;
 				params.specification = specification;
 				params.unit = "ea";
-// 				params.primary = primary;
+				params.primary = primary;
 				params.secondary = secondary;
 				params.wtPartType = wtPartType;
 				params.source = source;
@@ -842,6 +847,18 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				}
 				
 				$('#displayName').html(name);
+			})
+			
+			function folder() {
+				const location = decodeURIComponent("/Default/PART_Drawing");
+				const url = getCallUrl("/folder/popup?location=" + location);
+				_popup(url, 500, 600, "n");
+			}
+			
+			$("#seqList").click(function() {
+				const partNumber = $("#partType1").val()+$("#partType2").val()+$("#partType3").val()+$("#seq").val();
+				const url = getCallUrl("/part/searchSeqList?partNumber=" + partNumber);
+				_popup(url, 900, 450, "n");
 			})
 		</script>
 	</form>

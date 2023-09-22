@@ -47,6 +47,7 @@ import com.e3ps.part.service.PartSearchHelper;
 import wt.enterprise.Master;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
+import wt.part.QuantityUnit;
 import wt.part.WTPart;
 import wt.util.WTException;
 import wt.util.WTRuntimeException;
@@ -110,6 +111,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("productmethodList", productmethodList);
@@ -117,6 +119,7 @@ public class PartController extends BaseController {
 		model.addObject("matList", matList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
+		model.addObject("unitList", unitList);
 		model.setViewName("/extcore/jsp/part/part-create.jsp");
 		return model;
 	}
@@ -208,19 +211,13 @@ public class PartController extends BaseController {
 		return result;
 	}
 
-	/**
-	 * 부품 등록시 SEQ 버튼
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/searchSeqList")
+	@Description(value = "부품 등록시 SEQ 버튼")
+	@GetMapping(value = "/searchSeqList")
 	public ModelAndView searchSeqList(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		String partNumber = request.getParameter("partNumber");
 		model.addObject("partNumber", partNumber);
-		model.setViewName("popup:/part/searchSeqList");
+		model.setViewName("popup:/part/seq-list");
 		return model;
 	}
 
@@ -1361,17 +1358,18 @@ public class PartController extends BaseController {
 		return list;
 	}
 
+	@Description(value = "품목등록 seqList 검색 메서드")
 	@ResponseBody
-	@RequestMapping("/searchSeqAction")
-	public Map<String, Object> searchSeqAction(HttpServletRequest request, HttpServletResponse response) {
+	@PostMapping(value = "/searchSeqAction")
+	public Map<String, Object> searchSeqAction(@RequestBody Map<String, Object> params) {
 		Map<String, Object> map = null;
-
 		try {
-			map = PartHelper.service.searchSeqAction(request, response);
-
+			map = PartHelper.service.searchSeqAction(params);
+			map.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			map = new HashMap<String, Object>();
+			map.put("result", FAIL);
+			map.put("msg", e.toString());
 		}
 
 		return map;
