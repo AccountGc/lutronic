@@ -24,6 +24,24 @@ public class NumberCodeHelper {
 	public static final NumberCodeService service = ServiceFactory.getService(NumberCodeService.class);
 
 	/**
+	 * 코드 & 코드타입으로 값 가져오기
+	 */
+	public String getNumberCodeName(String code, String codeType) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode numberCode = (NumberCode) obj[0];
+			return numberCode.getName();
+		}
+		return null;
+	}
+
+	/**
 	 * 코드 & 코드타입으로 코드 객체 찾아오기
 	 */
 	public NumberCode getNumberCode(String code, String codeType) throws Exception {

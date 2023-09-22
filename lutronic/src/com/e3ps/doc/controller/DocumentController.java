@@ -58,6 +58,8 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
+		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
+		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
@@ -139,15 +141,8 @@ public class DocumentController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		DocumentDTO dto = new DocumentDTO(oid);
-//		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
-		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
-		String pnum = DocumentHelper.manager.getCnum(cList);
-
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.addObject("cList", cList);
-		model.addObject("pnum", pnum);
-//		model.addAllObjects(map);
 		model.setViewName("popup:/document/document-view");
 		return model;
 	}
@@ -158,16 +153,23 @@ public class DocumentController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		DocumentDTO dto = new DocumentDTO(oid);
-//		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
 		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
 		String pnum = DocumentHelper.manager.getCnum(cList);
-
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
+		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
+		model.addObject("docTypeList", docTypeList);
+		model.addObject("preserationList", preserationList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("modelList", modelList);
+		model.addObject("form", form);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.addObject("mode", mode);
 		model.addObject("cList", cList);
 		model.addObject("pnum", pnum);
-//		model.addAllObjects(map);
 		model.setViewName("popup:/document/document-update");
 		return model;
 	}

@@ -2,7 +2,7 @@ package com.e3ps.doc.column;
 
 import java.sql.Timestamp;
 
-import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -37,21 +37,31 @@ public class DocumentColumn {
 
 	}
 
+	/**
+	 * 문서검색에 사용될 클래스 - 리스트에 필요한 값만 세팅 속도 개선
+	 */
 	public DocumentColumn(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(doc.getNumber());
-		setInteralnumber(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_INTERALNUMBER));
-		setModel(IBAUtil.getAttrValue(doc, AttributeKey.IBAKey.IBA_MODEL));
+		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
+		setModel(keyToValue(IBAUtil.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
 		setLocation(doc.getLocation());
 		setVersion(VersionControlHelper.getVersionDisplayIdentifier(doc) + "."
 				+ doc.getIterationIdentifier().getSeries().getValue());
 		setState(doc.getLifeCycleState().getDisplay());
-		setWriter("");
+		setWriter(IBAUtil.getStringValue(doc, "DSGN"));
 		setCreator(doc.getCreatorName());
 		setCreatedDate(doc.getCreateTimestamp());
 		setModifiedDate(doc.getModifyTimestamp());
 		setPrimary(AUIGridUtil.primary(doc));
 		setSecondary(AUIGridUtil.secondary(doc));
+	}
+
+	/**
+	 * IBA 코드값 디스플레이값으로 변경
+	 */
+	private String keyToValue(String code, String codeType) throws Exception {
+		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
 	}
 }

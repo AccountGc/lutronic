@@ -1870,17 +1870,16 @@ public class StandardDocumentService extends StandardManager implements Document
 		dto.setIBAValue(doc, model, "MODEL");
 		// 부서
 		String deptcode = dto.getDeptcode();
-		dto.setIBAValue(doc, model, "DEPTCODE");
+		dto.setIBAValue(doc, deptcode, "DEPTCODE");
 		// 보존기간
 		String preseration = dto.getPreseration();
-		dto.setIBAValue(doc, model, "PRESERATION");
-
+		dto.setIBAValue(doc, preseration, "PRESERATION");
 		// 작성자
 		String writer = dto.getWriter();
-		dto.setIBAValue(doc, model, "WRITER");
-
+		dto.setIBAValue(doc, writer, "DSGN");
 		// 결재 유형
-		// approvaltype
+		String approvalType = dto.getLifecycle().equals("LC_Default") ? "DEFAUT" : "BATCH";
+		dto.setIBAValue(doc, approvalType, "APPROVALTYPE");
 	}
 
 	@Override

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.comments.beans.CommentsDTO;
+import com.e3ps.common.comments.service.CommentsHelper;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 
@@ -47,12 +51,13 @@ public class DocumentDTO {
 	private String deptcode;
 	private String approvaltype;
 
+	// 댓글
+	private ArrayList<CommentsDTO> list = new ArrayList<CommentsDTO>();
+
 	// auth
 	private boolean _delete = false;
 	private boolean _modify = false;
 	private boolean _revise = false;
-
-	private HashMap<String, String> attr = new HashMap<String, String>();
 
 	// 변수용
 	private String lifecycle;
@@ -69,6 +74,9 @@ public class DocumentDTO {
 		this((WTDocument) CommonUtil.getObject(oid));
 	}
 
+	/**
+	 * 문서 정보
+	 */
 	public DocumentDTO(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 		setDoc(doc);
@@ -86,19 +94,50 @@ public class DocumentDTO {
 		setCreatedDate(doc.getCreateTimestamp().toString().substring(0, 10));
 		setModifier(doc.getModifierFullName());
 		setModifiedDate(doc.getModifyTimestamp().toString().substring(0, 10));
+		setIBAAttributes(doc);
+		setAuth(doc);
+		setList(CommentsHelper.manager.list(doc));
 	}
 
-	private void setIBAAttribute(WTDocument doc) throws Exception {
-		// IBAUtil .. 수정해야
+	/**
+	 * IBA 값 세팅
+	 */
+	private void setIBAAttributes(WTDocument doc) throws Exception {
+		// 작성자
+		setWriter(IBAUtil.getStringValue(doc, "DSGN"));
+		// 프로젝트 코드
+		String model = keyToValue(IBAUtil.getStringValue(doc, "MODEL"), "MODEL");
+		setModel(model);
+		// 내부문서번호
+		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
+		// 결재타입
+		String approvalType = IBAUtil.getStringValue(doc, "APPROVALTYPE");
+		setApprovaltype("BATCH".equals(approvalType) ? "일괄결재" : "기본결재");
+		// 보존기간
+		String preseration = keyToValue(IBAUtil.getStringValue(doc, "PRESERATION"), "PRESERATION");
+		setPreseration(preseration);
+		// 부서코드
+		String deptcode = keyToValue(IBAUtil.getStringValue(doc, "DEPTCODE"), "DEPTCODE");
+		setDeptcode(deptcode);
 	}
 
+	/**
+	 * IBA 값 디스플레이 값으로 변경
+	 */
+	private String keyToValue(String code, String codeType) throws Exception {
+		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
+	}
+
+	/**
+	 * 권한 설정
+	 */
 	private void setAuth(WTDocument doc) throws Exception {
 		// 개정 권한 - (최신버전 && 승인됨)
 		if (check("APPROVED") && isLatest()) {
 			set_revise(true);
 		}
-		// 삭제, 수정 권한 - (최신버전 && (작업중 || 일괄결재중 || 재작업)) 
-		if(isLatest() && (check("INWORK") || check("BATCHAPPROVAL") || check("REWORK")) {
+		// 삭제, 수정 권한 - (최신버전 && (작업중 || 일괄결재중 || 재작업))
+		if (isLatest() && (check("INWORK") || check("BATCHAPPROVAL") || check("REWORK"))) {
 			set_delete(true);
 			set_modify(true);
 		}

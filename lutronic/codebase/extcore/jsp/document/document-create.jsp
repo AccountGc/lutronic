@@ -1,3 +1,4 @@
+<%@page import="wt.doc.DocumentType"%>
 <%@page import="com.e3ps.admin.form.FormTemplate"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
@@ -8,6 +9,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
+DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 %>
 <!DOCTYPE html>
 <html>
@@ -111,15 +113,13 @@ iframe {
 				<td class="indent5">
 					<select name="documentType" id="documentType" class="width-200">
 						<option value="">선택</option>
-						<option value="$$NDDocument">일반문서</option>
-						<option value="$$RDDocument">개발문서</option>
-						<option value="$$APDocument">승인원</option>
-						<option value="$$RADocument">인증문서</option>
-						<option value="$$MMDocument">금형문서</option>
-						<option value="$$DSDocument">개발소스</option>
-						<option value="$$DDDocument">배포자료</option>
-						<option value="$$ROHS">ROHS</option>
-						<option value="$$ETDocument">기타문서</option>
+						<%
+							for(DocumentType documentType : docTypeList) {
+						%>
+						<option value="<%=documentType.toString() %>"><%=documentType.getDisplay() %></option>
+						<%
+							}
+						%>
 					</select>
 				</td>
 				<th class="req">보존기간</th>
@@ -208,10 +208,10 @@ iframe {
 		</jsp:include>
 
 		<!-- 	관련 문서 -->
-<%-- 		<jsp:include page="/extcore/jsp/document/document-include.jsp"> --%>
-<%-- 			<jsp:param value="" name="oid" /> --%>
-<%-- 			<jsp:param value="create" name="mode" /> --%>
-<%-- 		</jsp:include> --%>
+		<%-- 		<jsp:include page="/extcore/jsp/document/document-include.jsp"> --%>
+		<%-- 			<jsp:param value="" name="oid" /> --%>
+		<%-- 			<jsp:param value="create" name="mode" /> --%>
+		<%-- 		</jsp:include> --%>
 
 		<!-- 	관련 EO -->
 		<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
@@ -395,7 +395,7 @@ iframe {
 				selectbox("model");
 				selectbox("deptcode");
 				$("#preseration").bindSelectSetValue("PR001");
-// 				createAUIGrid90(columns90);
+				// 				createAUIGrid90(columns90);
 				createAUIGrid2(columnsPart);
 				createAUIGridEco(columnsEco);
 				createAUIGridEO(columnsEo);

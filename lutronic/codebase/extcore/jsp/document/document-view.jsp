@@ -5,8 +5,6 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
-List<CommentsData> cList = (List<CommentsData>) request.getAttribute("cList");
-String pnum = (String) request.getAttribute("pnum");
 %>
 <style type="text/css">
 iframe {
@@ -55,24 +53,24 @@ iframe {
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="*">
+				<col width="450">
 				<col width="130">
-				<col width="*">
+				<col width="450">
+				<col width="130">
+				<col width="450">
 			</colgroup>
 			<tr>
 				<th class="lb">문서번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
-			</tr>
-			<tr>
-				<th class="lb">상태</th>
+				<th>상태</th>
 				<td class="indent5"><%=dto.getState()%></td>
-				<th>REV</th>
-				<td class="indent5"><%=dto.getVersion()%>.<%=dto.getIteration()%></td>
 			</tr>
 			<tr>
-				<th class="lb">등록자</th>
+				<th class="lb">REV</th>
+				<td class="indent5"><%=dto.getVersion()%>.<%=dto.getIteration()%></td>
+				<th>등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
 				<th>수정자</th>
 				<td class="indent5"><%=dto.getModifier()%></td>
@@ -82,12 +80,24 @@ iframe {
 				<td class="indent5"><%=dto.getCreatedDate()%></td>
 				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate()%></td>
+				<th>문서유형</th>
+				<td class="indent5"><%=dto.getDocumentType()%></td>
 			</tr>
 			<tr>
-				<th class="lb">문서유형</th>
-				<td class="indent5"><%=dto.getDocumentType()%></td>
-				<th>결재방식</th>
-				<td class="indent5"></td>
+				<th class="lb">결재방식</th>
+				<td class="indent5"><%=dto.getApprovaltype()%></td>
+				<th>내부문서번호</th>
+				<td class="indent5"><%=dto.getInteralnumber()%></td>
+				<th>프로젝트 코드</th>
+				<td class="indent5"><%=dto.getModel()%></td>
+			</tr>
+			<tr>
+				<th class="lb">작성자</th>
+				<td class="indent5"><%=dto.getWriter()%></td>
+				<th>보존기간</th>
+				<td class="indent5"><%=dto.getPreseration()%></td>
+				<th>부서</th>
+				<td class="indent5"><%=dto.getDeptcode()%></td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
@@ -97,13 +107,13 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">설명</th>
-				<td colspan="3" class="indent5">
+				<td colspan="5" class="indent5">
 					<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() == null ? "" : dto.getDescription()%></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">주 첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -114,7 +124,7 @@ iframe {
 					첨부파일
 					<!-- 					<input type="button" value="일괄 다운" title="일괄 다운" onclick=""> -->
 				</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -122,16 +132,83 @@ iframe {
 			</tr>
 		</table>
 
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						속성
-					</div>
-				</td>
-			</tr>
-		</table>
+		<div id="comment-table">
+			<table class="button-table">
+				<tr>
+					<td class="left">
+						<div class="header">
+							<img src="/Windchill/extcore/images/header.png">
+							댓글
+							<b style="color: blue;">
+								(<%=cList.size()%>개)
+							</b>
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<%
+			for (int i = 0; i < cList.size(); i++) {
+			%>
+			<table class="view-table">
+				<tr>
+					<%
+					if (cList.get(i).getCStep() > 0) {
+						int w = cList.get(i).getCStep() * 30;
+					%>
+					<td width="<%=w%>px"></td>
+					<%
+					}
+					%>
+					<th class="lb" style="background-color: skyblue;" width="110px"><%=cList.get(i).getCreator()%></th>
+					<td class="indent5" style="padding: 0, 0, 0, 5px;">
+						<%
+						if (cList.get(i).getOPerson() != null) {
+						%>
+						<span class="btn-link">
+							⤷@<%=cList.get(i).getOPerson()%></span>
+						<%
+						}
+						%>
+						<textarea rows="5" readonly="readonly"><%=cList.get(i).getComments()%></textarea>
+					</td>
+					<td align="center" style="padding: 0, 0, 0, 5px;" width="100px">
+						<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
+						<%
+						// 				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
+						%>
+						<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
+						<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
+						<%
+						// 				}
+						%>
+					</td>
+					<%
+					}
+					%>
+				</tr>
+			</table>
+			<br>
+			<table class="view-table">
+				<colgroup>
+					<col width="130">
+					<col width="*">
+				</colgroup>
+				<tr>
+					<th class="lb">댓글</th>
+					<td class="indent5">
+						<textarea rows="5" id="comments"></textarea>
+					</td>
+				</tr>
+			</table>
+			<table class="button-table">
+				<tr>
+					<td class="right">
+						<input type="button" value="댓글 등록" title="댓글 등록" class="blue" onclick="create();">
+					</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 	<div id="tabs-2">
 		<!-- 관련 품목 -->
@@ -148,98 +225,11 @@ iframe {
 			<jsp:param value="doc" name="moduleType" />
 		</jsp:include>
 	</div>
+
+
 </div>
 
-<div class="comment-table">
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png">
-					댓글
-					<span class="blue"><%=cList.size()%></span>
-				</div>
-			</td>
-		</tr>
-	</table>
 
-	<%
-	for (int i = 0; i < cList.size(); i++) {
-	%>
-	<table class="view-table">
-		<tr>
-			<%
-			if (cList.get(i).getDeleteYN().equals("N")) {
-			%>
-			<%
-			if (cList.get(i).getCStep() > 0) {
-				int w = cList.get(i).getCStep() * 30;
-			%>
-			<td width="<%=w%>px"></td>
-			<%
-			}
-			%>
-			<th class="lb" style="background-color: skyblue;" width="110px"><%=cList.get(i).getCreator()%></th>
-			<td class="indent5" style="padding: 0, 0, 0, 5px;">
-				<%
-				if (cList.get(i).getOPerson() != null) {
-				%>
-				<span class="btn-link">
-					⤷@<%=cList.get(i).getOPerson()%></span>
-				<%
-				}
-				%>
-				<textarea rows="5" readonly="readonly"><%=cList.get(i).getComments()%></textarea>
-			</td>
-			<td align="center" style="padding: 0, 0, 0, 5px;" width="100px">
-				<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
-				<%
-				// 				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
-				%>
-				<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
-				<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
-				<%
-				// 				}
-				%>
-			</td>
-			<%
-			} else {
-			%>
-			<td class="indent5" colspan="3">
-				<span class="btn-link">
-					⤷@<%=cList.get(i).getOPerson()%></span>
-				<br>
-				삭제된 글입니다.
-			</td>
-			<%
-			}
-			%>
-		</tr>
-	</table>
-	<br>
-	<%
-	}
-	%>
-	<table class="view-table">
-		<colgroup>
-			<col width="100">
-			<col width="*">
-		</colgroup>
-		<tr>
-			<th class="lb" width="110px">댓글</th>
-			<td class="indent5">
-				<textarea rows="5" id="comments"></textarea>
-			</td>
-		</tr>
-	</table>
-	<table class="button-table">
-		<tr>
-			<td class="right">
-				<input type="button" value="댓글 등록" title="댓글 등록" class="blue" id="commentsBtn">
-			</td>
-		</tr>
-	</table>
-</div>
 
 <!-- Modal 등록 -->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -319,6 +309,19 @@ nhn.husky.EZCreator.createInIFrame({
 				closeLayer();
 			}
 		}, "GET");
+	}
+
+	function create() {
+		const oid = document.getElementById("oid").value;
+		const comments = document.getElementById("comments");
+		if(comments.value === ""){
+			alert("댓글을 입력하세요.");
+			comments.focus();
+			return false;
+		}
+		const params :  {
+			
+		}
 	}
 	
 	//댓글 등록
