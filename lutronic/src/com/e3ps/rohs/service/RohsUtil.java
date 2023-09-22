@@ -166,12 +166,12 @@ public class RohsUtil {
 		if(list.size() > 0){
 			
 			for(RohsData data : list){
-				if(data.number.equals("NONE")){
+				if(data.getNumber().equals("NONE")){
 					rohsState = STATE_NONE_ROHS;
 					//System.out.println("PartNumber ::: " + ((WTPart)CommonUtil.getObject(oid)).getNumber()+"\tSTATE_NONE_ROHS");
 					break;
 				}else{
-					if(!data.isState("APPROVED")){
+					if(!data.getState().equals("APPROVED")){
 						rohsState = STATE_NOT_APPROVED;
 						//System.out.println("PartNumber ::: " + ((WTPart)CommonUtil.getObject(oid)).getNumber()+"\tSTATE_NOT_APPROVED");
 						break;

@@ -360,14 +360,13 @@ public class RohsHelper {
 	
 	public Map<String, Object> listAUIRoHSPart(Map<String, Object> params) throws Exception {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
-		List<Map<String,Object>> partRohlist = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> partRohslist = new ArrayList<Map<String,Object>>();
 		List<Map<String,Object>> partlist  = new ArrayList<Map<String,Object>>();
 		
-		String partNumber = StringUtil.checkNull((String)params.get("partNumber"));
-		WTPart part = PartHelper.service.getPart(partNumber);
-		String partOid = CommonUtil.getOIDString(part);
-		//WTPart part = (WTPart)CommonUtil.getObject(partOid);
+		String partOid = StringUtil.checkNull((String)params.get("partOid"));
+		WTPart part = (WTPart)CommonUtil.getObject(partOid);
 		if(part == null){
+			returnMap.put("partRohslist", partRohslist);
 			return returnMap;
 		}
 		
@@ -389,7 +388,6 @@ public class RohsHelper {
 	    
 	    int totalLevl = 0;
 		for(int i=0; i<partlist.size(); i++){
-			//Map<String,Object> partRohsMap = new HashMap<String, Object>();
 			Map<String,Object> partMap = partlist.get(i);
 			
 			String oid = (String)partMap.get("partOid");
@@ -398,12 +396,9 @@ public class RohsHelper {
 			if(totalLevl < level){
 				totalLevl = level;
 			}
-			//String key = String.valueOf(count) + "_"+oid;
 			WTPart supart = (WTPart)CommonUtil.getObject(oid);
 			
-			//System.out.println("1.supart =" + supart.getNumber() +"," + "Level"+level+"="+partMap.get("Level"+level));
-			
-			List<RohsData> rohslist = RohsQueryHelper.service.getPartToROHSList(supart);
+			List<RohsData> rohslist = getPartROHSList(supart);
 			
 			stateMap = RohsUtil.getRohsState(stateMap,oid);
 			int rohsState = stateMap.get(oid);
@@ -421,7 +416,8 @@ public class RohsHelper {
 			if(rohslist.size()>0){
 				for(RohsData rohsData : rohslist){
 					//System.out.println("rohslist.size >0 .supart =" + supart.getNumber());
-					List<ROHSContHolder> holderList = RohsQueryHelper.service.getROHSContHolder(rohsData.getOid());
+					ROHSMaterial material = (ROHSMaterial) CommonUtil.getObject(rohsData.getOid());
+					List<ROHSContHolder> holderList = getROHSContHolder(material);
 					
 					if(holderList.size() > 0){
 						
@@ -438,7 +434,7 @@ public class RohsHelper {
 							
 							partRohsMap = setPartROHMap(partRohsMap, partMap);
 							//System.out.println("holderList.size >0 .supart =" + partRohsMap.get("partNumber") +", getFileName" +partRohsMap.get("fileName"));
-							partRohlist.add(partRohsMap);
+							partRohslist.add(partRohsMap);
 						}
 					}else{
 						//System.out.println("holderList.size =0 .supart =" + supart.getNumber());
@@ -449,7 +445,7 @@ public class RohsHelper {
 						partRohsMap.put("rohslifeState", rohsData.getState());
 						partRohsMap.put("rohsStateName", state);
 						partRohsMap = setPartROHMap(partRohsMap, partMap);
-						partRohlist.add(partRohsMap);
+						partRohslist.add(partRohsMap);
 					}
 				}
 			}else{
@@ -459,13 +455,13 @@ public class RohsHelper {
 				partRohsMap.put("rohsState", rohsState);
 				partRohsMap.put("rohsStateName", state);
 				partRohsMap = setPartROHMap(partRohsMap, partMap);
-				partRohlist.add(partRohsMap);
+				partRohslist.add(partRohsMap);
 			}
 			
 		}
 		
 		returnMap.put("totalLevel", totalLevl);
-		returnMap.put("partRohlist", partRohlist);
+		returnMap.put("partRohslist", partRohslist);
 		/*
 		System.out.println("list =" + partRohlist.size());
 		
@@ -686,6 +682,18 @@ public class RohsHelper {
 			list.add(rholder);
 		}
 		
+		return list;
+	}
+	
+	public List<RohsData>  getPartROHSList(WTPart part) throws Exception {
+		List<RohsData> list = new ArrayList<RohsData>();
+		
+		QueryResult result = PersistenceHelper.manager.navigate(part, "rohs", PartToRohsLink.class);
+		while(result.hasMoreElements()){
+			ROHSMaterial rohs = (ROHSMaterial)result.nextElement();
+			RohsData data = new RohsData(rohs);
+			list.add(data);
+		}
 		return list;
 	}
 }
