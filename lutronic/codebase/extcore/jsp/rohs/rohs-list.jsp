@@ -257,7 +257,6 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				const url = getCallUrl("/rohs/list");
 				const field = ["_psize","rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
 				params = toField(params, field);
-				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
