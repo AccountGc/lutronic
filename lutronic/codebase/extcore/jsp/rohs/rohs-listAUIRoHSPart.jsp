@@ -16,7 +16,10 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="lastNum" id="lastNum"> 
+		<input type="hidden" name="curPage" id="curPage">
+		 <input type="hidden" name="oid" id="oid">
 
 		<table class="search-table">
 			<colgroup>
@@ -25,7 +28,11 @@
 			</colgroup>
 			<tr>
 				<th>부품</th>
-				<td class="indent5"><input type="text" name="rohsName" id="rohsName" class="width-200"></td>
+				<td class="indent5">
+					<input type="text" name="partNumber" id="partNumber" class="width-300" readonly>
+					<input type="hidden" name="partOid" id="partOid" />
+					<input type="button" value="조회" title="조회" id="searchPart">
+				</td>
 			</tr>
 		</table>
 
@@ -34,7 +41,7 @@
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('listAUIRoHSPart');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('listAUIRoHSPart');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -45,6 +52,7 @@
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn">
+					<input type="button" value="일괄다운" title="일괄다운" id="batchROHSDown">
 					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
@@ -180,25 +188,19 @@
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/rohs/listAUIRoHSPart");
-// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-// 				params = toField(params, field);
-// 				params.latest = latest;
-// 				const field = [ "_psize" ];
-// 				params = toField(params, field);
+				const field = ["_psize","partOid"];
+				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
-// 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
-						document.getElementById("sessionid").value = data.sessionid;
-						document.getElementById("curPage").value = data.curPage;
-						document.getElementById("lastNum").value = data.list.length;
-						AUIGrid.setGridData(myGridID, data.partRohlist);
+// 						totalPage = Math.ceil(data.total / data.pageSize);
+// 						document.getElementById("sessionid").value = data.sessionid;
+// 						createPagingNavigator(data.curPage);
+						AUIGrid.setGridData(myGridID, data.partRohslist);
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
 				});
 			}
 
@@ -211,16 +213,8 @@
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("fileType");
-				twindate("publication");
 				selectbox("_psize");
 			});
-
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
@@ -235,6 +229,39 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+			});
+			
+			// 검색
+			$("#searchBtn").click(function(){
+				if(isEmpty($("#partNumber").val())){
+					alert("부품번호를 선택해 주세요.");
+					return false;
+				}
+				
+				loadGridData();
+			});
+			
+			// 부품 조회
+			$("#searchPart").click(function(){
+				const url = getCallUrl("/part/listPopup");
+				_popup(url, 1500, 700, "n");
+			});
+			
+			function append(items){
+				var data = new Object();
+				for(var i=0; i<items.length; i++){
+					data.oid = items[i].part_oid;
+					data.name = items[i].name;
+					data.number = items[i].number;
+					data.version = items[i].version;
+				}
+				$("#partNumber").val(data.number);
+				$("#partOid").val(data.oid);
+			}
+			
+			$("#btnReset").click(function(){
+				$("#partNumber").val("");
+				$("#partOid").val("");
 			});
 		</script>
 	</form>
