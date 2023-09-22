@@ -67,11 +67,12 @@ public class ChangeECPRController extends BaseController {
 	
 	@Description(value = "관련 ECPR 팝업 페이지")
 	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup() throws Exception {
+	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false) Integer parentRowIndex) throws Exception {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		model.addObject("modelList", modelList);
+		model.addObject("parentRowIndex", parentRowIndex);
 		model.addObject("sectionList", sectionList);
 		model.setViewName("popup:/change/ecpr-list-popup");
 		return model;
