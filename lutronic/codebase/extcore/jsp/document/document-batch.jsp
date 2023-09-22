@@ -352,11 +352,6 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 					},
 				} ]
 			}, {
-				dataField : "division",
-				headerText : "분류체계",
-				width : 120,
-				cellMerge: true,
-			}, {
 				headerText : "주 첨부파일",
 				children : [ {
 					dataField : "primaryName",
@@ -733,63 +728,38 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 			function batch(){
 				const documentList = AUIGrid.getGridData(myGridID);
 				
-				
 				for(let i = 0; i < documentList.length; i++){
 					
 					const rowNum = i + 1;
 					
-// 					if(isEmpty(documentList[i].location)){
-// 						alert(rowNum + "행의 문서에 저장위치를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].docName)){
-// 						alert(rowNum + "행의 문서에 문서명을 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].documentName)){
-// 						alert(rowNum + "행의 문서에 문서종류를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].lifecycle)){
-// 						alert(rowNum + "행의 문서에 결재방식을 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].documentType)){
-// 						alert(rowNum + "행의 문서에 문서분류를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].model)){
-// 						alert(rowNum + "행의 문서에 프로젝트 코드를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].writer)){
-// 						alert(rowNum + "행의 문서에 작성자를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].deptcode)){
-// 						alert(rowNum + "행의 문서에 부서를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].interalnumber)){
-// 						alert(rowNum + "행의 문서에 내부 문서번호를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].preseration)){
-// 						alert(rowNum + "행의 문서에 보존기간을 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].division)){
-// 						alert(rowNum + "행의 문서에 분류체계를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].partOids)){
-// 						alert(rowNum + "행의 문서에 관련품목를 입력하세요.");
-// 						return;
-// 					}
-// 					if(isEmpty(documentList[i].docOids)){
-// 						alert(rowNum + "행의 문서에 관련문서를 입력하세요.");
-// 						return;
-// 					}
+					if(isEmpty(documentList[i].location)){
+						alert(rowNum + "행의 문서에 저장위치를 입력하세요.");
+						return;
+					}
+					if(isEmpty(documentList[i].docName)){
+						alert(rowNum + "행의 문서에 문서명을 입력하세요.");
+						return;
+					}
+					if(isEmpty(documentList[i].documentName)){
+						alert(rowNum + "행의 문서에 문서종류를 입력하세요.");
+						return;
+					}
+					if(isEmpty(documentList[i].lifecycle)){
+						alert(rowNum + "행의 문서에 결재방식을 입력하세요.");
+						return;
+					}
+					if(isEmpty(documentList[i].documentType)){
+						alert(rowNum + "행의 문서에 문서분류를 입력하세요.");
+						return;
+					}
+					if(isEmpty(documentList[i].preseration)){
+						alert(rowNum + "행의 문서에 보존기간을 입력하세요.");
+						return;
+					}
+					if(isEmpty(documentList[i].primary)){
+						alert(rowNum + "행의 문서에 주 첨부파일을 입력하세요.");
+						return;
+					}
 				}
 				
 				
