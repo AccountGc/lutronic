@@ -285,7 +285,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("ecr-list");
+				const columns = loadColumnLayout("ecpr-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -311,15 +311,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
-			document.querySelector("#addNumberCode").addEventListener("click", () => {
-				const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
-				popup(url, 1500, 700);
-			});
-			
-			document.querySelector("#delNumberCode").addEventListener("click", () => {
-				
-			});
-	
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -337,7 +328,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			
 			// 등록
 			$("#createBtn").click(function(){
-				location.href = getCallUrl("/changeCR/create");
+				location.href = getCallUrl("/changeECPR/create");
 			});
 		</script>
 	</form>
