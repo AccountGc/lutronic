@@ -52,7 +52,7 @@ public class DocumentDTO {
 	private String approvaltype;
 
 	// 댓글
-	private ArrayList<CommentsDTO> list = new ArrayList<CommentsDTO>();
+	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 
 	// auth
 	private boolean _delete = false;
@@ -96,7 +96,7 @@ public class DocumentDTO {
 		setModifiedDate(doc.getModifyTimestamp().toString().substring(0, 10));
 		setIBAAttributes(doc);
 		setAuth(doc);
-		setList(CommentsHelper.manager.list(doc));
+		setComments(CommentsHelper.manager.comments(doc));
 	}
 
 	/**

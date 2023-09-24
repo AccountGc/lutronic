@@ -29,9 +29,15 @@ import wt.util.WTException;
 
 								constraints = @PropertyConstraints(required = true)),
 
-						myRole = @MyRole(name = "comments"))
+						myRole = @MyRole(name = "comments")),
 
-		}
+				@GeneratedForeignKey(name = "ReplyCommentsLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "reply", type = Comments.class,
+
+								constraints = @PropertyConstraints(required = false)),
+
+						myRole = @MyRole(name = "comments")), }
 
 )
 public class Comments extends _Comments {

@@ -1,16 +1,20 @@
-<%@page import="com.e3ps.common.comments.CommentsData"%>
+<%@page import="com.e3ps.common.comments.beans.CommentsDTO"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
+ArrayList<CommentsDTO> list = dto.getComments();
 %>
 <style type="text/css">
 iframe {
 	margin-top: 3px;
 }
 </style>
+<link type="text/css" rel="stylesheet" href="/Windchill/extcore/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
@@ -132,84 +136,113 @@ iframe {
 			</tr>
 		</table>
 
-		<div id="comment-table">
+		<div id="comments-layer">
 			<table class="button-table">
 				<tr>
 					<td class="left">
 						<div class="header">
 							<img src="/Windchill/extcore/images/header.png">
 							댓글
-							<b style="color: blue;">
-								(<%=cList.size()%>개)
-							</b>
 						</div>
 					</td>
 				</tr>
 			</table>
-
 			<%
-			for (int i = 0; i < cList.size(); i++) {
+			for (CommentsDTO cm : list) {
+				int depth = cm.getDepth();
+				ArrayList<CommentsDTO> reply = cm.getReply();
 			%>
 			<table class="view-table">
 				<tr>
-					<%
-					if (cList.get(i).getCStep() > 0) {
-						int w = cList.get(i).getCStep() * 30;
-					%>
-					<td width="<%=w%>px"></td>
-					<%
-					}
-					%>
-					<th class="lb" style="background-color: skyblue;" width="110px"><%=cList.get(i).getCreator()%></th>
-					<td class="indent5" style="padding: 0, 0, 0, 5px;">
+					<th class="lb" style="background-color: rgb(193, 235, 255); width: 100px">
+						<%=cm.getCreator()%>
+						<br>
+						<%=cm.getCreatedDate()%>
+					</th>
+					<td class="indent5">
+						<textarea rows="5" readonly="readonly" style="resize: none;"><%=cm.getComment()%></textarea>
+					</td>
+					<td class="center" style="width: 80px">
+						<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
+						<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=cm.getOid()%>', '<%=cm.getComment()%>');">
 						<%
-						if (cList.get(i).getOPerson() != null) {
+						if (isAdmin) {
 						%>
-						<span class="btn-link">
-							⤷@<%=cList.get(i).getOPerson()%></span>
+						<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
 						<%
 						}
 						%>
-						<textarea rows="5" readonly="readonly"><%=cList.get(i).getComments()%></textarea>
 					</td>
-					<td align="center" style="padding: 0, 0, 0, 5px;" width="100px">
-						<input type="button" value="답글" title="답글" class="mb2 blue" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="modalSubmit(<%=cList.get(i).getCNum()%>,<%=cList.get(i).getCStep()%>,'<%=cList.get(i).getCreator()%>');">
-						<%
-						// 				if (isAdmin == true || sessionUser.getName().equals(cList.get(i).getId())) {
-						%>
-						<input type="button" value="수정" title="수정" class="mb2" data-bs-toggle="modal" data-bs-target="#replyUpdate" onclick="modalUpSubmit('<%=cList.get(i).getOid()%>','<%=cList.get(i).getComments()%>');">
-						<input type="button" value="삭제" title="삭제" class="red" onclick="replyDeleteBtn('<%=cList.get(i).getOid()%>');">
-						<%
-						// 				}
-						%>
-					</td>
-					<%
-					}
-					%>
 				</tr>
 			</table>
 			<br>
+			<!-- 답글 -->
+			<%
+			for (CommentsDTO dd : reply) {
+				int width = dd.getDepth() * 25;
+			%>
+			<table class="view-table" style="border-top: none;">
+				<tr>
+					<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
+					<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 100px">
+						<%=dd.getCreator()%>
+						<br>
+						<%=dd.getCreatedDate()%>
+					</th>
+					<td class="indent5" style="border-top: 2px solid #86bff9;">
+						<textarea rows="5" readonly="readonly" style="resize: none;"><%=dd.getComment()%></textarea>
+					</td>
+					<td class="center" style="border-top: 2px solid #86bff9; width: 80px">
+						<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
+						<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=dd.getOid()%>', '<%=dd.getComment()%>');">
+						<%
+						if (isAdmin) {
+						%>
+						<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
+						<%
+						}
+						%>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<%
+			}
+			%>
+			<%
+			}
+			%>
+			<%
+			if (list.size() == 0) {
+			%>
+			<br>
+			<%
+			}
+			%>
 			<table class="view-table">
 				<colgroup>
-					<col width="130">
+					<col width="100">
 					<col width="*">
 				</colgroup>
 				<tr>
 					<th class="lb">댓글</th>
 					<td class="indent5">
-						<textarea rows="5" id="comments"></textarea>
+						<textarea rows="5" name="comments" id="comments" style="resize: none;"></textarea>
 					</td>
 				</tr>
 			</table>
 			<table class="button-table">
 				<tr>
 					<td class="right">
-						<input type="button" value="댓글 등록" title="댓글 등록" class="blue" onclick="create();">
+						<input type="button" value="댓글 등록" title="댓글 등록" class="blue" onclick="_write('0');">
 					</td>
 				</tr>
 			</table>
 		</div>
+		<!-- 댓글 모달 -->
+		<%@include file="/extcore/jsp/common/comments-include.jsp"%>
 	</div>
+
 	<div id="tabs-2">
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
@@ -231,78 +264,43 @@ iframe {
 
 
 
-<!-- Modal 등록 -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="staticBackdropLabel">답글 등록</h5>
-			</div>
-			<div class="modal-body" style="width: 100%;">
-				<textarea rows="10" id="replyCreate" style="width: 100%;"></textarea>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				<button type="button" class="btn btn-primary" id="replyCreateBtn">등록</button>
-			</div>
-		</div>
-	</div>
-</div>
 
-<!-- Modal 수정 -->
-<div class="modal fade" id="replyUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="staticBackdropLabel">댓글 수정</h5>
-			</div>
-			<div class="modal-body" style="width: 100%;">
-				<textarea rows="10" id="replyModify" style="width: 100%;"></textarea>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-				<button type="button" class="btn btn-success" id="replyModifyBtn">수정</button>
-			</div>
-		</div>
-	</div>
-</div>
 <script type="text/javascript">
-
-const oEditors = [];
-nhn.husky.EZCreator.createInIFrame({
-	oAppRef : oEditors,
-	elPlaceHolder : "content", //textarea ID 입력
-	sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
-	fCreator : "createSEditor2",
-	htParams : {
-		bUseToolbar : false,
-		bUseVerticalResizer : false,
-		bUseModeChanger : false
-	},
-	fOnAppLoad : function(){
+	const oEditors = [];
+	nhn.husky.EZCreator.createInIFrame({
+		oAppRef : oEditors,
+		elPlaceHolder : "content", //textarea ID 입력
+		sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
+		fCreator : "createSEditor2",
+		htParams : {
+			bUseToolbar : false,
+			bUseVerticalResizer : false,
+			bUseModeChanger : false
+		},
+		fOnAppLoad : function() {
 			oEditors.getById["content"].exec("DISABLE_WYSIWYG");
 			oEditors.getById["content"].exec("DISABLE_ALL_UI");
-	},
-});
+		},
+	});
 
 	//수정 및 개정
 	function update(mode) {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode="+mode);
+		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
 		document.location.href = url;
 	};
 
 	//삭제
 	function _delete() {
 		const oid = document.getElementById("oid").value;
-		if(!confirm("삭제 하시겠습니까?")) {
+		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
-		const url = getCallUrl("/doc/delete?oid="+oid);
+		const url = getCallUrl("/doc/delete?oid=" + oid);
 		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
-			if(data.result) {
+			if (data.result) {
 				self.close();
 				opener.loadGridData();
 			} else {
@@ -311,174 +309,40 @@ nhn.husky.EZCreator.createInIFrame({
 		}, "GET");
 	}
 
-	function create() {
-		const oid = document.getElementById("oid").value;
-		const comments = document.getElementById("comments");
-		if(comments.value === ""){
-			alert("댓글을 입력하세요.");
-			comments.focus();
-			return false;
-		}
-		const params :  {
-			
-		}
-	}
-	
-	//댓글 등록
-	$("#commentsBtn").click(function () {
-		var param_num = "<%=pnum%>";
-		var num;
-		if(isEmpty(param_num)){
-			num = 0;
-		}else{
-			num = Number(param_num) +1;
-		}
-		var oid = document.getElementById("oid").value;
-		var comments = $("#comments").val();
-		if(isEmpty(comments)){
-			alert("댓글을 입력해주세요.");
-			return;
-		}
-		
-		if (!confirm("댓글을 등록 하시겠습니까?")) {
-			return;
-		}
-		
-		var params = {"oid": oid
-								, "comments" : comments
-								, "num" : num
-								, "step" : 0};
-		
-		var url = getCallUrl("/doc/createComments");
-		call(url, params, function(data) {
-			if(data.result){
-				alert("댓글이 등록 되었습니다.");
-				location.reload();
-			}else{
-				alert(data.msg);
-			}
-		});
-	})
-	
-	var reNum;
-	var reStep;
-	var rePerson;
-	
-	//답글 Modal에 데이터 보냄
-	function modalSubmit(num, step, person){
-		reNum = num;
-		reStep = step;
-		rePerson = person;
-	}
-	
-	//답글 등록
-	$("#replyCreateBtn").click(function () {
-		var comments = $("#replyCreate").val();
-		if(isEmpty(comments)){
-			alert("답글을 입력해주세요.");
-			return;
-		}
-		
-		if (!confirm("답글을 등록 하시겠습니까?")) {
-			return;
-		}
-		var oid = document.getElementById("oid").value;
-		var params = {"oid": oid
-								, "comments" : comments
-								, "num" : reNum
-								, "step" : reStep+1
-								, "person" : rePerson};
-		
-		var url = getCallUrl("/doc/createComments");
-		call(url, params, function(data) {
-			if(data.result){
-				alert("답글이 등록 되었습니다.");
-				location.reload();
-			}else{
-				alert(data.msg);
-			}
-		});
-	})
-	
-	var updateOid;
-	//수정 Modal에 데이터 보냄
-	function modalUpSubmit(oid, reply){
-		updateOid = oid;
-		$("#replyModify").val(reply);
-	}
-	
-	//댓글 수정
-	$("#replyModifyBtn").click(function () {
-		var reply = $("#replyModify").val();
-		
-		if (!confirm("수정 하시겠습니까?")) {
-			return;
-		}
-		
-		var params = {"oid": updateOid
-								, "comments" : reply};
-		
-		var url = getCallUrl("/doc/updateComments");
-		call(url, params, function(data) {
-			if(data.result){
-				alert(data.msg);
-				location.reload();
-			}else{
-				alert(data.msg);
-			}
-		});
-	})
-	
-	//댓글 삭제
-	function replyDeleteBtn(oid){
-		if (!confirm("삭제 하시겠습니까?")) {
-			return;
-		}
-		var url = getCallUrl("/doc/deleteComments?oid=" + oid);
-		call(url, null, function(data) {
-			if (data.result) {
-				alert(data.msg);
-				location.reload();
-			} else {
-				alert(data.msg);
-			}
-		}, "GET");
-	}	
-	
 	//일괄 다운로드
 	function batchSecondaryDown() {
 		const form = $("form[name=documentViewForm]").serialize();
 		const url = getCallUrl("/common/zip");
 		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			
-			error:function(data){
+			type : "POST",
+			url : url,
+			data : form,
+			dataType : "json",
+			async : true,
+			cache : false,
+
+			error : function(data) {
 				var msg = "데이터 검색오류";
 				alert(msg);
 			},
-			
-			success:function(data){
+
+			success : function(data) {
 				console.log(data.message);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
+				if (data.result) {
+					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName=' + data.message + '&originFileName=' + data.message;
+				} else {
 					alert(data.message);
 				}
-			}
-			,beforeSend: function() {
+			},
+			beforeSend : function() {
 				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
+			},
+			complete : function() {
 				gfn_EndShowProcessing();
-	        }
+			}
 		});
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
@@ -507,25 +371,24 @@ nhn.husky.EZCreator.createInIFrame({
 						createAUIGrid4(columnDev);
 						$(".comment-table").hide();
 					}
-					break;	
+					break;
 				}
 			}
 		});
-		createAUIGrid1(columnPart);
-		AUIGrid.resize(partGridID);
-		createAUIGrid4(columnDev);
-		AUIGrid.resize(devGridID);
-		createAUIGrid5(columnDoc);
-		AUIGrid.resize(docGridID);
-		createAUIGrid7(columnEco);
-		AUIGrid.resize(ecoGridID);
+		// 		createAUIGrid1(columnPart);
+		// 		AUIGrid.resize(partGridID);
+		// 		createAUIGrid4(columnDev);
+		// 		AUIGrid.resize(devGridID);
+		// 		createAUIGrid5(columnDoc);
+		// 		AUIGrid.resize(docGridID);
+		// 		createAUIGrid7(columnEco);
+		// 		AUIGrid.resize(ecoGridID);
 	});
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(partGridID);
-		AUIGrid.resize(devGridID);
-		AUIGrid.resize(docGridID);
-		AUIGrid.resize(ecoGridID);
+		// 		AUIGrid.resize(partGridID);
+		// 		AUIGrid.resize(devGridID);
+		// 		AUIGrid.resize(docGridID);
+		// 		AUIGrid.resize(ecoGridID);
 	});
-	
 </script>

@@ -380,6 +380,8 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				}
 			}
 
+			workbook.close();
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

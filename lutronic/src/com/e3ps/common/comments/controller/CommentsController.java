@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.doc.service.DocumentHelper;
-
-import org.springframework.stereotype.Controller;
 
 @Controller
 @RequestMapping(value = "/comments/**")
@@ -31,6 +27,23 @@ public class CommentsController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			CommentsHelper.service.create(dto);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "댓글의 답글 등록")
+	@ResponseBody
+	@PostMapping(value = "/reply")
+	public Map<String, Object> reply(@RequestBody CommentsDTO dto) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			CommentsHelper.service.reply(dto);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {

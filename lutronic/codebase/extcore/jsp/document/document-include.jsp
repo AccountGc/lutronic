@@ -4,11 +4,8 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
-String moduleType = request.getParameter("moduleType");
-boolean isView = "view".equals(mode);
-boolean isCreate = "create".equals(mode);
-boolean isUpdate = "update".equals(mode);
-JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
+String method = request.getParameter("method");
+boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 %>
 <table class="button-table">
 	<tr>
@@ -28,16 +25,8 @@ JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
 	<tr>
 		<th class="lb">관련문서</th>
 		<td class="indent5 pt5">
-			<%-- 				<input type="hidden" name="lifecycle" id="lifecycle" value="<%=lifecycle%>" /> --%>
-			<%-- 				<input type="hidden" name="searchType" id="searchType" value="<%=searchType%>" /> --%>
-			<%
-			if (isCreate || isUpdate) {
-			%>
 			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow90();">
-			<%
-			}
-			%>
 			<div id="grid90" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
@@ -57,53 +46,31 @@ JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-	}, {
-		dataField : "oid",
-		visible : false
 	} ]
 
 	function createAUIGrid90(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode: true,
+			fillColumnSizeMode : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			<%if (isCreate || isUpdate) {%>
-				showRowCheckColumn : true,
-//	 			showStateColumn : true,
-			<%}%>
+			showRowCheckColumn : true,
+			<%if (!multi) {%>
 			rowCheckToRadio : true,
+			<%}%>
 			enableFilter : true,
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		<%if (isView || isUpdate) {%>
-			AUIGrid.setGridData(myGridID90, <%=json%>);
-		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup90() {
-		const url = getCallUrl("/doc/listPopup");
+		const url = getCallUrl("/doc/popup?method=<%=method%>&multi=<%=multi%>");
 		_popup(url, 1800, 900, "n");
-	}
-
-	// 팝업 데이터 가져오는 메서드
-	function setAppendDoc(items) {
-		const data = AUIGrid.getGridData(myGridID90);
-		if (data.length != 0) {
-			for (let i = 0; i < items.length; i++) {
-				for (let j = 0; j < data.length; j++) {
-					if (data[j].oid == items[i].oid) {
-						items.splice(i, 1);
-					}
-				}
-			}
-		}
-		AUIGrid.addRow(myGridID90, items);
 	}
 
 	function deleteRow90() {
@@ -117,5 +84,10 @@ JSONArray json = DocumentHelper.manager.include_DocumentList(oid, moduleType);
 			const rowIndex = checked[i].rowIndex;
 			AUIGrid.removeRow(myGridID90, rowIndex);
 		}
+	}
+	
+	function insert90(arr, callBack) {
+		for(let i=0; i<)
+		AUIGrid.setGridData(myGridID90, arr);
 	}
 </script>

@@ -9,7 +9,8 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
-int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
+String method = (String) request.getAttribute("method");
+boolean multi = (boolean) request.getAttribute("multi");
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -177,10 +178,9 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
-			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
-            <input type="button" value="추가" title="추가"  onclick="add();">                        
+			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-popup');">
+			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-popup');">
+			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -191,7 +191,6 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
-			<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
@@ -227,15 +226,6 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 			headerText : "문서번호",
 			dataType : "string",
 			width : 120,
-			renderer : {
-				type : "LinkRenderer",
-				baseUrl : "javascript",
-				jsCallback : function(rowIndex, columnIndex, value, item) {
-					const oid = item.oid;
-					const url = getCallUrl("/doc/view?oid=" + oid);
-					_popup(url, 1600, 800, "n");
-				}
-			},
 			filter : {
 				showIcon : true,
 				inline : true
@@ -264,15 +254,6 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 			dataType : "string",
 			style : "aui-left",
 			width : 350,
-			renderer : {
-				type : "LinkRenderer",
-				baseUrl : "javascript",
-				jsCallback : function(rowIndex, columnIndex, value, item) {
-					const oid = item.oid;
-					const url = getCallUrl("/doc/view?oid=" + oid);
-					_popup(url, 1600, 800, "n");
-				}
-			},
 			filter : {
 				showIcon : true,
 				inline : true
@@ -372,6 +353,9 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 			headerHeight : 30,
 			showRowNumColumn : true,
 			showRowCheckColumn : true,
+			<%if (!multi) {%>
+			rowCheckToRadio : true,
+			<%}%>
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			selectionMode : "multipleCells",
@@ -418,7 +402,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("number");
-		const columns = loadColumnLayout("document-list");
+		const columns = loadColumnLayout("document-popup");
 		const contenxtHeader = genColumnHtml(columns);
 		$("#h_item_ul").append(contenxtHeader);
 		$("#headerMenu").menu({
@@ -440,11 +424,28 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 		finderUser("writer");
 	});
 
-	function exportExcel() {
-		// 				const exceptColumnFields = [ "primary" ];
-		// 				const sessionName = document.getElementById("sessionName").value;
-		// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+	function <%=method%>() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length === 0) {
+			alert("추가할 행을 선택하세요.");
+			return false;
+		}
+		
+		const arr = new Array();
+		checkedItems.forEach(function(item) {
+			logger(item);
+		})
+		
+		openLayer();
+		opener.insert90(checkedItems, function(res) {
+			if(result) {
+				setTimeout(function() {
+					closeLayer();
+				}, 500);
+			}
+		})
 	}
+	
 
 	document.addEventListener("keydown", function(event) {
 		const keyCode = event.keyCode || event.which;
@@ -460,41 +461,4 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID);
 	});
-	
-	//일괄 다운로드
-	function download() {
-		const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-		if (items.length == 0) {
-			alert("다운로드할 문서를 선택하세요.");
-			return false;
-		}
-		let oids = [];
-		items.forEach((item)=>{
-		    oids.push(item.oid)
-		});
-		document.location.href = "/Windchill/eSolution/content/downloadZIP?oids=" + oids;
-	}
-	
-    function add(){
-        const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-        if (items.length == 0) {
-            alert("첨부할 문서를 선택하세요.");
-            return false;
-        }
-        
-        let docOids = [];
-		let docNumber = [];
-		for(let i = 0; i < items.length; i++){
-			docOids.push(items[i].oid);
-			docNumber.push(items[i].number);
-		}
-		var parentRow = <%= parentRowIndex %>;
-		if(parentRow<0){
-			opener.setAppendDoc(items);
-		}else{
-			opener.setDoc(docOids, docNumber, <%= parentRowIndex %>);
-		}
-		
-        self.close();
-    }
 </script>

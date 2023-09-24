@@ -118,9 +118,8 @@ public class DocumentController extends BaseController {
 	}
 
 	@Description(value = "관련 문서 팝업 페이지")
-	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false) Integer parentRowIndex)
-			throws Exception {
+	@GetMapping(value = "/popup")
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
@@ -130,7 +129,8 @@ public class DocumentController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
-		model.addObject("parentRowIndex", parentRowIndex);
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/document/document-list-popup");
 		return model;
 	}

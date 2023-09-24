@@ -114,11 +114,11 @@ iframe {
 					<select name="documentType" id="documentType" class="width-200">
 						<option value="">선택</option>
 						<%
-							for(DocumentType documentType : docTypeList) {
+						for (DocumentType documentType : docTypeList) {
 						%>
-						<option value="<%=documentType.toString() %>"><%=documentType.getDisplay() %></option>
+						<option value="<%=documentType.toString()%>"><%=documentType.getDisplay()%></option>
 						<%
-							}
+						}
 						%>
 					</select>
 				</td>
@@ -208,10 +208,12 @@ iframe {
 		</jsp:include>
 
 		<!-- 	관련 문서 -->
-		<%-- 		<jsp:include page="/extcore/jsp/document/document-include.jsp"> --%>
-		<%-- 			<jsp:param value="" name="oid" /> --%>
-		<%-- 			<jsp:param value="create" name="mode" /> --%>
-		<%-- 		</jsp:include> --%>
+		<jsp:include page="/extcore/jsp/document/document-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert90" name="method" />
+			<jsp:param value="true" name="multi" />
+		</jsp:include>
 
 		<!-- 	관련 EO -->
 		<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
@@ -395,15 +397,16 @@ iframe {
 				selectbox("model");
 				selectbox("deptcode");
 				$("#preseration").bindSelectSetValue("PR001");
-				// 				createAUIGrid90(columns90);
-				createAUIGrid2(columnsPart);
-				createAUIGridEco(columnsEco);
-				createAUIGridEO(columnsEo);
-				createAUIGridECPR(columnsEcpr);
-				createAUIGridCR(columnsCr);
+				createAUIGrid90(columns90);
+				// 				createAUIGrid2(columnsPart);
+				// 				createAUIGridEco(columnsEco);
+				// 				createAUIGridEO(columnsEo);
+				// 				createAUIGridECPR(columnsEcpr);
+				// 				createAUIGridCR(columnsCr);
 			});
 
 			window.addEventListener("resize", function() {
+				AUIGrid.resize(myGridID90);
 			});
 		</script>
 	</form>
