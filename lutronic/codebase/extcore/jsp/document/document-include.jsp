@@ -69,7 +69,8 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup90() {
-		const url = getCallUrl("/doc/popup?method=<%=method%>&multi=<%=multi%>");
+		const url = getCallUrl("/doc/popup?method=<%=method%>&multi=<%=multi%>
+	");
 		_popup(url, 1800, 900, "n");
 	}
 
@@ -85,13 +86,11 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 			AUIGrid.removeRow(myGridID90, rowIndex);
 		}
 	}
-	
+
 	function insert90(arr, callBack) {
-<<<<<<< HEAD
-=======
-		for(let i=0; i<arr.length; i++)
->>>>>>> daa9f1b719b8f6488493d707a10d6ae3621b04f3
-		AUIGrid.setGridData(myGridID90, arr);
-		callBack(true);
+		for (let i = 0; i < arr.length; i++) {
+			AUIGrid.setGridData(myGridID90, arr);
+			callBack(true);
+		}
 	}
 </script>
