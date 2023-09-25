@@ -1,5 +1,10 @@
 package com.e3ps.part.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +13,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,12 +58,20 @@ import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
+import com.ptc.wvs.server.util.PublishUtils;
 
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.enterprise.Master;
+import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
+import wt.representation.Representation;
+import wt.util.FileUtil;
 import wt.util.WTException;
 import wt.util.WTRuntimeException;
 import wt.vc.baseline.Baseline;
@@ -1929,11 +1952,340 @@ public class PartController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@ResponseBody
-	@RequestMapping(value = "/partExcel")
-	public Map<String, Object> partExcel (@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		Map<String, Object> result =PartHelper.manager.partExcel(params,response);
-		return result;
+	@RequestMapping(value = "/partExcel", method = RequestMethod.GET)
+	public void partExcel(@RequestParam String oid,@RequestParam String view,@RequestParam String desc,@RequestParam String baseline2,@RequestParam String checkDummy, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("oid", oid);
+		param.put("view", view);
+		param.put("desc", desc);
+		param.put("baseline2", baseline2);
+		param.put("checkDummy", checkDummy);
+		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
+		List<Map<String, Object>> bomList =BomSearchHelper.manager.getAllBomList(param);
+		
+		
+		ReferenceFactory rf = new ReferenceFactory();
+		WTPart part =  (WTPart) rf.getReference(oid).getObject();
+	
+		// Part Thumbnail
+		String path = "C:\\ptc\\thumb";
+	//	String path = "/opt/ptc/partlistExcelImages";
+		Representation representation = PublishUtils.getRepresentation(part);
+		FileOutputStream fos = null;
+		if (StringUtil.isNotNull(representation)) {
+			QueryResult result = ContentHelper.service.getContentsByRole(representation, ContentRoleType.THUMBNAIL);
+			while (result.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) result.nextElement();
+				String ext = FileUtil.getExtension(data.getFileName());
+				byte[] buffer = new byte[10240];
+				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+	
+				File file = new File(path + File.separator + part.getNumber().toUpperCase() + ".jsp");
+	
+	//			FileOutputStream fos = new FileOutputStream(file);
+				fos = new FileOutputStream(file);
+	
+				int j = 0;
+				while ((j = is.read(buffer, 0, 10240)) > 0) {
+					fos.write(buffer, 0, j);
+				}
+				fos.close();
+				is.close();
+			}
+		}
+	
+		try {
+			// 새로운 워크북(엑셀 파일) 생성
+			XSSFWorkbook workbook = new XSSFWorkbook();
+	
+			// 워크북에 시트 생성
+			Sheet sheet = workbook.createSheet("Sheet1");
+	
+			sheet.setColumnWidth(1, 30 * 256);
+			// 헤더
+			Row row = sheet.createRow(0);
+			Cell cell = row.createCell(0);
+			cell.setCellValue("Bom Editor");
+	
+			CellRangeAddress mergedRegion = new CellRangeAddress(0, 0, 0, 7);
+			sheet.addMergedRegion(mergedRegion);
+			style(workbook, cell);
+	
+	
+			Row row1 = sheet.createRow(2);
+			Cell cell01 = row1.createCell(0);
+			cell01.setCellValue("Level");
+			style2(workbook, cell01);
+	
+			Cell cell02 = row1.createCell(1);
+			cell02.setCellValue("부품번호");
+			style2(workbook, cell02);
+	
+			Cell cell03 = row1.createCell(2);
+			cell03.setCellValue("도면번호");
+			style2(workbook, cell03);
+	
+			Cell cell04 = row1.createCell(3);
+			cell04.setCellValue("부품명");
+			style2(workbook, cell04);
+	
+			Cell cell05 = row1.createCell(4);
+			cell05.setCellValue("REV");
+			style2(workbook, cell05);
+	
+			Cell cell06 = row1.createCell(5);
+			cell06.setCellValue("OEM Info.");
+			style2(workbook, cell06);
+	
+			Cell cell07 = row1.createCell(6);
+			cell07.setCellValue("체크아웃 상태");
+			style2(workbook, cell07);
+	
+			Cell cell08 = row1.createCell(7);
+			cell08.setCellValue("상태");
+			style2(workbook, cell08);
+			
+			Cell cell09 = row1.createCell(8);
+			cell09.setCellValue("수정자");
+			style2(workbook, cell09);
+			
+			Cell cell10 = row1.createCell(9);
+			cell10.setCellValue("사양");
+			style2(workbook, cell10);
+			
+			Cell cell11 = row1.createCell(10);
+			cell11.setCellValue("수량");
+			style2(workbook, cell11);
+			
+			Cell cell12 = row1.createCell(11);
+			cell12.setCellValue("ECO NO.");
+			style2(workbook, cell12);
+	
+			Cell cell13 = row1.createCell(12);
+			cell13.setCellValue("프로젝트코드");
+			style2(workbook, cell13);
+			
+			Cell cell14 = row1.createCell(13);
+			cell14.setCellValue("부서");
+			style2(workbook, cell14);
+	
+			Cell cell15 = row1.createCell(14);
+			cell15.setCellValue("MANUFACTURER");
+			style2(workbook, cell15);
+			
+			Cell cell16 = row1.createCell(15);
+			cell16.setCellValue("제작방법");
+			style2(workbook, cell16);
+			
+	//		int rowCellCnt = 1;
+	//		int rowCnt = 5;
+	//		for (PARTLISTLink_HIS item : partlistLinkList) {
+	//			PARTLIST_HIS childPartlist = (PARTLIST_HIS) rf.getReference(item.getRoleBObjectId().toString())
+	//					.getObject();
+	//			WTPart childPart = childPartlist.getWtpart();
+	//
+	//			Row partlistRow = sheet.createRow(rowCnt);
+	//			// 로우 높이 조절
+	//			partlistRow.setHeightInPoints(100);
+	//			Cell partlistCell1 = partlistRow.createCell(0);
+	//			partlistCell1.setCellValue(rowCellCnt);
+	//			style2(workbook, partlistCell1);
+	//
+	//			// 이미지 파일 경로 설정 (예시: "image.jpg")
+	////	        String thumbnail = FileHelper.getViewContentURLForType(PublishUtils.findRepresentable(childPart),
+	////					ContentRoleType.THUMBNAIL);
+	////	        String imagePath = "";
+	////	        Cell partlistCell2 = partlistRow.createCell(1);
+	////
+	////		     // 이미지 파일 경로 설정 (예시: "image.jpg")
+	////		     String imagePath = ThumbnailUtils.thumbnails(childPart)[0];
+	////
+	////		     // 이미지 파일 읽기
+	////		     FileInputStream imageStream = new FileInputStream(imagePath);
+	////		     byte[] imageData = IOUtils.toByteArray(imageStream);
+	////		     int pictureIdx = workbook.addPicture(imageData, Workbook.PICTURE_TYPE_JPEG);
+	////
+	////		     // Drawing 객체 생성 및 워크북과 연결
+	////		     Drawing<?> drawing = sheet.createDrawingPatriarch();
+	////
+	////		     // ClientAnchor 객체 생성하여 이미지가 들어갈 위치와 크기 지정
+	////		     ClientAnchor anchor = workbook.getCreationHelper().createClientAnchor();
+	////		     anchor.setCol1(1); // 이미지가 들어갈 셀의 열 인덱스 (예시: 1)
+	////		     anchor.setRow1(rowCnt); // 이미지가 들어갈 셀의 행 인덱스
+	////
+	////		     // 그림 추가
+	////		     Picture picture = drawing.createPicture(anchor, pictureIdx);
+	////
+	////		     // 원본 크기로 유지하도록 설정 (선택적)
+	////		     picture.resize(1,1);
+	//
+	//			// add picture data to this workbook.
+	////			InputStream is = new FileInputStream(
+	////					"/opt/ptc/Windchill_12.0/Windchill/codebase/jsp/images/productview_openin_250.png");
+	////			InputStream is = new FileInputStream(paht"C:\\ptc\\Windchill_12.0\\Windchill\\codebase\\jsp\\images\\productview_openin_250.png");
+	////			InputStream is = new FileInputStream(path + "\\" + part.getNumber() + ".jpg");
+	//			InputStream is = null;
+	//			byte[] bytes = null;
+	//			int pictureIdx = 0;
+	//			if (StringUtils.isNotNull(fos)) {
+	//				is = new FileInputStream(path + "\\" + part.getNumber() + ".jpg");
+	//				bytes = IOUtils.toByteArray(is);
+	//				pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+	//				is.close();
+	//			} else {
+	//				is = new FileInputStream("C:\\ptc\\Windchill_12.0\\Windchill\\codebase\\jsp\\images\\productview_openin_250.png");
+	//				bytes = IOUtils.toByteArray(is);
+	//				pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+	//				is.close();
+	//			}
+	//			CreationHelper helper = workbook.getCreationHelper();
+	//			// Create the drawing patriarch. This is the top level container for all shapes.
+	//			Drawing drawing = sheet.createDrawingPatriarch();
+	//
+	//			// add a picture shape
+	//			ClientAnchor anchor = helper.createClientAnchor();
+	//			// set top-left corner of the picture,
+	//			// subsequent call of Picture#resize() will operate relative to it
+	//			anchor.setCol1(1);
+	//			anchor.setRow1(rowCnt);
+	//			anchor.setCol2(2);
+	//			anchor.setRow2(rowCnt + 1);
+	//			Picture pict = drawing.createPicture(anchor, pictureIdx);
+	//			// auto-size picture relative to its top-left corner
+	//			pict.resize(1, 1);
+	//
+	//			Cell partlistCell2 = partlistRow.createCell(1);
+	//			partlistCell2.setCellValue("");
+	//			style2(workbook, partlistCell2);
+	//
+	//			Cell partlistCell3 = partlistRow.createCell(2);
+	//			partlistCell3.setCellValue("자재".equals(PartHelper.manager.partTypeToDisplay(childPart)) == true
+	//					? IBAUtil.getStringValue(childPart, "PART_NO")
+	//					: IBAUtil.getStringValue(childPart, "ERP_CODE"));
+	//			style3(workbook, partlistCell3);
+	//
+	//			Cell partlistCell4 = partlistRow.createCell(3);
+	//			partlistCell4.setCellValue(IBAUtil.getStringValue(childPart, "DEV_CLASSIFICATION"));
+	//			style2(workbook, partlistCell4);
+	//
+	//			Cell partlistCell5 = partlistRow.createCell(4);
+	//			partlistCell5.setCellValue(childPart.getVersionIdentifier().getSeries().getValue());
+	//			style2(workbook, partlistCell5);
+	//
+	//			Cell partlistCell6 = partlistRow.createCell(5);
+	//			partlistCell6.setCellValue(childPartlist.getColor());
+	//			style2(workbook, partlistCell6);
+	//
+	//			Cell partlistCell7 = partlistRow.createCell(6);
+	//			partlistCell7.setCellValue(IBAUtil.getStringValue(childPart, "PART_NAME"));
+	//			style2(workbook, partlistCell7);
+	//
+	//			Cell partlistCell8 = partlistRow.createCell(7);
+	//			partlistCell8.setCellValue("");
+	//			style2(workbook, partlistCell8);
+	//			rowCnt++;
+	//			rowCellCnt++;
+	//			Map<String, Integer> cntMap = excelTree(childPartlist, masterHis, sheet, workbook, rowCnt, rowCellCnt);
+	//			if (cntMap.get("rowCnt") != rowCellCnt) {
+	//				rowCnt = cntMap.get("rowCnt");
+	//				rowCellCnt = cntMap.get("rowCellCnt");
+	//			}
+	//		}
+	
+			// 행 넓이 자동
+	//        sheet.autoSizeColumn(1);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(6);
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	
+			LocalDate date = LocalDate.now();
+			String now = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+			now = now.replaceAll("-", "");
+			now = now.substring(0, 8);
+	
+			response.setHeader("Content-Disposition",
+					"attachment; filename=" + IBAUtil.getStringValue(part, "ERP_CODE") + "_" + now + ".xlsx");
+	
+			try {
+				System.out.println("성공.");
+				workbook.write(response.getOutputStream());
+				System.out.println("성공.123123123");
+			} catch (Exception e) {
+				System.out.println("살패.");
+				e.printStackTrace();
+			}
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
 	}
 
+
+	private static void style(XSSFWorkbook workbook, Cell cell) {
+		CellStyle style = workbook.createCellStyle();
+	
+		// 폰트 설정 (크기, 진하게)
+		Font font = workbook.createFont();
+		font.setFontHeightInPoints((short) 15); // 폰트 크기
+		font.setBold(true); // 진하게 설정
+	
+		style.setFont(font);
+	
+		// 가운데 정렬 설정
+		style.setAlignment(HorizontalAlignment.CENTER);
+	
+		// 스타일 적용
+		cell.setCellStyle(style);
+	
+	}
+	
+	private static void style2(XSSFWorkbook workbook, Cell cell) {
+		CellStyle style = workbook.createCellStyle();
+	
+		// 테두리 설정
+		style.setBorderTop(BorderStyle.THIN); // 상단 테두리
+		style.setBorderBottom(BorderStyle.THIN); // 하단 테두리
+		style.setBorderLeft(BorderStyle.THIN); // 왼쪽 테두리
+		style.setBorderRight(BorderStyle.THIN); // 오른쪽 테두리
+	
+		// 폰트 설정 (크기, 진하게)
+		Font font = workbook.createFont();
+		font.setFontHeightInPoints((short) 12); // 폰트 크기
+		font.setBold(true); // 진하게 설정
+	
+		style.setFont(font);
+	
+		// 가운데 정렬 설정
+		style.setAlignment(HorizontalAlignment.CENTER);
+	
+		// 높이 가운데 정렬 설정
+		style.setVerticalAlignment(VerticalAlignment.CENTER);
+	
+		// 스타일 적용
+		cell.setCellStyle(style);
+	
+	}
+	
+	private static void style3(XSSFWorkbook workbook, Cell cell) {
+		CellStyle style = workbook.createCellStyle();
+	
+		// 테두리 설정
+		style.setBorderTop(BorderStyle.THIN); // 상단 테두리
+		style.setBorderBottom(BorderStyle.THIN); // 하단 테두리
+		style.setBorderLeft(BorderStyle.THIN); // 왼쪽 테두리
+		style.setBorderRight(BorderStyle.THIN); // 오른쪽 테두리
+	
+		// 폰트 설정 (크기, 진하게)
+		Font font = workbook.createFont();
+		font.setFontHeightInPoints((short) 12); // 폰트 크기
+		font.setBold(true); // 진하게 설정
+	
+		style.setFont(font);
+	
+		// 스타일 적용
+		cell.setCellStyle(style);
+	
+	}
 }
