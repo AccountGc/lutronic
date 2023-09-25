@@ -240,6 +240,30 @@ public class RohsController extends BaseController {
 		return result;
 	}
 	
+	@Description(value = "물질 개정 페이지")
+	@GetMapping(value = "/reviseRohs")
+	public ModelAndView reviseRohs(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/rohs/rohs-revise");
+		return model;
+	}
+	
+	@Description(value = "물질 개정 함수")
+	@ResponseBody
+	@PostMapping(value = "/reviseRohs")
+	public Map<String,Object> reviseRohs(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			RohsHelper.service.reviseRohs(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "물질 일괄등록 페이지")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception{
@@ -471,12 +495,12 @@ public class RohsController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@ResponseBody
-	@RequestMapping("/reviseRohs")
-	public ResultData reviseRohs(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ResultData data = RohsHelper.service.reviseUpdate(request, response);
-		return data;
-	}
+//	@ResponseBody
+//	@RequestMapping("/reviseRohs")
+//	public ResultData reviseRohs(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		ResultData data = RohsHelper.service.reviseUpdate(request, response);
+//		return data;
+//	}
 	
 	/** RoHS 자료검색
 	 * @param request

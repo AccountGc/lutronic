@@ -2696,4 +2696,71 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			}
         }
 	}
+
+	@Override
+	public void reviseRohs(Map<String, Object> params) throws Exception {
+		Transaction trx = new Transaction();
+		try {
+			trx.start();
+			
+			String oid = StringUtil.checkNull((String) params.get("oid"));
+			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+			if(!"".equals(oid)) {
+				ROHSMaterial oldRohs = (ROHSMaterial) CommonUtil.getObject(oid);
+            	ROHSMaterial rohs = (ROHSMaterial) ObjectUtil.revise(oldRohs, lifecycle);
+            	rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
+            	
+            	//관련 품목
+                List<PartToRohsLink> partList = RohsHelper.manager.getPartToRohsLinkList(oldRohs);
+                for(PartToRohsLink link : partList){
+                	WTPart part = (WTPart) link.getRoleAObject();
+                	PartToRohsLink partLink = PartToRohsLink.newPartToRohsLink(part, rohs);
+                	PersistenceServerHelper.manager.insert(partLink);
+                }
+                
+                //관련 물질 composition
+                List<RepresentToLink> rohsList = RohsHelper.manager.getRepresentLink(oldRohs);
+                for(RepresentToLink rohsLink : rohsList){
+                	ROHSMaterial comRohs = (ROHSMaterial) rohsLink.getRoleBObject();
+                	if(CommonUtil.isLatestVersion(comRohs)){
+                		RepresentToLink link = RepresentToLink.newRepresentToLink(rohs, comRohs);
+                    	PersistenceServerHelper.manager.insert(link);
+                	}
+                }
+                
+                //관련 물질 대표
+                List<RohsData> representList = RohsQueryHelper.service.getRepresentToLinkList(oldRohs, "represent");
+                for(RohsData representRohsData: representList){
+                	ROHSMaterial representRohs = (ROHSMaterial) CommonUtil.getObject(representRohsData.getOid());
+                	if(representRohsData.isLatest()){
+                		RepresentToLink link = RepresentToLink.newRepresentToLink(representRohs, rohs);
+                    	PersistenceServerHelper.manager.insert(link);
+                	}
+                }
+                		
+                //관련 첨부파일
+                copyROHSContHOlder(oldRohs, rohs);
+                
+                String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+                if("LC_Default_NonWF".equals(lifecycle)){
+                	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) rohs, "BATCHAPPROVAL");
+                	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+                }
+                Map<String,Object> map = new HashMap<String,Object>();
+                map.put("approvalType", approvalType);
+                CommonHelper.service.changeIBAValues(rohs, map);
+                
+			}
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
+        } finally {
+        	if (trx != null) {
+        		trx.rollback();
+			}
+        }
+	}
 }

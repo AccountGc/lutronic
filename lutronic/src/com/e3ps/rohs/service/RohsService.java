@@ -68,4 +68,6 @@ public interface RohsService {
 	public void update(Map<String, Object> params) throws Exception;
 	
 	public void copyRohs(Map<String, Object> params) throws Exception;
+	
+	public void reviseRohs(Map<String, Object> params) throws Exception;
 }
