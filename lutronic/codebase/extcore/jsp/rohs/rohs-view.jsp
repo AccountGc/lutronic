@@ -50,10 +50,6 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 				}
 				%>
 			<%	
-			}else{
-			%>
-				<input type="button" value="최신Rev." title="최신Rev." class="" id="lastestBtn">
-			<%	
 			}
 			%>
 			<input type="button" value="Rev.이력" title="Rev.이력" class="" id="versionBtn">
