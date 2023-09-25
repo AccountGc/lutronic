@@ -87,7 +87,7 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 	}
 	
 	function insert90(arr, callBack) {
-		for(let i=0; i<)
+		for(let i=0; i<arr.length; i++)
 		AUIGrid.setGridData(myGridID90, arr);
 	}
 </script>

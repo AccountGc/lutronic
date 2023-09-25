@@ -3,8 +3,8 @@
 <%
 String partNumber = request.getParameter("partNumber");
 %>
-<input type="hidden" name="partNumber"  id="partNumber " value="<%= partNumber %>"/>
-<input type="hidden" name="_psize"  id="_psize " value="10"/>
+<input type="hidden" name="partNumber" id="partNumber"  value="<%= partNumber %>"/>
+<input type="hidden" name="_psize"  id="_psize"  value="10"/>
 <table border="0"  height="100%"  cellspacing="0" cellpadding="0" width="100%" style="table-layout:auto">
 		<tr>
 			<td align="left" valign=top height=42>
