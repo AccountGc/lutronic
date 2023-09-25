@@ -29,7 +29,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<input type="hidden" name="source"			id="source"	      		value="make"            />
 		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
 		<input type="hidden" name="view"			id="view"        		value="Design" />
-		<input type="hidden" name="fid" 			id="fid"				value="" >
 		
 		<table class="button-table">
 			<tr>

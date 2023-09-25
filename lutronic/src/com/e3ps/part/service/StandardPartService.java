@@ -353,16 +353,9 @@ public class StandardPartService extends StandardManager implements PartService 
 			ViewHelper.assignToView(part, ViewHelper.service.getView(view));
 
 			// 폴더 셋팅
-//			Folder folder = null;
-//			if (StringUtil.checkString(fid)) {
-//				folder = (Folder) CommonUtil.getObject(fid);
-//			} else {
-//				folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
-//			}
-//			FolderHelper.assignLocation((FolderEntry) part, folder);
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) part, folder);
-//			part = (WTPart)PersistenceHelper.manager.save(part);
+			part = (WTPart)PersistenceHelper.manager.save(part);
 			
 			// 라이프사이클 셋팅
 			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
@@ -434,7 +427,6 @@ public class StandardPartService extends StandardManager implements PartService 
 			
 			for(Map<String, Object> part : partList) {
 				
-				String fid = StringUtil.checkNull((String) params.get("fid"));
 				String location = StringUtil.checkNull((String) part.get("location")); // 폴더 경로
 				
 				String partType1Oid = StringUtil.checkNull((String) part.get("partType1")); // 품목구분 (NumberCode)
@@ -507,13 +499,8 @@ public class StandardPartService extends StandardManager implements PartService 
 				_part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
 				
 				// 폴더 셋팅
-				Folder folder = null;
-				if (StringUtil.checkString(fid)) {
-					folder = (Folder) CommonUtil.getObject(fid);
-				} else {
-					folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());					
-				}
-				FolderHelper.assignLocation((FolderEntry) _part, folder);
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) part, folder);
 				
 				_part = (WTPart)PersistenceHelper.manager.save(_part);
 				
@@ -524,7 +511,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				// 주 도면
 				if(primary.length() > 0) {
 					part.put("oid", CommonUtil.getOIDString(_part));
-					part.put("epmfid", fid);
+					part.put("epmfid", location);
 					EPMDocument epm = DrawingHelper.service.createEPM(part);
 					EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, _part);
 					PersistenceServerHelper.manager.insert(link);
