@@ -814,7 +814,6 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		
 		EPMDocument epm = EPMDocument.newEPMDocument();
 		
-		String fid 				= StringUtil.checkNull((String) hash.get("epmfid")); 
 		String partOid 			= StringUtil.checkNull((String) hash.get("oid")); 			
 		String lifecycle 		= StringUtil.checkNull((String) hash.get("lifecycle"));
 		String primaryFile 		= StringUtil.checkNull((String) hash.get("primary"));
@@ -856,14 +855,8 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		
 		//Folder  && LifeCycle  Setting
 		ReferenceFactory rf = new ReferenceFactory();
-		// 폴더 셋팅
-		Folder folder = null;
-		if (StringUtil.checkString(fid)) {
-			folder = (Folder) CommonUtil.getObject(fid);
-		} else {
-			folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());					
-		}
-		FolderHelper.assignLocation((FolderEntry)epm, folder);
+		Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+		FolderHelper.assignLocation((FolderEntry) epm, folder);
 		
 		PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
 		WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);

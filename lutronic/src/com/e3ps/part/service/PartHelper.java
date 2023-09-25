@@ -12,11 +12,9 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.EcrPartLink;
-import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.VersionData;
 import com.e3ps.common.comments.Comments;
-import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
@@ -37,7 +35,6 @@ import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
-import com.e3ps.rohs.service.RohsQueryHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
@@ -1062,4 +1059,7 @@ public class PartHelper {
 		}
 		return null;
 	}
+	
+	
+	
 }

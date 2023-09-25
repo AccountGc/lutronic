@@ -1,5 +1,8 @@
 package com.e3ps.part.dto;
 
+import java.util.ArrayList;
+
+import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.iba.AttributeKey;
 
 import lombok.Getter;
@@ -21,6 +24,11 @@ public class PartDTO {
 	private String createDate;
 	private String modifyDate;
 	private String ecoNo;
+	
+	private String epmOid;
+	
+	// 댓글
+	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 
 	public PartDTO(WTPart part) throws Exception {
 		setOid(part.getPersistInfo().getObjectIdentifier().getStringValue());

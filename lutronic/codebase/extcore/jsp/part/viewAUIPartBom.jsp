@@ -486,14 +486,33 @@ function getViews() {
 	----------------------------------------------------------%>
 	$("#excelDown").click(function() {
 		
-		//alert($("#excelDownOption").val());
-		//if( $("#excelDownOption").val() =="1"){
-			expandAll();
-		//}
-		var excelName="<c:out value='${baseName}'/>";
-		var fileName= "<c:out value='${number}'/>";
-		exportAUIBOMExcel(fileName+excelName)
-	})
+		var oid =$("#oid").val();
+		
+		if(!confirm("엑셀 다운로드 하시겠습니까?")){
+			return false;
+		}
+		
+		isExpand = false;
+		let params = new Object();
+		const field = ["oid","view","desc","baseline2","checkDummy"];
+//			const latest = !!document.querySelector("input[name=latest]:checked").value; 
+		params = toField(params, field);
+		
+		
+		var d_url = getCallUrl("/part/partExcel?oid="+oid+"&view=Design&desc="+params.desc+"&baseline2="+params.baseline2+"&checkDummy="+params.checkDummy);
+		var downloadLink = document.createElement("a");
+		downloadLink.href = d_url;
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		document.body.removeChild(downloadLink);
+		
+		
+// 		var url	= getCallUrl("/part/partExcel");
+// 		call(url, params, function(data) {
+			
+// 		},"POST");
+		
+	});
 	
 	<%----------------------------------------------------------
 	*                     부품 첨부 파일 다운로드

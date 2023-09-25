@@ -40,20 +40,20 @@
 			</colgroup>
 			<tr>
 				<th class="req lb">CR 제목</th>
-				<td class="indent5" ><input type="text" name="eoName" id="eoName" class="width-200"></td>
+				<td class="indent5" ><input type="text" name="eoName" id="eoName" class="width-300"></td>
 				<th class="req lb">CR 번호</th>
-				<td class="indent5"><input type="text" name="eoNumber" id="eoNumber" class="width-200"></td>
+				<td class="indent5"><input type="text" name="eoNumber" id="eoNumber" class="width-300"></td>
 			</tr>
 			<tr>
 				<th class="lb">작성일</th>
-				<td class="indent5"><input type="text" name="createDate" id="createDate" class="width-100"><img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"></td>
+				<td class="indent5"><input type="text" name="createDate" id="createDate" class="width-300"><img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"></td>
 				<th class="lb">승인일</th>
-				<td class="indent5"><input type="text" name="approveDate" id="approveDate" class="width-100"><img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"></td>
+				<td class="indent5"><input type="text" name="approveDate" id="approveDate" class="width-300"><img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"></td>
 			</tr>
 			<tr>
 				<th class="lb">작성부서</th>
 				<td class="indent5">
-					<select name="createDepart" id="createDepart" class="width-200">
+					<select name="createDepart" id="createDepart" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
@@ -66,7 +66,7 @@
 				</td>
 				<th class="lb">작성자</th>
 				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-200"> 
+					<input type="text" name="writer" id="writer" data-multi="false" class="width-300"> 
 					<input type="hidden" name="creatorOid" id="creatorOid"> 
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
@@ -81,13 +81,13 @@
 			<tr>
 				<th class="lb">제안자</th>
 				<td class="indent5">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> 
+					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-300"> 
 					<input type="hidden" name="creatorOid" id="creatorOid"> 
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th class="lb">변경구분</th>
 				<td class="indent5" >
-					<select name="changeSection" id="changeSection" class="width-200">
+					<select name="changeSection" id="changeSection" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode section : sectionList) {

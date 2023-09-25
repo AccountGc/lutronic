@@ -565,4 +565,81 @@ public class BomSearchHelper {
 		return list;
 	}
 	
+	
+	/**
+	 * 일반 BOM
+	 */
+	public List<Map<String, Object>> getAllBomList(	Map<String, Object> param) throws Exception {
+
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		String oid = (String) param.get("oid");
+		String view = (String) param.get("view");
+		String desc = (String) param.get("desc");
+		String baseline2 = (String) param.get("baseline2");
+		String checkDummy = (String) param.get("checkDummy");
+		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
+
+		ReferenceFactory rf = new ReferenceFactory();
+		WTPart part = (WTPart) rf.getReference(oid).getObject();
+
+		Baseline bsobj = null;
+		if (baseline2 != null && baseline2.length() > 0) {
+			bsobj = (Baseline) rf.getReference(baseline2).getObject();
+		}
+		if (bsobj != null) {
+			QuerySpec qs = new QuerySpec();
+			int ii = qs.addClassList(WTPart.class, true);
+			int jj = qs.addClassList(BaselineMember.class, false);
+			qs.appendWhere(new SearchCondition(BaselineMember.class, "roleBObjectRef.key.id", WTPart.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { jj, ii });
+			qs.appendAnd();
+			qs.appendWhere(new SearchCondition(BaselineMember.class, "roleAObjectRef.key.id", "=", bsobj.getPersistInfo().getObjectIdentifier().getId()), new int[] { jj });
+			qs.appendAnd();
+			qs.appendWhere(new SearchCondition(WTPart.class, "masterReference.key.id", "=", part.getMaster().getPersistInfo().getObjectIdentifier().getId()), new int[] { ii });
+			QueryResult qr = PersistenceHelper.manager.find(qs);
+			if (qr.hasMoreElements()) {
+				Object[] o = (Object[]) qr.nextElement();
+				part = (WTPart) o[0];
+			}
+		}
+
+		BomBroker broker = new BomBroker();
+		
+		View[] views = ViewHelper.service.getAllViews();
+
+		if(view == null){
+			view = views[0].getName();
+		}
+		//MANUFACTURE
+		HashMap<String, String> manuFactureMap = CodeHelper.service.getCodeMap("MANUFACTURE");
+						
+		//PRODUCTMETHOD
+		HashMap<String, String> productMap= CodeHelper.service.getCodeMap("PRODUCTMETHOD");
+		
+		HashMap<String, String> departMap= CodeHelper.service.getCodeMap("DEPTCODE");
+		//PartTreeData root = broker.getOneleveTree(part, bsobj);//
+		PartTreeData root = broker.getTree(part, !"false".equals(desc), bsobj, ViewHelper.service.getView(view));
+		
+		HashMap<String, HashMap<String, String>> codeMap = new HashMap<String, HashMap<String,String>>();
+		codeMap.put("manuFactureMap", manuFactureMap);
+		codeMap.put("productMap", productMap);
+		codeMap.put("departMap", departMap);
+		root.setLocationOid("T"+0);
+		Map<String, Object> map1 = setBoMDate(null,root,0,codeMap);
+		list.add(map1);
+		//getDhtmlXPartData(root,rowNum2);
+		
+		
+		
+		int idx =1;
+		
+		partAUITreeSetting(root, list, idx,isCheckDummy);
+		int seq =1;
+		for(Map<String, Object>  mapData : list ){
+			mapData.put("seq", seq);
+			seq++;
+		}
+		return list;
+	}
+	
 }

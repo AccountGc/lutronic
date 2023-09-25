@@ -30,7 +30,12 @@ public final class StringUtil {
 		return false;
 	}
 
-
+	public static boolean isNotNull(Object var) {
+		if (var == null) {
+			return false;
+		}
+		return true;
+	}
 /*
  * 금잔디(frogx)님의 블로그에서 발췌
  */	

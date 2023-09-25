@@ -26,12 +26,14 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
 
 import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
 import wt.doc.WTDocument;
+import wt.enterprise.RevisionControlled;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
@@ -364,6 +366,10 @@ public class RohsHelper {
 		List<Map<String,Object>> partlist  = new ArrayList<Map<String,Object>>();
 		
 		String partOid = StringUtil.checkNull((String)params.get("partOid"));
+		if(partOid == ""){
+			returnMap.put("partRohslist", partRohslist);
+			return returnMap;
+		}
 		WTPart part = (WTPart)CommonUtil.getObject(partOid);
 		if(part == null){
 			returnMap.put("partRohslist", partRohslist);
@@ -413,6 +419,7 @@ public class RohsHelper {
 				state ="검은색";
 			}
 			
+			System.out.println("rohslist.size()=>"+rohslist.size());
 			if(rohslist.size()>0){
 				for(RohsData rohsData : rohslist){
 					//System.out.println("rohslist.size >0 .supart =" + supart.getNumber());
@@ -487,12 +494,13 @@ public class RohsHelper {
 	}
 	
 	public Map<String, Object> listRoHSProduct(Map<String, Object> params) throws Exception {
-		String[] partOids = (String[]) params.get("partOids");
+		ArrayList<Map<String, Object>> partList = (ArrayList<Map<String, Object>>) params.get("partList");
 		Map<String,Object> result = new HashMap<String,Object>();
 		List<PartData> list = new ArrayList<>(); 
 		
-		if(partOids != null) {
-			for(String partOid : partOids) {
+		if(partList!=null) {
+			for(Map<String, Object> map : partList) {
+				String partOid = (String) map.get("partOid");
 				WTPart part = (WTPart)CommonUtil.getObject(partOid);
 				PartData data = new PartData(part);
 				list.add(data);
@@ -568,9 +576,15 @@ public class RohsHelper {
 	
 	public int rohsCheck(Map<String, Object> params) throws Exception {
 		String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
+		String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
 		QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
-    	QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
+    	if(!"".equals(rohsName)) {
+    		QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
+    	}
+    	if(!"".equals(rohsNumber)) {
+    		QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, rohsNumber);
+    	}
     	QueryResult result = PersistenceHelper.manager.find(query);
     	int count = 0;
     	while (result.hasMoreElements()) {
@@ -693,6 +707,38 @@ public class RohsHelper {
 			ROHSMaterial rohs = (ROHSMaterial)result.nextElement();
 			RohsData data = new RohsData(rohs);
 			list.add(data);
+		}
+		return list;
+	}
+	
+	public List<PartToRohsLink> getPartToRohsLinkList(RevisionControlled rev) throws Exception{
+		List<PartToRohsLink> list = new ArrayList<PartToRohsLink>();
+		String vr = CommonUtil.getVROID(rev);
+		rev = (RevisionControlled)CommonUtil.getObject(vr);
+		String roleType ="rohs";
+		if(rev instanceof ROHSMaterial){
+			roleType = "part";
+		}
+		
+		QueryResult rt = PersistenceHelper.manager.navigate(rev, roleType, PartToRohsLink.class,false);
+	
+		while(rt.hasMoreElements()){
+			PartToRohsLink link = (PartToRohsLink)rt.nextElement();
+			list.add(link);
+		}
+		return list;
+	}
+	
+	public List<RepresentToLink> getRepresentLink(ROHSMaterial rohs) throws Exception{
+		List<RepresentToLink> list = new ArrayList<RepresentToLink>();
+		String vr = CommonUtil.getVROID(rohs);
+		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
+		
+		QueryResult rt = PersistenceHelper.manager.navigate(rohs, "composition", RepresentToLink.class,false);
+	
+		while(rt.hasMoreElements()){
+			RepresentToLink link = (RepresentToLink)rt.nextElement();
+			list.add(link);
 		}
 		return list;
 	}

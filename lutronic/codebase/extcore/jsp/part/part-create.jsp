@@ -29,7 +29,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<input type="hidden" name="source"			id="source"	      		value="make"            />
 		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
 		<input type="hidden" name="view"			id="view"        		value="Design" />
-		<input type="hidden" name="fid" 			id="fid"				value="" >
 		
 		<table class="button-table">
 			<tr>
@@ -395,12 +394,12 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const remarks = document.getElementById("remarks").value;
 				const specification = document.getElementById("specification").value;
 				const unit =  document.getElementById("unit").value;
+				const primary = document.querySelector("input[name=primary]") == null ? "" : document.querySelector("input[name=primary]").value;
 				const secondary = toArray("secondarys");
 				const wtPartType = document.getElementById("wtPartType").value;
 				const source = document.getElementById("source").value;
 				const lifecycle = document.getElementById("lifecycle").value;
 				const view = document.getElementById("view").value;
-				const fid = document.getElementById("fid").value;
 				const location = document.getElementById("location").value;
 				
 	            let docOids = [];
@@ -413,7 +412,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	            
 	            let rohsOids = [];
 	            const appendRohs = AUIGrid.getGridData(rohsGridID);
-	            if(appendDoc.length > 0){
+	            if(appendRohs.length > 0){
 	                for(let i = 0; i < appendRohs.length; i++){
 	                	rohsOids.push(appendRohs[i].oid)
 	                }
@@ -488,14 +487,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				params.finish = finish;
 				params.remarks = remarks;
 				params.specification = specification;
-				params.unit = "ea";
+				params.unit = unit;
 				params.primary = primary;
 				params.secondary = secondary;
 				params.wtPartType = wtPartType;
 				params.source = source;
 				params.lifecycle = lifecycle;
 				params.view = view;
-				params.fid = fid;
 				params.location = location;
 				params.docOids = docOids;
 				params.rohsOids = rohsOids;

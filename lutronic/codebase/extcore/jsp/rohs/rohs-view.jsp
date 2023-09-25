@@ -50,10 +50,6 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 				}
 				%>
 			<%	
-			}else{
-			%>
-				<input type="button" value="최신Rev." title="최신Rev." class="" id="lastestBtn">
-			<%	
 			}
 			%>
 			<input type="button" value="Rev.이력" title="Rev.이력" class="" id="versionBtn">
@@ -72,9 +68,9 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		<li>
 			<a href="#tabs-2">관련 품목</a>
 		</li>
-<!-- 		<li> -->
-<!-- 			<a href="#tabs-3">관련 대표 물질</a> -->
-<!-- 		</li> -->
+		<li>
+			<a href="#tabs-3">관련 대표 물질</a>
+		</li>
 		<li>
 			<a href="#tabs-4">관련 물질</a>
 		</li>
@@ -135,14 +131,14 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 			<jsp:param value="rohs" name="moduleType"/>
 		</jsp:include>
 	</div>
-<!-- 	<div id="tabs-3"> -->
+	<div id="tabs-3">
 		<!-- 관련 대표 물질 -->
-<%-- 		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false"> --%>
-<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
-<%-- 			<jsp:param value="represent" name="roleType"/> --%>
-<%-- 			<jsp:param value="관련 대표 물질" name="title"/> --%>
-<%-- 		</jsp:include> --%>
-<!-- 	</div> -->
+		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="represent" name="roleType"/>
+			<jsp:param value="관련 대표 물질" name="title"/>
+		</jsp:include>
+	</div>
 	<div id="tabs-4">
 		<!-- 관련 물질 -->
 		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
@@ -211,8 +207,9 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 			
 	//개정
 	$("#reviseBtn").click(function () {
-		var url	= getURLString("doc", "reviseDocumentPopup", "do") + "?oid="+$("#oid").val()+"&module=rohs";
-		openOtherName(url,"reviseDocumentPopup","350","200","status=no,scrollbars=yes,resizable=yes");
+		const oid = $("#oid").val();
+		const url = getCallUrl("/rohs/reviseRohs?oid=" + oid);
+		_popup(url, 1500, 550, "n");
 	})
 	
 	//버전이력
@@ -236,17 +233,11 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		popup(url, 830, 600);
 	})
 	
-	//최신버전
-	$("#lastestBtn").click(function() {
-		var oid = this.value;
-		openView(oid);
-	})
-	
 	//copy
 	$('#copyRohs').click(function() {
-		const oid = document.querySelector("#oid").value;
+		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/copyRohs?oid=" + oid);
-		popup(url, 830, 600);
+		_popup(url, 1500, 550, "n");
 	})
 	
 	//결재 회수
@@ -325,15 +316,15 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 		});
 		createAUIGrid1(columnPart);
 		AUIGrid.resize(partGridID);
-// 		createAUIGridRohs1(columnRohs);
-// 		AUIGrid.resize(rohsGridID);
+		createAUIGridRohs1(columnRohs);
+		AUIGrid.resize(rohsGridID);
 		createAUIGridRohs2(columnRohs2);
 		AUIGrid.resize(rohs2GridID);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(partGridID);
-// 		AUIGrid.resize(rohsGridID);
+		AUIGrid.resize(rohsGridID);
 		AUIGrid.resize(rohs2GridID);
 	});
 </script>
