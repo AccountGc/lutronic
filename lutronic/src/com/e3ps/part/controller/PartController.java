@@ -1921,4 +1921,19 @@ public class PartController extends BaseController {
 		return result;
 	}
 	
+	/**
+	 * 엑셀 다운로드
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/partExcel")
+	public Map<String, Object> partExcel (@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> result =PartHelper.manager.partExcel(params,response);
+		return result;
+	}
+
 }
