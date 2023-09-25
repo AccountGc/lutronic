@@ -377,7 +377,7 @@ public class PartController extends BaseController {
 		model.addObject("oid", oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
 		model.addObject("data", partData);
-		model.setViewName("/extcore/jsp/part/part-changeList.jsp");
+		model.setViewName("popup:/part/part-changeList");
 		return model;
 	}
 
