@@ -16,24 +16,10 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
-
-		<table class="search-table">
-			<colgroup>
-				<col width="130">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<td class="tdblueM">제품<input type="checkbox" name="allCheck" id="allCheck" align="middle" title="전체선택" value=""/></td>
-				<td class="indent5">
-					<input type="button" value="추가" class="blue" title="추가" id="searchPart" >
-					<input type="button" value="삭제" class="red" title="삭제" id="deletePart" >
-					<br>
-					<div id='partDiv'></div>
-				</td>
-				
-			</tr>
-		</table>
+		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="lastNum" id="lastNum">
+		 <input type="hidden" name="curPage" id="curPage">
+		  <input type="hidden" name="oid" id="oid">
 
 		<table class="button-table">
 			<tr>
@@ -65,7 +51,7 @@
 					dataField : "number",
 					headerText : "제품코드",
 					dataType : "string",
-					width : 120,
+					width : 140,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -83,7 +69,7 @@
 					dataField : "name",
 					headerText : "제품명",
 					dataType : "string",
-					width : 120,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -92,7 +78,7 @@
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 350,
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -101,7 +87,7 @@
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 100,
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -109,8 +95,8 @@
 				}, {
 					dataField : "state",
 					headerText : "상태",
-					dataType : "date",
-					width : 180,
+					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -118,8 +104,8 @@
 				}, {
 					dataField : "rohsState",
 					headerText : "RoHs 상태",
-					dataType : "date",
-					width : 180,
+					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -156,17 +142,11 @@
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(dataArr) {
 				let params = new Object();
 				const url = getCallUrl("/rohs/listRoHSProduct");
-// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-// 				params = toField(params, field);
-// 				params.latest = latest;
-// 				const field = [ "_psize" ];
-// 				params = toField(params, field);
+				params.partList = dataArr;
 				AUIGrid.showAjaxLoader(myGridID);
-// 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -177,7 +157,6 @@
 					} else {
 						alert(data.msg);
 					}
-// 					parent.closeLayer();
 				});
 			}
 
@@ -190,16 +169,8 @@
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("fileType");
-				twindate("publication");
 				selectbox("_psize");
 			});
-
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
@@ -215,6 +186,34 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			$("#searchBtn").click(function(){
+				const url = getCallUrl("/part/listPopup");
+				_popup(url, 1500, 700, "n");
+			});
+			
+			function append(items){
+				var data = new Object();
+				var dataArr = new Array();
+				for(var i=0; i<items.length; i++){
+					data.partOid = items[i].part_oid;
+					dataArr.push(data);
+				}
+				loadGridData(dataArr);
+			}
+			
+			function deleteBtn(){
+				const checked = AUIGrid.getCheckedRowItems(partGridID);
+				if (checked.length === 0) {
+					alert("삭제할 행을 선택하세요.");
+					return false;
+				}
+
+				for (let i = checked.length - 1; i >= 0; i--) {
+					const rowIndex = checked[i].rowIndex;
+					AUIGrid.removeRow(partGridID, rowIndex);
+				}
+			}
 		</script>
 	</form>
 </body>

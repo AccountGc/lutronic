@@ -364,6 +364,10 @@ public class RohsHelper {
 		List<Map<String,Object>> partlist  = new ArrayList<Map<String,Object>>();
 		
 		String partOid = StringUtil.checkNull((String)params.get("partOid"));
+		if(partOid == ""){
+			returnMap.put("partRohslist", partRohslist);
+			return returnMap;
+		}
 		WTPart part = (WTPart)CommonUtil.getObject(partOid);
 		if(part == null){
 			returnMap.put("partRohslist", partRohslist);
@@ -413,6 +417,7 @@ public class RohsHelper {
 				state ="검은색";
 			}
 			
+			System.out.println("rohslist.size()=>"+rohslist.size());
 			if(rohslist.size()>0){
 				for(RohsData rohsData : rohslist){
 					//System.out.println("rohslist.size >0 .supart =" + supart.getNumber());
@@ -487,12 +492,13 @@ public class RohsHelper {
 	}
 	
 	public Map<String, Object> listRoHSProduct(Map<String, Object> params) throws Exception {
-		String[] partOids = (String[]) params.get("partOids");
+		ArrayList<Map<String, Object>> partList = (ArrayList<Map<String, Object>>) params.get("partList");
 		Map<String,Object> result = new HashMap<String,Object>();
 		List<PartData> list = new ArrayList<>(); 
 		
-		if(partOids != null) {
-			for(String partOid : partOids) {
+		if(partList!=null) {
+			for(Map<String, Object> map : partList) {
+				String partOid = (String) map.get("partOid");
 				WTPart part = (WTPart)CommonUtil.getObject(partOid);
 				PartData data = new PartData(part);
 				list.add(data);
