@@ -395,7 +395,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const remarks = document.getElementById("remarks").value;
 				const specification = document.getElementById("specification").value;
 				const unit =  document.getElementById("unit").value;
-				const primary = document.querySelector("input[name=primary]").value;
+				const primary = document.querySelector("input[name=primary]") == null ? "" : document.querySelector("input[name=primary]").value;
 				const secondary = toArray("secondarys");
 				const wtPartType = document.getElementById("wtPartType").value;
 				const source = document.getElementById("source").value;
@@ -414,7 +414,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	            
 	            let rohsOids = [];
 	            const appendRohs = AUIGrid.getGridData(rohsGridID);
-	            if(appendDoc.length > 0){
+	            if(appendRohs.length > 0){
 	                for(let i = 0; i < appendRohs.length; i++){
 	                	rohsOids.push(appendRohs[i].oid)
 	                }

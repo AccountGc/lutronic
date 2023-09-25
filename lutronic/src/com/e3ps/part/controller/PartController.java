@@ -260,17 +260,12 @@ public class PartController extends BaseController {
 	public ModelAndView view(@RequestParam(value = "oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		PartData partData = new PartData(part);
+		PartDTO dto = new PartDTO(part);
 		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
-		List<CommentsData> cList = PartHelper.manager.commentsList(oid);
-		String pnum = DocumentHelper.manager.getCnum(cList);
 
-		model.addObject("oid", oid);
 		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("data", partData);
+		model.addObject("dto", dto);
 		model.addAllObjects(map);
-		model.addObject("cList", cList);
-		model.addObject("pnum", pnum);
 		model.setViewName("popup:/part/part-view");
 		return model;
 	}
