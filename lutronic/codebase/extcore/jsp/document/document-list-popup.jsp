@@ -386,6 +386,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		params = toField(params, field);
 		params.latest = latest;
 		AUIGrid.showAjaxLoader(myGridID);
+		openLayer();
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
@@ -396,7 +397,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			} else {
 				alert(data.msg);
 			}
-			parent.closeLayer();
+			closeLayer();
 		});
 	}
 
@@ -433,12 +434,12 @@ boolean multi = (boolean) request.getAttribute("multi");
 		
 		const arr = new Array();
 		checkedItems.forEach(function(item) {
-			logger(item);
+			arr.push(item.item);
 		})
 		
 		openLayer();
-		opener.insert90(checkedItems, function(res) {
-			if(result) {
+		opener.insert90(arr, function(res) {
+			if(res) {
 				setTimeout(function() {
 					closeLayer();
 				}, 500);
