@@ -702,12 +702,29 @@ public class RohsController extends BaseController {
 	@GetMapping(value = "/copyRohs")
 	public ModelAndView copyRohs(@RequestParam String oid) throws Exception{
 		ModelAndView model = new ModelAndView();
-		model.addObject("oid", oid);
 		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
 		RohsData data = new RohsData(rohs);
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		model.addObject("data", data);
-		model.setViewName("/extcore/jsp/rohs/copyRohs.jsp");
+		model.addObject("manufactureList", manufactureList);
+		model.setViewName("popup:/rohs/copyRohs");
 		return model;
+	}
+	
+	@Description(value = "물질복사 함수")
+	@ResponseBody
+	@PostMapping(value = "/copyRohs")
+	public Map<String,Object> copyRohs(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			RohsHelper.service.copyRohs(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	@ResponseBody

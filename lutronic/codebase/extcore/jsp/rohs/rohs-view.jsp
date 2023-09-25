@@ -244,9 +244,9 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 	
 	//copy
 	$('#copyRohs').click(function() {
-		const oid = document.querySelector("#oid").value;
+		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/copyRohs?oid=" + oid);
-		popup(url, 830, 600);
+		_popup(url, 1500, 550, "n");
 	})
 	
 	//결재 회수
