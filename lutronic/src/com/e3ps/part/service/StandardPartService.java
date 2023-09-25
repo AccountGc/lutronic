@@ -262,7 +262,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			
 			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle")); // LifeCycle
 			String view = StringUtil.checkNull((String) params.get("view")); // view
-			String fid = StringUtil.checkNull((String) params.get("fid")); // 분류체계
+			String location = StringUtil.checkNull((String) params.get("location")); // 분류체계
 			String wtPartType = StringUtil.checkNull((String) params.get("wtPartType"));
 			String source = StringUtil.checkNull((String) params.get("source"));
 
@@ -353,14 +353,15 @@ public class StandardPartService extends StandardManager implements PartService 
 			ViewHelper.assignToView(part, ViewHelper.service.getView(view));
 
 			// 폴더 셋팅
-			Folder folder = null;
-			if (StringUtil.checkString(fid)) {
-				folder = (Folder) CommonUtil.getObject(fid);
-			} else {
-				folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
-			}
+//			Folder folder = null;
+//			if (StringUtil.checkString(fid)) {
+//				folder = (Folder) CommonUtil.getObject(fid);
+//			} else {
+//				folder = FolderTaskLogic.getFolder("/Default/PART_Drawing", WCUtil.getWTContainerRef());
+//			}
+//			FolderHelper.assignLocation((FolderEntry) part, folder);
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) part, folder);
-			
 //			part = (WTPart)PersistenceHelper.manager.save(part);
 			
 			// 라이프사이클 셋팅
@@ -376,7 +377,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			// 주 도면
 			if(primary.length() > 0) {
 				params.put("oid", CommonUtil.getOIDString(part));
-				params.put("epmfid", fid);
+				params.put("epmfid", location);
 				EPMDocument epm = DrawingHelper.service.createEPM(params);
 				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
 				PersistenceServerHelper.manager.insert(link);
