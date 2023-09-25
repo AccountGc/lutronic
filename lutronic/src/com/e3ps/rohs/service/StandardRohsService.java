@@ -2282,6 +2282,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			trs.start();
 			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
 	    	String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
+	    	String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
 	    	
 			DocumentType docType = DocumentType.toDocumentType((String) params.get("docType"));
 			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
@@ -2289,7 +2290,11 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			// 문서 기본 정보 설정
 			rohs = ROHSMaterial.newROHSMaterial();
 			rohs.setName(rohsName);
-			rohs.setNumber(getRohsNumberSeq(manufacture));
+			if("".equals(rohsNumber)) {
+				rohs.setNumber(getRohsNumberSeq(manufacture));
+			}else {
+				rohs.setNumber(rohsNumber);
+			}
 			
 	        rohs.setDocType(docType);
 			rohs.setDescription(description);
@@ -2593,6 +2598,92 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	            new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
 			}
 			
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
+        } finally {
+        	if (trx != null) {
+        		trx.rollback();
+			}
+        }
+	}
+
+	@Override
+	public void copyRohs(Map<String, Object> params) throws Exception {
+		Transaction trx = new Transaction();
+		try {
+			trx.start();
+			
+			String oid = StringUtil.checkNull((String) params.get("oid"));
+			ROHSMaterial orgRohs = (ROHSMaterial)CommonUtil.getObject(oid);
+			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+	    	String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
+			DocumentType docType = DocumentType.toDocumentType((String) params.get("docType"));
+			String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
+			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+			
+			// 문서 기본 정보 설정
+			ROHSMaterial rohs = ROHSMaterial.newROHSMaterial();
+			rohs.setName(rohsName);
+			if("".equals(rohsNumber)){
+				rohs.setNumber(getRohsNumberSeq(manufacture));
+			}else{
+				rohs.setNumber(rohsNumber);
+			}
+			rohs.setDescription(orgRohs.getDescription());
+	        rohs.setDocType(docType);
+	        
+	        // 문서 분류쳬게 설정
+	        String location = StringUtil.checkNull((String) params.get("location"));
+	        Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+	        FolderHelper.assignLocation((FolderEntry)rohs, folder);
+			
+	        // 문서 Container 설정
+	        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+	        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+	        rohs.setContainer(e3psProduct);
+	        
+	        // 문서 lifeCycle 설정
+	        LifeCycleHelper.setLifeCycle(rohs, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
+            
+	        PersistenceHelper.manager.save(rohs);
+	        
+	        // 관련 품목
+	        List<PartToRohsLink> partList = RohsHelper.manager.getPartToRohsLinkList(orgRohs);
+	        for(PartToRohsLink link : partList){
+	        	WTPart part = (WTPart) link.getRoleAObject();
+	        	PartToRohsLink partLink = PartToRohsLink.newPartToRohsLink(part, rohs);
+	        	PersistenceServerHelper.manager.insert(partLink);
+	        }
+	        
+	        //관련 물질
+	        List<RepresentToLink> rohsList = RohsHelper.manager.getRepresentLink(orgRohs);
+	        for(RepresentToLink rohsLink : rohsList){
+	        	ROHSMaterial comRohs = (ROHSMaterial) rohsLink.getRoleBObject();
+	        	if(CommonUtil.isLatestVersion(comRohs)){
+	        		RepresentToLink link = RepresentToLink.newRepresentToLink(rohs, comRohs);
+		        	PersistenceServerHelper.manager.insert(link);
+	        	}
+	        }
+	        
+	        //관련 첨부파일
+	        copyROHSContHOlder(orgRohs, rohs);
+			
+	        String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+            if("LC_Default_NonWF".equals(lifecycle)){
+            	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) rohs, "BATCHAPPROVAL");
+            	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+            }
+            
+	        Map<String,Object> map = new HashMap<String,Object>();
+            
+            map.put("approvalType", approvalType);
+            map.put("manufacture", manufacture);
+            CommonHelper.service.changeIBAValues(rohs, map);
+	        
 			trx.commit();
 			trx = null;
 		} catch (Exception e) {
