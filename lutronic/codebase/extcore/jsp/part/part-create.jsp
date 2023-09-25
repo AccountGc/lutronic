@@ -400,7 +400,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const source = document.getElementById("source").value;
 				const lifecycle = document.getElementById("lifecycle").value;
 				const view = document.getElementById("view").value;
-				const fid = document.getElementById("fid").value;
 				const location = document.getElementById("location").value;
 				
 	            let docOids = [];
@@ -495,7 +494,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				params.source = source;
 				params.lifecycle = lifecycle;
 				params.view = view;
-				params.fid = fid;
 				params.location = location;
 				params.docOids = docOids;
 				params.rohsOids = rohsOids;

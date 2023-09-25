@@ -4,6 +4,7 @@
 <%@page import="com.e3ps.common.code.dto.NumberCodeDTO"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@page import="wt.folder.Folder"%>
+<%@page import="wt.part.QuantityUnit"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<Folder> folderList = (ArrayList<Folder>) request.getAttribute("folderList");
@@ -15,6 +16,7 @@ ArrayList<NumberCode> partName1List = (ArrayList<NumberCode>) request.getAttribu
 ArrayList<NumberCode> partName2List = (ArrayList<NumberCode>) request.getAttribute("partName2List");
 ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribute("partName3List");
 ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getAttribute("partType1List");
+QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>
 <html>
@@ -79,6 +81,10 @@ ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getA
 			let partType1List = [];
 			<%for(NumberCodeDTO partType1 : partType1List){%>
 				partType1List.push({ "code" : "<%= partType1.getOid() %>", "value" : "[<%= partType1.getCode() %>]<%= partType1.getName() %>"});
+			<% } %>
+			let unitList = [];
+			<% for(QuantityUnit unit : unitList){ %>
+				unitList.push({ "code" : "<%= unit.toString() %>", "value" : "<%= unit.getDisplay() %>"});
 			<% } %>
 
 			const layout = [ {
@@ -322,11 +328,21 @@ ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getA
 				headerText : "SEQ<br>(3자리)",
 				dataType : "string",
 				width : 120,
+				editRenderer : {
+					type : "InputEditRenderer",
+					onlyNumeric : true, // 0~9만 입력가능
+					maxlength : 3, // 글자수 10으로 제한 (천단위 구분자 삽입(autoThousandSeparator=true)로 한 경우 구분자 포함해서 10자로 제한)
+				}
 			}, {
 				dataField : "etc",
 				headerText : "CUSTOM<br>(2자리)",
 				dataType : "string",
 				width : 120,
+				editRenderer : {
+					type : "InputEditRenderer",
+					onlyNumeric : true, // 0~9만 입력가능
+					maxlength : 2, // 글자수 10으로 제한 (천단위 구분자 삽입(autoThousandSeparator=true)로 한 경우 구분자 포함해서 10자로 제한)
+				}
 			}, {
 				headerText : "MAT",
 				children : [ {
@@ -483,11 +499,49 @@ ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getA
 				headerText : "품목명<br>(KEY-IN)",
 				dataType : "string",
 				width : 120,
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					if(value != null){
+						value = value.toUpperCase()
+						item.partName4 = value;
+						return value;
+					}
+				},
 			}, {
 				dataField : "unit",
 				headerText : "단위",
 				dataType : "string",
 				width : 120,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+					var retStr = "";
+					for (var i = 0, len = unitList.length; i < len; i++) {
+						if (unitList[i]["code"] == value) {
+							retStr = unitList[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					list: unitList, 
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+					keyField: "code", 
+					valueField: "value" 
+				},
 			}, {
 				headerText : "부서",
 				children : [ {
@@ -871,6 +925,8 @@ ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getA
 				if (!confirm("등록 하시겠습니까?")) {
 					return false;
 				}
+				
+				debugger;
 				
 				
 				const url = getCallUrl("/part/batch");

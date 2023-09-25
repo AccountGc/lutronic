@@ -355,7 +355,6 @@ public class StandardPartService extends StandardManager implements PartService 
 			// 폴더 셋팅
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) part, folder);
-			part = (WTPart)PersistenceHelper.manager.save(part);
 			
 			// 라이프사이클 셋팅
 			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
@@ -500,7 +499,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				// 폴더 셋팅
 				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-				FolderHelper.assignLocation((FolderEntry) part, folder);
+				FolderHelper.assignLocation((FolderEntry) _part, folder);
 				
 				_part = (WTPart)PersistenceHelper.manager.save(_part);
 				
