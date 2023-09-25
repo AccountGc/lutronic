@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
@@ -18,6 +19,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.util.PartUtil;
+import com.e3ps.rohs.service.RohsUtil;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -97,6 +99,7 @@ public class PartData {
 	private String PDMLinkProductOid;
 	private boolean last;
 	private String location;
+	private double rohsState;
 
 	public PartData(WTPart part) throws Exception {
 //    	super(part);
@@ -130,7 +133,7 @@ public class PartData {
 //    	setState(part.getLifeCycleState().toString());
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorFullName());
-//    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
+    	setCreateDate(DateUtil.getDateString(part.getCreateTimestamp(),"a"));
     	setModifyDate(DateUtil.getDateString(part.getModifyTimestamp(),"a"));
 
 //    	if(epm == null){
@@ -148,6 +151,9 @@ public class PartData {
 		setPDMLinkProductOid(CommonUtil.getOIDString(wc.getContainer()));
 		setStateKey(part.getLifeCycleState().toString());
 		setLocation(part.getLocation());
+		Map<String, Object> dataMap = RohsUtil.getProductRoHsState(getOid());
+		setRohsState((double) dataMap.get("totalState"));
+		
 	}
 
 	private ArrayList<Object[]> descentLastPart(WTPart part, Baseline baseline, boolean isCheckDummy, State state)

@@ -153,7 +153,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "manufactureDisplay",
 					headerText : "협력업체",
 					dataType : "string",
-					width : 120,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -162,7 +162,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "name",
 					headerText : "물질명",
 					dataType : "string",
-					width : 120,
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -180,7 +180,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "version",
 					headerText : "Rev.",
 					dataType : "string",
-					width : 350,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -239,7 +239,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					showRowCheckColumn : true,
+					showRowCheckColumn : false,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
