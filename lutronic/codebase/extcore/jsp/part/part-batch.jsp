@@ -68,15 +68,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<%}%>
 			let partName1List = [];
 			<%for(NumberCode partName1 : partName1List){%>
-				partName1List.push({ "code" : "<%=partName1.getCode()%>", "value" : "<%=partName1.getName()%>"});
+				partName1List.push({ "code" : "<%=partName1.getName()%>", "value" : "<%=partName1.getName()%>"});
 			<%}%>
 			let partName2List = [];
 			<%for(NumberCode partName2 : partName2List){%>
-				partName2List.push({ "code" : "<%=partName2.getCode()%>", "value" : "<%=partName2.getName()%>"});
+				partName2List.push({ "code" : "<%=partName2.getName()%>", "value" : "<%=partName2.getName()%>"});
 			<%}%>
 			let partName3List = [];
 			<%for(NumberCode partName3 : partName3List){%>
-				partName3List.push({ "code" : "<%=partName3.getCode()%>", "value" : "<%=partName3.getName()%>"});
+				partName3List.push({ "code" : "<%=partName3.getName()%>", "value" : "<%=partName3.getName()%>"});
 			<%}%>
 			let partType1List = [];
 			<%for(NumberCodeDTO partType1 : partType1List){%>
@@ -925,9 +925,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				if (!confirm("등록 하시겠습니까?")) {
 					return false;
 				}
-				
-				debugger;
-				
 				
 				const url = getCallUrl("/part/batch");
 				let params = new Object();

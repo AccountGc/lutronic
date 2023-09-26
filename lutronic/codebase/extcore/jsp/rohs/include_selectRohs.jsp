@@ -51,8 +51,10 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			showAutoNoDataMessage : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
-			showRowCheckColumn : true,
 			showStateColumn : false,
+			<%if (isCreate || isUpdate) {%>
+			showRowCheckColumn : true,
+			<%}%>
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 		<%if (isUpdate) {%>

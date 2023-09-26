@@ -686,8 +686,23 @@ public class StandardPartService extends StandardManager implements PartService 
 				part = (WTPart) getWorkingCopy(part);
 				
 				
-				
-				String partName = StringUtil.checkNull((String)params.get("partName"));							// 품목명
+				String partName1 = StringUtil.checkNull((String) params.get("partName1")); // 품목명1 (NumberCode)
+				String partName2 = StringUtil.checkNull((String) params.get("partName2")); // 품목명2 (NumberCode)
+				String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
+				String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
+
+
+
+				String partName = "";
+				String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
+				for (int i = 0; i < partNames.length; i++) {
+					if (StringUtil.checkString(partNames[i])) {
+						if (i != 0 && partName.length() != 0) {
+							partName += "_";
+						}
+						partName += partNames[i];
+					}
+				}
 				
 				if (!oldPartName.equals(partName)) {
 					
