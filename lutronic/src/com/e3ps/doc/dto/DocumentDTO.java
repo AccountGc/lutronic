@@ -84,7 +84,7 @@ public class DocumentDTO {
 		setName(doc.getName());
 		setNumber(doc.getNumber());
 		setDescription(doc.getDescription());
-		setContent(doc.getTypeInfoWTDocument().getPtc_rht_1());
+		setContent(doc.getTypeInfoWTDocument().getPtc_str_1());
 		setLocation(doc.getLocation());
 		setDocumentType(doc.getDocType().getDisplay());
 		setLatest(CommonUtil.isLatestVersion(doc));
