@@ -309,6 +309,21 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
+	@Description(value = "물질 일괄링크 실행")
+	@ResponseBody
+	@PostMapping(value = "/link")
+	public Map<String,Object> link(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = RohsHelper.service.rohsLink(params);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "파일검색 페이지")
 	@GetMapping(value = "/listRohsFile")
 	public ModelAndView listRohsFile() {
@@ -527,25 +542,6 @@ public class RohsController extends BaseController {
 			result = new HashMap<String,Object>();
 		}
 		return result;
-	}
-	
-	@RequestMapping("/createPackageRoHSLink")
-	public ModelAndView createPackageRoHSLink(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu8");
-		model.addObject("module","rohs");
-		model.setViewName("default:/rohs/createPackageRoHSLink");
-		return model;
-	}
-	
-	@RequestMapping("/createPackageRoHSLinkAction")
-	public ModelAndView createPackageRoHSLinkAction(HttpServletRequest request, HttpServletResponse response) {
-		String xmlString = RohsHelper.service.createPackageRoHSLinkAction(request, response);
-		
-		ModelAndView model = new ModelAndView();
-		model.addObject("xmlString", xmlString);
-		model.setViewName("empty:/rohs/createPackageRoHSLinkAction");
-		return model;
 	}
 	
 	/** 부품의 BOM에서 ROHS 파일 다운로드

@@ -790,7 +790,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				}
 				
 				// 관련 ROHS 연결
-				List<PartToRohsLink> list = RohsQueryHelper.service.getPartToRohsLinkList(part);
+				List<PartToRohsLink> list = RohsHelper.manager.getPartToRohsLinkList(part);
 				for(PartToRohsLink link : list) {
 					PersistenceServerHelper.manager.remove(link);
 				}
@@ -1958,7 +1958,7 @@ public class StandardPartService extends StandardManager implements PartService 
 	    		}
 			}else if("rohs".equals(moduleType)){
 				ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-				list = RohsQueryHelper.service.getROHSToPartList(rohs);
+				list = RohsHelper.manager.getROHSToPartList(rohs);
 				Collections.sort(list, new ObjectComarator());
 			}
 		}
@@ -2038,7 +2038,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				PartData data = new PartData(part);
 				QueryResult linkQr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
 				QueryResult eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class);
-				List<PartToRohsLink> list = RohsQueryHelper.service.getPartToRohsLinkList(part);
+				List<PartToRohsLink> list = RohsHelper.manager.getPartToRohsLinkList(part);
 
 				// 도면
 				if (isDelete && !"".equals(data.getEpmOid())  ){ //&& (data.epmDoc != null)) {

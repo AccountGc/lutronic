@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -21,8 +22,10 @@ import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.org.People;
 import com.e3ps.part.dto.ObjectComarator;
+import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
@@ -37,6 +40,7 @@ import wt.enterprise.RevisionControlled;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
@@ -44,6 +48,8 @@ import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
 import wt.org.WTUser;
 import wt.part.WTPart;
+import wt.part.WTPartMaster;
+import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QueryException;
@@ -270,10 +276,10 @@ public class RohsHelper {
 			if(oid.length() > 0){
 				if("rohs".equals(module)){
 					ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-					list = RohsQueryHelper.service.getRepresentToLinkList(rohs,roleType);
+					list = RohsHelper.manager.getRepresentToLinkList(rohs,roleType);
 				}else if("part".equals(module)){
 					WTPart part = (WTPart)CommonUtil.getObject(oid);
-					list = RohsQueryHelper.service.getPartToROHSList(part);
+					list = RohsHelper.manager.getPartToROHSList(part);
 				}else {
 					list = new ArrayList<RohsData>();
 				}
@@ -389,7 +395,7 @@ public class RohsHelper {
 		returnMap.put("listCount", productStateMap.get("listCount"));
 		returnMap.put("isDumy_SonPartsCount", productStateMap.get("isDumy_SonPartsCount"));
 		
-		partlist = RohsQueryHelper.service.childPartPutMap(part, partlist,0);
+		partlist = childPartPutMap(part, partlist,0);
 	    HashMap<String, Integer> stateMap = new HashMap<String, Integer>();
 	    
 	    int totalLevl = 0;
@@ -554,8 +560,8 @@ public class RohsHelper {
 	
 	public List<Map<String,Object>> getRohsContent(String oid) throws Exception {
 		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		
-		List<ROHSContHolder> holderList = RohsQueryHelper.service.getROHSContHolder(oid);
+		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
+		List<ROHSContHolder> holderList = RohsHelper.manager.getROHSContHolder(rohs);
 		for(ROHSContHolder holder : holderList){
 			ApplicationData data = holder.getApp();
 			String url="/Windchill/plm/content/download?oid="+CommonUtil.getOIDString(data);
@@ -629,17 +635,17 @@ public class RohsHelper {
     	return duplicate;
 	}
 	
-	public List<PartData> getROHSToPartList(ROHSMaterial rohs) throws Exception{
+	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs) throws Exception{
 		return getROHSToPartList(rohs, CommonUtil.isLatestVersion(CommonUtil.getOIDString(rohs)));
 	}
 	
-	public List<PartData> getROHSToPartList(ROHSMaterial rohs,boolean islastversion) throws Exception{
-		List<PartData> list = new ArrayList<PartData>();
+	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs,boolean islastversion) throws Exception{
+		List<PartDTO> list = new ArrayList<PartDTO>();
 		QueryResult result = PersistenceHelper.manager.navigate(rohs, "part", PartToRohsLink.class);
 		while(result.hasMoreElements()){
 			WTPart part = (WTPart)result.nextElement();
-			PartData data = new PartData(part);
-			list.add(data);
+			PartDTO dto = new PartDTO(part);
+			list.add(dto);
 		}
 		return list;
 //		String vr = CommonUtil.getVROID(rohs);
@@ -742,4 +748,145 @@ public class RohsHelper {
 		}
 		return list;
 	}
+	
+	public boolean duplicateNumber(String partOid, String rohsNumber) throws Exception {
+		boolean isDuble = false;
+		QuerySpec qs = new QuerySpec();
+		int idx = qs.addClassList(PartToRohsLink.class, true);
+		qs.appendWhere(new SearchCondition(PartToRohsLink.class, "roleAObjectRef.key.branchId", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(partOid)));
+		QueryResult qr = PersistenceHelper.manager.find(qs);
+		while(qr.hasMoreElements()){
+			Object[] obj = (Object[])qr.nextElement();
+			PartToRohsLink link = (PartToRohsLink)obj[0];
+			ROHSMaterial rohs=(ROHSMaterial)link.getRoleBObject();
+			//System.out.println("rohs.getNumber() =" + rohs.getNumber() +",rohsNumber="+rohsNumber + "===="+(rohs.getNumber().equals(rohsNumber)));
+			if(rohs.getNumber().equals(rohsNumber)){
+				isDuble = true;
+			}
+		}
+		return isDuble;
+	}
+	
+	public List<RohsData> getRepresentToLinkList(ROHSMaterial rohs,String roleType) throws Exception{
+		//composition 구성,represent 대표
+		List<RohsData> list = new ArrayList<RohsData>();
+		String vr = CommonUtil.getVROID(rohs);
+		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
+		
+		QueryResult rt =PersistenceHelper.manager.navigate(rohs,roleType, RepresentToLink.class,true);
+		while(rt.hasMoreElements()){
+			ROHSMaterial rohsMaterial = (ROHSMaterial)rt.nextElement();
+			//System.out.println("getRepresentToLinkList rohsMaterial =" + rohsMaterial.getNumber());
+			RohsData data = new RohsData(rohsMaterial);
+			list.add(data);
+		}
+		return list;
+	}
+	
+	public List<RohsData> getPartToROHSList(WTPart part) throws Exception{
+		boolean islastversion = CommonUtil.isLatestVersion(part);
+		
+		QuerySpec qs = new QuerySpec();
+		int idx1= qs.addClassList(ROHSMaterial.class, true);
+        int idx2 = qs.addClassList(PartToRohsLink.class, true);
+        
+        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
+    	qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx1});
+        
+        if(islastversion) {
+         	SearchUtil.addLastVersionCondition(qs, ROHSMaterial.class, idx1);
+		}
+    	SearchUtil.setOrderBy(qs, ROHSMaterial.class, idx1, ROHSMaterial.NUMBER, false);
+	
+		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs",qs,true);
+		List<RohsData> list = new ArrayList<RohsData>();
+		while(rt.hasMoreElements()){
+			ROHSMaterial rohs = (ROHSMaterial)rt.nextElement();
+			RohsData data = new RohsData(rohs);
+		
+			list.add(data);
+		}
+		return list;
+	}
+	
+	public List<Map<String,Object>> childPartPutMap(WTPart part, List<Map<String,Object>> list,int level) throws Exception {
+		Map<String,Object> map = new HashMap<String,Object>();
+		//boolean isChildCheck = isChildPartCheck(part);
+		if(PartUtil.isChange(part.getNumber())){
+			return list;
+		}
+		
+		map.put("partOid", part.getPersistInfo().getObjectIdentifier().toString());
+		map.put("partNumber", part.getNumber());
+		map.put("partName", part.getName());
+		map.put("partCreator", part.getCreatorFullName());
+		map.put("partCreateDate", DateUtil.subString(DateUtil.getDateString(part.getPersistInfo().getCreateStamp(), "a"),0,10));
+		map.put("partState", part.getLifeCycleState().getDisplay(Message.getLocale()));
+		map.put("level", level);
+		map.put("Level"+level, level);
+		
+		list.add(map);
+		
+		QueryResult result = isChildPart(part, true);
+		List<WTPart> tempList = new ArrayList<WTPart>();
+		while(result.hasMoreElements()) {
+			Object[] o = (Object[])result.nextElement();
+			WTPartMaster childPartMaster = (WTPartMaster)o[0];
+			WTPart childPart = PartHelper.service.getPart(childPartMaster.getNumber());//getWTPartFormWTPartMaster(childPartMaster);
+			if(PartUtil.isChange(childPart.getNumber())){
+				continue;
+			}
+			tempList.add(childPart);
+			/*
+			if(childPart != null){
+				childPartPutMap(childPart, list,level+1);
+			}
+			*/
+		}
+		
+		Collections.sort(tempList, new ObjectComarator());
+		for(WTPart childPart : tempList){
+			if(childPart != null){
+				childPartPutMap(childPart, list,level+1);
+			}
+		}
+		return list;
+	}
+	
+	private QueryResult isChildPart(WTPart part, boolean isData) throws Exception {
+		QuerySpec spec = new QuerySpec();
+		
+		int idx_master = spec.addClassList(WTPartMaster.class, isData);
+		int idx = spec.addClassList(WTPartUsageLink.class, false);
+		int idx_part = spec.addClassList(WTPart.class, false);
+		spec.setAdvancedQueryEnabled(true);
+		
+		ClassAttribute idx_l = new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id");
+		ClassAttribute idx_p = new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id");
+		
+		spec.appendWhere(new SearchCondition(idx_l, SearchCondition.EQUAL, idx_p), new int[] {idx, idx_part});
+		
+		spec.appendAnd();
+		ClassAttribute idx_l2 = new ClassAttribute(WTPartUsageLink.class, "roleBObjectRef.key.id");
+		ClassAttribute idx_m = new ClassAttribute(WTPartMaster.class, "thePersistInfo.theObjectIdentifier.id");
+		
+		spec.appendWhere(new SearchCondition(idx_l2, SearchCondition.EQUAL, idx_m), new int[] {idx, idx_master});
+		
+		spec.appendAnd();
+		spec.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true), new int[] { idx_part });
+		
+		spec.appendJoin(idx, "roleA", part);
+		
+		if(!isData) {
+			spec.appendGroupBy(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), idx_part, true);
+		}
+		
+		spec.appendOrderBy(new OrderBy(new ClassAttribute(WTPartMaster.class, WTPartMaster.NUMBER), true), new int[] { idx_master });
+		
+		//System.out.println(spec.toString());
+		QueryResult result = PersistenceServerHelper.manager.query(spec);
+		
+		return result;
+	}
+		
 }

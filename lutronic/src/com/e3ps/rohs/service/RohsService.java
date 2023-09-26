@@ -21,24 +21,10 @@ public interface RohsService {
 	
 	List<Map<String,String>> rohsFileType();
 	
-	Map<String, Object> listRohsAction(HttpServletRequest request,HttpServletResponse response) throws Exception;
-
 	List<RohsData> include_RohsList(String oid) throws Exception;
 
-	ResultData createRohsAction(HttpServletRequest request,HttpServletResponse response);
-
-	List<Map<String, Object>> getRohsContent(String oid) throws Exception;
-
-	ResultData updateRohsAction(HttpServletRequest request, HttpServletResponse response);
-	
-	ResultData reviseUpdate(Map<String, Object> params) throws Exception;
-	
 	Map<String,Object> listRoHSDataAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
-	Map<String, Object> listRoHSPartAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-	
-	Map<String, Object> listRoHSProductAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
 	Map<String, Object> delete(String oid) throws Exception;
 
 	void createROHSToPartLink(RevisionControlled rv, String[] oids) throws WTException;
@@ -46,18 +32,6 @@ public interface RohsService {
 	List<RohsData> include_RohsView(String oid, String module, String roleType) throws Exception;
 
 	void revisePartToROHSLink(WTPart oldPart, WTPart newPart) throws Exception;
-
-	ResultData duplicateName(String rohsName);
-	
-	ResultData copyRohsAction(HttpServletRequest request, HttpServletResponse response);
-
-	String createPackageRoHSAction(HttpServletRequest request, HttpServletResponse response);
-
-	String createPackageRoHSLinkAction(HttpServletRequest request,
-			HttpServletResponse response);
-
-	Map<String, Object> listAUIRoHSPartAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
 
 	ResultData batchROHSDown(HttpServletRequest request, HttpServletResponse response);
 			
@@ -70,4 +44,6 @@ public interface RohsService {
 	public void copyRohs(Map<String, Object> params) throws Exception;
 	
 	public void reviseRohs(Map<String, Object> params) throws Exception;
+	
+	public Map<String, Object> rohsLink(Map<String, Object> params) throws Exception;
 }

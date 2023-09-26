@@ -16,241 +16,37 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
-		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="oid" id="oid">
-
-		<table class="search-table">
-			<colgroup>
-				<col width="180">
-				<col width="*">
-			</colgroup>
+		<table class="button-table">
 			<tr>
-				<th>
-					Excel 업로드 <span style="color:red;">*</span>
-					<br>
-					<input type="button" value="양식다운" title="양식다운" onclick="loadGridData();">
-				</th>
-				<td class="indent5">
+				<td>
+					<input type="button" value="등록" title="등록" onclick="saveBtn();"> 
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> 
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 				</td>
 			</tr>
 		</table>
-
+		<div id="grid_wrap" style="height: 370px; border-top: 1px solid #3180c3; width: 50%;"></div>
 		<script type="text/javascript">
 			let myGridID;
-			function _layout() {
-				return [ {
-					dataField : "name",
-					headerText : "품목번호",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "number",
-					headerText : "결과",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "description",
-					headerText : "품목구분(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "location",
-					headerText : "대분류(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "state",
-					headerText : "중분류(*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "version",
-					headerText : "SEQ",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "etc",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "품목명(*)",
-					dataType : "string",
-// 					width : 50,
-					cellColMerge : true, // 셀 가로 병합 실행
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-					children : [{
-						dataField : "creator",
-						headerText : "대제목",
-						dataType : "string",
-						width : 100,
-						filter : {
-							showIcon : true,
-							inline : true
-						},
-				     }, {
-				    	 dataField : "creator",
-						 headerText : "중제목",
-						 dataType : "string",
-						 width : 100,
-						 filter : {
-							 showIcon : true,
-							 inline : true
-						 },
-				     }, {
-				    	 dataField : "creator",
-						 headerText : "소제목",
-						 dataType : "string",
-						 width : 100,
-						 filter : {
-							 showIcon : true,
-							 inline : true
-						 },
-				     }, {
-				    	 dataField : "creator",
-						 headerText : "사용자 Key in",
-						 dataType : "string",
-						 width : 100,
-						 filter : {
-							 showIcon : true,
-							 inline : true
-						 },
-				     }] // end of children
-				}, {
-					dataField : "creator",
-					headerText : "프로젝트 코드 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "제작방법 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "부서 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "단위 (*)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "MANUFATURER",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "재질",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "후처리",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "사양",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "무게(g)",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "OEM Info.",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "creator",
-					headerText : "주도면",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				} ]
-			}
+			const columns = [ {
+				dataField : "partNumber",
+				headerText : "모 부품코드",
+				dataType : "string",
+				width : 180,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "rohsNumber",
+				headerText : "자 물질코드",
+				dataType : "string",
+				width : 180,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			} ]
 
 			function createAUIGrid(columnLayout) {
 				const props = {
@@ -261,63 +57,28 @@
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : true,
+					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					showRowCheckColumn : true,
+					fillColumnSizeMode: true,
+					editable : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-					hideContextMenu();
-					vScrollChangeHandler(event);
-				});
-				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-					hideContextMenu();
-				});
+				auiReadyHandler();
 			}
-
-			function loadGridData() {
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/doc/list");
-				// 				const field = ["_psize","oid","name","number","description","state","creatorOid","createdFrom","createdTo"];
-				// 				const latest = !!document.querySelector("input[name=latest]:checked").value;
-				// 				params = toField(params, field);
-				// 				params.latest = latest;
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					AUIGrid.setGridData(myGridID, data.list);
-				// 					document.getElementById("sessionid").value = data.sessionid;
-				// 					document.getElementById("curPage").value = data.curPage;document.getElementById("lastNum").value = data.list.length;
-				// 					parent.closeLayer();
-				// 				});
+			
+			function auiReadyHandler() {
+				var item = new Object();
+				AUIGrid.addRow(myGridID, item, 'last');
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("document-list");
-				const contenxtHeader = genColumnHtml(columns);
-				$("#h_item_ul").append(contenxtHeader);
-				$("#headerMenu").menu({
-					select : headerMenuSelectHandler
-				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("state");
-				finderUser("creator");
-				twindate("created");
-				twindate("modified");
-				selectbox("_psize");
 			});
-
-			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
@@ -333,6 +94,48 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			// 추가
+			function addBtn(){
+				var item = new Object();
+				AUIGrid.addRow(myGridID, item, 'last');
+			}
+			
+			// 삭제
+			function deleteBtn(){
+				AUIGrid.removeCheckedRows(myGridID);
+			}
+			
+			// 저장
+			function saveBtn(){
+				var gridList = AUIGrid.getGridData(myGridID);
+				for(var i=0; i<gridList.length; i++){
+					if(isEmpty(gridList[i].partNumber)){
+						alert("부품코드가 입력되지 않았습니다.");
+						return;
+					}
+					if(isEmpty(gridList[i].rohsNumber)){
+						alert("물질코드가 입력되지 않았습니다.");
+						return;
+					}
+				}
+				
+				if (!confirm("등록 하시겠습니까?")){
+					return;
+				}
+				
+				let params = new Object();
+				params.gridList = gridList;
+				const url = getCallUrl("/rohs/link");
+				call(url, params, function(data) {
+					if(data.result){
+						alert(data.msg);
+						location.reload();
+					}else{
+						alert(data.msg);
+					}
+				});
+			}
 		</script>
 	</form>
 </body>

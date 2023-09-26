@@ -29,6 +29,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.People;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
+import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
@@ -228,7 +229,7 @@ public class PartHelper {
 	}
 
 	public JSONArray include_PartList(String oid, String moduleType) throws Exception {
-		List<PartData> list = new ArrayList<PartData>();
+		List<PartDTO> list = new ArrayList<PartDTO>();
 		try {
 			if (oid.length() > 0) {
 				QueryResult rt = null;
@@ -238,7 +239,7 @@ public class PartHelper {
 					rt = PartDocHelper.service.getAssociatedParts(doc);
 					while (rt.hasMoreElements()) {
 						WTPart part = (WTPart) rt.nextElement();
-						PartData data = new PartData(part);
+						PartDTO data = new PartDTO(part);
 						list.add(data);
 					}
 				} else if ("drawing".equals(moduleType)) {
@@ -246,7 +247,7 @@ public class PartHelper {
 					QueryResult qr = PersistenceHelper.manager.navigate(epm, "describes", EPMDescribeLink.class);
 					while (qr.hasMoreElements()) {
 						WTPart part = (WTPart) qr.nextElement();
-						PartData data = new PartData(part);
+						PartDTO data = new PartDTO(part);
 						list.add(data);
 					}
 				} else if ("ecr".equals(moduleType)) {
@@ -257,7 +258,7 @@ public class PartHelper {
 						String version = link.getVersion();
 						WTPartMaster master = (WTPartMaster) link.getPart();
 						WTPart part = PartHelper.service.getPart(master.getNumber(), version);
-						PartData data = new PartData(part);
+						PartDTO data = new PartDTO(part);
 
 						list.add(data);
 					}
@@ -273,7 +274,7 @@ public class PartHelper {
 						String version = link.getVersion();
 
 						WTPart part = PartHelper.service.getPart(master.getNumber(), version);
-						PartData data = new PartData(part);
+						PartDTO data = new PartDTO(part);
 						// if(link.isBaseline()) data.setBaseline("checked");
 
 						list.add(data);
