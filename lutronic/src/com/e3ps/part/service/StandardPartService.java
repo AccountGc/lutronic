@@ -83,7 +83,9 @@ import com.e3ps.rohs.service.RohsQueryHelper;
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
 import wt.content.ApplicationData;
+import wt.content.ContentHelper;
 import wt.content.ContentHolder;
+import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
@@ -685,13 +687,10 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				part = (WTPart) getWorkingCopy(part);
 				
-				
 				String partName1 = StringUtil.checkNull((String) params.get("partName1")); // 품목명1 (NumberCode)
 				String partName2 = StringUtil.checkNull((String) params.get("partName2")); // 품목명2 (NumberCode)
 				String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
 				String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
-
-
 
 				String partName = "";
 				String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
@@ -705,11 +704,8 @@ public class StandardPartService extends StandardManager implements PartService 
 				}
 				
 				if (!oldPartName.equals(partName)) {
-					
-					//E3PSRENameObject.manager.PartReName(part, part.getNumber(), partName, false);
 					partReName(part, partName);
 					IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, partName, "string");
-					//changeNameCheck = true;
 				}
 				
 				// 단위 정보 셋팅
@@ -717,8 +713,6 @@ public class StandardPartService extends StandardManager implements PartService 
 				updateQuantityUnit(part, unit);
 				
 				part = (WTPart) PersistenceHelper.manager.modify(part);
-				
-				
 				
 				// IBA 설정
 				CommonHelper.service.changeIBAValues(part, params);
@@ -741,7 +735,6 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				// 주도면
 				EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
-				//System.out.println("************************   " + epm + ":"+isNonCheckout);
 				if (epm != null){
 					if(isNonCheckout){
 						epm = (EPMDocument) getWorkingCopy(epm);
@@ -760,7 +753,6 @@ public class StandardPartService extends StandardManager implements PartService 
 				}else {
 					// 주 도면
 					String primary = StringUtil.checkNull((String)params.get("primary"));
-					//System.out.println("===============================  " + primary);
 					if(primary.length() > 0) {
 						params.put("oid", CommonUtil.getOIDString(part));
 						params.put("epmfid", fid);
@@ -772,7 +764,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				}
 				
 				// 관련 문서
-				String[] docOids = (String[])params.get("docOids");
+				ArrayList<String> _docOids = (ArrayList<String>) params.get("docOids");
 				QueryResult results = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class, false);
 				while (results.hasMoreElements()) {
 					WTPartDescribeLink link = (WTPartDescribeLink) results.nextElement();
@@ -781,7 +773,8 @@ public class StandardPartService extends StandardManager implements PartService 
 
 				WTDocument doc = null;
 				WTPartDescribeLink dlink = null;
-				if (docOids != null) {
+				if(_docOids != null){
+					String[] docOids =_docOids.toArray(new String[_docOids.size()]);
 					for (String docOid : docOids) {
 						doc = (WTDocument) rf.getReference(docOid).getObject();
 						dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
@@ -795,15 +788,29 @@ public class StandardPartService extends StandardManager implements PartService 
 					PersistenceServerHelper.manager.remove(link);
 				}
 				
-				String[] rohsOid = (String[])params.get("rohsOid");
-				if(rohsOid != null){
-					RohsHelper.service.createROHSToPartLink(part, rohsOid);
+				ArrayList<String> _rohsOids = (ArrayList<String>) params.get("rohsOids");
+				if(_rohsOids != null){
+					String[] rohsOids = _rohsOids.toArray(new String[_rohsOids.size()]);
+					RohsHelper.service.createROHSToPartLink(part, rohsOids);
 				}
 				
 				// 첨부파일
-				String[] add_secondary = (String[])params.get("secondary");
-				String[] secondary = (String[])params.get("delocIds");
-				CommonContentHelper.service.attach(part, null, add_secondary, secondary);
+				ArrayList<String> secondarys =  (ArrayList<String>) params.get("secondary");
+				
+				QueryResult qr = ContentHelper.service.getContentsByRole(part, ContentRoleType.SECONDARY);
+				while (qr.hasMoreElements()) {
+					ContentItem item = (ContentItem) qr.nextElement ();
+					ContentServerHelper.service.deleteContent(part, item);
+				}
+				
+				for (int i = 0; i < secondarys.size(); i++) {
+					String cacheId = secondarys.get(i);
+					File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+					ApplicationData applicationData = ApplicationData.newApplicationData(part);
+					applicationData.setRole(ContentRoleType.SECONDARY);
+					PersistenceHelper.manager.save(applicationData);
+					ContentServerHelper.service.updateContent(part, applicationData, vault.getPath());
+				}
 				
 				//Instance 속성 전파
 				if(partData.isGENERIC(part)){

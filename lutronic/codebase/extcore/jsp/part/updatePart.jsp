@@ -513,8 +513,9 @@ $("#updateBtn").click(function() {
 	const remarks = document.getElementById("remarks").value;
 	const specification = document.getElementById("specification").value;
 	const primary = document.querySelector("input[name=primary]") == null ? "" : document.querySelector("input[name=primary]").value;
+	const secondary = toArray("secondarys");
+	const delocIds = toArray("delocIds");
 	
-
 //     let docOids = [];
 //     const appendDoc = AUIGrid.getGridData(myGridID90);
 //     if(appendDoc.length > 0){
@@ -578,11 +579,13 @@ $("#updateBtn").click(function() {
 		params.remarks = remarks;
 		params.specification = specification;
 		params.primary = primary;
+		params.rohsOids = rohsOids;
+		params.secondary = secondary;
 		
 		call(url, params, function(data) {
 			if (data.result) {
 				alert("수정 성공하였습니다.");
-				location.href = getCallUrl("/part/view?oid=" + data.oid);
+				document.location.href = getCallUrl("/part/view?oid=" + data.oid);
 			} else {
 				alert("수정 실패하였습니다. \n" + data.msg);
 			}
