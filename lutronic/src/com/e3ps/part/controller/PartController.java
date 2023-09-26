@@ -2234,8 +2234,8 @@ public class PartController extends BaseController {
 	
 			// 행 넓이 자동
 	//        sheet.autoSizeColumn(1);
-			sheet.autoSizeColumn(2);
-			sheet.autoSizeColumn(4);
+			sheet.autoSizeColumn(3);
+			sheet.autoSizeColumn(5);
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	
 			LocalDate date = LocalDate.now();
