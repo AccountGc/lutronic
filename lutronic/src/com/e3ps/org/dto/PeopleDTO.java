@@ -34,6 +34,26 @@ public class PeopleDTO {
 	private String duty;
 
 	public PeopleDTO() throws Exception {
+		this((WTUser) SessionHelper.manager.getPrincipal());
+	}
+
+	public PeopleDTO(WTUser user) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(user, "people", WTUserPeopleLink.class);
+		People people = null;
+		if (result.hasMoreElements()) {
+			people = (People) result.nextElement();
+		}
+		setPoid(people.getPersistInfo().getObjectIdentifier().getStringValue());
+		setWoid(people.getUser().getPersistInfo().getObjectIdentifier().getStringValue());
+		setName(people.getName());
+		setId(people.getId());
+		if (people.getDepartment() != null) {
+			setDepartment_name(people.getDepartment().getName());
+			setDepartment_oid(people.getDepartment().getPersistInfo().getObjectIdentifier().getStringValue());
+		}
+		setEmail(people.getEmail());
+		setAuth(people.getAuth());
+		setDuty(people.getDuty() != null ? people.getDuty() : "지정안됨");
 	}
 
 	public PeopleDTO(People people) throws Exception {

@@ -221,9 +221,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 	<!-- 관련 문서 -->
 	<div id="tabs-5">
-		<jsp:include page="/extcore/jsp/document/include_viewDocument.jsp">
-			<jsp:param value="part" name="moduleType" />
+		<jsp:include page="/extcore/jsp/document/document-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="part" name="module" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="insert90" name="method" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="200" name="height" />
 		</jsp:include>
 	</div>
 
@@ -583,12 +587,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 // 					}
 // 					break;
 				case "tabs-5":
-					isCreated = AUIGrid.isCreated(docGridID);
-					if (isCreated) {
-						AUIGrid.resize(docGridID);
+					const isCreated90 = AUIGrid.isCreated(myGridID90);
+					if (isCreated90) {
+						AUIGrid.resize(myGridID90);
 						$(".comment-table").hide();
 					} else {
-						createAUIGrid5(columnDoc);
+						createAUIGrid90(columns90);
 						$(".comment-table").hide();
 					}
 					break;

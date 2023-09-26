@@ -1086,4 +1086,85 @@ public class StandardCommonService extends StandardManager implements CommonServ
 		
 	}
 
+	@Override
+	public Map<String, Object> withDraw(Map<String, Object> params) throws Exception {
+		Map<String,Object> result = new HashMap<String,Object>();
+		String oid = (String) params.get("oid");
+		String withDrawType = (String) params.get("withDrawType"); //init,keep
+		boolean isInit = withDrawType.equals("init");
+		
+		Transaction trx = new Transaction();
+		try {
+			trx.start();
+			
+			//설계 변경(ECO,EO)-LC_ECO, ECR,ROHS,문서,금형관리-LC_Defalut
+			LifeCycleManaged lm = (LifeCycleManaged)CommonUtil.getObject(oid);
+			
+			String state = lm.getLifeCycleState().toString();
+			if(state.equals("APPROVED")){
+				result.put("result", false);
+				result.put("msg", "이미 승인 완료 되었습니다.");
+				return result;
+			}
+			
+			String lifecycleName = lm.getLifeCycleName();
+			//결재선 지정으로 초기화
+			//System.out.println("lifecycleName =" + lifecycleName +":" +lifecycleName.equals("LC_Default"));
+			if(lifecycleName.equals("LC_Default")){
+				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)lm, State.toState("INWORK"), true);
+			}else{
+				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)lm, State.toState("APPROVE_REQUEST"), true);
+			}
+			
+			lm = (LifeCycleManaged)PersistenceHelper.manager.refresh(lm);
+			//결재선 초기화
+			//System.out.println("********** 결재선 초기화 시작  tsuam1**********");
+			WFItem wfItem = WFItemHelper.service.getWFItem((WTObject)lm);
+			boolean isUseChage = false;
+			state = lm.getLifeCycleState().toString();
+			if(wfItem != null) {
+				wfItem.setObjectState(state);
+				wfItem = (WFItem)PersistenceHelper.manager.modify(wfItem);
+				WFItemHelper.service.reworkDataInit(wfItem,isInit);
+			}
+			//System.out.println("********** 결재선 초기화 끝  tsuam1**********");
+			Object obj = CommonUtil.getObject(oid);
+			//System.out.println("obj instanceof EChangeOrder Check " + (obj instanceof EChangeOrder));
+			if(obj instanceof EChangeOrder){
+			QueryResult qr = WorkflowHelper.service.getWorkItems((Persistable)obj);
+				//System.out.println("workitem Check Size" + qr.size());
+				
+		         while(qr.hasMoreElements()){
+		        	 WorkItem workItem =   (WorkItem)qr.nextElement();
+		        	 //System.out.println("workitem Check Null Check" + (null!=workItem));
+		        	 if(null!=workItem){
+		 				state = workItem.getStatus().getStringValue();
+		 				 //System.out.println("workitem Check state check" + (WfAssignmentState.POTENTIAL.equals(workItem.getStatus())));
+		 				if(WfAssignmentState.POTENTIAL.equals(workItem.getStatus())){
+		 					workItem.setStatus(WfAssignmentState.COMPLETED);
+		 					PersistenceHelper.manager.modify(workItem);
+		 					workItem = (WorkItem) PersistenceHelper.manager.refresh(workItem);
+		 					state = workItem.getStatus().getStringValue();
+		 					//System.out.println("workitem Check Chagne state" + (state));
+		 				}
+		 			}
+		         }
+			}
+			
+			result.put("result", true);
+			result.put("msg", "결재 회수 완료되었습니다.");
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
+        } finally {
+        	if (trx != null) {
+        		trx.rollback();
+			}
+        }
+		return result;
+	}
+
 }

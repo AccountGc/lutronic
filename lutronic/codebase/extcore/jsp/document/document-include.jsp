@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
@@ -5,7 +6,13 @@
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
 String method = request.getParameter("method");
+String module = request.getParameter("module");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
+boolean view = "view".equals(mode);
+boolean create = "create".equals(mode);
+boolean update = "update".equals(mode);
+String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
+// JSONArray json = DocumentHelper.manager.include_DocumentList(oid, module);
 %>
 <table class="button-table">
 	<tr>
@@ -24,10 +31,16 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 	</colgroup>
 	<tr>
 		<th class="lb">관련문서</th>
-		<td class="indent5 pt5">
+		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
+			<%
+			if (!view) {
+			%>
 			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow90();">
-			<div id="grid90" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<%
+			}
+			%>
+			<div id="grid90" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -37,28 +50,47 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 		dataField : "number",
 		headerText : "문서번호",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "name",
 		headerText : "문서명",
 		dataType : "string",
-		style : "aui-left"
+		style : "aui-left",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "date",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	} ]
 
 	function createAUIGrid90(columnLayout) {
 		const props = {
-			showStateColumn : true,
 			headerHeight : 30,
 			fillColumnSizeMode : true,
 			showRowNumColumn : true,
@@ -67,13 +99,20 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 			enableSorting : false,
 			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
+			<%if (!view) {%>
+			showStateColumn : true,
 			showRowCheckColumn : true,
+			<%}%>
 			<%if (!multi) {%>
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
 		}
-		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
+<%-- 		<% if(create) { %> --%>
+			myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
+<%-- 		<% } else{ %> --%>
+<%-- 			AUIGrid.setGridData(myGridID90, <%=json%>); --%>
+<%-- 		<% } %> --%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
@@ -84,6 +123,7 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 		_popup(url, 1800, 900, "n");
 	}
 
+	
 	function deleteRow90() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID90);
 		if (checkedItems.length === 0) {
