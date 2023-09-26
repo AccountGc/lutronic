@@ -41,8 +41,10 @@ import com.infoengine.util.Base64;
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.pdmlink.PDMLinkProduct;
+import wt.session.SessionHelper;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
@@ -751,12 +753,35 @@ public class CommonController extends BaseController {
 		return product.getPersistInfo().getObjectIdentifier().toString();
 	}
 	
-	@RequestMapping("/withDrawPopup")
-	public ModelAndView withDrawPoup(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
+	@Description(value = "결재회수 페이지")
+	@GetMapping(value = "/withDrawPopup")
+	public ModelAndView withDrawPopup(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.addObject("oid", oid);
-		model.setViewName("popup:/common/withDrawPopup");
+		model.setViewName("popup:/common/withDraw-popup");
 		return model;
+	}
+	
+//	@RequestMapping("/withDrawPopup")
+//	public ModelAndView withDrawPoup(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("oid", oid);
+//		model.setViewName("popup:/common/withDrawPopup");
+//		return model;
+//	}
+	
+	@Description(value = "결재회수 함수")
+	@ResponseBody
+	@PostMapping(value = "/withDrawPopup")
+	public Map<String, Object> withDrawPopup(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = CommonHelper.service.withDraw(params);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	/**
@@ -766,18 +791,18 @@ public class CommonController extends BaseController {
 	 * @return
 	 * @throws Exception
 	 */
-	@ResponseBody
-	@RequestMapping("/withDrawAction")
-	public ResultData withDrawAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String oid = request.getParameter("oid");
-		String withDrawType = request.getParameter("withDrawType"); //init,keep
-		
-		boolean isInit = withDrawType.equals("init");
-		//System.out.println("1 withDrawType :" + withDrawType +" ,isInit :" + isInit);
-		return CommonHelper.service.withDrawAction(oid,isInit);
-		//return DocumentHelper.service.deleteDocumentAction(request,response);
-		
-	}
+//	@ResponseBody
+//	@RequestMapping("/withDrawAction")
+//	public ResultData withDrawAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		String oid = request.getParameter("oid");
+//		String withDrawType = request.getParameter("withDrawType"); //init,keep
+//		
+//		boolean isInit = withDrawType.equals("init");
+//		//System.out.println("1 withDrawType :" + withDrawType +" ,isInit :" + isInit);
+//		return CommonHelper.service.withDrawAction(oid,isInit);
+//		//return DocumentHelper.service.deleteDocumentAction(request,response);
+//		
+//	}
 	
 	/**
 	 * 일괄 다운로드 
