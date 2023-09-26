@@ -2027,68 +2027,72 @@ public class PartController extends BaseController {
 			style2(workbook, cell00);
 			
 			Cell cell01 = row1.createCell(1);
-			cell01.setCellValue("Level");
+			cell01.setCellValue("Thumbanil");
 			style2(workbook, cell01);
-	
+			
 			Cell cell02 = row1.createCell(2);
-			cell02.setCellValue("부품번호");
+			cell02.setCellValue("Level");
 			style2(workbook, cell02);
 	
 			Cell cell03 = row1.createCell(3);
-			cell03.setCellValue("도면번호");
+			cell03.setCellValue("부품번호");
 			style2(workbook, cell03);
 	
 			Cell cell04 = row1.createCell(4);
-			cell04.setCellValue("부품명");
+			cell04.setCellValue("도면번호");
 			style2(workbook, cell04);
 	
 			Cell cell05 = row1.createCell(5);
-			cell05.setCellValue("REV");
+			cell05.setCellValue("부품명");
 			style2(workbook, cell05);
 	
 			Cell cell06 = row1.createCell(6);
-			cell06.setCellValue("OEM Info.");
+			cell06.setCellValue("REV");
 			style2(workbook, cell06);
 	
 			Cell cell07 = row1.createCell(7);
-			cell07.setCellValue("체크아웃 상태");
+			cell07.setCellValue("OEM Info.");
 			style2(workbook, cell07);
 	
 			Cell cell08 = row1.createCell(8);
-			cell08.setCellValue("상태");
+			cell08.setCellValue("체크아웃 상태");
 			style2(workbook, cell08);
-			
+	
 			Cell cell09 = row1.createCell(9);
-			cell09.setCellValue("수정자");
+			cell09.setCellValue("상태");
 			style2(workbook, cell09);
 			
 			Cell cell10 = row1.createCell(10);
-			cell10.setCellValue("사양");
+			cell10.setCellValue("수정자");
 			style2(workbook, cell10);
 			
 			Cell cell11 = row1.createCell(11);
-			cell11.setCellValue("수량");
+			cell11.setCellValue("사양");
 			style2(workbook, cell11);
 			
 			Cell cell12 = row1.createCell(12);
-			cell12.setCellValue("ECO NO.");
+			cell12.setCellValue("수량");
 			style2(workbook, cell12);
-	
+			
 			Cell cell13 = row1.createCell(13);
-			cell13.setCellValue("프로젝트코드");
+			cell13.setCellValue("ECO NO.");
 			style2(workbook, cell13);
-			
-			Cell cell14 = row1.createCell(14);
-			cell14.setCellValue("부서");
-			style2(workbook, cell14);
 	
-			Cell cell15 = row1.createCell(15);
-			cell15.setCellValue("MANUFACTURER");
-			style2(workbook, cell15);
+			Cell cell14 = row1.createCell(14);
+			cell14.setCellValue("프로젝트코드");
+			style2(workbook, cell14);
 			
+			Cell cell15 = row1.createCell(15);
+			cell15.setCellValue("부서");
+			style2(workbook, cell15);
+	
 			Cell cell16 = row1.createCell(16);
-			cell16.setCellValue("제작방법");
+			cell16.setCellValue("MANUFACTURER");
 			style2(workbook, cell16);
+			
+			Cell cell17 = row1.createCell(17);
+			cell17.setCellValue("제작방법");
+			style2(workbook, cell17);
 			
 			int rowCellCnt = 1;
 			int rowCnt = 3;
@@ -2118,72 +2122,7 @@ public class PartController extends BaseController {
 				bomCell00.setCellValue(rowCellCnt);
 				style2(workbook, bomCell00);
 	
-				Cell bomCell01 = bomRow.createCell(1);
-				bomCell01.setCellValue(level);
-				style2(workbook, bomCell01);
-				
-				Cell bomCell02 = bomRow.createCell(2);
-				bomCell02.setCellValue(number);
-				style2(workbook, bomCell02);
-
-				Cell bomCell03 = bomRow.createCell(3);
-				bomCell03.setCellValue(dwgNo);
-				style2(workbook, bomCell03);
-
-				Cell bomCell04 = bomRow.createCell(4);
-				bomCell04.setCellValue(name);
-				style2(workbook, bomCell04);
-	
-				Cell bomCell05 = bomRow.createCell(5);
-				bomCell05.setCellValue(rev);
-				style2(workbook, bomCell05);
-				
-				Cell bomCell06 = bomRow.createCell(6);
-				bomCell06.setCellValue(remarks);
-				style2(workbook, bomCell06);
-				
-				Cell bomCell07 = bomRow.createCell(7);
-				bomCell07.setCellValue(checkOutSts);
-				style2(workbook, bomCell07);
-				
-				Cell bomCell08 = bomRow.createCell(8);
-				bomCell08.setCellValue(state);
-				style2(workbook, bomCell08);
-				
-				Cell bomCell09 = bomRow.createCell(9);
-				bomCell09.setCellValue(modifier);
-				style2(workbook, bomCell09);
-				
-				Cell bomCell10 = bomRow.createCell(10);
-				bomCell10.setCellValue(spec);
-				style2(workbook, bomCell10);
-				
-				Cell bomCell11 = bomRow.createCell(11);
-				bomCell11.setCellValue(quantity);
-				style2(workbook, bomCell11);
-
-				Cell bomCell12 = bomRow.createCell(12);
-				bomCell12.setCellValue(ecoNo);
-				style2(workbook, bomCell12);
-				
-				Cell bomCell13 = bomRow.createCell(13);
-				bomCell13.setCellValue(model);
-				style2(workbook, bomCell13);
-				
-				Cell bomCell14 = bomRow.createCell(14);
-				bomCell14.setCellValue(deptcode);
-				style2(workbook, bomCell14);
-				
-				Cell bomCell15 = bomRow.createCell(15);
-				bomCell15.setCellValue(manufacture);
-				style2(workbook, bomCell15);
-				
-				Cell bomCell16 = bomRow.createCell(16);
-				bomCell16.setCellValue(productmethod);
-				style2(workbook, bomCell16);
-				
-				
-		        // 이미지 파일 경로 설정 (예시: "image.jpg")
+				 // 이미지 파일 경로 설정 (예시: "image.jpg")
 //		        String thumbnail = FileHelper.getViewContentURLForType(PublishUtils.findRepresentable(childPart),
 //						ContentRoleType.THUMBNAIL);
 //		        if(thumbnail ==null) {
@@ -2192,11 +2131,11 @@ public class PartController extends BaseController {
 //		        	System.out.println("thumbnail     :     "   + thumbnail);
 //		        	imagePath = "/opt/ptc/Windchill_12.0/Windchill/codebase/jsp/images/productview_openin_250.png";
 //		        }
-
+				
 		        //이미지 확인만 하고 추후 썸네일로 교체 예정..
 //				InputStream is = new FileInputStream(
 //						"/opt/ptc/Windchill_12.0/Windchill/codebase/jsp/images/productview_openin_250.png");
-		        InputStream is = new FileInputStream("D:\\ptc\\Windchill_11.1\\Windchill\\codebase\\jsp\\images\\productview_openin_250.png");
+		        InputStream is = new FileInputStream("D:\\ptc\\Windchill_11.1\\Windchill\\codebase\\extcore\\images\\productview_openin_250.png");
 				byte[] bytes = IOUtils.toByteArray(is);
 				int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
 				is.close();
@@ -2218,9 +2157,75 @@ public class PartController extends BaseController {
 				// auto-size picture relative to its top-left corner
 				pict.resize(1, 1);
 
-				Cell partlistCell2 = bomRow.createCell(17);
-				partlistCell2.setCellValue("");
-				style2(workbook, partlistCell2);
+				Cell bomCell01 = bomRow.createCell(1);
+				bomCell01.setCellValue("");
+				style2(workbook, bomCell01);
+				
+				
+				Cell bomCell02 = bomRow.createCell(2);
+				bomCell02.setCellValue(level);
+				style2(workbook, bomCell02);
+				
+				Cell bomCell03 = bomRow.createCell(3);
+				bomCell03.setCellValue(number);
+				style2(workbook, bomCell03);
+
+				Cell bomCell04 = bomRow.createCell(4);
+				bomCell04.setCellValue(dwgNo);
+				style2(workbook, bomCell04);
+
+				Cell bomCell05 = bomRow.createCell(5);
+				bomCell05.setCellValue(name);
+				style2(workbook, bomCell05);
+	
+				Cell bomCell06 = bomRow.createCell(6);
+				bomCell06.setCellValue(rev);
+				style2(workbook, bomCell06);
+				
+				Cell bomCell07 = bomRow.createCell(7);
+				bomCell07.setCellValue(remarks);
+				style2(workbook, bomCell07);
+				
+				Cell bomCell08 = bomRow.createCell(8);
+				bomCell08.setCellValue(checkOutSts);
+				style2(workbook, bomCell08);
+				
+				Cell bomCell09 = bomRow.createCell(9);
+				bomCell09.setCellValue(state);
+				style2(workbook, bomCell09);
+				
+				Cell bomCell10 = bomRow.createCell(10);
+				bomCell10.setCellValue(modifier);
+				style2(workbook, bomCell10);
+				
+				Cell bomCell11 = bomRow.createCell(11);
+				bomCell11.setCellValue(spec);
+				style2(workbook, bomCell11);
+				
+				Cell bomCell12 = bomRow.createCell(12);
+				bomCell12.setCellValue(quantity);
+				style2(workbook, bomCell12);
+
+				Cell bomCell13 = bomRow.createCell(13);
+				bomCell13.setCellValue(ecoNo);
+				style2(workbook, bomCell13);
+				
+				Cell bomCell14 = bomRow.createCell(14);
+				bomCell14.setCellValue(model);
+				style2(workbook, bomCell14);
+				
+				Cell bomCell15 = bomRow.createCell(15);
+				bomCell15.setCellValue(deptcode);
+				style2(workbook, bomCell15);
+				
+				Cell bomCell16 = bomRow.createCell(16);
+				bomCell16.setCellValue(manufacture);
+				style2(workbook, bomCell16);
+				
+				Cell bomCell17 = bomRow.createCell(17);
+				bomCell17.setCellValue(productmethod);
+				style2(workbook, bomCell17);
+		       
 				
 				rowCnt++;
 				rowCellCnt++;
