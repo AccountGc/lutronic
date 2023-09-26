@@ -80,7 +80,6 @@
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
 					<input type="button" value="초기화" title="초기화" id="resetBtn">
-					<input type="button" value="목록" title="목록" id="listBtn">
 				</td>
 			</tr>
 		</table>
@@ -92,26 +91,24 @@
 					return;
 				}
 				if($("#number").val() == "") {
-					alert("도번을 입력하세요.')}");
+					alert("도번을 입력하세요.");
 					return;
 				}
 				
 				if($("#name").val() == "") {
-					alert("도면명 입력하세요.')}");
+					alert("도면명 입력하세요.");
 					return;
 				}
 				
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
-				
+				debugger;
 				var params = _data($("#form"));
 				var url = getCallUrl("/drawing/create");
 				call(url, params, function(data) {
 					if(data.result){
 						alert(data.msg);
-						opener.loadGridData();
-						self.close();
 					}else{
 						alert(data.msg);
 					}

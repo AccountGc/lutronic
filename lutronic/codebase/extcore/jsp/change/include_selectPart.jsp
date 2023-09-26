@@ -151,17 +151,17 @@ if(moduleType=="" && !moduleType.equals("eco")){
 			}
 		}
 			
-		const url = getCallUrl("/part/listPopup");
+		const url = getCallUrl("/part/popup?&multi=true&method=append");
 		_popup(url, 1500, 700, "n");
 	}
 	
 	function append(items){
 		var data = new Object();
 		for(var i=0; i<items.length; i++){
-			data.oid = items[i].part_oid;
-			data.name = items[i].name;
-			data.number = items[i].number;
-			data.version = items[i].version;
+			data.oid = items[i].item.part_oid;
+			data.name = items[i].item.name;
+			data.number = items[i].item.number;
+			data.version = items[i].item.version;
 		}
 		AUIGrid.addRow(partGridID, data);
 	}
