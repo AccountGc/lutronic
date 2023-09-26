@@ -3,6 +3,17 @@
 <%
 String oid = (String) request.getAttribute("oid");
 PartData data = (PartData) request.getAttribute("data");
+String partName1 = "";
+String partName2 = "";
+String partName3 = "";
+String partName4 = "";
+if(data != null){
+	String[] partName = data.getName().split("_");
+	partName1 = partName[0];
+	partName2 = partName[1];
+	partName3 = partName[2];
+	partName4 = partName[3];
+}
 %>
 <form name="updateDevelopmentForm" id="updateDevelopmentForm" method="post" >
 <input type="hidden" name="oid" id="oid" value="<%= oid %>" />
@@ -42,7 +53,7 @@ PartData data = (PartData) request.getAttribute("data");
 					<th>품목분류 <span style="color:red;">*</span></th>
 					<td class="indent5" colspan="3">
 						<span id="locationName">
-							/Default/PART_Drawing
+							<%= data != null ? data.getLocation() : "" %>
 						</span>
 					</td>
 				</tr>
@@ -50,25 +61,37 @@ PartData data = (PartData) request.getAttribute("data");
 					<th rowspan="4">품목명 <span style="color:red;">*</span></th>
 					<th>대제목</th>
 					<td class="indent5">
-						<input type="text" name="partName1" id="partName1" class="width-300" value="">
+						<input id="partName1" name="partName1" class='partName width-300' type="text" value="<%= partName1 %>" >
+						<div id="partName1Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+							<ul id="partName1UL" style="list-style-type: none; padding-left: 0px;">
+							</ul>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<th>중제목</th>
 					<td class="indent5">
-						<input type="text" name="partName2" id="partName2" class="width-300">
+						<input id="partName2" name="partName2" class='partName width-300' type="text" value="<%= partName2 %>" >
+						<div id="partName2Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+							<ul id="partName2UL" style="list-style-type: none; padding-left: 0px;">
+							</ul>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<th>소제목</th>
 					<td class="indent5">
-						<input type="text" name="partName3" id="partName3" class="width-300">
+						<input id="partName3" name="partName3" class='partName width-300' type="text" value="<%= partName3 %>" >
+						<div id="partName3Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+							<ul id="partName3UL" style="list-style-type: none; padding-left: 0px;">
+							</ul>
+						</div>
 					</td>
 				</tr>
 				<tr>
 					<th>사용자 Key in</th>
 					<td class="indent5">
-						<input type="text" name="partName4" id="partName4" class="width-300">
+						<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%= partName4 %>" >
 					</td>
 				</tr>
 				<tr>
@@ -104,11 +127,11 @@ PartData data = (PartData) request.getAttribute("data");
 			<tr>
 				<th>프로젝트코드 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="model" id="model" class="width-500">
+					<input type="text" name="model" id="model" class="width-500" value="<%= data != null ? data.getModel() : "" %>">
 				</td>
 				<th>제작방법 <span style="color:red;">*</span></th>
 				<td class="indent5">
-					<input type="text" name="productmethod" id="productmethod" class="width-500">
+					<input type="text" name="productmethod" id="productmethod" class="width-500" value="<%= data != null ? data.getProductmethod() : "" %>">
 				</td>
 			</tr>
 			<tr>
@@ -181,12 +204,12 @@ PartData data = (PartData) request.getAttribute("data");
 		<br>
 		
 		<!-- 관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
-			<jsp:param value="part" name="moduleType"/>
-			<jsp:param value="<%= data.getOid() %>" name="oid"/>
-			<jsp:param value="관련 문서" name="title"/>
-			<jsp:param value="docOid" name="paramName"/>
-		</jsp:include>
+<%-- 		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp"> --%>
+<%-- 			<jsp:param value="part" name="moduleType"/> --%>
+<%-- 			<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
+<%-- 			<jsp:param value="관련 문서" name="title"/> --%>
+<%-- 			<jsp:param value="docOid" name="paramName"/> --%>
+<%-- 		</jsp:include> --%>
 		<br>
 		
 		
@@ -301,60 +324,99 @@ $(document).ready(function () {
 	
 })
 
-$(function () {
-	$(".partName").keyup(function (event) {
-		var charCode = (event.which) ? event.which : event.keyCode;
-		if((charCode == 38 || charCode == 40) ) {
-			if(!$( "#"+this.id+"Search" ).is( ":hidden" )){
-				var isAdd = false;
-				if(charCode == 38){
-					isAdd = true;
-				}
-				movePartNameFocus(this.id, isAdd);
+// 품목명 입력 시 
+$(".partName").keyup(function (event) {
+	var charCode = (event.which) ? event.which : event.keyCode;
+	if((charCode == 38 || charCode == 40) ) {
+		if(!$( "#"+this.id+"Search" ).is( ":hidden" )){
+			var isAdd = false;
+			if(charCode == 38){
+				isAdd = true;
 			}
-		} else if(charCode == 13 || charCode == 27){
+			movePartNameFocus(this.id, isAdd);
+		}
+	} else if(charCode == 13 || charCode == 27){
+		$("#" + this.id + "Search").hide();
+	} else if(charCode == 8) {
+		if($.trim($(this).val()) == '') {
 			$("#" + this.id + "Search").hide();
 		} else {
 			autoSearchPartName(this.id, this.value);
 		}
-	})
+	} else {
+		autoSearchPartName(this.id, this.value);
+	}
+})
+
+// partName 입력 시 partName 리스트 출력 메서드
+const autoSearchPartName = function(id, value) {
+	if($.trim(value) == "") {
+		addSearchList(id, '', true);
+	} else {
+		var codeType = id.toUpperCase();
+		
+		autoSearchName(codeType, value)
+		.then(result => {
+			addSearchList(id, result, false);
+		})
+		.catch(error => {
+			console.error(error);
+		})
+	}
+}
+
+// partName 가져오기 메서드
+const autoSearchName = function(codeType, value) {
 	
-	$('#partNameCustom').focusout(function() {
-		$('#partNameCustom').val(this.value.toUpperCase());
-	})
-	
-	$(".partName").focusout(function () {
+	const url = getCallUrl("/common/autoSearchName");
+	 const params = {
+		 codeType: codeType,	
+		 value: value
+    };
+	 
+	 return new Promise((resolve, reject) => {
+        call(url, params, function(dataList) {
+            const result = dataList.map(data => data); 
+            resolve(result); 
+        });
+    });
+}
+
+<%----------------------------------------------------------
+*                      품목명 입력시 데이터 리스트 보여주기
+----------------------------------------------------------%>
+const addSearchList = function(id, data, isRemove) {
+	$("#" + id + "UL li").remove();
+	if(isRemove) {
 		$("#" + this.id + "Search").hide();
-		
-		var name = '';
-		
-		if(!$.trim($('#partName1').val()) == '') {
-			name += $('#partName1').val();
-		}
-		
-		if(!$.trim($('#partName2').val()) == '') {
-			if(!$.trim(name) == '') {
-				name += '_';
+	} else{
+		if(data.length > 0) {
+			$("#" + id + "Search").show();
+			for(var i=0; i<data.length; i++) {
+				$("#" + id + "UL").append("<li title='" + id + "'>" + data[i].name);
 			}
-			name += $('#partName2').val();
+		} else {
+			$("#" + id + "Search").hide();
 		}
-		
-		if(!$.trim($('#partName3').val()) == '') {
-			if(!$.trim(name) == '') {
-				name += '_';
-			}
-			name += $('#partName3').val();
+	}
+}
+
+<%----------------------------------------------------------
+*                      품목명 데이터 마우스 올렸을때
+----------------------------------------------------------%>
+$(document).on("mouseover", 'div > ul > li', function() {
+	var partName = $(this).attr("title");
+	
+	$("#" + partName + "UL li").each(function() {
+		var cls = $(this).attr('class');
+		if(cls == 'hover') {
+			$(this).removeClass('hover');
 		}
-		
-		if(!$.trim($('#partNameCustom').val()) == '') {
-			if(!$.trim(name) == '') {
-				name += '_';
-			}
-			name += $('#partNameCustom').val();
-		}
-		
-		$('#displayName').html(name);
 	})
+	
+	$(this).addClass("hover") ;
+	$("#" + partName).val($(this).text());
+})
 	
 	<%----------------------------------------------------------
 	*                      수정버튼
@@ -378,10 +440,7 @@ $(function () {
 		const finish = document.getElementById("finish").value;
 		const remarks = document.getElementById("remarks").value;
 		const specification = document.getElementById("specification").value;
-		const unit = "EA";
-//			const addRows7 = AUIGrid.getAddedRowItems(myGridID7);
-//			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-//			const addRows11 = AUIGrid.getAddedRowItems(myGridID11);
+		const unit = document.getElementById("unit").value;
 		const primarys = toArray("primarys");
 		const wtPartType = document.getElementById("wtPartType").value;
 		const source = document.getElementById("source").value;
@@ -391,7 +450,7 @@ $(function () {
 		const location = document.getElementById("location").value;
 		
 		const oid = document.getElementById("oid").value;
-//			const location = document.getElementById("location").value;
+		const location = document.getElementById("location").value;
 		const docName = document.getElementById("docName");
 		const lifecycle = document.getElementById("lifecycle").value;
 		const description = document.getElementById("description").value;
@@ -455,9 +514,7 @@ $(function () {
 			params.finish = finish;
 			params.remarks = remarks;
 			params.specification = specification;
-			params.unit = "ea";
-// 			params.addRows7 = addRows7;
-// 			params.addRows11 = addRows11;
+			params.unit =unit;
 			params.primarys = primarys;
 			params.wtPartType = wtPartType;
 			params.source = source;
