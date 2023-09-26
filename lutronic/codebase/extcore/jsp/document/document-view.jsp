@@ -238,7 +238,9 @@ iframe {
 
 	<div id="tabs-2">
 		<!-- 관련 객체 -->
-		<%@include file="/extcore/jsp/document/document-reference-include.jsp"%>
+		<jsp:include page="/extcore/jsp/document/document-reference-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
 	</div>
 	<div id="tabs-3">
 		<!-- 관련 개발업무 -->

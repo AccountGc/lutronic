@@ -26,14 +26,19 @@ import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.template.DocumentTemplateData;
+import com.e3ps.download.DownloadHistory;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
 import com.e3ps.org.People;
+import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.part.column.PartColumn;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.epm.EPMDocument;
+import wt.epm.EPMDocumentType;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -53,6 +58,7 @@ import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
+import wt.vc.wip.WorkInProgressHelper;
 
 public class DocumentHelper {
 
@@ -158,8 +164,87 @@ public class DocumentHelper {
 		return map;
 	}
 
-	public ArrayList<Map<String, String>> reference(String oid) throws Exception {
+	/**
+	 * 문서 관련 객체
+	 */
+	public JSONArray reference(String oid, String type) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+		if ("part".equalsIgnoreCase(type)) {
+			QueryResult result = PersistenceHelper.manager.navigate(doc, "describes", WTPartDescribeLink.class);
+			while (result.hasMoreElements()) {
+				WTPart part = (WTPart) result.nextElement();
+				Map<String, Object> map = new HashMap<>();
+				PartColumn dto = new PartColumn(part);
+				map.put("part_oid", dto.getPart_oid());
+				map.put("_3d", dto.get_3d());
+				map.put("_2d", dto.get_2d());
+				map.put("number", dto.getNumber());
+				map.put("name", dto.getName());
+				map.put("version", dto.getVersion());
+				map.put("creator", dto.getCreator());
+				map.put("createdDate", dto.getCreateDate());
+				list.add(map);
+			}
+
+		} else if ("doc".equalsIgnoreCase(type)) {
+
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 문서 결재 이력
+	 */
+	public JSONArray allIterationsOf(String oid) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		QueryResult result = VersionControlHelper.service.allIterationsOf(doc.getMaster());
+		while (result.hasMoreElements()) {
+			WTDocument d = (WTDocument) result.nextElement();
+			Map<String, Object> map = new HashMap<>();
+			DocumentColumn dto = new DocumentColumn(d);
+			map.put("oid", dto.getOid());
+			map.put("name", dto.getName());
+			map.put("number", dto.getNumber());
+			map.put("version", dto.getVersion());
+			map.put("creator", dto.getCreator());
+			map.put("createdDate", dto.getCreatedDate());
+			map.put("note", d.getIterationNote());
+			map.put("primary", dto.getPrimary());
+			map.put("secondary", dto.getSecondary());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 다운로드 이력
+	 */
+	public JSONArray a(String oid) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(DownloadHistory.class, true);
+		QuerySpecUtils.toEquals(query, idx, DownloadHistory.class, DownloadHistory.D_OID, oid);
+		QuerySpecUtils.toOrderBy(query, idx, DownloadHistory.class, "thePersistInfo.createStamp", false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			DownloadHistory history = (DownloadHistory) obj[0];
+			Map<String, Object> map = new HashMap<>();
+			WTUser user = history.getUser();
+			PeopleDTO dto = new PeopleDTO(user);
+			map.put("oid", history.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("count", history.getDCount());
+			map.put("name", dto.getName());
+			map.put("duty", dto.getDuty());
+			map.put("time", history.getPersistInfo().getCreateStamp());
+			map.put("departmentName", dto.getDepartment_name());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
 	}
 
 	public Map<String, Object> listMoldAction(Map<String, Object> params) throws Exception {

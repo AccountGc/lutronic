@@ -230,7 +230,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/doc/view?oid=" + oid);
-							_popup(url, 1600, 800, "n");
+							_popup(url, "", "", "f");
 						}
 					},
 					filter : {
@@ -267,7 +267,7 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/doc/view?oid=" + oid);
-							_popup(url, 1600, 800, "n");
+							_popup(url, "", "", "f");
 						}
 					},
 					filter : {

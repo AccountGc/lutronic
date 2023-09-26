@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="com.e3ps.rohs.service.RohsHelper"%>
@@ -11,6 +12,7 @@ String mode = request.getParameter("mode");
 String method = request.getParameter("method");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
+String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -39,7 +41,7 @@ boolean view = "view".equals(mode);
 			<%
 			}
 			%>
-			<div id="grid91" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid91" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -106,15 +108,27 @@ boolean view = "view".equals(mode);
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "date",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
 	}, {
 		dataField : "bom",
 		headerText : "BOM",
 		dataType : "string",
 		width : 180,
+		filter : {
+			showIcon : false,
+			inline : false
+		},
 	} ]
 
 	function createAUIGrid91(columnLayout) {
@@ -138,7 +152,7 @@ boolean view = "view".equals(mode);
 		}
 		myGridID91 = AUIGrid.create("#grid91", columnLayout, props);
 		<%if (view) {%>
-		AUIGrid.setGridData(myGridID91, <%=DocumentHelper.manager.reference(oid)%>);
+		AUIGrid.setGridData(myGridID91, <%=DocumentHelper.manager.reference(oid, "part")%>);
 		<%}%>
 	}
 

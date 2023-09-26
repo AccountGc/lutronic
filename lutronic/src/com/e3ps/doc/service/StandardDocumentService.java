@@ -1855,7 +1855,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				String oid = addRow91.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(oid);
 				WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
-				PersistenceHelper.manager.save(link);
+				PersistenceServerHelper.manager.insert(link);
 			}
 
 			trs.commit();
