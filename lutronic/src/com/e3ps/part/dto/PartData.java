@@ -630,35 +630,35 @@ public class PartData {
 		return isGENERIC;
 	}
 
-//	public boolean isINSTANCE(){
-//		
-//		boolean isINSTANCE = false;
-//		int status;
-//		try{
-//			if(epm != null){
-//				
-//				status = epm.getFamilyTableStatus();
-//				
-//				if(status == 1){
-//					isINSTANCE = true;
-//				}
-//			}else{
-//				epm = DrawingHelper.service.getEPMDocument(this.part);
-//				if(epm != null){
-//					status = epm.getFamilyTableStatus();
-//					
-//					if(status == 1 ){
-//						isINSTANCE = true;
-//					}
-//				}
-//				
-//			}
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		
-//		return isINSTANCE;
-//	}
+	public boolean isINSTANCE(WTPart part){
+		
+		boolean isINSTANCE = false;
+		int status;
+		try{
+			if(epm != null){
+				
+				status = epm.getFamilyTableStatus();
+				
+				if(status == 1){
+					isINSTANCE = true;
+				}
+			}else{
+				epm = DrawingHelper.service.getEPMDocument(part);
+				if(epm != null){
+					status = epm.getFamilyTableStatus();
+					
+					if(status == 1 ){
+						isINSTANCE = true;
+					}
+				}
+				
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return isINSTANCE;
+	}
 
 	/**
 	 * GENERIC 이고 최신 버전 이고 작업중인 경우 수정

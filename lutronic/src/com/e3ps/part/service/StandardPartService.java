@@ -680,7 +680,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				
 				part = (WTPart) rf.getReference(oid).getObject();
 				PartData partData = new PartData(part);
-//				boolean isNonCheckout = !(partData.isGENERIC() || partData.isINSTANCE());
+				boolean isNonCheckout = !(partData.isGENERIC(part) || partData.isINSTANCE(part));
 				String oldPartName = part.getName();
 				
 				part = (WTPart) getWorkingCopy(part);
@@ -806,7 +806,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				CommonContentHelper.service.attach(part, null, add_secondary, secondary);
 				
 				//Instance 속성 전파
-				if(partData.isGENERIC()){
+				if(partData.isGENERIC(part)){
 					copyInstanceAttribute(part,params);
 				}
 				trx.commit();

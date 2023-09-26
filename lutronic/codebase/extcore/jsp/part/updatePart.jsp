@@ -582,7 +582,7 @@ $("#updateBtn").click(function() {
 		call(url, params, function(data) {
 			if (data.result) {
 				alert("수정 성공하였습니다.");
-				location.href = getCallUrl("/doc/view?oid=" + data.oid);
+				location.href = getCallUrl("/part/view?oid=" + data.oid);
 			} else {
 				alert("수정 실패하였습니다. \n" + data.msg);
 			}
