@@ -333,6 +333,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<jsp:include page="/extcore/jsp/document/document-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert90" name="method" />
+			<jsp:param value="true" name="multi" />
 		</jsp:include>
 		<br>
 		
