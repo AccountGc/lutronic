@@ -90,6 +90,7 @@ import wt.vc.views.ViewHelper;
 @RequestMapping(value = "/part/**")
 public class PartController extends BaseController {
 
+
 	@Description(value = "품목 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
@@ -109,10 +110,10 @@ public class PartController extends BaseController {
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
 	}
-
+	
 	@Description(value = "관련 품목 팝업 페이지")
-	@GetMapping(value = "/popup")
-	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
+	@GetMapping(value = "/listPopup")
+	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -126,9 +127,8 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
-		model.addObject("method", method);
-		model.addObject("multi", Boolean.parseBoolean(multi));
-		model.setViewName("popup:/part/part-list-popup");
+		model.addObject("parentRowIndex", parentRowIndex);
+		model.setViewName("popup:/part/part-list-popup");			
 		return model;
 	}
 
@@ -405,30 +405,16 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 수정 페이지")
 	@GetMapping(value = "/update")
-	public ModelAndView update(@RequestParam String oid) throws Exception{
+	public ModelAndView update(@RequestParam String oid) {
 		ModelAndView model = new ModelAndView();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		PartData partData = null;
-		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
-		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
-		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
-		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
-		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		try {
 			partData = new PartData(part);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		model.addObject("data", partData);
-		model.addObject("modelList", modelList);
-		model.addObject("productmethodList", productmethodList);
-		model.addObject("deptcodeList", deptcodeList);
-		model.addObject("matList", matList);
-		model.addObject("manufactureList", manufactureList);
-		model.addObject("finishList", finishList);
-		model.addObject("unitList", unitList);
 		model.setViewName("popup:/part/updatePart");
 		return model;
 	}
@@ -1768,7 +1754,7 @@ public class PartController extends BaseController {
 		List<Map<String, Object>> list = BomSearchHelper.manager.viewAUIPartBomChildAction(params);
 		return list;
 	}
-
+	
 	/**
 	 * AUI BOM Action
 	 * 
@@ -1779,15 +1765,16 @@ public class PartController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/viewAUIPartBomChildAction2")
-	public Map<String, Object> viewAUIPartBomChildAction2(@RequestBody Map<String, Object> params) throws Exception {
-
+	public Map<String, Object> viewAUIPartBomChildAction2(@RequestBody Map<String, Object> params)throws Exception {
+		
 		Map<String, Object> result = new HashMap<String, Object>();
 		result.put("list", BomSearchHelper.manager.viewAUIPartBomChildAction(params));
 		result.put("grideItem", params.get("grideItem"));
-
+		
+		
 		return result;
 	}
-
+	
 	/**
 	 * AUI BOM Action
 	 * 
@@ -1919,7 +1906,8 @@ public class PartController extends BaseController {
 		List<Map<String, Object>> list = BomSearchHelper.manager.bomEditorList(params);
 		return list;
 	}
-
+	
+	
 	/**
 	 * 부품 체크인
 	 * 
@@ -1931,10 +1919,10 @@ public class PartController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/partCheckIn")
 	public Map<String, Object> partCheckIn(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = PartHelper.service.partCheckIn(params);
+		Map<String, Object> result =PartHelper.service.partCheckIn(params);
 		return result;
 	}
-
+	
 	/**
 	 * 부품 체크 아웃
 	 * 
@@ -1946,10 +1934,10 @@ public class PartController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/partCheckOut")
 	public Map<String, Object> partCheckOut(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = PartHelper.service.partCheckOut(params);
+		Map<String, Object> result =PartHelper.service.partCheckOut(params);
 		return result;
 	}
-
+	
 	/**
 	 * 부품 체크 아웃 취소
 	 * 
@@ -1961,10 +1949,10 @@ public class PartController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/partUndoCheckOut")
 	public Map<String, Object> partUndoCheckOut(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = PartHelper.service.partUndoCheckOut(params);
+		Map<String, Object> result =PartHelper.service.partUndoCheckOut(params);
 		return result;
 	}
-
+	
 	/**
 	 * 엑셀 다운로드
 	 * 
@@ -1974,9 +1962,7 @@ public class PartController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/partExcel", method = RequestMethod.GET)
-	public void partExcel(@RequestParam String oid, @RequestParam String view, @RequestParam String desc,
-			@RequestParam String baseline2, @RequestParam String checkDummy, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public void partExcel(@RequestParam String oid,@RequestParam String view,@RequestParam String desc,@RequestParam String baseline2,@RequestParam String checkDummy, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("oid", oid);
 		param.put("view", view);
@@ -1984,14 +1970,15 @@ public class PartController extends BaseController {
 		param.put("baseline2", baseline2);
 		param.put("checkDummy", checkDummy);
 		boolean isCheckDummy = "true".equals(checkDummy) ? true : false;
-		List<Map<String, Object>> bomList = BomSearchHelper.manager.getAllBomList(param);
-
+		List<Map<String, Object>> bomList =BomSearchHelper.manager.getAllBomList(param);
+		
+		
 		ReferenceFactory rf = new ReferenceFactory();
-		WTPart part = (WTPart) rf.getReference(oid).getObject();
-
+		WTPart part =  (WTPart) rf.getReference(oid).getObject();
+	
 		// Part Thumbnail
 		String path = "C:\\ptc\\thumb";
-		// String path = "/opt/ptc/partlistExcelImages";
+	//	String path = "/opt/ptc/partlistExcelImages";
 		Representation representation = PublishUtils.getRepresentation(part);
 		FileOutputStream fos = null;
 		if (StringUtil.isNotNull(representation)) {
@@ -2001,12 +1988,12 @@ public class PartController extends BaseController {
 				String ext = FileUtil.getExtension(data.getFileName());
 				byte[] buffer = new byte[10240];
 				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
-
+	
 				File file = new File(path + File.separator + part.getNumber().toUpperCase() + ".jsp");
-
-				// FileOutputStream fos = new FileOutputStream(file);
+	
+	//			FileOutputStream fos = new FileOutputStream(file);
 				fos = new FileOutputStream(file);
-
+	
 				int j = 0;
 				while ((j = is.read(buffer, 0, 10240)) > 0) {
 					fos.write(buffer, 0, j);
@@ -2015,91 +2002,82 @@ public class PartController extends BaseController {
 				is.close();
 			}
 		}
-
+	
 		try {
 			// 새로운 워크북(엑셀 파일) 생성
 			XSSFWorkbook workbook = new XSSFWorkbook();
-
+	
 			// 워크북에 시트 생성
 			Sheet sheet = workbook.createSheet("Sheet1");
-
-			sheet.setColumnWidth(1, 30 * 256);
 	
 			// 헤더
 			Row row = sheet.createRow(0);
 			Cell cell = row.createCell(0);
 			cell.setCellValue("Bom Editor");
-
+	
 			CellRangeAddress mergedRegion = new CellRangeAddress(0, 0, 0, 7);
 			sheet.addMergedRegion(mergedRegion);
 			style(workbook, cell);
-
+	
+	
 			Row row1 = sheet.createRow(2);
-
+			
 			Cell cell00 = row1.createCell(0);
 			cell00.setCellValue("No.");
 			style2(workbook, cell00);
-
+			
 			Cell cell01 = row1.createCell(1);
 			cell01.setCellValue("Thumbanil");
 			style2(workbook, cell01);
-
+			
 			Cell cell02 = row1.createCell(2);
 			cell02.setCellValue("Level");
 			style2(workbook, cell02);
-
+	
 			Cell cell03 = row1.createCell(3);
 			cell03.setCellValue("부품번호");
 			style2(workbook, cell03);
-
+	
 			Cell cell04 = row1.createCell(4);
 			cell04.setCellValue("도면번호");
 			style2(workbook, cell04);
-
+	
 			Cell cell05 = row1.createCell(5);
 			cell05.setCellValue("부품명");
 			style2(workbook, cell05);
-
+	
 			Cell cell06 = row1.createCell(6);
 			cell06.setCellValue("REV");
 			style2(workbook, cell06);
-
+	
 			Cell cell07 = row1.createCell(7);
 			cell07.setCellValue("OEM Info.");
 			style2(workbook, cell07);
-
+	
 			Cell cell08 = row1.createCell(8);
 			cell08.setCellValue("체크아웃 상태");
 			style2(workbook, cell08);
-
+	
 			Cell cell09 = row1.createCell(9);
 			cell09.setCellValue("상태");
 			style2(workbook, cell09);
-
+			
 			Cell cell10 = row1.createCell(10);
 			cell10.setCellValue("수정자");
 			style2(workbook, cell10);
-
+			
 			Cell cell11 = row1.createCell(11);
 			cell11.setCellValue("사양");
 			style2(workbook, cell11);
-
+			
 			Cell cell12 = row1.createCell(12);
 			cell12.setCellValue("수량");
 			style2(workbook, cell12);
-
+			
 			Cell cell13 = row1.createCell(13);
 			cell13.setCellValue("ECO NO.");
 			style2(workbook, cell13);
-
-			Cell cell14 = row1.createCell(14);
-			cell14.setCellValue("부서");
-			style2(workbook, cell14);
-
-			Cell cell15 = row1.createCell(15);
-			cell15.setCellValue("MANUFACTURER");
-			style2(workbook, cell15);
-
+	
 			Cell cell14 = row1.createCell(14);
 			cell14.setCellValue("프로젝트코드");
 			style2(workbook, cell14);
@@ -2111,28 +2089,6 @@ public class PartController extends BaseController {
 			Cell cell16 = row1.createCell(16);
 			cell16.setCellValue("MANUFACTURER");
 			style2(workbook, cell16);
-
-			int rowCellCnt = 1;
-			int rowCnt = 3;
-			for (Map<String, Object> item : bomList) {
-				int level = 1;
-				String number = item.get("number") == null ? "" : item.get("number").toString();
-				String dwgNo = item.get("dwgNo") == null ? "" : item.get("dwgNo").toString();
-				String name = item.get("name") == null ? "" : item.get("name").toString();
-				String rev = item.get("rev") == null ? "" : item.get("rev").toString();
-				String remarks = item.get("remarks") == null ? "" : item.get("remarks").toString();
-				String checkOutSts = item.get("checkOutSts") == null ? "" : item.get("checkOutSts").toString();
-				String state = item.get("state") == null ? "" : item.get("state").toString();
-				String modifier = item.get("modifier") == null ? "" : item.get("modifier").toString();
-				String spec = item.get("spec") == null ? "" : item.get("spec").toString();
-				String quantity = item.get("quantity") == null ? "" : item.get("quantity").toString();
-				String ecoNo = item.get("ecoNo") == null ? "" : item.get("ecoNo").toString();
-				String model = item.get("model") == null ? "" : item.get("model").toString();
-				String deptcode = item.get("deptcode") == null ? "" : item.get("deptcode").toString();
-				String manufacture = item.get("manufacture") == null ? "" : item.get("manufacture").toString();
-				String productmethod = item.get("productmethod") == null ? "" : item.get("productmethod").toString();
-
-=======
 			
 			Cell cell17 = row1.createCell(17);
 			cell17.setCellValue("제작방법");
@@ -2159,15 +2115,12 @@ public class PartController extends BaseController {
 				String productmethod = item.get("productmethod") ==null ?"":item.get("productmethod").toString();
 				
 				
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 				Row bomRow = sheet.createRow(rowCnt);
 				// 로우 높이 조절
 				bomRow.setHeightInPoints(100);
 				Cell bomCell00 = bomRow.createCell(0);
 				bomCell00.setCellValue(rowCellCnt);
 				style2(workbook, bomCell00);
-<<<<<<< HEAD
-=======
 	
 				 // 이미지 파일 경로 설정 (예시: "image.jpg")
 //		        String thumbnail = FileHelper.getViewContentURLForType(PublishUtils.findRepresentable(childPart),
@@ -2203,17 +2156,12 @@ public class PartController extends BaseController {
 				Picture pict = drawing.createPicture(anchor, pictureIdx);
 				// auto-size picture relative to its top-left corner
 				pict.resize(1, 1);
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 
 				Cell bomCell01 = bomRow.createCell(1);
 				bomCell01.setCellValue("");
 				style2(workbook, bomCell01);
-<<<<<<< HEAD
-
-=======
 				
 				
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 				Cell bomCell02 = bomRow.createCell(2);
 				bomCell02.setCellValue(level);
 				style2(workbook, bomCell02);
@@ -2229,71 +2177,50 @@ public class PartController extends BaseController {
 				Cell bomCell05 = bomRow.createCell(5);
 				bomCell05.setCellValue(name);
 				style2(workbook, bomCell05);
-<<<<<<< HEAD
-
-=======
 	
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 				Cell bomCell06 = bomRow.createCell(6);
 				bomCell06.setCellValue(rev);
 				style2(workbook, bomCell06);
-
+				
 				Cell bomCell07 = bomRow.createCell(7);
 				bomCell07.setCellValue(remarks);
 				style2(workbook, bomCell07);
-
+				
 				Cell bomCell08 = bomRow.createCell(8);
 				bomCell08.setCellValue(checkOutSts);
 				style2(workbook, bomCell08);
-
+				
 				Cell bomCell09 = bomRow.createCell(9);
 				bomCell09.setCellValue(state);
 				style2(workbook, bomCell09);
-
+				
 				Cell bomCell10 = bomRow.createCell(10);
 				bomCell10.setCellValue(modifier);
 				style2(workbook, bomCell10);
-
+				
 				Cell bomCell11 = bomRow.createCell(11);
 				bomCell11.setCellValue(spec);
 				style2(workbook, bomCell11);
-<<<<<<< HEAD
-
-				Cell bomCell12 = bomRow.createCell(12);
-				bomCell12.setCellValue(ecoNo);
-=======
 				
 				Cell bomCell12 = bomRow.createCell(12);
 				bomCell12.setCellValue(quantity);
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 				style2(workbook, bomCell12);
 
 				Cell bomCell13 = bomRow.createCell(13);
 				bomCell13.setCellValue(ecoNo);
 				style2(workbook, bomCell13);
-
+				
 				Cell bomCell14 = bomRow.createCell(14);
 				bomCell14.setCellValue(model);
 				style2(workbook, bomCell14);
-
+				
 				Cell bomCell15 = bomRow.createCell(15);
 				bomCell15.setCellValue(deptcode);
 				style2(workbook, bomCell15);
-
+				
 				Cell bomCell16 = bomRow.createCell(16);
 				bomCell16.setCellValue(manufacture);
 				style2(workbook, bomCell16);
-<<<<<<< HEAD
-
-				rowCnt++;
-				rowCellCnt++;
-				// Map<String, Integer> cntMap = excelTree(childPartlist, masterHis, sheet,
-				// workbook, rowCnt, rowCellCnt);
-				// if (cntMap.get("rowCnt") != rowCellCnt) {
-				// rowCnt = cntMap.get("rowCnt");
-				// rowCellCnt = cntMap.get("rowCellCnt");
-				// }
-=======
 				
 				Cell bomCell17 = bomRow.createCell(17);
 				bomCell17.setCellValue(productmethod);
@@ -2303,29 +2230,22 @@ public class PartController extends BaseController {
 				rowCnt++;
 				rowCellCnt++;
 				System.out.println(item.get("children"));
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 			}
-
+	
 			// 행 넓이 자동
-<<<<<<< HEAD
-			// sheet.autoSizeColumn(1);
-//			sheet.autoSizeColumn(2);
-//			sheet.autoSizeColumn(6);
-=======
 	//        sheet.autoSizeColumn(1);
 			sheet.autoSizeColumn(3);
 			sheet.autoSizeColumn(5);
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-
+	
 			LocalDate date = LocalDate.now();
 			String now = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			now = now.replaceAll("-", "");
 			now = now.substring(0, 8);
-
+	
 			response.setHeader("Content-Disposition",
-					"attachment; filename=" + bomList.get(0).get("number") + "_" + now + ".xlsx");
-
+					"attachment; filename=" + bomList.get(0).get("number")  + "_" + now + ".xlsx");
+	
 			try {
 				System.out.println("성공.");
 				workbook.write(response.getOutputStream());
@@ -2333,77 +2253,78 @@ public class PartController extends BaseController {
 				System.out.println("실패.");
 				e.printStackTrace();
 			}
-
+	
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-
+		
 	}
+
 
 	private static void style(XSSFWorkbook workbook, Cell cell) {
 		CellStyle style = workbook.createCellStyle();
-
+	
 		// 폰트 설정 (크기, 진하게)
 		Font font = workbook.createFont();
 		font.setFontHeightInPoints((short) 15); // 폰트 크기
 		font.setBold(true); // 진하게 설정
-
+	
 		style.setFont(font);
-
+	
 		// 가운데 정렬 설정
 		style.setAlignment(HorizontalAlignment.CENTER);
-
+	
 		// 스타일 적용
 		cell.setCellStyle(style);
-
+	
 	}
-
+	
 	private static void style2(XSSFWorkbook workbook, Cell cell) {
 		CellStyle style = workbook.createCellStyle();
-
+	
 		// 테두리 설정
 		style.setBorderTop(BorderStyle.THIN); // 상단 테두리
 		style.setBorderBottom(BorderStyle.THIN); // 하단 테두리
 		style.setBorderLeft(BorderStyle.THIN); // 왼쪽 테두리
 		style.setBorderRight(BorderStyle.THIN); // 오른쪽 테두리
-
+	
 		// 폰트 설정 (크기, 진하게)
 		Font font = workbook.createFont();
 		font.setFontHeightInPoints((short) 12); // 폰트 크기
 		font.setBold(true); // 진하게 설정
-
+	
 		style.setFont(font);
-
+	
 		// 가운데 정렬 설정
 		style.setAlignment(HorizontalAlignment.CENTER);
-
+	
 		// 높이 가운데 정렬 설정
 		style.setVerticalAlignment(VerticalAlignment.CENTER);
-
+	
 		// 스타일 적용
 		cell.setCellStyle(style);
-
+	
 	}
-
+	
 	private static void style3(XSSFWorkbook workbook, Cell cell) {
 		CellStyle style = workbook.createCellStyle();
-
+	
 		// 테두리 설정
 		style.setBorderTop(BorderStyle.THIN); // 상단 테두리
 		style.setBorderBottom(BorderStyle.THIN); // 하단 테두리
 		style.setBorderLeft(BorderStyle.THIN); // 왼쪽 테두리
 		style.setBorderRight(BorderStyle.THIN); // 오른쪽 테두리
-
+	
 		// 폰트 설정 (크기, 진하게)
 		Font font = workbook.createFont();
 		font.setFontHeightInPoints((short) 12); // 폰트 크기
 		font.setBold(true); // 진하게 설정
-
+	
 		style.setFont(font);
-
+	
 		// 스타일 적용
 		cell.setCellStyle(style);
-
+	
 	}
 }
