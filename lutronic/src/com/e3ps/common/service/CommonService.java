@@ -57,4 +57,5 @@ public interface CommonService {
 
 	ResultData batchSecondaryDown(HttpServletRequest request,HttpServletResponse response);
 	
+	public Map<String, Object> withDraw(Map<String, Object> params) throws Exception;
 }

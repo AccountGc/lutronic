@@ -242,8 +242,9 @@ List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute(
 	
 	//결재 회수
 	$("#withDrawBtn").click(function() {
-		var url	= getURLString("common", "withDrawPopup", "do") + "?oid="+$("#oid").val();
-		openOtherName(url,"withDrawBtn","400","220","status=no,scrollbars=yes,resizable=yes");
+		const oid = $("#oid").val();
+		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
+		_popup(url, 1500, 550, "n");
 	})
 	
 	//일괄 다운로드
