@@ -858,6 +858,24 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const url = getCallUrl("/part/searchSeqList?partNumber=" + partNumber);
 				_popup(url, 900, 450, "n");
 			})
+			
+			
+			$(function() {
+				<%----------------------------------------------------------
+				*                      Weight 입력 중
+				----------------------------------------------------------%>
+				$('#weight').keypress(function(event) {
+					var charCode = (event.which) ? event.which : event.keyCode;
+					return (charCode == 46) || common_isNumber(event, this);
+				})
+				<%----------------------------------------------------------
+				*                      Weight 입력시
+				----------------------------------------------------------%>
+				$("#weight").keyup(function() {
+					var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
+					$("#weight").val(result);
+				})
+			})
 		</script>
 	</form>
 </body>
