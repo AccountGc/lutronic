@@ -1,6 +1,7 @@
 package com.e3ps.part.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -16,12 +17,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -2003,7 +2010,6 @@ public class PartController extends BaseController {
 			// 워크북에 시트 생성
 			Sheet sheet = workbook.createSheet("Sheet1");
 	
-			sheet.setColumnWidth(1, 30 * 256);
 			// 헤더
 			Row row = sheet.createRow(0);
 			Cell cell = row.createCell(0);
@@ -2087,9 +2093,9 @@ public class PartController extends BaseController {
 			int rowCellCnt = 1;
 			int rowCnt = 3;
 			for (Map<String, Object> item : bomList) {
-				int level =1;
 				String number = item.get("number") ==null ?"":item.get("number").toString();
 				String dwgNo = item.get("dwgNo") ==null ?"":item.get("dwgNo").toString();
+				String level = item.get("level") ==null ?"":   String.valueOf(Integer.parseInt(item.get("level").toString()) +1);
 				String name = item.get("name") ==null ?"":item.get("name").toString();
 				String rev = item.get("rev") ==null ?"":item.get("rev").toString();
 				String remarks = item.get("remarks") ==null ?"":item.get("remarks").toString();
@@ -2133,7 +2139,7 @@ public class PartController extends BaseController {
 				style2(workbook, bomCell05);
 				
 				Cell bomCell06 = bomRow.createCell(6);
-				bomCell06.setCellValue(rev);
+				bomCell06.setCellValue(remarks);
 				style2(workbook, bomCell06);
 				
 				Cell bomCell07 = bomRow.createCell(7);
@@ -2176,19 +2182,55 @@ public class PartController extends BaseController {
 				bomCell16.setCellValue(productmethod);
 				style2(workbook, bomCell16);
 				
+				
+		        // 이미지 파일 경로 설정 (예시: "image.jpg")
+//		        String thumbnail = FileHelper.getViewContentURLForType(PublishUtils.findRepresentable(childPart),
+//						ContentRoleType.THUMBNAIL);
+//		        if(thumbnail ==null) {
+//		        }else {
+		        	// 이미지 확인만 하고 추후 썸네일로 교체 예정..
+//		        	System.out.println("thumbnail     :     "   + thumbnail);
+//		        	imagePath = "/opt/ptc/Windchill_12.0/Windchill/codebase/jsp/images/productview_openin_250.png";
+//		        }
+
+		        //이미지 확인만 하고 추후 썸네일로 교체 예정..
+//				InputStream is = new FileInputStream(
+//						"/opt/ptc/Windchill_12.0/Windchill/codebase/jsp/images/productview_openin_250.png");
+		        InputStream is = new FileInputStream("D:\\ptc\\Windchill_11.1\\Windchill\\codebase\\jsp\\images\\productview_openin_250.png");
+				byte[] bytes = IOUtils.toByteArray(is);
+				int pictureIdx = workbook.addPicture(bytes, Workbook.PICTURE_TYPE_JPEG);
+				is.close();
+				
+
+				CreationHelper helper = workbook.getCreationHelper();
+				// Create the drawing patriarch. This is the top level container for all shapes.
+				Drawing drawing = sheet.createDrawingPatriarch();
+
+				// add a picture shape
+				ClientAnchor anchor = helper.createClientAnchor();
+				// set top-left corner of the picture,
+				// subsequent call of Picture#resize() will operate relative to it
+				anchor.setCol1(1);
+				anchor.setRow1(rowCnt);
+				anchor.setCol2(2);
+				anchor.setRow2(rowCnt + 1);
+				Picture pict = drawing.createPicture(anchor, pictureIdx);
+				// auto-size picture relative to its top-left corner
+				pict.resize(1, 1);
+
+				Cell partlistCell2 = bomRow.createCell(17);
+				partlistCell2.setCellValue("");
+				style2(workbook, partlistCell2);
+				
 				rowCnt++;
 				rowCellCnt++;
-	//			Map<String, Integer> cntMap = excelTree(childPartlist, masterHis, sheet, workbook, rowCnt, rowCellCnt);
-	//			if (cntMap.get("rowCnt") != rowCellCnt) {
-	//				rowCnt = cntMap.get("rowCnt");
-	//				rowCellCnt = cntMap.get("rowCellCnt");
-	//			}
+				System.out.println(item.get("children"));
 			}
 	
 			// 행 넓이 자동
 	//        sheet.autoSizeColumn(1);
-//			sheet.autoSizeColumn(2);
-//			sheet.autoSizeColumn(6);
+			sheet.autoSizeColumn(2);
+			sheet.autoSizeColumn(4);
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 	
 			LocalDate date = LocalDate.now();
