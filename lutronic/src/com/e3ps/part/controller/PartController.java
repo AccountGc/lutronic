@@ -112,8 +112,8 @@ public class PartController extends BaseController {
 	}
 	
 	@Description(value = "관련 품목 팝업 페이지")
-	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false)Integer parentRowIndex) throws Exception {
+	@GetMapping(value = "/popup")
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -127,8 +127,9 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
-		model.addObject("parentRowIndex", parentRowIndex);
-		model.setViewName("popup:/part/part-list-popup");			
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
+		model.setViewName("popup:/part/part-list-popup");
 		return model;
 	}
 
