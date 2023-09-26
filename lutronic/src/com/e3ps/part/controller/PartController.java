@@ -2008,12 +2008,9 @@ public class PartController extends BaseController {
 
 			// 워크북에 시트 생성
 			Sheet sheet = workbook.createSheet("Sheet1");
-<<<<<<< HEAD
 
 			sheet.setColumnWidth(1, 30 * 256);
-=======
 	
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 			// 헤더
 			Row row = sheet.createRow(0);
 			Cell cell = row.createCell(0);
@@ -2032,11 +2029,7 @@ public class PartController extends BaseController {
 			Cell cell01 = row1.createCell(1);
 			cell01.setCellValue("Thumbanil");
 			style2(workbook, cell01);
-<<<<<<< HEAD
 
-=======
-			
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 			Cell cell02 = row1.createCell(2);
 			cell02.setCellValue("Level");
 			style2(workbook, cell02);
@@ -2064,11 +2057,7 @@ public class PartController extends BaseController {
 			Cell cell08 = row1.createCell(8);
 			cell08.setCellValue("체크아웃 상태");
 			style2(workbook, cell08);
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 			Cell cell09 = row1.createCell(9);
 			cell09.setCellValue("상태");
 			style2(workbook, cell09);
@@ -2084,15 +2073,10 @@ public class PartController extends BaseController {
 			Cell cell12 = row1.createCell(12);
 			cell12.setCellValue("수량");
 			style2(workbook, cell12);
-<<<<<<< HEAD
 
-=======
-			
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 			Cell cell13 = row1.createCell(13);
 			cell13.setCellValue("ECO NO.");
 			style2(workbook, cell13);
-<<<<<<< HEAD
 
 			Cell cell14 = row1.createCell(14);
 			cell14.setCellValue("부서");
@@ -2102,8 +2086,6 @@ public class PartController extends BaseController {
 			cell15.setCellValue("MANUFACTURER");
 			style2(workbook, cell15);
 
-=======
-	
 			Cell cell14 = row1.createCell(14);
 			cell14.setCellValue("프로젝트코드");
 			style2(workbook, cell14);
@@ -2112,11 +2094,9 @@ public class PartController extends BaseController {
 			cell15.setCellValue("부서");
 			style2(workbook, cell15);
 	
->>>>>>> aeef8d4adb7d2c201e932fb386c877ad4d724cce
 			Cell cell16 = row1.createCell(16);
 			cell16.setCellValue("MANUFACTURER");
 			style2(workbook, cell16);
-<<<<<<< HEAD
 
 			int rowCellCnt = 1;
 			int rowCnt = 3;
