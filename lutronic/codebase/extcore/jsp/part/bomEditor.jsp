@@ -413,11 +413,11 @@
 			
 			break;
 		case 3:
-			var url = getCallUrl("/part/listPopup?callback=appendChild&rowId=" + item._$uid);
+			var url = getCallUrl("/part/popup?method=appendChild&rowId=" + item._$uid+"&multi=true");
 			_popup(url, 1500, 700, "n");
 			break;
 		case 4:
-			var url = getCallUrl("/part/listPopup?callback=change&rowId=" + item._$uid+"&radio=Y" );
+			var url = getCallUrl("/part/popup?method=change&rowId=" + item._$uid+"&multi=false" );
 			_popup(url, 1500, 700, "n");
 			break;	
 		case 6:
