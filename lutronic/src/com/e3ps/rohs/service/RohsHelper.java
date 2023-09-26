@@ -717,6 +717,30 @@ public class RohsHelper {
 		return list;
 	}
 	
+	public List<RohsData>  getPartROHSList(WTPart part, boolean islastversion) throws Exception {
+		QuerySpec qs = new QuerySpec();
+		int idx1= qs.addClassList(ROHSMaterial.class, true);
+        int idx2 = qs.addClassList(PartToRohsLink.class, true);
+        
+        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
+    	qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx1});
+        
+        if(islastversion) {
+         	SearchUtil.addLastVersionCondition(qs, ROHSMaterial.class, idx1);
+		}
+    	SearchUtil.setOrderBy(qs, ROHSMaterial.class, idx1, ROHSMaterial.NUMBER, false);
+	
+		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs",qs,true);
+		List<RohsData> list = new ArrayList<RohsData>();
+		while(rt.hasMoreElements()){
+			ROHSMaterial rohs = (ROHSMaterial)rt.nextElement();
+			RohsData data = new RohsData(rohs);
+		
+			list.add(data);
+		}
+		return list;
+	}
+	
 	public List<PartToRohsLink> getPartToRohsLinkList(RevisionControlled rev) throws Exception{
 		List<PartToRohsLink> list = new ArrayList<PartToRohsLink>();
 		String vr = CommonUtil.getVROID(rev);

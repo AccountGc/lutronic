@@ -195,7 +195,7 @@ public class RohsUtil {
 	public static List<RohsData>  getPartROHSList(String oid) throws Exception {
 		WTPart part = (WTPart)CommonUtil.getObject(oid);
 		
-		return RohsQueryHelper.service.getPartROHSList(part, true);
+		return RohsHelper.manager.getPartROHSList(part, true);
 		
 		
 	}
