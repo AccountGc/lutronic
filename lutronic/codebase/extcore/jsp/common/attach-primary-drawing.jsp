@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 <%
-String oid = (String) request.getAttribute("oid");
- String method = (String) request.getAttribute("method");
+String oid = (String) request.getParameter("oid");
+String method = (String) request.getAttribute("method");
+String mode = request.getParameter("mode");
 %>
 <div class="AXUpload5" id="primary_layer"></div>
 <script type="text/javascript">
@@ -52,9 +53,37 @@ function load() {
 				}
 		}
 	})
+	<% if("modify".equals(mode)){ %>
+	new AXReq("/Windchill/plm/content/list", {
+		pars : "oid=<%=oid%>&roleType=primary",
+		onsucc : function(res) {
+			if (!res.e) {
+				const form = document.querySelector("form");
+				const data = res.primaryFile;
+				const len = data.length;
+				for (let i = 0; i < len; i++) {
+					const primaryTag = document.createElement("input");
+					primaryTag.type = "hidden";
+					primaryTag.id = data[i].tagId;
+					primaryTag.name = "primary";
+					primaryTag.value = data[i].cacheId;
+					form.appendChild(primaryTag);
+				}
+				primary.setUploadedList(data);
+				imgurl = data[0].filePath + data[0].name;
+				$("#sign_preview").attr("src", imgurl);
+			}
+		}
+	});
+	<% } %>
 }
 	
 load();
+
+//이미지 미리보기
+function signPreview(uploadPath) {
+	$("#sign_preview").attr("src", uploadPath);
+}
 
 //첨부파일 업로드 시
 function fileUpload() {

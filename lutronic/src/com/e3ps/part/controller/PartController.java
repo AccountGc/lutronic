@@ -398,16 +398,30 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 수정 페이지")
 	@GetMapping(value = "/update")
-	public ModelAndView update(@RequestParam String oid) {
+	public ModelAndView update(@RequestParam String oid) throws Exception{
 		ModelAndView model = new ModelAndView();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		PartData partData = null;
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		try {
 			partData = new PartData(part);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		model.addObject("data", partData);
+		model.addObject("modelList", modelList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
+		model.addObject("unitList", unitList);
 		model.setViewName("popup:/part/updatePart");
 		return model;
 	}

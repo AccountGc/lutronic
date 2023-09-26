@@ -1,7 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.e3ps.part.dto.PartData"%>
+<%@page import="wt.org.WTUser"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
+<%@page import="com.e3ps.drawing.service.DrawingHelper"%>
+<%@page import="wt.part.QuantityUnit"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String oid = (String) request.getAttribute("oid");
 PartData data = (PartData) request.getAttribute("data");
 String partName1 = "";
 String partName2 = "";
@@ -14,9 +18,15 @@ if(data != null){
 	partName3 = partName[2];
 	partName4 = partName[3];
 }
+ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
+ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
+ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
+ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
+QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
-<form name="updateDevelopmentForm" id="updateDevelopmentForm" method="post" >
-<input type="hidden" name="oid" id="oid" value="<%= oid %>" />
+<input type="hidden" name="oid" id="oid" value="<%= data.getOid() %>" />
 <table width="100%" border="0" cellpadding="0" cellspacing="0" > 
 	<tr height="5">
 		<td>
@@ -46,14 +56,15 @@ if(data != null){
 				<tr>
 					<th>품목번호</th>
 					<td class="indent5" colspan="3">
-						<%= data != null ? data.getNumber() : "" %>
+						<%= data.getNumber() != null ? data.getNumber() : "" %>
 					</td>
 				</tr>
 				<tr>
 					<th>품목분류 <span style="color:red;">*</span></th>
 					<td class="indent5" colspan="3">
-						<span id="locationName">
-							<%= data != null ? data.getLocation() : "" %>
+						<input type="hidden" name="location"  id="location"  value="<%= data.getLocation() != null ? data.getLocation() : "" %>">
+						<span id="locationText">
+							<%= data.getLocation() != null ? data.getLocation() : "" %>
 						</span>
 					</td>
 				</tr>
@@ -108,221 +119,256 @@ if(data != null){
 	</tr>
 </table>
 <table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 품목 속성
-					</div>
-				</td>
-			</tr>
-		</table>
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> 품목 속성
+			</div>
+		</td>
+	</tr>
+</table>
 		
-		<table class="search-table">
-			<colgroup>
-				<col width="174">
-				<col width="*">
-				<col width="174">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>프로젝트코드 <span style="color:red;">*</span></th>
-				<td class="indent5">
-					<input type="text" name="model" id="model" class="width-500" value="<%= data != null ? data.getModel() : "" %>">
-				</td>
-				<th>제작방법 <span style="color:red;">*</span></th>
-				<td class="indent5">
-					<input type="text" name="productmethod" id="productmethod" class="width-500" value="<%= data != null ? data.getProductmethod() : "" %>">
-				</td>
-			</tr>
-			<tr>
-				<th>부서 <span style="color:red;">*</span></th>
-				<td class="indent5">
-					<input type="text" name="deptcode" id="deptcode" class="width-500">
-				</td>
-				<th>단위 <span style="color:red;">*</span></th>
-				<td class="indent5">
-					<input type="text" name="unit" id="unit" class="width-500">
-				</td>
-			</tr>
-			<tr>
-				<th>무게(g)</th>
-				<td class="indent5">
-					<input type="text" name="weight" id="weight" class="width-500">
-				</td>
-				<th>MANUFACTURER</th>
-				<td class="indent5">
-					<input type="text" name="manufacture" id="manufacture" class="width-500">
-				</td>
-			</tr>
-			<tr>
-				<th>재질</th>
-				<td class="indent5">
-					<input type="text" name="mat" id="mat" class="width-500">
-				</td>
-				<th>후처리</th>
-				<td class="indent5">
-					<input type="text" name="finish" id="finish" class="width-500">
-				</td>
-			</tr>
-			<tr>
-				<th>OEM Info.</th>
-				<td class="indent5">
-					<input type="text" name="remarks" id="remarks" class="width-500">
-				</td>
-				<th>사양</th>
-				<td class="indent5">
-					<input type="text" name="specification" id="specification" class="width-500">
-				</td>
-			</tr>
-		</table>
-		<br>
-		<!-- 	주도면 -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 주 도면&nbsp;&nbsp;
-						<span class="red">(메카 : CAD파일), (광학/제어/파워/인증 : PDF파일)</span>
-					</div>
-				</td>
-			</tr>
-		</table>
-		
-		<table class="search-table">
-			<colgroup>
-				<col width="180">
-				<col width="*">
-				<col width="180">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>주 도면</th>
-				<td class="indent5" colspan="3">
-				</td>
-			</tr>
-		</table>
-		<br>
-		
-		<!-- 관련 문서 -->
+<table class="search-table">
+	<colgroup>
+		<col width="174">
+		<col width="*">
+		<col width="174">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th>프로젝트코드 <span style="color:red;">*</span></th>
+		<td class="indent5">
+			<select name="model" id="model" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode model : modelList) {
+				%>
+				<option value="<%=model.getCode() %>" <% if(data.getModel().equals(model.getCode())){ %> selected <% } %>><%=model.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+		</td>
+		<th>제작방법 <span style="color:red;">*</span></th>
+		<td class="indent5">
+			<select name="productmethod" id="productmethod" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode productmethod : productmethodList) {
+				%>
+				<option value="<%=productmethod.getCode() %>" <% if(data.getProductmethod().equals(productmethod.getCode())){ %> selected <% } %>><%=productmethod.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+	</tr>
+	<tr>
+		<th>부서 <span style="color:red;">*</span></th>
+		<td class="indent5">
+			<select name="deptcode" id="deptcode" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode deptcode : deptcodeList) {
+				%>
+				<option value="<%=deptcode.getCode() %>" <% if(data.getDeptcode().equals(deptcode.getCode())){ %> selected <% } %>><%=deptcode.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+		</td>
+		<th>단위 <span style="color:red;">*</span></th>
+		<td class="indent5">
+			<select name="unit" id="unit" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (QuantityUnit unit : unitList) {
+				%>
+				<option value="<%=unit.toString() %>" <% if(data.getUnit().equals(unit.toString())){ %> selected <% } %>><%=unit.getDisplay() %></option>
+				<%
+				}
+				%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>무게(g)</th>
+		<td class="indent5">
+			<input type="text" name="weight" id="weight" class="width-200" value="<% if (data.getWeight() != null) { %><%= data.getWeight() %><% } %>">
+		</td>
+		<th>MANUFACTURER</th>
+		<td class="indent5">
+			<select name="manufacture" id="manufacture" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode manufacture : manufactureList) {
+				%>
+				<option value="<%=manufacture.getCode() %>" <% if(data.getManufacture() != null && data.getManufacture().equals(manufacture.getCode())) { %> selected <% } %>><%=manufacture.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>재질</th>
+		<td class="indent5">
+			<select name="mat" id="mat" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode mat : matList) {
+				%>
+				<option value="<%=mat.getCode() %>" <% if(data.getMat() != null && data.getMat().equals(mat.getCode())){ %> selected <% } %>><%=mat.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+		</td>
+		<th>후처리</th>
+		<td class="indent5">
+			<select name="finish" id="finish" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode finish : finishList) {
+				%>
+				<option value="<%=finish.getCode() %>" <% if(data.getFinish() != null && data.getFinish().equals(finish.getCode())) { %> selected <% } %>><%=finish.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>OEM Info.</th>
+		<td class="indent5">
+			<input type="text" name="remarks" id="remarks" class="width-200" value="<% if (data.getRemark() != null) { %><%= data.getRemark() %><% } %>">
+		</td>
+		<th>사양</th>
+		<td class="indent5">
+			<input type="text" name="specification" id="specification" class="width-200" value="<% if (data.getSpecification() != null) { %><%= data.getSpecification() %><% } %>">
+		</td>
+	</tr>
+</table>
+<br>
+<!-- 	주도면 -->
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> 주 도면&nbsp;&nbsp;
+				<span class="red">(메카 : CAD파일), (광학/제어/파워/인증 : PDF파일)</span>
+			</div>
+		</td>
+	</tr>
+</table>
+<table class="search-table">
+	<colgroup>
+		<col width="150">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th>주 도면</th>
+		<td class="indent5" >
+			<jsp:include page="/extcore/jsp/common/attach-primary-drawing.jsp">
+				<jsp:param value="<%= data.getOid() %>" name="oid" />
+				<jsp:param value="modify" name="mode" />
+			</jsp:include>
+		</td>
+	</tr>
+</table>
+<br>
+
+<!-- 관련 문서 -->
 <%-- 		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp"> --%>
 <%-- 			<jsp:param value="part" name="moduleType"/> --%>
 <%-- 			<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
 <%-- 			<jsp:param value="관련 문서" name="title"/> --%>
 <%-- 			<jsp:param value="docOid" name="paramName"/> --%>
 <%-- 		</jsp:include> --%>
-		<br>
-		
-		
-		<!-- 관련 rohs -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
-					</div>
-				</td>
-			</tr>
-		</table>
-		
-		<table class="search-table">
-			<colgroup>
-				<col width="180">
-				<col width="*">
-				<col width="180">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>관련 RoHS</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-						<jsp:param value="관련 RoHS" name="title"/>
-						<jsp:param name="paramName" value="rohsOid"/>
-						<jsp:param value="<%= data.getOid() %>" name="oid"/>
-						<jsp:param value="part" name="module"/>
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
-		
-		<!-- 첨부파일 -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 첨부파일
-					</div>
-				</td>
-			</tr>
-		</table>
-		
-		<table class="search-table">
-			<colgroup>
-				<col width="180">
-				<col width="*">
-				<col width="180">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
-						<jsp:param value="" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
-		<br>
-		
-		<table class="button-table">
-			<tr>
-				<td class="center">
-					<input type="button" value="등록" title="등록" id="createBtn" class="blue" onclick="create('false');" />
-					<input type="button" value="초기화" title="초기화" id="resetBtn" />
-					<input type="button" value="목록" title="목록" id="listBtn" />
-				</td>
-			</tr>
-		</table>
-		
-	</form>
+<br>
+
+
+<!-- 관련 rohs -->
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
+			</div>
+		</td>
+	</tr>
+</table>
+
+<table class="search-table">
+	<colgroup>
+		<col width="180">
+		<col width="*">
+		<col width="180">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th>관련 RoHS</th>
+		<td class="indent5" colspan="3">
+			<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+				<jsp:param value="<%= data.getOid() %>" name="oid"/>
+				<jsp:param value="관련 RoHs" name="title" />
+				<jsp:param value="part" name="module"/>
+				<jsp:param value="update" name="mode"/>
+			</jsp:include>
+		</td>
+	</tr>
+</table>
+
+<!-- 첨부파일 -->
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> 첨부파일
+			</div>
+		</td>
+	</tr>
+</table>
+
+<table class="search-table">
+	<colgroup>
+		<col width="180">
+		<col width="*">
+		<col width="180">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th class="lb">첨부파일</th>
+		<td class="indent5" colspan="3">
+			<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
+				<jsp:param value="<%= data.getOid() %>" name="oid" />
+				<jsp:param value="modify" name="mode" />
+			</jsp:include>
+		</td>
+	</tr>
+</table>
+<br>
+
+<table class="button-table">
+	<tr>
+		<td class="center">
+			<input type="button" value="수정" title="수정" id="updateBtn" class="blue" />
+		</td>
+	</tr>
+</table>
 <script>
-<%----------------------------------------------------------
-*                      페이지 초기 설정
-----------------------------------------------------------%>
-$(document).ready(function () {
-	
-	$("#" + this.id + "Search").hide();
-	
-	var name = '';
-	
-	if(!$.trim($('#partName1').val()) == '') {
-		name += $('#partName1').val();
-	}
-	
-	if(!$.trim($('#partName2').val()) == '') {
-		if(!$.trim(name) == '') {
-			name += '_';
-		}
-		name += $('#partName2').val();
-	}
-	
-	if(!$.trim($('#partName3').val()) == '') {
-		if(!$.trim(name) == '') {
-			name += '_';
-		}
-		name += $('#partName3').val();
-	}
-	
-	if(!$.trim($('#partNameCustom').val()) == '') {
-		if(!$.trim(name) == '') {
-			name += '_';
-		}
-		name += $('#partNameCustom').val();
-	}
-	
-	$('#displayName').html(name);
-	
-	
-})
+document.addEventListener("DOMContentLoaded", function() {
+	createAUIGrid6(columnsRohs);
+	AUIGrid.resize(rohsGridID);
+	document.getElementById("partName1").focus();
+	selectbox("state");
+	selectbox("model");
+	selectbox("productmethod");
+	selectbox("deptcode");
+	selectbox("unit");
+	selectbox("mat");
+	selectbox("finish");
+	selectbox("manufacture");
+});
 
 // 품목명 입력 시 
 $(".partName").keyup(function (event) {
@@ -417,121 +463,130 @@ $(document).on("mouseover", 'div > ul > li', function() {
 	$(this).addClass("hover") ;
 	$("#" + partName).val($(this).text());
 })
-	
-	<%----------------------------------------------------------
-	*                      수정버튼
-	----------------------------------------------------------%>
-	$("#updateBtn").click(function() {
-		const partName1 = document.getElementById("partName1").value;
-		const partType1 = document.getElementById("partType1").value;
-		const partName2 = document.getElementById("partName2").value;
-		const partType2 = document.getElementById("partType2").value;
-		const partName3 = document.getElementById("partName3").value;
-		const partType3 = document.getElementById("partType3").value;
-		const partName4 = document.getElementById("partName4").value;
-		const seq = document.getElementById("seq").value;
-		const etc = document.getElementById("etc").value;
-		const model = document.getElementById("model").value;
-		const productmethod = document.getElementById("productmethod").value;
-		const deptcode = document.getElementById("deptcode").value;
-		const weight = document.getElementById("weight").value;
-		const manufacture = document.getElementById("manufacture").value;
-		const mat = document.getElementById("mat").value;
-		const finish = document.getElementById("finish").value;
-		const remarks = document.getElementById("remarks").value;
-		const specification = document.getElementById("specification").value;
-		const unit = document.getElementById("unit").value;
-		const primarys = toArray("primarys");
-		const wtPartType = document.getElementById("wtPartType").value;
-		const source = document.getElementById("source").value;
-		const lifecycle = document.getElementById("lifecycle").value;
-		const view = document.getElementById("view").value;
-		const fid = document.getElementById("fid").value;
-		const location = document.getElementById("location").value;
-		
-		const oid = document.getElementById("oid").value;
-		const location = document.getElementById("location").value;
-		const docName = document.getElementById("docName");
-		const lifecycle = document.getElementById("lifecycle").value;
-		const description = document.getElementById("description").value;
-		const iterationNote = document.getElementById("iterationNote").value;
-		const primarys = toArray("primarys");
 
-// 		if($.trim($("#partName1").val()) == ""
-// 			   && $.trim($("#partName2").val()) == ""
-// 			   && $.trim($("#partName3").val()) == ""
-// 			   && $.trim($("#partNameCustom").val()) == "" ) {
-// 				alert("품목명을(를) 입력하세요.");
-// 				$("#partName1").focus();
-// 				return;
-// 			}else if($("#displayName").text().length > 40) {
-// 				alert("품목명은(는) 40자 이내로 입력하세요.");
-// 				return;
-// 			}
-// 			if($("#model").val() == "") {
-// 				alert("프로젝트코드을(를) 선택하세요.");
-// 				$("#model").focus();
-// 				return;
-// 			}
-			
-// 			if($("#productmethod").val() == "") {
-// 				alert("제작방법을(를) 선택하세요.");
-// 				$("#productmethod").focus();
-// 				return;
-// 			}
-			
-// 			if($("#deptcode").val() == "") {
-// 				alert("부서을(를) 선택하세요.");
-// 				$("#deptcode").focus();
-// 				return;
-// 			}
-			
-// 			if($("#unit").val() == "") {
-// 				alert("단위을(를) 선택하세요.");
-// 				$("#unit").focus();
-// 				return;
-// 			}
-			
-		if (confirm("수정하시겠습니까?")){
-			
-			const params = new Object();
-			const url = getCallUrl("/part/create");
-			params.partName1 = "MODULE";
-			params.partType1 = partType1;
-			params.partName2 = "BOARD";
-			params.partType2 = partType2;
-			params.partName3 = "LD DRIVER";
-			params.partType3 = partType3;
-			params.partName4 = "";
-			params.seq = seq;
-			params.etc = etc;
-			params.model = model;
-			params.productmethod = productmethod;
-			params.deptcode = deptcode;
-			params.weight = weight;
-			params.manufacture = manufacture;
-			params.mat = mat;
-			params.finish = finish;
-			params.remarks = remarks;
-			params.specification = specification;
-			params.unit =unit;
-			params.primarys = primarys;
-			params.wtPartType = wtPartType;
-			params.source = source;
-			params.lifecycle = lifecycle;
-			params.view = view;
-			params.fid = fid;
-			params.location = location;
-			
-			call(url, params, function(data) {
-				if (data.result) {
-					alert("수정 성공하였습니다.");
-					location.href = getCallUrl("/doc/view?oid=" + data.oid);
-				} else {
-					alert("수정 실패하였습니다. \n" + data.msg);
-				}
-			});
-		}
+<%----------------------------------------------------------
+*                      품목명 데이터 마우스 뺄때
+----------------------------------------------------------%>
+$(document).on("mouseout", 'div > ul > li', function() {
+	$(this).removeClass("hover") ;
+})
+
+$('#partName4').focusout(function() {
+	$('#partName4').val(this.value.toUpperCase());
+})
+
+$(function() {
+	<%----------------------------------------------------------
+	*                      Weight 입력 중
+	----------------------------------------------------------%>
+	$('#weight').keypress(function(event) {
+		var charCode = (event.which) ? event.which : event.keyCode;
+		return (charCode == 46) || common_isNumber(event, this);
 	})
+	<%----------------------------------------------------------
+	*                      Weight 입력시
+	----------------------------------------------------------%>
+	$("#weight").keyup(function() {
+		var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
+		$("#weight").val(result);
+	})
+})
+	
+<%----------------------------------------------------------
+*                      수정버튼
+----------------------------------------------------------%>
+$("#updateBtn").click(function() {
+	const oid = document.getElementById("oid").value;
+	const location = document.getElementById("location").value;
+	const partName1 = document.getElementById("partName1").value;
+	const partName2 = document.getElementById("partName2").value;
+	const partName3 = document.getElementById("partName3").value;
+	const partName4 = document.getElementById("partName4").value;
+	const model = document.getElementById("model").value;
+	const productmethod = document.getElementById("productmethod").value;
+	const deptcode = document.getElementById("deptcode").value;
+	const unit = document.getElementById("unit").value;
+	const weight = document.getElementById("weight").value;
+	const manufacture = document.getElementById("manufacture").value;
+	const mat = document.getElementById("mat").value;
+	const finish = document.getElementById("finish").value;
+	const remarks = document.getElementById("remarks").value;
+	const specification = document.getElementById("specification").value;
+	const primary = document.querySelector("input[name=primary]") == null ? "" : document.querySelector("input[name=primary]").value;
+	
+
+//     let docOids = [];
+//     const appendDoc = AUIGrid.getGridData(myGridID90);
+//     if(appendDoc.length > 0){
+//         for(let i = 0; i < appendDoc.length; i++){
+//             docOids.push(appendDoc[i].oid)
+//         }
+//     }
+    
+    let rohsOids = [];
+    const appendRohs = AUIGrid.getGridData(rohsGridID);
+    if(appendRohs.length > 0){
+        for(let i = 0; i < appendRohs.length; i++){
+        	rohsOids.push(appendRohs[i].oid)
+        }
+    }
+
+    if(isEmpty(location)){
+		alert("품목구분을 입력하세요.");
+		return;					
+	}
+	if(isEmpty(partName1) || isEmpty(partName2) || isEmpty(partName3) || isEmpty(partName4)){
+		alert("품목명을 입력하세요.");
+		return;					
+	}
+	if(isEmpty($("#model").val())){
+		alert("프로젝트 코드를 입력하세요.");
+		return;					
+	}
+	if(isEmpty($("#productmethod").val())){
+		alert("제작방법을 입력하세요.");
+		return;					
+	}
+	if(isEmpty($("#deptcode").val())){
+		alert("부서를 입력하세요.");
+		return;					
+	}
+	if(isEmpty($("#unit").val())){
+		alert("단위를 입력하세요.");
+		return;					
+	}
+	
+			
+	if (confirm("수정하시겠습니까?")){
+		
+		let params = new Object();
+		const url = getCallUrl("/part/update");
+		params.oid = oid;
+		params.location = location;
+		params.partName1 = partName1;
+		params.partName2 =  partName2;
+		params.partName3 =  partName3;
+		params.partName4 =  partName4;
+		params.model = model;
+		params.productmethod = productmethod;
+		params.deptcode = deptcode;
+		params.unit =unit;
+		params.weight = weight;
+		params.manufacture = manufacture;
+		params.mat = mat;
+		params.finish = finish;
+		params.remarks = remarks;
+		params.specification = specification;
+		params.primary = primary;
+		
+		call(url, params, function(data) {
+			if (data.result) {
+				alert("수정 성공하였습니다.");
+				location.href = getCallUrl("/doc/view?oid=" + data.oid);
+			} else {
+				alert("수정 실패하였습니다. \n" + data.msg);
+			}
+		});
+	}
 })
 </script>
