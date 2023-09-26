@@ -63,7 +63,8 @@ public class DocumentDTO {
 	private String lifecycle;
 	private String primary;
 	private ArrayList<String> secondarys = new ArrayList<>();
-	private ArrayList<Map<String, String>> addRows80 = new ArrayList<>();
+	private ArrayList<Map<String, String>> addRows90 = new ArrayList<>(); // 관련 문서
+	private ArrayList<Map<String, String>> addRows91 = new ArrayList<>(); // 관련 품목
 	private boolean temp;
 
 	public DocumentDTO() {

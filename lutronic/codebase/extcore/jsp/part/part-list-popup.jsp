@@ -11,12 +11,8 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
-int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
-String callback = request.getParameter("callback") != null ? request.getParameter("callback") :"append";
-String rowId = request.getParameter("rowId") != null ? request.getParameter("rowId") :"";
-String radio = request.getParameter("radio") != null ? request.getParameter("radio") :"N";
-
-
+String method = (String) request.getAttribute("method");
+boolean multi = (boolean) request.getAttribute("multi");
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -234,11 +230,10 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 	<tr>
 		<td class="left">
 			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
-			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
-			<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
+			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-popup');">
+			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-popup');">
 			<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
-			<input type="button" value="추가" title="추가"  onclick="add();">						
+			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -248,9 +243,9 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 				<option value="200">200</option>
 				<option value="300">300</option>
 			</select>
-			<input type="button" value="검색" title="검색" id="searchBtn">
-			<input type="button" value="초기화" title="초기화" id="btnReset">
-			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
+			<input type="button" value="검색" title="검색">
+			<input type="button" value="초기화" title="초기화">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -478,20 +473,19 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 				showIcon : true,
 				inline : true
 			},
-		},{
+		}, {
 			dataField : "version",
-			headerText: "version",
-			visible : false
-		},{
-			dataField : "dwgNo",
-			headerText: "dwgNo",
+			headerText : "version",
 			visible : false
 		}, {
-			dataField: "modifier",
-			headerText: "modifier",
+			dataField : "dwgNo",
+			headerText : "dwgNo",
 			visible : false
-		}, 
-		]
+		}, {
+			dataField : "modifier",
+			headerText : "modifier",
+			visible : false
+		}, ]
 	}
 
 	function createAUIGrid(columnLayout) {
@@ -507,10 +501,9 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 			showInlineFilter : false,
 			useContextMenu : true,
 			enableRowCheckShiftKey : true,
-			<% if("Y".equals(radio)){%>
-				rowCheckToRadio : true,
-			<%} %>
-			
+			<%if (!multi) {%>
+			rowCheckToRadio : true,
+			<%}%>
 			enableRightDownFocus : true,
 			filterLayerWidth : 320,
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
@@ -529,8 +522,8 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 	function loadGridData() {
 		let params = new Object();
 		const url = getCallUrl("/part/list");
-		const field = [ "_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
-				"ecoNo", "eoNo" ];
+		const field = [ "_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo",
+				"eoNo" ];
 		params = toField(params, field);
 		AUIGrid.showAjaxLoader(myGridID);
 		call(url, params, function(data) {
@@ -545,10 +538,32 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 			}
 		});
 	}
+	
+	function <%=method%>() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length === 0) {
+			alert("추가할 행을 선택하세요.");
+			return false;
+		}
+		
+// 		const arr = new Array();
+// 		checkedItems.forEach(function(item) {
+// 			arr.push(item.item);
+// 		})
+		
+		openLayer();
+		opener.<%=method%>(checkedItems, function(res) {
+			if(res) {
+				setTimeout(function() {
+					closeLayer();
+				}, 500);
+			}
+		})
+	}
 
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("partNumber");
-		const columns = loadColumnLayout("part-list");
+		const columns = loadColumnLayout("part-popup");
 		const contenxtHeader = genColumnHtml(columns);
 		$("#h_item_ul").append(contenxtHeader);
 		$("#headerMenu").menu({
@@ -572,17 +587,6 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 		twindate("modified");
 		$("#_psize").bindSelectSetValue(100);
 	});
-
-	function editBOM() {
-		const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-		if (items.length == 0) {
-			alert("편집할 부품을 선택하세요.");
-			return false;
-		}
-		const oid = items[0].oid;
-		const url = getCallUrl("/part/bom?oid=" + oid);
-		_popup(url, 1600, 800, "n");
-	};
 
 	document.addEventListener("keydown", function(event) {
 		const keyCode = event.keyCode || event.which;
@@ -639,40 +643,4 @@ String radio = request.getParameter("radio") != null ? request.getParameter("rad
 			}
 		}
 	}
-	
-	function add(){
-		const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-		if (items.length == 0) {
-			alert("첨부할 품목을 선택하세요.");
-			return false;
-		}
-		
-		let partOids = [];
-		let partNumber = [];
-		
-		for(let i = 0; i < items.length; i++){
-			partOids.push(items[i].part_oid);
-			partNumber.push(items[i].number);
-		}
-		var parentRow = <%= parentRowIndex %>;
-		var callback  = "<%= callback %>";
-		
-		<% if("Y".equals(radio)){%>
-			opener.<%= callback %>(items[0],"<%= rowId %>");
-		<%}else{%>
-			if(callback!="append"){
-				opener.<%= callback %>(items,"<%= rowId %>");
-			}else{
-				if(parentRow<0){
-					opener.append(items);
-				}else{
-					opener.setPart(partOids, partNumber, <%= parentRowIndex %>);
-				}
-			}
-		<%}%>
-		
-		
-		self.close();
-	}
-	
 </script>

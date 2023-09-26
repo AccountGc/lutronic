@@ -432,13 +432,13 @@ boolean multi = (boolean) request.getAttribute("multi");
 			return false;
 		}
 		
-		const arr = new Array();
-		checkedItems.forEach(function(item) {
-			arr.push(item.item);
-		})
+// 		const arr = new Array();
+// 		checkedItems.forEach(function(item) {
+// 			arr.push(item.item);
+// 		})
 		
 		openLayer();
-		opener.insert90(arr, function(res) {
+		opener.<%=method%>(checkedItems, function(res) {
 			if(res) {
 				setTimeout(function() {
 					closeLayer();

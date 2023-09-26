@@ -30,7 +30,6 @@ import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
@@ -43,7 +42,6 @@ import com.e3ps.rohs.service.RohsHelper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.DocumentType;
-import wt.doc.WTDocument;
 import wt.folder.Folder;
 
 @Controller

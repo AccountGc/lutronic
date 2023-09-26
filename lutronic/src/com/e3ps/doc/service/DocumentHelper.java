@@ -61,20 +61,12 @@ public class DocumentHelper {
 	 */
 	public static final String DOCUMENT_ROOT = "/Default/문서";
 
-	/**
-	 * 신규 제작 사양서 위치
-	 */
-	public static final String SPEC_NEW_ROOT = "/Default/프로젝트/제작사양서";
-
-	/**
-	 * PDM업그레이드 제작사양서 위치
-	 */
-	public static final String SPEC_OLD_ROOT = "/Default/문서/프로젝트/제작사양서";
-	public static final String ROOTLOCATION = "/Default/Document";
-
 	public static final DocumentService service = ServiceFactory.getService(DocumentService.class);
 	public static final DocumentHelper manager = new DocumentHelper();
 
+	/**
+	 * 문서 검색
+	 */
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<DocumentColumn> list = new ArrayList<>();
@@ -164,6 +156,10 @@ public class DocumentHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	public ArrayList<Map<String, String>> reference(String oid) throws Exception {
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 	}
 
 	public Map<String, Object> listMoldAction(Map<String, Object> params) throws Exception {
@@ -807,7 +803,7 @@ public class DocumentHelper {
 	 */
 	public Map<String, ArrayList<Map<String, String>>> a(WTDocument doc) throws Exception {
 		Map<String, ArrayList<Map<String, String>>> result = new HashMap<>();
-		
+
 		// 그리드 아이디에 맞게 배열 생성 한다.
 
 		return result;

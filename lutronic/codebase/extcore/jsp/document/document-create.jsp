@@ -202,9 +202,11 @@ iframe {
 			</tr>
 		</table>
 		<!-- 관련 품목 -->
-		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+		<jsp:include page="/extcore/jsp/part/part-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert91" name="method" />
+			<jsp:param value="true" name="multi" />
 		</jsp:include>
 
 		<!-- 	관련 문서 -->
@@ -331,6 +333,9 @@ iframe {
 
 			function loadForm() {
 				const oid = document.getElementById("formType").value;
+				if(oid === "") {
+					return false;
+				}
 				const url = getCallUrl("/form/html?oid=" + oid);
 				parent.openLayer();
 				call(url, null, function(data) {
@@ -365,6 +370,11 @@ iframe {
 					return false;
 				}
 				const url = getCallUrl("/doc/create");
+
+				// 관련문서
+				const addRows90 = AUIGrid.getAddedRowItems(myGridID90);
+				// 관련품목
+				const addRows91 = AUIGrid.getAddedRowItems(myGridID91);
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,
@@ -377,7 +387,10 @@ iframe {
 					model : model,
 					interalnumber : interalnumber,
 					writer : writer,
-					preseration : preseration
+					preseration : preseration,
+					// 링크 데이터
+					addRows90 : addRows90,
+					addRows91 : addRows91
 				};
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -398,15 +411,12 @@ iframe {
 				selectbox("deptcode");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
-				// 				createAUIGrid2(columnsPart);
-				// 				createAUIGridEco(columnsEco);
-				// 				createAUIGridEO(columnsEo);
-				// 				createAUIGridECPR(columnsEcpr);
-				// 				createAUIGridCR(columnsCr);
+				createAUIGrid91(columns91);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID90);
+				AUIGrid.resize(myGridID91);
 			});
 		</script>
 	</form>

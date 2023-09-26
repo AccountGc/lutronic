@@ -1804,7 +1804,8 @@ public class StandardDocumentService extends StandardManager implements Document
 		ArrayList<String> secondarys = dto.getSecondarys();
 
 		// 그리드 배열로 받아서 처리한다. 숫자로 그리드 아이디 구분
-		ArrayList<Map<String, String>> addRows80 = dto.getAddRows80();
+		ArrayList<Map<String, String>> addRows90 = dto.getAddRows90();
+		ArrayList<Map<String, String>> addRows91 = dto.getAddRows91();
 
 		Transaction trs = new Transaction();
 		try {
@@ -1844,6 +1845,18 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 
 			setIBAAttributes(doc, dto);
+
+			// 관련문서
+			for (Map<String, String> addRow90 : addRows90) {
+
+			}
+			// 관련품목
+			for (Map<String, String> addRow91 : addRows91) {
+				String oid = addRow91.get("part_oid");
+				WTPart part = (WTPart) CommonUtil.getObject(oid);
+				WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
+				PersistenceHelper.manager.save(link);
+			}
 
 			trs.commit();
 			trs = null;

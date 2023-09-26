@@ -212,13 +212,6 @@ iframe {
 			<%
 			}
 			%>
-			<%
-			if (list.size() == 0) {
-			%>
-			<br>
-			<%
-			}
-			%>
 			<table class="view-table">
 				<colgroup>
 					<col width="100">
@@ -244,12 +237,8 @@ iframe {
 	</div>
 
 	<div id="tabs-2">
-		<!-- 관련 품목 -->
-		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="doc" name="moduleType" />
-			<jsp:param value="관련 품목" name="title" />
-		</jsp:include>
+		<!-- 관련 객체 -->
+		<%@include file="/extcore/jsp/document/document-reference-include.jsp"%>
 	</div>
 	<div id="tabs-3">
 		<!-- 관련 개발업무 -->
@@ -350,45 +339,35 @@ iframe {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
-					$(".comment-table").show();
 					break;
 				case "tabs-2":
-					const isCreated1 = AUIGrid.isCreated(partGridID);
-					if (isCreated1) {
-						AUIGrid.resize(partGridID);
-						$(".comment-table").hide();
+					const isCreated90 = AUIGrid.isCreated(myGridID90);
+					if (isCreated90) {
+						AUIGrid.resize(myGridID90);
 					} else {
-						createAUIGrid1(columnPart);
-						$(".comment-table").hide();
+						createAUIGrid90(columns90);
 					}
+					const isCreated91 = AUIGrid.isCreated(myGridID91);
+					if (isCreated91) {
+						AUIGrid.resize(myGridID91);
+					} else {
+						createAUIGrid91(columns91);
+					}
+
 					break;
 				case "tabs-3":
 					const isCreated2 = AUIGrid.isCreated(devGridID);
 					if (isCreated2) {
 						AUIGrid.resize(devGridID);
-						$(".comment-table").hide();
 					} else {
 						createAUIGrid4(columnDev);
-						$(".comment-table").hide();
 					}
 					break;
 				}
 			}
 		});
-		// 		createAUIGrid1(columnPart);
-		// 		AUIGrid.resize(partGridID);
-		// 		createAUIGrid4(columnDev);
-		// 		AUIGrid.resize(devGridID);
-		// 		createAUIGrid5(columnDoc);
-		// 		AUIGrid.resize(docGridID);
-		// 		createAUIGrid7(columnEco);
-		// 		AUIGrid.resize(ecoGridID);
 	});
 
 	window.addEventListener("resize", function() {
-		// 		AUIGrid.resize(partGridID);
-		// 		AUIGrid.resize(devGridID);
-		// 		AUIGrid.resize(docGridID);
-		// 		AUIGrid.resize(ecoGridID);
 	});
 </script>
