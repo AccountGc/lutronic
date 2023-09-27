@@ -86,34 +86,22 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<a href="#tabs-3">참조 항목</a>
 		</li>
 		<li>
-			<a href="#tabs-4">관련 도면</a>
-		</li>
-		<li>
-			<a href="#tabs-5">관련 문서</a>
-		</li>
-		<li>
-			<a href="#tabs-6">관련 물질</a>
-		</li>
-		<li>
-			<a href="#tabs-7">관련 ECO</a>
-		</li>
-		<li>
-			<a href="#tabs-8">관련 개별 업무</a>
+			<a href="#tabs-4">관련 객체</a>
 		</li>
 		<%
 		if (isAdmin) {
 		%>
 		<li>
-			<a href="#tabs-9">관리자 속성</a>
+			<a href="#tabs-5">관리자 속성</a>
 		</li>
 		<%
 		}
 		%>
 		<li>
-			<a href="#tabs-10">버전 정보</a>
+			<a href="#tabs-6">버전 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-11">환경규제문서</a>
+			<a href="#tabs-7">환경규제문서</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -209,51 +197,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		</jsp:include>
 	</div>
 
-	<!-- 관련 도면 -->
-	<!-- 	<div id="tabs-4"> -->
-	<%-- 		<jsp:include page="/extcore/jsp/drawing/drawingView_include.jsp"> --%>
-	<%-- 			<jsp:param value="part" name="moduleType"/> --%>
-	<%-- 			<jsp:param value="<%=data.getOid() %>" name="oid"/> --%>
-	<%-- 			<jsp:param value="관련 도면" name="title"/> --%>
-	<%-- 			<jsp:param value="epmOid" name="paramName"/> --%>
-	<%-- 		</jsp:include> --%>
-	<!-- 	</div> -->
-
-	<!-- 관련 문서 -->
-	<div id="tabs-5">
-		<jsp:include page="/extcore/jsp/document/document-include.jsp">
+	<!-- 관련 객체 -->
+	<div id="tabs-4">
+		<jsp:include page="/extcore/jsp/part/part-reference-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="part" name="module" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="insert90" name="method" />
-			<jsp:param value="true" name="multi" />
-			<jsp:param value="200" name="height" />
-		</jsp:include>
-	</div>
-
-	<!-- 관련 물질 -->
-	<div id="tabs-6">
-		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="part" name="module" />
-			<jsp:param value="관련 RoHs" name="title" />
-			<jsp:param value="composition" name="roleType" />
-		</jsp:include>
-	</div>
-
-	<!-- 관련 ECO -->
-	<!-- 	<div id="tabs-7"> -->
-	<%-- 		<jsp:include page="/extcore/jsp/change/include_view_ecr_eco.jsp"> --%>
-	<%-- 			<jsp:param value="part" name="moduleType"/> --%>
-	<%-- 			<jsp:param value="<%=data.getOid() %>" name="oid" /> --%>
-	<%-- 		</jsp:include> --%>
-	<!-- 	</div> -->
-
-	<!-- 관련 개별 업무 -->
-	<div id="tabs-8">
-		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="part" name="moduleType" />
 		</jsp:include>
 	</div>
 
@@ -261,7 +208,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	if (isAdmin) {
 	%>
 	<!-- 관리자 속성 -->
-	<div id="tabs-9">
+	<div id="tabs-5">
 		<jsp:include page="/extcore/jsp/common/adminAttributes_include.jsp">
 			<jsp:param value="part" name="module" />
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -272,14 +219,14 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	%>
 
 	<!-- 버전 정보 -->
-	<div id="tabs-10">
+	<div id="tabs-6">
 		<jsp:include page="/extcore/jsp/development/include_viewVersionInfo.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
 
 	<!-- 환경규제문서 -->
-	<div id="tabs-11">
+	<div id="tabs-7">
 		<jsp:include page="/extcore/jsp/document/include_environmentalRegulatoryDocument.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
@@ -578,7 +525,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 					break;
-// 				case "tabs-4":
+				case "tabs-4":
 // 					const isCreated = AUIGrid.isCreated(myGridID1);
 // 					if (isCreated) {
 // 						AUIGrid.resize(myGridID1);
@@ -586,8 +533,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 // 						createAUIGrid1(columns1);
 // 					}
 // 					break;
-				case "tabs-5":
-					const isCreated90 = AUIGrid.isCreated(myGridID90);
+					isCreated90 = AUIGrid.isCreated(myGridID90);
 					if (isCreated90) {
 						AUIGrid.resize(myGridID90);
 						$(".comment-table").hide();
@@ -595,8 +541,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGrid90(columns90);
 						$(".comment-table").hide();
 					}
-					break;
-				case "tabs-6":
+					
 					isCreated = AUIGrid.isCreated(rohs2GridID);
 					if (isCreated) {
 						AUIGrid.resize(rohs2GridID);
@@ -605,8 +550,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGridRohs2(columnRohs2);
 						$(".comment-table").hide();
 					}
-					break;
-				case "tabs-7":
+					
 					isCreated = AUIGrid.isCreated(ecoGridID);
 					if (isCreated) {
 						AUIGrid.resize(ecoGridID);
@@ -615,8 +559,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGrid7(columnEco);
 						$(".comment-table").hide();
 					}
-					break;
-				case "tabs-8":
+					
 					isCreated = AUIGrid.isCreated(devGridID);
 					if (isCreated) {
 						AUIGrid.resize(devGridID);
@@ -626,7 +569,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 					break;
-				case "tabs-9":
+				case "tabs-5":
 					isCreated = AUIGrid.isCreated(adminGridID);
 					if (isCreated) {
 						AUIGrid.resize(adminGridID);
@@ -636,7 +579,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 					break;
-				case "tabs-10":
+				case "tabs-6":
 					isCreated = AUIGrid.isCreated(verGridID);
 					if (isCreated) {
 						AUIGrid.resize(verGridID);
@@ -646,7 +589,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 					break;	
-				case "tabs-11":
+				case "tabs-7":
 					isCreated = AUIGrid.isCreated(enDocGridID);
 					if (isCreated) {
 						AUIGrid.resize(enDocGridID);

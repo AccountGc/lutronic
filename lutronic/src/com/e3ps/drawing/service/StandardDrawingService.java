@@ -28,6 +28,7 @@ import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
+import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.epm.E3PSRENameObject;
 import wt.epm.EPMApplicationType;
@@ -2205,6 +2206,9 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			String number 		 = StringUtil.checkNull((String) map.get("number"));
 			String partToDrwOid  = StringUtil.checkNull((String) map.get("partToDrwOid"));
 			
+			
+			
+			
 //			if (primary.length() == 0) {
 //            	primary = "";
 //				throw new Exception(Message.get("파일이 존재 하지 않습니다."));
@@ -2231,18 +2235,17 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			epm.setNumber(number);
 			epm.setName(drwName);
 			epm.setDescription(description); 
-			
 			// 수정필요
 			EPMDocumentMaster epmMaster = (EPMDocumentMaster)epm.getMaster();
 			EPMContextHelper.setApplication(EPMApplicationType.toEPMApplicationType("EPM"));
 			epmMaster.setOwnerApplication(EPMContextHelper.getApplication());
 			EPMAuthoringAppType appType = EPMAuthoringAppType.toEPMAuthoringAppType("CATIAV5");
 			epmMaster.setAuthoringApplication(appType);
-//			EPMDocumentMaster epmMaster = (EPMDocumentMaster)epm.getMaster();
-//			EPMContextHelper.setApplication(EPMApplicationType.toEPMApplicationType(applicationType));
-//			epmMaster.setOwnerApplication(EPMContextHelper.getApplication());
-//			EPMAuthoringAppType appType = EPMAuthoringAppType.toEPMAuthoringAppType(authoringType);
-//			epmMaster.setAuthoringApplication(appType);
+			epmMaster.setCADName(drwName);
+			EPMDocumentType documetType = EPMDocumentType.toEPMDocumentType("CADCOMPONENT");
+			epmMaster.setDocType(documetType);
+			System.out.println("setDocType      : " + epmMaster.getDocType());
+			
 			
 			//Folder  && LifeCycle  Setting
 			ReferenceFactory rf = new ReferenceFactory();
@@ -2269,11 +2272,19 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 				String cacheId = primary.split("/")[0];
 				CachedContentDescriptor cacheDs = new CachedContentDescriptor(cacheId);
 
+				
 				file = new File(cacheDs.getContentIdentity());
 				orgFileName = file.getAbsolutePath();
 				fileDir = file.getParent();
-				
+				System.out.println("primary.split1                   : "+primary.split("\\\\").length);
+				System.out.println("primary.spl2                   : "+file);
 				fileName = primary.split("/")[1];
+				
+//				file = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+//				orgFileName = file.getAbsolutePath();
+//				fileDir = file.getParent();
+//				fileName = file.getName();
+				
 				
 				if(isFileNameCheck(fileName)){
 	            	throw new Exception(Message.get("중복된 파일입니다."));
@@ -2290,7 +2301,6 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 				EPMDocumentType docType = getEPMDocumentType(fileEnd);
 				epm.setDocType(docType);
 			}
-			
 			epm = (EPMDocument)PersistenceHelper.manager.save(epm);
 			
 			// 첨부 파일
@@ -2311,6 +2321,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 				}
 			}
 			
+			System.out.println("orgFileName       :   "+orgFileName);
 			EpmPublishUtil.publish(epm);  //��ǥ�۾�
 			File orgfile = new File(orgFileName);
 			file.renameTo(orgfile);

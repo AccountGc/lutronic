@@ -1255,59 +1255,6 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 
 	@Override
-	public List<DocumentDTO> include_DocumentList(String oid, String moduleType) throws Exception {
-		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
-		if (StringUtil.checkString(oid)) {
-			if ("part".equals(moduleType)) {
-				WTPart part = (WTPart) CommonUtil.getObject(oid);
-				QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
-				while (qr.hasMoreElements()) {
-					WTDocument doc = (WTDocument) qr.nextElement();
-					DocumentDTO data = new DocumentDTO(doc);
-					// Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
-					if (VersionHelper.service.isLastVersion(part)) {
-						if (data.isLatest()) {
-							list.add(data);
-						}
-					} else {
-						list.add(data);
-					}
-				}
-			} else if ("doc".equals(moduleType)) {
-				List<DocumentDTO> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
-				for (DocumentDTO data : dataList) {
-					list.add(data);
-				}
-
-				dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
-				for (DocumentDTO data : dataList) {
-					list.add(data);
-				}
-
-			} else if ("active".equals(moduleType)) {
-				devActive m = (devActive) CommonUtil.getObject(oid);
-				QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
-
-				while (qr.hasMoreElements()) {
-					Object p = (Object) qr.nextElement();
-					if (p instanceof WTDocument) {
-						DocumentDTO data = new DocumentDTO((WTDocument) p);
-						list.add(data);
-					}
-				}
-			} else if ("asm".equals(moduleType)) {
-				AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
-				List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
-				for (WTDocument doc : aList) {
-					DocumentDTO data = new DocumentDTO(doc);
-					list.add(data);
-				}
-			}
-		}
-		return list;
-	}
-
-	@Override
 	public WTDocument getLastDocument(String number) throws Exception {
 		WTDocument doc = null;
 		try {

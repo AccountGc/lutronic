@@ -35,8 +35,6 @@ public interface DocumentService {
 
 	void createOutPutLink(WTDocument doc, Hashtable hash) throws Exception;
 
-	List<DocumentDTO> include_DocumentList(String oid, String moduleType) throws Exception;
-
 	WTDocument getLastDocument(String number) throws Exception;
 
 	Map<String, Object> createDocumentLinkAction(HttpServletRequest request, HttpServletResponse respose)
