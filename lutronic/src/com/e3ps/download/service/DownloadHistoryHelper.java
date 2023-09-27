@@ -17,7 +17,7 @@ import wt.services.ServiceFactory;
 
 public class DownloadHistoryHelper {
 	public static final DownloadHistoryService service = ServiceFactory.getService(DownloadHistoryService.class);
-	public static final DownloadHistoryHelpe manager = new DownloadHistoryHelper();
+	public static final DownloadHistoryHelper manager = new DownloadHistoryHelper();
 
 	/**
 	 * 다운로드 이력
@@ -38,6 +38,7 @@ public class DownloadHistoryHelper {
 			map.put("oid", history.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("count", history.getDCount());
 			map.put("name", dto.getName());
+			map.put("id", dto.getId());
 			map.put("duty", dto.getDuty());
 			map.put("time", history.getPersistInfo().getCreateStamp());
 			map.put("departmentName", dto.getDepartment_name());
@@ -45,3 +46,4 @@ public class DownloadHistoryHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
+}

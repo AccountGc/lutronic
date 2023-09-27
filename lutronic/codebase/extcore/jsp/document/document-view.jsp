@@ -231,18 +231,18 @@ iframe {
 			</table>
 		</div>
 		<!-- 댓글 모달 -->
-		<%@include file="/extcore/jsp/common/comments-include.jsp"%>
+		<%@include file="/extcore/jsp/common/include/comments-include.jsp"%>
 	</div>
 
 	<div id="tabs-2">
 		<!-- 관련 객체 -->
-		<jsp:include page="/extcore/jsp/document/document-reference-include.jsp">
+		<jsp:include page="/extcore/jsp/document/include/document-reference-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
 	<div id="tabs-3">
 		<!-- 이력관리 -->
-		<jsp:include page="/extcore/jsp/document/document-record-include.jsp">
+		<jsp:include page="/extcore/jsp/document/include/document-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
@@ -360,6 +360,12 @@ iframe {
 						AUIGrid.resize(myGridID50);
 					} else {
 						createAUIGrid50(columns50);
+					}
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
+					if (isCreated51) {
+						AUIGrid.resize(myGridID51);
+					} else {
+						createAUIGrid51(columns51);
 					}
 					break;
 				}
