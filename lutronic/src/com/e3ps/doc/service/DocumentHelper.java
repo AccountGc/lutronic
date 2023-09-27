@@ -681,7 +681,7 @@ public class DocumentHelper {
 	}
 
 	public JSONArray include_DocumentList(String oid, String moduleType) throws Exception {
-		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		try {
 			if (StringUtil.checkString(oid)) {
 				if ("part".equals(moduleType)) {
@@ -693,21 +693,45 @@ public class DocumentHelper {
 						// Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
 						if (CommonUtil.isLatestVersion(part)) {
 							if (data.isLatest()) {
-								list.add(data);
+								Map<String, Object> map = new HashMap<>();
+								map.put("number", data.getNumber());
+								map.put("name", data.getName());
+								map.put("version", data.getVersion());
+								map.put("creator", data.getCreator());
+								map.put("createdDate", data.getCreatedDate());
+								list.add(map);
 							}
 						} else {
-							list.add(data);
+							Map<String, Object> map = new HashMap<>();
+							map.put("number", data.getNumber());
+							map.put("name", data.getName());
+							map.put("version", data.getVersion());
+							map.put("creator", data.getCreator());
+							map.put("createdDate", data.getCreatedDate());
+							list.add(map);
 						}
 					}
 				} else if ("doc".equals(moduleType)) {
 					List<DocumentDTO> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
 					for (DocumentDTO data : dataList) {
-						list.add(data);
+						Map<String, Object> map = new HashMap<>();
+						map.put("number", data.getNumber());
+						map.put("name", data.getName());
+						map.put("version", data.getVersion());
+						map.put("creator", data.getCreator());
+						map.put("createdDate", data.getCreatedDate());
+						list.add(map);
 					}
 
 					dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
 					for (DocumentDTO data : dataList) {
-						list.add(data);
+						Map<String, Object> map = new HashMap<>();
+						map.put("number", data.getNumber());
+						map.put("name", data.getName());
+						map.put("version", data.getVersion());
+						map.put("creator", data.getCreator());
+						map.put("createdDate", data.getCreatedDate());
+						list.add(map);
 					}
 
 				} else if ("active".equals(moduleType)) {
@@ -718,7 +742,13 @@ public class DocumentHelper {
 						Object p = (Object) qr.nextElement();
 						if (p instanceof WTDocument) {
 							DocumentDTO data = new DocumentDTO((WTDocument) p);
-							list.add(data);
+							Map<String, Object> map = new HashMap<>();
+							map.put("number", data.getNumber());
+							map.put("name", data.getName());
+							map.put("version", data.getVersion());
+							map.put("creator", data.getCreator());
+							map.put("createdDate", data.getCreatedDate());
+							list.add(map);
 						}
 					}
 				} else if ("asm".equals(moduleType)) {
@@ -726,7 +756,13 @@ public class DocumentHelper {
 					List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
 					for (WTDocument doc : aList) {
 						DocumentDTO data = new DocumentDTO(doc);
-						list.add(data);
+						Map<String, Object> map = new HashMap<>();
+						map.put("number", data.getNumber());
+						map.put("name", data.getName());
+						map.put("version", data.getVersion());
+						map.put("creator", data.getCreator());
+						map.put("createdDate", data.getCreatedDate());
+						list.add(map);
 					}
 				}
 			}
@@ -735,6 +771,7 @@ public class DocumentHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
+
 
 	public Map<String, Object> docTemplateList(Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();

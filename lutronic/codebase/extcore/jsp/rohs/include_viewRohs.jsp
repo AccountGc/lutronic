@@ -5,8 +5,11 @@
 <%
 String oid = request.getParameter("oid");
 String title = request.getParameter("title");
+String mode = request.getParameter("mode");
 String roleType = request.getParameter("roleType");
 String module = StringUtil.checkReplaceStr(request.getParameter("module"), "rohs");
+String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
+boolean view = "view".equals(mode);
 JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 %>
 <table class="button-table">
@@ -22,17 +25,37 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 		</td>
 	</tr>
 </table>
-<%
-if(roleType.equals("represent")){
-%>
-	<div id="grid_rohs" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-<%
-}else{
-%>
-	<div id="grid_rohs2" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-<%
-}
-%>
+
+<table class="create-table">
+	<colgroup>
+		<col width="150">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th class="lb">관련 품목</th>
+		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
+			<%
+			if (!view) {
+			%>
+			<input type="button" value="추가" title="추가" class="blue" onclick="popup91();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow91();">
+			<%
+			}
+			%>
+			<%
+			if(roleType.equals("represent")){
+			%>
+				<div id="grid_rohs" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<%
+			}else{
+			%>
+				<div id="grid_rohs2" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<%
+			}
+			%>
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 	<%
 	if(roleType.equals("represent")){

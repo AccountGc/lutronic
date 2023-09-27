@@ -347,6 +347,23 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
+	
+//	@Description(value = "관련 문서 가져오기")
+//	@ResponseBody
+//	@RequestMapping("/includeDocument")
+//	public Map<String, Object> includeDocument(@RequestBody Map<String, Object> params) {
+//		Map<String, Object> result = new HashMap<String, Object>();
+//		try {
+//			result = DocumentHelper.manager.include_DocumentList(params);
+//			result.put("result", SUCCESS);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			result.put("result", FAIL);
+//			result.put("msg", e.toString());
+//		}
+//		
+//		return result;
+//	}
 
 	/**
 	 * 일괄 등록(AUI) 메뉴 이동

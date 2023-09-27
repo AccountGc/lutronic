@@ -236,6 +236,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		<!-- 관련 대표 물질 -->
 		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="view" name="mode" />
 			<jsp:param value="represent" name="roleType"/>
 			<jsp:param value="관련 대표 물질" name="title"/>
 		</jsp:include>
@@ -244,6 +245,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		<!-- 관련 물질 -->
 		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
 			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="view" name="mode" />
 			<jsp:param value="composition" name="roleType"/>
 			<jsp:param value="관련 물질" name="title"/>
 		</jsp:include>

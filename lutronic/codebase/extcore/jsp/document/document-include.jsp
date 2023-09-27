@@ -6,8 +6,11 @@
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
 String method = request.getParameter("method");
+String moduleType = request.getParameter("moduleType");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
+boolean create = "create".equals(mode);
+boolean update = "update".equals(mode);
 String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
@@ -26,7 +29,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb">관련 문서</th>
+		<th class="lb">관련문서</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (!view) {
@@ -105,6 +108,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			enableFilter : true,
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
+		<% if(!create) { %>
+			AUIGrid.setGridData(myGridID90, <%  DocumentHelper.manager.include_DocumentList(oid, moduleType); %>);
+		<% } %>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
