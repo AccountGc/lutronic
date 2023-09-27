@@ -243,10 +243,9 @@ iframe {
 		</jsp:include>
 	</div>
 	<div id="tabs-3">
-		<!-- 관련 개발업무 -->
-		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
+		<!-- 이력관리 -->
+		<jsp:include page="/extcore/jsp/document/document-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="doc" name="moduleType" />
 		</jsp:include>
 	</div>
 
@@ -343,13 +342,13 @@ iframe {
 				case "tabs-1":
 					break;
 				case "tabs-2":
-					const isCreated90 = AUIGrid.isCreated(myGridID90);
+					const isCreated90 = AUIGrid.isCreated(myGridID90); // 문서
 					if (isCreated90) {
 						AUIGrid.resize(myGridID90);
 					} else {
 						createAUIGrid90(columns90);
 					}
-					const isCreated91 = AUIGrid.isCreated(myGridID91);
+					const isCreated91 = AUIGrid.isCreated(myGridID91); // 품목
 					if (isCreated91) {
 						AUIGrid.resize(myGridID91);
 					} else {
@@ -358,11 +357,11 @@ iframe {
 
 					break;
 				case "tabs-3":
-					const isCreated2 = AUIGrid.isCreated(devGridID);
-					if (isCreated2) {
-						AUIGrid.resize(devGridID);
+					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
+					if (isCreated50) {
+						AUIGrid.resize(myGridID50);
 					} else {
-						createAUIGrid4(columnDev);
+						createAUIGrid50(columns50);
 					}
 					break;
 				}

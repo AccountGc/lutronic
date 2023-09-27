@@ -28,6 +28,7 @@ public class DocumentColumn {
 	private String creator;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
+	private String modifier;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp modifiedDate;
 	private String primary;
@@ -53,6 +54,7 @@ public class DocumentColumn {
 		setWriter(IBAUtil.getStringValue(doc, "DSGN"));
 		setCreator(doc.getCreatorName());
 		setCreatedDate(doc.getCreateTimestamp());
+		setModifier(doc.getModifierFullName());
 		setModifiedDate(doc.getModifyTimestamp());
 		setPrimary(AUIGridUtil.primary(doc));
 		setSecondary(AUIGridUtil.secondary(doc));

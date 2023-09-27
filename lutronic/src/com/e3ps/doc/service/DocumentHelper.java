@@ -211,37 +211,11 @@ public class DocumentHelper {
 			map.put("version", dto.getVersion());
 			map.put("creator", dto.getCreator());
 			map.put("createdDate", dto.getCreatedDate());
+			map.put("modifier", dto.getModifier());
+			map.put("modifiedDate", dto.getModifiedDate());
 			map.put("note", d.getIterationNote());
 			map.put("primary", dto.getPrimary());
 			map.put("secondary", dto.getSecondary());
-			list.add(map);
-		}
-		return JSONArray.fromObject(list);
-	}
-
-	/**
-	 * 다운로드 이력
-	 */
-	public JSONArray a(String oid) throws Exception {
-		ArrayList<Map<String, Object>> list = new ArrayList<>();
-
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(DownloadHistory.class, true);
-		QuerySpecUtils.toEquals(query, idx, DownloadHistory.class, DownloadHistory.D_OID, oid);
-		QuerySpecUtils.toOrderBy(query, idx, DownloadHistory.class, "thePersistInfo.createStamp", false);
-		QueryResult result = PersistenceHelper.manager.find(query);
-		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			DownloadHistory history = (DownloadHistory) obj[0];
-			Map<String, Object> map = new HashMap<>();
-			WTUser user = history.getUser();
-			PeopleDTO dto = new PeopleDTO(user);
-			map.put("oid", history.getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("count", history.getDCount());
-			map.put("name", dto.getName());
-			map.put("duty", dto.getDuty());
-			map.put("time", history.getPersistInfo().getCreateStamp());
-			map.put("departmentName", dto.getDepartment_name());
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);

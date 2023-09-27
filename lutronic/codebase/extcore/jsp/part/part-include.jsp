@@ -19,7 +19,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				관련품목
+				관련 품목
 			</div>
 		</td>
 	</tr>
@@ -31,7 +31,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb">관련품목</th>
+		<th class="lb">관련 품목</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (!view) {

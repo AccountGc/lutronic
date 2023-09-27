@@ -6,13 +6,9 @@
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
 String method = request.getParameter("method");
-String module = request.getParameter("module");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
-boolean create = "create".equals(mode);
-boolean update = "update".equals(mode);
 String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
-// JSONArray json = DocumentHelper.manager.include_DocumentList(oid, module);
 %>
 <table class="button-table">
 	<tr>
@@ -30,7 +26,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb">관련문서</th>
+		<th class="lb">관련 문서</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (!view) {
@@ -108,11 +104,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			<%}%>
 			enableFilter : true,
 		}
-<%-- 		<% if(create) { %> --%>
-			myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-<%-- 		<% } else{ %> --%>
-<%-- 			AUIGrid.setGridData(myGridID90, <%=json%>); --%>
-<%-- 		<% } %> --%>
+		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
