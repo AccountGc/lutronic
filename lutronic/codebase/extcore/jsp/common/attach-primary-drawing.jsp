@@ -37,7 +37,7 @@ function load() {
 			const primaryTag = document.createElement("input");
 			primaryTag.type = "hidden";
 			primaryTag.name = "primary";
-			primaryTag.value = this.cacheId;
+			primaryTag.value = this.cacheId+"/"+this.name;
 			primaryTag.id = this._id_;
 			form.appendChild(primaryTag);
 		},
