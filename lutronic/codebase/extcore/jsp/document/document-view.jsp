@@ -13,8 +13,6 @@ iframe {
 	margin-top: 3px;
 }
 </style>
-<link type="text/css" rel="stylesheet" href="/Windchill/extcore/css/bootstrap.min.css">
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">

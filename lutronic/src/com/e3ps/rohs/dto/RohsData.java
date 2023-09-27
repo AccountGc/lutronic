@@ -1,7 +1,11 @@
 package com.e3ps.rohs.dto;
 
+import java.util.ArrayList;
+
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.comments.beans.CommentsDTO;
+import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -37,6 +41,8 @@ public class RohsData{
 	private String description;
 	private String fileType;
 	private String publicationDate;
+	// 댓글
+	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 	
 	public RohsData(ROHSMaterial rohs) throws Exception {
 //		super(rohs);
@@ -69,6 +75,7 @@ public class RohsData{
 			setFileType(StringUtil.checkNull(ch.getFileType()));
 			setPublicationDate(StringUtil.checkNull(ch.getPublicationDate()));
 		}
+		setComments(CommentsHelper.manager.comments(rohs));
 	}
 	
 	/**

@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<link type="text/css" rel="stylesheet" href="/Windchill/extcore/css/bootstrap.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <!-- 모달 등록 -->
 <div class="modal fade" id="reply">
 	<input type="hidden" name="roid" id="roid">
@@ -58,7 +60,7 @@
 			comments.focus();
 			return false;
 		}
-		if (!confirm("록 하시겠습니까?")) {
+		if (!confirm("등록 하시겠습니까?")) {
 			return false;
 		}
 		const params = {
@@ -67,13 +69,11 @@
 			depth : Number(depth)
 		};
 		const url = getCallUrl("/comments/create");
-		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
 			}
-			closeLayer();
 		})
 	}
 
@@ -109,14 +109,12 @@
 			return false;
 		}
 
-		openLayer();
 		const url = getCallUrl("/comments/reply");
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
 			}
-			closeLayer();
 		})
 	}
 
@@ -136,14 +134,12 @@
 			oid : oid,
 			comment : comment.value
 		}
-		openLayer();
 		const url = getCallUrl("/comments/modify");
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
 			}
-			closeLayer();
 		})
 	}
 
@@ -153,13 +149,11 @@
 			return false;
 		}
 		const url = getCallUrl("/comments/delete?oid=" + oid);
-		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
 			}
-			closeLayer();
 		}, "GET");
 	}
 </script>
