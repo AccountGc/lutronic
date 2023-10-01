@@ -320,7 +320,7 @@ String userNm = sessionUser.getFullName();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/drawing/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800,"n");
 						}
 					},
 				}, {
@@ -347,7 +347,7 @@ String userNm = sessionUser.getFullName();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/drawing/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800,"n");
 						}
 					},
 				}, {
