@@ -20,7 +20,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadData;
+import com.e3ps.download.beans.DownloadDTO;
 import com.e3ps.org.MailUser;
 
 import wt.fc.PagingQueryResult;
@@ -226,11 +226,11 @@ public class AdminHelper {
 		PageQueryUtils pager = new PageQueryUtils(params, qs);
 		PagingQueryResult result = pager.find();
 
-		ArrayList<DownloadData> list = new ArrayList<DownloadData>();
+		ArrayList<DownloadDTO> list = new ArrayList<DownloadDTO>();
 		while (result.hasMoreElements()) {
 			Object obj[] = (Object[]) result.nextElement();
 			DownloadHistory history = (DownloadHistory) obj[0];
-			DownloadData data = new DownloadData(history);
+			DownloadDTO data = new DownloadDTO(history);
 			list.add(data);
 		}
 		Map<String, Object> map = new HashMap<String, Object>();

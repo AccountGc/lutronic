@@ -1,3 +1,4 @@
+<%@page import="wt.iba.definition.litedefinition.IBAUtility"%>
 <%@page import="com.e3ps.common.comments.beans.CommentsDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -26,14 +27,29 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
+			<%
+// 			if (dto.is_revise()) {
+			%>
 			<input type="button" value="개정" title="개정" onclick="update('revise');">
+			<%
+// 			}
+			%>
 			<input type="button" value="결재회수" title="결재회수">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('mode');">
+			<%
+			if (dto.is_modify()) {
+			%>
+			<input type="button" value="수정" title="수정" class="blue" onclick="update('modify');">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_delete()) {
+			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
-			<input type="button" value="최신Rev." title="최신Rev.">
-			<!-- 			<input type="button" value="Rev.이력" title="Rev.이력"> -->
-			<!-- 			<input type="button" value="다운로드이력" title="다운로드이력"> -->
-			<!-- 			<input type="button" value="결재이력" title="결재이력"> -->
+			<%
+			}
+			%>
+			<!-- 			<input type="button" value="최신Rev." title="최신Rev."> -->
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -71,7 +87,19 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">REV</th>
-				<td class="indent5"><%=dto.getVersion()%>.<%=dto.getIteration()%></td>
+				<td class="indent5">
+					<%=dto.getVersion()%>.<%=dto.getIteration()%>
+					<%
+					if (!dto.isLatest()) {
+					%>
+					&nbsp;
+					<b>
+						<a href="javascript:latest();">(최신버전으로)</a>
+					</b>
+					<%
+					}
+					%>
+				</td>
 				<th>등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
 				<th>수정자</th>
@@ -83,23 +111,23 @@ iframe {
 				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate()%></td>
 				<th>문서유형</th>
-				<td class="indent5"><%=dto.getDocumentType()%></td>
+				<td class="indent5"><%=dto.getDocumentType_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">결재방식</th>
-				<td class="indent5"><%=dto.getApprovaltype()%></td>
+				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
 				<th>내부문서번호</th>
 				<td class="indent5"><%=dto.getInteralnumber()%></td>
 				<th>프로젝트 코드</th>
-				<td class="indent5"><%=dto.getModel()%></td>
+				<td class="indent5"><%=dto.getModel_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
 				<td class="indent5"><%=dto.getWriter()%></td>
 				<th>보존기간</th>
-				<td class="indent5"><%=dto.getPreseration()%></td>
+				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>
-				<td class="indent5"><%=dto.getDeptcode()%></td>
+				<td class="indent5"><%=dto.getDeptcode_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
@@ -271,6 +299,13 @@ iframe {
 		},
 	});
 
+	// 최신버전으로 페이지 이동
+	function latest() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/doc/latest?oid=" + oid);
+		document.location.href = url;
+	}
+
 	//수정 및 개정
 	function update(mode) {
 		const oid = document.getElementById("oid").value;
@@ -294,7 +329,7 @@ iframe {
 			} else {
 				closeLayer();
 			}
-		}, "GET");
+		}, "DELETE");
 	}
 
 	//일괄 다운로드

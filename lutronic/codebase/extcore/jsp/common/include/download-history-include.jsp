@@ -27,7 +27,25 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 <script type="text/javascript">
 	let myGridID51;
 	const columns51 = [ {
+		dataField : "info",
+		headerText : "모듈정보",
+		dataType : "string",
+		style : "aui-left",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
 		dataField : "name",
+		headerText : "파일명",
+		dataType : "string",
+		width : 300,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "userName",
 		headerText : "이름",
 		dataType : "string",
 		width : 150,
@@ -45,10 +63,19 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			inline : true
 		},
 	}, {
-		dataField : "version",
-		headerText : "해당모듈",
+		dataField : "duty",
+		headerText : "직급",
 		dataType : "string",
-		width : 80,
+		width : 150,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "department_name",
+		headerText : "부서",
+		dataType : "string",
+		width : 150,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -57,27 +84,17 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "count",
 		headerText : "다운로드횟수",
 		dataType : "numeric",
-		width : 150,
+		width : 100,
 		postfix : "회",
 		filter : {
 			showIcon : true,
 			inline : true
 		},
 	}, {
-		dataField : "time",
+		dataField : "createdDate",
 		headerText : "다운로드시간",
-		dataType : "date",
-		dateInputFormat : "yyyy-mm-dd",
-		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	}, {
-		dataField : "modifier",
-		headerText : "다운로드사유",
 		dataType : "string",
-		width : 100,
+		width : 110,
 		filter : {
 			showIcon : true,
 			inline : true

@@ -72,7 +72,7 @@ import com.e3ps.development.service.DevelopmentQueryHelper;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadData;
+import com.e3ps.download.beans.DownloadDTO;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.org.People;
 import com.e3ps.part.dto.PartData;
@@ -819,7 +819,7 @@ public class StandardExcelDownService extends StandardManager implements ExcelDo
 		while(qr.hasMoreElements()){	
 			Object obj[] = (Object[])qr.nextElement();
 			DownloadHistory history = (DownloadHistory)obj[0];
-			DownloadData dataD = new DownloadData(history);
+			DownloadDTO dataD = new DownloadDTO(history);
 			String[] string = new String[ExcelDownData.downloadHistoryTitle.length];
 			string[0] = dataD.getUserName();
 			string[1] = dataD.getUserID();

@@ -1,5 +1,6 @@
 package com.e3ps.download.service;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -10,9 +11,14 @@ import wt.method.RemoteInterface;
 @RemoteInterface
 public interface DownloadHistoryService {
 
-	String createDownloadHistory(Hashtable hash) throws Exception;
+	/**
+	 * 다운로드 이력 생성
+	 */
+	public abstract void create(String oid) throws Exception;
 
-	void createBatchDownloadHistory(List<BatchDownData> targetlist)
-			throws Exception;
+	/**
+	 * 일괄 다운로드 이력
+	 */
+	public abstract void create(ArrayList<String> list) throws Exception;
 
 }

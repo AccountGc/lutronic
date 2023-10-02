@@ -21,38 +21,14 @@ public interface DocumentService {
 
 	Map<String, Object> requestDocumentMapping(Map<String, Object> params);
 
-//	ResultData createDocumentAction(Map<String, Object> map);
-
-	Map<String, Object> updateDocumentAction(Map<String, Object> map);
-
-//	String createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
-
 	ResultData approvalPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
 	List<DocumentDTO> include_documentLink(String module, String oid);
 
-	ResultData reviseUpdate(Map<String, Object> params) throws Exception;
-
-	void createOutPutLink(WTDocument doc, Hashtable hash) throws Exception;
-
-	WTDocument getLastDocument(String number) throws Exception;
-
-	Map<String, Object> createDocumentLinkAction(HttpServletRequest request, HttpServletResponse respose)
-			throws Exception;
-
-	Vector<WTPartDescribeLink> getWTPartDescribeLink(RevisionControlled rc, boolean isLast);
-
-	ResultData linkDocumentAction(HttpServletRequest request, HttpServletResponse response);
-
-	ResultData deleteDocumentLinkAction(HttpServletRequest request, HttpServletResponse response);
-
+	/**
+	 * 문서 일괄 등록
+	 */
 	public void batch(Map<String, Object> params) throws Exception;
-
-	public void createComments(Map<String, Object> params) throws Exception;
-
-	public void updateComments(Map<String, Object> params) throws Exception;
-
-	public void deleteComments(String oid) throws Exception;
 
 	/**
 	 * 문서 일괄 결재 등록

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,13 +37,19 @@ import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.rohs.service.RohsHelper;
 
+import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.DocumentType;
+import wt.doc.WTDocument;
 import wt.folder.Folder;
+import wt.part.WTPartDescribeLink;
 
 @Controller
 @RequestMapping(value = "/doc")
@@ -56,7 +63,7 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
-		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
+		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -66,7 +73,7 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "문서 등록")
+	@Description(value = "문서 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
 	public Map<String, Object> create(@RequestBody DocumentDTO dto) throws Exception {
@@ -89,7 +96,7 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
+		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		ModelAndView model = new ModelAndView();
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -151,8 +158,6 @@ public class DocumentController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		DocumentDTO dto = new DocumentDTO(oid);
-		List<CommentsData> cList = DocumentHelper.manager.commentsList(oid);
-		String pnum = DocumentHelper.manager.getCnum(cList);
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
@@ -166,13 +171,11 @@ public class DocumentController extends BaseController {
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.addObject("mode", mode);
-		model.addObject("cList", cList);
-		model.addObject("pnum", pnum);
 		model.setViewName("popup:/document/document-update");
 		return model;
 	}
 
-	@Description(value = "문서 수정")
+	@Description(value = "문서 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/modify")
 	public Map<String, Object> modify(@RequestBody DocumentDTO dto) throws Exception {
@@ -189,7 +192,7 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "문서 개정")
+	@Description(value = "문서 개정 함수")
 	@ResponseBody
 	@PostMapping(value = "/revise")
 	public Map<String, Object> revise(@RequestBody DocumentDTO dto) throws Exception {
@@ -206,76 +209,44 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "댓글 등록 함수")
+	@Description(value = "문서 삭제 함수")
 	@ResponseBody
-	@PostMapping(value = "/createComments")
-	public Map<String, Object> createComments(@RequestBody Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			DocumentHelper.service.createComments(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
-	@Description(value = "댓글 수정 함수")
-	@ResponseBody
-	@PostMapping(value = "/updateComments")
-	public Map<String, Object> updateComments(@RequestBody Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			DocumentHelper.service.updateComments(params);
-			result.put("msg", MODIFY_MSG);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
-	@Description(value = "댓글 삭제 함수")
-	@ResponseBody
-	@GetMapping(value = "/deleteComments")
-	public Map<String, Object> deleteComments(@RequestParam String oid) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			DocumentHelper.service.deleteComments(oid);
-			result.put("msg", DELETE_MSG);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
-	@Description(value = "문서 개정")
-	@ResponseBody
-	@PostMapping(value = "/reviseDocument")
-	public ResultData reviseDocument(@RequestBody Map<String, Object> params) throws Exception {
-		ResultData data = null;
-		String module = StringUtil.checkReplaceStr((String) params.get("module"), "doc");
-		if ("doc".equals(module)) {
-			data = DocumentHelper.service.reviseUpdate(params);
-		} else if ("rohs".equals(module)) {
-			data = RohsHelper.service.reviseUpdate(params);
-		}
-		return data;
-	}
-
-	@Description(value = "문서 삭제")
-	@ResponseBody
-	@GetMapping(value = "/delete")
+	@DeleteMapping(value = "/delete")
 	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
+
+			// true 연결 있음
+			if (DocumentHelper.manager.isConnect(oid, DocumentECOLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 ECO가 있습니다.");
+				return result;
+			}
+
+			if (DocumentHelper.manager.isConnect(oid, DocumentEOLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 EO가 있습니다.");
+				return result;
+			}
+
+			if (DocumentHelper.manager.isConnect(oid, DocumentCRLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 CR이 있습니다.");
+				return result;
+			}
+
+//			if (DocumentHelper.manager.connect(doc, DocumentECPRLink.class)) {
+//				result.put("result", false);
+//				result.put("msg", "문서와 연결된 ECPR이 있습니다.");
+//				return result;
+//			}
+
+			if (DocumentHelper.manager.isConnect(oid, WTPartDescribeLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 품목이 있습니다.");
+				return result;
+			}
+
 			result = DocumentHelper.service.delete(oid);
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
@@ -284,26 +255,40 @@ public class DocumentController extends BaseController {
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
+		System.out.println(result);
 		return result;
+	}
+
+	@Description(value = "문서 최신버전 이동")
+	@GetMapping(value = "/latest")
+	public ModelAndView latest(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTDocument latest = DocumentHelper.manager.latest(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		DocumentDTO dto = new DocumentDTO(latest);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/document/document-view");
+		return model;
 	}
 
 	@Description(value = "문서 일괄등록")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception {
-
-		String container = "document";
-		String location = DocumentHelper.DOCUMENT_ROOT;
-
-		ArrayList<Folder> folderList = FolderUtils.loadAllFolder(location, container);
-		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
-		ArrayList<NumberCode> documentNameList = NumberCodeHelper.manager.getArrayCodeList("DOCUMENTNAME");
+		JSONArray flist = DocumentHelper.manager.recurcive();
+		JSONArray mlist = NumberCodeHelper.manager.toJson("MODEL");
+		JSONArray dlist = NumberCodeHelper.manager.toJson("DEPTCODE");
+		JSONArray nlist = NumberCodeHelper.manager.toJson("DOCUMENTNAME");
+		JSONArray plist = NumberCodeHelper.manager.toJson("PRESERATION");
+		JSONArray tlist = DocumentHelper.manager.toJson();
 		ModelAndView model = new ModelAndView();
+		model.addObject("flist", flist);
+		model.addObject("mlist", mlist);
+		model.addObject("dlist", dlist);
+		model.addObject("nlist", nlist);
+		model.addObject("plist", plist);
+		model.addObject("tlist", tlist);
 		model.setViewName("/extcore/jsp/document/document-batch.jsp");
-		model.addObject("folderList", folderList);
-		model.addObject("modelList", modelList);
-		model.addObject("deptcodeList", deptcodeList);
-		model.addObject("documentNameList", documentNameList);
 		return model;
 	}
 
@@ -347,23 +332,6 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
-	
-//	@Description(value = "관련 문서 가져오기")
-//	@ResponseBody
-//	@RequestMapping("/includeDocument")
-//	public Map<String, Object> includeDocument(@RequestBody Map<String, Object> params) {
-//		Map<String, Object> result = new HashMap<String, Object>();
-//		try {
-//			result = DocumentHelper.manager.include_DocumentList(params);
-//			result.put("result", SUCCESS);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			result.put("result", FAIL);
-//			result.put("msg", e.toString());
-//		}
-//		
-//		return result;
-//	}
 
 	/**
 	 * 일괄 등록(AUI) 메뉴 이동
@@ -381,44 +349,6 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-//	/**
-//	 * 일괄 등록 수행
-//	 * 
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@RequestMapping("/createPackageDocumentAction")
-//	public ModelAndView createPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-//		String xmlString = DocumentHelper.service.createPackageDocumentAction(request, response);
-//
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("xmlString", xmlString);
-//		model.setViewName("empty:/document/createPackageDocumentAction");
-//		return model;
-//	}
-//
-//	/**
-//	 * 일괄 등록 AUI 수행
-//	 * 
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//
-//	@ResponseBody
-//	@RequestMapping(value = "/createAUIPackageDocumentAction", method = RequestMethod.POST)
-//	public ResultData createAUIPackageDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-//		return DocumentHelper.service.createAUIPackageDocumentAction(request, response);
-//	}
-
-	/**
-	 * 관련 문서 추가
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
 	@RequestMapping("/include_DocumentSelect")
 	public ModelAndView include_DocumentSelect(HttpServletRequest request, HttpServletResponse response) {
 		String moduleType = request.getParameter("moduleType");
@@ -474,28 +404,6 @@ public class DocumentController extends BaseController {
 		model.setViewName("popup:/document/selectDocPopup");
 		return model;
 	}
-
-//	/**
-//	 * 문서 개정
-//	 * 
-//	 * @param request
-//	 * @param response
-//	 * @param oid
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@ResponseBody
-//	@RequestMapping("/reviseDocument")
-//	public ResultData reviseDocument(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		ResultData data = null;
-//		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
-//		if ("doc".equals(module)) {
-//			data = DocumentHelper.service.reviseUpdate(request, response);
-//		} else if ("rohs".equals(module)) {
-//			data = RohsHelper.service.reviseUpdate(request, response);
-//		}
-//		return data;
-//	}
 
 	/**
 	 * 관련 문서 보기
@@ -612,23 +520,6 @@ public class DocumentController extends BaseController {
 	public ResultData linkDocumentAction(HttpServletRequest request, HttpServletResponse response) {
 		return DocumentHelper.service.linkDocumentAction(request, response);
 	}
-
-	@ResponseBody
-	@RequestMapping("/deleteDocumentLinkAction")
-	public ResultData deleteDocumentLinkAction(HttpServletRequest request, HttpServletResponse response) {
-		return DocumentHelper.service.deleteDocumentLinkAction(request, response);
-	}
-
-//	@RequestMapping("/reviseDocumentPopup")
-//	public ModelAndView reviseDocumentPopup(HttpServletRequest request, HttpServletResponse response,
-//			@RequestParam("oid") String oid) {
-//		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "doc");
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("oid", oid);
-//		model.addObject("module", module);
-//		model.setViewName("popup:/document/reviseDocumentPopup");
-//		return model;
-//	}
 
 	/**
 	 * 일괄 등록 추가 AUI

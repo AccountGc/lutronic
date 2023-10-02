@@ -6,11 +6,10 @@
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
 String method = request.getParameter("method");
-String moduleType = request.getParameter("moduleType");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
-boolean create = "create".equals(mode);
 boolean update = "update".equals(mode);
+boolean create = "create".equals(mode);
 String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
@@ -32,7 +31,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<th class="lb">관련문서</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
-			if (!view) {
+			if (create || update) {
 			%>
 			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow90();">
@@ -49,6 +48,25 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "number",
 		headerText : "문서번호",
 		dataType : "string",
+		width : 180,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "interalnumber",
+		headerText : "내부 문서번호",
+		dataType : "string",
+		width : 120,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "model",
+		headerText : "프로젝트 코드",
+		dataType : "string",
+		width : 120,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -58,6 +76,17 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "문서명",
 		dataType : "string",
 		style : "aui-left",
+		width : 350,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "location",
+		headerText : "문서분류",
+		dataType : "string",
+		style : "aui-left",
+		width : 250,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -66,6 +95,25 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
+		width : 80,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		width : 120,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "writer",
+		headerText : "작성자",
+		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -74,31 +122,70 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
 		},
 	}, {
-		dataField : "createdDate",
+		dataField : "createdDate_txt",
 		headerText : "등록일",
-		dataType : "date",
+		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
+			inline : true,
 		},
+	}, {
+		dataField : "modifiedDate_txt",
+		headerText : "수정일",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+			inline : true,
+		},
+	}, {
+		dataField : "primary",
+		headerText : "주 첨부파일",
+		dataType : "string",
+		width : 80,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+			inline : false
+		},
+	}, {
+		dataField : "secondary",
+		headerText : "첨부파일",
+		dataType : "string",
+		width : 100,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+			inline : false
+		},
+	}, {
+		dataField : "oid",
+		dataType : "string",
+		visible : false
 	} ]
 
 	function createAUIGrid90(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode : true,
+			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
-			<%if (!view) {%>
+			<%if (create || update) {%>
 			showStateColumn : true,
 			showRowCheckColumn : true,
 			<%}%>
@@ -108,9 +195,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			enableFilter : true,
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		<% if(!create) { %>
-			AUIGrid.setGridData(myGridID90, <%  DocumentHelper.manager.include_DocumentList(oid, moduleType); %>);
-		<% } %>
+		<%if (view || update) {%>
+		AUIGrid.setGridData(myGridID90, <%=DocumentHelper.manager.reference(oid, "doc")%>);
+		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
@@ -139,7 +226,13 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
-			AUIGrid.addRow(myGridID90, item, rowIndex);
+			const unique = AUIGrid.isUniqueValue(myGridID90, "oid", item.oid);
+			if (unique) {
+				AUIGrid.addRow(myGridID90, item, rowIndex);
+			} else {
+				// 중복은 그냥 경고 없이 처리 할지 협의?
+				alert(item.number + " 문서는 이미 추가 되어있습니다.");
+			}
 		})
 		callBack(true);
 	}

@@ -13,6 +13,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 
+import net.sf.json.JSONArray;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.query.QuerySpec;
@@ -22,6 +23,29 @@ import wt.services.ServiceFactory;
 public class NumberCodeHelper {
 	public static final NumberCodeHelper manager = new NumberCodeHelper();
 	public static final NumberCodeService service = ServiceFactory.getService(NumberCodeService.class);
+
+	/**
+	 * AUI 그리드에서 사용하기 위한함수 JSO N형태로 리턴
+	 */
+	public JSONArray toJson(String codeType) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode n = (NumberCode) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("key", n.getCode());
+			map.put("value", n.getName());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
 
 	/**
 	 * 코드 & 코드타입으로 값 가져오기

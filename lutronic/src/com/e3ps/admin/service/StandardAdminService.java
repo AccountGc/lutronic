@@ -21,7 +21,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.PageControl;
 import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.download.DownloadHistory;
-import com.e3ps.download.beans.DownloadData;
+import com.e3ps.download.beans.DownloadDTO;
 import com.e3ps.org.Department;
 import com.e3ps.org.MailUser;
 import com.e3ps.org.People;
@@ -255,7 +255,7 @@ public class StandardAdminService extends StandardManager implements AdminServic
 			Object obj[] = (Object[]) qr.nextElement();
 			DownloadHistory history = (DownloadHistory) obj[0];
 
-			DownloadData data = new DownloadData(history);
+			DownloadDTO data = new DownloadDTO(history);
 
 			xmlBuf.append("<row id='" + history.getPersistInfo().getObjectIdentifier().toString() + "'>");
 			xmlBuf.append("<cell><![CDATA[	" + data.getUserName() + " ]]></cell>");

@@ -51,7 +51,7 @@ import wt.vc.views.ViewHelper;
 @Controller
 @RequestMapping("/common")
 public class CommonController extends BaseController {
-	
+
 	@Description(value = "주 도면 팝업창")
 	@GetMapping(value = "/attachPrimaryDrawing")
 	public ModelAndView attachPrimaryDrawing(@RequestParam String oid, @RequestParam String method) throws Exception {
@@ -61,31 +61,11 @@ public class CommonController extends BaseController {
 		model.addObject("method", method);
 		return model;
 	}
-	
-	@Description(value = "주 첨부파일 팝업창")
-	@GetMapping(value = "/attachPrimary")
-	public ModelAndView attachPrimary(@RequestParam String oid, @RequestParam String method) throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/common/pop-attach-primary");
-		model.addObject("oid", oid);
-		model.addObject("method", method);
-		return model;
-	}
-	
-	@Description(value = "첨부파일 팝업창")
-	@GetMapping(value = "/attachSecondary")
-	public ModelAndView attachSecondary(@RequestParam String oid, @RequestParam String method) throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/common/pop-attach-secondary");
-		model.addObject("oid", oid);
-		model.addObject("method", method);
-		return model;
-	}
-	
+
 	@Description(value = "NumberCode 데이터 리턴")
 	@ResponseBody
 	@PostMapping(value = "/autoSearchName")
-	public List<NumberCodeDTO> autoSearchName(@RequestBody Map<String, Object> params) throws Exception{
+	public List<NumberCodeDTO> autoSearchName(@RequestBody Map<String, Object> params) throws Exception {
 		String codeType = StringUtil.checkNull((String) params.get("codeType"));
 		String name = StringUtil.checkNull((String) params.get("value"));
 		System.out.println(codeType);
@@ -93,29 +73,28 @@ public class CommonController extends BaseController {
 		List<NumberCodeDTO> list = NumberCodeHelper.manager.autoSearchName(codeType, name);
 		return list;
 	}
-	
+
 	@Description(value = "NumberCode 가져오기")
 	@ResponseBody
 	@PostMapping(value = "/numberCodeList")
-	public List<NumberCodeDTO> numberCodeList(@RequestBody Map<String, Object> params) throws Exception{
+	public List<NumberCodeDTO> numberCodeList(@RequestBody Map<String, Object> params) throws Exception {
 		String codeType = StringUtil.checkNull((String) params.get("codeType"));
 		String parentOid = StringUtil.checkNull((String) params.get("parentOid"));
 		List<NumberCodeDTO> list = new ArrayList<NumberCodeDTO>();
 		try {
-			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid);			
-		}catch(Exception e) {
+			list = NumberCodeHelper.manager.getArrayPartTypeList(codeType, parentOid);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
 	/**
 	 * 
-	 * 		LUTRONIC 추가 시작
+	 * LUTRONIC 추가 시작
 	 * 
 	 * 
 	 */
-	
-	
+
 //	/** NumberCode 데이터 리턴
 //	 * @param request
 //	 * @param response
@@ -132,8 +111,10 @@ public class CommonController extends BaseController {
 //		List<NumberCodeData> list = CodeHelper.service.numberCodeList(codeType, parentOid, search);
 //		return list;
 //	}
-	
-	/** NumberCode 데이터 리턴
+
+	/**
+	 * NumberCode 데이터 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @param type
@@ -141,16 +122,17 @@ public class CommonController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/numberParentCodeList")
-	public List<NumberCodeDTO> numberParentCodeList(HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam("codeType") String codeType,
-			@RequestParam("pCode") String pCode,
+	public List<NumberCodeDTO> numberParentCodeList(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("codeType") String codeType, @RequestParam("pCode") String pCode,
 			@RequestParam("search") String isSearch) {
 		boolean search = ("true").equals(isSearch);
 		List<NumberCodeDTO> list = CodeHelper.service.numberParentCodeList(codeType, pCode, search);
 		return list;
 	}
-	
-	/** NumberCode 데이터 리턴
+
+	/**
+	 * NumberCode 데이터 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @param type
@@ -164,8 +146,10 @@ public class CommonController extends BaseController {
 //		List<NumberCodeData> list = CodeHelper.service.autoSearchName(codeType, name);
 //		return list;
 //	}
-	
-	/** NumberCode 데이터 리턴
+
+	/**
+	 * NumberCode 데이터 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @param type
@@ -173,12 +157,12 @@ public class CommonController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/autoSearchNameRtnName")
-	public List<String> autoSearchNameRtnName(HttpServletRequest request, HttpServletResponse response, 
-			@RequestParam("codeType") String codeType,
-			@RequestParam("name") String name) {
+	public List<String> autoSearchNameRtnName(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("codeType") String codeType, @RequestParam("name") String name) {
 		List<String> list = CodeHelper.service.autoSearchNameRtnName(codeType, name);
 		return list;
 	}
+
 	@Description(value = "팝업 코드 리스트")
 	@RequestMapping(value = "/popup_numberCodes")
 	public ModelAndView popup_numberCodes(HttpServletRequest request, HttpServletResponse response) {
@@ -193,6 +177,7 @@ public class CommonController extends BaseController {
 //		model.addObject("disable", disable);
 		return model;
 	}
+
 //	/**
 //	 * 팝업 코드 리스트
 //	 * @param request
@@ -214,6 +199,7 @@ public class CommonController extends BaseController {
 //	}
 	/**
 	 * popup NumberCode 리스트
+	 * 
 	 * @param request
 	 * @param response
 	 * @param codeType
@@ -221,32 +207,32 @@ public class CommonController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/popup_numberCodeAction")
-	public Map<String,Object> popup_numberCodeAction(HttpServletRequest request, HttpServletResponse response) {
-		
-		String disable= StringUtil.checkReplaceStr(request.getParameter("disable"),"false"); //false 사용,true 미사용
-		boolean disabled = disable.equals("true")?false:true;
-		Map<String, Object> result =new HashMap<String,Object>();
-		
+	public Map<String, Object> popup_numberCodeAction(HttpServletRequest request, HttpServletResponse response) {
+
+		String disable = StringUtil.checkReplaceStr(request.getParameter("disable"), "false"); // false 사용,true 미사용
+		boolean disabled = disable.equals("true") ? false : true;
+		Map<String, Object> result = new HashMap<String, Object>();
+
 		try {
 			result = CodeHelper.service.popup_numberCodeAction(request, response, disabled);
 		} catch (Exception e) {
-		
+
 			e.printStackTrace();
-			
+
 		}
-		//System.out.println("result ="+result);
-		return result; 
+		// System.out.println("result ="+result);
+		return result;
 	}
-	
+
 	@Description(value = "품목 속성 보기")
 	@PostMapping(value = "/include_Attributes")
 	public ModelAndView include_Attributes(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String oid = request.getParameter("oid");
 		String module = request.getParameter("module");
 		String mode = request.getParameter("mode");
-		
+
 		ModelAndView model = new ModelAndView();
-		Map<String,String> map = CommonHelper.manager.getAttributes(oid, mode);
+		Map<String, String> map = CommonHelper.manager.getAttributes(oid, mode);
 		model.setViewName("/extcore/jsp/common/attributes_include.jsp");
 		model.addAllObjects(map);
 		model.addObject("module", module);
@@ -271,20 +257,21 @@ public class CommonController extends BaseController {
 //		model.addObject("module", module);
 //		return model;
 //	}
-	
+
 	@Description(value = "픔목 속성 등록/수정")
 	@RequestMapping("/include_createAttributes")
-	public ModelAndView include_createAttributes(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public ModelAndView include_createAttributes(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
 		String oid = request.getParameter("oid");
 		String module = request.getParameter("module");
-		//System.out.println("oid = "+ oid);
-		//System.out.println("module = "+ module);
+		// System.out.println("oid = "+ oid);
+		// System.out.println("module = "+ module);
 		ModelAndView model = new ModelAndView();
-		Map<String,String> map = null;
-		if(null!=module){
+		Map<String, String> map = null;
+		if (null != module) {
 			map = CommonHelper.service.getAttributes(oid);
 		}
-		//System.out.println("map = "+ (null!=map));
+		// System.out.println("map = "+ (null!=map));
 		model.setViewName("include:/common/include_createAttributes");
 		model.addObject("module", module);
 		model.addAllObjects(map);
@@ -313,99 +300,96 @@ public class CommonController extends BaseController {
 //		model.addAllObjects(map);
 //		return model;
 //	}
-	
+
 	@ResponseBody
 	@RequestMapping("/documentTypeList")
-	public List<Map<String,String>> documentTypeList(HttpServletRequest request, HttpServletResponse response) {
+	public List<Map<String, String>> documentTypeList(HttpServletRequest request, HttpServletResponse response) {
 		return CommonHelper.service.documentTypeList(request, response);
 	}
-	
+
 	@RequestMapping("/include_MyDevelopment")
 	public ModelAndView include_MyDevelopment(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = null;
-		
+		List<Map<String, String>> list = null;
+
 		try {
 			list = CommonHelper.service.include_MyDevelopment(request, response);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,String>>();
+			list = new ArrayList<Map<String, String>>();
 		}
-		
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("list", list);
 		model.setViewName("include:/common/include_MyDevelopment");
 		return model;
 	}
-	
+
 	@RequestMapping("/userSearchForm")
 	public ModelAndView userSearchForm(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		String searchMode = StringUtil.checkReplaceStr(request.getParameter("searchMode"), "single");
-		
+
 		String hiddenParam = StringUtil.checkReplaceStr(request.getParameter("hiddenParam"), "creator");
 		String hiddenValue = StringUtil.checkNull(request.getParameter("hiddenValue"));
-		
+
 		String textParam = StringUtil.checkReplaceStr(request.getParameter("textParam"), "creatorName");
 		String textValue = StringUtil.checkNull(request.getParameter("textValue"));
-		
+
 		String extraParam = StringUtil.checkNull(request.getParameter("extraParam"));
 		String extraValue = StringUtil.checkNull(request.getParameter("extraValue"));
-		
+
 		String userType = StringUtil.checkReplaceStr(request.getParameter("userType"), "people");
 		String returnFunction = StringUtil.checkNull(request.getParameter("returnFunction"));
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("searchMode", searchMode);
-		
+
 		model.addObject("hiddenParam", hiddenParam);
 		model.addObject("hiddenValue", hiddenValue);
-		
+
 		model.addObject("textParam", textParam);
 		model.addObject("textValue", textValue);
-		
+
 		model.addObject("extraParam", extraParam);
 		model.addObject("extraValue", extraValue);
-		
+
 		model.addObject("userType", userType);
 		model.addObject("returnFunction", returnFunction);
-		
+
 		model.setViewName("empty:/common/userSearchForm");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/autoSearchUserName")
-	public List<Map<String,String>> autoSearchUserName(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = null;
-		
+	public List<Map<String, String>> autoSearchUserName(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, String>> list = null;
+
 		try {
-			list = CommonHelper.service.autoSearchUserName(request,response);
-		} catch(Exception e) {
+			list = CommonHelper.service.autoSearchUserName(request, response);
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,String>>();
+			list = new ArrayList<Map<String, String>>();
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * 
-	 * 		LUTRONIC 추가 끝
+	 * LUTRONIC 추가 끝
 	 * 
 	 * 
 	 */
-	
-	
-	
+
 	/**
 	 * @param request
 	 * @param response
 	 */
 	@RequestMapping("/login")
-	public void login(HttpServletRequest request, HttpServletResponse response){
+	public void login(HttpServletRequest request, HttpServletResponse response) {
 	}
-	
+
 	/**
 	 * @param request
 	 * @param response
@@ -414,16 +398,18 @@ public class CommonController extends BaseController {
 	@RequestMapping("/logout")
 	public Map<String, Object> logout(HttpServletRequest req, HttpServletResponse res) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		req.getSession().invalidate();
-		
+
 		map.put("result", true);
 		map.put("redirectUrl", "/Windchill/eSolution/groupware/main");
-		
+
 		return map;
 	}
-	
-	/** 로그인 정보 검사
+
+	/**
+	 * 로그인 정보 검사
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -431,29 +417,31 @@ public class CommonController extends BaseController {
 	@RequestMapping("/loginCheck")
 	public ModelAndView loginCheck(HttpServletRequest request, HttpServletResponse response) {
 		String viewName = "default:/workprocess/main";
-		
-		String id=request.getParameter("id");
-		String pw=request.getParameter("pw");
-		
-		String authString = Base64.encode(id+":"+pw);
-		if(authString.endsWith("=")){
-			authString = authString.substring(0,authString.length()-1);
+
+		String id = request.getParameter("id");
+		String pw = request.getParameter("pw");
+
+		String authString = Base64.encode(id + ":" + pw);
+		if (authString.endsWith("=")) {
+			authString = authString.substring(0, authString.length() - 1);
 		}
-		
-		Cookie authCookie = new Cookie("AuthCookie",authString);
+
+		Cookie authCookie = new Cookie("AuthCookie", authString);
 		authCookie.setPath("/Windchill");
 		response.addCookie(authCookie);
 		HttpSession session = request.getSession();
 		session.removeAttribute("Logout");
-		
+
 		CommonHelper.service.createLoginHistoty();
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName(viewName);
 		return model;
 	}
 
-	/** 관리자 true/false
+	/**
+	 * 관리자 true/false
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -464,16 +452,17 @@ public class CommonController extends BaseController {
 	public boolean isAdmin(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return CommonUtil.isAdmin();
 	}
-	
+
 	@Description(value = "다운로드 이력 상세보기")
 	@GetMapping(value = "/downloadHistory")
-	public ModelAndView downloadHistory(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
+	public ModelAndView downloadHistory(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("oid") String oid) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		model.setViewName("/extcore/jsp/common/downloadHistory.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "다운로드 이력 상세보기")
 	@ResponseBody
 	@PostMapping(value = "/downloadHistory")
@@ -482,15 +471,15 @@ public class CommonController extends BaseController {
 		try {
 			result = CommonHelper.service.downloadHistory(params);
 			result.put("result", SUCCESS);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
-		
+
 		return result;
 	}
-	
+
 //	/** 다운로드 이력 상세보기
 //	 * @param request
 //	 * @param response
@@ -516,8 +505,9 @@ public class CommonController extends BaseController {
 //		return model;
 //	}
 
-	
-	/** parent 코드값과 code type 으로 하위 NumberCode 데이터 리턴
+	/**
+	 * parent 코드값과 code type 으로 하위 NumberCode 데이터 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @param type
@@ -526,21 +516,22 @@ public class CommonController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("/childNumberCodeList")
-	public List<NumberCodeDTO> childNumberCodeList(HttpServletRequest request, HttpServletResponse response, @RequestParam("type") String type, @RequestParam("parentCode") String parentCode)	 {
-		List<NumberCodeDTO> list = CodeHelper.service.childNumberCodeList(type,parentCode);
+	public List<NumberCodeDTO> childNumberCodeList(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("type") String type, @RequestParam("parentCode") String parentCode) {
+		List<NumberCodeDTO> list = CodeHelper.service.childNumberCodeList(type, parentCode);
 		return list;
 	}
-	
+
 	@Description(value = "버전이력 페이지 이동")
 	@GetMapping(value = "/versionHistory")
-	public ModelAndView versionHistory(HttpServletRequest request, @RequestParam("oid")String oid) {
+	public ModelAndView versionHistory(HttpServletRequest request, @RequestParam("oid") String oid) {
 		ModelAndView model = new ModelAndView();
 		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
 		model.addObject("distribute", distribute);
 		model.setViewName("popup:/common/versionHistory");
 		return model;
 	}
-	
+
 	@Description(value = "버전이력 상세보기")
 	@ResponseBody
 	@PostMapping(value = "/versionHistory")
@@ -548,17 +539,17 @@ public class CommonController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		String oid = (String) params.get("oid");
 		try {
-			result = CommonHelper.service.versionHistory(oid);	
+			result = CommonHelper.service.versionHistory(oid);
 			result.put("result", SUCCESS);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
-		
+
 		return result;
 	}
-	
+
 //	/** 버전이력 상세보기
 //	 * @param request
 //	 * @param response
@@ -580,7 +571,9 @@ public class CommonController extends BaseController {
 //		
 //		return model;
 //	}
-	/** 객체 삭체 시 재확인 페이지
+	/**
+	 * 객체 삭체 시 재확인 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @param oid
@@ -588,15 +581,18 @@ public class CommonController extends BaseController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/deleteCheck")
-	public ModelAndView deleteCheck(HttpServletRequest request, HttpServletResponse response,@RequestParam("oid")String oid) throws Exception {
+	public ModelAndView deleteCheck(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("oid") String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.addObject("oid", oid);
 		model.setViewName("popup:/common/deleteCheck");
-		
+
 		return model;
 	}
-	
-	/** view 리스트 가져오기
+
+	/**
+	 * view 리스트 가져오기
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -607,137 +603,144 @@ public class CommonController extends BaseController {
 	public List<String> getViews(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		View[] views = ViewHelper.service.getAllViews();
 		List<String> list = new ArrayList<String>();
-		
-		for(int i=0; i< views.length ; i++){
+
+		for (int i = 0; i < views.length; i++) {
 			list.add(views[i].getName());
 		}
 		return list;
 	}
-	
-	/** 메인 화면 공지사항
+
+	/**
+	 * 메인 화면 공지사항
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/include_Notice")
 	public ModelAndView include_Notice(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = null;
-		
+		List<Map<String, String>> list = null;
+
 		try {
 			list = CommonHelper.service.include_Notice();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		ModelAndView model = new ModelAndView();
-		
-			
+
 		model.setViewName("include:/common/include_Notice");
-		
-		
+
 		model.addObject("list", list);
-		
+
 		return model;
 	}
-	
-	/** 메인 화면 결재&작업
+
+	/**
+	 * 메인 화면 결재&작업
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/include_Approve")
 	public ModelAndView include_Approve(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = null;
-		
+		List<Map<String, String>> list = null;
+
 		try {
 			list = CommonHelper.service.include_Approve();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("include:/common/include_Approve");
-		model.addObject("list",list);
+		model.addObject("list", list);
 		return model;
 	}
-	
-	/** 메인 화면 신규도면
+
+	/**
+	 * 메인 화면 신규도면
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/include_Drawing")
 	public ModelAndView include_Drawing(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = null;
-		
+		List<Map<String, String>> list = null;
+
 		try {
 			list = CommonHelper.service.include_Drawing(request);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("include:/common/include_Drawing");
-		model.addObject("list",list);
+		model.addObject("list", list);
 		return model;
 	}
-	
-	/** 메인 화면 신규문서
+
+	/**
+	 * 메인 화면 신규문서
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/include_Document")
 	public ModelAndView include_Document(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = null;
-		
+		List<Map<String, String>> list = null;
+
 		try {
 			list = CommonHelper.service.include_Document();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("include:/common/include_Document");
-		model.addObject("list",list);
+		model.addObject("list", list);
 		return model;
 	}
-	
+
 	@RequestMapping("/include_adminAttribute")
-	public ModelAndView include_adminAttribute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+	public ModelAndView include_adminAttribute(HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+
 		String oid = request.getParameter("oid");
 		Object object = CommonUtil.getObject(oid);
-		
+
 		String module = request.getParameter("module");
-		
+
 		HashMap has = null;
-		if("part".equals(module)) {
-			has = IBAUtil.getAttributes((WTPart)object);
-		}else if("drawing".equals(module)) {
-			has = IBAUtil.getAttributes((EPMDocument)object);
-		}else if("doc".equals(module)) {
-			has = IBAUtil.getAttributes((WTDocument)object);
+		if ("part".equals(module)) {
+			has = IBAUtil.getAttributes((WTPart) object);
+		} else if ("drawing".equals(module)) {
+			has = IBAUtil.getAttributes((EPMDocument) object);
+		} else if ("doc".equals(module)) {
+			has = IBAUtil.getAttributes((WTDocument) object);
 		}
-		
+
 		String temp = has.toString();
-		StringTokenizer tokens = new StringTokenizer(temp,", ");
-		
+		StringTokenizer tokens = new StringTokenizer(temp, ", ");
+
 		List<String> list = new ArrayList<String>();
-		
-        while(tokens.hasMoreTokens()){
-            String badT = (String)tokens.nextToken();
-            list.add(badT);
-        }
-        
-        ModelAndView model = new ModelAndView();
-        model.addObject("list", list);
-        model.addObject("module", module);
-        model.setViewName("include:/common/include_adminAttribute");
-        return model;
-        
+
+		while (tokens.hasMoreTokens()) {
+			String badT = (String) tokens.nextToken();
+			list.add(badT);
+		}
+
+		ModelAndView model = new ModelAndView();
+		model.addObject("list", list);
+		model.addObject("module", module);
+		model.setViewName("include:/common/include_adminAttribute");
+		return model;
+
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/getVROid")
 	public String getVROid(HttpServletRequest request, HttpServletResponse response) {
@@ -745,14 +748,14 @@ public class CommonController extends BaseController {
 		String vrOid = CommonUtil.getVROID(oid);
 		return vrOid;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/getPDMLinkProductOid")
 	public String getPDMLinkProductOid(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		PDMLinkProduct product =  WCUtil.getPDMLinkProduct();
+		PDMLinkProduct product = WCUtil.getPDMLinkProduct();
 		return product.getPersistInfo().getObjectIdentifier().toString();
 	}
-	
+
 	@Description(value = "결재회수 페이지")
 	@GetMapping(value = "/withDrawPopup")
 	public ModelAndView withDrawPopup(@RequestParam String oid) throws Exception {
@@ -760,7 +763,7 @@ public class CommonController extends BaseController {
 		model.setViewName("popup:/common/withDraw-popup");
 		return model;
 	}
-	
+
 //	@RequestMapping("/withDrawPopup")
 //	public ModelAndView withDrawPoup(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid") String oid) {
 //		ModelAndView model = new ModelAndView();
@@ -768,7 +771,7 @@ public class CommonController extends BaseController {
 //		model.setViewName("popup:/common/withDrawPopup");
 //		return model;
 //	}
-	
+
 	@Description(value = "결재회수 함수")
 	@ResponseBody
 	@PostMapping(value = "/withDrawPopup")
@@ -783,9 +786,10 @@ public class CommonController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	/**
-	 * 회수 
+	 * 회수
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -803,225 +807,239 @@ public class CommonController extends BaseController {
 //		//return DocumentHelper.service.deleteDocumentAction(request,response);
 //		
 //	}
-	
+
 	/**
-	 * 일괄 다운로드 
+	 * 일괄 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/batchEODownLoad")
 	public ModelAndView batchEODownLoad(HttpServletRequest request, HttpServletResponse response) {
-		//System.out.println("============== batchEODownLoad =================");
+		// System.out.println("============== batchEODownLoad =================");
 		ModelAndView model = new ModelAndView();
 		String oid = StringUtil.checkNull(request.getParameter("oid"));
-		String downType =StringUtil.checkNull(request.getParameter("downType"));
-		EChangeOrder eo = (EChangeOrder)CommonUtil.getObject(oid);
+		String downType = StringUtil.checkNull(request.getParameter("downType"));
+		EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
 		model.setViewName("popup:/common/batchEODownLoad");
-		
+
 		model.addObject("oid", oid);
 		model.addObject("downType", downType);
-		String title = eo.getEoNumber()+" 도면 다운로드";
-		if(downType.equals("attach")){
-			title = eo.getEoNumber()+"산출물 다운로드";
+		String title = eo.getEoNumber() + " 도면 다운로드";
+		if (downType.equals("attach")) {
+			title = eo.getEoNumber() + "산출물 다운로드";
 		}
-		
-		model.addObject("title",title );
-	
-	
+
+		model.addObject("title", title);
+
 		return model;
 	}
-	
-	
-	
-	/**  일괄 다운로드 
+
+	/**
+	 * 일괄 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 */
 	@ResponseBody
-	@RequestMapping(value="batchEODownAction", method={RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "batchEODownAction", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResultData batchEODownAction(HttpServletRequest request, HttpServletResponse response) {
 		ResultData data = new ResultData();
 		try {
-			//System.out.println("11111111111111111 batchEoDownAction 11111111111111111111");
+			// System.out.println("11111111111111111 batchEoDownAction
+			// 11111111111111111111");
 			String oid = request.getParameter("oid");
 			String describe = request.getParameter("describe");
 			String describeType = request.getParameter("describeType");
-			String downType =request.getParameter("downType");
+			String downType = request.getParameter("downType");
 			Map<String, String> map = CommonUtil.getBatchDescribe();
 			describeType = StringUtil.checkNull(map.get(describeType));
-			
-			describe = "["+describeType+"]"+describe;
-			if(downType.equals("attach")){
+
+			describe = "[" + describeType + "]" + describe;
+			if (downType.equals("attach")) {
 				data = ECOHelper.service.batchEOAttachDownAction(oid, describe);
-			}else{
+			} else {
 				data = ECOHelper.service.batchEODrawingDownAction(oid, describe);
 			}
-			
-			
-			//ExcelDownHelper.service.loginHistoryxcelDown(request, response);
-		} catch(Exception e) {
+
+			// ExcelDownHelper.service.loginHistoryxcelDown(request, response);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return data;
 	}
-	
+
 	/**
-	 * BOM 도면 일괄 다운로드 
+	 * BOM 도면 일괄 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/batchBOMDrawingDown")
 	public ModelAndView batchBOMDrawingDown(HttpServletRequest request, HttpServletResponse response) {
-		//System.out.println("============== batchBOMDrawingDown =================");
+		// System.out.println("============== batchBOMDrawingDown =================");
 		ModelAndView model = new ModelAndView();
 		String oid = StringUtil.checkNull(request.getParameter("oid"));
-		String ecoOid =StringUtil.checkNull(request.getParameter("ecoOid"));
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		String ecoOid = StringUtil.checkNull(request.getParameter("ecoOid"));
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		model.setViewName("popup:/common/batchBOMDrawingDownLoad");
-		
+
 		model.addObject("oid", oid);
 		model.addObject("ecoOid", ecoOid);
-		String title = part.getNumber()+" 도면 다운로드";
-		
-		model.addObject("title",title );
-	
-	
+		String title = part.getNumber() + " 도면 다운로드";
+
+		model.addObject("title", title);
+
 		return model;
 	}
-	
-	
-	/**  BOM 도면 일괄 다운로드
+
+	/**
+	 * BOM 도면 일괄 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 */
 	@ResponseBody
-	@RequestMapping(value="batchBOMDrawingDownAction", method={RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "batchBOMDrawingDownAction", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResultData batchBOMDrawingDownAction(HttpServletRequest request, HttpServletResponse response) {
 		ResultData data = new ResultData();
 		try {
-			//System.out.println("11111111111111111 batchBOMDrawingDownAction 11111111111111111111");
+			// System.out.println("11111111111111111 batchBOMDrawingDownAction
+			// 11111111111111111111");
 			String oid = request.getParameter("oid");
 			String describe = request.getParameter("describe");
 			String describeType = request.getParameter("describeType");
 			Map<String, String> map = CommonUtil.getBatchDescribe();
 			describeType = StringUtil.checkNull(map.get(describeType));
-			describe = "["+describeType+"]"+describe;
-			String ecoOid =StringUtil.checkNull(request.getParameter("ecoOid"));
-			//boolean  isDistribute = StringUtil.checkNull(request.getParameter("dis")).equals("true") ? true : false;
+			describe = "[" + describeType + "]" + describe;
+			String ecoOid = StringUtil.checkNull(request.getParameter("ecoOid"));
+			// boolean isDistribute =
+			// StringUtil.checkNull(request.getParameter("dis")).equals("true") ? true :
+			// false;
 			data = PartHelper.service.batchBomDrawingDownAction(oid, describe, ecoOid);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return data;
 	}
-	
+
 	/**
-	 * BOM 도면 일괄 다운로드 
+	 * BOM 도면 일괄 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/batchBOMSelectDownLoad")
 	public ModelAndView batchBOMSelectDownLoad(HttpServletRequest request, HttpServletResponse response) {
-		//System.out.println("============== batchBOMSelectDownLoad =================");
+		// System.out.println("============== batchBOMSelectDownLoad
+		// =================");
 		ModelAndView model = new ModelAndView();
 		String oid = StringUtil.checkNull(request.getParameter("oid"));
-		String downType =StringUtil.checkNull(request.getParameter("downType"));
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		String downType = StringUtil.checkNull(request.getParameter("downType"));
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		model.setViewName("popup:/common/batchBOMSelectDownLoad");
-		
+
 		model.addObject("oid", oid);
 		model.addObject("downType", downType);
-		String title = part.getNumber()+" 도면 다운로드";
-		if(downType.equals("attach")){
-			title = part.getNumber()+"  산출물 다운로드";
+		String title = part.getNumber() + " 도면 다운로드";
+		if (downType.equals("attach")) {
+			title = part.getNumber() + "  산출물 다운로드";
 		}
-		
-		model.addObject("title",title );
-	
-	
+
+		model.addObject("title", title);
+
 		return model;
 	}
-	
-	/**  BOM 도면 일괄 다운로드
+
+	/**
+	 * BOM 도면 일괄 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 */
 	@SuppressWarnings({ "unchecked", "resource" })
 	@ResponseBody
-	@RequestMapping(value="batchBOMSelectDownLoadAction")
+	@RequestMapping(value = "batchBOMSelectDownLoadAction")
 	public ResultData batchBOMSelectDownLoadAction(@RequestBody Map<String, Object> reqMap, HttpServletResponse res) {
 		ResultData data = new ResultData();
 		try {
-			List<Map<String,Object>> itemList = (List<Map<String, Object>>) reqMap.get("itemList");
-			String oid = (String)reqMap.get("oid");
-			String describe = (String)reqMap.get("describe");
-			String downType =(String)reqMap.get("downType");
-			String describeType = (String)reqMap.get("downType");
-			//boolean  isDistribute = StringUtil.checkNull(request.getParameter("dis")).equals("true") ? true : false;
-			data = PartHelper.service.batchBomSelectDownAction(oid, itemList, describe, downType,describeType);
-		} catch(Exception e) {
+			List<Map<String, Object>> itemList = (List<Map<String, Object>>) reqMap.get("itemList");
+			String oid = (String) reqMap.get("oid");
+			String describe = (String) reqMap.get("describe");
+			String downType = (String) reqMap.get("downType");
+			String describeType = (String) reqMap.get("downType");
+			// boolean isDistribute =
+			// StringUtil.checkNull(request.getParameter("dis")).equals("true") ? true :
+			// false;
+			data = PartHelper.service.batchBomSelectDownAction(oid, itemList, describe, downType, describeType);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return data;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/batchDownDescribe")
-	public List<Map<String,String>> batchDownDescribe(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = null;
-		
+	public List<Map<String, String>> batchDownDescribe(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, String>> list = null;
+
 		try {
 			list = CommonUtil.getBatchDescribeList();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			list = new ArrayList<Map<String,String>>();
+			list = new ArrayList<Map<String, String>>();
 		}
-		
+
 		return list;
 	}
-	
-	/** 부첨부 파일 일괄 다운로드
+
+	/**
+	 * 부첨부 파일 일괄 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 */
 	@ResponseBody
-	@RequestMapping(value="batchSecondaryDown", method={RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "batchSecondaryDown", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResultData batchSecondaryDown(HttpServletRequest request, HttpServletResponse response) {
 		ResultData returnData = new ResultData();
 		try {
-			returnData =  CommonHelper.service.batchSecondaryDown(request, response);//.service.batchSecondaryDown(request, response);
-		} catch(Exception e) {
+			returnData = CommonHelper.service.batchSecondaryDown(request, response);// .service.batchSecondaryDown(request,
+																					// response);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return returnData;
 	}
-	
-	/** 부품의 BOM에서 ROHS 파일 다운로드
+
+	/**
+	 * 부품의 BOM에서 ROHS 파일 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 */
 	@ResponseBody
-	@RequestMapping(value="batchROHSDown", method={RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "batchROHSDown", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResultData batchROHSDown(HttpServletRequest request, HttpServletResponse response) {
 		ResultData returnData = new ResultData();
-		//System.out.println("Controllor batchROHSDown");
-		//System.out.println(" partNumber = "+request.getParameter("partNumber"));
+		// System.out.println("Controllor batchROHSDown");
+		// System.out.println(" partNumber = "+request.getParameter("partNumber"));
 		try {
-			
+
 			returnData = RohsHelper.service.batchROHSDown(request, response);
-			//CommonHelper.service.batchSecondaryDown(request, response);//.service.batchSecondaryDown(request, response);
-			
-			
-		} catch(Exception e) {
+			// CommonHelper.service.batchSecondaryDown(request,
+			// response);//.service.batchSecondaryDown(request, response);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-				
+
 		return returnData;
 	}
 }

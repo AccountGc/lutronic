@@ -47,7 +47,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 80,
+		width : 90,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -56,7 +56,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 100,
+		width : 110,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -64,9 +64,8 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
-		dataType : "date",
-		dateInputFormat : "yyyy-mm-dd",
-		width : 100,
+		dataType : "string",
+		width : 110,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -75,7 +74,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "modifier",
 		headerText : "수정자",
 		dataType : "string",
-		width : 100,
+		width : 110,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -83,9 +82,8 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 	}, {
 		dataField : "modifiedDate",
 		headerText : "수정일",
-		dataType : "date",
-		dateInputFormat : "yyyy-mm-dd",
-		width : 100,
+		dataType : "string",
+		width : 110,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -94,7 +92,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "primary",
 		headerText : "주 첨부파일",
 		dataType : "string",
-		width : 80,
+		width : 90,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -106,7 +104,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "secondary",
 		headerText : "첨부파일",
 		dataType : "string",
-		width : 100,
+		width : 110,
 		renderer : {
 			type : "TemplateRenderer"
 		},

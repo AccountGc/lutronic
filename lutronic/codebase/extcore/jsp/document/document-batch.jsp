@@ -1,13 +1,16 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="wt.folder.Folder"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<Folder> folderList = (ArrayList<Folder>) request.getAttribute("folderList");
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
-ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttribute("documentNameList");
+JSONArray flist = (JSONArray) request.getAttribute("flist"); // 폴더
+JSONArray mlist = (JSONArray) request.getAttribute("mlist"); // 프로젝트 코드
+JSONArray dlist = (JSONArray) request.getAttribute("dlist"); // 부서
+JSONArray nlist = (JSONArray) request.getAttribute("nlist"); // 문서종류
+JSONArray plist = (JSONArray) request.getAttribute("plist"); // 보존기간
+JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 %>
 <!DOCTYPE html>
 <html>
@@ -24,40 +27,35 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 			<tr>
 				<td>
 					<input type="button" value="등록" title="등록" onclick="batch();">
-					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+					<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow();">
 				</td>
 			</tr>
 		</table>
 		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
-			const lifecycleList = [{"code": "LC_Default", "value": "기본결재"}, {"code": "LC_Default_NonWF", "value": "일괄결재"}];
-			const preserationList = [{"code": "PR001", "value": "영구"}, {"code": "PR002", "value": "5년"}, {"code": "PR003", "value": "7년"}];
-			const documentTypeList = [{"code": "$$NDDocument", "value": "일반문서"}, 
-				{"code": "$$RDDocument", "value": "개발문서"}, 
-				{"code": "$$RDDocument", "value": "승인원"}, 
-				{"code": "$$RADocument", "value": "인증문서"}, 
-				{"code": "$$DSDocument", "value": "개발소스"},
-				{"code": "$$DDDocument", "value": "배포자료"},
-				{"code": "$$ETDocument", "value": "기타문서"}];
-			let folderList = [];
-			<% for(Folder folder : folderList){ %>
-				folderList.push({ "code" : "<%= folder.getFolderPath()  %>", "value" : "<%= folder.getFolderPath() %>"});
-			<% } %>
-			let documentNameList = [];
-			<% for(NumberCode documentName : documentNameList){ %>
-				documentNameList.push({ "code" : "<%= documentName.getCode() %>", "value" : "<%= documentName.getName() %>"});
-			<% } %>
-			let deptcodeList = [];
-			<% for(NumberCode deptcode : deptcodeList){ %>
-				deptcodeList.push({ "code" : "<%= deptcode.getCode() %>", "value" : "<%= deptcode.getName() %>"});
-			<% } %>
-			let modelList = [];
-			<% for(NumberCode model : modelList){ %>
-				modelList.push({ "code" : "<%= model.getCode() %>", "value" : "<%= model.getName() %>"});
-			<% } %>
-			const layout = [{
+			let recentGridItem;
+			const flist =
+		<%=flist%>
+			const dlist =
+		<%=dlist%>
+			const mlist =
+		<%=mlist%>
+			const nlist =
+		<%=nlist%>
+			const tlist =
+		<%=tlist%>
+			const plist =
+		<%=plist%>
+			const llist = [ {
+				key : "LC_Default",
+				value : "기본결재"
+			}, {
+				key : "LC_Default_NonWF",
+				value : "일괄결재"
+			} ]
+			const layout = [ {
 				dataField : "location",
 				headerText : "저장위치",
 				dataType : "string",
@@ -74,29 +72,31 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = folderList.length; i < len; i++) {
-						if (folderList[i]["code"] == value) {
-							retStr = folderList[i]["value"];
-							break;
-						}
-					}
-					return retStr == "" ? value : retStr;
-				},
 				editRenderer : {
-					type: "ComboBoxRenderer",
-					list: folderList, 
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value" 
+					type : "ComboBoxRenderer",
+					list : flist,
+					matchFromFirst : false,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = flist.length; i < len; i++) {
+							if (flist[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
 				dataField : "documentName",
 				headerText : "문서 종류",
-				width : 120,
+				width : 250,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -109,39 +109,52 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = documentNameList.length; i < len; i++) {
-						if (documentNameList[i]["code"] == value) {
-							AUIGrid.setCellValue(myGridID, rowIndex, "documentName", value);
-							retStr = documentNameList[i]["value"];
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = nlist.length; i < len; i++) {
+						if (nlist[i]["key"] == value) {
+							retStr = nlist[i]["value"];
 							break;
 						}
 					}
 					return retStr == "" ? value : retStr;
 				},
 				editRenderer : {
-					type: "ComboBoxRenderer",
-					list: documentNameList, 
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code",
-					valueField: "value"
+					type : "ComboBoxRenderer",
+					list : nlist,
+					matchFromFirst : false,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = nlist.length; i < len; i++) {
+							if (nlist[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
-				dataField : "docName",
+				dataField : "name",
 				headerText : "문서명",
 				width : 120,
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 			}, {
 				dataField : "lifecycle",
 				headerText : "결재 방식",
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -154,32 +167,45 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = lifecycleList.length; i < len; i++) {
-						if (lifecycleList[i]["code"] == value) {
-                            AUIGrid.setCellValue(myGridID, rowIndex, "manufacture", value);
-							retStr = lifecycleList[i]["value"];
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = llist.length; i < len; i++) {
+						if (llist[i]["key"] == value) {
+							retStr = llist[i]["value"];
 							break;
 						}
 					}
 					return retStr == "" ? value : retStr;
 				},
 				editRenderer : {
-					type: "ComboBoxRenderer",
-					list: lifecycleList, 
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value" 
+					type : "ComboBoxRenderer",
+					list : llist,
+					matchFromFirst : false,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = llist.length; i < len; i++) {
+							if (llist[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
-				dataField : "documentType",
+				dataField : "documentType_code",
 				headerText : "문서분류",
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -192,36 +218,50 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = documentTypeList.length; i < len; i++) {
-						if (documentTypeList[i]["code"] == value) {
-                            AUIGrid.setCellValue(myGridID, rowIndex, "documentType", value);
-							retStr = documentTypeList[i]["value"];
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = tlist.length; i < len; i++) {
+						if (tlist[i]["key"] == value) {
+							retStr = tlist[i]["value"];
 							break;
 						}
 					}
 					return retStr == "" ? value : retStr;
 				},
 				editRenderer : {
-					type: "ComboBoxRenderer",
-					list: documentTypeList, 
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value" 
+					type : "ComboBoxRenderer",
+					list : tlist,
+					matchFromFirst : false,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = tlist.length; i < len; i++) {
+							if (tlist[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
 				headerText : "프로젝트 코드",
 				children : [ {
-					dataField : "model",
+					dataField : "model_code",
 					headerText : "프로젝트 코드",
-					width : 120,
+					width : 100,
+					editable : false
 				}, {
-					dataField : "modelName",
+					dataField : "model",
 					headerText : "프로젝트 명",
-					width : 120,
+					width : 150,
 					renderer : {
 						type : "IconRenderer",
 						iconWidth : 16,
@@ -234,25 +274,39 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 							AUIGrid.openInputer(event.pid);
 						}
 					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = modelList.length; i < len; i++) {
-							if (modelList[i]["code"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "model", value);
-								retStr = modelList[i]["value"];
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = mlist.length; i < len; i++) {
+							if (mlist[i]["key"] == value) {
+								AUIGrid.setCellValue(myGridID, rowIndex, "model_code", mlist[i]["key"]);
+								retStr = mlist[i]["value"];
 								break;
 							}
 						}
 						return retStr == "" ? value : retStr;
 					},
 					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: modelList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code",
-						valueField: "value"
+						type : "ComboBoxRenderer",
+						list : mlist,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = mlist.length; i < len; i++) {
+								if (mlist[i] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				} ]
 			}, {
@@ -260,15 +314,16 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				headerText : "작성자",
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 			}, {
 				headerText : "부서",
 				children : [ {
-					dataField : "deptcode",
+					dataField : "deptcode_code",
 					headerText : "부서코드",
 					width : 120,
+					editable : false
 				}, {
-					dataField : "deptcodeName",
+					dataField : "deptcode",
 					headerText : "부서명",
 					width : 120,
 					renderer : {
@@ -283,39 +338,54 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 							AUIGrid.openInputer(event.pid);
 						}
 					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = deptcodeList.length; i < len; i++) {
-							if (deptcodeList[i]["code"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode", value);
-								retStr = deptcodeList[i]["value"];
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = dlist.length; i < len; i++) {
+							if (dlist[i]["key"] == value) {
+								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode_code", dlist[i]["key"]);
+								retStr = dlist[i]["value"];
 								break;
 							}
 						}
 						return retStr == "" ? value : retStr;
 					},
 					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: deptcodeList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code",
-						valueField: "value"
+						type : "ComboBoxRenderer",
+						list : dlist,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = dlist.length; i < len; i++) {
+								if (dlist[i] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				} ]
 			}, {
 				dataField : "interalnumber",
 				headerText : "내부문서 번호",
-				width: 160,
+				width : 160,
 			}, {
 				headerText : "보존기간",
 				children : [ {
-					dataField : "preseration",
+					dataField : "preseration_code",
 					headerText : "보존기간코드",
 					width : 120,
+					editable : false
 				}, {
-					dataField : "preserationList",
+					dataField : "preseration",
 					headerText : "보존기간",
 					width : 120,
 					renderer : {
@@ -330,25 +400,39 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 							AUIGrid.openInputer(event.pid);
 						}
 					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = preserationList.length; i < len; i++) {
-							if (preserationList[i]["code"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "preseration", value);
-								retStr = preserationList[i]["value"];
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = plist.length; i < len; i++) {
+							if (plist[i]["key"] == value) {
+								AUIGrid.setCellValue(myGridID, rowIndex, "preseration_code", plist[i]["key"]);
+								retStr = plist[i]["value"];
 								break;
 							}
 						}
 						return retStr == "" ? value : retStr;
 					},
 					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: preserationList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code",
-						valueField: "value"
+						type : "ComboBoxRenderer",
+						list : plist,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = plist.length; i < len; i++) {
+								if (plist[i] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				} ]
 			}, {
@@ -356,137 +440,110 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 				children : [ {
 					dataField : "primaryName",
 					headerText : "파일명",
-					width: 160,
-					styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-						if (typeof value == "undefined" || value == "") {
-							return null;
-						}
-						return "my-file-selected";
-					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						if (typeof value == "undefined" || value == "") {
-							return "선택 파일 없음";
-						}
-						return value;
-					},
+					width : 160,
+					editable : false,
 				}, {
 					dataField : "primary",
 					headerText : "주 첨부파일",
-					width: 160,
+					width : 160,
 					editable : false,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "파일선택",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.id;
-							const url = getCallUrl("/common/attachPrimary?oid=" + oid + "&method=attachPrimary");
-							_popup(url, 800, 400,"n");
+							const oid = item.oid;
+							const url = getCallUrl("/aui/primary?oid=" + oid + "&method=primary");
+							_popup(url, 800, 200, "n");
 						}
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-				}]
+				} ]
 			}, {
 				headerText : "첨부파일",
 				children : [ {
 					dataField : "secondaryName",
 					headerText : "파일명",
-					width: 160,
-					styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-						if (typeof value == "undefined" || value == "") {
-							return null;
-						}
-						return "my-file-selected";
-					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						if (typeof value == "undefined" || value == "") {
-							return "선택 파일 없음";
-						}
-						return value;
-					},
+					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
 				}, {
 					dataField : "secondary",
 					headerText : "파일",
-					width: 160,
+					width : 160,
 					editable : false,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "파일선택",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.id;
-							const url = getCallUrl("/common/attachSecondary?oid=" + oid + "&method=attachSecondary");
-							_popup(url, 800, 400,"n");
+							const oid = item.oid;
+							const url = getCallUrl("/aui/secondary?oid=" + oid + "&method=secondary");
+							_popup(url, 800, 400, "n");
 						}
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-				}]
+				} ]
 			}, {
 				headerText : "관련품목",
 				children : [ {
-					dataField : "partOids",
+					dataField : "rows91",
 					dataType : "string",
 					visible : false
-				},{
+				}, {
 					dataField : "partNumber",
 					headerText : "품목번호",
-					width: 160,
+					width : 160,
 				}, {
-					dataField : "part",
 					headerText : "관련품목",
 					dataType : "string",
 					width : 120,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "부품추가",
-						onClick : function(event) {
-							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/part/listPopup?parentRowIndex=" + parentRowIndex);
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.oid;
+							const url = getCallUrl("/part/popup?method=insert91&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
-				}]
+				} ]
 			}, {
 				headerText : "관련문서",
 				children : [ {
-					dataField : "docOids",
+					dataField : "rows90",
 					dataType : "string",
 					visible : false
-				},{
+				}, {
 					dataField : "docNumber",
 					headerText : "문서번호",
-					width: 160,
+					width : 160,
 				}, {
-					dataField : "document",
 					headerText : "관련문서",
 					dataType : "string",
 					width : 120,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "문서추가",
-						onClick : function(event) {
-							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/doc/listPopup?parentRowIndex=" + parentRowIndex);
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.oid;
+							const url = getCallUrl("/doc/popup?method=insert90&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
-				}]
+				} ]
 			}, {
 				headerText : "관련EO",
 				children : [ {
 					dataField : "eoOids",
 					dataType : "string",
 					visible : false
-				},{
+				}, {
 					dataField : "eoNumber",
 					headerText : "EO번호",
-					width: 160,
+					width : 160,
 				}, {
 					dataField : "eo",
 					headerText : "관련EO",
@@ -501,17 +558,17 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 							_popup(url, 1800, 900, "n");
 						}
 					}
-				}]
+				} ]
 			}, {
 				headerText : "관련CR",
 				children : [ {
 					dataField : "crOids",
 					dataType : "string",
 					visible : false
-				},{
+				}, {
 					dataField : "crNumber",
 					headerText : "CR번호",
-					width: 160,
+					width : 160,
 				}, {
 					dataField : "cr",
 					headerText : "관련CR",
@@ -526,17 +583,17 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 							_popup(url, 1800, 900, "n");
 						}
 					}
-				}]
+				} ]
 			}, {
 				headerText : "관련ECPR",
 				children : [ {
 					dataField : "ecprOids",
 					dataType : "string",
 					visible : false
-				},{
+				}, {
 					dataField : "ecprNumber",
 					headerText : "ECPR번호",
-					width: 160,
+					width : 160,
 				}, {
 					dataField : "ecpr",
 					headerText : "관련CR",
@@ -551,17 +608,17 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 							_popup(url, 1800, 900, "n");
 						}
 					}
-				}]
+				} ]
 			}, {
 				headerText : "관련ECO",
 				children : [ {
 					dataField : "ecoOids",
 					dataType : "string",
 					visible : false
-				},{
+				}, {
 					dataField : "ecoNumber",
 					headerText : "ECO번호",
-					width: 160,
+					width : 160,
 				}, {
 					dataField : "eco",
 					headerText : "관련ECO",
@@ -576,26 +633,20 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 							_popup(url, 1800, 900, "n");
 						}
 					}
-				}]
-			}]
+				} ]
+			} ]
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-					rowIdField: "id",
+					rowIdField : "oid",
 					editable : true,
 					headerHeight : 35,
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
-					fillColumnSizeMode : false,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : false,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+				// 					wordWrap : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
@@ -626,160 +677,191 @@ ArrayList<NumberCode> documentNameList = (ArrayList<NumberCode>) request.getAttr
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			// 추가
-			function addBtn(){
+			function addRow() {
 				AUIGrid.addRow(myGridID, {}, 'last');
 			}
-			
+
 			// 삭제
-			function deleteBtn(){
-				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if(items.length==0){
-					alert("선택된 물질이 없습니다.");
-					return;
+			function deleteRow() {
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				if (checkedItems.length === 0) {
+					alert("삭제할 행을 선택하세요.");
+					return false;
 				}
-				
-				if (!confirm("삭제하시겠습니까?")){
-					return;
+
+				for (let i = checkedItems.length - 1; i >= 0; i--) {
+					const rowIndex = checkedItems[i].rowIndex;
+					AUIGrid.removeRow(myGridID, rowIndex);
 				}
-				
-				AUIGrid.removeCheckedRows(myGridID);
+			}
+
+			// 품목 추가 메소드
+			function insert91(arr, callBack) {
+				const rows91 = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rows91.push(item);
+					number += item.number + "\n";
+					// 중복 체크?
+					// 					const unique = AUIGrid.isUniqueValue(myGridID91, "part_oid", item.part_oid);
+					// 					if (unique) {
+					// 						AUIGrid.addRow(myGridID91, item, rowIndex);
+					// 					} else {
+					// 						// 중복은 그냥 경고 없이 처리 할지 협의?
+					// 						alert(item.number + " 품목은 이미 추가 되어있습니다.");
+					// 					}
+				})
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					rows91 : rows91,
+					partNumber : toRowsExp(number)
+				});
+				callBack(true);
 			}
 			
-			// 관련 품목 할당 메서드
-			function setPart(partOids, partNumber, parentRowIndex){
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "partOids", partOids);
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "partNumber", partNumber);
+			// 문서추가
+			function insert90(arr, callBack) {
+				const rows90 = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rows90.push(item);
+					number += item.number + "\n";
+					// 중복 체크?
+					// 					const unique = AUIGrid.isUniqueValue(myGridID91, "part_oid", item.part_oid);
+					// 					if (unique) {
+					// 						AUIGrid.addRow(myGridID91, item, rowIndex);
+					// 					} else {
+					// 						// 중복은 그냥 경고 없이 처리 할지 협의?
+					// 						alert(item.number + " 품목은 이미 추가 되어있습니다.");
+					// 					}
+				})
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					rows90 : rows90,
+					docNumber : toRowsExp(number)
+				});
+				callBack(true);
 			}
-						
-			// 관련 문서 할당 메서드
-			function setDoc(docOids, docNumber, parentRowIndex){
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "docOids", docOids);
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "docNumber", docNumber);
-			}
-						
+
 			// 관련 EO 할당 메서드
-			function setEO(eoOids, eoNumber, parentRowIndex){
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoOids", eoOids);
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoNumber", eoNumber);
+// 			function setEO(eoOids, eoNumber, parentRowIndex) {
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoOids", eoOids);
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoNumber", eoNumber);
+// 			}
+
+// 			// 관련 CR 할당 메서드
+// 			function setCR(crOids, crNumber, parentRowIndex) {
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crOids", crOids);
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crNumber", crNumber);
+// 			}
+
+// 			// 관련 ECPR 할당 메서드
+// 			function setECPR(ecprOids, ecprNumber, parentRowIndex) {
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprOids", ecprOids);
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprNumber", ecprNumber);
+// 			}
+
+// 			// 관련 ECO 할당 메서드
+// 			function setECO(ecoOids, ecoNumber, parentRowIndex) {
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoOids", ecoOids);
+// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoNumber", ecoNumber);
+// 			}
+
+			function primary(data) {
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					primary : data.cacheId,
+					primaryName : data.name
+				});
+				recentGridItem = undefined;
 			}
-						
-			// 관련 CR 할당 메서드
-			function setCR(crOids, crNumber, parentRowIndex){
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "crOids", crOids);
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "crNumber", crNumber);
-			}
-						
-			// 관련 ECPR 할당 메서드
-			function setECPR(ecprOids, ecprNumber, parentRowIndex){
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprOids", ecprOids);
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprNumber", ecprNumber);
-			}
-						
-			// 관련 ECO 할당 메서드
-			function setECO(ecoOids, ecoNumber, parentRowIndex){
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoOids", ecoOids);
-				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoNumber", ecoNumber);
-			}
-						
-			// 주 첨부파일
-			function attachPrimary(data) {
-				
-				for(let i = 0; i < data.length; i++){
-					AUIGrid.updateRowsById(myGridID, {
-						id : recentGridItem.id,
-						primary : data[0].cacheId,
-					});
-					
-					AUIGrid.updateRowsById(myGridID, {
-						id: recentGridItem.id,
-						primaryName: data[0].name
-					});
-				}
-			}
-						
 			// 첨부파일
-			function attachSecondary(data) {
-				
-				for(let i = 0; i < data.length; i++){
-					let cacheId = [];
-					let name = [];
-					
-					for(let i = 0; i < data.length; i++){
-						cacheId.push(data[i].cacheId);
-						name.push(data[i].name);
-					}
-					
-					
-					AUIGrid.updateRowsById(myGridID, {
-						id : recentGridItem.id,
-						secondary : cacheId,
-					});
-					
-					AUIGrid.updateRowsById(myGridID, {
-						id: recentGridItem.id,
-						secondaryName: name
-					});
+			function secondary(data) {
+				const cacheId = [];
+				let name = "";
+				for (let i = 0; i < data.length; i++) {
+					cacheId.push(data[i].cacheId);
+					name += data[i].name + "\n";
 				}
+				// 개행 처리
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					secondary : cacheId,
+					secondaryName : toRowsExp(name)
+				});
+				// 초기화
+				recentGridItem = undefined;
 			}
-						
+
 			// 등록
-			function batch(){
-				const documentList = AUIGrid.getGridData(myGridID);
-				
-				for(let i = 0; i < documentList.length; i++){
+			function batch() {
+				const gridData = AUIGrid.getGridData(myGridID);
+				for (let i = 0; i < gridData.length; i++) {
+					const item = gridData[i];
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item.oid);
+
+					if (isNull(item.location)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 0, "저장위치를 선택하세요.");
+						return false;
+					}
+
+					if (isNull(item.documentName)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 1, "문서종류를 선택하세요.");
+						return false;
+					}
 					
-					const rowNum = i + 1;
-					
-					if(isEmpty(documentList[i].location)){
-						alert(rowNum + "행의 문서에 저장위치를 입력하세요.");
-						return;
+					if (isNull(item.name)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 2, "문서명을 입력하세요.");
+						return false;
 					}
-					if(isEmpty(documentList[i].docName)){
-						alert(rowNum + "행의 문서에 문서명을 입력하세요.");
-						return;
+
+					if (isNull(item.lifecycle)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 3, "결재방식을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(documentList[i].documentName)){
-						alert(rowNum + "행의 문서에 문서종류를 입력하세요.");
-						return;
+
+					if (isNull(item.documentType_code)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "문서분류를 선택하세요.");
+						return false;
 					}
-					if(isEmpty(documentList[i].lifecycle)){
-						alert(rowNum + "행의 문서에 결재방식을 입력하세요.");
-						return;
+
+					if (isNull(item.preseration_code)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 12, "보존기간을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(documentList[i].documentType)){
-						alert(rowNum + "행의 문서에 문서분류를 입력하세요.");
-						return;
-					}
-					if(isEmpty(documentList[i].preseration)){
-						alert(rowNum + "행의 문서에 보존기간을 입력하세요.");
-						return;
-					}
-					if(isEmpty(documentList[i].primary)){
-						alert(rowNum + "행의 문서에 주 첨부파일을 입력하세요.");
-						return;
+
+					if (isNull(item.primary)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 14, "주 첨부파일을 선택하세요.");
+						return false;
 					}
 				}
-				
-				
+
 				if (!confirm("등록 하시겠습니까?")) {
 					return false;
 				}
-				
-				
+
 				const url = getCallUrl("/doc/batch");
-				let params = new Object();
-				params.documentList = documentList;
-				
-				console.log(params.documentList);
-				
+				const params = {
+					gridData : gridData
+				}
+				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						document.location.href = getCallUrl("/doc/list");
+					} else {
+						closeLayer();
 					}
 				});
+			}
+			// 개행 처리 
+			function toRowsExp(value) {
+				return value.replace(/\r|\n|\r\n/g, "<br/>");
 			}
 		</script>
 	</form>

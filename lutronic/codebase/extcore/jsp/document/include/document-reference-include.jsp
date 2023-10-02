@@ -3,7 +3,7 @@
 String oid = request.getParameter("oid");
 %>
 <!-- 관련 품목 -->
-<jsp:include page="/extcore/jsp/part/part-include.jsp">
+<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="insert91" name="method" />

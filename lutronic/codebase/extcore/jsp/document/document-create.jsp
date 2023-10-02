@@ -1,3 +1,7 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="java.util.Map"%>
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@page import="wt.doc.DocumentType"%>
 <%@page import="com.e3ps.admin.form.FormTemplate"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
@@ -9,7 +13,8 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
-DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
+JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
+DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 %>
 <!DOCTYPE html>
 <html>
@@ -114,9 +119,12 @@ iframe {
 					<select name="documentType" id="documentType" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (DocumentType documentType : docTypeList) {
+						for (int i = 0; i < docTypeList.size(); i++) {
+							JSONObject obj = (JSONObject) docTypeList.get(i);
+							String key = (String) obj.get("key");
+							String value = (String) obj.get("value");
 						%>
-						<option value="<%=documentType.toString()%>"><%=documentType.getDisplay()%></option>
+						<option value="<%=key%>"><%=value%></option>
 						<%
 						}
 						%>
@@ -202,11 +210,12 @@ iframe {
 			</tr>
 		</table>
 		<!-- 관련 품목 -->
-		<jsp:include page="/extcore/jsp/part/part-include.jsp">
+		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert91" name="method" />
 			<jsp:param value="true" name="multi" />
+			<jsp:param value="250" name="height" />
 		</jsp:include>
 
 		<!-- 	관련 문서 -->
@@ -215,6 +224,7 @@ iframe {
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
+			<jsp:param value="250" name="height" />
 		</jsp:include>
 
 		<!-- 	관련 EO -->
@@ -333,7 +343,7 @@ iframe {
 
 			function loadForm() {
 				const oid = document.getElementById("formType").value;
-				if(oid === "") {
+				if (oid === "") {
 					return false;
 				}
 				const url = getCallUrl("/form/html?oid=" + oid);
@@ -365,6 +375,7 @@ iframe {
 				const interalnumber = document.getElementById("interalnumber").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
+				const documentName = document.getElementById("documentName").value;
 
 				if (!confirm("등록하시겠습니까?")) {
 					return false;
@@ -372,25 +383,27 @@ iframe {
 				const url = getCallUrl("/doc/create");
 
 				// 관련문서
-				const addRows90 = AUIGrid.getAddedRowItems(myGridID90);
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 관련품목
-				const addRows91 = AUIGrid.getAddedRowItems(myGridID91);
+				const rows91 = AUIGrid.getGridDataWithState(myGridID91, "gridState");
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,
-					documentType : documentType.value,
+					documentType_code : documentType.value,
 					description : description.value,
 					content : content.value,
 					secondarys : secondarys,
 					primary : primary,
 					location : location.value,
-					model : model,
+					model_code : model,
+					deptcode_code : deptcode,
 					interalnumber : interalnumber,
 					writer : writer,
-					preseration : preseration,
+					preseration_code : preseration,
+					documentName : documentName,
 					// 링크 데이터
-					addRows90 : addRows90,
-					addRows91 : addRows91
+					rows90 : rows90,
+					rows91 : rows91
 				};
 				parent.openLayer();
 				call(url, params, function(data) {

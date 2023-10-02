@@ -1,3 +1,5 @@
+<%@page import="net.sf.json.JSONArray"%>
+<%@page import="net.sf.json.JSONObject"%>
 <%@page import="wt.doc.DocumentType"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
@@ -8,7 +10,7 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
+JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 %>
 <!DOCTYPE html>
 <html>
@@ -54,9 +56,12 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 					<select name="documentType" id="documentType" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (DocumentType docType : docTypeList) {
+						for (int i = 0; i < docTypeList.size(); i++) {
+							JSONObject obj = (JSONObject) docTypeList.get(i);
+							String key = (String) obj.get("key");
+							String value = (String) obj.get("value");
 						%>
-						<option value="<%=docType.toString()%>"><%=docType.getDisplay()%></option>
+						<option value="<%=key%>"><%=value%></option>
 						<%
 						}
 						%>
@@ -398,9 +403,10 @@ DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList"
 				const field = [ "_psize", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
-				params.latest = latest;
+				params.latest = false;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {

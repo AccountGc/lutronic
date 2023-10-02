@@ -30,10 +30,11 @@ public class DocumentDTO {
 	private WTDocument doc;
 	private String number;
 	private String name;
-	private String description;
-	private String content;
+	private String description = "";
+	private String content = "";
 	private String location;
-	private String documentType;
+	private String documentType_name;
+	private String documentType_code;
 	private boolean latest;
 	private String state;
 	private String version;
@@ -45,11 +46,15 @@ public class DocumentDTO {
 
 	// IBA
 	private String writer;
-	private String model;
-	private String preseration;
+	private String model_name;
+	private String model_code;
+	private String preseration_name;
+	private String preseration_code;
 	private String interalnumber;
-	private String deptcode;
-	private String approvaltype;
+	private String deptcode_name;
+	private String deptcode_code;
+	private String approvaltype_name;
+	private String approvaltype_code;
 
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
@@ -60,11 +65,12 @@ public class DocumentDTO {
 	private boolean _revise = false;
 
 	// 변수용
+	private String documentName;
 	private String lifecycle;
 	private String primary;
 	private ArrayList<String> secondarys = new ArrayList<>();
-	private ArrayList<Map<String, String>> addRows90 = new ArrayList<>(); // 관련 문서
-	private ArrayList<Map<String, String>> addRows91 = new ArrayList<>(); // 관련 품목
+	private ArrayList<Map<String, String>> rows90 = new ArrayList<>(); // 관련 문서
+	private ArrayList<Map<String, String>> rows91 = new ArrayList<>(); // 관련 품목
 	private boolean temp;
 
 	public DocumentDTO() {
@@ -84,9 +90,10 @@ public class DocumentDTO {
 		setName(doc.getName());
 		setNumber(doc.getNumber());
 		setDescription(doc.getDescription());
-		setContent(doc.getTypeInfoWTDocument().getPtc_str_1());
+		setContent(doc.getTypeInfoWTDocument().getPtc_rht_1());
 		setLocation(doc.getLocation());
-		setDocumentType(doc.getDocType().getDisplay());
+		setDocumentType_name(doc.getDocType().getDisplay());
+		setDocumentType_code(doc.getDocType().toString());
 		setLatest(CommonUtil.isLatestVersion(doc));
 		setState(doc.getLifeCycleState().getDisplay());
 		setVersion(doc.getVersionIdentifier().getSeries().getValue());
@@ -107,19 +114,27 @@ public class DocumentDTO {
 		// 작성자
 		setWriter(IBAUtil.getStringValue(doc, "DSGN"));
 		// 프로젝트 코드
-		String model = keyToValue(IBAUtil.getStringValue(doc, "MODEL"), "MODEL");
-		setModel(model);
+		String model_code = IBAUtil.getStringValue(doc, "MODEL");
+		String model_name = keyToValue(model_code, "MODEL");
+		setModel_code(model_code);
+		setModel_name(model_name);
 		// 내부문서번호
 		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
 		// 결재타입
-		String approvalType = IBAUtil.getStringValue(doc, "APPROVALTYPE");
-		setApprovaltype("BATCH".equals(approvalType) ? "일괄결재" : "기본결재");
+		String approvalType_code = IBAUtil.getStringValue(doc, "APPROVALTYPE");
+		String approvalType_name = "BATCH".equals(approvalType_code) ? "일괄결재" : "기본결재";
+		setApprovaltype_code(approvalType_code);
+		setApprovaltype_name(approvalType_name);
 		// 보존기간
-		String preseration = keyToValue(IBAUtil.getStringValue(doc, "PRESERATION"), "PRESERATION");
-		setPreseration(preseration);
+		String preseration_code = IBAUtil.getStringValue(doc, "PRESERATION");
+		String preseration_name = keyToValue(preseration_code, "PRESERATION");
+		setPreseration_code(preseration_code);
+		setPreseration_name(preseration_name);
 		// 부서코드
-		String deptcode = keyToValue(IBAUtil.getStringValue(doc, "DEPTCODE"), "DEPTCODE");
-		setDeptcode(deptcode);
+		String deptcode_code = IBAUtil.getStringValue(doc, "DEPTCODE");
+		String deptcode_name = keyToValue(deptcode_code, "DEPTCODE");
+		setDeptcode_code(deptcode_code);
+		setDeptcode_name(deptcode_name);
 	}
 
 	/**
@@ -181,9 +196,29 @@ public class DocumentDTO {
 		if (sd == null) {
 			return;
 		}
+
+		// 생성전 삭제 처리..
+		deleteIBAValue(doc, sd);
+
 		sv.setValue(value);
 		sv.setDefinitionReference((StringDefinitionReference) sd.getAttributeDefinitionReference());
 		sv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(doc)));
 		PersistenceHelper.manager.save(sv);
+	}
+
+	/**
+	 * IBA 값 삭제
+	 */
+	private void deleteIBAValue(WTDocument doc, StringDefinition sd) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(StringValue.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, StringValue.class, "definitionReference.key.id", sd);
+		QuerySpecUtils.toEqualsAnd(query, idx, StringValue.class, "theIBAHolderReference.key.id", doc);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			StringValue sv = (StringValue) obj[0];
+			PersistenceHelper.manager.delete(sv);
+		}
 	}
 }
