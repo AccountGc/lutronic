@@ -40,6 +40,10 @@ public class DocumentColumn {
 
 	}
 
+	public DocumentColumn(Object[] obj) throws Exception {
+		this((WTDocument) obj[0]);
+	}
+
 	/**
 	 * 문서검색에 사용될 클래스 - 리스트에 필요한 값만 세팅 속도 개선
 	 */

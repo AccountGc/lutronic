@@ -199,8 +199,7 @@ public class PartHelper {
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			WTPart part = (WTPart) obj[0];
-			PartColumn data = new PartColumn(part);
+			PartColumn data = new PartColumn(obj);
 			list.add(data);
 		}
 

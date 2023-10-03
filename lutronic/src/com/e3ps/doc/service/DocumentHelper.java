@@ -140,8 +140,7 @@ public class DocumentHelper {
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			WTDocument document = (WTDocument) obj[0];
-			DocumentColumn data = new DocumentColumn(document);
+			DocumentColumn data = new DocumentColumn(obj);
 			list.add(data);
 		}
 

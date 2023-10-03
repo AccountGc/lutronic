@@ -14,5 +14,7 @@
 
 8. myGridID103, columns100 관련 ECPR
 
+9. myGridID104, columns104 완제품 - EO 검색 페이지
+
 // 그리드 높이 정리
 -- 검색 1행, 페이징 처리할시 그리드 높이 700px --  

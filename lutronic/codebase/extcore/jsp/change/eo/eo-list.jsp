@@ -117,8 +117,8 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			</tr>
 			<tr>
 				<th class="req lb">완제품 품목</th>
-				<td colspan="5">
-					<jsp:include page="/extcore/jsp/change/include_ecrCompletePart.jsp">
+				<td colspan="5" class="indent5 pt5">
+					<jsp:include page="/extcore/jsp/change/include/include-complete-part.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
 				</td>
@@ -154,7 +154,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "eoNumber",
+					dataField : "number",
 					headerText : "EO 번호",
 					dataType : "string",
 					width : 150,
@@ -167,15 +167,16 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/changeECO/view?oid=" + oid);
+							const url = getCallUrl("/eo/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
 				}, {
-					dataField : "eoName",
+					dataField : "name",
 					headerText : "EO 제목",
 					dataType : "string",
-					width : 250,
+					style : "aui-left",
+					// 					width : 250,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -185,7 +186,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/changeECO/view?oid=" + oid);
+							const url = getCallUrl("/eo/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
@@ -217,9 +218,9 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "createdDate",
 					headerText : "등록일",
-					dataType : "string",
+					dataType : "date",
 					width : 200,
 					filter : {
 						showIcon : true,
@@ -228,7 +229,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				}, {
 					dataField : "approveDate",
 					headerText : "승인일",
-					dataType : "string",
+					dataType : "date",
 					width : 200,
 					filter : {
 						showIcon : true,
@@ -266,8 +267,10 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/changeECO/listEO");
+				const url = getCallUrl("/eo/list");
 				const field = [ "_psize", "name", "number", "eoType", "predate", "postdate", "creator", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "preApproveDate", "postApproveDate" ];
+				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
+				params.rows104 = rows104;
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -294,9 +297,9 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					select : headerMenuSelectHandler
 				});
 				createAUIGrid(columns);
-				createAUIGrid2(columnsPart);
+				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(partGridID);
+				AUIGrid.resize(myGridID104);
 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
@@ -318,7 +321,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(partGridID);
+				AUIGrid.resize(myGridID104);
 			});
 
 			// 등록

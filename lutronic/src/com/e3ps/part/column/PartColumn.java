@@ -8,7 +8,6 @@ import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.drawing.beans.EpmData;
-import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
@@ -20,7 +19,6 @@ import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildRule;
 import wt.part.WTPart;
-import wt.pdmlink.PDMLinkProduct;
 
 @Getter
 @Setter
@@ -49,13 +47,14 @@ public class PartColumn {
 	private String dxf;
 	private String dwgNo;
 	private String dwgOid;
-	private String quantity ="1";
-	
-	
-	
+	private String quantity = "1";
 
 	public PartColumn() {
 
+	}
+
+	public PartColumn(Object[] obj) throws Exception {
+		this((WTPart) obj[0]);
 	}
 
 	public PartColumn(WTPart part) throws Exception {
@@ -74,7 +73,7 @@ public class PartColumn {
 		setModifiedDate(part.getModifyTimestamp());
 		setAttach(part);
 		setDwgNoFn(part);
-		setQuantity(quantity);		
+		setQuantity(quantity);
 	}
 
 	private void setAttach(WTPart part) throws Exception {
@@ -90,53 +89,51 @@ public class PartColumn {
 			}
 		}
 	}
-	
+
 	public void setDwgNoFn(WTPart part) {
-    	boolean isDwg = false;
-    	try {
-    		EPMBuildRule buildRule = PartSearchHelper.service.getBuildRule(part);
-    		if(buildRule != null) {
-    			EPMDocument epm = (EPMDocument) buildRule.getBuildSource();
-    			EPMDocument epm2D = EpmSearchHelper.service.getEPM2D((EPMDocumentMaster)epm.getMaster());
-    			//System.out.println("check 1"+(null != epm2D));
-    			if(epm2D != null) {
-    				setDwgNo(epm2D.getNumber());
-    				setDwgOid(CommonUtil.getOIDString(epm2D));
-    			}else {
-    				isDwg = true;
-    				if(epm != null){
-    					
-    					EpmData epmData = new EpmData(epm);
-    					String appType = epmData.getApplicationType();
-    					if("MANUAL".equals(appType)){
-    						setDwgNo(epm.getNumber());
-    	    				setDwgOid(CommonUtil.getOIDString(epm));
-	        				isDwg = false;
-    					}
-        			}
-    			}
-    			
-    			
-    			
-    		}else {
-    			isDwg = true;
-    		}
-    		
-    		if(isDwg) {
-    			boolean isAP = PartSearchHelper.service.isHasDocumentType(part, "$$APDocument");
-    			if(isAP){
-    				setDwgNo("AP");
-    				setDwgOid(PartSearchHelper.service.getHasDocumentOid(part, "$$APDocument"));
-    			}else {
-    				setDwgNo("ND");
-    			}
-    		}
-    		
-    	}catch(Exception e) {
-    		e.printStackTrace();
-    		setDwgNo("");
-    	}
-    	
-    }
-	
+		boolean isDwg = false;
+		try {
+			EPMBuildRule buildRule = PartSearchHelper.service.getBuildRule(part);
+			if (buildRule != null) {
+				EPMDocument epm = (EPMDocument) buildRule.getBuildSource();
+				EPMDocument epm2D = EpmSearchHelper.service.getEPM2D((EPMDocumentMaster) epm.getMaster());
+				// System.out.println("check 1"+(null != epm2D));
+				if (epm2D != null) {
+					setDwgNo(epm2D.getNumber());
+					setDwgOid(CommonUtil.getOIDString(epm2D));
+				} else {
+					isDwg = true;
+					if (epm != null) {
+
+						EpmData epmData = new EpmData(epm);
+						String appType = epmData.getApplicationType();
+						if ("MANUAL".equals(appType)) {
+							setDwgNo(epm.getNumber());
+							setDwgOid(CommonUtil.getOIDString(epm));
+							isDwg = false;
+						}
+					}
+				}
+
+			} else {
+				isDwg = true;
+			}
+
+			if (isDwg) {
+				boolean isAP = PartSearchHelper.service.isHasDocumentType(part, "$$APDocument");
+				if (isAP) {
+					setDwgNo("AP");
+					setDwgOid(PartSearchHelper.service.getHasDocumentOid(part, "$$APDocument"));
+				} else {
+					setDwgNo("ND");
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			setDwgNo("");
+		}
+
+	}
+
 }
