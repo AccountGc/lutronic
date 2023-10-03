@@ -39,7 +39,7 @@ public class PageQueryUtils {
 	}
 
 	public PagingQueryResult find() throws Exception {
-		String cpage = (String) this.param.get("tpage");
+		String cpage = (String) this.param.get("curPage");
 		if (StringUtil.isNull(cpage)) {
 			cpage = "1";
 		}

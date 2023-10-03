@@ -35,26 +35,22 @@ public interface ECOService {
 	ResultData createECOAction(HttpServletRequest req);
 
 	void completeECO(EChangeOrder eco);
-	
+
 	void completeECOTEST(EChangeOrder eco);
 
 	void completePart(EChangeOrder eco) throws Exception;
 
-	void completePartStateChange(WTPart part, Map<String, String> map)
-			throws Exception;
+	void completePartStateChange(WTPart part, Map<String, String> map) throws Exception;
 
 	void approvedIBAChange(EChangeOrder eco) throws Exception;
 
-	void approvedIBAChange(RevisionControlled rc, Map<String, String> map)
-			throws Exception;
+	void approvedIBAChange(RevisionControlled rc, Map<String, String> map) throws Exception;
 
 	void createECOBaseline(EChangeOrder eco) throws Exception;
 
-	ManagedBaseline createBaseline(WTPart wtpart, EChangeOrder eco)
-			throws Exception;
+	ManagedBaseline createBaseline(WTPart wtpart, EChangeOrder eco) throws Exception;
 
-	List<WTPart> getBomList(WTPart part, View view, List<WTPart> BomList)
-			throws Exception;
+	List<WTPart> getBomList(WTPart part, View view, List<WTPart> BomList) throws Exception;
 
 	List<WTPart> productPartList(EChangeOrder eco) throws Exception;
 
@@ -71,9 +67,7 @@ public interface ECOService {
 	ResultData batchEOAttachDownAction(String oid, String describe);
 
 	ResultData batchEODrawingDownAction(String oid, String describe);
-	
-	public void create(ECOData data) throws Exception;
-	
-	public void createEO(ECOData data) throws Exception;
 
-}
+	public void create(ECOData data) throws Exception;
+
+S}

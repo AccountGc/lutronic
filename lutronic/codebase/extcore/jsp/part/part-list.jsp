@@ -242,7 +242,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
-					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
+					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -515,10 +515,11 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/part/list");
-				const field = [ "_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
+				const field = [ "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
 						"ecoNo", "eoNo" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -529,6 +530,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 
@@ -594,7 +596,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					const display = style.getPropertyValue("display");
 					if (display === "none") {
 						el.style.display = "table-row";
-						target.value = "접기";
+						target.value = "▲접기";
 						selectbox("state");
 						selectbox("model");
 						selectbox("productmethod");
@@ -609,7 +611,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						twindate("modified");
 					} else {
 						el.style.display = "none";
-						target.value = "펼치기";
+						target.value = "▼펼치기";
 						selectbox("state");
 						selectbox("model");
 						selectbox("productmethod");

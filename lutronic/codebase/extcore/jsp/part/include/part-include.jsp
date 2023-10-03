@@ -62,7 +62,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		},
 		filter : {
 			showIcon : false,
-			inline : false
 		},
 	}, {
 		dataField : "_2d",
@@ -77,59 +76,158 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		},
 		filter : {
 			showIcon : false,
-			inline : false
+		},
+	}, {
+		dataField : "step",
+		headerText : "STEP",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		dataField : "dxf",
+		headerText : "DXF",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		dataField : "pdf",
+		headerText : "PDF",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		headerText : "변경이력",
+		width : 80,
+		renderer : {
+			type : "IconRenderer",
+			iconPosition : "aisleCenter", // 아이콘 위치
+			iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+			iconHeight : 16,
+			iconTableRef : { // icon 값 참조할 테이블 레퍼런스
+				"default" : "/Windchill/extcore/images/help.gif" // default
+			},
+			onClick : function(event) {
+				const oid = event.item.part_oid;
+				const url = getCallUrl("/part/changeList?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
+		filter : {
+			showIcon : false,
 		},
 	}, {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.part_oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
-		width : 180,
+		style : "aui-left",
+		width : 380,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.part_oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
-		dataField : "version",
-		headerText : "REV.",
+		dataField : "location",
+		headerText : "품목분류",
 		dataType : "string",
 		width : 180,
 		filter : {
 			showIcon : true,
-			inline : true
+		},
+	}, {
+		dataField : "version",
+		headerText : "Rev.",
+		dataType : "string",
+		width : 90,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "remarks",
+		headerText : "OEM Info.",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
 		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 140,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
-		dataField : "createdDate",
+		dataField : "createDate",
 		headerText : "등록일",
-		dataType : "date",
+		dataType : "string",
+		width : 140,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
-		dataField : "bom",
+		dataField : "modifiedDate",
+		headerText : "수정일",
+		dataType : "string",
+		width : 140,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "ecoNo",
 		headerText : "BOM",
 		dataType : "string",
-		width : 180,
+		width : 80,
 		filter : {
-			showIcon : false,
-			inline : false
+			showIcon : true,
 		},
 	}, {
 		dataField : "part_oid",
@@ -140,7 +238,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 	function createAUIGrid91(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode : true,
+			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
@@ -197,5 +295,5 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			}
 		})
 		callBack(true);
-	}
+	}	
 </script>

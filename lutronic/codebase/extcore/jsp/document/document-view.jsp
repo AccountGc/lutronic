@@ -282,6 +282,7 @@ iframe {
 
 
 <script type="text/javascript">
+	// 에디터 로드가 느려서 처리..
 	const oEditors = [];
 	nhn.husky.EZCreator.createInIFrame({
 		oAppRef : oEditors,
@@ -298,7 +299,7 @@ iframe {
 			oEditors.getById["content"].exec("DISABLE_ALL_UI");
 		},
 	});
-
+	
 	// 최신버전으로 페이지 이동
 	function latest() {
 		const oid = document.getElementById("oid").value;

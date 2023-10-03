@@ -174,44 +174,7 @@ public class ChangeECOController extends BaseController {
 		return model;
 	}
 	
-	@Description(value = "EO 등록 페이지")
-	@GetMapping(value = "/createEO")
-	public ModelAndView createEO(HttpServletRequest request, HttpServletResponse response){
-		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/change/eo-create.jsp");
-		return model;
-	}
 	
-	/**	EO 등록 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@RequestMapping("/createEO")
-//	public ModelAndView createEO(HttpServletRequest request, HttpServletResponse response) {
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("menu", "menu6");
-//		model.addObject("module", "change");
-//		model.setViewName("/extcore/jsp/change/eo-create.jsp");
-//		return model;
-//	}
-	
-	@Description(value = "EO 등록 함수")
-	@ResponseBody
-	@PostMapping(value = "/createEO")
-	public Map<String,Object> createEO(@RequestBody ECOData data) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			ECOHelper.service.createEO(data);
-			result.put("msg", SAVE_MSG);
-			result.put("result", SUCCESS);
-		} catch(Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
 	
 	/**	EO 등록 Action
 	 * @param request
@@ -226,42 +189,6 @@ public class ChangeECOController extends BaseController {
 		return ECOHelper.service.createEOAction(request);//ECRHelper.service.createECRAction(request);
 	}
 
-	@Description(value = "EO 검색 페이지")
-	@GetMapping(value = "/listEO")
-	public ModelAndView listEO() throws Exception{
-		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ModelAndView model = new ModelAndView();
-		model.addObject("modelList", modelList);
-		model.setViewName("/extcore/jsp/change/eo-list.jsp");
-		return model;
-	}
-	
-	@Description(value = "관련 EO 팝업 페이지")
-	@GetMapping(value = "/listEOPopup")
-	public ModelAndView listEOPopup() throws Exception{
-		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ModelAndView model = new ModelAndView();
-		model.addObject("modelList", modelList);
-		model.setViewName("popup:/change/eo-list-popup");
-		return model;
-	}
-	
-	@Description(value="EO 검색  Action")
-	@ResponseBody
-	@PostMapping(value = "/listEO")
-	public Map<String,Object> listEO(@RequestBody Map<String, Object> params){
-		Map<String,Object> result = null;
-		try {
-			result = ECOHelper.manager.listEO(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-		
-	}
 //	/** EO 검색  Action
 //	 * @param request
 //	 * @param response

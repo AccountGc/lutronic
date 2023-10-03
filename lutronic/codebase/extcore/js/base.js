@@ -296,6 +296,9 @@ function toField(params, arr) {
 			params[arr[i]] = document.getElementById(arr[i]).value;
 		}
 	}
+	params["_psize"] = document.getElementById("_psize").value;
+	params["sessionid"] = document.getElementById("sessionid").value;
+	params["curPage"] = document.getElementById("curPage").value;
 	return params;
 }
 

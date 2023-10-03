@@ -49,9 +49,17 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "문서번호",
 		dataType : "string",
 		width : 180,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/doc/view?oid=" + oid);
+				_popup(url, "", "", "f");
+			}
+		},		
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "interalnumber",
@@ -60,7 +68,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 120,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "model",
@@ -69,7 +76,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 120,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "name",
@@ -77,9 +83,17 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		style : "aui-left",
 		width : 350,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/doc/view?oid=" + oid);
+				_popup(url, "", "", "f");
+			}
+		},		
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "location",
@@ -89,7 +103,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 250,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "version",
@@ -98,7 +111,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 80,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "state",
@@ -107,7 +119,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 120,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "writer",
@@ -116,7 +127,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "creator",
@@ -125,7 +135,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "createdDate_txt",
@@ -134,7 +143,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true,
 		},
 	}, {
 		dataField : "modifiedDate_txt",
@@ -143,7 +151,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true,
 		},
 	}, {
 		dataField : "primary",
@@ -155,7 +162,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		},
 		filter : {
 			showIcon : false,
-			inline : false
 		},
 	}, {
 		dataField : "secondary",
@@ -167,7 +173,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		},
 		filter : {
 			showIcon : false,
-			inline : false
 		},
 	}, {
 		dataField : "oid",

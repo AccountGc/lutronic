@@ -192,19 +192,19 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO</a>
+						<a onclick="moveToPage(this, '/eo/list', '> 설계변경 >EO 검색');">EO</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/changeCR/list', '> 설계변경 > CR 검색');">CR</a>
+						<a onclick="moveToPage(this, '/cr/list', '> 설계변경 > CR 검색');">CR</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/changeECPR/list', '> 설계변경 > ECPR 검색');">ECPR</a>
+						<a onclick="moveToPage(this, '/ecpr/list', '> 설계변경 > ECPR 검색');">ECPR</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO</a>
+						<a onclick="moveToPage(this, '/eco/list', '> 설계변경 > ECO 검색');">ECO</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/changeECN/list', '> 설계변경 > ECN 검색');">ECN</a>
+						<a onclick="moveToPage(this, '/ecn/list', '> 설계변경 > ECN 검색');">ECN</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 관리자 >PART 전송 현황');">PART 전송 현황</a>
@@ -288,10 +288,10 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create', '> 생산본부 문서관리 > 생산본부 문서등록');">생산본부 문서등록</a>
+						<a onclick="moveToPage(this, '/etc/create?type=production', '> 생산본부 문서관리 > 생산본부 문서등록');">생산본부 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?type=production', '> 생산본부 문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서결재');">생산본부 문서결재</a>
@@ -306,10 +306,10 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create', '> 병리연구 문서관리 > 병리연구 문서등록');">병리연구 문서등록</a>
+						<a onclick="moveToPage(this, '/etc/create?type=pathological', '> 병리연구 문서관리 > 병리연구 문서등록');">병리연구 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=pathological', '> 병리연구 문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?type=pathological', '> 병리연구 문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 병리연구 문서관리 > 병리연구 문서결재');">병리연구 문서결재</a>
@@ -324,10 +324,10 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create', '> 임상개발 문서관리 > 임상개발 문서등록');">임상개발 문서등록</a>
+						<a onclick="moveToPage(this, '/etc/create?type=clinical', '> 임상개발 문서관리 > 임상개발 문서등록');">임상개발 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType='clinical, '> 임상개발  문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?type=clinical', > 임상개발  문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 임상개발 문서관리 > 임상개발 문서결재');">임상개발 문서결재</a>
@@ -342,10 +342,10 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create', '> RA팀 문서관리 > RA팀 문서등록');">RA팀 문서등록</a>
+						<a onclick="moveToPage(this, '/etc/create?type=ra', '> RA팀 문서관리 > RA팀 문서등록');">RA팀 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=ra', '> RA팀 문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?type=ra', '> RA팀 문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> RA팀 문서관리 > RA팀 문서결재');">RA팀 문서결재</a>
@@ -360,10 +360,10 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create', '> 화장품 문서관리 > RA팀 문서등록');">화장품 문서등록</a>
+						<a onclick="moveToPage(this, '/etc/create?type=cosmetic', '> 화장품 문서관리 > RA팀 문서등록');">화장품 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=cosmetic', '> 화장품 문서관리 >  문서검색');">화장품 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?type=cosmetic', '> 화장품 문서관리 >  문서검색');">화장품 문서검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 화장품 문서관리 > 화장품 문서결재');">화장품 문서결재</a>

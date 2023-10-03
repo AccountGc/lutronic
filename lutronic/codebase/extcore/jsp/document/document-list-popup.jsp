@@ -381,7 +381,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	function loadGridData() {
 		let params = new Object();
 		const url = getCallUrl("/doc/list");
-		const field = [ "_psize", "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
+		const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
 		const latest = !!document.querySelector("input[name=latest]:checked").value;
 		params = toField(params, field);
 		params.latest = latest;

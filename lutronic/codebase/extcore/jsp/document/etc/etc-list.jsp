@@ -11,6 +11,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
+String location = (String) request.getAttribute("location");
 %>
 <!DOCTYPE html>
 <html>
@@ -38,8 +39,8 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 			<tr>
 				<th>문서 분류</th>
 				<td class="indent5">
-					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
-					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
+					<input type="hidden" name="location" id="location" value="<%=location%>">
+					<span id="locationText"><%=location%></span>
 				</td>
 				<th>문서 번호</th>
 				<td class="indent5">
@@ -207,7 +208,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
+						<jsp:param value="<%=location%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
 						<jsp:param value="593" name="height" />
@@ -234,7 +235,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/doc/view?oid=" + oid);
+							const url = getCallUrl("/etc/view?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
 					},
@@ -271,7 +272,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/doc/view?oid=" + oid);
+							const url = getCallUrl("/etc/view?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
 					},
@@ -399,7 +400,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/doc/list");
+				const url = getCallUrl("/etc/list");
 				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);

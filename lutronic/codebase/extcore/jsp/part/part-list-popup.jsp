@@ -232,7 +232,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-popup');">
 			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-popup');">
-			<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
+			<input type="button" value="▶펼치기" title="▶펼치기" class="red" onclick="spread(this);">
 			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
@@ -522,7 +522,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	function loadGridData() {
 		let params = new Object();
 		const url = getCallUrl("/part/list");
-		const field = [ "_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo",
+		const field = ["locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo",
 				"eoNo" ];
 		params = toField(params, field);
 		AUIGrid.showAjaxLoader(myGridID);
@@ -622,7 +622,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 				twindate("modified");
 			} else {
 				el.style.display = "none";
-				target.value = "펼치기";
+				target.value = "▶펼치기";
 				selectbox("state");
 				selectbox("model");
 				selectbox("productmethod");
