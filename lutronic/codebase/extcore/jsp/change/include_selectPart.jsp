@@ -156,14 +156,16 @@ if(moduleType=="" && !moduleType.equals("eco")){
 	}
 	
 	function append(items){
-		var data = new Object();
+		
 		for(var i=0; i<items.length; i++){
+			var data = new Object();
 			data.oid = items[i].item.part_oid;
 			data.name = items[i].item.name;
 			data.number = items[i].item.number;
 			data.version = items[i].item.version;
+			AUIGrid.addRow(partGridID, data);
 		}
-		AUIGrid.addRow(partGridID, data);
+		
 	}
 
 	function deleteRow9() {
