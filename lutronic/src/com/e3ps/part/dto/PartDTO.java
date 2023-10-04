@@ -3,6 +3,7 @@ package com.e3ps.part.dto;
 import java.util.ArrayList;
 
 import com.e3ps.common.comments.beans.CommentsDTO;
+import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.AttributeKey;
 
 import lombok.Getter;
@@ -42,5 +43,6 @@ public class PartDTO {
 		setCreator(part.getCreatorFullName());
 		setCreateDate(part.getCreateTimestamp().toString().substring(0, 10));
 		setModifyDate(part.getModifyTimestamp().toString().substring(0, 10));
+		setComments(CommentsHelper.manager.comments(part));
 	}
 }
