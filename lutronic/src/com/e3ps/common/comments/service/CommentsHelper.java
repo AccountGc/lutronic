@@ -73,10 +73,12 @@ public class CommentsHelper {
 	public String get(String oid) throws Exception {
 		Comments cm = (Comments) CommonUtil.getObject(oid);
 		String comment = cm.getComments();
-		int i = comment.indexOf("\n") + 1;
-		if (i > 0) {
-			comment = comment.substring(i);
+		int i = comment.indexOf("⤷");
+		int ent = comment.indexOf("\n") + 1;
+		if (i > -1) {
+			comment = comment.substring(ent);
 		}
+		comment = comment.replaceAll("\n", "<br>");
 		return comment;
 	}
 }

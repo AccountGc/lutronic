@@ -30,6 +30,7 @@
 <!-- 모달 수정 -->
 <div class="modal fade" id="modify">
 	<input type="hidden" name="moid" id="moid">
+	<input type="hidden" name="mdepth" id="mdepth">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -84,12 +85,15 @@
 	}
 
 	//수정 모달에 데이터 보냄
-	function sendUpdate(oid, data) {
+	function sendUpdate(oid, mdepth) {
+		document.getElementById("mdepth").value = mdepth;
 		const url = getCallUrl("/comments/get?oid=" + oid);
 		call(url, null, function(data) {
 			if(data.result) {
 				document.getElementById("moid").value = oid;
-				document.getElementsByName("data")[1].value = data.comments;
+				var comment = data.comments;
+				comment = comment.replaceAll("<br>","\n");
+				document.getElementsByName("data")[1].value = comment;
 			} else {
 				alert(data.msg);
 			}
@@ -128,19 +132,22 @@
 	function modify() {
 		const oid = document.getElementById("moid").value;
 		const comment = document.getElementsByName("data")[1];
+		const depth = document.getElementById("mdepth").value;
 		if (comment.value === "") {
 			alert("수정 내용을 입력하세요.");
 			comment.focus();
 			return false;
 		}
-
+		
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
 		const params = {
 			oid : oid,
-			comment : comment.value
+			comment : comment.value,
+			depth : depth
 		}
+		
 		const url = getCallUrl("/comments/modify");
 		call(url, params, function(data) {
 			alert(data.msg);
