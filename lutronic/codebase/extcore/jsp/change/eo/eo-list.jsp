@@ -19,6 +19,17 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						EOI 검색
+					</div>
+				</td>
+			</tr>
+		</table>
+		
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -227,7 +238,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "approveDate",
+					dataField : "approveDate_txt",
 					headerText : "승인일",
 					dataType : "date",
 					width : 200,

@@ -85,8 +85,15 @@
 
 	//수정 모달에 데이터 보냄
 	function sendUpdate(oid, data) {
-		document.getElementById("moid").value = oid;
-		document.getElementsByName("data")[1].value = data;
+		const url = getCallUrl("/comments/get?oid=" + oid);
+		call(url, null, function(data) {
+			if(data.result) {
+				document.getElementById("moid").value = oid;
+				document.getElementsByName("data")[1].value = data.comments;
+			} else {
+				alert(data.msg);
+			}
+		}, "GET");
 	}
 
 	// 답글달기

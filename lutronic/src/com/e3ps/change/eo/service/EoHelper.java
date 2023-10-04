@@ -29,26 +29,25 @@ public class EoHelper {
 
 		ArrayList<Map<String, String>> rows104 = (ArrayList<Map<String, String>>) params.get("rows104");
 
-		String name = StringUtil.checkNull((String) params.get("name"));
-		String number = StringUtil.checkNull((String) params.get("number"));
-		String eoType = StringUtil.checkNull((String) params.get("eoType"));
+		String name = (String) params.get("name");
+		String number = (String) params.get("number");
+		String eoType = (String) params.get("eoType");
 
-		String predate = StringUtil.checkNull((String) params.get("predate"));
-		String postdate = StringUtil.checkNull((String) params.get("postdate"));
+		String predate = (String) params.get("predate");
+		String postdate = (String) params.get("postdate");
 
-		String creator = StringUtil.checkNull((String) params.get("creator"));
-		String state = StringUtil.checkNull((String) params.get("state"));
+		String creator = (String) params.get("creator");
+		String state = (String) params.get("state");
 
-		String licensing = StringUtil.checkNull((String) params.get("licensing"));
+		String licensing = (String) params.get("licensing");
 
-		String model = StringUtil.checkNull((String) params.get("model"));
+		String model = (String) params.get("model");
 
-		String sortCheck = StringUtil.checkNull((String) params.get("sortCheck"));
-		String sortValue = StringUtil.checkNull((String) params.get("sortValue"));
-
-		String riskType = StringUtil.checkNull((String) params.get("riskType"));
-		String preApproveDate = StringUtil.checkNull((String) params.get("preApproveDate"));
-		String postApproveDate = StringUtil.checkNull((String) params.get("postApproveDate"));
+		String sortCheck = (String) params.get("sortCheck");
+		String sortValue = (String) params.get("sortValue");
+		String riskType = (String) params.get("riskType");
+		String preApproveDate = (String) params.get("preApproveDate");
+		String postApproveDate = (String) params.get("postApproveDate");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
@@ -74,28 +73,18 @@ public class EoHelper {
 //					new int[] { ecoIdx });
 //		}
 
-		// ECO 구분
-//		if (eoType.length() > 0) {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL, eoType, false),
-//					new int[] { ecoIdx });
-//		} else {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			qs.appendOpenParen();
-//			qs.appendWhere(
-//					new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL, ECOKey.ECO_DEV, false),
-//					new int[] { ecoIdx });
-//
-//			qs.appendOr();
-//
-//			qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.EO_TYPE, SearchCondition.EQUAL,
-//					ECOKey.ECO_PRODUCT, false), new int[] { ecoIdx });
-//			qs.appendCloseParen();
-//		}
+		if (StringUtil.checkString(eoType)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, eoType);
+		} else {
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			query.appendOpenParen();
+			QuerySpecUtils.toEquals(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "DEV");
+			query.appendOr();
+			QuerySpecUtils.toEquals(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "PRODUCT");
+			query.appendCloseParen();
+		}
 
 		// 인허가 구분
 //		if (licensing.length() > 0) {
@@ -129,7 +118,6 @@ public class EoHelper {
 //
 //		}
 
-		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, eoType);
 		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
 
 		if (rows104.size() > 0) {

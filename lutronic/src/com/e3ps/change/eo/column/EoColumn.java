@@ -20,8 +20,7 @@ public class EoColumn {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private Timestamp approveDate;
+	private String approveDate_txt;
 
 	public EoColumn() {
 
@@ -39,6 +38,6 @@ public class EoColumn {
 		setState(eo.getLifeCycleState().getDisplay());
 		setCreatedDate(eo.getCreateTimestamp());
 		setCreatedDate_txt(eo.getCreateTimestamp().toString().substring(0, 10));
-		setApproveDate(eo.getEoApproveDate().toString().substring(0, 10));
+		setApproveDate_txt(eo.getEoApproveDate());
 	}
 }

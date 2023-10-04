@@ -36,7 +36,7 @@ public class CommentsController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "댓글의 답글 등록")
 	@ResponseBody
 	@PostMapping(value = "/reply")
@@ -79,6 +79,23 @@ public class CommentsController extends BaseController {
 		try {
 			CommentsHelper.service.delete(oid);
 			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "댓글 정보 들고오기 개행 문제 발생")
+	@ResponseBody
+	@GetMapping(value = "/get")
+	public Map<String, Object> get(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			String comments = CommentsHelper.manager.get(oid);
+			result.put("comments", comments);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

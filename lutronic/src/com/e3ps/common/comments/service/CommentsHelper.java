@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.comments.ReplyCommentsLink;
 import com.e3ps.common.comments.beans.CommentsDTO;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 
 import wt.fc.Persistable;
@@ -64,5 +65,18 @@ public class CommentsHelper {
 			list.add(dto);
 			reply(list, reply);
 		}
+	}
+
+	/**
+	 * 답글에 대한 답글 내용 들고오기.. 개행 문제
+	 */
+	public String get(String oid) throws Exception {
+		Comments cm = (Comments) CommonUtil.getObject(oid);
+		String comment = cm.getComments();
+		int i = comment.indexOf("\n") + 1;
+		if (i > 0) {
+			comment = comment.substring(i);
+		}
+		return comment;
 	}
 }

@@ -20,26 +20,22 @@
 	- Shell -> src/com/ptc/wvs/util 이동
 	- javac -classpath %CLASSPATH%;%WT_HOME%\srclib\tool\Annotations.jar -d %wt_home%\codebase AfterEDRloader.java 실행	
 	
-6. State ResourceBuild 실행
-	- Shell -> ResourceBuild.bat wt.lifecycle.**
-	- codebase -> ant -f MakeJar.xml
-
-7. Workflow 가져오기
+6. Workflow 가져오기
 	- Shell -> xconfmanager -t codebase/wt.properties -s wt.ixb.import.allowCrossReleaseImport=true -p
 	
-8. 상태값 추가, 첨부파일 타입, 문서 타입 추가
+7. 상태값 추가, 첨부파일 타입, 문서 타입 추가
 	- Shell -> ResourceBuild.bat wt.lifecycle.**
 	- Shell -> ResourceBuild.bat wt.content.**
 	- Shell -> ResourceBuild.bat wt.doc.** 
 	- codebase -> ant -f MakeJar.xml
 	
-9. 문서양식로더
+8. 문서양식로더
 	- Shell -> java com.e3ps.admin.form.loader.FormTemplateLoader
 	
-10. 문서컬럼 추가
+9. 문서컬럼 추가
 	- Shell -> AddColumns.bat wt.doc.WTDocument InlineBLOB=1
 	- Shell -> codebase -> ant -f MakeJar.xml
 
-11. 사용자 및 부서 로더 -> 개발할시에만 사용 용도
+10. 사용자 및 부서 로더 -> 개발할시에만 사용 용도
 	- Shell -> com.e3ps.org.loader.UserLoader 엑셀파일(loadFiles/user 폴더에 위치)
 	- loadFiles/department/department.xlsx 디비 임포트

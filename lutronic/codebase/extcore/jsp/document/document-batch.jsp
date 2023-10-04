@@ -36,18 +36,12 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 		<script type="text/javascript">
 			let myGridID;
 			let recentGridItem;
-			const flist =
-		<%=flist%>
-			const dlist =
-		<%=dlist%>
-			const mlist =
-		<%=mlist%>
-			const nlist =
-		<%=nlist%>
-			const tlist =
-		<%=tlist%>
-			const plist =
-		<%=plist%>
+			const flist = <%=flist%>
+			const dlist = <%=dlist%>
+			const mlist = <%=mlist%>
+			const nlist = <%=nlist%>
+			const tlist = <%=tlist%>
+			const plist = <%=plist%>
 			const llist = [ {
 				key : "LC_Default",
 				value : "기본결재"
