@@ -515,7 +515,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/part/list");
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
 						"ecoNo", "eoNo" ];
 				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);

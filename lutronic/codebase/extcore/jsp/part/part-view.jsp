@@ -175,6 +175,104 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="part" name="module" />
 		</jsp:include>
+		<div id="comments-layer">
+				<table class="button-table">
+					<tr>
+						<td class="left">
+							<div class="header">
+								<img src="/Windchill/extcore/images/header.png">
+								댓글
+							</div>
+						</td>
+					</tr>
+				</table>
+				<%
+				for (CommentsDTO cm : list) {
+					int depth = cm.getDepth();
+					ArrayList<CommentsDTO> reply = cm.getReply();
+				%>
+				<table class="view-table">
+					<tr>
+						<th class="lb" style="background-color: rgb(193, 235, 255); width: 100px">
+							<%=cm.getCreator()%>
+							<br>
+							<%=cm.getCreatedDate()%>
+						</th>
+						<td class="indent5">
+							<textarea rows="5" readonly="readonly" style="resize: none;"><%=cm.getComment()%></textarea>
+						</td>
+						<td class="center" style="width: 80px">
+							<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
+							<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=cm.getOid()%>', '<%=cm.getComment()%>');">
+							<%
+							if (isAdmin) {
+							%>
+							<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
+							<%
+							}
+							%>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<!-- 답글 -->
+				<%
+				for (CommentsDTO dd : reply) {
+					int width = dd.getDepth() * 25;
+				%>
+				<table class="view-table" style="border-top: none;">
+					<tr>
+						<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
+						<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 100px">
+							<%=dd.getCreator()%>
+							<br>
+							<%=dd.getCreatedDate()%>
+						</th>
+						<td class="indent5" style="border-top: 2px solid #86bff9;">
+							<textarea rows="5" readonly="readonly" style="resize: none;"><%=dd.getComment()%></textarea>
+						</td>
+						<td class="center" style="border-top: 2px solid #86bff9; width: 80px">
+							<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
+							<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=dd.getOid()%>', '<%=dd.getComment()%>');">
+							<%
+							if (isAdmin) {
+							%>
+							<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
+							<%
+							}
+							%>
+						</td>
+					</tr>
+				</table>
+				<br>
+				<%
+				}
+				%>
+				<%
+				}
+				%>
+				<table class="view-table">
+					<colgroup>
+						<col width="100">
+						<col width="*">
+					</colgroup>
+					<tr>
+						<th class="lb">댓글</th>
+						<td class="indent5">
+							<textarea rows="5" name="comments" id="comments" style="resize: none;"></textarea>
+						</td>
+					</tr>
+				</table>
+				<table class="button-table">
+					<tr>
+						<td class="right">
+							<input type="button" value="댓글 등록" title="댓글 등록" class="blue" onclick="_write('0');">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<!-- 댓글 모달 -->
+			<%@include file="/extcore/jsp/common/include/comments-include.jsp"%>
 	</div>
 
 	<!-- 	주도면 -->
@@ -223,122 +321,15 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 <%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
 <%-- 		</jsp:include> --%>
 	</div>
+	
+	<!-- 이력관리 -->
 	<div id="tabs-7">
-		<!-- 이력관리 -->
 		<jsp:include page="/extcore/jsp/part/include/part-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
+	
 </div>
-
-
-		<div id="comments-layer">
-			<table class="button-table">
-				<tr>
-					<td class="left">
-						<div class="header">
-							<img src="/Windchill/extcore/images/header.png">
-							댓글
-						</div>
-					</td>
-				</tr>
-			</table>
-			<%
-			for (CommentsDTO cm : list) {
-				int depth = cm.getDepth();
-				ArrayList<CommentsDTO> reply = cm.getReply();
-			%>
-			<table class="view-table">
-				<tr>
-					<th class="lb" style="background-color: rgb(193, 235, 255); width: 100px">
-						<%=cm.getCreator()%>
-						<br>
-						<%=cm.getCreatedDate()%>
-					</th>
-					<td class="indent5">
-						<textarea rows="5" readonly="readonly" style="resize: none;"><%=cm.getComment()%></textarea>
-					</td>
-					<td class="center" style="width: 80px">
-						<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
-						<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=cm.getOid()%>', '<%=cm.getComment()%>');">
-						<%
-						if (isAdmin) {
-						%>
-						<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
-						<%
-						}
-						%>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<!-- 답글 -->
-			<%
-			for (CommentsDTO dd : reply) {
-				int width = dd.getDepth() * 25;
-			%>
-			<table class="view-table" style="border-top: none;">
-				<tr>
-					<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
-					<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 100px">
-						<%=dd.getCreator()%>
-						<br>
-						<%=dd.getCreatedDate()%>
-					</th>
-					<td class="indent5" style="border-top: 2px solid #86bff9;">
-						<textarea rows="5" readonly="readonly" style="resize: none;"><%=dd.getComment()%></textarea>
-					</td>
-					<td class="center" style="border-top: 2px solid #86bff9; width: 80px">
-						<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
-						<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=dd.getOid()%>', '<%=dd.getComment()%>');">
-						<%
-						if (isAdmin) {
-						%>
-						<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
-						<%
-						}
-						%>
-					</td>
-				</tr>
-			</table>
-			<br>
-			<%
-			}
-			%>
-			<%
-			}
-			%>
-			<%
-			if (list.size() == 0) {
-			%>
-			<br>
-			<%
-			}
-			%>
-			<table class="view-table">
-				<colgroup>
-					<col width="100">
-					<col width="*">
-				</colgroup>
-				<tr>
-					<th class="lb">댓글</th>
-					<td class="indent5">
-						<textarea rows="5" name="comments" id="comments" style="resize: none;"></textarea>
-					</td>
-				</tr>
-			</table>
-			<table class="button-table">
-				<tr>
-					<td class="right">
-						<input type="button" value="댓글 등록" title="댓글 등록" class="blue" onclick="_write('0');">
-					</td>
-				</tr>
-			</table>
-		</div>
-		<!-- 댓글 모달 -->
-<%-- 		<%@include file="/extcore/jsp/common/include/comments-include.jsp"%> --%>
-	</div>
-
 <script type="text/javascript">
 	// 수정
 	function update () {
