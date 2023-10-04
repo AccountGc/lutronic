@@ -338,7 +338,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</table>
 		</div>
 		<!-- 댓글 모달 -->
-		<%@include file="/extcore/jsp/common/comments-include.jsp"%>
+<%-- 		<%@include file="/extcore/jsp/common/include/comments-include.jsp"%> --%>
 	</div>
 
 <script type="text/javascript">
