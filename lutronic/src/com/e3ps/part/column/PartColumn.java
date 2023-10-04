@@ -68,7 +68,7 @@ public class PartColumn {
 		setRemarks(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_REMARKS));
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorName());
-		setCreateDate(part.getCreateTimestamp());
+		setCreatedDate(part.getCreateTimestamp());
 		setModifier(part.getModifierName());
 		setModifiedDate(part.getModifyTimestamp());
 		setAttach(part);
