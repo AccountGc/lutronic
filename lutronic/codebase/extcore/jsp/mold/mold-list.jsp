@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
@@ -6,6 +8,7 @@
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> moldTypeList = (ArrayList<NumberCode>) request.getAttribute("moldTypeList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 %>
@@ -24,6 +27,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="location" id="/Default/금형문서">
 		
 		<table class="search-table">
 			<colgroup>
@@ -62,10 +66,13 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (Map<String,String> lifecycle : lifecycleList) {
+						%>
+						<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>등록자</th>
@@ -161,7 +168,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('mold-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('mold-list');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -171,7 +178,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="조회" title="조회" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
 				</td>
 			</tr>
@@ -330,12 +337,6 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				twindate("modified");
 				selectbox("_psize");
 			});
-
-			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
