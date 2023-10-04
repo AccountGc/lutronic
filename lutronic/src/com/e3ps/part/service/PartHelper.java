@@ -22,6 +22,7 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -80,23 +81,48 @@ import wt.vc.views.ViewHelper;
 public class PartHelper {
 	public static final PartService service = ServiceFactory.getService(PartService.class);
 	public static final PartHelper manager = new PartHelper();
-
+	
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
+		ReferenceFactory rf = new ReferenceFactory();
+		
+		String location = StringUtil.checkNull((String) params.get("location"));
+		String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
+		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
+		String partName = StringUtil.checkNull((String) params.get("partName"));
+		String createdFrom = StringUtil.checkNull((String) params.get("createdFrom"));
+		String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
+		String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
+		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
+		String creator = StringUtil.checkNull((String) params.get("creator"));
+		String state = StringUtil.checkNull((String) params.get("state"));
+		String model = StringUtil.checkNull((String) params.get("model"));
+		String productmethod = StringUtil.checkNull((String) params.get("productmethod"));
+		String deptcode = StringUtil.checkNull((String) params.get("deptcode"));
+		String unit = StringUtil.checkNull((String) params.get("unit"));
+		String weight = StringUtil.checkNull((String) params.get("weight"));
+		String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+		String mat = StringUtil.checkNull((String) params.get("mat"));
+		String finish = StringUtil.checkNull((String) params.get("finish"));
+		String remarks = StringUtil.checkNull((String) params.get("remarks"));
+		String specification = StringUtil.checkNull((String) params.get("specification"));
+		String ecoNo = StringUtil.checkNull((String) params.get("ecoNo"));
+		String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
+		boolean latest = (boolean) params.get("latest");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
-//
-//		QuerySpecUtils.toCI(query, idx, WTPart.class);
-//		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
-//		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
-//		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);
-//		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, modifiedFrom,
-//				modifiedTo);
-//		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creator);
-//		QuerySpecUtils.toState(query, idx, WTPart.class, state);
-//		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
+		
+		QuerySpecUtils.toCI(query, idx, WTPart.class);
+		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
+		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, modifiedFrom,
+				modifiedTo);
+		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creator);
+		QuerySpecUtils.toState(query, idx, WTPart.class, state);
+		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
 		// EcoDate
 //		if (ecoPostdate.length() > 0 || ecoPredate.length() > 0) {
 //			// AttributeDefDefaultView aview =
@@ -142,59 +168,66 @@ public class PartHelper {
 //		}
 		// }
 
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MODEL, model);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_PRODUCTMETHOD, productmethod);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_DEPTCODE, deptcode);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_WEIGHT, weight);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MANUFACTURE, manufacture);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MAT, mat);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_FINISH, finish);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_REMARKS, remarks);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_SPECIFICATION, specification);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_CHANGENO, ecoNo);
-//		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MODEL, model);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_PRODUCTMETHOD, productmethod);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_DEPTCODE, deptcode);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_WEIGHT, weight);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MANUFACTURE, manufacture);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MAT, mat);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_FINISH, finish);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_REMARKS, remarks);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_SPECIFICATION, specification);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_CHANGENO, ecoNo);
+		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
+		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+		
+		if (!"/Default/PART_Drawing".equals(location)) {
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
 
-		// folder search
-//		if (!"/Default/PART_Drawing".equals(location)) {
-//			if (query.getConditionCount() > 0) {
-//				query.appendAnd();
-//			}
-//
-//			int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
-//			SearchCondition sc1 = new SearchCondition(
-//					new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"),
-//					SearchCondition.EQUAL, new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
-//			sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
-//			sc1.setOuterJoin(0);
-//			query.appendWhere(sc1, new int[] { folder_idx, idx });
-//
-//			query.appendAnd();
-//			ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
-//			query.appendOpenParen();
-//			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
-//					SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()),
-//					new int[] { folder_idx });
-//
-//			for (int fi = 0; fi < folders.size(); fi++) {
-//				String[] s = (String[]) folders.get(fi);
-//				Folder sf = (Folder) rf.getReference(s[2]).getObject();
-//				query.appendOr();
-//				query.appendWhere(
-//						new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
-//								SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
-//						new int[] { folder_idx });
-//			}
-//			query.appendCloseParen();
-//		} else {
-//			if (query.getConditionCount() > 0) {
-//				query.appendAnd();
-//			}
-//			query.appendWhere(
-//					new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false),
-//					new int[] { idx });
-//
-//		}
+			int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
+			SearchCondition sc1 = new SearchCondition(
+					new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"),
+					SearchCondition.EQUAL, new ClassAttribute(WTPart.class, "iterationInfo.branchId"));
+			sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
+			sc1.setOuterJoin(0);
+			query.appendWhere(sc1, new int[] { folder_idx, idx });
+
+			query.appendAnd();
+			ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
+			query.appendOpenParen();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
+					SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()),
+					new int[] { folder_idx });
+
+			for (int fi = 0; fi < folders.size(); fi++) {
+				String[] s = (String[]) folders.get(fi);
+				Folder sf = (Folder) rf.getReference(s[2]).getObject();
+				query.appendOr();
+				query.appendWhere(
+						new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
+								SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
+						new int[] { folder_idx });
+			}
+			query.appendCloseParen();
+		} else {
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			query.appendWhere(
+					new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false),
+					new int[] { idx });
+
+		}
+		
+		// 최신 이터레이션.
+		if (latest) {
+			QuerySpecUtils.toLatest(query, idx, WTPart.class);
+		}
+		
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
+		
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {

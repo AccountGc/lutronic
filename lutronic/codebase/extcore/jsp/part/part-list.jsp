@@ -50,8 +50,8 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				<th>품목분류</th>
 				<td class="indent5">
 					<input type="hidden" name="oid" id="oid">
-					<input type="hidden" name="location" id="location">
-					<span id="locationText">/Default/PART_Drawing </span>
+					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
+					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
@@ -252,7 +252,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn">
+					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
@@ -515,9 +515,11 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/part/list");
-				const field = [ "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
 						"ecoNo", "eoNo" ];
+				const latest = !!document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
+				params.latest = false;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
