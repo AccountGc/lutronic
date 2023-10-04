@@ -297,6 +297,42 @@ String userNm = sessionUser.getFullName();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "step",
+					headerText : "STEP",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "dxf",
+					headerText : "DXF",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "pdf",
+					headerText : "PDF",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
 					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
