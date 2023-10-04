@@ -58,10 +58,10 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<a href="#tabs-2">참조</a>
 		</li>
 		<li>
-			<a href="#tabs-3">참조 항목</a>
+			<a href="#tabs-3">버전이력</a>
 		</li>
 		<li>
-			<a href="#tabs-4">참조 품목</a>
+			<a href="#tabs-4">다운로드이력</a>
 		</li>
 		<li>
 			<a href="#tabs-5">관련 개발업무</a>
@@ -137,20 +137,23 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<jsp:param value="drawing"  name="moduleType"/>
 		</jsp:include>
 	</div>
+
 	<div id="tabs-3">
-		<!-- 참조 항목 -->
-		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-		</jsp:include>
+		<!-- 버전이력 -->
+<%-- 		<jsp:include page="/extcore/jsp/drawing/include_viewReference.jsp"> --%>
+<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
+<%-- 			<jsp:param value="drawing"  name="moduleType"/> --%>
+<%-- 		</jsp:include> --%>
 	</div>
+	
 	<div id="tabs-4">
-		<!-- 참조 품목 -->
-		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="참조 품목" name="title" />
-			<jsp:param value="drawing" name="moduleType"/>
-		</jsp:include>
+		<!-- 다운로드이력 -->
+<%-- 		<jsp:include page="/extcore/jsp/drawing/include_viewReference.jsp"> --%>
+<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
+<%-- 			<jsp:param value="drawing"  name="moduleType"/> --%>
+<%-- 		</jsp:include> --%>
 	</div>
+	
 	<div id="tabs-5">
 		<!-- 관련 개발업무 -->
 		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
@@ -287,16 +290,13 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					} else {
 						createAUIGrid2(columnRef);
 					}
-					break;
-				case "tabs-3":
 					const isCreated2 = AUIGrid.isCreated(refbyGridID);
 					if (isCreated2) {
 						AUIGrid.resize(refbyGridID);
 					} else {
 						createAUIGrid3(columnRefby);
 					}
-					break;
-				case "tabs-4":
+					
 					const isCreated3 = AUIGrid.isCreated(partGridID);
 					if (isCreated3) {
 						AUIGrid.resize(partGridID);
@@ -304,6 +304,24 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 						createAUIGrid1(columnPart);
 					}
 					break;
+				case "tabs-3":
+// 					const isCreated4 = AUIGrid.isCreated(devGridID);
+// 					if (isCreated4) {
+// 						AUIGrid.resize(devGridID);
+// 					} else {
+// 						createAUIGrid4(columnDev);
+// 					}
+					break;
+				}
+				case "tabs-4":
+// 					const isCreated4 = AUIGrid.isCreated(devGridID);
+// 					if (isCreated4) {
+// 						AUIGrid.resize(devGridID);
+// 					} else {
+// 						createAUIGrid4(columnDev);
+// 					}
+					break;
+				}
 				case "tabs-5":
 					const isCreated4 = AUIGrid.isCreated(devGridID);
 					if (isCreated4) {
