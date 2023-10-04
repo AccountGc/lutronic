@@ -1,8 +1,10 @@
 package com.e3ps.drawing.beans;
 
+import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.service.PartHelper;
 
@@ -40,6 +42,9 @@ public class EpmData {
 	public String pNum;
 	public String applicationType;
 	private String version;
+	private String pdf;
+	private String step;
+	private String dxf;
 	
 	public EpmData(EPMDocument epm) throws Exception {
 //		super(epm);
@@ -73,7 +78,7 @@ public class EpmData {
     	EPMDocumentMaster master = (EPMDocumentMaster)epm.getMaster();
     	String cadName = master.getCADName();
 		setCadName(cadName);
-		
+		setAttach(epm);
 		//Creo의 드로잉은 경우 3D의 WTPArt
 		if(EpmUtil.isCreoDrawing(epm)){
 			String number= epm.getNumber();
@@ -111,6 +116,16 @@ public class EpmData {
 			e.printStackTrace();
 		}
 		return pNum;
+	}
+	
+	
+	private void setAttach(EPMDocument epm) throws Exception {
+		setStep(AUIGridUtil.step(epm));
+		EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
+		if (epm2D != null) {
+			setPdf(AUIGridUtil.pdf(epm2D));
+			setDxf(AUIGridUtil.dxf(epm2D));
+		}
 	}
 	
 	/**
