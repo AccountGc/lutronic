@@ -227,9 +227,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 	<!-- 환경규제문서 -->
 	<div id="tabs-7">
-		<jsp:include page="/extcore/jsp/document/include_environmentalRegulatoryDocument.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
+<%-- 		<jsp:include page="/extcore/jsp/document/include_environmentalRegulatoryDocument.jsp"> --%>
+<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+<%-- 		</jsp:include> --%>
 	</div>
 </div>
 
