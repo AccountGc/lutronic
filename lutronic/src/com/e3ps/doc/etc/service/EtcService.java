@@ -1,5 +1,7 @@
 package com.e3ps.doc.etc.service;
 
+import java.util.Map;
+
 import com.e3ps.doc.etc.dto.EtcDTO;
 
 import wt.method.RemoteInterface;
@@ -11,5 +13,10 @@ public interface EtcService {
 	 * 기타 문서 등록
 	 */
 	public abstract void create(EtcDTO dto) throws Exception;
+	
+	/**
+	 * 기타 문서 삭제
+	 */
+	public abstract Map<String, Object> delete(String oid) throws Exception;
 
 }

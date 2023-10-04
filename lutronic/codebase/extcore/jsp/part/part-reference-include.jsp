@@ -35,9 +35,3 @@ String oid = request.getParameter("oid");
 <%-- 		<jsp:param value="part" name="moduleType"/> --%>
 <%-- 		<jsp:param value="<%=data.getOid() %>" name="oid" /> --%>
 <%-- 	</jsp:include> --%>
-
-<!-- 관련 개별 업무 -->
-<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
-	<jsp:param value="<%=oid%>" name="oid" />
-	<jsp:param value="part" name="moduleType" />
-</jsp:include>

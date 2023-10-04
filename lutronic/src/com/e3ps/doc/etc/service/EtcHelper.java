@@ -1,5 +1,14 @@
 package com.e3ps.doc.etc.service;
 
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentEOLink;
+
+import wt.doc.WTDocument;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
+import wt.part.WTPartDescribeLink;
 import wt.services.ServiceFactory;
 
 public class EtcHelper {
@@ -29,6 +38,39 @@ public class EtcHelper {
 			return COSMETIC;
 		}
 		return null;
+	}
+	
+	/**
+	 * 문서 링크 관계 확인 ( true : 연결, false : 미연결 )
+	 */
+	public boolean isConnect(String oid, Class<?> target) throws Exception {
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		return isConnect(doc, target);
+	}
+
+	/**
+	 * 문서 링크 관계 확인 ( true : 연결, false : 미연결 )
+	 */
+	public boolean isConnect(WTDocument doc, Class<?> target) throws Exception {
+		boolean isConnect = false;
+
+		if (target.equals(DocumentEOLink.class)) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "eo", DocumentEOLink.class);
+			isConnect = qr.size() > 0;
+		} else if (target.equals(DocumentECOLink.class)) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "eco", DocumentECOLink.class);
+			isConnect = qr.size() > 0;
+//		} else if (target.equals(DocumentECPRLink.class)) {
+//			QueryResult qr = PersistenceHelper.manager.navigate(doc, "ecpr", DocumentECPRLink.class);
+//			isConnect = qr.size() > 0;
+		} else if (target.equals(DocumentCRLink.class)) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "cr", DocumentCRLink.class);
+			isConnect = qr.size() > 0;
+		} else if (target.equals(WTPartDescribeLink.class)) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "describes", WTPartDescribeLink.class);
+			isConnect = qr.size() > 0;
+		}
+		return isConnect;
 	}
 
 }

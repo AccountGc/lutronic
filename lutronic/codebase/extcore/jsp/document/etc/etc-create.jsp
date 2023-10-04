@@ -9,6 +9,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+String type = request.getParameter("type");
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -410,7 +411,7 @@ iframe {
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/etc/list");
+						document.location.href = getCallUrl("/etc/list?type=<%= type %>");
 					}
 					parent.closeLayer();
 				});
