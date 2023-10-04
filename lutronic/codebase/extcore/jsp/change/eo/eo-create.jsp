@@ -64,7 +64,7 @@
 			</tr>
 			<tr>
 				<th class="req lb">완제품 품목</th>
-				<td colspan="3" class="indent5">
+				<td colspan="3" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/include-complete-part.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -119,7 +119,7 @@
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
-				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
+				const rows104 = AUIGrid.getAddedRowItems(myGridID104);
 
 				const url = getCallUrl("/eo/create");
 				const params = {

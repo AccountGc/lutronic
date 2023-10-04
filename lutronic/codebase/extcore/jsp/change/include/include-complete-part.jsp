@@ -8,55 +8,200 @@ String oid = request.getParameter("oid");
 <script type="text/javascript">
 	let myGridID104;
 	const columns104 = [ {
+		dataField : "_3d",
+		headerText : "3D",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "ImageRenderer",
+			altField : null,
+			onClick : function(event) {
+			}
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		dataField : "_2d",
+		headerText : "2D",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "ImageRenderer",
+			altField : null,
+			onClick : function(event) {
+			}
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		dataField : "step",
+		headerText : "STEP",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		dataField : "dxf",
+		headerText : "DXF",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		dataField : "pdf",
+		headerText : "PDF",
+		dataType : "string",
+		width : 60,
+		renderer : {
+			type : "TemplateRenderer"
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
+		headerText : "변경이력",
+		width : 80,
+		renderer : {
+			type : "IconRenderer",
+			iconPosition : "aisleCenter", // 아이콘 위치
+			iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+			iconHeight : 16,
+			iconTableRef : { // icon 값 참조할 테이블 레퍼런스
+				"default" : "/Windchill/extcore/images/help.gif" // default
+			},
+			onClick : function(event) {
+				const oid = event.item.part_oid;
+				const url = getCallUrl("/part/changeList?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
+		filter : {
+			showIcon : false,
+		},
+	}, {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
-		width : 100,
+		width : 180,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.part_oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 		filter : {
 			showIcon : true,
-			inline : true
-		}
+		},
 	}, {
 		dataField : "name",
-		headerText : "품명",
+		headerText : "품목명",
 		dataType : "string",
-		width : 300,
+		style : "aui-left",
+		width : 380,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.part_oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 		filter : {
 			showIcon : true,
-			inline : true
-		}
+		},
+	}, {
+		dataField : "location",
+		headerText : "품목분류",
+		dataType : "string",
+		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
-		width : 180,
+		width : 90,
 		filter : {
 			showIcon : true,
-			inline : true
-		}
+		},
 	}, {
-		dataField : "bom",
-		headerText : "BOM 보기",
+		dataField : "remarks",
+		headerText : "OEM Info.",
 		dataType : "string",
-		width : 180,
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
 	}, {
-		dataField : "oid",
-		visible : false
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "creator",
+		headerText : "등록자",
+		dataType : "string",
+		width : 140,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "createdDate",
+		headerText : "등록일",
+		dataType : "date",
+		width : 140,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "modifiedDate",
+		headerText : "수정일",
+		dataType : "date",
+		width : 140,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "ecoNo",
+		headerText : "BOM",
+		dataType : "string",
+		width : 80,
+		filter : {
+			showIcon : false,
+		},
 	} ]
 
 	function createAUIGrid104(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			fillColumnSizeMode : false,
 			showRowNumColumn : true,
-			fillColumnSizeMode : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
+			showStateColumn : true,
 			showRowCheckColumn : true,
-			rowCheckToRadio : true,
-			enableFilter : true
+			enableFilter : true,
 		}
 		myGridID104 = AUIGrid.create("#grid104", columnLayout, props);
 	}
@@ -70,19 +215,19 @@ String oid = request.getParameter("oid");
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
-			const unique = AUIGrid.isUniqueValue(myGridID91, "part_oid", item.part_oid);
+			const unique = AUIGrid.isUniqueValue(myGridID104, "part_oid", item.part_oid);
 			if (unique) {
-				AUIGrid.addRow(myGridID91, item, rowIndex);
+				AUIGrid.addRow(myGridID104, item, rowIndex);
 			} else {
 				// 중복은 그냥 경고 없이 처리 할지 협의?
 				alert(item.number + " 품목은 이미 추가 되어있습니다.");
 			}
 		})
 		callBack(true);
-	}	
+	}
 
 	function deleteRow104() {
-		const checkedItems = AUIGrid.getCheckedRowItems(myGridID91);
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID104);
 		if (checkedItems.length === 0) {
 			alert("삭제할 행을 선택하세요.");
 			return false;
@@ -90,7 +235,7 @@ String oid = request.getParameter("oid");
 
 		for (let i = checkedItems.length - 1; i >= 0; i--) {
 			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID91, rowIndex);
+			AUIGrid.removeRow(myGridID104, rowIndex);
 		}
 	}
 </script>

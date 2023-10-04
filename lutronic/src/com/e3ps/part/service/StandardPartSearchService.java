@@ -73,7 +73,7 @@ public class StandardPartSearchService extends StandardManager implements PartSe
 	}
 	
 	@Override
-	public Vector<EChangeOrder> 	(WTPart part,String moduleType){
+	public Vector<EChangeOrder> 	getPartEoWorking(WTPart part,String moduleType){
 		Vector<EChangeOrder> vec = new Vector();
 		try{
 			EChangeOrder eco = null;

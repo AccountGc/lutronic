@@ -41,8 +41,8 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<th>품목분류</th>
 		<td class="indent5">
 			<input type="hidden" name="oid" id="oid">
-			<input type="hidden" name="location" id="location">
-			<span id="locationText">/Default/PART_Drawing </span>
+			<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
+			<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
 		</td>
 		<th>등록자</th>
 		<td class="indent5">
@@ -232,7 +232,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-popup');">
 			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-popup');">
-			<input type="button" value="▶펼치기" title="▶펼치기" class="red" onclick="spread(this);">
+			<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
@@ -488,6 +488,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		}, ]
 	}
 
+
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
@@ -522,10 +523,13 @@ boolean multi = (boolean) request.getAttribute("multi");
 	function loadGridData() {
 		let params = new Object();
 		const url = getCallUrl("/part/list");
-		const field = ["locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification", "ecoNo",
-				"eoNo" ];
+		const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
+			"ecoNo", "eoNo" ];
+		const latest = !!document.querySelector("input[name=latest]:checked").value;
 		params = toField(params, field);
+		params.latest = false;
 		AUIGrid.showAjaxLoader(myGridID);
+		parent.openLayer();
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
@@ -536,6 +540,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			} else {
 				alert(data.msg);
 			}
+			parent.closeLayer();
 		});
 	}
 	
@@ -607,7 +612,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			const display = style.getPropertyValue("display");
 			if (display === "none") {
 				el.style.display = "table-row";
-				target.value = "접기";
+				target.value = "▲접기";
 				selectbox("state");
 				selectbox("model");
 				selectbox("productmethod");
@@ -622,7 +627,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 				twindate("modified");
 			} else {
 				el.style.display = "none";
-				target.value = "▶펼치기";
+				target.value = "▼펼치기";
 				selectbox("state");
 				selectbox("model");
 				selectbox("productmethod");

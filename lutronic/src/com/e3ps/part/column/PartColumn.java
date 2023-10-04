@@ -38,7 +38,7 @@ public class PartColumn {
 	private String creator;
 	private String modifier;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private Timestamp createDate;
+	private Timestamp createdDate;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp modifiedDate;
 	private String ecoNo;

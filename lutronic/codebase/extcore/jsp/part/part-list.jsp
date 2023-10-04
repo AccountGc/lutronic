@@ -521,6 +521,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				params = toField(params, field);
 				params.latest = false;
 				AUIGrid.showAjaxLoader(myGridID);
+				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);

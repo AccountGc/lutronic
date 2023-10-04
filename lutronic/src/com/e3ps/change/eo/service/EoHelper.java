@@ -2,17 +2,22 @@ package com.e3ps.change.eo.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.eo.column.EoColumn;
+import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -214,6 +219,78 @@ public class EoHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
+		return map;
+	}
+
+	/**
+	 * EO와 연결된 완제품 리스트
+	 */
+	public ArrayList<EOCompletePartLink> completeParts(Object obj) throws Exception {
+		ArrayList<EOCompletePartLink> list = new ArrayList<EOCompletePartLink>();
+		QueryResult result = null;
+		if (obj instanceof EChangeOrder) {
+			EChangeOrder eo = (EChangeOrder) obj;
+			result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class, false);
+		} else if (obj instanceof WTPart) {
+			WTPart part = (WTPart) obj;
+			result = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EOCompletePartLink.class, false);
+		}
+
+		while (result.hasMoreElements()) {
+			EOCompletePartLink link = (EOCompletePartLink) result.nextElement();
+			list.add(link);
+		}
+		return list;
+	}
+
+	/**
+	 * 진행중인 EO에 완제품이 있는지
+	 */
+	public Map<String, Object> checkerCompletePart(WTPart part) throws Exception {
+		ArrayList<EOCompletePartLink> list = completeParts(part);
+		Map<String, Object> map = new HashMap<>();
+		for (EOCompletePartLink link : list) {
+			EChangeOrder eo = link.getEco();
+
+			// ECO 경우 패스
+			if (eo.getEoType().equals("CHANGE")) {
+				continue;
+			}
+
+			// 승인된 EO 혹은 취소된 EO 패스
+			String state = eo.getState().toString();
+			if (state.equals("APPROVED") || state.equals("CANCELLED")) {
+				continue;
+			}
+
+			String msg = part.getNumber() + " 품목이 EO = " + eo.getEoNumber() + "에서 작업중인 업무가 있습니다.";
+			map.put("msg", msg);
+			map.put("result", false);
+			return map;
+		}
+		map.put("result", true);
+		return map;
+	}
+
+	/**
+	 * ECO에서 진행중인 품목인지
+	 */
+	public Map<String, Object> validatePart(WTPart part) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+
+		QueryResult result = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class);
+		while (result.hasMoreElements()) {
+			EChangeOrder eco = (EChangeOrder) result.nextElement();
+			String state = eco.getState().toString();
+			if (state.equals("APPROVED") || state.equals("CANCELLED")) {
+				continue;
+			}
+			String msg = part.getNumber() + " 품목이 ECO = " + eco.getEoNumber() + "에서 작업중인 업무가 있습니다.";
+			map.put("msg", msg);
+			map.put("result", false);
+			return map;
+		}
+		map.put("result", true);
 		return map;
 	}
 }

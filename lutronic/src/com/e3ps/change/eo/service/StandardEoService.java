@@ -1,28 +1,39 @@
 package com.e3ps.change.eo.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.eo.dto.EoDTO;
+import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.part.service.PartSearchHelper;
 
+import wt.content.ApplicationData;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
+import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.part.WTPart;
+import wt.part.WTPartMaster;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.vc.VersionControlHelper;
 
 public class StandardEoService extends StandardManager implements EoService {
 
@@ -72,11 +83,7 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 완제품 링크 및 검증
 			validateAndCompleteSave(eo, rows104);
 
-			// 완제품 생성
-//	    	createCompleteLink(eco, completeOids);
-
-			// 첨부파일
-//			CommonContentHelper.service.attach(eco, null, secondarys);
+			saveAttach(eo, dto);
 
 			// 활동 생성
 //	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);
@@ -105,30 +112,79 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	private void validateAndCompleteSave(EChangeOrder eo, ArrayList<Map<String, String>> rows104) throws Exception {
 		// 완제품 연결
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
 		for (Map<String, String> map : rows104) {
 			String oid = map.get("oid");
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
-
-		}
-	}
-
-	List<WTPart> list = new ArrayList<WTPart>();
-
-	boolean isEO = !eco.getEoType().equals(ECOKey.ECO_CHANGE);for(
-	int i = 0;partOids!=null&&i<partOids.length;i++)
-	{
-
-		WTPart part = (WTPart) CommonUtil.getObject(partOids[i]);
-
-		if (isEO) {
-			boolean isSelect = PartSearchHelper.service.isSelectEO(part, eco.getEoType());
-			if (!isSelect) {
-				throw new Exception(Message.get(part.getNumber() + "은 EO,ECO가 진행중입니다."));
+			Map<String, Object> m = EoHelper.manager.validatePart(part);
+			if (!(boolean) m.get("result")) {
+				throw new Exception((String) m.get("msg"));
 			}
+
+			Map<String, Object> c = EoHelper.manager.checkerCompletePart(part);
+			if (!(boolean) c.get("result")) {
+				throw new Exception((String) c.get("msg"));
+			}
+
 		}
-		list.add(part);
+		completeSave(eo, list);
 	}
 
-	createCompleteLink(eco, list);
+	private void completeSave(EChangeOrder eo, ArrayList<WTPart> list) throws Exception {
+		for (WTPart part : list) {
+			String version = VersionControlHelper.getVersionIdentifier(part).getSeries().getValue();
+			String state = part.getState().toString();
+			// ECO 이면서 A 면서 작업중인 것은 제외 한다.
+			// 완제품 조건??
+			// 아래는 설계변경일 경우에만.. EO일경우 아님
+//			if ("CHANGE".equals(eo.getEoType())) {
+//				if (version.equals("A") && "INWORK".equals(state)) {
+//					continue;
+//				} else {
+//					EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(),
+//							eo);
+//					link.setVersion(version);
+//					PersistenceHelper.manager.save(link);
+//				}
+//			} else {
+			EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(), eo);
+			link.setVersion(version);
+			PersistenceHelper.manager.save(link);
+//			}
+		}
+	}
+
+	/**
+	 * 첨부 파일 저장
+	 */
+	private void saveAttach(EChangeOrder eo, EoDTO dto) throws Exception {
+		ArrayList<String> secondarys = dto.getSecondarys();
+
+		for (int i = 0; i < secondarys.size(); i++) {
+			String cacheId = secondarys.get(i);
+			File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+			ApplicationData applicationData = ApplicationData.newApplicationData(eo);
+			applicationData.setRole(ContentRoleType.SECONDARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(eo, applicationData, vault.getPath());
+		}
+	}
+
+	@Override
+	public void delete(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }
