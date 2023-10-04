@@ -27,6 +27,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.org.People;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
@@ -319,6 +320,33 @@ public class PartHelper {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return JSONArray.fromObject(list);
+	}
+	
+	/**
+	 * 부품 이력
+	 */
+	public JSONArray allIterationsOf(String oid) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		QueryResult result = VersionControlHelper.service.allIterationsOf(part.getMaster());
+		while (result.hasMoreElements()) {
+			WTPart p = (WTPart) result.nextElement();
+			Map<String, String> map = new HashMap<>();
+			PartData data = new PartData(p);
+			map.put("oid", data.getOid());
+			map.put("name", data.getName());
+			map.put("number", data.getNumber());
+			map.put("version", data.getVersion());
+			map.put("creator", data.getCreator());
+			map.put("createdDate", data.getCreateDate());
+//			map.put("modifier", data.getModifier());
+			map.put("modifiedDate",  data.getModifyDate());
+			map.put("note", p.getIterationNote());
+//			map.put("primary", data.getPrimary());
+//			map.put("secondary", data.getSecondary());
+			list.add(map);
 		}
 		return JSONArray.fromObject(list);
 	}

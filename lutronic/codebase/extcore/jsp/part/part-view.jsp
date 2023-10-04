@@ -33,7 +33,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%-- 			<% if(!data.isLateste()){ %> --%>
 			<%-- 				<input type="button" value="최신Rev." title="최신Rev."  id="latestBtn" value="data.latestOid()"> --%>
 			<%-- 			<% } %> --%>
-			<input type="button" value="Rev.이력" title="Rev.이력" id="versionBtn">
 			<input type="button" value="BOM" title="BOM" id="auiBom">
 			<input type="button" value="BOM Editor" title="BOM Editor" id="bomE">
 			<input type="button" value="Compare" title="Compare" id="Compare">
@@ -98,10 +97,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		}
 		%>
 		<li>
-			<a href="#tabs-6">버전 정보</a>
+			<a href="#tabs-6">환경규제문서</a>
 		</li>
 		<li>
-			<a href="#tabs-7">환경규제문서</a>
+			<a href="#tabs-7">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -218,18 +217,17 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	}
 	%>
 
-	<!-- 버전 정보 -->
-	<div id="tabs-6">
-		<jsp:include page="/extcore/jsp/development/include_viewVersionInfo.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
-
 	<!-- 환경규제문서 -->
-	<div id="tabs-7">
+	<div id="tabs-6">
 <%-- 		<jsp:include page="/extcore/jsp/document/include_environmentalRegulatoryDocument.jsp"> --%>
 <%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
 <%-- 		</jsp:include> --%>
+	</div>
+	<div id="tabs-7">
+		<!-- 이력관리 -->
+		<jsp:include page="/extcore/jsp/part/include/part-record-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
 	</div>
 </div>
 
@@ -580,16 +578,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 					break;
 				case "tabs-6":
-					isCreated = AUIGrid.isCreated(verGridID);
-					if (isCreated) {
-						AUIGrid.resize(verGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGridVer(columnVer);
-						$(".comment-table").hide();
-					}
-					break;	
-				case "tabs-7":
 					isCreated = AUIGrid.isCreated(enDocGridID);
 					if (isCreated) {
 						AUIGrid.resize(enDocGridID);
@@ -599,6 +587,20 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					}
 					break;	
+				case "tabs-7":
+					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
+					if (isCreated50) {
+						AUIGrid.resize(myGridID50);
+					} else {
+						createAUIGrid50(columns50);
+					}
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
+					if (isCreated51) {
+						AUIGrid.resize(myGridID51);
+					} else {
+						createAUIGrid51(columns51);
+					}
+					break;
 				}
 			},
 		});
@@ -642,13 +644,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	$("#latestBtn").click(function () {
 		const loid = this.value;
 		openView(loid);
-	}),
-	<%----------------------------------------------------------
-	*                      버전이력 버튼
-	----------------------------------------------------------%>
-	$("#versionBtn").click(function () {
-		const url = getCallUrl("/common/versionHistory?oid=" + oid);
-		_popup(url, 830, 600,"n");
 	}),
 	<%----------------------------------------------------------
 	*                     AUI BOM 버튼
