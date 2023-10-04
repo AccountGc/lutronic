@@ -35,9 +35,13 @@ public class EcoColumn {
 	public EcoColumn(EChangeOrder eco) throws Exception {
 		setOid(eco.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(eco.getEoNumber());
-		setName(eco.getName());
+		setName(eco.getEoName());
 		setLicensing(eco.getLicensingChange());
 		setRiskType(eco.getRiskType());
-		set
+		setState(eco.getLifeCycleState().getDisplay());
+		setCreator(eco.getCreatorFullName());
+		setCreatedDate(eco.getCreateTimestamp());
+		setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
+		setApproveDate_txt(eco.getEoApproveDate());
 	}
 }

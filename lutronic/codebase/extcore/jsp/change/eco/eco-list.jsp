@@ -82,7 +82,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">프로젝트 코드</th>
+				<th class="lb">프로젝트 코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -174,8 +174,8 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					</div>
 				</td>
 			</tr>
-			<tr>
-				<th class="req lb">완제품 품목</th>
+			<tr class="hidden">
+				<th class="lb">완제품 품목</th>
 				<td colspan="5" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/include-complete-part.jsp">
 						<jsp:param value="" name="oid" />
@@ -190,6 +190,8 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('eco-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('eco-list');">
+					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
+					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -199,14 +201,14 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
+
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
 					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -400,6 +402,36 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			// 등록
 			function create() {
 				location.href = getCallUrl("/eco/create");
+			}
+			function spread(target) {
+				const e = document.querySelectorAll('.hidden');
+				// 버근가..
+				for (let i = 0; i < e.length; i++) {
+					const el = e[i];
+					const style = window.getComputedStyle(el);
+					const display = style.getPropertyValue("display");
+					if (display === "none") {
+						el.style.display = "table-row";
+						target.value = "▲접기";
+						selectbox("state");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
+						selectbox("_psize");
+						selectbox("model");
+						AUIGrid.resize(myGridID104);
+					} else {
+						el.style.display = "none";
+						target.value = "▼펼치기";
+						selectbox("state");
+						finderUser("creator");
+						twindate("created");
+						twindate("modified");
+						selectbox("_psize");
+						selectbox("model");
+						AUIGrid.resize(myGridID104);
+					}
+				}
 			}
 		</script>
 	</form>

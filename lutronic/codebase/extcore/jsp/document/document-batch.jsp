@@ -36,12 +36,18 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 		<script type="text/javascript">
 			let myGridID;
 			let recentGridItem;
-			const flist = <%=flist%>
-			const dlist = <%=dlist%>
-			const mlist = <%=mlist%>
-			const nlist = <%=nlist%>
-			const tlist = <%=tlist%>
-			const plist = <%=plist%>
+			const flist =
+		<%=flist%>
+			const dlist =
+		<%=dlist%>
+			const mlist =
+		<%=mlist%>
+			const nlist =
+		<%=nlist%>
+			const tlist =
+		<%=tlist%>
+			const plist =
+		<%=plist%>
 			const llist = [ {
 				key : "LC_Default",
 				value : "기본결재"
@@ -272,7 +278,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						let retStr = "";
 						for (let i = 0, len = mlist.length; i < len; i++) {
 							if (mlist[i]["key"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "model_code", mlist[i]["key"]);
+								// 								AUIGrid.setCellValue(myGridID, rowIndex, "model_code", mlist[i]["key"]);
 								retStr = mlist[i]["value"];
 								break;
 							}
@@ -336,7 +342,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						let retStr = "";
 						for (let i = 0, len = dlist.length; i < len; i++) {
 							if (dlist[i]["key"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode_code", dlist[i]["key"]);
+								// 								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode_code", dlist[i]["key"]);
 								retStr = dlist[i]["value"];
 								break;
 							}
@@ -398,7 +404,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						let retStr = "";
 						for (let i = 0, len = plist.length; i < len; i++) {
 							if (plist[i]["key"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "preseration_code", plist[i]["key"]);
+								// 								AUIGrid.setCellValue(myGridID, rowIndex, "preseration_code", plist[i]["key"]);
 								retStr = plist[i]["value"];
 								break;
 							}
@@ -640,11 +646,23 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
-				// 					wordWrap : true,
+					wordWrap : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
+				AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEndHandler);
 				auiReadyHandler();
+			}
+
+			function auiCellEditEndHandler(event) {
+				const dataField = event.dataField;
+				if (dataField === "model") {
+					AUIGrid.setCellValue(event.pid, event.rowIndex, "model_code", event.value);
+				} else if (dataField === "preseration") {
+					AUIGrid.setCellValue(event.pid, event.rowIndex, "preseration_code", event.value);
+				} else if (dataField === "deptcode") {
+					AUIGrid.setCellValue(event.pid, event.rowIndex, "deptcode_code", event.value);
+				}
 			}
 
 			function auiReadyHandler() {
@@ -715,7 +733,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				});
 				callBack(true);
 			}
-			
+
 			// 문서추가
 			function insert90(arr, callBack) {
 				const rows90 = [];
@@ -742,28 +760,28 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 			}
 
 			// 관련 EO 할당 메서드
-// 			function setEO(eoOids, eoNumber, parentRowIndex) {
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoOids", eoOids);
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoNumber", eoNumber);
-// 			}
+			// 			function setEO(eoOids, eoNumber, parentRowIndex) {
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoOids", eoOids);
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoNumber", eoNumber);
+			// 			}
 
-// 			// 관련 CR 할당 메서드
-// 			function setCR(crOids, crNumber, parentRowIndex) {
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crOids", crOids);
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crNumber", crNumber);
-// 			}
+			// 			// 관련 CR 할당 메서드
+			// 			function setCR(crOids, crNumber, parentRowIndex) {
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crOids", crOids);
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crNumber", crNumber);
+			// 			}
 
-// 			// 관련 ECPR 할당 메서드
-// 			function setECPR(ecprOids, ecprNumber, parentRowIndex) {
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprOids", ecprOids);
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprNumber", ecprNumber);
-// 			}
+			// 			// 관련 ECPR 할당 메서드
+			// 			function setECPR(ecprOids, ecprNumber, parentRowIndex) {
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprOids", ecprOids);
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprNumber", ecprNumber);
+			// 			}
 
-// 			// 관련 ECO 할당 메서드
-// 			function setECO(ecoOids, ecoNumber, parentRowIndex) {
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoOids", ecoOids);
-// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoNumber", ecoNumber);
-// 			}
+			// 			// 관련 ECO 할당 메서드
+			// 			function setECO(ecoOids, ecoNumber, parentRowIndex) {
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoOids", ecoOids);
+			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoNumber", ecoNumber);
+			// 			}
 
 			function primary(data) {
 				AUIGrid.updateRowsById(myGridID, {
@@ -807,7 +825,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						AUIGrid.showToastMessage(myGridID, rowIndex, 1, "문서종류를 선택하세요.");
 						return false;
 					}
-					
+
 					if (isNull(item.name)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 2, "문서명을 입력하세요.");
 						return false;

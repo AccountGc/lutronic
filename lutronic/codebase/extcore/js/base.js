@@ -311,3 +311,8 @@ function download(oid) {
 function logger(data) {
 	console.log(data);
 }
+
+// HTML 아이다값으로 값 찾기
+function toId(id) {
+	return document.getElementById(id).value;
+}

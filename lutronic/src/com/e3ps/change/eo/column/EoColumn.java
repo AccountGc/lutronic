@@ -17,6 +17,7 @@ public class EoColumn {
 	private String name;
 	private String eoType;
 	private String state;
+	private String creator;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
@@ -33,9 +34,10 @@ public class EoColumn {
 	public EoColumn(EChangeOrder eo) throws Exception {
 		setOid(eo.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(eo.getEoNumber());
-		setName(eo.getName());
+		setName(eo.getEoName());
 		setEoType(eo.getEoType());
 		setState(eo.getLifeCycleState().getDisplay());
+		setCreator(eo.getCreatorFullName());
 		setCreatedDate(eo.getCreateTimestamp());
 		setCreatedDate_txt(eo.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate_txt(eo.getEoApproveDate());

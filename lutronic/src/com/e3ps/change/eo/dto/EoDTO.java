@@ -1,6 +1,8 @@
 package com.e3ps.change.eo.dto;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.util.CommonUtil;
@@ -19,8 +21,14 @@ public class EoDTO {
 	private String eoType;
 	private String state;
 	private String creator;
+	private String eoCommentA;
+	private String eoCommentB;
+	private String eoCommentC;
 
-	
+	// 변수용
+	private ArrayList<String> secondarys = new ArrayList<>();
+	private ArrayList<Map<String, String>> rows104 = new ArrayList<E>();
+
 	public EoDTO() {
 
 	}
