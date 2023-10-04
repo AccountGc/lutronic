@@ -1,5 +1,6 @@
 package com.e3ps.common.comments;
 
+import com.ptc.windchill.annotations.metadata.Cardinality;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;
 import com.ptc.windchill.annotations.metadata.GeneratedForeignKey;
@@ -33,11 +34,11 @@ import wt.util.WTException;
 
 				@GeneratedForeignKey(name = "ReplyCommentsLink",
 
-						foreignKeyRole = @ForeignKeyRole(name = "reply", type = Comments.class,
+						foreignKeyRole = @ForeignKeyRole(name = "comment", type = Comments.class,
 
 								constraints = @PropertyConstraints(required = false)),
 
-						myRole = @MyRole(name = "comments")), }
+						myRole = @MyRole(name = "reply", cardinality = Cardinality.ONE)), }
 
 )
 public class Comments extends _Comments {

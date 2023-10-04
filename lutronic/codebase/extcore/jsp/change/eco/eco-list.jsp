@@ -298,7 +298,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				}, {
 					dataField : "approveDate_txt",
 					headerText : "승인일",
-					dataType : "date",
+					dataType : "string",
 					width : 100,
 					filter : {
 						showIcon : true,

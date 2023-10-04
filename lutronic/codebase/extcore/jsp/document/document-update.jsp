@@ -425,11 +425,16 @@ iframe {
 		selectbox("deptcode");
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
+		createAUIGrid100(columns100);
+		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID91);
+		AUIGrid.resize(myGridID100);
 		$("#documentType").bindSelectDisabled(true);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
+		AUIGrid.resize(myGridID100);
 	});
 </script>

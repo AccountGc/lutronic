@@ -30,6 +30,20 @@ String mode = request.getParameter("mode");
 				roleType : "roleType",
 				cacheId : "cacheId",
 			},
+			onStart : function() {
+				if(opener == null) {
+					parent.openLayer();
+				} else {
+					openLayer();
+				}
+			},
+			onComplete : function() {
+				if(opener == null) {
+					parent.closeLayer();
+				} else {
+					closeLayer();
+				}
+			},			
 			onUpload : function() {
 				const form = document.querySelector("form");
 				const primaryTag = document.createElement("input");

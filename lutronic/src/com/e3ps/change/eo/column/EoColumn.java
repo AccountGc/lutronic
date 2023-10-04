@@ -3,6 +3,7 @@ package com.e3ps.change.eo.column;
 import java.sql.Timestamp;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class EoColumn {
 	private String oid;
 	private String number;
 	private String name;
+	private String model; // 프로젝트 코드???
 	private String eoType;
 	private String state;
 	private String creator;
@@ -35,11 +37,24 @@ public class EoColumn {
 		setOid(eo.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(eo.getEoNumber());
 		setName(eo.getEoName());
-		setEoType(eo.getEoType());
+		setEoType(convert(eo.getEoType()));
 		setState(eo.getLifeCycleState().getDisplay());
 		setCreator(eo.getCreatorFullName());
 		setCreatedDate(eo.getCreateTimestamp());
 		setCreatedDate_txt(eo.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate_txt(eo.getEoApproveDate());
+	}
+
+	/*
+	 * ( EO 구분 변경
+	 */
+	private String convert(String eoType) throws Exception {
+		String rtn = "";
+		if ("DEV".equals(eoType)) {
+			rtn = "개발";
+		} else if ("PRODUCT".equals(eoType)) {
+			rtn = "양산";
+		}
+		return rtn;
 	}
 }

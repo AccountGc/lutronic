@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="net.sf.json.JSONArray"%>
@@ -201,7 +202,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID90, <%=DocumentHelper.manager.reference(oid, "doc")%>);
+		AUIGrid.setGridData(myGridID90, <%=AUIGridUtil.include(oid, "doc")%>);
 		<%}%>
 	}
 

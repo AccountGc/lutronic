@@ -27,7 +27,8 @@ public class EoDTO {
 
 	// 변수용
 	private ArrayList<String> secondarys = new ArrayList<>();
-	private ArrayList<Map<String, String>> rows104 = new ArrayList<E>();
+	private ArrayList<Map<String, String>> rows104 = new ArrayList<>(); // 완제품
+	private ArrayList<Map<String, String>> rows90 = new ArrayList<>(); // 관련문서
 
 	public EoDTO() {
 

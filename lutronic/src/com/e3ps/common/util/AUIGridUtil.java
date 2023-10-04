@@ -1,11 +1,21 @@
 package com.e3ps.common.util;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.doc.service.DocumentHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
+import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentHolder;
 import wt.content.ContentRoleType;
+import wt.doc.WTDocument;
+import wt.fc.Persistable;
 import wt.fc.QueryResult;
 import wt.representation.Representable;
 import wt.representation.Representation;
@@ -155,5 +165,35 @@ public class AUIGridUtil {
 			icon = "/Windchill/extcore/images/fileicon/file_xml.png";
 		}
 		return icon;
+	}
+
+	/**
+	 * INCLUDE 페이지 처리용 -> 객체 유형에 따라 분기
+	 */
+	public static JSONArray include(String oid, String type) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		Persistable per = CommonUtil.getObject(oid);
+		if (per instanceof WTDocument) {
+			return DocumentHelper.manager.reference(oid, type);
+		} else if (per instanceof EChangeOrder) {
+//			return DocumentHelper.manager.reference(oid, type);
+		}
+
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * DTO 클래스 Map 모든 필드값 변경시키는 함수
+	 */
+	public static Map<String, Object> dtoToMap(Object obj) throws Exception {
+		Class<?> clazz = obj.getClass();
+		Map<String, Object> map = new HashMap<>();
+		for (Field field : clazz.getDeclaredFields()) {
+			field.setAccessible(true);
+			String fieldName = field.getName();
+			Object fieldValue = field.get(obj);
+			map.put(fieldName, fieldValue);
+		}
+		return map;
 	}
 }

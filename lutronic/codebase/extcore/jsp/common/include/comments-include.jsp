@@ -70,10 +70,13 @@
 			depth : Number(depth)
 		};
 		const url = getCallUrl("/comments/create");
+		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
+			} else {
+				closeLayer();
 			}
 		})
 	}
@@ -163,10 +166,13 @@
 			return false;
 		}
 		const url = getCallUrl("/comments/delete?oid=" + oid);
+		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
+			} else {
+				closeLayer();
 			}
 		}, "GET");
 	}

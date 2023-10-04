@@ -228,9 +228,12 @@ iframe {
 		</jsp:include>
 
 		<!-- 	관련 EO -->
-		<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
+		<jsp:include page="/extcore/jsp/change/include/eo-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert100" name="method" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="250" name="height" />
 		</jsp:include>
 
 		<!-- 	관련 CR -->
@@ -386,6 +389,8 @@ iframe {
 				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 관련품목
 				const rows91 = AUIGrid.getGridDataWithState(myGridID91, "gridState");
+				// 관련EO
+				const rows100 = AUIGrid.getGridDataWithState(myGridID100, "gridState");
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,
@@ -403,7 +408,8 @@ iframe {
 					documentName : documentName,
 					// 링크 데이터
 					rows90 : rows90,
-					rows91 : rows91
+					rows91 : rows91,
+					rows100 : rows100
 				};
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -425,11 +431,16 @@ iframe {
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
+				createAUIGrid100(columns100);
+				AUIGrid.resize(myGridID90);
+				AUIGrid.resize(myGridID91);
+				AUIGrid.resize(myGridID100);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
+				AUIGrid.resize(myGridID100);
 			});
 		</script>
 	</form>

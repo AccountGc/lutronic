@@ -388,7 +388,12 @@ iframe {
 					} else {
 						createAUIGrid91(columns91);
 					}
-
+					const isCreated100 = AUIGrid.isCreated(myGridID100); // 품목
+					if (isCreated100) {
+						AUIGrid.resize(myGridID100);
+					} else {
+						createAUIGrid100(columns100);
+					}
 					break;
 				case "tabs-3":
 					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력

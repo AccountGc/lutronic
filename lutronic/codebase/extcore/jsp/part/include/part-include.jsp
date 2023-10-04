@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="com.e3ps.part.service.PartHelper"%>
@@ -206,7 +207,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			showIcon : true,
 		},
 	}, {
-		dataField : "createDate",
+		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
 		width : 140,
@@ -214,7 +215,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			showIcon : true,
 		},
 	}, {
-		dataField : "modifiedDate",
+		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
 		width : 140,
@@ -256,7 +257,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		}
 		myGridID91 = AUIGrid.create("#grid91", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID91, <%=DocumentHelper.manager.reference(oid, "part")%>);
+		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "part")%>);
 		<%}%>
 	}
 

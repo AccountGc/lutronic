@@ -455,9 +455,9 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "createdDate",
 					headerText : "등록일",
-					dataType : "string",
+					dataType : "date",
 					width : 140,
 					filter : {
 						showIcon : true,
@@ -466,7 +466,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				}, {
 					dataField : "modifiedDate",
 					headerText : "수정일",
-					dataType : "string",
+					dataType : "date",
 					width : 140,
 					filter : {
 						showIcon : true,

@@ -136,11 +136,11 @@ public class StandardCommentsService extends StandardManager implements Comments
 			Ownership ownership = Ownership.newOwnership(SessionHelper.manager.getPrincipal());
 			reply.setComments(s + comment);
 			reply.setPersist(per);
+			reply.setComment(comments);
 			reply.setOwnership(ownership);
 			reply.setDepth(depth);
 			reply = (Comments) PersistenceHelper.manager.save(reply);
 
-			comments.setReply(reply);
 			PersistenceHelper.manager.modify(comments);
 
 			trs.commit();

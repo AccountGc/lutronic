@@ -1,31 +1,25 @@
 package com.e3ps;
 
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.NumberCodeType;
-import com.e3ps.org.People;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
 
-import wt.doc.WTDocument;
-import wt.fc.PersistenceHelper;
-import wt.method.RemoteMethodServer;
-import wt.org.WTUser;
-import wt.part.WTPartDescribeLink;
-import wt.pom.Transaction;
-import wt.query.ClassAttribute;
-import wt.query.ColumnExpression;
-import wt.query.ConstantExpression;
-import wt.query.SQLFunction;
-import wt.query.SearchCondition;
-import wt.session.SessionContext;
-import wt.session.SessionHelper;
-import wt.vc.VersionControlHelper;
+import com.e3ps.change.eo.dto.EoDTO;
 
 public class Test {
 
 	public static void main(String[] args) throws Exception {
 
-		Class<?> target = WTPartDescribeLink.class;
-		System.out.println(target.equals(WTPartDescribeLink.class));
-		System.exit(0);
-
+		Class<?> clazz = EoDTO.class.getClass();
+		Map<String, Object> map = new HashMap<>();
+		for (Field field : clazz.getDeclaredFields()) {
+			field.setAccessible(true); // private 필드에 접근하기 위해 필요
+			String fieldName = field.getName();
+			Object fieldValue = field.get(EoDTO.class);
+			map.put(fieldName, fieldValue);
+		}
+		System.out.println(map);
 	}
 }

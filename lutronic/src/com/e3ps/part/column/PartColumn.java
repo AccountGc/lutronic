@@ -39,8 +39,10 @@ public class PartColumn {
 	private String modifier;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
+	private String createdDate_txt;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp modifiedDate;
+	private String modifiedDate_txt;
 	private String ecoNo;
 	private String pdf;
 	private String step;
@@ -69,8 +71,10 @@ public class PartColumn {
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorName());
 		setCreatedDate(part.getCreateTimestamp());
+		setCreatedDate_txt(part.getCreateTimestamp().toString().substring(0, 10));
 		setModifier(part.getModifierName());
 		setModifiedDate(part.getModifyTimestamp());
+		setModifiedDate_txt(part.getModifyTimestamp().toString().substring(0, 10));
 		setAttach(part);
 		setDwgNoFn(part);
 		setQuantity(quantity);

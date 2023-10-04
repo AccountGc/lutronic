@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -38,10 +39,12 @@ public class EoController extends BaseController {
 
 	@Description(value = "관련 EO 팝업 페이지")
 	@GetMapping(value = "/popup")
-	public ModelAndView popup() throws Exception {
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/change/eo/eo-list-popup");
 		return model;
 	}
@@ -72,8 +75,8 @@ public class EoController extends BaseController {
 
 	@Description(value = "EO 등록 함수")
 	@ResponseBody
-	@PostMapping(value = "/createEO")
-	public Map<String, Object> createEO(@RequestBody EoDTO dto) throws Exception {
+	@PostMapping(value = "/create")
+	public Map<String, Object> create(@RequestBody EoDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			EoHelper.service.create(dto);

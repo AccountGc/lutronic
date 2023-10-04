@@ -212,6 +212,15 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
+					dataField : "eoType",
+					headerText : "구분",
+					dataType : "string",
+					width : 120,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
@@ -224,7 +233,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 250,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -233,7 +242,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
-					width : 200,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -242,7 +251,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					dataField : "approveDate_txt",
 					headerText : "승인일",
 					dataType : "date",
-					width : 200,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true

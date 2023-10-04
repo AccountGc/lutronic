@@ -277,7 +277,6 @@ public class EoHelper {
 	 */
 	public Map<String, Object> validatePart(WTPart part) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-
 		QueryResult result = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class);
 		while (result.hasMoreElements()) {
 			EChangeOrder eco = (EChangeOrder) result.nextElement();

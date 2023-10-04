@@ -447,9 +447,9 @@ boolean multi = (boolean) request.getAttribute("multi");
 				inline : true
 			},
 		}, {
-			dataField : "createDate",
+			dataField : "createdDate",
 			headerText : "등록일",
-			dataType : "string",
+			dataType : "date",
 			width : 140,
 			filter : {
 				showIcon : true,
@@ -458,7 +458,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		}, {
 			dataField : "modifiedDate",
 			headerText : "수정일",
-			dataType : "string",
+			dataType : "date",
 			width : 140,
 			filter : {
 				showIcon : true,

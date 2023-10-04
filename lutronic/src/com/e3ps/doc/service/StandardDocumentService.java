@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.service.ECAHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -388,6 +389,19 @@ public class StandardDocumentService extends StandardManager implements Document
 				String oid = row91.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(oid);
 				WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+
+		ArrayList<Map<String, String>> rows100 = dto.getRows100();
+		// 관련EO
+		for (Map<String, String> row100 : rows100) {
+			String gridState = row100.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row100.get("oid");
+				EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+				DocumentEOLink link = DocumentEOLink.newDocumentEOLink(doc, eo);
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}

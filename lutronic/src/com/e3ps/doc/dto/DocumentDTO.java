@@ -71,6 +71,7 @@ public class DocumentDTO {
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows90 = new ArrayList<>(); // 관련 문서
 	private ArrayList<Map<String, String>> rows91 = new ArrayList<>(); // 관련 품목
+	private ArrayList<Map<String, String>> rows100 = new ArrayList<>(); // 관련 EO
 	private boolean temp;
 
 	public DocumentDTO() {

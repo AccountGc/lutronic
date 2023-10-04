@@ -78,7 +78,7 @@ public class CommentsHelper {
 		if (i > -1) {
 			comment = comment.substring(ent);
 		}
-		comment = comment.replaceAll("\n", "<br>");
+		comment = comment.replaceAll("\n", "<br/>");
 		return comment;
 	}
 }

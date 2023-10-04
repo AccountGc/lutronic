@@ -33,6 +33,20 @@ String moduleType = request.getParameter("moduleType");
 				roleType : "roleType",
 				cacheId : "cacheId",
 			},
+			onStart : function() {
+				if(opener == null) {
+					parent.openLayer();
+				} else {
+					openLayer();
+				}
+			},
+			onComplete : function() {
+				if(opener == null) {
+					parent.closeLayer();
+				} else {
+					closeLayer();
+				}
+			},
 			onUpload : function() {
 				const form = document.querySelector("form");
 				const secondaryTag = document.createElement("input");
@@ -78,7 +92,7 @@ String moduleType = request.getParameter("moduleType");
 				}
 			});
 		}else{
-			<% if("modify".equals(mode)){ %>
+			<%if ("modify".equals(mode)) {%>
 			new AXReq("/Windchill/plm/content/list", {
 				pars : "oid=<%=oid%>&roleType=secondary",
 				onsucc : function(res) {
@@ -98,11 +112,11 @@ String moduleType = request.getParameter("moduleType");
 					}
 				}
 			});
-			<% } %>
-		}
+<%}%>
+	}
 	}
 	load();
-	
+
 	//파일 전체 삭제
 	function deleteAllFiles() {
 		if (!confirm("전체 삭제 하시겠습니까?")) {

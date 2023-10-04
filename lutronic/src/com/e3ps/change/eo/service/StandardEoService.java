@@ -16,6 +16,8 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.part.service.PartSearchHelper;
 
@@ -24,6 +26,7 @@ import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
@@ -80,9 +83,13 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			eo = (EChangeOrder) PersistenceHelper.manager.save(eo);
 
+			// 관련 링크들
+			saveLink(eo, dto);
+
 			// 완제품 링크 및 검증
 			validateAndCompleteSave(eo, rows104);
 
+			// 첨부 파일
 			saveAttach(eo, dto);
 
 			// 활동 생성
@@ -110,11 +117,26 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	}
 
+	private void saveLink(EChangeOrder eo, EoDTO dto) throws Exception {
+		ArrayList<Map<String, String>> rows90 = dto.getRows90();
+		// 관련문서
+		for (Map<String, String> row90 : rows90) {
+			String gridState = row90.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row90.get("oid");
+				WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+				DocumentEOLink link = DocumentEOLink.newDocumentEOLink(doc, eo);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+	}
+
 	private void validateAndCompleteSave(EChangeOrder eo, ArrayList<Map<String, String>> rows104) throws Exception {
 		// 완제품 연결
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
 		for (Map<String, String> map : rows104) {
-			String oid = map.get("oid");
+			String oid = map.get("part_oid");
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
 			Map<String, Object> m = EoHelper.manager.validatePart(part);
 			if (!(boolean) m.get("result")) {

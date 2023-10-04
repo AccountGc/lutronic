@@ -97,6 +97,16 @@
 				</td>
 			</tr>
 		</table>
+
+		<!-- 	관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert90" name="method" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="250" name="height" />
+		</jsp:include>
+
 		<table class="button-table">
 			<tr>
 				<td class="center">
@@ -120,41 +130,42 @@
 				const secondarys = toArray("secondarys");
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
 				const rows104 = AUIGrid.getAddedRowItems(myGridID104);
-
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				const url = getCallUrl("/eo/create");
 				const params = {
 					name : name,
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
 					eoCommentC : eoCommentC,
-					eoType : epType,
+					eoType : eoType,
 					secondarys : secondarys,
-					rows104 : rows104
+					rows104 : rows104,
+					rows90 : rows90
 				}
-
+				logger(params);
+				parent.openLayer();
 				call(url, params, function(data) {
 					if (data.result) {
 						alert(data.msg);
-						location.href = getCallUrl("/changeECO/listEO");
+						document.location.href = getCallUrl("/eo/list");
 					} else {
 						alert(data.msg);
 					}
 				});
 			}
 
-			// 			document.querySelector("#addNumberCode").addEventListener("click", () => {
-			// 				const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
-			// 				popup(url, 1500, 700);
-			// 			});
-
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
 				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID104);
+				createAUIGrid90(columns90);
+				AUIGrid.resize(myGridID90);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID104);
+				AUIGrid.resize(myGridID90);
 			});
 		</script>
 	</form>
