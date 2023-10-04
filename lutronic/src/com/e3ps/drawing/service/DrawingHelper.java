@@ -17,11 +17,13 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.EPMDocumentType;
@@ -598,5 +600,31 @@ public class DrawingHelper {
 		}
 		
 		return list;
+	}
+	
+	/**
+	 * 문서 이력
+	 */
+	public JSONArray allIterationsOf(String oid) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+		QueryResult result = VersionControlHelper.service.allIterationsOf(epm.getMaster());
+		while (result.hasMoreElements()) {
+			EPMDocument d = (EPMDocument) result.nextElement();
+			Map<String, String> map = new HashMap<>();
+			EpmData data = new EpmData(epm);
+			map.put("oid", data.getOid());
+			map.put("name", data.getName());
+			map.put("number", data.getNumber());
+			map.put("version", data.getVersion());
+			map.put("creator", data.getCreator());
+			map.put("createdDate", data.getCreateDate());
+			map.put("modifier", data.getModifier());
+			map.put("modifiedDate", data.getModifyDate());
+//			map.put("primary", data.getPrimary());
+//			map.put("secondary", data.getSecondary());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
 	}
 }
