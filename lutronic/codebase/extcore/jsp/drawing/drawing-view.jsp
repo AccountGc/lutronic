@@ -41,8 +41,8 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<%	
 			}
 			%>
-			<input type="button" value="버전이력" title="버전이력" class="" id="versionBtn">
-			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn">
+<!-- 			<input type="button" value="버전이력" title="버전이력" class="" id="versionBtn"> -->
+<!-- 			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn"> -->
 			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">
 			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
 		</td>
@@ -58,10 +58,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<a href="#tabs-2">참조</a>
 		</li>
 		<li>
-			<a href="#tabs-3">버전이력</a>
-		</li>
-		<li>
-			<a href="#tabs-4">다운로드이력</a>
+			<a href="#tabs-3">이력 관리</a>
 		</li>
 		<li>
 			<a href="#tabs-5">관련 개발업무</a>
@@ -139,20 +136,12 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 	</div>
 
 	<div id="tabs-3">
-		<!-- 버전이력 -->
-<%-- 		<jsp:include page="/extcore/jsp/drawing/include_viewReference.jsp"> --%>
-<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
-<%-- 			<jsp:param value="drawing"  name="moduleType"/> --%>
-<%-- 		</jsp:include> --%>
+		<!-- 이력관리 -->
+		<jsp:include page="/extcore/jsp/drawing/drawing-record-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
 	</div>
 	
-	<div id="tabs-4">
-		<!-- 다운로드이력 -->
-<%-- 		<jsp:include page="/extcore/jsp/drawing/include_viewReference.jsp"> --%>
-<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
-<%-- 			<jsp:param value="drawing"  name="moduleType"/> --%>
-<%-- 		</jsp:include> --%>
-	</div>
 	
 	<div id="tabs-5">
 		<!-- 관련 개발업무 -->
@@ -305,23 +294,21 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					}
 					break;
 				case "tabs-3":
-// 					const isCreated4 = AUIGrid.isCreated(devGridID);
-// 					if (isCreated4) {
-// 						AUIGrid.resize(devGridID);
-// 					} else {
-// 						createAUIGrid4(columnDev);
-// 					}
+					
+					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
+					if (isCreated50) {
+						AUIGrid.resize(myGridID50);
+					} else {
+						createAUIGrid50(columns50);
+					}
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
+					if (isCreated51) {
+						AUIGrid.resize(myGridID51);
+					} else {
+						createAUIGrid51(columns51);
+					}
+					
 					break;
-				}
-				case "tabs-4":
-// 					const isCreated4 = AUIGrid.isCreated(devGridID);
-// 					if (isCreated4) {
-// 						AUIGrid.resize(devGridID);
-// 					} else {
-// 						createAUIGrid4(columnDev);
-// 					}
-					break;
-				}
 				case "tabs-5":
 					const isCreated4 = AUIGrid.isCreated(devGridID);
 					if (isCreated4) {
