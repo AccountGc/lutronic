@@ -21,7 +21,9 @@ import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.dto.DocumentDTO;
 
 @Controller
 @RequestMapping(value = "/eo/**")
@@ -88,5 +90,17 @@ public class EoController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "EO 상세보기")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		EoDTO dto = new EoDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/eo/eo-view");
+		return model;
 	}
 }

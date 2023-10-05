@@ -16,7 +16,7 @@ public class EoColumn {
 	private String oid;
 	private String number;
 	private String name;
-	private String model; // 프로젝트 코드???
+	private String model;
 	private String eoType;
 	private String state;
 	private String creator;
@@ -37,12 +37,20 @@ public class EoColumn {
 		setOid(eo.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(eo.getEoNumber());
 		setName(eo.getEoName());
+		setModel(keyToValue(eo.getModel(), "MODEL"));
 		setEoType(convert(eo.getEoType()));
 		setState(eo.getLifeCycleState().getDisplay());
 		setCreator(eo.getCreatorFullName());
 		setCreatedDate(eo.getCreateTimestamp());
 		setCreatedDate_txt(eo.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate_txt(eo.getEoApproveDate());
+	}
+
+	/**
+	 * 코드값 디스플레이값으로 변경
+	 */
+	private String keyToValue(String code, String codeType) throws Exception {
+		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
 	}
 
 	/*

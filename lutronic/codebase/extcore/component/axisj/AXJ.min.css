@@ -4947,7 +4947,8 @@ button, button:hover {
 
 .AXScrollSmall {
 	position: relative;
-	overflow: hidden
+	overflow: hidden;
+	height : 300px !important;
 }
 
 .AXScrollSmall .scrollTrack {

@@ -58,8 +58,9 @@
 			<tr>
 				<th class="req lb">제품명</th>
 				<td colspan="3" class="indent5">
-					<input type="button" value="추가" title="추가" class="blue" id="addNumberCode" name="addNumberCode">
-					<input type="button" value="삭제" title="삭제" class="red" id="delNumberCode" name="delNumberCode">
+					<input type="text" name="model" id="model" data-multi="false" class="width-200">
+					<input type="hidden" name="model_oid" id="model_oid">
+					<img src="/Windchill/extcore/images/delete.png"  title="삭제" onclick="clearUser('creator')">
 				</td>
 			</tr>
 			<tr>
@@ -128,6 +129,7 @@
 				const eoCommentB = toId("eoCommentB");
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
+				const model_oid = toId("model_oid");
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
 				const rows104 = AUIGrid.getAddedRowItems(myGridID104);
 				// 관련문서
@@ -141,7 +143,8 @@
 					eoType : eoType,
 					secondarys : secondarys,
 					rows104 : rows104,
-					rows90 : rows90
+					rows90 : rows90,
+					model_oid : model_oid
 				}
 				logger(params);
 				parent.openLayer();
@@ -154,9 +157,39 @@
 					}
 				});
 			}
+			
+			function finder(id) {
+				axdom("#" + id).bindSelector({
+					reserveKeys: {
+						options: "list",
+						optionValue: "oid",
+						optionText: "name"
+					},
+					optionPrintLength: "all",
+					onsearch: function(id, obj, callBack) {
+						const value = document.getElementById(id).value;
+						const params = new Object();
+						const url = getCallUrl("/code/finder");
+						params.codeType = id.toUpperCase();
+						params.value = value;
+						params.obj = obj;
+						call(url, params, function(data) {
+							callBack({
+								options: data.list
+							})
+						})
+					},
+					onchange: function() {
+						const id = this.targetID;
+						const value = this.selectedOption.oid
+						document.getElementById(id + "_oid").value = value;
+					},
+				})
+			}
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
+				finder("model");
 				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID104);
 				createAUIGrid90(columns90);

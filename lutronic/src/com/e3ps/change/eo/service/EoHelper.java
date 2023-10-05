@@ -10,11 +10,18 @@ import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
+import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.doc.DocumentToDocumentLink;
+import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.part.column.PartColumn;
 
+import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -291,5 +298,49 @@ public class EoHelper {
 		}
 		map.put("result", true);
 		return map;
+	}
+
+	/**
+	 * EO 관련 객체
+	 */
+	public JSONArray reference(String oid, String type) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+		if ("doc".equalsIgnoreCase(type)) {
+			// 문서
+			return JSONArray.fromObject(referenceDoc(eo, list));
+		} else if ("part".equalsIgnoreCase(type)) {
+			// 완제품
+			return JSONArray.fromObject(referencePart(eo, list));
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * EO 관련 문서
+	 */
+	private Object referenceDoc(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(eo, "document", DocumentEOLink.class);
+		while (result.hasMoreElements()) {
+			WTDocument doc = (WTDocument) result.nextElement();
+			DocumentColumn dto = new DocumentColumn(doc);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * EO 관련 완제품
+	 */
+	private Object referencePart(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class);
+		while (result.hasMoreElements()) {
+			WTPart part = (WTPart) result.nextElement();
+			PartColumn dto = new PartColumn(part);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
 	}
 }

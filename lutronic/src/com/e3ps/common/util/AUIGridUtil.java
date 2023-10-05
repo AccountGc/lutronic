@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
@@ -174,9 +177,23 @@ public class AUIGridUtil {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		Persistable per = CommonUtil.getObject(oid);
 		if (per instanceof WTDocument) {
+			// 문서 연관 객체
 			return DocumentHelper.manager.reference(oid, type);
 		} else if (per instanceof EChangeOrder) {
-//			return DocumentHelper.manager.reference(oid, type);
+			// EO, ECO 연관 객체
+			EChangeOrder eco = (EChangeOrder) per;
+			// ECO
+			if (eco.getEoType().equals("CHANGE")) {
+
+				// EO
+			} else {
+				return EoHelper.manager.reference(oid, type);
+			}
+
+		} else if (per instanceof EChangeRequest) {
+			// CR 연관 겍체
+		} else if (per instanceof EChangeNotice) {
+			// ECN 연관 객체
 		}
 
 		return JSONArray.fromObject(list);

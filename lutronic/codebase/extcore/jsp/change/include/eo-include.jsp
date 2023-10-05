@@ -146,7 +146,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		}
 		myGridID100 = AUIGrid.create("#grid100", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID100, <%=AUIGridUtil.include(oid, "doc")%>);
+		AUIGrid.setGridData(myGridID100, <%=AUIGridUtil.include(oid, "eo")%>);
 		<%}%>
 	}
 

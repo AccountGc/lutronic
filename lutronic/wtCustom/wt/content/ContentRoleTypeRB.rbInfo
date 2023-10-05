@@ -87,11 +87,12 @@ ECR.shortDescription=ECR
 ECO.value=ECO
 ECO.shortDescription=ECO
 
+# NEW ADD
 TR.value=TR
 TR.shortDescription=TR
 
-GUARANTEE.value=GUARANTEE
-GUARANTEE.shortDescription=GUARANTEE
+DOC.value=DOC
+DOC.shortDescription=DOC
 
 MSDS.value=MSDS
 MSDS.shortDescription=MSDS

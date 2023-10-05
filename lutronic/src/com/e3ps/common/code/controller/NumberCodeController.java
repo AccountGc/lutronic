@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.controller.BaseController;
+import com.e3ps.org.service.OrgHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -131,6 +132,23 @@ public class NumberCodeController extends BaseController {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "ASIXJ 넘버코드 파인더")
+	@PostMapping(value = "/finder")
+	@ResponseBody
+	public Map<String, Object> finder(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, String>> list = NumberCodeHelper.manager.finder(params);
+			result.put("result", SUCCESS);
+			result.put("list", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
 		}
 		return result;
 	}

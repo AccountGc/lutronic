@@ -8,6 +8,8 @@ import java.util.Map;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.eo.dto.EoDTO;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.message.Message;
@@ -49,6 +51,7 @@ public class StandardEoService extends StandardManager implements EoService {
 	@Override
 	public void create(EoDTO dto) throws Exception {
 		ArrayList<Map<String, String>> rows104 = dto.getRows104();
+		String model_oid = dto.getModel_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -62,15 +65,18 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			number = number + seqNo;
 
+			NumberCode model = (NumberCode) CommonUtil.getObject(model_oid);
 			EChangeOrder eo = EChangeOrder.newEChangeOrder();
+
+			System.out.println("ei=" + eo.getEoType());
 
 			eo.setEoName(dto.getName());
 			eo.setEoNumber(number);
 			eo.setEoType(dto.getEoType());
+			eo.setModel(model.getCode());
 			eo.setEoCommentA(dto.getEoCommentA());
 			eo.setEoCommentB(dto.getEoCommentB());
 			eo.setEoCommentC(dto.getEoCommentC());
-//			eo.setOwner(SessionHelper.manager.getPrincipalReference()); // 필요 없는 라인..
 
 			String location = "/Default/설계변경/EO";
 			String lifecycle = "LC_ECO";

@@ -90,8 +90,8 @@ ECO.shortDescription=ECO
 TR.value=시험성적서
 TR.shortDescription=시험성적서
 
-GUARANTEE.value=보증서
-GUARANTEE.shortDescription=보증서
+DOC.value=보증서
+DOC.shortDescription=보증서
 
 MSDS.value=MSDS 성분분석표
 MSDS.shortDescription=MSDS 성분분석표

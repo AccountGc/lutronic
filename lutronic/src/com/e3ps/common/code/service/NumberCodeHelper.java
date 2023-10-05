@@ -12,6 +12,7 @@ import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import wt.fc.PersistenceHelper;
@@ -306,5 +307,30 @@ public class NumberCodeHelper {
 			break;
 		}
 		return check;
+	}
+
+	/**
+	 * AXISJ 넘버코드 파인더
+	 */
+	public ArrayList<Map<String, String>> finder(Map<String, String> params) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		String value = params.get("value");
+		String codeType = params.get("codeType");
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.NAME, value);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode n = (NumberCode) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("name", n.getName());
+			list.add(map);
+		}
+		return list;
 	}
 }
