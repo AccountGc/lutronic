@@ -6,34 +6,20 @@ import java.util.Map;
 
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocLocation;
 import com.e3ps.mold.dto.MoldDTO;
-import com.e3ps.org.People;
 
-import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
-import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
-import wt.fc.ReferenceFactory;
-import wt.folder.Folder;
-import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
-import wt.org.WTUser;
-import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
-import wt.util.WTAttributeNameIfc;
-import wt.vc.VersionControlHelper;
 
 public class MoldHelper {
 	
@@ -69,6 +55,13 @@ public class MoldHelper {
 		String searchType = StringUtil.checkNull((String) params.get("searchType"));
 		String moldNumber = StringUtil.checkNull((String) params.get("moldnumber"));
 
+		// 일괄 결재시 타입에 따른 LC 상태 검색
+		if (searchType.length() > 0) {
+			if ("MOLD".equals(searchType)) {
+				QuerySpecUtils.toEquals(query, idx, WTDocument.class, WTDocument.DOC_TYPE, "$$MMDocument");
+			}
+		}
+		
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NUMBER, docNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NAME, docName);
 		QuerySpecUtils.creatorQuery(query, idx, WTDocument.class, creator);
@@ -79,16 +72,6 @@ public class MoldHelper {
 		QuerySpecUtils.toState(query, idx, WTDocument.class, state);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.DESCRIPTION, description);
 		
-		// 일괄 결재시 타입에 따른 LC 상태 검색
-		if (searchType.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			if ("MOLD".equals(searchType)) {
-				query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.DOC_TYPE, SearchCondition.EQUAL, "$$MMDocument"), new int[] { idx });
-			}
-		}
-
 		// 내부 문서번호
 		if (interalnumber.length() > 0) {
 			AttributeDefDefaultView aview = IBADefinitionHelper.service
@@ -237,8 +220,8 @@ public class MoldHelper {
 		if("true".equals(islastversion)) {
 			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		}
-
-		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
+		
+		SearchUtil.setOrderBy(query, WTDocument.class, idx, WTDocument.MODIFY_TIMESTAMP, "sort", true);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
@@ -246,10 +229,8 @@ public class MoldHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			WTDocument document = (WTDocument) obj[0];
 			MoldDTO data = new MoldDTO(document);
-			System.out.println("111111111111111111111111");
 			list.add(data);
 		}
-		System.out.println("2222222222222222"+query);
 
 		map.put("list", list);
 		map.put("topListCount", pager.getTotal());
