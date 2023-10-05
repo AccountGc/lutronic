@@ -20,5 +20,7 @@
 
 11. myGridID300, columns300 넘버코드 그리드
 
+12. myGridID105, columns105 관련 ECO
+
 // 그리드 높이 정리
 -- 검색 1행, 페이징 처리할시 그리드 높이 700px --  

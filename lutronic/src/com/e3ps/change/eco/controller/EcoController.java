@@ -39,10 +39,12 @@ public class EcoController extends BaseController {
 
 	@Description(value = "관련 ECO 팝업 페이지")
 	@GetMapping(value = "/popup")
-	public ModelAndView popup() throws Exception {
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/change/eco/eco-list-popup");
 		return model;
 	}

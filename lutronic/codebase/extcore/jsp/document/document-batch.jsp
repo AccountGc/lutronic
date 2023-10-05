@@ -545,7 +545,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 			}, {
 				headerText : "관련EO",
 				children : [ {
-					dataField : "eoOids",
+					dataField : "rows100",
 					dataType : "string",
 					visible : false
 				}, {
@@ -557,16 +557,16 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						type : "TemplateRenderer"
 					}
 				}, {
-					dataField : "eo",
 					headerText : "관련EO",
 					dataType : "string",
 					width : 120,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "EO추가",
-						onClick : function(event) {
-							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/changeECO/listEOPopup?parentRowIndex=" + parentRowIndex);
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.oid;
+							const url = getCallUrl("/eo/popup?method=insert100&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
@@ -632,7 +632,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 			}, {
 				headerText : "관련ECO",
 				children : [ {
-					dataField : "ecoOids",
+					dataField : "rows105",
 					dataType : "string",
 					visible : false
 				}, {
@@ -644,16 +644,16 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						type : "TemplateRenderer"
 					}
 				}, {
-					dataField : "eco",
 					headerText : "관련ECO",
 					dataType : "string",
 					width : 120,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "ECO추가",
-						onClick : function(event) {
-							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/changeECO/listPopup?parentRowIndex=" + parentRowIndex);
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.oid;
+							const url = getCallUrl("/eco/popup?method=insert105&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
@@ -782,12 +782,23 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				});
 				callBack(true);
 			}
-
-			// 관련 EO 할당 메서드
-			// 			function setEO(eoOids, eoNumber, parentRowIndex) {
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoOids", eoOids);
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "eoNumber", eoNumber);
-			// 			}
+			
+			// EO 추가
+			function insert100(arr, callBack) {
+				const rows100 = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rows100.push(item);
+					number += item.number + "\n";
+				})
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					rows100 : rows100,
+					eoNumber : toRowsExp(number)
+				});
+				callBack(true);
+			}	
 
 			// 			// 관련 CR 할당 메서드
 			// 			function setCR(crOids, crNumber, parentRowIndex) {
@@ -801,11 +812,22 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprNumber", ecprNumber);
 			// 			}
 
-			// 			// 관련 ECO 할당 메서드
-			// 			function setECO(ecoOids, ecoNumber, parentRowIndex) {
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoOids", ecoOids);
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecoNumber", ecoNumber);
-			// 			}
+			// ECO 추가
+			function insert105(arr, callBack) {
+				const rows105 = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rows105.push(item);
+					number += item.number + "\n";
+				})
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					rows105 : rows105,
+					ecoNumber : toRowsExp(number)
+				});
+				callBack(true);
+			}	
 
 			function primary(data) {
 				AUIGrid.updateRowsById(myGridID, {

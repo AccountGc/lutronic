@@ -29,7 +29,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb">관련문서</th>
+		<th class="lb">관련 EO</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (create || update) {
@@ -181,7 +181,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 				AUIGrid.addRow(myGridID100, item, rowIndex);
 			} else {
 				// 중복은 그냥 경고 없이 처리 할지 협의?
-				alert(item.number + " 문서는 이미 추가 되어있습니다.");
+				alert(item.number + " EO는 이미 추가 되어있습니다.");
 			}
 		})
 		callBack(true);
