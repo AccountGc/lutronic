@@ -49,7 +49,6 @@ public class StandardMoldService extends StandardManager implements MoldService 
 	public void create(MoldDTO dto) throws Exception {
 		String name = dto.getName();
 		String location = dto.getLocation();
-		System.out.println("location=>"+location);
 		String description = dto.getDescription();
 		String lifecycle = dto.getLifecycle();
 		String documentType = dto.getDocumentType();
