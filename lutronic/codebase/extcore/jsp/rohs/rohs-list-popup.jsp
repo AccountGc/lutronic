@@ -16,6 +16,8 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+String method = (String) request.getAttribute("method");
+boolean multi = (boolean) request.getAttribute("multi");
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
 <input type="hidden" name="lastNum" id="lastNum"> 
@@ -88,7 +90,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('rohs-list');">
 			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
-			<input type="button" value="추가" title="추가"  onclick="addBtn();">    
+			<input type="button" value="추가" title="추가"  onclick="<%=method%>();">    
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -289,14 +291,21 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		AUIGrid.resize(myGridID);
 	});
 	
-	function addBtn(){
-		const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-		if (items.length == 0) {
-			alert("추가할 물질을 선택하세요.");
+	function <%=method%>() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length === 0) {
+			alert("추가할 행을 선택하세요.");
 			return false;
 		}
-		opener.rohsAppend(items);
-		self.close();
+		
+		openLayer();
+		opener.<%=method%>(checkedItems, function(res) {
+			if(res) {
+				setTimeout(function() {
+					closeLayer();
+				}, 500);
+			}
+		})
 	}
 	
 </script>

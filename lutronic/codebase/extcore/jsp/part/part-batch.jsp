@@ -39,8 +39,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 		</table>
-		<input type="file" id="file" style="visibility:hidden;"></input>
-		<input type="hidden" name="fid"	 id="fid"  value="">
 		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
@@ -776,18 +774,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "primaryName",
 					headerText : "주도면 파일명",
 					width: 160,
-					styleFunction: function (rowIndex, columnIndex, value, headerText, item, dataField) {
-						if (typeof value == "undefined" || value == "") {
-							return null;
-						}
-						return "my-file-selected";
-					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						if (typeof value == "undefined" || value == "") {
-							return "선택 파일 없음";
-						}
-						return value;
-					},
+					editable : false,
 				}, {
 					dataField : "primary",
 					headerText : "주도면",
@@ -799,16 +786,70 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
 							const oid = item.id;
-							const url = getCallUrl("/common/attachPrimaryDrawing?oid=" + oid + "&method=attach");
+							const url = getCallUrl("/aui/primaryDrawing?oid=" + oid + "&method=attach");
 							_popup(url, 800, 400,"n");
 						}
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}]
-			}, ]
+			}, {
+				headerText : "관련문서",
+				children : [ {
+					dataField : "rows90",
+					dataType : "string",
+					visible : false
+				}, {
+					dataField : "docNumber",
+					headerText : "문서번호",
+					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
+				}, {
+					headerText : "관련문서",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "문서추가",
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.id;
+							const url = getCallUrl("/doc/popup?method=insert90&multi=true");
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
+			}, {
+				headerText : "관련RoHS",
+				children : [ {
+					dataField : "rowsRohs",
+					dataType : "string",
+					visible : false
+				}, {
+					dataField : "rohsNumber",
+					headerText : "RoHs 번호",
+					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
+				}, {
+					headerText : "관련RoHS",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "물질추가",
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.id;
+							const url = getCallUrl("/rohs/listPopup?method=rohsAppend&multi=true");
+							_popup(url, 1800, 900, "n");
+						}
+					}
+				}]
+			}]
 
 			function createAUIGrid(columnLayout) {
 				const props = {
@@ -818,20 +859,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
-					fillColumnSizeMode : false,
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					enableFilter : true,
-					showInlineFilter : false,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					wordWrap : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEndHandler);
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
-// 				AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBegin);
+				AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEndHandler);
 				auiReadyHandler();
 				AUIGrid.bind(myGridID, "ready", readyHandler);
 			}
@@ -930,17 +964,48 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.resize(myGridID);
 			});
 			
-			function attach(data) {
-				
+			// 문서추가
+			function insert90(arr, callBack) {
+				const rows90 = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rows90.push(item);
+					number += item.number + "\n";
+				})
 				AUIGrid.updateRowsById(myGridID, {
 					id : recentGridItem.id,
-					primary : data[0].cacheId,
+					rows90 : rows90,
+					docNumber : toRowsExp(number)
 				});
-				
+				callBack(true);
+			}
+			
+			// 물질 추가
+			function rohsAppend(arr, callBack) {
+				const rowsRohs = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rowsRohs.push(item);
+					number += item.number + "\n";
+				})
 				AUIGrid.updateRowsById(myGridID, {
-					id: recentGridItem.id,
-					primaryName: data[0].name
+					id : recentGridItem.id,
+					rowsRohs : rowsRohs,
+					rohsNumber : toRowsExp(number)
 				});
+				callBack(true);
+			}
+			
+			// 주 도면
+			function attach(data) {
+				AUIGrid.updateRowsById(myGridID, {
+					id : recentGridItem.id,
+					primary : data.cacheId,
+					primaryName : data.name
+				});
+				recentGridItem = undefined;
 			}
 			
 			function batch(){
@@ -1060,7 +1125,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			function deleteBtn(){
 				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
 				if(items.length==0){
-					alert("선택된 물질이 없습니다.");
+					alert("선택된 품목이 없습니다.");
 					return;
 				}
 				
@@ -1069,6 +1134,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 				
 				AUIGrid.removeCheckedRows(myGridID);
+			}
+			
+			// 개행 처리 
+			function toRowsExp(value) {
+				return value.replace(/\r|\n|\r\n/g, "<br/>");
 			}
 		</script>
 	</form>

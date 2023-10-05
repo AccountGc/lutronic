@@ -35,5 +35,16 @@ public class AUIGridController extends BaseController {
 		model.setViewName("popup:/common/aui/aui-secondary");
 		return model;
 	}
+	
+	@Description(value = "그리드 리스트서 주 첨부파일 추가 페이지")
+	@GetMapping(value = "/primaryDrawing")
+	public ModelAndView primaryDrawing(@RequestParam(required = false) String oid, @RequestParam String method)
+			throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.addObject("method", method);
+		model.addObject("oid", oid);
+		model.setViewName("popup:/common/aui/aui-primary-drawing");
+		return model;
+	}
 
 }

@@ -494,6 +494,10 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					dataField : "partNumber",
 					headerText : "품목번호",
 					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
 				}, {
 					headerText : "관련품목",
 					dataType : "string",
@@ -519,6 +523,10 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					dataField : "docNumber",
 					headerText : "문서번호",
 					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
 				}, {
 					headerText : "관련문서",
 					dataType : "string",
@@ -544,6 +552,10 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					dataField : "eoNumber",
 					headerText : "EO번호",
 					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
 				}, {
 					dataField : "eo",
 					headerText : "관련EO",
@@ -569,6 +581,10 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					dataField : "crNumber",
 					headerText : "CR번호",
 					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
 				}, {
 					dataField : "cr",
 					headerText : "관련CR",
@@ -594,6 +610,10 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					dataField : "ecprNumber",
 					headerText : "ECPR번호",
 					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
 				}, {
 					dataField : "ecpr",
 					headerText : "관련CR",
@@ -619,6 +639,10 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					dataField : "ecoNumber",
 					headerText : "ECO번호",
 					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
 				}, {
 					dataField : "eco",
 					headerText : "관련ECO",

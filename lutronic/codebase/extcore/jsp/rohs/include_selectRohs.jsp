@@ -63,7 +63,7 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 	}
 
 	function addRohs() {
-		const url = getCallUrl("/rohs/listPopup");
+		const url = getCallUrl("/rohs/listPopup?method=rohsAppend&multi=true");
 		_popup(url, 1500, 700, "n");
 	}
 	
