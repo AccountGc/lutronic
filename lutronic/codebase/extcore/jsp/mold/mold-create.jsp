@@ -18,7 +18,7 @@
 <script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
-	<form id="form">
+	<form>
 		<input type="hidden" name="fid" 			id="fid" 					value="">
 		<input type="hidden" name="location" 		id="location" 				value="/Default/금형문서">
 		<input type="hidden" name="documentType" 	id="documentType" 			value="$$MMDocument">
@@ -41,9 +41,9 @@
 			</colgroup>
 			<tr>
 				<th>결재방식 <span class="red">*</span></th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					<div class="pretty p-switch">
-						<input type="radio"name="lifecycle" value="LC_Default" checked="checked">
+						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">
 							<label> <b>기본결재</b>
 							</label>
@@ -61,7 +61,7 @@
 			<tr>
 				<th>문서명 <span style="color:red;">*</span></th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="docName" id="docName" class="width-500">
+					<input type="text" name="name" id="name" class="width-500">
 				</td>
 			</tr>
 			<tr>
@@ -153,10 +153,12 @@
 		</jsp:include>
 		<br>
 		
-		<!-- 		관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp">
-			<jsp:param value="관련 문서" name="title" />
-			<jsp:param value="docOid" name="paramName" />
+		<!-- 관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert90" name="method" />
+			<jsp:param value="true" name="multi" />
 		</jsp:include>
 		
 		<table class="button-table">
@@ -171,32 +173,40 @@
 
 		<script type="text/javascript">
 			$("#createBtn").click(function() {
-				if(isEmpty($("#lifecycle").val())) {
-					alert("결재방식을 선택하세요.");
-					return;
-				}
-				
-				if(isEmpty($("#docName").val())) {
+				const primary = document.querySelector("input[name=primary]").value;
+				if(isEmpty($("#name").val())) {
 					alert("문서명을 입력하세요.");
 					return;
 				}
-				
-// 				if($("#moldtype").val() == "") {
-// 					alert("금형타입을 선택하세요.");
-// 					return;
-// 				}
-				
-// 				if($("#PRIMARY").val() == "") {
-// 					alert("주 첨부파일을 추가해주세요.");
-// 					return;
-// 				}
+				if($("#moldtype").val() == "") {
+					alert("금형타입을 선택하세요.");
+					return;
+				}
+				if(primary.length<0) {
+					alert("주 첨부파일을 추가해주세요.");
+					return;
+				}
 				
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
 				
-				var params = _data($("#form"));
-				params.lifecycle=params.lifecycle[0];
+				let params = new Object();
+				params.lifecycle = $('input[name=lifecycle]:checked').val();
+				params.name = $("#name").val();
+				params.manufacture = $("#manufacture").val();
+				params.moldtype = $("#moldtype").val();
+				params.moldnumber = $("#moldnumber").val();
+				params.moldcost = $("#moldcost").val();
+				params.interalnumber = $("#interalnumber").val();
+				params.deptcode = $("#deptcode").val();
+				params.description = $("#description").val();
+				params.documentType = $("#documentType").val();
+				params.location = $("#location").val();
+				params.primary = primary;
+				params.secondary = toArray("secondarys");
+				params.partList = AUIGrid.getGridData(partGridID);
+				params.docList = AUIGrid.getGridData(myGridID90);
 				
 				var url = getCallUrl("/mold/create");
 				call(url, params, function(data) {
@@ -220,14 +230,13 @@
 				
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);
-				createAUIGrid4(columnsDoc);
-				AUIGrid.resize(docGridID);
+				createAUIGrid90(columns90);
+				AUIGrid.resize(myGridID90);
 			});
 			
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID);
 				AUIGrid.resize(partGridID);
-				AUIGrid.resize(docGridID);
+				AUIGrid.resize(myGridID90);
 			});
 
 		</script>

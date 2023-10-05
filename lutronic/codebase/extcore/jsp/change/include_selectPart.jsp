@@ -35,9 +35,9 @@ if(moduleType=="" && !moduleType.equals("eco")){
 <table class="create-table">
 	<colgroup>
 		<col width="150">
-		<col width="600">
+		<col width="*">
 		<col width="150">
-		<col width="600">
+		<col width="*">
 	</colgroup>
 	<tr>
 		<th class="lb">

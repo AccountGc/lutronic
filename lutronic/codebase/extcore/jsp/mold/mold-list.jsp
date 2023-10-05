@@ -28,6 +28,8 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="location" id="/Default/금형문서">
+		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
+		<input type="hidden" name="searchType" id="searchType" value="MOLD">
 		
 		<table class="search-table">
 			<colgroup>
@@ -41,11 +43,11 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			<tr>
 				<th>금형 번호</th>
 				<td class="indent5">
-					<input type="text" name="docNumber" id="docNumber" class="width-300">
+					<input type="text" name="number" id="number" class="width-300">
 				</td>
 				<th>금형명</th>
 				<td class="indent5">
-					<input type="text" name="docName" id="docName" class="width-300">
+					<input type="text" name="name" id="name" class="width-300">
 				</td>
 				<th>금형타입</th>
 				<td class="indent5">
@@ -83,9 +85,9 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				</td>
 				<th>등록일</th>
 				<td class="indent5">
-					<input type="text" name="predate" id="createdFrom" class="width-100">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
 					~
-					<input type="text" name="postdate" id="createdTo" class="width-100">
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
@@ -118,9 +120,9 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
-					<input type="text" name="predate_modify" id="modifiedFrom" class="width-100">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
 					~
-					<input type="text" name="postdate_modify" id="modifiedTo" class="width-100">
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
@@ -303,7 +305,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/mold/list");
-				const field = ["_psize","islastversion","docNumber","docName","predate","postdate","predate_modify","postdate_modify", "creator", "state", "documentType", "preseration", "model", "interalnumber", "deptcode", "writer", "description", "sortValue", "sortCheck", "searchType", "manufacture", "moldtype", "moldnumber", "moldcost"];
+				const field = ["_psize","islastversion","number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {

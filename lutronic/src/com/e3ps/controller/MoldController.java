@@ -30,6 +30,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.mold.service.MoldHelper;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
@@ -93,10 +94,10 @@ public class MoldController extends BaseController {
 	@Description(value = "금형 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+	public Map<String,Object> create(@RequestBody MoldDTO dto) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			DocumentHelper.service.create(params);
+			MoldHelper.service.create(dto);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch(Exception e) {

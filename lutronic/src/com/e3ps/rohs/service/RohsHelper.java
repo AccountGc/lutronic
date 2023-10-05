@@ -68,15 +68,8 @@ public class RohsHelper {
     	
     	QuerySpec query = new QuerySpec();
     	int idx = query.addClassList(ROHSMaterial.class, true);
-    	ReferenceFactory rf = new ReferenceFactory();
     	
     	try {
-    		
-    		String foid = StringUtil.checkNull((String) params.get("fid"));
-    		if(foid.length() == 0) {
-    			foid = StringUtil.checkNull((String) params.get("folder"));
-    		}
-    		
     		String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
     		String rohsNumber 		= StringUtil.checkNull((String) params.get("rohsNumber"));
     		String rohsName 		= StringUtil.checkNull((String) params.get("rohsName"));

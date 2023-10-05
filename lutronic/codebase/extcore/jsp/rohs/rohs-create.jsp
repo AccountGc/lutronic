@@ -47,9 +47,9 @@
 		</table>
 		<table class="create-table">
 			<colgroup>
-				<col width="174">
+				<col width="150">
 				<col width="*">
-				<col width="174">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
@@ -134,32 +134,12 @@
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="600">
-				<col width="150">
-				<col width="600">
-			</colgroup>
-			<tr>
-				<th class="lb">관련 RoHS</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
+		
+		<!-- 관련 rohs -->
+		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+		</jsp:include>
 		<table class="button-table">
 			<tr>
 				<td class="center">
