@@ -49,7 +49,6 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.comments.CommentsData;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
@@ -67,6 +66,7 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
+import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentRoleType;
@@ -159,17 +159,14 @@ public class PartController extends BaseController {
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception {
 
-		String location = DrawingHelper.ROOTLOCATION;
-		String container = "product";
-
-		ArrayList<Folder> folderList = FolderUtils.loadAllFolder(location, container);
-		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
-		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
-		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
-		ArrayList<NumberCode> partName1List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME1");
-		ArrayList<NumberCode> partName2List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME2");
-		ArrayList<NumberCode> partName3List = NumberCodeHelper.manager.getArrayCodeList("PARTNAME3");
+		JSONArray folderList = PartHelper.manager.recurcive();
+		JSONArray modelList = NumberCodeHelper.manager.toJson("MODEL");
+		JSONArray deptcodeList = NumberCodeHelper.manager.toJson("DEPTCODE");
+		JSONArray matList = NumberCodeHelper.manager.toJson("MAT");
+		JSONArray productmethodList = NumberCodeHelper.manager.toJson("PRODUCTMETHOD");
+		JSONArray partName1List = NumberCodeHelper.manager.toJson("PARTNAME1");
+		JSONArray partName2List = NumberCodeHelper.manager.toJson("PARTNAME2");
+		JSONArray partName3List = NumberCodeHelper.manager.toJson("PARTNAME3");
 		List<NumberCodeDTO> partType1List = new ArrayList<NumberCodeDTO>();
 		partType1List = NumberCodeHelper.manager.getArrayPartTypeList("PARTTYPE", "");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
