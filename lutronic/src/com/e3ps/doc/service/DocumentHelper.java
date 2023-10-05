@@ -201,6 +201,21 @@ public class DocumentHelper {
 	private Object referenceEcpr(WTDocument doc, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(doc, "describes", WTPartDescribeLink.class);
 		while (result.hasMoreElements()) {
+<<<<<<< HEAD
+=======
+			WTPart part = (WTPart) result.nextElement();
+			Map<String, Object> map = new HashMap<>();
+			PartColumn dto = new PartColumn(part);
+			map.put("part_oid", dto.getPart_oid());
+			map.put("_3d", dto.get_3d());
+			map.put("_2d", dto.get_2d());
+			map.put("number", dto.getNumber());
+			map.put("name", dto.getName());
+			map.put("version", dto.getVersion());
+			map.put("creator", dto.getCreator());
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
+			list.add(map);
+>>>>>>> 403bf9ec5bd98ea51b927a462b1fe3d99d41e0d3
 		}
 		return list;
 	}
@@ -211,6 +226,21 @@ public class DocumentHelper {
 	private Object referenceCr(WTDocument doc, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(doc, "cr", DocumentCRLink.class);
 		while (result.hasMoreElements()) {
+<<<<<<< HEAD
+=======
+			WTPart part = (WTPart) result.nextElement();
+			Map<String, Object> map = new HashMap<>();
+			PartColumn dto = new PartColumn(part);
+			map.put("part_oid", dto.getPart_oid());
+			map.put("_3d", dto.get_3d());
+			map.put("_2d", dto.get_2d());
+			map.put("number", dto.getNumber());
+			map.put("name", dto.getName());
+			map.put("version", dto.getVersion());
+			map.put("creator", dto.getCreator());
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
+			list.add(map);
+>>>>>>> 403bf9ec5bd98ea51b927a462b1fe3d99d41e0d3
 		}
 		return list;
 	}
@@ -243,9 +273,23 @@ public class DocumentHelper {
 	private Object referenceEo(WTDocument doc, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(doc, "eo", DocumentEOLink.class);
 		while (result.hasMoreElements()) {
+<<<<<<< HEAD
 			EChangeOrder eo = (EChangeOrder) result.nextElement();
 			EoColumn dto = new EoColumn(eo);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+=======
+			WTPart part = (WTPart) result.nextElement();
+			Map<String, Object> map = new HashMap<>();
+			PartColumn dto = new PartColumn(part);
+			map.put("part_oid", dto.getPart_oid());
+			map.put("_3d", dto.get_3d());
+			map.put("_2d", dto.get_2d());
+			map.put("number", dto.getNumber());
+			map.put("name", dto.getName());
+			map.put("version", dto.getVersion());
+			map.put("creator", dto.getCreator());
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
+>>>>>>> 403bf9ec5bd98ea51b927a462b1fe3d99d41e0d3
 			list.add(map);
 		}
 		return list;
@@ -260,7 +304,19 @@ public class DocumentHelper {
 		while (result.hasMoreElements()) {
 			WTPart part = (WTPart) result.nextElement();
 			PartColumn dto = new PartColumn(part);
+<<<<<<< HEAD
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+=======
+//			map.put("loid", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("part_oid", dto.getPart_oid());
+			map.put("_3d", dto.get_3d());
+			map.put("_2d", dto.get_2d());
+			map.put("number", dto.getNumber());
+			map.put("name", dto.getName());
+			map.put("version", dto.getVersion());
+			map.put("creator", dto.getCreator());
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
+>>>>>>> 403bf9ec5bd98ea51b927a462b1fe3d99d41e0d3
 			list.add(map);
 		}
 		return list;

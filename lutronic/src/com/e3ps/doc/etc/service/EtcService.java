@@ -18,5 +18,15 @@ public interface EtcService {
 	 * 기타 문서 삭제
 	 */
 	public abstract Map<String, Object> delete(String oid) throws Exception;
+	
+	/**
+	 * 기타 문서 개정
+	 */
+	public abstract void revise(EtcDTO dto) throws Exception;
+
+	/**
+	 * 기타 문서 수정
+	 */
+	public abstract void modify(EtcDTO dto) throws Exception;
 
 }

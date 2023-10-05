@@ -220,13 +220,14 @@ iframe {
 			<jsp:param value="250" name="height" />
 		</jsp:include>
 
-		<!-- 	관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+		<!-- 	관련 기타 문서 -->
+		<jsp:include page="/extcore/jsp/document/etc/include/etc-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
+			<jsp:param value="<%= location %>" name="location" />
 		</jsp:include>
 
 		<!-- 	관련 EO -->

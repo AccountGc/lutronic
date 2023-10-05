@@ -379,7 +379,7 @@ iframe {
 		if (!confirm("<%=title%>하시겠습니까?")) {
 			return false;
 		}
-		const url = getCallUrl("/doc/<%=mode%>");
+		const url = getCallUrl("/etc/<%=mode%>");
 
 		// 관련문서
 		const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
