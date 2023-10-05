@@ -226,7 +226,7 @@ public class DocumentHelper {
 			map.put("name", dto.getName());
 			map.put("version", dto.getVersion());
 			map.put("creator", dto.getCreator());
-			map.put("createdDate", dto.getCreateDate().toString().substring(0, 10));
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
 			list.add(map);
 		}
 		return list;
@@ -248,7 +248,7 @@ public class DocumentHelper {
 			map.put("name", dto.getName());
 			map.put("version", dto.getVersion());
 			map.put("creator", dto.getCreator());
-			map.put("createdDate", dto.getCreateDate().toString().substring(0, 10));
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
 			list.add(map);
 		}
 		return list;
@@ -270,7 +270,7 @@ public class DocumentHelper {
 			map.put("name", dto.getName());
 			map.put("version", dto.getVersion());
 			map.put("creator", dto.getCreator());
-			map.put("createdDate", dto.getCreateDate().toString().substring(0, 10));
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
 			list.add(map);
 		}
 		return list;
@@ -292,7 +292,7 @@ public class DocumentHelper {
 			map.put("name", dto.getName());
 			map.put("version", dto.getVersion());
 			map.put("creator", dto.getCreator());
-			map.put("createdDate", dto.getCreateDate().toString().substring(0, 10));
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
 			list.add(map);
 		}
 		return list;
@@ -316,7 +316,7 @@ public class DocumentHelper {
 			map.put("name", dto.getName());
 			map.put("version", dto.getVersion());
 			map.put("creator", dto.getCreator());
-			map.put("createdDate", dto.getCreateDate().toString().substring(0, 10));
+			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
 			list.add(map);
 		}
 		return list;

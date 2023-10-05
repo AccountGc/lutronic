@@ -264,13 +264,13 @@ iframe {
 
 	<div id="tabs-2">
 		<!-- 관련 객체 -->
-		<jsp:include page="/extcore/jsp/document/include/document-reference-include.jsp">
+		<jsp:include page="/extcore/jsp/document/etc/include/etc-reference-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
 	<div id="tabs-3">
 		<!-- 이력관리 -->
-		<jsp:include page="/extcore/jsp/document/include/document-record-include.jsp">
+		<jsp:include page="/extcore/jsp/document/etc/include/etc-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
