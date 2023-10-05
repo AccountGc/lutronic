@@ -95,7 +95,7 @@ boolean create = "create".equals(mode);
 		dateType : "string",
 		width : 150
 	}, {
-		dataField : "st3ep",
+		dataField : "activeUser",
 		headerText : "담당자",
 		dateType : "string",
 		width : 150,
@@ -133,7 +133,7 @@ boolean create = "create".equals(mode);
 			validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 				let isValid = false;
 				for (let i = 0, len = list.length; i < len; i++) {
-					if (list[i] == newValue) {
+					if (list[i]["value"] == newValue) {
 						isValid = true;
 						break;
 					}
@@ -145,7 +145,7 @@ boolean create = "create".equals(mode);
 			}
 		},
 	}, {
-		dataField : "completeDate",
+		dataField : "finishDate",
 		headerText : "완료요청일",
 		dataType : "date",
 		dateInputFormat : "yyyy/mm/dd", // 실제 데이터의 형식 지정

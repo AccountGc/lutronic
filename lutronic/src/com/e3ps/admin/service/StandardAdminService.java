@@ -1031,32 +1031,5 @@ public class StandardAdminService extends StandardManager implements AdminServic
 		}
 	}
 
-	@Override
-	public void deleteActivityDefinition(Map<String, Object> params) throws Exception {
-		ArrayList<Map<String, Object>> activityList = (ArrayList<Map<String, Object>>) params.get("activityList");
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			if (activityList.size() > 0) {
-				for (Map<String, Object> map : activityList) {
-					String oid = (String) map.get("oid");
-					EChangeActivityDefinition def = (EChangeActivityDefinition) CommonUtil.getObject(oid);
-					PersistenceHelper.manager.delete(def);
-				}
-			}
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null) {
-				trs.rollback();
-			}
-		}
-	}
 
 }

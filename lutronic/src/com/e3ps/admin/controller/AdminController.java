@@ -493,66 +493,6 @@ public class AdminController extends BaseController {
 //		return ECAHelper.service.createRootDefinitionAction(request);
 //	}
 
-	@Description(value = "설계변경 활동 페이지")
-	@GetMapping(value = "/changeActivityList")
-	public ModelAndView changeActivityList() throws Exception {
-		ModelAndView model = new ModelAndView();
-		List<ROOTData> rootList = AdminHelper.manager.getRootDefinition();
-		model.addObject("rootList", rootList);
-		model.setViewName("/extcore/jsp/admin/adminChangeActivity-list.jsp");
-		return model;
-	}
-
-	/**
-	 * 설계변경 활동 리스트
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@RequestMapping("/admin_listChangeActivity")
-//	public ModelAndView admin_listChangeActivity(HttpServletRequest request, HttpServletResponse response) {
-//		
-//		String oid = StringUtil.checkNull(request.getParameter("oid"));
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("oid", oid);
-//		model.setViewName("admin:/admin/admin_listChangeActivity");
-//		
-//		return model;
-//	}
-
-	@Description(value = "설계변경 활동 실행")
-	@ResponseBody
-	@PostMapping(value = "/changeActivityList")
-	public Map<String, Object> changeActivityList(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			result = AdminHelper.manager.changeActivityList(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
-//	@ResponseBody
-//	@RequestMapping("/admin_listChangeActivityAction")
-//	public Map<String,Object> admin_listChangeActivityAction(HttpServletRequest request, HttpServletResponse response) {
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		try {
-//			
-//			String rootOid = StringUtil.checkNull(request.getParameter("rootOid"));
-////			System.out.println("admin admin_listChangeActivityAction = "+rootOid);
-//			map = ECAHelper.service.listActiveDefinitionAction(request,response);
-//			
-//		} catch(Exception e) {
-//			map = new HashMap<String,Object>();
-//			e.printStackTrace();
-//		}
-//		return map;
-//	}
 
 	@Description(value = "RootDefinition 수정 페이지")
 	@GetMapping(value = "/updateRootDefinition")
@@ -743,22 +683,7 @@ public class AdminController extends BaseController {
 //		return ECAHelper.service.createActivityDefinitionAction(request);
 //	}
 
-	@Description(value = "ActivityDefinition 삭제")
-	@ResponseBody
-	@PostMapping(value = "/deleteActivityDefinition")
-	public Map<String, Object> deleteActivityDefinition(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			AdminHelper.service.deleteActivityDefinition(params);
-			result.put("msg", DELETE_MSG);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
+
 
 	/**
 	 * ActivityDefinition 수정 페이지

@@ -51,7 +51,7 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					<input type="button" value="루트 수정" title="루트 수정" class="" id="updateRootDefinition">
 					<input type="button" value="루트 삭제" title="루트 삭제" class="red" id="deleteRootDefinition">
 					<input type="button" value="활동추가" title="활동추가" class="blue" id="createActivity">
-					<input type="button" value="활동삭제" title="활동삭제" class="red" id="deleteActivity">
+					<input type="button" value="활동삭제" title="활동삭제" class="red" onclick="_delete();">
 				</td>
 			</tr>
 		</table>
@@ -59,8 +59,8 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('changeActivity-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('changeActivity-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('act-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('act-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -141,9 +141,9 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					headerHeight : 30,
 					showRowNumColumn : false,
 					showRowCheckColumn : true,
-										rowNumHeaderText : "번호",
+					rowNumHeaderText : "번호",
 					fillColumnSizeMode : true,
-					showAutoNoDataMessage : false
+					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
@@ -156,7 +156,7 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				loadGridData();
+				// 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -167,11 +167,10 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 			}
 
 			function loadGridData() {
-				var params = new Object();
-				const field = [ "rootOid", "_psize" ];
+				let params = new Object();
+				const field = [ "root", "_psize" ];
 				params = toField(params, field);
-
-				var url = getCallUrl("/admin/changeActivityList");
+				const url = getCallUrl("/activity/list");
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -186,7 +185,7 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("changeActivity-list");
+				const columns = loadColumnLayout("act-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -194,7 +193,7 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 				});
 				createAUIGrid(columns);
 				selectbox("_psize");
-				selectbox("rootOid");
+				selectbox("root");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -272,8 +271,9 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 			})
 
 			// 활동 삭제
-			$("#deleteActivity").click(function() {
-				var items = AUIGrid.getCheckedRowItemsAll(myGridID);
+
+			function _delete() {
+				const list = AUIGrid.getCheckedRowItemsAll(myGridID);
 				if (items.length == 0) {
 					alert("선택된 활동이 없습니다.");
 					return;
@@ -283,24 +283,16 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					return;
 				}
 
-				let params = new Object();
-				params.activityList = items;
-				const url = getCallUrl("/admin/deleteActivityDefinition");
+				const params = new Object();
+				params.list = list;
+				const url = getCallUrl("/activity/list");
 				call(url, params, function(data) {
-					if (data.result) {
-						alert(data.msg);
-						loadGridData();
-					} else {
-						alert(data.msg);
-					}
-				});
-			})
-
+				}, "DELETE");
+			}
 
 			document.getElementById("root").addEventListener("change", function() {
 				alert("C");
 			})
-			
 		</script>
 	</form>
 </body>

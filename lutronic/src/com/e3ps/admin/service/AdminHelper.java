@@ -267,25 +267,4 @@ public class AdminHelper {
 		return result;
 	}
 
-	/**
-	 * Root별 활동 리스트
-	 */
-	public List<ROOTData> getRootDefinition() throws Exception {
-		List<ROOTData> list = new ArrayList<ROOTData>();
-
-		QuerySpec query = new QuerySpec();
-		int idx = query.addClassList(EChangeActivityDefinitionRoot.class, true);
-
-		query.appendOrderBy(new OrderBy(new ClassAttribute(EChangeActivityDefinitionRoot.class, "sortNumber"), false),
-				new int[] { idx });
-		QueryResult result = PersistenceHelper.manager.find(query);
-
-		while (result.hasMoreElements()) {
-			Object[] o = (Object[]) result.nextElement();
-			EChangeActivityDefinitionRoot root = (EChangeActivityDefinitionRoot) o[0];
-			ROOTData data = new ROOTData(root);
-			list.add(data);
-		}
-		return list;
-	}
 }
