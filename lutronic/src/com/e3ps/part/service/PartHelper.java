@@ -2,6 +2,7 @@ package com.e3ps.part.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
+import wt.folder.SubFolder;
 import wt.iba.definition.StringDefinition;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
@@ -80,6 +82,9 @@ import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
 public class PartHelper {
+	
+	public static final String PART_ROOT = "/Default/PART_Drawing";
+	
 	public static final PartService service = ServiceFactory.getService(PartService.class);
 	public static final PartHelper manager = new PartHelper();
 	
@@ -1121,6 +1126,30 @@ public class PartHelper {
 		return null;
 	}
 	
+	/**
+	 * 품목 폴더 가져오기
+	 */
+	public JSONArray recurcive() throws Exception {
+		ArrayList<String> list = new ArrayList<>();
+		Folder root = FolderTaskLogic.getFolder(PART_ROOT, WCUtil.getWTContainerRef());
+		Enumeration result = FolderTaskLogic.getSubFolders(root);
+		while (result.hasMoreElements()) {
+			Folder folder = (Folder) result.nextElement();
+			list.add(folder.getFolderPath());
+			recurcive(folder, list);
+		}
+		return JSONArray.fromObject(list);
+	}
 	
-	
+	/**
+	 * 품목 폴더 가져오기 재귀함수
+	 */
+	private void recurcive(Folder parent, ArrayList<String> list) throws Exception {
+		QueryResult result = FolderHelper.service.findSubFolders(parent);
+		while (result.hasMoreElements()) {
+			SubFolder folder = (SubFolder) result.nextElement();
+			list.add(folder.getFolderPath());
+			recurcive(folder, list);
+		}
+	}
 }

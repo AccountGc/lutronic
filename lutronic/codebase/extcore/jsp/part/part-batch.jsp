@@ -5,16 +5,17 @@
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
 <%@page import="wt.folder.Folder"%>
 <%@page import="wt.part.QuantityUnit"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<Folder> folderList = (ArrayList<Folder>) request.getAttribute("folderList");
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
-ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
-ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
-ArrayList<NumberCode> partName1List = (ArrayList<NumberCode>) request.getAttribute("partName1List");
-ArrayList<NumberCode> partName2List = (ArrayList<NumberCode>) request.getAttribute("partName2List");
-ArrayList<NumberCode> partName3List = (ArrayList<NumberCode>) request.getAttribute("partName3List");
+JSONArray folderList = (JSONArray) request.getAttribute("folderList");
+JSONArray modelList = (JSONArray) request.getAttribute("modelList");
+JSONArray deptcodeList = (JSONArray) request.getAttribute("deptcodeList");
+JSONArray matList = (JSONArray) request.getAttribute("matList");
+JSONArray productmethodList = (JSONArray) request.getAttribute("productmethodList");
+JSONArray partName1List = (JSONArray) request.getAttribute("partName1List");
+JSONArray partName2List = (JSONArray) request.getAttribute("partName2List");
+JSONArray partName3List = (JSONArray) request.getAttribute("partName3List");
 ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getAttribute("partType1List");
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
@@ -45,39 +46,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			let myGridID;
 			let partType2Map = {};
 			let partType3Map = {};
-			let matList =[];
 			let recentGridItem = null;
-			<%for(NumberCode mat : matList){%>
-				matList.push({ "code" : "<%=mat.getCode()%>", "value" : "<%=mat.getName().replaceAll("(\r\n|\r|\n|\n\r)", "")%>"});
-			<%}%>
-			let folderList = [];
-			<%for(Folder folder : folderList){%>
-				folderList.push({ "code" : "<%=folder.getFolderPath()%>", "value" : "<%=folder.getFolderPath()%>"});
-			<%}%>
-			let deptcodeList = [];
-			<%for(NumberCode deptcode : deptcodeList){%>
-				deptcodeList.push({ "code" : "<%=deptcode.getCode()%>", "value" : "<%=deptcode.getName()%>"});
-			<%}%>
-			let productmethodList = [];
-			<%for(NumberCode productmethod : productmethodList){%>
-				productmethodList.push({ "code" : "<%=productmethod.getCode()%>", "value" : "<%=productmethod.getName()%>"});
-			<%}%>
-			let modelList = [];
-			<%for(NumberCode model : modelList){%>
-				modelList.push({ "code" : "<%=model.getCode()%>", "value" : "<%=model.getName()%>"});
-			<%}%>
-			let partName1List = [];
-			<%for(NumberCode partName1 : partName1List){%>
-				partName1List.push({ "code" : "<%=partName1.getName()%>", "value" : "<%=partName1.getName()%>"});
-			<%}%>
-			let partName2List = [];
-			<%for(NumberCode partName2 : partName2List){%>
-				partName2List.push({ "code" : "<%=partName2.getName()%>", "value" : "<%=partName2.getName()%>"});
-			<%}%>
-			let partName3List = [];
-			<%for(NumberCode partName3 : partName3List){%>
-				partName3List.push({ "code" : "<%=partName3.getName()%>", "value" : "<%=partName3.getName()%>"});
-			<%}%>
+			let matList = <%= matList %>;
+			let folderList = <%= folderList %>;
+			let deptcodeList = <%= deptcodeList %>
+			let productmethodList = <%= productmethodList %>
+			let modelList = <%= modelList %>
+			let partName1List = <%= partName1List %>
+			let partName2List = <%= partName2List %>
+			let partName3List = <%= partName3List %>
 			let partType1List = [];
 			<%for(NumberCodeDTO partType1 : partType1List){%>
 				partType1List.push({ "code" : "<%= partType1.getOid() %>", "value" : "[<%= partType1.getCode() %>]<%= partType1.getName() %>"});
@@ -104,24 +81,26 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = folderList.length; i < len; i++) {
-						if (folderList[i]["code"] == value) {
-							retStr = folderList[i]["value"];
-							break;
-						}
-					}
-					return retStr == "" ? value : retStr;
-				},
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: folderList, 
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value" 
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = folderList.length; i < len; i++) {
+							if (folderList[i]["code"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
 				dataField : "partType1",
@@ -349,8 +328,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "mat",
 					headerText : "재질코드",
 					width : 120,
+					editable : false
 				}, {
-					dataField : "matName",
+					dataField : "mat",
 					headerText : "재질명",
 					width : 120,
 					renderer : {
@@ -365,11 +345,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							AUIGrid.openInputer(event.pid);
 						}
 					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = matList.length; i < len; i++) {
-							if (matList[i]["code"] == value) {
-		                        AUIGrid.setCellValue(myGridID, rowIndex, "mat", value);
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = matList.length; i < len; i++) {
+							if (matList[i]["key"] == value) {
 								retStr = matList[i]["value"];
 								break;
 							}
@@ -377,13 +356,27 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return retStr == "" ? value : retStr;
 					},
 					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: matList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code", 
-						valueField: "value" 
+						type : "ComboBoxRenderer",
+						list : matList,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = matList.length; i < len; i++) {
+								if (matList[i] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				} ]
 			}, {
@@ -404,9 +397,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					}
 				},
 				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = partName1List.length; i < len; i++) {
-						if (partName1List[i]["code"] == value) {
+					let retStr = "";
+					for (let i = 0, len = partName1List.length; i < len; i++) {
+						if (partName1List[i]["key"] == value) {
+							// 								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode_code", dlist[i]["key"]);
 							retStr = partName1List[i]["value"];
 							break;
 						}
@@ -416,11 +410,25 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: partName1List, 
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code",
-					valueField: "value"
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = partName1List.length; i < len; i++) {
+							if (partName1List[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
 				dataField : "partName2",
@@ -440,9 +448,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					}
 				},
 				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = partName2List.length; i < len; i++) {
-						if (partName2List[i]["code"] == value) {
+					let retStr = "";
+					for (let i = 0, len = partName2List.length; i < len; i++) {
+						if (partName2List[i]["key"] == value) {
+							// 								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode_code", dlist[i]["key"]);
 							retStr = partName2List[i]["value"];
 							break;
 						}
@@ -452,11 +461,25 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: partName2List, 
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code",
-					valueField: "value"
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = partName2List.length; i < len; i++) {
+							if (partName2List[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
 				dataField : "partName3",
@@ -476,9 +499,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					}
 				},
 				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = partName3List.length; i < len; i++) {
-						if (partName3List[i]["code"] == value) {
+					let retStr = "";
+					for (let i = 0, len = partName3List.length; i < len; i++) {
+						if (partName3List[i]["key"] == value) {
+							// 								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode_code", dlist[i]["key"]);
 							retStr = partName3List[i]["value"];
 							break;
 						}
@@ -488,11 +512,25 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: partName3List, 
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code",
-					valueField: "value"
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = partName3List.length; i < len; i++) {
+							if (partName3List[i] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
 				dataField : "partName4",
@@ -536,11 +574,25 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: unitList, 
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
 					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
 					keyField: "code", 
-					valueField: "value" 
+					valueField: "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = unitList.length; i < len; i++) {
+							if (unitList[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			}, {
 				headerText : "부서",
@@ -548,8 +600,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "deptcode",
 					headerText : "부서코드",
 					width : 120,
+					editable : false
 				}, {
-					dataField : "deptcodeName",
+					dataField : "deptcode",
 					headerText : "부서명",
 					width : 120,
 					renderer : {
@@ -564,11 +617,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							AUIGrid.openInputer(event.pid);
 						}
 					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = deptcodeList.length; i < len; i++) {
-							if (deptcodeList[i]["code"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "deptcode", value);
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = deptcodeList.length; i < len; i++) {
+							if (deptcodeList[i]["key"] == value) {
 								retStr = deptcodeList[i]["value"];
 								break;
 							}
@@ -576,13 +628,27 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return retStr == "" ? value : retStr;
 					},
 					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: deptcodeList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code",
-						valueField: "value"
+						type : "ComboBoxRenderer",
+						list : deptcodeList,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = deptcodeList.length; i < len; i++) {
+								if (deptcodeList[i] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				} ]
 			}, {
@@ -591,8 +657,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "model",
 					headerText : "프로젝트 코드",
 					width : 120,
+					editable : false
 				}, {
-					dataField : "modelName",
+					dataField : "model",
 					headerText : "프로젝트 명",
 					width : 120,
 					renderer : {
@@ -607,11 +674,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							AUIGrid.openInputer(event.pid);
 						}
 					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = modelList.length; i < len; i++) {
-							if (modelList[i]["code"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "model", value);
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = modelList.length; i < len; i++) {
+							if (modelList[i]["key"] == value) {
 								retStr = modelList[i]["value"];
 								break;
 							}
@@ -619,13 +685,27 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return retStr == "" ? value : retStr;
 					},
 					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: modelList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code",
-						valueField: "value"
+						type : "ComboBoxRenderer",
+						list : modelList,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = modelList.length; i < len; i++) {
+								if (modelList[i] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				} ]
 			}, {
@@ -634,8 +714,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "productmethod",
 					headerText : "제작방법 코드",
 					width : 120,
+					editable : false
 				}, {
-					dataField : "productmethodName",
+					dataField : "productmethod",
 					headerText : "제작방법",
 					width : 120,
 					renderer : {
@@ -650,11 +731,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							AUIGrid.openInputer(event.pid);
 						}
 					},
-					labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-						var retStr = "";
-						for (var i = 0, len = productmethodList.length; i < len; i++) {
-							if (productmethodList[i]["code"] == value) {
-								AUIGrid.setCellValue(myGridID, rowIndex, "productmethod", value);
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = productmethodList.length; i < len; i++) {
+							if (productmethodList[i]["key"] == value) {
 								retStr = productmethodList[i]["value"];
 								break;
 							}
@@ -662,13 +742,27 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return retStr == "" ? value : retStr;
 					},
 					editRenderer : {
-						type: "ComboBoxRenderer",
-						list: productmethodList, 
-						autoCompleteMode: true, // 자동완성 모드 설정
-						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-						keyField: "code",
-						valueField: "value"
+						type : "ComboBoxRenderer",
+						list : productmethodList,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = productmethodList.length; i < len; i++) {
+								if (productmethodList[i] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				} ]
 			}, {
@@ -850,75 +944,94 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			}
 			
 			function batch(){
-				const partList = AUIGrid.getGridData(myGridID);
-				
-				
-				for(let i = 0; i < partList.length; i++){
-					
-					const rowNum = i + 1;
-					
-					const fid = document.querySelector("#fid").value;
-					partList[i].fid = fid;
-					
-					if(isEmpty(partList[i].location)){
-						alert(rowNum + "행의 품목에 저장위치를 입력하세요.");
-						return;
+				const gridData = AUIGrid.getGridData(myGridID);
+				for (let i = 0; i < gridData.length; i++) {
+					const item = gridData[i];
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item.id);
+
+					if (isNull(item.location)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 0, "저장위치를 선택하세요.");
+						return false;
+					}
+
+					if (isNull(item.partType1)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 1, "품목구분을 선택하세요.");
+						return false;
+					}
+
+					if (isNull(item.partType2)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 2, "대분류를 입력하세요.");
+						return false;
+					}
+
+					if (isNull(item.partType3)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 3, "중분류를 선택하세요.");
+						return false;
+					}
+
+					if (isNull(item.seq)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "SEQ를 선택하세요.");
+						return false;
+					}
+
+					if (isNull(item.etc)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "CUSTOM을 선택하세요.");
+						return false;
 					}
 					
-					if(isEmpty(partList[i].partType1)){
-						alert(rowNum + "행의 품목에 품목구분을 입력하세요.");
-						return;
+					if (isNull(item.etc)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 7, "재질명을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].partType2)){
-						alert(rowNum + "행의 품목에 대분류를 입력하세요.");
-						return;
+
+					if (isNull(item.partName1)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "품목명(대제목)을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].partType3)){
-						alert(rowNum + "행의 품목에 중분류를 입력하세요.");
-						return;
+
+					if (isNull(item.partName2)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 9, "품목명(중제목)을 선택하세요.");
+						return false;
 					}
-					
-					if(isEmpty(partList[i].partName1)){
-						alert(rowNum + "행의 품목에 품목명(대제목)을 입력하세요.");
-						return;
+
+					if (isNull(item.partName3)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 10, "품목명(소제목)을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].partName2)){
-						alert(rowNum + "행의 품목에 품목명(중제목)을 입력하세요.");
-						return;
+
+					if (isNull(item.partName4)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 11, "품목명(KEY-IN)을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].partName3)){
-						alert(rowNum + "행의 품목에 품목명(소제목)을 입력하세요.");
-						return;
+
+					if (isNull(item.unit)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 12, "단위를 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].partName4)){
-						alert(rowNum + "행의 품목에 품목명(KEY-IN)을 입력하세요.");
-						return;
+
+					if (isNull(item.deptcode)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 14, "부서를 선택하세요.");
+						return false;
 					}
-					
-					if(isEmpty(partList[i].unit)){
-						alert(rowNum + "행의 품목에 단위를 입력하세요.");
-						return;
+
+					if (isNull(item.model)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 16, "프로젝트 코드를 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].deptcode)){
-						alert(rowNum + "행의 품목에 부서를 입력하세요.");
-						return;
+
+					if (isNull(item.productmethod)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 18, "제작방법을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].model)){
-						alert(rowNum + "행의 품목에 프로젝트 코드를 입력하세요.");
-						return;
+
+					if (isNull(item.specification)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 19, "사양을 선택하세요.");
+						return false;
 					}
-					if(isEmpty(partList[i].productmethod)){
-						alert(rowNum + "행의 품목에 제작방법을 입력하세요.");
-						return;
-					}
-					if(isEmpty(partList[i].specification)){
-						alert(rowNum + "행의 품목에 사양을 입력하세요.");
-						return;
-					}
-					
-					if(isEmpty(partList[i].primary)){
-						alert(rowNum + "행의 품목에 주도면을 첨부해주세요.");
-						return;
+
+					if (isNull(item.primary)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 21, "주도면을 선택하세요.");
+						return false;
 					}
 				}
 				
@@ -928,7 +1041,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				
 				const url = getCallUrl("/part/batch");
 				let params = new Object();
-				params.partList = partList;
+				params.partList = gridData;
 				
 				call(url, params, function(data) {
 					alert(data.msg);
