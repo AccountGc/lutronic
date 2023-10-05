@@ -1,11 +1,10 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.org.service.OrgHelper"%>
-<%@page import="com.google.gwt.json.client.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 JSONArray list = OrgHelper.manager.toJson();
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
-String method = request.getParameter("method");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
@@ -33,7 +32,7 @@ boolean create = "create".equals(mode);
 			<%
 			if (create || update) {
 			%>
-			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
+			<input type="button" value="추가" title="추가" class="blue" onclick="insertRow200();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow200();">
 			<%
 			}
@@ -44,24 +43,48 @@ boolean create = "create".equals(mode);
 </table>
 <script type="text/javascript">
 	let myGridID200;
-	const list = <%=list%>
+	const step = [ "STEP1", "STEP2" ];
+	const list =
+<%=list%>
 	const columns200 = [ {
 		dataField : "step",
 		headerText : "STEP",
 		dateType : "string",
-		width : 150
+		width : 150,
+		editRenderer : {
+			type : "ComboBoxRenderer",
+			list : step,
+			matchFromFirst : false,
+			autoCompleteMode : true, // 자동완성 모드 설정
+			autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+			validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+				let isValid = false;
+				console.log(fromClipboard):
+				for (let i = 0, len = list.length; i < len; i++) {
+					if (list[i] == newValue) {
+						isValid = true;
+						break;
+					}
+				}
+				return {
+					"validate" : isValid,
+					"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+				};
+			}
+		},
 	}, {
-		dataField : "step",
+		dataField : "step1",
 		headerText : "활동면",
 		dateType : "string",
 		width : 150
 	}, {
-		dataField : "step",
+		dataField : "ste2p",
 		headerText : "활동구분",
 		dateType : "string",
 		width : 150
 	}, {
-		dataField : "step",
+		dataField : "st3ep",
 		headerText : "담당자",
 		dateType : "string",
 		width : 150,
@@ -109,9 +132,9 @@ boolean create = "create".equals(mode);
 					"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
 				};
 			}
-		},		
+		},
 	}, {
-		dataField : "step",
+		dataField : "st4ep",
 		headerText : "완료요청일",
 		dateType : "string",
 		width : 150
@@ -130,14 +153,32 @@ boolean create = "create".equals(mode);
 			showStateColumn : true,
 			showRowCheckColumn : true,
 			enableFilter : true,
-			autoGridHeight : true
+			autoGridHeight : true,
+			editable : true
 		}
 		myGridID200 = AUIGrid.create("#grid200", columnLayout, props);
 		auiReadyHandler();
+		AUIGrid.bind(myGridID200, "keyDown", auiKeyDownHandler);
+	}
+
+	function auiKeyDownHandler(event) {
+		if (event.keyCode == 13) {
+			var selectedItems = AUIGrid.getSelectedItems(event.pid);
+			var rowIndex = selectedItems[0].rowIndex;
+			if (rowIndex === AUIGrid.getRowCount(event.pid) - 1) {
+				AUIGrid.addRow(event.pid, {});
+				return false;
+			}
+		}
+		return true;
 	}
 
 	function auiReadyHandler() {
-		AUIGrid.addRow(myGridID, {}, "first");
+		AUIGrid.addRow(myGridID200, {}, "first");
+	}
+
+	function insertRow200() {
+
 	}
 
 	function deleteRow200() {

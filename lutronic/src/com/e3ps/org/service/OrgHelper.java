@@ -153,7 +153,8 @@ public class OrgHelper {
 			People p = (People) obj[0];
 			Map<String, String> map = new HashMap<>();
 			map.put("key", p.getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("value", p.getName() + " / " + p.getDepartment() != null ? p.getDepartment().getName() : "지정안됨");
+			map.put("value",
+					p.getName() + " [" + p.getDepartment() != null ? p.getDepartment().getName() + "]" : "지정안됨");
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);

@@ -113,6 +113,14 @@
 			<jsp:param value="250" name="height" />
 		</jsp:include>
 
+		<!-- 	설변 활동 -->
+		<jsp:include page="/extcore/jsp/change/include/activity-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="250" name="height" />
+		</jsp:include>
+
 		<table class="button-table">
 			<tr>
 				<td class="center">
