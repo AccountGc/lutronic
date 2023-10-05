@@ -51,6 +51,18 @@ boolean create = "create".equals(mode);
 		headerText : "STEP",
 		dateType : "string",
 		width : 150,
+		renderer : {
+			type : "IconRenderer",
+			iconWidth : 16,
+			iconHeight : 16,
+			iconPosition : "aisleRight",
+			iconTableRef : {
+				"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+			},
+			onClick : function(event) {
+				AUIGrid.openInputer(event.pid);
+			}
+		},
 		editRenderer : {
 			type : "ComboBoxRenderer",
 			list : step,
@@ -60,9 +72,8 @@ boolean create = "create".equals(mode);
 			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
 			validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 				let isValid = false;
-				console.log(fromClipboard):
-				for (let i = 0, len = list.length; i < len; i++) {
-					if (list[i] == newValue) {
+				for (let i = 0, len = step.length; i < len; i++) {
+					if (step[i] == newValue) {
 						isValid = true;
 						break;
 					}
@@ -134,10 +145,39 @@ boolean create = "create".equals(mode);
 			}
 		},
 	}, {
-		dataField : "st4ep",
+		dataField : "completeDate",
 		headerText : "완료요청일",
-		dateType : "string",
-		width : 150
+		dataType : "date",
+		dateInputFormat : "yyyy/mm/dd", // 실제 데이터의 형식 지정
+		formatString : "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
+		width : 160,
+		renderer : {
+			type : "IconRenderer",
+			iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+			iconHeight : 16,
+			iconPosition : "aisleRight",
+			iconTableRef : { // icon 값 참조할 테이블 레퍼런스
+				"default" : "/Windchill/extcore/component/AUIGrid/images/calendar-icon.png" // default
+			},
+			onClick : function(event) {
+				// 달력 아이콘 클릭하면 실제로 달력을 띄움.
+				// 즉, 수정으로 진입함.
+				AUIGrid.openInputer(event.pid);
+			}
+		},
+		editRenderer : {
+			type : "CalendarRenderer",
+			defaultFormat : "yyyy/mm/dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+			showPlaceholder: true, // defaultFormat 설정된 값으로 플래스홀더 표시
+			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+			onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+			showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+			showTodayBtn : true, // 오늘 날짜 선택 버턴 출력
+			showUncheckDateBtn : true, // 날짜 선택 해제 버턴 출력
+			todayText : "오늘 선택", // 오늘 날짜 버턴 텍스트
+			uncheckDateText : "날짜 선택 해제", // 날짜 선택 해제 버턴 텍스트
+			uncheckDateValue : "-", // 날짜 선택 해제 버턴 클릭 시 적용될 값.
+		}
 	}, ]
 
 	function createAUIGrid200(columnLayout) {

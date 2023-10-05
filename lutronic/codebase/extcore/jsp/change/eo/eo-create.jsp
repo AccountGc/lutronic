@@ -110,7 +110,7 @@
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="250" name="height" />
+			<jsp:param value="150" name="height" />
 		</jsp:include>
 
 		<!-- 	설변 활동 -->

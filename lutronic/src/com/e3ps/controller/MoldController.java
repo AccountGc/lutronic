@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import wt.doc.WTDocument;
-import wt.org.WTUser;
-import wt.session.SessionHelper;
-
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -32,22 +28,22 @@ import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.mold.service.MoldHelper;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.dto.RohsData;
-import com.e3ps.rohs.service.RohsHelper;
-import com.e3ps.rohs.service.RohsQueryHelper;
+
+import wt.doc.WTDocument;
+import wt.org.WTUser;
+import wt.session.SessionHelper;
 
 @Controller
 @RequestMapping(value = "/mold/**")
 public class MoldController extends BaseController {
-	
+
 	@Description(value = "금형 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
-		List<Map<String,String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
@@ -60,7 +56,7 @@ public class MoldController extends BaseController {
 		model.setViewName("/extcore/jsp/mold/mold-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "금형 검색")
 	@ResponseBody
 	@PostMapping(value = "/list")
@@ -76,10 +72,10 @@ public class MoldController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "금형 등록 페이지")
 	@GetMapping(value = "/create")
-	public ModelAndView create() throws Exception{
+	public ModelAndView create() throws Exception {
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> moldtypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
@@ -90,38 +86,38 @@ public class MoldController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		return model;
 	}
-	
+
 	@Description(value = "금형 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public Map<String,Object> create(@RequestBody MoldDTO dto) {
+	public Map<String, Object> create(@RequestBody MoldDTO dto) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			MoldHelper.service.create(dto);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "금형 상세 페이지")
-	@GetMapping(value =  "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception{
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		DocumentDTO dto = new DocumentDTO(doc);
-		
+
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("/extcore/jsp/mold/mold-view.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "금형 일괄결재 페이지")
 	@GetMapping(value = "/all")
 	public ModelAndView all() {
@@ -129,7 +125,7 @@ public class MoldController extends BaseController {
 		model.setViewName("/extcore/jsp/mold/mold-all.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "승인원 검색 페이지")
 	@GetMapping(value = "/ap-list")
 	public ModelAndView apList() throws Exception {
@@ -147,10 +143,10 @@ public class MoldController extends BaseController {
 		model.setViewName("/extcore/jsp/ap/ap-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "승인원 등록 페이지")
 	@GetMapping(value = "/ap-create")
-	public ModelAndView apCreate() throws Exception{
+	public ModelAndView apCreate() throws Exception {
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> moldtypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
@@ -161,7 +157,7 @@ public class MoldController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		return model;
 	}
-	
+
 	@Description(value = "승인원 결재 페이지")
 	@GetMapping(value = "/ap-all")
 	public ModelAndView apAll() {
@@ -169,8 +165,10 @@ public class MoldController extends BaseController {
 		model.setViewName("/extcore/jsp/ap/ap-all.jsp");
 		return model;
 	}
-	
-	/**	문서 상세보기
+
+	/**
+	 * 문서 상세보기
+	 * 
 	 * @param request
 	 * @param response
 	 * @param oid
@@ -188,8 +186,10 @@ public class MoldController extends BaseController {
 //		model.addObject("docData", docData);
 //		return model;
 //	}
-	
-	/**  일괄 등록 메뉴 이동
+
+	/**
+	 * 일괄 등록 메뉴 이동
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -198,12 +198,14 @@ public class MoldController extends BaseController {
 	public ModelAndView createPackageMold(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu3");
-		model.addObject("module","mold");
+		model.addObject("module", "mold");
 		model.setViewName("default:/mold/createPackageMold");
 		return model;
 	}
-	
-	/**	 일괄 등록 수행
+
+	/**
+	 * 일괄 등록 수행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -211,14 +213,16 @@ public class MoldController extends BaseController {
 	@RequestMapping("/createPackageMoldAction")
 	public ModelAndView createPackageMoldAction(HttpServletRequest request, HttpServletResponse response) {
 		String xmlString = DocumentHelper.service.createPackageDocumentAction(request, response);
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("xmlString", xmlString);
 		model.setViewName("empty:/mold/createPackageMoldAction");
 		return model;
 	}
-	
-	/**	일괄 결제 메뉴 이동
+
+	/**
+	 * 일괄 결제 메뉴 이동
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -227,12 +231,14 @@ public class MoldController extends BaseController {
 	public ModelAndView approvalPackageMold(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu4");
-		model.addObject("module","mold");
+		model.addObject("module", "mold");
 		model.setViewName("default:/mold/approvalPackageMold");
 		return model;
 	}
-	
-	/**	일괄 결제 실행
+
+	/**
+	 * 일괄 결제 실행
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -242,8 +248,10 @@ public class MoldController extends BaseController {
 	public ResultData approvalPackageMoldAction(HttpServletRequest request, HttpServletResponse response) {
 		return DocumentHelper.service.approvalPackageDocumentAction(request, response);
 	}
-	
-	/**	관련 금형, rohs 추가
+
+	/**
+	 * 관련 금형, rohs 추가
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -255,13 +263,13 @@ public class MoldController extends BaseController {
 		String title = request.getParameter("title");
 		String paramName = request.getParameter("paramName");
 		String type = request.getParameter("type");
-		String state = StringUtil.checkReplaceStr(request.getParameter("state"),"");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"),"");
+		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
+		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
 		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
 		List<DocumentDTO> list = null;
 		try {
-			list = DocumentHelper.service.include_DocumentList(oid,moduleType);
-		} catch(Exception e) {
+			list = DocumentHelper.service.include_DocumentList(oid, moduleType);
+		} catch (Exception e) {
 			e.printStackTrace();
 			list = new ArrayList<DocumentDTO>();
 		}
@@ -271,13 +279,15 @@ public class MoldController extends BaseController {
 		model.addObject("title", title);
 		model.addObject("paramName", paramName);
 		model.addObject("type", type);
-		model.addObject("state",state);
-		model.addObject("searchType",searchType);
-		model.addObject("lifecycle",lifecycle);
+		model.addObject("state", state);
+		model.addObject("searchType", searchType);
+		model.addObject("lifecycle", lifecycle);
 		return model;
 	}
-	
-	/** 금형, rohs 검색 팝업
+
+	/**
+	 * 금형, rohs 검색 팝업
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -289,21 +299,21 @@ public class MoldController extends BaseController {
 		String mode = StringUtil.checkReplaceStr(request.getParameter("mode"), "mutil");
 		String type = StringUtil.checkReplaceStr(request.getParameter("type"), "select");
 		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"),"");
+		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
 		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
 		String nameValue = "";
-		
-		if(searchType.equals("MOLD")){
+
+		if (searchType.equals("MOLD")) {
 			nameValue = "${f:getMessage('금형')}";
-		}else if(searchType.equals("rohs")){
+		} else if (searchType.equals("rohs")) {
 			nameValue = "${f:getMessage('물질')}";
 		}
-		
+
 		model.addObject("mode", mode);
 		model.addObject("modeulType", moduleType);
 		model.addObject("type", type);
 		model.addObject("state", state);
-		model.addObject("searchType",searchType);
+		model.addObject("searchType", searchType);
 		model.addObject("lifecycle", lifecycle);
 		model.addObject("nameValue", nameValue);
 		model.setViewName("popup:/mold/selectOtherPopup");
