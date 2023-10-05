@@ -67,7 +67,7 @@ import com.ptc.windchill.annotations.metadata.*;
          constraints=@PropertyConstraints(required=true)),
       myRole=@MyRole(name="holder"))
    })
-public class ROHSContHolder extends _ROHSContHolder {
+public class d extends _ROHSContHolder {
 
 
    static final long serialVersionUID = 1;

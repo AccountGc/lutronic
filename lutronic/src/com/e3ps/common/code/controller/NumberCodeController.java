@@ -12,15 +12,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.controller.BaseController;
 import com.e3ps.org.service.OrgHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import wt.doc.DocumentType;
 
 @Controller
 @RequestMapping(value = "/code/**")
@@ -31,6 +35,18 @@ public class NumberCodeController extends BaseController {
 	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/admin/code/code-list.jsp");
+		return model;
+	}
+
+	@Description(value = "코드 체계관리 팝업 페이지")
+	@GetMapping(value = "/popup")
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi, @RequestParam String codeType)
+			throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.addObject("codeType", codeType);
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
+		model.setViewName("popup:/admin/code/code-list-popup");
 		return model;
 	}
 
@@ -135,7 +151,7 @@ public class NumberCodeController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ASIXJ 넘버코드 파인더")
 	@PostMapping(value = "/finder")
 	@ResponseBody

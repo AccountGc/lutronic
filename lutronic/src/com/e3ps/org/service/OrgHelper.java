@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
@@ -21,6 +22,9 @@ public class OrgHelper {
 
 	public static final OrgHelper manager = new OrgHelper();
 
+	/**
+	 * 부서 트리 가져오기
+	 */
 	public JSONArray tree() throws Exception {
 		Department root = getRoot();
 		JSONArray list = new JSONArray();
@@ -54,6 +58,9 @@ public class OrgHelper {
 		return list;
 	}
 
+	/**
+	 * 부서 트리 가져오기 재귀 함수
+	 */
 	private void tree(Department parent, JSONObject parentNode) throws Exception {
 		JSONArray children = new JSONArray();
 		QuerySpec query = new QuerySpec();
@@ -87,6 +94,9 @@ public class OrgHelper {
 		return null;
 	}
 
+	/**
+	 * AXISJ 파인더
+	 */
 	public ArrayList<Map<String, String>> finder(Map<String, String> params) throws Exception {
 		ArrayList<Map<String, String>> list = new ArrayList<>();
 		String value = params.get("value");
@@ -125,5 +135,27 @@ public class OrgHelper {
 			getSubDepartment(child, list);
 		}
 		return list;
+	}
+
+	/**
+	 * AUI 그리드에서 사용하기 위한함수 JSON 형태로 리턴
+	 */
+	public JSONArray toJson() throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+		QuerySpecUtils.toBooleanAnd(query, idx, People.class, People.IS_DISABLE, false);
+		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			People p = (People) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("key", p.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("value", p.getName() + " / " + p.getDepartment() != null ? p.getDepartment().getName() : "지정안됨");
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
 	}
 }

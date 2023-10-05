@@ -113,7 +113,6 @@
 					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
-					style : "aui-left",
 					width : 300,
 					filter : {
 						showIcon : true,

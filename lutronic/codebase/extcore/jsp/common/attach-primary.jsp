@@ -1,3 +1,5 @@
+<%@page import="com.e3ps.org.service.OrgHelper"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");

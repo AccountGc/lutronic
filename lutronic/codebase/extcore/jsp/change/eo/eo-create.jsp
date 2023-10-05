@@ -57,16 +57,21 @@
 			</tr>
 			<tr>
 				<th class="req lb">제품명</th>
-				<td colspan="3" class="indent5">
-					<input type="text" name="model" id="model" data-multi="false" class="width-200">
-					<input type="hidden" name="model_oid" id="model_oid">
-					<img src="/Windchill/extcore/images/delete.png"  title="삭제" onclick="clearUser('creator')">
+				<td colspan="3" class="indent5 pt5">
+					<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+						<jsp:param value="insert300" name="method" />
+						<jsp:param value="MODEL" name="codeType" />
+						<jsp:param value="true" name="multi" />
+						<jsp:param value="150" name="height" />
+					</jsp:include>
 				</td>
 			</tr>
 			<tr>
 				<th class="req lb">완제품 품목</th>
 				<td colspan="3" class="indent5 pt5">
-					<jsp:include page="/extcore/jsp/change/include/include-complete-part.jsp">
+					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
 				</td>
@@ -129,7 +134,6 @@
 				const eoCommentB = toId("eoCommentB");
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
-				const model_oid = toId("model_oid");
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
 				const rows104 = AUIGrid.getAddedRowItems(myGridID104);
 				// 관련문서
@@ -144,7 +148,6 @@
 					secondarys : secondarys,
 					rows104 : rows104,
 					rows90 : rows90,
-					model_oid : model_oid
 				}
 				logger(params);
 				parent.openLayer();
@@ -157,16 +160,16 @@
 					}
 				});
 			}
-			
+
 			function finder(id) {
 				axdom("#" + id).bindSelector({
-					reserveKeys: {
-						options: "list",
-						optionValue: "oid",
-						optionText: "name"
+					reserveKeys : {
+						options : "list",
+						optionValue : "oid",
+						optionText : "name"
 					},
-					optionPrintLength: "all",
-					onsearch: function(id, obj, callBack) {
+					optionPrintLength : "all",
+					onsearch : function(id, obj, callBack) {
 						const value = document.getElementById(id).value;
 						const params = new Object();
 						const url = getCallUrl("/code/finder");
@@ -175,11 +178,11 @@
 						params.obj = obj;
 						call(url, params, function(data) {
 							callBack({
-								options: data.list
+								options : data.list
 							})
 						})
 					},
-					onchange: function() {
+					onchange : function() {
 						const id = this.targetID;
 						const value = this.selectedOption.oid
 						document.getElementById(id + "_oid").value = value;
@@ -189,16 +192,21 @@
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				finder("model");
 				createAUIGrid104(columns104);
-				AUIGrid.resize(myGridID104);
 				createAUIGrid90(columns90);
+				createAUIGrid300(columns300);
+				createAUIGrid200(columns200);
+				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);
+				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID200);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);
+				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID200);
 			});
 		</script>
 	</form>
