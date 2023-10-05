@@ -27,9 +27,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="상위품목" title="상위품목" id="upItem">
-			<input type="button" value="하위품목" title="하위품목" id="downItem">
-			<input type="button" value="END ITEM" title="END ITEM" id="endItem">
+<!-- 			<input type="button" value="상위품목" title="상위품목" id="upItem"> -->
+<!-- 			<input type="button" value="하위품목" title="하위품목" id="downItem"> -->
+<!-- 			<input type="button" value="END ITEM" title="END ITEM" id="endItem"> -->
 			<%-- 			<% if(!data.isLateste()){ %> --%>
 			<%-- 				<input type="button" value="최신Rev." title="최신Rev."  id="latestBtn" value="data.latestOid()"> --%>
 			<%-- 			<% } %> --%>
@@ -101,6 +101,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		</li>
 		<li>
 			<a href="#tabs-7">이력 관리</a>
+		</li>
+		<li>
+			<a href="#tabs-8">관련 품목</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -325,6 +328,12 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	<!-- 이력관리 -->
 	<div id="tabs-7">
 		<jsp:include page="/extcore/jsp/part/include/part-record-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
+	<!-- 관련품목 -->
+	<div id="tabs-8">
+		<jsp:include page="/extcore/jsp/part/include/part-related-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
@@ -592,6 +601,28 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGrid51(columns51);
 					}
 					break;
+				case "tabs-8":
+					const isCreated80 = AUIGrid.isCreated(myGridID80); // 상위 품목
+					if (isCreated80) {
+						AUIGrid.resize(myGridID80);
+					} else {
+						createAUIGrid80(columns80);
+					}
+					
+					const isCreated81 = AUIGrid.isCreated(myGridID81); // 하위 품목
+					if (isCreated81) {
+						AUIGrid.resize(myGridID81);
+					} else {
+						createAUIGrid81(columns81);
+					}
+					
+					const isCreated82 = AUIGrid.isCreated(myGridID82); // end item
+					if (isCreated82) {
+						AUIGrid.resize(myGridID82);
+					} else {
+						createAUIGrid82(columns82);
+					}
+					break;	
 				}
 			},
 		});
