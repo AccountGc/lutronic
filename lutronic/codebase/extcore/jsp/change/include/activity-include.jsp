@@ -12,3 +12,7 @@ String oid = request.getParameter("oid");
 		</td>
 	</tr>
 </table>
+
+<script type="text/javascript">
+	let myGridID200;
+</script>
