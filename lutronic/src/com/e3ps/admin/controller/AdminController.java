@@ -405,95 +405,6 @@ public class AdminController extends BaseController {
 		return result;
 	}
 
-	// 2016.03.02 이태용차장 문의 넘버코드 사라짐 현상으로 인해 로그 추가
-	public void createLog(String log, String fileName) {
-//		System.out.println("========== "+fileName+" ===========");
-		String filePath = "D:\\e3ps\\numbercode";
-
-		File folder = new File(filePath);
-
-		if (!folder.isDirectory()) {
-
-			folder.mkdirs();
-		}
-		fileName = fileName.replace(",", "||");
-		fileName = "NumberCode" + "_" + fileName;
-		// System.out.println("fileName= " + fileName +",isChange =" + isChange);
-		String toDay = com.e3ps.common.util.DateUtil.getCurrentDateString("date");
-		toDay = com.e3ps.common.util.StringUtil.changeString(toDay, "/", "-");
-		String logFileName = fileName + "_" + toDay.concat(".log");
-		String logFilePath = filePath.concat(File.separator).concat(logFileName);
-		File file = new File(logFilePath);
-
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(file, true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		PrintWriter out = new PrintWriter(new BufferedWriter(fw), true);
-		out.write(log);
-		// System.out.println(log);
-		out.write("\n");
-		out.close();
-	}
-
-	@Description(value = "RootDefinition 등록 페이지")
-	@GetMapping(value = "/createRootDefinition")
-	public ModelAndView createRootDefinition() throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/admin/rootDefinition-create");
-		return model;
-	}
-
-	/**
-	 * RootDefinition 등록 페이지
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@RequestMapping("/createRootDefinition")
-//	public ModelAndView createRootDefinition(HttpServletRequest request, HttpServletResponse response){
-//		ModelAndView model = new ModelAndView();
-//		
-//		model.setViewName("popup:/admin/createRootDefinition");
-//		return model;
-//	}
-
-	@Description(value = "RootDefinition 등록 실행")
-	@ResponseBody
-	@PostMapping(value = "/createRootDefinition")
-	public Map<String, Object> createRootDefinition(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			AdminHelper.service.createRootDefinition(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
-	/**
-	 * RootDefinition 등록 Action
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-//	@ResponseBody
-//	@RequestMapping("/createRootDefinitionAction")
-//	public ResultData createRootDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		
-//		return ECAHelper.service.createRootDefinitionAction(request);
-//	}
-
-
 	@Description(value = "RootDefinition 수정 페이지")
 	@GetMapping(value = "/updateRootDefinition")
 	public ModelAndView updateRootDefinition(@RequestParam String oid) throws Exception {
@@ -505,24 +416,6 @@ public class AdminController extends BaseController {
 		model.setViewName("popup:/admin/rootDefinition-update");
 		return model;
 	}
-
-	/**
-	 * RootDefinition 수정 페이지
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@RequestMapping("/updateRootDefinition")
-//	public ModelAndView updateRootDefinition(HttpServletRequest request, HttpServletResponse response){
-//		ModelAndView model = new ModelAndView();
-//		String oid = request.getParameter("oid");
-//		EChangeActivityDefinitionRoot root =(EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
-//		ROOTData rootdata = new ROOTData(root);
-//		model.addObject("rootdata", rootdata);
-//		model.setViewName("popup:/admin/updateRootDefinition");
-//		return model;
-//	}
 
 	@Description(value = "RootDefinition 수정 실행")
 	@ResponseBody
@@ -541,21 +434,6 @@ public class AdminController extends BaseController {
 		return result;
 	}
 
-	/**
-	 * RootDefinition 수정 Action
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-//	@ResponseBody
-//	@RequestMapping("/updateRootDefinitionAction")
-//	public ResultData updateRootDefinitionAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		
-//		return ECAHelper.service.updateRootDefinitionAction(request);
-//	}
-
 	@Description(value = "RootDefinition 삭제")
 	@ResponseBody
 	@PostMapping(value = "/deleteRootDefinition")
@@ -573,54 +451,6 @@ public class AdminController extends BaseController {
 		return result;
 	}
 
-	/**
-	 * RootDefinition 삭제 Action
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-//	@ResponseBody
-//	@RequestMapping("/deleteRootDefinition")
-//	public Map<String,Object> deleteRootDefinition(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		String oid = request.getParameter("rootOid");
-////		System.out.println("admin deleteRootDefinition oid =" +oid);
-//		boolean result = false;
-//		String msg = Message.get("삭제 실패하였습니다.");
-//		try {
-//			msg = ECAHelper.service.deleteRootDefinition(oid);
-//			result = true;
-//		}catch(Exception e) {
-//			result = false;
-//			msg = Message.get("삭제 실패하였습니다.");
-//			e.printStackTrace();
-//		}
-//		map.put("result", result);
-//		map.put("msg", msg);
-//		
-//		return map;
-//	}
-
-	/**
-	 * RootDefinition 목록
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@RequestMapping("/getRootDefinition")
-	public List<ROOTData> getRootDefinition(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-//		System.out.println("admin getRootDefinition");
-		return ECAHelper.service.getRootDefinition();
-
-	}
-
 //	@Description(value = "ActivityDefinition 등록 페이지")
 //	@GetMapping(value = "/createActivityDefinition")
 //	public ModelAndView createActivityDefinition(@RequestParam String oid) throws Exception {
@@ -635,38 +465,6 @@ public class AdminController extends BaseController {
 //		return model;
 //	}
 
-	/**
-	 * ActivityDefinition 등록 페이지
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@RequestMapping("/createActivityDefinition")
-//	public ModelAndView createActivityDefinition(HttpServletRequest request, HttpServletResponse response){
-//		ModelAndView model = new ModelAndView();
-//		String oid = request.getParameter("oid");
-//		model.addObject("oid", oid);
-//		model.setViewName("popup:/admin/createActivityDefinition");
-//		
-//		return model;
-//	}
-
-	@Description(value = "ActivityDefinition 등록 실행")
-	@ResponseBody
-	@PostMapping(value = "/createActivityDefinition")
-	public Map<String, Object> createActivityDefinition(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			AdminHelper.service.createActivityDefinition(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
 
 	/**
 	 * ActivityDefinition 등록 Action
@@ -682,8 +480,6 @@ public class AdminController extends BaseController {
 //		
 //		return ECAHelper.service.createActivityDefinitionAction(request);
 //	}
-
-
 
 	/**
 	 * ActivityDefinition 수정 페이지

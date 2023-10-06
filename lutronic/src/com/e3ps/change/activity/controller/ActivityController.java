@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.controller.BaseController;
 
 @Controller
@@ -51,11 +54,45 @@ public class ActivityController extends BaseController {
 	@Description(value = "설변활동 삭제")
 	@ResponseBody
 	@DeleteMapping(value = "/delete")
-	public Map<String, Object> delete(@RequestBody Map<String, ArrayList<Map<String, String>>> params) throws Exception {
+	public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			ActivityHelper.service.delete(params);
+			result = ActivityHelper.service.delete(params);
 			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "설변루트 및 활동 등록 페이지")
+	@GetMapping(value = "/create")
+	public ModelAndView create(@RequestParam String type, @RequestParam(required = false) String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		if ("act".equals(type)) {
+			ArrayList<NumberCode> list = NumberCodeHelper.manager.getArrayCodeList("EOSTEP");
+			Map<String, String> actMap = ActivityHelper.manager.getActMap();
+			model.addObject("oid", oid);
+			model.addObject("list", list);
+			model.addObject("actMap", actMap);
+			model.setViewName("popup:/change/activity/activity-create");
+		} else if ("root".equals(type)) {
+			model.setViewName("popup:/change/activity/root-create");
+		}
+		return model;
+	}
+
+	@Description(value = "설계변경 루트 및 활동 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String, Object> create(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.create(params);
+			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

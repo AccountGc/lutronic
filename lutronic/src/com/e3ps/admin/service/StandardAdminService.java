@@ -890,41 +890,6 @@ public class StandardAdminService extends StandardManager implements AdminServic
 	}
 
 	@Override
-	public void createRootDefinition(Map<String, Object> params) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			String name = (String) params.get("name");
-			String name_eng = (String) params.get("name_eng");
-			String sortNumber = (String) params.get("sortNumber");
-			int sort = 0;
-			if (sortNumber.length() > 0) {
-				sort = Integer.parseInt(sortNumber);
-			}
-			String description = StringUtil.checkNull((String) params.get("description"));
-
-			EChangeActivityDefinitionRoot def = EChangeActivityDefinitionRoot.newEChangeActivityDefinitionRoot();
-			def.setName(name);
-			def.setName_eng(name_eng);
-			def.setSortNumber(sort);
-			def.setDescription(description);
-			PersistenceHelper.manager.save(def);
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null) {
-				trs.rollback();
-			}
-		}
-	}
-
-	@Override
 	public void updateRootDefinition(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
 		try {
@@ -981,55 +946,5 @@ public class StandardAdminService extends StandardManager implements AdminServic
 			}
 		}
 	}
-
-	@Override
-	public void createActivityDefinition(Map<String, Object> params) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			String oid = StringUtil.checkNull((String) params.get("oid"));
-			String name = StringUtil.checkNull((String) params.get("name"));
-			String name_eng = StringUtil.checkNull((String) params.get("name_eng"));
-
-			String step = StringUtil.checkNull((String) params.get("eoStep"));
-			String activeType = StringUtil.checkNull((String) params.get("activeType"));
-			String activeUser = StringUtil.checkNull((String) params.get("activeUser"));
-//	    	WTUser user = (WTUser)CommonUtil.getObject(activeUser);
-			// 나중에 위에걸로 수정해야함
-			WTUser user = (WTUser) CommonUtil.getObject("wt.org.WTUser:11");
-			String sortNumber = StringUtil.checkNull((String) params.get("sortNumber"));
-
-			int sort = 0;
-			if (sortNumber.length() > 0) {
-				sort = Integer.parseInt(sortNumber);
-			}
-			String description = StringUtil.checkNull((String) params.get("description"));
-
-			EChangeActivityDefinitionRoot root = (EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
-			EChangeActivityDefinition def = EChangeActivityDefinition.newEChangeActivityDefinition();
-			def.setName(name);
-			def.setName_eng(name_eng);
-			def.setStep(step);
-			def.setActiveType(activeType);
-			def.setActiveUser(user);
-			def.setDescription(description);
-			def.setSortNumber(sort);
-			def.setRoot(root);
-			PersistenceHelper.manager.save(def);
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null) {
-				trs.rollback();
-			}
-		}
-	}
-
 
 }

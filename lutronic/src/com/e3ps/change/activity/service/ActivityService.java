@@ -11,6 +11,13 @@ public interface ActivityService {
 	/**
 	 * 설변활동 삭제
 	 */
-	public abstract void delete(Map<String, ArrayList<Map<String, String>>> params) throws Exception;
+	public abstract Map<String, Object> delete(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 설변 루트 빛 활동 생성
+	 * 
+	 * @param params
+	 */
+	public abstract void create(Map<String, Object> params) throws Exception;
 
 }

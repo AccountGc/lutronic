@@ -38,12 +38,9 @@ public interface AdminService {
 
 	Map<String, Object> admin_mailNewAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	public void createRootDefinition(Map<String, Object> params) throws Exception;
-
 	public void updateRootDefinition(Map<String, Object> params) throws Exception;
 
 	public void deleteRootDefinition(Map<String, Object> params) throws Exception;
 
-	public void createActivityDefinition(Map<String, Object> params) throws Exception;
 
 }

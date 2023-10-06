@@ -32,43 +32,34 @@ import wt.util.WTException;
 @RemoteInterface
 public interface ECAService {
 
-	ResultData createRootDefinitionAction(HttpServletRequest req)
-			throws Exception;
+	ResultData createRootDefinitionAction(HttpServletRequest req) throws Exception;
 
-	ResultData updateRootDefinitionAction(HttpServletRequest req)
-			throws Exception;
+	ResultData updateRootDefinitionAction(HttpServletRequest req) throws Exception;
 
 	String deleteRootDefinitionAction(HttpServletRequest req) throws Exception;
 
-	List<EChangeActivityDefinition> getActiveDefinition(long rootOid)
+	List<EChangeActivityDefinition> getActiveDefinition(long rootOid) throws Exception;
+
+	Map<String, Object> listActiveDefinitionAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
 
-	List<ROOTData> getRootDefinition() throws Exception;
-
-	Map<String, Object> listActiveDefinitionAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
-
-	ResultData createActivityDefinitionAction(HttpServletRequest req)
-			throws Exception;
+	ResultData createActivityDefinitionAction(HttpServletRequest req) throws Exception;
 
 	String deleteRootDefinition(String oid) throws Exception;
 
 	String deleteActivityDefinition(String oids) throws Exception;
 
-	ResultData updateActivityDefinitionAction(HttpServletRequest req)
-			throws Exception;
+	ResultData updateActivityDefinitionAction(HttpServletRequest req) throws Exception;
 
 	List<EADData> setActiveDefinition(String oid) throws Exception;
 
 	boolean createActivity(HttpServletRequest req, ECOChange eco) throws Exception;
 
-	
 	List<ECAData> include_ecaList(String oid) throws Exception;
 
 	List<EChangeActivity> getECAList(ECOChange eo) throws Exception;
 
-	List<EChangeActivity> getNextActivity(EChangeActivity activity)
-			throws Exception;
+	List<EChangeActivity> getNextActivity(EChangeActivity activity) throws Exception;
 
 	List<DocumentActivityLink> getECADocumentLink(EChangeActivity eca);
 
@@ -78,8 +69,7 @@ public interface ECAService {
 
 	boolean isStepComplete(EChangeActivity eca) throws Exception;
 
-	void createDocumentActivityLink(WTDocument doc, String parentOid)
-			throws Exception;
+	void createDocumentActivityLink(WTDocument doc, String parentOid) throws Exception;
 
 	List<Map<String, Object>> viewECA(ECOChange eo) throws Exception;
 
@@ -99,6 +89,4 @@ public interface ECAService {
 
 	List<Map<String, Object>> viewECA_Doc(ECOChange eo) throws Exception;
 
-	
-	
 }

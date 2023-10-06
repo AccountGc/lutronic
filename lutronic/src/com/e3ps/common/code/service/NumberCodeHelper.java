@@ -84,6 +84,9 @@ public class NumberCodeHelper {
 		return null;
 	}
 
+	/**
+	 * 코드타입과 일치하는 NumberCode 배열로 가져오기
+	 */
 	public ArrayList<NumberCode> getArrayCodeList(String codeType) throws Exception {
 		ArrayList<NumberCode> list = new ArrayList<>();
 		QuerySpec query = new QuerySpec();

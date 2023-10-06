@@ -28,7 +28,6 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 
 		<table class="search-table">
 			<colgroup>
-				<col width="50">
 				<col width="130">
 				<col width="*">
 			</colgroup>
@@ -46,21 +45,20 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 						%>
 					</select>
 				</td>
-				<td class="right">
-					<input type="button" value="루트 추가" title="루트 추가" class="blue" id="createRootDefinition">
-					<input type="button" value="루트 수정" title="루트 수정" class="" id="updateRootDefinition">
-					<input type="button" value="루트 삭제" title="루트 삭제" class="red" id="deleteRootDefinition">
-					<input type="button" value="활동추가" title="활동추가" class="blue" id="createActivity">
-					<input type="button" value="활동삭제" title="활동삭제" class="red" onclick="_delete();">
-				</td>
 			</tr>
 		</table>
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('act-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('act-list');">
+					<div id="rootLayer">
+						<input type="button" value="루트 추가" title="루트 추가" class="blue" onclick="create('root');">
+						<input type="button" value="루트 수정" title="루트 수정" class="">
+						<input type="button" value="루트 삭제" title="루트 삭제" class="red" onclick="">
+					</div>
+					<div id="actLayer">
+						<input type="button" value="활동추가" title="활동추가" class="blue" onclick="create('act');">
+						<input type="button" value="활동삭제" title="활동삭제" class="red" onclick="_delete();">
+					</div>
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -78,63 +76,61 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
 			let myGridID;
-			function _layout() {
-				return [ {
-					dataField : "stepName",
-					headerText : "단계",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "name",
-					headerText : "활동명",
-					dataType : "string",
-					width : 400,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "activityName",
-					headerText : "활동구분",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "departName",
-					headerText : "담당부서",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "activeUserName",
-					headerText : "담당자",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "enabled",
-					headerText : "활성화",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				} ]
-			}
+			const columns = [ {
+				dataField : "stepName",
+				headerText : "단계",
+				dataType : "string",
+				width : 120,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "name",
+				headerText : "활동명",
+				dataType : "string",
+				width : 400,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "activityName",
+				headerText : "활동구분",
+				dataType : "string",
+				width : 120,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "departName",
+				headerText : "담당부서",
+				dataType : "string",
+				width : 120,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "activeUserName",
+				headerText : "담당자",
+				dataType : "string",
+				width : 120,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "enabled",
+				headerText : "활성화",
+				dataType : "string",
+				width : 120,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			} ]
 
 			function createAUIGrid(columnLayout) {
 				const props = {
@@ -152,11 +148,10 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					rowCheckToRadio : false,
 					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
@@ -168,24 +163,27 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 
 			function loadGridData() {
 				let params = new Object();
-				const field = [ "root", "_psize" ];
-				params = toField(params, field);
 				const url = getCallUrl("/activity/list");
+				const field = [ "root" ];
+				params = toField(params, field);
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
 						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
-						setButtonControl();
+						buttonControl();
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("act-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -194,6 +192,7 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 				createAUIGrid(columns);
 				selectbox("_psize");
 				selectbox("root");
+				buttonControl();
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -212,25 +211,25 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 			});
 
 			// 버튼 제어
-			function setButtonControl() {
-				if ($("#rootOid").val() == "") {
-					$("#updateRootDefinition").hide();
-					$("#deleteRootDefinition").hide();
-					$("#createActivity").hide();
-					$("#deleteActivity").hide();
+			function buttonControl() {
+				const root = document.getElementById("root").value;
+				const rootLayer = document.getElementById("rootLayer");
+				const actLayer = document.getElementById("actLayer");
+
+				if (root === "") {
+					rootLayer.style.display = "";
+					actLayer.style.display = "none";
 				} else {
-					$("#updateRootDefinition").show();
-					$("#deleteRootDefinition").show();
-					$("#createActivity").show();
-					$("#deleteActivity").show();
+					rootLayer.style.display = "none";
+					actLayer.style.display = "";
 				}
 			}
 
-			// Root 추가
-			$("#createRootDefinition").click(function() {
-				const url = getCallUrl("/admin/createRootDefinition");
+			function create(type) {
+				const oid = document.getElementById("root").value;
+				const url = getCallUrl("/activity/create?type=" + type + "&oid=" + oid);
 				_popup(url, 600, 500, "n");
-			})
+			}
 
 			// Root 수정
 			$("#updateRootDefinition").click(function() {
@@ -290,8 +289,9 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 				}, "DELETE");
 			}
 
-			document.getElementById("root").addEventListener("change", function() {
-				alert("C");
+			// AXISJ SELECT BOX 바인딩이... 퓨어 스크립트가 안먹히네
+			$("#root").change(function() {
+				loadGridData();
 			})
 		</script>
 	</form>

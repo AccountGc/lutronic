@@ -99,4 +99,16 @@ public class ActivityHelper {
 		Map<String, String> map = getActMap();
 		return map.get(act);
 	}
+
+	/**
+	 * 루트에 활동이 있는지 확인, true 있음 , false 없음
+	 */
+	public boolean dependency(String oid) throws Exception {
+		EChangeActivityDefinitionRoot def = (EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(EChangeActivityDefinition.class, true);
+		QuerySpecUtils.toEquals(query, idx, EChangeActivityDefinition.class, "rootReference.key.id", def);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		return result.size() > 0 ? true : false;
+	}
 }

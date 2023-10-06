@@ -417,7 +417,6 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 				params.latest = false; // 안되는데??
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
-				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
