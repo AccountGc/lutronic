@@ -237,31 +237,13 @@ iframe {
 		</jsp:include>
 
 		<!-- 	관련 CR -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						관련 CR
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th class="lb">관련 CR</th>
-				<td class="indent5 pt5">
-					<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
+		<jsp:include page="/extcore/jsp/change/include/cr-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert100" name="method" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="250" name="height" />
+		</jsp:include>
 
 		<!-- 	관련 ECPR -->
 		<table class="button-table">
@@ -373,6 +355,8 @@ iframe {
 				const rows91 = AUIGrid.getGridDataWithState(myGridID91, "gridState");
 				// 관련EO
 				const rows100 = AUIGrid.getGridDataWithState(myGridID100, "gridState");
+				// 관련CR
+				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				const params = {
@@ -394,6 +378,7 @@ iframe {
 					rows90 : rows90,
 					rows91 : rows91,
 					rows100 : rows100,
+					rows100 : rows101,
 					rows105 : rows105
 				};
 				parent.openLayer();
@@ -417,10 +402,12 @@ iframe {
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
 				createAUIGrid100(columns100);
+				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
 				AUIGrid.resize(myGridID100);
+				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
 			});
 
@@ -428,6 +415,7 @@ iframe {
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
 				AUIGrid.resize(myGridID100);
+				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
 			});
 		</script>

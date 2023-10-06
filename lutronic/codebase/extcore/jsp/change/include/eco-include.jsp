@@ -49,7 +49,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "number",
 		headerText : "ECO번호",
 		dataType : "string",
-		width : 120,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -67,7 +66,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "name",
 		headerText : "ECO제목",
 		dataType : "string",
-		width : 120,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -85,7 +83,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "licensing",
 		headerText : "인허가변경",
 		dataType : "string",
-		width : 120,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -94,7 +91,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "riskType",
 		headerText : "위험 통제",
 		dataType : "string",
-		width : 350,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -103,7 +99,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 250,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -112,7 +107,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 350,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -121,7 +115,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "approveDate_txt",
 		headerText : "승인일",
 		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -130,7 +123,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
-		width : 200,
 		filter : {
 			showIcon : true,
 			inline : true
