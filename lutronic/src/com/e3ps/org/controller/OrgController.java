@@ -8,13 +8,16 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.groupware.service.GroupwareHelper;
@@ -107,5 +110,22 @@ public class OrgController extends BaseController {
 		model.addObject("openerId", openerId);
 		model.setViewName("popup:/workprocess/organization-popup");
 		return model;
+	}
+
+	@Description(value = "부서명 가져오기")
+	@ResponseBody
+	@GetMapping(value = "/department")
+	public Map<String, Object> department(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			String department_name = OrgHelper.manager.department(oid);
+			result.put("department_name", department_name);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

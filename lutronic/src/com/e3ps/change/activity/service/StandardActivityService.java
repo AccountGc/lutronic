@@ -2,6 +2,7 @@ package com.e3ps.change.activity.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivityDefinition;
@@ -26,31 +27,22 @@ public class StandardActivityService extends StandardManager implements Activity
 	@Override
 	public Map<String, Object> delete(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		String type = (String) params.get("type");
-		ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) params.get("list");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			if ("root".equals(type)) {
-				String oid = (String) params.get("oid");
-				boolean dependency = ActivityHelper.manager.dependency(oid);
-				if (dependency) {
-					map.put("result", false);
-					map.put("msg", "삭제 하려는 루트 활동에 설계변경 활동이 존재합니다.");
-					return map;
-				}
-
-				EChangeActivityDefinitionRoot def = (EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
-				PersistenceHelper.manager.delete(def);
-
-			} else if ("act".equals(type)) {
-				for (Map<String, String> m : list) {
-					String oid = m.get("oid");
-					EChangeActivityDefinition def = (EChangeActivityDefinition) CommonUtil.getObject(oid);
-					PersistenceHelper.manager.delete(def);
-				}
+			String oid = (String) params.get("oid");
+			boolean dependency = ActivityHelper.manager.dependency(oid);
+			if (dependency) {
+				map.put("success", false);
+				map.put("msg", "삭제 하려는 루트 활동에 설계변경 활동이 존재합니다.");
+				return map;
 			}
+
+			EChangeActivityDefinitionRoot def = (EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(def);
+
+			map.put("success", true);
 
 			trs.commit();
 			trs = null;
@@ -98,9 +90,42 @@ public class StandardActivityService extends StandardManager implements Activity
 				act.setStep(step);
 				act.setActiveType(activeType);
 				act.setDescription(description);
-				act.setSortNumber(Integer.parseInt(description));
+				act.setSortNumber(Integer.parseInt(sort));
 				act.setRoot(def);
 				PersistenceHelper.manager.save(act);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void save(HashMap<String, ArrayList<LinkedHashMap<String, Object>>> dataMap) throws Exception {
+		ArrayList<LinkedHashMap<String, Object>> editRows = dataMap.get("editRows");
+		ArrayList<LinkedHashMap<String, Object>> removeRows = dataMap.get("removeRows");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (LinkedHashMap<String, Object> editRow : editRows) {
+				String oid = (String) editRow.get("oid");
+				EChangeActivityDefinition act = (EChangeActivityDefinition) CommonUtil.getObject(oid);
+
+				PersistenceHelper.manager.modify(act);
+			}
+
+			for (LinkedHashMap<String, Object> removeRow : removeRows) {
+				String oid = (String) removeRow.get("oid");
+				EChangeActivityDefinition act = (EChangeActivityDefinition) CommonUtil.getObject(oid);
+				PersistenceHelper.manager.delete(act);
 			}
 
 			trs.commit();

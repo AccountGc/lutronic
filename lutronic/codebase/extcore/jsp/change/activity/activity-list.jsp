@@ -1,3 +1,4 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.change.activity.dto.DefDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.change.beans.ROOTData"%>
@@ -11,6 +12,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
+JSONArray alist = (JSONArray) request.getAttribute("alist");
+JSONArray ulist = (JSONArray) request.getAttribute("ulist");
+JSONArray slist = (JSONArray) request.getAttribute("slist");
 %>
 <!DOCTYPE html>
 <html>
@@ -53,11 +57,12 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					<div id="rootLayer">
 						<input type="button" value="루트 추가" title="루트 추가" class="blue" onclick="create('root');">
 						<input type="button" value="루트 수정" title="루트 수정" class="">
-						<input type="button" value="루트 삭제" title="루트 삭제" class="red" onclick="">
 					</div>
 					<div id="actLayer">
+						<input type="button" value="루트 삭제" title="루트 삭제" class="red" onclick="_delete()">
 						<input type="button" value="활동추가" title="활동추가" class="blue" onclick="create('act');">
-						<input type="button" value="활동삭제" title="활동삭제" class="red" onclick="_delete();">
+						<input type="button" value="활동삭제" title="활동삭제" class="red" onclick="deleteRow();">
+						<input type="button" value="저장" title="저장" onclick="save();">
 					</div>
 				</td>
 				<td class="right">
@@ -76,8 +81,14 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
 			let myGridID;
+			const slist =
+		<%=slist%>
+			const alist =
+		<%=alist%>
+			const ulist =
+		<%=ulist%>
 			const columns = [ {
-				dataField : "stepName",
+				dataField : "step_name",
 				headerText : "단계",
 				dataType : "string",
 				width : 120,
@@ -85,56 +96,199 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					showIcon : true,
 					inline : true
 				},
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = slist.length; i < len; i++) {
+						if (slist[i]["key"] == value) {
+							retStr = slist[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type : "ComboBoxRenderer",
+					list : slist,
+					matchFromFirst : false,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = slist.length; i < len; i++) {
+							if (slist[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
+				},
 			}, {
 				dataField : "name",
 				headerText : "활동명",
 				dataType : "string",
-				width : 400,
+				style : "aui-left",
 				filter : {
 					showIcon : true,
 					inline : true
 				},
 			}, {
-				dataField : "activityName",
+				dataField : "activity_name",
 				headerText : "활동구분",
 				dataType : "string",
-				width : 120,
+				width : 200,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = alist.length; i < len; i++) {
+						if (alist[i]["key"] == value) {
+							retStr = alist[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type : "ComboBoxRenderer",
+					list : alist,
+					matchFromFirst : false,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = alist.length; i < len; i++) {
+							if (alist[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
+				},
+			}, {
+				dataField : "step_sort",
+				headerText : "정렬",
+				dataType : "numeric",
+				width : 100,
+				formatString : "###0",
+				editRenderer : {
+					type : "InputEditRenderer",
+					onlyNumeric : true,
+					maxlength : 2,
+				},
 				filter : {
 					showIcon : true,
 					inline : true
 				},
 			}, {
-				dataField : "departName",
+				dataField : "department_name",
 				headerText : "담당부서",
 				dataType : "string",
-				width : 120,
+				width : 150,
+				editable : false,
 				filter : {
 					showIcon : true,
 					inline : true
 				},
 			}, {
-				dataField : "activeUserName",
+				dataField : "activeUser_name",
 				headerText : "담당자",
 				dataType : "string",
-				width : 120,
+				width : 150,
 				filter : {
 					showIcon : true,
 					inline : true
 				},
-			}, {
-				dataField : "enabled",
-				headerText : "활성화",
-				dataType : "string",
-				width : 120,
-				filter : {
-					showIcon : true,
-					inline : true
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = ulist.length; i < len; i++) {
+						if (ulist[i]["key"] == value) {
+							retStr = ulist[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+				editRenderer : {
+					type : "ComboBoxRenderer",
+					list : ulist,
+					matchFromFirst : false,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = ulist.length; i < len; i++) {
+							if (ulist[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
 				},
 			} ]
 
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
+					showStateColumn : true,
 					showRowNumColumn : false,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
@@ -148,7 +302,8 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableRowCheckShiftKey : true
+					enableRowCheckShiftKey : true,
+					editable : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -159,9 +314,33 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 					hideContextMenu();
 				});
+				AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEndHandler);
+			}
+
+			function auiCellEditEndHandler(event) {
+				const dataField = event.dataField;
+				if (dataField === "activeUser_name") {
+					parent.openLayer();
+					const value = event.value;
+					const url = getCallUrl("/org/department?oid=" + value);
+					call(url, null, function(data) {
+						if (data.result) {
+							const department_name = data.department_name;
+							AUIGrid.setCellValue(event.pid, event.rowIndex, "department_name", department_name);
+						} else {
+							alert(data.msg);
+						}
+						parent.closeLayer();
+					}, "GET");
+				}
 			}
 
 			function loadGridData() {
+				const root = document.getElementById("root").value;
+				if (root === "") {
+					buttonControl();
+					return false;
+				}
 				let params = new Object();
 				const url = getCallUrl("/activity/list");
 				const field = [ "root" ];
@@ -237,45 +416,48 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 				_popup(url, 600, 500, "n");
 			})
 
-			// Root 삭제
-			$("#deleteRootDefinition").click(function() {
-				var gridList = AUIGrid.getGridData(myGridID);
-				if (gridList.length > 0) {
-					alert("활동이 있을경우 삭제할 수 없습니다.");
-					return;
-				}
-
-				if (!confirm("삭제 하시겠습니까?")) {
+			function deleteRow() {
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				if (checkedItems.length === 0) {
+					alert("삭제할 행을 선택하세요.");
 					return false;
 				}
 
-				let params = new Object();
-				const oid = $("#rootOid").val();
-				params.oid = oid;
-				const url = getCallUrl("/admin/deleteRootDefinition");
+				for (let i = checkedItems.length - 1; i >= 0; i--) {
+					const rowIndex = checkedItems[i].rowIndex;
+					AUIGrid.removeRow(myGridID, rowIndex);
+				}
+			}
+
+			function save() {
+
+				if (!confirm("저장 하시겠습니까?")) {
+					return false;
+				}
+
+				const url = getCallUrl("/activity/save");
+				const editRows = AUIGrid.getEditedRowItems(myGridID);
+				const removeRows = AUIGrid.getRemovedItems(myGridID);
+				const params = {
+					editRows : editRows,
+					removeRows : removeRows
+				}
+				parent.openLayer();
 				call(url, params, function(data) {
+					alert(data.msg);
 					if (data.result) {
-						alert(data.msg);
-						location.reload();
-					} else {
-						alert(data.msg);
+						loadGridData();
 					}
-				});
-			})
+					parent.closeLayer();
+				})
+			}
 
-			// 활동 추가 
-			$("#createActivity").click(function() {
-				const url = getCallUrl("/admin/createActivityDefinition") + "?oid=" + $("#rootOid").val();
-				_popup(url, 600, 550, "n");
-			})
-
-			// 활동 삭제
-
+			// 활동 루트 삭제
 			function _delete() {
-				const list = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("선택된 활동이 없습니다.");
-					return;
+				const oid = document.getElementById("root").value;
+				if (oid === "") {
+					alert("삭제할 루트 활동을 선택하세요.");
+					return false;
 				}
 
 				if (!confirm("삭제하시겠습니까?")) {
@@ -283,9 +465,15 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 				}
 
 				const params = new Object();
-				params.list = list;
-				const url = getCallUrl("/activity/list");
+				params.oid = oid;
+				const url = getCallUrl("/activity/delete");
+				parent.openLayer();
 				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						document.location.reload();
+					}
+					parent.closeLayer();
 				}, "DELETE");
 			}
 

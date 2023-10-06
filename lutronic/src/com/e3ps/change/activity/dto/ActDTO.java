@@ -44,7 +44,7 @@ public class ActDTO {
 		setName(act.getName());
 		if (act.getStep() != null) {
 			setStep(act.getStep());
-			NumberCode step = NumberCodeHelper.manager.getNumberCode("EOSTEP", getStep());
+			NumberCode step = NumberCodeHelper.manager.getNumberCode(getStep(), "EOSTEP");
 			setStep_name(step.getName());
 			setStep_sort(step.getSort());
 		}

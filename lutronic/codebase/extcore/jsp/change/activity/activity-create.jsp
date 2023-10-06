@@ -114,22 +114,23 @@ Map<String, String> actMap = (Map<String, String>) request.getAttribute("actMap"
 			const activeType = document.getElementById("activeType");
 			const description = document.getElementById("description").value;
 
-			if (name === "") {
+			if (name.value === "") {
 				alert("이름을 입력하세요.");
 				name.focus();
 				return false;
 			}
-			if (step === "") {
+			
+			if (step.value === "") {
 				alert("STE{을 선택하세요.");
-				step.focus();
 				return false;
 			}
-			if (activeType === "") {
+				
+			if (activeType.value === "") {
 				alert("활동구분을 선택하세요.");
-				activeType.focus();
 				return false;
 			}
-			if (sort === "") {
+			
+			if (sort.value === "") {
 				alert("정렬을 입력하세요.");
 				sort.focus();
 				return false;
@@ -145,7 +146,7 @@ Map<String, String> actMap = (Map<String, String>) request.getAttribute("actMap"
 				step : step.value,
 				activeType : activeType.value,
 				sort : sort.value,
-				description : description.value,
+				description : description,
 				type : "act"
 			}
 			openLayer();
@@ -162,9 +163,9 @@ Map<String, String> actMap = (Map<String, String>) request.getAttribute("actMap"
 		}
 
 		document.addEventListener("DOMContentLoaded", function() {
+			toFocus("name");
 			selectbox("step");
 			selectbox("activeType");
-			// 			finderUser("activeUserName");
 		});
 	</script>
 </form>

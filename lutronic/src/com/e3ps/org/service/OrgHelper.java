@@ -5,14 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
+import com.e3ps.org.WTUserPeopleLink;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTUser;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
 
@@ -138,9 +141,9 @@ public class OrgHelper {
 	}
 
 	/**
-	 * AUI 그리드에서 사용하기 위한함수 JSON 형태로 리턴
+	 * AUI 그리드에서 사용하기 위한함수 JSON(People) 형태로 리턴
 	 */
-	public JSONArray toJson() throws Exception {
+	public JSONArray toJsonPeople() throws Exception {
 		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
 		QuerySpec query = new QuerySpec();
@@ -157,5 +160,42 @@ public class OrgHelper {
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * AUI 그리드에서 사용하기 위한함수 JSON(WTUser) 형태로 리턴
+	 */
+	public JSONArray toJsonWTUser() throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTUser.class, true);
+		QuerySpecUtils.toBooleanAnd(query, idx, WTUser.class, WTUser.DISABLED, false);
+		QuerySpecUtils.toBooleanAnd(query, idx, WTUser.class, WTUser.REPAIR_NEEDED, false);
+		QuerySpecUtils.toOrderBy(query, idx, WTUser.class, WTUser.FULL_NAME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			WTUser u = (WTUser) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("key", u.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("value", u.getName());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 부서명 가져오기
+	 */
+	public String department(String oid) throws Exception {
+		WTUser user = (WTUser) CommonUtil.getObject(oid);
+		QueryResult result = PersistenceHelper.manager.navigate(user, "people", WTUserPeopleLink.class);
+		String department_name = null;
+		if (result.hasMoreElements()) {
+			People p = (People) result.nextElement();
+			department_name = p.getDepartment() != null ? p.getDepartment().getName() : "지정안됨";
+		}
+		return department_name;
 	}
 }

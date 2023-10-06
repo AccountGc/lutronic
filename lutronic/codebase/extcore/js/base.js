@@ -49,9 +49,9 @@ function call(url, params, callBack, methodType, async) {
 			}
 
 			if (opener == null) {
-				closeLayer();
-			} else {
 				parent.closeLayer();
+			} else {
+				closeLayer();
 			}
 		}
 	})

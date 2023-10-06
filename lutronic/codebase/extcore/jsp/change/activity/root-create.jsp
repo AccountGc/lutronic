@@ -54,13 +54,13 @@
 		const name = document.getElementById("name");
 		const sort = document.getElementById("sort");
 
-		if (name === "") {
+		if (name.value === "") {
 			alert("이름을 입력하세요.");
 			name.focus();
 			return false;
 		}
 
-		if (sort === "") {
+		if (sort.value === "") {
 			alert("정렬을 입력하세요.");
 			sort.focus();
 			return false;

@@ -2,20 +2,18 @@ package com.e3ps.change.activity.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.dto.DefDTO;
-import com.e3ps.change.beans.EADData;
-import com.e3ps.change.key.ChangeKey;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.common.util.StringUtil;
 
+import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -90,6 +88,25 @@ public class ActivityHelper {
 		map.put("REVISE_BOM", "개정/BOM 변경");
 		map.put("DOCUMENT", "산출물 등록");
 		return map;
+	}
+
+	/**
+	 * 설변 활동 JSON
+	 */
+	public JSONArray toJsonActMap() throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		Map<String, String> actMap = getActMap();
+
+		Iterator it = actMap.keySet().iterator();
+		while (it.hasNext()) {
+			Map<String, String> map = new HashMap<>();
+			String key = (String) it.next();
+			String value = actMap.get(key);
+			map.put("key", key);
+			map.put("value", value);
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
 	}
 
 	/**

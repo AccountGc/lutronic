@@ -2,7 +2,7 @@
 <%@page import="com.e3ps.org.service.OrgHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-JSONArray list = OrgHelper.manager.toJson();
+JSONArray list = OrgHelper.manager.toJsonPeople();
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
