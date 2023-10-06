@@ -208,7 +208,7 @@ public class AUIGridUtil {
 		Map<String, Object> map = new HashMap<>();
 		for (Field field : clazz.getDeclaredFields()) {
 			// 그리드에서 표현 되는내용 차이로 인해 에러 발생하는듯
-			if (field.getClass().equals(Timestamp.class)) {
+			if (field.getType().equals(Timestamp.class)) {
 				System.out.println("fi=" + field.getName());
 				continue;
 			}
