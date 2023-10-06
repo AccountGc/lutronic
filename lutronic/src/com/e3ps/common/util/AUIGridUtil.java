@@ -1,6 +1,7 @@
 package com.e3ps.common.util;
 
 import java.lang.reflect.Field;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -206,6 +207,11 @@ public class AUIGridUtil {
 		Class<?> clazz = obj.getClass();
 		Map<String, Object> map = new HashMap<>();
 		for (Field field : clazz.getDeclaredFields()) {
+			// 그리드에서 표현 되는내용 차이로 인해 에러 발생하는듯
+			if (field.getClass().equals(Timestamp.class)) {
+				System.out.println("fi=" + field.getName());
+				continue;
+			}
 			field.setAccessible(true);
 			String fieldName = field.getName();
 			Object fieldValue = field.get(obj);
