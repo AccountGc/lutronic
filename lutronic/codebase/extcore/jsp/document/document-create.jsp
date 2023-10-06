@@ -67,7 +67,7 @@ iframe {
 				<th class="req">문서 템플릿</th>
 				<td class="indent5">
 					<select name="formType" id="formType" class="width-200" onchange="loadForm();">
-						<option value=-"">선택</option>
+						<option value="">선택</option>
 						<%
 						for (FormTemplate formType : form) {
 						%>

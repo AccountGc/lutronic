@@ -1,3 +1,6 @@
+<%@page import="net.sf.json.JSONObject"%>
+<%@page import="java.util.Map"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@page import="wt.doc.DocumentType"%>
 <%@page import="com.e3ps.admin.form.FormTemplate"%>
@@ -10,7 +13,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
-DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
+JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 String mode = (String) request.getAttribute("mode");
 String title = "";
@@ -62,7 +65,7 @@ iframe {
 		<th class="req">문서 템플릿</th>
 		<td class="indent5">
 			<select name="formType" id="formType" class="width-200" onchange="loadForm();">
-				<option value=-"">선택</option>
+				<option value="">선택</option>
 				<%
 				for (FormTemplate formType : form) {
 				%>
@@ -80,7 +83,7 @@ iframe {
 		</td>
 		<th class="req">문서종류</th>
 		<td class="indent5">
-			<input type="text" name="documentName" id="documentName" class="width-300">
+			<input type="text" name="documentName" id="documentName" class="width-300" value="<% if(dto.getDocumentName() != null){ dto.getDocumentName();} %>">
 			<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
 				<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 				</ul>
@@ -114,10 +117,14 @@ iframe {
 			<select name="documentType" id="documentType" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (DocumentType documentType : docTypeList) {
-					boolean selected = documentType.toString().equals(dto.getDocumentType_code());
+				for (int i = 0; i < docTypeList.size(); i++) {
+					JSONObject obj = (JSONObject) docTypeList.get(i);
+					String key = (String) obj.get("key");
+					String value = (String) obj.get("value");
+					
+					boolean selected = dto.getDocumentType_code().equals(key);
 				%>
-				<option value="<%=documentType.toString()%>" <%if (selected) {%> selected="selected" <%}%>><%=documentType.getDisplay()%></option>
+				<option value="<%=key%>" <%if (selected) {%> selected="selected" <%}%>><%=value%></option>
 				<%
 				}
 				%>
@@ -359,7 +366,6 @@ iframe {
 		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
 		const documentName = document.getElementById("documentName").value;
-	
 		if (!confirm("<%=title%>하시겠습니까?")) {
 			return false;
 		}
@@ -369,6 +375,10 @@ iframe {
 		const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 		// 관련품목
 		const rows91 = AUIGrid.getGridDataWithState(myGridID91, "gridState");
+		// 관련EO
+		const rows100 = AUIGrid.getGridDataWithState(myGridID100, "gridState");
+		// 관련ECO
+		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 		const params = {
 			oid : oid,
 			name : name.value,
@@ -391,6 +401,7 @@ iframe {
 			rows100 : rows100,
 			rows105 : rows105
 		};
+		
 		parent.openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
