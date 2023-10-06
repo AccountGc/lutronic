@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.eo.dto.EoDTO;
+import com.e3ps.rohs.ROHSAttr;
 import com.e3ps.rohs.ROHSContHolder;
 
 import wt.content.ApplicationData;
@@ -39,6 +40,25 @@ public class Test {
 				ApplicationData appData = (ApplicationData) obj2[0];
 				rohs.setFileType(appData.getRole().toString());
 				PersistenceHelper.manager.modify(rohs);
+				
+				QuerySpec query3 = new QuerySpec();
+				int idx3 = query3.appendClassList(ROHSAttr.class, true);
+				
+				SearchCondition sc3 = new SearchCondition(ROHSAttr.class, "appReference.key.id", "=", appData.getPersistInfo().getObjectIdentifier().getId());
+				query3.appendWhere(sc3, new int[] { idx3 });
+				QueryResult result3 = PersistenceHelper.manager.find(query3);
+				
+				if (result3.hasMoreElements()) {
+					Object[] obj3 = (Object[]) result3.nextElement();
+					ROHSAttr rohsAttr = (ROHSAttr) obj3[0];
+					rohsAttr.setPublicationDate(rohs.getPublicationDate());
+					PersistenceHelper.manager.modify(rohsAttr);
+				}else {
+					ROHSAttr rohsAttr = ROHSAttr.newROHSAttr();
+					rohsAttr.setPublicationDate(rohs.getPublicationDate());
+					rohsAttr.setApp(appData);
+					PersistenceHelper.manager.save(rohsAttr);
+				}
 				
 			}
 			
