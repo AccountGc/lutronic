@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -170,7 +171,7 @@ public class DocumentHelper {
 			return JSONArray.fromObject(referenceEo(doc, list));
 		} else if ("eco".equalsIgnoreCase(type)) {
 			// ECO
-//			return JSONArray.fromObject(referenceEco(doc, list));
+			return JSONArray.fromObject(referenceEco(doc, list));
 		} else if ("cr".equalsIgnoreCase(type)) {
 			// CR
 //			return JSONArray.fromObject(referenceCr(doc, list));
@@ -245,17 +246,9 @@ public class DocumentHelper {
 	private Object referenceEco(WTDocument doc, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(doc, "eco", DocumentECOLink.class);
 		while (result.hasMoreElements()) {
-			WTPart part = (WTPart) result.nextElement();
-			Map<String, Object> map = new HashMap<>();
-			PartColumn dto = new PartColumn(part);
-			map.put("part_oid", dto.getPart_oid());
-			map.put("_3d", dto.get_3d());
-			map.put("_2d", dto.get_2d());
-			map.put("number", dto.getNumber());
-			map.put("name", dto.getName());
-			map.put("version", dto.getVersion());
-			map.put("creator", dto.getCreator());
-			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
+			EChangeOrder eco = (EChangeOrder) result.nextElement();
+			EcoColumn dto = new EcoColumn(eco);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
 		return list;
