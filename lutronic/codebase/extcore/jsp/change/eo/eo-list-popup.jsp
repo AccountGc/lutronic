@@ -120,7 +120,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	<tr class="hidden">
 		<th class="lb">완제품 품목</th>
 		<td colspan="5" class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/include/include-complete-part.jsp">
+			<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 				<jsp:param value="" name="oid" />
 			</jsp:include>
 		</td>
