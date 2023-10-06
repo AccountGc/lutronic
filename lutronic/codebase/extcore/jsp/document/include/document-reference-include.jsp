@@ -42,7 +42,7 @@ String oid = request.getParameter("oid");
 <jsp:include page="/extcore/jsp/change/include/eco-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
-	<jsp:param value="insert102" name="method" />
+	<jsp:param value="insert105" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="200" name="height" />
 </jsp:include>

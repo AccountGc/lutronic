@@ -218,16 +218,18 @@ iframe {
 <!-- 	관련 문서 -->
 <jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="create" name="mode" />
+	<jsp:param value="update" name="mode" />
 	<jsp:param value="insert90" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
 <!-- 	관련 EO -->
-<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
+<jsp:include page="/extcore/jsp/change/include/eo-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="create" name="mode" />
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="insert100" name="method" />
+	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
@@ -286,31 +288,13 @@ iframe {
 </table>
 
 <!-- 	관련 ECO -->
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 ECO
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 ECO</th>
-		<td class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/eco_include.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-</table>
+<jsp:include page="/extcore/jsp/change/include/eco-include.jsp">
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="insert105" name="method" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="250" name="height" />
+</jsp:include>
 
 <script type="text/javascript">
 	const oEditors = [];
@@ -403,7 +387,9 @@ iframe {
 			documentName : documentName,
 			// 링크 데이터
 			rows90 : rows90,
-			rows91 : rows91
+			rows91 : rows91,
+			rows100 : rows100,
+			rows105 : rows105
 		};
 		parent.openLayer();
 		call(url, params, function(data) {
@@ -426,6 +412,7 @@ iframe {
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);
+		createAUIGrid105(columns105);
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
@@ -436,5 +423,6 @@ iframe {
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
+		AUIGrid.resize(myGridID105);
 	});
 </script>

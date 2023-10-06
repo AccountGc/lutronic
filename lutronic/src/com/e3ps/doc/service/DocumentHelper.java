@@ -33,6 +33,7 @@ import wt.clients.folder.FolderTaskLogic;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -186,6 +187,7 @@ public class DocumentHelper {
 	 * 관련 문서
 	 */
 	private Object referenceDoc(WTDocument doc, ArrayList<Map<String, Object>> list) throws Exception {
+		
 		QueryResult result = PersistenceHelper.manager.navigate(doc, "useBy", DocumentToDocumentLink.class);
 		while (result.hasMoreElements()) {
 			WTDocument ref = (WTDocument) result.nextElement();
@@ -253,7 +255,7 @@ public class DocumentHelper {
 		}
 		return list;
 	}
-
+	
 	/**
 	 * 관련 EO
 	 */
