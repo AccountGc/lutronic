@@ -7,7 +7,6 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
@@ -123,11 +122,11 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th class="lb">금형번호</th>
-				<td class="indent5"><%=dto.getMoldnumber_name() == null ? "" : dto.getMoldnumber_name()%></td>
+				<td class="indent5"><%=dto.getMoldnumber() == null ? "" : dto.getMoldnumber()%></td>
 				<th>금형타입</th>
 				<td class="indent5"><%=dto.getMoldtype_name() == null ? "" : dto.getMoldtype_name()%></td>
 				<th>금형개발비</th>
-				<td class="indent5"><%=dto.getMoldcost_name() == null ? "" : dto.getMoldcost_name()%></td>
+				<td class="indent5"><%=dto.getMoldcost() == null ? "" : dto.getMoldcost()%></td>
 			</tr>
 			<tr>
 				<th class="lb">설명</th>
@@ -206,8 +205,9 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			
 	//개정
 	$("#reviseBtn").click(function () {
-		var url	= getURLString("doc", "reviseDocumentPopup", "do") + "?oid="+$("#oid").val()+"&module=rohs";
-		openOtherName(url,"reviseDocumentPopup","350","200","status=no,scrollbars=yes,resizable=yes");
+		const oid = $("#oid").val();
+		const url = getCallUrl("/mold/revise?oid=" + oid);
+		document.location.href = url;
 	})
 	
 	//버전이력

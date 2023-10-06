@@ -4,14 +4,20 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.obj.ObjectUtil;
+import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.mold.dto.MoldDTO;
@@ -24,11 +30,13 @@ import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
+import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleManaged;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.pdmlink.PDMLinkProduct;
@@ -76,12 +84,6 @@ public class StandardMoldService extends StandardManager implements MoldService 
 	        
 	        // 문서 lifeCycle 설정
 	        LifeCycleHelper.setLifeCycle(doc, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
-			
-//			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-//			FolderHelper.assignLocation((FolderEntry) doc, folder);
-//			// 문서 lifeCycle 설정
-//			LifeCycleHelper.setLifeCycle(doc,
-//					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			
 	        PersistenceHelper.manager.save(doc);
 	        
@@ -156,11 +158,11 @@ public class StandardMoldService extends StandardManager implements MoldService 
 		String moldtype_code = dto.getMoldtype_code();
 		dto.setIBAValue(doc, moldtype_code, "MOLDTYPE");
 		// 금형번호
-		String moldnumber_code = dto.getMoldnumber_code();
-		dto.setIBAValue(doc, moldnumber_code, "MOLDNUMBER");
+		String moldnumber = dto.getMoldnumber();
+		dto.setIBAValue(doc, moldnumber, "MOLDNUMBER");
 		// 금형개발비
-		String moldcost_code = dto.getMoldcost_code();
-		dto.setIBAValue(doc, moldcost_code, "MOLDCOST");
+		String moldcost = dto.getMoldcost();
+		dto.setIBAValue(doc, moldcost, "MOLDCOST");
 		// 부서
 		String deptcode_code = dto.getDeptcode_code();
 		dto.setIBAValue(doc, deptcode_code, "DEPTCODE");
@@ -190,6 +192,62 @@ public class StandardMoldService extends StandardManager implements MoldService 
 			DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc, ref);
 			PersistenceServerHelper.manager.insert(link);
 		}
+	}
+
+	@Override
+	public void revise(Map<String, Object> params) throws Exception {
+		Transaction trx = new Transaction();
+		try {
+			trx.start();
+			String oid = StringUtil.checkNull((String) params.get("oid"));
+			if(oid.length() > 0) {
+				WTDocument oldDoc = (WTDocument)CommonUtil.getObject(oid);
+            	String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
+                WTDocument doc = (WTDocument)ObjectUtil.revise(oldDoc, lifecycle);
+                
+                doc = (WTDocument)PersistenceHelper.manager.save(doc);
+                
+                QueryResult qr = PersistenceHelper.manager.navigate(oldDoc, "describes", WTPartDescribeLink.class);
+                while(qr.hasMoreElements()) {
+                	WTPart part = (WTPart) qr.nextElement();
+                	WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
+                	PersistenceServerHelper.manager.insert(link);
+                }
+                
+                List<MoldDTO> useByList = MoldHelper.manager.getDocumentListToLinkRoleName(oldDoc, "useBy");
+    			for(MoldDTO dto : useByList){
+    				WTDocument dtoDoc = (WTDocument) CommonUtil.getObject(dto.getOid());
+    				DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc, dtoDoc);
+    				PersistenceServerHelper.manager.insert(link);
+    			}
+    			
+    			List<MoldDTO> usedList = MoldHelper.manager.getDocumentListToLinkRoleName(oldDoc, "used");
+    			for(MoldDTO dto : usedList){
+    				WTDocument dtoDoc = (WTDocument) CommonUtil.getObject(dto.getOid());
+    				DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(dtoDoc, doc);
+    				PersistenceServerHelper.manager.insert(link);
+    			}
+    			
+    			String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
+                if("LC_Default_NonWF".equals(lifecycle)){
+                	E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, "BATCHAPPROVAL");
+                	approvalType = AttributeKey.CommonKey.COMMON_BATCH;
+                }
+                Map<String,Object> map = new HashMap<String,Object>();
+                map.put("approvalType", approvalType);
+                CommonHelper.service.changeIBAValues(doc, map);
+			}
+			trx.commit();
+			trx = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trx.rollback();
+			throw e;
+        } finally {
+        	if (trx != null) {
+        		trx.rollback();
+			}
+        }
 	}
 	
 }

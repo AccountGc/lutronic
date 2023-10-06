@@ -312,7 +312,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 	$("#reviseBtn").click(function () {
 		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/reviseRohs?oid=" + oid);
-		_popup(url, 1500, 550, "n");
+		document.location.href = url;
 	})
 	
 	//버전이력

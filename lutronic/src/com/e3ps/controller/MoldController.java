@@ -28,6 +28,7 @@ import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.mold.service.MoldHelper;
+import com.e3ps.rohs.service.RohsHelper;
 
 import wt.doc.WTDocument;
 import wt.org.WTUser;
@@ -117,6 +118,30 @@ public class MoldController extends BaseController {
 		model.setViewName("popup:/mold/mold-view");
 		return model;
 	}
+	
+	@Description(value = "금형 개정 페이지")
+	@GetMapping(value = "/revise")
+	public ModelAndView revise(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/mold/mold-revise.jsp");
+		return model;
+	}
+	
+	@Description(value = "금형 개정 함수")
+	@ResponseBody
+	@PostMapping(value = "/revise")
+	public Map<String,Object> revise(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			MoldHelper.service.revise(params);
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "금형 일괄결재 페이지")
 	@GetMapping(value = "/all")
@@ -165,27 +190,6 @@ public class MoldController extends BaseController {
 		model.setViewName("/extcore/jsp/ap/ap-all.jsp");
 		return model;
 	}
-
-	/**
-	 * 문서 상세보기
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-//	@RequestMapping("/viewMold")
-//	public ModelAndView viewMold(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-//		ModelAndView model = new ModelAndView();
-//		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
-//		DocumentData docData = new DocumentData(doc);
-//		
-//		model.setViewName("popup:/mold/viewMold");
-//		model.addObject("isAdmin", CommonUtil.isAdmin());
-//		model.addObject("docData", docData);
-//		return model;
-//	}
 
 	/**
 	 * 일괄 등록 메뉴 이동
@@ -247,76 +251,5 @@ public class MoldController extends BaseController {
 	@RequestMapping("/approvalPackageMoldAction")
 	public ResultData approvalPackageMoldAction(HttpServletRequest request, HttpServletResponse response) {
 		return DocumentHelper.service.approvalPackageDocumentAction(request, response);
-	}
-
-	/**
-	 * 관련 금형, rohs 추가
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/include_OtherDocumentSelect")
-	public ModelAndView include_OtherDocumentSelect(HttpServletRequest request, HttpServletResponse response) {
-		String moduleType = request.getParameter("moduleType");
-		String oid = request.getParameter("oid");
-		String title = request.getParameter("title");
-		String paramName = request.getParameter("paramName");
-		String type = request.getParameter("type");
-		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
-		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
-		List<DocumentDTO> list = null;
-		try {
-			list = DocumentHelper.service.include_DocumentList(oid, moduleType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			list = new ArrayList<DocumentDTO>();
-		}
-		ModelAndView model = new ModelAndView();
-		model.setViewName("include:/mold/include_OtherDocumentSelect");
-		model.addObject("list", list);
-		model.addObject("title", title);
-		model.addObject("paramName", paramName);
-		model.addObject("type", type);
-		model.addObject("state", state);
-		model.addObject("searchType", searchType);
-		model.addObject("lifecycle", lifecycle);
-		return model;
-	}
-
-	/**
-	 * 금형, rohs 검색 팝업
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/selectOtherPopup")
-	public ModelAndView selectOtherPopup(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		String moduleType = request.getParameter("moduleType");
-		String mode = StringUtil.checkReplaceStr(request.getParameter("mode"), "mutil");
-		String type = StringUtil.checkReplaceStr(request.getParameter("type"), "select");
-		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
-		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
-		String nameValue = "";
-
-		if (searchType.equals("MOLD")) {
-			nameValue = "${f:getMessage('금형')}";
-		} else if (searchType.equals("rohs")) {
-			nameValue = "${f:getMessage('물질')}";
-		}
-
-		model.addObject("mode", mode);
-		model.addObject("modeulType", moduleType);
-		model.addObject("type", type);
-		model.addObject("state", state);
-		model.addObject("searchType", searchType);
-		model.addObject("lifecycle", lifecycle);
-		model.addObject("nameValue", nameValue);
-		model.setViewName("popup:/mold/selectOtherPopup");
-		return model;
 	}
 }

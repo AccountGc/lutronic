@@ -196,8 +196,8 @@
 				params.name = $("#name").val();
 				params.manufacture_code = $("#manufacture").val();
 				params.moldtype_code = $("#moldtype").val();
-				params.moldnumber_code = $("#moldnumber").val();
-				params.moldcost_code = $("#moldcost").val();
+				params.moldnumber = $("#moldnumber").val();
+				params.moldcost = $("#moldcost").val();
 				params.interalnumber = $("#interalnumber").val();
 				params.deptcode_code = $("#deptcode").val();
 				params.description = $("#description").val();
