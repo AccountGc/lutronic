@@ -406,7 +406,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 		}
 		
-		ArrayList<Map<String, String>> rows105 = dto.getRows100();
+		ArrayList<Map<String, String>> rows105 = dto.getRows105();
 		// 관련ECO
 		for (Map<String, String> row105 : rows105) {
 			String gridState = row105.get("gridState");
