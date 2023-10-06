@@ -52,6 +52,7 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
+import com.e3ps.rohs.ROHSAttr;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
@@ -875,6 +876,12 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		holder.setApp(applicationData);
 		holder.setRohs(rohs);
 		PersistenceHelper.manager.save(holder);
+		
+		ROHSAttr rohsAttr = ROHSAttr.newROHSAttr();
+		rohsAttr.setPublicationDate(publicationDate);
+		rohsAttr.setApp(applicationData);
+		PersistenceHelper.manager.save(rohsAttr);
+		
 	}
 
 	@Override
