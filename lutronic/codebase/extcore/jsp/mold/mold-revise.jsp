@@ -21,7 +21,7 @@ String oid = (String) request.getParameter("oid");
 		<td class="right">
 			<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
 			<input type="button" value="개정" title="개정" class="blue" id="reviseBtn">
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -61,7 +61,7 @@ String oid = (String) request.getParameter("oid");
 		let params = new Object();
 		params.lifecycle = $('input[name=lifecycle]:checked').val();
 		params.oid = $("#oid").val();
-		const url = getCallUrl("/rohs/reviseRohs");
+		const url = getCallUrl("/mold/revise");
 		call(url, params, function(data) {
 			if(data.result){
 				alert("개정 성공하였습니다.");

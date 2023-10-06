@@ -1097,7 +1097,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			
 			String oid = StringUtil.checkNull((String) params.get("oid"));
 			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle"));
-			if(!"".equals(oid)) {
+			if(oid.length() > 0) {
 				ROHSMaterial oldRohs = (ROHSMaterial) CommonUtil.getObject(oid);
             	ROHSMaterial rohs = (ROHSMaterial) ObjectUtil.revise(oldRohs, lifecycle);
             	rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
@@ -1131,7 +1131,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
                 }
                 		
                 //관련 첨부파일
-                copyROHSContHOlder(oldRohs, rohs);
+                copyAttach(oldRohs, rohs);
                 
                 String approvalType =AttributeKey.CommonKey.COMMON_DEFAULT; //일괄결재 Batch,기본결재 Default
                 if("LC_Default_NonWF".equals(lifecycle)){
@@ -1141,7 +1141,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
                 Map<String,Object> map = new HashMap<String,Object>();
                 map.put("approvalType", approvalType);
                 CommonHelper.service.changeIBAValues(rohs, map);
-                
 			}
 			trx.commit();
 			trx = null;
@@ -1154,6 +1153,30 @@ public class StandardRohsService extends StandardManager implements RohsService 
         		trx.rollback();
 			}
         }
+	}
+	
+	public void copyAttach(ROHSMaterial oldRohs,ROHSMaterial newRohs) throws Exception{
+		CommonContentHelper.service.delete(newRohs);
+		
+		List<ROHSContHolder> list = RohsHelper.manager.getROHSContHolder(oldRohs);
+		for(ROHSContHolder holder :  list){
+			ApplicationData app = holder.getApp();
+			String roleType = app.getRole().toString();
+			ContentRoleType contentroleType = ContentRoleType.toContentRoleType(roleType);
+			ApplicationData newApp = ApplicationData.newApplicationData(newRohs);
+			newApp.setRole(contentroleType);
+			PersistenceHelper.manager.save(newApp);
+			ContentServerHelper.service.updateContent(newRohs, newApp, app.getUploadedFromPath());
+			
+			ROHSContHolder newHolder = ROHSContHolder.newROHSContHolder();
+			String fileName = newApp.getFileName().toUpperCase();
+			holder.setFileName(fileName);
+			holder.setFileType(holder.getFileType());
+			holder.setPublicationDate(holder.getPublicationDate());
+			holder.setApp(newApp);
+			holder.setRohs(newRohs);
+			PersistenceHelper.manager.save(newHolder);
+		}
 	}
 
 	@Override

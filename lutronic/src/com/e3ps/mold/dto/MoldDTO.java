@@ -51,10 +51,8 @@ public class MoldDTO {
 	private String manufacture_code;
 	private String moldtype_name;
 	private String moldtype_code;
-	private String moldnumber_name;
-	private String moldnumber_code;
-	private String moldcost_name;
-	private String moldcost_code;
+	private String moldnumber;
+	private String moldcost;
 	private String interalnumber;
 	private String deptcode_name;
 	private String deptcode_code;
@@ -109,15 +107,9 @@ public class MoldDTO {
 		setMoldtype_code(moldtype_code);
 		setMoldtype_name(moldtype_name);
 		// 금형번호
-		String moldnumber_code = IBAUtil.getStringValue(doc, "MOLDNUMBER");
-		String moldnumber_name = keyToValue(moldnumber_code, "MOLDNUMBER");
-		setMoldnumber_code(moldnumber_code);
-		setMoldnumber_name(moldnumber_name);
+		setMoldnumber(IBAUtil.getStringValue(doc, "MOLDNUMBER"));
 		// 금형개발비
-		String moldcost_code = IBAUtil.getStringValue(doc, "MOLDCOST");
-		String moldcost_name = keyToValue(moldcost_code, "MOLDCOST");
-		setMoldcost_code(moldcost_code);
-		setMoldcost_name(moldcost_name);
+		setMoldcost(IBAUtil.getStringValue(doc, "MOLDCOST"));
 		// 부서코드
 		String deptcode_code = IBAUtil.getStringValue(doc, "DEPTCODE");
 		String deptcode_name = keyToValue(deptcode_code, "DEPTCODE");

@@ -2,18 +2,23 @@ package com.e3ps.mold.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocLocation;
+import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.mold.dto.MoldDTO;
 
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
@@ -240,6 +245,36 @@ public class MoldHelper {
 		map.put("curPage", pager.getCpage());
 		
 		return map;
-
+	}
+	
+	public List<MoldDTO> getDocumentListToLinkRoleName(WTDocument document, String roleName) throws Exception {
+		List<MoldDTO> list = new ArrayList<MoldDTO>();
+		
+		List<DocumentToDocumentLink> linkList = getDocumentToDocumentLinks(document, roleName);
+		for(DocumentToDocumentLink link : linkList) {
+			WTDocument doc = null;
+			if("used".equals(roleName)){
+				doc = link.getUsed();
+			}else if("useBy".equals(roleName)){
+				doc = link.getUseBy();
+			}
+			
+			MoldDTO data = new MoldDTO(doc);
+			list.add(data);
+		}
+		return list;
+	}
+	
+	public List<DocumentToDocumentLink> getDocumentToDocumentLinks(WTDocument document, String roleName) throws Exception {
+		List<DocumentToDocumentLink> list = new ArrayList<DocumentToDocumentLink>();
+		
+		String vrOid = CommonUtil.getVROID(document);
+		document = (WTDocument)CommonUtil.getObject(vrOid);
+		QueryResult qr = PersistenceHelper.manager.navigate(document, roleName, DocumentToDocumentLink.class, false);
+		while(qr.hasMoreElements()){ 
+			DocumentToDocumentLink link = (DocumentToDocumentLink)qr.nextElement();
+			list.add(link);
+    	}
+		return list;
 	}
 }
