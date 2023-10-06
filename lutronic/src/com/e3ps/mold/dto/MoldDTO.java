@@ -89,6 +89,7 @@ public class MoldDTO {
 		setLocation(doc.getLocation());
 		setDocumentType(doc.getDocType().toString());
 		setDocumentTypeDisplay(doc.getDocType().getDisplay());
+		setIBAAttributes(doc);
 	}
 	
 	/**

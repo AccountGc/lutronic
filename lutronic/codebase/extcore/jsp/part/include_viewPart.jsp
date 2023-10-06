@@ -21,7 +21,18 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		</td>
 	</tr>
 </table>
-<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<table class="create-table">
+	<colgroup>
+		<col width="150">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th class="lb">관련 품목</th>
+		<td class="indent5">
+			<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 	let partGridID;
 	const columnPart = [ {

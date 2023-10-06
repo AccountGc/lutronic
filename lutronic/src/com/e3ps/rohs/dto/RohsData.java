@@ -32,6 +32,7 @@ public class RohsData{
 	private String manufacture;
 	private String manufactureDisplay;
 	private String approvalType;
+	private String approvalTypeDisplay;
 	private String creator;
 	private String modifier;
 	private String createDate;
@@ -56,17 +57,16 @@ public class RohsData{
 		setModifier(rohs.getModifierFullName());
 		setCreateDate(DateUtil.getDateString(rohs.getCreateTimestamp(),"a"));
 		setModifyDate(DateUtil.getDateString(rohs.getModifyTimestamp(),"a"));
-		String manufa =IBAUtil.getAttrValue(rohs, IBAKey.IBA_MANUFACTURE);
-		NumberCode code =NumberCodeHelper.service.getNumberCode("MANUFACTURE", manufa);
-		if(code !=null){
-			setManufactureDisplay(code.getName());
-			setManufacture(code.getCode());
-		}
-		String appType =IBAUtil.getAttrValue(rohs, IBAKey.IBA_APPROVALTYPE);
-		NumberCode code2 =NumberCodeHelper.service.getNumberCode("APPROVALTYPE", appType);
-		if(code2 !=null){
-			setApprovalType(code2.getCode());
-		}
+		// 협력업체
+		String manufacture = IBAUtil.getAttrValue(rohs, IBAKey.IBA_MANUFACTURE);
+		String manufactureDisplay = keyToValue(manufacture, IBAKey.IBA_MANUFACTURE);
+		setManufacture(manufacture);
+		setManufactureDisplay(manufactureDisplay);
+		// 결재타입
+		String approvalType = IBAUtil.getAttrValue(rohs, IBAKey.IBA_APPROVALTYPE);
+		String approvalTypeDisplay = "BATCH".equals(approvalType) ? "일괄결재" : "기본결재";
+		setApprovalType(approvalType);
+		setApprovalTypeDisplay(approvalTypeDisplay);
 		setLatest(CommonUtil.isLatestVersion(rohs));
 		setDescription(StringUtil.checkNull(rohs.getDescription()));
 		setVersion(rohs.getVersionIdentifier().getValue() + "." + rohs.getIterationIdentifier().getValue());
@@ -107,18 +107,10 @@ public class RohsData{
 		return false;
 	}
 	
-//	public String getDescription(boolean isView) {
-//		String description = StringUtil.checkNull(this.rohs.getDescription());
-//		if(isView) {
-//			description = WebUtil.getHtml(description);
-//		}
-//		return description;
-//	}
-//	
-//	public String getRohsType() {
-//		String type = this.rohs.getDocType().getDisplay(Message.getLocale());
-//		return type;
-//	}
-//	
-
+	/**
+	 * IBA 값 디스플레이 값으로 변경
+	 */
+	private String keyToValue(String code, String codeType) throws Exception {
+		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
+	}
 }
