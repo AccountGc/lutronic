@@ -388,11 +388,17 @@ iframe {
 					} else {
 						createAUIGrid91(columns91);
 					}
-					const isCreated100 = AUIGrid.isCreated(myGridID100); // 품목
+					const isCreated100 = AUIGrid.isCreated(myGridID100); // EO
 					if (isCreated100) {
 						AUIGrid.resize(myGridID100);
 					} else {
 						createAUIGrid100(columns100);
+					}
+					const isCreated105 = AUIGrid.isCreated(myGridID105); // ECO
+					if (isCreated105) {
+						AUIGrid.resize(myGridID105);
+					} else {
+						createAUIGrid105(columns105);
 					}
 					break;
 				case "tabs-3":

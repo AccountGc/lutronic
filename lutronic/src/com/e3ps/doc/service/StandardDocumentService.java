@@ -405,6 +405,19 @@ public class StandardDocumentService extends StandardManager implements Document
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
+		
+		ArrayList<Map<String, String>> rows105 = dto.getRows100();
+		// 관련ECO
+		for (Map<String, String> row105 : rows105) {
+			String gridState = row105.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row105.get("oid");
+				EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+				DocumentECOLink  link = DocumentECOLink .newDocumentECOLink(doc, eco);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
 	}
 
 	/**
