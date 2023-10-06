@@ -398,10 +398,11 @@ iframe {
 			// 링크 데이터
 			rows90 : rows90,
 			rows91 : rows91,
-			rows100 : rows100,
-			rows105 : rows105
+// 			rows100 : rows100,
+// 			rows105 : rows105
 		};
 		
+		logger(params);
 		parent.openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);

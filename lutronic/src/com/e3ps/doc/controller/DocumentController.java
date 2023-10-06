@@ -28,12 +28,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
-import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.controller.BaseController;
@@ -42,7 +40,6 @@ import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.rohs.service.RohsHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
@@ -349,94 +346,6 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	@RequestMapping("/include_DocumentSelect")
-	public ModelAndView include_DocumentSelect(HttpServletRequest request, HttpServletResponse response) {
-		String moduleType = request.getParameter("moduleType");
-		String oid = request.getParameter("oid");
-		String title = request.getParameter("title");
-		String paramName = request.getParameter("paramName");
-		String type = request.getParameter("type");
-		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
-		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
-		List<DocumentDTO> list = null;
-		try {
-			list = DocumentHelper.service.include_DocumentList(oid, moduleType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			list = new ArrayList<DocumentDTO>();
-		}
-		ModelAndView model = new ModelAndView();
-		model.setViewName("include:/document/include_DocumentSelect");
-		model.addObject("list", list);
-		model.addObject("title", title);
-		model.addObject("paramName", paramName);
-		model.addObject("type", type);
-		model.addObject("state", state);
-		model.addObject("searchType", searchType);
-		model.addObject("lifecycle", lifecycle);
-		return model;
-	}
-
-	/**
-	 * 문서 검색 팝업
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/selectDocPopup")
-	public ModelAndView selectDocPopup(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		String moduleType = request.getParameter("moduleType");
-		String mode = StringUtil.checkReplaceStr(request.getParameter("mode"), "mutil");
-		String type = StringUtil.checkReplaceStr(request.getParameter("type"), "select");
-		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
-		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
-
-		model.addObject("mode", mode);
-		model.addObject("modeulType", moduleType);
-		model.addObject("type", type);
-		model.addObject("state", state);
-		model.addObject("searchType", searchType);
-		model.addObject("lifecycle", lifecycle);
-		model.setViewName("popup:/document/selectDocPopup");
-		return model;
-	}
-
-	/**
-	 * 관련 문서 보기
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/include_DocumentView")
-	public ModelAndView include_DocumentView(HttpServletRequest request, HttpServletResponse response) {
-		String moduleType = request.getParameter("moduleType");
-		String oid = request.getParameter("oid");
-		String title = request.getParameter("title");
-		String paramName = request.getParameter("paramName");
-		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-		List<DocumentDTO> list = null;
-		try {
-			list = DocumentHelper.service.include_DocumentList(oid, moduleType);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("moduleType", moduleType);
-		model.addObject("oid", oid);
-		model.addObject("title", title);
-		model.addObject("paramName", paramName);
-		model.addObject("list", list);
-		model.addObject("distribute", distribute);
-		model.setViewName("include:/document/include_DocumentView");
-		return model;
-	}
-
 	/**
 	 * 프로젝트 - 태스크 산출물 직접등록
 	 * 
@@ -513,12 +422,6 @@ public class DocumentController extends BaseController {
 		model.addObject("list", list);
 		model.addObject("enabled", Boolean.valueOf(enabled));
 		return model;
-	}
-
-	@ResponseBody
-	@RequestMapping("/linkDocumentAction")
-	public ResultData linkDocumentAction(HttpServletRequest request, HttpServletResponse response) {
-		return DocumentHelper.service.linkDocumentAction(request, response);
 	}
 
 	/**

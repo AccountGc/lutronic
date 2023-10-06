@@ -117,8 +117,17 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			for (LinkedHashMap<String, Object> editRow : editRows) {
 				String oid = (String) editRow.get("oid");
+				String step_name = (String) editRow.get("step_name");
+				String name = (String) editRow.get("name");
+				String activity_name = (String) editRow.get("activity_name"); // code..
+				int step_sort = (int) editRow.get("step_sort");
+				String activeUser_name = (String) editRow.get("activeUser_name"); // wtuser
 				EChangeActivityDefinition act = (EChangeActivityDefinition) CommonUtil.getObject(oid);
-
+				act.setName(name);
+				act.setActiveUser((WTUser) CommonUtil.getObject(activeUser_name));
+				act.setSortNumber(step_sort);
+				act.setStep(step_name);
+				act.setActiveType(activity_name);
 				PersistenceHelper.manager.modify(act);
 			}
 
