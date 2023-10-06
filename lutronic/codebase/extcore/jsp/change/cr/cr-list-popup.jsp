@@ -3,6 +3,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
+ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
@@ -18,20 +19,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid">
+		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="lastNum" id="lastNum"> 
 		<input type="hidden" name="curPage" id="curPage">
-
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						ECO 검색
-					</div>
-				</td>
-			</tr>
-		</table>
-
+		
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -42,17 +33,13 @@ boolean multi = (boolean) request.getAttribute("multi");
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>ECO 번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
-				</td>
-				<th>ECO 제목</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
-				</td>
+				<th>CR 번호</th>
+				<td class="indent5"><input type="text" name="number" id="number" class="width-300"></td>
+				<th>CR 제목</th>
+				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
 				<th>상태</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-200">
+					<select name="state" id="state" class="width-200" >
 						<option value="">선택</option>
 						<option value="INWORK">작업 중</option>
 						<option value="UNDERAPPROVAL">승인 중</option>
@@ -63,29 +50,52 @@ boolean multi = (boolean) request.getAttribute("multi");
 			</tr>
 			<tr>
 				<th>등록자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
+				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
 				<th>등록일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="createdTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
+				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
 				<th>승인일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
+				<td class="indent5"><input type="text" name="approveFrom" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('approveFrom', 'approveTo')"></td>
 			</tr>
 			<tr>
-				<th class="lb">프로젝트 코드</th>
+				<th>작성자</th>
 				<td class="indent5">
+					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
+					<input type="hidden" name="writerOid" id="writerOid"> 
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>작성부서</th>
+				<td class="indent5">
+					<input type="text" name="createDepart" id="createDepart" data-multi="false" class="width-200">
+				</td>
+				<th>작성일</th>
+				<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
+					onclick="clearFromTo('writedFrom', 'writedTo')"></td>
+				
+			</tr>
+			<tr>
+				<th>제안자</th>
+				<td class="indent5">
+					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
+					<input type="hidden" name="proposerOid" id="proposerOid"> 
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
+				<th>변경구분</th>
+				<td class="indent5">
+					<select name="changeSection" id="changeSection" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode section : sectionList) {
+						%>
+						<option value="<%=section.getCode() %>"><%=section.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th class="req lb">프로젝트 코드</th>
+				<td class="indent5" >
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<%
@@ -96,92 +106,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 						}
 						%>
 					</select>
-				</td>
-				<th>인허가변경</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>전체</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" id="licensing" value="NONE">
-						<div class="state p-success">
-							<label>
-								<b>N/A</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="0">
-						<div class="state p-success">
-							<label>
-								<b>불필요</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="1">
-						<div class="state p-success">
-							<label>
-								<b>필요</b>
-							</label>
-						</div>
-					</div>
-				</td>
-				<th>위험통제</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>전체</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" id="riskType" value="NONE">
-						<div class="state p-success">
-							<label>
-								<b>N/A</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="0">
-						<div class="state p-success">
-							<label>
-								<b>불필요</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="1">
-						<div class="state p-success">
-							<label>
-								<b>필요</b>
-							</label>
-						</div>
-					</div>
-				</td>
-			</tr>
-			<tr class="hidden">
-				<th class="lb">완제품 품목</th>
-				<td colspan="5" class="indent5 pt5">
-					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
-						<jsp:param value="" name="oid" />
-					</jsp:include>
 				</td>
 			</tr>
 		</table>
@@ -217,9 +141,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
-					headerText : "ECO번호",
+					dataField : "eoNumber",
+					headerText : "CR 번호",
 					dataType : "string",
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -229,15 +154,15 @@ boolean multi = (boolean) request.getAttribute("multi");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/eco/view?oid=" + oid);
+							const url = getCallUrl("/changeCR/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
 				}, {
-					dataField : "name",
-					headerText : "ECO제목",
+					dataField : "eoName",
+					headerText : "CR 제목",
 					dataType : "string",
-					style : "aui-left",
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -247,22 +172,42 @@ boolean multi = (boolean) request.getAttribute("multi");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/eco/view?oid=" + oid);
+							const url = getCallUrl("/changeCR/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
 				}, {
-					dataField : "licensing",
-					headerText : "인허가변경",
+					dataField : "changeSection",
+					headerText : "변경구분",
 					dataType : "string",
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "riskType",
-					headerText : "위험 통제",
+					dataField : "createDepart",
+					headerText : "작성부서",
 					dataType : "string",
+					width : 250,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "writer",
+					headerText : "작성자",
+					dataType : "string",
+					width : 180,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "createDate",
+					headerText : "작성일",
+					dataType : "string",
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -271,30 +216,25 @@ boolean multi = (boolean) request.getAttribute("multi");
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "creator",
+					dataField : "writer",
 					headerText : "등록자",
 					dataType : "string",
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "createdDate",
+					dataField : "createDate",
 					headerText : "등록일",
-					dataType : "date",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "approveDate_txt",
-					headerText : "승인일",
 					dataType : "string",
+					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -334,10 +274,8 @@ boolean multi = (boolean) request.getAttribute("multi");
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/eco/list");
+				const url = getCallUrl("/cr/list");
 				const field = [ "_psize", "name", "number" ];
-				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
-				params.rows104 = rows104;
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -381,9 +319,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 					select : headerMenuSelectHandler
 				});
 				createAUIGrid(columns);
-				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(myGridID104);
 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
@@ -411,7 +347,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(myGridID104);
 			});
 
 			function spread(target) {
@@ -430,7 +365,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 						twindate("modified");
 						selectbox("_psize");
 						selectbox("model");
-						AUIGrid.resize(myGridID104);
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
@@ -440,7 +374,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 						twindate("modified");
 						selectbox("_psize");
 						selectbox("model");
-						AUIGrid.resize(myGridID104);
 					}
 				}
 			}
