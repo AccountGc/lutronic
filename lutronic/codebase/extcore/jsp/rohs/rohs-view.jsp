@@ -120,9 +120,9 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			</tr>
 			<tr>
 				<th>결재방식</th>
-				<td><%=dto.getApprovalType()%></td>
+				<td><%=dto.getApprovalType() == null ? "" : dto.getApprovalType()%></td>
 				<th>설명</th>
-				<td><%=dto.getDescription()%></td>
+				<td><%=dto.getDescription() == null ? "" : dto.getDescription()%></td>
 			</tr>
 		</table>
 		<div id="comments-layer">

@@ -109,12 +109,12 @@ public class MoldController extends BaseController {
 	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-		DocumentDTO dto = new DocumentDTO(doc);
+		MoldDTO dto = new MoldDTO(doc);
 
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/mold/mold-view.jsp");
+		model.setViewName("popup:/mold/mold-view");
 		return model;
 	}
 

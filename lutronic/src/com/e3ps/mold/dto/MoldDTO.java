@@ -23,6 +23,7 @@ import wt.iba.definition.StringDefinitionReference;
 import wt.iba.value.IBAHolderReference;
 import wt.iba.value.StringValue;
 import wt.query.QuerySpec;
+import wt.session.SessionHelper;
 
 @Getter
 @Setter
@@ -32,6 +33,7 @@ public class MoldDTO {
 	private String name;
 	private String number;
 	private String state;
+	private String stateDisplay;
 	private String creator;
 	private String modifier;
 	private String createDate;
@@ -40,6 +42,9 @@ public class MoldDTO {
 	private String description;
 	private String location;
 	private String documentType;
+	private String documentTypeDisplay;
+	private boolean isLatest;
+	private String iteration;
 	
 	// IBA
 	private String manufacture_name;
@@ -71,15 +76,64 @@ public class MoldDTO {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(doc.getName());
 		setNumber(doc.getNumber());
-		setState(doc.getLifeCycleState().getDisplay());
+		setState(doc.getLifeCycleState().toString());
+		setStateDisplay(doc.getLifeCycleState().getDisplay());
+		setLatest(CommonUtil.isLatestVersion(doc));
 		setCreator(doc.getCreatorFullName());
 		setModifier(doc.getModifierFullName());
 		setCreateDate(doc.getCreateTimestamp().toString().substring(0, 10));
 		setModifyDate(doc.getModifyTimestamp().toString().substring(0, 10));
-		setInteralnumber(doc.getIterationIdentifier().getSeries().getValue());
+		setIteration(doc.getIterationIdentifier().getSeries().getValue());
 		setVersion(doc.getVersionIdentifier().getSeries().getValue());
 		setDescription(doc.getDescription());
 		setLocation(doc.getLocation());
+		setDocumentType(doc.getDocType().toString());
+		setDocumentTypeDisplay(doc.getDocType().getDisplay());
+	}
+	
+	/**
+	 * IBA 값 세팅
+	 */
+	private void setIBAAttributes(WTDocument doc) throws Exception {
+		// 내부문서번호
+		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
+		// 협력업체
+		String manufacture_code = IBAUtil.getStringValue(doc, "MANUFACTURE");
+		String manufacture_name = keyToValue(manufacture_code, "MANUFACTURE");
+		setManufacture_code(manufacture_code);
+		setManufacture_name(manufacture_name);
+		// 금형타입
+		String moldtype_code = IBAUtil.getStringValue(doc, "MOLDTYPE");
+		String moldtype_name = keyToValue(moldtype_code, "MOLDTYPE");
+		setMoldtype_code(moldtype_code);
+		setMoldtype_name(moldtype_name);
+		// 금형번호
+		String moldnumber_code = IBAUtil.getStringValue(doc, "MOLDNUMBER");
+		String moldnumber_name = keyToValue(moldnumber_code, "MOLDNUMBER");
+		setMoldnumber_code(moldnumber_code);
+		setMoldnumber_name(moldnumber_name);
+		// 금형개발비
+		String moldcost_code = IBAUtil.getStringValue(doc, "MOLDCOST");
+		String moldcost_name = keyToValue(moldcost_code, "MOLDCOST");
+		setMoldcost_code(moldcost_code);
+		setMoldcost_name(moldcost_name);
+		// 부서코드
+		String deptcode_code = IBAUtil.getStringValue(doc, "DEPTCODE");
+		String deptcode_name = keyToValue(deptcode_code, "DEPTCODE");
+		setDeptcode_code(deptcode_code);
+		setDeptcode_name(deptcode_name);
+		// 결재타입
+		String approvalType_code = IBAUtil.getStringValue(doc, "APPROVALTYPE");
+		String approvalType_name = "BATCH".equals(approvalType_code) ? "일괄결재" : "기본결재";
+		setApprovaltype_code(approvalType_code);
+		setApprovaltype_name(approvalType_name);
+	}
+	
+	/**
+	 * IBA 값 디스플레이 값으로 변경
+	 */
+	private String keyToValue(String code, String codeType) throws Exception {
+		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
 	}
 
 	/**
@@ -132,4 +186,29 @@ public class MoldDTO {
 			PersistenceHelper.manager.delete(sv);
 		}
 	}
+	
+	/**
+     * 회수 권한  승인중 && (소유자 || 관리자 ) && 기본 결재 
+     */
+	public boolean isWithDraw(){
+  	   	try{
+  	   		return  (state.equals("APPROVING") && ( isOwner() || CommonUtil.isAdmin()));
+  	   	}catch(Exception e){
+  	   		e.printStackTrace();
+  	   	}
+  	   	return false;
+	}
+	
+	 /**
+	  * Owner 유무 체크
+	  * @return
+	  */
+		public boolean isOwner(){
+			try{
+				return SessionHelper.getPrincipal().getName().equals(getCreator());
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return false;
+		}
 }

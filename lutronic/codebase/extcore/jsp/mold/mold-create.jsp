@@ -194,12 +194,12 @@
 				let params = new Object();
 				params.lifecycle = $('input[name=lifecycle]:checked').val();
 				params.name = $("#name").val();
-				params.manufacture = $("#manufacture").val();
-				params.moldtype = $("#moldtype").val();
-				params.moldnumber = $("#moldnumber").val();
-				params.moldcost = $("#moldcost").val();
+				params.manufacture_code = $("#manufacture").val();
+				params.moldtype_code = $("#moldtype").val();
+				params.moldnumber_code = $("#moldnumber").val();
+				params.moldcost_code = $("#moldcost").val();
 				params.interalnumber = $("#interalnumber").val();
-				params.deptcode = $("#deptcode").val();
+				params.deptcode_code = $("#deptcode").val();
 				params.description = $("#description").val();
 				params.documentType = $("#documentType").val();
 				params.location = $("#location").val();

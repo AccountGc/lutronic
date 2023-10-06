@@ -155,8 +155,7 @@ if(moduleType=="" && !moduleType.equals("eco")){
 		_popup(url, 1500, 700, "n");
 	}
 	
-	function append(items){
-		
+	function append(items, callBack){
 		for(var i=0; i<items.length; i++){
 			var data = new Object();
 			data.oid = items[i].item.part_oid;
@@ -165,7 +164,7 @@ if(moduleType=="" && !moduleType.equals("eco")){
 			data.version = items[i].item.version;
 			AUIGrid.addRow(partGridID, data);
 		}
-		
+		callBack(true);
 	}
 
 	function deleteRow9() {

@@ -123,7 +123,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
 					~
 					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
 				</td>
 			</tr>
 			<tr>
@@ -200,15 +200,15 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						showIcon : true,
 						inline : true
 					},
-// 					renderer : {
-// 						type : "LinkRenderer",
-// 						baseUrl : "javascript",
-// 						jsCallback : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.oid;
-// 							const url = getCallUrl("/mold/view?oid=" + oid);
-// 							popup(url, 1600, 800);
-// 						}
-// 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/mold/view?oid=" + oid);
+							_popup(url, 1600, 550, "n");
+						}
+					},
 				}, {
 					dataField : "name",
 					headerText : "금형명",
@@ -218,15 +218,15 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						showIcon : true,
 						inline : true
 					},
-// 					renderer : {
-// 						type : "LinkRenderer",
-// 						baseUrl : "javascript",
-// 						jsCallback : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.oid;
-// 							const url = getCallUrl("/mold/view?oid=" + oid);
-// 							popup(url, 1600, 800);
-// 						}
-// 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/mold/view?oid=" + oid);
+							_popup(url, 1600, 550, "n");
+						}
+					},
 				}, {
 					dataField : "version",
 					headerText : "Rev.",
@@ -237,7 +237,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						inline : true
 					},
 				}, {
-					dataField : "state",
+					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
 					width : 170,
