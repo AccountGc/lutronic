@@ -73,6 +73,8 @@ public class DocumentDTO {
 	private ArrayList<Map<String, String>> rows91 = new ArrayList<>(); // 관련 품목
 	private ArrayList<Map<String, String>> rows100 = new ArrayList<>(); // 관련 EO
 	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 ECO
+	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
+	
 	private boolean temp;
 
 	public DocumentDTO() {
@@ -201,7 +203,6 @@ public class DocumentDTO {
 
 		// 생성전 삭제 처리..
 		deleteIBAValue(doc, sd);
-
 		sv.setValue(value);
 		sv.setDefinitionReference((StringDefinitionReference) sd.getAttributeDefinitionReference());
 		sv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(doc)));

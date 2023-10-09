@@ -16,7 +16,7 @@ public class DefDTO {
 	private String oid;
 	private String name;
 	private int sort;
-	private String description;
+	private String description = "";
 
 	public DefDTO() {
 

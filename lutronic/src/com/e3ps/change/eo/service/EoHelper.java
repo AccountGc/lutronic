@@ -9,6 +9,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.eo.column.EoColumn;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -158,61 +159,6 @@ public class EoHelper {
 			query.appendCloseParen();
 		}
 
-//		if (sortValue != null && sortValue.length() > 0) {
-//			// System.out.println("sortCheck="+sortCheck+"\tsortValue="+sortValue);
-//			if ("true".equals(sortCheck)) {
-//
-//				if (!"creator.key.id".equals(sortValue)) {
-//					if (!"PROCESSDATE".equals(sortValue)) {
-//						qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class, sortValue), true),
-//								new int[] { ecoIdx });
-//					}
-//				} else {
-//
-//					if (qs.getConditionCount() > 0)
-//						qs.appendAnd();
-//					int idx_user = qs.appendClassList(WTUser.class, false);
-//					int idx_people = qs.appendClassList(People.class, false);
-//
-//					ClassAttribute ca = new ClassAttribute(EChangeOrder.class, "creator.key.id");
-//					ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-//					qs.appendWhere(new SearchCondition(ca, "=", ca2), new int[] { ecoIdx, idx_user });
-//					ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-//					qs.appendAnd();
-//					qs.appendWhere(new SearchCondition(ca2, "=", ca3), new int[] { idx_user, idx_people });
-//					SearchUtil.setOrderBy(qs, People.class, idx_people, People.NAME, "sort", true);
-//				}
-//
-//			} else {
-//
-//				if (!"creator.key.id".equals(sortValue)) {
-//					if (!"PROCESSDATE".equals(sortValue)) {
-//						qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class, sortValue), false),
-//								new int[] { ecoIdx });
-//					}
-//				} else {
-//
-//					if (qs.getConditionCount() > 0)
-//						qs.appendAnd();
-//					int idx_user = qs.appendClassList(WTUser.class, false);
-//					int idx_people = qs.appendClassList(People.class, false);
-//
-//					ClassAttribute ca = new ClassAttribute(EChangeOrder.class, "creator.key.id");
-//					ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-//					qs.appendWhere(new SearchCondition(ca, "=", ca2), new int[] { ecoIdx, idx_user });
-//					ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-//					qs.appendAnd();
-//					qs.appendWhere(new SearchCondition(ca2, "=", ca3), new int[] { idx_user, idx_people });
-//					SearchUtil.setOrderBy(qs, People.class, idx_people, People.NAME, "sort", false);
-//				}
-//			}
-//		} else {
-//			qs.appendOrderBy(new OrderBy(new ClassAttribute(ecoClass, EChangeOrder.EO_APPROVE_DATE), true),
-//					new int[] { ecoIdx });
-//			qs.appendOrderBy(new OrderBy(new ClassAttribute(ecoClass, EChangeOrder.CREATE_TIMESTAMP), true),
-//					new int[] { ecoIdx });
-//		}
-
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -342,5 +288,22 @@ public class EoHelper {
 			list.add(map);
 		}
 		return list;
+	}
+
+	/**
+	 * 모델명 복수개로 인해서 처리 하는 함수
+	 */
+	public String displayToModel(String model) throws Exception {
+		String display = "";
+		String[] ss = model.split(",");
+		for (int i = 0; i < ss.length; i++) {
+			String s = ss[i];
+			if (ss.length - 1 == i) {
+				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
+			} else {
+				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+			}
+		}
+		return display;
 	}
 }

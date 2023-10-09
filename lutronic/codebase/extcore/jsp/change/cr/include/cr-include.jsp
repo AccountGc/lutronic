@@ -6,7 +6,6 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
-String method = request.getParameter("method");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
@@ -51,16 +50,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
-		},
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/changeCR/view?oid=" + oid);
-				popup(url, 1600, 800);
-			}
 		},
 	}, {
 		dataField : "eoName",
@@ -68,16 +57,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
-		},
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/changeCR/view?oid=" + oid);
-				popup(url, 1600, 800);
-			}
 		},
 	}, {
 		dataField : "changeSection",
@@ -85,7 +64,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "createDepart",
@@ -93,7 +71,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "writer",
@@ -101,7 +78,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "createDate",
@@ -109,7 +85,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "state",
@@ -117,7 +92,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "writer",
@@ -125,7 +99,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "createDate",
@@ -133,7 +106,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "oid",
@@ -168,9 +140,8 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup101() {
-		const method = "<%=method%>";
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/cr/popup?method=" + method + "&multi=" + multi);
+		const url = getCallUrl("/cr/popup?method=insert101&multi=" + multi);
 		_popup(url, 1800, 900, "n");
 	}
 

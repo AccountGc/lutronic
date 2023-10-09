@@ -217,7 +217,6 @@ iframe {
 <jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
-	<jsp:param value="insert91" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
@@ -226,7 +225,6 @@ iframe {
 <jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
-	<jsp:param value="insert90" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
@@ -235,7 +233,6 @@ iframe {
 <jsp:include page="/extcore/jsp/change/include/eo-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
-	<jsp:param value="insert100" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
@@ -298,7 +295,6 @@ iframe {
 <jsp:include page="/extcore/jsp/change/include/eco-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
-	<jsp:param value="insert105" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>

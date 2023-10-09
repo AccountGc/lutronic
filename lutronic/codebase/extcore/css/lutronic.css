@@ -121,8 +121,8 @@ table.search-table th {
 	padding-bottom: 4px;
 	min-width: 100px;
 	width: 130px;
-/*	max-width: 130px;*/
-/*	min-width: 130px;*/
+	/*	max-width: 130px;*/
+	/*	min-width: 130px;*/
 }
 
 table.search-table td {
@@ -668,7 +668,8 @@ img.edit {
 	cursor: pointer;
 }
 
-.search-table img.delete {
+.search-table img.delete,
+.create-table img.delete {
 	position: relative;
 	top: 3px;
 	cursor: pointer;

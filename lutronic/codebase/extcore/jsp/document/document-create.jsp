@@ -222,13 +222,12 @@ iframe {
 		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
 
 		<!-- 	관련 EO -->
-		<jsp:include page="/extcore/jsp/change/include/eo-include.jsp">
+		<jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert100" name="method" />
@@ -237,7 +236,7 @@ iframe {
 		</jsp:include>
 
 		<!-- 	관련 CR -->
-		<jsp:include page="/extcore/jsp/change/include/cr-include.jsp">
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert100" name="method" />
@@ -273,7 +272,7 @@ iframe {
 		</table>
 
 		<!-- 	관련 ECO -->
-		<jsp:include page="/extcore/jsp/change/include/eco-include.jsp">
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert105" name="method" />

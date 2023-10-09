@@ -6,7 +6,6 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
-String method = request.getParameter("method");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
@@ -110,6 +109,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "REV",
 		dataType : "string",
 		width : 80,
+		renderer : {
+			type : "TemplateRenderer"
+		},
 		filter : {
 			showIcon : true,
 		},
@@ -208,9 +210,8 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup90() {
-		const method = "<%=method%>";
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/doc/popup?method=" + method + "&multi=" + multi);
+		const url = getCallUrl("/doc/popup?method=insert90&multi=" + multi);
 		_popup(url, 1800, 900, "n");
 	}
 

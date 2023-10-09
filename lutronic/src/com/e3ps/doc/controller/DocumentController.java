@@ -252,7 +252,6 @@ public class DocumentController extends BaseController {
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
-		System.out.println(result);
 		return result;
 	}
 

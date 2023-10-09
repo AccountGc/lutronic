@@ -12,7 +12,7 @@ String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String codeType = (String) request.getAttribute("codeType");
 %>
-<input type="hidden" name="codeType" id="codeType" value="<%=codeType %>">
+<input type="hidden" name="codeType" id="codeType" value="<%=codeType%>">
 <table class="search-table">
 	<colgroup>
 		<col width="130">
@@ -36,7 +36,7 @@ String codeType = (String) request.getAttribute("codeType");
 			<input type="text" name="description" id="description" class="width-200">
 		</td>
 		<th>활성화</th>
-		<td class="indent5">
+		<td>
 			&nbsp;
 			<div class="pretty p-switch">
 				<input type="radio" name="enabled" value="true" checked="checked">
@@ -61,9 +61,7 @@ String codeType = (String) request.getAttribute("codeType");
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('code-list');">
-			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('code-list');">
+			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -74,62 +72,59 @@ String codeType = (String) request.getAttribute("codeType");
 				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
-			<input type="button" value="목록 열기/닫기" title="목록 열기/닫기">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>
 <div id="grid_wrap" style="height: 700px; border-top: 1px solid #3180c3;"></div>
-<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">
 	let myGridID;
-	function _layout() {
-		return [ {
-			dataField : "name",
-			headerText : "이름",
-			dataType : "string",
-			width : 300,
-			filter : {
-				showIcon : true,
-			},
-		}, {
-			dataField : "code",
-			headerText : "코드",
-			dataType : "string",
-			width : 150,
-			filter : {
-				showIcon : true,
-			},
-		}, {
-			dataField : "sort",
-			headerText : "소트",
-			dataType : "string",
-			width : 100,
-			filter : {
-				showIcon : true,
-			},
-		}, {
-			dataField : "description",
-			headerText : "설명",
-			dataType : "string",
-			style : "aui-left",
-			filter : {
-				showIcon : true,
-			},
-		}, {
-			dataField : "enabled",
-			headerText : "활성화",
-			dataType : "string",
-			width : 120,
-			renderer : {
-				type : "CheckBoxEditRenderer",
-				edtiable : false,
-			},
-			filter : {
-				showIcon : false,
-			},
-		} ]
-	}
+	const columns= [ {
+		dataField : "name",
+		headerText : "이름",
+		dataType : "string",
+		width : 300,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "code",
+		headerText : "코드",
+		dataType : "string",
+		width : 150,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "sort",
+		headerText : "소트",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "description",
+		headerText : "설명",
+		dataType : "string",
+		style : "aui-left",
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "enabled",
+		headerText : "활성화",
+		dataType : "string",
+		width : 120,
+		renderer : {
+			type : "CheckBoxEditRenderer",
+			edtiable : false,
+		},
+		filter : {
+			showIcon : false,
+		},
+	} ]
 
 	function createAUIGrid(columnLayout) {
 		const props = {
@@ -149,6 +144,7 @@ String codeType = (String) request.getAttribute("codeType");
 			enableRightDownFocus : true,
 			filterLayerWidth : 320,
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+			autoGridHeight : true
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		loadGridData();
@@ -162,7 +158,7 @@ String codeType = (String) request.getAttribute("codeType");
 	}
 
 	function loadGridData() {
-		const type = document.getElementById("codeType").value = type;
+		const type = document.getElementById("codeType").value;
 		const params = {
 			type : type
 		}
@@ -177,15 +173,33 @@ String codeType = (String) request.getAttribute("codeType");
 			closeLayer();
 		})
 	}
+	
+	function <%=method%>() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length === 0) {
+			alert("추가할 행을 선택하세요.");
+			return false;
+		}
+		
+		openLayer();
+		opener.<%=method%>(checkedItems, function(res) {
+			if(res) {
+				setTimeout(function() {
+					closeLayer();
+				}, 500);
+			}
+		})
+	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-		const columns = loadColumnLayout("code-list");
+		toFocus("name");
 		const contenxtHeader = genColumnHtml(columns);
 		$("#h_item_ul").append(contenxtHeader);
 		$("#headerMenu").menu({
 			select : headerMenuSelectHandler
 		});
 		createAUIGrid(columns);
+		AUIGrid.resize(myGridID);
 		selectbox("_psize");
 	});
 

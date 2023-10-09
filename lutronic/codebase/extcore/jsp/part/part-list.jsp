@@ -479,7 +479,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					width : 80,
 					filter : {
 						showIcon : true,
-						inline : true
+						inline : false
 					},
 				} ]
 			}
@@ -494,12 +494,12 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
-					enableRowCheckShiftKey : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

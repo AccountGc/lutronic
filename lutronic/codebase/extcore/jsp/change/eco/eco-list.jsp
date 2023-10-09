@@ -176,7 +176,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			</tr>
 			<tr class="hidden">
 				<th class="lb">완제품 품목</th>
-				<td colspan="5" class="indent5 pt5">
+				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -229,7 +229,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/eco/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800);
 						}
 					},
 				}, {
@@ -247,7 +247,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/eco/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800);
 						}
 					},
 				}, {
@@ -296,7 +296,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "approveDate_txt",
+					dataField : "approveDate",
 					headerText : "승인일",
 					dataType : "string",
 					width : 100,
@@ -317,11 +317,12 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -337,7 +338,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
-				const field = [ "_psize", "name", "number" ];
+				const field = [ "name", "number" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params = toField(params, field);

@@ -56,9 +56,9 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 				<td class="left">
 					<div id="rootLayer">
 						<input type="button" value="루트 추가" title="루트 추가" class="blue" onclick="create('root');">
-						<input type="button" value="루트 수정" title="루트 수정" class="">
 					</div>
 					<div id="actLayer">
+						<input type="button" value="루트 수정" title="루트 수정" onclick="modify();">
 						<input type="button" value="루트 삭제" title="루트 삭제" class="red" onclick="_delete()">
 						<input type="button" value="활동추가" title="활동추가" class="blue" onclick="create('act');">
 						<input type="button" value="활동삭제" title="활동삭제" class="red" onclick="deleteRow();">
@@ -76,7 +76,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 700px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -88,7 +88,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 			const ulist =
 		<%=ulist%>
 			const columns = [ {
-				dataField : "step_name",
+				dataField : "step",
 				headerText : "단계",
 				dataType : "string",
 				width : 120,
@@ -205,7 +205,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 					}
 				},
 			}, {
-				dataField : "step_sort",
+				dataField : "sort",
 				headerText : "정렬",
 				dataType : "numeric",
 				width : 100,
@@ -230,7 +230,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 					inline : true
 				},
 			}, {
-				dataField : "activeUser_name",
+				dataField : "activeUser_oid",
 				headerText : "담당자",
 				dataType : "string",
 				width : 150,
@@ -337,10 +337,10 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 
 			function loadGridData() {
 				const root = document.getElementById("root").value;
-				if (root === "") {
-					buttonControl();
-					return false;
-				}
+				// 				if (root === "") {
+				// 					buttonControl();
+				// 					return false;
+				// 				}
 				let params = new Object();
 				const url = getCallUrl("/activity/list");
 				const field = [ "root" ];
@@ -411,10 +411,11 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 			}
 
 			// Root 수정
-			$("#updateRootDefinition").click(function() {
-				const url = getCallUrl("/admin/updateRootDefinition") + "?oid=" + $("#rootOid").val();
+			function modify() {
+				const oid = document.getElementById("root").value;
+				const url = getCallUrl("/activity/modify?oid=" + oid);
 				_popup(url, 600, 500, "n");
-			})
+			}
 
 			function deleteRow() {
 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
@@ -430,14 +431,20 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 			}
 
 			function save() {
+				const editRows = AUIGrid.getEditedRowItems(myGridID);
+				const removeRows = AUIGrid.getRemovedItems(myGridID);
+
+				if (editRows.length === 0 && removeRows.length === 0) {
+					alert("수정 내용이 없습니다.");
+					return false;
+				}
 
 				if (!confirm("저장 하시겠습니까?")) {
 					return false;
 				}
 
 				const url = getCallUrl("/activity/save");
-				const editRows = AUIGrid.getEditedRowItems(myGridID);
-				const removeRows = AUIGrid.getRemovedItems(myGridID);
+
 				const params = {
 					editRows : editRows,
 					removeRows : removeRows

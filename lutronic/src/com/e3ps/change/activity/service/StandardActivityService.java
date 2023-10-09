@@ -5,12 +5,19 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.WCUtil;
 
 import wt.fc.PersistenceHelper;
+import wt.folder.Folder;
+import wt.folder.FolderEntry;
+import wt.folder.FolderHelper;
+import wt.lifecycle.LifeCycleHelper;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -117,16 +124,16 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			for (LinkedHashMap<String, Object> editRow : editRows) {
 				String oid = (String) editRow.get("oid");
-				String step_name = (String) editRow.get("step_name");
+				String step = (String) editRow.get("step");
 				String name = (String) editRow.get("name");
 				String activity_name = (String) editRow.get("activity_name"); // code..
-				int step_sort = (int) editRow.get("step_sort");
-				String activeUser_name = (String) editRow.get("activeUser_name"); // wtuser
+				int sort = (int) editRow.get("sort");
+				String activeUser_oid = (String) editRow.get("activeUser_oid"); // wtuser
 				EChangeActivityDefinition act = (EChangeActivityDefinition) CommonUtil.getObject(oid);
 				act.setName(name);
-				act.setActiveUser((WTUser) CommonUtil.getObject(activeUser_name));
-				act.setSortNumber(step_sort);
-				act.setStep(step_name);
+				act.setActiveUser((WTUser) CommonUtil.getObject(activeUser_oid));
+				act.setSortNumber(sort);
+				act.setStep(step);
 				act.setActiveType(activity_name);
 				PersistenceHelper.manager.modify(act);
 			}
@@ -135,6 +142,83 @@ public class StandardActivityService extends StandardManager implements Activity
 				String oid = (String) removeRow.get("oid");
 				EChangeActivityDefinition act = (EChangeActivityDefinition) CommonUtil.getObject(oid);
 				PersistenceHelper.manager.delete(act);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void modify(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		String name = (String) params.get("name");
+		String sort = (String) params.get("sort");
+		String description = (String) params.get("description");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			EChangeActivityDefinitionRoot def = (EChangeActivityDefinitionRoot) CommonUtil.getObject(oid);
+			def.setName(name);
+			def.setSortNumber(Integer.parseInt(sort));
+			def.setDescription(description);
+			PersistenceHelper.manager.modify(def);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void saveActivity(EChangeOrder eo, ArrayList<Map<String, String>> list) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			int sort = 0;
+			for (Map<String, String> map : list) {
+				String step_name = map.get("step_name");
+				String name = map.get("name");
+				String active_type = map.get("active_type");
+				String activeUser_oid = map.get("activeUser_oid");
+				String finishDate = map.get("finishDate");
+
+				WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
+
+				EChangeActivity eca = EChangeActivity.newEChangeActivity();
+				eca.setStep(step_name);
+				eca.setName(name);
+				eca.setActiveType(active_type);
+				eca.setActiveUser(user);
+				eca.setFinishDate(DateUtil.convertDate(finishDate));
+				eca.setSortNumber(sort);
+				eca.setEo(eo);
+
+				String location = "/Default/설계변경/ECA";
+				String lifecycle = "LC_ECA_PROCESS";
+
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) eca, folder);
+				// 문서 lifeCycle 설정
+				LifeCycleHelper.setLifeCycle(eca,
+						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+
+				PersistenceHelper.manager.save(eca);
+				sort++;
 			}
 
 			trs.commit();

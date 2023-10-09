@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.AUIGridUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.doc.service.DocumentHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -17,6 +19,7 @@ import wt.vc.VersionControlHelper;
 public class DocumentColumn {
 
 	private String oid;
+	private boolean latest = false;
 	private String number;
 	private String interalnumber;
 	private String model;
@@ -49,13 +52,13 @@ public class DocumentColumn {
 	 */
 	public DocumentColumn(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
+		setLatest(CommonUtil.isLatestVersion(doc));
 		setNumber(doc.getNumber());
 		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
 		setModel(keyToValue(IBAUtil.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
 		setLocation(doc.getLocation());
-		setVersion(VersionControlHelper.getVersionDisplayIdentifier(doc) + "."
-				+ doc.getIterationIdentifier().getSeries().getValue());
+		setVersion(setVersionInfo(doc));
 		setState(doc.getLifeCycleState().getDisplay());
 		setWriter(IBAUtil.getStringValue(doc, "DSGN"));
 		setCreator(doc.getCreatorName());
@@ -66,6 +69,22 @@ public class DocumentColumn {
 		setModifiedDate_txt(doc.getModifyTimestamp().toString().substring(0, 10));
 		setPrimary(AUIGridUtil.primary(doc));
 		setSecondary(AUIGridUtil.secondary(doc));
+	}
+
+	/**
+	 * 최신버건과 함께 표시
+	 */
+	private String setVersionInfo(WTDocument doc) throws Exception {
+		WTDocument latest = DocumentHelper.manager.latest(getOid());
+		String version = VersionControlHelper.getVersionDisplayIdentifier(doc) + "."
+				+ doc.getIterationIdentifier().getSeries().getValue();
+		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+				+ latest.getIterationIdentifier().getSeries().getValue();
+		if (isLatest()) {
+			return version;
+		} else {
+			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+		}
 	}
 
 	/**

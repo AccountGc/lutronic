@@ -275,6 +275,11 @@ function clearUser(target) {
 	document.getElementById(target + "Oid").value = "";
 }
 
+// 단순 달력 삭제
+function clearDate(from) {
+	document.getElementById(from).value = "";
+}
+
 // 범위 기간 달력 삭제
 function clearFromTo(from, to) {
 	document.getElementById(from).value = "";

@@ -2,26 +2,20 @@ package com.e3ps.change.eo.service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.iba.AttributeKey.ECOKey;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.part.service.PartSearchHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentRoleType;
@@ -51,7 +45,9 @@ public class StandardEoService extends StandardManager implements EoService {
 	@Override
 	public void create(EoDTO dto) throws Exception {
 		ArrayList<Map<String, String>> rows104 = dto.getRows104();
-		String model_oid = dto.getModel_oid();
+		ArrayList<Map<String, String>> rows200 = dto.getRows200();
+		ArrayList<Map<String, String>> rows300 = dto.getRows300();
+//		String model_oid = dto.getModel_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -65,15 +61,26 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			number = number + seqNo;
 
-			NumberCode model = (NumberCode) CommonUtil.getObject(model_oid);
-			EChangeOrder eo = EChangeOrder.newEChangeOrder();
+			// 모델 배열 처리
+			// US21,MD23,PN21,
+			String model = "";
+			for (int i = 0; i < rows300.size(); i++) {
+				Map<String, String> row300 = rows300.get(i);
+				String oid = row300.get("oid");
+				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+				if (rows300.size() - 1 == i) {
+					model += n.getCode();
+				} else {
+					model += n.getCode() + ",";
+				}
+			}
 
-			System.out.println("ei=" + eo.getEoType());
+			EChangeOrder eo = EChangeOrder.newEChangeOrder();
 
 			eo.setEoName(dto.getName());
 			eo.setEoNumber(number);
+			eo.setModel(model);
 			eo.setEoType(dto.getEoType());
-			eo.setModel(model.getCode());
 			eo.setEoCommentA(dto.getEoCommentA());
 			eo.setEoCommentB(dto.getEoCommentB());
 			eo.setEoCommentC(dto.getEoCommentC());
@@ -97,6 +104,9 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			// 첨부 파일
 			saveAttach(eo, dto);
+
+			// 설변 활동 생성
+			ActivityHelper.service.saveActivity(eo, rows200);
 
 			// 활동 생성
 //	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);
@@ -200,6 +210,27 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	@Override
 	public void delete(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(eo);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void modify(EoDTO dto) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();

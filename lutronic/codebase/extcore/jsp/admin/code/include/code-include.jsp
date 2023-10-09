@@ -3,7 +3,6 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
-String method = request.getParameter("method");
 String codeType = request.getParameter("codeType");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
@@ -66,8 +65,12 @@ if (create || update) {
 		filter : {
 			showIcon : false,
 		},
+	}, {
+		dataField : "oid",
+		dataType : "string",
+		visible : false
 	} ]
-
+	
 	function createAUIGrid300(columnLayout) {
 		const props = {
 			headerHeight : 30,
@@ -94,23 +97,30 @@ if (create || update) {
 	
 
 	function popup300() {
-		const method = "<%=method%>";
 		const multi = "<%=multi%>";
 		const codeType = "<%=codeType%>";
-		const url = getCallUrl("/code/popup?method=" + method + "&multi=" + multi + "&codeType=" + codeType);
-		_popup(url, 1800, 900, "n");
+		const url = getCallUrl("/code/popup?method=insert300&multi=" + multi + "&codeType=" + codeType);
+		_popup(url, 1000, 600, "n");
 	}
 
 	function insert300(arr, callBack) {
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
-			const unique = AUIGrid.isUniqueValue(myGridID300, "oid", item.part_oid);
+			const unique = AUIGrid.isUniqueValue(myGridID300, "oid", item.oid);
+			const insert = {
+				code : item.code,
+				description : item.description,
+				enabled : item.enabled,
+				name : item.name,
+				oid : item.oid,
+				sort : item.sort
+			};
 			if (unique) {
-				AUIGrid.addRow(myGridID300, item, rowIndex);
+				AUIGrid.addRow(myGridID300, insert, rowIndex);
 			} else {
 				// 중복은 그냥 경고 없이 처리 할지 협의?
-				alert(item.number + " 품목은 이미 추가 되어있습니다.");
+				alert(item.name + " 제품은 이미 추가 되어있습니다.");
 			}
 		})
 		callBack(true);

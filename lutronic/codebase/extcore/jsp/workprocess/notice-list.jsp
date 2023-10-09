@@ -150,16 +150,18 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			const props = {
 				headerHeight : 30,
 				showRowNumColumn : true,
+				showRowCheckColumn : true,
 				rowNumHeaderText : "번호",
 				showAutoNoDataMessage : false,
 				selectionMode : "multipleCells",
 				enableMovingColumn : true,
 				enableFilter : true,
-				showInlineFilter : false,
+				showInlineFilter : true,
 				useContextMenu : true,
 				enableRightDownFocus : true,
 				filterLayerWidth : 320,
 				filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+				enableRowCheckShiftKey : true
 			};
 			myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 			loadGridData();

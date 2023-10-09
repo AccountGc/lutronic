@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.common.active.ActivityDefinition;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.org.service.OrgHelper;
 
@@ -134,6 +137,33 @@ public class ActivityController extends BaseController {
 			ActivityHelper.service.save(dataMap);
 			result.put("result", SUCCESS);
 			result.put("msg", SAVE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "설변루트 수정 페이지")
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		DefDTO dto = new DefDTO(oid);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/activity/root-modify");
+		return model;
+	}
+
+	@Description(value = "설계변경 루트 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.modify(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

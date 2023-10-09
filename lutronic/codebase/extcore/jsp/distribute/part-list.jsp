@@ -276,12 +276,12 @@ if (request.getParameter("popup") != null) {
 					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
 						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
+						<jsp:param value="633" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -386,6 +386,9 @@ if (request.getParameter("popup") != null) {
 					headerText : "REV.",
 					dataType : "string",
 					width : 90,
+					renderer : {
+						type : "TemplateRenderer"
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -457,14 +460,12 @@ if (request.getParameter("popup") != null) {
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
-					enableRowCheckShiftKey : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					rowCheckToRadio : true,
-				// 					fillColumnSizeMode: true,
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -563,7 +564,7 @@ if (request.getParameter("popup") != null) {
 				opener.append(items);
 				self.close();
 			}
-			
+
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');
 				// 버근가..

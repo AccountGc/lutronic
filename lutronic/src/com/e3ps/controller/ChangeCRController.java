@@ -24,10 +24,10 @@ import com.e3ps.common.util.CommonUtil;
 @Controller
 @RequestMapping(value = "/changeCR/**")
 public class ChangeCRController extends BaseController {
-	
+
 	@Description(value = "CR 등록 페이지")
 	@GetMapping(value = "/create")
-	public ModelAndView create() throws Exception{
+	public ModelAndView create() throws Exception {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		ModelAndView model = new ModelAndView();
@@ -36,7 +36,7 @@ public class ChangeCRController extends BaseController {
 		model.addObject("sectionList", sectionList);
 		return model;
 	}
-	
+
 	@Description(value = "CR 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
@@ -48,10 +48,11 @@ public class ChangeCRController extends BaseController {
 		model.setViewName("/extcore/jsp/change/cr-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "CR 팝업 페이지")
 	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false) Integer parentRowIndex) throws Exception {
+	public ModelAndView listPopup(@RequestParam(value = "parentRowIndex", required = false) Integer parentRowIndex)
+			throws Exception {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
@@ -62,14 +63,14 @@ public class ChangeCRController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "CR 검색  Action")
+	@Description(value = "CR 검색  함수")
 	@ResponseBody
 	@PostMapping(value = "/list")
-	public Map<String,Object> list(@RequestBody Map<String, Object> params){
-		Map<String,Object> result = null;
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = null;
 		try {
-			 result = CRHelper.manager.list(params);
-			 result.put("result", SUCCESS);
+			result = CRHelper.manager.list(params);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
@@ -77,14 +78,13 @@ public class ChangeCRController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "CR 상세 페이지")
 	@GetMapping(value = "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception{
+	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		EChangeRequest ecr = (EChangeRequest)CommonUtil.getObject(oid);
+		EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(oid);
 		ECRData dto = new ECRData(ecr);
-		
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);

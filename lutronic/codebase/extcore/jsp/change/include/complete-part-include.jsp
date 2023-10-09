@@ -1,9 +1,22 @@
+<%@page import="com.e3ps.common.util.AUIGridUtil"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+String mode = request.getParameter("mode");
+boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
+boolean view = "view".equals(mode);
+boolean update = "update".equals(mode);
+boolean create = "create".equals(mode);
+%>
+<%
+if (create || update) {
 %>
 <input type="button" value="추가" title="추가" class="blue" onclick="popup104();">
 <input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow104();">
+<%
+}
+%>
 <div id="grid104" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID104;
@@ -136,6 +149,9 @@ String oid = request.getParameter("oid");
 		headerText : "Rev.",
 		dataType : "string",
 		width : 90,
+		renderer : {
+			type : "TemplateRenderer"
+		},
 		filter : {
 			showIcon : true,
 		},
@@ -164,17 +180,17 @@ String oid = request.getParameter("oid");
 			showIcon : true,
 		},
 	}, {
-		dataField : "createdDate",
+		dataField : "createdDate_txt",
 		headerText : "등록일",
-		dataType : "date",
+		dataType : "string",
 		width : 140,
 		filter : {
 			showIcon : true,
 		},
 	}, {
-		dataField : "modifiedDate",
+		dataField : "modifiedDate_txt",
 		headerText : "수정일",
-		dataType : "date",
+		dataType : "string",
 		width : 140,
 		filter : {
 			showIcon : true,
@@ -199,11 +215,19 @@ String oid = request.getParameter("oid");
 			enableSorting : false,
 			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
+			<%if (create || update) {%>
 			showStateColumn : true,
 			showRowCheckColumn : true,
+			<%}%>
+			<%if (!multi) {%>
+			rowCheckToRadio : true,
+			<%}%>
 			enableFilter : true,
 		}
 		myGridID104 = AUIGrid.create("#grid104", columnLayout, props);
+		<%if (view || update) {%>
+		AUIGrid.setGridData(myGridID104, <%=AUIGridUtil.include(oid, "doc")%>);
+		<%}%>
 	}
 
 	function popup104() {

@@ -80,19 +80,23 @@ public class DownloadDTO {
 		String info = "";
 		if (per instanceof WTPart) {
 			WTPart part = (WTPart) per;
-			info = "[품목] " + part.getNumber() + "(" + part.getName() + ")";
+			info = "[품목] " + part.getNumber() + " - (" + part.getName() + ")";
 		} else if (per instanceof EPMDocument) {
 			EPMDocument epm = (EPMDocument) per;
-			info = "[도면] " + epm.getNumber() + "(" + epm.getName() + ")";
+			info = "[도면] " + epm.getNumber() + " - (" + epm.getName() + ")";
 		} else if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
-			info = "[문서] " + doc.getNumber() + "(" + doc.getName() + ")";
+			info = "[문서] " + doc.getNumber() + " - (" + doc.getName() + ")";
 		} else if (per instanceof EChangeOrder) {
 			EChangeOrder eco = (EChangeOrder) per;
-			info = "[ECO] " + eco.getEoNumber() + "(" + eco.getEoName() + ")";
+			if (eco.getEoType().equals("CHANGE")) {
+				info = "[ECO] " + eco.getEoNumber() + " - (" + eco.getEoName() + ")";
+			} else {
+				info = "[EO] " + eco.getEoNumber() + " - (" + eco.getEoName() + ")";
+			}
 		} else if (per instanceof EChangeRequest) {
 			EChangeRequest ecr = (EChangeRequest) per;
-			info = "[ECR] " + ecr.getEoNumber() + "(" + ecr.getEoName() + ")";
+			info = "[ECR] " + ecr.getEoNumber() + " - (" + ecr.getEoName() + ")";
 		}
 		setInfo(info);
 	}

@@ -4,11 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +21,6 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.dto.DocumentDTO;
 
 @Controller
 @RequestMapping(value = "/eo/**")
@@ -55,7 +52,7 @@ public class EoController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/list")
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = null;
+		Map<String, Object> result = new HashMap<>();
 		try {
 			result = EoHelper.manager.list(params);
 			result.put("result", SUCCESS);
@@ -103,4 +100,54 @@ public class EoController extends BaseController {
 		model.setViewName("popup:/change/eo/eo-view");
 		return model;
 	}
+
+	@Description(value = "EO 수정")
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		EoDTO dto = new EoDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/eo/eo-modify");
+		return model;
+	}
+
+	@Description(value = "EO 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody EoDTO dto) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EoHelper.service.modify(dto);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "EO 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+
+			// 삭제 불가 추가 예정
+
+			EoHelper.service.delete(oid);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 }

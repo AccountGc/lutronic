@@ -16,7 +16,7 @@ String mode = request.getParameter("mode");
 			targetID : "primary_layer",
 			uploadFileName : "primary",
 			buttonTxt : "파일 선택",
-			uploadMaxFileSize : (1024 * 1024 * 1024),
+// 			uploadMaxFileSize : (1024 * 1024 * 1024),
 			uploadUrl : getCallUrl("/content/upload"),
 			uploadPars : {
 				roleType : "primary"

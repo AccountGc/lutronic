@@ -22,7 +22,7 @@ public class EcoColumn {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
-	private String approveDate_txt;
+	private String approveDate;
 
 	public EcoColumn() {
 
@@ -42,6 +42,6 @@ public class EcoColumn {
 		setCreator(eco.getCreatorFullName());
 		setCreatedDate(eco.getCreateTimestamp());
 		setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
-		setApproveDate_txt(eco.getEoApproveDate());
+		setApproveDate(eco.getEoApproveDate());
 	}
 }

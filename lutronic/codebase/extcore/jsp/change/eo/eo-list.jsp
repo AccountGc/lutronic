@@ -24,7 +24,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						EOI 검색
+						EO 검색
 					</div>
 				</td>
 			</tr>
@@ -128,7 +128,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			</tr>
 			<tr class="hidden">
 				<th class="lb">완제품 품목</th>
-				<td colspan="5" class="indent5 pt5">
+				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -180,7 +180,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/eo/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -188,7 +188,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					headerText : "EO 제목",
 					dataType : "string",
 					style : "aui-left",
-					// 					width : 250,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -199,8 +198,17 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/eo/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
+					},
+				}, {
+					dataField : "model",
+					headerText : "제품명",
+					dataType : "string",
+					width : 250,
+					filter : {
+						showIcon : true,
+						inline : true
 					},
 				}, {
 					dataField : "eoType",
@@ -248,7 +256,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "approveDate_txt",
+					dataField : "approveDate",
 					headerText : "승인일",
 					dataType : "date",
 					width : 100,
@@ -269,11 +277,12 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

@@ -12,6 +12,7 @@ import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 
 import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
@@ -53,6 +54,16 @@ public class ActivityHelper {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ArrayList<ActDTO> list = new ArrayList<>();
 		String root = (String) params.get("root");
+
+		if (!StringUtil.checkString(root)) {
+			map.put("list", list);
+			map.put("topListCount", 1);
+			map.put("pageSize", 30);
+			map.put("total", 0);
+			map.put("sessionid", 0L);
+			map.put("curPage", 1);
+			return map;
+		}
 
 		EChangeActivityDefinitionRoot def = (EChangeActivityDefinitionRoot) CommonUtil.getObject(root);
 

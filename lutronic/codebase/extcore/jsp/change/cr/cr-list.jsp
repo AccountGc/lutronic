@@ -3,10 +3,8 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
-ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-String method = (String) request.getAttribute("method");
-boolean multi = (boolean) request.getAttribute("multi");
+ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 %>
 <!DOCTYPE html>
 <html>
@@ -21,6 +19,17 @@ boolean multi = (boolean) request.getAttribute("multi");
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						CR 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>
@@ -91,7 +100,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 					<input type="text" name="writedTo" id="writedTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('writedFrom', 'writedTo')">
 				</td>
-
 			</tr>
 			<tr>
 				<th>제안자</th>
@@ -132,7 +140,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<input type="button" value="추가" title="추가" onclick="<%=method%>();">
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('cr-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('cr-list');">
+					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -143,116 +154,143 @@ boolean multi = (boolean) request.getAttribute("multi");
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 				</td>
 			</tr>
 		</table>
-
-		<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 565px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+
 		<script type="text/javascript">
 			let myGridID;
-			const columns = [ {
-				dataField : "number",
-				headerText : "CR 번호",
-				dataType : "string",
-				width : 120,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "name",
-				headerText : "CR 제목",
-				dataType : "string",
-				style : "aui-left",
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "model",
-				headerText : "제품",
-				dataType : "string",
-				width : 200,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "changeSection",
-				headerText : "변경구분",
-				dataType : "string",
-				width : 200,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "createDepart",
-				headerText : "작성부서",
-				dataType : "string",
-				width : 150,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "writer",
-				headerText : "작성자",
-				dataType : "string",
-				width : 100,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "approveDate",
-				headerText : "승인일",
-				dataType : "string",
-				width : 100,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "state",
-				headerText : "상태",
-				dataType : "string",
-				width : 100,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "creator",
-				headerText : "등록자",
-				dataType : "string",
-				width : 100,
-				filter : {
-					showIcon : true,
-				},
-			}, {
-				dataField : "createdDate_txt",
-				headerText : "등록일",
-				dataType : "string",
-				width : 100,
-				filter : {
-					showIcon : true,
-				},
-			} ]
+			function _layout() {
+				return [ {
+					dataField : "number",
+					headerText : "CR 번호",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/cr/view?oid=" + oid);
+							_popup(url, 1600, 800, "n");
+						}
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "name",
+					headerText : "CR 제목",
+					dataType : "string",
+					style : "aui-left",
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/cr/view?oid=" + oid);
+							_popup(url, 1600, 800, "n");
+						}
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "model",
+					headerText : "제품",
+					dataType : "string",
+					width : 200,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "changeSection",
+					headerText : "변경구분",
+					dataType : "string",
+					width : 200,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "createDepart",
+					headerText : "작성부서",
+					dataType : "string",
+					width : 150,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "writer",
+					headerText : "작성자",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "approveDate",
+					headerText : "승인일",
+					dataType : "date",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "state",
+					headerText : "상태",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "creator",
+					headerText : "등록자",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "createdDate",
+					headerText : "등록일",
+					dataType : "date",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				} ]
+			}
 
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
-					<%if (!multi) {%>
-					rowCheckToRadio : true,
-					<%}%>
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -268,10 +306,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/cr/list");
-				const field = [  "name", "number" ];
+				const field = [ "name", "number" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
-				openLayer();
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -282,29 +320,17 @@ boolean multi = (boolean) request.getAttribute("multi");
 					} else {
 						alert(data.msg);
 					}
-					closeLayer();
+					parent.closeLayer();
 				});
 			}
-			
-			function <%=method%>() {
-				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				if (checkedItems.length === 0) {
-					alert("추가할 행을 선택하세요.");
-					return false;
-				}
-				
-				openLayer();
-				opener.<%=method%>(checkedItems, function(res) {
-					if(res) {
-						setTimeout(function() {
-							closeLayer();
-						}, 500);
-					}
-				})
+
+			function create() {
+				document.location.href = getCallUrl("/cr/create");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("number");
+				const columns = loadColumnLayout("cr-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -320,7 +346,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 				selectbox("model");
 			});
 
-
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -335,7 +360,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-
 		</script>
 	</form>
 </body>

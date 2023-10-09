@@ -275,13 +275,12 @@ iframe {
 		</jsp:include>
 	</div>
 
-
 </div>
 
 
 
-
 <script type="text/javascript">
+	const oid = document.getElementById("oid").value;
 	// 에디터 로드가 느려서 처리..
 	const oEditors = [];
 	nhn.husky.EZCreator.createInIFrame({
@@ -302,21 +301,18 @@ iframe {
 	
 	// 최신버전으로 페이지 이동
 	function latest() {
-		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/doc/latest?oid=" + oid);
 		document.location.href = url;
 	}
 
 	//수정 및 개정
 	function update(mode) {
-		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
 		document.location.href = url;
 	};
 
 	//삭제
 	function _delete() {
-		const oid = document.getElementById("oid").value;
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}

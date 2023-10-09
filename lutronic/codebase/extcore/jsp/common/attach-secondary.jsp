@@ -15,7 +15,7 @@ String moduleType = request.getParameter("moduleType");
 			targetID : "secondary_layer",
 			uploadFileName : "secondary",
 			buttonTxt : "파일 선택",
-			uploadMaxFileSize : (1024 * 1024 * 1024),
+// 			uploadMaxFileSize : (102400 * 1024 * 1024),
 			uploadUrl : getCallUrl("/content/upload"),
 			dropBoxID : "uploadQueueBox2",
 			queueBoxID : "uploadQueueBox2",

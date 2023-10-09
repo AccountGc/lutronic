@@ -179,7 +179,7 @@ public class OrgHelper {
 			WTUser u = (WTUser) obj[0];
 			Map<String, String> map = new HashMap<>();
 			map.put("key", u.getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("value", u.getName());
+			map.put("value", u.getFullName());
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);

@@ -36,20 +36,10 @@ public interface ECAService {
 
 	ResultData updateRootDefinitionAction(HttpServletRequest req) throws Exception;
 
-	String deleteRootDefinitionAction(HttpServletRequest req) throws Exception;
-
 	List<EChangeActivityDefinition> getActiveDefinition(long rootOid) throws Exception;
 
 	Map<String, Object> listActiveDefinitionAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
-
-	ResultData createActivityDefinitionAction(HttpServletRequest req) throws Exception;
-
-	String deleteRootDefinition(String oid) throws Exception;
-
-	String deleteActivityDefinition(String oids) throws Exception;
-
-	ResultData updateActivityDefinitionAction(HttpServletRequest req) throws Exception;
 
 	List<EADData> setActiveDefinition(String oid) throws Exception;
 

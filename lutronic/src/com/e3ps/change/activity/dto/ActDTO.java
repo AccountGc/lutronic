@@ -20,7 +20,6 @@ public class ActDTO {
 	private String name;
 	private String step;
 	private String step_name;
-	private String step_sort;
 	private String activity_type;
 	private String activity_name;
 	private String activeUser_oid;
@@ -45,8 +44,9 @@ public class ActDTO {
 		if (act.getStep() != null) {
 			setStep(act.getStep());
 			NumberCode step = NumberCodeHelper.manager.getNumberCode(getStep(), "EOSTEP");
-			setStep_name(step.getName());
-			setStep_sort(step.getSort());
+			if (step != null) {
+				setStep_name(step.getName());
+			}
 		}
 		setActivity_type(act.getActiveType());
 		setActivity_name(ActivityHelper.manager.getActName(getActivity_type()));

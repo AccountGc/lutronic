@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
-import com.e3ps.common.iba.AttributeKey;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -221,12 +221,12 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="593" name="height" />
+						<jsp:param value="563" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 560px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -305,6 +305,9 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 					headerText : "REV",
 					dataType : "string",
 					width : 80,
+					renderer : {
+						type : "TemplateRenderer"
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -391,11 +394,12 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

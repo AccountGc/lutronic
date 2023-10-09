@@ -23,12 +23,10 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.org.People;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
@@ -78,21 +76,23 @@ import wt.query.RelationalExpression;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
+import wt.vc.config.ConfigHelper;
+import wt.vc.config.LatestConfigSpec;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
 public class PartHelper {
-	
+
 	public static final String PART_ROOT = "/Default/PART_Drawing";
-	
+
 	public static final PartService service = ServiceFactory.getService(PartService.class);
 	public static final PartHelper manager = new PartHelper();
-	
+
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
 		ReferenceFactory rf = new ReferenceFactory();
-		
+
 		String location = StringUtil.checkNull((String) params.get("location"));
 		String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
 		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
@@ -119,7 +119,7 @@ public class PartHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
-		
+
 		QuerySpecUtils.toCI(query, idx, WTPart.class);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
@@ -186,7 +186,7 @@ public class PartHelper {
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_CHANGENO, ecoNo);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-		
+
 		if (!"/Default/PART_Drawing".equals(location)) {
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();
@@ -226,14 +226,14 @@ public class PartHelper {
 					new int[] { idx });
 
 		}
-		
+
 		// 최신 이터레이션.
 		if (latest) {
 			QuerySpecUtils.toLatest(query, idx, WTPart.class);
 		}
-		
+
 		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
-		
+
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -328,7 +328,7 @@ public class PartHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
-	
+
 	/**
 	 * 부품 이력
 	 */
@@ -347,7 +347,7 @@ public class PartHelper {
 			map.put("creator", data.getCreator());
 			map.put("createdDate", data.getCreateDate());
 //			map.put("modifier", data.getModifier());
-			map.put("modifiedDate",  data.getModifyDate());
+			map.put("modifiedDate", data.getModifyDate());
 			map.put("note", p.getIterationNote());
 //			map.put("primary", data.getPrimary());
 //			map.put("secondary", data.getSecondary());
@@ -1125,7 +1125,7 @@ public class PartHelper {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 품목 폴더 가져오기
 	 */
@@ -1140,7 +1140,7 @@ public class PartHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
-	
+
 	/**
 	 * 품목 폴더 가져오기 재귀함수
 	 */
@@ -1152,4 +1152,19 @@ public class PartHelper {
 			recurcive(folder, list);
 		}
 	}
+
+	/**
+	 * 최신버전 부품
+	 */
+	public WTPart latest(String oid) throws Exception {
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(part.getMaster(), config);
+		if (result.hasMoreElements()) {
+			WTPart latest = (WTPart) result.nextElement();
+			return latest;
+		}
+		return null;
+	}
+
 }

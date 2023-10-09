@@ -17,4 +17,9 @@ public interface EoService {
 	 */
 	public abstract void delete(String oid) throws Exception;
 
+	
+	/**
+	 * EO 수정
+	 */
+	public abstract void modify(EoDTO dto) throws Exception;
 }

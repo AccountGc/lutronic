@@ -61,7 +61,6 @@
 					<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
-						<jsp:param value="insert300" name="method" />
 						<jsp:param value="MODEL" name="codeType" />
 						<jsp:param value="true" name="multi" />
 						<jsp:param value="150" name="height" />
@@ -73,6 +72,8 @@
 				<td colspan="3" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+						<jsp:param value="true" name="multi" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -108,13 +109,12 @@
 		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="150" name="height" />
 		</jsp:include>
 
 		<!-- 	설변 활동 -->
-		<jsp:include page="/extcore/jsp/change/include/activity-include.jsp">
+		<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
@@ -143,9 +143,14 @@
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
-				const rows104 = AUIGrid.getAddedRowItems(myGridID104);
+				// 완제품
+				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				// 관련문서
 				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
+				// ECA
+				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
+				// 제품
+				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 				const url = getCallUrl("/eo/create");
 				const params = {
 					name : name,
@@ -156,15 +161,17 @@
 					secondarys : secondarys,
 					rows104 : rows104,
 					rows90 : rows90,
+					rows200 : rows200,
+					rows300 : rows300
 				}
 				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
+					alert(data.msg);
 					if (data.result) {
-						alert(data.msg);
 						document.location.href = getCallUrl("/eo/list");
 					} else {
-						alert(data.msg);
+						parent.closeLayer();
 					}
 				});
 			}

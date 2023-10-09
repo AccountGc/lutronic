@@ -162,7 +162,7 @@ public class CommonContentHelper {
 	 * 첨부 파일 업로드
 	 */
 	public JSONObject upload(HttpServletRequest request) throws Exception {
-		int sizeLimit = (1024 * 1024 * 500);
+		int sizeLimit = (1024 * 1024 * 5000);
 		MultipartRequest multi = new MultipartRequest(request, savePath, sizeLimit, "UTF-8",
 				new DefaultFileRenamePolicy());
 

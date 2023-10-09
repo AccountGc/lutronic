@@ -19,11 +19,13 @@ import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildRule;
 import wt.part.WTPart;
+import wt.vc.VersionControlHelper;
 
 @Getter
 @Setter
 public class PartColumn {
 
+	private boolean latest = false;
 	private String part_oid; // 부품
 	private String epm_oid; // 3D
 	private String drawing_oid; // 2D
@@ -60,13 +62,13 @@ public class PartColumn {
 	}
 
 	public PartColumn(WTPart part) throws Exception {
+		setLatest(CommonUtil.isLatestVersion(part));
 		setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
 		set_3d(ThumbnailUtil.thumbnailSmall(part));
 		setNumber(part.getNumber());
 		setName(part.getName());
 		setLocation(part.getLocation());
-		setVersion(part.getVersionIdentifier().getSeries().getValue() + "."
-				+ part.getIterationIdentifier().getSeries().getValue());
+		setVersion(setVersionInfo(part));
 		setRemarks(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_REMARKS));
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorName());
@@ -78,6 +80,22 @@ public class PartColumn {
 		setAttach(part);
 		setDwgNoFn(part);
 		setQuantity(quantity);
+	}
+
+	/**
+	 * 최신버건과 함께 표시
+	 */
+	private String setVersionInfo(WTPart part) throws Exception {
+		WTPart latest = PartHelper.manager.latest(getPart_oid());
+		String version = VersionControlHelper.getVersionDisplayIdentifier(part) + "."
+				+ part.getIterationIdentifier().getSeries().getValue();
+		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+				+ latest.getIterationIdentifier().getSeries().getValue();
+		if (isLatest()) {
+			return version;
+		} else {
+			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+		}
 	}
 
 	private void setAttach(WTPart part) throws Exception {
