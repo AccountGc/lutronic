@@ -185,7 +185,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
-				const primary = document.getElementById("primary");
+				const primary = document.querySelector("input[name=primary]").value;
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델

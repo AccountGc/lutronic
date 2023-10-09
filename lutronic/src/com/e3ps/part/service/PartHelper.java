@@ -6,6 +6,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -66,7 +67,10 @@ import wt.introspection.WTIntrospector;
 import wt.org.WTUser;
 import wt.part.PartDocHelper;
 import wt.part.WTPart;
+import wt.part.WTPartConfigSpec;
+import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
+import wt.part.WTPartStandardConfigSpec;
 import wt.pds.DatabaseInfoUtilities;
 import wt.query.ClassAttribute;
 import wt.query.KeywordExpression;
@@ -1167,4 +1171,106 @@ public class PartHelper {
 		return null;
 	}
 
+	/**
+	 * 부품 BOM 구조 호출 함수
+	 */
+	public ArrayList<WTPart> descendants(WTPart part) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		// root 추가
+		list.add(part);
+		View view = ViewHelper.service.getView(part.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			list.add(p);
+			descendants(p, list);
+		}
+		return list;
+	}
+
+	/**
+	 * 품목 BOM 구조 재귀 함수
+	 */
+	private void descendants(WTPart part, ArrayList<WTPart> list) throws Exception {
+		View view = ViewHelper.service.getView(part.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			list.add(p);
+			descendants(p, list);
+		}
+	}
+
+	/**
+	 * 완제품 가져오기
+	 */
+	public ArrayList<WTPart> collectEndItem(WTPart part, ArrayList<WTPart> data) throws Exception {
+		ArrayList<WTPart> list = descendants(part);
+
+		for (WTPart p : list) {
+			String number = p.getNumber();
+			if (number.equals(part.getNumber())) {
+				continue;
+			}
+
+			if (isCollectNumber(number)) {
+				continue;
+			}
+
+			if (isTopNumber(number)) {
+				if (!data.contains(p)) {
+					data.add(p);
+				}
+			}
+		}
+		return data;
+	}
+
+	/**
+	 * PDM에서 채번 유무 확인
+	 */
+	public static boolean isCollectNumber(String partNumber) {
+		boolean reValue = true;
+		if (partNumber != null) {
+			if (partNumber.length() == 10) {
+				if (Pattern.matches("^[0-9]+$", partNumber)) {
+					// 숫자임
+					reValue = false;
+				} else {
+					// 숫자아님
+					reValue = true;
+				}
+			} else {
+				reValue = true;
+			}
+		} else {
+			// 입력값 없음.
+			reValue = true;
+		}
+		return reValue;
+	}
+
+	/**
+	 * 최상위 품번인지 체크
+	 */
+	public static boolean isTopNumber(String number) {
+		String firstNumber = number.substring(0, 1);
+		String endNumber = number.substring(5, 8);// number.substring(5,number.length());
+		if (firstNumber.equals("1") && !endNumber.endsWith("000")) { // 6,7,8이 000인경우
+			return true;
+		}
+		return false;
+	}
 }

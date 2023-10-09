@@ -14,14 +14,13 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				관련 품목
+				설계변경 품목
 			</div>
 		</td>
 	</tr>
@@ -33,27 +32,34 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb">관련 품목</th>
+		<th class="lb">설계변경 품목</th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (create || update) {
 			%>
-			<input type="button" value="추가" title="추가" class="blue" onclick="popup91();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow91();">
+			<input type="button" value="추가" title="추가" class="blue" onclick="popup500();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow500();">
 			<%
 			}
 			%>
-			<div id="grid91" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid500" style="height: 100px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <script type="text/javascript">
-	let myGridID91;
-	const columns91 = [ {
+	let myGridID500;
+	const columns500 = [ {
+		dataField : "group",
+		headerText : "그룹핑",
+		dataType : "string",
+		cellMerge : true,
+		width : 150,
+	}, {
 		dataField : "_3d",
 		headerText : "3D",
 		dataType : "string",
 		width : 60,
+		editable : false,
 		renderer : {
 			type : "ImageRenderer",
 			altField : null,
@@ -68,6 +74,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "2D",
 		dataType : "string",
 		width : 60,
+		editable : false,
 		renderer : {
 			type : "ImageRenderer",
 			altField : null,
@@ -82,6 +89,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "STEP",
 		dataType : "string",
 		width : 60,
+		editable : false,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -93,6 +101,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "DXF",
 		dataType : "string",
 		width : 60,
+		editable : false,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -104,6 +113,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "PDF",
 		dataType : "string",
 		width : 60,
+		editable : false,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -113,6 +123,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 	}, {
 		headerText : "변경이력",
 		width : 80,
+		editable : false,
 		renderer : {
 			type : "IconRenderer",
 			iconPosition : "aisleCenter", // 아이콘 위치
@@ -135,6 +146,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
+		editable : false,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -153,6 +165,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		style : "aui-left",
 		width : 380,
+		editable : false,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -170,6 +183,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "품목분류",
 		dataType : "string",
 		width : 180,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -178,6 +192,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "Rev.",
 		dataType : "string",
 		width : 90,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -186,6 +201,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "OEM Info.",
 		dataType : "string",
 		width : 100,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -194,6 +210,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -202,6 +219,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "등록자",
 		dataType : "string",
 		width : 140,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -210,6 +228,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "등록일",
 		dataType : "string",
 		width : 140,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -218,6 +237,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "수정일",
 		dataType : "string",
 		width : 140,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -226,6 +246,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "BOM",
 		dataType : "string",
 		width : 80,
+		editable : false,
 		filter : {
 			showIcon : true,
 		},
@@ -235,7 +256,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		visible : false
 	} ]
 	
-	function createAUIGrid91(columnLayout) {
+	function createAUIGrid500(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			fillColumnSizeMode : false,
@@ -253,23 +274,27 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
+			autoGridHeight : true,
+			enableCellMerge : true,
+			rowSelectionWithMerge : true,
+			editable : true
 		}
-		myGridID91 = AUIGrid.create("#grid91", columnLayout, props);
+		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "part")%>);
+		AUIGrid.setGridData(myGridID500, <%=AUIGridUtil.include(oid, "part")%>);
 		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
-	function popup91() {
+	function popup500() {
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/part/popup?method=insert91&multi=" + multi);
+		const url = getCallUrl("/part/popup?method=insert500&multi=" + multi);
 		_popup(url, 1800, 900, "n");
 	}
 
 
-	function deleteRow91() {
-		const checkedItems = AUIGrid.getCheckedRowItems(myGridID91);
+	function deleteRow500() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID500);
 		if (checkedItems.length === 0) {
 			alert("삭제할 행을 선택하세요.");
 			return false;
@@ -277,17 +302,17 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 
 		for (let i = checkedItems.length - 1; i >= 0; i--) {
 			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID91, rowIndex);
+			AUIGrid.removeRow(myGridID500, rowIndex);
 		}
 	}
 
-	function insert91(arr, callBack) {
+	function insert500(arr, callBack) {
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
-			const unique = AUIGrid.isUniqueValue(myGridID91, "part_oid", item.part_oid);
+			const unique = AUIGrid.isUniqueValue(myGridID500, "part_oid", item.part_oid);
 			if (unique) {
-				AUIGrid.addRow(myGridID91, item, rowIndex);
+				AUIGrid.addRow(myGridID500, item, rowIndex);
 			} else {
 				// 중복은 그냥 경고 없이 처리 할지 협의?
 				alert(item.number + " 품목은 이미 추가 되어있습니다.");

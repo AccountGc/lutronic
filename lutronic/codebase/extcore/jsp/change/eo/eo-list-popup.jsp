@@ -15,7 +15,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				EOI 검색
+				EO 검색
 			</div>
 		</td>
 	</tr>

@@ -40,7 +40,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="<%=title %>" title="<%=title %>" class="red" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title%>" title="<%=title%>" class="red" onclick="<%=mode%>('false');">
 			<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 		</td>
@@ -83,7 +83,9 @@ iframe {
 		</td>
 		<th class="req">문서종류</th>
 		<td class="indent5">
-			<input type="text" name="documentName" id="documentName" class="width-300" value="<% if(dto.getDocumentName() != null){ dto.getDocumentName();} %>">
+			<input type="text" name="documentName" id="documentName" class="width-300" value="<%if (dto.getDocumentName() != null) {
+	dto.getDocumentName();
+}%>">
 			<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
 				<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 				</ul>
@@ -121,7 +123,7 @@ iframe {
 					JSONObject obj = (JSONObject) docTypeList.get(i);
 					String key = (String) obj.get("key");
 					String value = (String) obj.get("value");
-					
+
 					boolean selected = dto.getDocumentType_code().equals(key);
 				%>
 				<option value="<%=key%>" <%if (selected) {%> selected="selected" <%}%>><%=value%></option>
@@ -215,81 +217,38 @@ iframe {
 
 <!-- 관련 품목 -->
 <jsp:include page="/extcore/jsp/part/include/part-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
+	<jsp:param value="<%=dto.getOid() %>" name="oid" />
+	<jsp:param value="create" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
 <!-- 	관련 문서 -->
 <jsp:include page="/extcore/jsp/document/include/document-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
+	<jsp:param value="<%=dto.getOid() %>" name="oid" />	
+	<jsp:param value="create" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
 <!-- 	관련 EO -->
-<jsp:include page="/extcore/jsp/change/include/eo-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
+<jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp">
+	<jsp:param value="<%=dto.getOid() %>" name="oid" />
+	<jsp:param value="create" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
 <!-- 	관련 CR -->
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 CR
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 CR</th>
-		<td class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-</table>
+<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
+	<jsp:param value="<%=dto.getOid() %>" name="oid" />
+	<jsp:param value="create" name="mode" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="250" name="height" />
+</jsp:include>
 
-<!-- 	관련 ECPR -->
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 ECPR
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 ECPR</th>
-		<td class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-</table>
+
+<!-- 관련 ECPR -->
 
 <!-- 	관련 ECO -->
 <jsp:include page="/extcore/jsp/change/include/eco-include.jsp">

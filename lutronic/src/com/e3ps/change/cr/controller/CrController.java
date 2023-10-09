@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.cr.service.CrHelper;
-import com.e3ps.change.eo.dto.EoDTO;
-import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.controller.BaseController;
@@ -88,6 +87,23 @@ public class CrController extends BaseController {
 		try {
 			CrHelper.service.create(dto);
 			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "CR 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			CrHelper.service.delete(oid);
+			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

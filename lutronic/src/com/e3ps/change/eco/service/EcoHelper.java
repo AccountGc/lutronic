@@ -8,10 +8,13 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.eo.column.EoColumn;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.part.service.PartHelper;
 
 import wt.fc.PagingQueryResult;
 import wt.part.WTPart;
@@ -210,5 +213,65 @@ public class EcoHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	/**
+	 * 설변관련 대상들 가져오기
+	 */
+	public Map<String, Object> dataMap(ArrayList<Map<String, String>> rows500) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<WTPart> clist = new ArrayList<WTPart>(); // 설변 대상 리스트
+		ArrayList<WTPart> plist = new ArrayList<WTPart>(); // 완제품 리스트
+		ArrayList<String> mlist = new ArrayList<String>(); // 제품 리스트
+		String model = "";
+		for (Map<String, String> row500 : rows500) {
+			String part_oid = row500.get("part_oid");
+			WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+			clist.add(part);
+
+			// 제품명 담기
+			model = putModel(model, part, mlist);
+
+			plist = PartHelper.manager.collectEndItem(part, plist);
+		}
+
+		for (int i = 0; i < plist.size(); i++) {
+			WTPart pp = (WTPart) plist.get(i);
+
+			if (isSkip(pp)) {
+				// 그냥 여기서 제외 하면 되는거 아닌가?
+				plist.remove(i);
+				continue;
+			}
+			putModel(model, pp, mlist);
+		}
+		map.put("model", model);
+		map.put("plist", plist);
+		map.put("clist", clist);
+		return map;
+	}
+
+	/**
+	 * 제품명 담기
+	 */
+	private String putModel(String model, WTPart part, ArrayList<String> mlist) throws Exception {
+		String m = IBAUtil.getAttrValue(part, "MODEL");
+		if (!mlist.contains(m)) {
+			model = model + "," + m;
+			mlist.add(m);
+		}
+		return model;
+	}
+
+	/**
+	 * 설변 대상 품목 제외
+	 */
+	public boolean isSkip(WTPart pp) throws Exception {
+		String version = pp.getVersionIdentifier().getSeries().getValue();
+		String state = pp.getLifeCycleState().toString();
+		if (version.equals("A") && state.equals("INWORK")) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -213,7 +213,6 @@ iframe {
 		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert91" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
@@ -230,7 +229,6 @@ iframe {
 		<jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert100" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
@@ -239,43 +237,16 @@ iframe {
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert100" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
 
 		<!-- 	관련 ECPR -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						관련 ECPR
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th class="lb">관련 ECPR</th>
-				<td class="indent5 pt5">
-					<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
 
 		<!-- 	관련 ECO -->
 		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert105" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
