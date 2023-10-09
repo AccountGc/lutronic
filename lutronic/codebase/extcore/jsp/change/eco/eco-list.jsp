@@ -175,10 +175,11 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				</td>
 			</tr>
 			<tr class="hidden">
-				<th class="lb">완제품 품목</th>
-				<td colspan="5" class="indent5">
+				<th class="lb pt5">완제품 품목</th>
+				<td colspan="5" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode"/>
 					</jsp:include>
 				</td>
 			</tr>
@@ -229,7 +230,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/eco/view?oid=" + oid);
-							_popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -247,7 +248,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/eco/view?oid=" + oid);
-							_popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {

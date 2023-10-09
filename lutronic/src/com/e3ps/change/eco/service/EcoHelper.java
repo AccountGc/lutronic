@@ -8,6 +8,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.eo.column.EoColumn;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.util.CommonUtil;
@@ -273,5 +274,22 @@ public class EcoHelper {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 모델명 복수개로 인해서 처리 하는 함수
+	 */
+	public String displayToModel(String model) throws Exception {
+		String display = "";
+		String[] ss = model.split(",");
+		for (int i = 0; i < ss.length; i++) {
+			String s = ss[i];
+			if (ss.length - 1 == i) {
+				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
+			} else {
+				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+			}
+		}
+		return display;
 	}
 }
