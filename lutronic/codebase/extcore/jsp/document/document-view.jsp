@@ -27,6 +27,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
+			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
 			<%
 // 			if (dto.is_revise()) {
 			%>
@@ -304,12 +305,31 @@ iframe {
 		const url = getCallUrl("/doc/latest?oid=" + oid);
 		document.location.href = url;
 	}
+	
+	//내용인쇄
+	function print(mode) {
+        var content = "<%=dto.getContent()%>"; // 에디터 내용 가져오기
+        var printWindow = window.open('', '_blank'); // 새 창 열기
 
+        printWindow.document.open();
+        printWindow.document.write('<html><head><title></title></head><body>');
+        
+        // 출력할 내용 추가
+        printWindow.document.write('<pre>' + content + '</pre>');
+
+        printWindow.document.write('</body></html>');
+        
+		printWindow.document.close();
+
+		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
+	}
+	
+	
 	//수정 및 개정
 	function update(mode) {
 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
 		document.location.href = url;
-	};
+	}
 
 	//삭제
 	function _delete() {
