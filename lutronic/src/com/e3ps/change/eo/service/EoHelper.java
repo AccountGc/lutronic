@@ -295,14 +295,16 @@ public class EoHelper {
 	 */
 	public String displayToModel(String model) throws Exception {
 		String display = "";
-		String[] ss = model.split(",");
-		for (int i = 0; i < ss.length; i++) {
-			String s = ss[i];
-			if (ss.length - 1 == i) {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
-			} else {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
-			}
+		if(model != null) {
+			String[] ss = model.split(",");
+			for (int i = 0; i < ss.length; i++) {
+				String s = ss[i];
+				if (ss.length - 1 == i) {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
+				} else {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+				}
+			}			
 		}
 		return display;
 	}
