@@ -242,16 +242,14 @@ iframe {
 <!-- 	관련 CR -->
 <jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 	<jsp:param value="<%=dto.getOid() %>" name="oid" />
-	<jsp:param value="create" name="mode" />
+	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
 
-<!-- 관련 ECPR -->
-
 <!-- 	관련 ECO -->
-<jsp:include page="/extcore/jsp/change/include/eco-include.jsp">
+<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
@@ -334,6 +332,8 @@ iframe {
 		const rows100 = AUIGrid.getGridDataWithState(myGridID100, "gridState");
 		// 관련ECO
 		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+		// 관련CR
+		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		const params = {
 			oid : oid,
 			name : name.value,
@@ -354,6 +354,7 @@ iframe {
 			rows90 : rows90,
 			rows91 : rows91,
 			rows100 : rows100,
+			rows101 : rows101,
 			rows105 : rows105
 		};
 		
@@ -379,10 +380,13 @@ iframe {
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);
+		createAUIGrid101(columns101);
 		createAUIGrid105(columns105);
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
+		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID105);
 		$("#documentType").bindSelectDisabled(true);
 	});
 
@@ -390,6 +394,7 @@ iframe {
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
+		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID105);
 	});
 </script>
