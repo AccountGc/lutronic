@@ -574,7 +574,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 			}, {
 				headerText : "관련CR",
 				children : [ {
-					dataField : "crOids",
+					dataField : "rows101",
 					dataType : "string",
 					visible : false
 				}, {
@@ -586,16 +586,16 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						type : "TemplateRenderer"
 					}
 				}, {
-					dataField : "cr",
 					headerText : "관련CR",
 					dataType : "string",
 					width : 120,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "CR추가",
-						onClick : function(event) {
-							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/changeCR/listPopup?parentRowIndex=" + parentRowIndex);
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.oid;
+							const url = getCallUrl("/cr/popup?method=insert101&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
@@ -799,12 +799,23 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				});
 				callBack(true);
 			}	
-
-			// 			// 관련 CR 할당 메서드
-			// 			function setCR(crOids, crNumber, parentRowIndex) {
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crOids", crOids);
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "crNumber", crNumber);
-			// 			}
+			
+			// CR 추가
+			function insert101(arr, callBack) {
+				const rows101 = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rows101.push(item);
+					number += item.number + "\n";
+				})
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					rows101 : rows101,
+					crNumber : toRowsExp(number)
+				});
+				callBack(true);
+			}	
 
 			// 			// 관련 ECPR 할당 메서드
 			// 			function setECPR(ecprOids, ecprNumber, parentRowIndex) {
