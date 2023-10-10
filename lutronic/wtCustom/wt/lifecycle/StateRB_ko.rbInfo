@@ -32,10 +32,13 @@ RETURN.value=반려됨
 RETURN.shortDescription=반려 상태
 
 DEATH.value=폐기
-DEATH.shortDescription=폐
+DEATH.shortDescription=폐기
 
 BATCHAPPROVAL.value=일괄결재
 BAATHAPPROVAL.shortDescription=일괄결재
+
+TEMP.value=임시저장
+TEMP.shortDescription=임시저장
 
 #############################################################
 #		CHANGE 에서 사용하는 LifeCycle 상태 

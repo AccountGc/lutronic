@@ -1,3 +1,4 @@
+
 package com.e3ps.doc.service;
 
 import java.io.File;
@@ -58,6 +59,8 @@ import wt.folder.FolderHelper;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
+import wt.lifecycle.StandardLifeCycleService;
+import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
@@ -306,7 +309,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentType = dto.getDocumentType_code();
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
-
+		boolean temprary = dto.isTemprary();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -325,11 +328,16 @@ public class StandardDocumentService extends StandardManager implements Document
 			doc.setDescription(description);
 			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
 
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) doc, folder);
-			// 문서 lifeCycle 설정
-			LifeCycleHelper.setLifeCycle(doc,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+			// 임시 서장함 이동
+			if (temprary) {
+				setTemprary(doc, lifecycle);
+			} else {
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) doc, folder);
+				// 문서 lifeCycle 설정
+				LifeCycleHelper.setLifeCycle(doc,
+						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+			}
 
 			doc = (WTDocument) PersistenceHelper.manager.save(doc);
 
@@ -352,6 +360,32 @@ public class StandardDocumentService extends StandardManager implements Document
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 임시 저장함으로 이동시킬 함수
+	 */
+	private void setTemprary(WTDocument doc, String lifecycle) throws Exception {
+		setTemprary(doc, lifecycle, "C");
+	}
+
+	/**
+	 * 임시 저장함으로 이동시킬 함수 C 생성, R, U 개정 및 수정
+	 */
+	private void setTemprary(WTDocument doc, String lifecycle, String option) throws Exception {
+		String location = "/Default/임시저장함";
+		if ("C".equals(option)) {
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) doc, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(doc,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+		} else if ("U".equals(option) || "R".equals(option)) {
+
+		}
+		State state = State.toState("TEMP");
+		// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+		LifeCycleHelper.service.setLifeCycleState(doc, state);
 	}
 
 	/**
@@ -411,7 +445,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
-		
+
 		ArrayList<Map<String, String>> rows101 = dto.getRows101();
 		// 관련CR
 		for (Map<String, String> row101 : rows101) {

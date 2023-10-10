@@ -313,9 +313,16 @@ iframe {
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName").value;
+				const temprary = !!temp;
 
-				if (!confirm("등록하시겠습니까?")) {
-					return false;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
 				}
 				const url = getCallUrl("/doc/create");
 
@@ -349,7 +356,8 @@ iframe {
 					rows91 : rows91,
 					rows100 : rows100,
 					rows101 : rows101,
-					rows105 : rows105
+					rows105 : rows105,
+					temprary : temprary
 				};
 				parent.openLayer();
 				call(url, params, function(data) {

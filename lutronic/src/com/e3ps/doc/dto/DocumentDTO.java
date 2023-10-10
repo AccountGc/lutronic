@@ -75,7 +75,7 @@ public class DocumentDTO {
 	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 ECO
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	
-	private boolean temp;
+	private boolean temprary;
 
 	public DocumentDTO() {
 

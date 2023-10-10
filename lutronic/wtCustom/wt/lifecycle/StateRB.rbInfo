@@ -38,7 +38,8 @@ DEATH.shortDescription=DEATH
 BATCHAPPROVAL.value=BATCHAPPROVAL
 BAATHAPPROVAL.shortDescription=BATCHAPPROVAL
 
-
+TEMP.value=TEMP
+TEMP.shortDescription=TEMP
 #############################################################
 #		CHANGE 에서 사용하는 LifeCycle 상태 
 # ECO : 작업중-ECA 활동

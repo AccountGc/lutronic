@@ -95,7 +95,7 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의업무 > 일괄결재 검색');">일괄결재 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/temp/list', '> 나의업무 > 임시저장함');">임시저장함</a>
+						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
