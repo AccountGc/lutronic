@@ -2,11 +2,15 @@ package com.e3ps.change.eco.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.ContentUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -36,7 +40,7 @@ public class EcoDTO {
 	private String licensing_name;
 	private String riskType_name;
 	private String eoType;
-	private String approveDate;
+	private String approveDate = "";
 	private String model_name;
 	// 변수용
 	private String primary;
@@ -44,6 +48,8 @@ public class EcoDTO {
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows200 = new ArrayList<>(); // 설변활동
 	private ArrayList<Map<String, String>> rows500 = new ArrayList<>(); // 대상품목
+
+	private Map<String, Object> contentMap = null;
 
 	public EcoDTO() {
 
@@ -76,6 +82,7 @@ public class EcoDTO {
 		if (eco.getModel() != null) {
 			setModel_name(EcoHelper.manager.displayToModel(eco.getModel()));
 		}
+		setContentMap(ContentUtils.getContentByRole(eco, "ECO"));
 	}
 
 	/**

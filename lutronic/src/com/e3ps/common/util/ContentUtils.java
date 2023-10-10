@@ -29,9 +29,9 @@ import wt.util.WTProperties;
 public class ContentUtils {
 
 	public static String TMP_PATH = "";
-	
+
 	public static String FILE_PATH = "/Windchill/extcore/lutronic/";
-	
+
 	static {
 		try {
 			TMP_PATH = WTProperties.getServerProperties().getProperty("wt.temp");
@@ -45,6 +45,38 @@ public class ContentUtils {
 	 */
 	private ContentUtils() {
 
+	}
+
+	/**
+	 * OID로 와 ContentRoleType 으로 첨부파일 가져오기
+	 */
+	public static Map<String, Object> getContentByRole(String oid, String role) throws Exception {
+		ReferenceFactory rf = new ReferenceFactory();
+		ContentHolder holder = (ContentHolder) rf.getReference(oid).getObject();
+		return getContentByRole(holder, role);
+	}
+
+	/**
+	 * OID로 와 ContentRoleType 으로 첨부파일 가져오기
+	 */
+	public static Map<String, Object> getContentByRole(ContentHolder holder, String role) throws Exception {
+		Map<String, Object> primary = null;
+		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.toContentRoleType(role));
+		if (result.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) result.nextElement();
+			String fileIcon = getFileIcon(data.getFileName());
+			primary = new HashMap<>();
+			primary.put("oid", holder.getPersistInfo().getObjectIdentifier().getStringValue());
+			primary.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
+			primary.put("name", data.getFileName());
+			primary.put("fileSizeKB", data.getFileSizeKB() + "KB");
+			primary.put("fileIcon", fileIcon);
+			primary.put("url", "/Windchill/plm/content/download?oid="
+					+ data.getPersistInfo().getObjectIdentifier().getStringValue());
+			primary.put("fileSize", data.getFileSize());
+			primary.put("filePath", FILE_PATH);
+		}
+		return primary;
 	}
 
 	/**

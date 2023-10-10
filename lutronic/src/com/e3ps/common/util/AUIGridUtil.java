@@ -9,6 +9,7 @@ import java.util.Map;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -185,7 +186,7 @@ public class AUIGridUtil {
 			EChangeOrder eco = (EChangeOrder) per;
 			// ECO
 			if (eco.getEoType().equals("CHANGE")) {
-
+				return EcoHelper.manager.reference(oid, type);
 				// EO
 			} else {
 				return EoHelper.manager.reference(oid, type);

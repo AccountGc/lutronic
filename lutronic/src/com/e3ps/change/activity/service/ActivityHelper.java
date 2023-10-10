@@ -3,12 +3,20 @@ package com.e3ps.change.activity.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
+
+import com.e3ps.change.ECOChange;
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.dto.DefDTO;
+import com.e3ps.change.beans.ECAData;
+import com.e3ps.change.service.ChangeUtil;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -18,7 +26,10 @@ import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.query.ClassAttribute;
+import wt.query.OrderBy;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 
 public class ActivityHelper {
@@ -138,5 +149,59 @@ public class ActivityHelper {
 		QuerySpecUtils.toEquals(query, idx, EChangeActivityDefinition.class, "rootReference.key.id", def);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		return result.size() > 0 ? true : false;
+	}
+
+	/**
+	 * ECA 활동 목록 가져오기
+	 */
+	public ArrayList<ActDTO> activityList(String oid) throws Exception {
+		ArrayList<ActDTO> list = new ArrayList<ActDTO>();
+		ECOChange e = (ECOChange) CommonUtil.getObject(oid);
+		ArrayList<EChangeActivity> result = colletActivity(e);
+		
+		for(EChangeActivity eca : result) {
+//			ECAData data = new ECAData(eca);
+//			ImageIcon icon = ChangeUtil.getECAStateImg(eca.getFinishDate(), data.state);
+//			data.setIcon(icon);
+//			list.add(data);
+		}
+		return list;
+	}
+
+	/**
+	 * ECO 및 EO에 관련된 ECA 리스트
+	 */
+	public ArrayList<EChangeActivity> colletActivity(ECOChange eo) throws Exception {
+
+		ArrayList<EChangeActivity> list = new ArrayList<EChangeActivity>();
+
+		
+		long id = eo.getPersistInfo().getObjectIdentifier().getId();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeActivity.class, true);
+		int idx_n = query.appendClassList(NumberCode.class, false);
+		
+		SearchCondition sc = null;
+		
+		ClassAttribute ca = new ClassAttribute(EChangeActivity.class, EChangeActivity.STEP);
+		ClassAttribute ca_n = new ClassAttribute(NumberCode.class, NumberCode.CODE);
+		sc = new SearchCondition(ca, "=", ca_n);
+		sc.setFromIndicies(new int[] { idx, idx_n }, 0);
+		sc.setOuterJoin(0);
+		query.appendWhere(sc, new int[] { idx, idx_n });
+
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(EChangeActivity.class, "eoReference.key.id", SearchCondition.EQUAL, id),
+				new int[] { idx });
+
+		query.appendOrderBy(new OrderBy(new ClassAttribute(NumberCode.class, "sort"), false), new int[] { idx_n });
+		query.appendOrderBy(new OrderBy(new ClassAttribute(EChangeActivity.class, "sortNumber"), false), new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EChangeActivity eca = (EChangeActivity) obj[0];
+			list.add(eca);
+		}
+		return list;
 	}
 }

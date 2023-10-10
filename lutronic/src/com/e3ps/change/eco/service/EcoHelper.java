@@ -17,6 +17,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.part.service.PartHelper;
 
+import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
@@ -291,5 +292,12 @@ public class EcoHelper {
 			}
 		}
 		return display;
+	}
+
+	/**
+	 * ECO 관련 객체들
+	 */
+	public JSONArray reference(String oid, String type) throws Exception {
+		return null;
 	}
 }

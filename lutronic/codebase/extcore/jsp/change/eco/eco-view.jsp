@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="com.e3ps.change.eco.dto.EcoDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -78,10 +79,75 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<th>승인일</th>
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
+			<tr>
+				<th class="lb">변경사항</th>
+				<td colspan="3" class="indent5">
+					<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">변경사유</th>
+				<td colspan="3" class="indent5">
+					<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">특기사항</th>
+				<td colspan="3" class="indent5">
+					<textarea rows="5" readonly="readonly" id="eoCommentC" rows="5"><%=dto.getEoCommentC()%></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">기타사항</th>
+				<td colspan="3" class="indent5">
+					<textarea rows="5" readonly="readonly" id="eoCommentD" rows="5"><%=dto.getEoCommentD()%></textarea>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">계변경 부품 내역파일</th>
+				<td class="indent5" colspan="3">
+					<%
+					Map<String, Object> contentMap = dto.getContentMap();
+					if (contentMap != null) {
+					%>
+					<div>
+						<a href="<%=contentMap.get("url")%>">
+							<span style="position: relative; bottom: 2px;"><%=contentMap.get("name")%></span>
+							<img src="<%=contentMap.get("fileIcon")%>" style="position: relative; top: 1px;">
+						</a>
+					</div>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>등록된 계변경 부품 내역파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">첨부파일</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 	</div>
 </div>
 <script type="text/javascript">
+	function autoHeight() {
+		const eoCommentC = document.getElementById("eoCommentC");
+		eoCommentC.style.height = "auto";
+		eoCommentC.style.height = "500px";
+		// 		const style = window.getComputedStyle(eoCommentC);
+		// 		console.log(style);
+
+	}
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
@@ -97,5 +163,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 		});
+
+		autoHeight();
 	});
 </script>

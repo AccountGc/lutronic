@@ -571,7 +571,6 @@ if (request.getParameter("popup") != null) {
 				for (let i = 0; i < e.length; i++) {
 					const el = e[i];
 					const style = window.getComputedStyle(el);
-					console.log(el);
 					const display = style.getPropertyValue("display");
 					if (display === "none") {
 						el.style.display = "table-row";
