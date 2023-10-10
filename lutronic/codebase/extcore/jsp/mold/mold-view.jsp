@@ -154,11 +154,41 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 	</div>
 	<div id="tabs-2">
 		<!-- 속성 -->
-<%-- 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp" flush="false" > --%>
-<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
-<%-- 			<jsp:param value="관련 품목" name="title" /> --%>
-<%-- 			<jsp:param value="doc" name="moduleType"/> --%>
-<%-- 		</jsp:include> --%>
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 속성
+					</div>
+				</td>
+			</tr>
+		</table>
+		<table class="view-table">
+			<colgroup>
+				<col width="130">
+				<col width="450">
+				<col width="130">
+				<col width="450">
+				<col width="130">
+				<col width="450">
+			</colgroup>
+			<tr>
+				<th class="lb">Manufacturer</th>
+				<td class="indent5"><%=dto.getManufacture_name() %></td>
+				<th class="lb">금형타입</th>
+				<td class="indent5"><%=dto.getMoldtype_name() %></td>
+				<th class="lb">내부 문서번호</th>
+				<td class="indent5"><%=dto.getInteralnumber() %></td>
+			</tr>
+			<tr>
+				<th class="lb">부서</th>
+				<td class="indent5"><%=dto.getDeptcode_name() %></td>
+				<th class="lb">업체 금형번호</th>
+				<td class="indent5"><%=dto.getMoldnumber() %></td>
+				<th class="lb">금형개발비</th>
+				<td class="indent5"><%=dto.getMoldcost() %></td>
+			</tr>
+		</table>	
 	</div>
 	<div id="tabs-3">
 		<!-- 관련 품목 -->
@@ -170,11 +200,11 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 	</div>
 	<div id="tabs-4">
 		<!-- 관련 문서 -->
-<%-- 		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp" flush="false" > --%>
-<%-- 			<jsp:param value="<%=dto.getOid() %>" name="oid" /> --%>
-<%-- 			<jsp:param value="관련 품목" name="title" /> --%>
-<%-- 			<jsp:param value="doc" name="moduleType"/> --%>
-<%-- 		</jsp:include> --%>
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="true" name="multi" />
+		</jsp:include>
 	</div>
 </div>
 
@@ -182,8 +212,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 	//수정
 	$("#updateBtn").click(function () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		openLayer();
+		const url = getCallUrl("/mold/update?oid=" + oid);
 		document.location.href = url;
 	})
 			
@@ -192,15 +221,17 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
-
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		call(url, null, function(data) {
+		const url = getCallUrl("/mold/delete");
+		let params = new Object();
+		params.oid = oid;
+		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
+				opener.loadGridData();
 				self.close();
 			}
-		}, "GET");
+		});
 	})
 			
 	//개정
@@ -231,57 +262,17 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		popup(url, 830, 600);
 	})
 	
-	//최신버전
-	$("#lastestBtn").click(function() {
-		var oid = this.value;
-		openView(oid);
-	})
+	// 최신버전으로 페이지 이동
+	function latest() {
+		const url = getCallUrl("/mold/latest?oid=" + oid);
+		_popup(url, 1600, 550, "n");
+	}
 	
-	//copy
-	$('#copyRohs').click(function() {
-		var url = getURLString("rohs", "copyRohs", "do") + '?oid='+$('#oid').val();
-		openOtherName(url,"copyRohs","830","300","status=no,scrollbars=yes,resizable=yes");
-	})
-			
 	//결재 회수
 	$("#withDrawBtn").click(function() {
-		var url	= getURLString("common", "withDrawPopup", "do") + "?oid="+$("#oid").val();
-		openOtherName(url,"withDrawBtn","400","220","status=no,scrollbars=yes,resizable=yes");
-	})
-	
-	//일괄 다운로드
-	$("#batchSecondaryDown").click(function() {
-		var form = $("form[name=rohsViewForm]").serialize();
-		var url	= getURLString("common", "batchSecondaryDown", "do");
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			
-			error:function(data){
-				var msg = "데이터 검색오류";
-				alert(msg);
-			},
-			
-			success:function(data){
-				console.log(data.message);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
-					alert(data.message);
-				}
-			}
-			,beforeSend: function() {
-				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
-				gfn_EndShowProcessing();
-	        }
-		});
-		
+		const oid = $("#oid").val();
+		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
+		_popup(url, 1500, 550, "n");
 	})
 	
 	document.addEventListener("DOMContentLoaded", function() {
@@ -290,14 +281,6 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-2":
-// 					const isCreated1 = AUIGrid.isCreated(partGridID);
-// 					if (isCreated1) {
-// 						AUIGrid.resize(partGridID);
-// 					} else {
-// 						createAUIGrid1(columnPart);
-// 					}
-					break;
 				case "tabs-3":
 					const isCreated2 = AUIGrid.isCreated(partGridID);
 					if (isCreated2) {
@@ -307,21 +290,23 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 					}
 					break;
 				case "tabs-4":
-// 					const isCreated3 = AUIGrid.isCreated(rohs2GridID);
-// 					if (isCreated3) {
-// 						AUIGrid.resize(rohs2GridID);
-// 					} else {
-// 						createAUIGridRohs2(columnRohs2);
-// 					}
+					const isCreated3 = AUIGrid.isCreated(myGridID90);
+					if (isCreated3) {
+						AUIGrid.resize(myGridID90);
+					} else {
+						createAUIGrid90(columns90);
+					}
 					break;
 				}
 			}
 		});
 		createAUIGrid1(columnPart);
 		AUIGrid.resize(partGridID);
+		AUIGrid.resize(myGridID90);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(partGridID);
+		AUIGrid.resize(myGridID90);
 	});
 </script>

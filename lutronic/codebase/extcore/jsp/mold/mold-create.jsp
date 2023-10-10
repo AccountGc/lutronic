@@ -34,9 +34,9 @@
 		</table>
 		<table class="search-table">
 			<colgroup>
-				<col width="130">
+				<col width="150">
 				<col width="*">
-				<col width="130">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
@@ -93,7 +93,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th>업체자제금형번호</th>
+				<th>업체자체금형번호</th>
 				<td class="indent5">
 					<input type="text" name="moldnumber" id="moldnumber" class="width-500">
 				</td>

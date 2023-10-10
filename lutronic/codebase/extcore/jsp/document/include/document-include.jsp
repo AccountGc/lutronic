@@ -191,7 +191,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : true,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,
@@ -224,7 +224,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		}
 
 		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
+			var rowIndex = checkedItems[i].rowIndex;
 			AUIGrid.removeRow(myGridID90, rowIndex);
 		}
 	}

@@ -1,21 +1,6 @@
 <%@page import="com.e3ps.rohs.dto.RohsData"%>
 <%@page import="java.util.List"%>
-<%@page import="com.e3ps.common.service.CommonHelper"%>
-<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
-<%@page import="com.e3ps.common.iba.AttributeKey"%>
-<%@page import="wt.fc.PersistenceHelper"%>
-<%@page import="wt.ownership.Ownership"%>
-<%@page import="wt.session.SessionHelper"%>
-<%@page import="wt.org.WTPrincipal"%>
-<%@page import="com.e3ps.common.util.SequenceDao"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.util.Date"%>
-<%@page import="com.e3ps.common.util.DateUtil"%>
-<%@page import="wt.doc.DocumentType"%>
-<%@page import="com.e3ps.common.util.StringUtil"%>
-<%@page import="com.e3ps.rohs.ROHSMaterial"%>
-<%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -42,28 +27,28 @@
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> RoHS 정보
+						<img src="/Windchill/extcore/images/header.png"> RoHS 수정
 					</div>
 				</td>
 			</tr>
 		</table>
 		<table class="create-table">
 			<colgroup>
-				<col width="174">
+				<col width="150">
 				<col width="*">
-				<col width="174">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
 				<th class="req lb">물질명</th>
 				<td class="indent5">
-					<input type="text" name="rohsName" id="rohsName" class="width-400" value="<%=data.getName()%>">
+					<input type="text" name="rohsName" id="rohsName" class="width-500" value="<%=data.getName()%>">
 					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" id="NameCheck">
 					<input type="hidden" id="duplicationChk" value="F">
 				</td>
 				<th class="req lb">협력업체</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-200">
 							<option value="">선택</option>
 							<%
 							for (NumberCode manufacture : manufactureList) {
@@ -91,7 +76,7 @@
 			<tr>
 				<th class="lb">파일구분</th>
 				<td class="indent5">
-					<select name="fileType" id="fileType" class="width-500">
+					<select name="fileType" id="fileType" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (Map<String,String> type : typeList) {
@@ -104,7 +89,7 @@
 				</td>
 				<th class="lb">발행일</th>
 				<td class="indent5">
-					<input type="text" name="publicationDate" id="publicationDate" class="width-100" value="<%=data.getPublicationDate()%>">
+                    <input type="text" name="publicationDate" id="publicationDate" class="width-100" value="<%=data.getPublicationDate() == null ? "" : data.getPublicationDate()%>">
 				</td>
 			</tr>
 		</table>
@@ -114,34 +99,12 @@
 			<jsp:param value="update" name="mode" />
 			<jsp:param value="rohs" name="moduleType"/>
 		</jsp:include>
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="600">
-				<col width="150">
-				<col width="600">
-			</colgroup>
-			<tr>
-				<th class="lb">관련 RoHS</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-						<jsp:param value="<%=data.getOid() %>" name="oid" />
-						<jsp:param value="composition" name="roleType"/>
-						<jsp:param value="update" name="mode" />
-						<jsp:param value="rohs" name="module" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
+		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+			<jsp:param value="<%=data.getOid() %>" name="oid" />
+			<jsp:param value="composition" name="roleType"/>
+			<jsp:param value="update" name="mode" />
+			<jsp:param value="rohs" name="module" />
+		</jsp:include>
 		<table class="button-table">
 			<tr>
 				<td class="center">

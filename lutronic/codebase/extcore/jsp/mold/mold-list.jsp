@@ -206,7 +206,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/mold/view?oid=" + oid);
-							_popup(url, 1600, 550, "n");
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -224,7 +224,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/mold/view?oid=" + oid);
-							_popup(url, 1600, 550, "n");
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -305,8 +305,9 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/mold/list");
-				const field = ["_psize","islastversion","number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];
+				const field = ["_psize","number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];
 				params = toField(params, field);
+				params.islastversion = $('input[name=islastversion]:checked').val();
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);

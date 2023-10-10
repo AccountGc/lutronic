@@ -14,10 +14,15 @@ if(request.getParameter("moduleType")!=null){
 boolean isView = "view".equals(mode);
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
+boolean multi = false;
+if(request.getParameter("multi")!=null){
+	multi = request.getParameter("multi").equals("true") ? true : false;
+}
+
 List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 %>
 <%
-if(moduleType=="" && !moduleType.equals("eco")){
+if(moduleType=="" && !moduleType.equals("eco") || moduleType.equals("doc")){
 %>
 	<table class="button-table">
 		<tr>
@@ -42,7 +47,7 @@ if(moduleType=="" && !moduleType.equals("eco")){
 	<tr>
 		<th class="lb">
 			<%
-			if(moduleType=="" && !moduleType.equals("eco")){
+			if(moduleType=="" && !moduleType.equals("eco") || moduleType.equals("doc")){
 			%>
 				관련품목
 			<%	
@@ -120,7 +125,9 @@ if(moduleType=="" && !moduleType.equals("eco")){
 			showRowCheckColumn : true,
 // 			showStateColumn : true,
 			<%}%>
+			<%if (!multi) {%>
 			rowCheckToRadio : true,
+			<%}%>
 			enableFilter : true,
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
@@ -175,7 +182,7 @@ if(moduleType=="" && !moduleType.equals("eco")){
 		}
 
 		for (let i = checked.length - 1; i >= 0; i--) {
-			const rowIndex = checked[i].rowIndex;
+			var rowIndex = checked[i].rowIndex;
 			AUIGrid.removeRow(partGridID, rowIndex);
 		}
 	}

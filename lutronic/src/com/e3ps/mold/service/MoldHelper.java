@@ -16,6 +16,7 @@ import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.mold.dto.MoldDTO;
 
 import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -25,6 +26,7 @@ import wt.iba.value.StringValue;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.vc.VersionControlHelper;
 
 public class MoldHelper {
 	
@@ -60,8 +62,20 @@ public class MoldHelper {
 		String searchType = StringUtil.checkNull((String) params.get("searchType"));
 		String moldNumber = StringUtil.checkNull((String) params.get("moldnumber"));
 
+		// 최신 이터레이션
+		if("true".equals(islastversion)) {
+			if(query.getConditionCount() > 0) { query.appendAnd(); }
+			query.appendWhere(VersionControlHelper.getSearchCondition(WTDocument.class, true), new int[]{idx});
+		}
+		
+		// 버전 검색
+		if("true".equals(islastversion)) {
+			SearchUtil.addLastVersionCondition(query, WTDocument.class, idx);;
+		}
+		
 		// 일괄 결재시 타입에 따른 LC 상태 검색
 		if (searchType.length() > 0) {
+			if(query.getConditionCount() > 0) { query.appendAnd(); }
 			if ("MOLD".equals(searchType)) {
 				QuerySpecUtils.toEquals(query, idx, WTDocument.class, WTDocument.DOC_TYPE, "$$MMDocument");
 			}
@@ -221,11 +235,6 @@ public class MoldHelper {
 			query.appendWhere(new SearchCondition(DocLocation.class, "loc", SearchCondition.LIKE, location + "%"), new int[] { folder_idx });
 		}
     	
-    	// 최신 이터레이션.
-		if("true".equals(islastversion)) {
-			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
-		}
-		
 		SearchUtil.setOrderBy(query, WTDocument.class, idx, WTDocument.MODIFY_TIMESTAMP, "sort", true);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
@@ -265,6 +274,9 @@ public class MoldHelper {
 		return list;
 	}
 	
+	/**
+	 * 관련 문서 링크 가져오기
+	 */
 	public List<DocumentToDocumentLink> getDocumentToDocumentLinks(WTDocument document, String roleName) throws Exception {
 		List<DocumentToDocumentLink> list = new ArrayList<DocumentToDocumentLink>();
 		
@@ -276,5 +288,19 @@ public class MoldHelper {
 			list.add(link);
     	}
 		return list;
+	}
+	
+	/**
+	 * 관련 문서 링크 관계 확인 ( true : 연결, false : 미연결 )
+	 */
+	public boolean isConnect(String oid) throws Exception {
+		boolean isConnect = false;
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		List<DocumentToDocumentLink> used = getDocumentToDocumentLinks(doc, "used");
+        List<DocumentToDocumentLink> useBy = getDocumentToDocumentLinks(doc, "useBy");
+        if(used.size() > 0 || useBy.size() > 0){
+        	isConnect = true;
+        }
+        return isConnect;
 	}
 }

@@ -23,11 +23,17 @@ import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.mold.dto.MoldDTO;
 
 import wt.clients.folder.FolderTaskLogic;
+import wt.clients.vc.CheckInOutTaskLogic;
 import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
+import wt.doc.WTDocumentMaster;
+import wt.doc.WTDocumentMasterIdentity;
+import wt.fc.IdentityHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -43,6 +49,8 @@ import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.vc.wip.CheckoutLink;
+import wt.vc.wip.WorkInProgressHelper;
 
 @SuppressWarnings("serial")
 public class StandardMoldService extends StandardManager implements MoldService {
@@ -144,6 +152,24 @@ public class StandardMoldService extends StandardManager implements MoldService 
 	}
 	
 	/**
+	 * 첨부 파일 삭제
+	 */
+	private void removeAttach(WTDocument workCopy) throws Exception {
+		QueryResult result = ContentHelper.service.getContentsByRole(workCopy, ContentRoleType.PRIMARY);
+		if (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(workCopy, item);
+		}
+
+		result.reset();
+		result = ContentHelper.service.getContentsByRole(workCopy, ContentRoleType.SECONDARY);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(workCopy, item);
+		}
+	}
+	
+	/**
 	 * 문서 IBA 속성값 세팅 함수
 	 */
 	private void setIBAAttributes(WTDocument doc, MoldDTO dto) throws Exception {
@@ -167,7 +193,7 @@ public class StandardMoldService extends StandardManager implements MoldService 
 		String deptcode_code = dto.getDeptcode_code();
 		dto.setIBAValue(doc, deptcode_code, "DEPTCODE");
 		// 결재 유형
-		String approvalType_code = dto.getLifecycle().equals("LC_Default") ? "DEFAUT" : "BATCH";
+		String approvalType_code = dto.getLifecycle().equals("LC_Default") ? "DEFAULT" : "BATCH";
 		dto.setIBAValue(doc, approvalType_code, "APPROVALTYPE");
 	}
 	
@@ -192,6 +218,117 @@ public class StandardMoldService extends StandardManager implements MoldService 
 			DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc, ref);
 			PersistenceServerHelper.manager.insert(link);
 		}
+	}
+	
+	/**
+	 * 문서 링크 데이터 삭제
+	 */
+	private void deleteLink(WTDocument workCopy) throws Exception {
+		// 윈칠 객체의 경우 체크인아웃시 자동 연결 처리
+		QueryResult result = PersistenceHelper.manager.navigate(workCopy, "describes", WTPartDescribeLink.class, false);
+		while (result.hasMoreElements()) {
+			WTPartDescribeLink link = (WTPartDescribeLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+		QueryResult result2 = PersistenceHelper.manager.navigate(workCopy, "used", DocumentToDocumentLink.class, false);
+		while(result2.hasMoreElements()){ 
+			DocumentToDocumentLink link = (DocumentToDocumentLink)result2.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+    	}
+		
+		QueryResult result3 = PersistenceHelper.manager.navigate(workCopy, "useBy", DocumentToDocumentLink.class, false);
+		while(result3.hasMoreElements()){ 
+			DocumentToDocumentLink link = (DocumentToDocumentLink)result3.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+    	}
+	}
+	
+	@Override
+	public void update(MoldDTO dto) throws Exception {
+		String oid = dto.getOid();
+		String name = dto.getName();
+		String location = dto.getLocation();
+		String description = dto.getDescription();
+		String iterationNote = dto.getIterationNote();
+		
+		WTDocument doc = null;
+		WTDocument olddoc = null;
+		
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			olddoc = (WTDocument) CommonUtil.getObject(oid);
+			// Working Copy
+            doc = (WTDocument)getWorkingCopy(olddoc);
+            doc.setDescription(description);
+            doc = (WTDocument) PersistenceHelper.manager.modify(doc);
+            
+            // 첨부 파일 클리어
+ 			removeAttach(doc);
+ 			// 첨부파일 저장
+ 			saveAttach(doc, dto);
+ 			
+ 			doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+ 			
+ 			// CheckedOut
+            if(WorkInProgressHelper.isCheckedOut(doc)){
+                doc = (WTDocument) WorkInProgressHelper.service.checkin(doc, iterationNote);
+            }
+            
+            // 링크 정보 삭제
+ 			deleteLink(doc);
+ 			// 관련 링크 세팅
+ 			saveLink(doc, dto);
+ 			
+ 			// IBA 설정
+			setIBAAttributes(doc, dto);
+			
+			doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+			
+			if(location.length()!=0){
+            	Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+            	doc = (WTDocument) FolderHelper.service.changeFolder((FolderEntry) doc, folder);
+            }
+			
+			WTDocumentMaster master = (WTDocumentMaster) doc.getMaster();
+			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
+			// 문서 이름 세팅..
+			if ("$$MMDocument".equals(doc.getDocType().toString())) {
+				identity.setName(name);
+			} else {
+				if (name.length() > 0) {
+					identity.setName(doc.getDocType().getDisplay() + "-" + name);
+				} else {
+					identity.setName(doc.getDocType().getDisplay());
+				}
+			}
+			
+			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
+            
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+	
+	private WTDocument getWorkingCopy(WTDocument _doc) throws Exception {
+		if( !WorkInProgressHelper.isCheckedOut(_doc)){
+             if (!CheckInOutTaskLogic.isCheckedOut(_doc)){
+                 CheckoutLink checkoutlink = WorkInProgressHelper.service.checkout(_doc, CheckInOutTaskLogic.getCheckoutFolder(), "");
+             }
+             _doc = (WTDocument)WorkInProgressHelper.service.workingCopyOf(_doc);
+        }else{
+            if(!WorkInProgressHelper.isWorkingCopy(_doc)) {
+            	_doc = (WTDocument)WorkInProgressHelper.service.workingCopyOf(_doc);
+            }
+        }
+		return _doc;
 	}
 
 	@Override
@@ -249,5 +386,5 @@ public class StandardMoldService extends StandardManager implements MoldService 
 			}
         }
 	}
-	
+
 }

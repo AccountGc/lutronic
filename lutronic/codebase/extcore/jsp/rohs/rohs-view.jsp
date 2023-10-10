@@ -86,9 +86,9 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		<table class="view-table">
 			<colgroup>
 				<col width="150">
-				<col width="350">
+				<col width="*">
 				<col width="150">
-				<col width="350">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>물질명</th>

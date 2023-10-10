@@ -65,6 +65,7 @@ public class MoldDTO {
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> partList = new ArrayList<>(); // 관련 품목
 	private ArrayList<Map<String, String>> docList = new ArrayList<>(); // 관련 문서
+	private String iterationNote; // 수정사유
 
 	public MoldDTO() {
 		
