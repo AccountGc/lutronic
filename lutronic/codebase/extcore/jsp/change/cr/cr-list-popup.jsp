@@ -156,9 +156,18 @@ const columns = [ {
 	dataField : "number",
 	headerText : "CR 번호",
 	dataType : "string",
-	width : 120,
 	filter : {
 		showIcon : true,
+		inline : true
+	},
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.oid;
+			const url = getCallUrl("/cr/view?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		}
 	},
 }, {
 	dataField : "name",
@@ -167,54 +176,64 @@ const columns = [ {
 	style : "aui-left",
 	filter : {
 		showIcon : true,
+		inline : true
+	},
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.oid;
+			const url = getCallUrl("/cr/view?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		}
 	},
 }, {
 	dataField : "model",
 	headerText : "제품",
 	dataType : "string",
-	width : 200,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 }, {
 	dataField : "changeSection",
 	headerText : "변경구분",
 	dataType : "string",
-	width : 200,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 }, {
 	dataField : "createDepart",
 	headerText : "작성부서",
 	dataType : "string",
-	width : 150,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 }, {
 	dataField : "writer",
 	headerText : "작성자",
 	dataType : "string",
-	width : 100,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 }, {
 	dataField : "approveDate",
 	headerText : "승인일",
 	dataType : "string",
-	width : 100,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 }, {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
-	width : 100,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 }, {
 	dataField : "creator",
@@ -223,14 +242,15 @@ const columns = [ {
 	width : 100,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 }, {
 	dataField : "createdDate_txt",
 	headerText : "등록일",
 	dataType : "string",
-	width : 100,
 	filter : {
 		showIcon : true,
+		inline : true
 	},
 } ]
 

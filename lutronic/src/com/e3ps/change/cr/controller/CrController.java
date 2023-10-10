@@ -19,6 +19,7 @@ import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 
 @Controller
@@ -111,5 +112,17 @@ public class CrController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+	
+	@Description(value = "CR 상세 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		CrDTO dto = new CrDTO(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/change/cr/cr-view.jsp");
+		return model;
 	}
 }

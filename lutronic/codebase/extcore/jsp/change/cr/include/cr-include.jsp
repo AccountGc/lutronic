@@ -45,18 +45,47 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 <script type="text/javascript">
 	let myGridID101;
 	const columns101 = [ {
-		dataField : "eoNumber",
+		dataField : "number",
 		headerText : "CR 번호",
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
+		},
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/cr/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
 		},
 	}, {
-		dataField : "eoName",
+		dataField : "name",
 		headerText : "CR 제목",
+		dataType : "string",
+		style : "aui-left",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/cr/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
+	}, {
+		dataField : "model",
+		headerText : "제품",
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
 		dataField : "changeSection",
@@ -64,6 +93,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
 		dataField : "createDepart",
@@ -71,6 +101,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
 		dataField : "writer",
@@ -78,13 +109,15 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
-		dataField : "createDate",
-		headerText : "작성일",
+		dataField : "approveDate",
+		headerText : "승인일",
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
 		dataField : "state",
@@ -92,25 +125,25 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
-		dataField : "writer",
+		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
-		dataField : "createDate",
+		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
 		filter : {
 			showIcon : true,
+			inline : true
 		},
-	}, {
-		dataField : "oid",
-		dataType : "string",
-		visible : false
 	} ]
 	
 	function createAUIGrid101(columnLayout) {

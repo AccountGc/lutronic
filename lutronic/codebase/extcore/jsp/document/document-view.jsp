@@ -396,6 +396,12 @@ iframe {
 					} else {
 						createAUIGrid105(columns105);
 					}
+					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
+					if (isCreated101) {
+						AUIGrid.resize(myGridID101);
+					} else {
+						createAUIGrid101(columns101);
+					}
 					break;
 				case "tabs-3":
 					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
