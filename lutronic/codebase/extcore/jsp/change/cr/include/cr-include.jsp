@@ -131,7 +131,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true

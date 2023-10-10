@@ -348,7 +348,7 @@ iframe {
 					rows90 : rows90,
 					rows91 : rows91,
 					rows100 : rows100,
-					rows100 : rows101,
+					rows101 : rows101,
 					rows105 : rows105
 				};
 				parent.openLayer();

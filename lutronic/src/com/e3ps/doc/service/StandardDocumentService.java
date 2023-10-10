@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.service.ECAHelper;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -27,7 +28,6 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
-import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
@@ -45,7 +45,6 @@ import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
-import wt.doc.WTDocumentHelper;
 import wt.doc.WTDocumentMaster;
 import wt.doc.WTDocumentMasterIdentity;
 import wt.enterprise.RevisionControlled;
@@ -53,15 +52,9 @@ import wt.fc.IdentityHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
-import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
-import wt.iba.value.DefaultAttributeContainer;
-import wt.iba.value.IBAHolder;
-import wt.iba.value.StringValue;
-import wt.iba.value.litevalue.AbstractValueView;
-import wt.iba.value.service.IBAValueHelper;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
@@ -415,6 +408,19 @@ public class StandardDocumentService extends StandardManager implements Document
 				String oid = row105.get("oid");
 				EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 				DocumentECOLink link = DocumentECOLink.newDocumentECOLink(doc, eco);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+		
+		ArrayList<Map<String, String>> rows101 = dto.getRows101();
+		// 관련CR
+		for (Map<String, String> row101 : rows101) {
+			String gridState = row101.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row101.get("oid");
+				EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+				DocumentCRLink link = DocumentCRLink.newDocumentCRLink(doc, cr);
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}

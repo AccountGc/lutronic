@@ -15,7 +15,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				CR/ECPR 상세보기
+				CR 상세보기
 			</div>
 		</td>
 		<td class="right">
@@ -55,11 +55,11 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<col width="37%">
 			</colgroup>
 			<tr>
-				<th>CR/ECPR 제목</th>
+				<th>CR 제목</th>
 				<td colspan="3"><%=dto.getName()%></td>
 			</tr>
 			<tr>
-				<th>CR/ECPR 번호</th>
+				<th>CR 번호</th>
 				<td><%=dto.getNumber()%></td>
 				<th>상태</th>
 				<td><%=dto.getState()%></td>
