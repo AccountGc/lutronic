@@ -341,6 +341,12 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			doc = (WTDocument) PersistenceHelper.manager.save(doc);
 
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(doc, state);
+			}
+
 			// 첨부 파일 저장
 			saveAttach(doc, dto);
 
@@ -383,9 +389,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		} else if ("U".equals(option) || "R".equals(option)) {
 
 		}
-		State state = State.toState("TEMP");
-		// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-		LifeCycleHelper.service.setLifeCycleState(doc, state);
 	}
 
 	/**
