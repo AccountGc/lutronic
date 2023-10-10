@@ -101,9 +101,6 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecr-list');">
-			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
 			<input type="button" value="추가" title="추가"  onclick="add();">
 		</td>
 		<td class="right">
@@ -123,228 +120,225 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 <div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <script type="text/javascript">
-	let myGridID;
-	function _layout() {
-		return [ {
-			dataField : "eoNumber",
-			headerText : "ECPR 번호",
-			dataType : "string",
-			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-			renderer : {
-				type : "LinkRenderer",
-				baseUrl : "javascript",
-				jsCallback : function(rowIndex, columnIndex, value, item) {
-					const oid = item.oid;
-					const url = getCallUrl("/changeECR/view?oid=" + oid);
-					popup(url, 1600, 800);
-				}
-			},
-		}, {
-			dataField : "eoName",
-			headerText : "ECPR 제목",
-			dataType : "string",
-			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-			renderer : {
-				type : "LinkRenderer",
-				baseUrl : "javascript",
-				jsCallback : function(rowIndex, columnIndex, value, item) {
-					const oid = item.oid;
-					const url = getCallUrl("/changeECR/view?oid=" + oid);
-					popup(url, 1600, 800);
-				}
-			},
-		}, {
-			dataField : "changeSection",
-			headerText : "변경구분",
-			dataType : "string",
-			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "createDepart",
-			headerText : "작성부서",
-			dataType : "string",
-			width : 250,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "writer",
-			headerText : "작성자",
-			dataType : "string",
-			width : 180,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "createDate",
-			headerText : "작성일",
-			dataType : "string",
-			width : 180,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "state",
-			headerText : "상태",
-			dataType : "string",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "writer",
-			headerText : "등록자",
-			dataType : "string",
-			width : 180,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "createDate",
-			headerText : "등록일",
-			dataType : "string",
-			width : 180,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		} ]
-	}
-
-	function createAUIGrid(columnLayout) {
-		const props = {
-			headerHeight : 30,
-			showRowNumColumn : true,
-			fillColumnSizeMode: true,
-			rowNumHeaderText : "번호",
-			showAutoNoDataMessage : true,
-			selectionMode : "multipleCells",
-			enableMovingColumn : true,
-			showInlineFilter : false,
-			useContextMenu : true,
-			enableRightDownFocus : true,
-			filterLayerWidth : 320,
-			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-			enableFilter : true
-		};
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		loadGridData();
-		AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-		AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-			hideContextMenu();
-		});
-		AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-			hideContextMenu();
-		});
-	}
-
-	function loadGridData() {
-		let params = new Object();
-		const url = getCallUrl("/changeECR/list");
-		const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
-		params = toField(params, field);
-		AUIGrid.showAjaxLoader(myGridID);
-		call(url, params, function(data) {
-			AUIGrid.removeAjaxLoader(myGridID);
-			if (data.result) {
-				totalPage = Math.ceil(data.total / data.pageSize);
-				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.curPage);
-				AUIGrid.setGridData(myGridID, data.list);
-			} else {
-				alert(data.msg);
-			}
-		});
-	}
-
-	document.addEventListener("DOMContentLoaded", function() {
-		const columns = loadColumnLayout("ecr-list");
-		const contenxtHeader = genColumnHtml(columns);
-		$("#h_item_ul").append(contenxtHeader);
-		$("#headerMenu").menu({
-			select : headerMenuSelectHandler
-		});
-		createAUIGrid(columns);
-		AUIGrid.resize(myGridID);
-		selectbox("state");
-		finderUser("creator");
-		finderUser("writer");
-		finderUser("proposer");
-		twindate("created");
-		twindate("approve");
-		twindate("writed");
-		selectbox("_psize");
-		selectbox("changeSection");
-		selectbox("model");
-	});
-
-	function exportExcel() {
-		// 				const exceptColumnFields = [ "primary" ];
-		// 				const sessionName = document.getElementById("sessionName").value;
-		// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-	}
-
-	document.querySelector("#addNumberCode").addEventListener("click", () => {
-		const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
-		popup(url, 1500, 700);
-	});
-	
-	document.querySelector("#delNumberCode").addEventListener("click", () => {
-		
-	});
-
-	document.addEventListener("keydown", function(event) {
-		const keyCode = event.keyCode || event.which;
-		if (keyCode === 13) {
-			loadGridData();
+let myGridID;
+const columns = [ {
+	dataField : "eoNumber",
+	headerText : "ECPR 번호",
+	dataType : "string",
+	width : 120,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.oid;
+			const url = getCallUrl("/changeECR/view?oid=" + oid);
+			popup(url, 1600, 800);
 		}
-	})
+	},
+}, {
+	dataField : "eoName",
+	headerText : "ECPR 제목",
+	dataType : "string",
+	width : 120,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.oid;
+			const url = getCallUrl("/changeECR/view?oid=" + oid);
+			popup(url, 1600, 800);
+		}
+	},
+}, {
+	dataField : "changeSection",
+	headerText : "변경구분",
+	dataType : "string",
+	width : 120,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "createDepart",
+	headerText : "작성부서",
+	dataType : "string",
+	width : 250,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "writer",
+	headerText : "작성자",
+	dataType : "string",
+	width : 180,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "createDate",
+	headerText : "작성일",
+	dataType : "string",
+	width : 180,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "state",
+	headerText : "상태",
+	dataType : "string",
+	width : 100,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "writer",
+	headerText : "등록자",
+	dataType : "string",
+	width : 180,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "createDate",
+	headerText : "등록일",
+	dataType : "string",
+	width : 180,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+} ]
 
-	document.addEventListener("click", function(event) {
+function createAUIGrid(columnLayout) {
+	const props = {
+		headerHeight : 30,
+		showRowNumColumn : true,
+		fillColumnSizeMode: true,
+		rowNumHeaderText : "번호",
+		showAutoNoDataMessage : true,
+		selectionMode : "multipleCells",
+		enableMovingColumn : true,
+		showInlineFilter : false,
+		useContextMenu : true,
+		enableRightDownFocus : true,
+		filterLayerWidth : 320,
+		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+		enableFilter : true
+	};
+	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+	loadGridData();
+	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 		hideContextMenu();
-	})
-
-	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID);
 	});
+	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
+		hideContextMenu();
+	});
+}
+
+function loadGridData() {
+	let params = new Object();
+	const url = getCallUrl("/changeECR/list");
+	const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
+	params = toField(params, field);
+	AUIGrid.showAjaxLoader(myGridID);
+	call(url, params, function(data) {
+		AUIGrid.removeAjaxLoader(myGridID);
+		if (data.result) {
+			totalPage = Math.ceil(data.total / data.pageSize);
+			document.getElementById("sessionid").value = data.sessionid;
+			createPagingNavigator(data.curPage);
+			AUIGrid.setGridData(myGridID, data.list);
+		} else {
+			alert(data.msg);
+		}
+	});
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	const contenxtHeader = genColumnHtml(columns);
+	$("#h_item_ul").append(contenxtHeader);
+	$("#headerMenu").menu({
+		select : headerMenuSelectHandler
+	});
+	createAUIGrid(columns);
+	AUIGrid.resize(myGridID);
+	selectbox("state");
+	finderUser("creator");
+	finderUser("writer");
+	finderUser("proposer");
+	twindate("created");
+	twindate("approve");
+	twindate("writed");
+	selectbox("_psize");
+	selectbox("changeSection");
+	selectbox("model");
+});
+
+function exportExcel() {
+	// 				const exceptColumnFields = [ "primary" ];
+	// 				const sessionName = document.getElementById("sessionName").value;
+	// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+}
+
+document.querySelector("#addNumberCode").addEventListener("click", () => {
+	const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
+	popup(url, 1500, 700);
+});
+
+document.querySelector("#delNumberCode").addEventListener("click", () => {
 	
-	// 추가 버튼
-	function add(){
-	       const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-	       if (items.length == 0) {
-	           alert("첨부할 EO를 선택하세요.");
-	           return false;
-	       }
-	       
-	       let ecprOids = [];
-			let ecprNumber = [];
-			for(let i = 0; i < items.length; i++){
-				ecprOids.push(items[i].oid);
-				ecprNumber.push(items[i].number);
-			}
-			var parentRow = <%= parentRowIndex %>;
-			if(parentRow<0){
-				opener.setAppendECPR(items);
-			}else{
-				opener.setECPR(ecprOids, ecprNumber, <%= parentRowIndex %>);
-			}
-				
-	       	self.close();
-	   }
+});
+
+document.addEventListener("keydown", function(event) {
+	const keyCode = event.keyCode || event.which;
+	if (keyCode === 13) {
+		loadGridData();
+	}
+})
+
+document.addEventListener("click", function(event) {
+	hideContextMenu();
+})
+
+window.addEventListener("resize", function() {
+	AUIGrid.resize(myGridID);
+});
+
+// 추가 버튼
+function add(){
+	const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+	if (items.length == 0) {
+	    alert("첨부할 EO를 선택하세요.");
+	    return false;
+	}
+       
+	let ecprOids = [];
+	let ecprNumber = [];
+	for(let i = 0; i < items.length; i++){
+		ecprOids.push(items[i].oid);
+		ecprNumber.push(items[i].number);
+	}
+	var parentRow = <%= parentRowIndex %>;
+	if(parentRow<0){
+		opener.setAppendECPR(items);
+	}else{
+		opener.setECPR(ecprOids, ecprNumber, <%= parentRowIndex %>);
+	}
+	
+	self.close();
+}
 </script>

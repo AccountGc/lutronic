@@ -178,8 +178,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-popup');">
-			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-popup');">
 			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
@@ -219,213 +217,210 @@ boolean multi = (boolean) request.getAttribute("multi");
 	</tr>
 </table>
 <script type="text/javascript">
-	let myGridID;
-	function _layout() {
-		return [ {
-			dataField : "number",
-			headerText : "문서번호",
-			dataType : "string",
-			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "interalnumber",
-			headerText : "내부 문서번호",
-			dataType : "string",
-			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "model",
-			headerText : "프로젝트 코드",
-			dataType : "string",
-			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "name",
-			headerText : "문서명",
-			dataType : "string",
-			style : "aui-left",
-			width : 350,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "location",
-			headerText : "문서분류",
-			dataType : "string",
-			width : 250,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "version",
-			headerText : "Rev",
-			dataType : "string",
-			width : 350,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "state",
-			headerText : "상태",
-			dataType : "string",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "writer",
-			headerText : "작성자",
-			dataType : "string",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "creator",
-			headerText : "등록자",
-			dataType : "string",
-			width : 80,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "createdDate",
-			headerText : "등록일",
-			dataType : "date",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true,
-			},
-		}, {
-			dataField : "modifiedDate",
-			headerText : "수정일",
-			dataType : "date",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true,
-			},
-		}, {
-			dataField : "primary",
-			headerText : "주 첨부파일",
-			dataType : "string",
-			width : 100,
-			renderer : {
-				type : "TemplateRenderer"
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		}, {
-			dataField : "secondary",
-			headerText : "첨부파일",
-			dataType : "string",
-			width : 100,
-			renderer : {
-				type : "TemplateRenderer"
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		} ]
-	}
+let myGridID;
+const columns = [ {
+	dataField : "number",
+	headerText : "문서번호",
+	dataType : "string",
+	width : 120,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "interalnumber",
+	headerText : "내부 문서번호",
+	dataType : "string",
+	width : 120,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "model",
+	headerText : "프로젝트 코드",
+	dataType : "string",
+	width : 120,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "name",
+	headerText : "문서명",
+	dataType : "string",
+	style : "aui-left",
+	width : 350,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "location",
+	headerText : "문서분류",
+	dataType : "string",
+	width : 250,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "version",
+	headerText : "Rev",
+	dataType : "string",
+	width : 350,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "state",
+	headerText : "상태",
+	dataType : "string",
+	width : 100,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "writer",
+	headerText : "작성자",
+	dataType : "string",
+	width : 100,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "creator",
+	headerText : "등록자",
+	dataType : "string",
+	width : 80,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "createdDate",
+	headerText : "등록일",
+	dataType : "date",
+	width : 100,
+	filter : {
+		showIcon : true,
+		inline : true,
+	},
+}, {
+	dataField : "modifiedDate",
+	headerText : "수정일",
+	dataType : "date",
+	width : 100,
+	filter : {
+		showIcon : true,
+		inline : true,
+	},
+}, {
+	dataField : "primary",
+	headerText : "주 첨부파일",
+	dataType : "string",
+	width : 100,
+	renderer : {
+		type : "TemplateRenderer"
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+}, {
+	dataField : "secondary",
+	headerText : "첨부파일",
+	dataType : "string",
+	width : 100,
+	renderer : {
+		type : "TemplateRenderer"
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+} ]
 
-	function createAUIGrid(columnLayout) {
-		const props = {
-			headerHeight : 30,
-			showRowNumColumn : true,
-			showRowCheckColumn : true,
-			<%if (!multi) {%>
-			rowCheckToRadio : true,
-			<%}%>
-			rowNumHeaderText : "번호",
-			showAutoNoDataMessage : false,
-			selectionMode : "multipleCells",
-			enableMovingColumn : true,
-			enableFilter : true,
-			showInlineFilter : false,
-			useContextMenu : true,
-			enableRightDownFocus : true,
-			filterLayerWidth : 320,
-			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		};
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		loadGridData();
-		AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-		AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-			hideContextMenu();
-		});
-		AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-			hideContextMenu();
-		});
-	}
-
-	function loadGridData() {
-		let params = new Object();
-		const url = getCallUrl("/etc/list");
-		const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
-		const latest = !!document.querySelector("input[name=latest]:checked").value;
-		params = toField(params, field);
-		params.latest = latest;
-		AUIGrid.showAjaxLoader(myGridID);
-		openLayer();
-		call(url, params, function(data) {
-			AUIGrid.removeAjaxLoader(myGridID);
-			if (data.result) {
-				totalPage = Math.ceil(data.total / data.pageSize);
-				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.curPage);
-				AUIGrid.setGridData(myGridID, data.list);
-			} else {
-				alert(data.msg);
-			}
-			closeLayer();
-		});
-	}
-
-	document.addEventListener("DOMContentLoaded", function() {
-		toFocus("number");
-		const columns = loadColumnLayout("document-popup");
-		const contenxtHeader = genColumnHtml(columns);
-		$("#h_item_ul").append(contenxtHeader);
-		$("#headerMenu").menu({
-			select : headerMenuSelectHandler
-		});
-		createAUIGrid(columns);
-		AUIGrid.resize(myGridID);
-		_createAUIGrid(_columns);
-		AUIGrid.resize(_myGridID);
-		selectbox("state");
-		finderUser("creator");
-		twindate("created");
-		twindate("modified");
-		selectbox("_psize");
-		selectbox("documentType");
-		selectbox("preseration");
-		selectbox("model");
-		selectbox("deptcode");
-		finderUser("writer");
+function createAUIGrid(columnLayout) {
+	const props = {
+		headerHeight : 30,
+		showRowNumColumn : true,
+		showRowCheckColumn : true,
+		<%if (!multi) {%>
+		rowCheckToRadio : true,
+		<%}%>
+		rowNumHeaderText : "번호",
+		showAutoNoDataMessage : false,
+		selectionMode : "multipleCells",
+		enableMovingColumn : true,
+		enableFilter : true,
+		showInlineFilter : false,
+		useContextMenu : true,
+		enableRightDownFocus : true,
+		filterLayerWidth : 320,
+		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+	};
+	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+	loadGridData();
+	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
+		hideContextMenu();
 	});
+	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
+		hideContextMenu();
+	});
+}
 
-	function <%=method%>() {
+function loadGridData() {
+	let params = new Object();
+	const url = getCallUrl("/etc/list");
+	const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
+	const latest = !!document.querySelector("input[name=latest]:checked").value;
+	params = toField(params, field);
+	params.latest = latest;
+	AUIGrid.showAjaxLoader(myGridID);
+	openLayer();
+	call(url, params, function(data) {
+		AUIGrid.removeAjaxLoader(myGridID);
+		if (data.result) {
+			totalPage = Math.ceil(data.total / data.pageSize);
+			document.getElementById("sessionid").value = data.sessionid;
+			createPagingNavigator(data.curPage);
+			AUIGrid.setGridData(myGridID, data.list);
+		} else {
+			alert(data.msg);
+		}
+		closeLayer();
+	});
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+	toFocus("number");
+	const contenxtHeader = genColumnHtml(columns);
+	$("#h_item_ul").append(contenxtHeader);
+	$("#headerMenu").menu({
+		select : headerMenuSelectHandler
+	});
+	createAUIGrid(columns);
+	AUIGrid.resize(myGridID);
+	_createAUIGrid(_columns);
+	AUIGrid.resize(_myGridID);
+	selectbox("state");
+	finderUser("creator");
+	twindate("created");
+	twindate("modified");
+	selectbox("_psize");
+	selectbox("documentType");
+	selectbox("preseration");
+	selectbox("model");
+	selectbox("deptcode");
+	finderUser("writer");
+});
+
+function <%=method%>() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 		if (checkedItems.length === 0) {
 			alert("추가할 행을 선택하세요.");
@@ -439,27 +434,27 @@ boolean multi = (boolean) request.getAttribute("multi");
 		
 		openLayer();
 		opener.<%=method%>(checkedItems, function(res) {
-			if(res) {
-				setTimeout(function() {
-					closeLayer();
-				}, 500);
-			}
-		})
-	}
-	
-
-	document.addEventListener("keydown", function(event) {
-		const keyCode = event.keyCode || event.which;
-		if (keyCode === 13) {
-			loadGridData();
+		if(res) {
+			setTimeout(function() {
+				closeLayer();
+			}, 500);
 		}
 	})
+}
 
-	document.addEventListener("click", function(event) {
-		hideContextMenu();
-	})
 
-	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID);
-	});
+document.addEventListener("keydown", function(event) {
+	const keyCode = event.keyCode || event.which;
+	if (keyCode === 13) {
+		loadGridData();
+	}
+})
+
+document.addEventListener("click", function(event) {
+	hideContextMenu();
+})
+
+window.addEventListener("resize", function() {
+	AUIGrid.resize(myGridID);
+});
 </script>
