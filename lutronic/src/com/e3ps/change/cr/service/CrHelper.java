@@ -48,14 +48,16 @@ public class CrHelper {
 	 */
 	public String displayToModel(String model) throws Exception {
 		String display = "";
-		String[] ss = model.split(",");
-		for (int i = 0; i < ss.length; i++) {
-			String s = ss[i];
-			if (ss.length - 1 == i) {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
-			} else {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
-			}
+		if(model != null) {
+			String[] ss = model.split(",");
+			for (int i = 0; i < ss.length; i++) {
+				String s = ss[i];
+				if (ss.length - 1 == i) {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL");
+				} else {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
+				}
+			}			
 		}
 		return display;
 	}
@@ -65,13 +67,15 @@ public class CrHelper {
 	 */
 	public String displayToSection(String section) throws Exception {
 		String display = "";
-		String[] ss = section.split(",");
-		for (int i = 0; i < ss.length; i++) {
-			String s = ss[i];
-			if (ss.length - 1 == i) {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "CHANGESECTION");
-			} else {
-				display += NumberCodeHelper.manager.getNumberCodeName(s, "CHANGESECTION") + ",";
+		if(section != null) {
+			String[] ss = section.split(",");
+			for (int i = 0; i < ss.length; i++) {
+				String s = ss[i];
+				if (ss.length - 1 == i) {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "CHANGESECTION");
+				} else {
+					display += NumberCodeHelper.manager.getNumberCodeName(s, "CHANGESECTION") + ",";
+				}
 			}
 		}
 		return display;
