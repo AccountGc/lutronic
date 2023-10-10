@@ -229,9 +229,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-			<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-popup');">
-			<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-popup');">
 			<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
@@ -275,372 +272,369 @@ boolean multi = (boolean) request.getAttribute("multi");
 </table>
 
 <script type="text/javascript">
-	let myGridID;
-	function _layout() {
-		return [ {
-			dataField : "_3d",
-			headerText : "3D",
-			dataType : "string",
-			width : 60,
-			renderer : {
-				type : "ImageRenderer",
-				altField : null,
-				onClick : function(event) {
-				}
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		}, {
-			dataField : "_2d",
-			headerText : "2D",
-			dataType : "string",
-			width : 60,
-			renderer : {
-				type : "ImageRenderer",
-				altField : null,
-				onClick : function(event) {
-				}
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		}, {
-			dataField : "step",
-			headerText : "STEP",
-			dataType : "string",
-			width : 60,
-			renderer : {
-				type : "TemplateRenderer"
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		}, {
-			dataField : "dxf",
-			headerText : "DXF",
-			dataType : "string",
-			width : 60,
-			renderer : {
-				type : "TemplateRenderer"
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		}, {
-			dataField : "pdf",
-			headerText : "PDF",
-			dataType : "string",
-			width : 60,
-			renderer : {
-				type : "TemplateRenderer"
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		}, {
-			headerText : "변경이력",
-			width : 80,
-			renderer : {
-				type : "IconRenderer",
-				iconPosition : "aisleCenter", // 아이콘 위치
-				iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-				iconHeight : 16,
-				iconTableRef : { // icon 값 참조할 테이블 레퍼런스
-					"default" : "/Windchill/extcore/images/help.gif" // default
-				},
-				onClick : function(event) {
-					const oid = event.item.oid;
-					const url = getCallUrl("/part/changeList?oid=" + oid);
-					_popup(url, 1600, 800, "n");
-				}
-			},
-			filter : {
-				showIcon : false,
-				inline : false
-			},
-		}, {
-			dataField : "number",
-			headerText : "품목번호",
-			dataType : "string",
-			width : 180,
-			renderer : {
-				type : "LinkRenderer",
-				baseUrl : "javascript",
-				jsCallback : function(rowIndex, columnIndex, value, item) {
-					const oid = item.part_oid;
-					const url = getCallUrl("/part/view?oid=" + oid);
-					_popup(url, 1600, 800, "n");
-				}
-			},
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "name",
-			headerText : "품목명",
-			dataType : "string",
-			style : "aui-left",
-			width : 380,
-			renderer : {
-				type : "LinkRenderer",
-				baseUrl : "javascript",
-				jsCallback : function(rowIndex, columnIndex, value, item) {
-					const oid = item.oid;
-					const url = getCallUrl("/part/view?oid=" + oid);
-					_popup(url, 1600, 800, "n");
-				}
-			},
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "location",
-			headerText : "품목분류",
-			dataType : "string",
-			width : 180,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "version",
-			headerText : "Rev.",
-			dataType : "string",
-			width : 90,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "remarks",
-			headerText : "OEM Info.",
-			dataType : "string",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "state",
-			headerText : "상태",
-			dataType : "string",
-			width : 100,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "creator",
-			headerText : "등록자",
-			dataType : "string",
-			width : 140,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "createdDate",
-			headerText : "등록일",
-			dataType : "date",
-			width : 140,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "modifiedDate",
-			headerText : "수정일",
-			dataType : "date",
-			width : 140,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "ecoNo",
-			headerText : "BOM",
-			dataType : "string",
-			width : 80,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
-		}, {
-			dataField : "version",
-			headerText : "version",
-			visible : false
-		}, {
-			dataField : "dwgNo",
-			headerText : "dwgNo",
-			visible : false
-		}, {
-			dataField : "modifier",
-			headerText : "modifier",
-			visible : false
-		}, ]
-	}
+let myGridID;
+const columns = [ {
+	dataField : "_3d",
+	headerText : "3D",
+	dataType : "string",
+	width : 60,
+	renderer : {
+		type : "ImageRenderer",
+		altField : null,
+		onClick : function(event) {
+		}
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+}, {
+	dataField : "_2d",
+	headerText : "2D",
+	dataType : "string",
+	width : 60,
+	renderer : {
+		type : "ImageRenderer",
+		altField : null,
+		onClick : function(event) {
+		}
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+}, {
+	dataField : "step",
+	headerText : "STEP",
+	dataType : "string",
+	width : 60,
+	renderer : {
+		type : "TemplateRenderer"
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+}, {
+	dataField : "dxf",
+	headerText : "DXF",
+	dataType : "string",
+	width : 60,
+	renderer : {
+		type : "TemplateRenderer"
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+}, {
+	dataField : "pdf",
+	headerText : "PDF",
+	dataType : "string",
+	width : 60,
+	renderer : {
+		type : "TemplateRenderer"
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+}, {
+	headerText : "변경이력",
+	width : 80,
+	renderer : {
+		type : "IconRenderer",
+		iconPosition : "aisleCenter", // 아이콘 위치
+		iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+		iconHeight : 16,
+		iconTableRef : { // icon 값 참조할 테이블 레퍼런스
+			"default" : "/Windchill/extcore/images/help.gif" // default
+		},
+		onClick : function(event) {
+			const oid = event.item.oid;
+			const url = getCallUrl("/part/changeList?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		}
+	},
+	filter : {
+		showIcon : false,
+		inline : false
+	},
+}, {
+	dataField : "number",
+	headerText : "품목번호",
+	dataType : "string",
+	width : 180,
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.part_oid;
+			const url = getCallUrl("/part/view?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		}
+	},
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "name",
+	headerText : "품목명",
+	dataType : "string",
+	style : "aui-left",
+	width : 380,
+	renderer : {
+		type : "LinkRenderer",
+		baseUrl : "javascript",
+		jsCallback : function(rowIndex, columnIndex, value, item) {
+			const oid = item.oid;
+			const url = getCallUrl("/part/view?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		}
+	},
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "location",
+	headerText : "품목분류",
+	dataType : "string",
+	width : 180,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "version",
+	headerText : "Rev.",
+	dataType : "string",
+	width : 90,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "remarks",
+	headerText : "OEM Info.",
+	dataType : "string",
+	width : 100,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "state",
+	headerText : "상태",
+	dataType : "string",
+	width : 100,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "creator",
+	headerText : "등록자",
+	dataType : "string",
+	width : 140,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "createdDate",
+	headerText : "등록일",
+	dataType : "date",
+	width : 140,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "modifiedDate",
+	headerText : "수정일",
+	dataType : "date",
+	width : 140,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "ecoNo",
+	headerText : "BOM",
+	dataType : "string",
+	width : 80,
+	filter : {
+		showIcon : true,
+		inline : true
+	},
+}, {
+	dataField : "version",
+	headerText : "version",
+	visible : false
+}, {
+	dataField : "dwgNo",
+	headerText : "dwgNo",
+	visible : false
+}, {
+	dataField : "modifier",
+	headerText : "modifier",
+	visible : false
+} ]
 
 
-	function createAUIGrid(columnLayout) {
-		const props = {
-			headerHeight : 30,
-			showRowNumColumn : true,
-			showRowCheckColumn : true,
-			rowNumHeaderText : "번호",
-			showAutoNoDataMessage : false,
-			selectionMode : "multipleCells",
-			enableMovingColumn : true,
-			enableFilter : true,
-			showInlineFilter : false,
-			useContextMenu : true,
-			enableRowCheckShiftKey : true,
-			<%if (!multi) {%>
-			rowCheckToRadio : true,
-			<%}%>
-			enableRightDownFocus : true,
-			filterLayerWidth : 320,
-			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		};
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		loadGridData();
-		AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-		AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-			hideContextMenu();
-		});
-		AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-			hideContextMenu();
-		});
-	}
+function createAUIGrid(columnLayout) {
+	const props = {
+		headerHeight : 30,
+		showRowNumColumn : true,
+		showRowCheckColumn : true,
+		rowNumHeaderText : "번호",
+		showAutoNoDataMessage : false,
+		selectionMode : "multipleCells",
+		enableMovingColumn : true,
+		enableFilter : true,
+		showInlineFilter : false,
+		useContextMenu : true,
+		enableRowCheckShiftKey : true,
+		<%if (!multi) {%>
+		rowCheckToRadio : true,
+		<%}%>
+		enableRightDownFocus : true,
+		filterLayerWidth : 320,
+		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+	};
+	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+	loadGridData();
+	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
+		hideContextMenu();
+	});
+	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
+		hideContextMenu();
+	});
+}
 
-	function loadGridData() {
-		let params = new Object();
-		const url = getCallUrl("/part/list");
-		const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-			"ecoNo", "eoNo" ];
-		const latest = !!document.querySelector("input[name=latest]:checked").value;
-		params = toField(params, field);
-		params.latest = false;
-		AUIGrid.showAjaxLoader(myGridID);
-		parent.openLayer();
-		call(url, params, function(data) {
-			AUIGrid.removeAjaxLoader(myGridID);
-			if (data.result) {
-				totalPage = Math.ceil(data.total / data.pageSize);
-				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.curPage);
-				AUIGrid.setGridData(myGridID, data.list);
-			} else {
-				alert(data.msg);
-			}
-			parent.closeLayer();
-		});
+function loadGridData() {
+	let params = new Object();
+	const url = getCallUrl("/part/list");
+	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
+		"ecoNo", "eoNo" ];
+	const latest = !!document.querySelector("input[name=latest]:checked").value;
+	params = toField(params, field);
+	params.latest = false;
+	AUIGrid.showAjaxLoader(myGridID);
+	parent.openLayer();
+	call(url, params, function(data) {
+		AUIGrid.removeAjaxLoader(myGridID);
+		if (data.result) {
+			totalPage = Math.ceil(data.total / data.pageSize);
+			document.getElementById("sessionid").value = data.sessionid;
+			createPagingNavigator(data.curPage);
+			AUIGrid.setGridData(myGridID, data.list);
+		} else {
+			alert(data.msg);
+		}
+		parent.closeLayer();
+	});
+}
+	
+function <%=method%>() {
+	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+	if (checkedItems.length === 0) {
+		alert("추가할 행을 선택하세요.");
+		return false;
 	}
 	
-	function <%=method%>() {
-		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-		if (checkedItems.length === 0) {
-			alert("추가할 행을 선택하세요.");
-			return false;
-		}
-		
-		openLayer();
-		opener.<%=method%>(checkedItems, function(res) {
-			if(res) {
-				setTimeout(function() {
-					closeLayer();
-				}, 500);
-			}
-		})
-	}
-
-	document.addEventListener("DOMContentLoaded", function() {
-		toFocus("partNumber");
-		const columns = loadColumnLayout("part-popup");
-		const contenxtHeader = genColumnHtml(columns);
-		$("#h_item_ul").append(contenxtHeader);
-		$("#headerMenu").menu({
-			select : headerMenuSelectHandler
-		});
-		createAUIGrid(columns);
-		AUIGrid.resize(myGridID);
-		_createAUIGrid(_columns);
-		AUIGrid.resize(_myGridID);
-		selectbox("state");
-		selectbox("model");
-		selectbox("productmethod");
-		selectbox("deptcode");
-		selectbox("unit");
-		selectbox("mat");
-		selectbox("finish");
-		selectbox("manufacture");
-		selectbox("_psize");
-		finderUser("creator");
-		twindate("created");
-		twindate("modified");
-		$("#_psize").bindSelectSetValue(100);
-	});
-
-	document.addEventListener("keydown", function(event) {
-		const keyCode = event.keyCode || event.which;
-		if (keyCode === 13) {
-			loadGridData();
+	openLayer();
+	opener.<%=method%>(checkedItems, function(res) {
+		if(res) {
+			setTimeout(function() {
+				closeLayer();
+			}, 500);
 		}
 	})
+}
 
-	document.addEventListener("click", function(event) {
-		hideContextMenu();
-	})
-
-	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID);
+document.addEventListener("DOMContentLoaded", function() {
+	toFocus("partNumber");
+	const contenxtHeader = genColumnHtml(columns);
+	$("#h_item_ul").append(contenxtHeader);
+	$("#headerMenu").menu({
+		select : headerMenuSelectHandler
 	});
+	createAUIGrid(columns);
+	AUIGrid.resize(myGridID);
+	_createAUIGrid(_columns);
+	AUIGrid.resize(_myGridID);
+	selectbox("state");
+	selectbox("model");
+	selectbox("productmethod");
+	selectbox("deptcode");
+	selectbox("unit");
+	selectbox("mat");
+	selectbox("finish");
+	selectbox("manufacture");
+	selectbox("_psize");
+	finderUser("creator");
+	twindate("created");
+	twindate("modified");
+	$("#_psize").bindSelectSetValue(100);
+});
 
-	function spread(target) {
-		const e = document.querySelectorAll('.hidden');
-		// 버근가..
-		for (let i = 0; i < e.length; i++) {
-			const el = e[i];
-			const style = window.getComputedStyle(el);
-			const display = style.getPropertyValue("display");
-			if (display === "none") {
-				el.style.display = "table-row";
-				target.value = "▲접기";
-				selectbox("state");
-				selectbox("model");
-				selectbox("productmethod");
-				selectbox("deptcode");
-				selectbox("unit");
-				selectbox("mat");
-				selectbox("finish");
-				selectbox("manufacture");
-				selectbox("_psize");
-				finderUser("creator");
-				twindate("created");
-				twindate("modified");
-			} else {
-				el.style.display = "none";
-				target.value = "▼펼치기";
-				selectbox("state");
-				selectbox("model");
-				selectbox("productmethod");
-				selectbox("deptcode");
-				selectbox("unit");
-				selectbox("mat");
-				selectbox("finish");
-				selectbox("manufacture");
-				selectbox("_psize");
-				finderUser("creator");
-				twindate("created");
-				twindate("modified");
-			}
+document.addEventListener("keydown", function(event) {
+	const keyCode = event.keyCode || event.which;
+	if (keyCode === 13) {
+		loadGridData();
+	}
+})
+
+document.addEventListener("click", function(event) {
+	hideContextMenu();
+})
+
+window.addEventListener("resize", function() {
+	AUIGrid.resize(myGridID);
+});
+
+function spread(target) {
+	const e = document.querySelectorAll('.hidden');
+	// 버근가..
+	for (let i = 0; i < e.length; i++) {
+		const el = e[i];
+		const style = window.getComputedStyle(el);
+		const display = style.getPropertyValue("display");
+		if (display === "none") {
+			el.style.display = "table-row";
+			target.value = "▲접기";
+			selectbox("state");
+			selectbox("model");
+			selectbox("productmethod");
+			selectbox("deptcode");
+			selectbox("unit");
+			selectbox("mat");
+			selectbox("finish");
+			selectbox("manufacture");
+			selectbox("_psize");
+			finderUser("creator");
+			twindate("created");
+			twindate("modified");
+		} else {
+			el.style.display = "none";
+			target.value = "▼펼치기";
+			selectbox("state");
+			selectbox("model");
+			selectbox("productmethod");
+			selectbox("deptcode");
+			selectbox("unit");
+			selectbox("mat");
+			selectbox("finish");
+			selectbox("manufacture");
+			selectbox("_psize");
+			finderUser("creator");
+			twindate("created");
+			twindate("modified");
 		}
 	}
+}
 </script>
