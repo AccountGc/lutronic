@@ -35,9 +35,10 @@ String mode = request.getParameter("mode");
 			onStart : function() {
 				if(opener == null) {
 					parent.openLayer();
-				} else {
-					openLayer();
-				}
+				} 
+// 				else {
+// 					openLayer();
+// 				}
 			},
 			onComplete : function() {
 				if(opener == null) {
