@@ -58,6 +58,7 @@ import wt.method.RemoteMethodServer;
 import wt.org.OrganizationServicesHelper;
 import wt.org.WTPrincipal;
 import wt.org.WTUser;
+import wt.ownership.Ownership;
 import wt.pdmlink.PDMLinkProduct;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -811,6 +812,13 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		boolean isLatestIteration = VersionControlHelper.isLatestIteration((Iterated) persistable);
 
 		return (isLatestIteration && isLatestRevision);
+	}
+
+	/*
+	 * OWNERSHIP 객체 리턴
+	 */
+	public static Ownership sessionOwner() throws Exception {
+		return Ownership.newOwnership(SessionHelper.manager.getPrincipal());
 	}
 
 }

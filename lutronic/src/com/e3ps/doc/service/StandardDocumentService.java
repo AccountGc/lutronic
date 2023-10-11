@@ -34,6 +34,7 @@ import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.groupware.workprocess.AppPerLink;
 import com.e3ps.groupware.workprocess.AsmApproval;
+import com.e3ps.workspace.service.WorkspaceHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -236,6 +237,11 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		boolean temprary = dto.isTemprary();
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+		boolean isSelf = dto.isSelf();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -281,6 +287,17 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 문서 관련 객체 데이터 처리
 			saveLink(doc, dto);
+
+			// 결재 시작
+			if (isSelf) {
+				// 자가결재시
+				WorkspaceHelper.service.self(doc);
+			} else {
+				// 결재시작
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
+				}
+			}
 
 			trs.commit();
 			trs = null;
@@ -543,10 +560,10 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 문서 이름 세팅..
 			if (name.length() > 0) {
-				if(name.indexOf("-") == -1) {
+				if (name.indexOf("-") == -1) {
 					identity.setName(documentName + "-" + name);
-				}else {
-					identity.setName(documentName + "-" + name.split("-")[1]);					
+				} else {
+					identity.setName(documentName + "-" + name.split("-")[1]);
 				}
 			} else {
 				identity.setName(documentName);
@@ -625,10 +642,10 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 문서 이름 세팅..
 			if (name.length() > 0) {
-				if(name.indexOf("-") == -1) {
+				if (name.indexOf("-") == -1) {
 					identity.setName(documentName + "-" + name);
-				}else {
-					identity.setName(documentName + "-" + name.split("-")[1]);					
+				} else {
+					identity.setName(documentName + "-" + name.split("-")[1]);
 				}
 			} else {
 				identity.setName(documentName);
