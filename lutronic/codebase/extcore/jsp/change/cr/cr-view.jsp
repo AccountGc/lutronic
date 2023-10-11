@@ -136,8 +136,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 <script type="text/javascript">
 	$("#updateBtn").click(function () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		openLayer();
+		const url = getCallUrl("/cr/update?oid=" + oid);
 		document.location.href = url;
 	})
 
