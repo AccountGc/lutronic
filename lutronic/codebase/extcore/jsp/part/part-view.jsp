@@ -1,3 +1,5 @@
+<%@page import="com.e3ps.common.util.CommonUtil"%>
+<%@page import="wt.part.WTPart"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="com.e3ps.common.comments.beans.CommentsDTO"%>
 <%@page import="java.util.List"%>
@@ -11,6 +13,9 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 PartDTO dto = (PartDTO) request.getAttribute("dto");
+
+WTPart part = (WTPart)CommonUtil.getObject(dto.getOid());
+
 List<CommentsDTO> list = dto.getComments();
 String pnum = (String) request.getAttribute("pnum");
 WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
@@ -23,7 +28,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				품목 상세보기
+				품목 상세보기<%=part.getContainer().getPersistInfo().getObjectIdentifier().getStringValue() %>
 			</div>
 		</td>
 		<td class="right">
