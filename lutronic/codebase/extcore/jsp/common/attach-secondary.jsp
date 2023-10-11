@@ -2,11 +2,13 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
+String moduleType = request.getParameter("moduleType");
 %>
 <div class="AXUpload5" id="secondary_layer"></div>
 <div class="AXUpload5QueueBox_list" id="uploadQueueBox2" style=""></div>
 <script type="text/javascript">
 	const secondary = new AXUpload5();
+	var moduleType = "<%=moduleType%>";
 	function load() {
 		secondary.setConfig({
 			isSingleUpload : false,
@@ -70,27 +72,49 @@ String mode = request.getParameter("mode");
 			}
 		})
 		
-	<%if ("modify".equals(mode)) {%>
-		new AXReq("/Windchill/plm/content/list", {
-			pars : "oid=<%=oid%>&roleType=secondary",
-			onsucc : function(res) {
-				if (!res.e) {
-					const form = document.querySelector("form");
-					const data = res.secondaryFile;
-					const len = data.length;
-					for (let i = 0; i < len; i++) {
-						const secondaryTag = document.createElement("input");
-						secondaryTag.type = "hidden";
-						secondaryTag.id = data[i]._id_;
-						secondaryTag.name = "secondarys";
-						secondaryTag.value = data[i].cacheId;
-						form.appendChild(secondaryTag);
+		if(moduleType!=null && moduleType=="rohs"){
+			new AXReq("/Windchill/plm/content/rohsList", {
+				pars : "oid=<%=oid%>",
+				onsucc : function(res) {
+					if (!res.e) {
+						const form = document.querySelector("form");
+						const data = res.secondaryFile;
+						const len = data.length;
+						for (let i = 0; i < len; i++) {
+							const secondaryTag = document.createElement("input");
+							secondaryTag.type = "hidden";
+							secondaryTag.id = data[i]._id_;
+							secondaryTag.name = "secondarys";
+							secondaryTag.value = data[i].cacheId;
+							form.appendChild(secondaryTag);
+						}
+						secondary.setUploadedList(data);
 					}
-					secondary.setUploadedList(data);
 				}
-			}
-		});
-	<%}%>
+			});
+		}else{
+			<%if ("modify".equals(mode)) {%>
+			new AXReq("/Windchill/plm/content/list", {
+				pars : "oid=<%=oid%>&roleType=secondary",
+				onsucc : function(res) {
+					if (!res.e) {
+						const form = document.querySelector("form");
+						const data = res.secondaryFile;
+						const len = data.length;
+						for (let i = 0; i < len; i++) {
+							const secondaryTag = document.createElement("input");
+							secondaryTag.type = "hidden";
+							secondaryTag.id = data[i]._id_;
+							secondaryTag.name = "secondarys";
+							secondaryTag.value = data[i].cacheId;
+							form.appendChild(secondaryTag);
+						}
+						secondary.setUploadedList(data);
+					}
+				}
+			});
+			<%}%>
+		}	
 	}
 	load();
 

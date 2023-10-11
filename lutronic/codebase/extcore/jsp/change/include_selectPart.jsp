@@ -21,21 +21,16 @@ if(request.getParameter("multi")!=null){
 
 List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 %>
-<%
-if(moduleType=="" && !moduleType.equals("eco") || moduleType.equals("doc")){
-%>
-	<table class="button-table">
-		<tr>
-			<td class="left">
-				<div class="header">
-					<img src="/Windchill/extcore/images/header.png"> 관련품목
-				</div>
-			</td>
-		</tr>
-	</table>
-<%	
-}
-%>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png"> 
+				<%if(moduleType=="" && !moduleType.equals("eco") || moduleType.equals("doc")){%>관련품목<%}else{%>설계변경 부품<%	}%>
+			</div>
+		</td>
+	</tr>
+</table>
 
 <table class="create-table">
 	<colgroup>

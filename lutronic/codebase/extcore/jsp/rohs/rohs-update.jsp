@@ -69,6 +69,7 @@
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="<%=data.getOid() %>" name="oid" />
+						<jsp:param value="modify" name="mode"/>
 						<jsp:param value="rohs" name="moduleType"/>
 					</jsp:include>
 				</td>
