@@ -204,7 +204,8 @@
 				params.documentType = $("#documentType").val();
 				params.location = $("#location").val();
 				params.primary = primary;
-				params.secondary = toArray("secondarys");
+				const secondarys = toArray("secondarys");
+				params.secondarys = secondarys;
 				params.partList = AUIGrid.getGridData(partGridID);
 				params.docList = AUIGrid.getGridData(myGridID90);
 				

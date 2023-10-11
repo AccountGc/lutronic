@@ -50,13 +50,13 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">문서설명</th>
 				<td class="indent5" colspan="3">
-					<textarea name="description" id="description" rows="5"><%=dto.getDescription()%></textarea>
+					<textarea name="description" id="description" rows="5"><%=dto.getDescription() == null ? "" : dto.getDescription()%></textarea>
 				</td>
 			</tr>	
 			<tr>
 				<th class="lb">수정사유</th>
 				<td class="indent5" colspan="3">
-					<textarea name="iterationNote" id="iterationNote" rows="2"><%=dto.getDescription()%></textarea>
+					<textarea name="iterationNote" id="iterationNote" rows="2"></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -64,7 +64,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-						<jsp:param value="modify" name="mode" />
+						<jsp:param value="modify" name="mode"/>
 					</jsp:include>
 				</td>
 			</tr>
@@ -73,6 +73,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+						<jsp:param value="modify" name="mode"/>
 					</jsp:include>
 				</td>
 			</tr>
@@ -203,11 +204,11 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 					alert("금형타입을 선택하세요.");
 					return;
 				}
-// 				const primary = document.querySelector("input[name=primary]").value;
-// 				if(primary.length<0) {
-// 					alert("주 첨부파일을 추가해주세요.");
-// 					return;
-// 				}
+				const primary = document.querySelector("input[name=primary]").value;
+				if(primary.length<0) {
+					alert("주 첨부파일을 추가해주세요.");
+					return;
+				}
 				
 				if (!confirm("수정 하시겠습니까?")) {
 					return;
@@ -219,8 +220,9 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				params.name = $("#name").val();
 				params.description = $("#description").val();
 				params.iterationNote = $("#iterationNote").val();
-// 				params.primary = primary;
-// 				params.secondary = toArray("secondarys");
+				params.primary = primary;
+				const secondarys = toArray("secondarys");
+				params.secondarys = secondarys;
 				params.manufacture_code = $("#manufacture").val();
 				params.moldtype_code = $("#moldtype").val();
 				params.moldnumber = $("#moldnumber").val();
