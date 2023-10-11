@@ -111,7 +111,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th>주 첨부파일</th>
 				<td colspan="3">
-					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
+					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
 					</jsp:include>
 				</td>
@@ -119,7 +119,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th>첨부파일</th>
 				<td colspan="3">
-					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
+					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
 					</jsp:include>
 				</td>
