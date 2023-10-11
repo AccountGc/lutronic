@@ -77,15 +77,13 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">문서명</th>
+		<th class="lb">문서명</th>
 		<td class="indent5">
 			<input type="text" name="docName" id="docName" class="width-300" value="<%=dto.getName()%>">
 		</td>
 		<th class="req">문서종류</th>
 		<td class="indent5">
-			<input type="text" name="documentName" id="documentName" class="width-300" value="<%if (dto.getDocumentName() != null) {
-	dto.getDocumentName();
-}%>">
+			<input type="text" name="documentName" id="documentName" class="width-200" value="<%= dto.getName().indexOf("-") > -1 ? dto.getName().split("-")[0] : dto.getName() %>">
 			<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
 				<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 				</ul>
@@ -334,17 +332,6 @@ iframe {
 		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 		// 관련CR
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
-		
-		
-		if(temprary) {
-			if (!confirm("임시저장하시겠습니까?");
-				return false;
-			}	
-		} else {
-			if (!confirm("<%=title%>하시겠습니까?")) {
-				return false;
-			}	
-		}
 
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
@@ -363,17 +350,17 @@ iframe {
 			alert("주 첨부파일을 첨부해주세요.");
 			return false;
 		}
-
-		if (temprary) {
-			if (!confirm("임시저장하시겠습니까??")) {
-				return false;
-			}
-		} else {
-			if (!confirm("등록하시겠습니까?")) {
-				return false;
-			}
-		}
 		
+		if(temprary) {
+			if (!confirm("임시저장하시겠습니까?")){
+				return false;
+			}	
+		} else {
+			if (!confirm("<%=title%>하시겠습니까?")) {
+				return false;
+			}	
+		}
+
 		const params = {
 			oid : oid,
 			name : name.value,
@@ -429,6 +416,36 @@ iframe {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID105);
 		$("#documentType").bindSelectDisabled(true);
+		
+		// 문서명 규칙
+		$("#documentName").bindSelector({
+			reserveKeys : {
+				options : "list",
+				optionValue : "value",
+				optionText : "name"
+			},
+			optionPrintLength : "all",
+			onsearch : function(id, obj, callBack) {
+				const value = document.getElementById(id).value;
+				const url = getCallUrl("/doc/finder");
+				const params = {
+					value : value,
+				};
+				logger(params);
+				call(url, params, function(data) {
+					callBack({
+						options : data.list
+					})
+				})
+			},
+			onchange : function() {
+				const id = this.targetID;
+				if (this.selectedOption != null) {
+					const value = this.selectedOption.value;
+					document.getElementById(id).value = value;
+				}
+			},
+		});
 	});
 
 	window.addEventListener("resize", function() {

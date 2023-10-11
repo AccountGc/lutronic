@@ -53,6 +53,9 @@ public class NumberCodeHelper {
 	 */
 	public String getNumberCodeName(String code, String codeType) throws Exception {
 		
+		if(code == null) {
+			return null;
+		}
 		String[] codes = code.split(",");
 		
 		QuerySpec query = new QuerySpec();

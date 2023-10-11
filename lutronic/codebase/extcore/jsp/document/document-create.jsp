@@ -375,6 +375,8 @@ iframe {
 					temprary : temprary
 				};
 				parent.openLayer();
+				
+				console.log(params);
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
@@ -382,7 +384,6 @@ iframe {
 					}
 					parent.closeLayer();
 				});
-
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

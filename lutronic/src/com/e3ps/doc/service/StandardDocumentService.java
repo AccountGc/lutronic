@@ -624,14 +624,14 @@ public class StandardDocumentService extends StandardManager implements Document
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 
 			// 문서 이름 세팅..
-			if ("$$MMDocument".equals(documentType)) {
-				identity.setName(name);
-			} else {
-				if (name.length() > 0) {
+			if (name.length() > 0) {
+				if(name.indexOf("-") == -1) {
 					identity.setName(documentName + "-" + name);
-				} else {
-					identity.setName(documentName);
+				}else {
+					identity.setName(documentName + "-" + name.split("-")[1]);					
 				}
+			} else {
+				identity.setName(documentName);
 			}
 //			master.setDocType(docType);
 			identity.setNumber(number);
