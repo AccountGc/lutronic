@@ -1856,47 +1856,4 @@ public class StandardGroupwareService extends StandardManager implements Groupwa
 			}
 		}
 	}
-
-	@Override
-	public void apply(Map<String, String> params) throws Exception {
-		String oid = params.get("oid");
-		String creatorOid = params.get("creatorOid");
-		ReferenceFactory rf = new ReferenceFactory();
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			WTReference ref = rf.getReference(oid);
-			System.out.println("ref=" + ref);
-			if (ref == null) {
-				throw new Exception("해당 OID에 일치하는 객체가 없습니다.");
-			}
-
-			Persistable persistable = ref.getObject();
-			if (!(persistable instanceof Iterated)) {
-				throw new Exception("작성자를 구현한 객체가 아닙니다.");
-			}
-
-			// 사용자 변경은 안되는거로... 기안자 의미가 있어야함 
-			Iterated iterated = (Iterated) persistable;
-			iterated = (Iterated) PersistenceHelper.manager.refresh(iterated);
-
-			System.out.println(PersistenceHelper.isPersistent(iterated));
-
-			WTUser user = (WTUser) CommonUtil.getObject(creatorOid);
-
-			WTPrincipalReference principalReference = WTPrincipalReference.newWTPrincipalReference(user);
-			VersionControlHelper.assignIterationCreator(iterated, principalReference);
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
-		}
-	}
 }

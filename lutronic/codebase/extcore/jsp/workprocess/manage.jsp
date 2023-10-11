@@ -192,47 +192,6 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 			</tr>
 		</table>
 
-		<!-- 기안자 변경 -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						기안자 변경
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="search-table">
-			<colgroup>
-				<col width="174">
-				<col width="*">
-				<col width="174">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>OID</th>
-				<td class="indent5">
-					<input type="text" name="target" id="target" class="width-300">
-				</td>
-				<th>변경 기안자</th>
-				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-				</td>
-			</tr>
-		</table>
-		<table class="button-table">
-			<tr>
-				<td class="center">
-					<input type="button" value="기안자 변경" title="기안자 변경" class="blue" onclick="apply();">
-				</td>
-			</tr>
-		</table>
-
-
-
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("attrName");
@@ -240,42 +199,6 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 				finderUser("creator");
 				document.getElementById("msg").style.display = "none";
 			})
-
-			// 기안자 변경
-			function apply() {
-				const target = document.getElementById("target");
-				const creator = document.getElementById("creator");
-				const creatorOid = document.getElementById("creatorOid");
-				if (target.value === "") {
-					alert("기안자 변경할 객체의 OID를 입력하세요.");
-					target.focus();
-					return false;
-				}
-				if (creator.value === "") {
-					alert("변경할 기안자를 선택하세요.");
-					creator.focus();
-					return false;
-				}
-				const url = getCallUrl("/groupware/apply");
-				const params = {
-					oid : target.value,
-					creatorOid : creatorOid.value
-				}
-				if (!confirm("변경 하시겠습니까?")) {
-					return false;
-				}
-
-				parent.openLayer();
-				call(url, params, function(data) {
-					alert(data.msg);
-					if (data.result) {
-
-					} else {
-
-					}
-					parent.closeLayer();
-				})
-			}
 
 			function info() {
 				const oid = document.getElementById("value");
