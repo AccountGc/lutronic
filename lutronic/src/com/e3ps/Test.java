@@ -6,22 +6,30 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.eo.dto.EoDTO;
+import com.e3ps.common.util.WCUtil;
 import com.e3ps.rohs.ROHSAttr;
 import com.e3ps.rohs.ROHSContHolder;
 
 import wt.content.ApplicationData;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
+import wt.folder.Folder;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-
+		ReferenceFactory rf = new ReferenceFactory();
+		EChangeOrder ec  = (EChangeOrder) rf.getReference("com.e3ps.change.EChangeOrder:282303").getObject();
+		
+		
 		//ROHSContHolder 의 FileType 를  ApplicationData 의 roletype로 변경
 		QuerySpec query = new QuerySpec();
+		System.out.println(WCUtil.getWTContainerRef());
 		int idx = query.appendClassList(ROHSContHolder.class, true);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		

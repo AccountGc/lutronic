@@ -2,6 +2,8 @@ package com.e3ps.change.eo.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
@@ -37,6 +39,7 @@ public class EoDTO {
 	private ArrayList<Map<String, String>> rows90 = new ArrayList<>(); // 관련문서
 	private ArrayList<Map<String, String>> rows200 = new ArrayList<>(); // ECA
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 제품코드
+	private ArrayList<Map<String, String>> modelInfo = new ArrayList<>();
 
 	public EoDTO() {
 
@@ -51,10 +54,13 @@ public class EoDTO {
 		setNumber(eo.getEoNumber());
 		setName(eo.getEoName());
 		setEoType(eo.getEoType());
+//		modelInfo
 		// 모델 코드 처리??
 		if (eo.getModel() != null) {
 			setModel_name(EoHelper.manager.displayToModel(eo.getModel()));
 		}
+		
+		setModelInfo(getModel(eo.getModel()));
 		setState(eo.getLifeCycleState().getDisplay());
 		setCreator(eo.getCreatorFullName());
 		setCreatedDate(eo.getCreateTimestamp().toString().substring(0, 10));
@@ -64,4 +70,23 @@ public class EoDTO {
 		setEoCommentC(eo.getEoCommentC());
 
 	}
+
+	private ArrayList<Map<String, String>> getModel(String model) throws Exception {
+		ArrayList<Map<String, String>> result = new ArrayList<Map<String, String>>();
+		String[] ss = model.split(",");
+		for (int i = 0; i < ss.length; i++) {
+			Map<String, String> data = new HashMap<String, String>();
+			String s = ss[i];
+			NumberCode code = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+			data.put("name", code.getName());
+			data.put("code", code.getCode());
+			data.put("sort", code.getSort());
+			data.put("description", code.getDescription());
+			data.put("enabled", code.getEngName());
+			data.put("oid", code.getPersistInfo().getObjectIdentifier().getStringValue());
+			result.add(data);
+		}			
+		return result;
+	}
+	
 }
