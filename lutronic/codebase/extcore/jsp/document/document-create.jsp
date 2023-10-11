@@ -43,7 +43,6 @@ iframe {
 				</td>
 				<td class="right">
 					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
@@ -204,7 +203,17 @@ iframe {
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="5">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
+
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 			<jsp:param value="" name="oid" />
@@ -246,6 +255,16 @@ iframe {
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
+
+
+		<table class="button-table">
+			<tr>
+				<td class="center">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
+			</tr>
+		</table>
 
 		<script type="text/javascript">
 			const oEditors = [];
@@ -375,7 +394,7 @@ iframe {
 					temprary : temprary
 				};
 				parent.openLayer();
-				
+
 				console.log(params);
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -398,11 +417,13 @@ iframe {
 				createAUIGrid100(columns100);
 				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);
+				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
 				AUIGrid.resize(myGridID100);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
+				AUIGrid.resize(myGridID8);
 
 				// 문서명 규칙
 				$("#documentName").bindSelector({
@@ -441,6 +462,7 @@ iframe {
 				AUIGrid.resize(myGridID100);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
+				AUIGrid.resize(myGridID8);
 			});
 		</script>
 	</form>

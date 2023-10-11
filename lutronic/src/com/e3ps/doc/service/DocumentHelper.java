@@ -103,35 +103,32 @@ public class DocumentHelper {
 				modifiedTo);
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-		if (folder != null) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
-			ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
-			SearchCondition fsc = new SearchCondition(fca, "=",
-					new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
-			fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
-			fsc.setOuterJoin(0);
-			query.appendWhere(fsc, new int[] { f_idx, idx });
+		if (query.getConditionCount() > 0) {
 			query.appendAnd();
-
-			query.appendOpenParen();
-			long fid = folder.getPersistInfo().getObjectIdentifier().getId();
-			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
-					new int[] { f_idx });
-
-			ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
-			for (int i = 0; i < folders.size(); i++) {
-				Folder sub = (Folder) folders.get(i);
-				query.appendOr();
-				long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
-				query.appendWhere(
-						new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
-						new int[] { f_idx });
-			}
-			query.appendCloseParen();
 		}
+		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+		SearchCondition fsc = new SearchCondition(fca, "=",
+				new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
+		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+		fsc.setOuterJoin(0);
+		query.appendWhere(fsc, new int[] { f_idx, idx });
+		query.appendAnd();
+
+		query.appendOpenParen();
+		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+				new int[] { f_idx });
+
+		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
+		for (int i = 0; i < folders.size(); i++) {
+			Folder sub = (Folder) folders.get(i);
+			query.appendOr();
+			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
+					new int[] { f_idx });
+		}
+		query.appendCloseParen();
 
 		// 최신 이터레이션.
 		if (latest) {

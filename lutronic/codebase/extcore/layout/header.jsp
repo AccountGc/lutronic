@@ -52,8 +52,8 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						<a onclick="moveToPage(this, '/notice/list', '> 나의업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/workItem', '> 나의업무 > 작업함');">
-							작업함
+						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
+							결재함
 							<span class="label label-info float-right">
 								<%
 								//=count.get("check")
@@ -62,7 +62,17 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=ing', '> 나의업무 > 진행함');">
+						<a onclick="moveToPage(this, '/activity/llist', '> 나의업무 > ECA 활동함');">
+							ECA 활동함
+							<span class="label label-info float-right">
+								<%
+								//=count.get("check")
+								%>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/workspace/progress', '> 나의업무 > 진행함');">
 							진행함
 							<span class="label label-info float-right">
 								<%
@@ -72,7 +82,7 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=complete', '> 나의업무 > 완료함');">
+						<a onclick="moveToPage(this, '/workspace/complete', '> 나의업무 > 완료함');">
 							완료함
 							<span class="label label-info float-right">
 								<%
@@ -82,8 +92,18 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의업무 > 수신함');">
+						<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
 							수신함
+							<span class="label label-info float-right">
+								<%
+								//=count.get("receive")
+								%>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');">
+							반려함
 							<span class="label label-info float-right">
 								<%
 								//=count.get("receive")
