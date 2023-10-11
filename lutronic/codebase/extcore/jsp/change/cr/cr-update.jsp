@@ -109,7 +109,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th class="lb">변경구분</th>
-				<td>
+				<td class="indent5" colspan="3">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
@@ -132,19 +132,19 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">변경사유</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentA" id="eoCommentA" rows="6"><%= dto.getEoCommentA() != null ? dto.getEoCommentA() : "" %></textarea>
+					<textarea name="eoCommentA" id="eoCommentA" rows="10"><%= dto.getEoCommentA() != null ? dto.getEoCommentA() : "" %></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">변경사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentB" id="eoCommentB" rows="6"><%= dto.getEoCommentB() != null ? dto.getEoCommentB() : "" %></textarea>
+					<textarea name="eoCommentB" id="eoCommentB" rows="10"><%= dto.getEoCommentB() != null ? dto.getEoCommentB() : "" %></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">참고사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentC" id="eoCommentC" rows="6"><%= dto.getEoCommentC() != null ? dto.getEoCommentC() : "" %></textarea>
+					<textarea name="eoCommentC" id="eoCommentC" rows="10"><%= dto.getEoCommentC() != null ? dto.getEoCommentC() : "" %></textarea>
 				</td>
 			</tr>
 			<tr>

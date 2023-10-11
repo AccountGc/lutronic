@@ -105,7 +105,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			</tr>
 			<tr>
 				<th class="lb">변경구분</th>
-				<td>
+				<td class="indent5" colspan="3">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
@@ -127,19 +127,19 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			<tr>
 				<th class="lb">변경사유</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentA" id="eoCommentA" rows="6"></textarea>
+					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">변경사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea>
+					<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">참고사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentC" id="eoCommentC" rows="6"></textarea>
+					<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea>
 				</td>
 			</tr>
 			<tr>

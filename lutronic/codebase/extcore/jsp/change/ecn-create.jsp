@@ -50,11 +50,11 @@
 			</tr>
 			<tr>
 				<th class="lb">변경사유</th>
-				<td class="indent5" colspan="7"><textarea name="eoCommentA" id="eoCommentA" rows="6"></textarea></td>
+				<td class="indent5" colspan="7"><textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea></td>
 			</tr>
 			<tr>
 				<th class="lb">변경사항</th>
-				<td class="indent5" colspan="7"><textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea></td>
+				<td class="indent5" colspan="7"><textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea></td>
 			</tr>
 			<tr>
 				<th class="lb">설계변경 부품</th>
