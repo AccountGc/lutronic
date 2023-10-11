@@ -27,6 +27,7 @@
 	- Shell -> ResourceBuild.bat wt.lifecycle.**
 	- Shell -> ResourceBuild.bat wt.content.**
 	- Shell -> ResourceBuild.bat wt.doc.** 
+	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.code.** -Dbundle.buildLocales=true
 	- codebase -> ant -f MakeJar.xml
 	
 8. 문서양식로더

@@ -19,8 +19,6 @@ import wt.part.WTPartDescribeLink;
 @RemoteInterface
 public interface DocumentService {
 
-	Map<String, Object> requestDocumentMapping(Map<String, Object> params);
-
 	ResultData approvalPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
 	List<DocumentDTO> include_documentLink(String module, String oid);

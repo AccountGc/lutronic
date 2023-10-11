@@ -11,6 +11,7 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.eo.column.EoColumn;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
@@ -35,7 +36,6 @@ import wt.clients.folder.FolderTaskLogic;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
-import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -189,7 +189,7 @@ public class DocumentHelper {
 	 * 관련 문서
 	 */
 	private Object referenceDoc(WTDocument doc, ArrayList<Map<String, Object>> list) throws Exception {
-		
+
 		QueryResult result = PersistenceHelper.manager.navigate(doc, "useBy", DocumentToDocumentLink.class);
 		while (result.hasMoreElements()) {
 			WTDocument ref = (WTDocument) result.nextElement();
@@ -249,7 +249,7 @@ public class DocumentHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 관련 EO
 	 */
@@ -500,4 +500,27 @@ public class DocumentHelper {
 		return JSONArray.fromObject(list);
 	}
 
+	/**
+	 * 문서 종류 바인더
+	 */
+	public ArrayList<Map<String, String>> finder(Map<String, String> params) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		String value = params.get("value");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "DOCUMENTNAME");
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, value);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode n = (NumberCode) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("value", n.getName());
+			map.put("name", n.getName());
+			list.add(map);
+		}
+		return list;
+	}
 }

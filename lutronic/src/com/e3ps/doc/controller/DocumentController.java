@@ -531,4 +531,20 @@ public class DocumentController extends BaseController {
 		}
 	}
 
+	@Description(value = "문서 종료 바인더")
+	@ResponseBody
+	@PostMapping(value = "/finder")
+	public Map<String, Object> finder(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, String>> list = DocumentHelper.manager.finder(params);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }
