@@ -314,17 +314,8 @@ iframe {
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName");
-				const temprary = !!temp;
+				const temprary = JSON.parse(temp);
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
-				} else {
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
-				}
 				const url = getCallUrl("/doc/create");
 
 				// 관련문서
@@ -337,28 +328,40 @@ iframe {
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
-				
-// 				if(isEmpty(formType.value)){
-// 					alert("문서템플릿을 선택해주세요.");
-// 					return;
-// 				}
-				
-				if(isEmpty(documentName.value)){
+
+				// 				if(isEmpty(formType.value)){
+				// 					alert("문서템플릿을 선택해주세요.");
+				// 					return;
+				// 				}
+
+				if (isNull(documentName.value)) {
 					alert("문서종류를 입력해주세요.");
 					documentName.focus();
-					return;
+					return false;
 				}
-				
-				if(isEmpty(documentType.value)){
+
+				if (isNull(documentType.value)) {
 					alert("문서유형을 선택해주세요.");
-					return;
+					return false;
 				}
-				
-				if(primary == null){
+
+				console.log(primary);
+
+				if (primary == null) {
 					alert("주 첨부파일을 첨부해주세요.");
-					return;
+					return false;
 				}
-				
+
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
+				}
+
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,

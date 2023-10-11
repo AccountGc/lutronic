@@ -217,7 +217,7 @@ iframe {
 
 <!-- 관련 품목 -->
 <jsp:include page="/extcore/jsp/part/include/part-include.jsp">
-	<jsp:param value="<%=dto.getOid() %>" name="oid" />
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="create" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
@@ -225,7 +225,7 @@ iframe {
 
 <!-- 	관련 문서 -->
 <jsp:include page="/extcore/jsp/document/include/document-include.jsp">
-	<jsp:param value="<%=dto.getOid() %>" name="oid" />	
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="create" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
@@ -233,7 +233,7 @@ iframe {
 
 <!-- 	관련 EO -->
 <jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp">
-	<jsp:param value="<%=dto.getOid() %>" name="oid" />
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="create" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
@@ -241,7 +241,7 @@ iframe {
 
 <!-- 	관련 CR -->
 <jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
-	<jsp:param value="<%=dto.getOid() %>" name="oid" />
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
@@ -319,9 +319,8 @@ iframe {
 		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
 		const documentName = document.getElementById("documentName").value;
-		if (!confirm("<%=title%>하시겠습니까?")) {
-			return false;
-		}
+		const temprary = JSON.parse(temp);
+		
 		const url = getCallUrl("/doc/<%=mode%>");
 
 		// 관련문서
@@ -334,6 +333,18 @@ iframe {
 		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 		// 관련CR
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+		
+		
+		if(temprary) {
+			if (!confirm("임시저장하시겠습니까?");
+				return false;
+			}	
+		} else {
+			if (!confirm("<%=title%>하시겠습니까?")) {
+				return false;
+			}	
+		}
+		
 		const params = {
 			oid : oid,
 			name : name.value,
@@ -355,7 +366,8 @@ iframe {
 			rows91 : rows91,
 			rows100 : rows100,
 			rows101 : rows101,
-			rows105 : rows105
+			rows105 : rows105,
+			temprary : temprary
 		};
 		
 		logger(params);
