@@ -20,6 +20,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
+		<input type="hidden" name="lastNum" id="lastNum">
+		<input type="hidden" name="curPage" id="curPage">
 
 		<table class="search-table">
 			<colgroup>
@@ -150,9 +152,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			const props = {
 				headerHeight : 30,
 				showRowNumColumn : true,
-				showRowCheckColumn : true,
 				rowNumHeaderText : "번호",
-				showAutoNoDataMessage : false,
+				showAutoNoDataMessage : true,
 				selectionMode : "multipleCells",
 				enableMovingColumn : true,
 				enableFilter : true,
@@ -161,7 +162,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				enableRightDownFocus : true,
 				filterLayerWidth : 320,
 				filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-				enableRowCheckShiftKey : true
+				enableRowCheckShiftKey : true,
+				showInlineFilter : false
 			};
 			myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 			loadGridData();
@@ -184,8 +186,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			call(url, params, function(data) {
 				AUIGrid.removeAjaxLoader(myGridID);
 				if (data.result) {
-					createPagingNavigator(data.curPage);
+					totalPage = Math.ceil(data.total / data.pageSize);
 					document.getElementById("sessionid").value = data.sessionid;
+					createPagingNavigator(data.curPage);
 					AUIGrid.setGridData(myGridID, data.list);
 				} else {
 					alert(data.msg);
@@ -208,12 +211,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			selectbox("_psize");
 		});
 
-		function exportExcel() {
-			// 				const exceptColumnFields = [ "primary" ];
-			// 				const sessionName = document.getElementById("sessionName").value;
-			// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-		}
-
 		document.addEventListener("keydown", function(event) {
 			const keyCode = event.keyCode || event.which;
 			if (keyCode === 13) {
@@ -231,7 +228,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 		function create() {
 			const url = getCallUrl("/notice/create");
-			_popup(url, 1500, 550, "n");
+			_popup(url, 1500, 650, "n");
 		}
 	</script>
 </body>
