@@ -369,7 +369,7 @@ iframe {
 					description : description.value,
 					content : content.value,
 					secondarys : secondarys,
-					primary : primary,
+					primary : primary.value,
 					location : location.value,
 					model_code : model,
 					deptcode_code : deptcode,
