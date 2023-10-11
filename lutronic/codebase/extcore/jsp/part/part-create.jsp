@@ -339,31 +339,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</jsp:include>
 		<br>
 		
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
-					</div>
-				</td>
-			</tr>
-		</table>
-		
-		<table class="search-table">
-			<colgroup>
-				<col width="150">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th>관련 RoHS</th>
-				<td class="indent5" >
-					<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
+		<!-- 관련 RoHS -->
+		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+		</jsp:include>
 		
 		<table class="button-table">
 			<tr>

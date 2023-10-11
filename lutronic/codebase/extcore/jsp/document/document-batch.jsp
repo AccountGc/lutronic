@@ -202,7 +202,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				},
 			}, {
 				dataField : "documentType_code",
-				headerText : "문서분류",
+				headerText : "문서유형",
 				dataType : "string",
 				width : 120,
 				cellMerge : true,
@@ -883,18 +883,13 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						return false;
 					}
 
-					if (isNull(item.name)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 2, "문서명을 입력하세요.");
-						return false;
-					}
-
 					if (isNull(item.lifecycle)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 3, "결재방식을 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.documentType_code)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "문서분류를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "문서유형을 선택하세요.");
 						return false;
 					}
 
