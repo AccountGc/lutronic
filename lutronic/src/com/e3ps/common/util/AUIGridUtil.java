@@ -9,6 +9,7 @@ import java.util.Map;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.doc.service.DocumentHelper;
@@ -194,6 +195,7 @@ public class AUIGridUtil {
 
 		} else if (per instanceof EChangeRequest) {
 			// CR 연관 겍체
+			return CrHelper.manager.reference(oid, type);
 		} else if (per instanceof EChangeNotice) {
 			// ECN 연관 객체
 		}

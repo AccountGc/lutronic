@@ -11,6 +11,7 @@ import com.e3ps.change.service.ChangeUtil;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -57,6 +58,8 @@ public class CrDTO {
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
+	
+	private Map<String, Object> contentMap = null;
 
 	public CrDTO() {
 
@@ -90,6 +93,7 @@ public class CrDTO {
 		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(CrHelper.manager.displayToModel(cr.getModel()));
+		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
 	}
 	
 	/**

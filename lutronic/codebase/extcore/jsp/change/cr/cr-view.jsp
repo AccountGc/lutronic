@@ -1,4 +1,5 @@
 <%@page import="com.e3ps.change.cr.dto.CrDTO"%>
+<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@include file="/extcore/jsp/common/css.jsp"%>
@@ -111,9 +112,25 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th>주 첨부파일</th>
 				<td colspan="3">
-					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
-						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
-					</jsp:include>
+					<%
+					Map<String, Object> contentMap = dto.getContentMap();
+					if (contentMap != null) {
+					%>
+					<div>
+						<a href="<%=contentMap.get("url")%>">
+							<span style="position: relative; bottom: 2px;"><%=contentMap.get("name")%></span>
+							<img src="<%=contentMap.get("fileIcon")%>" style="position: relative; top: 1px;">
+						</a>
+					</div>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>등록된 계변경 부품 내역파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>

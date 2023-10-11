@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.cr.dto.CrDTO;
@@ -21,6 +22,7 @@ import wt.content.ContentServerHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
@@ -199,19 +201,81 @@ public class StandardCrService extends StandardManager implements CrService {
 
 	@Override
 	public void modify(CrDTO dto) throws Exception {
-		String oid = dto.getOid();
+		
+		String writer_oid = dto.getWriter_oid();
+		String proposer_oid = dto.getProposer_oid();
+		String createDepart_code = dto.getCreateDepart_code();
+		
+		ArrayList<String> sections = dto.getSections();
+		ArrayList<Map<String, String>> rows101 = dto.getRows101();
+		ArrayList<Map<String, String>> rows300 = dto.getRows300();
+//		String model_oid = dto.getModel_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+			
+			// 모델 배열 처리
+			String model = "";
+			for (int i = 0; i < rows300.size(); i++) {
+				Map<String, String> row300 = rows300.get(i);
+				String oid = row300.get("oid");
+				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+				if(n != null) {
+					if (rows300.size() - 1 == i) {
+						model += n.getCode();
+					} else {
+						model += n.getCode() + ",";
+					}					
+				}
+			}
+			
+			String changeSection = "";
+			for (int i = 0; i < sections.size(); i++) {
+				String value = sections.get(i);
+				if (sections.size() - 1 == i) {
+					changeSection += value;
+				} else {
+					changeSection += value + ",";
+				}
+			}
 
-			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(dto.getOid());
+			
+			cr.setEoName(dto.getName());
+			cr.setModel(model);
+			cr.setEoCommentA(dto.getEoCommentA());
+			cr.setEoCommentB(dto.getEoCommentB());
+			cr.setEoCommentC(dto.getEoCommentC());
+			
+			cr.setEoName(dto.getName());
+			cr.setEoNumber(dto.getNumber());
+			cr.setCreateDate(dto.getCreatedDate());
+			WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
+			if(writer != null) {
+				cr.setWriter(writer.getFullName());				
+			}
+			cr.setApproveDate(dto.getApproveDate());
+			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
+			cr.setModel(model);
+
+			WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
+			if(proposer != null) {
+				cr.setProposer(proposer.getFullName());				
+			}
+			cr.setChangeSection(changeSection);
+			cr.setEoCommentA(dto.getEoCommentA());
+			cr.setEoCommentB(dto.getEoCommentB());
+			cr.setEoCommentC(dto.getEoCommentC());
+
+			cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
 
 			// 첨부 파일 삭제
 			removeAttach(cr);
+			saveAttach(cr, dto);
 
 			// 링크 삭제
 			deleteLink(cr);
-			PersistenceHelper.manager.modify(cr);
+			saveLink(cr, rows101);
 
 			trs.commit();
 			trs = null;

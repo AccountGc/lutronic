@@ -226,6 +226,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				}
 				
 				const params = {
+					oid: "<%= dto.getOid() %>",
 					name : name.value,
 					number : number.value,
 					createdDate : toId("createdDate"),

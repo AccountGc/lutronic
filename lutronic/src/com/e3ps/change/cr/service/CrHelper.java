@@ -4,14 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.AUIGridUtil;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.doc.column.DocumentColumn;
 
+import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
+import wt.util.WTException;
 
 public class CrHelper {
 
@@ -86,5 +97,33 @@ public class CrHelper {
 	 */
 	public String displayToDept(String dept) throws Exception {
 		return NumberCodeHelper.manager.getNumberCodeName(dept, "DEPTCODE");
+	}
+
+	public JSONArray reference(String oid, String type) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+		if ("cr".equalsIgnoreCase(type)) {
+			// CR
+			return JSONArray.fromObject(referenceCr(cr, list));
+		} else if ("code".equalsIgnoreCase(type)) {
+			// 제품명
+			return JSONArray.fromObject(referenceCode(cr, list));
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	private Object referenceCode(EChangeRequest cr, ArrayList<Map<String, Object>> list) {
+		return list;
+	}
+
+	private Object referenceCr(EChangeRequest cr, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(cr, "useBy", EcrToEcrLink.class);
+		while (result.hasMoreElements()) {
+			EChangeRequest doc = (EChangeRequest) result.nextElement();
+			CrColumn dto = new CrColumn(doc);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
 	}
 }

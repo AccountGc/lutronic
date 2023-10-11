@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -92,6 +93,7 @@ if (create || update) {
 		}
 		myGridID300 = AUIGrid.create("#grid300", columnLayout, props);
 		<%if (view || update) {%>
+<%-- 		AUIGrid.setGridData(myGridID300, <%=AUIGridUtil.include(oid, "code")%>); --%>
 		<%}%>
 	}
 	
