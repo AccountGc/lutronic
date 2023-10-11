@@ -135,7 +135,7 @@ const columns = [ {
 		baseUrl : "javascript",
 		jsCallback : function(rowIndex, columnIndex, value, item) {
 			const oid = item.oid;
-			const url = getCallUrl("/changeECR/view?oid=" + oid);
+			const url = getCallUrl("/ecpr/view?oid=" + oid);
 			popup(url, 1600, 800);
 		}
 	},
@@ -153,7 +153,7 @@ const columns = [ {
 		baseUrl : "javascript",
 		jsCallback : function(rowIndex, columnIndex, value, item) {
 			const oid = item.oid;
-			const url = getCallUrl("/changeECR/view?oid=" + oid);
+			const url = getCallUrl("/ecpr/view?oid=" + oid);
 			popup(url, 1600, 800);
 		}
 	},
@@ -251,7 +251,7 @@ function createAUIGrid(columnLayout) {
 
 function loadGridData() {
 	let params = new Object();
-	const url = getCallUrl("/changeECR/list");
+	const url = getCallUrl("/ecpr/list");
 	const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
 	params = toField(params, field);
 	AUIGrid.showAjaxLoader(myGridID);
@@ -287,12 +287,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("changeSection");
 	selectbox("model");
 });
-
-function exportExcel() {
-	// 				const exceptColumnFields = [ "primary" ];
-	// 				const sessionName = document.getElementById("sessionName").value;
-	// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-}
 
 document.querySelector("#addNumberCode").addEventListener("click", () => {
 	const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");

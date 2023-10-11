@@ -113,8 +113,8 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecr-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecpr-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecpr-list');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -126,18 +126,19 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					</select> 
 					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('document-list');">
+					<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('ecpr-list');">
 				</td>
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> 
+		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "eoNumber",
+					dataField : "number",
 					headerText : "ECPR 번호",
 					dataType : "string",
 					width : 120,
@@ -150,12 +151,12 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/changeECR/view?oid=" + oid);
+							const url = getCallUrl("/ecpr/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
 				}, {
-					dataField : "eoName",
+					dataField : "name",
 					headerText : "ECPR 제목",
 					dataType : "string",
 					width : 120,
@@ -168,7 +169,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/changeECR/view?oid=" + oid);
+							const url = getCallUrl("/ecpr/view?oid=" + oid);
 							popup(url, 1600, 800);
 						}
 					},
@@ -227,7 +228,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 180,
@@ -240,20 +241,21 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-					headerHeight : 30,
-					showRowNumColumn : true,
-					fillColumnSizeMode: true,
-					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : true,
-					selectionMode : "multipleCells",
-					enableMovingColumn : true,
-					showInlineFilter : false,
-					useContextMenu : true,
-					enableRightDownFocus : true,
-					filterLayerWidth : 320,
-					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableFilter : true
-				};
+		            headerHeight : 30,
+		            showRowNumColumn : true,
+		            showRowCheckColumn : true,
+		            rowNumHeaderText : "번호",
+		            showAutoNoDataMessage : false,
+		            selectionMode : "multipleCells",
+		            enableMovingColumn : true,
+		            enableFilter : true,
+		            showInlineFilter : true,
+		            useContextMenu : true,
+		            enableRightDownFocus : true,
+		            filterLayerWidth : 320,
+		            filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+		            enableRowCheckShiftKey : true
+	         	};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
@@ -267,7 +269,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/changeECR/list");
+				const url = getCallUrl("/ecpr/list");
 				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
@@ -305,12 +307,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				selectbox("model");
 			});
 
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
-
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -328,7 +324,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			
 			// 등록
 			$("#createBtn").click(function(){
-				location.href = getCallUrl("/changeECPR/create");
+				location.href = getCallUrl("/ecpr/create");
 			});
 		</script>
 	</form>

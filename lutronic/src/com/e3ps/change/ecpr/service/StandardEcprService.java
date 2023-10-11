@@ -1,5 +1,31 @@
 package com.e3ps.change.ecpr.service;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
+
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcrToEcrLink;
+import com.e3ps.change.cr.dto.CrDTO;
+import com.e3ps.change.ecpr.dto.EcprDTO;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
+
+import wt.content.ApplicationData;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
+import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
+import wt.folder.Folder;
+import wt.folder.FolderEntry;
+import wt.folder.FolderHelper;
+import wt.lifecycle.LifeCycleHelper;
+import wt.org.WTUser;
+import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.util.WTException;
 
@@ -11,4 +37,144 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		return instance;
 	}
 
+	@Override
+	public void create(EcprDTO dto) throws Exception {
+		String name = dto.getName();
+		String number = dto.getNumber();
+		String createdDate = dto.getCreatedDate();
+		String approveDate = dto.getApproveDate();
+		String createDepart_code = dto.getCreateDepart_code();
+		String writer_oid = dto.getWriter_oid();
+		String proposer_oid = dto.getProposer_oid();
+		String eoCommentA = dto.getEoCommentA();
+		String eoCommentB = dto.getEoCommentB();
+		String eoCommentC = dto.getEoCommentC();
+		ArrayList<String> sections = dto.getSections(); // 변경 구분
+		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
+		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
+
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			// 모델 배열 처리
+			// US21,MD23,PN21,
+			String model = "";
+			for (int i = 0; i < rows300.size(); i++) {
+				Map<String, String> row300 = rows300.get(i);
+				String oid = row300.get("oid");
+				if(oid != null) {
+					NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+					if (rows300.size() - 1 == i) {
+						model += n.getCode();
+					} else {
+						model += n.getCode() + ",";
+					}					
+				}
+			}
+
+			String changeSection = "";
+			for (int i = 0; i < sections.size(); i++) {
+				String value = sections.get(i);
+				if (sections.size() - 1 == i) {
+					changeSection += value;
+				} else {
+					changeSection += value + ",";
+				}
+			}
+
+			ECPRRequest ecpr = ECPRRequest.newECPRRequest();
+			ecpr.setEoName(name);
+			ecpr.setEoNumber(number);
+			ecpr.setCreateDate(createdDate);
+
+			WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
+			if(writer != null) {
+				ecpr.setWriter(writer.getFullName());				
+			}
+			ecpr.setApproveDate(approveDate);
+
+//			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
+			ecpr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
+			ecpr.setModel(model);
+
+			WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
+			if(proposer != null) {
+				ecpr.setProposer(proposer.getFullName());				
+			}
+			ecpr.setChangeSection(changeSection);
+			ecpr.setEoCommentA(eoCommentA);
+			ecpr.setEoCommentB(eoCommentB);
+			ecpr.setEoCommentC(eoCommentC);
+
+			String location = "/Default/설계변경/ECPR";
+			String lifecycle = "LC_Default";
+
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) ecpr, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(ecpr,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+			ecpr = (ECPRRequest) PersistenceHelper.manager.save(ecpr);
+
+//			String[] ecrOids = (String[]) req.getParameterValues("ecrOid");
+//			updateECRToECRLink(ecr, ecrOids, false);
+			// 첨부 파일 저장
+			saveAttach(ecpr, dto);
+
+			// 관련 CR 링크
+			saveLink(ecpr, rows101);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+	
+	/**
+	 * 첨부 파일 저장
+	 */
+	private void saveAttach(ECPRRequest ecpr, EcprDTO dto) throws Exception {
+		String primary = dto.getPrimary();
+		ArrayList<String> secondarys = dto.getSecondarys();
+
+		if (StringUtil.checkString(primary)) {
+			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+			ApplicationData applicationData = ApplicationData.newApplicationData(ecpr);
+			applicationData.setRole(ContentRoleType.toContentRoleType("ECR"));
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(ecpr, applicationData, vault.getPath());
+		}
+
+		for (int i = 0; i < secondarys.size(); i++) {
+			String cacheId = secondarys.get(i);
+			File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+			ApplicationData applicationData = ApplicationData.newApplicationData(ecpr);
+			applicationData.setRole(ContentRoleType.SECONDARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(ecpr, applicationData, vault.getPath());
+		}
+	}
+	
+	/**
+	 * 관련 ECPR링크
+	 */
+	private void saveLink(ECPRRequest ecpr, ArrayList<Map<String, String>> rows101) throws Exception {
+		for (Map<String, String> row101 : rows101) {
+			String gridState = row101.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row101.get("oid");
+				ECPRRequest ref = (ECPRRequest) CommonUtil.getObject(oid);
+//				EcrToEcrLink link = EcrToEcrLink.newEcrToEcrLink(ecpr, ref);
+//				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+	}
 }
