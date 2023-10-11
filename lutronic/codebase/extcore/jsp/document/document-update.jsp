@@ -305,6 +305,7 @@ iframe {
 		// temp 임시저장 여부 처리
 		const oid = document.getElementById("oid").value;
 		const location = document.getElementById("location");
+		const formType = document.getElementById("formType");
 		const name = document.getElementById("docName");
 		const documentType = document.getElementById("documentType");
 		oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
@@ -312,13 +313,13 @@ iframe {
 		const description = document.getElementById("description");
 		const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 		const secondarys = toArray("secondarys");
-		const primary = document.querySelector("input[name=primary]").value;
+		const primary = document.querySelector("input[name=primary]");
 		const model = document.getElementById("model").value;
 		const writer = document.getElementById("writer").value;
 		const interalnumber = document.getElementById("interalnumber").value;
 		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
-		const documentName = document.getElementById("documentName").value;
+		const documentName = document.getElementById("documentName");
 		const temprary = JSON.parse(temp);
 		
 		const url = getCallUrl("/doc/<%=mode%>");
@@ -344,6 +345,34 @@ iframe {
 				return false;
 			}	
 		}
+
+		if (isNull(documentName.value)) {
+			alert("문서종류를 입력해주세요.");
+			documentName.focus();
+			return false;
+		}
+
+		if (isNull(documentType.value)) {
+			alert("문서유형을 선택해주세요.");
+			return false;
+		}
+
+		console.log(primary);
+
+		if (primary == null) {
+			alert("주 첨부파일을 첨부해주세요.");
+			return false;
+		}
+
+		if (temprary) {
+			if (!confirm("임시저장하시겠습니까??")) {
+				return false;
+			}
+		} else {
+			if (!confirm("등록하시겠습니까?")) {
+				return false;
+			}
+		}
 		
 		const params = {
 			oid : oid,
@@ -353,14 +382,14 @@ iframe {
 			description : description.value,
 			content : content.value,
 			secondarys : secondarys,
-			primary : primary,
+			primary : primary.value,
 			location : location.value,
 			model_code : model,
 			deptcode_code : deptcode,
 			interalnumber : interalnumber,
 			writer : writer,
 			preseration_code : preseration,
-			documentName : documentName,
+			documentName : documentName.value,
 			// 링크 데이터
 			rows90 : rows90,
 			rows91 : rows91,

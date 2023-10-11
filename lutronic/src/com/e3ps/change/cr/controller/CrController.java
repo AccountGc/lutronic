@@ -125,4 +125,37 @@ public class CrController extends BaseController {
 		model.setViewName("/extcore/jsp/change/cr/cr-view.jsp");
 		return model;
 	}
+	
+	@Description(value = "CR 수정 페이지")
+	@GetMapping(value = "/update")
+	public ModelAndView update(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		CrDTO dto = new CrDTO(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("sectionList", sectionList);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/cr/cr-update");
+		return model;
+	}
+	
+	@Description(value = "CR 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody CrDTO dto) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			CrHelper.service.modify(dto);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }
