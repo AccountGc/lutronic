@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eo.dto.EoDTO;
@@ -18,11 +19,15 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
 
 import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
+import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
@@ -231,9 +236,64 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	@Override
 	public void modify(EoDTO dto) throws Exception {
+		ReferenceFactory rf = new ReferenceFactory();
+		
+		ArrayList<Map<String, String>> rows104 = dto.getRows104();
+		ArrayList<Map<String, String>> rows200 = dto.getRows200();
+		ArrayList<Map<String, String>> rows300 = dto.getRows300();
+//		String model_oid = dto.getModel_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+
+
+			// 모델 배열 처리
+			String model = "";
+			for (int i = 0; i < rows300.size(); i++) {
+				Map<String, String> row300 = rows300.get(i);
+				String oid = row300.get("oid");
+				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+				if (rows300.size() - 1 == i) {
+					model += n.getCode();
+				} else {
+					model += n.getCode() + ",";
+				}
+			}
+
+			EChangeOrder eo = (EChangeOrder) rf.getReference(dto.getOid()).getObject();
+			eo.setEoName(dto.getName());
+			eo.setModel(model);
+			eo.setEoType(dto.getEoType());
+			eo.setEoCommentA(dto.getEoCommentA());
+			eo.setEoCommentB(dto.getEoCommentB());
+			eo.setEoCommentC(dto.getEoCommentC());
+
+			eo = (EChangeOrder) PersistenceHelper.manager.modify(eo);
+
+			// 관련 링크들
+//			saveLink(eo, dto);
+
+			// 완제품 링크 및 검증
+//			validateAndCompleteSave(eo, rows104);
+
+			// 첨부 파일
+			removeAttach(eo);
+			saveAttach(eo, dto);
+
+			// 설변 활동 생성
+//			ActivityHelper.service.saveActivity(eo, rows200);
+
+			// 활동 생성
+//	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);
+
+			// eco 상태 설정
+			/*
+			 * if(isActivity){
+			 * LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco,
+			 * State.toState("ACTIVITY")); }else{
+			 * LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco,
+			 * State.toState("APPROVE_REQUEST")); }
+			 */
 
 			trs.commit();
 			trs = null;
@@ -245,5 +305,18 @@ public class StandardEoService extends StandardManager implements EoService {
 			if (trs != null)
 				trs.rollback();
 		}
+
 	}
+	
+	/**
+	 * 첨부 파일 삭제
+	 */
+	private void removeAttach(EChangeOrder eo) throws Exception {
+		QueryResult result = ContentHelper.service.getContentsByRole(eo, ContentRoleType.SECONDARY);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(eo, item);
+		}
+	}
+	
 }
