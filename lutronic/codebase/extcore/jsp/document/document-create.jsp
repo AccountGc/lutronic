@@ -299,6 +299,7 @@ iframe {
 			function create(temp) {
 				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
+				const formType = document.getElementById("formType");
 				const name = document.getElementById("docName");
 				const documentType = document.getElementById("documentType");
 				oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
@@ -306,7 +307,7 @@ iframe {
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
-				const primary = document.querySelector("input[name=primary]").value;
+				const primary = document.querySelector("input[name=primary]");
 				const model = document.getElementById("model").value;
 				const writer = document.getElementById("writer").value;
 				const interalnumber = document.getElementById("interalnumber").value;
@@ -336,6 +337,28 @@ iframe {
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+				
+				if(isEmpty(formType.value)){
+					alert("문서템플릿을 선택해주세요.");
+					return;
+				}
+				
+				if(isEmpty(documentName.value)){
+					alert("문서종류를 입력해주세요.");
+					documentName.focus();
+					return;
+				}
+				
+				if(isEmpty(documentType.value)){
+					alert("문서유형을 선택해주세요.");
+					return;
+				}
+				
+				if(isEmpty(primary)){
+					alert("주 첨부파일을 첨부해주세요.");
+					return;
+				}
+				
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,
@@ -350,7 +373,7 @@ iframe {
 					interalnumber : interalnumber,
 					writer : writer,
 					preseration_code : preseration,
-					documentName : documentName,
+					documentName : documentName.value,
 					// 링크 데이터
 					rows90 : rows90,
 					rows91 : rows91,
