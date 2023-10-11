@@ -78,7 +78,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<th>작성자</th>
 				<td><%=dto.getWriter_name()%></td>
 				<th>작성부서</th>
-				<td><%=dto.getCreateDepart()%></td>
+				<td><%=dto.getCreateDepart_name()%></td>
 			</tr>
 			<tr>
 				<th>작성일</th>

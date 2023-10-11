@@ -80,19 +80,19 @@
 			<tr>
 				<th class="lb">제품 설계 개요</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentA" id="eoCommentA" rows="6"></textarea>
+					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">특기사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea>
+					<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">기타사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentC" id="eoCommentC" rows="6"></textarea>
+					<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea>
 				</td>
 			</tr>
 			<tr>

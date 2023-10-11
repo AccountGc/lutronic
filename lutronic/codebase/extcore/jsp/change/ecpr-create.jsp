@@ -101,11 +101,11 @@
 			</tr>
 			<tr>
 				<th class="lb">변경사유</th>
-				<td class="indent5" colspan="3"><textarea name="eoCommentA" id="eoCommentA" rows="6"></textarea></td>
+				<td class="indent5" colspan="3"><textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea></td>
 			</tr>
 			<tr>
 				<th class="lb">변경사항</th>
-				<td class="indent5" colspan="3"><textarea name="eoCommentB" id="eoCommentB" rows="6"></textarea></td>
+				<td class="indent5" colspan="3"><textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea></td>
 			</tr>
 			<tr>
 				<th class="lb">관련 ECPR</th>
@@ -118,7 +118,7 @@
 			</tr>
 			<tr>
 				<th class="lb">참고사항</th>
-				<td class="indent5" colspan="3"><textarea name="eoCommentC" id="eoCommentC" rows="6"></textarea></td>
+				<td class="indent5" colspan="3"><textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea></td>
 			</tr>
 			<tr>
 				<th class="req lb">주 첨부파일</th>
