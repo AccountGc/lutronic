@@ -70,6 +70,15 @@ public class CrDTO {
 		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
+		setCreatedDate(cr.getCreateDate());
+		setApproveDate(cr.getApproveDate());
+		setCreateDepart_name(cr.getCreateDepart());
+		setWriter_name(cr.getWriter());
+		setProposer_name(cr.getProposer());
+		setChangeSection(cr.getChangeSection());
+		setEoCommentA(cr.getEoCommentA());
+		setEoCommentB(cr.getEoCommentB());
+		setEoCommentC(cr.getEoCommentC());
 		
 		// 따로 추가
 		setState(cr.getLifeCycleState().getDisplay());

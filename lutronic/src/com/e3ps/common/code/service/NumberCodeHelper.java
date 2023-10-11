@@ -52,18 +52,30 @@ public class NumberCodeHelper {
 	 * 코드 & 코드타입으로 값 가져오기
 	 */
 	public String getNumberCodeName(String code, String codeType) throws Exception {
+		
+		String[] codes = code.split(",");
+		
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		for(int i = 0; i < codes.length; i++) {
+			QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+		}
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "CHANGESECTION");
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
-		if (result.hasMoreElements()) {
+		int i = 0;
+		String numberCodeNames = "";
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode numberCode = (NumberCode) obj[0];
-			return numberCode.getName();
+			if(result.size() -1 == i) {
+				numberCodeNames += numberCode.getName();
+			}else {
+				numberCodeNames += numberCode.getName() + ",";
+			}
+			i++;
 		}
-		return null;
+		return numberCodeNames;
 	}
 
 	/**
