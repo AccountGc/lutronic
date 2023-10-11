@@ -64,11 +64,13 @@ public class StandardCrService extends StandardManager implements CrService {
 			for (int i = 0; i < rows300.size(); i++) {
 				Map<String, String> row300 = rows300.get(i);
 				String oid = row300.get("oid");
-				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
-				if (rows300.size() - 1 == i) {
-					model += n.getCode();
-				} else {
-					model += n.getCode() + ",";
+				if(oid != null) {
+					NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+					if (rows300.size() - 1 == i) {
+						model += n.getCode();
+					} else {
+						model += n.getCode() + ",";
+					}					
 				}
 			}
 
@@ -88,7 +90,9 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setCreateDate(createdDate);
 
 			WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
-			cr.setWriter(writer.getFullName());
+			if(writer != null) {
+				cr.setWriter(writer.getFullName());				
+			}
 			cr.setApproveDate(approveDate);
 
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
@@ -96,7 +100,9 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setModel(model);
 
 			WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
-			cr.setProposer(proposer.getFullName());
+			if(proposer != null) {
+				cr.setProposer(proposer.getFullName());				
+			}
 			cr.setChangeSection(changeSection);
 			cr.setEoCommentA(eoCommentA);
 			cr.setEoCommentB(eoCommentB);

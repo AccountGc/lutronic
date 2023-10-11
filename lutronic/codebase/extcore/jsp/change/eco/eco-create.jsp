@@ -85,7 +85,7 @@
 				<td>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="">
+						<input type="radio" name="riskType" value="NONE" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>N/A</b>
@@ -187,18 +187,29 @@
 				const eoCommentC = toId("eoCommentC");
 				const eoCommentD = toId("eoCommentD");
 				const secondarys = toArray("secondarys");
-				const primary = document.querySelector("input[name=primary]").value;
+				const primary = document.querySelector("input[name=primary]");
 				const riskType = document.querySelector("input[name=riskType]:checked").value;
 				const licensing = document.querySelector("input[name=licensing]:checked").value;
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+				
+				if(isEmpty(name.value)){
+					alert("ECO 제목을 입력해주세요.");
+					return;
+				}
+				
+				if(primary == null){
+					alert("설계변경 부품 내역파일을 첨부해주세요.");
+					return;
+				}
+				
 				const params = {
 					name : name.value,
 					riskType : riskType,
 					licensing : licensing,
 					secondarys : secondarys,
-					primary : primary,
+					primary : primary.value,
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
 					eoCommentC : eoCommentC,

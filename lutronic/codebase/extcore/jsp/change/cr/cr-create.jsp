@@ -185,7 +185,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
-				const primary = document.querySelector("input[name=primary]").value;
+				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
@@ -197,7 +197,29 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				changeSection.forEach(function(item) {
 					sections.push(item.value);
 				});
-
+				
+				if(isEmpty(name.value)){
+					alert("CR 제목을 입력해주세요.");
+					name.focus();
+					return;
+				}
+				
+				if(isEmpty(number.value)){
+					alert("CR 번호를 선택해주세요.");
+					number.focus();
+					return;
+				}
+				
+				if(rows300.length == 0){
+					alert("제품명을 입력해주세요.");
+					return;
+				}
+				
+				if(primary == null){
+					alert("주 첨부파일을 첨부해주세요.");
+					return;
+				}
+				
 				const params = {
 					name : name.value,
 					number : number.value,
@@ -210,7 +232,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
-					primary : primary,
+					primary : primary.value,
 					rows101 : rows101,
 					rows300 : rows300
 				}

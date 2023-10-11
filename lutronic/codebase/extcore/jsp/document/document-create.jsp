@@ -313,7 +313,7 @@ iframe {
 				const interalnumber = document.getElementById("interalnumber").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
-				const documentName = document.getElementById("documentName").value;
+				const documentName = document.getElementById("documentName");
 				const temprary = !!temp;
 
 				if (temprary) {
@@ -338,10 +338,10 @@ iframe {
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				
-				if(isEmpty(formType.value)){
-					alert("문서템플릿을 선택해주세요.");
-					return;
-				}
+// 				if(isEmpty(formType.value)){
+// 					alert("문서템플릿을 선택해주세요.");
+// 					return;
+// 				}
 				
 				if(isEmpty(documentName.value)){
 					alert("문서종류를 입력해주세요.");
@@ -354,7 +354,7 @@ iframe {
 					return;
 				}
 				
-				if(isEmpty(primary)){
+				if(primary == null){
 					alert("주 첨부파일을 첨부해주세요.");
 					return;
 				}
