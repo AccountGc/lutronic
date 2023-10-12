@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.change.ecpr.service.EcprHelper;
-import com.e3ps.change.service.ECPRHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 
 @Controller
@@ -45,7 +47,7 @@ public class EcprController extends BaseController {
 	public Map<String,Object> list(@RequestBody Map<String, Object> params){
 		Map<String,Object> result = null;
 		try {
-			 result = ECPRHelper.manager.list(params);
+			 result = EcprHelper.manager.list(params);
 			 result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -89,6 +91,51 @@ public class EcprController extends BaseController {
 		try {
 			EcprHelper.service.create(dto);
 			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "ECPR 상세 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception{
+		ModelAndView model = new ModelAndView();
+		EcprDTO dto = new EcprDTO(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/change/ecpr/ecpr-view.jsp");
+		return model;
+	}
+	
+	@Description(value = "ECPR 수정 페이지")
+	@GetMapping(value = "/update")
+	public ModelAndView update(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EcprDTO dto = new EcprDTO(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("sectionList", sectionList);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/ecpr/ecpr-update");
+		return model;
+	}
+	
+	@Description(value = "ECPR 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/update")
+	public Map<String, Object> update(@RequestBody CrDTO dto) throws Exception{
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			CrHelper.service.modify(dto);
+			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

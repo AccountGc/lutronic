@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
@@ -41,7 +42,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 	public void create(EcprDTO dto) throws Exception {
 		String name = dto.getName();
 		String number = dto.getNumber();
-		String createdDate = dto.getCreatedDate();
+		String writeDate = dto.getWriteDate();
 		String approveDate = dto.getApproveDate();
 		String createDepart_code = dto.getCreateDepart_code();
 		String writer_oid = dto.getWriter_oid();
@@ -86,15 +87,13 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ECPRRequest ecpr = ECPRRequest.newECPRRequest();
 			ecpr.setEoName(name);
 			ecpr.setEoNumber(number);
-			ecpr.setCreateDate(createdDate);
+			ecpr.setCreateDate(writeDate);
 
 			WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
 			if(writer != null) {
 				ecpr.setWriter(writer.getFullName());				
 			}
 			ecpr.setApproveDate(approveDate);
-
-//			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			ecpr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
@@ -117,8 +116,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			ecpr = (ECPRRequest) PersistenceHelper.manager.save(ecpr);
 
-//			String[] ecrOids = (String[]) req.getParameterValues("ecrOid");
-//			updateECRToECRLink(ecr, ecrOids, false);
 			// 첨부 파일 저장
 			saveAttach(ecpr, dto);
 
@@ -163,7 +160,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 	}
 	
 	/**
-	 * 관련 ECPR링크
+	 * 관련 CR링크
 	 */
 	private void saveLink(ECPRRequest ecpr, ArrayList<Map<String, String>> rows101) throws Exception {
 		for (Map<String, String> row101 : rows101) {
@@ -171,9 +168,9 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			// 신규 혹은 삭제만 있다. (added, removed
 			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
 				String oid = row101.get("oid");
-				ECPRRequest ref = (ECPRRequest) CommonUtil.getObject(oid);
-//				EcrToEcrLink link = EcrToEcrLink.newEcrToEcrLink(ecpr, ref);
-//				PersistenceServerHelper.manager.insert(link);
+				EChangeRequest ref = (EChangeRequest) CommonUtil.getObject(oid);
+				CrToEcprLink link = CrToEcprLink.newCrToEcprLink(ref, ecpr);
+				PersistenceServerHelper.manager.insert(link);
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-<%@page import="com.e3ps.change.cr.dto.CrDTO"%>
+<%@page import="com.e3ps.change.ecpr.dto.EcprDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%@include file="/extcore/jsp/common/css.jsp"%>
@@ -6,8 +6,7 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-CrDTO dto = (CrDTO) request.getAttribute("dto");
+EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -15,7 +14,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				CR 상세보기
+				ECPR 상세보기
 			</div>
 		</td>
 		<td class="right">
@@ -55,13 +54,13 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<col width="37%">
 			</colgroup>
 			<tr>
-				<th>CR 제목</th>
+				<th>ECPR 제목</th>
 				<td colspan="3"><%=dto.getName()%></td>
 			</tr>
 			<tr>
-				<th>CR 번호</th>
+				<th>ECPR 번호</th>
 				<td><%=dto.getNumber()%></td>
-				<th>상태</th>
+				<th>ECPR</th>
 				<td><%=dto.getState()%></td>
 			</tr>
 			<tr>
@@ -78,7 +77,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<th>작성자</th>
 				<td><%=dto.getWriter_name()%></td>
 				<th>작성부서</th>
-				<td><%=dto.getCreateDepart_name()%></td>
+				<td><%=dto.getCreateDepart_name() == null ? "" : dto.getCreateDepart_name()%></td>
 			</tr>
 			<tr>
 				<th>작성일</th>
@@ -89,7 +88,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th>제안자</th>
 				<td><%=dto.getProposer()%></td>
-				<th>변경부분</th>
+				<th>변경구분</th>
 				<td><%=dto.getChangeCode()%></td>
 			</tr>
 			<tr>
@@ -128,15 +127,15 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 	</div>
 	<div id="tabs-2">
 		<!-- 관련 객체 -->
-		<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
+<%-- 		<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp"> --%>
+<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+<%-- 		</jsp:include> --%>
 	</div>
 </div>
 <script type="text/javascript">
 	$("#updateBtn").click(function () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/cr/update?oid=" + oid);
+		const url = getCallUrl("/ecpr/update?oid=" + oid);
 		document.location.href = url;
 	})
 
@@ -157,111 +156,23 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		}, "GET");
 	})
 	
-	$("#viewECA").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("changeECA" , "viewECA", "do") + "?oid="+oid;
-		openWindow(url, "eca", 1000, 600);
-	})
-	
 	$("#approveBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("groupware", "historyWork", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
+		popup(url, 830, 600);
 	})
 	
 	$("#downloadBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("common", "downloadHistory", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+		const oid = document.querySelector("#oid").value;
+		const url = getCallUrl("/common/downloadHistory?oid=" + oid);
+		popup(url, 830, 600);
 	})
 	
-	$("#erpSend").click(function() {
-		if (!confirm("ERP 전송 하시게습니까?")){
-			return;
-		}
-		
-		var form = $("form[name=viewECOForm]").serialize();
-		var url	= getURLString("erp", "erpSendAction", "do");
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			error: function(data) {
-				alert("ERP 전송 오류");
-			},
-			success:function(data){
-				alert(data.message);
-				location.reload();
-			}
-			,beforeSend: function() {
-				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
-				gfn_EndShowProcessing();
-	        }
-		});
-	})
-	
-	$('#excelDown').click(function() {
-		var url = getURLString("changeECO", "excelDown", "do");
-		console.log(this.value);
-		console.log(url);
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:{
-				oid : $('#oid').val(),
-				eoType : this.value
-			},
-			dataType:"json",
-			async: false,
-			cache: false,
-			success:function(data){
-				console.log(data);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
-					alert(data.message);
-				}
-			}
-		});
-	})
-	
-	$("#batchSecondaryDown").click(function() {
-		var form = $("form[name=viewECOForm]").serialize();
-		var url	= getURLString("common", "batchSecondaryDown", "do");
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			
-			error:function(data){
-				var msg = "데이터 검색오류";
-				alert(msg);
-			},
-			
-			success:function(data){
-				console.log(data.message);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
-					alert(data.message);
-				}
-			}
-			,beforeSend: function() {
-				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
-				gfn_EndShowProcessing();
-	        }
-		});
-		
+	//결재 회수
+	$("#withDrawBtn").click(function() {
+		const oid = $("#oid").val();
+		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
+		_popup(url, 1500, 550, "n");
 	})
 	
 	document.addEventListener("DOMContentLoaded", function() {
@@ -271,19 +182,19 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-2":
-					const isCreated105 = AUIGrid.isCreated(myGridID105); // ECO
-					if (isCreated105) {
-						AUIGrid.resize(myGridID105);
-					} else {
-						createAUIGrid105(columns105);
-					}
-					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
-					if (isCreated101) {
-						AUIGrid.resize(myGridID101);
-					} else {
-						createAUIGrid101(columns101);
-					}
-					break;
+// 					const isCreated105 = AUIGrid.isCreated(myGridID105); // ECO
+// 					if (isCreated105) {
+// 						AUIGrid.resize(myGridID105);
+// 					} else {
+// 						createAUIGrid105(columns105);
+// 					}
+// 					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
+// 					if (isCreated101) {
+// 						AUIGrid.resize(myGridID101);
+// 					} else {
+// 						createAUIGrid101(columns101);
+// 					}
+// 					break;
 				}
 			}
 		});

@@ -1,13 +1,13 @@
+<%@page import="com.e3ps.change.ecpr.dto.EcprDTO"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
-<%@page import="com.e3ps.change.cr.dto.CrDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-CrDTO dto = (CrDTO) request.getAttribute("dto");
+EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 %>
 <!DOCTYPE html>
 <html>
@@ -25,7 +25,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						CR 수정
+						ECPR 수정
 					</div>
 				</td>
 				<td class="right">
@@ -43,11 +43,11 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="req lb">CR 제목</th>
+				<th class="req lb">ECPR 제목</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300" value="<%= dto.getName() %>">
 				</td>
-				<th class="req">CR 번호</th>
+				<th class="req">ECPR 번호</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300" value="<%=dto.getNumber()%>">
 				</td>
@@ -166,17 +166,17 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		</table>
 
 		<!-- 	관련 CR -->
-		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
-			<jsp:param value="<%= dto.getOid() %>" name="oid" />
-			<jsp:param value="update" name="mode" />
-			<jsp:param value="true" name="multi" />
-			<jsp:param value="150" name="height" />
-		</jsp:include>
+<%-- 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp"> --%>
+<%-- 			<jsp:param value="<%= dto.getOid() %>" name="oid" /> --%>
+<%-- 			<jsp:param value="update" name="mode" /> --%>
+<%-- 			<jsp:param value="true" name="multi" /> --%>
+<%-- 			<jsp:param value="150" name="height" /> --%>
+<%-- 		</jsp:include> --%>
 
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create();">
+					<input type="button" value="수정" title="수정" class="red" onclick="update();">
 					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
 					<input type="button" value="임시저장" title="임시저장" class="">
 				</td>
@@ -187,12 +187,12 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 
-				if (!confirm("등록 하시겠습니까?")) {
+				if (!confirm("수정 하시겠습니까?")) {
 					return;
 				}
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
-				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+// 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 
@@ -230,7 +230,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					number : number.value,
 					createdDate : toId("createdDate"),
 					approveDate : toId("approveDate"),
-					createDepart : toId("createDepart"),
+					createDepart_code : toId("createDepart"),
 					writer_oid : toId("writerOid"),
 					proposer_oid : toId("proposerOid"),
 					eoCommentA : toId("eoCommentA"),
@@ -238,18 +238,17 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
 					primary : primary.value,
-					rows101 : rows101,
+// 					rows101 : rows101,
 					rows300 : rows300
 				}
-				params.secondarys = toArray("secondarys");
-				const url = getCallUrl("/cr/modify");
-				parent.openLayer();
-				logger(params);
+				const secondarys = toArray("secondarys");
+				params.secondarys = secondarys;
+				const url = getCallUrl("/ecpr/modify");
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/cr/list");
+						document.location.href = getCallUrl("/ecpr/list");
 					} else {
 						parent.closeLayer();
 					}
@@ -265,14 +264,14 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				finderUser("writer");
 				finderUser("proposer");
 				createAUIGrid300(columns300);
-				createAUIGrid101(columns101);
+// 				createAUIGrid101(columns101);
 				AUIGrid.resize(myGridID300);
-				AUIGrid.resize(myGridID101);
+// 				AUIGrid.resize(myGridID101);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
-				AUIGrid.resize(myGridID101);
+// 				AUIGrid.resize(myGridID101);
 			});
 		</script>
 	</form>

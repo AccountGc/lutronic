@@ -68,7 +68,6 @@ public class EcprDTO {
 		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
-		setCreatedDate(cr.getCreateDate());
 		setApproveDate(cr.getApproveDate());
 		setCreateDepart_name(cr.getCreateDepart());
 		setWriter_name(cr.getWriter());

@@ -173,7 +173,7 @@
 
 		<script type="text/javascript">
 			$("#createBtn").click(function() {
-				const primary = document.querySelector("input[name=primary]").value;
+				const primary = document.querySelector("input[name=primary]");
 				if(isEmpty($("#name").val())) {
 					alert("문서명을 입력하세요.");
 					return;
@@ -182,8 +182,8 @@
 					alert("금형타입을 선택하세요.");
 					return;
 				}
-				if(primary.length<0) {
-					alert("주 첨부파일을 추가해주세요.");
+				if(primary == null){
+					alert("주 첨부파일을 첨부해주세요.");
 					return;
 				}
 				
@@ -203,7 +203,7 @@
 				params.description = $("#description").val();
 				params.documentType = $("#documentType").val();
 				params.location = $("#location").val();
-				params.primary = primary;
+				params.primary = primary.value;
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				params.partList = AUIGrid.getGridData(partGridID);
