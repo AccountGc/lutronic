@@ -55,8 +55,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">작성일</th>
 				<td class="indent5">
-					<input type="text" name="createdDate" id="createdDate" class="width-100" value="<%=dto.getCreatedDate() != null ? dto.getCreatedDate() : ""%>">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('createdDate');">
+					<input type="text" name="writeDate" id="writeDate" class="width-100" value="<%=dto.getWriteDate() != null ? dto.getWriteDate() : ""%>">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
 				</td>
 				<th>승인일</th>
 				<td class="indent5">
@@ -71,9 +71,9 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
-							boolean selected = dto.getCreateDepart_code() == deptcode.getCode();
+							boolean selected = (dto.getCreateDepart_code().equals(deptcode.getCode()));
 						%>
-						<option value="<%=deptcode.getCode()%>" <% if(selected){%> selected <%} %>><%=deptcode.getName()%></option>
+						<option value="<%=deptcode.getCode()%>" <% if(selected){%> selected="selected" <%} %>><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
@@ -102,7 +102,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">제안자</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer() : ""%>">
+					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer_name() : ""%>">
 					<input type="hidden" name="proposerOid" id="proposerOid" value="<%= dto.getProposer_oid()%>">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
 				</td>
@@ -113,10 +113,10 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
-						int isInclude = dto.getSections().indexOf(section.getCode());
+						int isInclude = dto.getChangeSection().indexOf(section.getName());
 					%>
 					<div class="pretty p-switch">
-						<input type="checkbox" name="changeSection" value="<%=section.getCode()%>" <%if(isInclude >= 0){ %>checked<%} %>>
+						<input type="checkbox" name="changeSection" value="<%=section.getCode()%>" <%if(isInclude >= 0){ %>checked="checked"<%} %>>
 						<div class="state p-success">
 							<label>
 								<b><%=section.getName()%></b>
@@ -152,6 +152,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid" />
+						<jsp:param value="modify" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -160,6 +161,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid" />
+						<jsp:param value="modify" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -173,21 +175,12 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<jsp:param value="150" name="height" />
 		</jsp:include>
 
-		<table class="button-table">
-			<tr>
-				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create();">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="">
-				</td>
-			</tr>
-		</table>
 		<script type="text/javascript">
 			function update() {
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 
-				if (!confirm("등록 하시겠습니까?")) {
+				if (!confirm("수정 하시겠습니까?")) {
 					return;
 				}
 				const primary = document.querySelector("input[name=primary]");
@@ -229,11 +222,11 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					oid: "<%= dto.getOid() %>",
 					name : name.value,
 					number : number.value,
-					createdDate : toId("createdDate"),
+					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
-					createDepart : toId("createDepart"),
-					writer_oid : toId("writerOid"),
-					proposer_oid : toId("proposerOid"),
+					createDepart_code : toId("createDepart"),
+					writer_name : toId("writer"),
+					proposer_name : toId("proposer"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -250,7 +243,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/cr/list");
+						opener.loadGridData();
+						self.close();
 					} else {
 						parent.closeLayer();
 					}
@@ -260,7 +254,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				date("createdDate");
+				date("writeDate");
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");

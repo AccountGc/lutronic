@@ -52,8 +52,8 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			<tr>
 				<th class="lb">작성일</th>
 				<td class="indent5">
-					<input type="text" name="createdDate" id="createdDate" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('createdDate');">
+					<input type="text" name="writeDate" id="writeDate" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
 				</td>
 				<th>승인일</th>
 				<td class="indent5">
@@ -168,15 +168,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			<jsp:param value="150" name="height" />
 		</jsp:include>
 
-		<table class="button-table">
-			<tr>
-				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create();">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="">
-				</td>
-			</tr>
-		</table>
 		<script type="text/javascript">
 			function create() {
 				const name = document.getElementById("name");
@@ -223,11 +214,11 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				const params = {
 					name : name.value,
 					number : number.value,
-					createdDate : toId("createdDate"),
+					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
-					createDepart : toId("createDepart"),
-					writer_oid : toId("writerOid"),
-					proposer_oid : toId("proposerOid"),
+					createDepart_code : toId("createDepart"),
+					writer_name : toId("writer"),
+					proposer_name : toId("proposer"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -236,6 +227,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					rows101 : rows101,
 					rows300 : rows300
 				}
+				
 				params.secondarys = toArray("secondarys");
 				const url = getCallUrl("/cr/create");
 				parent.openLayer();
@@ -254,7 +246,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				date("createdDate");
+				date("writeDate");
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");

@@ -44,11 +44,11 @@ public class StandardCrService extends StandardManager implements CrService {
 	public void create(CrDTO dto) throws Exception {
 		String name = dto.getName();
 		String number = dto.getNumber();
-		String createdDate = dto.getCreatedDate();
 		String approveDate = dto.getApproveDate();
+		String writeDate = dto.getWriteDate();
 		String createDepart_code = dto.getCreateDepart_code();
-		String writer_oid = dto.getWriter_oid();
-		String proposer_oid = dto.getProposer_oid();
+		String writer_name = dto.getWriter_name();
+		String proposer_name= dto.getProposer_name();
 		String eoCommentA = dto.getEoCommentA();
 		String eoCommentB = dto.getEoCommentB();
 		String eoCommentC = dto.getEoCommentC();
@@ -89,22 +89,16 @@ public class StandardCrService extends StandardManager implements CrService {
 			EChangeRequest cr = EChangeRequest.newEChangeRequest();
 			cr.setEoName(name);
 			cr.setEoNumber(number);
-			cr.setCreateDate(createdDate);
+			cr.setCreateDate(writeDate);
 
-			WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
-			if(writer != null) {
-				cr.setWriter(writer.getFullName());				
-			}
+			cr.setWriter(writer_name);				
 			cr.setApproveDate(approveDate);
-
+			
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
 			cr.setModel(model);
 
-			WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
-			if(proposer != null) {
-				cr.setProposer(proposer.getFullName());				
-			}
+			cr.setProposer(proposer_name);				
 			cr.setChangeSection(changeSection);
 			cr.setEoCommentA(eoCommentA);
 			cr.setEoCommentB(eoCommentB);
@@ -202,8 +196,6 @@ public class StandardCrService extends StandardManager implements CrService {
 	@Override
 	public void modify(CrDTO dto) throws Exception {
 		
-		String writer_oid = dto.getWriter_oid();
-		String proposer_oid = dto.getProposer_oid();
 		String createDepart_code = dto.getCreateDepart_code();
 		
 		ArrayList<String> sections = dto.getSections();
@@ -241,27 +233,20 @@ public class StandardCrService extends StandardManager implements CrService {
 
 			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(dto.getOid());
 			
-			cr.setEoName(dto.getName());
-			cr.setModel(model);
-			cr.setEoCommentA(dto.getEoCommentA());
-			cr.setEoCommentB(dto.getEoCommentB());
-			cr.setEoCommentC(dto.getEoCommentC());
+			
 			
 			cr.setEoName(dto.getName());
 			cr.setEoNumber(dto.getNumber());
-			cr.setCreateDate(dto.getCreatedDate());
-			WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
-			if(writer != null) {
-				cr.setWriter(writer.getFullName());				
-			}
+			cr.setCreateDate(dto.getWriteDate());
+
+			cr.setWriter(dto.getWriter_name());				
 			cr.setApproveDate(dto.getApproveDate());
+			
+//			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
 			cr.setModel(model);
 
-			WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
-			if(proposer != null) {
-				cr.setProposer(proposer.getFullName());				
-			}
+			cr.setProposer(dto.getProposer_name());				
 			cr.setChangeSection(changeSection);
 			cr.setEoCommentA(dto.getEoCommentA());
 			cr.setEoCommentB(dto.getEoCommentB());

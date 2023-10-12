@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
 <%@page import="com.e3ps.change.cr.dto.CrDTO"%>
 <%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -50,68 +51,70 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		<!-- 기본 정보 -->
 		<table class="view-table">
 			<colgroup>
-				<col width="13%">
-				<col width="37%">
-				<col width="13%">
-				<col width="37%">
+				<col width="130">
+				<col width="450">
+				<col width="130">
+				<col width="450">
+				<col width="130">
+				<col width="450">
 			</colgroup>
 			<tr>
-				<th>CR 제목</th>
-				<td colspan="3"><%=dto.getName()%></td>
-			</tr>
-			<tr>
-				<th>CR 번호</th>
+				<th class="lb">CR 번호</th>
 				<td><%=dto.getNumber()%></td>
+				<th>CR 제목</th>
+				<td><%=dto.getName()%></td>
 				<th>상태</th>
 				<td><%=dto.getState()%></td>
 			</tr>
 			<tr>
-				<th>등록자</th>
-				<td colspan="3"><%=dto.getCreator()%></td>
-			</tr>
-			<tr>
+				<th class="lb">등록자</th>
+				<td><%=dto.getCreator()%></td>
 				<th>등록일</th>
-				<td><%=dto.getCreatedDate()%></td>
+				<td><%=dto.getCreatedDate_text()%></td>
 				<th>수정일</th>
 				<td><%=dto.getModifiedDate_text()%></td>
 			</tr>
 			<tr>
-				<th>작성자</th>
+				<th class="lb">작성자</th>
 				<td><%=dto.getWriter_name()%></td>
 				<th>작성부서</th>
 				<td><%=dto.getCreateDepart_name()%></td>
-			</tr>
-			<tr>
 				<th>작성일</th>
 				<td><%=dto.getWriteDate()%></td>
+			</tr>
+			<tr>
+				<th class="lb">제안자</th>
+				<td><%=dto.getProposer_name()%></td>
+				<th>변경부분</th>
+				<td><%=dto.getChangeSection()%></td>
 				<th>승인일</th>
 				<td><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
-				<th>제안자</th>
-				<td><%=dto.getProposer()%></td>
-				<th>변경부분</th>
-				<td><%=dto.getChangeCode()%></td>
+				<th class="lb">제품명</th>
+				<td colspan="5"><%=dto.getModel()%></td>
 			</tr>
 			<tr>
-				<th>제품명</th>
-				<td colspan="3"><%=dto.getModel()%></td>
+				<th class="lb">변경사유</th>
+				<td colspan="5">
+					<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentA()%></textarea>
+				</td>
 			</tr>
 			<tr>
-				<th>변경사유</th>
-				<td colspan="3"><%=dto.getEoCommentA()%></td>
+				<th class="lb">변경사항</th>
+				<td colspan="5">
+					<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentB()%></textarea>
+				</td>
 			</tr>
 			<tr>
-				<th>변경사항</th>
-				<td colspan="3"><%=dto.getEoCommentB()%></td>
+				<th class="lb">참고사항</th>
+				<td colspan="5">
+					<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentC()%></textarea>
+				</td>
 			</tr>
 			<tr>
-				<th>참고사항</th>
-				<td colspan="3"><%=dto.getEoCommentC()%></td>
-			</tr>
-			<tr>
-				<th>주 첨부파일</th>
-				<td colspan="3">
+				<th class="lb">주 첨부파일</th>
+				<td colspan="5">
 					<%
 					Map<String, Object> contentMap = dto.getContentMap();
 					if (contentMap != null) {
@@ -134,8 +137,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				</td>
 			</tr>
 			<tr>
-				<th>첨부파일</th>
-				<td colspan="3">
+				<th class="lb">첨부파일</th>
+				<td colspan="5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
 					</jsp:include>

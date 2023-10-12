@@ -27,7 +27,9 @@ public class CrDTO {
 	private String oid;
 	private String name;
 	private String number;
-	private String createdDate;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private Timestamp createdDate;
+	private String createdDate_text;
 	private String approveDate;
 	private String createDepart_name;
 	private String writer_name;
@@ -44,7 +46,6 @@ public class CrDTO {
 	private Timestamp modifiedDate;
 	private String modifiedDate_text;
 	private String creator;
-	private String createDepart;
 	private String writeDate;
 	private String proposer;
 	private String changeCode;
@@ -73,26 +74,27 @@ public class CrDTO {
 		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
-		setCreatedDate(cr.getCreateDate());
 		setApproveDate(cr.getApproveDate());
-		setCreateDepart_name(cr.getCreateDepart());
+		setCreateDepart_name(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE"));
 		setWriter_name(cr.getWriter());
 		setProposer_name(cr.getProposer());
-		setChangeSection(cr.getChangeSection());
+		setChangeSection(NumberCodeHelper.manager.getNumberCodeName(cr.getChangeSection(), "CHANGESECTION"));
 		setEoCommentA(cr.getEoCommentA());
 		setEoCommentB(cr.getEoCommentB());
 		setEoCommentC(cr.getEoCommentC());
 		
+		
 		// 따로 추가
+		setCreateDepart_code(StringUtil.checkNull(cr.getCreateDepart()));
 		setState(cr.getLifeCycleState().getDisplay());
-		setCreatedDate(DateUtil.getDateString(cr.getCreateTimestamp(),"a"));
+		setCreatedDate(cr.getCreateTimestamp());
+		setCreatedDate_text(cr.getCreateTimestamp().toString().substring(0, 10));
 		setModifiedDate(cr.getModifyTimestamp());
 		setModifiedDate_text(cr.getModifyTimestamp().toString().substring(0, 10));
 		setCreator(cr.getCreatorFullName());
-		setCreateDepart(StringUtil.checkNull(cr.getCreateDepart()));
-		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
+		setWriteDate(cr.getCreateDate());
 		setProposer(StringUtil.checkNull(cr.getProposer()));
-		setModel(CrHelper.manager.displayToModel(cr.getModel()));
+		setModel(cr.getModel());
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
 	}
 	
