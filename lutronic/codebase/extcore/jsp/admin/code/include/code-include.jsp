@@ -93,7 +93,7 @@ if (create || update) {
 		}
 		myGridID300 = AUIGrid.create("#grid300", columnLayout, props);
 		<%if (view || update) {%>
-<%-- 		AUIGrid.setGridData(myGridID300, <%=AUIGridUtil.include(oid, "code")%>); --%>
+		AUIGrid.setGridData(myGridID300, <%=AUIGridUtil.include(oid, codeType)%>);
 		<%}%>
 	}
 	

@@ -229,7 +229,7 @@ public class NumberCodeHelper {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		// 페이징 처리 안하는것으로 한다.
 		String type = (String) params.get("type");
-
+		
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, type);
