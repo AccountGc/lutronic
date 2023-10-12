@@ -56,14 +56,20 @@ public class NumberCodeHelper {
 		if(code == null) {
 			return null;
 		}
-		String[] codes = code.split(",");
 		
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
-		for(int i = 0; i < codes.length; i++) {
-			QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+		
+		if(code.indexOf(",") > -1) {
+			String[] codes = code.split(",");
+			for(int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+			}
+		}else {
+			QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, code);
 		}
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "CHANGESECTION");
+		
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		int i = 0;
