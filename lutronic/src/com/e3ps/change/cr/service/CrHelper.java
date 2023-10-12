@@ -8,10 +8,13 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.cr.column.CrColumn;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 
@@ -20,6 +23,7 @@ import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
 import wt.util.WTException;
@@ -105,14 +109,34 @@ public class CrHelper {
 		if ("cr".equalsIgnoreCase(type)) {
 			// CR
 			return JSONArray.fromObject(referenceCr(cr, list));
-		} else if ("code".equalsIgnoreCase(type)) {
+		} else if ("MODEL".equalsIgnoreCase(type)) {
 			// 제품명
 			return JSONArray.fromObject(referenceCode(cr, list));
 		}
 		return JSONArray.fromObject(list);
 	}
 
-	private Object referenceCode(EChangeRequest cr, ArrayList<Map<String, Object>> list) {
+	private Object referenceCode(EChangeRequest cr, ArrayList<Map<String, Object>> list) throws Exception {
+		
+		String[] codes = cr.getModel() != null ? cr.getModel().split(",") : null;
+		
+		if(codes != null) {
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(NumberCode.class, true);
+			for(int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+			}
+			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "MODEL");
+			QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+			QueryResult result = PersistenceHelper.manager.find(query);
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				NumberCode n = (NumberCode) obj[0];
+				NumberCodeDTO dto = new NumberCodeDTO(n);
+				Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+				list.add(map);
+			}
+		}
 		return list;
 	}
 
