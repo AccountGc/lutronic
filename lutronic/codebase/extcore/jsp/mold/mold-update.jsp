@@ -204,9 +204,9 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 					alert("금형타입을 선택하세요.");
 					return;
 				}
-				const primary = document.querySelector("input[name=primary]").value;
-				if(primary.length<0) {
-					alert("주 첨부파일을 추가해주세요.");
+				const primary = document.querySelector("input[name=primary]");
+				if(primary == null){
+					alert("주 첨부파일을 첨부해주세요.");
 					return;
 				}
 				
@@ -220,7 +220,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				params.name = $("#name").val();
 				params.description = $("#description").val();
 				params.iterationNote = $("#iterationNote").val();
-				params.primary = primary;
+				params.primary = primary.value;
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				params.manufacture_code = $("#manufacture").val();

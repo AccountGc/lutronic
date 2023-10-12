@@ -51,8 +51,8 @@
 			<tr>
 				<th class="lb">작성일</th>
 				<td class="indent5">
-					<input type="text" name="createdDate" id="createdDate" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('createdDate');">
+					<input type="text" name="createdDate" id="writeDate" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
 				</td>
 				<th>승인일</th>
 				<td class="indent5">
@@ -159,6 +159,14 @@
 			</tr>
 		</table>
 		
+		<!-- 	관련 CR -->
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="150" name="height" />
+		</jsp:include>
+		
 		<table class="button-table">
 			<tr>
 				<td class="center">
@@ -191,13 +199,13 @@
 				});
 				
 				if(isEmpty(name.value)){
-					alert("CR 제목을 입력해주세요.");
+					alert("ECPR 제목을 입력해주세요.");
 					name.focus();
 					return;
 				}
 				
 				if(isEmpty(number.value)){
-					alert("CR 번호를 선택해주세요.");
+					alert("ECPR 번호를 선택해주세요.");
 					number.focus();
 					return;
 				}
@@ -215,9 +223,9 @@
 				const params = {
 					name : name.value,
 					number : number.value,
-					createdDate : toId("createdDate"),
+					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
-					createDepart : toId("createDepart"),
+					createDepart_code : toId("createDepart"),
 					writer_oid : toId("writerOid"),
 					proposer_oid : toId("proposerOid"),
 					eoCommentA : toId("eoCommentA"),
@@ -225,14 +233,12 @@
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
 					primary : primary.value,
-					rows101 : rows101,
+// 					rows101 : rows101,
 					rows300 : rows300
 				}
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/create");
-				parent.openLayer();
-				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -251,9 +257,15 @@
 				selectbox("createDepart");
 				finderUser("writer");
 				finderUser("proposer");
+				createAUIGrid300(columns300);
+				createAUIGrid101(columns101);
+				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID101);
 			});
 	
 			window.addEventListener("resize", function() {
+				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID101);
 			});
 			
 		</script>

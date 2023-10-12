@@ -93,7 +93,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						%>
 					</select>
 				</td>
-				<th class="req lb">프로젝트 코드</th>
+				<th class="req lb">제품명</th>
 				<td class="indent5" >
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -126,7 +126,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					</select> 
 					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('ecpr-list');">
+					<input type="button" value="초기화" title="초기화" onclick="">
 				</td>
 			</tr>
 		</table>
@@ -201,7 +201,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "writeDate",
 					headerText : "작성일",
 					dataType : "string",
 					width : 180,
@@ -219,7 +219,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "writer",
+					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 180,
@@ -228,7 +228,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						inline : true
 					},
 				}, {
-					dataField : "createdDate",
+					dataField : "createdDate_txt",
 					headerText : "등록일",
 					dataType : "string",
 					width : 180,
@@ -276,6 +276,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
+						console.log(data.list.length);
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
 						createPagingNavigator(data.curPage);

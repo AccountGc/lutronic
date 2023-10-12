@@ -27,6 +27,7 @@ public class EcprColumn {
 	private Timestamp createdDate;
 	private String createdDate_txt;
 	private String creator;
+	private String writeDate;
 
 	public EcprColumn() {
 
@@ -50,5 +51,6 @@ public class EcprColumn {
 		setCreatedDate(cr.getCreateTimestamp());
 		setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
 		setCreator(cr.getCreatorFullName());
+		setWriteDate(cr.getCreateDate());
 	}
 }
