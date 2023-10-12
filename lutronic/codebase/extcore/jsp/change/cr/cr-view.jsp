@@ -288,11 +288,11 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-2":
-					const isCreated105 = AUIGrid.isCreated(myGridID105); // ECO
-					if (isCreated105) {
-						AUIGrid.resize(myGridID105);
+					const isCreated300 = AUIGrid.isCreated(myGridID300); // ECO
+					if (isCreated300) {
+						AUIGrid.resize(myGridID300);
 					} else {
-						createAUIGrid105(columns105);
+						createAUIGrid300(columns300);
 					}
 					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
 					if (isCreated101) {
