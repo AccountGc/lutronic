@@ -26,7 +26,7 @@ import wt.util.WTException;
 
 								constraints = @PropertyConstraints(required = true)),
 
-						myRole = @MyRole(name = "master", cardinality = Cardinality.ONE))
+						myRole = @MyRole(name = "lineMaster", cardinality = Cardinality.ONE))
 
 		}
 
