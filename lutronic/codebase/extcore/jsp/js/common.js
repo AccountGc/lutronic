@@ -1650,7 +1650,8 @@ function _popup(url, width, height, opt) {
 		opt = "scrollbars=yes, resizable=yes, fullscreen=yes";
 	}
 	// 중복 생성 방지?
-	window.open(url, "", opt + ", top=" + (top - 50) + ", left=" + left + ", height=" + popH + ", width=" + popW);
+	var panel = window.open(url, "", opt + ", top=" + (top - 50) + ", left=" + left + ", height=" + popH + ", width=" + popW);
+	return panel;
 }
 
 /**************************************************************

@@ -59,15 +59,8 @@ boolean update = "update".equals(mode);
 				showRowCheckColumn : true,
 				showAutoNoDataMessage : false,
 				enableRowCheckShiftKey : true,
-				showDragKnobColumn : true,
-				useContextMenu : true,
 				enableSorting : false,
-				enableRightDownFocus : true,
 				autoGridHeight : true,
-				contextMenuItems : [ {
-					label : "선택된 행 삭제",
-					callback : contextItemHandler
-				} ],
 			}
 			myGridID8 = AUIGrid.create("#grid8", columnLayout, props);
 		}
@@ -88,25 +81,12 @@ boolean update = "update".equals(mode);
 					receives.push(list[i]);
 				}
 			}
-
+			
 			const url = getCallUrl("/workspace/popup");
-			const p = _popup(url, 1200, 700, "n");
+			const p = _popup(url, 1400, 900, "n");
 			p.approvals = approvals;
 			p.agrees = agrees;
 			p.receives = receives;
-		}
-
-		function contextItemHandler(event) {
-			const item = new Object();
-			switch (event.contextIndex) {
-			case 0:
-				const selectedItems = AUIGrid.getSelectedItems(event.pid);
-				for (let i = selectedItems.length - 1; i >= 0; i--) {
-					const rowIndex = selectedItems[i].rowIndex;
-					AUIGrid.removeRow(event.pid, rowIndex);
-				}
-				break;
-			}
 		}
 
 		function deleteRow8() {

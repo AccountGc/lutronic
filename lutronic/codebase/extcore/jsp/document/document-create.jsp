@@ -393,8 +393,9 @@ iframe {
 					rows105 : rows105,
 					temprary : temprary
 				};
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
-
 				console.log(params);
 				call(url, params, function(data) {
 					alert(data.msg);

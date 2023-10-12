@@ -7,6 +7,8 @@ import java.util.Map;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.query.QuerySpec;
@@ -52,5 +54,65 @@ public class DepartmentHelper {
 			return department;
 		}
 		return null;
+	}
+
+	/**
+	 * 갤재선 등록페이지에서 부서 가져오는 함수
+	 */
+	public JSONArray load900() throws Exception {
+		Department root = getRoot();
+
+		JSONArray list = new JSONArray();
+		JSONObject rootNode = new JSONObject();
+		rootNode.put("id", root.getPersistInfo().getObjectIdentifier().getId());
+		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+		rootNode.put("name", root.getName());
+
+		JSONArray children = new JSONArray();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, Department.class, "parentReference.key.id",
+				root.getPersistInfo().getObjectIdentifier().getId());
+		QuerySpecUtils.toOrderBy(query, idx, Department.class, Department.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			Department child = (Department) obj[0];
+			JSONObject node = new JSONObject();
+			node.put("id", child.getPersistInfo().getObjectIdentifier().getId());
+			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("name", child.getName());
+			load900(child, node);
+			children.add(node);
+		}
+		rootNode.put("children", children);
+		list.add(rootNode);
+		return list;
+
+	}
+
+	/**
+	 * 갤재선 등록페이지에서 부서 가져오는 재귀 함수
+	 */
+	private void load900(Department parent, JSONObject parentNode) throws Exception {
+		JSONArray children = new JSONArray();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, Department.class, "parentReference.key.id",
+				parent.getPersistInfo().getObjectIdentifier().getId());
+		QuerySpecUtils.toOrderBy(query, idx, Department.class, Department.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			Department child = (Department) obj[0];
+			JSONObject node = new JSONObject();
+			node.put("id", child.getPersistInfo().getObjectIdentifier().getId());
+			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("name", child.getName());
+			load900(child, node);
+			children.add(node);
+		}
+		parentNode.put("children", children);
 	}
 }

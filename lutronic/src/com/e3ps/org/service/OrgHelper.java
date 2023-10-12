@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
+import com.e3ps.org.dto.PeopleDTO;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -17,7 +18,9 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTAttributeNameIfc;
 
 public class OrgHelper {
 
@@ -197,5 +200,55 @@ public class OrgHelper {
 			department_name = p.getDepartment() != null ? p.getDepartment().getName() : "지정안됨";
 		}
 		return department_name;
+	}
+
+	/**
+	 * 결재선 지정 페이지에서 부서별 사용자 가져오기
+	 */
+	public ArrayList<PeopleDTO> load1000(String oid) throws Exception {
+		ArrayList<PeopleDTO> list = new ArrayList<>();
+		Department department = null;
+
+		if (StringUtil.checkString(oid)) {
+			department = (Department) CommonUtil.getObject(oid);
+		} else {
+			department = getRoot();
+		}
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+		int idx_d = query.appendClassList(Department.class, false);
+		int idx_w = query.appendClassList(WTUser.class, false);
+
+		QuerySpecUtils.toInnerJoin(query, People.class, WTUser.class, "userReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_w);
+		QuerySpecUtils.toInnerJoin(query, People.class, Department.class, "departmentReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_d);
+		QuerySpecUtils.toBooleanAnd(query, idx, People.class, People.IS_DISABLE, false);
+
+		query.appendAnd();
+		query.appendOpenParen();
+		SearchCondition sc = new SearchCondition(People.class, "departmentReference.key.id", "=",
+				department.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+
+		ArrayList<Department> departments = OrgHelper.manager.getSubDepartment(department, new ArrayList<Department>());
+		for (int i = 0; i < departments.size(); i++) {
+			Department sub = (Department) departments.get(i);
+			query.appendOr();
+			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(People.class, "departmentReference.key.id", "=", sfid),
+					new int[] { idx });
+		}
+		query.appendCloseParen();
+		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			People people = (People) obj[0];
+			PeopleDTO dto = new PeopleDTO(people);
+			list.add(dto);
+		}
+		return list;
 	}
 }

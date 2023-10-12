@@ -26,6 +26,18 @@
 
 12. myGridID8, columns8 결재
 
+13. myGridID900, columns900 결재선 등록 -> 부서 그리드
+
+14. myGridID1000, columns1000 결재선 등록 -> 부서 -> 사용자 그리드
+
+15. myGridID2000, columns2000 결재선 등록 -> 검토라인
+
+16. myGridID3000, columns3000 결재선 등록 -> 결재라인
+
+17. myGridID4000, columns4000 결재선 등록 -> 수신라인
+
+18. myGridID5000, columns5000 결재선 등록 -> 개인결재선
+
 
 // 그리드 높이 정리
 -- 검색 1행 기준 670px. 인라인 필터 사용시 ( 미사용시 700px) -- 

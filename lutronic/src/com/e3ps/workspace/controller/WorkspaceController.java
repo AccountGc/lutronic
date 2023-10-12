@@ -5,10 +5,12 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -166,4 +168,117 @@ public class WorkspaceController extends BaseController {
 		model.setViewName("popup:/workspace/register-popup");
 		return model;
 	}
+	
+	@Description(value = "개인결재선 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/loadLine")
+	public Map<String, Object> loadLine(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = WorkspaceHelper.manager.loadLine(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "개인결재선 저장 함수")
+	@ResponseBody
+	@PostMapping(value = "/save")
+	public Map<String, Object> save(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+
+			result = WorkspaceHelper.manager.validate(params);
+			if ((boolean) result.get("validate")) {
+				result.put("result", FAIL);
+				return result;
+			}
+
+			WorkspaceHelper.service.save(params);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+
+	@Description(value = "개인결재선 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.delete(oid);
+			result.put("result", SUCCESS);
+			result.put("msg", DELETE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/delete", "개인결재선 삭제 함수");
+		}
+		return result;
+	}
+
+	@Description(value = "개인결재선 즐겨찾기 저장 함수")
+	@ResponseBody
+	@PostMapping(value = "/favorite")
+	public Map<String, Object> favorite(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.favorite(params);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/favorite", "개인결재선 즐겨찾기 저장 함수");
+		}
+		return result;
+	}
+	
+	@Description(value = "개인결재선 즐겨찾기 불러오는 함수")
+	@ResponseBody
+	@PostMapping(value = "/loadFavorite")
+	public Map<String, Object> loadFavorite() throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = WorkspaceHelper.manager.loadFavorite();
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/loadFavorite", "개인결재선 즐겨찾기 불러오는 함수");
+		}
+		return result;
+	}
+
+	@Description(value = "개인결재선 불러오는 함수")
+	@ResponseBody
+	@GetMapping(value = "/loadFavorite")
+	public Map<String, Object> loadFavorite(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = WorkspaceHelper.manager.loadFavorite(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/loadFavorite", "개인결재선 불러오는 함수");
+		}
+		return result;
+	}
+
+
 }

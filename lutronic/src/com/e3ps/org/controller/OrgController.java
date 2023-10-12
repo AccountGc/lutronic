@@ -128,4 +128,21 @@ public class OrgController extends BaseController {
 		}
 		return result;
 	}
+
+	@Description(value = "결재선 지정 홤녀에서 부서별 사용자 리스트 가져오기")
+	@GetMapping(value = "/load1000")
+	@ResponseBody
+	public Map<String, Object> load1000(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<PeopleDTO> list = OrgHelper.manager.load1000(oid);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
 }
