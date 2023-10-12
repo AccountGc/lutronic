@@ -11,36 +11,15 @@ boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 제품
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 제품</th>
-		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
-			<%
-			if (create || update) {
-			%>
-			<input type="button" value="추가" title="추가" class="blue" onclick="popup300();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow300();">
-			<%
-			}
-			%>
-			<div id="grid300" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-		</td>
-	</tr>
-</table>
+<%
+if (create || update) {
+%>
+<input type="button" value="추가" title="추가" class="blue" onclick="popup300();">
+<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow300();">
+<%
+}
+%>
+<div id="grid300" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID300;
 	const columns300 = [ {
@@ -114,7 +93,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		}
 		myGridID300 = AUIGrid.create("#grid300", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID300, <%=AUIGridUtil.include(oid, codeType)%>);
+<%-- 		AUIGrid.setGridData(myGridID300, <%=AUIGridUtil.include(oid, "code")%>); --%>
 		<%}%>
 	}
 	

@@ -26,8 +26,9 @@ public class Test {
 
 	public static void main(String[] args) throws Exception {
 
-		EChangeRequest cr = (EChangeRequest) CommonUtil.getObject("com.e3ps.change.EChangeRequest:291813");
+		String s = "wt.workflow.work.WorkItemURLProcessor/URLTemplateAction?u8&action=AddParticipant&oid=OR%3Awt.workflow.work.WorkItem%3A207067831";
 		
-		System.out.println(cr.getModel());
+		
+
 	}
 }
