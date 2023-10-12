@@ -180,6 +180,9 @@ public class StandardCrService extends StandardManager implements CrService {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+			
+			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(cr);
 
 			trs.commit();
 			trs = null;
