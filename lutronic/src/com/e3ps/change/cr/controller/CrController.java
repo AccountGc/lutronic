@@ -122,7 +122,7 @@ public class CrController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/change/cr/cr-view.jsp");
+		model.setViewName("popup:/change/cr/cr-view");
 		return model;
 	}
 	

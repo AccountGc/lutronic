@@ -1,14 +1,10 @@
 <%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
 <%@page import="com.e3ps.change.cr.dto.CrDTO"%>
 <%@page import="java.util.Map"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 CrDTO dto = (CrDTO) request.getAttribute("dto");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
@@ -29,11 +25,11 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<%	
 			}
 			%>
-			<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">
 			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn">
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -154,135 +150,44 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 	</div>
 </div>
 <script type="text/javascript">
-	$("#updateBtn").click(function () {
+	function modify() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/cr/update?oid=" + oid);
 		document.location.href = url;
-	})
+	}
 
-	$("#deleteBtn").click(function () {
+	function _delete() {
 
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
 
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
+		const url = getCallUrl("/cr/delete?oid=" + oid);
+		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
-//		 				opener.loadGridData();
+				opener.loadGridData();
 				self.close();
+			} else {
+				clsoeLayer();
 			}
-		}, "GET");
-	})
+		}, "DELETE");
+	}
 	
-	$("#viewECA").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("changeECA" , "viewECA", "do") + "?oid="+oid;
-		openWindow(url, "eca", 1000, 600);
-	})
 	
-	$("#approveBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("groupware", "historyWork", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
-	})
+// 	$("#approveBtn").click(function () {
+// 		var oid = $("#oid").val();
+// 		var url = getURLString("groupware", "historyWork", "do") + "?oid=" + oid;
+// 		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+// 	})
 	
-	$("#downloadBtn").click(function () {
-		var oid = $("#oid").val();
-		var url = getURLString("common", "downloadHistory", "do") + "?oid=" + oid;
-		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
-	})
-	
-	$("#erpSend").click(function() {
-		if (!confirm("ERP 전송 하시게습니까?")){
-			return;
-		}
-		
-		var form = $("form[name=viewECOForm]").serialize();
-		var url	= getURLString("erp", "erpSendAction", "do");
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			error: function(data) {
-				alert("ERP 전송 오류");
-			},
-			success:function(data){
-				alert(data.message);
-				location.reload();
-			}
-			,beforeSend: function() {
-				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
-				gfn_EndShowProcessing();
-	        }
-		});
-	})
-	
-	$('#excelDown').click(function() {
-		var url = getURLString("changeECO", "excelDown", "do");
-		console.log(this.value);
-		console.log(url);
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:{
-				oid : $('#oid').val(),
-				eoType : this.value
-			},
-			dataType:"json",
-			async: false,
-			cache: false,
-			success:function(data){
-				console.log(data);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
-					alert(data.message);
-				}
-			}
-		});
-	})
-	
-	$("#batchSecondaryDown").click(function() {
-		var form = $("form[name=viewECOForm]").serialize();
-		var url	= getURLString("common", "batchSecondaryDown", "do");
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			
-			error:function(data){
-				var msg = "데이터 검색오류";
-				alert(msg);
-			},
-			
-			success:function(data){
-				console.log(data.message);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
-					alert(data.message);
-				}
-			}
-			,beforeSend: function() {
-				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
-				gfn_EndShowProcessing();
-	        }
-		});
-		
-	})
+// 	$("#downloadBtn").click(function () {
+// 		var oid = $("#oid").val();
+// 		var url = getURLString("common", "downloadHistory", "do") + "?oid=" + oid;
+// 		openOtherName(url,"window","830","600","status=no,scrollbars=yes,resizable=yes");
+// 	})
 	
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
@@ -310,5 +215,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID300);
 	});
 </script>
