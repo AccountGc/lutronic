@@ -9,17 +9,21 @@ import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.WCUtil;
 
 import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.org.WTUser;
 import wt.pom.Transaction;
+import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 
@@ -232,4 +236,20 @@ public class StandardActivityService extends StandardManager implements Activity
 				trs.rollback();
 		}
 	}
+	
+	@Override
+	public void deleteActivity(EChangeOrder eo) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeActivity.class, true);
+		SearchCondition sc = new SearchCondition(EChangeActivity.class, "eoReference.key.id", "=", eo.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EChangeActivity eChangeActivity = (EChangeActivity) obj[0];
+			PersistenceHelper.manager.delete(eChangeActivity);
+		}
+
+	}
+	
 }

@@ -84,6 +84,7 @@ import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
+import wt.vc.wip.WorkInProgressHelper;
 
 public class PartHelper {
 
@@ -1272,5 +1273,49 @@ public class PartHelper {
 			return true;
 		}
 		return false;
+	}
+	
+	public WTPart getLatest(WTPartMaster master) throws Exception {
+		String number = master.getNumber();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTPart.class, true);
+		int idx_master = query.appendClassList(WTPartMaster.class, false);
+
+		SearchCondition sc = null;
+
+		sc = WorkInProgressHelper.getSearchCondition_CI(WTPart.class);
+		query.appendWhere(sc, new int[] { idx });
+		query.appendAnd();
+
+		sc = VersionControlHelper.getSearchCondition(WTPart.class, true);
+		query.appendWhere(sc, new int[] { idx });
+		query.appendAnd();
+
+		sc = new SearchCondition(WTPart.class, "masterReference.key.id", WTPartMaster.class,
+				"thePersistInfo.theObjectIdentifier.id");
+		query.appendWhere(sc, new int[] { idx, idx_master });
+		query.appendAnd();
+
+		sc = new SearchCondition(WTPartMaster.class, WTPartMaster.NUMBER, "=", number);
+		query.appendWhere(sc, new int[] { idx_master });
+
+		QueryResult result = PersistenceHelper.manager.find(query);
+		WTPart part = null;
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			part = (WTPart) obj[0];
+		}
+		boolean isCheckout = WorkInProgressHelper.isCheckedOut(part);
+		if (isCheckout) {
+			throw new Exception("체크아웃된 부품 = " + part.getNumber());
+		}
+
+		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(part);
+		System.out.println("partHelper - isWorkCopy  : " + isWorkCopy);
+		if (isWorkCopy) {
+			throw new Exception("작업 복사본 부품 = " + part.getNumber());
+		}
+
+		return (WTPart) CommonUtil.getLatestVersion(part);
 	}
 }

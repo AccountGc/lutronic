@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.change.activity.service.ActivityHelper"%>
 <%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
@@ -113,7 +114,7 @@ boolean create = "create".equals(mode);
 		dateType : "string",
 		width : 150
 	}, {
-		dataField : "activity_type",
+		dataField : "active_type",
 		headerText : "활동구분",
 		dateType : "string",
 		width : 150,
@@ -265,7 +266,14 @@ boolean create = "create".equals(mode);
 			editable : true
 		}
 		myGridID200 = AUIGrid.create("#grid200", columnLayout, props);
+		<%if (view || update) {%>
+		AUIGrid.setGridData(myGridID200, <%=AUIGridUtil.include(oid, "activity")%>);
+		<%}else{%>
 		auiReadyHandler();
+		<%}%>
+		
+		
+		
 		AUIGrid.bind(myGridID200, "keyDown", auiKeyDownHandler);
 		AUIGrid.bind(myGridID200, "cellEditEnd", auiCellEditEndHandler);
 	}

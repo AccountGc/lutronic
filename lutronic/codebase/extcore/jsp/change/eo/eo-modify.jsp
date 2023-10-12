@@ -88,8 +88,8 @@
 				<th class="req lb">완제품 품목</th>
 				<td colspan="3" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+						<jsp:param value="update" name="mode" />
 						<jsp:param value="true" name="multi" />
 					</jsp:include>
 				</td>
@@ -126,15 +126,15 @@
 		<!-- 	관련 문서 -->
 		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="create" name="mode" />
+			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="150" name="height" />
 		</jsp:include>
 
 		<!-- 	설변 활동 -->
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
@@ -193,11 +193,21 @@
 				const secondarys = toArray("secondarys");
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
 				// 완제품
-				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
+				var rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
+				rows104 = rows104.filter(function(item){
+					return item.gridState!=	"removed";
+				});
+				
 				// 관련문서
-				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
+				var rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
+				rows90 = rows90.filter(function(item){
+					return item.gridState!=	"removed";
+				});
 				// ECA
-				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
+				var rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
+				rows200 = rows200.filter(function(item){
+					return item.gridState!=	"removed";
+				});
 				// 제품
 				var  rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 				rows300 = rows300.filter(function(item){

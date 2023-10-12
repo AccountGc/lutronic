@@ -11,12 +11,15 @@ import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.part.column.PartColumn;
+import com.e3ps.part.service.PartHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -35,6 +38,8 @@ import wt.lifecycle.LifeCycleHelper;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.pom.Transaction;
+import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
@@ -153,6 +158,21 @@ public class StandardEoService extends StandardManager implements EoService {
 		}
 	}
 
+	private void deleteLink(EChangeOrder eo) throws Exception {
+		// 관련문서 삭제
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(DocumentEOLink.class, true);
+		SearchCondition sc = new SearchCondition(DocumentEOLink.class, "roleBObjectRef.key.id", "=", eo.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			DocumentEOLink link = (DocumentEOLink) obj[0];
+			PersistenceHelper.manager.delete(link);
+		}
+		
+	}
+	
 	private void validateAndCompleteSave(EChangeOrder eo, ArrayList<Map<String, String>> rows104) throws Exception {
 		// 완제품 연결
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
@@ -168,11 +188,27 @@ public class StandardEoService extends StandardManager implements EoService {
 			if (!(boolean) c.get("result")) {
 				throw new Exception((String) c.get("msg"));
 			}
-
+			list.add(part);
 		}
 		completeSave(eo, list);
 	}
 
+	private void deleteCompleteSave(EChangeOrder eo) throws Exception {
+		// 완제품 삭제
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EOCompletePartLink.class, true);
+		SearchCondition sc = new SearchCondition(EOCompletePartLink.class, "roleBObjectRef.key.id", "=", eo.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EOCompletePartLink link = (EOCompletePartLink) obj[0];
+			PersistenceHelper.manager.delete(link);
+		}
+		
+	}
+	
+	
 	private void completeSave(EChangeOrder eo, ArrayList<WTPart> list) throws Exception {
 		for (WTPart part : list) {
 			String version = VersionControlHelper.getVersionIdentifier(part).getSeries().getValue();
@@ -190,6 +226,7 @@ public class StandardEoService extends StandardManager implements EoService {
 //					PersistenceHelper.manager.save(link);
 //				}
 //			} else {
+			
 			EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(), eo);
 			link.setVersion(version);
 			PersistenceHelper.manager.save(link);
@@ -271,17 +308,23 @@ public class StandardEoService extends StandardManager implements EoService {
 			eo = (EChangeOrder) PersistenceHelper.manager.modify(eo);
 
 			// 관련 링크들
-//			saveLink(eo, dto);
+			deleteLink(eo);
+			saveLink(eo, dto);
 
-			// 완제품 링크 및 검증
-//			validateAndCompleteSave(eo, rows104);
-
+//			 완제품 링크 및 검증
+			deleteCompleteSave(eo);
+			validateAndCompleteSave(eo, rows104);
+			
 			// 첨부 파일
 			removeAttach(eo);
 			saveAttach(eo, dto);
 
 			// 설변 활동 생성
 //			ActivityHelper.service.saveActivity(eo, rows200);
+			
+			
+			ActivityHelper.service.deleteActivity(eo);
+			ActivityHelper.service.saveActivity(eo, rows200);
 
 			// 활동 생성
 //	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);

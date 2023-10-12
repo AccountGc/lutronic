@@ -821,4 +821,12 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		return Ownership.newOwnership(SessionHelper.manager.getPrincipal());
 	}
 
+	public static Persistable getLatestVersion(Persistable persistable) throws Exception {
+		WTHashSet set = new WTHashSet();
+		set.add(persistable);
+
+		WTValuedHashMap map = (WTValuedHashMap) VersionControlHelper.service.getLatestRevisions(set);
+		VersionReference reference = (VersionReference) map.get(persistable);
+		return reference.getObject();
+	}
 }
