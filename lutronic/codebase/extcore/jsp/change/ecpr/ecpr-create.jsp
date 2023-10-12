@@ -225,7 +225,7 @@
 					number : number.value,
 					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
-					createDepart_code : toId("createDepart"),
+					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
 					proposer_oid : toId("proposerOid"),
 					eoCommentA : toId("eoCommentA"),
@@ -233,7 +233,7 @@
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
 					primary : primary.value,
-// 					rows101 : rows101,
+					rows101 : rows101,
 					rows300 : rows300
 				}
 				const secondarys = toArray("secondarys");
@@ -243,7 +243,7 @@
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/ecpr/list");
+						location.href = getCallUrl("/ecpr/list");
 					} else {
 						parent.closeLayer();
 					}

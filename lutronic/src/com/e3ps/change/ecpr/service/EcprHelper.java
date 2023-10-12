@@ -4,22 +4,32 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.beans.ECRData;
+import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.ecpr.dto.EcprDTO;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.org.People;
 
+import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
@@ -154,5 +164,66 @@ public class EcprHelper {
 	 */
 	public String displayToDept(String dept) throws Exception {
 		return NumberCodeHelper.manager.getNumberCodeName(dept, "DEPTCODE");
+	}
+	
+	/**
+	 * 관련 CR
+	 */
+	public JSONArray reference(String oid, String type) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+		if ("cr".equalsIgnoreCase(type)) {
+			// CR
+			return JSONArray.fromObject(referenceCr(ecpr, list));
+		} else if ("MODEL".equalsIgnoreCase(type)) {
+			// 제품명
+			return JSONArray.fromObject(referenceCode(ecpr, list));
+		}
+		return JSONArray.fromObject(list);
+	}
+	
+	private Object referenceCr(ECPRRequest ecpr, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
+		while (result.hasMoreElements()) {
+			ECPRRequest doc = (ECPRRequest) result.nextElement();
+			EcprColumn dto = new EcprColumn(doc);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
+	
+	private Object referenceCode(ECPRRequest ecpr, ArrayList<Map<String, Object>> list) throws Exception {
+		String[] codes = ecpr.getModel() != null ? ecpr.getModel().split(",") : null;
+		
+		if(codes != null) {
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(NumberCode.class, true);
+			for(int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+			}
+			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "MODEL");
+			QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+			QueryResult result = PersistenceHelper.manager.find(query);
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				NumberCode n = (NumberCode) obj[0];
+				NumberCodeDTO dto = new NumberCodeDTO(n);
+				Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+				list.add(map);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 링크 관계 확인 ( true : 연결, false : 미연결 )
+	 */
+	public boolean isConnect(String oid) throws Exception {
+		boolean isConnect = false;
+		ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+		QueryResult qr = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
+		isConnect = qr.size() > 0;
+		return isConnect;
 	}
 }

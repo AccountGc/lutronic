@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.eco.service.EcoHelper;
+import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -198,6 +200,9 @@ public class AUIGridUtil {
 			return CrHelper.manager.reference(oid, type);
 		} else if (per instanceof EChangeNotice) {
 			// ECN 연관 객체
+		} else if (per instanceof ECPRRequest) {
+			// CR 연관 객체
+			return EcprHelper.manager.reference(oid, type);
 		}
 
 		return JSONArray.fromObject(list);

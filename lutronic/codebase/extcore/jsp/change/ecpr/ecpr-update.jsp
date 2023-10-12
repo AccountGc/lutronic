@@ -20,6 +20,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 </head>
 <body>
 	<form>
+		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -71,7 +72,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
-							boolean selected = dto.getCreateDepart_code() == deptcode.getCode();
+							boolean selected = dto.getCreateDepart().equals(deptcode.getCode());
 						%>
 						<option value="<%=deptcode.getCode()%>" <% if(selected){%> selected <%} %>><%=deptcode.getName()%></option>
 						<%
@@ -113,7 +114,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
-						int isInclude = dto.getSections().indexOf(section.getCode());
+						int isInclude = dto.getChangeSection().indexOf(section.getCode());
 					%>
 					<div class="pretty p-switch">
 						<input type="checkbox" name="changeSection" value="<%=section.getCode()%>" <%if(isInclude >= 0){ %>checked<%} %>>
@@ -166,12 +167,12 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 		</table>
 
 		<!-- 	관련 CR -->
-<%-- 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp"> --%>
-<%-- 			<jsp:param value="<%= dto.getOid() %>" name="oid" /> --%>
-<%-- 			<jsp:param value="update" name="mode" /> --%>
-<%-- 			<jsp:param value="true" name="multi" /> --%>
-<%-- 			<jsp:param value="150" name="height" /> --%>
-<%-- 		</jsp:include> --%>
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
+			<jsp:param value="<%= dto.getOid() %>" name="oid" />
+			<jsp:param value="update" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="150" name="height" />
+		</jsp:include>
 
 		<table class="button-table">
 			<tr>
@@ -192,7 +193,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				}
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
-// 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 
@@ -226,11 +227,12 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				}
 				
 				const params = {
+					oid : oid,
 					name : name.value,
 					number : number.value,
 					createdDate : toId("createdDate"),
 					approveDate : toId("approveDate"),
-					createDepart_code : toId("createDepart"),
+					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
 					proposer_oid : toId("proposerOid"),
 					eoCommentA : toId("eoCommentA"),
@@ -238,17 +240,18 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
 					primary : primary.value,
-// 					rows101 : rows101,
+					rows101 : rows101,
 					rows300 : rows300
 				}
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
-				const url = getCallUrl("/ecpr/modify");
+				var url = getCallUrl("/ecpr/update");
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/ecpr/list");
+						opener.loadGridData();
+						self.close();
 					} else {
 						parent.closeLayer();
 					}
@@ -264,14 +267,14 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				finderUser("writer");
 				finderUser("proposer");
 				createAUIGrid300(columns300);
-// 				createAUIGrid101(columns101);
+				createAUIGrid101(columns101);
 				AUIGrid.resize(myGridID300);
-// 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID101);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
-// 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID101);
 			});
 		</script>
 	</form>

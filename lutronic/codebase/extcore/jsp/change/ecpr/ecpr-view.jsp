@@ -60,7 +60,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<tr>
 				<th>ECPR 번호</th>
 				<td><%=dto.getNumber()%></td>
-				<th>ECPR</th>
+				<th>상태</th>
 				<td><%=dto.getState()%></td>
 			</tr>
 			<tr>
@@ -127,9 +127,9 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 	</div>
 	<div id="tabs-2">
 		<!-- 관련 객체 -->
-<%-- 		<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp"> --%>
-<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
-<%-- 		</jsp:include> --%>
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
 	</div>
 </div>
 <script type="text/javascript">
@@ -140,17 +140,14 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 	})
 
 	$("#deleteBtn").click(function () {
-
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
-
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/delete?oid=" + oid);
+		const url = getCallUrl("/ecpr/delete?oid=" + oid);
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
-//		 				opener.loadGridData();
 				self.close();
 			}
 		}, "GET");
@@ -182,24 +179,19 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-2":
-// 					const isCreated105 = AUIGrid.isCreated(myGridID105); // ECO
-// 					if (isCreated105) {
-// 						AUIGrid.resize(myGridID105);
-// 					} else {
-// 						createAUIGrid105(columns105);
-// 					}
-// 					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
-// 					if (isCreated101) {
-// 						AUIGrid.resize(myGridID101);
-// 					} else {
-// 						createAUIGrid101(columns101);
-// 					}
-// 					break;
+					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
+					if (isCreated101) {
+						AUIGrid.resize(myGridID101);
+					} else {
+						createAUIGrid101(columns101);
+					}
+					break;
 				}
 			}
 		});
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID101);
 	});
 </script>

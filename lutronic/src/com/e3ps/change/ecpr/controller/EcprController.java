@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.cr.dto.CrDTO;
@@ -24,6 +26,14 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.mold.service.MoldHelper;
+
+import wt.doc.WTDocument;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
+import wt.part.WTPartDescribeLink;
 
 @Controller
 @RequestMapping(value = "/ecpr/**")
@@ -131,11 +141,35 @@ public class EcprController extends BaseController {
 	@Description(value = "ECPR 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/update")
-	public Map<String, Object> update(@RequestBody CrDTO dto) throws Exception{
+	public Map<String, Object> update(@RequestBody EcprDTO dto) throws Exception{
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			CrHelper.service.modify(dto);
+			EcprHelper.service.update(dto);
 			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "ECPR 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			// true 연결 있음
+			if (EcprHelper.manager.isConnect(oid)) {
+				result.put("result", false);
+				result.put("msg", "ecpr과 연결된 cr이 있습니다.");
+				return result;
+			}
+			
+			EcprHelper.service.delete(oid);
+			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

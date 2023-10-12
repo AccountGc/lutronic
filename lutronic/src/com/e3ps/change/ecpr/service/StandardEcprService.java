@@ -7,8 +7,6 @@ import java.util.Map;
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.EcrToEcrLink;
-import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -17,10 +15,13 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 
 import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
+import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
@@ -44,7 +45,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String number = dto.getNumber();
 		String writeDate = dto.getWriteDate();
 		String approveDate = dto.getApproveDate();
-		String createDepart_code = dto.getCreateDepart_code();
+		String createDepart = dto.getCreateDepart();
 		String writer_oid = dto.getWriter_oid();
 		String proposer_oid = dto.getProposer_oid();
 		String eoCommentA = dto.getEoCommentA();
@@ -94,7 +95,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				ecpr.setWriter(writer.getFullName());				
 			}
 			ecpr.setApproveDate(approveDate);
-			ecpr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
+			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
 			WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
@@ -144,7 +145,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		if (StringUtil.checkString(primary)) {
 			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
 			ApplicationData applicationData = ApplicationData.newApplicationData(ecpr);
-			applicationData.setRole(ContentRoleType.toContentRoleType("ECR"));
+			applicationData.setRole(ContentRoleType.PRIMARY);
 			PersistenceHelper.manager.save(applicationData);
 			ContentServerHelper.service.updateContent(ecpr, applicationData, vault.getPath());
 		}
@@ -172,6 +173,145 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				CrToEcprLink link = CrToEcprLink.newCrToEcprLink(ref, ecpr);
 				PersistenceServerHelper.manager.insert(link);
 			}
+		}
+	}
+	
+	/**
+	 * 첨부 파일 삭제
+	 */
+	private void removeAttach(ECPRRequest ecpr) throws Exception {
+		QueryResult result = ContentHelper.service.getContentsByRole(ecpr, ContentRoleType.toContentRoleType("ECPR"));
+		if (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(ecpr, item);
+		}
+
+		result.reset();
+		result = ContentHelper.service.getContentsByRole(ecpr, ContentRoleType.PRIMARY);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(ecpr, item);
+		}
+	}
+
+	/**
+	 * 관련 CR 삭제
+	 */
+	private void deleteLink(ECPRRequest ecpr) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class, false);
+		while (result.hasMoreElements()) {
+			CrToEcprLink link = (CrToEcprLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+	}
+
+	@Override
+	public void update(EcprDTO dto) throws Exception {
+		String name = dto.getName();
+		String number = dto.getNumber();
+		String writeDate = dto.getWriteDate();
+		String approveDate = dto.getApproveDate();
+		String createDepart = dto.getCreateDepart();
+		String writer_oid = dto.getWriter_oid();
+		String proposer_oid = dto.getProposer_oid();
+		String eoCommentA = dto.getEoCommentA();
+		String eoCommentB = dto.getEoCommentB();
+		String eoCommentC = dto.getEoCommentC();
+		ArrayList<String> sections = dto.getSections(); // 변경 구분
+		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
+		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
+
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			
+			// 모델 배열 처리
+			String model = "";
+			for (int i = 0; i < rows300.size(); i++) {
+				Map<String, String> row300 = rows300.get(i);
+				String oid = row300.get("oid");
+				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+				if(n != null) {
+					if (rows300.size() - 1 == i) {
+						model += n.getCode();
+					} else {
+						model += n.getCode() + ",";
+					}					
+				}
+			}
+			
+			String changeSection = "";
+			for (int i = 0; i < sections.size(); i++) {
+				String value = sections.get(i);
+				if (sections.size() - 1 == i) {
+					changeSection += value;
+				} else {
+					changeSection += value + ",";
+				}
+			}
+			
+			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(dto.getOid());
+			ecpr.setEoName(name);
+			ecpr.setEoNumber(number);
+			ecpr.setCreateDate(writeDate);
+
+			WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
+			if(writer != null) {
+				ecpr.setWriter(writer.getFullName());				
+			}
+			ecpr.setApproveDate(approveDate);
+			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
+			ecpr.setModel(model);
+
+			WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
+			if(proposer != null) {
+				ecpr.setProposer(proposer.getFullName());				
+			}
+			ecpr.setChangeSection(changeSection);
+			ecpr.setEoCommentA(eoCommentA);
+			ecpr.setEoCommentB(eoCommentB);
+			ecpr.setEoCommentC(eoCommentC);
+			
+			ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
+			
+			// 첨부 파일 삭제
+			removeAttach(ecpr);
+			saveAttach(ecpr, dto);
+
+			// 링크 삭제
+			deleteLink(ecpr);
+			saveLink(ecpr, rows101);
+			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void delete(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+
+			PersistenceHelper.manager.delete(ecpr);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }

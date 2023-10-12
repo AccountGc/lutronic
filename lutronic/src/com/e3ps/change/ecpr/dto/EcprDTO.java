@@ -50,7 +50,6 @@ public class EcprDTO {
 	// 변수용
 	private String writer_oid;
 	private String proposer_oid;
-	private String createDepart_code;
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
@@ -69,7 +68,7 @@ public class EcprDTO {
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
 		setApproveDate(cr.getApproveDate());
-		setCreateDepart_name(cr.getCreateDepart());
+		setCreateDepart_name(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
 		setWriter_name(cr.getWriter());
 		setProposer_name(cr.getProposer());
 		setChangeSection(cr.getChangeSection());
@@ -79,7 +78,7 @@ public class EcprDTO {
 		
 		// 따로 추가
 		setState(cr.getLifeCycleState().getDisplay());
-		setCreatedDate(DateUtil.getDateString(cr.getCreateTimestamp(),"a"));
+		setCreatedDate(cr.getCreateTimestamp().toString().substring(0, 10));
 		setModifiedDate(cr.getModifyTimestamp());
 		setModifiedDate_text(cr.getModifyTimestamp().toString().substring(0, 10));
 		setCreator(cr.getCreatorFullName());
