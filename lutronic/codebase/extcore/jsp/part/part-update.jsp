@@ -619,9 +619,6 @@ function update() {
 			remarks : toId("remarks"),
 			specification : toId("specification"),
 			wtPartType : toId("wtPartType"),
-			source : toId("source"),
-			lifecycle : toId("lifecycle"),
-			view :toId("view"),
 			location : toId("location"),
 			// 링크 데이터
 			rows90 : rows90,

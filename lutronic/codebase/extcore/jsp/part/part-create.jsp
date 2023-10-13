@@ -143,15 +143,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<input type="text" name="etc" id="etc" class="width-200">
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">결재</th>
-				<td colspan="4">
-					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 		<table class="button-table">
 			<tr>
@@ -281,6 +272,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<th>사양</th>
 				<td class="indent5">
 					<input type="text" name="specification" id="specification" class="width-200">
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
 				</td>
 			</tr>
 		</table>
