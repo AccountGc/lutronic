@@ -109,9 +109,18 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<td class="tdblueM" id="auto" colspan="3" >
 						<div>
 							<span style="font-weight: bold; vertical-align: middle;" id="displayName">
-								<c:out value="<%= data != null ? data.getName() : "" %>" />
+								<%= data != null ? data.getName() : "" %>
 							</span>
 						</div>
+					</td>
+				</tr>
+				<tr>
+					<th class="lb">결재</th>
+					<td colspan="3">
+						<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+							<jsp:param value="" name="oid" />
+							<jsp:param value="create" name="mode" />
+						</jsp:include>
 					</td>
 				</tr>
 			</table>
@@ -248,7 +257,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 </table>
-<br>
+
 <!-- 	주도면 -->
 <table class="button-table">
 	<tr>
@@ -275,48 +284,23 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 </table>
-<br>
 
 <!-- 관련 문서 -->
-<%-- 		<jsp:include page="/extcore/jsp/document/include_selectDocument.jsp"> --%>
-<%-- 			<jsp:param value="part" name="moduleType"/> --%>
-<%-- 			<jsp:param value="<%= data.getOid() %>" name="oid"/> --%>
-<%-- 			<jsp:param value="관련 문서" name="title"/> --%>
-<%-- 			<jsp:param value="docOid" name="paramName"/> --%>
-<%-- 		</jsp:include> --%>
-<br>
+<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+	<jsp:param value="<%= data.getOid() %>" name="oid" />
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="insert90" name="method" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="250" name="height" />
+</jsp:include>
 
-
-<!-- 관련 rohs -->
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png"> 관련 RoHS
-			</div>
-		</td>
-	</tr>
-</table>
-
-<table class="search-table">
-	<colgroup>
-		<col width="180">
-		<col width="*">
-		<col width="180">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th>관련 RoHS</th>
-		<td class="indent5" colspan="3">
-			<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-				<jsp:param value="<%= data.getOid() %>" name="oid"/>
-				<jsp:param value="관련 RoHs" name="title" />
-				<jsp:param value="part" name="module"/>
-				<jsp:param value="update" name="mode"/>
-			</jsp:include>
-		</td>
-	</tr>
-</table>
+<!-- 관련 RoHS -->
+<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+	<jsp:param value="<%=data.getOid() %>" name="oid" />
+	<jsp:param value="composition" name="roleType"/>
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="part" name="module" />
+</jsp:include>
 
 <!-- 첨부파일 -->
 <table class="button-table">
@@ -346,7 +330,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 </table>
-<br>
 
 <table class="button-table">
 	<tr>
@@ -357,8 +340,12 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 </table>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+	createAUIGrid90(columns90);
+	AUIGrid.resize(myGridID90);
 	createAUIGrid6(columnsRohs);
 	AUIGrid.resize(rohsGridID);
+	createAUIGrid8(columns8);
+	AUIGrid.resize(myGridID8);
 	document.getElementById("partName1").focus();
 	selectbox("state");
 	selectbox("model");
@@ -368,6 +355,12 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("mat");
 	selectbox("finish");
 	selectbox("manufacture");
+});
+
+window.addEventListener("resize", function() {
+	AUIGrid.resize(docGridID);
+	AUIGrid.resize(rohsGridID);
+	AUIGrid.resize(myGridID8);
 });
 
 // 품목명 입력 시 
@@ -561,6 +554,8 @@ $("#updateBtn").click(function() {
 	if (confirm("수정하시겠습니까?")){
 		
 		let params = new Object();
+		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+		toRegister(params, addRows8); // 결재선 세팅
 		const url = getCallUrl("/part/update");
 		params.oid = oid;
 		params.location = location;

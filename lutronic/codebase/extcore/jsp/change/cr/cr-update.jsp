@@ -165,6 +165,15 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 
 		<!-- 	관련 CR -->
@@ -179,6 +188,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			function update() {
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
+				const secondarys = toArray("secondarys");
 
 				if (!confirm("수정 하시겠습니까?")) {
 					return;
@@ -232,10 +242,12 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
 					primary : primary.value,
+					secondarys : secondarys,
 					rows101 : rows101,
 					rows300 : rows300
 				}
-				params.secondarys = toArray("secondarys");
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/cr/modify");
 				parent.openLayer();
 				logger(params);
@@ -261,13 +273,16 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
+				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID8);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID8);
 			});
 		</script>
 	</form>

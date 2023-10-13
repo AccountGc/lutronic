@@ -27,7 +27,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				</td>
 				<td class="right">
 					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
