@@ -26,9 +26,9 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create();">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
 					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -158,6 +158,15 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="5">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 
 		<!-- 	관련 CR -->
@@ -167,15 +176,23 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="150" name="height" />
 		</jsp:include>
+		
+		<table class="button-table">
+			<tr>
+				<td class="center">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
+			</tr>
+		</table>
 
 		<script type="text/javascript">
-			function create() {
+			function create(temp) {
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
-
-				if (!confirm("등록 하시겠습니까?")) {
-					return;
-				}
+				const temprary = JSON.parse(temp);
+				const secondarys = toArray("secondarys");
+				
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
@@ -211,6 +228,16 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					return;
 				}
 				
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
+				}
+				
 				const params = {
 					name : name.value,
 					number : number.value,
@@ -224,11 +251,13 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
 					primary : primary.value,
+					secondarys : secondarys,
 					rows101 : rows101,
-					rows300 : rows300
+					rows300 : rows300,
+					temprary : temprary
 				}
-				
-				params.secondarys = toArray("secondarys");
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/cr/create");
 				parent.openLayer();
 				logger(params);
