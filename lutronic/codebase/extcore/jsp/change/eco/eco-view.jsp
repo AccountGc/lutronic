@@ -137,7 +137,17 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</tr>
 		</table>
 	</div>
+	
+	<div id="tabs-2">
+		<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="250" name="height" />
+		</jsp:include>
+	</div>
+	
 </div>
+
 <script type="text/javascript">
 	function autoHeight() {
 		const eoCommentC = document.getElementById("eoCommentC");
@@ -157,6 +167,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				case "tabs-1":
 					break;
 				case "tabs-2":
+					const isCreated200 = AUIGrid.isCreated(myGridID200); // 설변 활동
+					if (isCreated200) {
+						AUIGrid.resize(myGridID200);
+					} else {
+						createAUIGrid200(columns200);
+					}
 					break;
 				case "tabs-3":
 					break;

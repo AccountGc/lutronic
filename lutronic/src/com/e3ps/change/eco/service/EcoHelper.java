@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.activity.dto.ActDTO;
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
+import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -298,6 +302,36 @@ public class EcoHelper {
 	 * ECO 관련 객체들
 	 */
 	public JSONArray reference(String oid, String type) throws Exception {
-		return null;
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+		if ("doc".equalsIgnoreCase(type)) {
+			// 문서
+//			return JSONArray.fromObject(referenceDoc(eo, list));
+		} else if ("part".equalsIgnoreCase(type)) {
+			// 완제품
+//			return JSONArray.fromObject(referencePart(eo, list));
+		} else if ("activity".equalsIgnoreCase(type)) {
+			// 설계변경 활동
+			return JSONArray.fromObject(referenceActivity(eco, list));
+		}
+		
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * ECO 관련 설계변경 활동
+	 */
+	private Object referenceActivity(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		JSONArray j = new JSONArray();
+		ArrayList<EChangeActivity> colletActivityList =ActivityHelper.manager.colletActivity(eco);
+		System.out.println(colletActivityList.size());
+		for(EChangeActivity item : colletActivityList) {
+			
+			ActDTO dto = new ActDTO(item);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		
+		return list;
 	}
 }

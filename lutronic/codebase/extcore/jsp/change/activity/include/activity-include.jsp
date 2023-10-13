@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.change.activity.service.ActivityHelper"%>
 <%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
@@ -14,6 +15,7 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
+String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -42,7 +44,7 @@ boolean create = "create".equals(mode);
 			<%
 			}
 			%>
-			<div id="grid200" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid200" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -259,8 +261,10 @@ boolean create = "create".equals(mode);
 			enableSorting : false,
 			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
+			<%if (create || update) {%>
 			showStateColumn : true,
 			showRowCheckColumn : true,
+			<%}%>
 			enableFilter : true,
 			autoGridHeight : true,
 			editable : true

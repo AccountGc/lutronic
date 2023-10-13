@@ -13,6 +13,7 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.message.Message;
@@ -106,6 +107,9 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			// 변경 대상 품목 링크
 			saveEcoPart(eco, clist);
+			
+			// 설변 활동 생성
+			ActivityHelper.service.saveActivity(eco, rows200);
 
 			trs.commit();
 			trs = null;
