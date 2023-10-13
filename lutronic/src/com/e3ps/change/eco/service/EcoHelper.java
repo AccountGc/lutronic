@@ -7,6 +7,7 @@ import java.util.Map;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.column.EcoColumn;
@@ -19,11 +20,15 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.part.WTPart;
+import wt.part.WTPartMaster;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -304,12 +309,9 @@ public class EcoHelper {
 	public JSONArray reference(String oid, String type) throws Exception {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
-		if ("doc".equalsIgnoreCase(type)) {
-			// 문서
-//			return JSONArray.fromObject(referenceDoc(eo, list));
-		} else if ("part".equalsIgnoreCase(type)) {
-			// 완제품
-//			return JSONArray.fromObject(referencePart(eo, list));
+		if ("part".equalsIgnoreCase(type)) {
+			// 설계변경 품목
+			return JSONArray.fromObject(referencePart(eco, list));
 		} else if ("activity".equalsIgnoreCase(type)) {
 			// 설계변경 활동
 			return JSONArray.fromObject(referenceActivity(eco, list));
@@ -318,6 +320,20 @@ public class EcoHelper {
 		return JSONArray.fromObject(list);
 	}
 
+	/**
+	 * ECO 설계변경 품목
+	 */
+	private Object referencePart(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class);
+		while (result.hasMoreElements()) {
+			WTPartMaster master = (WTPartMaster) result.nextElement();
+			WTPart part = PartHelper.manager.getLatest(master);
+			PartColumn dto = new PartColumn(part);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
 	/**
 	 * ECO 관련 설계변경 활동
 	 */
