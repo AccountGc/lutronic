@@ -1,4 +1,5 @@
 <%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.rohs.service.RohsHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -10,6 +11,7 @@ String roleType = request.getParameter("roleType");
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
 JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
+String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -24,15 +26,13 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 	<colgroup>
 		<col width="150">
 		<col width="*">
-		<col width="150">
-		<col width="*">
 	</colgroup>
 	<tr>
 		<th class="lb">관련 RoHS</th>
-		<td colspan="3">
+		<td class="indent5 pt5 ">
 			<input type="button" value="추가" title="추가" class="blue" onclick="addRohs();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRohs();">
-			<div id="grid_rohs" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid_rohs" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
