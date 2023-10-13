@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.cr.dto.CrDTO;
@@ -22,12 +21,11 @@ import wt.content.ContentServerHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
-import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
-import wt.org.WTUser;
+import wt.lifecycle.State;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.util.WTException;
@@ -55,6 +53,7 @@ public class StandardCrService extends StandardManager implements CrService {
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
+		boolean temprary = dto.isTemprary();
 
 		Transaction trs = new Transaction();
 		try {
@@ -107,12 +106,20 @@ public class StandardCrService extends StandardManager implements CrService {
 			String location = "/Default/설계변경/ECR";
 			String lifecycle = "LC_Default";
 
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) cr, folder);
-			// 문서 lifeCycle 설정
-			LifeCycleHelper.setLifeCycle(cr,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+			// 임시 서장함 이동
+			if (temprary) {
+				setTemprary(cr, lifecycle);
+			} else {
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) cr, folder);				
+			}
 			cr = (EChangeRequest) PersistenceHelper.manager.save(cr);
+			
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(cr, state);
+			}
 
 //			String[] ecrOids = (String[]) req.getParameterValues("ecrOid");
 //			updateECRToECRLink(ecr, ecrOids, false);
@@ -131,6 +138,29 @@ public class StandardCrService extends StandardManager implements CrService {
 		} finally {
 			if (trs != null)
 				trs.rollback();
+		}
+	}
+	
+	/**
+	 * 임시 저장함으로 이동시킬 함수
+	 */
+	private void setTemprary(EChangeRequest cr, String lifecycle) throws Exception {
+		setTemprary(cr, lifecycle, "C");
+	}
+
+	/**
+	 * 임시 저장함으로 이동시킬 함수 C 생성, R, U 개정 및 수정
+	 */
+	private void setTemprary(EChangeRequest cr, String lifecycle, String option) throws Exception {
+		String location = "/Default/임시저장함";
+		if ("C".equals(option)) {
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) cr, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(cr,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+		} else if ("U".equals(option) || "R".equals(option)) {
+
 		}
 	}
 

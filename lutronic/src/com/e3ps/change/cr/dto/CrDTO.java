@@ -61,6 +61,8 @@ public class CrDTO {
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 	
 	private Map<String, Object> contentMap = null;
+	
+	private boolean temprary;
 
 	public CrDTO() {
 
