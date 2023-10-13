@@ -426,7 +426,7 @@ public class PartController extends BaseController {
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
 		model.addObject("unitList", unitList);
-		model.setViewName("popup:/part/updatePart");
+		model.setViewName("popup:/part/part-update");
 		return model;
 	}
 
