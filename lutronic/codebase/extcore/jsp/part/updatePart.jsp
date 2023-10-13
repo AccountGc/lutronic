@@ -296,9 +296,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 <!-- 관련 RoHS -->
 <jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-	<jsp:param value="<%= data.getOid() %>" name="oid" />
+	<jsp:param value="<%=data.getOid() %>" name="oid" />
 	<jsp:param value="composition" name="roleType"/>
 	<jsp:param value="update" name="mode" />
+	<jsp:param value="part" name="module" />
 </jsp:include>
 
 <!-- 첨부파일 -->
