@@ -27,102 +27,96 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <input type="hidden" name="oid" id="oid" value="<%= data.getOid() %>" />
-<table width="100%" border="0" cellpadding="0" cellspacing="0" > 
-	<tr height="5">
-		<td>
-			<table class="button-table">
-				<tr>
-					<td class="left">
-						<div class="header">
-							<img src="/Windchill/extcore/images/header.png">&nbsp;품목 수정
-						</div>
-					</td>
-					<td class="right">
-						<input type="button" value="이전페이지" name="backBtn" id="backBtn" onclick="javascript:history.back();">
-					</td>
-				</tr>
-			</table>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				품목 수정
+			</div>
+		</td>
+		<td class="right">
+			<input type="button" value="수정" title="수정" class="red" onclick="update('false');">
+			<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 		</td>
 	</tr>
-	
-	<tr align="center">
-		<td valign="top" colspan="2">
-			<table class="search-table">
-				<colgroup>
-					<col width="180">
-					<col width="180">
-					<col width="*">
-				</colgroup>
-				<tr>
-					<th>품목번호</th>
-					<td class="indent5" colspan="3">
-						<%= data.getNumber() != null ? data.getNumber() : "" %>
-					</td>
-				</tr>
-				<tr>
-					<th>품목분류 <span style="color:red;">*</span></th>
-					<td class="indent5" colspan="3">
-						<input type="hidden" name="location"  id="location"  value="<%= data.getLocation() != null ? data.getLocation() : "" %>">
-						<span id="locationText">
-							<%= data.getLocation() != null ? data.getLocation() : "" %>
-						</span>
-					</td>
-				</tr>
-				<tr>
-					<th rowspan="4">품목명 <span style="color:red;">*</span></th>
-					<th>대제목</th>
-					<td class="indent5">
-						<input id="partName1" name="partName1" class='partName width-300' type="text" value="<%= partName1 %>" >
-						<div id="partName1Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
-							<ul id="partName1UL" style="list-style-type: none; padding-left: 0px;">
-							</ul>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>중제목</th>
-					<td class="indent5">
-						<input id="partName2" name="partName2" class='partName width-300' type="text" value="<%= partName2 %>" >
-						<div id="partName2Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
-							<ul id="partName2UL" style="list-style-type: none; padding-left: 0px;">
-							</ul>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>소제목</th>
-					<td class="indent5">
-						<input id="partName3" name="partName3" class='partName width-300' type="text" value="<%= partName3 %>" >
-						<div id="partName3Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
-							<ul id="partName3UL" style="list-style-type: none; padding-left: 0px;">
-							</ul>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>사용자 Key in</th>
-					<td class="indent5">
-						<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%= partName4 %>" >
-					</td>
-				</tr>
-				<tr>
-					<td class="tdblueM" id="auto" colspan="3" >
-						<div>
-							<span style="font-weight: bold; vertical-align: middle;" id="displayName">
-								<%= data != null ? data.getName() : "" %>
-							</span>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th class="lb">결재</th>
-					<td colspan="3">
-						<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-							<jsp:param value="" name="oid" />
-							<jsp:param value="create" name="mode" />
-						</jsp:include>
-					</td>
-				</tr>
+</table>
+<table class="create-table">
+	<colgroup>
+		<col width="180">
+		<col width="180">
+		<col width="*">
+	</colgroup>
+	<tr>
+		<th class="lb">품목번호</th>
+		<td class="indent5" colspan="3">
+			<%= data.getNumber() != null ? data.getNumber() : "" %>
+		</td>
+	</tr>
+	<tr>
+		<th class="req lb">품목분류</th>
+		<td class="indent5" colspan="3">
+			<input type="hidden" name="location"  id="location"  value="<%= data.getLocation() != null ? data.getLocation() : "" %>">
+			<span id="locationText">
+				<%= data.getLocation() != null ? data.getLocation() : "" %>
+			</span>
+		</td>
+	</tr>
+	<tr>
+		<th rowspan="4" class="req lb">품목명 <span style="color:red;">*</span></th>
+		<th class="lb">대제목</th>
+		<td class="indent5">
+			<input id="partName1" name="partName1" class='partName width-300' type="text" value="<%= partName1 %>" >
+			<div id="partName1Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+				<ul id="partName1UL" style="list-style-type: none; padding-left: 0px;">
+				</ul>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">중제목</th>
+		<td class="indent5">
+			<input id="partName2" name="partName2" class='partName width-300' type="text" value="<%= partName2 %>" >
+			<div id="partName2Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+				<ul id="partName2UL" style="list-style-type: none; padding-left: 0px;">
+				</ul>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">소제목</th>
+		<td class="indent5">
+			<input id="partName3" name="partName3" class='partName width-300' type="text" value="<%= partName3 %>" >
+			<div id="partName3Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
+				<ul id="partName3UL" style="list-style-type: none; padding-left: 0px;">
+				</ul>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">사용자 Key in</th>
+		<td class="indent5">
+			<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%= partName4 %>" >
+		</td>
+	</tr>
+	<tr>
+		<td class="tdblueM" id="auto" colspan="3" >
+			<div>
+				<span style="font-weight: bold; vertical-align: middle;" id="displayName">
+					<%= data != null ? data.getName() : "" %>
+				</span>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">결재</th>
+		<td colspan="3">
+			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+				<jsp:param value="" name="oid" />
+				<jsp:param value="create" name="mode" />
+			</jsp:include>
+		</td>
+	</tr>
 			</table>
 		</td>
 	</tr>
@@ -145,7 +139,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th>프로젝트코드 <span style="color:red;">*</span></th>
+		<th class="req lb">프로젝트코드 <span style="color:red;">*</span></th>
 		<td class="indent5">
 			<select name="model" id="model" class="width-200">
 				<option value="">선택</option>
@@ -158,7 +152,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				%>
 			</select>
 		</td>
-		<th>제작방법 <span style="color:red;">*</span></th>
+		<th class="req">제작방법 <span style="color:red;">*</span></th>
 		<td class="indent5">
 			<select name="productmethod" id="productmethod" class="width-200">
 				<option value="">선택</option>
@@ -172,7 +166,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</select>
 	</tr>
 	<tr>
-		<th>부서 <span style="color:red;">*</span></th>
+		<th class="req lb">부서 <span style="color:red;">*</span></th>
 		<td class="indent5">
 			<select name="deptcode" id="deptcode" class="width-200">
 				<option value="">선택</option>
@@ -185,7 +179,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				%>
 			</select>
 		</td>
-		<th>단위 <span style="color:red;">*</span></th>
+		<th class="req">단위 <span style="color:red;">*</span></th>
 		<td class="indent5">
 			<select name="unit" id="unit" class="width-200">
 				<option value="">선택</option>
@@ -363,7 +357,7 @@ window.addEventListener("resize", function() {
 	AUIGrid.resize(myGridID8);
 });
 
-// 품목명 입력 시 
+//품목명 입력 시 
 $(".partName").keyup(function (event) {
 	var charCode = (event.which) ? event.which : event.keyCode;
 	if((charCode == 38 || charCode == 40) ) {
@@ -387,7 +381,32 @@ $(".partName").keyup(function (event) {
 	}
 })
 
-// partName 입력 시 partName 리스트 출력 메서드
+// 품목명에서 ↑,↓ 입력 시 발생 메서드
+const movePartNameFocus = function(id,isAdd) {
+	var removeCount = 0;
+	var addCount = 0;
+	var l = $("#" + id + "UL li").length;
+	for(var i=0; i<l; i++){
+		var cls = $("#" + id + "UL li").eq(i).attr('class');
+		if(cls == 'hover') {
+			$("#" + id + "UL li").eq(i).removeClass("hover");
+			removeCount = i;
+			if(isAdd){
+				addCount = (i-1);
+			}else if(!isAdd) {
+				addCount = (i+1);
+			}
+			break;
+		}
+	}
+	if(addCount == l) {
+		addCount = 0;
+	}
+	$("#" + id + "UL li").eq(addCount).addClass("hover");
+	$("#" + id).val($("#" + id + "UL li").eq(addCount).text());
+}
+
+// 품목명 입력 시 품목명 리스트 출력 메서드
 const autoSearchPartName = function(id, value) {
 	if($.trim(value) == "") {
 		addSearchList(id, '', true);
@@ -404,7 +423,7 @@ const autoSearchPartName = function(id, value) {
 	}
 }
 
-// partName 가져오기 메서드
+// 품목명 가져오기 메서드
 const autoSearchName = function(codeType, value) {
 	
 	const url = getCallUrl("/common/autoSearchName");
@@ -421,9 +440,7 @@ const autoSearchName = function(codeType, value) {
     });
 }
 
-<%----------------------------------------------------------
-*                      품목명 입력시 데이터 리스트 보여주기
-----------------------------------------------------------%>
+// 품목명 입력시 데이터 리스트 보여주기
 const addSearchList = function(id, data, isRemove) {
 	$("#" + id + "UL li").remove();
 	if(isRemove) {
@@ -440,9 +457,7 @@ const addSearchList = function(id, data, isRemove) {
 	}
 }
 
-<%----------------------------------------------------------
-*                      품목명 데이터 마우스 올렸을때
-----------------------------------------------------------%>
+// 품목명 데이터 마우스 올렸을때
 $(document).on("mouseover", 'div > ul > li', function() {
 	var partName = $(this).attr("title");
 	
@@ -457,9 +472,7 @@ $(document).on("mouseover", 'div > ul > li', function() {
 	$("#" + partName).val($(this).text());
 })
 
-<%----------------------------------------------------------
-*                      품목명 데이터 마우스 뺄때
-----------------------------------------------------------%>
+//품목명 데이터 마우스 뺄때
 $(document).on("mouseout", 'div > ul > li', function() {
 	$(this).removeClass("hover") ;
 })
@@ -468,29 +481,55 @@ $('#partName4').focusout(function() {
 	$('#partName4').val(this.value.toUpperCase());
 })
 
+$(".partName").focusout(function () {
+	$("#" + this.id + "Search").hide();
+	
+	var name = '';
+	
+	if(!$.trim($('#partName1').val()) == '') {
+		name += $('#partName1').val();
+	}
+	
+	if(!$.trim($('#partName2').val()) == '') {
+		if(!$.trim(name) == '') {
+			name += '_';
+		}
+		name += $('#partName2').val();
+	}
+	
+	if(!$.trim($('#partName3').val()) == '') {
+		if(!$.trim(name) == '') {
+			name += '_';
+		}
+		name += $('#partName3').val();
+	}
+	
+	if(!$.trim($('#partName4').val()) == '') {
+		if(!$.trim(name) == '') {
+			name += '_';
+		}
+		name += $('#partName4').val();
+	}
+	
+	$('#displayName').html(name);
+})
+
+// 무게 입력 메서드
 $(function() {
-	<%----------------------------------------------------------
-	*                      Weight 입력 중
-	----------------------------------------------------------%>
+	// 무게 입력 중
 	$('#weight').keypress(function(event) {
 		var charCode = (event.which) ? event.which : event.keyCode;
 		return (charCode == 46) || common_isNumber(event, this);
 	})
-	<%----------------------------------------------------------
-	*                      Weight 입력시
-	----------------------------------------------------------%>
+	// 무게 입력 중
 	$("#weight").keyup(function() {
 		var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
 		$("#weight").val(result);
 	})
 })
-	
-<%----------------------------------------------------------
-*                      수정버튼
-----------------------------------------------------------%>
-$("#updateBtn").click(function() {
-	const oid = document.getElementById("oid").value;
-	const location = document.getElementById("location").value;
+
+// 수정 메서드
+function update() {
 	const partName1 = document.getElementById("partName1").value;
 	const partName2 = document.getElementById("partName2").value;
 	const partName3 = document.getElementById("partName3").value;
@@ -498,24 +537,14 @@ $("#updateBtn").click(function() {
 	const model = document.getElementById("model").value;
 	const productmethod = document.getElementById("productmethod").value;
 	const deptcode = document.getElementById("deptcode").value;
-	const unit = document.getElementById("unit").value;
-	const weight = document.getElementById("weight").value;
-	const manufacture = document.getElementById("manufacture").value;
-	const mat = document.getElementById("mat").value;
-	const finish = document.getElementById("finish").value;
-	const remarks = document.getElementById("remarks").value;
-	const specification = document.getElementById("specification").value;
+	const unit =  document.getElementById("unit").value;
+	const temprary = JSON.parse(temp);
+	
 	const primary = document.querySelector("input[name=primary]") == null ? "" : document.querySelector("input[name=primary]").value;
 	const secondary = toArray("secondarys");
-	const delocIds = toArray("delocIds");
 	
-//     let docOids = [];
-//     const appendDoc = AUIGrid.getGridData(myGridID90);
-//     if(appendDoc.length > 0){
-//         for(let i = 0; i < appendDoc.length; i++){
-//             docOids.push(appendDoc[i].oid)
-//         }
-//     }
+	// 관련문서
+	const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
     
     let rohsOids = [];
     const appendRohs = AUIGrid.getGridData(rohsGridID);
@@ -533,58 +562,80 @@ $("#updateBtn").click(function() {
 		alert("품목명을 입력하세요.");
 		return;					
 	}
-	if(isEmpty($("#model").val())){
+	if(isEmpty(model)){
 		alert("프로젝트 코드를 입력하세요.");
 		return;					
 	}
-	if(isEmpty($("#productmethod").val())){
+	if(isEmpty(productmethod)){
 		alert("제작방법을 입력하세요.");
 		return;					
 	}
-	if(isEmpty($("#deptcode").val())){
+	if(isEmpty(deptcode)){
 		alert("부서를 입력하세요.");
 		return;					
 	}
-	if(isEmpty($("#unit").val())){
+	if(isEmpty(unit)){
 		alert("단위를 입력하세요.");
 		return;					
 	}
-	
-			
-	if (confirm("수정하시겠습니까?")){
-		
-		let params = new Object();
-		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-		toRegister(params, addRows8); // 결재선 세팅
-		const url = getCallUrl("/part/update");
-		params.oid = oid;
-		params.location = location;
-		params.partName1 = partName1;
-		params.partName2 =  partName2;
-		params.partName3 =  partName3;
-		params.partName4 =  partName4;
-		params.model = model;
-		params.productmethod = productmethod;
-		params.deptcode = deptcode;
-		params.unit =unit;
-		params.weight = weight;
-		params.manufacture = manufacture;
-		params.mat = mat;
-		params.finish = finish;
-		params.remarks = remarks;
-		params.specification = specification;
-		params.primary = primary;
-		params.rohsOids = rohsOids;
-		params.secondary = secondary;
-		
-		call(url, params, function(data) {
-			if (data.result) {
-				alert("수정 성공하였습니다.");
-				document.location.href = getCallUrl("/part/view?oid=" + data.oid);
-			} else {
-				alert("수정 실패하였습니다. \n" + data.msg);
-			}
-		});
+
+	if (temprary) {
+		if (!confirm("임시저장하시겠습니까??")) {
+			return false;
+		}
+	} else {
+		if (!confirm("등록하시겠습니까?")) {
+			return false;
+		}
 	}
+
+	if (temprary) {
+		if (!confirm("임시저장하시겠습니까??")) {
+			return false;
+		}
+	} else {
+		if (!confirm("수정하시겠습니까?")) {
+			return false;
+		}
+	}
+	
+	const params ={
+			oid : toId("oid"),
+			partName1 : partName1,
+			partName2 : partName2,
+			partName3 : partName3,
+			partName4 : partName4,
+			model : model,
+			productmethod : productmethod,
+			deptcode : deptcode,
+			unit : unit,
+			temprary : temprary,
+			primary : primary,
+			secondary : secondary,
+			weight : toId("weight"),
+			manufacture : toId("manufacture"),
+			mat : toId("mat"),
+			finish : toId("finish"),
+			remarks : toId("remarks"),
+			specification : toId("specification"),
+			wtPartType : toId("wtPartType"),
+			source : toId("source"),
+			lifecycle : toId("lifecycle"),
+			view :toId("view"),
+			location : toId("location"),
+			// 링크 데이터
+			rows90 : rows90,
+			rohsOids : rohsOids,
+	};
+	
+	
+	call(url, params, function(data) {
+		if (data.result) {
+			alert("수정 성공하였습니다.");
+			document.location.href = getCallUrl("/part/view?oid=" + data.oid);
+		} else {
+			alert("수정 실패하였습니다. \n" + data.msg);
+		}
+	});
 })
 </script>

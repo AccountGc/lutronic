@@ -41,7 +41,6 @@ iframe {
 		</td>
 		<td class="right">
 			<input type="button" value="<%=title%>" title="<%=title%>" class="red" onclick="<%=mode%>('false');">
-			<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 		</td>
 	</tr>
