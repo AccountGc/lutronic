@@ -382,13 +382,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				// 관련문서
 				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 	            
-	            let rohsOids = [];
-	            const appendRohs = AUIGrid.getGridData(rohsGridID);
-	            if(appendRohs.length > 0){
-	                for(let i = 0; i < appendRohs.length; i++){
-	                	rohsOids.push(appendRohs[i].oid)
-	                }
-	            }
+				// RoHs
+				const rowsRohs = AUIGrid.getGridDataWithState(rohsGridID, "gridState");
 
 	            if(isEmpty(location)){
 					alert("품목구분을 입력하세요.");
@@ -467,7 +462,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						location : toId("location"),
 						// 링크 데이터
 						rows90 : rows90,
-						rohsOids : rohsOids,
+						rowsRohs : rowsRohs,
 				};
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
