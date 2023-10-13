@@ -21,7 +21,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -37,10 +36,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<img src="/Windchill/extcore/images/header.png"> 채번 정보
 					</div>
 				</td>
-			</tr>
+				<td class="right">
+						<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+						<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					</td>
+				</tr>
 		</table>
-		
-		<table class="search-table">
+		<table class="create-table">
 			<colgroup>
 				<col width="150">
 				<col width="*">
@@ -49,7 +51,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>품목분류 <span style="color:red;">*</span></th>
+				<th class="req lb">품목분류</th>
 				<td class="indent5">
 					<input type="hidden" name="location"  id="location"  value="/Default/PART_Drawing">
 					<span id="locationText">
@@ -57,8 +59,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					</span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 				</td>
-				<th rowspan="4">품목명 <span style="color:red;">*</span></th>
-				<th>대제목</th>
+				<th class="req" rowspan="4">품목명</th>
+				<th class="lb">대제목</th>
 				<td class="indent5">
 					<input id="partName1" name="partName1" class='partName width-200' type="text" >
 					<div id="partName1Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
@@ -68,7 +70,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>품목구분 <span style="color:red;">*</span></th>
+				<th class="req lb">품목구분</th>
 				<td class="indent5">
 					<select id="partType1" name="partType1"  class="width-200">
 						<option value="">
@@ -76,7 +78,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						</option>
 					</select>
 				</td>
-				<th>중제목</th>
+				<th class="lb">중제목</th>
 				<td class="indent5">
 					<input id="partName2" name="partName2" class='partName width-200' type="text" >
 					<div id="partName2Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
@@ -86,7 +88,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>대분류 <span style="color:red;">*</span></th>
+				<th class="req lb">대분류</th>
 				<td class="indent5">
 					<select id="partType2" name="partType2"  class="width-200">
 						<option value="">
@@ -94,7 +96,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						</option>
 					</select>
 				</td>
-				<th>소제목</th>
+				<th class="lb">소제목</th>
 				<td class="indent5">
 					<input id="partName3" name="partName3" class='partName width-200' type="text" >
 					<div id="partName3Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
@@ -104,7 +106,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>중분류 <span style="color:red;">*</span></th>
+				<th class="req lb">중분류</th>
 				<td class="indent5">
 					<select id="partType3" name="partType3"  class="width-200">
 						<option value="">
@@ -112,13 +114,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						</option>
 					</select>
 				</td>
-				<th>사용자 Key in</th>
+				<th class="lb">사용자 Key in</th>
 				<td class="indent5">
 					<input type="text"  class="partName width-200" name="partName4" id="partName4" >
 				</td>
 			</tr>
 			<tr>
-				<th>SEQ <br><span style="color:red;">(3자리)</span></th>
+				<th class="lb">SEQ <br><span style="color:red;">(3자리)</span></th>
 				<td class="indent5">
 					<input type="text" name="seq" id="seq" class="width-200">
 					<input type="button" id="seqList" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" >
@@ -136,7 +138,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>기타 <br><span style="color:red;">(2자리)</span></th>
+				<th class="lb">기타 <br><span style="color:red;">(2자리)</span></th>
 				<td class="indent5" colspan="4">
 					<input type="text" name="etc" id="etc" class="width-200">
 				</td>
@@ -151,8 +153,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 		</table>
-		
-		<br>
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -163,7 +163,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</tr>
 		</table>
 		
-		<table class="search-table">
+		<table class="create-table">
 			<colgroup>
 				<col width="150">
 				<col width="*">
@@ -171,7 +171,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>프로젝트코드 <span style="color:red;">*</span></th>
+				<th class="req lb">프로젝트코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -184,7 +184,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						%>
 					</select>
 				</td>
-				<th>제작방법 <span style="color:red;">*</span></th>
+				<th class="req">제작방법</th>
 				<td class="indent5">
 					<select name="productmethod" id="productmethod" class="width-200">
 						<option value="">선택</option>
@@ -199,7 +199,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>부서 <span style="color:red;">*</span></th>
+				<th class="req lb">부서</span></th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
@@ -212,7 +212,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						%>
 					</select>
 				</td>
-				<th>단위 <span style="color:red;">*</span></th>
+				<th class="req lb">단위</th>
 				<td class="indent5">
 					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
@@ -227,7 +227,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>무게(g)</th>
+				<th class="lb">무게(g)</th>
 				<td class="indent5">
 					<input type="text" name="weight" id="weight" class="width-200">
 				</td>
@@ -246,7 +246,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>재질</th>
+				<th class="lb">재질</th>
 				<td class="indent5">
 					<select name="mat" id="mat" class="width-200">
 						<option value="">선택</option>
@@ -274,7 +274,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th>OEM Info.</th>
+				<th class="lb">OEM Info.</th>
 				<td class="indent5">
 					<input type="text" name="remarks" id="remarks" class="width-200">
 				</td>
@@ -285,7 +285,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</tr>
 		</table>
 		
-		<br>
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -310,7 +309,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 		</table>
-		<br>
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -336,7 +334,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 		</table>
-		<br>
 		
 		<!-- 관련 문서 -->
 		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
@@ -346,7 +343,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
-		<br>
 		
 		<!-- 관련 RoHS -->
 		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
@@ -357,16 +353,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" id="createBtn" class="blue" onclick="create('false');" />
-					<input type="button" value="초기화" title="초기화" id="resetBtn" />
-					<input type="button" value="목록" title="목록" id="listBtn" />
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
 
-			function create(isSelf) {
+			function create(temp) {
 				const partName1 = document.getElementById("partName1").value;
 				const partType1 = document.getElementById("partType1").value;
 				const partName2 = document.getElementById("partName2").value;
@@ -374,33 +369,17 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const partName3 = document.getElementById("partName3").value;
 				const partType3 = document.getElementById("partType3").value;
 				const partName4 = document.getElementById("partName4").value;
-				const seq = document.getElementById("seq").value;
-				const etc = document.getElementById("etc").value;
 				const model = document.getElementById("model").value;
 				const productmethod = document.getElementById("productmethod").value;
 				const deptcode = document.getElementById("deptcode").value;
-				const weight = document.getElementById("weight").value;
-				const manufacture = document.getElementById("manufacture").value;
-				const mat = document.getElementById("mat").value;
-				const finish = document.getElementById("finish").value;
-				const remarks = document.getElementById("remarks").value;
-				const specification = document.getElementById("specification").value;
 				const unit =  document.getElementById("unit").value;
+				const temprary = JSON.parse(temp);
+				
 				const primary = document.querySelector("input[name=primary]") == null ? "" : document.querySelector("input[name=primary]").value;
 				const secondary = toArray("secondarys");
-				const wtPartType = document.getElementById("wtPartType").value;
-				const source = document.getElementById("source").value;
-				const lifecycle = document.getElementById("lifecycle").value;
-				const view = document.getElementById("view").value;
-				const location = document.getElementById("location").value;
 				
-	            let docOids = [];
-	            const appendDoc = AUIGrid.getGridData(myGridID90);
-	            if(appendDoc.length > 0){
-	                for(let i = 0; i < appendDoc.length; i++){
-	                    docOids.push(appendDoc[i].oid)
-	                }
-	            }
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 	            
 	            let rohsOids = [];
 	            const appendRohs = AUIGrid.getGridData(rohsGridID);
@@ -410,87 +389,88 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	                }
 	            }
 
-				if(isEmpty($("#location").val())){
+	            if(isEmpty(location)){
 					alert("품목구분을 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#partType1").val())){
+	            if(isEmpty(partType1)){
 					alert("품목구분을 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#partType2").val())){
+	            if(isEmpty(partType2)){
 					alert("대분류를 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#partType3").val())){
+	            if(isEmpty(partType3)){
 					alert("중분류를 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#partName1").val()) || isEmpty($("#partName2").val()) || isEmpty($("#partName3").val()) || isEmpty($("#partName4").val())){
+				if(isEmpty(partName1) || isEmpty(partName2) || isEmpty(partName3) || isEmpty(partName4)){
 					alert("품목명을 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#seq").val())){
-					alert("SEQ를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#etc").val())){
-					alert("기타를 입력하세요.");
-					return;					
-				}
-				if(isEmpty($("#model").val())){
+				if(isEmpty(model)){
 					alert("프로젝트 코드를 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#productmethod").val())){
+				if(isEmpty(productmethod)){
 					alert("제작방법을 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#deptcode").val())){
+				if(isEmpty(deptcode)){
 					alert("부서를 입력하세요.");
 					return;					
 				}
-				if(isEmpty($("#unit").val())){
+				if(isEmpty(unit)){
 					alert("단위를 입력하세요.");
 					return;					
 				}
 				
-				if (!confirm("등록 하시겠습니까?")) {
-					return false;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
 				}
 				
-				const params = new Object();
+				const params ={
+						partName1 : partName1,
+						partName2 : partName2,
+						partName3 : partName3,
+						partName4 : partName4,
+						partType1 : partType1,
+						partType2 : partType2,
+						partType3 : partType3,
+						model : model,
+						productmethod : productmethod,
+						deptcode : deptcode,
+						unit : unit,
+						temprary : temprary,
+						primary : primary,
+						secondary : secondary,
+						seq : seq,
+						etc : etc,
+						weight : weight,
+						manufacture : manufacture,
+						mat : mat,
+						finish : finish,
+						remarks : remarks,
+						specification : specification,
+						wtPartType : wtPartType,
+						source : source,
+						lifecycle : lifecycle,
+						view : view,
+						location : location,
+						// 링크 데이터
+						rows90 : rows90,
+						rohsOids : rohsOids,
+				};
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/part/create");
-				params.partName1 = partName1;
-				params.partType1 = partType1;
-				params.partName2 = partName2;
-				params.partType2 = partType2;
-				params.partName3 = partName3;
-				params.partType3 = partType3;
-				params.partName4 = partName4;
-				params.seq = seq;
-				params.etc = etc;
-				params.model = model;
-				params.productmethod = productmethod;
-				params.deptcode = deptcode;
-				params.weight = weight;
-				params.manufacture = manufacture;
-				params.mat = mat;
-				params.finish = finish;
-				params.remarks = remarks;
-				params.specification = specification;
-				params.unit = unit;
-				params.primary = primary;
-				params.secondary = secondary;
-				params.wtPartType = wtPartType;
-				params.source = source;
-				params.lifecycle = lifecycle;
-				params.view = view;
-				params.location = location;
-				params.docOids = docOids;
-				params.rohsOids = rohsOids;
 				
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -500,23 +480,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				});
 			};
 
-			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
-
-			document.addEventListener("keydown", function(event) {
-				const keyCode = event.keyCode || event.which;
-				if (keyCode === 13) {
-// 					loadGridData();
-				}
-			})
-
-			document.addEventListener("click", function(event) {
-				hideContextMenu();
-			})
-			
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid90(columns90);
 				AUIGrid.resize(myGridID90);
@@ -524,7 +487,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.resize(rohsGridID);
 				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID8);
-				document.getElementById("partName1").focus();
 				numberCodeList('partType1', '');
 				selectbox("partType2");
 				selectbox("partType3");
@@ -539,7 +501,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
-				selectbox("_psize");
 			});
 			
 			window.addEventListener("resize", function() {
@@ -548,30 +509,24 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.resize(myGridID8);
 			});
 			
-			<%----------------------------------------------------------
-			*                      품목구분 변경시
-			----------------------------------------------------------%>
+			// 품목구분(partType1) 변경 메서드
 			$("#partType1").change(function() {
 				numberCodeList('partType2', $("#partType1 option:selected").attr("title"));
 				$("#partTypeNum").html(this.value);
 			})
-			<%----------------------------------------------------------
-			*                      대분류 변경시
-			----------------------------------------------------------%>
+			
+			// 대분류(partType2) 변경 메서드
 			$("#partType2").change(function() {
 				numberCodeList('partType3', $("#codeNum").html() + $("#partType2 option:selected").attr("title"));
 				$("#partTypeNum").html($("#partType1").val() + this.value);
 			})
-			<%----------------------------------------------------------
-			*                      중분류 변경시
-			----------------------------------------------------------%>
+			
+			// 중분류(partType3) 변경 메서드
 			$("#partType3").change(function() {
 				$("#partTypeNum").html($("#partType1").val() + $("#partType2").val() + this.value);
 			})
 			
-			<%----------------------------------------------------------
-			*                      SEQ 입력 중
-			----------------------------------------------------------%>
+			// SEQ 입력 중 발생 메서드
 			$("#seq").keypress(function (event) {
 				if($("#partType3").val() == "" ) {
 					alert("제품분류을(를) 선택하세요.");
@@ -581,26 +536,27 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 		    })
 		    
-		    <%----------------------------------------------------------
-			*                      SEQ 입력시
-			----------------------------------------------------------%>
+		    // SEQ 입력 시 발생 메서드
 			$("#seq").keyup(function() {
 				var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
 				$("#seq").val(result);
 			})
 			
-			<%----------------------------------------------------------
-			*                      SEQ 입력 후 focus 이동시
-			----------------------------------------------------------%>
+			// SEQ 입력 후 포커스 아웃 시 발생 메서드
 			$("#seq").focusout(function() {
 				if($("#partType3").val() != "" && $.trim(this.value) ) {
 					$("#seqNum").html(this.value);
 				}
 			})
+			
+			// SEQ 현황보기 클릭 시 메서드
+			$("#seqList").click(function() {
+				const partNumber = $("#partType1").val()+$("#partType2").val()+$("#partType3").val()+$("#seq").val();
+				const url = getCallUrl("/part/searchSeqList?partNumber=" + partNumber);
+				_popup(url, 900, 450, "n");
+			})
 		    
-			<%----------------------------------------------------------
-			*                      기타 입력 중
-			----------------------------------------------------------%>
+			// 기타 입력 중 발생 메서드
 			$("#etc").keypress(function (event) {
 				if($.trim($("#seq").val()) == "" ) {
 					alert("SEQ을(를) 입력하세요.");
@@ -610,17 +566,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 		    })
 		    
-			<%----------------------------------------------------------
-			*                      기타 입력시
-			----------------------------------------------------------%>
+			// 기타 입력 시 발생 메서드
 			$("#etc").keyup(function() {
 				var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
 				$("#etc").val(result);
 			})
 			
-			<%----------------------------------------------------------
-			*                      기타 입력 후 focus 이동시
-			----------------------------------------------------------%>
+			// 기타 입력 후 포커스 아웃 시 발생 메서드
 			$("#etc").focusout(function() {
 				if($.trim($("#seq").val()) != "" && $.trim(this.value) ) {
 					$("#etcNum").html(this.value);
@@ -646,7 +598,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				    .catch(error => {
 				        console.error(error);
 				    });
-				    
 			}
 
 			// PartType Select태그 option 추가
@@ -703,9 +654,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 			})
 			
-			<%----------------------------------------------------------
-			*                      ↑,↓ 입력시
-			----------------------------------------------------------%>
+			// 품목명에서 ↑,↓ 입력 시 발생 메서드
 			const movePartNameFocus = function(id,isAdd) {
 				var removeCount = 0;
 				var addCount = 0;
@@ -730,7 +679,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				$("#" + id).val($("#" + id + "UL li").eq(addCount).text());
 			}
 			
-			// partName 입력 시 partName 리스트 출력 메서드
+			// 품목명 입력 시 품목명 리스트 출력 메서드
 			const autoSearchPartName = function(id, value) {
 				if($.trim(value) == "") {
 					addSearchList(id, '', true);
@@ -747,7 +696,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 			}
 			
-			// partName 가져오기 메서드
+			// 품목명 가져오기 메서드
 			const autoSearchName = function(codeType, value) {
 				
 				const url = getCallUrl("/common/autoSearchName");
@@ -764,9 +713,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			    });
 			}
 			
-			<%----------------------------------------------------------
-			*                      품목명 입력시 데이터 리스트 보여주기
-			----------------------------------------------------------%>
+			// 품목명 입력시 데이터 리스트 보여주기
 			const addSearchList = function(id, data, isRemove) {
 				$("#" + id + "UL li").remove();
 				if(isRemove) {
@@ -783,9 +730,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 			}
 			
-			<%----------------------------------------------------------
-			*                      품목명 데이터 마우스 올렸을때
-			----------------------------------------------------------%>
+			// 품목명 데이터 마우스 올렸을때
 			$(document).on("mouseover", 'div > ul > li', function() {
 				var partName = $(this).attr("title");
 				
@@ -800,9 +745,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				$("#" + partName).val($(this).text());
 			})
 			
-			<%----------------------------------------------------------
-			*                      품목명 데이터 마우스 뺄때
-			----------------------------------------------------------%>
+			//품목명 데이터 마우스 뺄때
 			$(document).on("mouseout", 'div > ul > li', function() {
 				$(this).removeClass("hover") ;
 			})
@@ -850,24 +793,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				_popup(url, 500, 600, "n");
 			}
 			
-			$("#seqList").click(function() {
-				const partNumber = $("#partType1").val()+$("#partType2").val()+$("#partType3").val()+$("#seq").val();
-				const url = getCallUrl("/part/searchSeqList?partNumber=" + partNumber);
-				_popup(url, 900, 450, "n");
-			})
-			
-			
+			// 무게 입력 메서드
 			$(function() {
-				<%----------------------------------------------------------
-				*                      Weight 입력 중
-				----------------------------------------------------------%>
+				// 무게 입력 중
 				$('#weight').keypress(function(event) {
 					var charCode = (event.which) ? event.which : event.keyCode;
 					return (charCode == 46) || common_isNumber(event, this);
 				})
-				<%----------------------------------------------------------
-				*                      Weight 입력시
-				----------------------------------------------------------%>
+				// 무게 입력 중
 				$("#weight").keyup(function() {
 					var result = this.value.replace(/[\ㄱ-ㅎㅏ-ㅣ|가-힣]/gi,'');
 					$("#weight").val(result);
