@@ -56,10 +56,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="req lb">품목분류</th>
 		<td class="indent5" colspan="3">
-			<input type="hidden" name="location"  id="location"  value="<%= data.getLocation() != null ? data.getLocation() : "" %>">
-			<span id="locationText">
-				<%= data.getLocation() != null ? data.getLocation() : "" %>
-			</span>
+			<input type="hidden" name="location" id="location" value="<%=data.getLocation()%>">
+			<span id="locationText"><%=data.getLocation()%></span>
+			<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 		</td>
 	</tr>
 	<tr>
@@ -106,18 +105,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<%= data != null ? data.getName() : "" %>
 				</span>
 			</div>
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">결재</th>
-		<td colspan="3">
-			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-			</table>
 		</td>
 	</tr>
 </table>
@@ -250,6 +237,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<input type="text" name="specification" id="specification" class="width-200" value="<% if (data.getSpecification() != null) { %><%= data.getSpecification() %><% } %>">
 		</td>
 	</tr>
+	<tr>
+		<th class="lb">결재</th>
+		<td colspan="3">
+			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+				<jsp:param value="" name="oid" />
+				<jsp:param value="create" name="mode" />
+			</jsp:include>
+		</td>
+	</tr>
 </table>
 
 <!-- 	주도면 -->
@@ -328,11 +324,18 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="수정" title="수정" id="updateBtn" class="blue" />
+			<input type="button" value="수정" title="수정" class="red" onclick="update('false');">
+			<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 		</td>
 	</tr>
 </table>
 <script>
+function folder() {
+	const location = decodeURIComponent("/Default/PART_Drawing");
+	const url = getCallUrl("/folder/popup?location=" + location);
+	_popup(url, 500, 600, "n");
+}
+
 document.addEventListener("DOMContentLoaded", function() {
 	createAUIGrid90(columns90);
 	AUIGrid.resize(myGridID90);
@@ -529,7 +532,7 @@ $(function() {
 })
 
 // 수정 메서드
-function update() {
+function update(temp) {
 	const partName1 = document.getElementById("partName1").value;
 	const partName2 = document.getElementById("partName2").value;
 	const partName3 = document.getElementById("partName3").value;
@@ -584,16 +587,6 @@ function update() {
 			return false;
 		}
 	} else {
-		if (!confirm("등록하시겠습니까?")) {
-			return false;
-		}
-	}
-
-	if (temprary) {
-		if (!confirm("임시저장하시겠습니까??")) {
-			return false;
-		}
-	} else {
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
@@ -634,5 +627,5 @@ function update() {
 			alert("수정 실패하였습니다. \n" + data.msg);
 		}
 	});
-})
+};
 </script>
