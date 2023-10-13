@@ -12,6 +12,7 @@ import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -54,7 +55,12 @@ public class StandardCrService extends StandardManager implements CrService {
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
-
+		
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+		boolean isSelf = dto.isSelf();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -128,6 +134,17 @@ public class StandardCrService extends StandardManager implements CrService {
 
 			// 관련 CR 링크
 			saveLink(cr, rows101);
+			
+			// 결재 시작
+			if (isSelf) {
+				// 자가결재시
+				WorkspaceHelper.service.self(cr);
+			} else {
+				// 결재시작
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(cr, agreeRows, approvalRows, receiveRows);
+				}
+			}
 
 			trs.commit();
 			trs = null;
