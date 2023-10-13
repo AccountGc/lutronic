@@ -1,4 +1,5 @@
 <%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@page import="com.e3ps.rohs.service.RohsHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -68,19 +69,25 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 
 	function createAUIGrid6(columnLayout) {
 		const props = {
-			headerHeight : 30,
-			showRowNumColumn : false,
-			showAutoNoDataMessage : false,
-			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
-			showStateColumn : false,
-			<%if (isCreate || isUpdate) {%>
-			showRowCheckColumn : true,
-			<%}%>
+				headerHeight : 30,
+				fillColumnSizeMode : false,
+				showRowNumColumn : true,
+				rowNumHeaderText : "번호",
+				showAutoNoDataMessage : false,
+				enableSorting : false,
+				softRemoveRowMode : false,
+				selectionMode : "multipleCells",
+				showStateColumn : true,
+				showRowCheckColumn : true,
+				enableFilter : true,
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 		<%if (isUpdate) {%>
 			AUIGrid.setGridData(rohsGridID, <%=json%>);
+		<%}%>
+		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
+		<%if (isUpdate) {%>
+		AUIGrid.setGridData(rohsGridID, <%=AUIGridUtil.include(oid, "rohs")%>);
 		<%}%>
 	}
 
@@ -89,27 +96,19 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 		_popup(url, 1500, 700, "n");
 	}
 	
-	function rohsAppend(items){
-		var arr = [];
-		var count=0;
-		var data = AUIGrid.getGridData(rohsGridID);
-		for (var i=0; i<items.length; i++){
-			var a=0;
-			if(data.length==0){
-				arr[i] = items[i];
-			}else{
-				for(var j=0; j<data.length; j++){
-					if(data[j].oid == items[i].oid){
-						a++;
-					}
-				}
+	function rohsAppend(arr, callBack){
+		arr.forEach(function(dd) {
+			const rowIndex = dd.rowIndex;
+			const item = dd.item;
+			const unique = AUIGrid.isUniqueValue(rohsGridID, "oid", item.oid);
+			if (unique) {
+				AUIGrid.addRow(rohsGridID, item, rowIndex);
+			} else {
+				// 중복은 그냥 경고 없이 처리 할지 협의?
+				alert(item.number + " 물질는 이미 추가 되어있습니다.");
 			}
-			if(a==0){
-				arr[count] = items[i];
-				count++;
-			}
-		}
-		AUIGrid.addRow(rohsGridID, arr);
+		})
+		callBack(true);
 	}
 
 	function deleteRohs() {

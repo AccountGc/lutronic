@@ -93,14 +93,13 @@ public class RohsController extends BaseController {
 	
 	@Description(value = "물질검색")
 	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup(@RequestParam String method, @RequestParam String multi) throws Exception {
+	public ModelAndView listPopup(@RequestParam String method) throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
 		model.addObject("method", method);
-		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/rohs/rohs-list-popup");
 		return model;
 	}

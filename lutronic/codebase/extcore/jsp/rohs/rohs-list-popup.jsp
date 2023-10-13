@@ -17,7 +17,6 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 String method = (String) request.getAttribute("method");
-boolean multi = (boolean) request.getAttribute("multi");
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
 <input type="hidden" name="lastNum" id="lastNum"> 
@@ -203,20 +202,19 @@ const columns = [ {
 
 function createAUIGrid(columnLayout) {
 	const props = {
-		headerHeight : 30,
-		showRowNumColumn : true,
-		fillColumnSizeMode: true,
-		rowNumHeaderText : "번호",
-		showAutoNoDataMessage : true,
-		selectionMode : "multipleCells",
-		enableMovingColumn : true,
-		enableFilter : true,
-		showInlineFilter : false,
-		useContextMenu : true,
-		enableRightDownFocus : true,
-		filterLayerWidth : 320,
-		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		showRowCheckColumn : true,
+			headerHeight : 30,
+			showRowNumColumn : true,
+			showRowCheckColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			selectionMode : "multipleCells",
+			enableMovingColumn : true,
+			enableFilter : true,
+			showInlineFilter : false,
+			useContextMenu : true,
+			enableRightDownFocus : true,
+			filterLayerWidth : 320,
+			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 	loadGridData();
@@ -235,6 +233,7 @@ function loadGridData() {
 	const field = ["_psize","rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
 	params = toField(params, field);
 	AUIGrid.showAjaxLoader(myGridID);
+	openLayer();
 	call(url, params, function(data) {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
@@ -245,6 +244,7 @@ function loadGridData() {
 		} else {
 			alert(data.msg);
 		}
+		closeLayer();
 	});
 }
 
@@ -263,12 +263,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	twindate("modified");
 	selectbox("_psize");
 });
-
-function exportExcel() {
-	// 				const exceptColumnFields = [ "primary" ];
-	// 				const sessionName = document.getElementById("sessionName").value;
-	// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-}
 
 document.addEventListener("keydown", function(event) {
 	const keyCode = event.keyCode || event.which;
