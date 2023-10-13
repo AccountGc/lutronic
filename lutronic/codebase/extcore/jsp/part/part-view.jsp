@@ -28,20 +28,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				품목 상세보기<%=part.getContainer().getPersistInfo().getObjectIdentifier().getStringValue() %>
+				품목 상세보기
 			</div>
 		</td>
 		<td class="right">
-<!-- 			<input type="button" value="상위품목" title="상위품목" id="upItem"> -->
-<!-- 			<input type="button" value="하위품목" title="하위품목" id="downItem"> -->
-<!-- 			<input type="button" value="END ITEM" title="END ITEM" id="endItem"> -->
-			<%-- 			<% if(!data.isLateste()){ %> --%>
-			<%-- 				<input type="button" value="최신Rev." title="최신Rev."  id="latestBtn" value="data.latestOid()"> --%>
-			<%-- 			<% } %> --%>
 			<input type="button" value="BOM" title="BOM" id="auiBom">
 			<input type="button" value="BOM Editor" title="BOM Editor" id="bomE">
 			<input type="button" value="Compare" title="Compare" id="Compare">
-			<%-- 			<% if(!data.isLateste()){ %> --%>
 			<%
 			if ("DEATH".equals(dto.getState()) && isAdmin) {
 			%>
@@ -49,13 +42,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%
 			}
 			%>
-			<%-- 			<% } %> --%>
-			<%-- 			<% if(data.isClearing()){ %> --%>
 			<input type="button" value="속성 Clearing" title="속성 Clearing" id="attributeCleaning">
-			<%-- 			<% } %> --%>
-			<%-- 			<% if(data.isFamliyModify()){ %> --%>
-			<!-- 			<input type="button"  value="Family 테이블 수정"  title="Family 테이블 수정"  id="updatefamily"> -->
-			<%-- 			<% } %> --%>
 			<%
 			if (isAdmin) {
 			%>
@@ -127,7 +114,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5"><%=dto.getNumber()%></td>
 				<th class="lb">품목분류</th>
 				<td class="indent5">
-					<%-- 					<%=data.getLocation()%> --%>
+					<%=dto.getLocation()%>
 				</td>
 				<td class="" align="center" rowspan="7">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
@@ -345,41 +332,41 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	
 </div>
 <script type="text/javascript">
-	// 수정
-	function update () {
-		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/part/update?oid=" + oid);
-		document.location.href = url;
-	};
+// 수정
+function update () {
+	const oid = document.getElementById("oid").value;
+	const url = getCallUrl("/part/update?oid=" + oid);
+	document.location.href = url;
+};
+
+//삭제
+$("#deleteBtn").click(function () {
 	
-	//삭제
-	$("#deleteBtn").click(function () {
-		
-			if (!confirm("삭제 하시겠습니까?")) {
-				return false;
-			}
-		
-		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/part/delete");
-		const params = new Object();
-		params.oid = oid;
-		call(url, params, function(data) {
-			alert(data.msg);
-			if (data.result) {
-				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
-					parent.opener.location.reload();
-				}else {
-					parent.opener.$("#sessionId").val("");
-					parent.opener.lfn_Search();
-				}
-				window.close();
-			}
-		});
-	})
+		if (!confirm("삭제 하시겠습니까?")) {
+			return false;
+		}
 	
-	//댓글 등록
-	$("#commentsBtn").click(function () {
-		var param_num = "<%=pnum%>";
+	const oid = document.getElementById("oid").value;
+	const url = getCallUrl("/part/delete");
+	const params = new Object();
+	params.oid = oid;
+	call(url, params, function(data) {
+		alert(data.msg);
+		if (data.result) {
+			if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+				parent.opener.location.reload();
+			}else {
+				parent.opener.$("#sessionId").val("");
+				parent.opener.lfn_Search();
+			}
+			window.close();
+		}
+	});
+})
+
+//댓글 등록
+$("#commentsBtn").click(function () {
+	var param_num = "<%=pnum%>";
 		var num;
 		if(isEmpty(param_num)){
 			num = 0;
@@ -648,122 +635,74 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	const oid = document.querySelector("#oid").value;
 	
 	<%----------------------------------------------------------
-	*                      상위품목 버튼
-	----------------------------------------------------------%>
-	$("#upItem").click(function() {
-		viewBomList("up");
-	})
-	<%----------------------------------------------------------
-	*                      하위품목 버튼
-	----------------------------------------------------------%>
-	$("#downItem").click(function() {
-		viewBomList("down");
-	})
-	<%----------------------------------------------------------
-	*                      END ITEM 버튼
-	----------------------------------------------------------%>
-	$("#endItem").click(function() {
-		viewBomList("end");
-	})
-	<%----------------------------------------------------------
-	*                      최신버전 버튼
-	----------------------------------------------------------%>
-	$("#latestBtn").click(function () {
-		const loid = this.value;
-		openView(loid);
-	}),
-	<%----------------------------------------------------------
-	*                     AUI BOM 버튼
-	----------------------------------------------------------%>
-	$(document).keydown(function(event) {
-		var charCode = (event.which) ? event.which : event.keyCode;
-		if(charCode ==17){
-			$("#bomSelect").val("true");
-		}else{
-			$("#bomSelect").val("false");
-		}
-	})
+*                     AUI BOM 버튼
+----------------------------------------------------------%>
+$(document).keydown(function(event) {
+	var charCode = (event.which) ? event.which : event.keyCode;
+	if(charCode ==17){
+		$("#bomSelect").val("true");
+	}else{
+		$("#bomSelect").val("false");
+	}
+})
+
+$("#auiBom").click(function() {
+	auiBom(oid,'');
+});
+
+$("#packageUpdate").click(function() {
+	const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);
+	_popup(url, 1500, 600,"n");
+})
+
+$("#bomE").click(function() {
+	var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
+	_popup(url, "1400", "600", "n");
 	
-	$("#auiBom").click(function() {
-		auiBom(oid,'');
-	});
-	
-	$("#packageUpdate").click(function() {
-		const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);
-		_popup(url, 1500, 600,"n");
-	})
-	
-	$("#bomE").click(function() {
-		var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
-		_popup(url, "1400", "600", "n");
+})
+
+$("#Compare").click(function() {
+	var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
+	_popup(str, 1300, 600,"n");
+})
+
+$("#orderNumber").click(function() {
+	const url = getCallUrl("/part/partChange?oid=" + oid);
+	_popup(url, 1500, 600,"n");
+})
+
+$("#orderNumber_NewVersion").click(function() {
+	const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
+	_popup(url, 1500, 600,"n");
+})
+
+$("#restore").click(function() {
+	if (confirm("복원하시겠습니까?")){ 
+		partStateChange('INWORK');
+	}
+})
+$('#changeDev').click(function() {
+	if (confirm("변경하시겠습니까?")){ 
+		partStateChange('INWORK');
+	}
+})
+
+$("#attributeCleaning").click(function() {
+	if (confirm("속성 Clearing 하시겠습니까?")){ 
 		
-	})
-	
-	$("#Compare").click(function() {
-		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
-		_popup(str, 1300, 600,"n");
-	})
-	
-	$("#orderNumber").click(function() {
-		const url = getCallUrl("/part/partChange?oid=" + oid);
-		_popup(url, 1500, 600,"n");
-	})
-	
-	$("#orderNumber_NewVersion").click(function() {
-		const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
-		_popup(url, 1500, 600,"n");
-	})
-	
-	$("#disuse").click(function() {
-		if (confirm("폐기하시겠습니까?")){ 
-			partStateChange('DEATH');
-		}
-	})
-	
-	$("#restore").click(function() {
-		if (confirm("복원하시겠습니까?")){ 
-			partStateChange('INWORK');
-		}
-	})
-	$('#changeDev').click(function() {
-		if (confirm("변경하시겠습니까?")){ 
-			partStateChange('INWORK');
-		}
-	})
-	
-	$("#updatefamily").click(function() {//updatePackagePart
-		const url = getCallUrl("/part/updatefamilyPart?oid=" + oid);
-		popup(url, 1300, 600);
-	})
-	
-	
-	$("#attributeCleaning").click(function() {
-		if (confirm("속성 Clearing 하시겠습니까?")){ 
-			
-			var form = $("form[name=partViewForm]").serialize();
-			var url	= getCallUrl("/part/attributeCleaning");
-			var params = {"oid": $("#oid").val() };
+		var form = $("form[name=partViewForm]").serialize();
+		var url	= getCallUrl("/part/attributeCleaning");
+		var params = {"oid": $("#oid").val() };
 
-			call(url, params, function(data) {
-				alert(data.message);
-				if(data.result) {
-					location.reload();
-				}
-			},"POST");
-		}
-	})
+		call(url, params, function(data) {
+			alert(data.message);
+			if(data.result) {
+				location.reload();
+			}
+		},"POST");
+	}
+})
 	
-function bom2View(){
-	//var str = getURLString("part", "PartTree", "do") + "?oid="+$("#oid").val();
-	var str = getURLString("part", "viewPartBom", "do") + "?oid="+$("#oid").val();
-    var opts = "toolbar=0,location=0,directory=0,status=1,menubar=0,scrollbars=1,resizable=1,";
-    leftpos = (screen.width - 1000)/ 2;
-    toppos = (screen.height - 600) / 2 ;
-    rest = "width=1100,height=600,left=" + leftpos + ',top=' + toppos;
-    var newwin = window.open( str , "viewBOM2", opts+rest);
-    newwin.focus();
-}
-
 window.partStateChange = function(state) {
 	var url	= getURLString("part", "partStateChange", "do");
 	$.ajax({
@@ -796,44 +735,4 @@ window.partStateChange = function(state) {
 		}
 	});
 }
-
-
-function createCDialogWindow(dialogURL, dialogName, w, h, statusBar)
-{
-	if( typeof(_use_wvs_cookie) != "undefined" ) {
-		var cookie_value = document.cookie;
-		if( cookie_value != null ) {
-			var loc = cookie_value.indexOf("wvs_ContainerOid=");
-			if( loc >= 0 ) {
-				var subp = cookie_value.substring(loc+4);
-				loc = subp.indexOf(";");
-				if( loc >= 0 ) subp = subp.substring(0, loc);
-				dialogURL += "&" + subp;
-			}
-		}
-	}else {
-		var vm_url = "" + document.location;
-		if( vm_url != null ) {
-			var loc = vm_url.indexOf("ContainerOid=");
-			if( loc >= 0 ) {
-				var subp = vm_url.substring(loc);
-				loc = subp.indexOf("&");
-				if( loc >= 0 ) subp = subp.substring(0, loc);
-				dialogURL += "&" + subp;
-			}
-		}
-	}
-
-	openWindow(dialogURL, dialogName, w, h, statusBar);
-}
-	
-	
-	<%----------------------------------------------------------
-	*                      Bom Type에 따른 bom 검색
-	----------------------------------------------------------%>
-	function viewBomList(bomType){
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/part/bomPartList?oid=" + oid + "&bomType=" + bomType);
-		_popup(url, 800, 550,"n");
-	}
 </script>
