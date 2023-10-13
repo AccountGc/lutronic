@@ -825,6 +825,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		int dotIndex = primaryFile.lastIndexOf(".");
 		
         String fileName = primaryFile.substring(0, dotIndex);
+		String fileEnd = fileName.substring(dotIndex).toLowerCase();
 		
 		if (primaryFile.length() == 0) {
 			primaryFile = "";
@@ -877,9 +878,6 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			if(isFileNameCheck(fileName)){
 				throw new Exception(Message.get("이미 등록된 파일입니다."));
             }
-			
-			int lastIndex = fileName.lastIndexOf(".");
-			String fileEnd = fileName.substring(lastIndex).toLowerCase();
 			newFileName = fileDir + File.separator +fileName;
 			rfile = new File(newFileName);
 			file.renameTo(rfile);
