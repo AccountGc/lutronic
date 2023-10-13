@@ -348,6 +348,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="250" name="height" />
 		</jsp:include>
 		
 		<table class="button-table">
