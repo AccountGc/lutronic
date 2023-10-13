@@ -141,6 +141,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<input type="text" name="etc" id="etc" class="width-200">
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="4">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		
 		<br>
@@ -451,6 +460,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 				
 				const params = new Object();
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/part/create");
 				params.partName1 = partName1;
 				params.partType1 = partType1;
@@ -511,6 +522,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.resize(myGridID90);
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
+				createAUIGrid8(columns8);
+				AUIGrid.resize(myGridID8);
 				document.getElementById("partName1").focus();
 				numberCodeList('partType1', '');
 				selectbox("partType2");
@@ -532,6 +545,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(docGridID);
 				AUIGrid.resize(rohsGridID);
+				AUIGrid.resize(myGridID8);
 			});
 			
 			<%----------------------------------------------------------

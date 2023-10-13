@@ -142,6 +142,15 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 
 
@@ -219,8 +228,10 @@
 					rows500 : rows500, // 설변품목
 				};
 				logger(params);
-				parent.openLayer();
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/eco/create");
+				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
@@ -237,15 +248,18 @@
 				createAUIGrid101(columns101);
 				createAUIGrid200(columns200);
 				createAUIGrid500(columns500);
+				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
+				AUIGrid.resize(myGridID8);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
+				AUIGrid.resize(myGridID8);
 			});
 		</script>
 	</form>

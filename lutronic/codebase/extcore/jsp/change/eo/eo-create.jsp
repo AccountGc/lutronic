@@ -103,6 +103,15 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 
 		<!-- 	관련 문서 -->
@@ -151,7 +160,6 @@
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 				// 제품
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
-				const url = getCallUrl("/eo/create");
 				const params = {
 					name : name,
 					eoCommentA : eoCommentA,
@@ -164,6 +172,9 @@
 					rows200 : rows200,
 					rows300 : rows300
 				}
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
+				const url = getCallUrl("/eo/create");
 				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -211,10 +222,12 @@
 				createAUIGrid90(columns90);
 				createAUIGrid300(columns300);
 				createAUIGrid200(columns200);
+				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID200);
+				AUIGrid.resize(myGridID8);
 			});
 
 			window.addEventListener("resize", function() {
@@ -222,6 +235,7 @@
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID200);
+				AUIGrid.resize(myGridID8);
 			});
 		</script>
 	</form>

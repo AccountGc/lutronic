@@ -160,7 +160,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			</tr>
 			<tr>
 				<th class="lb">결재</th>
-				<td colspan="5">
+				<td colspan="3">
 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -282,13 +282,16 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
+				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID8);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID8);
 			});
 		</script>
 	</form>
