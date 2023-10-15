@@ -4,53 +4,320 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
+import com.e3ps.workspace.column.ApprovalLineColumn;
 
+import wt.doc.WTDocument;
+import wt.fc.PagingQueryResult;
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTUser;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
+import wt.util.WTAttributeNameIfc;
 
 public class WorkspaceHelper {
 
 	public static final WorkspaceService service = ServiceFactory.getService(WorkspaceService.class);
 	public static final WorkspaceHelper manager = new WorkspaceHelper();
 
+	// # ECR : 작업중-일괄결재-승인중-승인됨-반려됨-재작업-폐기
+
 	/*
-	 * 라이프사이클 관련 상태값
+	 * 마스터 라인 상태값
 	 */
+	public static final String STATE_MASTER_APPROVAL_APPROVING = "승인중";
+	public static final String STATE_MASTER_APPROVAL_REJECT = "반려됨";
+	public static final String STATE_MASTER_AGREE_REJECT = "검토반려";
+	public static final String STATE_MASTER_APPROVAL_COMPLETE = "결재완료";
+
+	/**
+	 * 기안 라인 상태
+	 */
+	public static final String STATE_SUBMIT_COMPLETE = "기안완료";
+
+	/*
+	 * 결재라인 상태값
+	 */
+	public static final String STATE_APPROVAL_READY = "대기중";
 	public static final String STATE_APPROVAL_APPROVING = "승인중";
-	public static final String STATE_APPROVAL_REJECT = "반려됨";
 	public static final String STATE_APPROVAL_COMPLETE = "결재완료";
+	public static final String STATE_APPROVAL_REJECT = "반려됨";
 
-	public Map<String, Object> complete(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * 검토 라인 상태값 상수
+	 */
+	public static final String STATE_AGREE_READY = "검토중";
+	public static final String STATE_AGREE_COMPLETE = "검토완료";
+	public static final String STATE_AGREE_REJECT = "검토반려";
+
+	/**
+	 * 수신 라인 상태값 상수
+	 */
+	public static final String STATE_RECEIVE_READY = "수신확인중";
+	public static final String STATE_RECEIVE_COMPLETE = "수신완료";
+
+	/*
+	 * 결재자 역할들
+	 */
+	public static final String WORKING_SUBMITTER = "기안자";
+	public static final String WORKING_APPROVAL = "승인자";
+	public static final String WORKING_AGREE = "검토자";
+	public static final String WORKING_RECEIVE = "수신자";
+
+	/*
+	 * 결재라인 종류
+	 */
+	public static final String SUBMIT_LINE = "기안";
+	public static final String AGREE_LINE = "합의";
+	public static final String APPROVAL_LINE = "결재";
+	public static final String RECEIVE_LINE = "수신";
+
+	/**
+	 * 완료함
+	 */
+	public Map<String, Object> complete(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<ApprovalLineColumn> list = new ArrayList<>();
+		String name = (String) params.get("name");
+		String receiveFrom = (String) params.get("receiveFrom");
+		String receiveTo = (String) params.get("receiveTo");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalMaster.class, true);
+
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, "ownership.owner.key.id", sessionUser);
+		}
+
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, ApprovalMaster.STATE,
+				STATE_MASTER_APPROVAL_COMPLETE);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalMaster.class, ApprovalMaster.CREATE_TIMESTAMP,
+				receiveFrom, receiveTo);
+		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, ApprovalMaster.START_TIME, true);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalMaster master = (ApprovalMaster) obj[0];
+			ApprovalLineColumn column = new ApprovalLineColumn(master, "COMPLETE_COLUMN");
+			list.add(column);
+		}
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 
-	public Map<String, Object> approval(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * 결재함
+	 */
+	public Map<String, Object> approval(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<ApprovalLineColumn> list = new ArrayList<>();
+		String submiterOid = (String) params.get("submiterOid");
+		String receiveFrom = (String) params.get("receiveFrom");
+		String receiveTo = (String) params.get("receiveTo");
+		String approvalTitle = (String) params.get("approvalTitle");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, false);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+
+		// 쿼리 수정할 예정
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalLine.class, ApprovalLine.CREATE_TIMESTAMP, receiveFrom,
+				receiveTo);
+
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
+		}
+
+		QuerySpecUtils.toCreator(query, idx_m, ApprovalMaster.class, submiterOid);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalLine.class, ApprovalLine.CREATE_TIMESTAMP, receiveFrom,
+				receiveTo);
+		QuerySpecUtils.toLikeAnd(query, idx, ApprovalLine.class, ApprovalLine.NAME, approvalTitle);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, true);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine approvalLine = (ApprovalLine) obj[0];
+			ApprovalLineColumn column = new ApprovalLineColumn(approvalLine, "APPROVAL_COLUMN");
+			list.add(column);
+		}
+
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 
-	public Map<String, Object> receive(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * 수신함
+	 */
+	public Map<String, Object> receive(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<ApprovalLineColumn> list = new ArrayList<>();
+		String name = (String) params.get("name");
+		String receiveFrom = (String) params.get("receiveFrom");
+		String receiveTo = (String) params.get("receiveTo");
+		String submiterOid = (String) params.get("submiterOid");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_master = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_READY);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, RECEIVE_LINE);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalLine.class, ApprovalLine.CREATE_TIMESTAMP, receiveFrom,
+				receiveTo);
+		QuerySpecUtils.toCreator(query, idx_master, ApprovalMaster.class, submiterOid);
+
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+		}
+
+		QuerySpecUtils.toLikeAnd(query, idx, ApprovalLine.class, ApprovalLine.NAME, name);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, true);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine line = (ApprovalLine) obj[0];
+			ApprovalLineColumn column = new ApprovalLineColumn(line, "RECEIVE_COLUMN");
+			list.add(column);
+		}
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 
-	public Map<String, Object> progress(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * 진행함
+	 */
+	public Map<String, Object> progress(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<ApprovalLineColumn> list = new ArrayList<>();
+		String name = (String) params.get("name");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalMaster.class, true);
+
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, "ownership.owner.key.id", sessionUser);
+		}
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		query.appendOpenParen();
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_APPROVAL_APPROVING);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_AGREE_READY);
+		query.appendCloseParen();
+
+		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, ApprovalMaster.START_TIME, true);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalMaster master = (ApprovalMaster) obj[0];
+			ApprovalLineColumn column = new ApprovalLineColumn(master, "PROGRESS_COLUMN");
+			list.add(column);
+		}
+
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 
-	public Map<String, Object> reject(Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * 반려함
+	 */
+	public Map<String, Object> reject(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<ApprovalLineColumn> list = new ArrayList<>();
+		String name = (String) params.get("name");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalMaster.class, true);
+
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, "ownership.owner.key.id", sessionUser);
+		}
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		query.appendOpenParen();
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_AGREE_REJECT);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_REJECT);
+		query.appendCloseParen();
+
+		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalMaster.class, ApprovalMaster.START_TIME, true);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalMaster master = (ApprovalMaster) obj[0];
+			ApprovalLineColumn column = new ApprovalLineColumn(master, "REJECT_COLUMN");
+			list.add(column);
+		}
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 
 	/**
@@ -180,5 +447,159 @@ public class WorkspaceHelper {
 		map.put("agree", agree);
 		map.put("receive", receive);
 		return map;
+	}
+
+	/**
+	 * 결재명 만들기
+	 */
+	public String getName(Persistable per) throws Exception {
+
+		String name = "";
+
+		if (!(per instanceof LifeCycleManaged)) {
+			throw new Exception("객체가 라이프사이클을 구현하지 않았습니다.");
+		}
+
+		if (per instanceof WTDocument) {
+			WTDocument doc = (WTDocument) per;
+			name = doc.getNumber() + " [" + doc.getName() + "]";
+		} else if (per instanceof EChangeRequest) {
+
+		} else if (per instanceof ECPRRequest) {
+			ECPRRequest ecpr = (ECPRRequest) per;
+			name = ecpr.getEoNumber() + " [" + ecpr.getEoName() + "]";
+		} else if (per instanceof EChangeOrder) {
+
+		}
+
+		return name;
+	}
+
+	/**
+	 * 모든 결재라인을 가져오는 함수
+	 */
+	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master) throws Exception {
+		ArrayList<ApprovalLine> list = new ArrayList<ApprovalLine>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		// 정렬???
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine line = (ApprovalLine) obj[0];
+			list.add(line);
+		}
+		return list;
+
+	}
+
+	/**
+	 * 결재 개수
+	 */
+	public Map<String, Integer> count() throws Exception {
+		Map<String, Integer> count = new HashMap<>();
+
+		return count;
+	}
+
+	public boolean isLastLine(ApprovalMaster master) throws Exception {
+		return false;
+	}
+
+	/**
+	 * 결재라인 가져오기
+	 * 
+	 * @throws Exception
+	 */
+	public ArrayList<ApprovalLine> getApprovalLines(ApprovalMaster master) throws Exception {
+		ArrayList<ApprovalLine> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_APPROVAL);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine line = (ApprovalLine) obj[0];
+			list.add(line);
+		}
+		return list;
+	}
+
+	/**
+	 * 검토 라인 가져오기
+	 */
+	public ArrayList<ApprovalLine> getAgreeLines(ApprovalMaster master) throws Exception {
+		ArrayList<ApprovalLine> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_AGREE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, AGREE_LINE);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine line = (ApprovalLine) obj[0];
+			list.add(line);
+		}
+		return list;
+	}
+
+	/**
+	 * 수신라인 가져오기
+	 */
+	public ArrayList<ApprovalLine> getReceiveLines(ApprovalMaster master) throws Exception {
+		ArrayList<ApprovalLine> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_RECEIVE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, RECEIVE_LINE);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine line = (ApprovalLine) obj[0];
+			list.add(line);
+		}
+		return list;
+	}
+
+	/**
+	 * 기안라인 가져오기
+	 */
+	public ApprovalLine getSubmitLine(ApprovalMaster master) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_SUBMITTER);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine line = (ApprovalLine) obj[0];
+			return line;
+		}
+		return null;
 	}
 }

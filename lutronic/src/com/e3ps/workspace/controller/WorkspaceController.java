@@ -1,5 +1,6 @@
 package com.e3ps.workspace.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,7 +169,7 @@ public class WorkspaceController extends BaseController {
 		model.setViewName("popup:/workspace/register-popup");
 		return model;
 	}
-	
+
 	@Description(value = "개인결재선 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/loadLine")
@@ -208,7 +209,6 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
-	
 
 	@Description(value = "개인결재선 삭제 함수")
 	@ResponseBody
@@ -245,7 +245,7 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "개인결재선 즐겨찾기 불러오는 함수")
 	@ResponseBody
 	@PostMapping(value = "/loadFavorite")
@@ -280,5 +280,58 @@ public class WorkspaceController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "결재 초기화 함수")
+	@ResponseBody
+	@PostMapping(value = "/_reset")
+	public Map<String, Object> _reset(@RequestBody Map<String, ArrayList<String>> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service._reset(params);
+			result.put("msg", "결재가 초기화 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/_reset", "결재 초기화 함수");
+		}
+		return result;
+	}
+
+	@Description(value = "승인 함수")
+	@ResponseBody
+	@PostMapping(value = "/_approval")
+	public Map<String, Object> _approval(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service._approval(params);
+			result.put("msg", APPROVAL_SUCCESS_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/_approval", "승인 함수");
+		}
+		return result;
+	}
+
+	@Description(value = "반려 함수")
+	@ResponseBody
+	@PostMapping(value = "/_reject")
+	public Map<String, Object> _reject(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service._reject(params);
+			result.put("msg", REJECT_SUCCESS_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/_reject", "반려 함수");
+		}
+		return result;
+	}
 
 }

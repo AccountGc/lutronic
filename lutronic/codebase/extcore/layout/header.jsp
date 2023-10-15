@@ -7,6 +7,7 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count");
 boolean isWork = (boolean) request.getAttribute("isWork");
 boolean isDoc = (boolean) request.getAttribute("isDoc");
 boolean isPart = (boolean) request.getAttribute("isPart");

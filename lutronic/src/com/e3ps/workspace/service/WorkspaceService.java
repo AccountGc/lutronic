@@ -39,4 +39,20 @@ public interface WorkspaceService {
 	 * 개인결재선 즐겨찾기 저장 함수
 	 */
 	public abstract void favorite(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 결재선 초기화
+	 */
+	public abstract void _reset(Map<String, ArrayList<String>> params) throws Exception;
+
+	/**
+	 * 결재 승인
+	 */
+	public abstract void _approval(Map<String, String> params) throws Exception;
+
+	/**
+	 * 결재 반려
+	 */
+	public abstract void _reject(Map<String, String> params) throws Exception;
+
 }

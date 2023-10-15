@@ -18,6 +18,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import net.sf.json.JSONArray;
 import wt.org.WTUser;
@@ -49,6 +50,7 @@ public class IndexController extends BaseController {
 		PeopleDTO dto = new PeopleDTO(people);
 		String department_name = dto.getDepartment_name();
 		String auths = dto.getAuth();
+		Map<String, Integer> count = WorkspaceHelper.manager.count();
 		boolean isWork = CommonUtil.isAdmin();
 		boolean isDoc = CommonUtil.isAdmin();
 		boolean isPart = CommonUtil.isAdmin();
@@ -77,6 +79,9 @@ public class IndexController extends BaseController {
 		if ("".equals(department_name)) {
 
 		}
+
+		// 결재 재수
+		model.addObject("coun", count);
 
 		model.addObject("isRa", isRa);
 		model.addObject("isProduction", isProduction);
