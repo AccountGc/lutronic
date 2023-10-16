@@ -18,11 +18,6 @@ public interface AdminService {
 	Map<String, Object> admin_downLoadHistoryAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
 
-	Map<String, Object> admin_mailAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	Map<String, Object> admin_loginHistoryAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception;
-
 	Map<String, Object> admin_changeActivityAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
 
@@ -36,11 +31,8 @@ public interface AdminService {
 
 	void admin_packageAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	Map<String, Object> admin_mailNewAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
 	public void updateRootDefinition(Map<String, Object> params) throws Exception;
 
 	public void deleteRootDefinition(Map<String, Object> params) throws Exception;
-
 
 }

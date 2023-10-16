@@ -30,8 +30,8 @@ public class DocumentDTO {
 	private WTDocument doc;
 	private String number;
 	private String name;
-	private String description = "";
-	private String content = "";
+	private String description;
+	private String content;
 	private String location;
 	private String documentType_name;
 	private String documentType_code;
@@ -162,8 +162,8 @@ public class DocumentDTO {
 		if (check("APPROVED") && isLatest()) {
 			set_revise(true);
 		}
-		// 삭제, 수정 권한 - (최신버전 && (작업중 || 일괄결재중 || 재작업))
-		if (isLatest() && (check("INWORK") || check("BATCHAPPROVAL") || check("REWORK"))) {
+		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
+		if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
 			set_delete(true);
 			set_modify(true);
 		}

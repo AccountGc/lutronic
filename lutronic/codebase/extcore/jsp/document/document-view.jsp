@@ -29,11 +29,11 @@ iframe {
 		<td class="right">
 			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
 			<%
-// 			if (dto.is_revise()) {
+			// 			if (dto.is_revise()) {
 			%>
 			<input type="button" value="개정" title="개정" onclick="update('revise');">
 			<%
-// 			}
+			// 			}
 			%>
 			<input type="button" value="결재회수" title="결재회수">
 			<%
@@ -133,13 +133,13 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="content" id="content" rows="30"><%=dto.getContent()%></textarea>
+					<textarea name="content" id="content" rows="30"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">설명</th>
 				<td colspan="5" class="indent5">
-					<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() == null ? "" : dto.getDescription()%></textarea>
+					<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -299,32 +299,27 @@ iframe {
 			oEditors.getById["content"].exec("DISABLE_ALL_UI");
 		},
 	});
-	
+
 	// 최신버전으로 페이지 이동
 	function latest() {
 		const url = getCallUrl("/doc/latest?oid=" + oid);
 		document.location.href = url;
 	}
-	
+
 	//내용인쇄
 	function print(mode) {
-        var content = "<%=dto.getContent()%>"; // 에디터 내용 가져오기
-        var printWindow = window.open('', '_blank'); // 새 창 열기
+		const content = document.getElementById("content").value;
+		const printWindow = window.open('', '_blank'); // 새 창 열기
+		printWindow.document.open();
+		printWindow.document.write('<html><head><title></title></head><body>');
+		// 출력할 내용 추가
+		printWindow.document.write('<pre>' + content + '</pre>');
 
-        printWindow.document.open();
-        printWindow.document.write('<html><head><title></title></head><body>');
-        
-        // 출력할 내용 추가
-        printWindow.document.write('<pre>' + content + '</pre>');
-
-        printWindow.document.write('</body></html>');
-        
+		printWindow.document.write('</body></html>');
 		printWindow.document.close();
-
 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
 	}
-	
-	
+
 	//수정 및 개정
 	function update(mode) {
 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
@@ -436,6 +431,12 @@ iframe {
 					} else {
 						createAUIGrid51(columns51);
 					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 다운로드이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
+					}
 					break;
 				}
 			}
@@ -443,5 +444,12 @@ iframe {
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID91);
+		AUIGrid.resize(myGridID100);
+		AUIGrid.resize(myGridID105);
+		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID50);
+		AUIGrid.resize(myGridID51);
+		AUIGrid.resize(myGridID10000);
 	});
 </script>

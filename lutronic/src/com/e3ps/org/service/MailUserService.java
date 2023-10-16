@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import com.e3ps.admin.dto.MailUserDTO;
 import com.e3ps.org.MailWTobjectLink;
 
 import wt.fc.WTObject;
@@ -30,4 +31,9 @@ public interface MailUserService {
 	void sendWTObjectMailUser(WTObject wtobject);
 
 	public void adminMailSave(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 외부메일 저장
+	 */
+	public abstract void mail(MailUserDTO dto) throws Exception;
 }

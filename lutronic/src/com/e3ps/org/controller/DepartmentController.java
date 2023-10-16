@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,7 +59,7 @@ public class DepartmentController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "결재선 등록 페이지에서 부서 트리 구조 가져오기")
 	@GetMapping(value = "/load900")
 	@ResponseBody
@@ -76,4 +77,19 @@ public class DepartmentController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "결재선 등록 페이지에서 부서 더블클릭시 해당 부서 사용자들 일괄 지정")
+	@GetMapping(value = "/specify")
+	@ResponseBody
+	public Map<String, Object> specify(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = DepartmentHelper.manager.specify(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
 }

@@ -52,23 +52,23 @@ public class NumberCodeHelper {
 	 * 코드 & 코드타입으로 값 가져오기
 	 */
 	public String getNumberCodeName(String code, String codeType) throws Exception {
-		
-		if(code == null) {
+
+		if (!StringUtil.checkString(codeType)) {
 			return null;
 		}
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
-		
-		if(code.indexOf(",") > -1) {
+
+		if (code.indexOf(",") > -1) {
 			String[] codes = code.split(",");
-			for(int i = 0; i < codes.length; i++) {
-				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+			for (int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);
 			}
-		}else {
+		} else {
 			QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, code);
 		}
-		
+
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
@@ -77,9 +77,9 @@ public class NumberCodeHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode numberCode = (NumberCode) obj[0];
-			if(result.size() -1 == i) {
+			if (result.size() - 1 == i) {
 				numberCodeNames += numberCode.getName();
-			}else {
+			} else {
 				numberCodeNames += numberCode.getName() + ",";
 			}
 			i++;
@@ -235,7 +235,7 @@ public class NumberCodeHelper {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		// 페이징 처리 안하는것으로 한다.
 		String type = (String) params.get("type");
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, type);

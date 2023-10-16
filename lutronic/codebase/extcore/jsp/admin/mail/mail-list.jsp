@@ -6,13 +6,6 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-// MailUser u = MailUser.newMailUser();
-// u.setEmail("test@gmail.com");
-// u.setIsDisable(true);
-// u.setName("테스트");
-// PersistenceHelper.manager.save(u);
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +19,6 @@
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -52,7 +44,7 @@
 						<input type="radio" name="enable" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
-								<b>ON</b>
+								<b>사용</b>
 							</label>
 						</div>
 					</div>
@@ -61,7 +53,7 @@
 						<input type="radio" name="enable" value="false">
 						<div class="state p-success">
 							<label>
-								<b>OFF</b>
+								<b>미사용</b>
 							</label>
 						</div>
 					</div>
@@ -71,9 +63,9 @@
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('mail-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('mail-list');"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('mail-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('mail-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -83,15 +75,14 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="search">
-					<input type="button" value="초기화" title="초기화" id="reset">
-					<input type="button" value="추가" title="추가" id="add" class="blue">
-					<input type="button" value="삭제" title="삭제" id="delete" class="red">
-					<input type="button" value="저장" title="저장" id="save" class="blue">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
+					<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
+					<input type="button" value="저장" title="저장" onclick="save();">
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 705px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -110,7 +101,7 @@
 					dataField : "email",
 					headerText : "이메일",
 					dataType : "string",
-					width : 400,
+					style : "aui-left",
 					filter : {
 						showIcon : true,
 						inline : true
@@ -118,33 +109,36 @@
 				}, {
 					dataField : "enable",
 					headerText : "활성화",
-					dataType : "string",
-					width : 120,
+					dataType : "boolean",
+					width : 100,
 					filter : {
-						showIcon : true,
-						inline : true
+						showIcon : false,
+						inline : false
 					},
+					renderer : {
+						type : "CheckBoxEditRenderer",
+						editable : true
+					}
 				} ]
 			}
 
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : false,
+					showRowNumColumn : true,
 					showRowCheckColumn : true,
-// 					rowNumHeaderText : "번호",
-					fillColumnSizeMode: true,
-					showAutoNoDataMessage : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					editable : true,
-					rowCheckToRadio : true,
+					enableRowCheckShiftKey : true,
+					editable : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -158,13 +152,16 @@
 			}
 
 			function loadGridData() {
-				var params = new Object();
-				const field = ["name","email","_psize"];
+				let params = new Object();
+				const field = [ "name", "email", "_psize" ];
+				const enable = document.querySelector("input[name=enable]:checked").value;
+				const url = getCallUrl("/admin/mail");
 				params = toField(params, field);
-				const enable = $("input[name=enable]:checked").val();
-				params.enable = enable;
-				var url = getCallUrl("/admin/adminMail");
+				params.enable = JSON.parse(enable);
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
@@ -173,10 +170,12 @@
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("name");
 				const columns = loadColumnLayout("mail-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -185,7 +184,6 @@
 				});
 				createAUIGrid(columns);
 				selectbox("_psize");
-				selectbox("rootOid");
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -202,66 +200,55 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			// 추가
-			$("#add").click(function() {
-				var item = new Object();
+
+			function addRow() {
+				const item = new Object();
 				AUIGrid.addRow(myGridID, item, 'first');
-			});
-			
-			// 삭제
-			$("#delete").click(function() {
-				var items = AUIGrid.getCheckedRowItems(myGridID);
-				if (items.length == 0) {
+			}
+
+			function _delete() {
+				const items = AUIGrid.getCheckedRowItems(myGridID);
+				if (items.length === 0) {
 					alert("삭제 할 행을 선택하세요.");
 				}
-				for (var i = 0; i < items.length; i++) {
+				for (let i = 0; i < items.length; i++) {
 					AUIGrid.removeRow(myGridID, items[i].rowIndex);
 				}
-			});
-			
-			// 저장
-			$("#save").click(function() {
+			}
+
+			function save() {
 				// 추가된 행
-				var addedRowItems = AUIGrid.getAddedRowItems(myGridID);
+				const addedRowItems = AUIGrid.getAddedRowItems(myGridID);
 				// 수정된 행
-				var editedRowItems = AUIGrid.getEditedRowItems(myGridID);
+				const editedRowItems = AUIGrid.getEditedRowItems(myGridID);
 				// 삭제된 행
-				var removedRowItems = AUIGrid.getRemovedItems(myGridID);
-				
-				if (addedRowItems.length == 0 && editedRowItems.length == 0 && removedRowItems.length == 0) {
-					return;
+				const removedRowItems = AUIGrid.getRemovedItems(myGridID);
+
+				if (addedRowItems.length === 0 && editedRowItems.length === 0 && removedRowItems.length === 0) {
+					return false;
 				}
-				
+
 				if (!confirm("저장 하시겠습니까?")) {
 					return;
 				}
-				
-				var params = new Object();
+
+				const params = new Object();
+				const url = getCallUrl("/admin/mail");
 				params.addRow = addedRowItems;
 				params.editRow = editedRowItems;
 				params.removeRow = removedRowItems;
-				
-				const url = getCallUrl("/admin/adminMailSave");
+				parent.openLayer();
 				call(url, params, function(data) {
+					alert(data.msg);
 					if (data.result) {
-						alert(data.msg);
 						loadGridData();
 					} else {
-						alert(data.msg);
+						parent.closeLayer();
 					}
-				});
-			});
-			
-			$("#search").click(function() {
-				loadGridData();
-			});
-			
-			$("#reset").click(function() {
-				$("input[type=text]").val("");
-				$('input:radio[name="enable"]:input[value="true"]').prop('checked',true);
-			});
-			
+				}, "PUT");
+			}
 		</script>
 	</form>
 </body>

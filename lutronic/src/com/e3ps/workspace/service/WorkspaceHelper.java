@@ -15,8 +15,10 @@ import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
+import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.column.ApprovalLineColumn;
 
+import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.Persistable;
@@ -40,7 +42,6 @@ public class WorkspaceHelper {
 	 */
 	public static final String STATE_MASTER_APPROVAL_APPROVING = "승인중";
 	public static final String STATE_MASTER_APPROVAL_REJECT = "반려됨";
-	public static final String STATE_MASTER_AGREE_REJECT = "검토반려";
 	public static final String STATE_MASTER_APPROVAL_COMPLETE = "결재완료";
 
 	/**
@@ -68,6 +69,7 @@ public class WorkspaceHelper {
 	 */
 	public static final String STATE_RECEIVE_READY = "수신확인중";
 	public static final String STATE_RECEIVE_COMPLETE = "수신완료";
+	public static final String STATE_RECEIVE_REJECT = "수신반려";
 
 	/*
 	 * 결재자 역할들
@@ -295,8 +297,9 @@ public class WorkspaceHelper {
 			query.appendAnd();
 		}
 
+		// 검토 어떻게 처리 할건지?
 		query.appendOpenParen();
-		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_AGREE_REJECT);
+//		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_AGREE_REJECT);
 		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_REJECT);
 		query.appendCloseParen();
 
@@ -476,13 +479,25 @@ public class WorkspaceHelper {
 	}
 
 	/**
-	 * 모든 결재라인을 가져오는 함수
+	 * 모든 결재라인을 가져오는 함수, 두번재 변수로 기안라인을 가져오냐마쟈 여부 TRUE 가져옴, FALSE 안가져옴
 	 */
 	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master) throws Exception {
+		return getAllLines(master, true);
+	}
+
+	/**
+	 * 모든 결재라인을 가져오는 함수
+	 */
+	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master, boolean exclude) throws Exception {
 		ArrayList<ApprovalLine> list = new ArrayList<ApprovalLine>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
 		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+
+		if (!exclude) {
+			QuerySpecUtils.toNotEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
+		}
+
 		// 정렬???
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -491,7 +506,6 @@ public class WorkspaceHelper {
 			list.add(line);
 		}
 		return list;
-
 	}
 
 	/**
@@ -601,5 +615,92 @@ public class WorkspaceHelper {
 			return line;
 		}
 		return null;
+	}
+
+	/**
+	 * 결재 마스터 객체 가져오기
+	 */
+	public ApprovalMaster getMaster(Persistable per) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(per, "lineMaster", PersistMasterLink.class);
+		if (result.hasMoreElements()) {
+			return (ApprovalMaster) result.nextElement();
+		}
+		return null;
+	}
+
+	/**
+	 * 결재 이력
+	 */
+	public JSONArray history(String oid) throws Exception {
+		Persistable per = CommonUtil.getObject(oid);
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		ApprovalMaster master = getMaster(per);
+
+		if (master != null) {
+			ApprovalLine submit = getSubmitLine(master);
+			Map<String, String> data = new HashMap<>();
+			data.put("type", submit.getType());
+			data.put("role", submit.getRole());
+			data.put("name", submit.getName());
+			data.put("state", submit.getState());
+			data.put("owner", submit.getOwnership().getOwner().getFullName());
+			data.put("receiveDate_txt", submit.getStartTime().toString().substring(0, 16));
+			data.put("completeDate_txt", submit.getCompleteTime().toString().substring(0, 16));
+			data.put("description", submit.getDescription());
+			list.add(data);
+
+			ArrayList<ApprovalLine> agreeLines = getAgreeLines(master);
+			for (ApprovalLine agreeLine : agreeLines) {
+				Map<String, String> map = new HashMap<>();
+				map.put("type", agreeLine.getType());
+				map.put("role", agreeLine.getRole());
+				map.put("name", agreeLine.getName());
+				map.put("state", agreeLine.getState());
+				map.put("owner", agreeLine.getOwnership().getOwner().getFullName());
+				map.put("receiveDate_txt", agreeLine.getStartTime().toString().substring(0, 16));
+				map.put("completeDate_txt",
+						agreeLine.getCompleteTime() != null ? agreeLine.getCompleteTime().toString().substring(0, 16)
+								: "");
+				map.put("description", agreeLine.getDescription());
+				list.add(map);
+			}
+
+			ArrayList<ApprovalLine> approvalLines = getApprovalLines(master);
+			for (ApprovalLine approvalLine : approvalLines) {
+				Map<String, String> map = new HashMap<>();
+				map.put("type", approvalLine.getType());
+				map.put("role", approvalLine.getRole());
+				map.put("name", approvalLine.getName());
+				map.put("state", approvalLine.getState());
+				map.put("owner", approvalLine.getOwnership().getOwner().getFullName());
+				map.put("receiveDate_txt",
+						approvalLine.getStartTime() != null ? approvalLine.getStartTime().toString().substring(0, 16)
+								: "");
+				map.put("completeDate_txt",
+						approvalLine.getCompleteTime() != null
+								? approvalLine.getCompleteTime().toString().substring(0, 16)
+								: "");
+				map.put("description", approvalLine.getDescription());
+				list.add(map);
+			}
+
+			ArrayList<ApprovalLine> receiveLines = getReceiveLines(master);
+			for (ApprovalLine receiveLine : receiveLines) {
+				Map<String, String> map = new HashMap<>();
+				map.put("type", receiveLine.getType());
+				map.put("role", receiveLine.getRole());
+				map.put("name", receiveLine.getName());
+				map.put("state", receiveLine.getState());
+				map.put("owner", receiveLine.getOwnership().getOwner().getFullName());
+				map.put("receiveDate_txt", receiveLine.getStartTime().toString().substring(0, 16));
+				map.put("completeDate_txt",
+						receiveLine.getCompleteTime() != null
+								? receiveLine.getCompleteTime().toString().substring(0, 16)
+								: "");
+				map.put("description", receiveLine.getDescription());
+				list.add(map);
+			}
+		}
+		return JSONArray.fromObject(list);
 	}
 }

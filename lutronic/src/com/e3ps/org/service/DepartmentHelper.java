@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
+import com.e3ps.org.People;
+import com.e3ps.org.dto.PeopleDTO;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -114,5 +117,26 @@ public class DepartmentHelper {
 			children.add(node);
 		}
 		parentNode.put("children", children);
+	}
+
+	public Map<String, Object> specify(String oid) throws Exception {
+		ArrayList<PeopleDTO> list = new ArrayList<>();
+		Map<String, Object> result = new HashMap<>();
+
+		Department departmen = (Department) CommonUtil.getObject(oid);
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, People.class, "departmentReference.key.id", departmen);
+		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			PeopleDTO dto = new PeopleDTO(obj);
+			list.add(dto);
+		}
+
+		result.put("list", list);
+		return result;
 	}
 }

@@ -1,14 +1,7 @@
 package com.e3ps.admin.controller;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -20,49 +13,25 @@ import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import wt.fc.EnumeratedType;
-import wt.fc.PersistenceHelper;
-import wt.fc.ReferenceFactory;
-import wt.org.WTPrincipal;
-import wt.session.SessionHelper;
-
+import com.e3ps.admin.dto.MailUserDTO;
 import com.e3ps.admin.service.AdminHelper;
-import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
-import com.e3ps.change.beans.DEFData;
-import com.e3ps.change.beans.EADData;
 import com.e3ps.change.beans.ROOTData;
-import com.e3ps.change.service.ChangeUtil;
-import com.e3ps.change.service.ECAHelper;
-import com.e3ps.change.service.ECRHelper;
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.NumberCodeType;
-import com.e3ps.common.code.dto.NumberCodeData;
-import com.e3ps.common.code.service.CodeHelper;
-import com.e3ps.common.code.service.GenNumberHelper;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
-import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.org.Department;
 import com.e3ps.org.dto.CompanyState;
 import com.e3ps.org.service.MailUserHelper;
-import com.ptc.core.adapter.server.impl.CollectObjectsWebjectDelegate.OutputType;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping(value = "/admin/**")
@@ -253,50 +222,21 @@ public class AdminController extends BaseController {
 		return result;
 	}
 
-//	@ResponseBody
-//	@RequestMapping("/admin_downLoadHistoryAction")
-//	public Map<String,Object> admin_downLoadHistoryAction(HttpServletRequest request, HttpServletResponse response) {
-//		
-//		Map<String,Object> map = null;
-//		
-//		try {
-//			map = AdminHelper.service.admin_downLoadHistoryAction(request, response);
-//		} catch(Exception e) {
-//			map = new HashMap<String,Object>();
-//			e.printStackTrace();
-//		}
-//		
-//		return map;
-//	}
-
 	@Description(value = "외부 메일 페이지")
-	@GetMapping(value = "/adminMail")
-	public ModelAndView adminMail() throws Exception {
+	@GetMapping(value = "/mail")
+	public ModelAndView mail() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/admin/adminMail.jsp");
+		model.setViewName("/extcore/jsp/admin/mail/mail-list.jsp");
 		return model;
 	}
 
-	/*
-	 * 
-	 * 외부 메일
-	 * 
-	 */
-//	@RequestMapping("/admin_mail")
-//	public ModelAndView admin_mail(HttpServletRequest request, HttpServletResponse response) {
-//		ModelAndView model = new ModelAndView();
-//		model.setViewName("admin:/admin/admin_mail");
-//		model.addObject("module", "mail");
-//		return model;
-//	}
-
-	@Description(value = "외부 메일 실행")
+	@Description(value = "외부 메일 리스트 함수")
 	@ResponseBody
-	@PostMapping(value = "/adminMail")
-	public Map<String, Object> adminMail(@RequestBody Map<String, Object> params) throws Exception {
+	@PostMapping(value = "/mail")
+	public Map<String, Object> mail(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = AdminHelper.manager.adminMail(params);
+			result = AdminHelper.manager.mail(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -306,28 +246,13 @@ public class AdminController extends BaseController {
 		return result;
 	}
 
-//	@ResponseBody
-//	@RequestMapping("/admin_mailAction")
-//	public Map<String,Object> admin_mailAction(HttpServletRequest request, HttpServletResponse response) {
-//		Map<String,Object> map = null;
-//		
-//		try {
-//			map = AdminHelper.service.admin_mailAction(request, response);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			map = new HashMap<String,Object>();
-//		}
-//		
-//		return map;
-//	}
-
 	@Description(value = "외부 메일 저장")
 	@ResponseBody
-	@PostMapping(value = "/adminMailSave")
-	public Map<String, Object> adminMailSave(@RequestBody Map<String, Object> params) throws Exception {
+	@PutMapping(value = "/mail")
+	public Map<String, Object> mail(@RequestBody MailUserDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			MailUserHelper.service.adminMailSave(params);
+			MailUserHelper.service.mail(dto);
 			result.put("result", SUCCESS);
 			result.put("msg", SAVE_MSG);
 		} catch (Exception e) {

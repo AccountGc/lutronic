@@ -147,7 +147,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				PersistenceHelper.manager.save(receiveLine);
 			}
 
-			registerAfterAction(master);
+			afterRegisterAction(master);
 
 			trs.commit();
 			trs = null;
@@ -164,7 +164,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	/**
 	 * 결재 등록시 이뤄지는 작업 상태값 변경
 	 */
-	private void registerAfterAction(ApprovalMaster master) throws Exception {
+	private void afterRegisterAction(ApprovalMaster master) throws Exception {
 		master = (ApprovalMaster) PersistenceHelper.manager.refresh(master);
 		Persistable per = master.getPersist();
 
@@ -338,12 +338,66 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	@Override
 	public void _approval(Map<String, String> params) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void _reject(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
-		
+		String oid = params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+			ApprovalMaster m = line.getMaster();
+
+			WTUser sessionUser = CommonUtil.sessionUser();
+
+			// 기안라인은 제외한다?
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, false);
+			for (ApprovalLine l : list) {
+
+				String t = l.getType();
+				// 검토라인
+				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
+					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
+				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
+					l.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
+				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
+					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
+				}
+				l.setCompleteTime(new Timestamp(new Date().getTime()));
+				PersistenceHelper.manager.modify(l);
+			}
+
+			m.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_REJECT);
+			m.setCompleteTime(new Timestamp(new Date().getTime()));
+			m = (ApprovalMaster) PersistenceHelper.manager.modify(m);
+
+			// 반려후 작업할 행위.. 객체 상태값 반려됨으로 처리한다.
+			afterRejectAction(m);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
+	}
+
+	/**
+	 * 결재 반려후 이뤄지는 함수
+	 */
+	private void afterRejectAction(ApprovalMaster m) throws Exception {
+		Persistable per = m.getPersist();
+		if (per instanceof LifeCycleManaged) {
+			LifeCycleManaged lcm = (LifeCycleManaged) per;
+			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("RETURN"));
+		}
 	}
 }

@@ -33,6 +33,10 @@ public class PeopleDTO {
 	private String auth;
 	private String duty;
 
+	public PeopleDTO(Object[] obj) throws Exception {
+		this((People) obj[0]);
+	}
+
 	public PeopleDTO() throws Exception {
 		this((WTUser) SessionHelper.manager.getPrincipal());
 	}

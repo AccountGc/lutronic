@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.e3ps.admin.dto.MailUserDTO;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.beans.EADData;
@@ -68,49 +69,6 @@ public class AdminHelper {
 			EADData data = new EADData((EChangeActivityDefinition) o[0]);
 			list.add(data);
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("topListCount", pager.getTotal());
-		map.put("pageSize", pager.getPsize());
-		map.put("total", pager.getTotalSize());
-		map.put("sessionid", pager.getSessionId());
-		map.put("curPage", pager.getCpage());
-		return map;
-	}
-
-	/**
-	 * 외부 메일 리스트
-	 */
-	public Map<String, Object> adminMail(Map<String, Object> params) throws Exception {
-		String oid = StringUtil.checkNull((String) params.get("oid"));
-		String name = StringUtil.checkNull((String) params.get("name"));
-		String email = StringUtil.checkNull((String) params.get("email"));
-		boolean enable = params.get("enable").equals("true") ? true : false;
-
-		QuerySpec query = new QuerySpec();
-		int idx = query.addClassList(MailUser.class, true);
-
-		QuerySpecUtils.toLikeAnd(query, idx, MailUser.class, MailUser.NAME, name);
-		QuerySpecUtils.toLikeAnd(query, idx, MailUser.class, MailUser.EMAIL, email);
-		QuerySpecUtils.toBooleanAnd(query, idx, MailUser.class, MailUser.IS_DISABLE, enable);
-		QuerySpecUtils.toOrderBy(query, idx, MailUser.class, MailUser.NAME, false);
-
-		PageQueryUtils pager = new PageQueryUtils(params, query);
-		PagingQueryResult result = pager.find();
-
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		while (result.hasMoreElements()) {
-			Object[] o = (Object[]) result.nextElement();
-			MailUser user = (MailUser) o[0];
-
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("oid", user.getPersistInfo().getObjectIdentifier().toString());
-			map.put("name", user.getName());
-			map.put("email", user.getEmail());
-			map.put("enable", user.isIsDisable());
-			list.add(map);
-		}
-
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("list", list);
 		map.put("topListCount", pager.getTotal());
@@ -267,4 +225,38 @@ public class AdminHelper {
 		return result;
 	}
 
+	/**
+	 * 외부 메일 리스트
+	 */
+	public Map<String, Object> mail(Map<String, Object> params) throws Exception {
+		List<MailUserDTO> list = new ArrayList<MailUserDTO>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String name = (String) params.get("name");
+		String email = (String) params.get("email");
+		boolean enable = (boolean) params.get("enable");
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(MailUser.class, true);
+
+		QuerySpecUtils.toLikeAnd(query, idx, MailUser.class, MailUser.NAME, name);
+		QuerySpecUtils.toLikeAnd(query, idx, MailUser.class, MailUser.EMAIL, email);
+		QuerySpecUtils.toBooleanAnd(query, idx, MailUser.class, MailUser.IS_DISABLE, enable);
+		QuerySpecUtils.toOrderBy(query, idx, MailUser.class, MailUser.NAME, false);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			MailUserDTO dto = new MailUserDTO(obj);
+			list.add(dto);
+		}
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
+	}
 }

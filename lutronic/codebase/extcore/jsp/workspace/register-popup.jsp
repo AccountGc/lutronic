@@ -166,10 +166,106 @@ String oid = (String) request.getAttribute("oid");
 // 						displayTreeOpen : true
 					}
 					myGridID900 = AUIGrid.create("#grid900", columnLayout, props);
-// 					logger(AUIGrid.isTreeGrid(myGridID900));
 					load900();
 					AUIGrid.bind(myGridID900, "selectionChange", auiGridSelectionChangeHandler);
-// 					AUIGrid.showItemsOnDepth(myGridID900, 3);
+					AUIGrid.bind(myGridID900, "cellDoubleClick", auiCellDoubleClickHandler);
+				}
+				
+				function auiCellDoubleClickHandler(event) {
+					const item = event.item;
+					const oid = item.oid;
+					// 부서일 경우만 모두 ...
+					
+					const radioGroup = document.getElementsByName("lineType");
+					let selectedValue;
+					for (const radioButton of radioGroup) {
+						if (radioButton.checked) {
+							selectedValue = radioButton.value;
+							break;
+						}
+					}
+					
+					if(oid.indexOf("Department") > -1) {
+						const url = getCallUrl("/department/specify?oid="+oid);
+						call(url, null, function(data) {
+							const rows = data.list;
+							if("agree" === selectedValue) {
+								
+								for(let i=0; i<rows.length; i++) {
+									const oid = rows[i].woid;
+									const name = rows[i].name;
+									const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
+									if(!isUnique1) {
+										alert("검토라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+									
+									const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
+									if(!isUnique2) {
+										alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+									
+									const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
+									if(!isUnique3) {
+										alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+								}
+								
+								AUIGrid.addRow(myGridID2000, rows, "last");
+							} else if("approval" === selectedValue) {
+								
+								for(let i=0; i<rows.length; i++) {
+									const oid = rows[i].woid;
+									const name = rows[i].name;
+									const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
+									if(!isUnique1) {
+										alert("검토라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+									
+									const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
+									if(!isUnique2) {
+										alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+									
+									const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
+									if(!isUnique3) {
+										alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+								}
+								
+								AUIGrid.addRow(myGridID3000, rows, "last");
+							} else if("receive" === selectedValue) {
+								
+								for(let i=0; i<rows.length; i++) {
+									const oid = rows[i].woid;
+									const name = rows[i].name;
+									const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
+									if(!isUnique1) {
+										alert("검토라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+									
+									const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
+									if(!isUnique2) {
+										alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+									
+									const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
+									if(!isUnique3) {
+										alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
+										return false;
+									}
+								}
+								AUIGrid.addRow(myGridID4000, rows, "last");
+							}
+						}, "GET");
+					}
 				}
 
 				function load900() {
@@ -186,12 +282,14 @@ String oid = (String) request.getAttribute("oid");
 					if (timerId) {
 						clearTimeout(timerId);
 					}
-
 					timerId = setTimeout(function() {
 						const primeCell = event.primeCell;
 						const rowItem = primeCell.item;
 						const oid = rowItem.oid;
-						load1000(oid);
+						// 부서일 경우만..
+						if(oid.indexOf("Department") > -1) {
+							load1000(oid);
+						}
 					}, 500);
 				}
 
@@ -604,14 +702,14 @@ String oid = (String) request.getAttribute("oid");
 	// 기본 스크립트
 	
 	// 추가 버튼
-	function moveRow() {
+function moveRow() {
 	const radioGroup = document.getElementsByName("lineType");
 	let selectedValue;
 	for (const radioButton of radioGroup) {
-	  if (radioButton.checked) {
-	    selectedValue = radioButton.value;
-	    break;
-	  }
+		if (radioButton.checked) {
+			selectedValue = radioButton.value;
+			break;
+		}
 	}
 	
 	const rows = AUIGrid.getCheckedRowItemsAll(myGridID1000);

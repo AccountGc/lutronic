@@ -19,6 +19,10 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.org.Department;
 import com.e3ps.org.service.DepartmentHelper;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.dto.ApprovalLineDTO;
+import com.e3ps.workspace.dto.ApprovalMasterDTO;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 @Controller
@@ -301,7 +305,7 @@ public class WorkspaceController extends BaseController {
 	@Description(value = "승인 함수")
 	@ResponseBody
 	@PostMapping(value = "/_approval")
-	public Map<String, Object> _approval(@RequestBody Map<String, Object> params) throws Exception {
+	public Map<String, Object> _approval(@RequestBody Map<String, String> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			WorkspaceHelper.service._approval(params);
@@ -319,7 +323,7 @@ public class WorkspaceController extends BaseController {
 	@Description(value = "반려 함수")
 	@ResponseBody
 	@PostMapping(value = "/_reject")
-	public Map<String, Object> _reject(@RequestBody Map<String, Object> params) throws Exception {
+	public Map<String, Object> _reject(@RequestBody Map<String, String> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			WorkspaceHelper.service._reject(params);
@@ -332,6 +336,32 @@ public class WorkspaceController extends BaseController {
 //			ErrorLogHelper.service.create(e.toString(), "/workspace/_reject", "반려 함수");
 		}
 		return result;
+	}
+
+	@Description(value = "결재 정보 보기")
+	@GetMapping(value = "/lineView")
+	public ModelAndView lineView(@RequestParam String oid, @RequestParam String columnType, @RequestParam String poid)
+			throws Exception {
+		ModelAndView model = new ModelAndView();
+		ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+		ApprovalLineDTO dto = new ApprovalLineDTO(line);
+		model.addObject("dto", dto);
+		model.addObject("oid", oid);
+		model.setViewName("popup:/workspace/line-view");
+		return model;
+	}
+
+	@Description(value = "결재 정보 보기")
+	@GetMapping(value = "/masterView")
+	public ModelAndView masterView(@RequestParam String oid, @RequestParam String columnType, @RequestParam String poid)
+			throws Exception {
+		ModelAndView model = new ModelAndView();
+		ApprovalMaster master = (ApprovalMaster) CommonUtil.getObject(oid);
+		ApprovalMasterDTO dto = new ApprovalMasterDTO(master);
+		model.addObject("dto", dto);
+		model.addObject("oid", oid);
+		model.setViewName("popup:/workspace/master-view");
+		return model;
 	}
 
 }
