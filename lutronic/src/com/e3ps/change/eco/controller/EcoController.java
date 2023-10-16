@@ -101,4 +101,17 @@ public class EcoController extends BaseController {
 		model.setViewName("popup:/change/eco/eco-view");
 		return model;
 	}
+	
+	
+	@Description(value = "ECO 수정")
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		EcoDTO dto = new EcoDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/eco/eco-modify");
+		return model;
+	}
 }
