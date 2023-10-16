@@ -516,13 +516,6 @@ $("#commentsBtn").click(function () {
 					}
 					break;
 				case "tabs-4":
-// 					const isCreated = AUIGrid.isCreated(myGridID1);
-// 					if (isCreated) {
-// 						AUIGrid.resize(myGridID1);
-// 					} else {
-// 						createAUIGrid1(columns1);
-// 					}
-// 					break;
 					isCreated90 = AUIGrid.isCreated(myGridID90);
 					if (isCreated90) {
 						AUIGrid.resize(myGridID90);
@@ -532,30 +525,12 @@ $("#commentsBtn").click(function () {
 						$(".comment-table").hide();
 					}
 					
-					isCreated = AUIGrid.isCreated(rohs2GridID);
-					if (isCreated) {
-						AUIGrid.resize(rohs2GridID);
+					isCreated106 = AUIGrid.isCreated(myGridID106);
+					if (isCreated106) {
+						AUIGrid.resize(myGridID106);
 						$(".comment-table").hide();
 					} else {
-						createAUIGridRohs2(columnRohs2);
-						$(".comment-table").hide();
-					}
-					
-					isCreated = AUIGrid.isCreated(ecoGridID);
-					if (isCreated) {
-						AUIGrid.resize(ecoGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGrid7(columnEco);
-						$(".comment-table").hide();
-					}
-					
-					isCreated = AUIGrid.isCreated(devGridID);
-					if (isCreated) {
-						AUIGrid.resize(devGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGrid4(columnDev);
+						createAUIGrid106(columns106);
 						$(".comment-table").hide();
 					}
 					break;
