@@ -15,6 +15,7 @@ import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.part.service.PartHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
@@ -25,6 +26,7 @@ import wt.content.ContentRoleType;
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.fc.QueryResult;
+import wt.part.WTPart;
 import wt.representation.Representable;
 import wt.representation.Representation;
 import wt.util.FileUtil;
@@ -203,6 +205,9 @@ public class AUIGridUtil {
 		} else if (per instanceof ECPRRequest) {
 			// CR 연관 객체
 			return EcprHelper.manager.reference(oid, type);
+		} else if (per instanceof WTPart) {
+			// part 연관 객체
+			return PartHelper.manager.reference(oid, type);
 		}
 
 		return JSONArray.fromObject(list);

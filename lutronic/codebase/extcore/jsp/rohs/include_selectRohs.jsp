@@ -85,10 +85,10 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<%if (isUpdate) {%>
 			AUIGrid.setGridData(rohsGridID, <%=json%>);
 		<%}%>
-		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		<%if (isUpdate) {%>
-		AUIGrid.setGridData(rohsGridID, <%=AUIGridUtil.include(oid, "rohs")%>);
-		<%}%>
+// 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
+<%-- 		<%if (isUpdate) {%> --%>
+<%-- 		AUIGrid.setGridData(rohsGridID, <%=AUIGridUtil.include(oid, "rohs")%>); --%>
+<%-- 		<%}%> --%>
 	}
 
 	function addRohs() {

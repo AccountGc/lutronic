@@ -22,12 +22,14 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
+import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.org.People;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
@@ -36,6 +38,7 @@ import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
+import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
 
@@ -68,6 +71,7 @@ import wt.org.WTUser;
 import wt.part.PartDocHelper;
 import wt.part.WTPart;
 import wt.part.WTPartConfigSpec;
+import wt.part.WTPartDescribeLink;
 import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
@@ -1317,5 +1321,50 @@ public class PartHelper {
 		}
 
 		return (WTPart) CommonUtil.getLatestVersion(part);
+	}
+
+	/**
+	 * 문서 관련 객체
+	 */
+	public JSONArray reference(String oid, String type) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		if ("doc".equalsIgnoreCase(type)) {
+			// 문서
+			return JSONArray.fromObject(referenceDoc(part, list));
+		} else if ("part".equalsIgnoreCase(type)) {
+			// ROHS
+			return JSONArray.fromObject(referenceRohs(part, list));
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 관련 문서
+	 */
+	private Object referenceDoc(WTPart part, ArrayList<Map<String, Object>> list) throws Exception {
+
+		QueryResult result = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
+		while (result.hasMoreElements()) {
+			WTDocument ref = (WTDocument) result.nextElement();
+			DocumentColumn dto = new DocumentColumn(ref);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
+	
+	/**
+	 * 관련 ROHS
+	 */
+	private Object referenceRohs(WTPart part, ArrayList<Map<String, Object>> list) throws Exception {
+		
+		QueryResult result = PersistenceHelper.manager.navigate(part, "rohs", PartToRohsLink.class);
+		while (result.hasMoreElements()) {
+			ROHSMaterial ref = (ROHSMaterial) result.nextElement();
+			Map<String, Object> map = AUIGridUtil.dtoToMap(ref);
+			list.add(map);
+		}
+		return list;
 	}
 }
