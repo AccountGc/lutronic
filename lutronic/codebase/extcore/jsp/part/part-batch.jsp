@@ -55,7 +55,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			let partName3List = <%= partName3List %>
 			let partType1List = [];
 			<%for(NumberCodeDTO partType1 : partType1List){%>
-				partType1List.push({ "code" : "<%= partType1.getOid() %>", "value" : "[<%= partType1.getCode() %>]<%= partType1.getName() %>"});
+				partType1List.push({"code" : "<%= partType1.getOid() %>", "value" : "[<%= partType1.getCode() %>]<%= partType1.getName() %>"});
 			<% } %>
 			let unitList = [];
 			<% for(QuantityUnit unit : unitList){ %>
@@ -823,7 +823,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			}, {
 				headerText : "관련RoHS",
 				children : [ {
-					dataField : "rowsRohs",
+					dataField : "rows106",
 					dataType : "string",
 					visible : false
 				}, {
@@ -844,7 +844,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
 							const oid = item.id;
-							const url = getCallUrl("/rohs/listPopup?method=rohsAppend&multi=true");
+							const url = getCallUrl("/rohs/listPopup?method=insert106&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
@@ -965,6 +965,23 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			});
 			
 			// 문서추가
+			function insert8(arr, callBack) {
+				const rows90 = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rows90.push(item);
+					number += item.number + "\n";
+				})
+				AUIGrid.updateRowsById(myGridID, {
+					id : recentGridItem.id,
+					rows90 : rows90,
+					docNumber : toRowsExp(number)
+				});
+				callBack(true);
+			}
+			
+			// 문서추가
 			function insert90(arr, callBack) {
 				const rows90 = [];
 				let number = "";
@@ -982,17 +999,17 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			}
 			
 			// 물질 추가
-			function rohsAppend(arr, callBack) {
-				const rowsRohs = [];
+			function insert106(arr, callBack) {
+				const rows106 = [];
 				let number = "";
 				arr.forEach(function(dd) {
 					const item = dd.item;
-					rowsRohs.push(item);
+					rows106.push(item);
 					number += item.number + "\n";
 				})
 				AUIGrid.updateRowsById(myGridID, {
 					id : recentGridItem.id,
-					rowsRohs : rowsRohs,
+					rows106 : rows106,
 					rohsNumber : toRowsExp(number)
 				});
 				callBack(true);
@@ -1034,20 +1051,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return false;
 					}
 
-					if (isNull(item.seq)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "SEQ를 선택하세요.");
-						return false;
-					}
-
-					if (isNull(item.etc)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "CUSTOM을 선택하세요.");
-						return false;
-					}
-					
-					if (isNull(item.etc)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 7, "재질명을 선택하세요.");
-						return false;
-					}
 
 					if (isNull(item.partName1)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "품목명(대제목)을 선택하세요.");
@@ -1089,15 +1092,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return false;
 					}
 
-					if (isNull(item.specification)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 19, "사양을 선택하세요.");
-						return false;
-					}
-
-					if (isNull(item.primary)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 21, "주도면을 선택하세요.");
-						return false;
-					}
 				}
 				
 				if (!confirm("등록 하시겠습니까?")) {
@@ -1105,13 +1099,17 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 				
 				const url = getCallUrl("/part/batch");
-				let params = new Object();
-				params.partList = gridData;
-				
+				const params = {
+					gridData : gridData
+				}
+				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 	 					document.location.href = getCallUrl("/part/list");
+					} else {
+						closeLayer();
 					}
 				});
 			}

@@ -345,9 +345,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</jsp:include>
 		
 		<!-- 관련 RoHS -->
-		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+		<jsp:include page="/extcore/jsp/rohs/include/rohs-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="insert106" name="method" />
+			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
 		
@@ -383,7 +385,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 	            
 				// RoHs
-				const rowsRohs = AUIGrid.getGridDataWithState(rohsGridID, "gridState");
+				const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 
 	            if(isEmpty(location)){
 					alert("품목구분을 입력하세요.");
@@ -462,7 +464,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						location : toId("location"),
 						// 링크 데이터
 						rows90 : rows90,
-						rowsRohs : rowsRohs,
+						myGridID106 : myGridID106,
 				};
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
