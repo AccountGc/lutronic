@@ -624,7 +624,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				String partName2 = StringUtil.checkNull((String) params.get("partName2")); // 품목명2 (NumberCode)
 				String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
 				String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
-
+				
 				String partName = "";
 				String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
 				for (int i = 0; i < partNames.length; i++) {
@@ -697,34 +697,42 @@ public class StandardPartService extends StandardManager implements PartService 
 				}
 				
 				// 관련 문서
-				ArrayList<String> _docOids = (ArrayList<String>) params.get("docOids");
+				ArrayList<Map<String, String>> rows90 = (ArrayList<Map<String, String>>) params.get("rows90");
+				// 기존 관련 문서 연결 해제
 				QueryResult results = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class, false);
 				while (results.hasMoreElements()) {
 					WTPartDescribeLink link = (WTPartDescribeLink) results.nextElement();
 					PersistenceServerHelper.manager.remove(link);
 				}
-
-				WTDocument doc = null;
-				WTPartDescribeLink dlink = null;
-				if(_docOids != null){
-					String[] docOids =_docOids.toArray(new String[_docOids.size()]);
-					for (String docOid : docOids) {
-						doc = (WTDocument) rf.getReference(docOid).getObject();
-						dlink = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
-						dlink = (WTPartDescribeLink) PersistenceHelper.manager.save(dlink);
+				// 관련 문서 연결
+				for (Map<String, String> row90 : rows90) {
+					String gridState = row90.get("gridState");
+					// 신규 혹은 삭제만 있다. (added, removed
+					if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+						String docOid = row90.get("oid");
+						WTDocument ref = (WTDocument) CommonUtil.getObject(docOid);
+						WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, ref);
+						PersistenceServerHelper.manager.insert(link);
 					}
 				}
 				
-				// 관련 ROHS 연결
+				// 관련 ROHS
+				ArrayList<Map<String, String>> rowsRohs = (ArrayList<Map<String, String>>) params.get("rowsRohs");
+				// 기존 관련 ROHS 연결 해제
 				List<PartToRohsLink> list = RohsHelper.manager.getPartToRohsLinkList(part);
 				for(PartToRohsLink link : list) {
 					PersistenceServerHelper.manager.remove(link);
 				}
-				
-				ArrayList<String> _rohsOids = (ArrayList<String>) params.get("rohsOids");
-				if(_rohsOids != null){
-					String[] rohsOids = _rohsOids.toArray(new String[_rohsOids.size()]);
-					RohsHelper.service.createROHSToPartLink(part, rohsOids);
+				// 관련 ROHS 연결
+				for (Map<String, String> rowRohs : rowsRohs) {
+					String gridState = rowRohs.get("gridState");
+					// 신규 혹은 삭제만 있다. (added, removed
+					if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+						String rohsOid = rowRohs.get("oid");
+						ROHSMaterial ref = (ROHSMaterial) CommonUtil.getObject(rohsOid);
+						PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, ref);
+						PersistenceHelper.manager.save(link);
+					}
 				}
 				
 				// 첨부파일
