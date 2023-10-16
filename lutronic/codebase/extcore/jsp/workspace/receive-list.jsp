@@ -52,6 +52,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('receive-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('receive-list');">
+					<input type="button" value="일괄수신처리" title="일괄수신처리" onclick="receives();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -65,7 +66,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 		</table>
-
 
 		<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
@@ -86,15 +86,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						type : "CheckBoxEditRenderer",
 					}
 				}, {
-					dataField : "persistType",
-					headerText : "객체유형",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
 					dataField : "type",
 					headerText : "구분",
 					dataType : "string",
@@ -105,7 +96,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_RECEIVE&poid=" + item.poid);
-							popup(url, 1500, 800);
+							_popup(url, 1500, 800);
 						}
 					},
 					filter : {
@@ -123,7 +114,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_RECEIVE&poid=" + item.poid);
-							popup(url, 1500, 800);
+							_popup(url, 1500, 800);
 						}
 					},
 					filter : {
@@ -141,7 +132,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_RECEIVE&poid=" + item.poid);
-							popup(url, 1500, 800);
+							_popup(url, 1500, 800);
 						}
 					},
 					filter : {
@@ -182,10 +173,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					dataField : "receiveTime",
 					headerText : "수신일",
 					dataType : "date",
+					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 170,
 					filter : {
 						showIcon : true,
 						inline : true,
+						displayFormatValues : true
 					},
 				} ]
 			}
@@ -221,7 +214,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/workspace/receive");
-				const field = [ "name" ];
+				const field = [ "name", "receiveFrom", "receiveTo", "submiterOid", "_psize" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -253,6 +246,33 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				twindate("receive");
 				selectbox("_psize");
 			});
+
+			function exportExcel() {
+				const exceptColumnFields = [ "reads", "point" ];
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("수신함 리스트", "수신함", "수신함 리스트", exceptColumnFields, sessionName);
+			}
+
+			function receives() {
+				const list = AUIGrid.getCheckedRowItems(myGridID);
+				if (list.length === 0) {
+					alert("일괄수신처리 할 결재를 선택하세요.");
+					return false;
+				}
+				const url = getCallUrl("/workspace/receives");
+				const params = {
+					list : list
+				};
+				parent.openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						loadGridData();
+					} else {
+						parent.closeLayer();
+					}
+				})
+			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;

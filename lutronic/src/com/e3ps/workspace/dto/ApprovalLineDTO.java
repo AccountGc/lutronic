@@ -3,6 +3,7 @@ package com.e3ps.workspace.dto;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,10 @@ public class ApprovalLineDTO {
 	private String description;
 	private String role;
 	private String submiter;
+
+	private boolean isApprovalLine = false;
+	private boolean isAgreeLine = false;
+	private boolean isReceiveLine = false;
 
 	public ApprovalLineDTO() {
 
@@ -44,5 +49,13 @@ public class ApprovalLineDTO {
 		setDescription(line.getDescription());
 		setSubmiter(master.getOwnership().getOwner().getFullName());
 		setRole(line.getRole());
+		setLineType(line);
+	}
+
+	private void setLineType(ApprovalLine line) throws Exception {
+		setApprovalLine(line.getType().equals(WorkspaceHelper.APPROVAL_LINE));
+		setAgreeLine(line.getType().equals(WorkspaceHelper.AGREE_LINE));
+		setReceiveLine(line.getType().equals(WorkspaceHelper.RECEIVE_LINE));
+
 	}
 }

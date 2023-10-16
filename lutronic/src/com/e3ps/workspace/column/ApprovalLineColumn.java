@@ -94,7 +94,7 @@ public class ApprovalLineColumn {
 			setName(master.getName());
 			setSubmiter(master.getOwnership().getOwner().getFullName());
 			setState(master.getState());
-			setReceiveTime(master.getStartTime());
+			setCreatedDate(master.getCreateTimestamp());
 			setCompleteTime(master.getCompleteTime()); // 반드시 완료날짜 잇음
 		} else if (REJECT_COLUMN.equals("REJECT_COLUMN")) {
 			// 반려함
@@ -103,7 +103,7 @@ public class ApprovalLineColumn {
 			setCreatedDate(master.getCreateTimestamp());
 			setSubmiter(master.getOwnership().getOwner().getFullName());
 			setState(master.getState());
-			setReceiveTime(master.getStartTime());
+			setCreatedDate(master.getCreateTimestamp()); // 생성일 = 기안일
 			setCompleteTime(master.getCompleteTime());
 		}
 		persistInfo(master);

@@ -4,7 +4,6 @@
 ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-<input type="hidden" name="poid" id="poid" value="<%=dto.getPoid()%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -14,11 +13,29 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			</div>
 		</td>
 		<td class="right">
+			<%
+			if (dto.isApprovalLine()) {
+			%>
 			<input type="button" value="승인" title="승인" onclick="_approval();">
 			<input type="button" value="반려" title="반려" class="red" onclick="_reject();">
+			<%
+			}
+			%>
+			<%
+			if (dto.isAgreeLine()) {
+			%>
 			<input type="button" value="검토완료" title="검토완료" onclick="_agree();">
 			<input type="button" value="검토반려" title="검토반려" class="red" onclick="_unagree()">
+			<%
+			}
+			%>
+			<%
+			if (dto.isReceiveLine()) {
+			%>
 			<input type="button" value="수신확인" title="수신확인" onclick="_receive();">
+			<%
+			}
+			%>
 			<input type="button" value="닫기" title="닫기" class="blue" onclick="self.close();">
 		</td>
 	</tr>
@@ -70,7 +87,17 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">결재의견</th>
 				<td class="indent5" colspan="3">
-					<textarea name="description" id="description" rows="6"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+					<%
+						if(dto.isApprovalLine() || dto.isAgreeLine()) {
+					%>
+					<textarea name="description" id="description" rows="6"></textarea>
+					<%
+						} else {
+					%>
+					<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+					<%
+						}
+					%>
 				</td>
 			</tr>
 		</table>
@@ -86,8 +113,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
-	const poid = document.getElementById("poid").value;
-
+	const description = document.getElementById("description").value;
 	function reassign() {
 		const reassignUser = document.getElementById("reassignUser");
 		const reassignUserOid = document.getElementById("reassignUserOid").value;
@@ -122,7 +148,6 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 		}
 		const url = getCallUrl("/workspace/_receive");
 		const params = new Object();
-		const description = document.getElementById("description").value;
 		params.oid = oid;
 		params.description = description;
 		openLayer();
@@ -143,7 +168,6 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 		}
 		const url = getCallUrl("/workspace/_unagree");
 		const params = new Object();
-		const description = document.getElementById("description").value;
 		params.oid = oid;
 		params.description = description;
 		openLayer();
@@ -159,14 +183,14 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	}
 
 	function _reject() {
-		if (!confirm("결재 반려 하시겠습니까?")) {
+		if (!confirm("반려 하시겠습니까?")) {
 			return false;
 		}
 		const url = getCallUrl("/workspace/_reject");
-		const params = new Object();
-		const description = document.getElementById("description").value;
-		params.oid = oid;
-		params.description = description;
+		const params = {
+			oid : oid,
+			description : description
+		}
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
@@ -185,7 +209,6 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 		}
 		const url = getCallUrl("/workspace/_agree");
 		const params = new Object();
-		const description = document.getElementById("description").value;
 		params.oid = oid;
 		params.description = description;
 		openLayer();
@@ -206,11 +229,10 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			return false;
 		}
 		const url = getCallUrl("/workspace/_approval");
-		const params = new Object();
-		const description = document.getElementById("description").value;
-		params.oid = oid;
-		params.poid = poid;
-		params.description = description;
+		const params = {
+			oid : oid,
+			description : description
+		}
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
@@ -223,8 +245,21 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 		})
 	}
 
+	function read() {
+		const url = getCallUrl("/workspace/read?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			if (data.result) {
+				opener.loadGridData();
+			} else {
+				alert(data.msg);
+			}
+			closeLayer();
+		}, "GET");
+	}
+
 	document.addEventListener("DOMContentLoaded", function() {
-		document.getElementById("description").focus();
+		toFocus("description");
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
@@ -246,6 +281,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 		// 		createAUIGrid(columns);
 		// 		AUIGrid.resize(myGridID);
 		finderUser("reassignUser");
+		read();
 	})
 
 	window.addEventListener("resize", function() {

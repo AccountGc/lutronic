@@ -364,4 +364,39 @@ public class WorkspaceController extends BaseController {
 		return model;
 	}
 
+	@Description(value = "수신함 일괄 수신 처리")
+	@ResponseBody
+	@PostMapping(value = "/receives")
+	public Map<String, Object> receives(@RequestBody Map<String, ArrayList<Map<String, String>>> params)
+			throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.receives(params);
+			result.put("msg", "일괄 수신확인 처리 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/reject", "반려함 조회 함수");
+		}
+		return result;
+	}
+
+	@Description(value = "결재 읽음 처리")
+	@ResponseBody
+	@GetMapping(value = "/read")
+	public Map<String, Object> read(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.read(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/reject", "반려함 조회 함수");
+		}
+		return result;
+	}
 }

@@ -703,4 +703,22 @@ public class WorkspaceHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
+
+	/**
+	 * 마지막 결재 라인인지 체크
+	 */
+	public boolean isEndApprovalLine(ApprovalMaster master, int sort) throws Exception {
+
+		boolean isEndApprovalLine = true;
+		ArrayList<ApprovalLine> list = getApprovalLines(master);
+		for (ApprovalLine appLine : list) {
+			int compare = appLine.getSort();
+			if (sort <= compare) {
+				isEndApprovalLine = false;
+				break;
+			}
+		}
+		return isEndApprovalLine;
+	}
+
 }

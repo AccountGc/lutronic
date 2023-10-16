@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
@@ -14,7 +15,6 @@ import com.e3ps.workspace.ApprovalUserLine;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
@@ -337,13 +337,71 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 	@Override
 	public void _approval(Map<String, String> params) throws Exception {
-		// TODO Auto-generated method stub
+		String oid = (String) params.get("oid");
+		String description = (String) params.get("description");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
 
+			WTUser sessionUser = CommonUtil.sessionUser();
+			Timestamp completeTime = new Timestamp(new Date().getTime());
+			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+
+			if (!StringUtil.checkString(description)) {
+				description = "승인합니다.";
+			}
+
+			line.setDescription(description);
+			line.setCompleteTime(completeTime);
+			line.setState(WorkspaceHelper.STATE_APPROVAL_COMPLETE);
+			line = (ApprovalLine) PersistenceHelper.manager.modify(line);
+
+			ApprovalMaster master = line.getMaster();
+			Persistable per = master.getPersist();
+
+			ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(master);
+			for (ApprovalLine approvalLine : approvalLines) {
+				int sort = approvalLine.getSort();
+				if (sort == 1) {
+					approvalLine.setStartTime(completeTime);
+					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+				}
+				approvalLine.setSort(sort - 1);
+				approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
+			}
+
+			master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
+			master = (ApprovalMaster) PersistenceHelper.manager.modify(master);
+
+			boolean isEndApprovalLine = WorkspaceHelper.manager.isEndApprovalLine(master, 0);
+			if (isEndApprovalLine) {
+				master.setCompleteTime(completeTime);
+				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_COMPLETE);
+				PersistenceHelper.manager.modify(master);
+
+				if (per instanceof LifeCycleManaged) {
+					State state = State.toState("APPROVED");
+					per = (Persistable) LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, state);
+//					sendToERP(per);
+				}
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 
 	@Override
 	public void _reject(Map<String, String> params) throws Exception {
 		String oid = params.get("oid");
+		string description = params.get("description");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -352,6 +410,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			ApprovalMaster m = line.getMaster();
 
 			WTUser sessionUser = CommonUtil.sessionUser();
+
+			String msg = sessionUser.getFullName() + " 사용자의 반려로 인해 모든 결재가 반려 처리 되었습니다.";
 
 			// 기안라인은 제외한다?
 			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, false);
@@ -367,6 +427,14 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
 				}
 				l.setCompleteTime(new Timestamp(new Date().getTime()));
+
+				// 클래스 비교가 이게 맞나..
+				if (l != line) {
+					l.setDescription(msg);
+				} else {
+					l.setDescription(description);
+				}
+
 				PersistenceHelper.manager.modify(l);
 			}
 
@@ -398,6 +466,55 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		if (per instanceof LifeCycleManaged) {
 			LifeCycleManaged lcm = (LifeCycleManaged) per;
 			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("RETURN"));
+		}
+	}
+
+	@Override
+	public void read(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+			line.setReads(true);
+			PersistenceHelper.manager.modify(line);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void receives(Map<String, ArrayList<Map<String, String>>> params) throws Exception {
+		ArrayList<Map<String, String>> list = params.get("list");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (Map<String, String> map : list) {
+				String oid = map.get("oid");
+				ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+				line.setState(WorkspaceHelper.STATE_RECEIVE_COMPLETE);
+				line.setCompleteTime(new Timestamp(new Date().getTime()));
+				PersistenceHelper.manager.modify(line);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }

@@ -5,6 +5,23 @@
 String oid = request.getParameter("oid");
 JSONArray data = WorkspaceHelper.manager.history(oid);
 %>
+<style type="text/css">
+/** 결재 관련 셀 스타일 **/
+.approval {
+	background-color: rgb(189, 214, 255);
+	font-weight: bold;
+}
+
+.submit {
+	background-color: #FFFFA1;
+	font-weight: bold;
+}
+
+.receive {
+	background-color: #FFCBCB;
+	font-weight: bold;
+}
+</style>
 <table class="button-table">
 	<tr>
 		<td class="left">

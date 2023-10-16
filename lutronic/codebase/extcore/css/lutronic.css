@@ -713,19 +713,3 @@ span.red {
 tr.hidden {
 	display: none;
 }
-
-/** 결재 관련 셀 스타일 **/
-.approval {
-	background-color: rgb(189, 214, 255);
-	font-weight: bold;
-}
-
-.submit {
-	background-color: #FFFFA1;
-	font-weight: bold;
-}
-
-.receive {
-	background-color: #FFCBCB;
-	font-weight: bold;
-}

@@ -55,4 +55,13 @@ public interface WorkspaceService {
 	 */
 	public abstract void _reject(Map<String, String> params) throws Exception;
 
+	/**
+	 * 결재 읽음 처리
+	 */
+	public abstract void read(String oid) throws Exception;
+
+	/**
+	 * 일괄 수신 처리
+	 */
+	public abstract void receives(Map<String, ArrayList<Map<String, String>>> params) throws Exception;
 }
