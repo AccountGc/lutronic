@@ -61,6 +61,7 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.distribute.util.MakeZIPUtil;
 import com.e3ps.doc.DocumentToDocumentLink;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.e3ps.drawing.service.DrawingHelper;
@@ -81,6 +82,8 @@ import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.rohs.service.RohsQueryHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -208,7 +211,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			ArrayList<Map<String, String>> rows90 = (ArrayList<Map<String, String>>) params.get("rows90");
 
 			// 관련 RoHs
-			ArrayList<Map<String, String>> rowsRohs = (ArrayList<Map<String, String>>) params.get("rowsRohs");
+			ArrayList<Map<String, String>> rows106 = (ArrayList<Map<String, String>>) params.get("rows106");
 
 			// 첨부파일
 			ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
@@ -257,19 +260,27 @@ public class StandardPartService extends StandardManager implements PartService 
 			part.setName(partName.trim());
 			part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
 			
-			part.setPartType(PartType.toPartType(wtPartType));
-			part.setSource(Source.toSource(source));
+			if(wtPartType.length() > 0) {
+				part.setPartType(PartType.toPartType(wtPartType));				
+			}
+			if(source.length() > 0) {
+				part.setSource(Source.toSource(source));				
+			}
 			
 			// 뷰 셋팅(Design 고정임)
-			ViewHelper.assignToView(part, ViewHelper.service.getView(view));
+			if(view.length() > 0) {
+				ViewHelper.assignToView(part, ViewHelper.service.getView(view));				
+			}
 
 			// 폴더 셋팅
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) part, folder);
 			
 			// 라이프사이클 셋팅
-			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
-			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+			if(lifecycle.length() > 0) {
+				LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+				part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);				
+			}
 			
 			part = (WTPart)PersistenceHelper.manager.save(part);
 			
@@ -293,26 +304,30 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 			
 			// 관련 문서 연결
-			for (Map<String, String> row90 : rows90) {
-				String gridState = row90.get("gridState");
-				// 신규 혹은 삭제만 있다. (added, removed
-				if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
-					String oid = row90.get("oid");
-					WTDocument ref = (WTDocument) CommonUtil.getObject(oid);
-					WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, ref);
-					PersistenceServerHelper.manager.insert(link);
-				}
+			if(rows90 != null) {
+				for (Map<String, String> row90 : rows90) {
+					String gridState = row90.get("gridState");
+					// 신규 혹은 삭제만 있다. (added, removed
+					if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+						String oid = row90.get("oid");
+						WTDocument ref = (WTDocument) CommonUtil.getObject(oid);
+						WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, ref);
+						PersistenceServerHelper.manager.insert(link);
+					}
+				}				
 			}
 			
 			// 관련 ROHS 연결
-			for (Map<String, String> rowRohs : rowsRohs) {
-				String gridState = rowRohs.get("gridState");
-				// 신규 혹은 삭제만 있다. (added, removed
-				if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
-					String oid = rowRohs.get("oid");
-					ROHSMaterial ref = (ROHSMaterial) CommonUtil.getObject(oid);
-					PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, ref);
-					PersistenceHelper.manager.save(link);
+			if(rows106 != null) {
+				for (Map<String, String> row106 : rows106) {
+					String gridState = row106.get("gridState");
+					// 신규 혹은 삭제만 있다. (added, removed
+					if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+						String oid = row106.get("oid");
+						ROHSMaterial ref = (ROHSMaterial) CommonUtil.getObject(oid);
+						PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, ref);
+						PersistenceHelper.manager.save(link);
+					}
 				}
 			}
 			
@@ -333,9 +348,9 @@ public class StandardPartService extends StandardManager implements PartService 
 //				WorkspaceHelper.service.self(part);
 //			} else {
 				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
-				}
+//				if (approvalRows.size() > 0) {
+//					WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
+//				}
 //			}
 						
 			trx.commit();
@@ -352,131 +367,34 @@ public class StandardPartService extends StandardManager implements PartService 
 	
 	@Override
 	public void batch(Map<String,Object> params) throws Exception {
-		Transaction trx = new Transaction();
-		Map<String, Object> result = new HashMap<String, Object>();
-		ArrayList<Map<String, Object>> partList = (ArrayList<Map<String, Object>>) params.get("partList");
-		
+		Transaction trs = new Transaction();
 		try {
-			trx.start();
-			
-			for(Map<String, Object> part : partList) {
-				
-				String location = StringUtil.checkNull((String) part.get("location")); // 폴더 경로
-				
-				String partType1Oid = StringUtil.checkNull((String) part.get("partType1")); // 품목구분 (NumberCode)
-				String partType2Oid = StringUtil.checkNull((String) part.get("partType2")); // 대 분류 (NumberCode)
-				String partType3Oid = StringUtil.checkNull((String) part.get("partType3")); // 중 분류 (NumberCode)
-				NumberCode partType1Code = (NumberCode)CommonUtil.getObject(partType1Oid);
-				String partType1 = partType1Code.getCode();
-				NumberCode partType2Code = (NumberCode)CommonUtil.getObject(partType2Oid);
-				String partType2 = partType2Code.getCode();
-				NumberCode partType3Code = (NumberCode)CommonUtil.getObject(partType3Oid);
-				String partType3= partType3Code.getCode();
-				String seq = StringUtil.checkNull((String) part.get("seq")); // SEQ
-				String etc = StringUtil.checkNull((String) part.get("etc")); // 기타
-				
-				// String[] partNames = request.getParameterValues("partName");
-				String partName1 = StringUtil.checkNull((String) part.get("partName1")); // 품목명1 (NumberCode)
-				String partName2 = StringUtil.checkNull((String) part.get("partName2")); // 품목명2 (NumberCode)
-				String partName3 = StringUtil.checkNull((String) part.get("partName3")); // 품목명3 (NumberCode)
-				String partName4 = StringUtil.checkNull((String) part.get("partName4")); // 품목명4 (Key In)
-				
-				// 품목 속성
-				String mat = StringUtil.checkNull((String) part.get("mat")); // 재질 (NumberCode, IBA)
-				String unit = StringUtil.checkNull((String) part.get("unit")); // 단위 (NumberCode)
-				String deptcode = StringUtil.checkNull((String) part.get("deptcode")); // 부서 (NumberCode, IBA)
-				String model = StringUtil.checkNull((String) part.get("model")); // 프로젝트 코드 (NumberCode, IBA)
-				String productmethod = StringUtil.checkNull((String) part.get("productmethod")); // 제작방법 (NumberCode, IBA)
-				String specification = StringUtil.checkNull((String) part.get("specification")); // 사양 (Key IN, iBA)
-				
-				// 주 도면
-				String primary = StringUtil.checkNull((String) part.get("primary"));
-				
-				String partName = "";
-				String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
-				for (int i = 0; i < partNames.length; i++) {
-					if (StringUtil.checkString(partNames[i])) {
-						if (i != 0 && partName.length() != 0) {
-							partName += "_";
-						}
-						partName += partNames[i];
-					}
-				}
-				String partNumber = partType1 + partType2 + partType3;
-				
-				if(seq.length() == 0) {
-					seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
-				}else if(seq.length() == 1) {
-					seq = "00" + seq;
-				}else if(seq.length() == 2) {
-					seq = "0" + seq;
-				}
-				
-				if(etc.length() == 0) {
-					etc = "00";
-				}else if(etc.length() == 1) {
-					etc = "0" + etc;
-				}
-				partNumber += seq + etc;
-				
-				if(partNumber.length() > 10) {
-					throw new Exception(Message.get("허용된 품목번호의 길이가 아닙니다."));
-				}
-				
-				WTPart _part = WTPart.newWTPart();
-				PDMLinkProduct product = WCUtil.getPDMLinkProduct();
-				WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
-				_part.setContainer(product);
-				
-				_part.setNumber(partNumber);
-				_part.setName(partName.trim());
-				_part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
-				
-				// 폴더 셋팅
-				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-				FolderHelper.assignLocation((FolderEntry) _part, folder);
-				
-				_part = (WTPart)PersistenceHelper.manager.save(_part);
-				
-				// IBA 설정
-				CommonHelper.service.changeIBAValues(_part, part);
-				IBAUtil.changeIBAValue(_part, AttributeKey.IBAKey.IBA_DES, partName, "string");
-				
-				// 주 도면
-				if(primary.length() > 0) {
-					part.put("oid", CommonUtil.getOIDString(_part));
-					part.put("epmfid", location);
-					EPMDocument epm = DrawingHelper.service.createEPM(part);
-					EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, _part);
-					PersistenceServerHelper.manager.insert(link);
-					IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_DES, partName, "string");
-				}
-			
-				// 관련 문서 연결
-				String[] docOids = (String[])part.get("docOids");
-				if(docOids != null) {
-					for(String docOid : docOids) {
-						WTDocument doc = (WTDocument)CommonUtil.getObject(docOid);
-						WTPartDescribeLink dlink = WTPartDescribeLink.newWTPartDescribeLink(_part, doc);
-						PersistenceServerHelper.manager.insert(dlink);
-					}
-				}
-				
-				// 관련 ROHS 연결
-				String[] rohsOid = (String[])part.get("rohsOid");
-				if(rohsOid != null){
-					RohsHelper.service.createROHSToPartLink(_part, rohsOid);
-				}
+			trs.start();
+
+			ArrayList<Map<String, Object>> gridData = (ArrayList<Map<String, Object>>) params.get("gridData");
+
+
+			// 화면에서 모든 검증 처리 진행
+			for (Map<String, Object> data : gridData) {
+				NumberCode partType1 = (NumberCode) CommonUtil.getObject(StringUtil.checkNull((String)data.get("partType1")));
+				data.put("partType1",  partType1.getCode());
+				NumberCode partType2 = (NumberCode) CommonUtil.getObject(StringUtil.checkNull((String)data.get("partType2")));
+				data.put("partType2",  partType2.getCode());
+				NumberCode partType3 = (NumberCode) CommonUtil.getObject(StringUtil.checkNull((String)data.get("partType3")));
+				data.put("partType3",  partType3.getCode());
+				data.put("temprary", false);
+				create(data);
 			}
-			trx.commit();
-			trx = null;
-		} catch(Exception e) {
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception(e.toString());
+			trs.rollback();
+			throw e;
 		} finally {
-			if(trx != null) {
-				trx.rollback();
-			}
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 	

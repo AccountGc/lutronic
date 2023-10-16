@@ -123,7 +123,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup106() {
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/rohs/listPopup?method=rohsAppend&multi=" + multi);
+		const url = getCallUrl("/rohs/listPopup?method=insert106&multi=" + multi);
 		_popup(url, 1500, 700, "n");
 	}
 	
