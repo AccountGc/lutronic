@@ -40,6 +40,7 @@ import com.e3ps.part.util.BomBroker;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 
 import net.sf.json.JSONArray;
@@ -1324,7 +1325,7 @@ public class PartHelper {
 	}
 
 	/**
-	 * 문서 관련 객체
+	 * 부품 관련 객체 불러오기 메서드
 	 */
 	public JSONArray reference(String oid, String type) throws Exception {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
@@ -1332,7 +1333,7 @@ public class PartHelper {
 		if ("doc".equalsIgnoreCase(type)) {
 			// 문서
 			return JSONArray.fromObject(referenceDoc(part, list));
-		} else if ("part".equalsIgnoreCase(type)) {
+		} else if ("rohs".equalsIgnoreCase(type)) {
 			// ROHS
 			return JSONArray.fromObject(referenceRohs(part, list));
 		}
@@ -1362,7 +1363,8 @@ public class PartHelper {
 		QueryResult result = PersistenceHelper.manager.navigate(part, "rohs", PartToRohsLink.class);
 		while (result.hasMoreElements()) {
 			ROHSMaterial ref = (ROHSMaterial) result.nextElement();
-			Map<String, Object> map = AUIGridUtil.dtoToMap(ref);
+			RohsData data = new RohsData(ref);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
 			list.add(map);
 		}
 		return list;
