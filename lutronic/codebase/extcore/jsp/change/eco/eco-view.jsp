@@ -6,8 +6,7 @@ EcoDTO dto = (EcoDTO) request.getAttribute("dto");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 %>
 
-
-
+<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -18,7 +17,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 		<td class="right">
 			<input type="button" value="결재회수" title="결재회수">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('modify');">
+			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -153,10 +152,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<jsp:param value="true" name="multi" />
 		</jsp:include>
 	</div>
-	
 </div>
 
 <script type="text/javascript">
+	const oid = document.getElementById("oid").value;
+
 	function autoHeight() {
 		const eoCommentC = document.getElementById("eoCommentC");
 		eoCommentC.style.height = "auto";
@@ -196,4 +196,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 		autoHeight();
 	});
+	
+	function modify() {
+		document.location.href = getCallUrl("/eco/modify?oid=" + oid);
+	}
 </script>
