@@ -88,15 +88,15 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 				<th class="lb">결재의견</th>
 				<td class="indent5" colspan="3">
 					<%
-						if(dto.isApprovalLine() || dto.isAgreeLine()) {
+					if (dto.isApprovalLine() || dto.isAgreeLine()) {
 					%>
 					<textarea name="description" id="description" rows="6"></textarea>
 					<%
-						} else {
+					} else {
 					%>
 					<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
 					<%
-						}
+					}
 					%>
 				</td>
 			</tr>
@@ -113,7 +113,6 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
-	const description = document.getElementById("description").value;
 	function reassign() {
 		const reassignUser = document.getElementById("reassignUser");
 		const reassignUserOid = document.getElementById("reassignUserOid").value;
@@ -183,6 +182,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	}
 
 	function _reject() {
+		const description = document.getElementById("description").value;
 		if (!confirm("반려 하시겠습니까?")) {
 			return false;
 		}
@@ -224,7 +224,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	}
 
 	function _approval() {
-
+		const description = document.getElementById("description").value;
 		if (!confirm("승인 하시겠습니까?")) {
 			return false;
 		}

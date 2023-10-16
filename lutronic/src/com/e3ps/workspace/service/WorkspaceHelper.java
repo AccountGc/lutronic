@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.e3ps.change.ECPRRequest;
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.ECOChange;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -466,13 +464,10 @@ public class WorkspaceHelper {
 		if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
 			name = doc.getNumber() + " [" + doc.getName() + "]";
-		} else if (per instanceof EChangeRequest) {
 
-		} else if (per instanceof ECPRRequest) {
-			ECPRRequest ecpr = (ECPRRequest) per;
-			name = ecpr.getEoNumber() + " [" + ecpr.getEoName() + "]";
-		} else if (per instanceof EChangeOrder) {
-
+		} else if (per instanceof ECOChange) {
+			ECOChange e = (ECOChange) per;
+			name = e.getEoNumber() + " [" + e.getEoName() + "]";
 		}
 
 		return name;

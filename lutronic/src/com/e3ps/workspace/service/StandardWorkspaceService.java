@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -12,6 +13,7 @@ import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 
+import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -170,7 +172,13 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 		if (per instanceof LifeCycleManaged) {
 			LifeCycleManaged lcm = (LifeCycleManaged) per;
-			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+
+			if (lcm instanceof EChangeOrder) {
+				// EO..
+
+			} else if (lcm instanceof WTDocument) {
+				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+			}
 		}
 		// 일괄 격제 관련해서 처리
 	}

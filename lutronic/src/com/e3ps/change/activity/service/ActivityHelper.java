@@ -3,19 +3,15 @@ package com.e3ps.change.activity.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-
-import javax.swing.ImageIcon;
 
 import com.e3ps.change.ECOChange;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.dto.DefDTO;
-import com.e3ps.change.beans.ECAData;
-import com.e3ps.change.service.ChangeUtil;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
@@ -26,6 +22,7 @@ import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTUser;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
@@ -158,8 +155,8 @@ public class ActivityHelper {
 		ArrayList<ActDTO> list = new ArrayList<ActDTO>();
 		ECOChange e = (ECOChange) CommonUtil.getObject(oid);
 		ArrayList<EChangeActivity> result = colletActivity(e);
-		
-		for(EChangeActivity eca : result) {
+
+		for (EChangeActivity eca : result) {
 //			ECAData data = new ECAData(eca);
 //			ImageIcon icon = ChangeUtil.getECAStateImg(eca.getFinishDate(), data.state);
 //			data.setIcon(icon);
@@ -175,14 +172,13 @@ public class ActivityHelper {
 
 		ArrayList<EChangeActivity> list = new ArrayList<EChangeActivity>();
 
-		
 		long id = eo.getPersistInfo().getObjectIdentifier().getId();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeActivity.class, true);
 		int idx_n = query.appendClassList(NumberCode.class, false);
-		
+
 		SearchCondition sc = null;
-		
+
 		ClassAttribute ca = new ClassAttribute(EChangeActivity.class, EChangeActivity.STEP);
 		ClassAttribute ca_n = new ClassAttribute(NumberCode.class, NumberCode.CODE);
 		sc = new SearchCondition(ca, "=", ca_n);
@@ -195,7 +191,8 @@ public class ActivityHelper {
 				new int[] { idx });
 
 		query.appendOrderBy(new OrderBy(new ClassAttribute(NumberCode.class, "sort"), false), new int[] { idx_n });
-		query.appendOrderBy(new OrderBy(new ClassAttribute(EChangeActivity.class, "sortNumber"), false), new int[] { idx });
+		query.appendOrderBy(new OrderBy(new ClassAttribute(EChangeActivity.class, "sortNumber"), false),
+				new int[] { idx });
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
@@ -204,4 +201,42 @@ public class ActivityHelper {
 		}
 		return list;
 	}
+
+	/**
+	 * 접속한 사용자의 ECA 활동 리스트
+	 */
+	public Map<String, Object> eca(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		WTUser sessionUser = CommonUtil.sessionUser();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeActivity.class, true);
+		QuerySpecUtils.toEquals(query, idx, EChangeActivity.class, "activeUserReference.key.id", sessionUser);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EChangeActivity eca = (EChangeActivity) obj[0];
+			EChangeOrder eo = (EChangeOrder) eca.getEo();
+			Map<String, Object> data = new HashMap<>();
+			data.put("step", eca.getStep());
+			data.put("number", eo.getEoNumber());
+			data.put("name", eo.getEoName());
+			data.put("step", eca.getStep());
+			data.put("finishDate", eca.getFinishDate());
+			data.put("state", eca.getActiveState());
+			data.put("activityName", getActName(eca.getActiveType()));
+			list.add(data);
+		}
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
+	}
+
 }

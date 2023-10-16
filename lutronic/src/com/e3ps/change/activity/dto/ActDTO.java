@@ -65,7 +65,7 @@ public class ActDTO {
 		setSort(act.getSortNumber());
 		setDescription(act.getDescription());
 	}
-	
+
 	public ActDTO(EChangeActivity act) throws Exception {
 		setOid(act.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(act.getName());
@@ -77,7 +77,7 @@ public class ActDTO {
 			}
 			setStep_name(act.getStep());
 		}
-		
+
 		setActive_type(act.getActiveType());
 		setActive_name(ActivityHelper.manager.getActName(getActive_type()));
 		if (act.getActiveUser() != null) {
@@ -91,10 +91,8 @@ public class ActDTO {
 		}
 		setSort(act.getSortNumber());
 		setDescription(act.getDescription());
-		setFinishDate(act.getFinishDate() == null ?  null:act.getFinishDate().toString());
-		
-		
-		
+		setFinishDate(act.getFinishDate() == null ? null : act.getFinishDate().toString());
+
 	}
-	
+
 }

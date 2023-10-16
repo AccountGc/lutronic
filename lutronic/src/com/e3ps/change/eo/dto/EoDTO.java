@@ -41,6 +41,11 @@ public class EoDTO {
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 제품코드
 	private ArrayList<Map<String, String>> modelInfo = new ArrayList<>();
 
+	// 결재 변수
+	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
+	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
+	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
+
 	public EoDTO() {
 
 	}
@@ -59,7 +64,7 @@ public class EoDTO {
 		if (eo.getModel() != null) {
 			setModel_name(EoHelper.manager.displayToModel(eo.getModel()));
 		}
-		
+
 		setModelInfo(getModel(eo.getModel()));
 		setState(eo.getLifeCycleState().getDisplay());
 		setCreator(eo.getCreatorFullName());
@@ -85,8 +90,8 @@ public class EoDTO {
 			data.put("enabled", code.getEngName());
 			data.put("oid", code.getPersistInfo().getObjectIdentifier().getStringValue());
 			result.add(data);
-		}			
+		}
 		return result;
 	}
-	
+
 }

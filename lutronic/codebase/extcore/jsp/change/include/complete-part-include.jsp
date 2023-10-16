@@ -223,6 +223,7 @@ if (create || update) {
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID104 = AUIGrid.create("#grid104", columnLayout, props);
 		<%if (view || update) {%>

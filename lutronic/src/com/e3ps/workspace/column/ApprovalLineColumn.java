@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.workspace.ApprovalLine;
@@ -157,11 +158,19 @@ public class ApprovalLineColumn {
 		} else if (per instanceof EPMDocument) {
 			persistType = "도면";
 		} else if (per instanceof EChangeRequest) {
-
+			persistType = "CR";
 		} else if (per instanceof EChangeOrder) {
-
+			EChangeOrder e = (EChangeOrder) per;
+			String t = e.getEoType();
+			if ("CHANGE".equals(t)) {
+				persistType = "ECO";
+			} else {
+				persistType = "EO";
+			}
 		} else if (per instanceof ECPRRequest) {
 			persistType = "ECPR";
+		} else if (per instanceof EChangeNotice) {
+			persistType = "ECN";
 		}
 		setPersistType(persistType);
 	}

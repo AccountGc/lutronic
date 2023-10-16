@@ -20,6 +20,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -58,6 +59,10 @@ public class StandardEoService extends StandardManager implements EoService {
 		ArrayList<Map<String, String>> rows200 = dto.getRows200();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
 //		String model_oid = dto.getModel_oid();
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -130,6 +135,12 @@ public class StandardEoService extends StandardManager implements EoService {
 			 * State.toState("APPROVE_REQUEST")); }
 			 */
 
+			// 결재 시작
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
+			}
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -162,7 +173,8 @@ public class StandardEoService extends StandardManager implements EoService {
 		// 관련문서 삭제
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(DocumentEOLink.class, true);
-		SearchCondition sc = new SearchCondition(DocumentEOLink.class, "roleBObjectRef.key.id", "=", eo.getPersistInfo().getObjectIdentifier().getId());
+		SearchCondition sc = new SearchCondition(DocumentEOLink.class, "roleBObjectRef.key.id", "=",
+				eo.getPersistInfo().getObjectIdentifier().getId());
 		query.appendWhere(sc, new int[] { idx });
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -170,9 +182,9 @@ public class StandardEoService extends StandardManager implements EoService {
 			DocumentEOLink link = (DocumentEOLink) obj[0];
 			PersistenceHelper.manager.delete(link);
 		}
-		
+
 	}
-	
+
 	private void validateAndCompleteSave(EChangeOrder eo, ArrayList<Map<String, String>> rows104) throws Exception {
 		// 완제품 연결
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
@@ -190,6 +202,7 @@ public class StandardEoService extends StandardManager implements EoService {
 			}
 			list.add(part);
 		}
+		System.out.println("list=" + list);
 		completeSave(eo, list);
 	}
 
@@ -197,7 +210,8 @@ public class StandardEoService extends StandardManager implements EoService {
 		// 완제품 삭제
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EOCompletePartLink.class, true);
-		SearchCondition sc = new SearchCondition(EOCompletePartLink.class, "roleBObjectRef.key.id", "=", eo.getPersistInfo().getObjectIdentifier().getId());
+		SearchCondition sc = new SearchCondition(EOCompletePartLink.class, "roleBObjectRef.key.id", "=",
+				eo.getPersistInfo().getObjectIdentifier().getId());
 		query.appendWhere(sc, new int[] { idx });
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -205,10 +219,9 @@ public class StandardEoService extends StandardManager implements EoService {
 			EOCompletePartLink link = (EOCompletePartLink) obj[0];
 			PersistenceHelper.manager.delete(link);
 		}
-		
+
 	}
-	
-	
+
 	private void completeSave(EChangeOrder eo, ArrayList<WTPart> list) throws Exception {
 		for (WTPart part : list) {
 			String version = VersionControlHelper.getVersionIdentifier(part).getSeries().getValue();
@@ -226,7 +239,7 @@ public class StandardEoService extends StandardManager implements EoService {
 //					PersistenceHelper.manager.save(link);
 //				}
 //			} else {
-			
+
 			EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(), eo);
 			link.setVersion(version);
 			PersistenceHelper.manager.save(link);
@@ -257,6 +270,18 @@ public class StandardEoService extends StandardManager implements EoService {
 			trs.start();
 
 			EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+
+			// 연관 문서 링크 삭제
+			deleteLink(eo);
+
+			// 관련 완제품 품목 삭제
+			QueryResult result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class,
+					false);
+			while (result.hasMoreElements()) {
+				EOCompletePartLink link = (EOCompletePartLink) result.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+
 			PersistenceHelper.manager.delete(eo);
 
 			trs.commit();
@@ -274,7 +299,7 @@ public class StandardEoService extends StandardManager implements EoService {
 	@Override
 	public void modify(EoDTO dto) throws Exception {
 		ReferenceFactory rf = new ReferenceFactory();
-		
+
 		ArrayList<Map<String, String>> rows104 = dto.getRows104();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
@@ -282,7 +307,6 @@ public class StandardEoService extends StandardManager implements EoService {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-
 
 			// 모델 배열 처리
 			String model = "";
@@ -314,15 +338,14 @@ public class StandardEoService extends StandardManager implements EoService {
 //			 완제품 링크 및 검증
 			deleteCompleteSave(eo);
 			validateAndCompleteSave(eo, rows104);
-			
+
 			// 첨부 파일
 			removeAttach(eo);
 			saveAttach(eo, dto);
 
 			// 설변 활동 생성
 //			ActivityHelper.service.saveActivity(eo, rows200);
-			
-			
+
 			ActivityHelper.service.deleteActivity(eo);
 			ActivityHelper.service.saveActivity(eo, rows200);
 
@@ -350,7 +373,7 @@ public class StandardEoService extends StandardManager implements EoService {
 		}
 
 	}
-	
+
 	/**
 	 * 첨부 파일 삭제
 	 */
@@ -361,5 +384,5 @@ public class StandardEoService extends StandardManager implements EoService {
 			ContentServerHelper.service.deleteContent(eo, item);
 		}
 	}
-	
+
 }

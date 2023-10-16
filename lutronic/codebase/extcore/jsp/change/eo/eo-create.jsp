@@ -19,6 +19,10 @@
 						EO 등록
 					</div>
 				</td>
+				<td class="right">
+					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
+					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+				</td>
 			</tr>
 		</table>
 		<table class="create-table">

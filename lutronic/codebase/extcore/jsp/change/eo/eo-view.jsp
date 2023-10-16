@@ -173,6 +173,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					} else {
 						createAUIGrid51(columns51);
 					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
+					}
 					break;
 				}
 			}

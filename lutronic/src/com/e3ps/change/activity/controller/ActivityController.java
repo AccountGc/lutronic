@@ -24,6 +24,7 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.service.OrgHelper;
 
 import net.sf.json.JSONArray;
@@ -163,6 +164,30 @@ public class ActivityController extends BaseController {
 		try {
 			ActivityHelper.service.modify(params);
 			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "나의업무 -> ECA 활동 리스트")
+	@GetMapping(value = "/eca")
+	public ModelAndView eca() throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("/extcore/jsp/workspace/eca-list.jsp");
+		return model;
+	}
+
+	@Description(value = "나의업무 -> ECA 활동함 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/eca")
+	public Map<String, Object> eca(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = ActivityHelper.manager.eca(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

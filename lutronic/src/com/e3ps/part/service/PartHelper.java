@@ -1178,6 +1178,19 @@ public class PartHelper {
 	}
 
 	/**
+	 * 최신버전 부품
+	 */
+	public WTPart latest(WTPartMaster master) throws Exception {
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(master, config);
+		if (result.hasMoreElements()) {
+			WTPart latest = (WTPart) result.nextElement();
+			return latest;
+		}
+		return null;
+	}
+
+	/**
 	 * 부품 BOM 구조 호출 함수
 	 */
 	public ArrayList<WTPart> descendants(WTPart part) throws Exception {
@@ -1279,7 +1292,7 @@ public class PartHelper {
 		}
 		return false;
 	}
-	
+
 	public WTPart getLatest(WTPartMaster master) throws Exception {
 		String number = master.getNumber();
 		QuerySpec query = new QuerySpec();
@@ -1354,12 +1367,12 @@ public class PartHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 관련 ROHS
 	 */
 	private Object referenceRohs(WTPart part, ArrayList<Map<String, Object>> list) throws Exception {
-		
+
 		QueryResult result = PersistenceHelper.manager.navigate(part, "rohs", PartToRohsLink.class);
 		while (result.hasMoreElements()) {
 			ROHSMaterial ref = (ROHSMaterial) result.nextElement();

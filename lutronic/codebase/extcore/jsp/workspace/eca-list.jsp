@@ -1,8 +1,5 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,18 +13,16 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						결재함
+						ECA 활동함
 					</div>
 				</td>
 			</tr>
 		</table>
-
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -242,12 +237,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 			function loadGridData() {
 				let params = new Object();
-				const url = getCallUrl("/workspace/approval");
+				const url = getCallUrl("/activity/eca");
 				const field = [ "name" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
+					logger(data);
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);

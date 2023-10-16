@@ -63,7 +63,7 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/activity/llist', '> 나의업무 > ECA 활동함');">
+						<a onclick="moveToPage(this, '/activity/eca', '> 나의업무 > ECA 활동함');">
 							ECA 활동함
 							<span class="label label-info float-right">
 								<%

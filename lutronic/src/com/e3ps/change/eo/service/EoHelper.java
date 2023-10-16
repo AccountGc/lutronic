@@ -165,6 +165,8 @@ public class EoHelper {
 			query.appendCloseParen();
 		}
 
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
+
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -258,18 +260,18 @@ public class EoHelper {
 	public JSONArray reference(String oid, String type) throws Exception {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+		System.out.println("여기 실행되나?");
 		if ("doc".equalsIgnoreCase(type)) {
 			// 문서
 			return JSONArray.fromObject(referenceDoc(eo, list));
 		} else if ("part".equalsIgnoreCase(type)) {
 			// 완제품
-			return JSONArray.fromObject(referencePart(eo, list));
+			return JSONArray.fromObject(referenceComplete(eo, list));
 		} else if ("activity".equalsIgnoreCase(type)) {
 			// 완제품
 			return JSONArray.fromObject(referenceActivity(eo, list));
 		}
-		
-		
+
 		return JSONArray.fromObject(list);
 	}
 
@@ -290,11 +292,12 @@ public class EoHelper {
 	/**
 	 * EO 관련 완제품
 	 */
-	private Object referencePart(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
+	private Object referenceComplete(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class);
+		System.out.println("여기 실행되라고..");
 		while (result.hasMoreElements()) {
 			WTPartMaster master = (WTPartMaster) result.nextElement();
-			WTPart part = PartHelper.manager.getLatest(master);
+			WTPart part = PartHelper.manager.latest(master);
 			PartColumn dto = new PartColumn(part);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
@@ -307,25 +310,24 @@ public class EoHelper {
 	 */
 	private Object referenceActivity(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
 		JSONArray j = new JSONArray();
-		ArrayList<EChangeActivity> colletActivityList =ActivityHelper.manager.colletActivity(eo);
+		ArrayList<EChangeActivity> colletActivityList = ActivityHelper.manager.colletActivity(eo);
 		System.out.println(colletActivityList.size());
-		for(EChangeActivity item : colletActivityList) {
-			
+		for (EChangeActivity item : colletActivityList) {
+
 			ActDTO dto = new ActDTO(item);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
-		
+
 		return list;
 	}
 
-	
 	/**
 	 * 모델명 복수개로 인해서 처리 하는 함수
 	 */
 	public String displayToModel(String model) throws Exception {
 		String display = "";
-		if(model != null) {
+		if (model != null) {
 			String[] ss = model.split(",");
 			for (int i = 0; i < ss.length; i++) {
 				String s = ss[i];
@@ -334,7 +336,7 @@ public class EoHelper {
 				} else {
 					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
 				}
-			}			
+			}
 		}
 		return display;
 	}
