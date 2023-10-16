@@ -10,7 +10,6 @@ String module = request.getParameter("module");
 String roleType = request.getParameter("roleType");
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
-JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
@@ -83,11 +82,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 		<%if (isUpdate) {%>
-			AUIGrid.setGridData(rohsGridID, <%=json%>);
-		<%}%>
-		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		<%if (isUpdate) {%>
-		AUIGrid.setGridData(rohsGridID, <%=AUIGridUtil.include(oid, "rohs")%>);
+			AUIGrid.setGridData(rohsGridID, <%=AUIGridUtil.include(oid, "rohs")%>);
 		<%}%>
 	}
 

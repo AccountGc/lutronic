@@ -40,6 +40,8 @@
 
 19. myGridID10000, columns10000 결재이력
 
+20. myGridID106, columns106 관련ROHS
+
 
 // 그리드 높이 정리
 -- 검색 1행 기준 705px. 인라인 필터 사용시 ( 미사용시 740px) -- 

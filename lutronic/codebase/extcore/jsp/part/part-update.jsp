@@ -279,17 +279,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 <jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 	<jsp:param value="<%= data.getOid() %>" name="oid" />
 	<jsp:param value="update" name="mode" />
-	<jsp:param value="insert90" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
 <!-- 관련 RoHS -->
-<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
-	<jsp:param value="<%=data.getOid() %>" name="oid" />
-	<jsp:param value="composition" name="roleType"/>
+<jsp:include page="/extcore/jsp/rohs/include/rohs-include.jsp">
+	<jsp:param value="<%= data.getOid() %>" name="oid" />
 	<jsp:param value="update" name="mode" />
-	<jsp:param value="part" name="module" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="250" name="height" />
 </jsp:include>
 
 <!-- 첨부파일 -->
@@ -338,10 +337,10 @@ function folder() {
 
 document.addEventListener("DOMContentLoaded", function() {
 	createAUIGrid90(columns90);
-	AUIGrid.resize(myGridID90);
-	createAUIGrid6(columnsRohs);
-	AUIGrid.resize(rohsGridID);
+	createAUIGrid106(columns106);
 	createAUIGrid8(columns8);
+	AUIGrid.resize(myGridID90);
+	AUIGrid.resize(myGridID106);
 	AUIGrid.resize(myGridID8);
 	document.getElementById("partName1").focus();
 	selectbox("state");
@@ -356,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 window.addEventListener("resize", function() {
 	AUIGrid.resize(docGridID);
-	AUIGrid.resize(rohsGridID);
+	AUIGrid.resize(myGridID106);
 	AUIGrid.resize(myGridID8);
 });
 
@@ -549,13 +548,8 @@ function update(temp) {
 	// 관련문서
 	const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
     
-    let rohsOids = [];
-    const appendRohs = AUIGrid.getGridData(rohsGridID);
-    if(appendRohs.length > 0){
-        for(let i = 0; i < appendRohs.length; i++){
-        	rohsOids.push(appendRohs[i].oid)
-        }
-    }
+	// RoHs
+	const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 
     if(isEmpty(location)){
 		alert("품목구분을 입력하세요.");
@@ -611,14 +605,13 @@ function update(temp) {
 			finish : toId("finish"),
 			remarks : toId("remarks"),
 			specification : toId("specification"),
-			wtPartType : toId("wtPartType"),
 			location : toId("location"),
 			// 링크 데이터
 			rows90 : rows90,
-			rohsOids : rohsOids,
+			rowsRohs : rowsRohs,
 	};
 	
-	
+	const url = getCallUrl("/part/update");
 	call(url, params, function(data) {
 		if (data.result) {
 			alert("수정 성공하였습니다.");
