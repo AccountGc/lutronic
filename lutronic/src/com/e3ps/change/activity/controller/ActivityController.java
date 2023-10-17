@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
@@ -26,6 +27,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.service.OrgHelper;
+import com.e3ps.workspace.dto.EcaDTO;
 
 import net.sf.json.JSONArray;
 
@@ -195,5 +197,21 @@ public class ActivityController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "나의업무 -> ECA 활동 업무 페이지")
+	@GetMapping(value = "/info")
+	public ModelAndView info(@RequestParam String activityType, @RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EcaDTO dto = new EcaDTO(oid);
+		if (activityType.equals("ORDER_NUMBER")) {
+			model.setViewName("/extcore/jsp/workspace/activity/orderNumber.jsp");
+		} else if (activityType.equals("REVISE_BOM")) {
+			model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
+		} else if (activityType.equals("DOCUMENT")) {
+			model.setViewName("/extcore/jsp/workspace/activity/document.jsp");
+		}
+		model.addObject("dto", dto);
+		return model;
 	}
 }

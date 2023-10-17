@@ -98,9 +98,19 @@
 						showIcon : true,
 						inline : true
 					},
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const activityType = item.activityType;
+							const oid = item.oid;
+							const url = getCallUrl("/activity/info?activityType=" + activityType + "&oid=" + oid);
+							document.location.href = url;
+						}
+					},
 				}, {
 					dataField : "number",
-					headerText : "번호",
+					headerText : "EO/ECO 번호",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -109,9 +119,18 @@
 					},
 				}, {
 					dataField : "name",
-					headerText : "제목",
+					headerText : "EO/ECO 제목",
 					dataType : "string",
 					style : "aui-left",
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "activityUser",
+					headerText : "담당자",
+					dataType : "string",
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -127,9 +146,20 @@
 					},
 				}, {
 					dataField : "finishDate",
-					headerText : "완료예정일",
+					headerText : "완료 요청일",
 					dataType : "date",
+					formatString : "yyyy-mm-dd",
 					width : 140,
+					filter : {
+						showIcon : true,
+						inline : true,
+					},
+				}, {
+					dataField : "createdDate",
+					headerText : "도착일",
+					dataType : "date",
+					formatString : "yyyy-mm-dd HH:MM:ss",
+					width : 170,
 					filter : {
 						showIcon : true,
 						inline : true,

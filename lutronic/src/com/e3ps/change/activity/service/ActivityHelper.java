@@ -221,12 +221,16 @@ public class ActivityHelper {
 			EChangeActivity eca = (EChangeActivity) obj[0];
 			EChangeOrder eo = (EChangeOrder) eca.getEo();
 			Map<String, Object> data = new HashMap<>();
+			data.put("oid", eca.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("number", eo.getEoNumber());
 			data.put("name", eo.getEoName());
 			data.put("step", eca.getStep());
 			data.put("finishDate", eca.getFinishDate());
-			data.put("state", eca.getActiveState());
+			data.put("state", eca.getLifeCycleState().getDisplay());
 			data.put("activityName", getActName(eca.getActiveType()));
+			data.put("activityType", eca.getActiveType());
+			data.put("activityUser", eca.getActiveUser().getFullName());
+			data.put("createdDate", eca.getCreateTimestamp());
 			list.add(data);
 		}
 		map.put("list", list);

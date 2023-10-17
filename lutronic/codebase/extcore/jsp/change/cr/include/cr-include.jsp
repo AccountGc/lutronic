@@ -163,6 +163,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID101 = AUIGrid.create("#grid101", columnLayout, props);
 		<%if (view || update) {%>
