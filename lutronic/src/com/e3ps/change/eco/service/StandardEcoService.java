@@ -260,13 +260,16 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			saveLink(eco, dto);
 
 			// 완제품 연결 
-//			saveCompletePart(eco, plist);
+			deleteCompletPart(eco);
+			saveCompletePart(eco, plist);
 
 			// 변경 대상 품목 링크
-//			saveEcoPart(eco, clist);
+			deleteEcoPart(eco);
+			saveEcoPart(eco, clist);
 			
 			// 설변 활동 생성
-//			ActivityHelper.service.saveActivity(eco, rows200);
+			ActivityHelper.service.deleteActivity(eco);
+			ActivityHelper.service.saveActivity(eco, rows200);
 
 			trs.commit();
 			trs = null;
@@ -298,8 +301,10 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		}
 	}
 	
+	/**
+	 *  관련 CR 및 ECPR 삭제
+	 */
 	private void deleteLink(EChangeOrder eco) throws Exception {
-		// 관련 CR 및 ECPR 삭제
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(RequestOrderLink.class, true);
 		SearchCondition sc = new SearchCondition(RequestOrderLink.class, "roleAObjectRef.key.id", "=",
@@ -311,7 +316,42 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			RequestOrderLink link = (RequestOrderLink) obj[0];
 			PersistenceHelper.manager.delete(link);
 		}
+	}
+	
+	/**
+	 *  완제품 삭제
+	 */
+	private void deleteCompletPart(EChangeOrder eco) throws Exception {
 		
+		// 완제품 삭제
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EOCompletePartLink.class, true);
+		SearchCondition sc = new SearchCondition(EOCompletePartLink.class, "roleBObjectRef.key.id", "=",
+				eco.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EOCompletePartLink link = (EOCompletePartLink) obj[0];
+			PersistenceHelper.manager.delete(link);
+		}
+	}
+
+	/**
+	 *  변경 대상 품목 링크 삭제
+	 */
+	private void deleteEcoPart(EChangeOrder eco) throws Exception {
 		
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EcoPartLink.class, true);
+		SearchCondition sc = new SearchCondition(EcoPartLink.class, "roleBObjectRef.key.id", "=",
+				eco.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EcoPartLink link = (EcoPartLink) obj[0];
+			PersistenceHelper.manager.delete(link);
+		}
 	}
 }

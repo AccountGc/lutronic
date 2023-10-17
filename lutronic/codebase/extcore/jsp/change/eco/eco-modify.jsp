@@ -220,9 +220,15 @@
 					return item.gridState!=	"removed";
 				});
 				
-				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
-				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+				var rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
+				rows200 = rows200.filter(function(item){
+					return item.gridState!=	"removed";
+				});
 				
+				var rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+				rows500 = rows500.filter(function(item){
+					return item.gridState!=	"removed";
+				});
 				
 				
 				if(isEmpty(name.value)){
@@ -234,7 +240,6 @@
 					alert("설계변경 부품 내역파일을 첨부해주세요.");
 					return;
 				}
-				debugger;
 				const params = {
 					name : name.value,
 					riskType : riskType,
