@@ -202,7 +202,6 @@ public class StandardPartService extends StandardManager implements PartService 
 			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
 			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
 			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
-//			boolean isSelf = (boolean) params.get("self");
 
 			// 주 도면
 			String primary = StringUtil.checkNull((String) params.get("primary"));
@@ -342,17 +341,11 @@ public class StandardPartService extends StandardManager implements PartService 
 				}
 			}
 			
-			// 결재 시작
-//			if (isSelf) {
-//				// 자가결재시
-//				WorkspaceHelper.service.self(part);
-//			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
-				}
-//			}
-						
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
+			}
+				
 			trx.commit();
 			trx = null;
 		} catch (Exception e) {
