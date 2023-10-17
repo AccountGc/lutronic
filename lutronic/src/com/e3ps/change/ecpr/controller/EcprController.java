@@ -2,6 +2,7 @@ package com.e3ps.change.ecpr.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
@@ -28,6 +29,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.mold.service.MoldHelper;
 
 import wt.doc.WTDocument;
@@ -45,8 +47,10 @@ public class EcprController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		model.addObject("modelList", modelList);
 		model.addObject("sectionList", sectionList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/change/ecpr/ecpr-list.jsp");
 		return model;
 	}
@@ -72,9 +76,11 @@ public class EcprController extends BaseController {
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("sectionList", sectionList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("method", method);
 		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/change/ecpr/ecpr-list-popup");
