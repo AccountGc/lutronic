@@ -24,6 +24,7 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTUser;
+import wt.part.WTPart;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
@@ -464,10 +465,12 @@ public class WorkspaceHelper {
 		if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
 			name = doc.getNumber() + " [" + doc.getName() + "]";
-
 		} else if (per instanceof ECOChange) {
 			ECOChange e = (ECOChange) per;
 			name = e.getEoNumber() + " [" + e.getEoName() + "]";
+		} else if (per instanceof WTPart) {
+			WTPart part = (WTPart) per;
+			name = part.getNumber() + " [" + part.getName() + "]";
 		}
 
 		return name;

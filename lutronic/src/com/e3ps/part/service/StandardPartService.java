@@ -217,7 +217,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
 
 			// 첨부 추가
-//			String[] delocIds = (String[]) params.get("delocIds");
+			String[] delocIds = (String[]) params.get("delocIds");
 
 			String partName = "";
 			String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
@@ -348,9 +348,9 @@ public class StandardPartService extends StandardManager implements PartService 
 //				WorkspaceHelper.service.self(part);
 //			} else {
 				// 결재시작
-//				if (approvalRows.size() > 0) {
-//					WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
-//				}
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
+				}
 //			}
 						
 			trx.commit();
