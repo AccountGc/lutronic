@@ -9,7 +9,6 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -37,7 +36,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			<%
 			}
 			%>
-			<div id="gridEcpr" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="gridEcpr" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -79,14 +78,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			}
 		},
 	}, {
-		dataField : "model",
-		headerText : "제품",
-		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	}, {
 		dataField : "changeSection",
 		headerText : "변경구분",
 		dataType : "string",
@@ -111,8 +102,8 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			inline : true
 		},
 	}, {
-		dataField : "approveDate",
-		headerText : "승인일",
+		dataField : "writeDate",
+		headerText : "작성일",
 		dataType : "string",
 		filter : {
 			showIcon : true,
@@ -130,6 +121,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -162,6 +154,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridIDEcpr = AUIGrid.create("#gridEcpr", columnLayout, props);
 		<%if (view || update) {%>
