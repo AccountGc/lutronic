@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.e3ps.change.DocumentActivityLink;
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -29,6 +30,7 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
@@ -401,6 +403,19 @@ public class StandardDocumentService extends StandardManager implements Document
 				String oid = row101.get("oid");
 				EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
 				DocumentCRLink link = DocumentCRLink.newDocumentCRLink(doc, cr);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+		
+		ArrayList<Map<String, String>> rowsEcpr = dto.getRowsEcpr();
+		// 관련CR
+		for (Map<String, String> rowEcpr : rowsEcpr) {
+			String gridState = rowEcpr.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = rowEcpr.get("oid");
+				ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+				DocumentECPRLink link = DocumentECPRLink.newDocumentECPRLink(doc, ecpr);
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}

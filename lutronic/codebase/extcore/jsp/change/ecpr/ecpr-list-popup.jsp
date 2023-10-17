@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="wt.org.WTUser"%>
@@ -5,7 +7,9 @@
 <%
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) request.getAttribute("parentRowIndex") : -1;
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+String method = (String) request.getAttribute("method");
+boolean multi = (boolean) request.getAttribute("multi");
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
 <input type="hidden" name="lastNum" id="lastNum"> 
@@ -29,10 +33,13 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 		<td class="indent5">
 			<select name="state" id="state" class="width-200" >
 				<option value="">선택</option>
-				<option value="INWORK">작업 중</option>
-				<option value="UNDERAPPROVAL">승인 중</option>
-				<option value="APPROVED">승인됨</option>
-				<option value="RETURN">반려됨</option>
+				<%
+				for (Map<String,String> lifecycle : lifecycleList) {
+				%>
+				<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+				<%
+				}
+				%>
 			</select>
 		</td>
 	</tr>
@@ -101,7 +108,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<input type="button" value="추가" title="추가"  onclick="add();">
+			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -112,7 +119,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 				<option value="300">300</option>
 			</select> 
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
-			<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('document-list');">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>
@@ -122,7 +129,7 @@ int parentRowIndex = request.getAttribute("parentRowIndex") != null ? (int) requ
 <script type="text/javascript">
 let myGridID;
 const columns = [ {
-	dataField : "eoNumber",
+	dataField : "number",
 	headerText : "ECPR 번호",
 	dataType : "string",
 	width : 120,
@@ -140,7 +147,7 @@ const columns = [ {
 		}
 	},
 }, {
-	dataField : "eoName",
+	dataField : "name",
 	headerText : "ECPR 제목",
 	dataType : "string",
 	width : 120,
@@ -185,7 +192,7 @@ const columns = [ {
 		inline : true
 	},
 }, {
-	dataField : "createDate",
+	dataField : "writeDate",
 	headerText : "작성일",
 	dataType : "string",
 	width : 180,
@@ -203,7 +210,7 @@ const columns = [ {
 		inline : true
 	},
 }, {
-	dataField : "writer",
+	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
 	width : 180,
@@ -212,7 +219,7 @@ const columns = [ {
 		inline : true
 	},
 }, {
-	dataField : "createDate",
+	dataField : "createdDate_txt",
 	headerText : "등록일",
 	dataType : "string",
 	width : 180,
@@ -226,17 +233,20 @@ function createAUIGrid(columnLayout) {
 	const props = {
 		headerHeight : 30,
 		showRowNumColumn : true,
-		fillColumnSizeMode: true,
+		showRowCheckColumn : true,
+		<%if (!multi) {%>
+		rowCheckToRadio : true,
+		<%}%>
 		rowNumHeaderText : "번호",
-		showAutoNoDataMessage : true,
+		showAutoNoDataMessage : false,
 		selectionMode : "multipleCells",
 		enableMovingColumn : true,
+		enableFilter : true,
 		showInlineFilter : false,
 		useContextMenu : true,
 		enableRightDownFocus : true,
 		filterLayerWidth : 320,
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		enableFilter : true
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 	loadGridData();
@@ -288,15 +298,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("model");
 });
 
-document.querySelector("#addNumberCode").addEventListener("click", () => {
-	const url = getCallUrl("/common/popup_numberCodes?codeType=MODEL&disable=true");
-	popup(url, 1500, 700);
-});
-
-document.querySelector("#delNumberCode").addEventListener("click", () => {
-	
-});
-
 document.addEventListener("keydown", function(event) {
 	const keyCode = event.keyCode || event.which;
 	if (keyCode === 13) {
@@ -313,26 +314,20 @@ window.addEventListener("resize", function() {
 });
 
 // 추가 버튼
-function add(){
-	const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-	if (items.length == 0) {
-	    alert("첨부할 EO를 선택하세요.");
-	    return false;
-	}
-       
-	let ecprOids = [];
-	let ecprNumber = [];
-	for(let i = 0; i < items.length; i++){
-		ecprOids.push(items[i].oid);
-		ecprNumber.push(items[i].number);
-	}
-	var parentRow = <%= parentRowIndex %>;
-	if(parentRow<0){
-		opener.setAppendECPR(items);
-	}else{
-		opener.setECPR(ecprOids, ecprNumber, <%= parentRowIndex %>);
+function <%=method%>() {
+	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+	if (checkedItems.length === 0) {
+		alert("추가할 행을 선택하세요.");
+		return false;
 	}
 	
-	self.close();
+	openLayer();
+	opener.<%=method%>(checkedItems, function(res) {
+		if(res) {
+			setTimeout(function() {
+				closeLayer();
+			}, 500);
+		}
+	})
 }
 </script>

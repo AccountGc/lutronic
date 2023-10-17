@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.eco.column.EcoColumn;
+import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.util.AUIGridUtil;
@@ -23,6 +25,7 @@ import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
@@ -177,7 +180,7 @@ public class DocumentHelper {
 			return JSONArray.fromObject(referenceCr(doc, list));
 		} else if ("ecpr".equalsIgnoreCase(type)) {
 			// ECPR
-//			return JSONArray.fromObject(referenceEcpr(doc, list));
+			return JSONArray.fromObject(referenceEcpr(doc, list));
 		}
 		return JSONArray.fromObject(list);
 	}
@@ -201,19 +204,11 @@ public class DocumentHelper {
 	 * 관련 ECPR
 	 */
 	private Object referenceEcpr(WTDocument doc, ArrayList<Map<String, Object>> list) throws Exception {
-		QueryResult result = PersistenceHelper.manager.navigate(doc, "describes", WTPartDescribeLink.class);
+		QueryResult result = PersistenceHelper.manager.navigate(doc, "ecpr", DocumentECPRLink.class);
 		while (result.hasMoreElements()) {
-			WTPart part = (WTPart) result.nextElement();
-			Map<String, Object> map = new HashMap<>();
-			PartColumn dto = new PartColumn(part);
-			map.put("part_oid", dto.getPart_oid());
-			map.put("_3d", dto.get_3d());
-			map.put("_2d", dto.get_2d());
-			map.put("number", dto.getNumber());
-			map.put("name", dto.getName());
-			map.put("version", dto.getVersion());
-			map.put("creator", dto.getCreator());
-			map.put("createdDate", dto.getCreatedDate().toString().substring(0, 10));
+			ECPRRequest ecpr = (ECPRRequest) result.nextElement();
+			EcprColumn dto = new EcprColumn(ecpr);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
 		return list;
