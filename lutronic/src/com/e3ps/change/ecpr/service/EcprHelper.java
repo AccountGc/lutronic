@@ -163,6 +163,9 @@ public class EcprHelper {
 	 * 작성부서 코드 -> 값
 	 */
 	public String displayToDept(String dept) throws Exception {
+		if(dept == null) {
+			return "";
+		}
 		return NumberCodeHelper.manager.getNumberCodeName(dept, "DEPTCODE");
 	}
 	
@@ -185,8 +188,8 @@ public class EcprHelper {
 	private Object referenceCr(ECPRRequest ecpr, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
 		while (result.hasMoreElements()) {
-			ECPRRequest doc = (ECPRRequest) result.nextElement();
-			EcprColumn dto = new EcprColumn(doc);
+			EChangeRequest cr = (EChangeRequest) result.nextElement();
+			CrColumn dto = new CrColumn(cr);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
