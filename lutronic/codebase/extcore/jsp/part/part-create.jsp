@@ -480,10 +480,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid90(columns90);
-				AUIGrid.resize(myGridID90);
-				createAUIGrid6(columnsRohs);
-				AUIGrid.resize(rohsGridID);
+				createAUIGrid106(columns106);
 				createAUIGrid8(columns8);
+				AUIGrid.resize(myGridID90);
+				AUIGrid.resize(myGridID106);
 				AUIGrid.resize(myGridID8);
 				numberCodeList('partType1', '');
 				selectbox("partType2");
@@ -503,7 +503,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(docGridID);
-				AUIGrid.resize(rohsGridID);
+				AUIGrid.resize(myGridID106);
 				AUIGrid.resize(myGridID8);
 			});
 			
