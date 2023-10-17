@@ -6,10 +6,13 @@ import java.util.Map;
 
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -315,6 +318,9 @@ public class EcoHelper {
 		} else if ("activity".equalsIgnoreCase(type)) {
 			// 설계변경 활동
 			return JSONArray.fromObject(referenceActivity(eco, list));
+		} else if ("cr".equalsIgnoreCase(type)) {
+			// 설계변경 활동
+			return JSONArray.fromObject(referenceCr(eco, list));
 		}
 		
 		return JSONArray.fromObject(list);
@@ -348,6 +354,20 @@ public class EcoHelper {
 			list.add(map);
 		}
 		
+		return list;
+	}
+	
+	/**
+	 * ECO CR 목록
+	 */
+	private Object referenceCr(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "ecr", RequestOrderLink.class);
+		while (result.hasMoreElements()) {
+			EChangeRequest ecr = (EChangeRequest) result.nextElement();
+			CrColumn data = new CrColumn(ecr);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
+			list.add(map);
+		}
 		return list;
 	}
 }

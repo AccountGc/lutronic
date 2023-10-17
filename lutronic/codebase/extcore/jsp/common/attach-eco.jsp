@@ -48,12 +48,13 @@ String mode = request.getParameter("mode");
 				}
 			},			
 			onUpload : function() {
+				$("#primary")[0].remove();
 				const form = document.querySelector("form");
 				const primaryTag = document.createElement("input");
 				primaryTag.type = "hidden";
 				primaryTag.name = "primary";
 				primaryTag.value = this.cacheId+"/"+this.name;
-				primaryTag.id = this._id_;
+				primaryTag.id= "primary";
 				form.appendChild(primaryTag);
 			},
 			onDelete : function() {
@@ -79,7 +80,7 @@ String mode = request.getParameter("mode");
 					for (let i = 0; i < len; i++) {
 						const primaryTag = document.createElement("input");
 						primaryTag.type = "hidden";
-						primaryTag.id = data[i].tagId;
+						primaryTag.id = "primary";
 						primaryTag.name = "primary";
 						primaryTag.value = data[i].cacheId;
 						form.appendChild(primaryTag);
