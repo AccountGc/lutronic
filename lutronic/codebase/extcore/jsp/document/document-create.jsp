@@ -330,6 +330,7 @@ iframe {
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 
 				const url = getCallUrl("/doc/create");
 
@@ -366,6 +367,12 @@ iframe {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
@@ -396,7 +403,6 @@ iframe {
 					rows105 : rows105,
 					temprary : temprary
 				};
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
 				call(url, params, function(data) {

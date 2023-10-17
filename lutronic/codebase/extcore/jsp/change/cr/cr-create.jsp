@@ -231,6 +231,12 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
