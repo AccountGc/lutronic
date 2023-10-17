@@ -37,6 +37,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
@@ -232,11 +233,11 @@ public class DocumentController extends BaseController {
 				return result;
 			}
 
-//			if (DocumentHelper.manager.connect(doc, DocumentECPRLink.class)) {
-//				result.put("result", false);
-//				result.put("msg", "문서와 연결된 ECPR이 있습니다.");
-//				return result;
-//			}
+			if (DocumentHelper.manager.isConnect(oid, DocumentECPRLink.class)) {
+				result.put("result", false);
+				result.put("msg", "문서와 연결된 ECPR이 있습니다.");
+				return result;
+			}
 
 			if (DocumentHelper.manager.isConnect(oid, WTPartDescribeLink.class)) {
 				result.put("result", false);

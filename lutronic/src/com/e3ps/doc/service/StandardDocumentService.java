@@ -408,7 +408,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		}
 		
 		ArrayList<Map<String, String>> rowsEcpr = dto.getRowsEcpr();
-		// 관련CR
+		// 관련ECPR
 		for (Map<String, String> rowEcpr : rowsEcpr) {
 			String gridState = rowEcpr.get("gridState");
 			// 신규 혹은 삭제만 있다. (added, removed

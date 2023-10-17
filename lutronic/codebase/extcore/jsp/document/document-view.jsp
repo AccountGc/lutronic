@@ -417,6 +417,12 @@ iframe {
 					} else {
 						createAUIGrid101(columns101);
 					}
+					const isCreatedEcpr = AUIGrid.isCreated(myGridIDEcpr); // ECPR
+					if (isCreatedEcpr) {
+						AUIGrid.resize(myGridIDEcpr);
+					} else {
+						createAUIGridEcpr(columnsEcpr);
+					}
 					break;
 				case "tabs-3":
 					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
@@ -448,6 +454,7 @@ iframe {
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridIDEcpr);
 		AUIGrid.resize(myGridID50);
 		AUIGrid.resize(myGridID51);
 		AUIGrid.resize(myGridID10000);
