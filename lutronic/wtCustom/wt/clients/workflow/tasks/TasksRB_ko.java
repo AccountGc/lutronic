@@ -133,7 +133,7 @@ public final class TasksRB_ko extends WTListResourceBundle {
    @RBEntry("수준 올리기")
    public static final String PROMOTE = "promote";
 
-   @RBEntry("검토")
+   @RBEntry("협의")
    public static final String REVIEW = "review";
 
    @RBEntry("제출")

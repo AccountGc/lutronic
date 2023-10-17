@@ -63,7 +63,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					visible : false
 				}, {
 					dataField : "agree",
-					headerText : "검토",
+					headerText : "협의",
 					width : 160,
 					editable : false,
 					renderer : {
@@ -809,7 +809,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 
 				for (let i = agree.length - 1; i >= 0; i--) {
 					const item = agree[i];
-					item.type = "검토";
+					item.type = "협의";
 					item.sort = sort;
 					rows8.push(item);
 					agr += item.name + "\n";

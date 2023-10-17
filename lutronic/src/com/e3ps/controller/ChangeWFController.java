@@ -207,9 +207,9 @@ public class ChangeWFController {
 				//isSave = ECAHelper.service.saveCheckResult(req);
 				if(isSave){
 					
-					msg = Message.get("검토결과가 등록 되었습니다.");
+					msg = Message.get("협의결과가 등록 되었습니다.");
 				}else{
-					msg = Message.get("검토결과 등록시 오류가 발생 하였습니다.");
+					msg = Message.get("협의결과 등록시 오류가 발생 하였습니다.");
 				}
 			
 			}else if(ecaAction.equals("ecoConfirm")){

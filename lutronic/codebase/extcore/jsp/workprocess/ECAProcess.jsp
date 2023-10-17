@@ -134,7 +134,7 @@ function validationCheck() {
 			*/
 			
 			if($("#ecaCheck").val() == "false") {
-				alert("${f:getMessage('검토 회의를 입력하세요.')}");
+				alert("${f:getMessage('협의 회의를 입력하세요.')}");
 				return false;
 			}
 		}

@@ -24,8 +24,8 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			<%
 			if (dto.isAgreeLine()) {
 			%>
-			<input type="button" value="검토완료" title="검토완료" onclick="_agree();">
-			<input type="button" value="검토반려" title="검토반려" class="red" onclick="_unagree()">
+			<input type="button" value="의완료" title="협의완료" onclick="_agree();">
+			<input type="button" value="협의반려" title="협의반려" class="red" onclick="_unagree()">
 			<%
 			}
 			%>
@@ -162,7 +162,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	}
 
 	function _unagree() {
-		if (!confirm("검토 반려 하시겠습니까?")) {
+		if (!confirm("협의 반려 하시겠습니까?")) {
 			return false;
 		}
 		const url = getCallUrl("/workspace/_unagree");
@@ -204,7 +204,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	}
 
 	function _agree() {
-		if (!confirm("검토완료 하시겠습니까?")) {
+		if (!confirm("협의완료 하시겠습니까?")) {
 			return false;
 		}
 		const url = getCallUrl("/workspace/_agree");
