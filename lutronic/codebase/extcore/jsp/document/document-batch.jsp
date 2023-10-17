@@ -56,6 +56,57 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				value : "일괄결재"
 			} ]
 			const layout = [ {
+				headerText : "결재",
+				children : [ {
+					dataField : "rows8",
+					dataType : "string",
+					visible : false
+				}, {
+					dataField : "agree",
+					headerText : "검토",
+					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
+				}, {
+					dataField : "approval",
+					headerText : "결재",
+					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
+				}, {
+					dataField : "receive",
+					headerText : "수신",
+					width : 160,
+					editable : false,
+					renderer : {
+						type : "TemplateRenderer"
+					}
+				}, {
+					headerText : "결재선 지정",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "ButtonRenderer",
+						labelText : "결재선 지정",
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const approvals = [];
+							const agrees = [];
+							const receives = [];
+							const oid = item.id;
+							const url = getCallUrl("/workspace/popup");
+							const p = _popup(url, 1400, 900, "n");
+							p.approvals = approvals;
+							p.agrees = agrees;
+							p.receives = receives;
+						}
+					}
+				}]
+			}, {
 				dataField : "location",
 				headerText : "저장위치",
 				dataType : "string",
@@ -732,6 +783,46 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					AUIGrid.removeRow(myGridID, rowIndex);
 				}
 			}
+			
+			// 결재선 지정
+			function setLine(agree, approval, receive) {
+				const rows8 = [];
+				let rece = "";
+				let appro = "";
+				let agr = "";
+				
+				for (let i = receive.length - 1; i >= 0; i--) {
+					const item = receive[i];
+					item.type = "수신";
+					rows8.push(item);
+					rece += item.name + "\n";
+				}
+
+				let sort = approval.length;
+				for (let i = approval.length - 1; i >= 0; i--) {
+					const item = approval[i];
+					item.type = "결재";
+					item.sort = sort;
+					rows8.push(item);
+					appro += item.name + "\n";
+				}
+
+				for (let i = agree.length - 1; i >= 0; i--) {
+					const item = agree[i];
+					item.type = "검토";
+					item.sort = sort;
+					rows8.push(item);
+					agr += item.name + "\n";
+				}
+				
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					rows8 : rows8,
+					receive : toRowsExp(rece),
+					approval : toRowsExp(appro),
+					agree : toRowsExp(agr)
+				});
+			}
 
 			// 품목 추가 메소드
 			function insert91(arr, callBack) {
@@ -873,33 +964,38 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					const item = gridData[i];
 					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item.oid);
 
+					if (isNull(item.rows8)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "결재선을 지정하세요.");
+						return false;
+					}
+
 					if (isNull(item.location)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 0, "저장위치를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "저장위치를 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.documentName)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 1, "문서종류를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 6, "문서종류를 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.lifecycle)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 3, "결재방식을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "결재방식을 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.documentType_code)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "문서유형을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 9, "문서유형을 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.preseration_code)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 12, "보존기간을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 17, "보존기간을 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.primary)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 14, "주 첨부파일을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 19, "주 첨부파일을 선택하세요.");
 						return false;
 					}
 				}
@@ -912,6 +1008,9 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				const params = {
 					gridData : gridData
 				}
+				params.gridData.forEach((param)=>{
+					toRegister(param, param.rows8);					
+				})
 				parent.openLayer();
 				logger(params);
 				call(url, params, function(data) {
