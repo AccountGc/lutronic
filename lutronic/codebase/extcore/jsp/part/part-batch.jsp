@@ -70,7 +70,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					visible : false
 				}, {
 					dataField : "agree",
-					headerText : "검토",
+					headerText : "협의",
 					width : 160,
 					editable : false,
 					renderer : {
@@ -1040,7 +1040,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 				for (let i = agree.length - 1; i >= 0; i--) {
 					const item = agree[i];
-					item.type = "검토";
+					item.type = "협의";
 					item.sort = sort;
 					rows8.push(item);
 					agr += item.name + "\n";
@@ -1105,11 +1105,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					const item = gridData[i];
 					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item.id);
 					
-					if (isNull(item.rows8)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "결재선을 지정하세요.");
-						return false;
-					}
-
 					if (isNull(item.location)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "저장위치를 선택하세요.");
 						return false;
@@ -1182,7 +1177,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					gridData : gridData
 				}
 				params.gridData.forEach((param)=>{
-					toRegister(param, param.rows8);					
+					params.rows8 && toRegister(param, param.rows8);	
 				})
 				parent.openLayer();
 				logger(params);
