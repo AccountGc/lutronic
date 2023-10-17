@@ -100,6 +100,9 @@ public class CrHelper {
 	 * 작성부서 코드 -> 값
 	 */
 	public String displayToDept(String dept) throws Exception {
+		if(dept == null) {
+			return "";
+		}
 		return NumberCodeHelper.manager.getNumberCodeName(dept, "DEPTCODE");
 	}
 
