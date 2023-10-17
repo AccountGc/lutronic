@@ -203,7 +203,7 @@ public class AUIGridUtil {
 		} else if (per instanceof EChangeNotice) {
 			// ECN 연관 객체
 		} else if (per instanceof ECPRRequest) {
-			// CR 연관 객체
+			// ECPR 연관 객체
 			return EcprHelper.manager.reference(oid, type);
 		} else if (per instanceof WTPart) {
 			// part 연관 객체

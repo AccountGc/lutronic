@@ -180,14 +180,14 @@ public class StandardEcprService extends StandardManager implements EcprService 
 	 * 첨부 파일 삭제
 	 */
 	private void removeAttach(ECPRRequest ecpr) throws Exception {
-		QueryResult result = ContentHelper.service.getContentsByRole(ecpr, ContentRoleType.toContentRoleType("ECPR"));
+		QueryResult result = ContentHelper.service.getContentsByRole(ecpr, ContentRoleType.PRIMARY);
 		if (result.hasMoreElements()) {
 			ContentItem item = (ContentItem) result.nextElement();
 			ContentServerHelper.service.deleteContent(ecpr, item);
 		}
 
 		result.reset();
-		result = ContentHelper.service.getContentsByRole(ecpr, ContentRoleType.PRIMARY);
+		result = ContentHelper.service.getContentsByRole(ecpr, ContentRoleType.SECONDARY);
 		while (result.hasMoreElements()) {
 			ContentItem item = (ContentItem) result.nextElement();
 			ContentServerHelper.service.deleteContent(ecpr, item);

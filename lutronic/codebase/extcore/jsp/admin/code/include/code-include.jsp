@@ -80,7 +80,7 @@ if (create || update) {
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : true,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,

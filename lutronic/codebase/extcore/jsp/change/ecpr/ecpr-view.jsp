@@ -144,13 +144,16 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			return false;
 		}
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/ecpr/delete?oid=" + oid);
-		call(url, null, function(data) {
+		const url = getCallUrl("/ecpr/delete");
+		let params = new Object();
+		params.oid = oid;
+		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
+				opener.loadGridData();
 				self.close();
 			}
-		}, "GET");
+		});
 	})
 	
 	$("#approveBtn").click(function () {
@@ -179,6 +182,12 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-2":
+					const isCreated300 = AUIGrid.isCreated(myGridID300); // MODEL
+					if (isCreated300) {
+						AUIGrid.resize(myGridID300);
+					} else {
+						createAUIGrid300(columns300);
+					}
 					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
 					if (isCreated101) {
 						AUIGrid.resize(myGridID101);
@@ -192,6 +201,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID300);
 		AUIGrid.resize(myGridID101);
 	});
 </script>

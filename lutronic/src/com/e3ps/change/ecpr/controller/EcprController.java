@@ -157,10 +157,11 @@ public class EcprController extends BaseController {
 	
 	@Description(value = "ECPR 삭제 함수")
 	@ResponseBody
-	@DeleteMapping(value = "/delete")
-	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+	@PostMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
+			String oid = (String) params.get("oid");
 			// true 연결 있음
 			if (EcprHelper.manager.isConnect(oid)) {
 				result.put("result", false);

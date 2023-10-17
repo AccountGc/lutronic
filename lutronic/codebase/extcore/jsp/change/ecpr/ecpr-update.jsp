@@ -153,6 +153,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid" />
+						<jsp:param value="modify" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -161,6 +162,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid" />
+						<jsp:param value="modify" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -185,12 +187,13 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 		</table>
 		<script type="text/javascript">
 			function update() {
+				const oid = document.getElementById("oid");
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 
 				if (!confirm("수정 하시겠습니까?")) {
 					return;
-				}
+				}				
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
@@ -227,7 +230,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				}
 				
 				const params = {
-					oid : oid,
+					oid : oid.value,
 					name : name.value,
 					number : number.value,
 					createdDate : toId("createdDate"),
@@ -245,7 +248,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				}
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
-				var url = getCallUrl("/ecpr/update");
+				const url = getCallUrl("/ecpr/update");
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
