@@ -53,7 +53,7 @@ public class NumberCodeHelper {
 	 */
 	public String getNumberCodeName(String code, String codeType) throws Exception {
 
-		if (!StringUtil.checkString(codeType)) {
+		if (!StringUtil.checkString(codeType) || code == null) {
 			return null;
 		}
 
