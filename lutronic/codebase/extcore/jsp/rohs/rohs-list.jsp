@@ -124,7 +124,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 605px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		
