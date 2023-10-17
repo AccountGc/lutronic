@@ -20,6 +20,19 @@
 		<input type="hidden" name="fid" 		id="fid"		value="" />
 		<input type="hidden" name="location" 	id="location"	value="/Default/PART_Drawing" />
 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png"> 도면 정보
+					</div>
+				</td>
+				<td class="right">
+						<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+						<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					</td>
+				</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="180">
@@ -67,6 +80,15 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td class="indent5" colspan="5">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		
 		<br>
@@ -78,8 +100,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
-					<input type="button" value="초기화" title="초기화" id="resetBtn">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -103,8 +125,25 @@
 				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
-				debugger;
+				
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
+				}
 				var params = _data($("#form"));
+				toRegister(params, addRows8); // 결재선 세팅
+				parent.openLayer();
 				var url = getCallUrl("/drawing/create");
 				call(url, params, function(data) {
 					if(data.result){
