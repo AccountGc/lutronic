@@ -44,5 +44,23 @@
 
 
 // 그리드 높이 정리
--- 검색 1행 기준 705px. 인라인 필터 사용시 ( 미사용시 740px) -- 
--- 행 하나당 35px 가감 작업 --  
+-- 검색 1행 기준 675px. 인라인 필터 사용시 ( 미사용시 705px) -- 
+-- 행 하나당 35px 가감 작업 --
+
+-- 검색 그리드 속성 -- 
+const props = {
+	headerHeight : 30,
+	showRowNumColumn : true,
+	showRowCheckColumn : true,
+	rowNumHeaderText : "번호",
+	showAutoNoDataMessage : false,
+	selectionMode : "multipleCells",
+	enableMovingColumn : true,
+	enableFilter : true,
+	showInlineFilter : true,
+	useContextMenu : true,
+	enableRightDownFocus : true,
+	filterLayerWidth : 320,
+	filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+	enableRowCheckShiftKey : true
+};  

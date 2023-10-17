@@ -81,106 +81,37 @@
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "reads",
-					headerText : "확인",
-					dataType : "boolean",
-					width : 60,
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-					renderer : {
-						type : "CheckBoxEditRenderer",
-					}
-				}, {
-					dataField : "persistType",
-					headerText : "객체유형",
+					dataField : "step",
+					headerText : "STEP",
 					dataType : "string",
 					width : 120,
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL&poid=" + item.poid);
-							_popup(url, 1500, 800, "n");
-						}
-					},
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "type",
-					headerText : "구분",
+					dataField : "activityName",
+					headerText : "활동구분",
 					dataType : "string",
-					width : 80,
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL&poid=" + item.poid);
-							_popup(url, 1500, 800, "n");
-						}
-					},
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "role",
-					headerText : "역할",
+					dataField : "number",
+					headerText : "번호",
 					dataType : "string",
-					width : 80,
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL&poid=" + item.poid);
-							_popup(url, 1500, 800, "n");
-						}
-					},
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
 					dataField : "name",
-					headerText : "결재 제목",
+					headerText : "제목",
 					dataType : "string",
 					style : "aui-left",
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL&poid=" + item.poid);
-							_popup(url, 1500, 800, "n");
-						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "point",
-					headerText : "진행단계",
-					dataType : "string",
-					style : "right",
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-					renderer : {
-						type : "TemplateRenderer"
-					},
-				}, {
-					dataField : "submiter",
-					headerText : "기안자",
-					dataType : "string",
-					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -189,17 +120,16 @@
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "receiveTime",
-					headerText : "수신일",
+					dataField : "finishDate",
+					headerText : "완료예정일",
 					dataType : "date",
-					formatString : "yyyy-mm-dd HH:MM:ss",
-					width : 170,
+					width : 140,
 					filter : {
 						showIcon : true,
 						inline : true,

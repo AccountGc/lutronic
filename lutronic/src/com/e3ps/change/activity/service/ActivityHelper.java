@@ -221,7 +221,6 @@ public class ActivityHelper {
 			EChangeActivity eca = (EChangeActivity) obj[0];
 			EChangeOrder eo = (EChangeOrder) eca.getEo();
 			Map<String, Object> data = new HashMap<>();
-			data.put("step", eca.getStep());
 			data.put("number", eo.getEoNumber());
 			data.put("name", eo.getEoName());
 			data.put("step", eca.getStep());
