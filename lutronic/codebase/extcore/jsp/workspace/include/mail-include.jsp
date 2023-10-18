@@ -27,15 +27,20 @@ boolean update = "update".equals(mode);
 
 		function createAUIGrid9(columnLayout) {
 			const props = {
-				headerHeight : 30,
-				showRowNumColumn : true,
-				rowNumHeaderText : "번호",
-				showAutoNoDataMessage : false,
-				showRowCheckColumn : true,
-				showAutoNoDataMessage : false,
-				enableRowCheckShiftKey : true,
-				enableSorting : false,
-				autoGridHeight : true,
+					headerHeight : 30,
+					fillColumnSizeMode : false,
+					showRowNumColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
+					enableSorting : false,
+					softRemoveRowMode : false,
+					selectionMode : "multipleCells",
+					<%if (create || update) {%>
+					showStateColumn : true,
+					showRowCheckColumn : true,
+					<%}%>
+					enableFilter : true,
+					autoGridHeight : true
 			}
 			myGridID9 = AUIGrid.create("#grid9", columnLayout, props);
 		}
@@ -44,7 +49,7 @@ boolean update = "update".equals(mode);
 			const list = AUIGrid.getGridData(myGridID9);
 			
 			const url = getCallUrl("/workspace/mail");
-			const p = _popup(url, 1400, 900, "n");
+			const p = _popup(url, 1400, 860, "n");
 		}
 
 		function deleteRow9() {

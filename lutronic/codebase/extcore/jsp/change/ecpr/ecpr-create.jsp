@@ -165,6 +165,15 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">외부 메일 지정</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		
 		<!-- 	관련 CR -->
@@ -283,16 +292,19 @@
 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
+				createAUIGrid8(columns8);
+				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 	
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 			
 		</script>

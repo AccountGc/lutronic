@@ -40,6 +40,9 @@
 </table>
 <table class="button-table">
 	<tr>
+		<td class="left">
+			<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
+		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
 				<option value="30">30</option>
@@ -49,11 +52,11 @@
 				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
-			<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>
-<div id="grid_wrap" style="height: 705px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 675px; border-top: 1px solid #3180c3;"></div>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">
