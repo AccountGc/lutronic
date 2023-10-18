@@ -63,6 +63,16 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
+							합의함
+							<span class="label label-info float-right">
+								<%
+								//=count.get("check")
+								%>
+							</span>
+						</a>
+					</li>
+					<li>
 						<a onclick="moveToPage(this, '/activity/eca', '> 나의업무 > ECA 활동함');">
 							ECA 활동함
 							<span class="label label-info float-right">
