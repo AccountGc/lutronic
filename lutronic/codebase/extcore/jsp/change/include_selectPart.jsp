@@ -18,7 +18,6 @@ boolean multi = false;
 if(request.getParameter("multi")!=null){
 	multi = request.getParameter("multi").equals("true") ? true : false;
 }
-
 List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 %>
 <table class="button-table">
@@ -63,7 +62,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			<%
 			}
 			%>
-			<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid_part" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -73,7 +72,6 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
-		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -82,7 +80,6 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
-		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -91,7 +88,6 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
-		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -100,7 +96,6 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "bom",
 		headerText : "BOM",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "oid",
 		visible : false
@@ -109,21 +104,22 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	function createAUIGrid2(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode: true,
+			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
 			<%if (isCreate || isUpdate) {%>
+			showStateColumn : true,
 			showRowCheckColumn : true,
-// 			showStateColumn : true,
 			<%}%>
 			<%if (!multi) {%>
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		partGridID = AUIGrid.create("#grid_part", columnLayout, props);
 		<%if (isView || isUpdate) {%>

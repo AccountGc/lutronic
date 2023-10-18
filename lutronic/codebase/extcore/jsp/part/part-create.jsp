@@ -350,7 +350,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="insert106" name="method" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="250" name="height" />
 		</jsp:include>
 		
 		<table class="button-table">

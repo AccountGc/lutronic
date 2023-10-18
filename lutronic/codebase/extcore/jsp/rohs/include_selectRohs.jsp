@@ -10,7 +10,6 @@ String module = request.getParameter("module");
 String roleType = request.getParameter("roleType");
 boolean isCreate = "create".equals(mode);
 boolean isUpdate = "update".equals(mode);
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -31,7 +30,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		<td class="indent5 pt5 ">
 			<input type="button" value="추가" title="추가" class="blue" onclick="addRohs();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRohs();">
-			<div id="grid_rohs" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid_rohs" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -68,17 +67,20 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 
 	function createAUIGrid6(columnLayout) {
 		const props = {
-				headerHeight : 30,
-				fillColumnSizeMode : false,
-				showRowNumColumn : true,
-				rowNumHeaderText : "번호",
-				showAutoNoDataMessage : false,
-				enableSorting : false,
-				softRemoveRowMode : false,
-				selectionMode : "multipleCells",
-				showStateColumn : true,
-				showRowCheckColumn : true,
-				enableFilter : true,
+			headerHeight : 30,
+			fillColumnSizeMode : false,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			enableSorting : false,
+			softRemoveRowMode : true,
+			selectionMode : "multipleCells",
+			<%if (isCreate || isUpdate) {%>
+			showStateColumn : true,
+			showRowCheckColumn : true,
+			<%}%>
+			enableFilter : true,
+			autoGridHeight : true
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 		<%if (isUpdate) {%>

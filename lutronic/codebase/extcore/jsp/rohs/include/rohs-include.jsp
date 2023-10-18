@@ -10,7 +10,6 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -37,7 +36,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			<%
 			}
 			%>
-			<div id="grid106" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid106" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -47,6 +46,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "manufactureDisplay",
 		headerText : "협력업체",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "number",
 		headerText : "물질번호",
@@ -59,6 +61,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 				const url = getCallUrl("/rohs/view?oid=" + oid);
 				popup(url, 1600, 800);
 			}
+		},
+		filter : {
+			showIcon : true,
 		},
 	}, {
 		dataField : "name",
@@ -73,22 +78,37 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 				popup(url, 1600, 800);
 			}
 		},
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "modifyDate",
 		headerText : "수정일",
 		dataType : "string",
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "oid",
 		visible : false
@@ -96,23 +116,23 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 
 	function createAUIGrid106(columnLayout) {
 		const props = {
-				headerHeight : 30,
-				fillColumnSizeMode : false,
-				showRowNumColumn : true,
-				rowNumHeaderText : "번호",
-				showAutoNoDataMessage : false,
-				enableSorting : false,
-				softRemoveRowMode : false,
-				selectionMode : "multipleCells",
-				<%if (create || update) {%>
-				showStateColumn : true,
-				showRowCheckColumn : true,
-				<%}%>
-				<%if (!multi) {%>
-				rowCheckToRadio : true,
-				<%}%>
-				enableFilter : true,
-				enableFilter : true,
+			headerHeight : 30,
+			fillColumnSizeMode : false,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			enableSorting : false,
+			softRemoveRowMode : true,
+			selectionMode : "multipleCells",
+			<%if (create || update) {%>
+			showStateColumn : true,
+			showRowCheckColumn : true,
+			<%}%>
+			<%if (!multi) {%>
+			rowCheckToRadio : true,
+			<%}%>
+			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID106 = AUIGrid.create("#grid106", columnLayout, props);
 		<%if (view || update) {%>

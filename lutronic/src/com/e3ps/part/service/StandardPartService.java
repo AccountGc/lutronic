@@ -1793,7 +1793,7 @@ public class StandardPartService extends StandardManager implements PartService 
 					EcrPartLink link = (EcrPartLink)qr.nextElement();
 					String version = link.getVersion();
 					WTPartMaster master = (WTPartMaster)link.getPart();
-					WTPart part = PartHelper.service.getPart(master.getNumber(),version);
+					WTPart part = PartHelper.service.getPart(master.getNumber());
 					PartDTO data = new PartDTO(part);
 	    			
 	    			list.add(data);
@@ -1809,7 +1809,7 @@ public class StandardPartService extends StandardManager implements PartService 
 	    			WTPartMaster master =  (WTPartMaster)link.getPart();
 	    			String version = link.getVersion();
 	    			
-	    			WTPart part = PartHelper.service.getPart(master.getNumber(),version);
+	    			WTPart part = PartHelper.service.getPart(master.getNumber());
 	    			PartDTO data = new PartDTO(part);
 	    			//if(link.isBaseline()) data.setBaseline("checked");
 	    			
@@ -2569,7 +2569,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			String isBOMCheck ="";
 			//if(isBOM) isBOMCheck ="<b><font color='red'>√</font></b>";
 			WTPartMaster master = (WTPartMaster)link.getPart();
-			WTPart part = PartHelper.service.getPart(master.getNumber(),version);
+			WTPart part = PartHelper.service.getPart(master.getNumber());
 			WTPart nextPart = null;
 			String nextNumber = "";
 			String nextState  = "";

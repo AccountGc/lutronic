@@ -29,7 +29,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	<tr>
 		<th class="lb">관련 품목</th>
 		<td class="indent5">
-			<div id="grid_part" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid_part" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -39,12 +39,10 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "number",
 		headerText : "품목 번호",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
-		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -58,22 +56,18 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "modifyDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 180,
 	}, {
 		dataField : "oid",
 		visible : false
@@ -86,10 +80,11 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
 			rowCheckToRadio : true,
-			fillColumnSizeMode: true,
+			fillColumnSizeMode : false,
+			autoGridHeight : true
 		}
 		let dataList = [];
 		<% for(PartDTO part : partList) { %>

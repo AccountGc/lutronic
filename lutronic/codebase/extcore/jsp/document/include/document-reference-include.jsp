@@ -7,7 +7,6 @@ String oid = request.getParameter("oid");
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 문서 -->
@@ -15,7 +14,6 @@ String oid = request.getParameter("oid");
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 EO -->
@@ -23,7 +21,6 @@ String oid = request.getParameter("oid");
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 CR -->
@@ -31,7 +28,6 @@ String oid = request.getParameter("oid");
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 ECPR -->
@@ -39,7 +35,6 @@ String oid = request.getParameter("oid");
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 ECO -->
@@ -47,5 +42,4 @@ String oid = request.getParameter("oid");
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>

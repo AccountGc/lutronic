@@ -8,7 +8,6 @@ String title = request.getParameter("title");
 String mode = request.getParameter("mode");
 String roleType = request.getParameter("roleType");
 String module = StringUtil.checkReplaceStr(request.getParameter("module"), "rohs");
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 boolean view = "view".equals(mode);
 JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 %>
@@ -45,11 +44,11 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			<%
 			if(roleType.equals("represent")){
 			%>
-				<div id="grid_rohs" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+				<div id="grid_rohs" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 			<%
 			}else{
 			%>
-				<div id="grid_rohs2" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+				<div id="grid_rohs2" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 			<%
 			}
 			%>
@@ -74,17 +73,14 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			dataField : "manufactureDisplay",
 			headerText : "협력업체",
 			dataType : "string",
-			width : 180,
 		}, {
 			dataField : "number",
 			headerText : "물질번호",
 			dataType : "string",
-			width : 180,
 		}, {
 			dataField : "name",
 			headerText : "물질명",
 			dataType : "string",
-			width : 180,
 			renderer : {
 				type : "LinkRenderer",
 				baseUrl : "javascript",
@@ -98,22 +94,18 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			dataField : "state",
 			headerText : "상태",
 			dataType : "string",
-			width : 180,
 		}, {
 			dataField : "version",
 			headerText : "Rev.",
 			dataType : "string",
-			width : 180,
 		}, {
 			dataField : "creator",
 			headerText : "등록자",
 			dataType : "string",
-			width : 180,
 		}, {
 			dataField : "modifyDate",
 			headerText : "수정일",
 			dataType : "string",
-			width : 180,
 		}, {
 			dataField : "oid",
 			visible : false
@@ -128,10 +120,11 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
 			rowCheckToRadio : true,
-			fillColumnSizeMode: true,
+			fillColumnSizeMode : false,
+			autoGridHeight : true
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 		AUIGrid.setGridData(rohsGridID, <%=json%>);
@@ -144,10 +137,11 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
 			rowCheckToRadio : true,
-			fillColumnSizeMode: true,
+			fillColumnSizeMode : false,
+			autoGridHeight : true
 		}
 		rohs2GridID = AUIGrid.create("#grid_rohs2", columnLayout, props);
 		AUIGrid.setGridData(rohs2GridID, <%=json%>);
