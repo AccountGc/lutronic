@@ -14,6 +14,7 @@ import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.common.code.NumberCode;
@@ -116,7 +117,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			// 변경 대상 품목 링크
 			saveEcoPart(eco, clist);
-			
+
 			// 설변 활동 생성
 			ActivityHelper.service.saveActivity(eco, rows200);
 
@@ -216,7 +217,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			ContentServerHelper.service.updateContent(eco, applicationData, vault.getPath());
 		}
 	}
-	
+
 	@Override
 	public void modify(EcoDTO dto) throws Exception {
 		ReferenceFactory rf = new ReferenceFactory();
@@ -232,7 +233,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-
 
 			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
 
@@ -259,14 +259,14 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			deleteLink(eco);
 			saveLink(eco, dto);
 
-			// 완제품 연결 
+			// 완제품 연결
 			deleteCompletPart(eco);
 			saveCompletePart(eco, plist);
 
 			// 변경 대상 품목 링크
 			deleteEcoPart(eco);
 			saveEcoPart(eco, clist);
-			
+
 			// 설변 활동 생성
 			ActivityHelper.service.deleteActivity(eco);
 			ActivityHelper.service.saveActivity(eco, rows200);
@@ -283,26 +283,26 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		}
 
 	}
-	
+
 	/**
 	 * 첨부 파일 삭제
 	 */
 	private void removeAttach(EChangeOrder eco) throws Exception {
 		EcoDTO ecoDto = new EcoDTO(eco);
 		ReferenceFactory rf = new ReferenceFactory();
-		ApplicationData ad =(ApplicationData) rf.getReference(ecoDto.getContentMap().get("aoid").toString()).getObject();
+		ApplicationData ad = (ApplicationData) rf.getReference(ecoDto.getContentMap().get("aoid").toString())
+				.getObject();
 		ContentServerHelper.service.deleteContent(eco, ad);
-		
-		
+
 		QueryResult result = ContentHelper.service.getContentsByRole(eco, ContentRoleType.SECONDARY);
 		while (result.hasMoreElements()) {
 			ContentItem item = (ContentItem) result.nextElement();
 			ContentServerHelper.service.deleteContent(eco, item);
 		}
 	}
-	
+
 	/**
-	 *  관련 CR 및 ECPR 삭제
+	 * 관련 CR 및 ECPR 삭제
 	 */
 	private void deleteLink(EChangeOrder eco) throws Exception {
 		QuerySpec query = new QuerySpec();
@@ -317,12 +317,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			PersistenceHelper.manager.delete(link);
 		}
 	}
-	
+
 	/**
-	 *  완제품 삭제
+	 * 완제품 삭제
 	 */
 	private void deleteCompletPart(EChangeOrder eco) throws Exception {
-		
+
 		// 완제품 삭제
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EOCompletePartLink.class, true);
@@ -338,10 +338,10 @@ public class StandardEcoService extends StandardManager implements EcoService {
 	}
 
 	/**
-	 *  변경 대상 품목 링크 삭제
+	 * 변경 대상 품목 링크 삭제
 	 */
 	private void deleteEcoPart(EChangeOrder eco) throws Exception {
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EcoPartLink.class, true);
 		SearchCondition sc = new SearchCondition(EcoPartLink.class, "roleBObjectRef.key.id", "=",
@@ -352,6 +352,32 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			Object[] obj = (Object[]) result.nextElement();
 			EcoPartLink link = (EcoPartLink) obj[0];
 			PersistenceHelper.manager.delete(link);
+		}
+	}
+
+	@Override
+	public void complete(EChangeOrder eco) throws Exception {
+		String state = eco.getLifeCycleState().toString();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			if (!"APPROVED".equals(state)) {
+				return;
+			}
+
+			// 완료가 되면 ECN 자동 생성한다.
+			EcnHelper.service.create(eco);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 	}
 }

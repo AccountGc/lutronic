@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 
 import wt.method.RemoteInterface;
@@ -51,5 +52,10 @@ public interface ActivityService {
 	 * 설변활동 산출물 링크 삭제
 	 */
 	public abstract void deleteLink(String oid) throws Exception;
+
+	/**
+	 * ECA 활동 완료후 발생하는 이벤트
+	 */
+	public abstract void complete(EChangeActivity eca) throws Exception;
 
 }

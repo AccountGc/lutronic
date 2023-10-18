@@ -43,7 +43,6 @@ public class DocumentDTO {
 	private String createdDate;
 	private String modifier;
 	private String modifiedDate;
-	private String iterationNote;
 
 	// IBA
 	private String writer;
@@ -117,7 +116,6 @@ public class DocumentDTO {
 		setIBAAttributes(doc);
 		setAuth(doc);
 		setComments(CommentsHelper.manager.comments(doc));
-		setIterationNote(doc.getIterationNote());
 	}
 
 	/**

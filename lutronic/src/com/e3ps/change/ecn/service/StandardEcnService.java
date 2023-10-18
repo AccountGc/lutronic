@@ -1,6 +1,7 @@
 package com.e3ps.change.ecn.service;
 
 import com.e3ps.change.EChangeNotice;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.util.CommonUtil;
 
 import wt.fc.PersistenceHelper;
@@ -24,6 +25,29 @@ public class StandardEcnService extends StandardManager implements EcnService {
 
 			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
 			PersistenceHelper.manager.delete(ecn);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void create(EChangeOrder eco) throws Exception {
+		String name = eco.getEoName();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeNotice ecn = EChangeNotice.newEChangeNotice();
+
+			PersistenceHelper.manager.save(ecn);
 
 			trs.commit();
 			trs = null;

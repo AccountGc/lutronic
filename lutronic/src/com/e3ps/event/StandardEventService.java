@@ -10,6 +10,7 @@ import com.e3ps.org.service.DepartmentHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceManagerEvent;
 import wt.fc.QueryResult;
+import wt.lifecycle.LifeCycleServiceEvent;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.ManagerException;
@@ -20,6 +21,7 @@ public class StandardEventService extends StandardManager implements EventServic
 
 	private static final String POST_STORE = PersistenceManagerEvent.POST_STORE;
 	private static final String POST_MODIFY = PersistenceManagerEvent.POST_MODIFY;
+	private static final String STATE_CHANGE = LifeCycleServiceEvent.STATE_CHANGE;
 
 	public static StandardEventService newStandardEventService() throws WTException {
 		StandardEventService instance = new StandardEventService();
@@ -32,6 +34,7 @@ public class StandardEventService extends StandardManager implements EventServic
 		EventListener listener = new EventListener(StandardEventService.class.getName());
 		getManagerService().addEventListener(listener, PersistenceManagerEvent.generateEventKey(POST_STORE));
 		getManagerService().addEventListener(listener, PersistenceManagerEvent.generateEventKey(POST_MODIFY));
+		getManagerService().addEventListener(listener, LifeCycleServiceEvent.generateEventKey(STATE_CHANGE));
 	}
 
 	@Override

@@ -303,4 +303,27 @@ public class StandardActivityService extends StandardManager implements Activity
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void complete(EChangeActivity eca) throws Exception {
+		String state = eca.getLifeCycleState().toString();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			if (!"COMPLETED".equals(state)) {
+				return;
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

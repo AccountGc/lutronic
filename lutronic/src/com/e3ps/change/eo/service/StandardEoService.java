@@ -385,4 +385,21 @@ public class StandardEoService extends StandardManager implements EoService {
 		}
 	}
 
+	@Override
+	public void complete(EChangeOrder eo) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

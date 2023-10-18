@@ -63,7 +63,7 @@ iframe {
 		</td>
 		<th class="lb">개정/수정사유</th>
 		<td class="indent5">
-			<input type="text" name="iterationNote" id="iterationNote" class="width-300" value="<%=dto.getIterationNote() == null ? "" : dto.getIterationNote()%>">
+			<input type="text" name="iterationNote" id="iterationNote" class="width-300">
 		</td>
 		<th class="req">문서 템플릿</th>
 		<td class="indent5">
