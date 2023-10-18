@@ -45,6 +45,7 @@ public class MoldDTO {
 	private String documentTypeDisplay;
 	private boolean isLatest;
 	private String iteration;
+	private String iterationNote; // 수정사유
 	
 	// IBA
 	private String manufacture_name;
@@ -65,7 +66,6 @@ public class MoldDTO {
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> partList = new ArrayList<>(); // 관련 품목
 	private ArrayList<Map<String, String>> docList = new ArrayList<>(); // 관련 문서
-	private String iterationNote; // 수정사유
 
 	public MoldDTO() {
 		
@@ -89,6 +89,7 @@ public class MoldDTO {
 		setDocumentType(doc.getDocType().toString());
 		setDocumentTypeDisplay(doc.getDocType().getDisplay());
 		setIBAAttributes(doc);
+		setIterationNote(doc.getIterationNote());
 	}
 	
 	/**

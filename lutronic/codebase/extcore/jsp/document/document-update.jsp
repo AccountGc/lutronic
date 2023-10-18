@@ -56,10 +56,14 @@ iframe {
 	</colgroup>
 	<tr>
 		<th class="req lb">문서분류</th>
-		<td class="indent5" colspan="3">
+		<td class="indent5">
 			<input type="hidden" name="location" id="location" value="<%=dto.getLocation()%>">
 			<span id="locationText"><%=dto.getLocation()%></span>
 			<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
+		</td>
+		<th class="lb">개정/수정사유</th>
+		<td class="indent5">
+			<input type="text" name="iterationNote" id="iterationNote" class="width-300" value="<%=dto.getIterationNote() == null ? "" : dto.getIterationNote()%>">
 		</td>
 		<th class="req">문서 템플릿</th>
 		<td class="indent5">
@@ -334,6 +338,7 @@ iframe {
 		const preseration = document.getElementById("preseration").value;
 		const documentName = document.getElementById("documentName");
 		const temprary = JSON.parse(temp);
+		const iterationNote = document.getElementById("iterationNote").value;
 		
 		const url = getCallUrl("/doc/<%=mode%>");
 
@@ -394,6 +399,7 @@ iframe {
 			writer : writer,
 			preseration_code : preseration,
 			documentName : documentName.value,
+			iterationNote : iterationNote,
 			// 링크 데이터
 			rows90 : rows90,
 			rows91 : rows91,

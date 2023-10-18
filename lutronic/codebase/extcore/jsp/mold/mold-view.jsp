@@ -135,6 +135,12 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				</td>
 			</tr>
 			<tr>
+				<th class="lb">수정사유</th>
+				<td colspan="5" class="indent5">
+					<textarea rows="5" readonly="readonly" id="iterationNote" rows="5"><%=dto.getIterationNote() == null ? "" : dto.getIterationNote()%></textarea>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">주 첨부파일</th>
 				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
