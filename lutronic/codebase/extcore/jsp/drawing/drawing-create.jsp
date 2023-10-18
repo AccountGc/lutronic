@@ -107,7 +107,11 @@
 		</table>
 
 		<script type="text/javascript">
-			$("#createBtn").click(function() {
+			function create(temp) {
+				
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				
 				if ($("#location").val() == "") {
 					alert("도면분류를 선택하세요.");
 					return;
@@ -141,6 +145,7 @@
 						return false;
 					}
 				}
+				
 				var params = _data($("#form"));
 				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
@@ -152,11 +157,13 @@
 						alert(data.msg);
 					}
 				});
-			})
+			}
 			
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid2(columnsPart);
+				createAUIGrid8(columns8);
 				AUIGrid.resize(partGridID);
+				AUIGrid.resize(myGridID8);
 				selectbox("state");
 				selectbox("type");
 				selectbox("depart");
@@ -181,6 +188,7 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
+				AUIGrid.resize(myGridID8);
 			});
 		</script>
 	</form>

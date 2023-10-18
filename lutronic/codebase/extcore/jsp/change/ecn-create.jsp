@@ -23,6 +23,10 @@
 						<img src="/Windchill/extcore/images/header.png"> ECN 등록
 					</div>
 				</td>
+				<td class="right">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
 			</tr>
 		</table>
 		<table class="create-table">
@@ -73,37 +77,59 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="7">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="기안"  title="기안"  class="blue"  id="createBtn">
-					<input type="button" value="초기화" title="초기화" id="resetBtn">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
-					<input type="button"  value="임시저장"  title="임시저장"  id="exBtn">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			$("#createBtn").click(function() {
+			function create(temp) {
 				const name = document.getElementById("name").value;
 				const eoCommentA = document.getElementById("eoCommentA").value;
 				const eoCommentB = document.getElementById("eoCommentB").value;
+				
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 				if(isEmpty($("#name").val())) {
 					alert("제목을 입력하세요.");
 					return;
 				}
 				
-				if (!confirm("등록 하시겠습니까?")) {
-					return;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
 				}
 				
 				const params = new Object();
 				params.name = name;
 				params.eoCommentA = eoCommentA;
 				params.eoCommentB = eoCommentB;
-				
+				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/changeECN/create");
 				call(url, params, function(data) {
 					if(data.result){
@@ -113,13 +139,21 @@
 						alert(data.msg);
 					}
 				});
-			})
+			}
 			
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid1(columnsEco);
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(ecoGridID);
+				createAUIGrid8(columns8);
+				AUIGrid.resize(myGridID8);
+			});
+			
+			window.addEventListener("resize", function() {
+				AUIGrid.resize(partGridID);
+				AUIGrid.resize(ecoGridID);
+				AUIGrid.resize(myGridID8);
 			});
 	
 		</script>

@@ -43,6 +43,10 @@
 						<img src="/Windchill/extcore/images/header.png"> RoHS 정보
 					</div>
 				</td>
+				<td class="right">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
 			</tr>
 		</table>
 		<table class="create-table">
@@ -128,6 +132,15 @@
 					<input type="text" name="publicationDate" id="publicationDate" class="width-100">
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
@@ -140,19 +153,24 @@
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 		</jsp:include>
+		
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="등록"  title="등록"  class="blue"  id="createBtn">
-					<input type="button" value="초기화" title="초기화" id="resetBtn">
-					<input type="button" value="목록" title="목록" id="listBtn">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
+		
 		<script type="text/javascript">
 			var nameChk;
 		
-			$("#createBtn").click(function() {
+			function create(temp) {
+				
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				
 				if(isEmpty($("#rohsName").val())) {
 					alert("물질명을 입력하세요.");
 					return;
@@ -183,10 +201,23 @@
 				params.rohsList = AUIGrid.getGridData(rohsGridID);
 				params.partList = AUIGrid.getGridData(partGridID);
 				
-				if (!confirm("등록 하시겠습니까?")) {
-					return;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
 				}
 				
+				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/rohs/create");
 				call(url, params, function(data) {
 					if(data.result){
@@ -196,7 +227,7 @@
 						alert(data.msg);
 					}
 				});
-			});
+			};
 			
 			$("#listBtn").click(function() {
 				location.href = getCallUrl("/rohs/list");
@@ -258,11 +289,14 @@
 				AUIGrid.resize(partGridID);
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
+				createAUIGrid8(columns8);
+				AUIGrid.resize(myGridID8);
 			});
 	
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(rohsGridID);
+				AUIGrid.resize(myGridID8);
 			});
 			
 		</script>
