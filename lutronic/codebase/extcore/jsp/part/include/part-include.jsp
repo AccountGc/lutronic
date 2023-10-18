@@ -42,98 +42,16 @@ boolean create = "create".equals(mode);
 			<%
 			}
 			%>
-			<div id="grid91" style="height: 40px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid91" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <script type="text/javascript">
 	let myGridID91;
 	const columns91 = [ {
-		dataField : "_3d",
-		headerText : "3D",
-		dataType : "string",
-		width : 60,
-		renderer : {
-			type : "ImageRenderer",
-			altField : null,
-			onClick : function(event) {
-			}
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "_2d",
-		headerText : "2D",
-		dataType : "string",
-		width : 60,
-		renderer : {
-			type : "ImageRenderer",
-			altField : null,
-			onClick : function(event) {
-			}
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "step",
-		headerText : "STEP",
-		dataType : "string",
-		width : 60,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "dxf",
-		headerText : "DXF",
-		dataType : "string",
-		width : 60,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "pdf",
-		headerText : "PDF",
-		dataType : "string",
-		width : 60,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		headerText : "변경이력",
-		width : 80,
-		renderer : {
-			type : "IconRenderer",
-			iconPosition : "aisleCenter", // 아이콘 위치
-			iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-			iconHeight : 16,
-			iconTableRef : { // icon 값 참조할 테이블 레퍼런스
-				"default" : "/Windchill/extcore/images/help.gif" // default
-			},
-			onClick : function(event) {
-				const oid = event.item.part_oid;
-				const url = getCallUrl("/part/changeList?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
-		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -151,7 +69,6 @@ boolean create = "create".equals(mode);
 		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
-		width : 380,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -165,10 +82,9 @@ boolean create = "create".equals(mode);
 			showIcon : true,
 		},
 	}, {
-		dataField : "location",
-		headerText : "품목분류",
+		dataField : "state",
+		headerText : "상태",
 		dataType : "string",
-		width : 180,
 		filter : {
 			showIcon : true,
 		},
@@ -176,23 +92,6 @@ boolean create = "create".equals(mode);
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
-		width : 90,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "remarks",
-		headerText : "OEM Info.",
-		dataType : "string",
-		width : 100,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "state",
-		headerText : "상태",
-		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -200,15 +99,6 @@ boolean create = "create".equals(mode);
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 140,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "createdDate_txt",
-		headerText : "등록일",
-		dataType : "string",
-		width : 140,
 		filter : {
 			showIcon : true,
 		},
@@ -216,15 +106,6 @@ boolean create = "create".equals(mode);
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
-		width : 140,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "ecoNo",
-		headerText : "BOM",
-		dataType : "string",
-		width : 80,
 		filter : {
 			showIcon : true,
 		},
