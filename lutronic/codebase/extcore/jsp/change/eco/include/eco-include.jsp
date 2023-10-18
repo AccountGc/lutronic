@@ -78,22 +78,6 @@ boolean create = "create".equals(mode);
 			}
 		},
 	}, {
-		dataField : "licensing",
-		headerText : "인허가변경",
-		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	}, {
-		dataField : "riskType",
-		headerText : "위험 통제",
-		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
@@ -112,14 +96,6 @@ boolean create = "create".equals(mode);
 	}, {
 		dataField : "approveDate_txt",
 		headerText : "승인일",
-		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	}, {
-		dataField : "createdDate_txt",
-		headerText : "등록일",
 		dataType : "string",
 		filter : {
 			showIcon : true,

@@ -56,7 +56,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">수정사유</th>
 				<td class="indent5" colspan="3">
-					<textarea name="iterationNote" id="iterationNote" rows="2"><%=dto.getIterationNote() == null ? "" : dto.getIterationNote()%></textarea>
+					<textarea name="iterationNote" id="iterationNote" rows="2"></textarea>
 				</td>
 			</tr>
 			<tr>
