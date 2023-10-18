@@ -218,6 +218,15 @@ iframe {
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">외부 메일 지정</th>
+				<td colspan="5">
+					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
@@ -463,15 +472,18 @@ iframe {
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
 				createAUIGrid8(columns8);
+				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

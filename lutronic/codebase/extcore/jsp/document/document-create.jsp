@@ -215,7 +215,7 @@ iframe {
 			<tr>
 				<th class="lb">외부 메일 지정</th>
 				<td colspan="5">
-					<jsp:include page="/extcore/jsp/workspace/include/email-include.jsp">
+					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
 					</jsp:include>
