@@ -42,6 +42,8 @@ iframe {
 		<td class="right">
 			<input type="button" value="<%=title%>" title="<%=title%>" class="red" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
+			<input type="button" value="뒤로" title="뒤로" class="" onclick="history.go(-1);">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>

@@ -1094,7 +1094,6 @@ public class StandardECOSearchService extends StandardManager implements ECOSear
 			WTPart part = PartHelper.service.getPart(master.getNumber(),version);
 			partList.add(part);
 		}
-		
 		return partList;
 		
 	}

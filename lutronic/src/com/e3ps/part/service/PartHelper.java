@@ -68,6 +68,7 @@ import wt.iba.value.IBAHolder;
 import wt.iba.value.StringValue;
 import wt.introspection.ClassInfo;
 import wt.introspection.WTIntrospector;
+import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.PartDocHelper;
 import wt.part.WTPart;
@@ -1379,6 +1380,65 @@ public class PartHelper {
 			RohsData data = new RohsData(ref);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
 			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * 부품 번호와 버전에 맞는 부품 가져오는 함수
+	 */
+	public WTPart getPart(String number, String version) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTPart.class, true);
+		SearchCondition sc = VersionControlHelper.getSearchCondition(WTPart.class, true);
+		query.appendWhere(sc, new int[] { idx });
+		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.NUMBER, number);
+		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, "versionInfo.identifier.versionId", version);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			return (WTPart) result.nextElement();
+		}
+		return null;
+	}
+
+	/**
+	 * 부품 BOM 리스트 (WTPart, View)
+	 */
+	public ArrayList<WTPart> descentsPart(WTPart part, View view) throws Exception {
+		return descentsPart(part, view, null);
+	}
+
+	/**
+	 * 부품 BOM 리스트 (WTPart)
+	 */
+	public ArrayList<WTPart> descentsPart(WTPart part) throws Exception {
+		return descentsPart(part, (View) part.getView().getObject(), null);
+	}
+
+	public ArrayList<WTPart> descentsPart(WTPart part, View view, State state) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		if (!PersistenceHelper.isPersistent(part)) {
+			return list;
+		}
+
+		WTPartStandardConfigSpec spec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+		WTPartConfigSpec configSpec = WTPartConfigSpec.newWTPartConfigSpec(spec);
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+
+			WTPart p = (WTPart) obj[1];
+			if (p.getView() == null) {
+				System.out.println("뷰가 널인 부품 = " + p.getNumber());
+				continue;
+			}
+
+			if (view != null && view.getName().equals(((View) p.getView().getObject()).getName())) {
+				list.add(p);
+			}
 		}
 		return list;
 	}

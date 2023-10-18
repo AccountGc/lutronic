@@ -2,23 +2,23 @@ package com.e3ps.change.eo.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eo.dto.EoDTO;
+import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -36,14 +36,19 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleTemplate;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
+import wt.vc.baseline.BaselineHelper;
+import wt.vc.baseline.ManagedBaseline;
 
 public class StandardEoService extends StandardManager implements EoService {
 
@@ -387,9 +392,16 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	@Override
 	public void complete(EChangeOrder eo) throws Exception {
+		String type = eo.getEoType();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+
+			if ("PRODUCT".equals(type)) {
+				saveBaseline(eo);
+			} else if ("DEV".equals(type)) {
+				saveBaseline(eo);
+			}
 
 			trs.commit();
 			trs = null;
@@ -401,5 +413,71 @@ public class StandardEoService extends StandardManager implements EoService {
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 베이스 라인 저장 함수
+	 */
+	private void saveBaseline(EChangeOrder eo) throws Exception {
+		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		for (EOCompletePartLink link : completeParts) {
+			String version = link.getVersion();
+			WTPartMaster master = (WTPartMaster) link.getCompletePart();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+			list.add(part);
+		}
+
+		for (WTPart part : list) {
+			String state = part.getLifeCycleState().toString();
+			String v = part.getVersionIdentifier().getSeries().getValue();
+			boolean isApproved = state.equals("APPROVED");
+			boolean isFirst = v.equals("A");
+
+			// 승인된게 아니면서
+			if (!isApproved) {
+				// A버전이 아닌거?
+				if (!isFirst) {
+					part = (WTPart) VersionControlHelper.service.predecessorOf(part);
+				}
+			}
+
+			boolean isBaseline = true;
+			String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+			List<Map<String, String>> baseLine = EChangeUtils.manager.getBaseline(oid);
+			for (Map<String, String> map : baseLine) {
+				String baseLine_name = map.get("baseLine_name");
+				if (baseLine_name.equals(eo.getEoNumber())) {
+					isBaseline = false;
+					break;
+				}
+			}
+			if (isBaseline) {
+				saveBaseLine(part, eo);
+			}
+		}
+	}
+
+	/**
+	 * EO 베이스 라인 저장
+	 */
+	private void saveBaseLine(WTPart part, EChangeOrder eo) throws Exception {
+		String name = eo.getEoNumber() + ":" + part.getNumber();
+		String location = "/Default/설계변경/Baseline";
+		Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+		LifeCycleTemplate lct = (LifeCycleTemplate) part.getLifeCycleTemplate().getObject();
+		Vector v = new Vector();
+		// 베이스 라인 대상 부품 수집
+		EChangeUtils.manager.collectBaseLineParts(part, v);
+		ManagedBaseline managedbaseline = ManagedBaseline.newManagedBaseline();
+		managedbaseline.setName(name);
+		managedbaseline.setDescription(eo.getEoNumber() + "관련 베이스 라인 작성");
+		managedbaseline = (ManagedBaseline) LifeCycleHelper.setLifeCycle(managedbaseline, lct);
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		SessionHelper.manager.setAdministrator();
+		FolderHelper.assignLocation((FolderEntry) managedbaseline, folder);
+		managedbaseline = (ManagedBaseline) PersistenceHelper.manager.save(managedbaseline);
+		managedbaseline = (ManagedBaseline) BaselineHelper.service.addToBaseline(v, managedbaseline);
+		SessionHelper.manager.setPrincipal(user.getName());
 	}
 }

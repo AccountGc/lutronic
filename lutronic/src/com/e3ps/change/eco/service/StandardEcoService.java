@@ -25,6 +25,7 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.erp.service.ERPHelper;
 import com.e3ps.part.service.PartSearchHelper;
 
 import wt.content.ApplicationData;
@@ -365,6 +366,24 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			if (!"APPROVED".equals(state)) {
 				return;
 			}
+			
+			// eco 인경우
+			
+			// 완제품 제수집
+//			createCompleteProduction(eco); // 소스 개 십스레기..
+
+//			this.completePart(eco);
+
+			// ERP 전송
+			// System.out.println("3.[ChangeECOHelper]{completeECO} = " +eco.getEoNumber()
+			// +" ERP 전송");
+//			ERPHelper.service.sendERP(eco);
+
+			// Baseline 생성
+			// System.out.println("2.[ChangeECOHelper]{completeECO} = " +eco.getEoNumber()
+			// +" Baseline 생성");
+
+//			createECOBaseline(eco);
 
 			// 완료가 되면 ECN 자동 생성한다.
 			EcnHelper.service.create(eco);

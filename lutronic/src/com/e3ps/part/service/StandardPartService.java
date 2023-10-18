@@ -2425,22 +2425,6 @@ public class StandardPartService extends StandardManager implements PartService 
 			return partData;
 		}
 
-	   @Override
-	public WTPart getPart(String number, String version) throws Exception {
-		QuerySpec qs = new QuerySpec(WTPart.class);
-
-        qs.appendWhere(VersionControlHelper.getSearchCondition(WTPart.class, true), new int[] { 0 });
-        qs.appendAnd();
-        qs.appendWhere(new SearchCondition(WTPart.class, "master>number", "=", number), new int[] { 0 });
-        qs.appendAnd();
-        qs.appendWhere(new SearchCondition(WTPart.class, "versionInfo.identifier.versionId", "=", version), new int[] { 0 });
-        QueryResult qr = PersistenceHelper.manager.find(qs);
-        if ( qr.hasMoreElements() ) {
-            return (WTPart) qr.nextElement();
-        }
-
-        return null;
-	}
 	
 	@Override
 	public QuerySpec getEPMNumber(String number)throws Exception{

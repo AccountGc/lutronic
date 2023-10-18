@@ -20,40 +20,37 @@ import wt.query.QuerySpec;
 
 @RemoteInterface
 public interface PartService {
-	
+
 	/**
 	 * 
 	 * 
 	 * 
 	 */
-	
+
 //	Map<String, Object> requestPartMapping(Map<String, Object> params);
-	
-	void create(Map<String,Object> map) throws Exception;
-	
+
+	void create(Map<String, Object> map) throws Exception;
+
 	Map<String, Object> updatePartAction(Map<String, Object> params);
-	
+
 	String createPackagePartAction(HttpServletRequest request, HttpServletResponse response);
-	
+
 	ResultData changeNumber(HttpServletRequest req);
-	
-	List<Map<String,Object>> partBomListGrid(String oid) throws Exception ;
-	
+
+	List<Map<String, Object>> partBomListGrid(String oid) throws Exception;
+
 	ResultData partStateChange(HttpServletRequest request, HttpServletResponse response);
-	
+
 	ResultData updatePackagePartAction(HttpServletRequest request, HttpServletResponse response);
-	
-	
+
 	/**
 	 * 
 	 * 
 	 * 
 	 * 
 	 */
-	
 
 	Map<String, Object> listPartAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
 
 	Vector<String> getQuantityUnit();
 
@@ -66,11 +63,8 @@ public interface PartService {
 	Hashtable modify(Map hash, String[] loc, String[] deloc) throws Exception;
 
 	Map<String, Object> getPartTreeAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-	
+
 	Map<String, Object> getBaseLineCompare(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-
-	WTPart getPart(String number, String version) throws Exception;
 
 	QuerySpec getEPMNumber(String number) throws Exception;
 
@@ -86,7 +80,8 @@ public interface PartService {
 
 	Map<String, Object> selectEOPartAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	List<Map<String,Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
+	List<Map<String, Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
 
 	Map<String, Object> searchSeqAction(Map<String, Object> params) throws Exception;
 
@@ -98,55 +93,51 @@ public interface PartService {
 
 	List<Map<String, Object>> partInstanceGrid(String oid) throws Exception;
 
-	List<Map<String, Object>> listAUIPartAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
-	//Map<String, String> createProduct(Map<String, Object> hash) throws Exception;
-	//boolean isDubleCheck(String number);
-	//Map<String, Object> getBaselineinfo(String oid, String oid2, String baseline, String baseline2) throws Exception;
+	List<Map<String, Object>> listAUIPartAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
+	// Map<String, String> createProduct(Map<String, Object> hash) throws Exception;
+	// boolean isDubleCheck(String number);
+	// Map<String, Object> getBaselineinfo(String oid, String oid2, String baseline,
+	// String baseline2) throws Exception;
 
-	void partTreeSelectAttachDown(HttpServletRequest request,
-			HttpServletResponse response, Map<String, Object> param)
+	void partTreeSelectAttachDown(HttpServletRequest request, HttpServletResponse response, Map<String, Object> param)
 			throws Exception;
 
 	void partReName(WTPart part, String changeName) throws Exception;
 
-	ResultData getBaseLineCompareExcelDown(HttpServletRequest request,
-			HttpServletResponse response);
+	ResultData getBaseLineCompareExcelDown(HttpServletRequest request, HttpServletResponse response);
 
-	List<BatchDownData> getEPMBatchDownList(List<BatchDownData> list,
-			List<WTPart> partList, String describe) throws Exception;
+	List<BatchDownData> getEPMBatchDownList(List<BatchDownData> list, List<WTPart> partList, String describe)
+			throws Exception;
 
-	ResultData batchBomDrawingDownAction(String oid, String describe,
-			String ecoOid);
+	ResultData batchBomDrawingDownAction(String oid, String describe, String ecoOid);
 
 	ResultData attributeCleaning(Map<String, Object> param) throws Exception;
 
-	ResultData batchBomSelectDownAction(String oid,
-			List<Map<String, Object>> itemList, String describe,
+	ResultData batchBomSelectDownAction(String oid, List<Map<String, Object>> itemList, String describe,
 			String downType, String describeType);
 
 	ResultData updateAUIPackagePartAction(Map<String, Object> param);
 
-	ResultData createAUIPackagePartAction(HttpServletRequest request,
-			HttpServletResponse response);
+	ResultData createAUIPackagePartAction(HttpServletRequest request, HttpServletResponse response);
 
 	ResultData updateAUIPartChangeAction(Map<String, Object> param);
 
-	Map<String, Object> listPagingAUIPartAction(HttpServletRequest request,
-			HttpServletResponse response) throws Exception;
+	Map<String, Object> listPagingAUIPartAction(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
 
 	public void createComments(Map<String, Object> params) throws Exception;
-	
+
 	public void updateComments(Map<String, Object> params) throws Exception;
-	
+
 	public void deleteComments(String oid) throws Exception;
 
 	void batch(Map<String, Object> params) throws Exception;
-	
-	public  Map<String, Object> partCheckIn(Map<String, Object> params) throws Exception;
-	
-	public  Map<String, Object> partCheckOut(Map<String, Object> params) throws Exception;
-	
-	public  Map<String, Object> partUndoCheckOut(Map<String, Object> params) throws Exception;
-	
+
+	public Map<String, Object> partCheckIn(Map<String, Object> params) throws Exception;
+
+	public Map<String, Object> partCheckOut(Map<String, Object> params) throws Exception;
+
+	public Map<String, Object> partUndoCheckOut(Map<String, Object> params) throws Exception;
+
 }
