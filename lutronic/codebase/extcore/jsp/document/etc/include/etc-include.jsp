@@ -236,7 +236,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			if (unique) {
 				AUIGrid.addRow(myGridID90, item, rowIndex);
 			} else {
-				// 중복은 그냥 경고 없이 처리 할지 협의?
+				// 중복은 그냥 경고 없이 처리 할지 합의?
 				alert(item.number + " 문서는 이미 추가 되어있습니다.");
 			}
 		})

@@ -40,3 +40,5 @@
 10. 사용자 및 부서 로더 -> 개발할시에만 사용 용도
 	- Shell -> com.e3ps.org.loader.UserLoader 엑셀파일(loadFiles/user 폴더에 위치)
 	- loadFiles/department/department.xlsx 디비 임포트
+
+11. sapjco3.dll 파일 Windows- > System32 아래 위치

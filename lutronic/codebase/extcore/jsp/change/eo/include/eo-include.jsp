@@ -178,7 +178,7 @@ boolean create = "create".equals(mode);
 			if (unique) {
 				AUIGrid.addRow(myGridID100, item, rowIndex);
 			} else {
-				// 중복은 그냥 경고 없이 처리 할지 협의?
+				// 중복은 그냥 경고 없이 처리 할지 합의?
 				alert(item.number + " EO는 이미 추가 되어있습니다.");
 			}
 		})

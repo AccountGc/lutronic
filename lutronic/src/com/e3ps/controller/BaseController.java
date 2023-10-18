@@ -11,8 +11,8 @@ public class BaseController {
 	protected final String MODIFY_MSG = "수정되었습니다.";
 	
 	protected final String REGISTER_MSG = "결재가 등록되었습니다.";
-	protected final String AGREE_SUCCESS_MSG = "협의완료 되었습니다.";
-	protected final String AGREE_REJECT_MSG = "협의반려 되었습니다.";
+	protected final String AGREE_SUCCESS_MSG = "합의완료 되었습니다.";
+	protected final String AGREE_REJECT_MSG = "합의반려 되었습니다.";
 	protected final String APPROVAL_SUCCESS_MSG = "승인 되었습니다.";
 	protected final String RECEIVE_SUCCESS_MSG = "수신확인 되었습니다.";
 	protected final String REJECT_SUCCESS_MSG = "반려 되었습니다.";

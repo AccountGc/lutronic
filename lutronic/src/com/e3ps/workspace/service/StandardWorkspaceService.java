@@ -66,6 +66,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	@Override
 	public void register(Persistable per, ArrayList<Map<String, String>> agreeRows,
 			ArrayList<Map<String, String>> approvalRows, ArrayList<Map<String, String>> receiveRows) throws Exception {
+		boolean isAgree = !agreeRows.isEmpty();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -82,7 +83,11 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			master.setOwnership(ownership);
 			master.setPersist(per);
 			master.setStartTime(startTime);
-			master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
+			if (isAgree) {
+				master.setState(WorkspaceHelper.STATE_AGREE_READY);
+			} else {
+				master.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+			}
 			master = (ApprovalMaster) PersistenceHelper.manager.save(master);
 
 			// 기안 라인
@@ -95,12 +100,35 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			startLine.setStartTime(startTime);
 			startLine.setType(WorkspaceHelper.SUBMIT_LINE);
 			startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
-			startLine.setDescription(null);
-			startLine.setCompleteTime(startTime);
+			startLine.setDescription(ownership.getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
 			startLine.setState(WorkspaceHelper.STATE_SUBMIT_COMPLETE);
+			startLine.setCompleteTime(startTime);
+
 			PersistenceHelper.manager.save(startLine);
 
 			int sort = 0;
+			if (isAgree) {
+				sort = 1;
+				for (Map<String, String> agree : agreeRows) {
+					String woid = agree.get("woid");
+					WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
+					// 합의 라인 생성
+					ApprovalLine agreeLine = ApprovalLine.newApprovalLine();
+					agreeLine.setName(name);
+					agreeLine.setOwnership(Ownership.newOwnership(wtuser));
+					agreeLine.setMaster(master);
+					agreeLine.setReads(false);
+					agreeLine.setSort(0);
+					agreeLine.setStartTime(startTime);
+					agreeLine.setType(WorkspaceHelper.AGREE_LINE);
+					agreeLine.setRole(WorkspaceHelper.WORKING_AGREE);
+					agreeLine.setDescription(null);
+					agreeLine.setCompleteTime(null);
+					agreeLine.setState(WorkspaceHelper.STATE_AGREE_READY);
+					PersistenceHelper.manager.save(agreeLine);
+				}
+			}
+
 			// 결재부터 샘플로
 			for (Map<String, String> approval : approvalRows) {
 				String woid = approval.get("woid");
@@ -116,14 +144,22 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				approvalLine.setRole(WorkspaceHelper.WORKING_APPROVAL);
 				approvalLine.setDescription(null);
 
-				if (sort == 0) {
-					approvalLine.setStartTime(startTime);
-					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
-					approvalLine.setCompleteTime(null);
-				} else {
+				// 합의가 있을 경우
+				if (isAgree) {
 					approvalLine.setStartTime(null);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
 					approvalLine.setCompleteTime(null);
+				} else {
+					// 합의 없을경우
+					if (sort == 0) {
+						approvalLine.setStartTime(startTime);
+						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+						approvalLine.setCompleteTime(null);
+					} else {
+						approvalLine.setStartTime(null);
+						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
+						approvalLine.setCompleteTime(null);
+					}
 				}
 				PersistenceHelper.manager.save(approvalLine);
 				sort += 1;
@@ -145,7 +181,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				receiveLine.setRole(WorkspaceHelper.WORKING_RECEIVE);
 				receiveLine.setDescription(null);
 				receiveLine.setCompleteTime(null);
-				receiveLine.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+				// 결재 완료후 볼수 있어야 한다.
+				receiveLine.setState(WorkspaceHelper.STATE_RECEIVE_STAND);
 				PersistenceHelper.manager.save(receiveLine);
 			}
 
@@ -383,6 +420,14 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			boolean isEndApprovalLine = WorkspaceHelper.manager.isEndApprovalLine(master, 0);
 			if (isEndApprovalLine) {
+
+				// 모든 수신라인 상태 변경
+				ArrayList<ApprovalLine> ll = WorkspaceHelper.manager.getReceiveLines(master);
+				for (ApprovalLine rLine : ll) {
+					rLine.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+					PersistenceHelper.manager.modify(rLine);
+				}
+
 				master.setCompleteTime(completeTime);
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_COMPLETE);
 				PersistenceHelper.manager.modify(master);
@@ -426,7 +471,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			for (ApprovalLine l : list) {
 
 				String t = l.getType();
-				// 검토라인
+				// 합의라인
 				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
 					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
 				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
@@ -499,9 +544,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		}
 	}
 
-
 	@Override
-	public void receive(Map<String, Object> params) throws Exception {
+	public void _receive(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -554,7 +598,32 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	@Override
 	public void delegate(Map<String, String> params) throws Exception {
 		String oid = params.get("oid"); // 결재라인
-		String delegateOid = params.get("delegateOid");
+		String reassignUserOid = params.get("reassignUserOid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTUser user = (WTUser) CommonUtil.getObject(reassignUserOid);
+			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+			line.setOwnership(Ownership.newOwnership(user));
+			PersistenceHelper.manager.modify(line);
+
+			// 메일 처리
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void _agree(Map<String, String> params) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();

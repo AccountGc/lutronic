@@ -68,7 +68,7 @@ boolean update = "update".equals(mode);
 				if (unique) {
 					AUIGrid.addRow(myGridID9, item, rowIndex);
 				} else {
-					// 중복은 그냥 경고 없이 처리 할지 협의?
+					// 중복은 그냥 경고 없이 처리 할지 합의?
 					alert(item.number + " 메일은 이미 추가 되어있습니다.");
 				}
 			})

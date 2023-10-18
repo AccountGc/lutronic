@@ -119,6 +119,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "note",
 		headerText : "수정사유",
 		dataType : "string",
+		style : "aui-left",
 		filter : {
 			showIcon : true,
 			inline : true

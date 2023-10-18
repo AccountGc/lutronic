@@ -29,6 +29,33 @@ import com.e3ps.workspace.service.WorkspaceHelper;
 @RequestMapping(value = "/workspace/**")
 public class WorkspaceController extends BaseController {
 
+	@Description(value = "합의함 리스트 페이지")
+	@GetMapping(value = "/agree")
+	public ModelAndView agree() throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("/extcore/jsp/workspace/agree-list.jsp");
+		return model;
+	}
+
+	@Description(value = "합의함 조회 함수")
+	@ResponseBody
+	@PostMapping(value = "/agree")
+	public Map<String, Object> agree(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = WorkspaceHelper.manager.agree(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/approval", "결재함 조회 함수");
+		}
+		return result;
+	}
+
 	@Description(value = "결재함 리스트 페이지")
 	@GetMapping(value = "/approval")
 	public ModelAndView approval() throws Exception {
@@ -367,11 +394,10 @@ public class WorkspaceController extends BaseController {
 	@Description(value = "수신 처리")
 	@ResponseBody
 	@PostMapping(value = "/_receive")
-	public Map<String, Object> _receive(@RequestBody Map<String, Object> params)
-			throws Exception {
+	public Map<String, Object> _receive(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			WorkspaceHelper.service.receive(params);
+			WorkspaceHelper.service._receive(params);
 			result.put("msg", "수신확인 처리 되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -381,7 +407,7 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "수신함 일괄 수신 처리")
 	@ResponseBody
 	@PostMapping(value = "/receives")
@@ -417,7 +443,7 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "외부 메일 페이지")
 	@GetMapping(value = "/mail")
 	public ModelAndView mail() throws Exception {
@@ -425,5 +451,24 @@ public class WorkspaceController extends BaseController {
 		model.setViewName("popup:/workspace/mail-popup");
 		return model;
 	}
+
 	
+
+	@Description(value = "합의 함수")
+	@ResponseBody
+	@PostMapping(value = "/_agree")
+	public Map<String, Object> _agree(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service._agree(params);
+			result.put("msg", AGREE_SUCCESS_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/_approval", "승인 함수");
+		}
+		return result;
+	}
 }

@@ -7,6 +7,28 @@ String mode = request.getParameter("mode");
 boolean create = "create".equals(mode);
 boolean update = "update".equals(mode);
 %>
+<style type="text/css">
+/** 결재 관련 셀 스타일 **/
+.approval {
+	background-color: rgb(189, 214, 255);
+	font-weight: bold;
+}
+
+.submit {
+	background-color: #FFFFA1;
+	font-weight: bold;
+}
+
+.receive {
+	background-color: #FFCBCB;
+	font-weight: bold;
+}
+
+.agree {
+	background-color: rgb(200, 255, 203);
+	font-weight: bold;
+}
+</style>
 <div class="include">
 	<input type="button" value="결재선 추가" title="결재선 추가" class="blue" onclick="popup8();">
 	<input type="button" value="결재선 삭제" title="결재선 삭제" class="red" onclick="deleteRow8();">
@@ -23,6 +45,18 @@ boolean update = "update".equals(mode);
 			headerText : "결재타입",
 			dataType : "string",
 			width : 130,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value == "기안") {
+					return "submit";
+				} else if (value == "결재") {
+					return "approval";
+				} else if (value == "수신") {
+					return "receive";
+				} else if (value == "합의") {
+					return "agree";
+				}
+				return null;
+			}
 		}, {
 			dataField : "name",
 			headerText : "이름",
@@ -73,7 +107,7 @@ boolean update = "update".equals(mode);
 
 			for (let i = 0; i < list.length; i++) {
 				const type = list[i].type;
-				if ("협의" === type) {
+				if ("합의" === type) {
 					agrees.push(list[i]);
 				} else if ("결재" === type) {
 					approvals.push(list[i]);
@@ -81,7 +115,7 @@ boolean update = "update".equals(mode);
 					receives.push(list[i]);
 				}
 			}
-			
+
 			const url = getCallUrl("/workspace/popup");
 			const p = _popup(url, 1400, 900, "n");
 			p.approvals = approvals;
@@ -117,7 +151,7 @@ boolean update = "update".equals(mode);
 
 			for (let i = agree.length - 1; i >= 0; i--) {
 				const item = agree[i];
-				item.type = "협의";
+				item.type = "합의";
 				AUIGrid.addRow(myGridID8, item, "first");
 			}
 		}

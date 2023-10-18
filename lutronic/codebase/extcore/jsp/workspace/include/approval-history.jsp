@@ -21,6 +21,11 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 	background-color: #FFCBCB;
 	font-weight: bold;
 }
+
+.agree {
+	background-color: rgb(200, 255, 203);
+	font-weight: bold;
+}
 </style>
 <table class="button-table">
 	<tr>
@@ -53,6 +58,8 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 				return "approval";
 			} else if (value == "수신") {
 				return "receive";
+			} else if (value == "합의") {
+				return "agree";
 			}
 			return null;
 		}

@@ -63,7 +63,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					visible : false
 				}, {
 					dataField : "agree",
-					headerText : "협의",
+					headerText : "합의",
 					width : 160,
 					editable : false,
 					renderer : {
@@ -809,7 +809,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 
 				for (let i = agree.length - 1; i >= 0; i--) {
 					const item = agree[i];
-					item.type = "협의";
+					item.type = "합의";
 					item.sort = sort;
 					rows8.push(item);
 					agr += item.name + "\n";
@@ -837,7 +837,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					// 					if (unique) {
 					// 						AUIGrid.addRow(myGridID91, item, rowIndex);
 					// 					} else {
-					// 						// 중복은 그냥 경고 없이 처리 할지 협의?
+					// 						// 중복은 그냥 경고 없이 처리 할지 합의?
 					// 						alert(item.number + " 품목은 이미 추가 되어있습니다.");
 					// 					}
 				})
@@ -862,7 +862,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					// 					if (unique) {
 					// 						AUIGrid.addRow(myGridID91, item, rowIndex);
 					// 					} else {
-					// 						// 중복은 그냥 경고 없이 처리 할지 협의?
+					// 						// 중복은 그냥 경고 없이 처리 할지 합의?
 					// 						alert(item.number + " 품목은 이미 추가 되어있습니다.");
 					// 					}
 				})

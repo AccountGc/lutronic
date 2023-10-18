@@ -256,7 +256,7 @@ function toRegister(params, rows) {
 
 	for (let i = 0; i < rows.length; i++) {
 		const type = rows[i].type;
-		if (type === "협의") {
+		if (type === "합의") {
 			agrees.push(rows[i]);
 		} else if (type === "결재") {
 			approvals.push(rows[i]);

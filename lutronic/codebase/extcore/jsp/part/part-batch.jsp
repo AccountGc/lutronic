@@ -70,7 +70,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					visible : false
 				}, {
 					dataField : "agree",
-					headerText : "협의",
+					headerText : "합의",
 					width : 160,
 					editable : false,
 					renderer : {
@@ -1040,7 +1040,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 				for (let i = agree.length - 1; i >= 0; i--) {
 					const item = agree[i];
-					item.type = "협의";
+					item.type = "합의";
 					item.sort = sort;
 					rows8.push(item);
 					agr += item.name + "\n";

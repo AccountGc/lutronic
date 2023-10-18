@@ -121,7 +121,7 @@ if (create || update) {
 			if (unique) {
 				AUIGrid.addRow(myGridID300, insert, rowIndex);
 			} else {
-				// 중복은 그냥 경고 없이 처리 할지 협의?
+				// 중복은 그냥 경고 없이 처리 할지 합의?
 				alert(item.name + " 제품은 이미 추가 되어있습니다.");
 			}
 		})

@@ -41,6 +41,7 @@ public class ApprovalLineColumn {
 	/*
 	 * 리스트 화면 변수
 	 */
+	private final String AGREE_COLUMN = "AGREE_COLUMN";
 	private final String APPROVAL_COLUMN = "APPROVAL_COLUMN";
 	private final String PROGRESS_COLUMN = "PROGRESS_COLUMN";
 	private final String COMPLETE_COLUMN = "COMPLETE_COLUMN";

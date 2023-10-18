@@ -75,12 +75,12 @@ $(function() {
 	
 	$("#check_Result").click(function() {
 		if($("input[name='checkResult']:checked").length == 0 ) {
-			alert("${f:getMessage('협의결과')}${f:getMessage('을(를) 선택하세요.')}");
+			alert("${f:getMessage('합의결과')}${f:getMessage('을(를) 선택하세요.')}");
 			return false;
 		}
 		
 		if($.trim($("#checkDate").val()) == "" ) {
-			alert("${f:getMessage('협의일자')}${f:getMessage('을(를) 선택하세요.')}");
+			alert("${f:getMessage('합의일자')}${f:getMessage('을(를) 선택하세요.')}");
 			return false;
 		}
 	

@@ -15,6 +15,7 @@ import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.column.ApprovalLineColumn;
+import com.e3ps.workspace.dto.ApprovalLineDTO;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -26,6 +27,7 @@ import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
 
@@ -57,25 +59,25 @@ public class WorkspaceHelper {
 	public static final String STATE_APPROVAL_REJECT = "반려됨";
 
 	/**
-	 * 협의 라인 상태값 상수
+	 * 합의 라인 상태값 상수
 	 */
-	public static final String STATE_AGREE_READY = "협의중";
-	public static final String STATE_AGREE_COMPLETE = "협의완료";
-	public static final String STATE_AGREE_REJECT = "협의반려";
+	public static final String STATE_AGREE_READY = "합의중";
+	public static final String STATE_AGREE_COMPLETE = "합의완료";
+	public static final String STATE_AGREE_REJECT = "합의반려";
 
 	/**
 	 * 수신 라인 상태값 상수
 	 */
+	public static final String STATE_RECEIVE_STAND = "수신대기중";
 	public static final String STATE_RECEIVE_READY = "수신확인중";
 	public static final String STATE_RECEIVE_COMPLETE = "수신완료";
-	public static final String STATE_RECEIVE_REJECT = "수신반려";
 
 	/*
 	 * 결재자 역할들
 	 */
 	public static final String WORKING_SUBMITTER = "기안자";
 	public static final String WORKING_APPROVAL = "승인자";
-	public static final String WORKING_AGREE = "협의자";
+	public static final String WORKING_AGREE = "합의자";
 	public static final String WORKING_RECEIVE = "수신자";
 
 	/*
@@ -296,7 +298,7 @@ public class WorkspaceHelper {
 			query.appendAnd();
 		}
 
-		// 검토 어떻게 처리 할건지?
+		// 합의 어떻게 처리 할건지?
 		query.appendOpenParen();
 //		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_AGREE_REJECT);
 		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_REJECT);
@@ -546,7 +548,7 @@ public class WorkspaceHelper {
 	}
 
 	/**
-	 * 검토 라인 가져오기
+	 * 합의 라인 가져오기
 	 */
 	public ArrayList<ApprovalLine> getAgreeLines(ApprovalMaster master) throws Exception {
 		ArrayList<ApprovalLine> list = new ArrayList<>();
@@ -717,6 +719,83 @@ public class WorkspaceHelper {
 			}
 		}
 		return isEndApprovalLine;
+	}
+
+	/**
+	 * 합의함 조회 함수
+	 */
+	public Map<String, Object> agree(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ArrayList<ApprovalLineColumn> list = new ArrayList<>();
+
+		String name = (String) params.get("name"); // 결재 제목
+		String submiterOid = (String) params.get("submiterOid"); // 작성자
+		String receiveFrom = (String) params.get("receiveFrom");
+		String receiveTo = (String) params.get("receiveTo");
+		String state = (String) params.get("state");
+
+		// 쿼리문 작성
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_master = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_master);
+
+		if ("합의완료".equals(state)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_COMPLETE);
+		} else if ("합의중".equals(state)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_READY);
+		} else if ("합의반려".equals(state)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_REJECT);
+		} else if ("전체".equals(state)) {
+
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+
+			query.appendOpenParen();
+
+			SearchCondition sc = new SearchCondition(ApprovalLine.class, ApprovalLine.STATE, "=", STATE_AGREE_COMPLETE);
+			query.appendWhere(sc, new int[] { idx });
+			query.appendOr();
+
+			sc = new SearchCondition(ApprovalLine.class, ApprovalLine.STATE, "=", STATE_AGREE_READY);
+			query.appendWhere(sc, new int[] { idx });
+			query.appendOr();
+
+			sc = new SearchCondition(ApprovalLine.class, ApprovalLine.STATE, "=", STATE_AGREE_REJECT);
+			query.appendWhere(sc, new int[] { idx });
+
+			query.appendCloseParen();
+		}
+
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, AGREE_LINE);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalLine.class, ApprovalLine.CREATE_TIMESTAMP, receiveFrom,
+				receiveTo);
+		QuerySpecUtils.toCreator(query, idx_master, ApprovalMaster.class, submiterOid);
+		QuerySpecUtils.toLikeAnd(query, idx, ApprovalLine.class, ApprovalLine.NAME, name);
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+		}
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, true);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine approvalLine = (ApprovalLine) obj[0];
+			ApprovalLineColumn column = new ApprovalLineColumn(approvalLine, "AGREE_COLUMN");
+			list.add(column);
+		}
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 
 }

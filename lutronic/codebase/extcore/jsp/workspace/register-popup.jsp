@@ -196,7 +196,7 @@ String oid = (String) request.getAttribute("oid");
 									const name = rows[i].name;
 									const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
 									if(!isUnique1) {
-										alert("협의라인에 이미 등록된 사용자(" + name + ")입니다.");
+										alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
 										return false;
 									}
 									
@@ -221,7 +221,7 @@ String oid = (String) request.getAttribute("oid");
 									const name = rows[i].name;
 									const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
 									if(!isUnique1) {
-										alert("협의라인에 이미 등록된 사용자(" + name + ")입니다.");
+										alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
 										return false;
 									}
 									
@@ -246,7 +246,7 @@ String oid = (String) request.getAttribute("oid");
 									const name = rows[i].name;
 									const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
 									if(!isUnique1) {
-										alert("협의라인에 이미 등록된 사용자(" + name + ")입니다.");
+										alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
 										return false;
 									}
 									
@@ -385,7 +385,7 @@ String oid = (String) request.getAttribute("oid");
 							<input type="radio" name="lineType" value="agree">
 							<div class="state p-success">
 								<label>
-									<b>협의</b>
+									<b>합의</b>
 								</label>
 							</div>
 						</div>
@@ -450,7 +450,7 @@ String oid = (String) request.getAttribute("oid");
 								<td class="left">
 									<div class="header">
 										<img src="/Windchill/extcore/images/header.png">
-										협의 라인
+										합의 라인
 									</div>
 								</td>
 							</tr>
@@ -725,7 +725,7 @@ function moveRow() {
 			const name = rows[i].name;
 			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
 			if(!isUnique1) {
-				alert("협의라인에 이미 등록된 사용자(" + name + ")입니다.");
+				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
 				return false;
 			}
 			
@@ -750,7 +750,7 @@ function moveRow() {
 			const name = rows[i].name;
 			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
 			if(!isUnique1) {
-				alert("협의라인에 이미 등록된 사용자(" + name + ")입니다.");
+				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
 				return false;
 			}
 			
@@ -775,7 +775,7 @@ function moveRow() {
 			const name = rows[i].name;
 			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
 			if(!isUnique1) {
-				alert("협의라인에 이미 등록된 사용자(" + name + ")입니다.");
+				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
 				return false;
 			}
 			
@@ -962,7 +962,7 @@ function moveRow() {
 		AUIGrid.resize(myGridID900);
 		createAUIGrid1000(columns1000); // 조직도
 		AUIGrid.resize(myGridID1000);
-		createAUIGrid2000(columns2000); // 협의
+		createAUIGrid2000(columns2000); // 합의
 		AUIGrid.resize(myGridID2000);
 		createAUIGrid3000(columns3000); // 결재
 		AUIGrid.resize(myGridID3000);

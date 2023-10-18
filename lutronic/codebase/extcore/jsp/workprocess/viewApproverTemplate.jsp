@@ -37,7 +37,7 @@ function loadApprovalLine(type) {
 			var app = "${f:getMessage('통보')}";
 			var className = "border_text_03-1";
 			if(type == "app1") {
-				app = "${f:getMessage('협의')}";
+				app = "${f:getMessage('합의')}";
 				className = "border_text_03-1";
 			}else if(type == "app2") {
 				app = "${f:getMessage('결재')}";

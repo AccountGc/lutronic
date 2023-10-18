@@ -24,8 +24,8 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			<%
 			if (dto.isAgreeLine()) {
 			%>
-			<input type="button" value="의완료" title="협의완료" onclick="_agree();">
-			<input type="button" value="협의반려" title="협의반려" class="red" onclick="_unagree()">
+			<input type="button" value="합의완료" title="합의완료" onclick="_agree();">
+			<input type="button" value="합의반려" title="합의반려" class="red" onclick="_unagree()">
 			<%
 			}
 			%>
@@ -44,6 +44,9 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	<ul>
 		<li>
 			<a href="#tabs-1">결재정보</a>
+		</li>
+		<li>
+			<a href="#tabs-2">결재대상정보</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -87,17 +90,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">결재의견</th>
 				<td class="indent5" colspan="3">
-					<%
-					if (dto.isApprovalLine() || dto.isAgreeLine()) {
-					%>
 					<textarea name="description" id="description" rows="6"></textarea>
-					<%
-					} else {
-					%>
-					<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
-					<%
-					}
-					%>
 				</td>
 			</tr>
 		</table>
@@ -108,6 +101,10 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			<jsp:param value="300" name="height" />
 		</jsp:include>
 
+	</div>
+	
+	<div id="tabs-2">
+		여기 만들어보는거로
 	</div>
 </div>
 
@@ -125,10 +122,11 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			return false;
 		}
 
-		const url = getCallUrl("/workspace/reassign");
-		const params = new Object();
-		params.reassignUserOid = reassignUserOid;
-		params.oid = oid;
+		const url = getCallUrl("/workspace/delegate");
+		const params = {
+			reassignUserOid : reassignUserOid,
+			oid : oid
+		}
 		openLayer();
 		call(url, params, function(data) {
 			alert(reassignUser.value + "사용자에게 " + data.msg);
@@ -146,9 +144,10 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 			return false;
 		}
 		const url = getCallUrl("/workspace/_receive");
-		const params = new Object();
-		params.oid = oid;
-		params.description = description;
+		const params = {
+			oid : oid,
+			description : description
+		}
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
@@ -162,7 +161,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	}
 
 	function _unagree() {
-		if (!confirm("협의 반려 하시겠습니까?")) {
+		if (!confirm("합의 반려 하시겠습니까?")) {
 			return false;
 		}
 		const url = getCallUrl("/workspace/_unagree");
@@ -204,7 +203,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	}
 
 	function _agree() {
-		if (!confirm("협의완료 하시겠습니까?")) {
+		if (!confirm("합의완료 하시겠습니까?")) {
 			return false;
 		}
 		const url = getCallUrl("/workspace/_agree");
