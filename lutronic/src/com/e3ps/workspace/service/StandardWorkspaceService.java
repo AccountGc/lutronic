@@ -499,6 +499,31 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		}
 	}
 
+
+	@Override
+	public void receive(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			String oid = (String) params.get("oid");
+			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+			line.setState(WorkspaceHelper.STATE_RECEIVE_COMPLETE);
+			line.setCompleteTime(new Timestamp(new Date().getTime()));
+			PersistenceHelper.manager.modify(line);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
 	@Override
 	public void receives(Map<String, ArrayList<Map<String, String>>> params) throws Exception {
 		ArrayList<Map<String, String>> list = params.get("list");

@@ -364,6 +364,24 @@ public class WorkspaceController extends BaseController {
 		return model;
 	}
 
+	@Description(value = "수신 처리")
+	@ResponseBody
+	@PostMapping(value = "/_receive")
+	public Map<String, Object> _receive(@RequestBody Map<String, Object> params)
+			throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.receive(params);
+			result.put("msg", "수신확인 처리 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
 	@Description(value = "수신함 일괄 수신 처리")
 	@ResponseBody
 	@PostMapping(value = "/receives")

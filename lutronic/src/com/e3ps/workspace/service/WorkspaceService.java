@@ -69,4 +69,9 @@ public interface WorkspaceService {
 	 * 결재 및 합의 위임
 	 */
 	public abstract void delegate(Map<String, String> params) throws Exception;
+	
+	/**
+	 * 수신 처리
+	 */
+	public abstract void receive(Map<String, Object> params) throws Exception;
 }
