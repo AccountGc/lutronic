@@ -554,6 +554,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentType = dto.getDocumentType_code();
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
+		String iterationNote = dto.getIterationNote();
 
 		Transaction trs = new Transaction();
 		try {
@@ -561,9 +562,9 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 			WTDocument latest = (WTDocument) VersionControlHelper.service.newVersion(doc);
-			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-			String msg = user.getFullName() + " 사용자가 문서를 개정 하였습니다.";
-			VersionControlHelper.setNote(latest, msg);
+//			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+//			String msg = user.getFullName() + " 사용자가 문서를 개정 하였습니다.";
+			VersionControlHelper.setNote(latest, iterationNote);
 
 			DocumentType docType = DocumentType.toDocumentType(documentType);
 			String number = getDocumentNumberSeq(docType.getLongDescription());
@@ -636,6 +637,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentType = dto.getDocumentType_code();
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
+		String iterationNote = dto.getIterationNote();
 
 		Transaction trs = new Transaction();
 		try {
@@ -670,10 +672,10 @@ public class StandardDocumentService extends StandardManager implements Document
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			workCopy.getTypeInfoWTDocument().setPtc_rht_1(content);
-			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-			String msg = user.getFullName() + " 사용자가 문서를 수정 하였습니다.";
+//			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+//			String msg = user.getFullName() + " 사용자가 문서를 수정 하였습니다.";
 			// 필요하면 수정 사유로 대체
-			workCopy = (WTDocument) WorkInProgressHelper.service.checkin(workCopy, msg);
+			workCopy = (WTDocument) WorkInProgressHelper.service.checkin(workCopy, iterationNote);
 
 			// 폴더 이동
 			Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
