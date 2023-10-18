@@ -525,4 +525,24 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void delegate(Map<String, String> params) throws Exception {
+		String oid = params.get("oid"); // 결재라인
+		String delegateOid = params.get("delegateOid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }
