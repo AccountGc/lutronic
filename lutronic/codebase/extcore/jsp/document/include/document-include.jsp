@@ -37,7 +37,7 @@ boolean create = "create".equals(mode);
 			<%
 			}
 			%>
-			<div id="grid90" style="height: 40px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid90" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -47,7 +47,6 @@ boolean create = "create".equals(mode);
 		dataField : "number",
 		headerText : "문서번호",
 		dataType : "string",
-		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -57,22 +56,6 @@ boolean create = "create".equals(mode);
 				_popup(url, "", "", "f");
 			}
 		},		
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "interalnumber",
-		headerText : "내부 문서번호",
-		dataType : "string",
-		width : 120,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "model",
-		headerText : "프로젝트 코드",
-		dataType : "string",
-		width : 120,
 		filter : {
 			showIcon : true,
 		},
@@ -81,7 +64,6 @@ boolean create = "create".equals(mode);
 		headerText : "문서명",
 		dataType : "string",
 		style : "aui-left",
-		width : 350,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -95,11 +77,9 @@ boolean create = "create".equals(mode);
 			showIcon : true,
 		},
 	}, {
-		dataField : "location",
-		headerText : "문서분류",
+		dataField : "state",
+		headerText : "상태",
 		dataType : "string",
-		style : "aui-left",
-		width : 250,
 		filter : {
 			showIcon : true,
 		},
@@ -107,26 +87,9 @@ boolean create = "create".equals(mode);
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 80,
 		renderer : {
 			type : "TemplateRenderer"
 		},
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "state",
-		headerText : "상태",
-		dataType : "string",
-		width : 120,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "writer",
-		headerText : "작성자",
-		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -134,15 +97,6 @@ boolean create = "create".equals(mode);
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 100,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "createdDate_txt",
-		headerText : "등록일",
-		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -150,31 +104,8 @@ boolean create = "create".equals(mode);
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
-		},
-	}, {
-		dataField : "primary",
-		headerText : "주 첨부파일",
-		dataType : "string",
-		width : 80,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "secondary",
-		headerText : "첨부파일",
-		dataType : "string",
-		width : 100,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
 		},
 	}, {
 		dataField : "oid",

@@ -34,16 +34,16 @@ String oid = request.getParameter("oid");
 	<jsp:param value="200" name="height" />
 </jsp:include>
 
-<!-- 	관련 ECO -->
-<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+<!-- 	관련 ECPR -->
+<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="200" name="height" />
 </jsp:include>
 
-<!-- 	관련 ECPR -->
-<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
+<!-- 	관련 ECO -->
+<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
