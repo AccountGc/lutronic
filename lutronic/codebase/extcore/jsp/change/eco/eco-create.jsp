@@ -20,8 +20,8 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -179,17 +179,14 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			function create() {
+			function create(temp) {
 				const name = document.getElementById("name");
-				if (!confirm("등록 하시겠습니까?")) {
-					return false;
-				}
 
 				const eoCommentA = toId("eoCommentA");
 				const eoCommentB = toId("eoCommentB");
@@ -203,6 +200,9 @@
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
 				
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				
 				if(isEmpty(name.value)){
 					alert("ECO 제목을 입력해주세요.");
 					return;
@@ -211,6 +211,22 @@
 				if(primary == null){
 					alert("설계변경 부품 내역파일을 첨부해주세요.");
 					return;
+				}
+				
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
 				}
 				
 				const params = {
@@ -228,7 +244,6 @@
 					rows500 : rows500, // 설변품목
 				};
 				logger(params);
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/eco/create");
 				parent.openLayer();

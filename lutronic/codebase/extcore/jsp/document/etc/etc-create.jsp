@@ -45,7 +45,6 @@ iframe {
 				</td>
 				<td class="right">
 					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
@@ -210,6 +209,15 @@ iframe {
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="5">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
@@ -316,6 +324,15 @@ iframe {
 				</td>
 			</tr>
 		</table>
+		
+		<table class="button-table">
+			<tr>
+				<td class="center">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
+			</tr>
+		</table>
 
 		<script type="text/javascript">
 			const oEditors = [];
@@ -379,10 +396,26 @@ iframe {
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName").value;
+				
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 
-				if (!confirm("등록하시겠습니까?")) {
-					return false;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
 				}
+				
 				const url = getCallUrl("/etc/create");
 
 				// 관련문서
@@ -408,6 +441,7 @@ iframe {
 					rows90 : rows90,
 					rows91 : rows91
 				};
+				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -428,11 +462,16 @@ iframe {
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
+				createAUIGrid8(columns8);
+				AUIGrid.resize(myGridID90);
+				AUIGrid.resize(myGridID91);
+				AUIGrid.resize(myGridID8);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
+				AUIGrid.resize(myGridID8);
 			});
 		</script>
 	</form>
