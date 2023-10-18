@@ -30,6 +30,10 @@
 						<img src="/Windchill/extcore/images/header.png"> 금형 정보
 					</div>
 				</td>
+				<td class="right">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
 			</tr>
 		</table>
 		<table class="search-table">
@@ -143,6 +147,15 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		<br>
 		
@@ -233,11 +246,14 @@
 				AUIGrid.resize(partGridID);
 				createAUIGrid90(columns90);
 				AUIGrid.resize(myGridID90);
+				createAUIGrid8(columns8);
+				AUIGrid.resize(myGridID8);
 			});
 			
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(myGridID90);
+				AUIGrid.resize(myGridID8);
 			});
 
 		</script>

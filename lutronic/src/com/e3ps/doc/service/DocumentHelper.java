@@ -318,9 +318,9 @@ public class DocumentHelper {
 		} else if (target.equals(DocumentECOLink.class)) {
 			QueryResult qr = PersistenceHelper.manager.navigate(doc, "eco", DocumentECOLink.class);
 			isConnect = qr.size() > 0;
-//		} else if (target.equals(DocumentECPRLink.class)) {
-//			QueryResult qr = PersistenceHelper.manager.navigate(doc, "ecpr", DocumentECPRLink.class);
-//			isConnect = qr.size() > 0;
+		} else if (target.equals(DocumentECPRLink.class)) {
+			QueryResult qr = PersistenceHelper.manager.navigate(doc, "ecpr", DocumentECPRLink.class);
+			isConnect = qr.size() > 0;
 		} else if (target.equals(DocumentCRLink.class)) {
 			QueryResult qr = PersistenceHelper.manager.navigate(doc, "cr", DocumentCRLink.class);
 			isConnect = qr.size() > 0;

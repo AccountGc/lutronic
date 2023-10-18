@@ -73,7 +73,7 @@ boolean update = "update".equals(mode);
 
 			for (let i = 0; i < list.length; i++) {
 				const type = list[i].type;
-				if ("검토" === type) {
+				if ("협의" === type) {
 					agrees.push(list[i]);
 				} else if ("결재" === type) {
 					approvals.push(list[i]);
@@ -117,7 +117,7 @@ boolean update = "update".equals(mode);
 
 			for (let i = agree.length - 1; i >= 0; i--) {
 				const item = agree[i];
-				item.type = "검토";
+				item.type = "협의";
 				AUIGrid.addRow(myGridID8, item, "first");
 			}
 		}

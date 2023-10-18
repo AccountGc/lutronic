@@ -20,7 +20,8 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
 				</td>
 			</tr>
@@ -137,25 +138,25 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
-					<!-- 					<input type="button" value="초기화" title="초기화"> -->
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			function create() {
-
-				if (!confirm("등록 하시겠습니까?")) {
-					return false;
-				}
+			function create(temp) {
 
 				const name = toId("name");
 				const eoCommentA = toId("eoCommentA");
 				const eoCommentB = toId("eoCommentB");
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
+				
+				const temprary = JSON.parse(temp);
+				
 				// 완제품
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				// 관련문서
@@ -176,7 +177,23 @@
 					rows200 : rows200,
 					rows300 : rows300
 				}
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
+				}
+				
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/eo/create");
 				logger(params);

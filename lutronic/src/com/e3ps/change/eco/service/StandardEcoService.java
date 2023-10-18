@@ -15,19 +15,26 @@ import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
+import com.e3ps.change.eo.dto.EoDTO;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.part.service.PartSearchHelper;
 
 import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
+import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
@@ -35,6 +42,8 @@ import wt.lifecycle.LifeCycleHelper;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.pom.Transaction;
+import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
@@ -205,6 +214,144 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			applicationData.setRole(ContentRoleType.SECONDARY);
 			PersistenceHelper.manager.save(applicationData);
 			ContentServerHelper.service.updateContent(eco, applicationData, vault.getPath());
+		}
+	}
+	
+	@Override
+	public void modify(EcoDTO dto) throws Exception {
+		ReferenceFactory rf = new ReferenceFactory();
+		String name = dto.getName();
+		String riskType = dto.getRiskType();
+		String licensing = dto.getLicensing();
+		String eoCommentA = dto.getEoCommentA();
+		String eoCommentB = dto.getEoCommentB();
+		String eoCommentC = dto.getEoCommentC();
+		String eoCommentD = dto.getEoCommentD();
+		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
+		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+
+			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
+
+			EChangeOrder eco = (EChangeOrder) rf.getReference(dto.getOid()).getObject();
+			eco.setEoName(name);
+			eco.setModel((String) dataMap.get("model"));
+			eco.setLicensingChange(licensing);
+			eco.setEoCommentA(eoCommentA);
+			eco.setEoCommentB(eoCommentB);
+			eco.setEoCommentC(eoCommentC);
+			eco.setEoCommentD(eoCommentD);
+			eco.setRiskType(riskType);
+
+			eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
+
+			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
+			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
+
+			// 첨부 파일 저장
+			removeAttach(eco);
+			saveAttach(eco, dto);
+
+			// 관련 CR 및 ECPR
+			deleteLink(eco);
+			saveLink(eco, dto);
+
+			// 완제품 연결 
+			deleteCompletPart(eco);
+			saveCompletePart(eco, plist);
+
+			// 변경 대상 품목 링크
+			deleteEcoPart(eco);
+			saveEcoPart(eco, clist);
+			
+			// 설변 활동 생성
+			ActivityHelper.service.deleteActivity(eco);
+			ActivityHelper.service.saveActivity(eco, rows200);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
+	}
+	
+	/**
+	 * 첨부 파일 삭제
+	 */
+	private void removeAttach(EChangeOrder eco) throws Exception {
+		EcoDTO ecoDto = new EcoDTO(eco);
+		ReferenceFactory rf = new ReferenceFactory();
+		ApplicationData ad =(ApplicationData) rf.getReference(ecoDto.getContentMap().get("aoid").toString()).getObject();
+		ContentServerHelper.service.deleteContent(eco, ad);
+		
+		
+		QueryResult result = ContentHelper.service.getContentsByRole(eco, ContentRoleType.SECONDARY);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(eco, item);
+		}
+	}
+	
+	/**
+	 *  관련 CR 및 ECPR 삭제
+	 */
+	private void deleteLink(EChangeOrder eco) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(RequestOrderLink.class, true);
+		SearchCondition sc = new SearchCondition(RequestOrderLink.class, "roleAObjectRef.key.id", "=",
+				eco.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			RequestOrderLink link = (RequestOrderLink) obj[0];
+			PersistenceHelper.manager.delete(link);
+		}
+	}
+	
+	/**
+	 *  완제품 삭제
+	 */
+	private void deleteCompletPart(EChangeOrder eco) throws Exception {
+		
+		// 완제품 삭제
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EOCompletePartLink.class, true);
+		SearchCondition sc = new SearchCondition(EOCompletePartLink.class, "roleBObjectRef.key.id", "=",
+				eco.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EOCompletePartLink link = (EOCompletePartLink) obj[0];
+			PersistenceHelper.manager.delete(link);
+		}
+	}
+
+	/**
+	 *  변경 대상 품목 링크 삭제
+	 */
+	private void deleteEcoPart(EChangeOrder eco) throws Exception {
+		
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EcoPartLink.class, true);
+		SearchCondition sc = new SearchCondition(EcoPartLink.class, "roleBObjectRef.key.id", "=",
+				eco.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EcoPartLink link = (EcoPartLink) obj[0];
+			PersistenceHelper.manager.delete(link);
 		}
 	}
 }

@@ -57,11 +57,11 @@ public class WorkspaceHelper {
 	public static final String STATE_APPROVAL_REJECT = "반려됨";
 
 	/**
-	 * 검토 라인 상태값 상수
+	 * 협의 라인 상태값 상수
 	 */
-	public static final String STATE_AGREE_READY = "검토중";
-	public static final String STATE_AGREE_COMPLETE = "검토완료";
-	public static final String STATE_AGREE_REJECT = "검토반려";
+	public static final String STATE_AGREE_READY = "협의중";
+	public static final String STATE_AGREE_COMPLETE = "협의완료";
+	public static final String STATE_AGREE_REJECT = "협의반려";
 
 	/**
 	 * 수신 라인 상태값 상수
@@ -75,7 +75,7 @@ public class WorkspaceHelper {
 	 */
 	public static final String WORKING_SUBMITTER = "기안자";
 	public static final String WORKING_APPROVAL = "승인자";
-	public static final String WORKING_AGREE = "검토자";
+	public static final String WORKING_AGREE = "협의자";
 	public static final String WORKING_RECEIVE = "수신자";
 
 	/*

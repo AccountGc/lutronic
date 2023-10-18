@@ -25,9 +25,8 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create();">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -157,6 +156,15 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		
 		<!-- 	관련 CR -->
@@ -171,20 +179,19 @@
 			<tr>
 				<td class="center">
 					<input type="button" value="기안" title="기안" class="red" onclick="create();">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
 					<input type="button" value="임시저장" title="임시저장" class="">
 				</td>
 			</tr>
 		</table>
 		
 		<script type="text/javascript">
-			function create() {
+			function create(temp) {
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
+				
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 	
-				if (!confirm("등록 하시겠습니까?")) {
-					return;
-				}
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
@@ -220,6 +227,22 @@
 					return;
 				}
 				
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
+				}
+				
 				const params = {
 					name : name.value,
 					number : number.value,
@@ -239,6 +262,7 @@
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/create");
+				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -261,11 +285,14 @@
 				createAUIGrid101(columns101);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				createAUIGrid8(columns8);
+				AUIGrid.resize(myGridID8);
 			});
 	
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID8);
 			});
 			
 		</script>

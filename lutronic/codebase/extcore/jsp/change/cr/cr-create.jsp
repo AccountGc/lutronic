@@ -189,8 +189,10 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			function create(temp) {
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
-				const temprary = JSON.parse(temp);
 				const secondarys = toArray("secondarys");
+				
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
@@ -231,6 +233,12 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
@@ -255,7 +263,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					rows300 : rows300,
 					temprary : temprary
 				}
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/cr/create");
 				parent.openLayer();

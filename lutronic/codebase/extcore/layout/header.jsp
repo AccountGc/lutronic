@@ -449,8 +449,8 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 						<ul class="nav nav-second-level collapse">
 							<li>
-								<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 검토함');">
-									검토함
+								<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 협의함');">
+									협의함
 									<span class="label label-info float-right">
 										<%
 										//=count.get("check")

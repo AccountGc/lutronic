@@ -22,6 +22,7 @@
 </head>
 <body>
 	<form>
+		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -171,38 +172,38 @@
 
 		<!-- 설계변경 품목 -->
 		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />
 		</jsp:include>
 
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
 
 		<!-- 	설변 활동 -->
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 		</jsp:include>
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
+					<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			function create() {
+			function modify() {
 				const name = document.getElementById("name");
-				if (!confirm("등록 하시겠습니까?")) {
+				if (!confirm("수정 하시겠습니까?")) {
 					return false;
 				}
 
@@ -214,9 +215,21 @@
 				const primary = document.querySelector("input[name=primary]");
 				const riskType = document.querySelector("input[name=riskType]:checked").value;
 				const licensing = document.querySelector("input[name=licensing]:checked").value;
-				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
-				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
-				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+				var rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+				rows101 = rows101.filter(function(item){
+					return item.gridState!=	"removed";
+				});
+				
+				var rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
+				rows200 = rows200.filter(function(item){
+					return item.gridState!=	"removed";
+				});
+				
+				var rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+				rows500 = rows500.filter(function(item){
+					return item.gridState!=	"removed";
+				});
+				
 				
 				if(isEmpty(name.value)){
 					alert("ECO 제목을 입력해주세요.");
@@ -227,7 +240,6 @@
 					alert("설계변경 부품 내역파일을 첨부해주세요.");
 					return;
 				}
-				
 				const params = {
 					name : name.value,
 					riskType : riskType,
@@ -241,19 +253,15 @@
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
 					rows500 : rows500, // 설변품목
+					oid : $("#oid").val(),
 				};
-				logger(params);
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
-				const url = getCallUrl("/eco/create");
+				const url = getCallUrl("/eco/modify");
 				parent.openLayer();
 				call(url, params, function(data) {
-					alert(data.msg);
-					if (data.result) {
-						document.location.href = getCallUrl("/eco/list");
-					} else {
-						parent.closeLayer();
-					}
+					opener.loadGridData();
+					self.close();
 				});
 			}
 

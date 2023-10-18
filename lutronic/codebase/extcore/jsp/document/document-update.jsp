@@ -253,6 +253,13 @@ iframe {
 	<jsp:param value="250" name="height" />
 </jsp:include>
 
+<!-- 	관련 ECPR -->
+<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="250" name="height" />
+</jsp:include>
 
 <!-- 	관련 ECO -->
 <jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
@@ -340,6 +347,8 @@ iframe {
 		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 		// 관련CR
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+		// 관련ECPR
+		const rowsEcpr = AUIGrid.getGridDataWithState(myGridIDEcpr, "gridState");
 
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
@@ -390,6 +399,7 @@ iframe {
 			rows91 : rows91,
 			rows100 : rows100,
 			rows101 : rows101,
+			rowsEcpr : rowsEcpr,
 			rows105 : rows105,
 			temprary : temprary
 		};
@@ -419,12 +429,14 @@ iframe {
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);
 		createAUIGrid101(columns101);
+		createAUIGridEcpr(columnsEcpr);
 		createAUIGrid105(columns105);
 		createAUIGrid8(columns8);
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridIDEcpr);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID8);
 		$("#documentType").bindSelectDisabled(true);
@@ -465,6 +477,7 @@ iframe {
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridIDEcpr);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID8);
 	});

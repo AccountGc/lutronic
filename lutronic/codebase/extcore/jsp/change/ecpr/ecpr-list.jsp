@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="wt.org.WTUser"%>
@@ -5,6 +7,7 @@
 <%
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 %>
 <!DOCTYPE html>
 <html>
@@ -40,10 +43,13 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<td class="indent5">
 					<select name="state" id="state" class="width-200" >
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+                        for (Map<String,String> lifecycle : lifecycleList) {
+                        %>
+                        <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+                        <%
+                        }
+                        %>
 					</select>
 				</td>
 			</tr>
