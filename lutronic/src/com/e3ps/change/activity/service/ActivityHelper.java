@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECOChange;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
@@ -17,8 +18,11 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.service.DocumentHelper;
 
 import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
+import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -240,6 +244,29 @@ public class ActivityHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	/**
+	 * 설변활동 - 산출물 링크
+	 */
+	public JSONArray docList(EChangeActivity eca) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		QueryResult qr = PersistenceHelper.manager.navigate(eca, "doc", DocumentActivityLink.class, false);
+		while (qr.hasMoreElements()) {
+			DocumentActivityLink link = (DocumentActivityLink)qr.nextElement();
+			WTDocumentMaster m = link.getDoc();
+			WTDocument doc = DocumentHelper.manager.latest(m);
+			Map<String, String> map = new HashMap<>();
+			map.put("oid",, link.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("name", doc.getName());
+			map.put("number", doc.getNumber());
+			map.put("version", doc.getVersionIdentifier().getSeries().getValue() + "."
+					+ doc.getIterationIdentifier().getSeries().getValue());
+			map.put("creator", doc.getCreatorFullName());
+			map.put("state", doc.getLifeCycleState().getDisplay());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
 	}
 
 }

@@ -5,15 +5,17 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.WCUtil;
 
+import wt.doc.WTDocument;
+import wt.doc.WTDocumentMaster;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.folder.Folder;
@@ -236,12 +238,13 @@ public class StandardActivityService extends StandardManager implements Activity
 				trs.rollback();
 		}
 	}
-	
+
 	@Override
 	public void deleteActivity(EChangeOrder eo) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeActivity.class, true);
-		SearchCondition sc = new SearchCondition(EChangeActivity.class, "eoReference.key.id", "=", eo.getPersistInfo().getObjectIdentifier().getId());
+		SearchCondition sc = new SearchCondition(EChangeActivity.class, "eoReference.key.id", "=",
+				eo.getPersistInfo().getObjectIdentifier().getId());
 		query.appendWhere(sc, new int[] { idx });
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -251,5 +254,53 @@ public class StandardActivityService extends StandardManager implements Activity
 		}
 
 	}
-	
+
+	@Override
+	public void saveLink(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		ArrayList<String> list = (ArrayList<String>) params.get("list");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+			for (String s : list) {
+				WTDocument doc = (WTDocument) CommonUtil.getObject(s);
+				DocumentActivityLink link = DocumentActivityLink
+						.newDocumentActivityLink((WTDocumentMaster) doc.getMaster(), eca);
+				PersistenceHelper.manager.save(link);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void deleteLink(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			DocumentActivityLink link = (DocumentActivityLink) CommonUtil.getObject(oid);
+			PersistenceHelper.manager.delete(link);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

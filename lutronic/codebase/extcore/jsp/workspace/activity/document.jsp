@@ -1,7 +1,9 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.workspace.dto.EcaDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
+JSONArray docList = dto.getDocList();
 %>
 <!DOCTYPE html>
 <html>
@@ -14,6 +16,7 @@ EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 </head>
 <body>
 	<form>
+		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -78,7 +81,7 @@ EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 				</td>
 				<td class="right">
 					<input type="button" value="직접등록" title="직접등록" class="blue" onclick="">
-					<input type="button" value="링크등록" title="링크등록" onclick="">
+					<input type="button" value="링크등록" title="링크등록" onclick="popup00();">
 				</td>
 			</tr>
 		</table>
@@ -125,6 +128,18 @@ EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 					type : "ButtonRenderer",
 					labelText : "삭제",
 					onclick : function(rowIndex, columnIndex, value, item) {
+						if (!confirm("삭제 하시겠습니까?")) {
+							const oid = item.oid;
+							const url = getCallUrl("/activity/deleteLink?oid=" + oid);
+							parent.openLayer();
+							call(url, null, function(data) {
+								alert(data.msg);
+								if (data.result) {
+									document.location.reload();
+								}
+								parent.closeLayer();
+							}, "GET");
+						}
 					}
 				}
 			} ]
@@ -133,7 +148,6 @@ EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -141,6 +155,40 @@ EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 					autoGridHeight : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				AUIGrid.setGridData(myGridID,
+		<%=docList%>
+			);
+			}
+
+			// 추가 버튼 클릭 시 팝업창 메서드
+			function popup00() {
+				const url = getCallUrl("/doc/popup?method=insert00&multi=true");
+				_popup(url, 1800, 900, "n");
+			}
+
+			function insert00(arr, callBack) {
+				const list = new Array();
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					list.push(item.oid);
+				})
+
+				const oid = document.getElementById("oid").value;
+				const url = getCallUrl("/activity/saveLink");
+				const params = {
+					list : list,
+					oid : oid
+				}
+				logger(params);
+				parent.openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						document.location.reload();
+						callBack(true, true);
+					}
+					parent.closeLayer();
+				})
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

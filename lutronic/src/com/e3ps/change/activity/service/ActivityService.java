@@ -36,9 +36,20 @@ public interface ActivityService {
 	 * EO 설변 활동 생성
 	 */
 	public abstract void saveActivity(EChangeOrder eo, ArrayList<Map<String, String>> list) throws Exception;
+
 	/**
 	 * EO 설변 활동 삭제
 	 */
 	public abstract void deleteActivity(EChangeOrder eo) throws Exception;
+
+	/**
+	 * 설변활동 + 산출물 링크 등록
+	 */
+	public abstract void saveLink(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 설변활동 산출물 링크 삭제
+	 */
+	public abstract void deleteLink(String oid) throws Exception;
 
 }

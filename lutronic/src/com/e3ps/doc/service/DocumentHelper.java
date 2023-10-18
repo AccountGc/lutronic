@@ -334,6 +334,19 @@ public class DocumentHelper {
 	/**
 	 * 최신버전 문서
 	 */
+	public WTDocument latest(WTDocumentMaster master) throws Exception {
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(master, config);
+		if (result.hasMoreElements()) {
+			WTDocument latest = (WTDocument) result.nextElement();
+			return latest;
+		}
+		return null;
+	}
+
+	/**
+	 * 최신버전 문서
+	 */
 	public WTDocument latest(String oid) throws Exception {
 		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 		LatestConfigSpec config = new LatestConfigSpec();

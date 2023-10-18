@@ -48,6 +48,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "REV",
 		dataType : "string",
 		width : 90,
+		renderer : {
+			type : "TemplateRenderer"
+		},
 		filter : {
 			showIcon : true,
 			inline : true

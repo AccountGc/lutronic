@@ -16,16 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.EChangeActivity;
-import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
-import com.e3ps.common.active.ActivityDefinition;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.service.OrgHelper;
 import com.e3ps.workspace.dto.EcaDTO;
 
@@ -213,5 +208,39 @@ public class ActivityController extends BaseController {
 		}
 		model.addObject("dto", dto);
 		return model;
+	}
+
+	@Description(value = "설계변경 활동 산출물 링크등록")
+	@ResponseBody
+	@PostMapping(value = "/saveLink")
+	public Map<String, Object> saveLink(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.saveLink(params);
+			result.put("msg", "산출물이 등록 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "설계변경 활동 산출물 링크삭제")
+	@ResponseBody
+	@PostMapping(value = "/deleteLink")
+	public Map<String, Object> deleteLink(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.deleteLink(oid);
+			result.put("msg", "산출물 링크가 삭제 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

@@ -446,11 +446,14 @@ function <%=method%>() {
 	}
 	
 	openLayer();
-	opener.<%=method%>(checkedItems, function(res) {
+	opener.<%=method%>(checkedItems, function(res, close) {
 		if(res) {
 			setTimeout(function() {
 				closeLayer();
 			}, 500);
+		}
+		if(close) {
+			self.close();
 		}
 	})
 }
