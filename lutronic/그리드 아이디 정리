@@ -42,6 +42,8 @@
 
 20. myGridID106, columns106 관련ROHS
 
+21. myGridID8, columns8 외부 메일
+
 
 // 그리드 높이 정리
 -- 검색 1행 기준 675px. 인라인 필터 사용시 ( 미사용시 705px) -- 

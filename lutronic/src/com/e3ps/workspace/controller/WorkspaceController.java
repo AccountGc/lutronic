@@ -399,4 +399,13 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "외부 메일 페이지")
+	@GetMapping(value = "/mail")
+	public ModelAndView mail() throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("popup:/workspace/mail-popup");
+		return model;
+	}
+	
 }
