@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
+String jsp = dto.getPersist().getClass().getName();
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -105,6 +106,7 @@ ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 	
 	<div id="tabs-2">
 		여기 만들어보는거로
+		상단 jsp 변수로 처리해서 if문 업이 만들기
 	</div>
 </div>
 

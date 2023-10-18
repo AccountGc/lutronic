@@ -23,6 +23,7 @@ public class ApprovalLineDTO {
 	private String description;
 	private String role;
 	private String submiter;
+	private Persistable persist;
 
 	private boolean isApprovalLine = false;
 	private boolean isAgreeLine = false;
@@ -50,6 +51,7 @@ public class ApprovalLineDTO {
 		setSubmiter(master.getOwnership().getOwner().getFullName());
 		setRole(line.getRole());
 		setLineType(line);
+		setPersist(per);
 	}
 
 	private void setLineType(ApprovalLine line) throws Exception {
