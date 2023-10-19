@@ -5,6 +5,8 @@ import java.util.Map;
 
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
+import wt.util.WTException;
+import wt.workflow.work.WorkItem;
 
 public interface WorkspaceService {
 
@@ -79,4 +81,7 @@ public interface WorkspaceService {
 	 * 합의 처리
 	 */
 	public abstract void _agree(Map<String, String> params) throws Exception;
+
+	
+	WorkItem getWorkItem(Persistable per) throws WTException;
 }

@@ -13,6 +13,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.rohs.ROHSAttr;
 import com.e3ps.rohs.ROHSContHolder;
+import com.e3ps.workspace.ApprovalLine;
 
 import wt.content.ApplicationData;
 import wt.fc.PersistenceHelper;
@@ -26,9 +27,8 @@ public class Test {
 
 	public static void main(String[] args) throws Exception {
 
-		String s = "wt.workflow.work.WorkItemURLProcessor/URLTemplateAction?u8&action=AddParticipant&oid=OR%3Awt.workflow.work.WorkItem%3A207067831";
-		
-		
+		ApprovalLine line = (ApprovalLine) CommonUtil.getObject("com.e3ps.workspace.ApprovalLine:311110");
+		System.out.println(line.getType());
 
 	}
 }

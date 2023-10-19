@@ -134,6 +134,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 
 		const url = getCallUrl("/workspace/delegate");
 		const params = {
+			tapOid : "<%=tapOid%>",
 			reassignUserOid : reassignUserOid,
 			oid : oid
 		}

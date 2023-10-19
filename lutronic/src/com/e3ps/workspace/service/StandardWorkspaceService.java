@@ -6,27 +6,36 @@ import java.util.Date;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.groupware.workprocess.WFItem;
+import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 
 import wt.doc.WTDocument;
+import wt.doc.WTDocumentMaster;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.fc.WTObject;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.ownership.Ownership;
+import wt.part.WTPart;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.workflow.work.WorkItem;
+import wt.workflow.work.WorkflowHelper;
 
 public class StandardWorkspaceService extends StandardManager implements WorkspaceService {
 
@@ -609,7 +618,19 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			PersistenceHelper.manager.modify(line);
 
 			// 메일 처리
-
+			String tapOid = params.get("tapOid");
+			Persistable per = CommonUtil.getObject(tapOid);
+			if (per instanceof WTDocument) {
+				WTDocument doc = (WTDocument) CommonUtil.getObject(tapOid);
+				per = doc;
+			}
+			
+			WorkItem item = getWorkItem(per);
+			
+			if(null!=item){
+				boolean mmmm = MailUtil.manager.taskNoticeMail(item);
+			}
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -621,6 +642,15 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				trs.rollback();
 		}
 	}
+	
+	@Override
+    public WorkItem getWorkItem(Persistable per) throws WTException{
+         QueryResult qr = WorkflowHelper.service.getWorkItems(per);
+         if(qr.hasMoreElements()){
+                return (WorkItem)qr.nextElement();
+         }
+         return null;
+    }
 
 	@Override
 	public void _agree(Map<String, String> params) throws Exception {
