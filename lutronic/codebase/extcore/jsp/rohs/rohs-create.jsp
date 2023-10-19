@@ -225,15 +225,13 @@
 						return false;
 					}
 				}
-				
+				params.temprary = temprary;
 				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/rohs/create");
 				call(url, params, function(data) {
+					alert(data.msg);
 					if(data.result){
-						alert(data.msg);
 						location.href = getCallUrl("/rohs/list");
-					}else{
-						alert(data.msg);
 					}
 				});
 			};

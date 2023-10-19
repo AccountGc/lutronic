@@ -187,8 +187,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create();">
-					<input type="button" value="임시저장" title="임시저장" class="">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -272,13 +272,10 @@
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/create");
 				toRegister(params, addRows8); // 결재선 세팅
-				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						location.href = getCallUrl("/ecpr/list");
-					} else {
-						parent.closeLayer();
 					}
 				});
 			}
