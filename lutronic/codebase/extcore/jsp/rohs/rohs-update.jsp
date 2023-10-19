@@ -99,6 +99,7 @@
 			<jsp:param value="update" name="mode" />
 			<jsp:param value="rohs" name="moduleType"/>
 		</jsp:include>
+		<!-- 관련 rohs -->
 		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
 			<jsp:param value="<%=data.getOid() %>" name="oid" />
 			<jsp:param value="composition" name="roleType"/>

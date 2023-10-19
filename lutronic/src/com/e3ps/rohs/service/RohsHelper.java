@@ -797,10 +797,9 @@ public class RohsHelper {
 		String vr = CommonUtil.getVROID(rohs);
 		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
 		
-		QueryResult rt =PersistenceHelper.manager.navigate(rohs,roleType, RepresentToLink.class,true);
+		QueryResult rt =PersistenceHelper.manager.navigate(rohs, roleType, RepresentToLink.class,true);
 		while(rt.hasMoreElements()){
 			ROHSMaterial rohsMaterial = (ROHSMaterial)rt.nextElement();
-			//System.out.println("getRepresentToLinkList rohsMaterial =" + rohsMaterial.getNumber());
 			RohsData data = new RohsData(rohsMaterial);
 			list.add(data);
 		}
@@ -911,6 +910,33 @@ public class RohsHelper {
 		QueryResult result = PersistenceServerHelper.manager.query(spec);
 		
 		return result;
+	}
+	
+	/**
+	 * 관련 객체 불러오기 메서드
+	 */
+	public JSONArray reference(String oid, String type) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
+		if ("rohs".equalsIgnoreCase(type)) {
+			// 물질
+			return JSONArray.fromObject(referenceRohs(rohs, list));
+		}
+		return JSONArray.fromObject(list);
+	}
+	
+	/**
+	 * 관련 ROHS
+	 */
+	private Object referenceRohs(ROHSMaterial rohs, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(rohs, "composition", RepresentToLink.class);
+		while (result.hasMoreElements()) {
+			ROHSMaterial ref = (ROHSMaterial) result.nextElement();
+			RohsData data = new RohsData(ref);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(data);
+			list.add(map);
+		}
+		return list;
 	}
 
 }

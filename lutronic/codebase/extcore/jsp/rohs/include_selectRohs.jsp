@@ -73,7 +73,7 @@ boolean isUpdate = "update".equals(mode);
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : true,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (isCreate || isUpdate) {%>
 			showStateColumn : true,
@@ -84,7 +84,7 @@ boolean isUpdate = "update".equals(mode);
 		}
 		rohsGridID = AUIGrid.create("#grid_rohs", columnLayout, props);
 		<%if (isUpdate) {%>
-			AUIGrid.setGridData(rohsGridID, <%=AUIGridUtil.include(oid, "rohs")%>);
+			AUIGrid.setGridData(rohsGridID, <%=RohsHelper.manager.reference(oid, "rohs")%>);
 		<%}%>
 	}
 

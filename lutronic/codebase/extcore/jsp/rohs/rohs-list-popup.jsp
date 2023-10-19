@@ -112,7 +112,7 @@ const columns = [ {
 	dataField : "number",
 	headerText : "물질번호",
 	dataType : "string",
-	width : 120,
+	width : 250,
 	filter : {
 		showIcon : true,
 		inline : true
@@ -130,7 +130,7 @@ const columns = [ {
 	dataField : "manufactureDisplay",
 	headerText : "협력업체",
 	dataType : "string",
-	width : 120,
+	width : 250,
 	filter : {
 		showIcon : true,
 		inline : true
@@ -139,7 +139,7 @@ const columns = [ {
 	dataField : "name",
 	headerText : "물질명",
 	dataType : "string",
-	width : 120,
+	width : 250,
 	filter : {
 		showIcon : true,
 		inline : true
@@ -175,7 +175,7 @@ const columns = [ {
 	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
-	width : 100,
+	width : 180,
 	filter : {
 		showIcon : true,
 		inline : true

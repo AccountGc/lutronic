@@ -109,7 +109,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : true,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (isCreate || isUpdate) {%>
 			showStateColumn : true,
