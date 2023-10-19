@@ -69,7 +69,7 @@ public class EcprDTO {
 		setNumber(cr.getEoNumber());
 		setApproveDate(cr.getApproveDate());
 		setCreateDepart_name(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
-		setWriter_name(cr.getWriter());
+		setWriter_name(StringUtil.checkNull(cr.getWriter()));
 		setProposer_name(cr.getProposer());
 		setChangeSection(cr.getChangeSection());
 		setEoCommentA(cr.getEoCommentA());

@@ -177,15 +177,16 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="등록"  title="등록"  class="blue"  id="createBtn">
-					<input type="button" value="초기화" title="초기화" id="resetBtn">
-					<input type="button" value="목록" title="목록" id="listBtn">
+					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
-			$("#createBtn").click(function() {
+			function create(temp) {
+				const temprary = JSON.parse(temp);
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const primary = document.querySelector("input[name=primary]");
 				if(isEmpty($("#name").val())) {
 					alert("문서명을 입력하세요.");
@@ -200,8 +201,20 @@
 					return;
 				}
 				
-				if (!confirm("등록 하시겠습니까?")) {
-					return;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if(addRows8){
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
 				}
 				
 				let params = new Object();
@@ -221,17 +234,17 @@
 				params.secondarys = secondarys;
 				params.partList = AUIGrid.getGridData(partGridID);
 				params.docList = AUIGrid.getGridData(myGridID90);
+				params.temprary = temprary;
 				
 				var url = getCallUrl("/mold/create");
+				toRegister(params, addRows8); // 결재선 세팅
 				call(url, params, function(data) {
+					alert(data.msg);
 					if(data.result){
-						alert(data.msg);
 						location.href = getCallUrl("/mold/list");
-					}else{
-						alert(data.msg);
 					}
 				});
-			});
+			}
 			
 			$("#listBtn").click(function() {
 				location.href = getCallUrl("/mold/list");

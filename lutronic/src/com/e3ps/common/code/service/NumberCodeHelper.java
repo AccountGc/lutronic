@@ -52,9 +52,9 @@ public class NumberCodeHelper {
 	 * 코드 & 코드타입으로 값 가져오기
 	 */
 	public String getNumberCodeName(String code, String codeType) throws Exception {
-
+		String numberCodeNames = "";
 		if (!StringUtil.checkString(codeType) || code == null || code.equals("")) {
-			return "";
+			return numberCodeNames;
 		}
 
 		QuerySpec query = new QuerySpec();
@@ -73,7 +73,7 @@ public class NumberCodeHelper {
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		int i = 0;
-		String numberCodeNames = "";
+		
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode numberCode = (NumberCode) obj[0];

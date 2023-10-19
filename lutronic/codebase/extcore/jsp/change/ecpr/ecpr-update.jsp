@@ -114,7 +114,10 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
-						int isInclude = dto.getChangeSection().indexOf(section.getCode());
+						int isInclude = -1;
+						if(dto.getChangeSection()!=null){
+							isInclude = dto.getChangeSection().indexOf(section.getCode());
+						}
 					%>
 					<div class="pretty p-switch">
 						<input type="checkbox" name="changeSection" value="<%=section.getCode()%>" <%if(isInclude >= 0){ %>checked<%} %>>
@@ -249,14 +252,11 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/update");
-				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						opener.loadGridData();
 						self.close();
-					} else {
-						parent.closeLayer();
 					}
 				});
 			}
