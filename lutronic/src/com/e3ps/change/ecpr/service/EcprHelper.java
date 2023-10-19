@@ -7,32 +7,22 @@ import java.util.Map;
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.EcrToEcrLink;
-import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
-import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
-import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.org.WTUser;
-import wt.query.ClassAttribute;
-import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -88,14 +78,14 @@ public class EcprHelper {
 				query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.WRITER, SearchCondition.LIKE , "%"+writer+"%", false), new int[] {idx});
 			}
 			//작성부서
-			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.CREATE_DEPART, createDepart);
+			QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.CREATE_DEPART, createDepart);
 			//작성일
 			QuerySpecUtils.toTimeGreaterAndLess(query, idx, ECPRRequest.class, ECPRRequest.CREATE_DATE, writedFrom,
 					writedTo);
 			//제안자
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.PROPOSER, proposer);
 			//변경구분
-			QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.CHANGE_SECTION, changeSection);
+			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.CHANGE_SECTION, changeSection);
 			//제품명
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.MODEL, model);
 			

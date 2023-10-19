@@ -56,8 +56,8 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">작성일</th>
 				<td class="indent5">
-					<input type="text" name="createdDate" id="createdDate" class="width-100" value="<%=dto.getCreatedDate() != null ? dto.getCreatedDate() : ""%>">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('createdDate');">
+					<input type="text" name="writeDate" id="writeDate" class="width-100" value="<%=dto.getWriteDate() != null ? dto.getWriteDate() : ""%>">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
 				</td>
 				<th>승인일</th>
 				<td class="indent5">
@@ -103,7 +103,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">제안자</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer() : ""%>">
+					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer_name() : ""%>">
 					<input type="hidden" name="proposerOid" id="proposerOid" value="<%= dto.getProposer_oid()%>">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
 				</td>
@@ -236,7 +236,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					oid : oid.value,
 					name : name.value,
 					number : number.value,
-					createdDate : toId("createdDate"),
+					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
 					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
@@ -264,7 +264,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				date("createdDate");
+				date("writeDate");
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");

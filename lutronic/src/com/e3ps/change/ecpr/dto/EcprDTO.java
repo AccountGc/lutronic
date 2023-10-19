@@ -34,6 +34,8 @@ public class EcprDTO {
 	private String eoCommentA;
 	private String eoCommentB;
 	private String eoCommentC;
+	private String writer_oid;
+	private String proposer_oid;
 	
 	// 따로 추가
 	private String state;
@@ -48,8 +50,6 @@ public class EcprDTO {
 	private String model;
 
 	// 변수용
-	private String writer_oid;
-	private String proposer_oid;
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
@@ -69,12 +69,14 @@ public class EcprDTO {
 		setNumber(cr.getEoNumber());
 		setApproveDate(cr.getApproveDate());
 		setCreateDepart_name(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
-		setWriter_name(StringUtil.checkNull(cr.getWriter()));
-		setProposer_name(cr.getProposer());
+		setWriter_name(CommonUtil.getUserNameFromOid(cr.getWriter()));
+		setWriter_oid(CommonUtil.getUserOid(cr.getWriter()));
+		setProposer_name(CommonUtil.getUserNameFromOid(cr.getProposer()));
+		setProposer_oid(CommonUtil.getUserOid(cr.getProposer()));
 		setChangeSection(cr.getChangeSection());
-		setEoCommentA(cr.getEoCommentA());
-		setEoCommentB(cr.getEoCommentB());
-		setEoCommentC(cr.getEoCommentC());
+		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
+		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
+		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
 		
 		// 따로 추가
 		setState(cr.getLifeCycleState().getDisplay());

@@ -42,7 +42,7 @@
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th class="req">ECPR 번호</th>
+				<th class="req lb">ECPR 번호</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300">
 				</td>
@@ -50,10 +50,10 @@
 			<tr>
 				<th class="lb">작성일</th>
 				<td class="indent5">
-					<input type="text" name="createdDate" id="writeDate" class="width-100">
+					<input type="text" name="writeDate" id="writeDate" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
 				</td>
-				<th>승인일</th>
+				<th class="lb">승인일</th>
 				<td class="indent5">
 					<input type="text" name="approveDate" id="approveDate" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="createDate('approveDate');">
@@ -158,7 +158,7 @@
 			</tr>
 			<tr>
 				<th class="lb">결재</th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -167,7 +167,7 @@
 			</tr>
 			<tr>
 				<th class="lb">외부 메일 지정</th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -282,7 +282,7 @@
 		
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				date("createdDate");
+				date("writeDate");
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");

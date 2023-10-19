@@ -6,6 +6,7 @@ import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -44,7 +45,7 @@ public class EcprColumn {
 		setChangeSection(EcprHelper.manager.displayToSection(cr.getChangeSection()));
 		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
 		setCreateDepart(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
-		setWriter(cr.getWriter());
+		setWriter(CommonUtil.getUserNameFromOid(cr.getWriter()));
 		setApproveDate(cr.getApproveDate());
 		setState(cr.getLifeCycleState().getDisplay());
 		setCreator(cr.getCreatorFullName());

@@ -8,6 +8,7 @@
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 %>
 <!DOCTYPE html>
 <html>
@@ -72,7 +73,16 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				</td>
 				<th>작성부서</th>
 				<td class="indent5">
-					<input type="text" name="createDepart" id="createDepart" data-multi="false" class="width-200">
+					<select name="createDepart" id="createDepart" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>작성일</th>
 				<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
@@ -311,6 +321,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				selectbox("_psize");
 				selectbox("changeSection");
 				selectbox("model");
+				selectbox("createDepart");
 			});
 
 			document.addEventListener("keydown", function(event) {

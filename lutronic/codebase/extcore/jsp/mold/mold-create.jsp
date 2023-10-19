@@ -36,7 +36,7 @@
 				</td>
 			</tr>
 		</table>
-		<table class="search-table">
+		<table class="create-table">
 			<colgroup>
 				<col width="150">
 				<col width="*">
@@ -44,7 +44,7 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>결재방식 <span class="red">*</span></th>
+				<th class="req lb">결재방식</th>
 				<td colspan="3" class="indent5">
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
@@ -63,13 +63,13 @@
 				</td>
 			</tr>
 			<tr>
-				<th>문서명 <span style="color:red;">*</span></th>
+				<th class="req lb">문서명</th>
 				<td class="indent5" colspan="3">
 					<input type="text" name="name" id="name" class="width-500">
 				</td>
 			</tr>
 			<tr>
-				<th>Manufacturer</th>
+				<th class="lb">Manufacturer</th>
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
@@ -82,7 +82,7 @@
 						%>
 					</select>
 				</td>
-				<th>금형타입 <span class="red">*</span></th>
+				<th class="req lb">금형타입</th>
 				<td class="indent5">
 					<select name="moldtype" id="moldtype" class="width-200">
 						<option value="">선택</option>
@@ -97,21 +97,21 @@
 				</td>
 			</tr>
 			<tr>
-				<th>업체자체금형번호</th>
+				<th class="lb">업체자체금형번호</th>
 				<td class="indent5">
 					<input type="text" name="moldnumber" id="moldnumber" class="width-500">
 				</td>
-				<th>금형개발비</th>
+				<th class="lb">금형개발비</th>
 				<td class="indent5">
 					<input type="text" name="moldcost" id="moldcost" class="width-500">
 				</td>
 			</tr>
 			<tr>
-				<th>내부 문서번호 <br>(자산등록번호)</th>
+				<th class="lb">내부 문서번호 <br>(자산등록번호)</th>
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-500">
 				</td>
-				<th>부서</th>
+				<th class="lb">부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
@@ -126,13 +126,13 @@
 				</td>
 			</tr>
 			<tr>
-				<th>문서설명</th>
+				<th class="lb">문서설명</th>
 				<td class="indent5" colspan="3">
 					<input type="text" name="description" id="description" class="width-300">
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">주 첨부파일 <span class="red">*</span></th>
+				<th class="req lb">주 첨부파일</th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="" name="oid" />
@@ -149,7 +149,7 @@
 			</tr>
 			<tr>
 				<th class="lb">결재</th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
