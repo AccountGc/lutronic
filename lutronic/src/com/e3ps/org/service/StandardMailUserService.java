@@ -406,14 +406,13 @@ public class StandardMailUserService extends StandardManager implements MailUser
 	}
 
 	@Override
-	public void deleteLink(Map<String, Object> params) throws Exception {
-		ArrayList<String> list = new ArrayList<String>();
+	public void deleteLink(String oid) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			for (String oid : list) {
-				MailWTobjectLink link = (MailWTobjectLink) CommonUtil.getObject(oid);
+			ArrayList<MailWTobjectLink> list = MailUserHelper.manager.navigate(oid);
+			for (MailWTobjectLink link : list) {
 				PersistenceHelper.manager.delete(link);
 			}
 

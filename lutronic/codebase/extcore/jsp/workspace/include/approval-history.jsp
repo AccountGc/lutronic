@@ -37,13 +37,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		</td>
 	</tr>
 </table>
-<table class="create-table">
-	<tr>
-		<td class="lb">
-			<div id="grid10000" style="height: 250px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-		</td>
-	</tr>
-</table>
+<div id="grid10000" style="height: 250px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID10000;
 	const columns10000 = [ {
@@ -116,4 +110,20 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 <%=data%>
 	);
 	}
+</script>
+
+
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				외부 유저 메일
+			</div>
+		</td>
+	</tr>
+</table>
+<div id="grid10001" style="height: 250px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<script type="text/javascript">
+	let myGridID10001;
 </script>

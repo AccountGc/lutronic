@@ -47,5 +47,5 @@ public interface MailUserService {
 	/**
 	 * 외부 메일 유저 링크 삭제 - 객제 결재시
 	 */
-	public abstract void deleteLink(Map<String, Object> params) throws Exception;
+	public abstract void deleteLink(String oid) throws Exception;
 }

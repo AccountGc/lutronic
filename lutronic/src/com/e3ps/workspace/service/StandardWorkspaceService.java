@@ -8,32 +8,24 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
-import com.e3ps.common.obj.ReflectUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.groupware.workprocess.WFItem;
-import com.e3ps.groupware.workprocess.WFItemUserLink;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 
 import wt.doc.WTDocument;
-import wt.doc.WTDocumentMaster;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.fc.WTObject;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.ownership.Ownership;
-import wt.part.WTPart;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.services.StandardManager;
@@ -624,14 +616,14 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			PersistenceHelper.manager.modify(line);
 
 			// 메일 처리
-			
+
 			// 발신인
-			WTUser adminUser = (WTUser)SessionHelper.manager.getAdministrator(); 
+			WTUser adminUser = (WTUser) SessionHelper.manager.getAdministrator();
 			// 수신인
 			Map<String, Object> toPerson = new HashMap<String, Object>();
 			toPerson.put(user.getEMail(), user.getFullName());
 			// 제목
-			String subject = ""; 
+			String subject = "";
 			String[] processTarget = new String[3];
 			// 내용
 			String content = "";
@@ -639,7 +631,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			String creatorName = "";
 			String description = "";
 			String deadlineStr = "";
-			
+
 			Persistable per = CommonUtil.getObject(tapOid);
 			if (per instanceof WTDocument) {
 				WTDocument doc = (WTDocument) CommonUtil.getObject(tapOid);
@@ -649,34 +641,34 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				processTarget[1] = doc.getNumber();
 				processTarget[2] = doc.getName();
 			}
-			
-			String viewString = processTarget[1] + " ("+processTarget[2]+")";
+
+			String viewString = processTarget[1] + " (" + processTarget[2] + ")";
 			String workName = line.getType();
-			if(null!=processTarget[0] && processTarget[0].length()>0) {
-				subject = processTarget[0] + "의 " + workName + "요청 알림 메일입니다.";	
+			if (null != processTarget[0] && processTarget[0].length() > 0) {
+				subject = processTarget[0] + "의 " + workName + "요청 알림 메일입니다.";
 				chash.put("gubun", processTarget[0]);
 			} else {
-				subject = processTarget[1] + "의 " + workName + "요청 알림 메일입니다.";	
+				subject = processTarget[1] + "의 " + workName + "요청 알림 메일입니다.";
 				chash.put("gubun", processTarget[1]);
 			}
-			
+
 			chash.put("viewString", viewString);
 			chash.put("workName", workName);
 			chash.put("deadlineStr", deadlineStr);
 			chash.put("creatorName", creatorName);
 			chash.put("description", description);
-			
+
 			MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
 			content = mhct.htmlContent(chash, "mail_notice.html");
 			Hashtable hash = new Hashtable();
-			
+
 			hash.put("FROM", adminUser);
 			hash.put("TO", toPerson);
 			hash.put("SUBJECT", subject);
 			hash.put("CONTENT", content);
-			
+
 			boolean mmmm = MailUtil.manager.sendMail(hash);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -688,15 +680,15 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				trs.rollback();
 		}
 	}
-	
+
 	@Override
-    public WorkItem getWorkItem(Persistable per) throws WTException{
-         QueryResult qr = WorkflowHelper.service.getWorkItems(per);
-         if(qr.hasMoreElements()){
-                return (WorkItem)qr.nextElement();
-         }
-         return null;
-    }
+	public WorkItem getWorkItem(Persistable per) throws WTException {
+		QueryResult qr = WorkflowHelper.service.getWorkItems(per);
+		if (qr.hasMoreElements()) {
+			return (WorkItem) qr.nextElement();
+		}
+		return null;
+	}
 
 	@Override
 	public void _agree(Map<String, String> params) throws Exception {

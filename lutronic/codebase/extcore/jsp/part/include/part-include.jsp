@@ -14,6 +14,8 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
+boolean header = Boolean.parseBoolean(request.getParameter("header"));
+JSONArray data = AUIGridUtil.include(oid, "part");
 %>
 <table class="button-table">
 	<tr>
@@ -26,6 +28,10 @@ boolean create = "create".equals(mode);
 	</tr>
 </table>
 
+<%
+	// 테이블 처리 여부
+	if(header) {
+%>
 <table class="create-table">
 	<colgroup>
 		<col width="150">
@@ -46,6 +52,13 @@ boolean create = "create".equals(mode);
 		</td>
 	</tr>
 </table>
+<%
+	} else {
+%>
+<div id="grid91" style="height: 110px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<%
+	}
+%>
 <script type="text/javascript">
 	let myGridID91;
 	const columns91 = [ {
@@ -121,7 +134,18 @@ boolean create = "create".equals(mode);
 			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
+			<%
+				if(view) {
+			%>
+			showAutoNoDataMessage : true,
+			noDataMessage : "관련 품목이 없습니다.",
+			<%
+				} else {
+			%>
 			showAutoNoDataMessage : false,
+			<%
+				}			
+			%>
 			enableSorting : false,
 			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
@@ -137,7 +161,7 @@ boolean create = "create".equals(mode);
 		}
 		myGridID91 = AUIGrid.create("#grid91", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "part")%>);
+		AUIGrid.setGridData(myGridID91, <%=data%>);
 		<%}%>
 	}
 

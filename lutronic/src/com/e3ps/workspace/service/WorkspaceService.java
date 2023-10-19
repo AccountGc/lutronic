@@ -84,4 +84,9 @@ public interface WorkspaceService {
 
 	
 	WorkItem getWorkItem(Persistable per) throws WTException;
+
+	/**
+	 * 결재 이력 삭제
+	 */
+	public abstract Persistable removeHistory(WTDocument doc) throws Exception;
 }

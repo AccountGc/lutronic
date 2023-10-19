@@ -215,6 +215,12 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
+			// 외부 메일 로직 추가
+
+			// 결재 이력 삭제
+			doc = (WTDocument) WorkspaceHelper.service.removeHistory(doc);
+
+			// 다 통과시 삭제
 			PersistenceHelper.manager.delete(doc);
 
 			trs.commit();
@@ -295,7 +301,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(doc, external);
-			
+
 			// 결재 시작
 			if (isSelf) {
 				// 자가결재시
