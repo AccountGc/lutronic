@@ -3,6 +3,8 @@
 <%
 ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 String jsp = dto.getPersist().getClass().getName();
+int idx = jsp.indexOf(".");
+jsp = jsp.substring(0, idx);
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -103,10 +105,17 @@ String jsp = dto.getPersist().getClass().getName();
 		</jsp:include>
 
 	</div>
-	
+
 	<div id="tabs-2">
-		여기 만들어보는거로
-		상단 jsp 변수로 처리해서 if문 업이 만들기
+		<%
+		// 여기가 결재 대상 마다 jsp 주소가 변경
+		// 문서 일경우 WTDocument.jsp
+		// 해당 jsp를 아래 위치에 만들고 기본 문서정보에 있던것들 복붙해서 가공 
+		String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
+		%>
+		<jsp:include page="<%=url%>">
+			<jsp:param value="<%=dto.getPersist().getPersistInfo().getObjectIdentifier().getStringValue()%>" name="oid" />
+		</jsp:include>
 	</div>
 </div>
 

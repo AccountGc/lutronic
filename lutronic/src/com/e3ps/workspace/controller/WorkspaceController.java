@@ -452,8 +452,6 @@ public class WorkspaceController extends BaseController {
 		return model;
 	}
 
-	
-
 	@Description(value = "합의 함수")
 	@ResponseBody
 	@PostMapping(value = "/_agree")
@@ -468,6 +466,24 @@ public class WorkspaceController extends BaseController {
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 //			ErrorLogHelper.service.create(e.toString(), "/workspace/_approval", "승인 함수");
+		}
+		return result;
+	}
+
+	@Description(value = "위임 함수")
+	@ResponseBody
+	@PostMapping(value = "/delegate")
+	public Map<String, Object> delegate(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.delegate(params);
+			result.put("result", SUCCESS);
+			result.put("msg", "결재가 위임 되었습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/delete", "개인결재선 삭제 함수");
 		}
 		return result;
 	}
