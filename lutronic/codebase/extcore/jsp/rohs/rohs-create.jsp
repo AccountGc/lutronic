@@ -134,7 +134,7 @@
 			</tr>
 			<tr>
 				<th class="lb">결재</th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -143,7 +143,7 @@
 			</tr>
 			<tr>
 				<th class="lb">외부 메일 지정</th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />

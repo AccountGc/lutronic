@@ -90,18 +90,18 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoNumber(number);
 			ecpr.setCreateDate(writeDate);
 
-			if(writer_oid!="") {
-				WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
-				ecpr.setWriter(writer.getFullName());
+			if(!writer_oid.equals("")) {
+				long writerOid = CommonUtil.getOIDLongValue(writer_oid);
+				ecpr.setWriter(Long.toString(writerOid));
 			}
 			
 			ecpr.setApproveDate(approveDate);
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
-			if(proposer_oid!="") {
-				WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
-				ecpr.setProposer(proposer.getFullName());		
+			if(!proposer_oid.equals("")) {
+				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
+				ecpr.setProposer(Long.toString(proposerOid));	
 			}
 			
 			ecpr.setChangeSection(changeSection);
@@ -257,17 +257,17 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoNumber(number);
 			ecpr.setCreateDate(writeDate);
 
-			if(writer_oid != "") {
-				WTUser writer = (WTUser) CommonUtil.getObject(writer_oid);
-				ecpr.setWriter(writer.getFullName());				
+			if(!writer_oid.equals("")) {
+				long writerOid = CommonUtil.getOIDLongValue(writer_oid);
+				ecpr.setWriter(Long.toString(writerOid));
 			}
 			ecpr.setApproveDate(approveDate);
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
-			if(proposer_oid != "") {
-				WTUser proposer = (WTUser) CommonUtil.getObject(proposer_oid);
-				ecpr.setProposer(proposer.getFullName());				
+			if(!proposer_oid.equals("")) {
+				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
+				ecpr.setProposer(Long.toString(proposerOid));
 			}
 			ecpr.setChangeSection(changeSection);
 			ecpr.setEoCommentA(eoCommentA);

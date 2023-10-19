@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,26 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.ECPRRequest;
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.beans.ECRData;
-import com.e3ps.change.cr.dto.CrDTO;
-import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.mold.service.MoldHelper;
-
-import wt.doc.WTDocument;
-import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
-import wt.part.WTPartDescribeLink;
 
 @Controller
 @RequestMapping(value = "/ecpr/**")
@@ -48,9 +34,11 @@ public class EcprController extends BaseController {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		model.addObject("modelList", modelList);
 		model.addObject("sectionList", sectionList);
 		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("deptcodeList", deptcodeList);
 		model.setViewName("/extcore/jsp/change/ecpr/ecpr-list.jsp");
 		return model;
 	}

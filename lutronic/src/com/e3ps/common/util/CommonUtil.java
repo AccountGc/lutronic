@@ -829,4 +829,15 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		VersionReference reference = (VersionReference) map.get(persistable);
 		return reference.getObject();
 	}
+	
+	public static String getUserOid(String ida2a2) throws WTException {
+		String oid = "wt.org.WTUser:" + ida2a2;
+		WTUser wtuser = (WTUser) getObject(oid);
+
+		if (wtuser != null) {
+			return wtuser.getPersistInfo().getObjectIdentifier().getStringValue();
+		} else {
+			return "";
+		}
+	}
 }
