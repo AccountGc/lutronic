@@ -448,7 +448,7 @@ public class WorkspaceController extends BaseController {
 	@GetMapping(value = "/mail")
 	public ModelAndView mail() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/workspace/mail-popup");
+		model.setViewName("popup:/workspace/mail-list-popup");
 		return model;
 	}
 

@@ -21,8 +21,8 @@ public class ActDTO {
 	private String name;
 	private String step;
 	private String step_name;
-	private String active_type;
-	private String active_name;
+//	private String active_type;
+//	private String active_name;
 	private String activity_type;
 	private String activity_name;
 	private String activeUser_oid;
@@ -31,6 +31,8 @@ public class ActDTO {
 	private int sort;
 	private String description;
 	private String finishDate;
+	private String completeDate;
+	private String state;
 
 	public ActDTO() {
 
@@ -78,8 +80,8 @@ public class ActDTO {
 			setStep_name(act.getStep());
 		}
 
-		setActive_type(act.getActiveType());
-		setActive_name(ActivityHelper.manager.getActName(getActive_type()));
+		setActivity_type(act.getActiveType());
+		setActivity_name(ActivityHelper.manager.getActName(getActivity_type()));
 		if (act.getActiveUser() != null) {
 			setActiveUser_oid(act.getActiveUser().getPersistInfo().getObjectIdentifier().getStringValue());
 			setActiveUser_name(act.getActiveUser().getFullName());
@@ -92,7 +94,8 @@ public class ActDTO {
 		setSort(act.getSortNumber());
 		setDescription(act.getDescription());
 		setFinishDate(act.getFinishDate() == null ? null : act.getFinishDate().toString());
-
+//		setCompleteDate(act)
+		setState(act.getLifeCycleState().getDisplay());
 	}
 
 }

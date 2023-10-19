@@ -27,6 +27,7 @@ import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -260,7 +261,6 @@ public class EoHelper {
 	public JSONArray reference(String oid, String type) throws Exception {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
-		System.out.println("여기 실행되나?");
 		if ("doc".equalsIgnoreCase(type)) {
 			// 문서
 			return JSONArray.fromObject(referenceDoc(eo, list));
@@ -309,17 +309,13 @@ public class EoHelper {
 	 * EO 관련 설계변경 활동
 	 */
 	private Object referenceActivity(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
-		JSONArray j = new JSONArray();
 		ArrayList<EChangeActivity> colletActivityList = ActivityHelper.manager.colletActivity(eo);
-		System.out.println(colletActivityList.size());
 		for (EChangeActivity item : colletActivityList) {
-
 			ActDTO dto = new ActDTO(item);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
-
-		return list;
+		return JSONArray.fromObject(list);
 	}
 
 	/**
@@ -340,4 +336,5 @@ public class EoHelper {
 		}
 		return display;
 	}
+
 }

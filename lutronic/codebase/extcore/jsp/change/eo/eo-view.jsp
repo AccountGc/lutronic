@@ -33,10 +33,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">관련 객체</a>
+			<a href="#tabs-2">이력 관리</a>
 		</li>
 		<li>
-			<a href="#tabs-3">이력 관리</a>
+			<a href="#tabs-3">관련 객체</a>
+		</li>
+		<li>
+			<a href="#tabs-4">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -73,16 +76,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5"><%=dto.getModifiedDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">완제품 품목</th>
-				<td colspan="5">
-					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-						<jsp:param value="view" name="mode" />
-						<jsp:param value="true" name="multi" />
-					</jsp:include>
-				</td>
-			</tr>
-			<tr>
 				<th class="lb">제품 설계 개요</th>
 				<td colspan="5" class="indent5">
 					<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getEoCommentA()%></textarea>
@@ -108,15 +101,31 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">완제품 품목</th>
+				<td colspan="5">
+					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+						<jsp:param value="view" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
+
+		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
 	</div>
 	<div id="tabs-2">
+		<!-- 산출물 -->
+	</div>
+	<div id="tabs-3">
 		<!-- 관련 객체 -->
 		<jsp:include page="/extcore/jsp/change/eo/include/eo-reference-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
-	<div id="tabs-3">
+	<div id="tabs-4">
 		<!-- 이력관리 -->
 		<jsp:include page="/extcore/jsp/change/eo/include/eo-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -187,9 +196,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		// 완제품
 		createAUIGrid104(columns104);
 		AUIGrid.resize(myGridID104);
+		createAUIGrid700(columns700);
+		AUIGrid.resize(myGridID700);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID104);
+		AUIGrid.resize(myGridID700);
 	});
 </script>

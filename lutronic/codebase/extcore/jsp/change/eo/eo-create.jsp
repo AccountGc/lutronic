@@ -22,16 +22,16 @@
 				<td class="right">
 					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button" value="뒤로" title="뒤로" class="gray" onclick="javascript:history.back();">
 				</td>
 			</tr>
 		</table>
 		<table class="create-table">
 			<colgroup>
 				<col width="150">
-				<col width="*">
+				<col width="650">
 				<col width="150">
-				<col width="*">
+				<col width="650">
 			</colgroup>
 			<tr>
 				<th class="req lb">EO 제목</th>
@@ -68,7 +68,6 @@
 						<jsp:param value="create" name="mode" />
 						<jsp:param value="MODEL" name="codeType" />
 						<jsp:param value="true" name="multi" />
-						<jsp:param value="150" name="height" />
 					</jsp:include>
 				</td>
 			</tr>

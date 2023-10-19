@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.WTObject;
@@ -370,6 +371,55 @@ public class StandardMailUserService extends StandardManager implements MailUser
 		} catch (
 
 		Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void saveLink(Persistable per, ArrayList<Map<String, String>> params) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (Map<String, String> map : params) {
+				String s = map.get("oid");
+				MailUser user = (MailUser) CommonUtil.getObject(s);
+				MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) per, user);
+				PersistenceHelper.manager.save(link);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void deleteLink(Map<String, Object> params) throws Exception {
+		ArrayList<String> list = new ArrayList<String>();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (String oid : list) {
+				MailWTobjectLink link = (MailWTobjectLink) CommonUtil.getObject(oid);
+				PersistenceHelper.manager.delete(link);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
 			e.printStackTrace();
 			trs.rollback();
 			throw e;

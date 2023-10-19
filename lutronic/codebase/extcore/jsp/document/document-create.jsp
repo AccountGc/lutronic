@@ -355,6 +355,8 @@ iframe {
 				const rowsEcpr = AUIGrid.getGridDataWithState(myGridIDEcpr, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				if (isNull(documentName.value)) {
 					alert("문서종류를 입력해주세요.");
@@ -410,8 +412,11 @@ iframe {
 					rows101 : rows101,
 					rowsEcpr : rowsEcpr,
 					rows105 : rows105,
-					temprary : temprary
+					temprary : temprary,
+					// 외부 메일
+					external : external
 				};
+				logger(params);
 				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
 				call(url, params, function(data) {

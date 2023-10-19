@@ -5,7 +5,6 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
 String oid = request.getParameter("oid");
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -20,7 +19,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 <table class="create-table">
 	<tr>
 		<td class="lb">
-			<div id="grid51" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid51" style="height: 250px; border-top: 1px solid#3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -111,8 +110,11 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID51 = AUIGrid.create("#grid51", columnLayout, props);
-		AUIGrid.setGridData(myGridID51, <%=DownloadHistoryHelper.manager.dLogger(oid)%>);
+		AUIGrid.setGridData(myGridID51,
+<%=DownloadHistoryHelper.manager.dLogger(oid)%>
+	);
 	}
 </script>

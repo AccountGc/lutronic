@@ -19,11 +19,11 @@ import wt.part.WTPart;
 @Getter
 @Setter
 public class EpmData {
-	
+
 //	public EPMDocument epm;
-	public String oid;																							// 도면번호
-	public String name;																							// 도면번호
-	public String number;																							// 도면번호
+	public String oid; // 도면번호
+	public String name; // 도면번호
+	public String number; // 도면번호
 	public String linkRefernceType;
 	public String icon;
 	public WTPart part;
@@ -45,7 +45,7 @@ public class EpmData {
 	private String pdf;
 	private String step;
 	private String dxf;
-	
+
 	public EpmData(EPMDocument epm) throws Exception {
 //		super(epm);
 //		setEpm(epm);
@@ -56,60 +56,61 @@ public class EpmData {
 		setCadType(epm.getDocType().toString());
 		setCreator(epm.getCreatorFullName());
 		setModifier(epm.getModifierFullName());
-		setCreateDate(DateUtil.getDateString(epm.getCreateTimestamp(),"a"));
-		setModifyDate(DateUtil.getDateString(epm.getModifyTimestamp(),"a"));
-		//true이면 동기화 버튼 활성화, false 이면 비활성
+		setCreateDate(DateUtil.getDateString(epm.getCreateTimestamp(), "a"));
+		setModifyDate(DateUtil.getDateString(epm.getModifyTimestamp(), "a"));
+		// true이면 동기화 버튼 활성화, false 이면 비활성
 		boolean isDRW = epm.getDocType().toString().equals("CADDRAWING");
-		if(!isDRW){
+		if (!isDRW) {
 			setNameSyschronization(false);
 		}
-		//수정 가능여부
+		// 수정 가능여부
 		boolean wgm = false;
 		wgm = epm.getOwnerApplication().toString().equals("EPM") ? true : false;
-		if((State.INWORK).equals(epm.getLifeCycleState()) && CommonUtil.isLatestVersion(epm) && ! wgm) {
+		if ((State.INWORK).equals(epm.getLifeCycleState()) && CommonUtil.isLatestVersion(epm) && !wgm) {
 			setUpdate(true);
 		}
-		//최신객체여부
+		// 최신객체여부
 		setLatest(CommonUtil.isLatestVersion(epm));
-		
-		setLocation(StringUtil.checkNull(epm.getLocation()).replaceAll("/Default",""));
+
+		setLocation(StringUtil.checkNull(epm.getLocation()).replaceAll("/Default", ""));
 		setState(epm.getLifeCycleState().toString());
 		setStateDisplay(epm.getLifeCycleState().getDisplay());
-    	EPMDocumentMaster master = (EPMDocumentMaster)epm.getMaster();
-    	String cadName = master.getCADName();
+		EPMDocumentMaster master = (EPMDocumentMaster) epm.getMaster();
+		String cadName = master.getCADName();
 		setCadName(cadName);
 		setAttach(epm);
-		//Creo의 드로잉은 경우 3D의 WTPArt
-		if(EpmUtil.isCreoDrawing(epm)){
-			String number= epm.getNumber();
+		// Creo의 드로잉은 경우 3D의 WTPArt
+		if (EpmUtil.isCreoDrawing(epm)) {
+			String number = epm.getNumber();
 			String version = epm.getVersionIdentifier().getValue();
 			number = EpmUtil.getFileNameNonExtension(number);
-			part = PartHelper.service.getPart(number, version);
-		}else{
+			part = PartHelper.manager.getPart(number, version);
+		} else {
 			part = DrawingHelper.service.getWTPart(epm);
 		}
-		
-		//연관 파트 번호
-		if(part == null){
+
+		// 연관 파트 번호
+		if (part == null) {
 			part = getDrawingPart();
 		}
-		if(part != null){
+		if (part != null) {
 			pNum = part.getNumber();
 		}
 		setPNum(pNum);
-		
+
 		setApplicationType(epm.getOwnerApplication().toString());
 		setVersion(epm.getVersionIdentifier().getValue() + "." + epm.getIterationIdentifier().getValue());
 	}
-	//연관 파트 번호
+
+	// 연관 파트 번호
 	public String getpNum() {
 		String pNum = "";
 		try {
-			if(part == null){
+			if (part == null) {
 				part = getDrawingPart();
 			}
-			
-			if(part != null) {
+
+			if (part != null) {
 				pNum = part.getNumber();
 			}
 		} catch (Exception e) {
@@ -117,8 +118,7 @@ public class EpmData {
 		}
 		return pNum;
 	}
-	
-	
+
 	private void setAttach(EPMDocument epm) throws Exception {
 		setStep(AUIGridUtil.step(epm));
 		EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
@@ -127,25 +127,24 @@ public class EpmData {
 			setDxf(AUIGridUtil.dxf(epm2D));
 		}
 	}
-	
+
 	/**
 	 * Creo의 드로잉은 경우 3D의 WTPArt
+	 * 
 	 * @return
 	 */
 	public WTPart getDrawingPart() {
-		
+
 		try {
-			
-			
-			
+
 			return part;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	//승인여부
+
+	// 승인여부
 //	public boolean getApprove() throws Exception{
 //		boolean approve = false;
 //		WFItem wfItem =  WFItemHelper.service.getWFItem(epm);

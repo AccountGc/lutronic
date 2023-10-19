@@ -127,8 +127,8 @@ public class PartColumn {
 					isDwg = true;
 					if (epm != null) {
 
-						EpmData epmData = new EpmData(epm);
-						String appType = epmData.getApplicationType();
+//						EpmData epmData = new EpmData(epm);
+						String appType = epm.getOwnerApplication().toString();
 						if ("MANUAL".equals(appType)) {
 							setDwgNo(epm.getNumber());
 							setDwgOid(CommonUtil.getOIDString(epm));

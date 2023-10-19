@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.org.MailUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,8 +26,11 @@ public class MailUserDTO {
 	/**
 	 * 변수
 	 */
+	@JsonIgnore
 	private ArrayList<Map<String, Object>> addRow = new ArrayList<Map<String, Object>>();
+	@JsonIgnore
 	private ArrayList<Map<String, Object>> editRow = new ArrayList<Map<String, Object>>();
+	@JsonIgnore
 	private ArrayList<Map<String, Object>> removeRow = new ArrayList<Map<String, Object>>();
 
 	public MailUserDTO() {

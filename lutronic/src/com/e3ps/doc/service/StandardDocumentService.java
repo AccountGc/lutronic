@@ -36,6 +36,7 @@ import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.groupware.workprocess.AppPerLink;
 import com.e3ps.groupware.workprocess.AsmApproval;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -243,6 +244,8 @@ public class StandardDocumentService extends StandardManager implements Document
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
 		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
 		boolean isSelf = dto.isSelf();
 		Transaction trs = new Transaction();
 		try {
@@ -290,6 +293,9 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 문서 관련 객체 데이터 처리
 			saveLink(doc, dto);
 
+			// 외부 메일 링크 저장
+			MailUserHelper.service.saveLink(doc, external);
+			
 			// 결재 시작
 			if (isSelf) {
 				// 자가결재시
@@ -406,7 +412,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
-		
+
 		ArrayList<Map<String, String>> rowsEcpr = dto.getRowsEcpr();
 		// 관련ECPR
 		for (Map<String, String> rowEcpr : rowsEcpr) {

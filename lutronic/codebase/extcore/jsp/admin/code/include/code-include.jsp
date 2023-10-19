@@ -9,7 +9,6 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <%
 if (create || update) {
@@ -19,7 +18,7 @@ if (create || update) {
 <%
 }
 %>
-<div id="grid300" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid300" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID300;
 	const columns300 = [ {
@@ -90,6 +89,7 @@ if (create || update) {
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID300 = AUIGrid.create("#grid300", columnLayout, props);
 		<%if (view || update) {%>

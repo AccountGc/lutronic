@@ -11,7 +11,6 @@ boolean update = "update".equals(mode);
 	<input type="button" value="외부 메일 추가" title="외부 메일 추가" class="blue" onclick="popup9();">
 	<input type="button" value="외부 메일 삭제" title="외부 메일 삭제" class="red" onclick="deleteRow9();">
 	<div id="grid9" style="height: 100px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-	<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 	
 	<script type="text/javascript">
 		let myGridID9;
@@ -23,31 +22,33 @@ boolean update = "update".equals(mode);
 			dataField : "type",
 			headerText : "이메일",
 			dataType : "string",
-		} ]
+		}, {
+			dataField : "oid",
+			dataType : "string",
+			visible : false
+		}]
 
 		function createAUIGrid9(columnLayout) {
 			const props = {
-					headerHeight : 30,
-					fillColumnSizeMode : false,
-					showRowNumColumn : true,
-					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : false,
-					enableSorting : false,
-					softRemoveRowMode : false,
-					selectionMode : "multipleCells",
-					<%if (create || update) {%>
-					showStateColumn : true,
-					showRowCheckColumn : true,
-					<%}%>
-					enableFilter : true,
-					autoGridHeight : true
+				headerHeight : 30,
+				fillColumnSizeMode : false,
+				showRowNumColumn : true,
+				rowNumHeaderText : "번호",
+				showAutoNoDataMessage : false,
+				enableSorting : false,
+				softRemoveRowMode : false,
+				selectionMode : "multipleCells",
+				<%if (create || update) {%>
+				showStateColumn : true,
+				showRowCheckColumn : true,
+				<%}%>
+				enableFilter : true,
+				autoGridHeight : true
 			}
 			myGridID9 = AUIGrid.create("#grid9", columnLayout, props);
 		}
 
 		function popup9() {
-			const list = AUIGrid.getGridData(myGridID9);
-			
 			const url = getCallUrl("/workspace/mail");
 			const p = _popup(url, 1400, 860, "n");
 		}
@@ -65,11 +66,12 @@ boolean update = "update".equals(mode);
 				const rowIndex = dd.rowIndex;
 				const item = dd.item;
 				const unique = AUIGrid.isUniqueValue(myGridID9, "oid", item.oid);
+				logger(item);
 				if (unique) {
 					AUIGrid.addRow(myGridID9, item, rowIndex);
 				} else {
 					// 중복은 그냥 경고 없이 처리 할지 합의?
-					alert(item.number + " 메일은 이미 추가 되어있습니다.");
+					alert(item.name + " 메일은 이미 추가 되어있습니다.");
 				}
 			})
 			callBack(true);
