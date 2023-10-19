@@ -114,19 +114,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th class="lb">결재방식</th>
-				<td class="indent5"><%=dto.getApprovaltype_name() == null ? "" : dto.getApprovaltype_name()%></td>
-				<th>내부문서번호</th>
-				<td class="indent5"><%=dto.getInteralnumber() == null ? "" : dto.getInteralnumber()%></td>
-				<th>부서</th>
-				<td class="indent5"><%=dto.getDeptcode_name() == null ? "" : dto.getDeptcode_name()%></td>
-			</tr>
-			<tr>
-				<th class="lb">금형번호</th>
-				<td class="indent5"><%=dto.getMoldnumber() == null ? "" : dto.getMoldnumber()%></td>
-				<th>금형타입</th>
-				<td class="indent5"><%=dto.getMoldtype_name() == null ? "" : dto.getMoldtype_name()%></td>
-				<th>금형개발비</th>
-				<td class="indent5"><%=dto.getMoldcost() == null ? "" : dto.getMoldcost()%></td>
+				<td class="indent5" colspan="5"><%=dto.getApprovaltype_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">설명</th>

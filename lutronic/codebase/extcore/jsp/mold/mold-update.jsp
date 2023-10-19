@@ -145,8 +145,6 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 						<option value="">선택</option>
 						<%
 						for (NumberCode deptcode : deptcodeList) {
-							System.out.println(deptcode.getCode());
-							System.out.println(dto.getDeptcode_code());
 						%>
 							<option value="<%=deptcode.getCode() %>" <%if (deptcode.getCode().equals(dto.getDeptcode_code())) {%> selected="selected" <%}%>><%=deptcode.getName()%></option>
 						<%
