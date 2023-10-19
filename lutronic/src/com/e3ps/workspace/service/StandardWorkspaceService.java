@@ -3,11 +3,15 @@ package com.e3ps.workspace.service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
+import com.e3ps.common.obj.ReflectUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -33,6 +37,7 @@ import wt.part.WTPart;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.workflow.work.WorkItem;
 import wt.workflow.work.WorkflowHelper;
@@ -608,6 +613,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	public void delegate(Map<String, String> params) throws Exception {
 		String oid = params.get("oid"); // 결재라인
 		String reassignUserOid = params.get("reassignUserOid");
+		String tapOid = params.get("tapOid");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -618,18 +624,58 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			PersistenceHelper.manager.modify(line);
 
 			// 메일 처리
-			String tapOid = params.get("tapOid");
+			
+			// 발신인
+			WTUser adminUser = (WTUser)SessionHelper.manager.getAdministrator(); 
+			// 수신인
+			Map<String, Object> toPerson = new HashMap<String, Object>();
+			toPerson.put(user.getEMail(), user.getFullName());
+			// 제목
+			String subject = ""; 
+			String[] processTarget = new String[3];
+			// 내용
+			String content = "";
+			Hashtable chash = new Hashtable();
+			String creatorName = "";
+			String description = "";
+			String deadlineStr = "";
+			
 			Persistable per = CommonUtil.getObject(tapOid);
 			if (per instanceof WTDocument) {
 				WTDocument doc = (WTDocument) CommonUtil.getObject(tapOid);
-				per = doc;
+				creatorName = doc.getCreatorFullName();
+				description = StringUtil.checkNull(doc.getDescription());
+				processTarget[0] = null;
+				processTarget[1] = doc.getNumber();
+				processTarget[2] = doc.getName();
 			}
 			
-			WorkItem item = getWorkItem(per);
-			
-			if(null!=item){
-				boolean mmmm = MailUtil.manager.taskNoticeMail(item);
+			String viewString = processTarget[1] + " ("+processTarget[2]+")";
+			String workName = line.getType();
+			if(null!=processTarget[0] && processTarget[0].length()>0) {
+				subject = processTarget[0] + "의 " + workName + "요청 알림 메일입니다.";	
+				chash.put("gubun", processTarget[0]);
+			} else {
+				subject = processTarget[1] + "의 " + workName + "요청 알림 메일입니다.";	
+				chash.put("gubun", processTarget[1]);
 			}
+			
+			chash.put("viewString", viewString);
+			chash.put("workName", workName);
+			chash.put("deadlineStr", deadlineStr);
+			chash.put("creatorName", creatorName);
+			chash.put("description", description);
+			
+			MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+			content = mhct.htmlContent(chash, "mail_notice.html");
+			Hashtable hash = new Hashtable();
+			
+			hash.put("FROM", adminUser);
+			hash.put("TO", toPerson);
+			hash.put("SUBJECT", subject);
+			hash.put("CONTENT", content);
+			
+			boolean mmmm = MailUtil.manager.sendMail(hash);
 			
 			trs.commit();
 			trs = null;
