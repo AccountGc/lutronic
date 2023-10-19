@@ -3,8 +3,12 @@
 <%
 ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
 String jsp = dto.getPersist().getClass().getName();
+
 int idx = jsp.indexOf(".");
-jsp = jsp.substring(0, idx);
+
+jsp = jsp.substring(jsp.lastIndexOf(".") + 1);
+String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
+String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getStringValue();
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -107,15 +111,10 @@ jsp = jsp.substring(0, idx);
 	</div>
 
 	<div id="tabs-2">
-		<%
-		// 여기가 결재 대상 마다 jsp 주소가 변경
-		// 문서 일경우 WTDocument.jsp
-		// 해당 jsp를 아래 위치에 만들고 기본 문서정보에 있던것들 복붙해서 가공 
-		String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
-		%>
 		<jsp:include page="<%=url%>">
-			<jsp:param value="<%=dto.getPersist().getPersistInfo().getObjectIdentifier().getStringValue()%>" name="oid" />
+			<jsp:param value="<%=tapOid%>" name="tapOid" />
 		</jsp:include>
+		
 	</div>
 </div>
 
@@ -283,6 +282,8 @@ jsp = jsp.substring(0, idx);
 						createAUIGrid10000(columns10000);
 					}
 					break;
+				case "tabs-2":
+					break;
 				}
 			}
 		});
@@ -297,4 +298,7 @@ jsp = jsp.substring(0, idx);
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID10000);
 	});
+	
+	
+	
 </script>
