@@ -460,7 +460,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	@Override
 	public void _reject(Map<String, String> params) throws Exception {
 		String oid = params.get("oid");
-		string description = params.get("description");
+		String description = params.get("description");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();

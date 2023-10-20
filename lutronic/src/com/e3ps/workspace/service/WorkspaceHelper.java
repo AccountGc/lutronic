@@ -71,6 +71,7 @@ public class WorkspaceHelper {
 	public static final String STATE_RECEIVE_STAND = "수신대기중";
 	public static final String STATE_RECEIVE_READY = "수신확인중";
 	public static final String STATE_RECEIVE_COMPLETE = "수신완료";
+	public static final String STATE_RECEIVE_REJECT = "수신반려";
 
 	/*
 	 * 결재자 역할들
@@ -797,14 +798,14 @@ public class WorkspaceHelper {
 		map.put("curPage", pager.getCpage());
 		return map;
 	}
-	
+
 	/**
 	 * 외부 메일 가져오기 메서드
 	 */
 	public JSONArray getMailList(String oid) throws Exception {
 		Persistable per = CommonUtil.getObject(oid);
 		ArrayList<Map<String, String>> list = new ArrayList<>();
-		
+
 		if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 			DocumentDTO dto = new DocumentDTO(doc);

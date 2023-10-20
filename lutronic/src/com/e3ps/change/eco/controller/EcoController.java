@@ -16,8 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.eco.service.EcoHelper;
-import com.e3ps.change.eo.dto.EoDTO;
-import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -101,8 +99,7 @@ public class EcoController extends BaseController {
 		model.setViewName("popup:/change/eco/eco-view");
 		return model;
 	}
-	
-	
+
 	@Description(value = "ECO 수정")
 	@GetMapping(value = "/modify")
 	public ModelAndView modify(@RequestParam String oid) throws Exception {
@@ -114,7 +111,7 @@ public class EcoController extends BaseController {
 		model.setViewName("popup:/change/eco/eco-modify");
 		return model;
 	}
-	
+
 	@Description(value = "ECO 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/modify")

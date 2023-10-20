@@ -45,7 +45,7 @@ public class EventListener extends ServiceEventListenerAdapter {
 		if (target instanceof EChangeActivity) {
 			if (type.equals(STATE_CHANGE)) {
 				EChangeActivity eca = (EChangeActivity) target;
-				ActivityHelper.service.complete(eca);
+				ActivityHelper.service.ccompleteAfterEvent(eca);
 			}
 		}
 
