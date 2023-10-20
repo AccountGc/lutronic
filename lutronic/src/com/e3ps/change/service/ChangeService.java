@@ -10,9 +10,8 @@ import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.RequestOrderLink;
-import com.e3ps.change.beans.EADData;
-import com.e3ps.change.beans.ECOData;
-import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.change.activity.dto.ActDTO;
+import com.e3ps.change.eco.dto.EcoDTO;
 
 import wt.method.RemoteInterface;
 import wt.vc.baseline.ManagedBaseline;
@@ -39,9 +38,9 @@ public interface ChangeService {
 
 	List<String[]> addECRPartCheck(String ecrOid) throws Exception;
 
-	List<EADData> getEOActivityList(String eoType, String ecaOid);
+	List<ActDTO> getEOActivityList(String eoType, String ecaOid);
 
-	List<EADData> getEOActivityUpdateList(ECOChange eo, String eoType);
+	List<ActDTO> getEOActivityUpdateList(ECOChange eo, String eoType);
 
 	ManagedBaseline getEOToPartBaseline(String eoNumber, String partNumber)
 			throws Exception;
@@ -51,7 +50,7 @@ public interface ChangeService {
 
 	ManagedBaseline getLastBaseline(String partOid) throws Exception;
 
-	List<ECOData> include_ECOList(String oid, String moduleType)  throws Exception;
+	List<EcoDTO> include_ECOList(String oid, String moduleType)  throws Exception;
 
 	
 
