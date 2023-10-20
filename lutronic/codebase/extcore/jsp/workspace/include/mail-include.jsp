@@ -1,9 +1,11 @@
 <%@page import="wt.fc.Persistable"%>
 <%@page import="net.sf.json.JSONArray"%>
+<%@page import="com.e3ps.workspace.service.WorkspaceHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
+boolean view = "view".equals(mode);
 boolean create = "create".equals(mode);
 boolean update = "update".equals(mode);
 %>
@@ -17,11 +19,21 @@ boolean update = "update".equals(mode);
 		const columns9 = [ {
 			dataField : "name",
 			headerText : "이름",
-			dataType : "name",
+			dataType : "string",
+			width : 120,
+			filter : {
+				showIcon : true,
+				inline : true
+			},
 		}, {
-			dataField : "type",
+			dataField : "email",
 			headerText : "이메일",
 			dataType : "string",
+			style : "aui-left",
+			filter : {
+				showIcon : true,
+				inline : true
+			},
 		}, {
 			dataField : "oid",
 			dataType : "string",
@@ -46,6 +58,9 @@ boolean update = "update".equals(mode);
 				autoGridHeight : true
 			}
 			myGridID9 = AUIGrid.create("#grid9", columnLayout, props);
+			<%if (view || update) {%>
+			AUIGrid.setGridData(myGridID9, <%=WorkspaceHelper.manager.getMailList(oid)%>);
+			<%}%>
 		}
 
 		function popup9() {
@@ -57,7 +72,7 @@ boolean update = "update".equals(mode);
 			const checked = AUIGrid.getCheckedRowItems(myGridID9);
 			for (let i = checked.length - 1; i >= 0; i--) {
 				const rowIndex = checked[i].rowIndex;
-				AUIGrid.removeRow(myGridID8, rowIndex);
+				AUIGrid.removeRow(myGridID9, rowIndex);
 			}
 		}
 

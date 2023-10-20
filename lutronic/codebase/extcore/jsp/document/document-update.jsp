@@ -220,8 +220,17 @@ iframe {
 		<th class="lb">결재</th>
 		<td colspan="5">
 			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
+				<jsp:param value="<%=dto.getOid()%>" name="oid" />
+				<jsp:param value="update" name="mode" />
+			</jsp:include>
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">외부 메일 지정</th>
+		<td colspan="5">
+			<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
+				<jsp:param value="<%=dto.getOid()%>" name="oid" />
+				<jsp:param value="update" name="mode" />
 			</jsp:include>
 		</td>
 	</tr>
@@ -273,6 +282,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <script type="text/javascript">
@@ -356,6 +366,8 @@ iframe {
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		// 관련ECPR
 		const rowsEcpr = AUIGrid.getGridDataWithState(myGridIDEcpr, "gridState");
+		// 외부 메일
+		const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
@@ -409,7 +421,9 @@ iframe {
 			rows101 : rows101,
 			rowsEcpr : rowsEcpr,
 			rows105 : rows105,
-			temprary : temprary
+			temprary : temprary,
+			// 외부 메일
+			external : external
 		};
 		
 		logger(params);
@@ -440,6 +454,7 @@ iframe {
 		createAUIGridEcpr(columnsEcpr);
 		createAUIGrid105(columns105);
 		createAUIGrid8(columns8);
+		createAUIGrid9(columns9)
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
@@ -447,6 +462,7 @@ iframe {
 		AUIGrid.resize(myGridIDEcpr);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID8);
+		AUIGrid.resize(myGridID9);
 		$("#documentType").bindSelectDisabled(true);
 		
 		// 문서명 규칙
@@ -488,5 +504,6 @@ iframe {
 		AUIGrid.resize(myGridIDEcpr);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID8);
+		AUIGrid.resize(myGridID9);
 	});
 </script>
