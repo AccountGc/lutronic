@@ -113,7 +113,15 @@ iframe {
 			</td>
 		</tr>
 	</table>
+	
+	<jsp:include page="/extcore/jsp/document/include/document-reference-include.jsp">
+		<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	</jsp:include>
+	
 
+	<%
+		if (list.size() !=0) {
+	%>
 	<div id="comments-layer">
 		<table class="button-table">
 			<tr>
@@ -140,10 +148,6 @@ iframe {
 				<td class="indent5">
 					<textarea rows="5" readonly="readonly" style="resize: none;"><%=cm.getComment()%></textarea>
 				</td>
-				<td class="center" style="width: 80px">
-					<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
-					<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=cm.getOid()%>', '<%=cm.getComment()%>');">
-				</td>
 			</tr>
 		</table>
 		<br>
@@ -163,10 +167,6 @@ iframe {
 				<td class="indent5" style="border-top: 2px solid #86bff9;">
 					<textarea rows="5" readonly="readonly" style="resize: none;"><%=dd.getComment()%></textarea>
 				</td>
-				<td class="center" style="border-top: 2px solid #86bff9; width: 80px">
-					<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
-					<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=dd.getOid()%>', '<%//=dd.getComment()%>');">
-				</td>
 			</tr>
 		</table>
 		<br>
@@ -176,26 +176,11 @@ iframe {
 		<%
 		}
 		%>
-		<table class="view-table">
-			<colgroup>
-				<col width="100">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th class="lb">댓글</th>
-				<td class="indent5">
-					<textarea rows="5" name="comments" id="comments" style="resize: none;"></textarea>
-				</td>
-			</tr>
-		</table>
-		<table class="button-table">
-			<tr>
-				<td class="right">
-					<input type="button" value="댓글 등록" title="댓글 등록" class="blue" onclick="_write('0');">
-				</td>
-			</tr>
-		</table>
 	</div>
+	<%
+		}
+	%>
+	
 	<!-- 댓글 모달 -->
 	<%@include file="/extcore/jsp/common/include/comments-include.jsp"%>
 
@@ -230,4 +215,51 @@ iframe {
 	}
 
 
+	document.addEventListener("DOMContentLoaded", function() {
+		const isCreated90 = AUIGrid.isCreated(myGridID90); // 문서
+		if (isCreated90) {
+			AUIGrid.resize(myGridID90);
+		} else {
+			createAUIGrid90(columns90);
+		}
+		const isCreated91 = AUIGrid.isCreated(myGridID91); // 품목
+		if (isCreated91) {
+			AUIGrid.resize(myGridID91);
+		} else {
+			createAUIGrid91(columns91);
+		}
+		const isCreated100 = AUIGrid.isCreated(myGridID100); // EO
+		if (isCreated100) {
+			AUIGrid.resize(myGridID100);
+		} else {
+			createAUIGrid100(columns100);
+		}
+		const isCreated105 = AUIGrid.isCreated(myGridID105); // ECO
+		if (isCreated105) {
+			AUIGrid.resize(myGridID105);
+		} else {
+			createAUIGrid105(columns105);
+		}
+		const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
+		if (isCreated101) {
+			AUIGrid.resize(myGridID101);
+		} else {
+			createAUIGrid101(columns101);
+		}
+		const isCreatedEcpr = AUIGrid.isCreated(myGridIDEcpr); // ECPR
+		if (isCreatedEcpr) {
+			AUIGrid.resize(myGridIDEcpr);
+		} else {
+			createAUIGridEcpr(columnsEcpr);
+		}
+	});
+
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID91);
+		AUIGrid.resize(myGridID100);
+		AUIGrid.resize(myGridID105);
+		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridIDEcpr);
+	});
 </script>
