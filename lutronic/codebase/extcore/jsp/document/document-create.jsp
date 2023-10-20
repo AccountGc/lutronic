@@ -236,6 +236,7 @@ iframe {
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 	관련 EO -->
