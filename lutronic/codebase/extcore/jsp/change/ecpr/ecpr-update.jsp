@@ -30,9 +30,8 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="수정" title="수정" class="red" onclick="update();">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="">
+					<input type="button" value="수정" title="수정" class="red" onclick="update('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 				</td>
 			</tr>
 		</table>
@@ -169,6 +168,24 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">외부 메일 지정</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+						<jsp:param value="update" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 
 		<!-- 	관련 CR -->
@@ -178,21 +195,12 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="150" name="height" />
 		</jsp:include>
-
-		<table class="button-table">
-			<tr>
-				<td class="center">
-					<input type="button" value="수정" title="수정" class="red" onclick="update();">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="">
-				</td>
-			</tr>
-		</table>
 		<script type="text/javascript">
-			function update() {
+			function update(temp) {
 				const oid = document.getElementById("oid");
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
+				const temprary = JSON.parse(temp);
 
 				if (!confirm("수정 하시겠습니까?")) {
 					return;
@@ -202,6 +210,8 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -247,8 +257,13 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					sections : sections, //변경 구분
 					primary : primary.value,
 					rows101 : rows101,
-					rows300 : rows300
+					rows300 : rows300,
+					temprary : temprary,
+					// 외부 메일
+					external : external,
 				}
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/update");
@@ -271,13 +286,19 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
+				createAUIGrid8(columns8);
+				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

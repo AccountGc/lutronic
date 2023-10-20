@@ -28,8 +28,6 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			%>
 			<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
-			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">
-			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn">
 			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
 		</td>
 	</tr>
@@ -42,6 +40,9 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 		</li>
 		<li>
 			<a href="#tabs-2">관련 객체</a>
+		</li>
+		<li>
+			<a href="#tabs-3">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -131,6 +132,12 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
+	<div id="tabs-3">
+		<!-- 이력관리 -->
+		<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-record-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
 </div>
 <script type="text/javascript">
 	$("#updateBtn").click(function () {
@@ -193,6 +200,26 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 						AUIGrid.resize(myGridID101);
 					} else {
 						createAUIGrid101(columns101);
+					}
+					break;
+				case "tabs-3":
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
+					if (isCreated51) {
+						AUIGrid.resize(myGridID51);
+					} else {
+						createAUIGrid51(columns51);
+					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
+					}
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 메일
+					if (isCreated10001) {
+						AUIGrid.resize(myGridID10001);
+					} else {
+						createAUIGrid10001(columns10001);
 					}
 					break;
 				}

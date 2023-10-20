@@ -206,6 +206,8 @@
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 	
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -266,7 +268,9 @@
 					sections : sections, //변경 구분
 					primary : primary.value,
 					rows101 : rows101,
-					rows300 : rows300
+					rows300 : rows300,
+					// 외부 메일
+					external : external
 				}
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;

@@ -13,6 +13,8 @@ import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -54,6 +56,13 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+		boolean isSelf = dto.isSelf();
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -124,6 +133,20 @@ public class StandardEcprService extends StandardManager implements EcprService 
 
 			// 관련 CR 링크
 			saveLink(ecpr, rows101);
+			
+			// 외부 메일 링크 저장
+			MailUserHelper.service.saveLink(ecpr, external);
+			
+			// 결재 시작
+			if (isSelf) {
+				// 자가결재시
+				WorkspaceHelper.service.self(ecpr);
+			} else {
+				// 결재시작
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(ecpr, agreeRows, approvalRows, receiveRows);
+				}
+			}
 
 			trs.commit();
 			trs = null;
@@ -222,6 +245,8 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -283,6 +308,11 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			// 링크 삭제
 			deleteLink(ecpr);
 			saveLink(ecpr, rows101);
+			
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(dto.getOid());
+			// 외부 메일 링크 추가
+			MailUserHelper.service.saveLink(ecpr, external);
 			
 			trs.commit();
 			trs = null;
