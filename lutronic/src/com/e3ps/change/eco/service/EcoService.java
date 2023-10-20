@@ -23,4 +23,9 @@ public interface EcoService {
 	 * ECO 상태변경 후 발생 하는 이벤트
 	 */
 	public abstract void complete(EChangeOrder eco) throws Exception;
+	
+	/**
+	 * ECO 상태변경 후 발생 하는 이벤트
+	 */
+	public abstract void delete(String oid) throws Exception;
 }
