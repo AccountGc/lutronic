@@ -6,12 +6,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.e3ps.change.DocumentActivityLink;
+import com.e3ps.change.ECOChange;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.PageQueryUtils;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.WCUtil;
 
 import wt.doc.WTDocument;
@@ -22,6 +25,7 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
@@ -225,6 +229,13 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				PersistenceHelper.manager.save(eca);
 				sort++;
+
+				// STEP1 코드
+				if (eca.getStep().equals("ES001")) {
+					State state = State.toState("INWORK");
+					// STEP01 단계부터 무조건 시작
+					LifeCycleHelper.service.setLifeCycleState(eca, state);
+				}
 			}
 
 			trs.commit();
@@ -305,7 +316,7 @@ public class StandardActivityService extends StandardManager implements Activity
 	}
 
 	@Override
-	public void complete(EChangeActivity eca) throws Exception {
+	public void ccompleteAfterEvent(EChangeActivity eca) throws Exception {
 		String state = eca.getLifeCycleState().toString();
 		Transaction trs = new Transaction();
 		try {
@@ -325,5 +336,113 @@ public class StandardActivityService extends StandardManager implements Activity
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	@Override
+	public void complete(Map<String, String> params) throws Exception {
+		String oid = (String) params.get("oid"); // eca oid
+		String description = (String) params.get("description"); // 완료 의견
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+			eca.setDescription(description);
+			PersistenceHelper.manager.modify(eca);
+
+			// 승인됨으로 변경한다.
+			LifeCycleHelper.service.setLifeCycleState(eca, State.toState("APPROVED"));
+
+			String step = eca.getStep();
+
+			// 같은 STEP 단계확인을 하여 해당 스텝이 마지막인지 확인
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(EChangeActivity.class, true);
+			QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "eoReference.key.id", eca.getEo());
+			QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, EChangeActivity.STEP, step);
+			QueryResult qr = PersistenceHelper.manager.find(query);
+			boolean isLast = true;
+			while (qr.hasMoreElements()) {
+				Object[] obj = (Object[]) qr.nextElement();
+				EChangeActivity ee = (EChangeActivity) obj[0];
+				String state = ee.getLifeCycleState().toString();
+				if ("INTAKE".equals(state)) {
+					isLast = false; // 접수가 있으면 마지막이 아니다.
+				}
+			}
+			// ES001 ES002 ES003 ES004
+			// 스텝 코드 순서
+			System.out.println("마지막 작업이 끝났어요 = " + isLast);
+
+			int last = Integer.parseInt(step.substring(4));
+			String nextStep = step.substring(0, 4) + (last + 1); // ES001 -> ES002
+			// 마지막일경우 다음 스텝의 ECA 활동을 작업중으로 변경처리한다.
+			if (isLast) {
+				QuerySpec qs = new QuerySpec(EChangeActivity.class);
+				QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, "eoReference.key.id", eca.getEo());
+				QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, EChangeActivity.STEP, nextStep);
+				QueryResult result = PersistenceHelper.manager.find(qs);
+				while (result.hasMoreElements()) {
+					Object[] oo = (Object[]) result.nextElement();
+					EChangeActivity next = (EChangeActivity) oo[0];
+					// 작업중으로 전부 변경한다 다음 스텝
+					LifeCycleHelper.service.setLifeCycleState(next, State.toState("INWORK"));
+				}
+			}
+
+			// 모든 ECA가 끝났을 경우 EO, ECO상태값을변경한다.
+			boolean isEnd = checkActivityComplete(eca.getEo());
+			if (isEnd) {
+				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("APPROVING"));
+			}
+
+			// EChangeActivity
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	/**
+	 * 해당 EO에 관련된 ECA가 모두 끝낫는지 확인 후 승인중 상태로 변경한다.
+	 */
+	private boolean checkActivityComplete(ECOChange eo) throws Exception {
+		boolean isEnd = true;
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			QuerySpec qs = new QuerySpec(EChangeActivity.class);
+			QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, "eoReference.key.id", eo);
+			QueryResult qr = PersistenceHelper.manager.find(qs);
+			while (qr.hasMoreElements()) {
+				Object[] obj = (Object[]) qr.nextElement();
+				EChangeActivity eca = (EChangeActivity) obj[0];
+				String state = eca.getLifeCycleState().toString();
+				// 승인됨이 아닌게 있을 경우 마지막이 아니다
+				if (!"APPROVED".equals(state)) {
+					isEnd = false;
+					break;
+				}
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+		return isEnd;
 	}
 }

@@ -27,8 +27,10 @@ public class Test {
 
 	public static void main(String[] args) throws Exception {
 
-		ApprovalLine line = (ApprovalLine) CommonUtil.getObject("com.e3ps.workspace.ApprovalLine:311110");
-		System.out.println(line.getType());
+		String s = "ES001";
+
+		System.out.println(s.substring(0, 4) + (Integer.parseInt(s.substring(4)) + 1));
+		System.out.println(s.substring(4));
 
 	}
 }

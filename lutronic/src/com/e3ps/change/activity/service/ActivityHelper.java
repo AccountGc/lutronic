@@ -216,7 +216,8 @@ public class ActivityHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeActivity.class, true);
-		QuerySpecUtils.toEquals(query, idx, EChangeActivity.class, "activeUserReference.key.id", sessionUser);
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "activeUserReference.key.id", sessionUser);
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "state.state", "INWORK");
 		QuerySpecUtils.toOrderBy(query, idx, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

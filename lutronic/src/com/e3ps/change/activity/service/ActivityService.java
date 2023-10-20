@@ -56,6 +56,11 @@ public interface ActivityService {
 	/**
 	 * ECA 활동 완료후 발생하는 이벤트
 	 */
-	public abstract void complete(EChangeActivity eca) throws Exception;
+	public abstract void ccompleteAfterEvent(EChangeActivity eca) throws Exception;
+
+	/**
+	 * ECA 활동 완료 이벤트
+	 */
+	public abstract void complete(Map<String, String> params) throws Exception;
 
 }
