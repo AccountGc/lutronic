@@ -86,15 +86,6 @@
 					</jsp:include>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="7">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 		<table class="button-table">
 			<tr>
@@ -112,8 +103,6 @@
 				
 				const temprary = JSON.parse(temp);
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
 				if(isEmpty($("#name").val())) {
 					alert("제목을 입력하세요.");
@@ -141,8 +130,6 @@
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
 					temprary : temprary,
-					// 외부 메일
-					external : external
 				}
 				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/ecn/create");

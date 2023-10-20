@@ -64,8 +64,6 @@ public class StandardEcnService extends StandardManager implements EcnService {
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
 		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		boolean isSelf = dto.isSelf();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -96,9 +94,6 @@ public class StandardEcnService extends StandardManager implements EcnService {
 			}
 
 			PersistenceHelper.manager.save(ecn);
-			
-			// 외부 메일 링크 저장
-			MailUserHelper.service.saveLink(ecn, external);
 			
 			// 결재 시작
 			if (isSelf) {
