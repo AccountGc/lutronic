@@ -29,9 +29,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="수정" title="수정" class="red" onclick="update();">
-					<input type="button" value="결재선 지정" title="결재선 지정" class="blue" onclick="">
-					<input type="button" value="임시저장" title="임시저장" class="">
+					<input type="button" value="수정" title="수정" class="red" onclick="update('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 				</td>
 			</tr>
 		</table>
@@ -174,6 +173,15 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">외부 메일 지정</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+						<jsp:param value="update" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 
 		<!-- 	관련 CR -->
@@ -185,9 +193,10 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		</jsp:include>
 
 		<script type="text/javascript">
-			function update() {
+			function update(temp) {
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
+				const temprary = JSON.parse(temp);
 				const secondarys = toArray("secondarys");
 
 				if (!confirm("수정 하시겠습니까?")) {
@@ -198,6 +207,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -244,7 +255,10 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 					primary : primary.value,
 					secondarys : secondarys,
 					rows101 : rows101,
-					rows300 : rows300
+					rows300 : rows300,
+					temprary : temprary,
+					// 외부 메일
+					external : external,
 				}
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
@@ -274,15 +288,18 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				createAUIGrid8(columns8);
+				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

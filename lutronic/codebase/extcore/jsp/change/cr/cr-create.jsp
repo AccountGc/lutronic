@@ -208,6 +208,8 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -270,7 +272,9 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					secondarys : secondarys,
 					rows101 : rows101,
 					rows300 : rows300,
-					temprary : temprary
+					temprary : temprary,
+					// 외부 메일
+					external : external
 				}
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/cr/create");

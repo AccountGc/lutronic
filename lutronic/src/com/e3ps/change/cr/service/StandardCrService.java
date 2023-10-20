@@ -12,6 +12,7 @@ import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -61,6 +62,8 @@ public class StandardCrService extends StandardManager implements CrService {
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
 		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		boolean isSelf = dto.isSelf();
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -134,6 +137,9 @@ public class StandardCrService extends StandardManager implements CrService {
 
 			// 관련 CR 링크
 			saveLink(cr, rows101);
+			
+			// 외부 메일 링크 저장
+			MailUserHelper.service.saveLink(cr, external);
 			
 			// 결재 시작
 			if (isSelf) {
@@ -229,8 +235,11 @@ public class StandardCrService extends StandardManager implements CrService {
 			trs.start();
 			
 			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(oid);
+			
 			PersistenceHelper.manager.delete(cr);
-
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -247,10 +256,14 @@ public class StandardCrService extends StandardManager implements CrService {
 	public void modify(CrDTO dto) throws Exception {
 		
 		String createDepart_code = dto.getCreateDepart_code();
+		boolean temprary = dto.isTemprary();
 		
 		ArrayList<String> sections = dto.getSections();
 		ArrayList<Map<String, String>> rows101 = dto.getRows101();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
+		
 //		String model_oid = dto.getModel_oid();
 		Transaction trs = new Transaction();
 		try {
@@ -311,6 +324,11 @@ public class StandardCrService extends StandardManager implements CrService {
 			// 링크 삭제
 			deleteLink(cr);
 			saveLink(cr, rows101);
+			
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(dto.getOid());
+			// 외부 메일 링크 추가
+			MailUserHelper.service.saveLink(cr, external);
 
 			trs.commit();
 			trs = null;

@@ -46,6 +46,7 @@ public class MailUserHelper {
 		while (qr.hasMoreElements()) {
 			MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
 			Map<String, String> map = new HashMap<String, String>();
+			map.put("oid", CommonUtil.getOIDString(link.getUser()));
 			map.put("name", link.getUser().getName());
 			map.put("email", link.getUser().getEmail());
 			list.add(map);
