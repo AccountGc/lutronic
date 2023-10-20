@@ -12,6 +12,7 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.service.MailUserHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -55,6 +56,9 @@ public class EcprDTO {
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 	
+	// 외부 메일 변수
+	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
+	
 	public EcprDTO() {
 		
 	}
@@ -88,6 +92,7 @@ public class EcprDTO {
 		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
+		setExternal(MailUserHelper.manager.getMailList(cr.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 	
 	/**

@@ -5,6 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.ECOChange;
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeNotice;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.cr.dto.CrDTO;
+import com.e3ps.change.ecn.dto.EcnDTO;
+import com.e3ps.change.eco.dto.EcoDTO;
+import com.e3ps.change.ecpr.dto.EcprDTO;
+import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -807,8 +816,34 @@ public class WorkspaceHelper {
 		ArrayList<Map<String, String>> list = new ArrayList<>();
 
 		if (per instanceof WTDocument) {
+			// 문서 외부 메일
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 			DocumentDTO dto = new DocumentDTO(doc);
+			list = dto.getExternal();
+		} else if (per instanceof EChangeOrder) {
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+			if (eco.getEoType().equals("CHANGE")) {
+				// ECO 외부 메일
+				EcoDTO dto = new EcoDTO(eco);
+				list = dto.getExternal();
+			}else {
+				// EO 외부 메일
+				EoDTO dto = new EoDTO(eco);
+				list = dto.getExternal();
+			}
+		}else if (per instanceof EChangeRequest) {
+			// CR 외부 메일
+			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+			CrDTO dto = new CrDTO(cr);
+			list = dto.getExternal();
+		} else if (per instanceof ECPRRequest) {
+			// ECPR 외부 메일
+			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+			EcprDTO dto = new EcprDTO(ecpr);
+		} else if (per instanceof EChangeNotice) {
+			// ECN 외부 메일
+			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
+			EcnDTO dto = new EcnDTO(ecn);
 			list = dto.getExternal();
 		}
 		return JSONArray.fromObject(list);

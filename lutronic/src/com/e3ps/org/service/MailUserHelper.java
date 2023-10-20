@@ -50,11 +50,6 @@ public class MailUserHelper {
 			map.put("email", link.getUser().getEmail());
 			list.add(map);
 		}
-		for(int i = 0; i < list.size(); i++) {
-			System.out.println("===================================>" + i);
-			System.out.println("===================================>" + list.get(i).get("name"));
-			System.out.println("===================================>" + list.get(i).get("email"));
-		}
 		return list;
 	}
 

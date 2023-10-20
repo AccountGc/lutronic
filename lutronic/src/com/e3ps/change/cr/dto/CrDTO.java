@@ -14,6 +14,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.service.MailUserHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -68,6 +69,9 @@ public class CrDTO {
 	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
 	private boolean self; // 자가 결재
 	
+	// 외부 메일 변수
+	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
+	
 	private boolean temprary;
 
 	public CrDTO() {
@@ -104,6 +108,7 @@ public class CrDTO {
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(cr.getModel());
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
+		setExternal(MailUserHelper.manager.getMailList(cr.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 	
 	/**

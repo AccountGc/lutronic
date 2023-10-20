@@ -11,6 +11,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
+import com.e3ps.org.service.MailUserHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -50,6 +51,9 @@ public class EcoDTO {
 	private ArrayList<Map<String, String>> rows500 = new ArrayList<>(); // 대상품목
 
 	private Map<String, Object> contentMap = null;
+	
+	// 외부 메일 변수
+	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
 
 	public EcoDTO() {
 
@@ -83,6 +87,7 @@ public class EcoDTO {
 			setModel_name(EcoHelper.manager.displayToModel(eco.getModel()));
 		}
 		setContentMap(ContentUtils.getContentByRole(eco, "ECO"));
+		setExternal(MailUserHelper.manager.getMailList(eco.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 
 	/**
