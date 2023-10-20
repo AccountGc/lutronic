@@ -48,14 +48,14 @@ JSONArray data = AUIGridUtil.include(oid, "part");
 			<%
 			}
 			%>
-			<div id="grid91" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid91" style="height:  30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <%
 	} else {
 %>
-<div id="grid91" style="height: 110px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid91" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
 	}
 %>
