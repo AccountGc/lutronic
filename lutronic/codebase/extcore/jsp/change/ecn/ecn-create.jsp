@@ -86,6 +86,15 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">외부 메일 지정</th>
+				<td colspan="7">
+					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 		<table class="button-table">
 			<tr>
@@ -103,6 +112,8 @@
 				
 				const temprary = JSON.parse(temp);
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
 				if(isEmpty($("#name").val())) {
 					alert("제목을 입력하세요.");
@@ -125,16 +136,20 @@
 					}
 				}
 				
-				const params = new Object();
-				params.name = name;
-				params.eoCommentA = eoCommentA;
-				params.eoCommentB = eoCommentB;
+				const params = {
+					name : name,
+					eoCommentA : eoCommentA,
+					eoCommentB : eoCommentB,
+					temprary : temprary,
+					// 외부 메일
+					external : external
+				}
 				toRegister(params, addRows8); // 결재선 세팅
-				var url = getCallUrl("/changeECN/create");
+				var url = getCallUrl("/ecn/create");
 				call(url, params, function(data) {
 					if(data.result){
 						alert(data.msg);
-						location.href = getCallUrl("/changeECN/list");
+						location.href = getCallUrl("/ecn/list");
 					}else{
 						alert(data.msg);
 					}
@@ -144,16 +159,19 @@
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid1(columnsEco);
 				createAUIGrid2(columnsPart);
+				createAUIGrid8(columns8);
+				createAUIGrid9(columns9);
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(ecoGridID);
-				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 			
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(ecoGridID);
 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
 			});
 	
 		</script>
