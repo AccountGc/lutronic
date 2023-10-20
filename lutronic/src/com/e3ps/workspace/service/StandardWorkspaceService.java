@@ -707,4 +707,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public Persistable removeHistory(WTDocument doc) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

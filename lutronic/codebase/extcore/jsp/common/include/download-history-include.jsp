@@ -16,13 +16,7 @@ String oid = request.getParameter("oid");
 		</td>
 	</tr>
 </table>
-<table class="create-table">
-	<tr>
-		<td class="lb">
-			<div id="grid51" style="height: 250px; border-top: 1px solid#3180c3; margin: 5px;"></div>
-		</td>
-	</tr>
-</table>
+<div id="grid51" style="height: 250px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID51;
 	const columns51 = [ {
