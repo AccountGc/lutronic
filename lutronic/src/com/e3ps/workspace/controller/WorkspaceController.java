@@ -384,9 +384,10 @@ public class WorkspaceController extends BaseController {
 			throws Exception {
 		ModelAndView model = new ModelAndView();
 		ApprovalMaster master = (ApprovalMaster) CommonUtil.getObject(oid);
-		ApprovalMasterDTO dto = new ApprovalMasterDTO(master);
+		ApprovalLineDTO dto = WorkspaceHelper.manager.ingLine(master);
 		model.addObject("dto", dto);
 		model.addObject("oid", oid);
+		model.addObject("poid", poid);
 		model.setViewName("popup:/workspace/master-view");
 		return model;
 	}

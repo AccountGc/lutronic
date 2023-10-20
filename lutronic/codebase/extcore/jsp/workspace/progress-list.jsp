@@ -75,8 +75,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL&poid=" + item.poid);
-							popup(url, 1500, 800);
+							const url = getCallUrl("/workspace/masterView?oid=" + oid + "&columnType=COLUMN_PROGRESS&poid=" + item.poid);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {
@@ -94,7 +94,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/masterView?oid=" + oid + "&columnType=COLUMN_PROGRESS&poid=" + item.poid);
-							popup(url, 1500, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {

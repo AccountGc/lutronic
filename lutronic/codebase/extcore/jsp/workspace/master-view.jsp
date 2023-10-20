@@ -1,20 +1,19 @@
-<%@page import="e3ps.bom.partlist.PartListMaster"%>
+<%@page import="com.e3ps.workspace.dto.ApprovalLineDTO"%>
 <%@page import="wt.fc.Persistable"%>
-<%@page import="e3ps.workspace.ApprovalLine"%>
 <%@page import="wt.fc.ReferenceFactory"%>
-<%@page import="e3ps.workspace.dto.ApprovalLineDTO"%>
 <%@page import="net.sf.json.JSONArray"%>
-<%@page import="e3ps.common.util.ContentUtils"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ApprovalLineDTO dto = (ApprovalLineDTO) request.getAttribute("dto");
-Persistable per = (Persistable) request.getAttribute("per");
-String poid = (String) request.getAttribute("poid");
+String jsp = dto.getPersist().getClass().getName();
+
+int idx = jsp.indexOf(".");
+
+jsp = jsp.substring(jsp.lastIndexOf(".") + 1);
+String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
+String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getStringValue();
 %>
-<%@include file="/extcore/jsp/common/aui/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js?v=1010"></script>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-<input type="hidden" name="poid" id="poid" value="<%=poid%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -32,6 +31,9 @@ String poid = (String) request.getAttribute("poid");
 	<ul>
 		<li>
 			<a href="#tabs-1">결재정보</a>
+		</li>
+		<li>
+			<a href="#tabs-2">결재대상정보</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -64,60 +66,52 @@ String poid = (String) request.getAttribute("poid");
 			</tr>
 		</table>
 
-		<jsp:include page="/extcore/jsp/workspace/persistable.jsp">
-			<jsp:param value="<%=per.getPersistInfo().getObjectIdentifier().getStringValue()%>" name="oid" />
-		</jsp:include>
-
-
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						결재 라인
-					</div>
-				</td>
-			</tr>
-		</table>
 		<!-- 결재이력 -->
-		<jsp:include page="/extcore/jsp/common/approval-history.jsp">
+		<jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
 			<jsp:param value="<%=dto.getPoid()%>" name="oid" />
 		</jsp:include>
+	</div>
+	
+	<div id="tabs-2">
+		<jsp:include page="<%=url%>">
+			<jsp:param value="<%=tapOid%>" name="tapOid" />
+		</jsp:include>
+		
 	</div>
 </div>
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
+		toFocus("description");
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
-					const isCreated100 = AUIGrid.isCreated(myGridID100);
-					if (isCreated100) {
-						AUIGrid.resize(myGridID100);
+					const isCreated10000 = AUIGrid.isCreated(columns10000);
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
 					} else {
-						createAUIGrid100(columns100);
+						createAUIGrid10000(columns10000);
 					}
-					const isCreated = AUIGrid.isCreated(columns);
-					if (isCreated) {
-						AUIGrid.resize(myGridID);
-					} else {
-						createAUIGrid(columns);
-					}
+					break;
+				case "tabs-2":
 					break;
 				}
 			}
 		});
-		createAUIGrid100(columns100);
-		AUIGrid.resize(myGridID100);
-		createAUIGrid(columns);
-		AUIGrid.resize(myGridID);
+		createAUIGrid10000(columns10000);
+		AUIGrid.resize(myGridID10000);
+		createAUIGrid10001(columns10001);
+		AUIGrid.resize(myGridID10001);
+		// 		createAUIGrid(columns);
+		// 		AUIGrid.resize(myGridID);
+		finderUser("reassignUser");
 	})
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID100);
-		AUIGrid.resize(myGridID);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	});
 </script>

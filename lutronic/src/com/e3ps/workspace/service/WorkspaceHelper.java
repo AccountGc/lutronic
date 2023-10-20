@@ -25,6 +25,7 @@ import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.column.ApprovalLineColumn;
+import com.e3ps.workspace.dto.ApprovalLineDTO;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -849,5 +850,38 @@ public class WorkspaceHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
+    
+    /**
+     * 진행함 상세(대기중, 승인중, 합의중)
+     * @throws Exception 
+     */
+    public ApprovalLineDTO ingLine(ApprovalMaster master) throws Exception {
+        QuerySpec query = new QuerySpec();
+        int idx = query.appendClassList(ApprovalLine.class, true);
 
+        if (!CommonUtil.isAdmin()) {
+            WTUser sessionUser = CommonUtil.sessionUser();
+            QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+        }
+
+        if (query.getConditionCount() > 0) {
+            query.appendAnd();
+        }
+
+        query.appendOpenParen();
+        QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
+        QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_READY);
+        QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_READY);
+        query.appendCloseParen();
+
+        QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+        QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+        QueryResult result = PersistenceHelper.manager.find(query);
+        ApprovalLineDTO dto = null;
+        while (result.hasMoreElements()) {
+            Object[] obj = (Object[]) result.nextElement();
+            dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
+        }
+        return dto;
+    }
 }
