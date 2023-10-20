@@ -65,6 +65,7 @@ public class DocumentDTO {
 	private boolean _revise = false;
 
 	// 변수용
+	private String iterationNote;
 	private String documentName;
 	private String lifecycle;
 	private String primary;

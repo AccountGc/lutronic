@@ -651,6 +651,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
+		ArrayList<Map<String, String>> external =  dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -716,7 +717,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
 			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(doc, dto.getExternal());
+			MailUserHelper.service.saveLink(workCopy, external);
 
 			trs.commit();
 			trs = null;

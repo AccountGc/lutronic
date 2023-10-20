@@ -443,6 +443,12 @@ iframe {
 					} else {
 						createAUIGrid10000(columns10000);
 					}
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 유저 메일
+					if (isCreated10001) {
+						AUIGrid.resize(myGridID10001);
+					} else {
+						createAUIGrid10001(columns10001);
+					}
 					break;
 				}
 			}
