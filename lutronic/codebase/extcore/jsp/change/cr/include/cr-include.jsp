@@ -10,6 +10,8 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
+boolean header = Boolean.parseBoolean(request.getParameter("header"));
+JSONArray data = AUIGridUtil.include(oid, "cr");
 %>
 <table class="button-table">
 	<tr>
@@ -21,6 +23,11 @@ boolean create = "create".equals(mode);
 		</td>
 	</tr>
 </table>
+
+<%
+	// 테이블 처리 여부
+	if(header) {
+%>
 <table class="create-table">
 	<colgroup>
 		<col width="150">
@@ -41,6 +48,13 @@ boolean create = "create".equals(mode);
 		</td>
 	</tr>
 </table>
+<%
+	} else {
+%>
+<div id="grid101" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<%
+	}
+%>
 <script type="text/javascript">
 	let myGridID101;
 	const columns101 = [ {
