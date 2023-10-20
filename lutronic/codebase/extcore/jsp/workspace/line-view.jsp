@@ -290,6 +290,8 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 		});
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
+		createAUIGrid10001(columns10001);
+		AUIGrid.resize(myGridID10001);
 		// 		createAUIGrid(columns);
 		// 		AUIGrid.resize(myGridID);
 		finderUser("reassignUser");
@@ -298,6 +300,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	});
 	
 	

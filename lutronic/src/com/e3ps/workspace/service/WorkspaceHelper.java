@@ -8,6 +8,7 @@ import com.e3ps.change.ECOChange;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.ApprovalLine;
@@ -15,7 +16,6 @@ import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.column.ApprovalLineColumn;
-import com.e3ps.workspace.dto.ApprovalLineDTO;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -796,6 +796,21 @@ public class WorkspaceHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+	
+	/**
+	 * 외부 메일 가져오기 메서드
+	 */
+	public JSONArray getMailList(String oid) throws Exception {
+		Persistable per = CommonUtil.getObject(oid);
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		
+		if (per instanceof WTDocument) {
+			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+			DocumentDTO dto = new DocumentDTO(doc);
+			list = dto.getExternal();
+		}
+		return JSONArray.fromObject(list);
 	}
 
 }

@@ -4,6 +4,7 @@
 <%
 String oid = request.getParameter("oid");
 JSONArray data = WorkspaceHelper.manager.history(oid);
+JSONArray mailData = WorkspaceHelper.manager.getMailList(oid);
 %>
 <style type="text/css">
 /** 결재 관련 셀 스타일 **/
@@ -126,4 +127,36 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 <div id="grid10001" style="height: 250px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID10001;
+	const columns10001 = [ {
+		dataField : "name",
+		headerText : "이름",
+		dataType : "string",
+		width : 120,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "email",
+		headerText : "이메일",
+		dataType : "string",
+		style : "aui-left",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	} ]
+	function createAUIGrid10001(columnLayout) {
+		const props = {
+			headerHeight : 30,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
+			selectionMode : "multipleCells",
+			enableSorting : false,
+			showAutoNoDataMessage : false,
+			autoGridHeight : true
+		}
+		myGridID10001 = AUIGrid.create("#grid10001", columnLayout, props);
+		AUIGrid.setGridData(myGridID10001, <%=mailData%>);
+	}
 </script>

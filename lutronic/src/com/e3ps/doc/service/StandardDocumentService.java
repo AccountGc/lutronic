@@ -215,7 +215,8 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-			// 외부 메일 로직 추가
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(oid);
 
 			// 결재 이력 삭제
 			doc = (WTDocument) WorkspaceHelper.service.removeHistory(doc);
@@ -711,6 +712,11 @@ public class StandardDocumentService extends StandardManager implements Document
 			deleteLink(workCopy);
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
+			
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(oid);
+			// 외부 메일 링크 추가
+			MailUserHelper.service.saveLink(doc, dto.getExternal());
 
 			trs.commit();
 			trs = null;

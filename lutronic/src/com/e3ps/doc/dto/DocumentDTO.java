@@ -1,7 +1,6 @@
 package com.e3ps.doc.dto;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -10,6 +9,7 @@ import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.org.service.MailUserHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -119,6 +119,7 @@ public class DocumentDTO {
 		setIBAAttributes(doc);
 		setAuth(doc);
 		setComments(CommentsHelper.manager.comments(doc));
+		setExternal(MailUserHelper.manager.getMailList(doc.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 
 	/**
