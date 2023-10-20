@@ -15,6 +15,7 @@ import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EOData;
+import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.part.dto.PartData;
 
@@ -85,7 +86,7 @@ public interface ECOSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<ECOData> getECOListToLinkRoleName(String documentOid, String roleName) throws Exception;
+	List<EcoDTO> getECOListToLinkRoleName(String documentOid, String roleName) throws Exception;
 
 	/**	 ECOData 리스트를 리턴 ( WTDocument )
 	 * @param document
@@ -93,7 +94,7 @@ public interface ECOSearchService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<ECOData> getECOListToLinkRoleName(WTDocument document, String roleName) throws Exception;
+	List<EcoDTO> getECOListToLinkRoleName(WTDocument document, String roleName) throws Exception;
 
 	Map<String, Object> listPagingAUIECOAction(HttpServletRequest request,
 			HttpServletResponse response) throws Exception;

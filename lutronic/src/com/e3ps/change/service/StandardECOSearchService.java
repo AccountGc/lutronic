@@ -51,6 +51,7 @@ import com.e3ps.change.beans.ECAData;
 import com.e3ps.change.beans.ECOData;
 import com.e3ps.change.beans.EOData;
 import com.e3ps.change.beans.EoComparator;
+import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
@@ -1569,16 +1570,16 @@ public class StandardECOSearchService extends StandardManager implements ECOSear
 
 	}
 	@Override
-	public List<ECOData> getECOListToLinkRoleName(String documentOid,
+	public List<EcoDTO> getECOListToLinkRoleName(String documentOid,
 			String roleName) throws Exception {
 		WTDocument document = (WTDocument)CommonUtil.getObject(documentOid);
 		return getECOListToLinkRoleName(document, roleName);
 	}
 
 	@Override
-	public List<ECOData> getECOListToLinkRoleName(WTDocument document,
+	public List<EcoDTO> getECOListToLinkRoleName(WTDocument document,
 			String roleName) throws Exception {
-		List<ECOData> list = new ArrayList<ECOData>();
+		List<EcoDTO> list = new ArrayList<EcoDTO>();
 		List<String> list_ECONo = new ArrayList<String>();
 		//System.out.println(CommonUtil.getOIDString(document));
 		QueryResult rt = PersistenceHelper.manager.navigate(document.getMaster(), "activity",DocumentActivityLink.class);
@@ -1587,11 +1588,11 @@ public class StandardECOSearchService extends StandardManager implements ECOSear
 			EChangeActivity eca = (EChangeActivity)rt.nextElement();
 			if(eca != null){
 				EChangeOrder eco =  (EChangeOrder) eca.getEo();
-				ECOData data = new ECOData(eco);
-				if(!list_ECONo.contains(data.getEoNumber())){
+				EcoDTO data = new EcoDTO(eco);
+				if(!list_ECONo.contains(data.getNumber())){
 					list.add(data);
 				}
-				list_ECONo.add(data.getEoNumber());
+				list_ECONo.add(data.getNumber());
 			}
 		}
 		return list;
