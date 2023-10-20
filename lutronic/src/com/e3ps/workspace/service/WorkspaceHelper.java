@@ -840,6 +840,7 @@ public class WorkspaceHelper {
 			// ECPR 외부 메일
 			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
 			EcprDTO dto = new EcprDTO(ecpr);
+			list = dto.getExternal();
 		} else if (per instanceof EChangeNotice) {
 			// ECN 외부 메일
 			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
