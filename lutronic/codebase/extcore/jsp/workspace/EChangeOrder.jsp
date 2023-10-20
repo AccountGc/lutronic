@@ -206,12 +206,21 @@ String type = eChangeOrder.getEoType();
 		</tr>
 	</table>
 
+	<jsp:include page="/extcore/jsp/change/eo/include/eo-reference-include.jsp">
+		<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	</jsp:include>
 	<script type="text/javascript">
 
 	document.addEventListener("DOMContentLoaded", function() {
 		// 완제품
 		createAUIGrid104(columns104);
 		AUIGrid.resize(myGridID104);
+		const isCreated90 = AUIGrid.isCreated(myGridID90); // 관련문서
+		if (isCreated90) {
+			AUIGrid.resize(myGridID90);
+		} else {
+			createAUIGrid90(columns90);
+		}
 	});
 	
 	window.addEventListener("resize", function() {

@@ -105,8 +105,24 @@ CrDTO dto = new CrDTO(tapOid);
 			</td>
 		</tr>
 	</table>
+	
+	<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp">
+		<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	</jsp:include>
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
+		const isCreated300 = AUIGrid.isCreated(myGridID300); // ECO
+		if (isCreated300) {
+			AUIGrid.resize(myGridID300);
+		} else {
+			createAUIGrid300(columns300);
+		}
+		const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
+		if (isCreated101) {
+			AUIGrid.resize(myGridID101);
+		} else {
+			createAUIGrid101(columns101);
+		}
 	});
 
 	window.addEventListener("resize", function() {
