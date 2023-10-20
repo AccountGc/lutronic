@@ -208,6 +208,8 @@
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
 				const temprary = JSON.parse(temp);
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
@@ -251,6 +253,9 @@
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
 					rows500 : rows500, // 설변품목
+					temprary : temprary,
+					// 외부 메일
+					external : external
 				};
 				logger(params);
 				toRegister(params, addRows8); // 결재선 세팅

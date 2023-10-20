@@ -200,4 +200,24 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	function modify() {
 		document.location.href = getCallUrl("/eco/modify?oid=" + oid);
 	}
+	
+	function _delete() {
+
+		if (!confirm("삭제 하시겠습니까?")) {
+			return false;
+		}
+
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eco/delete?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				opener.loadGridData();
+				self.close();
+			} else {
+				clsoeLayer();
+			}
+		}, "DELETE");
+	}
 </script>

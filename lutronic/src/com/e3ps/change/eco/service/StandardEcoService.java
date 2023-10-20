@@ -26,7 +26,9 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.erp.service.ERPHelper;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartSearchHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -69,6 +71,14 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+		boolean isSelf = dto.isSelf();
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
+		
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -121,6 +131,20 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			// 설변 활동 생성
 			ActivityHelper.service.saveActivity(eco, rows200);
+			
+			// 외부 메일 링크 저장
+			MailUserHelper.service.saveLink(eco, external);
+			
+			// 결재 시작
+			if (isSelf) {
+				// 자가결재시
+				WorkspaceHelper.service.self(eco);
+			} else {
+				// 결재시작
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(eco, agreeRows, approvalRows, receiveRows);
+				}
+			}
 
 			trs.commit();
 			trs = null;
@@ -231,6 +255,8 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -271,6 +297,11 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			// 설변 활동 생성
 			ActivityHelper.service.deleteActivity(eco);
 			ActivityHelper.service.saveActivity(eco, rows200);
+			
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(dto.getOid());
+			// 외부 메일 링크 추가
+			MailUserHelper.service.saveLink(eco, external);
 
 			trs.commit();
 			trs = null;
@@ -388,6 +419,33 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			// 완료가 되면 ECN 자동 생성한다.
 			EcnHelper.service.create(eco);
 
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+	
+	/**
+	 * ECO 삭제
+	 */
+	@Override
+	public void delete(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(oid);
+			
+			PersistenceHelper.manager.delete(eco);
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
