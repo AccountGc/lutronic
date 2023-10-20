@@ -303,9 +303,17 @@ function toField(params, arr) {
 			params[arr[i]] = document.getElementById(arr[i]).value;
 		}
 	}
-	params["_psize"] = document.getElementById("_psize").value;
-	params["sessionid"] = document.getElementById("sessionid").value;
-	params["curPage"] = document.getElementById("curPage").value;
+	
+	if(document.getElementById("_psize") !=null){
+		params["_psize"] = document.getElementById("_psize").value;
+	}
+	if(document.getElementById("sessionid") !=null){
+		params["sessionid"] = document.getElementById("sessionid").value;
+	}
+	if(document.getElementById("curPage") !=null){
+		params["curPage"] = document.getElementById("curPage").value;
+	}
+	
 	return params;
 }
 
