@@ -33,6 +33,6 @@ public class EcnDTO {
 		setOid(ecn.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(ecn.getEoName());
 		setNumber(ecn.getEoNumber());
-		setExternal(MailUserHelper.manager.getMailList(doc.getPersistInfo().getObjectIdentifier().getStringValue()));
+		setExternal(MailUserHelper.manager.getMailList(ecn.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 }
