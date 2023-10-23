@@ -821,4 +821,58 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				trs.rollback();
 		}
 	}
+
+	@Override
+	public void _unagree(Map<String, String> params) throws Exception {
+		String oid = params.get("oid");
+		String description = params.get("description");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			
+			WTUser sessionUser = CommonUtil.sessionUser();
+			if (!StringUtil.checkString(description)) {
+				description = sessionUser.getFullName() + " 사용자의 합의반려로 인해 모든 결재가 반려 처리 되었습니다.";
+			}
+
+			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+			ApprovalMaster m = line.getMaster();
+			// 기안라인 제외
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, true);
+			for (ApprovalLine l : list) {
+				String t = l.getType();
+				// 합의라인
+				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
+					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
+				// 결재라인
+				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
+					l.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
+				// 수신라인	
+				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
+					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
+				}
+				l.setCompleteTime(new Timestamp(new Date().getTime()));
+				l.setDescription(description);
+
+				PersistenceHelper.manager.modify(l);
+			}
+
+			m.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_REJECT);
+			m.setCompleteTime(new Timestamp(new Date().getTime()));
+			m = (ApprovalMaster) PersistenceHelper.manager.modify(m);
+
+			// 반려후 작업할 행위.. 객체 상태값 반려됨으로 처리한다.
+			afterRejectAction(m);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

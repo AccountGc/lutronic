@@ -98,4 +98,9 @@ public interface WorkspaceService {
 	 * 설변활동 결재 시작
 	 */
 	public abstract void start(Persistable per) throws Exception;
+	
+	/**
+	 * 합의 반려
+	 */
+	public abstract void _unagree(Map<String, String> params) throws Exception;
 }
