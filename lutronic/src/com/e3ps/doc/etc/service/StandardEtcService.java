@@ -224,6 +224,8 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String documentType = dto.getDocumentType_code();
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
+		String iterationNote = dto.getIterationNote();
+		ArrayList<Map<String, String>> external =  dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -231,9 +233,9 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 			WTDocument latest = (WTDocument) VersionControlHelper.service.newVersion(doc);
-			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-			String msg = user.getFullName() + " 사용자가 문서를 개정 하였습니다.";
-			VersionControlHelper.setNote(latest, msg);
+//			WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+//			String msg = user.getFullName() + " 사용자가 문서를 개정 하였습니다.";
+			VersionControlHelper.setNote(latest, iterationNote);
 
 			DocumentType docType = DocumentType.toDocumentType(documentType);
 			String number = getDocumentNumberSeq(docType.getLongDescription());
@@ -242,23 +244,23 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 			WTDocumentMaster master = (WTDocumentMaster) latest.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
-
+			
 			// 문서 이름 세팅..
-			if ("$$MMDocument".equals(documentType)) {
-				identity.setName(name);
-			} else {
-				if (name.length() > 0) {
+			if (name.length() > 0) {
+				if (name.indexOf("-") == -1) {
 					identity.setName(documentName + "-" + name);
 				} else {
-					identity.setName(documentName);
+					identity.setName(documentName + "-" + name.split("-")[1]);
 				}
+			} else {
+				identity.setName(documentName);
 			}
-//			master.setDocType(docType);
+//						master.setDocType(docType);
 			identity.setNumber(number);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			latest.getTypeInfoWTDocument().setPtc_rht_1(content);
-
+			
 			PersistenceHelper.manager.save(latest);
 
 			// 폴더 이동
@@ -274,7 +276,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			saveAttach(latest, dto);
 
 			// IBA 삭제
-//			deleteIBAAttributes(latest);
+//			deleteIBAAttributes(workCopy);
 
 			// IBA 설정
 			setIBAAttributes(latest, dto);
@@ -283,7 +285,12 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			deleteLink(latest);
 			// 관련 링크 세팅
 			saveLink(latest, dto);
-
+			
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(oid);
+			// 외부 메일 링크 추가
+			MailUserHelper.service.saveLink(latest, external);
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
