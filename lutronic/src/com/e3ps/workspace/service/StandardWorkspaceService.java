@@ -8,11 +8,13 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.sap.service.SAPHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
@@ -73,137 +75,124 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	public void register(Persistable per, ArrayList<Map<String, String>> agreeRows,
 			ArrayList<Map<String, String>> approvalRows, ArrayList<Map<String, String>> receiveRows) throws Exception {
 		boolean isAgree = !agreeRows.isEmpty();
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
 
-			Timestamp startTime = new Timestamp(new Date().getTime());
-			Ownership ownership = CommonUtil.sessionOwner();
-			String name = WorkspaceHelper.manager.getName(per);
+		Timestamp startTime = new Timestamp(new Date().getTime());
+		Ownership ownership = CommonUtil.sessionOwner();
+		String name = WorkspaceHelper.manager.getName(per);
 //			String description = WorkspaceHelper.manager.getDescription(per);
 
-			// 마스터 생성..
-			ApprovalMaster master = ApprovalMaster.newApprovalMaster();
-			master.setName(name);
-			master.setCompleteTime(null);
-			master.setOwnership(ownership);
-			master.setPersist(per);
-			master.setStartTime(startTime);
-			if (isAgree) {
-				master.setState(WorkspaceHelper.STATE_AGREE_READY);
-			} else {
-				master.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
-			}
-			master = (ApprovalMaster) PersistenceHelper.manager.save(master);
+		// 마스터 생성..
+		ApprovalMaster master = ApprovalMaster.newApprovalMaster();
+		master.setName(name);
+		master.setCompleteTime(null);
+		master.setOwnership(ownership);
+		master.setPersist(per);
+		master.setStartTime(startTime);
+		if (isAgree) {
+			master.setState(WorkspaceHelper.STATE_AGREE_READY);
+		} else {
+			master.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+		}
+		master = (ApprovalMaster) PersistenceHelper.manager.save(master);
 
-			// 기안 라인
-			ApprovalLine startLine = ApprovalLine.newApprovalLine();
-			startLine.setName(name);
-			startLine.setOwnership(ownership);
-			startLine.setMaster(master);
-			startLine.setReads(true);
-			startLine.setSort(-50);
-			startLine.setStartTime(startTime);
-			startLine.setType(WorkspaceHelper.SUBMIT_LINE);
-			startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
-			startLine.setDescription(ownership.getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
-			startLine.setState(WorkspaceHelper.STATE_SUBMIT_COMPLETE);
-			startLine.setCompleteTime(startTime);
+		// 기안 라인
+		ApprovalLine startLine = ApprovalLine.newApprovalLine();
+		startLine.setName(name);
+		startLine.setOwnership(ownership);
+		startLine.setMaster(master);
+		startLine.setReads(true);
+		startLine.setSort(-50);
+		startLine.setStartTime(startTime);
+		startLine.setType(WorkspaceHelper.SUBMIT_LINE);
+		startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
+		startLine.setDescription(ownership.getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
+		startLine.setState(WorkspaceHelper.STATE_SUBMIT_COMPLETE);
+		startLine.setCompleteTime(startTime);
 
-			PersistenceHelper.manager.save(startLine);
+		PersistenceHelper.manager.save(startLine);
 
-			int sort = 0;
-			if (isAgree) {
-				sort = 1;
-				for (Map<String, String> agree : agreeRows) {
-					String woid = agree.get("woid");
-					WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
-					// 합의 라인 생성
-					ApprovalLine agreeLine = ApprovalLine.newApprovalLine();
-					agreeLine.setName(name);
-					agreeLine.setOwnership(Ownership.newOwnership(wtuser));
-					agreeLine.setMaster(master);
-					agreeLine.setReads(false);
-					agreeLine.setSort(0);
-					agreeLine.setStartTime(startTime);
-					agreeLine.setType(WorkspaceHelper.AGREE_LINE);
-					agreeLine.setRole(WorkspaceHelper.WORKING_AGREE);
-					agreeLine.setDescription(null);
-					agreeLine.setCompleteTime(null);
-					agreeLine.setState(WorkspaceHelper.STATE_AGREE_START);
-					PersistenceHelper.manager.save(agreeLine);
-				}
-			}
-
-			// 결재부터 샘플로
-			for (Map<String, String> approval : approvalRows) {
-				String woid = approval.get("woid");
+		int sort = 0;
+		if (isAgree) {
+			sort = 1;
+			for (Map<String, String> agree : agreeRows) {
+				String woid = agree.get("woid");
 				WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
-				// 결재 라인 생성
-				ApprovalLine approvalLine = ApprovalLine.newApprovalLine();
-				approvalLine.setName(name);
-				approvalLine.setOwnership(Ownership.newOwnership(wtuser));
-				approvalLine.setMaster(master);
-				approvalLine.setReads(false);
-				approvalLine.setSort(sort);
-				approvalLine.setType(WorkspaceHelper.APPROVAL_LINE);
-				approvalLine.setRole(WorkspaceHelper.WORKING_APPROVAL);
-				approvalLine.setDescription(null);
+				// 합의 라인 생성
+				ApprovalLine agreeLine = ApprovalLine.newApprovalLine();
+				agreeLine.setName(name);
+				agreeLine.setOwnership(Ownership.newOwnership(wtuser));
+				agreeLine.setMaster(master);
+				agreeLine.setReads(false);
+				agreeLine.setSort(0);
+				agreeLine.setStartTime(startTime);
+				agreeLine.setType(WorkspaceHelper.AGREE_LINE);
+				agreeLine.setRole(WorkspaceHelper.WORKING_AGREE);
+				agreeLine.setDescription(null);
+				agreeLine.setCompleteTime(null);
+				agreeLine.setState(WorkspaceHelper.STATE_AGREE_START);
+				PersistenceHelper.manager.save(agreeLine);
+			}
+		}
 
-				// 합의가 있을 경우
-				if (isAgree) {
+		// 결재부터 샘플로
+		for (Map<String, String> approval : approvalRows) {
+			String woid = approval.get("woid");
+			WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
+			// 결재 라인 생성
+			ApprovalLine approvalLine = ApprovalLine.newApprovalLine();
+			approvalLine.setName(name);
+			approvalLine.setOwnership(Ownership.newOwnership(wtuser));
+			approvalLine.setMaster(master);
+			approvalLine.setReads(false);
+			approvalLine.setSort(sort);
+			approvalLine.setType(WorkspaceHelper.APPROVAL_LINE);
+			approvalLine.setRole(WorkspaceHelper.WORKING_APPROVAL);
+			approvalLine.setDescription(null);
+
+			// 합의가 있을 경우
+			if (isAgree) {
+				approvalLine.setStartTime(null);
+				approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
+				approvalLine.setCompleteTime(null);
+			} else {
+				// 합의 없을경우
+				if (sort == 0) {
+					approvalLine.setStartTime(startTime);
+					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+					approvalLine.setCompleteTime(null);
+				} else {
 					approvalLine.setStartTime(null);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
 					approvalLine.setCompleteTime(null);
-				} else {
-					// 합의 없을경우
-					if (sort == 0) {
-						approvalLine.setStartTime(startTime);
-						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
-						approvalLine.setCompleteTime(null);
-					} else {
-						approvalLine.setStartTime(null);
-						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_READY);
-						approvalLine.setCompleteTime(null);
-					}
 				}
-				PersistenceHelper.manager.save(approvalLine);
-				sort += 1;
 			}
-
-			// 수신라인
-			for (Map<String, String> receive : receiveRows) {
-				String woid = receive.get("woid");
-				WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
-				// 결재 라인 생성
-				ApprovalLine receiveLine = ApprovalLine.newApprovalLine();
-				receiveLine.setName(name);
-				receiveLine.setOwnership(Ownership.newOwnership(wtuser));
-				receiveLine.setMaster(master);
-				receiveLine.setReads(false);
-				receiveLine.setSort(0);
-				receiveLine.setStartTime(startTime);
-				receiveLine.setType(WorkspaceHelper.RECEIVE_LINE);
-				receiveLine.setRole(WorkspaceHelper.WORKING_RECEIVE);
-				receiveLine.setDescription(null);
-				receiveLine.setCompleteTime(null);
-				// 결재 완료후 볼수 있어야 한다.
-				receiveLine.setState(WorkspaceHelper.STATE_RECEIVE_READY);
-				PersistenceHelper.manager.save(receiveLine);
-			}
-
-			afterRegisterAction(master);
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
+			PersistenceHelper.manager.save(approvalLine);
+			sort += 1;
 		}
+
+		// 수신라인
+		for (Map<String, String> receive : receiveRows) {
+			String woid = receive.get("woid");
+			WTUser wtuser = (WTUser) CommonUtil.getObject(woid);
+			// 결재 라인 생성
+			ApprovalLine receiveLine = ApprovalLine.newApprovalLine();
+			receiveLine.setName(name);
+			receiveLine.setOwnership(Ownership.newOwnership(wtuser));
+			receiveLine.setMaster(master);
+			receiveLine.setReads(false);
+			receiveLine.setSort(0);
+			receiveLine.setStartTime(startTime);
+			receiveLine.setType(WorkspaceHelper.RECEIVE_LINE);
+			receiveLine.setRole(WorkspaceHelper.WORKING_RECEIVE);
+			receiveLine.setDescription(null);
+			receiveLine.setCompleteTime(null);
+			// 결재 완료후 볼수 있어야 한다.
+			receiveLine.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+			PersistenceHelper.manager.save(receiveLine);
+		}
+
+		afterRegisterAction(master);
+
 	}
 
 	/**
@@ -415,7 +404,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				approvalLine.setSort(sort - 1);
 				approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
 			}
-			
+
 			for (ApprovalLine approvalLine : approvalLines) {
 				int sort = approvalLine.getSort();
 				if (sort == 1) {
@@ -442,10 +431,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_COMPLETE);
 				PersistenceHelper.manager.modify(master);
 
-				if (per instanceof LifeCycleManaged) {
-					State state = State.toState("APPROVED");
-					per = (Persistable) LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, state);
-				}
+				afterApprovalAction(per);
 			}
 
 			trs.commit();
@@ -458,6 +444,36 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 최종 결재 이후 시작할 함수
+	 */
+	private void afterApprovalAction(Persistable per) throws Exception {
+
+		// 객체 상태 승인됨으로 변경한다.
+		if (per instanceof LifeCycleManaged) {
+			State state = State.toState("APPROVED");
+			per = (Persistable) LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, state);
+			per = PersistenceHelper.manager.refresh(per);
+
+			// EO/ ECO
+			if (per instanceof EChangeOrder) {
+				EChangeOrder e = (EChangeOrder) per;
+				String t = e.getEoType();
+				// ECO
+				if ("CHANGE".equals(t)) {
+					SAPHelper.service.sendSapToEco(e);
+					// EO
+				} else {
+					System.out.println("EO 결재 완료");
+					EoHelper.service.afterAction(e);
+				}
+			}
+
+		}
+
+		// 함수로 처리하고 이벤트처리에서 제외한다
 	}
 
 	@Override
@@ -483,10 +499,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 합의라인
 				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
 					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
-				// 결재라인
+					// 결재라인
 				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
 					l.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
-				// 수신라인	
+					// 수신라인
 				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
 					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
 				}
@@ -688,7 +704,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		}
 		return null;
 	}
-	
+
 	@Override
 	public void _agree(Map<String, String> params) throws Exception {
 		String oid = (String) params.get("oid");
@@ -712,7 +728,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			ApprovalMaster master = line.getMaster();
 			boolean isAgreeApprovalLine = WorkspaceHelper.manager.isAgreeApprovalLine(master);
-			if(!isAgreeApprovalLine) { //합의중 없으면
+			if (!isAgreeApprovalLine) { // 합의중 없으면
 				ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(master);
 				for (ApprovalLine approvalLine : approvalLines) {
 					int sort = approvalLine.getSort();
@@ -725,7 +741,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
 				master = (ApprovalMaster) PersistenceHelper.manager.modify(master);
 			}
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -746,79 +762,49 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 	@Override
 	public void stand(Persistable per) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
-
-			if (m != null) {
-				// 기안 라인 제외
-				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, false);
-				for (ApprovalLine line : list) {
-					String type = line.getType();
-					if (type.equals(WorkspaceHelper.APPROVAL_LINE)) {
-						line.setState(WorkspaceHelper.STATE_APPROVAL_READY);
-					} else if (type.equals(WorkspaceHelper.RECEIVE_LINE)) {
-						line.setState(WorkspaceHelper.STATE_RECEIVE_READY);
-					} else if (type.equals(WorkspaceHelper.AGREE_LINE)) {
-						line.setState(WorkspaceHelper.STATE_AGREE_READY);
-					}
-					PersistenceHelper.manager.modify(line);
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
+		if (m != null) {
+			// 기안 라인 제외
+			// 시작일 전부 NULL처리
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, false);
+			for (ApprovalLine line : list) {
+				String type = line.getType();
+				if (type.equals(WorkspaceHelper.APPROVAL_LINE)) {
+					line.setState(WorkspaceHelper.STATE_APPROVAL_READY);
+				} else if (type.equals(WorkspaceHelper.RECEIVE_LINE)) {
+					line.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+				} else if (type.equals(WorkspaceHelper.AGREE_LINE)) {
+					line.setState(WorkspaceHelper.STATE_AGREE_READY);
 				}
-
+				line.setStartTime(null);
+				PersistenceHelper.manager.modify(line);
 			}
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
 		}
 	}
 
 	@Override
 	public void start(Persistable per) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
 
-			ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
+		if (m != null) {
 
-			if (m != null) {
-
-				// 합의 라인 부터
-				ArrayList<ApprovalLine> agrees = WorkspaceHelper.manager.getAgreeLines(m);
-				if (agrees.size() > 0) {
-					for (ApprovalLine agree : agrees) {
-						agree.setState(WorkspaceHelper.STATE_AGREE_START);
-						agree.setStartTime(new Timestamp(new Date().getTime()));
-						PersistenceHelper.manager.modify(agree);
-					}
-				} else {
-					// 수신은 아무 변화 업는것으로..
-					ArrayList<ApprovalLine> approvals = WorkspaceHelper.manager.getApprovalLines(m);
-					for (ApprovalLine approval : approvals) {
-						approval.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
-						approval.setStartTime(new Timestamp(new Date().getTime()));
-						PersistenceHelper.manager.modify(approval);
-					}
+			// 합의 라인 부터
+			ArrayList<ApprovalLine> agrees = WorkspaceHelper.manager.getAgreeLines(m);
+			if (agrees.size() > 0) {
+				for (ApprovalLine agree : agrees) {
+					agree.setState(WorkspaceHelper.STATE_AGREE_START);
+					agree.setStartTime(new Timestamp(new Date().getTime()));
+					PersistenceHelper.manager.modify(agree);
+				}
+			} else {
+				// 수신은 아무 변화 업는것으로..
+				ArrayList<ApprovalLine> approvals = WorkspaceHelper.manager.getApprovalLines(m);
+				for (ApprovalLine approval : approvals) {
+					approval.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+					approval.setStartTime(new Timestamp(new Date().getTime()));
+					PersistenceHelper.manager.modify(approval);
 				}
 			}
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
 		}
 	}
 
@@ -829,7 +815,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			if (!StringUtil.checkString(description)) {
 				WTUser sessionUser = CommonUtil.sessionUser();
 				description = sessionUser.getFullName() + " 사용자의 합의반려로 인해 모든 결재가 반려 처리 되었습니다.";
@@ -844,10 +830,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 합의라인
 				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
 					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
-				// 결재라인
+					// 결재라인
 				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
 					l.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
-				// 수신라인	
+					// 수신라인
 				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
 					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
 				}

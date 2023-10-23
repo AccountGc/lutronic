@@ -9,7 +9,6 @@ import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.org.service.MailUserHelper;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -43,22 +43,22 @@ public class EventListener extends ServiceEventListenerAdapter {
 
 		// 설변 활동
 		if (target instanceof EChangeActivity) {
-			if (type.equals(STATE_CHANGE)) {
-				EChangeActivity eca = (EChangeActivity) target;
-				ActivityHelper.service.ccompleteAfterEvent(eca);
-			}
+//			if (type.equals(STATE_CHANGE)) {
+//				EChangeActivity eca = (EChangeActivity) target;
+//				ActivityHelper.service.ccompleteAfterEvent(eca);
+//			}
 		}
 
 		// EO / ECO
 		if (target instanceof EChangeOrder) {
-			if (type.equals(STATE_CHANGE)) {
-				EChangeOrder eco = (EChangeOrder) target;
-				if (eco.getEoType().equals("CHANGE")) {
-					EcoHelper.service.complete(eco);
-				} else {
-					EoHelper.service.complete(eco);
-				}
-			}
+//			if (type.equals(STATE_CHANGE)) {
+//				EChangeOrder eco = (EChangeOrder) target;
+//				if (eco.getEoType().equals("CHANGE")) {
+//					EcoHelper.service.complete(eco);
+//				} else {
+//					EoHelper.service.complete(eco);
+//				}
+//			}
 		}
 
 	}

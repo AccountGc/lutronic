@@ -382,26 +382,12 @@ public class StandardMailUserService extends StandardManager implements MailUser
 
 	@Override
 	public void saveLink(Persistable per, ArrayList<Map<String, String>> params) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
 
-			for (Map<String, String> map : params) {
-				String s = map.get("oid");
-				MailUser user = (MailUser) CommonUtil.getObject(s);
-				MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) per, user);
-				PersistenceHelper.manager.save(link);
-			}
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
+		for (Map<String, String> map : params) {
+			String s = map.get("oid");
+			MailUser user = (MailUser) CommonUtil.getObject(s);
+			MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) per, user);
+			PersistenceHelper.manager.save(link);
 		}
 	}
 

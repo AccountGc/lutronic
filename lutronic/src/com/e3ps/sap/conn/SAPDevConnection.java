@@ -8,26 +8,15 @@ import java.util.Properties;
 
 import com.e3ps.common.jdf.config.Config;
 import com.e3ps.common.jdf.config.ConfigImpl;
-import com.sap.conn.jco.JCoDestination;
-import com.sap.conn.jco.JCoDestinationManager;
-import com.sap.conn.jco.JCoException;
-import com.sap.conn.jco.JCoFieldIterator;
-import com.sap.conn.jco.JCoFunction;
-import com.sap.conn.jco.JCoParameterList;
-import com.sap.conn.jco.JCoTable;
 
 import wt.util.WTProperties;
 
-public class SAPConnection {
+public class SAPDevConnection {
 
-	protected static String properties_filename = "sap.properties";
+	protected static String properties_filename = "sap_dev.properties";
 	protected static Properties sapProps = null;
 
 	public static String DESTINATION_NAME = "";
-	public static String FUNTION_ECO = "ZIFFM_PDM_PP001";
-	public static String FUNTION_MATERIAL = "ZIFFM_PDM_PP002";
-	public static String FUNTION_BOM = "ZIFFM_PDM_PP003";
-	public static String FUNTION_PDM_RETURN = "ZIFFM_PDM_RETURN";
 	public static boolean isERPSend = true;
 
 	static {
@@ -39,7 +28,7 @@ public class SAPConnection {
 		Config conf = ConfigImpl.getInstance();
 		System.out.println("erp.destination = " + conf.getString("erp.destination"));
 		System.out.println("erp.send = " + conf.getString("erp.send"));
-		DESTINATION_NAME = conf.getString("erp.destination");
+		DESTINATION_NAME = conf.getString("erp_dev.destination");
 
 		isERPSend = conf.getString("erp.send").equals("true") ? true : false;
 
@@ -99,55 +88,6 @@ public class SAPConnection {
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to create the destination files", e);
 		}
-	}
-
-	public static void step3SimpleCall() throws JCoException { // .getStructure
-		// table
-		// 단일 필드
-		JCoDestination destination = JCoDestinationManager.getDestination(DESTINATION_NAME);
-
-		JCoFunction function = destination.getRepository().getFunction(FUNTION_ECO);
-		if (function == null) {
-			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
-		}
-
-		JCoParameterList list = function.getTableParameterList();
-		// JCoParameterList exportList =function.getExportParameterList();
-
-		JCoFieldIterator it = list.getFieldIterator();
-		while (it.hasNextField()) {
-
-			// System.out.println(it.nextField().getName());
-		}
-
-		JCoParameterList list2 = function.getImportParameterList();
-
-		JCoTable codes = function.getTableParameterList().getTable("IT_INPUT");
-		// System.out.println("codes1 =" + codes.getNumRows());
-		for (int i = 1; i < 3; i++) {
-
-			// codes.appendRows(i);
-			codes.insertRow(i);
-			codes.setValue("ZIFNO", "EE" + i);
-			codes.setValue("AENNR", "test");
-			codes.setValue("AETXT", "111");
-			codes.setValue("DATUV", "111");
-			codes.setValue("DATUV", "111");
-			codes.setValue("AEGRU", "111");
-			codes.setValue("ZECMID", "111");
-
-		}
-
-		// codes.deleteRow(10);
-		// System.out.println("codes2 =" + codes.getNumRows());
-		// System.out.println("IT_INPUT =" + codes.ge);
-
-		// function.getTableParameterList().setValue("IT_INPUT",
-		// codes);//setValue("IT_INPUT",codes.getTable("IT_INPUT"));
-
-		//
-		function.execute(destination);
-
 	}
 
 	public static void main(String[] args) {

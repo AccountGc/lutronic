@@ -19,8 +19,10 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.erp.service.ERPHelper;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.service.SAPHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -392,36 +394,10 @@ public class StandardEoService extends StandardManager implements EoService {
 		}
 	}
 
-	@Override
-	public void complete(EChangeOrder eo) throws Exception {
-		String type = eo.getEoType();
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			if ("PRODUCT".equals(type)) {
-				saveBaseline(eo);
-			} else if ("DEV".equals(type)) {
-				saveBaseline(eo);
-			}
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
-		}
-	}
-
 	/**
 	 * 베이스 라인 저장 함수
 	 */
-	private void saveBaseline(EChangeOrder eo) throws Exception {
-		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
+	private void saveBaseline(EChangeOrder eo, ArrayList<EOCompletePartLink> completeParts) throws Exception {
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
 		for (EOCompletePartLink link : completeParts) {
 			String version = link.getVersion();
@@ -481,5 +457,19 @@ public class StandardEoService extends StandardManager implements EoService {
 		managedbaseline = (ManagedBaseline) PersistenceHelper.manager.save(managedbaseline);
 		managedbaseline = (ManagedBaseline) BaselineHelper.service.addToBaseline(v, managedbaseline);
 		SessionHelper.manager.setPrincipal(user.getName());
+	}
+
+	@Override
+	public void afterAction(EChangeOrder eo) throws Exception {
+		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
+		ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
+
+//		completeProduct(partList, eco);
+
+//		ERPHelper.service.sendERP(eco);
+		
+		SAPHelper.service.sendSapToEo(eo);
+
+		saveBaseline(eo, completeParts);
 	}
 }

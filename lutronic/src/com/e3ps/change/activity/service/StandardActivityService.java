@@ -200,58 +200,44 @@ public class StandardActivityService extends StandardManager implements Activity
 
 	@Override
 	public void saveActivity(EChangeOrder eo, ArrayList<Map<String, String>> list) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
 
-			int sort = 0;
-			for (Map<String, String> map : list) {
-				String step_name = map.get("step_name");
-				String name = map.get("name");
-				String active_type = map.get("active_type");
-				String activeUser_oid = map.get("activeUser_oid");
-				String finishDate = map.get("finishDate");
+		int sort = 0;
+		for (Map<String, String> map : list) {
+			String step_name = map.get("step_name");
+			String name = map.get("name");
+			String active_type = map.get("active_type");
+			String activeUser_oid = map.get("activeUser_oid");
+			String finishDate = map.get("finishDate");
 
-				WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
+			WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
 
-				EChangeActivity eca = EChangeActivity.newEChangeActivity();
-				eca.setStep(step_name);
-				eca.setName(name);
-				eca.setActiveType(active_type);
-				eca.setActiveUser(user);
-				eca.setFinishDate(DateUtil.convertDate(finishDate));
-				eca.setSortNumber(sort);
-				eca.setEo(eo);
+			EChangeActivity eca = EChangeActivity.newEChangeActivity();
+			eca.setStep(step_name);
+			eca.setName(name);
+			eca.setActiveType(active_type);
+			eca.setActiveUser(user);
+			eca.setFinishDate(DateUtil.convertDate(finishDate));
+			eca.setSortNumber(sort);
+			eca.setEo(eo);
 
-				String location = "/Default/설계변경/ECA";
-				String lifecycle = "LC_ECA_PROCESS";
+			String location = "/Default/설계변경/ECA";
+			String lifecycle = "LC_ECA_PROCESS";
 
-				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-				FolderHelper.assignLocation((FolderEntry) eca, folder);
-				// 문서 lifeCycle 설정
-				LifeCycleHelper.setLifeCycle(eca,
-						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) eca, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(eca,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
-				eca = (EChangeActivity) PersistenceHelper.manager.save(eca);
-				sort++;
+			eca = (EChangeActivity) PersistenceHelper.manager.save(eca);
+			sort++;
 
-				// STEP1 코드
-				if (eca.getStep().equals("ES001")) {
-					State state = State.toState("INWORK");
-					// STEP01 단계부터 무조건 시작
-					LifeCycleHelper.service.setLifeCycleState(eca, state);
-				}
+			// STEP1 코드
+			if (eca.getStep().equals("ES001")) {
+				State state = State.toState("INWORK");
+				// STEP01 단계부터 무조건 시작
+				LifeCycleHelper.service.setLifeCycleState(eca, state);
 			}
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
 		}
 	}
 
@@ -321,29 +307,6 @@ public class StandardActivityService extends StandardManager implements Activity
 	}
 
 	@Override
-	public void ccompleteAfterEvent(EChangeActivity eca) throws Exception {
-//		String state = eca.getLifeCycleState().toString();
-//		Transaction trs = new Transaction();
-//		try {
-//			trs.start();
-//
-//			if (!"COMPLETED".equals(state)) {
-//				return;
-//			}
-//
-//			trs.commit();
-//			trs = null;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			trs.rollback();
-//			throw e;
-//		} finally {
-//			if (trs != null)
-//				trs.rollback();
-//		}
-	}
-
-	@Override
 	public void complete(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid"); // eca oid
 		String description = (String) params.get("description"); // 완료 의견
@@ -400,7 +363,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			}
 
 			// 모든 ECA가 끝났을 경우 EO, ECO상태값을변경한다.
-			boolean isEnd = checkActivityComplete(eca.getEo());
+			boolean isEnd = isEnd(eca.getEo());
 			if (isEnd) {
 				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("APPROVING"));
 				// 결재선들 시작 한다
@@ -425,8 +388,6 @@ public class StandardActivityService extends StandardManager implements Activity
 	 * 설변 활동 다음 스텝 체크
 	 */
 	private void nextValidate(ECOChange eo, String nextStep) throws Exception {
-
-		System.out.println("nextStep=" + nextStep);
 		// 5번 스텝으로 되면 끝을낸다.
 		if (nextStep.equals("ES005")) {
 			return;
@@ -455,34 +416,20 @@ public class StandardActivityService extends StandardManager implements Activity
 	/**
 	 * 해당 EO에 관련된 ECA가 모두 끝낫는지 확인 후 승인중 상태로 변경한다.
 	 */
-	private boolean checkActivityComplete(ECOChange eo) throws Exception {
+	private boolean isEnd(ECOChange eo) throws Exception {
 		boolean isEnd = true;
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
 
-			QuerySpec qs = new QuerySpec(EChangeActivity.class);
-			QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, "eoReference.key.id", eo);
-			QueryResult qr = PersistenceHelper.manager.find(qs);
-			while (qr.hasMoreElements()) {
-				EChangeActivity eca = (EChangeActivity) qr.nextElement();
-				String state = eca.getLifeCycleState().toString();
-				// 승인됨이 아닌게 있을 경우 마지막이 아니다
-				if (!"COMPLETED".equals(state)) {
-					isEnd = false;
-					break;
-				}
+		QuerySpec qs = new QuerySpec(EChangeActivity.class);
+		QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, "eoReference.key.id", eo);
+		QueryResult qr = PersistenceHelper.manager.find(qs);
+		while (qr.hasMoreElements()) {
+			EChangeActivity eca = (EChangeActivity) qr.nextElement();
+			String state = eca.getLifeCycleState().toString();
+			// 승인됨이 아닌게 있을 경우 마지막이 아니다
+			if (!"COMPLETED".equals(state)) {
+				isEnd = false;
+				break;
 			}
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
 		}
 		return isEnd;
 	}

@@ -24,7 +24,7 @@ public interface EoService {
 	public abstract void modify(EoDTO dto) throws Exception;
 
 	/**
-	 * EO 상태변경 후 발생 하는 이벤트
+	 * EO 최종 승인후 호출될 함수
 	 */
-	public abstract void complete(EChangeOrder eo) throws Exception;
+	public abstract void afterAction(EChangeOrder eo) throws Exception;
 }

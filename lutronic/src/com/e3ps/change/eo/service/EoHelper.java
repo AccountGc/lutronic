@@ -2,7 +2,6 @@ package com.e3ps.change.eo.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivity;
@@ -13,21 +12,17 @@ import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
@@ -337,4 +332,31 @@ public class EoHelper {
 		return display;
 	}
 
+	/**
+	 * 완제품 아래의 모든 부품을 가져오는 함수
+	 */
+	public ArrayList<WTPart> getter(EChangeOrder eo, ArrayList<EOCompletePartLink> completeParts) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		for (EOCompletePartLink link : completeParts) {
+			WTPartMaster m = link.getCompletePart();
+			String v = link.getVersion();
+			WTPart p = PartHelper.manager.getPart(m.getNumber(), v);
+			// 재귀함수에서 루트를 추가한다...
+			// list.add(p);
+			list = getter(p, list);
+		}
+		return list;
+	}
+
+	/**
+	 * 완제품 아래의 부품 가져오는 재귀 함수
+	 */
+	private ArrayList<WTPart> getter(WTPart p, ArrayList<WTPart> list) throws Exception {
+		ArrayList<WTPart> data = PartHelper.manager.descendants(p);
+		for (WTPart part : data) {
+			list.add(part);
+			getter(part, list);
+		}
+		return list;
+	}
 }

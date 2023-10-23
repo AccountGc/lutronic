@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
@@ -78,11 +79,28 @@ public class StandardSAPService extends StandardManager implements SAPService {
 				double qty = row.getCell(11).getNumericCellValue();
 				String name = df.formatCellValue(row.getCell(5));
 				String version = df.formatCellValue(row.getCell(6));
-//				double number = row.getCell(3).getNumericCellValue();
+				String model = df.formatCellValue(row.getCell(13));
+				String dept = df.formatCellValue(row.getCell(14));
 
-				System.out.println("number=" + number + ", name = " + name);
+				String spec = df.formatCellValue(row.getCell(10));
+				String product = df.formatCellValue(row.getCell(16));
+
+				// 지금은 이름...
+				String modelCode = SAPHelper.manager.get(model, "MODEL");
+				String deptCode = SAPHelper.manager.get(dept, "DEPTCODE");
+
+				String specCode = SAPHelper.manager.get(spec, "SPECIFICATION");
+				String productCode = SAPHelper.manager.get(product, "PRODUCTMETHOD");
+
+				System.out.println("number=" + number + ", name = " + name + ", model + " + modelCode + ", dept = "
+						+ deptCode + ", spec + " + specCode + ", produc = " + productCode);
 
 				WTPart part = create(number, name, version);
+
+				IBAUtil.createIba(part, "string", "MODEL", modelCode);
+				IBAUtil.createIba(part, "string", "DEPTCODE", deptCode);
+				IBAUtil.createIba(part, "string", "SPECIFICATION", specCode);
+				IBAUtil.createIba(part, "string", "PRODUCTMETHOD", productCode);
 
 				WTPart parentPart = parentMap.get(level - 1);
 				if (parentPart != null) {
@@ -117,14 +135,14 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		String end = version.substring(idx + 1);
 		try {
 
-			part = PartHelper.manager.getPart(number, first);
+			part = SAPHelper.manager.getPart(number, first, end);
 			if (part == null) {
 
 				part = WTPart.newWTPart();
 				part.setName(name);
 				part.setNumber(number);
 				part.setDefaultUnit(QuantityUnit.toQuantityUnit("ea"));
-				View view = ViewHelper.service.getView("Engineering");
+				View view = ViewHelper.service.getView("Design");
 				ViewHelper.assignToView(part, view);
 
 				VersionIdentifier vc = VersionIdentifier
@@ -148,5 +166,23 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			throw e;
 		}
 		return part;
+	}
+
+	@Override
+	public void sendSapToEo(EChangeOrder e) throws Exception {
+		// 결재완료 안에서 동작하기에 트랜젝션 제외
+		System.out.println("EO SAP SEND START");
+		
+		// 조건이.. 맣은데 일단 다 전송하는건지?
+		
+		
+		// 자재마스터 전송 시작
+		
+	}
+
+	@Override
+	public void sendSapToEco(EChangeOrder e) throws Exception {
+		// 결재완료 안에서 동작하기에 트랜젝션 제외
+		System.out.println("ECO SAP SEND START");
 	}
 }

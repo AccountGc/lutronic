@@ -22,7 +22,6 @@ import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.dto.ApprovalLineDTO;
-import com.e3ps.workspace.dto.ApprovalMasterDTO;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 @Controller
@@ -367,8 +366,7 @@ public class WorkspaceController extends BaseController {
 
 	@Description(value = "결재 정보 보기")
 	@GetMapping(value = "/lineView")
-	public ModelAndView lineView(@RequestParam String oid, @RequestParam String columnType)
-			throws Exception {
+	public ModelAndView lineView(@RequestParam String oid, @RequestParam String columnType) throws Exception {
 		ModelAndView model = new ModelAndView();
 		ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
 		ApprovalLineDTO dto = new ApprovalLineDTO(line);
@@ -380,16 +378,15 @@ public class WorkspaceController extends BaseController {
 
 	@Description(value = "결재 정보 보기")
 	@GetMapping(value = "/masterView")
-	public ModelAndView masterView(@RequestParam String oid, @RequestParam String columnType)
-			throws Exception {
+	public ModelAndView masterView(@RequestParam String oid, @RequestParam String columnType) throws Exception {
 		ModelAndView model = new ModelAndView();
 		ApprovalMaster master = (ApprovalMaster) CommonUtil.getObject(oid);
 		ApprovalLineDTO dto = null;
-		if(columnType.equals("COLUMN_PROGRESS")) { //진행
+		if (columnType.equals("COLUMN_PROGRESS")) { // 진행
 			dto = WorkspaceHelper.manager.ingLine(master);
-		}else if(columnType.equals("COLUMN_COMPLETE")) { //완료
+		} else if (columnType.equals("COLUMN_COMPLETE")) { // 완료
 			dto = WorkspaceHelper.manager.completeLine(master);
-		}else if(columnType.equals("COLUMN_REJECT")) { //반려
+		} else if (columnType.equals("COLUMN_REJECT")) { // 반려
 			dto = WorkspaceHelper.manager.rejectLine(master);
 		}
 		model.addObject("dto", dto);
@@ -493,7 +490,7 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "합의반려 함수")
 	@ResponseBody
 	@PostMapping(value = "/_unagree")

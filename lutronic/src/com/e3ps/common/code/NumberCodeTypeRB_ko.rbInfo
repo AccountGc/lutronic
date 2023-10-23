@@ -144,3 +144,10 @@ DOCFORMTYPE.order=180
 DOCFORMTYPE.shortDescription=true
 DOCFORMTYPE.longDescription=DF
 DOCFORMTYPE.abbreviatedDisplay=false
+
+#NATION = NATION
+NATION.value=국가
+NATION.order=190
+NATION.shortDescription=true
+NATION.longDescription=NA
+NATION.abbreviatedDisplay=false

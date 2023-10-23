@@ -22,4 +22,17 @@ public interface SAPService {
 	 * SAP 샘플용 데이터 부품 만들기
 	 */
 	public abstract WTPart create(String number, String name, String version) throws Exception;
+
+	/**
+	 * SAP EO 전송
+	 */
+	public abstract void sendSapToEo(EChangeOrder e) throws Exception;
+
+	/**
+	 * SAP ECO 전송
+	 * 
+	 * @param e
+	 */
+	public abstract void sendSapToEco(EChangeOrder e) throws Exception;
+
 }
