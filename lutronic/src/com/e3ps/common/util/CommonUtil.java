@@ -350,7 +350,7 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	public static boolean isSupervisor() throws Exception {
 		WTUser user = (WTUser)SessionHelper.manager.getPrincipal();
 		String name = user.getName();
-		return "wcadmin".equals(name));
+		return "wcadmin".equals(name);
 	}
 
 	public static boolean isMember(String group, WTUser user) throws Exception {
@@ -403,6 +403,9 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	}
 
 	public static String getUserNameFromOid(String ida2a2) throws WTException {
+		if(ida2a2==null) {
+			return "";
+		}
 		String oid = "wt.org.WTUser:" + ida2a2;
 		WTUser wtuser = (WTUser) getObject(oid);
 
@@ -831,6 +834,9 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	}
 	
 	public static String getUserOid(String ida2a2) throws WTException {
+		if(ida2a2==null) {
+			return "";
+		}
 		String oid = "wt.org.WTUser:" + ida2a2;
 		WTUser wtuser = (WTUser) getObject(oid);
 
