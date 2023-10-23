@@ -1,10 +1,9 @@
 package com.e3ps.sap.service;
 
-import java.io.File;
-
 import com.e3ps.change.EChangeOrder;
 
 import wt.method.RemoteInterface;
+import wt.part.WTPart;
 
 @RemoteInterface
 public interface SAPService {
@@ -17,5 +16,10 @@ public interface SAPService {
 	/**
 	 * BOM 샘플 데이터 업로드(운영서버 BOM 다운받은것으로 진행)
 	 */
-	public abstract void upload(File f) throws Exception;
+	public abstract void loaderBom(String path) throws Exception;
+
+	/**
+	 * SAP 샘플용 데이터 부품 만들기
+	 */
+	public abstract WTPart create(String number, String name, String version) throws Exception;
 }

@@ -1396,7 +1396,9 @@ public class PartHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, "versionInfo.identifier.versionId", version);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		if (result.hasMoreElements()) {
-			return (WTPart) result.nextElement();
+			Object[] obj = (Object[]) result.nextElement();
+			WTPart part = (WTPart) obj[0];
+			return part;
 		}
 		return null;
 	}

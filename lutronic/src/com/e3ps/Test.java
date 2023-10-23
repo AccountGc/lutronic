@@ -27,10 +27,15 @@ public class Test {
 
 	public static void main(String[] args) throws Exception {
 
-		String s = "ES001";
+		String a = "A.1";
 
-		System.out.println(s.substring(0, 4) + (Integer.parseInt(s.substring(4)) + 1));
-		System.out.println(s.substring(4));
+		int idx = a.indexOf(".");
+
+		String first = a.substring(0, idx);
+		String end = a.substring(idx+1);
+
+		System.out.println(first);
+		System.out.println(end);
 
 	}
 }

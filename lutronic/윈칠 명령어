@@ -40,5 +40,10 @@
 10. 사용자 및 부서 로더 -> 개발할시에만 사용 용도
 	- Shell -> java com.e3ps.org.loader.UserLoader 엑셀파일(loadFiles/user 폴더에 위치)
 	- loadFiles/department/department.xlsx 디비 임포트
+	- 2가지 실행 후 서버 재시작
 
 11. sapjco3.dll 파일 Windows- > System32 아래 위치
+
+12. BOM 업로드 (SAP 테스트 용)
+	- Shell -> java com.e3ps.sap.loader.BOMLoader 엑셀파일(loadFiles/bom 폴더에 있는것중 사용)
+	- PART_Drawing 밑에 TEST폴더 있어야함

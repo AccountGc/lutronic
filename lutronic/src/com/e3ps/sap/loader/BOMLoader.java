@@ -24,8 +24,7 @@ public class BOMLoader {
 	 * BOM 샘플 업로더
 	 */
 	private void initialize(String path) throws Exception {
-		File f = new File(path);
-		SAPHelper.service.upload(f);
+		SAPHelper.service.loaderBom(path);
 	}
 
 }
