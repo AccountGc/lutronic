@@ -720,77 +720,77 @@ function moveRow() {
 	
 	if("agree" === selectedValue) {
 		
-		for(let i=0; i<rows.length; i++) {
-			const oid = rows[i].woid;
-			const name = rows[i].name;
-			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
-			if(!isUnique1) {
-				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
+// 		for(let i=0; i<rows.length; i++) {
+// 			const oid = rows[i].woid;
+// 			const name = rows[i].name;
+// 			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
+// 			if(!isUnique1) {
+// 				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
 			
-			const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
-			if(!isUnique2) {
-				alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
+// 			const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
+// 			if(!isUnique2) {
+// 				alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
 			
-			const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
-			if(!isUnique3) {
-				alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
-		}
+// 			const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
+// 			if(!isUnique3) {
+// 				alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
+// 		}
 		
 		AUIGrid.addRow(myGridID2000, rows, "last");
 	} else if("approval" === selectedValue) {
 		
-		for(let i=0; i<rows.length; i++) {
-			const oid = rows[i].woid;
-			const name = rows[i].name;
-			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
-			if(!isUnique1) {
-				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
+// 		for(let i=0; i<rows.length; i++) {
+// 			const oid = rows[i].woid;
+// 			const name = rows[i].name;
+// 			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
+// 			if(!isUnique1) {
+// 				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
 			
-			const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
-			if(!isUnique2) {
-				alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
+// 			const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
+// 			if(!isUnique2) {
+// 				alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
 			
-			const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
-			if(!isUnique3) {
-				alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
-		}
+// 			const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
+// 			if(!isUnique3) {
+// 				alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
+// 		}
 		
 		AUIGrid.addRow(myGridID3000, rows, "last");
 	} else if("receive" === selectedValue) {
 		
-		for(let i=0; i<rows.length; i++) {
-			const oid = rows[i].woid;
-			const name = rows[i].name;
-			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
-			if(!isUnique1) {
-				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
+// 		for(let i=0; i<rows.length; i++) {
+// 			const oid = rows[i].woid;
+// 			const name = rows[i].name;
+// 			const isUnique1 = AUIGrid.isUniqueValue(myGridID2000, "woid", oid);
+// 			if(!isUnique1) {
+// 				alert("합의라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
 			
-			const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
-			if(!isUnique2) {
-				alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
+// 			const isUnique2 = AUIGrid.isUniqueValue(myGridID3000, "woid", oid);
+// 			if(!isUnique2) {
+// 				alert("결재라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
 			
-			const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
-			if(!isUnique3) {
-				alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
-				return false;
-			}
-		}
+// 			const isUnique3 = AUIGrid.isUniqueValue(myGridID4000, "woid", oid);
+// 			if(!isUnique3) {
+// 				alert("수신라인에 이미 등록된 사용자(" + name + ")입니다.");
+// 				return false;
+// 			}
+// 		}
 		AUIGrid.addRow(myGridID4000, rows, "last");
 	}
 	AUIGrid.setAllCheckedRows(myGridID1000);

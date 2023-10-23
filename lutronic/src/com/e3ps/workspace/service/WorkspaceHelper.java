@@ -759,7 +759,7 @@ public class WorkspaceHelper {
 		if ("합의완료".equals(state)) {
 			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_COMPLETE);
 		} else if ("합의중".equals(state)) {
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_READY);
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
 		} else if ("합의반려".equals(state)) {
 			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_REJECT);
 		} else if ("전체".equals(state)) {
@@ -829,7 +829,7 @@ public class WorkspaceHelper {
 	}
 
 	/**
-	 * 진행함 상세(대기중, 승인중, 합의중)
+	 * 진행함 상세(합의중, 승인중, 수신확인중)
 	 * 
 	 * @throws Exception
 	 */
@@ -847,9 +847,9 @@ public class WorkspaceHelper {
 		}
 
 		query.appendOpenParen();
-		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_READY);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_READY);
+		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
 		query.appendCloseParen();
 
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
@@ -880,7 +880,7 @@ public class WorkspaceHelper {
         }
 
         QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_COMPLETE);
-
+        QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, APPROVAL_LINE);
         QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
         QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
         QueryResult result = PersistenceHelper.manager.find(query);
@@ -920,4 +920,38 @@ public class WorkspaceHelper {
         }
         return dto;
     }
+    
+    /**
+	 * 합의중이 있는지 체크
+	 */
+	public boolean isAgreeApprovalLine(ApprovalMaster master) throws Exception {
+		boolean isAgreeApprovalLine = true;
+		ArrayList<ApprovalLine> list = getAgreeLine(master);
+		if(list.size()==0) {
+			isAgreeApprovalLine = false;
+		}
+		return isAgreeApprovalLine;
+	}
+	
+	public ArrayList<ApprovalLine> getAgreeLine(ApprovalMaster master) throws Exception {
+		ArrayList<ApprovalLine> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_AGREE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, AGREE_LINE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			ApprovalLine line = (ApprovalLine) obj[0];
+			list.add(line);
+		}
+		return list;
+	}
 }

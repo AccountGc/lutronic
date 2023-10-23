@@ -689,18 +689,43 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		}
 		return null;
 	}
-
+	
 	@Override
 	public void _agree(Map<String, String> params) throws Exception {
+		String oid = (String) params.get("oid");
+		String description = (String) params.get("description");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
 			// 합의시 상태값 합의 완료로 변경
 			// 모든 합의가 끝나면 결재를 시작하는데 결재는 직렬로 순서대로 진행
-			
-			
+			Timestamp completeTime = new Timestamp(new Date().getTime());
+			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
 
+			if (!StringUtil.checkString(description)) {
+				description = "합의합니다.";
+			}
+
+			line.setDescription(description);
+			line.setCompleteTime(completeTime);
+			line.setState(WorkspaceHelper.STATE_AGREE_COMPLETE);
+			line = (ApprovalLine) PersistenceHelper.manager.modify(line);
+
+			ApprovalMaster master = line.getMaster();
+			boolean isAgreeApprovalLine = WorkspaceHelper.manager.isAgreeApprovalLine(master);
+			if(!isAgreeApprovalLine) { //합의중 없으면
+				ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(master);
+				for (ApprovalLine approvalLine : approvalLines) {
+					int sort = approvalLine.getSort();
+					if (sort == 1) {
+						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+						approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
+					}
+				}
+				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
+				master = (ApprovalMaster) PersistenceHelper.manager.modify(master);
+			}
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
