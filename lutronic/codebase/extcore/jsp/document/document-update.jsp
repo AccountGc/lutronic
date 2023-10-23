@@ -242,6 +242,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <!-- 	관련 문서 -->
@@ -250,6 +251,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <!-- 	관련 EO -->
@@ -258,6 +260,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <!-- 	관련 CR -->
@@ -266,6 +269,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <!-- 	관련 ECPR -->
@@ -274,6 +278,7 @@ iframe {
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="250" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <!-- 	관련 ECO -->

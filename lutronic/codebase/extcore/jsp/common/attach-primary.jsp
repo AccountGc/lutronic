@@ -68,7 +68,7 @@ String mode = request.getParameter("mode");
 					}
 			}
 		})
-		<% if("modify".equals(mode)){ %>
+		<% if("modify".equals(mode) || "revise".equals(mode)){ %>
 		new AXReq("/Windchill/plm/content/list", {
 			pars : "oid=<%=oid%>&roleType=primary",
 			onsucc : function(res) {
