@@ -346,7 +346,7 @@ iframe {
 				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-
+				
 				const url = getCallUrl("/doc/create");
 
 				// 관련문서
@@ -385,7 +385,7 @@ iframe {
 						return false;
 					}
 
-					if (addRows8) {
+					if (addRows8.length > 0) {
 						alert("결재선 지정을 해지해주세요.")
 						return false;
 					}

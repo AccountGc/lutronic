@@ -124,9 +124,14 @@ boolean update = "update".equals(mode);
 		}
 
 		function deleteRow8() {
-			const checked = AUIGrid.getCheckedRowItems(myGridID8);
-			for (let i = checked.length - 1; i >= 0; i--) {
-				const rowIndex = checked[i].rowIndex;
+			const checkedItems = AUIGrid.getCheckedRowItems(myGridID8);
+			if (checkedItems.length === 0) {
+				alert("삭제할 행을 선택하세요.");
+				return false;
+			}
+
+			for (let i = checkedItems.length - 1; i >= 0; i--) {
+				var rowIndex = checkedItems[i].rowIndex;
 				AUIGrid.removeRow(myGridID8, rowIndex);
 			}
 		}

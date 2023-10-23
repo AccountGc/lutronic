@@ -245,7 +245,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 						return false;
 					}
 					
-					if(addRows8){
+					if (addRows8.length > 0) {
 						alert("결재선 지정을 해지해주세요.")
 						return false;
 					}
