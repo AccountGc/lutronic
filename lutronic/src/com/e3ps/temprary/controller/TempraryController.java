@@ -43,4 +43,12 @@ public class TempraryController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "OID 값으로 주소 구분 하기")
+	@ResponseBody
+	@PostMapping(value = "/identity")
+	public String identity(@RequestBody String oid) {
+		return TempraryHelper.service.getViewIdentity(oid);
+	}
+	
 }
