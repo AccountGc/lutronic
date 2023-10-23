@@ -367,7 +367,7 @@ public class WorkspaceController extends BaseController {
 
 	@Description(value = "결재 정보 보기")
 	@GetMapping(value = "/lineView")
-	public ModelAndView lineView(@RequestParam String oid, @RequestParam String columnType, @RequestParam String poid)
+	public ModelAndView lineView(@RequestParam String oid, @RequestParam String columnType)
 			throws Exception {
 		ModelAndView model = new ModelAndView();
 		ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);

@@ -394,7 +394,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		try {
 			trs.start();
 
-			WTUser sessionUser = CommonUtil.sessionUser();
 			Timestamp completeTime = new Timestamp(new Date().getTime());
 			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
 
@@ -413,12 +412,17 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(master);
 			for (ApprovalLine approvalLine : approvalLines) {
 				int sort = approvalLine.getSort();
+				approvalLine.setSort(sort - 1);
+				approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
+			}
+			
+			for (ApprovalLine approvalLine : approvalLines) {
+				int sort = approvalLine.getSort();
 				if (sort == 1) {
 					approvalLine.setStartTime(completeTime);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+					approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
 				}
-				approvalLine.setSort(sort - 1);
-				approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
 			}
 
 			master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_APPROVING);
@@ -430,7 +434,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 모든 수신라인 상태 변경
 				ArrayList<ApprovalLine> ll = WorkspaceHelper.manager.getReceiveLines(master);
 				for (ApprovalLine rLine : ll) {
-					rLine.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+					rLine.setState(WorkspaceHelper.STATE_RECEIVE_START);
 					PersistenceHelper.manager.modify(rLine);
 				}
 
@@ -441,7 +445,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				if (per instanceof LifeCycleManaged) {
 					State state = State.toState("APPROVED");
 					per = (Persistable) LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, state);
-//					sendToERP(per);
 				}
 			}
 
@@ -468,31 +471,27 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
 			ApprovalMaster m = line.getMaster();
 
-			WTUser sessionUser = CommonUtil.sessionUser();
-
-			String msg = sessionUser.getFullName() + " 사용자의 반려로 인해 모든 결재가 반려 처리 되었습니다.";
+			if (!StringUtil.checkString(description)) {
+				WTUser sessionUser = CommonUtil.sessionUser();
+				description = sessionUser.getFullName() + " 사용자의 합의반려로 인해 모든 결재가 반려 처리 되었습니다.";
+			}
 
 			// 기안라인은 제외한다?
-			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, false);
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, true);
 			for (ApprovalLine l : list) {
-
 				String t = l.getType();
 				// 합의라인
 				if (t.equals(WorkspaceHelper.AGREE_LINE)) {
 					l.setState(WorkspaceHelper.STATE_AGREE_REJECT);
+				// 결재라인
 				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
 					l.setState(WorkspaceHelper.STATE_APPROVAL_REJECT);
+				// 수신라인	
 				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
 					l.setState(WorkspaceHelper.STATE_RECEIVE_REJECT);
 				}
 				l.setCompleteTime(new Timestamp(new Date().getTime()));
-
-				// 클래스 비교가 이게 맞나..
-				if (l != line) {
-					l.setDescription(msg);
-				} else {
-					l.setDescription(description);
-				}
+				l.setDescription(description);
 
 				PersistenceHelper.manager.modify(l);
 			}
@@ -719,6 +718,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					int sort = approvalLine.getSort();
 					if (sort == 1) {
 						approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+						approvalLine.setStartTime(completeTime);
 						approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
 					}
 				}
@@ -830,8 +830,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		try {
 			trs.start();
 			
-			WTUser sessionUser = CommonUtil.sessionUser();
 			if (!StringUtil.checkString(description)) {
+				WTUser sessionUser = CommonUtil.sessionUser();
 				description = sessionUser.getFullName() + " 사용자의 합의반려로 인해 모든 결재가 반려 처리 되었습니다.";
 			}
 

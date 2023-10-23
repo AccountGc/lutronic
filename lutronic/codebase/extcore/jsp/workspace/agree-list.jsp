@@ -147,7 +147,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE&poid=" + item.poid);
+							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE");
 							_popup(url, 1500, 800, "n");
 						}
 					},
@@ -165,7 +165,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL&poid=" + item.poid);
+							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE");
 							_popup(url, 1500, 800, "n");
 						}
 					},
@@ -183,7 +183,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE&poid=" + item.poid);
+							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE");
 							_popup(url, 1500, 800, "n");
 						}
 					},
@@ -201,7 +201,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE&poid=" + item.poid);
+							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE");
 							_popup(url, 1500, 800, "n");
 						}
 					},
