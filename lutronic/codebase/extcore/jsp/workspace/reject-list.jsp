@@ -74,8 +74,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/workspace/masterView?oid=" + oid + "&columnType=COLUMN_REJECT&poid=" + item.poid);
-							_popup(url, 1500, 800);
+							const url = getCallUrl("/workspace/masterView?oid=" + oid + "&columnType=COLUMN_REJECT");
+							_popup(url, 1500, 800, "n");
 						}
 					},
 					filter : {

@@ -38,7 +38,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<tr>
 				<th>결재 제목</th>
 				<td colspan="3" class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
+					<input type="text" name="approvalTitle" id="approvalTitle" class="width-300">
 				</td>
 			</tr>
 			<tr>
@@ -243,7 +243,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/workspace/approval");
-				const field = [ "name" ];
+				const field = [ "approvalTitle", "submiterOid", "receiveFrom", "receiveTo" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -262,7 +262,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				toFocus("name");
+				toFocus("approvalTitle");
 				const columns = loadColumnLayout("approval-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);

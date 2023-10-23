@@ -862,4 +862,62 @@ public class WorkspaceHelper {
 		}
 		return dto;
 	}
+    
+    /**
+     * 완료함 상세
+     */
+    public ApprovalLineDTO completeLine(ApprovalMaster master) throws Exception {
+        QuerySpec query = new QuerySpec();
+        int idx = query.appendClassList(ApprovalLine.class, true);
+
+        if (!CommonUtil.isAdmin()) {
+            WTUser sessionUser = CommonUtil.sessionUser();
+            QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+        }
+
+        if (query.getConditionCount() > 0) {
+            query.appendAnd();
+        }
+
+        QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_COMPLETE);
+
+        QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+        QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+        QueryResult result = PersistenceHelper.manager.find(query);
+        ApprovalLineDTO dto = null;
+        while (result.hasMoreElements()) {
+            Object[] obj = (Object[]) result.nextElement();
+            dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
+        }
+        return dto;
+    }
+    
+    /**
+     * 반려함 상세
+     */
+    public ApprovalLineDTO rejectLine(ApprovalMaster master) throws Exception {
+        QuerySpec query = new QuerySpec();
+        int idx = query.appendClassList(ApprovalLine.class, true);
+        
+        if (!CommonUtil.isAdmin()) {
+            WTUser sessionUser = CommonUtil.sessionUser();
+            QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+        }
+        
+        if (query.getConditionCount() > 0) {
+            query.appendAnd();
+        }
+        
+        QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_REJECT);
+        
+        QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+        QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+        QueryResult result = PersistenceHelper.manager.find(query);
+        ApprovalLineDTO dto = null;
+        while (result.hasMoreElements()) {
+            Object[] obj = (Object[]) result.nextElement();
+            dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
+        }
+        return dto;
+    }
 }
