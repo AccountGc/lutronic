@@ -654,7 +654,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 			}, {
 				headerText : "관련ECPR",
 				children : [ {
-					dataField : "ecprOids",
+					dataField : "rowsEcpr",
 					dataType : "string",
 					visible : false
 				}, {
@@ -667,15 +667,16 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					}
 				}, {
 					dataField : "ecpr",
-					headerText : "관련CR",
+					headerText : "관련ECPR",
 					dataType : "string",
 					width : 120,
 					renderer : {
 						type : "ButtonRenderer",
 						labelText : "ECPR추가",
-						onClick : function(event) {
-							const parentRowIndex = event.rowIndex;
-							const url = getCallUrl("/changeECPR/listPopup?parentRowIndex=" + parentRowIndex);
+						onclick : function(rowIndex, columnIndex, value, item) {
+							recentGridItem = item;
+							const oid = item.oid;
+							const url = getCallUrl("/ecpr/popup?method=insertEcpr&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
@@ -908,11 +909,22 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				callBack(true);
 			}	
 
-			// 			// 관련 ECPR 할당 메서드
-			// 			function setECPR(ecprOids, ecprNumber, parentRowIndex) {
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprOids", ecprOids);
-			// 				AUIGrid.setCellValue(myGridID, parentRowIndex, "ecprNumber", ecprNumber);
-			// 			}
+			// ECPR 추가
+			function insertEcpr(arr, callBack) {
+				const rowsEcpr = [];
+				let number = "";
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					rowsEcpr.push(item);
+					number += item.number + "\n";
+				})
+				AUIGrid.updateRowsById(myGridID, {
+					oid : recentGridItem.oid,
+					rowsEcpr : rowsEcpr,
+					ecprNumber : toRowsExp(number)
+				});
+				callBack(true);
+			}	
 
 			// ECO 추가
 			function insert105(arr, callBack) {

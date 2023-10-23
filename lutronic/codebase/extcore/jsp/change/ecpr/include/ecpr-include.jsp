@@ -197,7 +197,6 @@ JSONArray data = AUIGridUtil.include(oid, "ecpr");
 	}
 
 	function insertEcpr(arr, callBack) {
-		debugger;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
