@@ -82,6 +82,14 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				</td>
 			</tr>
 			<tr>
+				<th class="lb">제안자</th>
+				<td class="indent5" colspan="3">
+					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
+					<input type="hidden" name="proposerOid" id="proposerOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
+				</td>
+			</tr>
+			<tr>
 				<th class="req lb">제품명</th>
 				<td colspan="3" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
@@ -92,14 +100,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 						<jsp:param value="true" name="multi" />
 						<jsp:param value="150" name="height" />
 					</jsp:include>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">제안자</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
-					<input type="hidden" name="proposerOid" id="proposerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
 				</td>
 			</tr>
 			<tr>

@@ -27,12 +27,13 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
+			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
 			<%
-// 			if (dto.is_revise()) {
+			// 			if (dto.is_revise()) {
 			%>
 			<input type="button" value="개정" title="개정" onclick="update('revise');">
 			<%
-// 			}
+			// 			}
 			%>
 			<input type="button" value="결재회수" title="결재회수">
 			<%
@@ -282,6 +283,7 @@ iframe {
 
 
 <script type="text/javascript">
+const oid = document.getElementById("oid").value;
 	// 에디터 로드가 느려서 처리..
 	const oEditors = [];
 	nhn.husky.EZCreator.createInIFrame({
@@ -302,14 +304,12 @@ iframe {
 	
 	// 최신버전으로 페이지 이동
 	function latest() {
-		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/etc/latest?oid=" + oid);
 		document.location.href = url;
 	}
 
 	//수정 및 개정
 	function update(mode) {
-		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/etc/update?oid=" + oid + "&mode=" + mode);
 		document.location.href = url;
 	};
@@ -388,7 +388,30 @@ iframe {
 					} else {
 						createAUIGrid91(columns91);
 					}
-
+					const isCreated100 = AUIGrid.isCreated(myGridID100); // EO
+					if (isCreated100) {
+						AUIGrid.resize(myGridID100);
+					} else {
+						createAUIGrid100(columns100);
+					}
+					const isCreated105 = AUIGrid.isCreated(myGridID105); // ECO
+					if (isCreated105) {
+						AUIGrid.resize(myGridID105);
+					} else {
+						createAUIGrid105(columns105);
+					}
+					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
+					if (isCreated101) {
+						AUIGrid.resize(myGridID101);
+					} else {
+						createAUIGrid101(columns101);
+					}
+					const isCreatedEcpr = AUIGrid.isCreated(myGridIDEcpr); // ECPR
+					if (isCreatedEcpr) {
+						AUIGrid.resize(myGridIDEcpr);
+					} else {
+						createAUIGridEcpr(columnsEcpr);
+					}
 					break;
 				case "tabs-3":
 					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
@@ -403,6 +426,18 @@ iframe {
 					} else {
 						createAUIGrid51(columns51);
 					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 다운로드이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
+					}
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 유저 메일
+					if (isCreated10001) {
+						AUIGrid.resize(myGridID10001);
+					} else {
+						createAUIGrid10001(columns10001);
+					}
 					break;
 				}
 			}
@@ -410,5 +445,13 @@ iframe {
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID91);
+		AUIGrid.resize(myGridID100);
+		AUIGrid.resize(myGridID105);
+		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridIDEcpr);
+		AUIGrid.resize(myGridID50);
+		AUIGrid.resize(myGridID51);
+		AUIGrid.resize(myGridID10000);
 	});
 </script>

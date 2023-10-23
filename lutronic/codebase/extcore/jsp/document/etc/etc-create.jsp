@@ -228,111 +228,54 @@ iframe {
 				</td>
 			</tr>
 		</table>
+		
 		<!-- 관련 품목 -->
 		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert91" name="method" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="250" name="height" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
-		<!-- 	관련 기타 문서 -->
-		<jsp:include page="/extcore/jsp/document/etc/include/etc-include.jsp">
+		<!-- 	관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="250" name="height" />
-			<jsp:param value="<%= location %>" name="location" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 	관련 EO -->
-		<jsp:include page="/extcore/jsp/change/include_selectEO.jsp">
+		<jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 	관련 CR -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						관련 CR
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th class="lb">관련 CR</th>
-				<td class="indent5 pt5">
-					<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
 
 		<!-- 	관련 ECPR -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						관련 ECPR
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th class="lb">관련 ECPR</th>
-				<td class="indent5 pt5">
-					<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
+		<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
 
 		<!-- 	관련 ECO -->
-		<table class="button-table">
-			<tr>
-				<td class="left">
-					<div class="header">
-						<img src="/Windchill/extcore/images/header.png">
-						관련 ECO
-					</div>
-				</td>
-			</tr>
-		</table>
-		<table class="create-table">
-			<colgroup>
-				<col width="150">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<th class="lb">관련 ECO</th>
-				<td class="indent5 pt5">
-					<jsp:include page="/extcore/jsp/change/eco_include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
 		
 		<table class="button-table">
 			<tr>
@@ -391,6 +334,7 @@ iframe {
 			function create(temp) {
 				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
+				const formType = document.getElementById("formType");
 				const name = document.getElementById("docName");
 				const documentType = document.getElementById("documentType");
 				oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
@@ -398,39 +342,65 @@ iframe {
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
-				const primary = document.querySelector("input[name=primary]").value;
+				const primary = document.querySelector("input[name=primary]");
 				const model = document.getElementById("model").value;
 				const writer = document.getElementById("writer").value;
 				const interalnumber = document.getElementById("interalnumber").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
-				const documentName = document.getElementById("documentName").value;
-				
+				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
-					
-					if(addRows8){
-						alert("결재선 지정을 해지해주세요.")
-						return false;
-					}
-					
-				} else {
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
-				}
-				
-				const url = getCallUrl("/etc/create");
+				const url = getCallUrl("/doc/create");
 
 				// 관련문서
 				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 관련품목
 				const rows91 = AUIGrid.getGridDataWithState(myGridID91, "gridState");
+				// 관련EO
+				const rows100 = AUIGrid.getGridDataWithState(myGridID100, "gridState");
+				// 관련CR
+				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+				// 관련ECPR
+				const rowsEcpr = AUIGrid.getGridDataWithState(myGridIDEcpr, "gridState");
+				// 관련ECO
+				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+
+				if (isNull(documentName.value)) {
+					alert("문서종류를 입력해주세요.");
+					documentName.focus();
+					return false;
+				}
+
+				if (isNull(documentType.value)) {
+					alert("문서유형을 선택해주세요.");
+					return false;
+				}
+
+				if (primary == null) {
+					alert("주 첨부파일을 첨부해주세요.");
+					return false;
+				}
+
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+
+					if (addRows8) {
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+
+				} else {
+					if (!confirm("등록하시겠습니까?")) {
+						return false;
+					}
+				}
+
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,
@@ -438,18 +408,26 @@ iframe {
 					description : description.value,
 					content : content.value,
 					secondarys : secondarys,
-					primary : primary,
+					primary : primary.value,
 					location : location.value,
 					model_code : model,
 					deptcode_code : deptcode,
 					interalnumber : interalnumber,
 					writer : writer,
 					preseration_code : preseration,
-					documentName : documentName,
+					documentName : documentName.value,
 					// 링크 데이터
 					rows90 : rows90,
-					rows91 : rows91
+					rows91 : rows91,
+					rows100 : rows100,
+					rows101 : rows101,
+					rowsEcpr : rowsEcpr,
+					rows105 : rows105,
+					temprary : temprary,
+					// 외부 메일
+					external : external
 				};
+				logger(params);
 				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -471,17 +449,59 @@ iframe {
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
+				createAUIGrid100(columns100);
+				createAUIGrid101(columns101);
+				createAUIGridEcpr(columnsEcpr);
+				createAUIGrid105(columns105);
 				createAUIGrid8(columns8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
+				AUIGrid.resize(myGridID100);
+				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridIDEcpr);
+				AUIGrid.resize(myGridID105);
 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
+
+				// 문서명 규칙
+				$("#documentName").bindSelector({
+					reserveKeys : {
+						options : "list",
+						optionValue : "value",
+						optionText : "name"
+					},
+					optionPrintLength : "all",
+					onsearch : function(id, obj, callBack) {
+						const value = document.getElementById(id).value;
+						const url = getCallUrl("/doc/finder");
+						const params = {
+							value : value,
+						};
+						logger(params);
+						call(url, params, function(data) {
+							callBack({
+								options : data.list
+							})
+						})
+					},
+					onchange : function() {
+						const id = this.targetID;
+						if (this.selectedOption != null) {
+							const value = this.selectedOption.value;
+							document.getElementById(id).value = value;
+						}
+					},
+				});
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
+				AUIGrid.resize(myGridID100);
+				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridIDEcpr);
+				AUIGrid.resize(myGridID105);
 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});

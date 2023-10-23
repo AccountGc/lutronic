@@ -6,52 +6,41 @@ String oid = request.getParameter("oid");
 <jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
-	<jsp:param value="insert91" name="method" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
+	<jsp:param value="false" name="header" />
 </jsp:include>
 
-<!-- 	관련 문서 -->
+<!-- 	관련 기타 문서 -->
 <jsp:include page="/extcore/jsp/document/etc/include/etc-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
-	<jsp:param value="insert90" name="method" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 EO -->
-<jsp:include page="/extcore/jsp/change/include/eo-include.jsp">
+<jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
-	<jsp:param value="insert100" name="method" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 CR -->
-<jsp:include page="/extcore/jsp/change/include/cr-include.jsp">
+<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
-	<jsp:param value="insert101" name="method" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
-</jsp:include>
-
-<!-- 	관련 ECO -->
-<jsp:include page="/extcore/jsp/change/include/eco-include.jsp">
-	<jsp:param value="<%=oid%>" name="oid" />
-	<jsp:param value="view" name="mode" />
-	<jsp:param value="insert102" name="method" />
-	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
 </jsp:include>
 
 <!-- 	관련 ECPR -->
-<jsp:include page="/extcore/jsp/change/include/ecpr-include.jsp">
+<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
-	<jsp:param value="insert103" name="method" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="200" name="height" />
+</jsp:include>
+
+<!-- 	관련 ECO -->
+<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+	<jsp:param value="<%=oid%>" name="oid" />
+	<jsp:param value="view" name="mode" />
+	<jsp:param value="true" name="multi" />
 </jsp:include>

@@ -3,7 +3,13 @@
 String oid = request.getParameter("oid");
 %>
 <!-- 버전 이력 -->
-<jsp:include page="/extcore/jsp/document/etc/include/etc-iteration-include.jsp">
+<jsp:include page="/extcore/jsp/document/include/document-iteration-include.jsp">
+	<jsp:param value="<%=oid%>" name="oid" />
+	<jsp:param value="300" name="height" />
+</jsp:include>
+
+<!-- 결재 이력 -->
+<jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="300" name="height" />
 </jsp:include>

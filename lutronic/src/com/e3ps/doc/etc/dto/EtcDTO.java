@@ -9,6 +9,7 @@ import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.org.service.MailUserHelper;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,8 +30,8 @@ public class EtcDTO {
 	private WTDocument doc;
 	private String number;
 	private String name;
-	private String description = "";
-	private String content = "";
+	private String description;
+	private String content;
 	private String location;
 	private String documentType_name;
 	private String documentType_code;
@@ -64,13 +65,28 @@ public class EtcDTO {
 	private boolean _revise = false;
 
 	// 변수용
+	private String iterationNote;
 	private String documentName;
 	private String lifecycle;
 	private String primary;
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows90 = new ArrayList<>(); // 관련 문서
 	private ArrayList<Map<String, String>> rows91 = new ArrayList<>(); // 관련 품목
-	private boolean temp;
+	private ArrayList<Map<String, String>> rows100 = new ArrayList<>(); // 관련 EO
+	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 ECO
+	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
+	private ArrayList<Map<String, String>> rowsEcpr = new ArrayList<>(); // 관련 ECPR
+
+	// 결재 변수
+	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
+	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
+	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
+	private boolean self; // 자가 결재
+
+	// 외부 메일 변수
+	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
+
+	private boolean temprary;
 
 	public EtcDTO() {
 
@@ -151,8 +167,8 @@ public class EtcDTO {
 		if (check("APPROVED") && isLatest()) {
 			set_revise(true);
 		}
-		// 삭제, 수정 권한 - (최신버전 && (작업중 || 일괄결재중 || 재작업))
-		if (isLatest() && (check("INWORK") || check("BATCHAPPROVAL") || check("REWORK"))) {
+		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
+		if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
 			set_delete(true);
 			set_modify(true);
 		}
@@ -198,7 +214,6 @@ public class EtcDTO {
 
 		// 생성전 삭제 처리..
 		deleteIBAValue(doc, sd);
-
 		sv.setValue(value);
 		sv.setDefinitionReference((StringDefinitionReference) sd.getAttributeDefinitionReference());
 		sv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(doc)));

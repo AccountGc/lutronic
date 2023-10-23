@@ -1,17 +1,17 @@
 <%@page import="com.e3ps.common.util.StringUtil"%>
+<%@page import="com.e3ps.common.util.AUIGridUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.doc.etc.service.EtcHelper"%>
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
-String method = request.getParameter("method");
-String location = request.getParameter("location");
 boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
+boolean header = Boolean.parseBoolean(request.getParameter("header"));
+JSONArray data = AUIGridUtil.include(oid, "doc");
 %>
 <table class="button-table">
 	<tr>
@@ -23,6 +23,11 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		</td>
 	</tr>
 </table>
+<%
+	// 테이블 처리 여부
+	if(header) {
+%>
+
 <table class="create-table">
 	<colgroup>
 		<col width="150">
@@ -39,17 +44,24 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			<%
 			}
 			%>
-			<div id="grid90" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid90" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
+
+<%
+	} else {
+%>
+<div id="grid90" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<%
+	}
+%>
 <script type="text/javascript">
 	let myGridID90;
 	const columns90 = [ {
 		dataField : "number",
 		headerText : "문서번호",
 		dataType : "string",
-		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -59,22 +71,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 				_popup(url, "", "", "f");
 			}
 		},		
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "interalnumber",
-		headerText : "내부 문서번호",
-		dataType : "string",
-		width : 120,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "model",
-		headerText : "프로젝트 코드",
-		dataType : "string",
-		width : 120,
 		filter : {
 			showIcon : true,
 		},
@@ -83,7 +79,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		headerText : "문서명",
 		dataType : "string",
 		style : "aui-left",
-		width : 350,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -97,11 +92,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			showIcon : true,
 		},
 	}, {
-		dataField : "location",
-		headerText : "문서분류",
+		dataField : "state",
+		headerText : "상태",
 		dataType : "string",
-		style : "aui-left",
-		width : 250,
 		filter : {
 			showIcon : true,
 		},
@@ -109,23 +102,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 80,
-		filter : {
-			showIcon : true,
+		renderer : {
+			type : "TemplateRenderer"
 		},
-	}, {
-		dataField : "state",
-		headerText : "상태",
-		dataType : "string",
-		width : 120,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "writer",
-		headerText : "작성자",
-		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -133,15 +112,6 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 100,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "createdDate_txt",
-		headerText : "등록일",
-		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -149,31 +119,8 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
-		width : 100,
 		filter : {
 			showIcon : true,
-		},
-	}, {
-		dataField : "primary",
-		headerText : "주 첨부파일",
-		dataType : "string",
-		width : 80,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "secondary",
-		headerText : "첨부파일",
-		dataType : "string",
-		width : 100,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
 		},
 	}, {
 		dataField : "oid",
@@ -189,7 +136,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : true,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,
@@ -199,18 +146,18 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID90, <%=EtcHelper.manager.reference(oid, "doc")%>);
+		AUIGrid.setGridData(myGridID90, <%=AUIGridUtil.include(oid, "doc")%>);
 		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup90() {
-		const method = "<%=method%>";
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/etc/popup?method=" + method + "&multi=" + multi + "&location=<%= location %>");
+		const url = getCallUrl("/etc/popup?method=insert90&multi=" + multi);
 		_popup(url, 1800, 900, "n");
 	}
 
@@ -223,7 +170,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		}
 
 		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
+			var rowIndex = checkedItems[i].rowIndex;
 			AUIGrid.removeRow(myGridID90, rowIndex);
 		}
 	}
