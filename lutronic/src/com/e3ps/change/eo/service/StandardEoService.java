@@ -134,16 +134,17 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(eo, external);
 
-			// 결재 시작
-			if (rows200.size() > 0) {
 
-			} else {
-				// 활동이 없을경우인데 필수값일듯..
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
-				}
+			// 결재 생성후
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
 			}
 
+			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
+			if(rows200.size() > 0) {
+				WorkspaceHelper.service.stand(eo);
+			}
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

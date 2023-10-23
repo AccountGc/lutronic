@@ -3,6 +3,8 @@ package com.e3ps.workspace.service;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
+
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.util.WTException;
@@ -82,11 +84,17 @@ public interface WorkspaceService {
 	 */
 	public abstract void _agree(Map<String, String> params) throws Exception;
 
-	
 	WorkItem getWorkItem(Persistable per) throws WTException;
 
 	/**
 	 * 결재 이력 삭제
 	 */
-	public abstract Persistable removeHistory(WTDocument doc) throws Exception;
+	public abstract Persistable removeHistory(Persistable per) throws Exception;
+
+	/**
+	 * 설변 활동 전용
+	 * 
+	 * @param eo
+	 */
+	public abstract void stand(Persistable per) throws Exception;
 }

@@ -709,8 +709,45 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	}
 
 	@Override
-	public Persistable removeHistory(WTDocument doc) throws Exception {
+	public Persistable removeHistory(Persistable per) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void stand(Persistable per) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
+
+			if (m != null) {
+				// 기안 라인 제외
+				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, false);
+				for (ApprovalLine line : list) {
+					String type = line.getType();
+					if (type.equals(WorkspaceHelper.APPROVAL_LINE)) {
+						line.setState(WorkspaceHelper.STATE_APPROVAL_READY);
+					} else if (type.equals(WorkspaceHelper.RECEIVE_LINE)) {
+						line.setState(WorkspaceHelper.STATE_RECEIVE_READY);
+					} else if (type.equals(WorkspaceHelper.AGREE_LINE)) {
+						line.setState(WorkspaceHelper.STATE_AGREE_READY);
+					}
+					PersistenceHelper.manager.modify(line);
+				}
+
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }

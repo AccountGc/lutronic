@@ -501,13 +501,13 @@ public class WorkspaceHelper {
 	/**
 	 * 모든 결재라인을 가져오는 함수
 	 */
-	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master, boolean exclude) throws Exception {
+	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master, boolean include) throws Exception {
 		ArrayList<ApprovalLine> list = new ArrayList<ApprovalLine>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
 		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 
-		if (!exclude) {
+		if (include) {
 			QuerySpecUtils.toNotEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
 		}
 
