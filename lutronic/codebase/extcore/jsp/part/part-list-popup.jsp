@@ -555,7 +555,8 @@ function addBtn() {
 		opener.<%=method%>(checkedItems, function(res) {
 			if(res) {
 				setTimeout(function() {
-					closeLayer();
+// 					closeLayer();
+					self.close();
 				}, 500);
 			}
 		})
