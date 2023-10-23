@@ -306,10 +306,11 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/cr/list");
-				const field = [ "name", "number" ];
+				const field = [ "name", "number", "state", "creator", "createdFrom", "createdTo", "approveFrom", "approveTo", "writer", "createDepart", "writedFrom", "writedTo", "proposer", "changeSection", "model" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -344,6 +345,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				twindate("modified");
 				selectbox("_psize");
 				selectbox("model");
+				selectbox("changeSection");
 			});
 
 			document.addEventListener("keydown", function(event) {

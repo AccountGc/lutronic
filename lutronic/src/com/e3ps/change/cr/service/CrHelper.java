@@ -25,6 +25,7 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.query.QueryException;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTException;
 
@@ -38,10 +39,58 @@ public class CrHelper {
 		ArrayList<CrColumn> list = new ArrayList<>();
 
 		String name = (String) params.get("name");
+		String number = (String) params.get("number");
+		String state = (String) params.get("state");
+		String creator = (String) params.get("creator");
+		String createdFrom = (String) params.get("createdFrom");
+		String createdTo = (String) params.get("createdTo");
+		String approveFrom = (String) params.get("approveFrom");
+		String approveTo = (String) params.get("approveTo");
+		String writer = (String) params.get("writer");
+		String createDepart = (String) params.get("createDepart");
+		String writedFrom = (String) params.get("writedFrom");
+		String writedTo = (String) params.get("writedTo");
+		String proposer = (String) params.get("proposer");
+		String changeSection = (String)params.get("changeSection");
+		String model = (String) params.get("model");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeRequest.class, true);
-
+		
+		// 제목
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.EO_NAME, name);
+		// 번호
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.EO_NUMBER, number);
+		// 상태
+		QuerySpecUtils.toState(query, idx, EChangeRequest.class, state);
+		// 등록자
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, creator);
+		//등록일
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, createdFrom,
+				createdTo);
+		//승인일
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.APPROVE_DATE, approveFrom,
+				approveTo);
+		
+		//작성자
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
+		
+		//작성부서
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
+		
+		//작성일
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DATE, writedFrom,
+				writedTo);
+		
+		//제안자
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.PROPOSER, proposer);
+		
+		//프로젝트 코드
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.MODEL, model);
+		
+		// 변경구분
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CHANGE_SECTION, changeSection);
+		
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
