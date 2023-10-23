@@ -214,6 +214,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	}
 
 	function _agree() {
+		const description = document.getElementById("description").value;
 		if (!confirm("합의완료 하시겠습니까?")) {
 			return false;
 		}
