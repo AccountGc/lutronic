@@ -38,6 +38,7 @@ import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleTemplate;
+import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
@@ -134,17 +135,19 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(eo, external);
 
-
 			// 결재 생성후
 			if (approvalRows.size() > 0) {
 				WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
 			}
 
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
-			if(rows200.size() > 0) {
+			if (rows200.size() > 0) {
 				WorkspaceHelper.service.stand(eo);
+				// ECA 활동으로 변경
+				eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
+				LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
 			}
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
