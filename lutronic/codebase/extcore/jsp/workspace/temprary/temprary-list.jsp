@@ -95,7 +95,11 @@
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							alert("OID 값으로 주소 구분 하기");
+							const url = getCallUrl("/temprary/identity");
+							call(url, oid, function(data) {
+								const url = getCallUrl("/" + data + "/view?oid=" + oid);
+								_popup(url, "", "", "f");
+							});
 						}
 					},
 					filter : {
@@ -112,7 +116,11 @@
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							alert("OID 값으로 주소 구분 하기");
+							const url = getCallUrl("/temprary/identity");
+							call(url, oid, function(data) {
+								const url = getCallUrl("/" + data + "/view?oid=" + oid);
+								_popup(url, "", "", "f");
+							});
 						}
 					},
 					filter : {
@@ -129,7 +137,11 @@
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							alert("OID 값으로 주소 구분 하기");
+							const url = getCallUrl("/temprary/identity");
+							call(url, oid, function(data) {
+								const url = getCallUrl("/" + data + "/view?oid=" + oid);
+								_popup(url, "", "", "f");
+							});
 						}
 					},
 					filter : {
