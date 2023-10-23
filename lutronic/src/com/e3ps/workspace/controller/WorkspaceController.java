@@ -472,7 +472,6 @@ public class WorkspaceController extends BaseController {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
-//			ErrorLogHelper.service.create(e.toString(), "/workspace/_approval", "승인 함수");
 		}
 		return result;
 	}
@@ -491,6 +490,23 @@ public class WorkspaceController extends BaseController {
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 //			ErrorLogHelper.service.create(e.toString(), "/workspace/delete", "개인결재선 삭제 함수");
+		}
+		return result;
+	}
+	
+	@Description(value = "합의반려 함수")
+	@ResponseBody
+	@PostMapping(value = "/_unagree")
+	public Map<String, Object> _unagree(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service._unagree(params);
+			result.put("result", SUCCESS);
+			result.put("msg", AGREE_REJECT_MSG);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
 		return result;
 	}

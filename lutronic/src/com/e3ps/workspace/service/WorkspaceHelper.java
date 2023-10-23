@@ -267,9 +267,8 @@ public class WorkspaceHelper {
 		}
 
 		query.appendOpenParen();
-		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_APPROVAL_APPROVING);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_AGREE_READY);
 		query.appendCloseParen();
 
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);
