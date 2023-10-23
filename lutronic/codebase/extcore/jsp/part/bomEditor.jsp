@@ -461,20 +461,30 @@
 		}
 		
 		for(var i =0; i<items.length;i++){
-			var item = items[i];
-			item.level =level+1;
+			var item = items[i].item;
+// 			item.level =level+1;
+			item.oid =item.part_oid;
+			
+			
+			var url	= getCallUrl("/part/bomEditorList");
+			call(url, item, function(data) {
+				var gridData = data;
+				gridData[0].level=level+1;
+				AUIGrid.addTreeRow(myBOMGridID, gridData[0], rowId, "last");
+				
+			});	
+			
 		}
-		AUIGrid.addTreeRow(myBOMGridID, items, rowId, "last");
 	}
 	
 	// 교체 
 	function change(item,rowId){
-		item.oid= item.part_oid;
+		var param = item[0].item;
+		param.oid= param.part_oid;
 		var selectItem = AUIGrid.getRowsByValue(myBOMGridID,"_$uid", rowId);
 		var index = AUIGrid.rowIdToIndex(myBOMGridID,rowId);
 		var url	= getCallUrl("/part/bomEditorList");
-		call(url, item, function(data) {
-// 			debugger;
+		call(url, param, function(data) {
 			var gridData = data;
 			gridData[0].level=selectItem[0].level;
 			
