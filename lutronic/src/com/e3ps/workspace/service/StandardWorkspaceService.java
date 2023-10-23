@@ -695,6 +695,11 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+			
+			// 합의시 상태값 합의 완료로 변경
+			// 모든 합의가 끝나면 결재를 시작하는데 결재는 직렬로 순서대로 진행
+			
+			
 
 			trs.commit();
 			trs = null;
