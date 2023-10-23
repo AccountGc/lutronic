@@ -402,9 +402,9 @@ String location = (String) request.getAttribute("location");
 				let params = new Object();
 				const url = getCallUrl("/etc/list");
 				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
-				const latest = !!document.querySelector("input[name=latest]:checked").value;
+				const latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
-				params.latest = false; // 안되는데??
+				params.latest = JSON.parse(latest);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				logger(params);
