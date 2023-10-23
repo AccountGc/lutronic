@@ -421,6 +421,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 				params.latest = JSON.parse(latest);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {

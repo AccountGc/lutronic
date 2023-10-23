@@ -14,6 +14,7 @@ import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
@@ -46,6 +47,9 @@ import wt.folder.Folder;
 import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.folder.SubFolder;
+import wt.iba.definition.litedefinition.AttributeDefDefaultView;
+import wt.iba.definition.service.IBADefinitionHelper;
+import wt.iba.value.StringValue;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
@@ -73,7 +77,7 @@ public class DocumentHelper {
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<DocumentColumn> list = new ArrayList<>();
-
+		
 		boolean latest = (boolean) params.get("latest");
 		String location = (String) params.get("location");
 		String name = (String) params.get("name");
@@ -84,6 +88,13 @@ public class DocumentHelper {
 		String createdTo = (String) params.get("createdTo");
 		String modifiedFrom = (String) params.get("modifiedFrom");
 		String modifiedTo = (String) params.get("modifiedTo");
+		String documentType = (String) params.get("documentType");
+		String preseration = (String) params.get("preseration");
+		String model = (String) params.get("model");
+		String deptcode = (String) params.get("deptcode");
+		String interalnumber = (String) params.get("interalnumber");
+		String writer = (String) params.get("writer");
+		String description = (String) params.get("description");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, true);
@@ -97,13 +108,106 @@ public class DocumentHelper {
 
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NUMBER, number);
-//		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.DESCRIPTION, description);
+		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.DESCRIPTION, description);
 		QuerySpecUtils.toState(query, idx, WTDocument.class, state);
 		QuerySpecUtils.creatorQuery(query, idx, WTDocument.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, modifiedFrom,
 				modifiedTo);
+		
+		QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, WTDocument.DOC_TYPE, documentType);
+
+		// 보존 기간
+    	if(preseration.length() > 0) {
+    		AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_PRESERATION);
+			if (aview != null) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				int _idx = query.appendClassList(StringValue.class, false);
+				query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + preseration + "%").toUpperCase(), false), new int[] { _idx });
+			}
+		} else {
+			preseration = "";
+		}
+    	
+    	// 프로젝트 코드
+		if (model.length() > 0) {
+			AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MODEL);
+			if (aview != null) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				int _idx = query.appendClassList(StringValue.class, false);
+				query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + model + "%").toUpperCase(), false), new int[] { _idx });
+			}
+		} else {
+			model = "";
+		}
+		
+		// 내부 문서번호
+		if (interalnumber.length() > 0) {
+			AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_INTERALNUMBER);
+			if (aview != null) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				int _idx = query.appendClassList(StringValue.class, false);
+				query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + interalnumber + "%").toUpperCase(), false), new int[] { _idx });
+			}
+		} else {
+			interalnumber = "";
+		}
+		
+		// 부서
+		if (deptcode.length() > 0) {
+			AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_DEPTCODE);
+			if (aview != null) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				int _idx = query.appendClassList(StringValue.class, false);
+				query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + deptcode + "%").toUpperCase()), new int[] { _idx });
+			}
+		} else {
+			deptcode = "";
+		}
+		
+		// 등록자
+		if (writer.length() > 0) {
+			AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_DSGN);
+			if (aview != null) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				int _idx = query.appendClassList(StringValue.class, false);
+				query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + writer + "%").toUpperCase(), false), new int[] { _idx });
+			}
+		} else {
+			deptcode = "";
+		}
+		
 
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 		if (query.getConditionCount() > 0) {
