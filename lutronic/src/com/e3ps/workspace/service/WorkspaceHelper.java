@@ -73,15 +73,16 @@ public class WorkspaceHelper {
 	/**
 	 * 합의 라인 상태값 상수
 	 */
-	public static final String STATE_AGREE_READY = "합의중";
+	public static final String STATE_AGREE_READY = "대기중";
+	public static final String STATE_AGREE_START = "합의중";
 	public static final String STATE_AGREE_COMPLETE = "합의완료";
 	public static final String STATE_AGREE_REJECT = "합의반려";
 
 	/**
 	 * 수신 라인 상태값 상수
 	 */
-	public static final String STATE_RECEIVE_STAND = "수신대기중";
-	public static final String STATE_RECEIVE_READY = "수신확인중";
+	public static final String STATE_RECEIVE_READY = "수신대기중";
+	public static final String STATE_RECEIVE_START = "수신확인중";
 	public static final String STATE_RECEIVE_COMPLETE = "수신완료";
 	public static final String STATE_RECEIVE_REJECT = "수신반려";
 

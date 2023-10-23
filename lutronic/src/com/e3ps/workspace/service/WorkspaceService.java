@@ -3,9 +3,6 @@ package com.e3ps.workspace.service;
 import java.util.ArrayList;
 import java.util.Map;
 
-import com.e3ps.change.EChangeOrder;
-
-import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.util.WTException;
 import wt.workflow.work.WorkItem;
@@ -94,7 +91,11 @@ public interface WorkspaceService {
 	/**
 	 * 설변 활동 전용
 	 * 
-	 * @param eo
 	 */
 	public abstract void stand(Persistable per) throws Exception;
+
+	/**
+	 * 설변활동 결재 시작
+	 */
+	public abstract void start(Persistable per) throws Exception;
 }

@@ -17,6 +17,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentRoleType;
@@ -402,6 +403,8 @@ public class StandardActivityService extends StandardManager implements Activity
 			boolean isEnd = checkActivityComplete(eca.getEo());
 			if (isEnd) {
 				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("APPROVING"));
+				// 결재선들 시작 한다
+				WorkspaceHelper.service.start(eca.getEo());
 			}
 
 			// EChangeActivity

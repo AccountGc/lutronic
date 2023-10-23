@@ -130,7 +130,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					agreeLine.setRole(WorkspaceHelper.WORKING_AGREE);
 					agreeLine.setDescription(null);
 					agreeLine.setCompleteTime(null);
-					agreeLine.setState(WorkspaceHelper.STATE_AGREE_READY);
+					agreeLine.setState(WorkspaceHelper.STATE_AGREE_START);
 					PersistenceHelper.manager.save(agreeLine);
 				}
 			}
@@ -188,7 +188,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				receiveLine.setDescription(null);
 				receiveLine.setCompleteTime(null);
 				// 결재 완료후 볼수 있어야 한다.
-				receiveLine.setState(WorkspaceHelper.STATE_RECEIVE_STAND);
+				receiveLine.setState(WorkspaceHelper.STATE_RECEIVE_READY);
 				PersistenceHelper.manager.save(receiveLine);
 			}
 
@@ -737,6 +737,47 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					PersistenceHelper.manager.modify(line);
 				}
 
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void start(Persistable per) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
+
+			if (m != null) {
+
+				// 합의 라인 부터
+				ArrayList<ApprovalLine> agrees = WorkspaceHelper.manager.getAgreeLines(m);
+				if (agrees.size() > 0) {
+					for (ApprovalLine agree : agrees) {
+						agree.setState(WorkspaceHelper.STATE_AGREE_START);
+						agree.setStartTime(new Timestamp(new Date().getTime()));
+						PersistenceHelper.manager.modify(agree);
+					}
+				} else {
+					// 수신은 아무 변화 업는것으로..
+					ArrayList<ApprovalLine> approvals = WorkspaceHelper.manager.getApprovalLines(m);
+					for (ApprovalLine approval : approvals) {
+						approval.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
+						approval.setStartTime(new Timestamp(new Date().getTime()));
+						PersistenceHelper.manager.modify(approval);
+					}
+				}
 			}
 
 			trs.commit();
