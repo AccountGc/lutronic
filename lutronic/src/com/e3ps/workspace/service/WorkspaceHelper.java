@@ -117,7 +117,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, "ownership.owner.key.id", sessionUser);
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, ApprovalMaster.STATE,
@@ -170,8 +170,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
-					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
 		QuerySpecUtils.toCreator(query, idx_m, ApprovalMaster.class, submiterOid);
@@ -215,7 +214,7 @@ public class WorkspaceHelper {
 
 		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
 				WTAttributeNameIfc.ID_NAME, idx, idx_master);
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_READY);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, RECEIVE_LINE);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalLine.class, ApprovalLine.CREATE_TIMESTAMP, receiveFrom,
 				receiveTo);
@@ -223,7 +222,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalLine.class, ApprovalLine.NAME, name);
@@ -259,7 +258,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, "ownership.owner.key.id", sessionUser);
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
 		if (query.getConditionCount() > 0) {
@@ -305,7 +304,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalMaster.class, "ownership.owner.key.id", sessionUser);
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
 		if (query.getConditionCount() > 0) {
@@ -727,7 +726,7 @@ public class WorkspaceHelper {
 		ArrayList<ApprovalLine> list = getApprovalLines(master);
 		for (ApprovalLine appLine : list) {
 			int compare = appLine.getSort();
-			if (sort <= compare) {
+			if (sort < compare) {
 				isEndApprovalLine = false;
 				break;
 			}
@@ -791,7 +790,7 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalLine.class, ApprovalLine.NAME, name);
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, true);
 
@@ -839,7 +838,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
 		if (query.getConditionCount() > 0) {
@@ -849,7 +848,6 @@ public class WorkspaceHelper {
 		query.appendOpenParen();
 		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
 		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
 		query.appendCloseParen();
 
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
@@ -871,8 +869,8 @@ public class WorkspaceHelper {
         int idx = query.appendClassList(ApprovalLine.class, true);
 
         if (!CommonUtil.isAdmin()) {
-            WTUser sessionUser = CommonUtil.sessionUser();
-            QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+        	WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
         }
 
         if (query.getConditionCount() > 0) {
@@ -900,8 +898,8 @@ public class WorkspaceHelper {
         int idx = query.appendClassList(ApprovalLine.class, true);
         
         if (!CommonUtil.isAdmin()) {
-            WTUser sessionUser = CommonUtil.sessionUser();
-            QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+        	WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class, sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
         }
         
         if (query.getConditionCount() > 0) {
