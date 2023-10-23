@@ -11,7 +11,6 @@ int idx = jsp.indexOf(".");
 
 jsp = jsp.substring(jsp.lastIndexOf(".") + 1);
 String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
-String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getStringValue();
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -74,7 +73,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	
 	<div id="tabs-2">
 		<jsp:include page="<%=url%>">
-			<jsp:param value="<%=tapOid%>" name="tapOid" />
+			<jsp:param value="<%=dto.getPoid()%>" name="tapOid" />
 		</jsp:include>
 		
 	</div>

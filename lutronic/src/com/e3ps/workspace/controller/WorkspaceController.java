@@ -380,14 +380,20 @@ public class WorkspaceController extends BaseController {
 
 	@Description(value = "결재 정보 보기")
 	@GetMapping(value = "/masterView")
-	public ModelAndView masterView(@RequestParam String oid, @RequestParam String columnType, @RequestParam String poid)
+	public ModelAndView masterView(@RequestParam String oid, @RequestParam String columnType)
 			throws Exception {
 		ModelAndView model = new ModelAndView();
 		ApprovalMaster master = (ApprovalMaster) CommonUtil.getObject(oid);
-		ApprovalLineDTO dto = WorkspaceHelper.manager.ingLine(master);
+		ApprovalLineDTO dto = null;
+		if(columnType.equals("COLUMN_PROGRESS")) { //진행
+			dto = WorkspaceHelper.manager.ingLine(master);
+		}else if(columnType.equals("COLUMN_COMPLETE")) { //완료
+			dto = WorkspaceHelper.manager.completeLine(master);
+		}else if(columnType.equals("COLUMN_REJECT")) { //반려
+			dto = WorkspaceHelper.manager.rejectLine(master);
+		}
 		model.addObject("dto", dto);
 		model.addObject("oid", oid);
-		model.addObject("poid", poid);
 		model.setViewName("popup:/workspace/master-view");
 		return model;
 	}

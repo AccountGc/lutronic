@@ -13,6 +13,7 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
+String rowId =request.getParameter("rowId")==null?"":request.getParameter("rowId").toString();
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -230,7 +231,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	<tr>
 		<td class="left">
 			<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
-			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
+			<input type="button" value="추가" title="추가" onclick="addBtn();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -539,7 +540,7 @@ function loadGridData() {
 	});
 }
 	
-function <%=method%>() {
+function addBtn() {
 	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 	if (checkedItems.length === 0) {
 		alert("추가할 행을 선택하세요.");
@@ -547,13 +548,21 @@ function <%=method%>() {
 	}
 	
 	openLayer();
-	opener.<%=method%>(checkedItems, function(res) {
-		if(res) {
-			setTimeout(function() {
-				closeLayer();
-			}, 500);
-		}
-	})
+	<%if(!"".equals(rowId)){%>
+		opener.<%=method%>(checkedItems,"<%=rowId%>" );
+		self.close();
+	<%}else{%>
+		opener.<%=method%>(checkedItems, function(res) {
+			if(res) {
+				setTimeout(function() {
+					closeLayer();
+				}, 500);
+			}
+		})
+	<%}%>
+	
+	
+	
 }
 
 document.addEventListener("DOMContentLoaded", function() {
