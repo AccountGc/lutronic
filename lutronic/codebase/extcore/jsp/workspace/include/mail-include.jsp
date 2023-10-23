@@ -59,7 +59,7 @@ boolean update = "update".equals(mode);
 			}
 			myGridID9 = AUIGrid.create("#grid9", columnLayout, props);
 			<%if (view || update) {%>
-			AUIGrid.setGridData(myGridID9, <%=WorkspaceHelper.manager.getMailList(oid)%>);
+			AUIGrid.setGridData(myGridID9, <%=WorkspaceHelper.manager.getExternalMail(oid)%>);
 			<%}%>
 		}
 

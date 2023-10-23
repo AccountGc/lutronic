@@ -46,7 +46,7 @@ public class EoDTO {
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
 	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
 	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
-	
+
 	// 외부 메일 변수
 	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
 
@@ -77,7 +77,6 @@ public class EoDTO {
 		setEoCommentA(eo.getEoCommentA());
 		setEoCommentB(eo.getEoCommentB());
 		setEoCommentC(eo.getEoCommentC());
-		setExternal(MailUserHelper.manager.getMailList(eo.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 
 	private ArrayList<Map<String, String>> getModel(String model) throws Exception {

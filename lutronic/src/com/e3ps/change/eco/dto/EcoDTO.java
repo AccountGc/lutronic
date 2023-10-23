@@ -93,7 +93,6 @@ public class EcoDTO {
 			setModel_name(EcoHelper.manager.displayToModel(eco.getModel()));
 		}
 		setContentMap(ContentUtils.getContentByRole(eco, "ECO"));
-		setExternal(MailUserHelper.manager.getMailList(eco.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 
 	/**

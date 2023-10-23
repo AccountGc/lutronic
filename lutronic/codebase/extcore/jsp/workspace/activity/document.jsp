@@ -25,6 +25,9 @@ JSONArray docList = dto.getDocList();
 						업무 기본정보
 					</div>
 				</td>
+				<td class="right">
+					<input type="button" title="업무완료" value="업무완료" class="red" onclick="complete();">
+				</td>
 			</tr>
 		</table>
 		<!-- 기본 정보 -->
@@ -59,6 +62,12 @@ JSONArray docList = dto.getDocList();
 					<input type="text" name="reassignUser" id="reassignUser">
 					<input type="hidden" name="reassignUserOid" id="reassignUserOid">
 					<input type="button" title="위임" value="위임" onclick="reassign();">
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">의견</th>
+				<td class="indent5" colspan="3">
+					<textarea name="description" id="description" rows="6"></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -129,17 +138,18 @@ JSONArray docList = dto.getDocList();
 					labelText : "삭제",
 					onclick : function(rowIndex, columnIndex, value, item) {
 						if (!confirm("삭제 하시겠습니까?")) {
-							const oid = item.oid;
-							const url = getCallUrl("/activity/deleteLink?oid=" + oid);
-							parent.openLayer();
-							call(url, null, function(data) {
-								alert(data.msg);
-								if (data.result) {
-									document.location.reload();
-								}
-								parent.closeLayer();
-							}, "GET");
+							return false;
 						}
+						const oid = item.oid;
+						const url = getCallUrl("/activity/deleteLink?oid=" + oid);
+						parent.openLayer();
+						call(url, null, function(data) {
+							alert(data.msg);
+							if (data.result) {
+								document.location.reload();
+							}
+							parent.closeLayer();
+						}, "DELETE");
 					}
 				}
 			} ]
@@ -155,9 +165,7 @@ JSONArray docList = dto.getDocList();
 					autoGridHeight : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.setGridData(myGridID,
-		<%=docList%>
-			);
+				AUIGrid.setGridData(myGridID, <%=docList%>);
 			}
 
 			// 추가 버튼 클릭 시 팝업창 메서드
@@ -182,10 +190,34 @@ JSONArray docList = dto.getDocList();
 				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
-					alert(data.msg);
+					const msg = data.msg;
 					if (data.result) {
 						document.location.reload();
-						callBack(true, true);
+						callBack(true, true, msg);
+					}
+					parent.closeLayer();
+				})
+			}
+
+			function complete() {
+				const oid = document.getElementById("oid").value;
+				const description = document.getElementById("description").value;
+				if (!confirm("설변활동을 완료 하시겠습니까?")) {
+					return false;
+				}
+				const secondarys = toArray("secondarys");
+				const url = getCallUrl("/activity/complete");
+				const params = {
+					oid : oid,
+					description : description,
+					secondarys : secondarys
+				};
+				logger(params);
+				parent.openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						document.location.href = getCallUrl("/activity/eca");
 					}
 					parent.closeLayer();
 				})
@@ -198,6 +230,7 @@ JSONArray docList = dto.getDocList();
 			})
 
 			window.addEventListener("resize", function() {
+				AUIGrid.resize(myGridID);
 			});
 		</script>
 	</form>

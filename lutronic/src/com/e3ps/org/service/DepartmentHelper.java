@@ -8,12 +8,14 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
+import com.e3ps.org.WTUserPeopleLink;
 import com.e3ps.org.dto.PeopleDTO;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTUser;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
 
@@ -138,5 +140,18 @@ public class DepartmentHelper {
 
 		result.put("list", list);
 		return result;
+	}
+
+	/**
+	 * 사용자 부서 가져온느 함수
+	 */
+	public Department getDepartment(WTUser user) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(user, "people", WTUserPeopleLink.class);
+		Department dept = null;
+		if (qr.hasMoreElements()) {
+			People p = (People) qr.nextElement();
+			dept = p.getDepartment();
+		}
+		return dept;
 	}
 }

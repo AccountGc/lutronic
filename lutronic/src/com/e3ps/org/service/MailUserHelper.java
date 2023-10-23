@@ -38,20 +38,4 @@ public class MailUserHelper {
 		}
 		return list;
 	}
-
-	public ArrayList<Map<String, String>> getMailList(String oid) throws Exception {
-		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
-		Persistable per = CommonUtil.getObject(oid);
-		QueryResult qr = PersistenceHelper.manager.navigate((WTObject) per, "user", MailWTobjectLink.class, false);
-		while (qr.hasMoreElements()) {
-			MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("oid", CommonUtil.getOIDString(link.getUser()));
-			map.put("name", link.getUser().getName());
-			map.put("email", link.getUser().getEmail());
-			list.add(map);
-		}
-		return list;
-	}
-
 }

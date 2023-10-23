@@ -132,7 +132,7 @@
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="150" name="height" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 	설변 활동 -->
@@ -162,9 +162,9 @@
 				const secondarys = toArray("secondarys");
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
-				
+
 				const temprary = JSON.parse(temp);
-				
+
 				// 완제품
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				// 관련문서
@@ -185,23 +185,23 @@
 					rows200 : rows200,
 					rows300 : rows300
 				}
-				
+
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-					
-					if(addRows8){
+
+					if (addRows8) {
 						alert("결재선 지정을 해지해주세요.")
 						return false;
 					}
-					
+
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
 				}
-				
+
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/eo/create");
 				logger(params);

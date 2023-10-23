@@ -19,6 +19,7 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -69,6 +70,8 @@ public class StandardEoService extends StandardManager implements EoService {
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
 		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		Transaction trs = new Transaction();
+		// 외부 메일
+		ArrayList<Map<String, String>> external = dto.getExternal();
 		try {
 			trs.start();
 
@@ -128,22 +131,17 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 설변 활동 생성
 			ActivityHelper.service.saveActivity(eo, rows200);
 
-			// 활동 생성
-//	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);
-
-			// eco 상태 설정
-			/*
-			 * if(isActivity){
-			 * LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco,
-			 * State.toState("ACTIVITY")); }else{
-			 * LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco,
-			 * State.toState("APPROVE_REQUEST")); }
-			 */
+			// 외부 메일 링크 저장
+			MailUserHelper.service.saveLink(eo, external);
 
 			// 결재 시작
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
+			if (rows200.size() > 0) {
+
+			} else {
+				// 활동이 없을경우인데 필수값일듯..
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
+				}
 			}
 
 			trs.commit();

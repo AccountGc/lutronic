@@ -21,11 +21,27 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 				관련 문서
 			</div>
 		</td>
+		<%
+			if(!header) {
+		%>
+		<td class="right">
+			<%
+			if (create || update) {
+			%>
+			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow90();">
+			<%
+			}
+			%>
+		</td>
+		<%
+			}
+		%>
 	</tr>
 </table>
 <%
-	// 테이블 처리 여부
-	if(header) {
+// 테이블 처리 여부
+if (header) {
 %>
 
 <table class="create-table">
@@ -50,11 +66,11 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 </table>
 
 <%
-	} else {
+} else {
 %>
-<div id="grid90" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid90" style="height: <%if (data.size() == 0) {%>110px; <%} else {%>30px;<%}%> border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
-	}
+}
 %>
 
 <script type="text/javascript">

@@ -37,7 +37,7 @@ public class EcprDTO {
 	private String eoCommentC;
 	private String writer_oid;
 	private String proposer_oid;
-	
+
 	// 따로 추가
 	private String state;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -55,24 +55,24 @@ public class EcprDTO {
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
-	
+
 	// 결재 변수
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
 	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
 	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
 	private boolean self; // 자가 결재
-	
+
 	// 외부 메일 변수
 	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
-	
+
 	public EcprDTO() {
-		
+
 	}
-	
+
 	public EcprDTO(String oid) throws Exception {
 		this((ECPRRequest) CommonUtil.getObject(oid));
 	}
-	
+
 	public EcprDTO(ECPRRequest cr) throws Exception {
 		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(cr.getEoName());
@@ -87,7 +87,7 @@ public class EcprDTO {
 		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
 		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
 		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
-		
+
 		// 따로 추가
 		setState(cr.getLifeCycleState().getDisplay());
 		setCreatedDate(cr.getCreateTimestamp().toString().substring(0, 10));
@@ -98,43 +98,44 @@ public class EcprDTO {
 		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
-		setExternal(MailUserHelper.manager.getMailList(cr.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
-	
+
 	/**
-   * 회수 권한  승인중 && (소유자 || 관리자 ) && 기본 결재 
-   * @return
-   */
-   public boolean isWithDraw(){
-  	   try{
-			return  (state.equals("APPROVING") && ( isOwner() || CommonUtil.isAdmin()));
-  	   }catch(Exception e){
-			e.printStackTrace();
-  	   }
-  	   return false;
-		
-	}
-   
-   /**
-    * Owner 유무 체크
-    * @return
-    */
-	public boolean isOwner(){
-		
-		try{
-			return SessionHelper.getPrincipal().getName().equals(getCreator());
-		}catch(Exception e){
+	 * 회수 권한 승인중 && (소유자 || 관리자 ) && 기본 결재
+	 * 
+	 * @return
+	 */
+	public boolean isWithDraw() {
+		try {
+			return (state.equals("APPROVING") && (isOwner() || CommonUtil.isAdmin()));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		return false;
+
+	}
+
+	/**
+	 * Owner 유무 체크
+	 * 
+	 * @return
+	 */
+	public boolean isOwner() {
+
+		try {
+			return SessionHelper.getPrincipal().getName().equals(getCreator());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
-	
+
 	/**
-     * 변경 구분
-     */
-    public String getChangeCode() throws Exception{
-    	this.changeCode = NumberCodeHelper.manager.getNumberCodeName(this.changeSection, "CHANGESECTION");
-    	return changeCode;
-    }
+	 * 변경 구분
+	 */
+	public String getChangeCode() throws Exception {
+		this.changeCode = NumberCodeHelper.manager.getNumberCodeName(this.changeSection, "CHANGESECTION");
+		return changeCode;
+	}
 }

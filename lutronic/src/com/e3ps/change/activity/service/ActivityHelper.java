@@ -216,7 +216,10 @@ public class ActivityHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeActivity.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "activeUserReference.key.id", sessionUser);
+		// 관리자가 아닐경우
+		if (!CommonUtil.isAdmin()) {
+			QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "activeUserReference.key.id", sessionUser);
+		}
 		QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "state.state", "INWORK");
 		QuerySpecUtils.toOrderBy(query, idx, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
@@ -250,21 +253,29 @@ public class ActivityHelper {
 	/**
 	 * 설변활동 - 산출물 링크
 	 */
+	public JSONArray docList(String oid) throws Exception {
+		return docList((EChangeActivity) CommonUtil.getObject(oid));
+	}
+
+	/**
+	 * 설변활동 - 산출물 링크
+	 */
 	public JSONArray docList(EChangeActivity eca) throws Exception {
 		ArrayList<Map<String, String>> list = new ArrayList<>();
 		QueryResult qr = PersistenceHelper.manager.navigate(eca, "doc", DocumentActivityLink.class, false);
 		while (qr.hasMoreElements()) {
-			DocumentActivityLink link = (DocumentActivityLink)qr.nextElement();
+			DocumentActivityLink link = (DocumentActivityLink) qr.nextElement();
 			WTDocumentMaster m = link.getDoc();
 			WTDocument doc = DocumentHelper.manager.latest(m);
 			Map<String, String> map = new HashMap<>();
-			map.put("oid",, link.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("name", doc.getName());
 			map.put("number", doc.getNumber());
 			map.put("version", doc.getVersionIdentifier().getSeries().getValue() + "."
 					+ doc.getIterationIdentifier().getSeries().getValue());
 			map.put("creator", doc.getCreatorFullName());
 			map.put("state", doc.getLifeCycleState().getDisplay());
+			map.put("createdDate_txt", doc.getCreateTimestamp().toString().substring(0, 10));
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);

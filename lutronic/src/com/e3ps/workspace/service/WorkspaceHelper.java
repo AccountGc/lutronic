@@ -18,8 +18,10 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
@@ -812,76 +814,51 @@ public class WorkspaceHelper {
 	/**
 	 * 외부 메일 가져오기 메서드
 	 */
-	public JSONArray getMailList(String oid) throws Exception {
-		Persistable per = CommonUtil.getObject(oid);
+	public JSONArray getExternalMail(String oid) throws Exception {
 		ArrayList<Map<String, String>> list = new ArrayList<>();
-
-		if (per instanceof WTDocument) {
-			// 문서 외부 메일
-			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-			DocumentDTO dto = new DocumentDTO(doc);
-			list = dto.getExternal();
-		} else if (per instanceof EChangeOrder) {
-			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
-			if (eco.getEoType().equals("CHANGE")) {
-				// ECO 외부 메일
-				EcoDTO dto = new EcoDTO(eco);
-				list = dto.getExternal();
-			}else {
-				// EO 외부 메일
-				EoDTO dto = new EoDTO(eco);
-				list = dto.getExternal();
-			}
-		}else if (per instanceof EChangeRequest) {
-			// CR 외부 메일
-			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
-			CrDTO dto = new CrDTO(cr);
-			list = dto.getExternal();
-		} else if (per instanceof ECPRRequest) {
-			// ECPR 외부 메일
-			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
-			EcprDTO dto = new EcprDTO(ecpr);
-			list = dto.getExternal();
-		} else if (per instanceof EChangeNotice) {
-			// ECN 외부 메일
-			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
-			EcnDTO dto = new EcnDTO(ecn);
-			list = dto.getExternal();
+		ArrayList<MailWTobjectLink> data = MailUserHelper.manager.navigate(oid);
+		for (MailWTobjectLink link : data) {
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("oid", link.getUser().getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("name", link.getUser().getName());
+			map.put("email", link.getUser().getEmail());
+			list.add(map);
 		}
 		return JSONArray.fromObject(list);
 	}
-    
-    /**
-     * 진행함 상세(대기중, 승인중, 합의중)
-     * @throws Exception 
-     */
-    public ApprovalLineDTO ingLine(ApprovalMaster master) throws Exception {
-        QuerySpec query = new QuerySpec();
-        int idx = query.appendClassList(ApprovalLine.class, true);
 
-        if (!CommonUtil.isAdmin()) {
-            WTUser sessionUser = CommonUtil.sessionUser();
-            QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
-        }
+	/**
+	 * 진행함 상세(대기중, 승인중, 합의중)
+	 * 
+	 * @throws Exception
+	 */
+	public ApprovalLineDTO ingLine(ApprovalMaster master) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
 
-        if (query.getConditionCount() > 0) {
-            query.appendAnd();
-        }
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "ownership.owner.key.id", sessionUser);
+		}
 
-        query.appendOpenParen();
-        QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
-        QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_READY);
-        QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_READY);
-        query.appendCloseParen();
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
 
-        QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
-        QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
-        QueryResult result = PersistenceHelper.manager.find(query);
-        ApprovalLineDTO dto = null;
-        while (result.hasMoreElements()) {
-            Object[] obj = (Object[]) result.nextElement();
-            dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
-        }
-        return dto;
-    }
+		query.appendOpenParen();
+		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_APPROVING);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_READY);
+		QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_APPROVAL_READY);
+		query.appendCloseParen();
+
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		ApprovalLineDTO dto = null;
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			dto = new ApprovalLineDTO((ApprovalLine) obj[0]);
+		}
+		return dto;
+	}
 }

@@ -23,7 +23,23 @@ String oid = request.getParameter("oid");
 		dataField : "",
 		headerText : "현황",
 		dataType : "string",
-		width : 100
+		width : 100,
+		renderre : {
+			type : "ImageRenderer",
+			altField : null,
+			srcFunction : function(rowIndex, columnIndex, value, item) {
+				switch (value) {
+				case "COMPLETED":
+					return "";
+				case "STAND":
+					return "";
+				case "PROGRESS":
+					return "";
+				case "COMPLETED":
+					return "";
+				}
+			}
+		}
 	}, {
 		dataField : "step_name",
 		headerText : "단계",

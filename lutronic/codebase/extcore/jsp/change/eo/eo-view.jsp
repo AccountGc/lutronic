@@ -33,7 +33,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">이력 관리</a>
+			<a href="#tabs-2">산출물</a>
 		</li>
 		<li>
 			<a href="#tabs-3">관련 객체</a>
@@ -117,7 +117,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</jsp:include>
 	</div>
 	<div id="tabs-2">
-		<!-- 산출물 -->
+		<jsp:include page="/extcore/jsp/change/include/change-output.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
 	</div>
 	<div id="tabs-3">
 		<!-- 관련 객체 -->
@@ -168,25 +170,27 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				case "tabs-1":
 					break;
 				case "tabs-2":
-					const isCreated90 = AUIGrid.isCreated(myGridID90); // 관련문서
-					if (isCreated90) {
-						AUIGrid.resize(myGridID90);
-					} else {
-						createAUIGrid90(columns90);
-					}
 					break;
 				case "tabs-3":
+					break;
+				case "tabs-4":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
 					if (isCreated51) {
 						AUIGrid.resize(myGridID51);
 					} else {
 						createAUIGrid51(columns51);
 					}
-					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 다운로드이력
 					if (isCreated10000) {
 						AUIGrid.resize(myGridID10000);
 					} else {
 						createAUIGrid10000(columns10000);
+					}
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 유저 메일
+					if (isCreated10001) {
+						AUIGrid.resize(myGridID10001);
+					} else {
+						createAUIGrid10001(columns10001);
 					}
 					break;
 				}
@@ -203,5 +207,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID104);
 		AUIGrid.resize(myGridID700);
+
+		AUIGrid.resize(myGridID50);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	});
 </script>

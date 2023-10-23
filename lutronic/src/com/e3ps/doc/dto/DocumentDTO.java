@@ -120,7 +120,6 @@ public class DocumentDTO {
 		setIBAAttributes(doc);
 		setAuth(doc);
 		setComments(CommentsHelper.manager.comments(doc));
-		setExternal(MailUserHelper.manager.getMailList(doc.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 
 	/**

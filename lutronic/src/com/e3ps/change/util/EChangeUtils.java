@@ -2,25 +2,24 @@ package com.e3ps.change.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import com.amazonaws.services.route53domains.model.ContactType;
+import com.e3ps.change.EChangeActivity;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.part.dto.PartData;
+import com.e3ps.org.Department;
+import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.part.service.PartHelper;
 
+import net.sf.json.JSONArray;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.fc.ReferenceFactory;
 import wt.part.WTPart;
-import wt.query.ClassAttribute;
-import wt.query.OrderBy;
 import wt.query.QuerySpec;
-import wt.query.SearchCondition;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.BaselineMember;
 import wt.vc.baseline.ManagedBaseline;
@@ -116,7 +115,39 @@ public class EChangeUtils {
 				prev = p;
 			}
 			v.add(prev);
-			collectBaseLineParts(prev.v);
+			collectBaseLineParts(prev, v);
 		}
+	}
+
+	/**
+	 * 설변활동 산출물 요약
+	 */
+	public ArrayList<Map<String, Object>> summary(String oid) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<>();
+		EChangeOrder e = (EChangeOrder) CommonUtil.getObject(oid);
+
+		QuerySpec qs = new QuerySpec(EChangeActivity.class);
+		QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, "eoReference.key.id", e);
+		QuerySpecUtils.toEqualsAnd(qs, 0, EChangeActivity.class, EChangeActivity.ACTIVE_TYPE, "DOCUMENT");
+		QueryResult result = PersistenceHelper.manager.find(qs);
+		while (result.hasMoreElements()) {
+			EChangeActivity eca = (EChangeActivity) result.nextElement();
+
+			Map<String, Object> map = new HashMap<>();
+			// 담당부서 담당자 상태 요청완료일 완료일 첨부파일 의견 산추룸ㄹ
+			Department dept = DepartmentHelper.manager.getDepartment(eca.getActiveUser());
+			map.put("oid", eca.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("department_name", dept != null ? dept.getName() : "지정안됨");
+			map.put("activity_user", eca.getActiveUser().getFullName());
+			map.put("state", eca.getLifeCycleState().getDisplay());
+			map.put("finishDate", eca.getFinishDate() != null ? eca.getFinishDate().toString().substring(0, 10) : "");
+			map.put("completeDate", eca.getModifyTimestamp().toString().substring(0, 10));
+			map.put("description", eca.getDescription());
+			map.put("secondary", ContentUtils.getSecondary(eca));
+			JSONArray data = ActivityHelper.manager.docList(eca);
+			map.put("data", data);
+			list.add(map);
+		}
+		return list;
 	}
 }

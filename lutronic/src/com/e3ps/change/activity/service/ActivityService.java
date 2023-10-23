@@ -61,6 +61,6 @@ public interface ActivityService {
 	/**
 	 * ECA 활동 완료 이벤트
 	 */
-	public abstract void complete(Map<String, String> params) throws Exception;
+	public abstract void complete(Map<String, Object> params) throws Exception;
 
 }

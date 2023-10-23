@@ -4,7 +4,7 @@
 <%
 String oid = request.getParameter("oid");
 JSONArray data = WorkspaceHelper.manager.history(oid);
-JSONArray mailData = WorkspaceHelper.manager.getMailList(oid);
+JSONArray mail = WorkspaceHelper.manager.getExternalMail(oid);
 %>
 <style type="text/css">
 /** 결재 관련 셀 스타일 **/
@@ -157,6 +157,6 @@ JSONArray mailData = WorkspaceHelper.manager.getMailList(oid);
 			autoGridHeight : true
 		}
 		myGridID10001 = AUIGrid.create("#grid10001", columnLayout, props);
-		AUIGrid.setGridData(myGridID10001, <%=mailData%>);
+		AUIGrid.setGridData(myGridID10001, <%=mail%>);
 	}
 </script>

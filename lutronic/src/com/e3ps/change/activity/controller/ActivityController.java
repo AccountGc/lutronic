@@ -229,12 +229,29 @@ public class ActivityController extends BaseController {
 
 	@Description(value = "설계변경 활동 산출물 링크삭제")
 	@ResponseBody
-	@PostMapping(value = "/deleteLink")
+	@DeleteMapping(value = "/deleteLink")
 	public Map<String, Object> deleteLink(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			ActivityHelper.service.deleteLink(oid);
 			result.put("msg", "산출물 링크가 삭제 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "설계변경 활동 완료")
+	@ResponseBody
+	@PostMapping(value = "/complete")
+	public Map<String, Object> complete(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.complete(params);
+			result.put("msg", "설계변경 활동이 완료되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

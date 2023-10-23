@@ -108,7 +108,6 @@ public class CrDTO {
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(cr.getModel());
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
-		setExternal(MailUserHelper.manager.getMailList(cr.getPersistInfo().getObjectIdentifier().getStringValue()));
 	}
 	
 	/**
