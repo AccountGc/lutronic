@@ -114,7 +114,7 @@ public class SAPHelper {
 		result.firstRow();
 		for (int j = 1; j <= result.getNumRows(); j++, result.nextRow()) {
 			System.out.println("ZIFSTA(상태) = " + result.getValue("ZIFSTA"));
-//			System.out.println("ZIFMSG(처리상태) = " + result.getValue("ZIFMSG"));
+			System.out.println("ZIFMSG(처리상태) = " + result.getValue("ZIFMSG"));
 		}
 
 		// ERP 전송 로그 작성

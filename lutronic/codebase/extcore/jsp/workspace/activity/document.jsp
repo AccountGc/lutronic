@@ -1,8 +1,9 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.workspace.dto.EcaDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
-String oid = dto.getOid();
+JSONArray docList = dto.getDocList();
 %>
 <!DOCTYPE html>
 <html>
@@ -69,13 +70,135 @@ String oid = dto.getOid();
 					<textarea name="description" id="description" rows="6"></textarea>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">첨부파일</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
+						<jsp:param value="" name="oid" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
-		<!-- 산출물 -->
-		<jsp:include page="/extcore/jsp/workspace/activity/revise.jsp">
-			<jsp:param value="<%= oid %>" name="oid" />
-		</jsp:include>
+
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						산출물
+					</div>
+				</td>
+				<td class="right">
+					<input type="button" value="직접등록" title="직접등록" class="blue" onclick="">
+					<input type="button" value="링크등록" title="링크등록" onclick="popup00();">
+				</td>
+			</tr>
+		</table>
+
+		<div id="grid_wrap" style="height: 30px; border-top: 1px solid #3180c3;"></div>
 
 		<script type="text/javascript">
+			let myGridiD;
+			const columns = [ {
+				dataField : "number",
+				dataType : "string",
+				headerText : "문서번호",
+				width : 150
+			}, {
+				dataField : "name",
+				dataType : "string",
+				headerText : "문서제목",
+				style : "aui-left"
+			}, {
+				dataField : "number",
+				dataType : "string",
+				headerText : "문서번호",
+				width : 150
+			}, {
+				dataField : "version",
+				dataType : "string",
+				headerText : "REV",
+				width : 100
+			}, {
+				dataField : "state",
+				dataType : "string",
+				headerText : "상태",
+				width : 100
+			}, {
+				dataField : "creator",
+				dataType : "string",
+				headerText : "작성자",
+				width : 100
+			}, {
+				headerText : "",
+				dataType : "string",
+				width : 120,
+				renderer : {
+					type : "ButtonRenderer",
+					labelText : "삭제",
+					onclick : function(rowIndex, columnIndex, value, item) {
+						if (!confirm("삭제 하시겠습니까?")) {
+							return false;
+						}
+						const oid = item.oid;
+						const url = getCallUrl("/activity/deleteLink?oid=" + oid);
+						parent.openLayer();
+						call(url, null, function(data) {
+							alert(data.msg);
+							if (data.result) {
+								document.location.reload();
+							}
+							parent.closeLayer();
+						}, "DELETE");
+					}
+				}
+			} ]
+
+			function createAUIGrid(columnLayout) {
+				const props = {
+					headerHeight : 30,
+					showRowNumColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
+					selectionMode : "multipleCells",
+					enableRowCheckShiftKey : true,
+					autoGridHeight : true
+				};
+				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+				AUIGrid.setGridData(myGridID, <%=docList%>);
+			}
+
+			// 추가 버튼 클릭 시 팝업창 메서드
+			function popup00() {
+				const url = getCallUrl("/doc/popup?method=insert00&multi=true");
+				_popup(url, 1800, 900, "n");
+			}
+
+			function insert00(arr, callBack) {
+				const list = new Array();
+				arr.forEach(function(dd) {
+					const item = dd.item;
+					list.push(item.oid);
+				})
+
+				const oid = document.getElementById("oid").value;
+				const url = getCallUrl("/activity/saveLink");
+				const params = {
+					list : list,
+					oid : oid
+				}
+				logger(params);
+				parent.openLayer();
+				call(url, params, function(data) {
+					const msg = data.msg;
+					if (data.result) {
+						document.location.reload();
+						callBack(true, true, msg);
+					}
+					parent.closeLayer();
+				})
+			}
+
 			function complete() {
 				const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
@@ -112,4 +235,4 @@ String oid = dto.getOid();
 		</script>
 	</form>
 </body>
-</html>>
+</html>
