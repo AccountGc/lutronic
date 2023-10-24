@@ -575,7 +575,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			trs.start();
 
 			String oid = (String) params.get("oid");
+			String description = (String) params.get("description");
+			if (!StringUtil.checkString(description)) {
+				description = "수신확인합니다.";
+			}
 			ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+			line.setDescription(description);
 			line.setState(WorkspaceHelper.STATE_RECEIVE_COMPLETE);
 			line.setCompleteTime(new Timestamp(new Date().getTime()));
 			PersistenceHelper.manager.modify(line);

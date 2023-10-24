@@ -154,6 +154,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 		if (!confirm("수신확인 하시겠습니까?")) {
 			return false;
 		}
+		const description = document.getElementById("description").value;
 		const url = getCallUrl("/workspace/_receive");
 		const params = {
 			oid : oid,
