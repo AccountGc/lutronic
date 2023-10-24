@@ -516,7 +516,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				let params = new Object();
 				const url = getCallUrl("/part/list");
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-						"ecoNo", "eoNo","creatorOid","latest" ];
+						"ecoNo", "eoNo","creatorOid","latest" ,"specification"];
 				var  latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest =  latest=="true"?true:false;

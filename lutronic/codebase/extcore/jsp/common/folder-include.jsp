@@ -66,7 +66,7 @@ String height = request.getParameter("height");
 			const oid = primeCell.oid;
 			const location = primeCell.location;
 			document.getElementById("oid").value = oid;
-			document.getElementById("location").value = oid;
+			document.getElementById("location").value = location;
 			document.getElementById("locationText").innerText = location;
 			loadGridData();
 		}, 500);  
