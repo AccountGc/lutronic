@@ -441,7 +441,7 @@ public class RohsHelper {
 							partRohsMap.put("rohsName", rohsData.getName());
 							partRohsMap.put("rohsState", rohsState);
 							partRohsMap.put("rohsStateName", state);
-							partRohsMap.put("rohslifeState", rohsData.getState());
+							partRohsMap.put("rohslifeState", rohsData.getStateDisplay());
 							partRohsMap.put("fileName", rohsHolder.getFileName());
 							partRohsMap.put("docType", RohsUtil.getRohsDocTypeName(rohsHolder.getFileType()));
 							
@@ -455,7 +455,7 @@ public class RohsHelper {
 						partRohsMap.put("rohsNumber", rohsData.getNumber());
 						partRohsMap.put("rohsName", rohsData.getName());
 						partRohsMap.put("rohsState", rohsState);
-						partRohsMap.put("rohslifeState", rohsData.getState());
+						partRohsMap.put("rohslifeState", rohsData.getStateDisplay());
 						partRohsMap.put("rohsStateName", state);
 						partRohsMap = setPartROHMap(partRohsMap, partMap);
 						partRohslist.add(partRohsMap);

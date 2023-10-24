@@ -469,7 +469,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						location : toId("location"),
 						// 링크 데이터
 						rows90 : rows90,
-						myGridID106 : myGridID106,
+						rows106 : rows106,
 				};
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅

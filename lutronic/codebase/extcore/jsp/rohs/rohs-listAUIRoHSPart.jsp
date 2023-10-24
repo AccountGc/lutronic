@@ -67,7 +67,7 @@
 					dataField : "level",
 					headerText : "Level",
 					dataType : "string",
-					width : 120,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -85,7 +85,7 @@
 					dataField : "partName",
 					headerText : "품목명",
 					dataType : "string",
-					width : 350,
+					width : 300,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -103,14 +103,34 @@
 					dataField : "rohsState",
 					headerText : "ROHS 상태",
 					dataType : "string",
-					width : 100,
+					width : 80,
+					renderer : {
+						type : "ImageRenderer",
+						imgHeight : 16, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
+						altField : "color", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
+						srcFunction : function(rowIndex, columnIndex, value, item) {
+							debugger;
+							switch(value) {
+								case 0:
+								return "/Windchill/extcore/images/task_ready.gif";
+								case 1:
+								return "/Windchill/extcore/images/task_orange.gif";
+								case 2:
+								return "/Windchill/extcore/images/task_complete.gif";
+								case 3:
+								return "/Windchill/extcore/images/task_delay.gif";
+								default:
+								return "/Windchill/extcore/images/task_ready.gif";
+							}
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "rohsStateName",
-					headerText : "ROHS 상태명",
+					dataField : "rohsNumber",
+					headerText : "물질번호",
 					dataType : "string",
 					width : 100,
 					filter : {
@@ -121,7 +141,7 @@
 					dataField : "rohsName",
 					headerText : "물질명",
 					dataType : "string",
-					width : 100,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -130,7 +150,7 @@
 					dataField : "rohslifeState",
 					headerText : "물질 상태",
 					dataType : "string",
-					width : 100,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -243,20 +263,13 @@
 			
 			// 부품 조회
 			$("#searchPart").click(function(){
-				const url = getCallUrl("/part/listPopup");
+				const url = getCallUrl("/part/popup?method=append&multi=false&rowId=0");
 				_popup(url, 1500, 700, "n");
 			});
 			
 			function append(items){
-				var data = new Object();
-				for(var i=0; i<items.length; i++){
-					data.oid = items[i].part_oid;
-					data.name = items[i].name;
-					data.number = items[i].number;
-					data.version = items[i].version;
-				}
-				$("#partNumber").val(data.number);
-				$("#partOid").val(data.oid);
+				$("#partNumber").val(items[0].item.number);
+				$("#partOid").val(items[0].item.part_oid);
 			}
 			
 			$("#btnReset").click(function(){
