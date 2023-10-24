@@ -26,7 +26,7 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 
 PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 %>
-<nav class="navbar-default navbar-static-side" role="navigation">
+<nav class="navbar-default navbar-static-side" role="navigation" id="navigation">
 	<div class="sidebar-collapse">
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">

@@ -1,12 +1,77 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.workspace.dto.EcaDTO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-String oid = request.getParameter("oid");
-EcaDTO dto = new EcaDTO(oid);
-JSONArray docList = (JSONArray) dto.getDocList();
-%> 
+EcaDTO dto = (EcaDTO) request.getAttribute("dto");
+JSONArray docList = dto.getDocList();
+%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<%@include file="/extcore/jsp/common/css.jsp"%>
+<%@include file="/extcore/jsp/common/script.jsp"%>
+<%@include file="/extcore/jsp/common/auigrid.jsp"%>
+</head>
+<body>
+<form>
+<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				업무 기본정보
+			</div>
+		</td>
+		<td class="right">
+			<input type="button" title="업무완료" value="업무완료" class="red" onclick="complete();">
+		</td>
+	</tr>
+</table>
+<!-- 기본 정보 -->
+<table class="view-table">
+	<colgroup>
+		<col width="130">
+		<col width="450">
+		<col width="130">
+		<col width="450">
+	</colgroup>
+	<tr>
+		<th class="lb">EO/ECO 번호</th>
+		<td class="indent5"><%=dto.getNumber()%></td>
+		<th>작업자</th>
+		<td class="indent5"><%=dto.getActivityUser_txt()%></td>
+	</tr>
+	<tr>
+		<th class="lb">EO/ECO 제목</th>
+		<td class="indent5"><%=dto.getName()%></td>
+		<th>도착일</th>
+		<td class="indent5"><%=dto.getCreatedDate_txt()%></td>
+	</tr>
+	<tr>
+		<th class="lb">상태</th>
+		<td class="indent5"><%=dto.getState()%></td>
+		<th>완료 예정일</th>
+		<td class="indent5"><%=dto.getFinishDate_txt()%></td>
+	</tr>
+	<tr>
+		<th class="lb">업무위임</th>
+		<td class="indent5" colspan="3">
+			<input type="text" name="reassignUser" id="reassignUser">
+			<input type="hidden" name="reassignUserOid" id="reassignUserOid">
+			<input type="button" title="위임" value="위임" onclick="reassign();">
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">의견</th>
+		<td class="indent5" colspan="3">
+			<textarea name="description" id="description" rows="6"></textarea>
+		</td>
+	</tr>
+</table>
+
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -16,14 +81,13 @@ JSONArray docList = (JSONArray) dto.getDocList();
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="부품개정" title="부품개정" onclick="popup00();">
-			<input type="button" value="품목변경" title="품목변경" class="blue" onclick="">
-			<input type="button" value="새로고침" title="새로고침" class="gray" onclick="popup00();">
+			<input type="button" value="직접등록" title="직접등록" class="blue" onclick="">
+			<input type="button" value="링크등록" title="링크등록" onclick="popup00();">
 		</td>
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 30px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 150px; border-top: 1px solid #3180c3;"></div>
 <script>
 let myGridiD;
 const columns = [ {
@@ -109,14 +173,19 @@ children : [{
 
 function createAUIGrid(columnLayout) {
 	const props = {
-		headerHeight : 30,
-		showRowCheckColumn : true,
-		showRowNumColumn : true,
-		rowNumHeaderText : "번호",
-		showAutoNoDataMessage : false,
-		selectionMode : "multipleCells",
-		enableRowCheckShiftKey : true,
-		autoGridHeight : true
+			headerHeight : 30,
+			fillColumnSizeMode : false,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			enableSorting : false,
+			softRemoveRowMode : false,
+			selectionMode : "multipleCells",
+			showStateColumn : true,
+			showRowCheckColumn : true,
+			rowCheckToRadio : true,
+			enableFilter : true,
+			autoGridHeight : true
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 	AUIGrid.setGridData(myGridID, <%=docList%>);
@@ -152,4 +221,17 @@ function insert00(arr, callBack) {
 		parent.closeLayer();
 	})
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+	createAUIGrid(columns);
+	AUIGrid.resize(myGridID);
+	finderUser("reassignUser");
+})
+
+window.addEventListener("resize", function() {
+	AUIGrid.resize(myGridID);
+});
 </script>
+</form>
+</body>
+</html>
