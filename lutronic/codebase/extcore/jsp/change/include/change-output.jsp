@@ -23,7 +23,7 @@ for (int i = 0; i < list.size(); i++) {
 				<img src="/Windchill/extcore/images/header.png">
 				산출물 등록<%
 				if (CommonUtil.isAdmin()) {
-				%>&nbsp;<%=eoid%>
+				%>&nbsp;<%//=eoid%>
 				<%
 				}
 				%>

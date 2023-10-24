@@ -89,7 +89,7 @@ JSONArray docList = dto.getDocList();
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="직접등록" title="직접등록" class="blue" onclick="">
+					<input type="button" value="직접등록" title="직접등록" class="blue" onclick="link();">
 					<input type="button" value="링크등록" title="링크등록" onclick="popup00();">
 				</td>
 			</tr>
@@ -165,7 +165,9 @@ JSONArray docList = dto.getDocList();
 					autoGridHeight : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.setGridData(myGridID, <%=docList%>);
+				AUIGrid.setGridData(myGridID,
+		<%=docList%>
+			);
 			}
 
 			// 추가 버튼 클릭 시 팝업창 메서드
@@ -221,6 +223,12 @@ JSONArray docList = dto.getDocList();
 					}
 					parent.closeLayer();
 				})
+			}
+
+			function link() {
+				const oid = document.getElementById("oid").value;
+				const url = getCallUrl("/doc/link?oid="+oid);
+				_popup(url, 1600, 800, "n");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

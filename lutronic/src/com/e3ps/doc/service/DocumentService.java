@@ -21,8 +21,6 @@ public interface DocumentService {
 
 	ResultData approvalPackageDocumentAction(HttpServletRequest request, HttpServletResponse response);
 
-	List<DocumentDTO> include_documentLink(String module, String oid);
-
 	/**
 	 * 문서 일괄 등록
 	 */

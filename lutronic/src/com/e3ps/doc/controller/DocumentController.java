@@ -53,6 +53,25 @@ import wt.part.WTPartDescribeLink;
 @RequestMapping(value = "/doc")
 public class DocumentController extends BaseController {
 
+	@Description(value = "문서 등록 페이지 - 설변활동 링크등록")
+	@GetMapping(value = "/link")
+	public ModelAndView link(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
+		JSONArray docTypeList = DocumentHelper.manager.toJson();
+		model.addObject("docTypeList", docTypeList);
+		model.addObject("preserationList", preserationList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("modelList", modelList);
+		model.addObject("form", form);
+		model.addObject("oid", oid);
+		model.setViewName("popup:/document/document-link");
+		return model;
+	}
+
 	@Description(value = "문서 등록 페이지")
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {

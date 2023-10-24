@@ -38,11 +38,11 @@ iframe {
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						문서 정보
+						문서 등록
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
@@ -275,7 +275,7 @@ iframe {
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>

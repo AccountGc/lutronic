@@ -162,51 +162,6 @@ public class StandardDocumentService extends StandardManager implements Document
 	}
 
 	@Override
-	public List<DocumentDTO> include_documentLink(String module, String oid) {
-		List<DocumentDTO> list = new ArrayList<DocumentDTO>();
-
-		try {
-			if (StringUtil.checkString(oid)) {
-				if ("active".equals(module)) {
-					devActive m = (devActive) CommonUtil.getObject(oid);
-					QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class, false);
-
-					while (qr.hasMoreElements()) {
-						devOutPutLink link = (devOutPutLink) qr.nextElement();
-						RevisionControlled rc = link.getOutput();
-						String linkOid = CommonUtil.getOIDString(link);
-
-						if (rc instanceof WTDocument) {
-							DocumentDTO data = new DocumentDTO((WTDocument) rc);
-							data.setLinkOid(linkOid);
-							list.add(data);
-						}
-
-					}
-				} else if ("ecaAction".equals(module)) {
-					EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
-					List<DocumentActivityLink> linkList = ECAHelper.service.getECADocumentLink(eca);
-					for (DocumentActivityLink link : linkList) {
-						WTDocumentMaster master = link.getDoc();
-
-						String linkOid = CommonUtil.getOIDString(link);
-						WTDocument doc = DocumentHelper.service.getLastDocument(master.getNumber());
-
-						DocumentDTO data = new DocumentDTO(doc);
-						data.setLinkOid(linkOid);
-						list.add(data);
-
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return list;
-	}
-
-	@Override
 	public Map<String, Object> delete(String oid) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		Transaction trs = new Transaction();
@@ -247,7 +202,9 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		boolean temprary = dto.isTemprary();
-		
+
+		// 설별 활동 링크 OID
+		String oid = dto.getOid();
 		// 결재
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
@@ -303,6 +260,14 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(doc, external);
+
+			// 설변활동 링크
+			if (StringUtil.checkString(oid)) {
+				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+				DocumentActivityLink link = DocumentActivityLink
+						.newDocumentActivityLink((WTDocumentMaster) doc.getMaster(), eca);
+				PersistenceHelper.manager.save(link);
+			}
 
 			// 결재 시작
 			if (isSelf) {
@@ -569,7 +534,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		ArrayList<Map<String, String>> external =  dto.getExternal();
+		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -588,7 +553,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			WTDocumentMaster master = (WTDocumentMaster) latest.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
-			
+
 			// 문서 이름 세팅..
 			if (name.length() > 0) {
 				if (name.indexOf("-") == -1) {
@@ -604,7 +569,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			latest.getTypeInfoWTDocument().setPtc_rht_1(content);
-			
+
 			PersistenceHelper.manager.save(latest);
 
 			// 폴더 이동
@@ -629,12 +594,12 @@ public class StandardDocumentService extends StandardManager implements Document
 			deleteLink(latest);
 			// 관련 링크 세팅
 			saveLink(latest, dto);
-			
+
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(latest, external);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -658,7 +623,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		ArrayList<Map<String, String>> external =  dto.getExternal();
+		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -720,7 +685,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			deleteLink(workCopy);
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
-			
+
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
 			// 외부 메일 링크 추가

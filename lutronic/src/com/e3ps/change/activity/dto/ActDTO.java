@@ -2,13 +2,14 @@ package com.e3ps.change.activity.dto;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Date;
 
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCode
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.org.People;
 import com.e3ps.org.service.PeopleHelper;
 
 import lombok.Getter;

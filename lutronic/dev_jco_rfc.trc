@@ -1,0 +1,10 @@
+
+**** Error file opened at 20231024 132331 Korean Standard Time Rel. 3.0.14 (2015-12-16) [721.619]
+Error:  >Tue Oct 24 13:23:31,255<    >RfcGetException rc (7) message: 유효하지 않은 PBT 서버그룹이름: lerpdev
+<RfcGetException
+
+
+**** Error file opened at 20231024 133402 Korean Standard Time Rel. 3.0.14 (2015-12-16) [721.619]
+Error:  >Tue Oct 24 13:34:02,501<    >RfcGetException rc (7) message: Open SQL array insert produces duplicate records in the database.
+<RfcGetException
+
