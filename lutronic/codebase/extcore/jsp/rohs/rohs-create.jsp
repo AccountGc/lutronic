@@ -178,7 +178,10 @@
 			function create(temp) {
 				
 				const temprary = JSON.parse(temp);
+				// 결재선
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
 				if(isEmpty($("#rohsName").val())) {
 					alert("물질명을 입력하세요.");
@@ -226,6 +229,7 @@
 					}
 				}
 				params.temprary = temprary;
+				params.external = external;
 				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/rohs/create");
 				call(url, params, function(data) {
