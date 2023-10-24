@@ -65,14 +65,14 @@ public class SAPHelper {
 		ArrayList<WTPart> list = PartHelper.manager.descendants(root);
 
 		// ET_MAT
-		JCoTable insertTable = function.getTableParameterList().getTable("IT_INPUT");
+		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
 		// SAP Setting END
 
 		int idx = 1;
 		for (WTPart part : list) {
 
-			String next = getNextSeq("PART", "00000000");
-			String ZIFNO = "PART-" + next;
+//			String next = getNextSeq("PART", "00000000");
+//			String ZIFNO = "PART-" + next;
 
 			insertTable.insertRow(idx);
 
@@ -103,12 +103,21 @@ public class SAPHelper {
 			// 테스트 용으로 전송
 			insertTable.setValue("ZPREPO", "X"); // 선구매필요
 
+			System.out.println("number = " + part.getNumber() + ", version = " + v);
+
 			idx++;
 		}
 
 		function.execute(destination);
-		JCoTable result = function.getTableParameterList().getTable(""); // 여기도 뭐??
+		JCoTable result = function.getTableParameterList().getTable("ET_MAT"); // 여기도 뭐??
+		result.firstRow();
+		for (int j = 1; j <= result.getNumRows(); j++, result.nextRow()) {
+			System.out.println("ZIFSTA(상태) = " + result.getValue("ZIFSTA"));
+			System.out.println("ZIFMSG(처리상태) = " + result.getValue("ZIFMSG"));
+		}
+
 		// ERP 전송 로그 작성
+
 		System.out.println("result=" + result);
 	}
 

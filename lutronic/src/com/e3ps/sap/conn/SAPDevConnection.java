@@ -26,7 +26,7 @@ public class SAPDevConnection {
 	public static void setERPInit() {
 
 		Config conf = ConfigImpl.getInstance();
-		System.out.println("erp.destination = " + conf.getString("erp.destination"));
+		System.out.println("erp_dev.destination = " + conf.getString("erp_dev.destination"));
 		System.out.println("erp.send = " + conf.getString("erp.send"));
 		DESTINATION_NAME = conf.getString("erp_dev.destination");
 
