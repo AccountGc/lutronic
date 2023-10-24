@@ -64,6 +64,7 @@ public class SAPHelper {
 		WTPart root = (WTPart) CommonUtil.getObject("wt.part.WTPart:" + id);
 		ArrayList<WTPart> list = PartHelper.manager.descendants(root);
 
+		System.out.println("SAP PART INTERFACE START!");
 		// ET_MAT
 		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
 		// SAP Setting END
@@ -113,18 +114,85 @@ public class SAPHelper {
 		result.firstRow();
 		for (int j = 1; j <= result.getNumRows(); j++, result.nextRow()) {
 			System.out.println("ZIFSTA(상태) = " + result.getValue("ZIFSTA"));
-			System.out.println("ZIFMSG(처리상태) = " + result.getValue("ZIFMSG"));
+//			System.out.println("ZIFMSG(처리상태) = " + result.getValue("ZIFMSG"));
 		}
 
 		// ERP 전송 로그 작성
-
-		System.out.println("result=" + result);
+		System.out.println("SAP PART INTERFACE END!");
+//		System.out.println("result=" + result);
 	}
 
 	/**
 	 * BOM이력 테스트 용
 	 */
 	public void ZPPIF_PDM_002_TEST() throws Exception {
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
+		if (function == null) {
+			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
+		}
+
+		WTPart root = (WTPart) CommonUtil.getObject("wt.part.WTPart:" + id);
+		ArrayList<WTPart> list = PartHelper.manager.descendants(root);
+
+		// ET_MAT
+		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
+		// SAP Setting END
+
+		System.out.println("SAP BOM INTERFACE START!");
+
+		int idx = 1;
+		for (WTPart part : list) {
+
+//			String next = getNextSeq("PART", "00000000");
+//			String ZIFNO = "PART-" + next;
+
+			insertTable.insertRow(idx);
+
+			// 샘플로 넣기
+			insertTable.setValue("AENNR8", AENNR8); // 변경번호 8자리
+			insertTable.setValue("MATNR", part.getNumber()); // 자재번호
+			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
+			insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
+
+			String ZSPEC = IBAUtil.getStringValue(part, "SPECIFICATION");
+			insertTable.setValue("ZSPEC", ZSPEC); // 사양
+
+			String ZMODEL = IBAUtil.getStringValue(part, "MODEL");
+			insertTable.setValue("ZMODEL", ZMODEL); // Model:프로젝트
+
+			String ZPRODM = IBAUtil.getStringValue(part, "PRODUCTMETHOD");
+			insertTable.setValue("ZPRODM", ZPRODM); // 제작방법
+
+			String ZDEPT = IBAUtil.getStringValue(part, "DEPTCODE");
+			insertTable.setValue("ZDEPT", ZDEPT); // 설계부서
+
+			// 샘플링 실제는 2D여부 확인해서 전송
+			insertTable.setValue("ZDWGNO", part.getNumber() + ".DRW"); // 도면번호
+
+			String v = part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue();
+			insertTable.setValue("ZEIVR", v); // 버전
+			// 테스트 용으로 전송
+			insertTable.setValue("ZPREPO", "X"); // 선구매필요
+
+			System.out.println("number = " + part.getNumber() + ", version = " + v);
+
+			idx++;
+		}
+
+		function.execute(destination);
+		JCoTable result = function.getTableParameterList().getTable("ET_MAT"); // 여기도 뭐??
+		result.firstRow();
+		for (int j = 1; j <= result.getNumRows(); j++, result.nextRow()) {
+			System.out.println("ZIFSTA(상태) = " + result.getValue("ZIFSTA"));
+			System.out.println("ZIFMSG(처리상태) = " + result.getValue("ZIFMSG"));
+		}
+
+		System.out.println("SAP BOM INTERFACE END!");
+		// ERP 전송 로그 작성
+
+		System.out.println("result=" + result);
 	}
 
 	/**
