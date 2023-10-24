@@ -20,7 +20,7 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 					<input type="button" value="뒤로" title="뒤로" class="gray" onclick="javascript:history.back();">
 				</td>
@@ -146,7 +146,7 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
 				</td>

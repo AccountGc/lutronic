@@ -1,6 +1,7 @@
 package com.e3ps.sap.service;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -10,11 +11,22 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.conn.SAPDevConnection;
+import com.e3ps.sap.dto.SAPBomDTO;
+import com.sap.conn.jco.JCoDestination;
+import com.sap.conn.jco.JCoDestinationManager;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoTable;
 
+import wt.fc.IdentityHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.folder.Folder;
@@ -24,6 +36,7 @@ import wt.part.Quantity;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
+import wt.part.WTPartMasterIdentity;
 import wt.part.WTPartUsageLink;
 import wt.pom.Transaction;
 import wt.series.MultilevelSeries;
@@ -92,8 +105,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 				String specCode = SAPHelper.manager.get(spec, "SPECIFICATION");
 				String productCode = SAPHelper.manager.get(product, "PRODUCTMETHOD");
 
-				System.out.println("number=" + number + ", name = " + name + ", model + " + modelCode + ", dept = "
-						+ deptCode + ", spec + " + specCode + ", produc = " + productCode);
+				System.out.println("version == " + version + ", number=" + number + ", name = " + name + ", model + "
+						+ modelCode + ", dept = " + deptCode + ", spec + " + specCode + ", produc = " + productCode);
 
 				WTPart part = create(number, name, version);
 
@@ -135,31 +148,62 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		String end = version.substring(idx + 1);
 		try {
 
-			part = SAPHelper.manager.getPart(number, first, end);
+			part = SAPHelper.manager.getPart(number.trim(), first, end);
 			if (part == null) {
 
-				part = WTPart.newWTPart();
-				part.setName(name);
-				part.setNumber(number);
-				part.setDefaultUnit(QuantityUnit.toQuantityUnit("ea"));
-				View view = ViewHelper.service.getView("Design");
-				ViewHelper.assignToView(part, view);
+				WTPartMaster master = SAPHelper.manager.getMaster(number);
+				if (master != null) {
 
-				VersionIdentifier vc = VersionIdentifier
-						.newVersionIdentifier(MultilevelSeries.newMultilevelSeries("wt.series.HarvardSeries", first));
-				part.getMaster().setSeries("wt.series.HarvardSeries");
-				VersionControlHelper.setVersionIdentifier(part, vc);
-				// set iteration as "3"
-				Series ser = Series.newSeries("wt.vc.IterationIdentifier", end);
-				IterationIdentifier iid = IterationIdentifier.newIterationIdentifier(ser);
-				VersionControlHelper.setIterationIdentifier(part, iid);
+					part = WTPart.newWTPart();
 
-				Folder folder = FolderHelper.service.getFolder("/Default/PART_Drawing/TEST",
-						WCUtil.getWTContainerRef());
-				FolderHelper.assignLocation((FolderEntry) part, folder);
+					WTPartMasterIdentity identity = (WTPartMasterIdentity) master.getIdentificationObject();
+					identity.setNumber(number);
+					identity.setName(name);
+					master = (WTPartMaster) IdentityHelper.service.changeIdentity(master, identity);
 
-				PersistenceHelper.manager.save(part);
+					part.setMaster(master);
+//					part.setName(name);
+//					part.setNumber(number);
+					part.setDefaultUnit(QuantityUnit.toQuantityUnit("ea"));
+					View view = ViewHelper.service.getView("Design");
+					ViewHelper.assignToView(part, view);
 
+					VersionIdentifier vc = VersionIdentifier.newVersionIdentifier(
+							MultilevelSeries.newMultilevelSeries("wt.series.HarvardSeries", first));
+					part.getMaster().setSeries("wt.series.HarvardSeries");
+					VersionControlHelper.setVersionIdentifier(part, vc);
+					// set iteration as "3"
+					Series ser = Series.newSeries("wt.vc.IterationIdentifier", end);
+					IterationIdentifier iid = IterationIdentifier.newIterationIdentifier(ser);
+					VersionControlHelper.setIterationIdentifier(part, iid);
+
+					Folder folder = FolderHelper.service.getFolder("/Default/PART_Drawing/TEST",
+							WCUtil.getWTContainerRef());
+					FolderHelper.assignLocation((FolderEntry) part, folder);
+
+					PersistenceHelper.manager.save(part);
+				} else {
+					part = WTPart.newWTPart();
+					part.setName(name);
+					part.setNumber(number);
+					part.setDefaultUnit(QuantityUnit.toQuantityUnit("ea"));
+					View view = ViewHelper.service.getView("Design");
+					ViewHelper.assignToView(part, view);
+
+					VersionIdentifier vc = VersionIdentifier.newVersionIdentifier(
+							MultilevelSeries.newMultilevelSeries("wt.series.HarvardSeries", first));
+					part.getMaster().setSeries("wt.series.HarvardSeries");
+					VersionControlHelper.setVersionIdentifier(part, vc);
+					Series ser = Series.newSeries("wt.vc.IterationIdentifier", end);
+					IterationIdentifier iid = IterationIdentifier.newIterationIdentifier(ser);
+					VersionControlHelper.setIterationIdentifier(part, iid);
+
+					Folder folder = FolderHelper.service.getFolder("/Default/PART_Drawing/TEST",
+							WCUtil.getWTContainerRef());
+					FolderHelper.assignLocation((FolderEntry) part, folder);
+
+					PersistenceHelper.manager.save(part);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -169,15 +213,154 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	}
 
 	@Override
-	public void sendSapToEo(EChangeOrder e) throws Exception {
+	public void sendSapToEo(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception {
 		// 결재완료 안에서 동작하기에 트랜젝션 제외
 		System.out.println("EO SAP SEND START");
-		
-		// 조건이.. 맣은데 일단 다 전송하는건지?
-		
-		
+
+		// 자재마스터 전송
+		sendToSapEoPart(e, completeParts);
+		// BOM 전송
+		sendToSapEoBom(e, completeParts);
+
 		// 자재마스터 전송 시작
-		
+		System.out.println("EO SAP SEND START");
+	}
+
+	/**
+	 * EO 전용 BOM 전송 함수
+	 */
+	private void sendToSapEoBom(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception {
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
+		if (function == null) {
+			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
+		}
+		System.out.println("SAP BOM INTERFACE START!");
+
+		String seq = "0001"; // ??
+
+		JCoParameterList importTable = function.getImportParameterList();
+		importTable.setValue("IV_WERKS", "1000"); // 플랜트
+
+		// EO/ECO 헤더 정보 전송
+		JCoTable eoTable = function.getTableParameterList().getTable("ES_ECM");
+
+		eoTable.appendRow();
+		eoTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 12자리??
+		eoTable.setValue("ZECMID", e.getEoType()); // EO/ECO 구분
+		eoTable.setValue("DATUV", "");
+		eoTable.setValue("AEGRU", "초도발행"); // 변경사유 테스트 일단 한줄
+		eoTable.setValue("AETXT", "첫줄 테스트"); // 변경 내역 첫줄만 일단 테스트
+		eoTable.setValue("AETXT_L", "테스트1<br>테스트2<br>테스트3"); // 변경 내역 전체 내용
+
+		// 완제품으로 품목을 담는다.
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		for (EOCompletePartLink link : completeParts) {
+			String version = link.getVersion();
+			WTPart root = PartHelper.manager.getPart(link.getCompletePart().getNumber(), version);
+			list.add(root);
+		}
+
+		JCoTable bomTable = function.getTableParameterList().getTable("ET_BOM");
+		// BOM 전송 한번 돌고 호출하고 하는식???
+		int idx = 1;
+		for (WTPart part : list) {
+			// 완제품에 해당하는 BOM 목록들..
+			ArrayList<SAPBomDTO> dataList = SAPHelper.manager.getterBomData(part);
+			for (SAPBomDTO dto : dataList) {
+				System.out.println(dto.toString());
+				bomTable.insertRow(idx);
+				bomTable.setValue("AENNR8", ""); // 변경번호 12자리?
+				bomTable.setValue("SEQNO", ""); // 항목번호
+				bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 기존 모품번
+				bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 기존 자품번
+				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 신규 모품번
+				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 신규 자품번
+				bomTable.setValue("MENGE", dto.getQty()); // 수량
+				bomTable.setValue("MEINS", dto.getUnit()); // 단위
+
+				idx++;
+			}
+		}
+
+		function.execute(destination);
+		JCoParameterList result = function.getExportParameterList();
+		Object r_type = result.getValue("EV_STATUS");
+		Object r_msg = result.getValue("EV_MESSAGE");
+		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
+		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
+
+	}
+
+	/**
+	 * EO 전용 자재마스터 리스트 전송 함수
+	 */
+	private void sendToSapEoPart(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception {
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");
+		if (function == null) {
+			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
+		}
+
+		// 완제품으로 하위에 있는 모든 품목을 조회 해서 전송한다
+		System.out.println("SAP PART INTERFACE START!");
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		for (EOCompletePartLink link : completeParts) {
+			String version = link.getVersion();
+			WTPart root = PartHelper.manager.getPart(link.getCompletePart().getNumber(), version);
+			// 중복 품목 제외를 한다.
+			SAPHelper.manager.getterSkip(root, list);
+		}
+
+		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
+		JCoParameterList importTable = function.getImportParameterList();
+		importTable.setValue("IV_WERKS", "1000"); // 플랜트
+		int idx = 1;
+		// 자재는 한번에 넘기고 함수 호출
+		for (WTPart part : list) {
+			insertTable.insertRow(idx);
+
+			// 샘플로 넣기
+			insertTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 8자리
+			insertTable.setValue("MATNR", part.getNumber()); // 자재번호
+			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
+			insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
+
+			String ZSPEC = IBAUtil.getStringValue(part, "SPECIFICATION");
+			insertTable.setValue("ZSPEC", ZSPEC); // 사양
+
+			String ZMODEL = IBAUtil.getStringValue(part, "MODEL");
+			insertTable.setValue("ZMODEL", ZMODEL); // Model:프로젝트
+
+			String ZPRODM_CODE = IBAUtil.getStringValue(part, "PRODUCTMETHOD");
+			NumberCode ZPRODM_N = NumberCodeHelper.manager.getNumberCode(ZPRODM_CODE, "PRODUCTMETHOD");
+			if (ZPRODM_N != null) {
+				insertTable.setValue("ZPRODM", ZPRODM_N.getName()); // 제작방법
+			} else {
+				insertTable.setValue("ZPRODM", ""); // 제작방법
+			}
+
+			String ZDEPT = IBAUtil.getStringValue(part, "DEPTCODE");
+			insertTable.setValue("ZDEPT", ZDEPT); // 설계부서
+
+			// 샘플링 실제는 2D여부 확인해서 전송
+			insertTable.setValue("ZDWGNO", part.getNumber() + ".DRW"); // 도면번호
+
+			String v = part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue();
+			insertTable.setValue("ZEIVR", v); // 버전
+			// 테스트 용으로 전송
+			insertTable.setValue("ZPREPO", "X"); // 선구매필요
+			System.out.println("number = " + part.getNumber() + ", version = " + v);
+			idx++;
+		}
+
+		function.execute(destination);
+		JCoParameterList result = function.getExportParameterList();
+		Object r_type = result.getValue("EV_STATUS");
+		Object r_msg = result.getValue("EV_MESSAGE");
+		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
+		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 	}
 
 	@Override

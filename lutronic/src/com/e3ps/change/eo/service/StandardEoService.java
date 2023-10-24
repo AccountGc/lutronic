@@ -462,13 +462,15 @@ public class StandardEoService extends StandardManager implements EoService {
 	@Override
 	public void afterAction(EChangeOrder eo) throws Exception {
 		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
+		
+		// 모든 부품 대상 수집..
 		ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
 
 //		completeProduct(partList, eco);
 
 //		ERPHelper.service.sendERP(eco);
 		
-		SAPHelper.service.sendSapToEo(eo);
+		SAPHelper.service.sendSapToEo(eo, completeParts);
 
 		saveBaseline(eo, completeParts);
 	}

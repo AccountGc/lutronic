@@ -9,28 +9,35 @@ import java.util.ArrayList;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDevConnection;
+import com.e3ps.sap.dto.SAPBomDTO;
+import com.ptc.core.query.report.bom.server.WTPartUsageIdCollector;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
-import com.sap.conn.jco.JCoField;
 import com.sap.conn.jco.JCoFunction;
-import com.sap.conn.jco.JCoParameterFieldIterator;
 import com.sap.conn.jco.JCoParameterList;
-import com.sap.conn.jco.JCoRecordFieldIterator;
 import com.sap.conn.jco.JCoTable;
 
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.method.MethodContext;
 import wt.part.WTPart;
+import wt.part.WTPartConfigSpec;
+import wt.part.WTPartHelper;
+import wt.part.WTPartMaster;
+import wt.part.WTPartStandardConfigSpec;
+import wt.part.WTPartUsageLink;
 import wt.pom.DBProperties;
 import wt.pom.WTConnection;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
+import wt.vc.views.View;
+import wt.vc.views.ViewHelper;
 
 public class SAPHelper {
 
@@ -65,7 +72,9 @@ public class SAPHelper {
 		}
 
 		WTPart root = (WTPart) CommonUtil.getObject("wt.part.WTPart:" + id);
-		ArrayList<WTPart> list = PartHelper.manager.descendants(root);
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		getterSkip(root, list);
+//		ArrayList<WTPart> list = descendants(root);
 
 		System.out.println("SAP PART INTERFACE START!");
 		// ET_MAT
@@ -95,8 +104,13 @@ public class SAPHelper {
 			String ZMODEL = IBAUtil.getStringValue(part, "MODEL");
 			insertTable.setValue("ZMODEL", ZMODEL); // Model:프로젝트
 
-			String ZPRODM = IBAUtil.getStringValue(part, "PRODUCTMETHOD");
-			insertTable.setValue("ZPRODM", ZPRODM); // 제작방법
+			String ZPRODM_CODE = IBAUtil.getStringValue(part, "PRODUCTMETHOD");
+			NumberCode ZPRODM_N = NumberCodeHelper.manager.getNumberCode(ZPRODM_CODE, "PRODUCTMETHOD");
+			if (ZPRODM_N != null) {
+				insertTable.setValue("ZPRODM", ZPRODM_N.getName()); // 제작방법
+			} else {
+				insertTable.setValue("ZPRODM", ""); // 제작방법
+			}
 
 			String ZDEPT = IBAUtil.getStringValue(part, "DEPTCODE");
 			insertTable.setValue("ZDEPT", ZDEPT); // 설계부서
@@ -199,6 +213,22 @@ public class SAPHelper {
 	}
 
 	/**
+	 * 테스트용 데이터 만들기 위한것, 부품번호로 마스터 찾기
+	 */
+	public WTPartMaster getMaster(String number) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTPart.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.NUMBER, number);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			WTPart part = (WTPart) obj[0];
+			return (WTPartMaster) part.getMaster();
+		}
+		return null;
+	}
+
+	/**
 	 * 테이블 시퀀시 가져오기
 	 */
 	public String getNextSeq(String table, String ft) throws Exception {
@@ -252,5 +282,96 @@ public class SAPHelper {
 				MethodContext.getContext().freeConnection();
 			}
 		}
+	}
+
+	/**
+	 * 품목 SAP 전용 BOM 구조 함수 - 둥복 자재 제거 테스트용
+	 */
+	public ArrayList<WTPart> descendants(WTPart part) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		// root 추가
+		list.add(part);
+		View view = ViewHelper.service.getView(part.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			list.add(p);
+			descendants(p, list);
+		}
+		return list;
+	}
+
+	/**
+	 * 품목 SAP 전용 BOM 구조 재귀 함수 - 중복제거 테스트용
+	 */
+	private void descendants(WTPart part, ArrayList<WTPart> list) throws Exception {
+		View view = ViewHelper.service.getView(part.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			list.add(p);
+			descendants(p, list);
+		}
+	}
+
+	/**
+	 * ERP 전송시 사용 - 중복 제외
+	 */
+	public void getterSkip(WTPart root, ArrayList<WTPart> list) throws Exception {
+		// root 추가
+		if (!list.contains(root)) {
+			list.add(root);
+		}
+		View view = ViewHelper.service.getView(root.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			if (!list.contains(p)) {
+				list.add(p);
+			}
+			getterSkip(p, list);
+		}
+	}
+
+	/**
+	 * BOM 전송용 데이터 만드는 함수
+	 */
+	public ArrayList<SAPBomDTO> getterBomData(WTPart part) throws Exception {
+		ArrayList<SAPBomDTO> list = new ArrayList<SAPBomDTO>();
+		// root 추가
+		View view = ViewHelper.service.getView(part.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart p = (WTPart) obj[1];
+			SAPBomDTO dto = new SAPBomDTO(link);
+			list.add(dto);
+			getterBomData(p, list);
+		}
+		return list;
 	}
 }

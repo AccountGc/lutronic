@@ -23,7 +23,7 @@ public class SAPTest {
 
 	public static void main(String[] args) throws Exception {
 
-		SAPHelper.manager.ZPPIF_PDM_001_TEST(436906, "C2507014");
+		SAPHelper.manager.ZPPIF_PDM_001_TEST(436906, "C2507114");
 //
 //		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
 //		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");

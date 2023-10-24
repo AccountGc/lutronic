@@ -8,12 +8,11 @@
 	</div>
 </div>
 <script>
+	const f = document.getElementById('content');
+	const fd = f.contentDocument || f.contentWindow.document;
 	function scrollToTop() {
-		document.querySelector("iframe#content").scrollTo({
-			top : 0,
-			behavior : 'smooth'
-		});
+		fd.documentElement.scrollTop = 0;
+		fd.body.scrollTop = 0;
 	}
-
-	document.getElementById('scrollToTopIcon').addEventListener('click', scrollToTop);
+	document.getElementById("scrollToTopIcon").addEventListener("click", scrollToTop);
 </script>

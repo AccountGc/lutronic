@@ -87,7 +87,7 @@ JSONArray docList = dto.getDocList();
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 150px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 60px; border-top: 1px solid #3180c3;"></div>
 <script>
 let myGridiD;
 const columns = [ {

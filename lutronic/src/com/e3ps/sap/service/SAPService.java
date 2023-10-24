@@ -1,6 +1,9 @@
 package com.e3ps.sap.service;
 
+import java.util.ArrayList;
+
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EOCompletePartLink;
 
 import wt.method.RemoteInterface;
 import wt.part.WTPart;
@@ -26,7 +29,7 @@ public interface SAPService {
 	/**
 	 * SAP EO 전송
 	 */
-	public abstract void sendSapToEo(EChangeOrder e) throws Exception;
+	public abstract void sendSapToEo(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception;
 
 	/**
 	 * SAP ECO 전송
