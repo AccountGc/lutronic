@@ -24,4 +24,9 @@ public interface NumberCodeService {
 	 */
 	public abstract void save(HashMap<String, List<NumberCodeDTO>> dataMap) throws Exception;
 
+	/**
+	 * 국가코드 로더
+	 */
+	public abstract void loaderNation(String path) throws Exception;
+
 }

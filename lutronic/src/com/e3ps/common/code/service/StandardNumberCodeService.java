@@ -1,5 +1,22 @@
 package com.e3ps.common.code.service;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.NumberCodeType;
+import com.e3ps.common.code.dto.NumberCodeDTO;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
+
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.pom.Transaction;
@@ -10,17 +27,6 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
-
-import java.util.HashMap;
-import java.util.List;
-
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.NumberCodeType;
-import com.e3ps.common.code.dto.NumberCodeDTO;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.download.DownloadHistory;
 
 public class StandardNumberCodeService extends StandardManager implements NumberCodeService {
 
@@ -184,5 +190,67 @@ public class StandardNumberCodeService extends StandardManager implements Number
 				trs.rollback();
 		}
 
+	}
+
+	@Override
+	public void loaderNation(String path) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			File file = new File(path);
+
+			Workbook workbook = new XSSFWorkbook(file);
+			Sheet sheet = workbook.getSheetAt(0);
+
+			int rows = sheet.getPhysicalNumberOfRows(); // 시트의 행 개수 가져오기
+
+			// 모든 행(row)을 순회하면서 데이터 가져오기
+			for (int i = 1; i < rows; i++) {
+				Row row = sheet.getRow(i);
+
+				String code = row.getCell(0).getStringCellValue();
+				// 값없을 경우 리턴
+				if (!StringUtil.checkString(code)) {
+					return;
+				}
+				String name = row.getCell(1).getStringCellValue();
+				// 값없을 경우 리턴
+				if (!StringUtil.checkString(name)) {
+					return;
+				}
+
+				QuerySpec query = new QuerySpec();
+				int idx = query.appendClassList(NumberCode.class, true);
+				QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
+				QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "NATION");
+				QueryResult result = PersistenceHelper.manager.find(query);
+				if (result.hasMoreElements()) {
+					return;
+				}
+				NumberCode n = NumberCode.newNumberCode();
+				n.setCode(code);
+				n.setName(name);
+				n.setSort(String.valueOf(i));
+				n.setDescription(name);
+				n.setCodeType(NumberCodeType.toNumberCodeType("NATION"));
+				n.setDisabled(false);
+				PersistenceHelper.manager.save(n);
+			}
+
+			workbook.close();
+
+			trs.commit();
+			trs = null;
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }

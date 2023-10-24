@@ -1,4 +1,7 @@
-package com.e3ps.org.loader;
+package com.e3ps.common.code.loader;
+
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.org.loader.UserLoader;
 import com.e3ps.org.service.OrgHelper;
 
 public class NationLoader {
@@ -16,6 +19,6 @@ public class NationLoader {
 	}
 
 	private void initialize(String path) throws Exception {
-		OrgHelper.service.loaderNation(path);
+		NumberCodeHelper.service.loaderNation(path);
 	}
 }

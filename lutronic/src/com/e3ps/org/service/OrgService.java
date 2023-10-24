@@ -33,9 +33,4 @@ public interface OrgService {
 	 */
 	public abstract void loaderUser(String path) throws Exception;
 
-	/**
-	 * 윈칠 국가 로더
-	 */
-	void loaderNation(String path) throws Exception;
-
 }

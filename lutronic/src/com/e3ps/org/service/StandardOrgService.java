@@ -18,8 +18,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -33,7 +31,6 @@ import wt.load.LoadUser;
 import wt.method.MethodContext;
 import wt.org.OrganizationServicesMgr;
 import wt.org.WTUser;
-import wt.part.WTPart;
 import wt.pom.DBProperties;
 import wt.pom.Transaction;
 import wt.pom.WTConnection;
@@ -395,74 +392,5 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			if (trs != null)
 				trs.rollback();
 		}
-	}
-	
-	@Override
-	public void loaderNation(String path) throws Exception{
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			File file = new File(path);
-
-			Workbook workbook = new XSSFWorkbook(file);
-			Sheet sheet = workbook.getSheetAt(0);
-
-			int rows = sheet.getPhysicalNumberOfRows(); // 시트의 행 개수 가져오기
-			
-			// 모든 행(row)을 순회하면서 데이터 가져오기
-			for (int i = 1; i < rows; i++) {
-				Row row = sheet.getRow(i);
-
-				String code = row.getCell(0).getStringCellValue();
-				String name = row.getCell(1).getStringCellValue();
-				String codetype = "NATION";
-				System.out.println("code=" + code + ", name = " + name + ", codetype + " + codetype);
-				
-				NumberCode n = newCode(code, name, codetype);
-			}
-			workbook.close();
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
-		}
-	}
-
-	private NumberCode newCode(String code, String name, String codetype) throws Exception {
-		NumberCode n = null;
-		try {
-			QuerySpec query = new QuerySpec();
-			int idx = query.appendClassList(NumberCode.class, true);
-			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
-			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.NAME, name);
-			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codetype);
-			QueryResult result = PersistenceHelper.manager.find(query);
-			if (result.hasMoreElements()) {
-				Object[] obj = (Object[]) result.nextElement();
-				n = (NumberCode) obj[0];
-			}
-			
-			if(n == null) {
-				n = NumberCode.newNumberCode();
-				n.setCode(code);
-				n.setName(name);
-				n.setCodeType(NumberCodeType.toNumberCodeType(codetype));
-				
-				PersistenceHelper.manager.save(n);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-		
-		return n;
 	}
 }
