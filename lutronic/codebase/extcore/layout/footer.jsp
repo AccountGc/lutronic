@@ -4,11 +4,16 @@
 <div class="footer fixed">
 	<div style="display: flex; justify-content: space-between; align-items: center;">
 		<p style="margin: 0;">LUTRONIC PDM SYSTEM &copy; 2022-2023</p>
-		<img id="upArrow" style="cursor: pointer;" onclick="scrollToTop();" alt="up arrow image" src="/Windchill/extcore/images/up_arrow.gif">
+		<img id="scrollToTopIcon" style="cursor: pointer;" src="/Windchill/extcore/images/up_arrow.gif">
 	</div>
 </div>
 <script>
-function scrollToTop(){
-	window.scrollTo(0, 0);
-}
+	function scrollToTop() {
+		window.scrollTo({
+			top : 0,
+			behavior : 'smooth'
+		});
+	}
+
+	document.getElementById('scrollToTopIcon').addEventListener('click', scrollToTop);
 </script>
