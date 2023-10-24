@@ -105,7 +105,7 @@
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('send-listBOMERP');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('send-listBOMERP');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -117,7 +117,6 @@
 					</select> 
 					<input type="button"   value="ERP 적용 현황체크" title="ERP 적용 현황체크" onclick="loadGridData();">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="reset">
 				</td>
 			</tr>
 		</table>

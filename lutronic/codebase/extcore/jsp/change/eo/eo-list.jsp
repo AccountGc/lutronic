@@ -155,7 +155,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" onclick="resetColumnLayout('eo-list');">
 				</td>
 			</tr>
 		</table>
