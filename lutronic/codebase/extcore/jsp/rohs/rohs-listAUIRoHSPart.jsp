@@ -53,7 +53,6 @@
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn">
 					<input type="button" value="일괄다운" title="일괄다운" id="batchROHSDown">
-					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
 		</table>
@@ -271,11 +270,6 @@
 				$("#partNumber").val(items[0].item.number);
 				$("#partOid").val(items[0].item.part_oid);
 			}
-			
-			$("#btnReset").click(function(){
-				$("#partNumber").val("");
-				$("#partOid").val("");
-			});
 		</script>
 	</form>
 </body>

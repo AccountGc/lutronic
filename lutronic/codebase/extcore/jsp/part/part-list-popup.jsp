@@ -242,7 +242,6 @@ String rowId =request.getParameter("rowId")==null?"":request.getParameter("rowId
 				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색">
-			<input type="button" value="초기화" title="초기화">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>

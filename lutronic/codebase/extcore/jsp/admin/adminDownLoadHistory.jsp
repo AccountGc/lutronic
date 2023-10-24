@@ -60,7 +60,6 @@
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn">
-					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
 		</table>
@@ -276,10 +275,6 @@
 			
 			$("#searchBtn").click(function() {
 				loadGridData();
-			});
-			
-			$("#btnReset").click(function() {
-				$("input[type=text]").val("");
 			});
 		</script>
 	</form>

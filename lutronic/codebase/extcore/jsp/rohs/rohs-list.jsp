@@ -120,7 +120,6 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="btnReset">
 				</td>
 			</tr>
 		</table>
@@ -288,12 +287,6 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				selectbox("_psize");
 			});
 
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
-
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -307,16 +300,6 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
-			});
-			
-			// 초기화
-			$("#btnReset").click(function(){
-				$("input[type=text]").val("");
-				$("#creatorOid").val("");
-				$("#state option:eq(0)").prop("selected",true);
-				$("#AXselect_AX_state_AX_SelectText").text("선택");
-				$("#manufacture option:eq(0)").prop("selected",true);
-				$("#AXselect_AX_manufacture_AX_SelectText").text("선택");
 			});
 		</script>
 	</form>
