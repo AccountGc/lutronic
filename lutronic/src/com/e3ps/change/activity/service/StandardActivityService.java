@@ -323,6 +323,7 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
 				String cacheId = secondarys.get(i);
+				System.out.println("저장됩니다.");
 				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
 				ApplicationData applicationData = ApplicationData.newApplicationData(eca);
 				applicationData.setRole(ContentRoleType.SECONDARY);

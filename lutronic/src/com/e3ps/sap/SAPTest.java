@@ -54,7 +54,7 @@ public class SAPTest {
 			// 플랜트
 
 			// 샘플로 넣기
-			insertTable.setValue("AENNR8", "C2207004"); // 변경번호 8자리
+			insertTable.setValue("AENNR8", "C230700" + idx); // 변경번호 8자리
 			insertTable.setValue("MATNR", part.getNumber()); // 자재번호
 			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
 			insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
@@ -94,7 +94,7 @@ public class SAPTest {
 //		}
 
 		Object r_type = result.getValue("EV_STATUS");
-		Object r_msg = result.getValue("EV_SMESSAGE");
+		Object r_msg = result.getValue("EV_MESSAGE");
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 

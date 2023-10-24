@@ -497,23 +497,23 @@ public class WorkspaceHelper {
 	}
 
 	/**
-	 * 모든 결재라인을 가져오는 함수, 두번재 변수로 기안라인을 가져오냐마쟈 여부 TRUE 가져옴, FALSE 안가져옴
+	 * 모든 결재라인을 가져오는 함수, 두번재 변수로 기안라인을 가져오냐마쟈 여부 TRUE 안가져옴, FALSE 가져옴
 	 */
 	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master) throws Exception {
-		return getAllLines(master, true);
+		return getAllLines(master, false);
 	}
 
 	/**
 	 * 모든 결재라인을 가져오는 함수
 	 */
-	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master, boolean include) throws Exception {
+	public ArrayList<ApprovalLine> getAllLines(ApprovalMaster master, boolean exclude) throws Exception {
 		ArrayList<ApprovalLine> list = new ArrayList<ApprovalLine>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
 		QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 
-		if (include) {
-			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
+		if (exclude) {
+			QuerySpecUtils.toNotEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
 		}
 
 		// 정렬???
@@ -662,8 +662,10 @@ public class WorkspaceHelper {
 			data.put("name", submit.getName());
 			data.put("state", submit.getState());
 			data.put("owner", submit.getOwnership().getOwner().getFullName());
-			data.put("receiveDate_txt", submit.getStartTime().toString().substring(0, 16));
-			data.put("completeDate_txt", submit.getCompleteTime().toString().substring(0, 16));
+			data.put("receiveDate_txt",
+					submit.getStartTime() != null ? submit.getStartTime().toString().substring(0, 16) : "");
+			data.put("completeDate_txt",
+					submit.getCompleteTime() != null ? submit.getCompleteTime().toString().substring(0, 16) : "");
 			data.put("description", submit.getDescription());
 			list.add(data);
 

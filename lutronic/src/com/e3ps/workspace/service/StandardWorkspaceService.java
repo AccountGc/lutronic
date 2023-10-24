@@ -211,8 +211,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			} else if (lcm instanceof WTDocument) {
 				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
-			} else if(lcm instanceof EChangeRequest) {
-				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));				
+			} else if (lcm instanceof EChangeRequest) {
+				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
 			}
 		}
 		// 일괄 격제 관련해서 처리
@@ -774,7 +774,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		if (m != null) {
 			// 기안 라인 제외
 			// 시작일 전부 NULL처리
-			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, false);
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m, true);
 			for (ApprovalLine line : list) {
 				String type = line.getType();
 				if (type.equals(WorkspaceHelper.APPROVAL_LINE)) {
