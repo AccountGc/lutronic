@@ -55,9 +55,6 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			<%	
 			}
 			%>
-			<input type="button" value="Rev.이력" title="Rev.이력" class="" id="versionBtn">
-			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn">
-			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">
 			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
 		</td>
 	</tr>
@@ -69,16 +66,13 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">관련 품목</a>
+			<a href="#tabs-2">첨부파일</a>
 		</li>
 		<li>
-			<a href="#tabs-3">관련 대표 물질</a>
+			<a href="#tabs-3">관련 객체</a>
 		</li>
 		<li>
-			<a href="#tabs-4">관련 물질</a>
-		</li>
-		<li>
-			<a href="#tabs-5">첨부파일</a>
+			<a href="#tabs-4">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -91,38 +85,38 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>물질명</th>
-				<td colspan="3"><%=dto.getName()%></td>
+				<th class="lb">물질명</th>
+				<td class="indent5" colspan="3"><%=dto.getName()%></td>
 			</tr>
 			<tr>
-				<th>물질 번호</th>
-				<td><%=dto.getNumber()%></td>
-				<th>협력업체</th>
-				<td><%=dto.getManufactureDisplay()%></td>
+				<th class="lb">물질 번호</th>
+				<td class="indent5"><%=dto.getNumber()%></td>
+				<th class="lb">협력업체</th>
+				<td class="indent5"><%=dto.getManufactureDisplay()%></td>
 			</tr>
 			<tr>
-				<th>상태</th>
-				<td><%=dto.getStateDisplay()%></td>
-				<th>Rev.</th>
-				<td><%=dto.getVersion()%></td>
+				<th class="lb">상태</th>
+				<td class="indent5"><%=dto.getStateDisplay()%></td>
+				<th class="lb">Rev.</th>
+				<td class="indent5"><%=dto.getVersion()%></td>
 			</tr>
 			<tr>
-				<th>등록자</th>
-				<td><%=dto.getCreator()%></td>
-				<th>수정자</th>
-				<td><%=dto.getModifier()%></td>
+				<th class="lb">등록자</th>
+				<td class="indent5"><%=dto.getCreator()%></td>
+				<th class="lb">수정자</th>
+				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
-				<th>등록일</th>
-				<td><%=dto.getCreateDate()%></td>
-				<th>수정일</th>
-				<td><%=dto.getModifyDate()%></td>
+				<th class="lb">등록일</th>
+				<td class="indent5"><%=dto.getCreateDate()%></td>
+				<th class="lb">수정일</th>
+				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
-				<th>결재방식</th>
-				<td><%=dto.getApprovalTypeDisplay() == null ? "" : dto.getApprovalTypeDisplay()%></td>
-				<th>설명</th>
-				<td><%=dto.getDescription() == null ? "" : dto.getDescription()%></td>
+				<th class="lb">결재방식</th>
+				<td class="indent5"><%=dto.getApprovalTypeDisplay() == null ? "" : dto.getApprovalTypeDisplay()%></td>
+				<th class="lb">설명</th>
+				<td class="indent5"><%=dto.getDescription() == null ? "" : dto.getDescription()%></td>
 			</tr>
 		</table>
 		<div id="comments-layer">
@@ -225,32 +219,6 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		<%@include file="/extcore/jsp/common/include/comments-include.jsp"%>
 	</div>
 	<div id="tabs-2">
-		<!-- 관련 품목 -->
-		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp" flush="false" >
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="관련 품목" name="title" />
-			<jsp:param value="rohs" name="moduleType"/>
-		</jsp:include>
-	</div>
-	<div id="tabs-3">
-		<!-- 관련 대표 물질 -->
-		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="represent" name="roleType"/>
-			<jsp:param value="관련 대표 물질" name="title"/>
-		</jsp:include>
-	</div>
-	<div id="tabs-4">
-		<!-- 관련 물질 -->
-		<jsp:include page="/extcore/jsp/rohs/include_viewRohs.jsp" flush="false">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="composition" name="roleType"/>
-			<jsp:param value="관련 물질" name="title"/>
-		</jsp:include>
-	</div>
-	<div id="tabs-5">
 		<!-- 첨부 파일 -->
 		<table class="view-table">
 			<colgroup>
@@ -276,7 +244,19 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			}
 			%>
 		</table>
-	</div>		
+	</div>
+	<div id="tabs-3">
+		<!-- 관련 객체 -->
+		<jsp:include page="/extcore/jsp/rohs/include/rohs-reference-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-4">
+		<!-- 이력관리 -->
+		<jsp:include page="/extcore/jsp/rohs/include/rohs-record-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -313,27 +293,6 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/reviseRohs?oid=" + oid);
 		document.location.href = url;
-	})
-	
-	//버전이력
-	$("#versionBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/versionHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//다운로드 이력
-	$("#downloadBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/downloadHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//결재이력
-	$("#approveBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
-		popup(url, 830, 600);
 	})
 	
 	//copy
@@ -391,44 +350,64 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-2":
-					const isCreated1 = AUIGrid.isCreated(partGridID);
+				case "tabs-3":
+					const isCreated1 = AUIGrid.isCreated(partGridID); // 품목
 					if (isCreated1) {
 						AUIGrid.resize(partGridID);
 					} else {
 						createAUIGrid1(columnPart);
 					}
-					break;
-				case "tabs-3":
-					const isCreated2 = AUIGrid.isCreated(rohsGridID);
+					const isCreated2 = AUIGrid.isCreated(rohsGridID); // 대표물질
 					if (isCreated2) {
 						AUIGrid.resize(rohsGridID);
 					} else {
 						createAUIGridRohs1(columnRohs);
 					}
-					break;
-				case "tabs-4":
-					const isCreated3 = AUIGrid.isCreated(rohs2GridID);
+					const isCreated3 = AUIGrid.isCreated(rohs2GridID); // 물질
 					if (isCreated3) {
 						AUIGrid.resize(rohs2GridID);
 					} else {
 						createAUIGridRohs2(columnRohs2);
 					}
 					break;
+				case "tabs-4":
+					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
+					if (isCreated50) {
+						AUIGrid.resize(myGridID50);
+					} else {
+						createAUIGrid50(columns50);
+					}
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
+					if (isCreated51) {
+						AUIGrid.resize(myGridID51);
+					} else {
+						createAUIGrid51(columns51);
+					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
+					}
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 유저 메일
+					if (isCreated10001) {
+						AUIGrid.resize(myGridID10001);
+					} else {
+						createAUIGrid10001(columns10001);
+					}
+					break;
 				}
 			}
 		});
-		createAUIGrid1(columnPart);
-		AUIGrid.resize(partGridID);
-		createAUIGridRohs1(columnRohs);
-		AUIGrid.resize(rohsGridID);
-		createAUIGridRohs2(columnRohs2);
-		AUIGrid.resize(rohs2GridID);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(partGridID);
 		AUIGrid.resize(rohsGridID);
 		AUIGrid.resize(rohs2GridID);
+		AUIGrid.resize(myGridID50);
+		AUIGrid.resize(myGridID51);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	});
 </script>

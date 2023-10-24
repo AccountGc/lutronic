@@ -13,8 +13,10 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocLocation;
 import com.e3ps.doc.DocumentToDocumentLink;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.mold.dto.MoldDTO;
 
+import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
@@ -302,5 +304,32 @@ public class MoldHelper {
         	isConnect = true;
         }
         return isConnect;
+	}
+	
+	/**
+	 * 금형 이력
+	 */
+	public JSONArray allIterationsOf(String oid) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		QueryResult result = VersionControlHelper.service.allIterationsOf(doc.getMaster());
+		while (result.hasMoreElements()) {
+			WTDocument d = (WTDocument) result.nextElement();
+			Map<String, String> map = new HashMap<>();
+			DocumentColumn dto = new DocumentColumn(d);
+			map.put("oid", dto.getOid());
+			map.put("name", dto.getName());
+			map.put("number", dto.getNumber());
+			map.put("version", dto.getVersion());
+			map.put("creator", dto.getCreator());
+			map.put("createdDate", dto.getCreatedDate_txt());
+			map.put("modifier", dto.getModifier());
+			map.put("modifiedDate", dto.getModifiedDate_txt());
+			map.put("note", d.getIterationNote());
+			map.put("primary", dto.getPrimary());
+			map.put("secondary", dto.getSecondary());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
 	}
 }

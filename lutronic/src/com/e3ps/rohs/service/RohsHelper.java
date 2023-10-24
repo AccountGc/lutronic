@@ -938,5 +938,29 @@ public class RohsHelper {
 		}
 		return list;
 	}
-
+	
+	/**
+	 * rohs 이력
+	 */
+	public JSONArray allIterationsOf(String oid) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
+		QueryResult result = VersionControlHelper.service.allIterationsOf(rohs.getMaster());
+		while (result.hasMoreElements()) {
+			ROHSMaterial r = (ROHSMaterial) result.nextElement();
+			Map<String, String> map = new HashMap<>();
+			RohsData dto = new RohsData(r);
+			map.put("oid", dto.getOid());
+			map.put("name", dto.getName());
+			map.put("number", dto.getNumber());
+			map.put("version", dto.getVersion());
+			map.put("creator", dto.getCreator());
+			map.put("createdDate", dto.getCreateDate());
+			map.put("modifier", dto.getModifier());
+			map.put("modifiedDate", dto.getModifyDate());
+			map.put("note", r.getIterationNote());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
 }
