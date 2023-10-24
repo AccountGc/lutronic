@@ -310,7 +310,7 @@ public class StandardActivityService extends StandardManager implements Activity
 	public void complete(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid"); // eca oid
 		String description = (String) params.get("description"); // 완료 의견
-		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
+		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -320,7 +320,6 @@ public class StandardActivityService extends StandardManager implements Activity
 			PersistenceHelper.manager.modify(eca);
 
 			System.out.println(params);
-
 			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
 				String cacheId = secondarys.get(i);
 				System.out.println("저장됩니다.");

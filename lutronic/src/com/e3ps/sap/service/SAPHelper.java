@@ -70,21 +70,7 @@ public class SAPHelper {
 		System.out.println("SAP PART INTERFACE START!");
 		// ET_MAT
 		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
-		JCoRecordFieldIterator record = insertTable.getRecordFieldIterator();
-		while (record.hasNextField()) {
-			JCoField field = (JCoField) record.nextField();
-			System.out.println(field.getName());
-		}
-
-		// SAP Setting END
 		JCoParameterList importTable = function.getImportParameterList();
-
-		JCoParameterFieldIterator it = importTable.getParameterFieldIterator();
-		while (it.hasNextField()) {
-			JCoField field = (JCoField) it.nextField();
-			System.out.println(field.getName());
-		}
-
 		importTable.setValue("IV_WERKS", "1000"); // 플랜트
 
 		int idx = 1;
@@ -132,7 +118,7 @@ public class SAPHelper {
 		JCoParameterList result = function.getExportParameterList();
 //		JCoStructure e_return = result.getStructure("E_RETURN");
 		Object r_type = result.getValue("EV_STATUS");
-		Object r_msg = result.getValue("EV_MESSAGGE");
+		Object r_msg = result.getValue("EV_MESSAGE");
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 
