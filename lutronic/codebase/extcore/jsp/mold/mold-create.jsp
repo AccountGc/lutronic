@@ -170,8 +170,8 @@
 		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 		
 		<table class="button-table">
@@ -186,6 +186,7 @@
 		<script type="text/javascript">
 			function create(temp) {
 				const temprary = JSON.parse(temp);
+				// 결재선
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const primary = document.querySelector("input[name=primary]");
 				if(isEmpty($("#name").val())) {

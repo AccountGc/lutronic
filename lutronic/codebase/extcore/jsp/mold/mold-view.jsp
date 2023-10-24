@@ -42,9 +42,6 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<%	
 			}
 			%>
-			<input type="button" value="Rev.이력" title="Rev.이력" class="" id="versionBtn">
-			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn">
-			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">
 			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
 		</td>
 	</tr>
@@ -59,10 +56,10 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<a href="#tabs-2">속성</a>
 		</li>
 		<li>
-			<a href="#tabs-3">관련 품목</a>
+			<a href="#tabs-3">관련 객체</a>
 		</li>
 		<li>
-			<a href="#tabs-4">관련 문서</a>
+			<a href="#tabs-4">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -185,19 +182,15 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		</table>	
 	</div>
 	<div id="tabs-3">
-		<!-- 관련 품목 -->
-		<jsp:include page="/extcore/jsp/part/include_viewPart.jsp" flush="false" >
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="관련 품목" name="title" />
-			<jsp:param value="doc" name="moduleType"/>
+		<!-- 관련 객체 -->
+		<jsp:include page="/extcore/jsp/mold/include/mold-reference-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
 	<div id="tabs-4">
-		<!-- 관련 문서 -->
-		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+		<!-- 이력관리 -->
+		<jsp:include page="/extcore/jsp/mold/include/mold-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="true" name="multi" />
 		</jsp:include>
 	</div>
 </div>
@@ -235,27 +228,6 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		document.location.href = url;
 	})
 	
-	//버전이력
-	$("#versionBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/versionHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//다운로드 이력
-	$("#downloadBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/downloadHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//결재이력
-	$("#approveBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
 	// 최신버전으로 페이지 이동
 	function latest() {
 		const url = getCallUrl("/mold/latest?oid=" + oid);
@@ -276,31 +248,50 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-3":
-					const isCreated2 = AUIGrid.isCreated(partGridID);
+					const isCreated2 = AUIGrid.isCreated(partGridID); // 품목
 					if (isCreated2) {
 						AUIGrid.resize(partGridID);
 					} else {
 						createAUIGrid1(columnPart);
 					}
-					break;
-				case "tabs-4":
-					const isCreated3 = AUIGrid.isCreated(myGridID90);
+					const isCreated3 = AUIGrid.isCreated(myGridID90); // 문서
 					if (isCreated3) {
 						AUIGrid.resize(myGridID90);
 					} else {
 						createAUIGrid90(columns90);
 					}
 					break;
+				case "tabs-4":
+					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
+					if (isCreated50) {
+						AUIGrid.resize(myGridID50);
+					} else {
+						createAUIGrid50(columns50);
+					}
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
+					if (isCreated51) {
+						AUIGrid.resize(myGridID51);
+					} else {
+						createAUIGrid51(columns51);
+					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
+					}
+					break;
 				}
 			}
 		});
-		createAUIGrid1(columnPart);
-		AUIGrid.resize(partGridID);
-		AUIGrid.resize(myGridID90);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(partGridID);
 		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID50);
+		AUIGrid.resize(myGridID51);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	});
 </script>
