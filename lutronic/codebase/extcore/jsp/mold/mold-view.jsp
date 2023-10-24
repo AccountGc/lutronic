@@ -35,7 +35,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			}
 			%>
 			<%
-			if(dto.getState().equals("INWORK") || dto.getState().equals("BATCHAPPROVAL") || dto.getState().equals("REWORK")){
+			if(dto.getState().equals("INWORK") || dto.getState().equals("REWORK") || dto.getState().equals("TEMPRARY")){
 			%>
 				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 				<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
@@ -279,6 +279,12 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 						AUIGrid.resize(myGridID10000);
 					} else {
 						createAUIGrid10000(columns10000);
+					}
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 유저 메일
+					if (isCreated10001) {
+						AUIGrid.resize(myGridID10001);
+					} else {
+						createAUIGrid10001(columns10001);
 					}
 					break;
 				}
