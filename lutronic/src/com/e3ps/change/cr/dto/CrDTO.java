@@ -51,6 +51,10 @@ public class CrDTO {
 	private String proposer;
 	private String changeCode;
 	private String model;
+	
+	// auth
+	private boolean _delete = false;
+	private boolean _modify = false;
 
 	// 변수용
 	private String writer_oid;

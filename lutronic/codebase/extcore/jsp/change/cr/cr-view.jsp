@@ -25,8 +25,20 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<%	
 			}
 			%>
+			<%
+			if (dto.is_modify()) {
+			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_delete()) {
+			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
+			<%
+			}
+			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
