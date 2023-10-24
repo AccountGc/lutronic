@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
@@ -210,6 +211,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			} else if (lcm instanceof WTDocument) {
 				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+			} else if(lcm instanceof EChangeRequest) {
+				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));				
 			}
 		}
 		// 일괄 격제 관련해서 처리

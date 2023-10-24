@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.doc.WTDocument;
 import wt.session.SessionHelper;
 
 @Getter
@@ -52,6 +53,7 @@ public class CrDTO {
 	private String changeCode;
 	private String model;
 	
+	private EChangeRequest cr;
 	// auth
 	private boolean _delete = false;
 	private boolean _modify = false;
@@ -112,6 +114,9 @@ public class CrDTO {
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(cr.getModel());
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
+		
+		setCr(cr);
+		setAuth(cr);
 	}
 	
 	/**
@@ -150,5 +155,28 @@ public class CrDTO {
     	this.changeCode = NumberCodeHelper.manager.getNumberCodeName(this.changeSection, "CHANGESECTION");
     	return changeCode;
     }
+    
+    /**
+	 * 권한 설정
+	 */
+	private void setAuth(EChangeRequest cr) throws Exception {
+		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
+		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
+			set_delete(true);
+			set_modify(true);
+		}
+	}
+	
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(String state) throws Exception {
+		boolean check = false;
+		String compare = getCr().getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
+	}
 	
 }
