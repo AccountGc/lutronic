@@ -17,6 +17,7 @@ import com.e3ps.rohs.service.RohsHelper;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.doc.WTDocument;
 import wt.session.SessionHelper;
 
 @Getter
@@ -44,6 +45,10 @@ public class RohsData{
 	private String publicationDate;
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
+	
+	public RohsData(String oid) throws Exception {
+		this((ROHSMaterial) CommonUtil.getObject(oid));
+	}
 	
 	public RohsData(ROHSMaterial rohs) throws Exception {
 //		super(rohs);

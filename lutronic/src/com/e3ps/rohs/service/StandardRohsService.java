@@ -45,6 +45,7 @@ import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.distribute.util.MakeZIPUtil;
 import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
@@ -58,6 +59,7 @@ import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.content.ApplicationData;
@@ -67,6 +69,7 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
+import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.doc.WTDocumentMasterIdentity;
 import wt.enterprise.RevisionControlled;
@@ -83,6 +86,7 @@ import wt.folder.FolderHelper;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
+import wt.lifecycle.State;
 import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.pdmlink.PDMLinkProduct;
@@ -673,6 +677,16 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			DocumentType docType = DocumentType.toDocumentType((String) params.get("docType"));
 			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
 			String description = StringUtil.checkNull((String) params.get("description"));
+			boolean temprary = params.get("description").equals("true")?true:false;
+			
+			// 결재
+			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
+			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
+			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
+			// 외부 메일
+			ArrayList<Map<String, String>> external =  (ArrayList<Map<String, String>>) params.get("external");
+			boolean isSelf = false;
+			
 			// 문서 기본 정보 설정
 			rohs = ROHSMaterial.newROHSMaterial();
 			rohs.setName(rohsName);
@@ -684,21 +698,28 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			
 	        rohs.setDocType(docType);
 			rohs.setDescription(description);
-	        // 문서 분류쳬게 설정
+			
 			String location = StringUtil.checkNull((String) params.get("location"));
-	        Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-	        FolderHelper.assignLocation((FolderEntry)rohs, folder);
-	        
-	        // 문서 Container 설정
-	        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
-	        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
-	        rohs.setContainer(e3psProduct);
-	        
-	        // 문서 lifeCycle 설정
-	        LifeCycleHelper.setLifeCycle(rohs, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
-            
+			// 임시 서장함 이동
+			if (temprary) {
+				setTemprary(rohs, lifecycle);
+			} else {
+				// 문서 분류쳬게 설정
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) rohs, folder);
+				// 문서 lifeCycle 설정
+				LifeCycleHelper.setLifeCycle(rohs,
+						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+			}
+			
 	        rohs.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
 	        rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
+	        
+	        if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(rohs, state);
+			}
 	        
 	        ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
 	        Map<String,String> rohsMap = new HashMap<String,String>();
@@ -735,6 +756,20 @@ public class StandardRohsService extends StandardManager implements RohsService 
             map.put("approvalType", approvalType);
             map.put("manufacture", manufacture);
             CommonHelper.service.changeIBAValues(rohs, map);
+            
+            // 외부 메일 링크 저장
+ 			MailUserHelper.service.saveLink(rohs, external);
+ 			
+ 			// 결재 시작
+			if (isSelf) {
+				// 자가결재시
+				WorkspaceHelper.service.self(rohs);
+			} else {
+				// 결재시작
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(rohs, agreeRows, approvalRows, receiveRows);
+				}
+			}
             
             trs.commit();
 			trs = null;
@@ -1242,5 +1277,29 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			}
         }
 		return result;
+	}
+	
+	/**
+	 * 임시 저장함으로 이동시킬 함수
+	 */
+	private void setTemprary(ROHSMaterial rohs, String lifecycle) throws Exception {
+		setTemprary(rohs, lifecycle, "C");
+	}
+
+	/**
+	 * 임시 저장함으로 이동시킬 함수 C 생성, R, U 개정 및 수정
+	 */
+	private void setTemprary(ROHSMaterial rohs, String lifecycle, String option) throws Exception {
+		String location = "/Default/임시저장함";
+		if ("C".equals(option)) {
+			// 문서 분류쳬게 설정
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) rohs, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(rohs,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+		} else if ("U".equals(option) || "R".equals(option)) {
+
+		}
 	}
 }
