@@ -341,6 +341,8 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				AUIGrid.resize(myGridID);
 				selectbox("state");
 				finderUser("creator");
+				finderUser("writer");
+				finderUser("proposer");
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");

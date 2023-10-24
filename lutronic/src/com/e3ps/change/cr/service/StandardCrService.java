@@ -120,7 +120,10 @@ public class StandardCrService extends StandardManager implements CrService {
 				setTemprary(cr, lifecycle);
 			} else {
 				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-				FolderHelper.assignLocation((FolderEntry) cr, folder);				
+				FolderHelper.assignLocation((FolderEntry) cr, folder);		
+				// lifecycle 설정
+				LifeCycleHelper.setLifeCycle(cr,
+						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef()));
 			}
 			cr = (EChangeRequest) PersistenceHelper.manager.save(cr);
 			
