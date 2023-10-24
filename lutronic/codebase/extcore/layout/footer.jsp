@@ -9,7 +9,7 @@
 </div>
 <script>
 	function scrollToTop() {
-		window.scrollTo({
+		document.querySelector("iframe#content").scrollTo({
 			top : 0,
 			behavior : 'smooth'
 		});
