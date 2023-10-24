@@ -700,7 +700,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			rohs.setDescription(description);
 			
 			String location = StringUtil.checkNull((String) params.get("location"));
-			// 임시 서장함 이동
+			// 임시 저장함 이동
 			if (temprary) {
 				setTemprary(rohs, lifecycle);
 			} else {
