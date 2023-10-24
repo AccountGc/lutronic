@@ -113,6 +113,7 @@ public class PartHelper {
 		String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
 		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
 		String creator = StringUtil.checkNull((String) params.get("creator"));
+		String creatorOid = StringUtil.checkNull((String) params.get("creatorOid"));
 		String state = StringUtil.checkNull((String) params.get("state"));
 		String model = StringUtil.checkNull((String) params.get("model"));
 		String productmethod = StringUtil.checkNull((String) params.get("productmethod"));
@@ -127,7 +128,7 @@ public class PartHelper {
 		String ecoNo = StringUtil.checkNull((String) params.get("ecoNo"));
 		String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
 		boolean latest = (boolean) params.get("latest");
-
+		
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
 
@@ -137,7 +138,7 @@ public class PartHelper {
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, modifiedFrom,
 				modifiedTo);
-		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creator);
+		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creatorOid);
 		QuerySpecUtils.toState(query, idx, WTPart.class, state);
 		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
 		// EcoDate

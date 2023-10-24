@@ -121,7 +121,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="">
+						<input type="radio" name="latest" value="false">
 						<div class="state p-success">
 							<label>
 								<b>모든REV</b>
@@ -516,12 +516,11 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				let params = new Object();
 				const url = getCallUrl("/part/list");
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-						"ecoNo", "eoNo" ];
-				const latest = !!document.querySelector("input[name=latest]:checked").value;
+						"ecoNo", "eoNo","creatorOid","latest" ];
+				var  latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
-				params.latest = false;
+				params.latest =  latest=="true"?true:false;
 				AUIGrid.showAjaxLoader(myGridID);
-				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
