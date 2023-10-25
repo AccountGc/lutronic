@@ -69,7 +69,7 @@ public class CommonContentHelper {
 		JSONObject list = new JSONObject();
 		if (!StringUtil.isNull(oid)) {
 			ReferenceFactory rf = new ReferenceFactory();
-			if ("ECO".equalsIgnoreCase(roleType)) {
+			if ("ECO".equalsIgnoreCase(roleType) || "ECR".equals(roleType)) {
 				JSONArray array = new JSONArray();
 				ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
 				JSONObject obj = new JSONObject();
