@@ -2,6 +2,7 @@ package com.e3ps.change.eo.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivity;
@@ -27,16 +28,27 @@ import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTPrincipal;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.queue.ProcessingQueue;
+import wt.queue.QueueHelper;
 import wt.services.ServiceFactory;
+import wt.session.SessionHelper;
 
 public class EoHelper {
 
 	public static final EoService service = ServiceFactory.getService(EoService.class);
 	public static final EoHelper manager = new EoHelper();
+
+	/**
+	 * 큐 관련 상수
+	 */
+	private static final String processQueueName = "SapProcessQueue";
+	private static final String className = "com.e3ps.change.eo.service.StandardEoService";
+	private static final String methodName = "afterAction";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
@@ -358,5 +370,21 @@ public class EoHelper {
 			getter(part, list);
 		}
 		return list;
+	}
+
+	/**
+	 * EO 결재후 진행될 내용 큐로 처리
+	 */
+	public void postAfterAction(EChangeOrder e) throws Exception {
+		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", e.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, methodName, className, argClasses, argObjects);
 	}
 }

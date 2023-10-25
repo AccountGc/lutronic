@@ -1,6 +1,7 @@
 package com.e3ps.change.eo.service;
 
-import com.e3ps.change.EChangeOrder;
+import java.util.Hashtable;
+
 import com.e3ps.change.eo.dto.EoDTO;
 
 import wt.method.RemoteInterface;
@@ -26,5 +27,5 @@ public interface EoService {
 	/**
 	 * EO 최종 승인후 호출될 함수
 	 */
-	public abstract void afterAction(EChangeOrder eo) throws Exception;
+	public abstract void afterAction(Hashtable<String, String> hash) throws Exception;
 }

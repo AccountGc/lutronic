@@ -47,3 +47,6 @@
 12. BOM 업로드 (SAP 테스트 용)
 	- Shell -> java com.e3ps.sap.loader.BOMLoader 엑셀파일(loadFiles/bom 폴더에 있는것중 사용)
 	- PART_Drawing 밑에 TEST폴더 있어야함
+	
+13. SAP 전송 큐 생성
+	- 사이트 > 유틸리티 > 대기열관리 > SapProcessQueue 프로세스 큐 생성	

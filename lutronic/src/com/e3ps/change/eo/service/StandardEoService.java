@@ -2,6 +2,7 @@ package com.e3ps.change.eo.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -19,7 +20,6 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.erp.service.ERPHelper;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.service.SAPHelper;
@@ -460,16 +460,20 @@ public class StandardEoService extends StandardManager implements EoService {
 	}
 
 	@Override
-	public void afterAction(EChangeOrder eo) throws Exception {
+	public void afterAction(Hashtable<String, String> hash) throws Exception {
+		String oid = hash.get("oid");
+		EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+
 		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
-		
+
 		// 모든 부품 대상 수집..
 		ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
 
+		System.out.println("list=" + list.size());
 //		completeProduct(partList, eco);
 
 //		ERPHelper.service.sendERP(eco);
-		
+
 		SAPHelper.service.sendSapToEo(eo, completeParts);
 
 		saveBaseline(eo, completeParts);

@@ -470,7 +470,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					// EO
 				} else {
 					System.out.println("EO 결재 완료");
-					EoHelper.service.afterAction(e);
+					EoHelper.manager.postAfterAction(e);
+//					EoHelper.service.afterAction(e);
 				}
 			}
 

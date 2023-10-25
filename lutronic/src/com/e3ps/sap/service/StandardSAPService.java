@@ -312,6 +312,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			SAPHelper.manager.getterSkip(root, list);
 		}
 
+		System.out.println("수집된거=" + list.size());
+
 		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
 		JCoParameterList importTable = function.getImportParameterList();
 		importTable.setValue("IV_WERKS", "1000"); // 플랜트
