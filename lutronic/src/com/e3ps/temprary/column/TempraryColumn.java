@@ -2,6 +2,7 @@ package com.e3ps.temprary.column;
 
 import java.sql.Timestamp;
 
+import com.e3ps.change.EChangeRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
@@ -49,6 +50,14 @@ public class TempraryColumn {
 			setCreator(doc.getCreatorFullName());
 			setCreatedDate(doc.getCreateTimestamp());
 			setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
+		}else if(lcm instanceof EChangeRequest) {
+			EChangeRequest cr = (EChangeRequest) lcm;
+			setName(cr.getName());
+			setNumber(cr.getEoNumber());
+			setDataType("CR");
+			setCreator(cr.getCreatorFullName());
+			setCreatedDate(cr.getCreateTimestamp());
+			setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
 		}
 	}
 }
