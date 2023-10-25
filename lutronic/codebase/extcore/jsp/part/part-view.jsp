@@ -232,7 +232,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 							<%
 							if (isAdmin) {
 							%>
-							<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
+							<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=dd.getOid()%>');">
 							<%
 							}
 							%>
