@@ -175,7 +175,8 @@
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="250" name="height" />
+			<jsp:param value="150" name="height" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 	설변 활동 -->
