@@ -31,7 +31,7 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th class="lb">관련 rohs</th>
+		<th class="lb"><%=title%></th>
 		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
 			<%
 			if (!view) {

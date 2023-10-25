@@ -182,6 +182,7 @@
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="150" name="height" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 		
 		<table class="button-table">
