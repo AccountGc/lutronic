@@ -81,18 +81,20 @@ public class EoDTO {
 
 	private ArrayList<Map<String, String>> getModel(String model) throws Exception {
 		ArrayList<Map<String, String>> result = new ArrayList<Map<String, String>>();
-		String[] ss = model.split(",");
-		for (int i = 0; i < ss.length; i++) {
-			Map<String, String> data = new HashMap<String, String>();
-			String s = ss[i];
-			NumberCode code = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
-			data.put("name", code.getName());
-			data.put("code", code.getCode());
-			data.put("sort", code.getSort());
-			data.put("description", code.getDescription());
-			data.put("enabled", code.getEngName());
-			data.put("oid", code.getPersistInfo().getObjectIdentifier().getStringValue());
-			result.add(data);
+		if(model != null) {
+			String[] ss = model.split(",");
+			for (int i = 0; i < ss.length; i++) {
+				Map<String, String> data = new HashMap<String, String>();
+				String s = ss[i];
+				NumberCode code = NumberCodeHelper.manager.getNumberCode(s, "MODEL");
+				data.put("name", code.getName());
+				data.put("code", code.getCode());
+				data.put("sort", code.getSort());
+				data.put("description", code.getDescription());
+				data.put("enabled", code.getEngName());
+				data.put("oid", code.getPersistInfo().getObjectIdentifier().getStringValue());
+				result.add(data);
+			}			
 		}
 		return result;
 	}
