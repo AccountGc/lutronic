@@ -152,6 +152,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<jsp:param value="true" name="multi" />
 		</jsp:include>
 	</div>
+	
+	<div id="tabs-4">
+		<!-- 이력관리 -->
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-record-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -188,6 +195,26 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						AUIGrid.resize(myGridID500);
 					} else {
 						createAUIGrid500(columns500);
+					}
+					break;
+				case "tabs-4":
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
+					if (isCreated51) {
+						AUIGrid.resize(myGridID51);
+					} else {
+						createAUIGrid51(columns51);
+					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
+					}
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 메일
+					if (isCreated10001) {
+						AUIGrid.resize(myGridID10001);
+					} else {
+						createAUIGrid10001(columns10001);
 					}
 					break;
 				}
