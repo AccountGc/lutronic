@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.eco.service.EcoHelper;
@@ -16,6 +17,7 @@ import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
 import com.e3ps.sap.service.SAPHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
@@ -25,6 +27,9 @@ import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.folder.Folder;
+import wt.folder.FolderEntry;
+import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
@@ -382,6 +387,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	@Override
 	public void _approval(Map<String, String> params) throws Exception {
 		String oid = (String) params.get("oid");
+		String tapOid = (String) params.get("tapOid");
 		String description = (String) params.get("description");
 		Transaction trs = new Transaction();
 		try {
@@ -437,6 +443,8 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 				afterApprovalAction(per);
 			}
+			
+			createECN(tapOid);
 
 			trs.commit();
 			trs = null;
@@ -448,6 +456,31 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	private void createECN(String tapOid) throws Exception {
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(tapOid);
+		EChangeNotice ecn = EChangeNotice.newEChangeNotice();
+		ecn.setEoName(eco.getEoName());
+		ecn.setEoNumber(eco.getEoNumber());
+		ecn.setModel(eco.getModel());
+		ecn.setEoCommentA(eco.getEoCommentA());
+		ecn.setEoCommentB(eco.getEoCommentB());
+		ecn.setEoCommentC(eco.getEoCommentC());
+		ecn.setEoCommentD(eco.getEoCommentD());
+		ecn.setEoCommentE(eco.getEoCommentE());
+		ecn.setEoType(eco.getEoType());
+		ecn.setEco(eco);
+		
+		String location = "/Default/설계변경/ECN";
+		String lifecycle = "LC_ECN";
+		
+		Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+		FolderHelper.assignLocation((FolderEntry) ecn, folder);
+		// 문서 lifeCycle 설정
+		LifeCycleHelper.setLifeCycle(ecn,
+				LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+		ecn = (EChangeNotice) PersistenceHelper.manager.save(ecn);
 	}
 
 	/**

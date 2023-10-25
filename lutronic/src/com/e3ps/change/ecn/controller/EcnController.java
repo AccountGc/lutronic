@@ -49,14 +49,6 @@ public class EcnController extends BaseController {
 		}
 		return result;
 	}
-	
-	@Description(value = "CR 등록 페이지")
-	@GetMapping(value = "/create")
-	public ModelAndView create() throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/change/ecn/ecn-create.jsp");
-		return model;
-	}
 
 	@Description(value = "ECN 등록 함수")
 	@ResponseBody

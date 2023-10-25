@@ -191,7 +191,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecn-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecn-list');">
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -399,10 +398,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				AUIGrid.resize(myGridID104);
 			});
 
-			// 등록
-			function create() {
-				location.href = getCallUrl("/ecn/create");
-			}
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');
 				// 버근가..

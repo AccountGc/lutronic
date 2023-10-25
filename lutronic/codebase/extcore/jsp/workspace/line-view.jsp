@@ -244,7 +244,8 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 		const url = getCallUrl("/workspace/_approval");
 		const params = {
 			oid : oid,
-			description : description
+			description : description,
+			tapOid : "<%= tapOid %>",
 		}
 		openLayer();
 		call(url, params, function(data) {
