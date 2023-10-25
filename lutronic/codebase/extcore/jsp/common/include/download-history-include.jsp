@@ -5,6 +5,7 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
 String oid = request.getParameter("oid");
+JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 %>
 <table class="button-table">
 	<tr>
@@ -16,7 +17,7 @@ String oid = request.getParameter("oid");
 		</td>
 	</tr>
 </table>
-<div id="grid51" style="height: 250px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid51" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID51;
 	const columns51 = [ {
@@ -108,7 +109,7 @@ String oid = request.getParameter("oid");
 		}
 		myGridID51 = AUIGrid.create("#grid51", columnLayout, props);
 		AUIGrid.setGridData(myGridID51,
-<%=DownloadHistoryHelper.manager.dLogger(oid)%>
+<%=data%>
 	);
 	}
 </script>

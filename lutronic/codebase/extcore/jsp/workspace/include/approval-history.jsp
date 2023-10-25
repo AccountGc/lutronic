@@ -4,7 +4,6 @@
 <%
 String oid = request.getParameter("oid");
 JSONArray data = WorkspaceHelper.manager.history(oid);
-JSONArray mail = WorkspaceHelper.manager.getExternalMail(oid);
 %>
 <style type="text/css">
 /** 결재 관련 셀 스타일 **/
@@ -38,7 +37,7 @@ JSONArray mail = WorkspaceHelper.manager.getExternalMail(oid);
 		</td>
 	</tr>
 </table>
-<div id="grid10000" style="height: 250px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid10000" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID10000;
 	const columns10000 = [ {
@@ -110,53 +109,5 @@ JSONArray mail = WorkspaceHelper.manager.getExternalMail(oid);
 		AUIGrid.setGridData(myGridID10000,
 <%=data%>
 	);
-	}
-</script>
-
-
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				외부 유저 메일
-			</div>
-		</td>
-	</tr>
-</table>
-<div id="grid10001" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-<script type="text/javascript">
-	let myGridID10001;
-	const columns10001 = [ {
-		dataField : "name",
-		headerText : "이름",
-		dataType : "string",
-		width : 120,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	}, {
-		dataField : "email",
-		headerText : "이메일",
-		dataType : "string",
-		style : "aui-left",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	} ]
-	function createAUIGrid10001(columnLayout) {
-		const props = {
-			headerHeight : 30,
-			showRowNumColumn : true,
-			rowNumHeaderText : "번호",
-			selectionMode : "multipleCells",
-			enableSorting : false,
-			showAutoNoDataMessage : false,
-			autoGridHeight : true
-		}
-		myGridID10001 = AUIGrid.create("#grid10001", columnLayout, props);
-		AUIGrid.setGridData(myGridID10001, <%=mail%>);
 	}
 </script>
