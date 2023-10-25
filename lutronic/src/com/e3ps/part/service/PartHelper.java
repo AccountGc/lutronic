@@ -128,7 +128,7 @@ public class PartHelper {
 		String ecoNo = StringUtil.checkNull((String) params.get("ecoNo"));
 		String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
 		boolean latest = (boolean) params.get("latest");
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
 

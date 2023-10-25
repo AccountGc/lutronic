@@ -26,7 +26,7 @@ public class SAPBomDTO {
 		WTPartMaster parent = link.getUses();
 		WTPart child = link.getUsedBy();
 		setParentPartNumber(parent.getNumber());
-		setChildPpartNumber(child.getNumber());
+		setChildPartNumber(child.getNumber());
 		setQty(link.getQuantity().getAmount());
 		setUnit(link.getQuantity().getUnit().toString());
 	}

@@ -2,18 +2,22 @@ package com.e3ps.change.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
 
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.Department;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.service.SAPHelper;
 
 import net.sf.json.JSONArray;
 import wt.fc.PersistenceHelper;
@@ -149,5 +153,37 @@ public class EChangeUtils {
 			list.add(map);
 		}
 		return list;
+	}
+
+	/**
+	 * EO 결재후 발생할 내용들 큐로 전환
+	 * 
+	 * @param hash
+	 * @throws Exception
+	 */
+	public static void afterEoAction(Hashtable<String, String> hash) throws Exception {
+		System.out.println("EO 승인후 호출 !!!");
+		try {
+			String oid = hash.get("oid");
+			EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+
+			ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
+			System.out.println("완제품 개수 = " + completeParts.size());
+
+			// 모든 부품 대상 수집..
+			ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
+
+			System.out.println("EO 대상 품목 개수 =  " + list.size());
+//		completeProduct(partList, eco);
+
+//		ERPHelper.service.sendERP(eco);
+
+			SAPHelper.service.sendSapToEo(eo, completeParts);
+
+			EoHelper.service.saveBaseline(eo, completeParts);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 }

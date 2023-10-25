@@ -331,9 +331,6 @@ public class SAPHelper {
 	 */
 	public void getterSkip(WTPart root, ArrayList<WTPart> list) throws Exception {
 		// root 추가
-		if (!list.contains(root)) {
-			list.add(root);
-		}
 		View view = ViewHelper.service.getView(root.getViewName());
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
@@ -349,6 +346,33 @@ public class SAPHelper {
 			}
 			getterSkip(p, list);
 		}
+	}
+
+	/**
+	 * SAP 전송할 품목 수집
+	 */
+	public ArrayList<WTPart> getterSkip(WTPart part) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		// root 추가
+		if (!list.contains(part)) {
+			list.add(part);
+		}
+		View view = ViewHelper.service.getView(part.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			if (!list.contains(p)) {
+				list.add(p);
+			}
+			getterSkip(p, list);
+		}
+		return list;
 	}
 
 	/**
@@ -374,4 +398,27 @@ public class SAPHelper {
 		}
 		return list;
 	}
+
+	/**
+	 * BOM 전송용 데이터 만드는 함수
+	 */
+	private void getterBomData(WTPart part, ArrayList<SAPBomDTO> list) throws Exception {
+		// root 추가
+		View view = ViewHelper.service.getView(part.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart p = (WTPart) obj[1];
+			SAPBomDTO dto = new SAPBomDTO(link);
+			list.add(dto);
+			getterBomData(p, list);
+		}
+	}
+
 }

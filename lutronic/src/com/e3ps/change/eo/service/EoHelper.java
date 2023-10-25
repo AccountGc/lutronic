@@ -47,8 +47,8 @@ public class EoHelper {
 	 * 큐 관련 상수
 	 */
 	private static final String processQueueName = "SapProcessQueue";
-	private static final String className = "com.e3ps.change.eo.service.StandardEoService";
-	private static final String methodName = "afterAction";
+	private static final String className = "com.e3ps.change.util.EChangeUtils";
+	private static final String methodName = "afterEoAction";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
@@ -353,21 +353,10 @@ public class EoHelper {
 			WTPartMaster m = link.getCompletePart();
 			String v = link.getVersion();
 			WTPart p = PartHelper.manager.getPart(m.getNumber(), v);
-			// 재귀함수에서 루트를 추가한다...
-			// list.add(p);
-			list = getter(p, list);
-		}
-		return list;
-	}
 
-	/**
-	 * 완제품 아래의 부품 가져오는 재귀 함수
-	 */
-	private ArrayList<WTPart> getter(WTPart p, ArrayList<WTPart> list) throws Exception {
-		ArrayList<WTPart> data = PartHelper.manager.descendants(p);
-		for (WTPart part : data) {
-			list.add(part);
-			getter(part, list);
+			System.out.println("number = " + p.getNumber() + ", version = " + v);
+
+			list = PartHelper.manager.descendants(p);
 		}
 		return list;
 	}

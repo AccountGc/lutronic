@@ -1,6 +1,7 @@
 package com.e3ps.sap.service;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -237,7 +238,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		}
 		System.out.println("SAP BOM INTERFACE START!");
 
-		String seq = "0001"; // ??
+		int seq = 1; // ??
+		DecimalFormat df = new DecimalFormat("0000");
 
 		JCoParameterList importTable = function.getImportParameterList();
 		importTable.setValue("IV_WERKS", "1000"); // 플랜트
@@ -246,8 +248,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		JCoTable eoTable = function.getTableParameterList().getTable("ES_ECM");
 
 		eoTable.appendRow();
-		eoTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 12자리??
-		eoTable.setValue("ZECMID", e.getEoType()); // EO/ECO 구분
+		eoTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리??
+		eoTable.setValue("ZECMID", "EO"); // EO/ECO 구분
 		eoTable.setValue("DATUV", "");
 		eoTable.setValue("AEGRU", "초도발행"); // 변경사유 테스트 일단 한줄
 		eoTable.setValue("AETXT", "첫줄 테스트"); // 변경 내역 첫줄만 일단 테스트
@@ -267,18 +269,21 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		for (WTPart part : list) {
 			// 완제품에 해당하는 BOM 목록들..
 			ArrayList<SAPBomDTO> dataList = SAPHelper.manager.getterBomData(part);
+
+			System.out.println("BOM 리스트 항목 개수  = " + dataList.size());
+
 			for (SAPBomDTO dto : dataList) {
-				System.out.println(dto.toString());
+//				System.out.println(dto.toString());
 				bomTable.insertRow(idx);
-				bomTable.setValue("AENNR8", ""); // 변경번호 12자리?
-				bomTable.setValue("SEQNO", ""); // 항목번호
+				bomTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리?
+				bomTable.setValue("SEQNO", df.format(seq)); // 항목번호
 				bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 기존 모품번
 				bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 기존 자품번
 				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 신규 모품번
 				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 신규 자품번
 				bomTable.setValue("MENGE", dto.getQty()); // 수량
 				bomTable.setValue("MEINS", dto.getUnit()); // 단위
-
+				seq++;
 				idx++;
 			}
 		}
@@ -309,7 +314,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			String version = link.getVersion();
 			WTPart root = PartHelper.manager.getPart(link.getCompletePart().getNumber(), version);
 			// 중복 품목 제외를 한다.
-			SAPHelper.manager.getterSkip(root, list);
+			list = SAPHelper.manager.getterSkip(root);
 		}
 
 		System.out.println("수집된거=" + list.size());
@@ -348,12 +353,11 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			// 샘플링 실제는 2D여부 확인해서 전송
 			insertTable.setValue("ZDWGNO", part.getNumber() + ".DRW"); // 도면번호
 
-			String v = part.getVersionIdentifier().getSeries().getValue() + "."
-					+ part.getIterationIdentifier().getSeries().getValue();
+			String v = part.getVersionIdentifier().getSeries().getValue();
 			insertTable.setValue("ZEIVR", v); // 버전
 			// 테스트 용으로 전송
 			insertTable.setValue("ZPREPO", "X"); // 선구매필요
-			System.out.println("number = " + part.getNumber() + ", version = " + v);
+//			System.out.println("number = " + part.getNumber() + ", version = " + v);
 			idx++;
 		}
 

@@ -31,6 +31,7 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
+import wt.fc.ObjectReference;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -397,7 +398,8 @@ public class StandardEoService extends StandardManager implements EoService {
 	/**
 	 * 베이스 라인 저장 함수
 	 */
-	private void saveBaseline(EChangeOrder eo, ArrayList<EOCompletePartLink> completeParts) throws Exception {
+	@Override
+	public void saveBaseline(EChangeOrder eo, ArrayList<EOCompletePartLink> completeParts) throws Exception {
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
 		for (EOCompletePartLink link : completeParts) {
 			String version = link.getVersion();
@@ -416,7 +418,23 @@ public class StandardEoService extends StandardManager implements EoService {
 			if (!isApproved) {
 				// A버전이 아닌거?
 				if (!isFirst) {
+					System.out.println("number = " + part.getNumber() + ", version = "
+							+ part.getVersionIdentifier().getSeries().getValue() + "."
+							+ part.getIterationIdentifier().getSeries().getValue());
+
+					ObjectReference orf = (ObjectReference) VersionControlHelper.getPredecessor(part);
+					if (orf != null) {
+						WTPart prev = (WTPart) orf.getObject();
+						if (prev != null) {
+							System.out.println("prev = " + prev.getVersionIdentifier().getSeries().getValue() + "."
+									+ prev.getIterationIdentifier().getSeries().getValue());
+						}
+					}
 					part = (WTPart) VersionControlHelper.service.predecessorOf(part);
+					if (part != null) {
+						System.out.println("part = " + part.getVersionIdentifier().getSeries().getValue() + "."
+								+ part.getIterationIdentifier().getSeries().getValue());
+					}
 				}
 			}
 
@@ -439,7 +457,8 @@ public class StandardEoService extends StandardManager implements EoService {
 	/**
 	 * EO 베이스 라인 저장
 	 */
-	private void saveBaseLine(WTPart part, EChangeOrder eo) throws Exception {
+	@Override
+	public void saveBaseLine(WTPart part, EChangeOrder eo) throws Exception {
 		String name = eo.getEoNumber() + ":" + part.getNumber();
 		String location = "/Default/설계변경/Baseline";
 		Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
@@ -457,25 +476,5 @@ public class StandardEoService extends StandardManager implements EoService {
 		managedbaseline = (ManagedBaseline) PersistenceHelper.manager.save(managedbaseline);
 		managedbaseline = (ManagedBaseline) BaselineHelper.service.addToBaseline(v, managedbaseline);
 		SessionHelper.manager.setPrincipal(user.getName());
-	}
-
-	@Override
-	public void afterAction(Hashtable<String, String> hash) throws Exception {
-		String oid = hash.get("oid");
-		EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
-
-		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
-
-		// 모든 부품 대상 수집..
-		ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
-
-		System.out.println("list=" + list.size());
-//		completeProduct(partList, eco);
-
-//		ERPHelper.service.sendERP(eco);
-
-		SAPHelper.service.sendSapToEo(eo, completeParts);
-
-		saveBaseline(eo, completeParts);
 	}
 }
