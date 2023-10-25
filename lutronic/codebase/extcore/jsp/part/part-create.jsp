@@ -342,6 +342,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<jsp:param value="insert90" name="method" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
+			<jsp:param value="true" name="header" />
+			
 		</jsp:include>
 		
 		<!-- 관련 RoHS -->
