@@ -12,7 +12,7 @@ boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
 JSONArray data = null;
-if(view){
+if(view || update){
 	data = AUIGridUtil.include(oid, "cr");
 }
 %>
@@ -183,7 +183,7 @@ if(view){
 		}
 		myGridID101 = AUIGrid.create("#grid101", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID101, <%=AUIGridUtil.include(oid, "cr")%>);
+		AUIGrid.setGridData(myGridID101, <%=data%>);
 		<%}%>
 	}
 

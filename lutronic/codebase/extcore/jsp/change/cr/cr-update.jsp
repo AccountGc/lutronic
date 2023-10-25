@@ -190,6 +190,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="150" name="height" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<script type="text/javascript">
