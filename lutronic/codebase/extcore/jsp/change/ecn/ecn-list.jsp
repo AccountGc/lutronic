@@ -227,7 +227,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/ecn/view?oid=" + oid);
-							_popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -245,7 +245,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/ecn/view?oid=" + oid);
-							_popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
