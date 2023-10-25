@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.rohs.ROHSMaterial;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +24,7 @@ public class PartDTO {
 	private String state;
 	private String creator;
 	private String createDate;
+	private String modifier;
 	private String modifyDate;
 	private String ecoNo;
 	
@@ -30,6 +33,10 @@ public class PartDTO {
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 
+	public PartDTO(String oid) throws Exception {
+		this((WTPart) CommonUtil.getObject(oid));
+	}
+	
 	public PartDTO(WTPart part) throws Exception {
 		setOid(part.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(part.getNumber());
@@ -41,6 +48,7 @@ public class PartDTO {
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorFullName());
 		setCreateDate(part.getCreateTimestamp().toString().substring(0, 10));
+		setModifier(part.getModifierFullName());
 		setModifyDate(part.getModifyTimestamp().toString().substring(0, 10));
 		setComments(CommentsHelper.manager.comments(part));
 	}

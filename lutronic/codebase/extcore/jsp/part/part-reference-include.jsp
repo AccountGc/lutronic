@@ -15,6 +15,7 @@ String oid = request.getParameter("oid");
 	<jsp:param value="<%=oid%>" name="oid" />
 	<jsp:param value="view" name="mode" />
 	<jsp:param value="true" name="multi" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <!-- 관련 물질 -->
