@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
@@ -466,12 +467,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				String t = e.getEoType();
 				// ECO
 				if ("CHANGE".equals(t)) {
-					SAPHelper.service.sendSapToEco(e);
+					System.out.println("ECO 결재 완료");
+					EcoHelper.manager.postAfterAction(e);
 					// EO
 				} else {
 					System.out.println("EO 결재 완료");
 					EoHelper.manager.postAfterAction(e);
-//					EoHelper.service.afterAction(e);
 				}
 			}
 

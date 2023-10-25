@@ -415,28 +415,28 @@ public class StandardEoService extends StandardManager implements EoService {
 			boolean isFirst = v.equals("A");
 
 			// 승인된게 아니면서
-			if (!isApproved) {
-				// A버전이 아닌거?
-				if (!isFirst) {
-					System.out.println("number = " + part.getNumber() + ", version = "
-							+ part.getVersionIdentifier().getSeries().getValue() + "."
-							+ part.getIterationIdentifier().getSeries().getValue());
-
-					ObjectReference orf = (ObjectReference) VersionControlHelper.getPredecessor(part);
-					if (orf != null) {
-						WTPart prev = (WTPart) orf.getObject();
-						if (prev != null) {
-							System.out.println("prev = " + prev.getVersionIdentifier().getSeries().getValue() + "."
-									+ prev.getIterationIdentifier().getSeries().getValue());
-						}
-					}
-					part = (WTPart) VersionControlHelper.service.predecessorOf(part);
-					if (part != null) {
-						System.out.println("part = " + part.getVersionIdentifier().getSeries().getValue() + "."
-								+ part.getIterationIdentifier().getSeries().getValue());
-					}
-				}
-			}
+//			if (!isApproved) {
+//				// A버전이 아닌거?
+//				if (!isFirst) {
+//					System.out.println("number = " + part.getNumber() + ", version = "
+//							+ part.getVersionIdentifier().getSeries().getValue() + "."
+//							+ part.getIterationIdentifier().getSeries().getValue());
+//
+//					ObjectReference orf = (ObjectReference) VersionControlHelper.getPredecessor(part);
+//					if (orf != null) {
+//						WTPart prev = (WTPart) orf.getObject();
+//						if (prev != null) {
+//							System.out.println("prev = " + prev.getVersionIdentifier().getSeries().getValue() + "."
+//									+ prev.getIterationIdentifier().getSeries().getValue());
+//						}
+//					}
+//					part = (WTPart) VersionControlHelper.service.predecessorOf(part);
+//					if (part != null) {
+//						System.out.println("part = " + part.getVersionIdentifier().getSeries().getValue() + "."
+//								+ part.getIterationIdentifier().getSeries().getValue());
+//					}
+//				}
+//			}
 
 			boolean isBaseline = true;
 			String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();

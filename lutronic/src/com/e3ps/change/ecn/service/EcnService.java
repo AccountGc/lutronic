@@ -1,5 +1,6 @@
 package com.e3ps.change.ecn.service;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.ecn.dto.EcnDTO;
 
 import wt.method.RemoteInterface;
@@ -13,7 +14,7 @@ public interface EcnService {
 	public abstract void delete(String oid) throws Exception;
 
 	/**
-	 * ECO 완료시 ECN 자동생성
+	 * ECO 결재 후 ECN 자동 생성
 	 */
-	public abstract void create(EcnDTO dto) throws Exception;
+	public abstract void create(EChangeOrder eco) throws Exception;
 }

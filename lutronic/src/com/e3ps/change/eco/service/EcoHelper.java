@@ -2,6 +2,7 @@ package com.e3ps.change.eco.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivity;
@@ -30,16 +31,27 @@ import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTPrincipal;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.queue.ProcessingQueue;
+import wt.queue.QueueHelper;
 import wt.services.ServiceFactory;
+import wt.session.SessionHelper;
 
 public class EcoHelper {
 
 	public static final EcoService service = ServiceFactory.getService(EcoService.class);
 	public static final EcoHelper manager = new EcoHelper();
+
+	/**
+	 * 큐 관련 상수
+	 */
+	private static final String processQueueName = "SapProcessQueue";
+	private static final String className = "com.e3ps.change.util.EChangeUtils";
+	private static final String methodName = "afterEcoAction";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 
@@ -322,7 +334,7 @@ public class EcoHelper {
 			// 설계변경 활동
 			return JSONArray.fromObject(referenceCr(eco, list));
 		}
-		
+
 		return JSONArray.fromObject(list);
 	}
 
@@ -340,23 +352,24 @@ public class EcoHelper {
 		}
 		return list;
 	}
+
 	/**
 	 * ECO 관련 설계변경 활동
 	 */
 	private Object referenceActivity(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
 		JSONArray j = new JSONArray();
-		ArrayList<EChangeActivity> colletActivityList =ActivityHelper.manager.colletActivity(eco);
+		ArrayList<EChangeActivity> colletActivityList = ActivityHelper.manager.colletActivity(eco);
 		System.out.println(colletActivityList.size());
-		for(EChangeActivity item : colletActivityList) {
-			
+		for (EChangeActivity item : colletActivityList) {
+
 			ActDTO dto = new ActDTO(item);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * ECO CR 목록
 	 */
@@ -369,5 +382,21 @@ public class EcoHelper {
 			list.add(map);
 		}
 		return list;
+	}
+
+	/**
+	 * ECO 결재 완료후 호출 되는 함수 큐 이용
+	 */
+	public void postAfterAction(EChangeOrder e) throws Exception {
+		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", e.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, methodName, className, argClasses, argObjects);
 	}
 }

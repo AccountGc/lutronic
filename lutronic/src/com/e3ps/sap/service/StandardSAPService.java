@@ -224,7 +224,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		sendToSapEoBom(e, completeParts);
 
 		// 자재마스터 전송 시작
-		System.out.println("EO SAP SEND START");
+		System.out.println("EO SAP SEND END");
 	}
 
 	/**
@@ -273,7 +273,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			System.out.println("BOM 리스트 항목 개수  = " + dataList.size());
 
 			for (SAPBomDTO dto : dataList) {
-//				System.out.println(dto.toString());
+				System.out.println("n = " + dto.getParentPartNumber());
+				//				System.out.println(dto.toString());
 				bomTable.insertRow(idx);
 				bomTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리?
 				bomTable.setValue("SEQNO", df.format(seq)); // 항목번호

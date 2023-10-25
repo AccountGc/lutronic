@@ -10,6 +10,7 @@ import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
@@ -157,9 +158,6 @@ public class EChangeUtils {
 
 	/**
 	 * EO 결재후 발생할 내용들 큐로 전환
-	 * 
-	 * @param hash
-	 * @throws Exception
 	 */
 	public static void afterEoAction(Hashtable<String, String> hash) throws Exception {
 		System.out.println("EO 승인후 호출 !!!");
@@ -181,6 +179,26 @@ public class EChangeUtils {
 			SAPHelper.service.sendSapToEo(eo, completeParts);
 
 			EoHelper.service.saveBaseline(eo, completeParts);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/**
+	 * ECO 결재후 발생할 내용들 큐로 전환
+	 */
+	public static void afterEcoAction(Hashtable<String, String> hash) throws Exception {
+		System.out.println("ECO 승인후 호출 !!!");
+		try {
+			String oid = hash.get("oid");
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+			
+			
+			
+			// ECO 정보로 ECN 자동 생성
+			EcnHelper.service.create(eco);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
