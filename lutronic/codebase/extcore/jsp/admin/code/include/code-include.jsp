@@ -9,6 +9,10 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
+boolean header = Boolean.parseBoolean(request.getParameter("header"));
+%>
+<%
+if (header) {
 %>
 <table class="button-table">
 	<tr>
@@ -20,6 +24,9 @@ boolean create = "create".equals(mode);
 		</td>
 	</tr>
 </table>
+<%
+}
+%>
 <%
 if (create || update) {
 %>

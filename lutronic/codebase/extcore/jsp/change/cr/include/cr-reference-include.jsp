@@ -18,4 +18,5 @@ String oid = request.getParameter("oid");
 	<jsp:param value="MODEL" name="codeType" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="150" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>
