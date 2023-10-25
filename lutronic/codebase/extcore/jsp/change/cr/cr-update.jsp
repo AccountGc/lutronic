@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
@@ -8,6 +9,8 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 CrDTO dto = (CrDTO) request.getAttribute("dto");
+Map<String, Object> contentMap = dto.getContentMap();
+String aOid =contentMap.get("aoid")==null ?"":contentMap.get("aoid").toString();
 %>
 <!DOCTYPE html>
 <html>
@@ -149,9 +152,10 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			<tr>
 				<th class="req lb">주 첨부파일</th>
 				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
-						<jsp:param value="<%= dto.getOid() %>" name="oid" />
-						<jsp:param value="modify" name="mode" />
+					<jsp:include page="/extcore/jsp/common/attach-eco.jsp">
+						<jsp:param value="<%= aOid %>" name="oid" />
+						<jsp:param value="modify" name="mode"/>
+						<jsp:param value="ECR" name="roleType"/>
 					</jsp:include>
 				</td>
 			</tr>

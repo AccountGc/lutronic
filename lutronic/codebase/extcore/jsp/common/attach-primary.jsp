@@ -69,10 +69,9 @@ String mode = request.getParameter("mode");
 			}
 		})
 		<% if("modify".equals(mode) || "revise".equals(mode)){ %>
-		new AXReq("/Windchill/plm/content/list", {
-			pars : "oid=<%=oid%>&roleType=primary",
-			onsucc : function(res) {
-				if (!res.e) {
+			const url = getCallUrl("/content/list?oid=<%=oid%>&roleType=primary");
+			call(url, null, function(res) {
+				if (res.primaryFile) {
 					const form = document.querySelector("form");
 					const data = res.primaryFile;
 					const len = data.length;
@@ -88,8 +87,7 @@ String mode = request.getParameter("mode");
 					imgurl = data[0].filePath + data[0].name;
 					$("#sign_preview").attr("src", imgurl);
 				}
-			}
-		});
+			});
 		<% } %>
 	}
 	load();

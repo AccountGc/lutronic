@@ -4,6 +4,7 @@
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
+String roleType = request.getParameter("roleType");
 %>
 <div class="AXUpload5" id="primary_layer"></div>
 <script type="text/javascript">
@@ -70,17 +71,17 @@ String mode = request.getParameter("mode");
 			}
 		})
 		<% if("modify".equals(mode)){ %>
-		new AXReq("/Windchill/plm/content/list", {
-			pars : "oid=<%=oid%>&roleType=ECO",
-			onsucc : function(res) {
-				if (!res.e) {
+			const url = getCallUrl("/content/list?oid=<%=oid%>&roleType=<%= roleType%>");
+			call(url, null, function(res) {
+				console.log(res);
+				if (res.ecoFile) {
 					const form = document.querySelector("form");
 					const data = res.ecoFile;
 					const len = data.length;
 					for (let i = 0; i < len; i++) {
 						const primaryTag = document.createElement("input");
 						primaryTag.type = "hidden";
-						primaryTag.id = "primary";
+						primaryTag.id = data[i].tagId;
 						primaryTag.name = "primary";
 						primaryTag.value = data[i].cacheId;
 						form.appendChild(primaryTag);
@@ -89,8 +90,7 @@ String mode = request.getParameter("mode");
 					imgurl = data[0].filePath + data[0].name;
 					$("#sign_preview").attr("src", imgurl);
 				}
-			}
-		});
+			});
 		<% } %>
 	}
 	load();

@@ -145,6 +145,7 @@
 					<jsp:include page="/extcore/jsp/common/attach-eco.jsp">
 						<jsp:param value="<%= aOid%>" name="oid" />
 						<jsp:param value="modify" name="mode"/>
+						<jsp:param value="ECO" name="roleType"/>
 					</jsp:include>
 					
 				</td>
