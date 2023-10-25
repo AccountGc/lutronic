@@ -87,10 +87,6 @@ iframe {
 		<jsp:param value="주도면" name="title" />
 		<jsp:param value="epmOid" name="paramName" />
 	</jsp:include>
-	<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
-		<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		<jsp:param value="part" name="module" />
-	</jsp:include>
 	<!-- 참조 항목 -->
 	<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
 		<jsp:param value="part" name="moduleType" />
