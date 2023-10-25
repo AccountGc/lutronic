@@ -113,10 +113,6 @@ iframe {
 	<%
 	}
 	%>
-	<!-- 이력관리 -->
-	<jsp:include page="/extcore/jsp/part/include/part-record-include.jsp">
-		<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	</jsp:include>
 	<!-- 관련품목 -->
 	<jsp:include page="/extcore/jsp/part/include/part-related-include.jsp">
 		<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -229,18 +225,6 @@ iframe {
 		} else {
 			createAUIGridAdmin(columnsAdmin);
 		}
-		const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
-		if (isCreated50) {
-			AUIGrid.resize(myGridID50);
-		} else {
-			createAUIGrid50(columns50);
-		}
-		const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
-		if (isCreated51) {
-			AUIGrid.resize(myGridID51);
-		} else {
-			createAUIGrid51(columns51);
-		}
 		const isCreated80 = AUIGrid.isCreated(myGridID80); // 상위 품목
 		if (isCreated80) {
 			AUIGrid.resize(myGridID80);
@@ -267,8 +251,6 @@ iframe {
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID106);
 		AUIGrid.resize(adminGridID);
-		AUIGrid.resize(myGridID50);
-		AUIGrid.resize(myGridID51);
 		AUIGrid.resize(myGridID80);
 		AUIGrid.resize(myGridID81);
 		AUIGrid.resize(myGridID82);
