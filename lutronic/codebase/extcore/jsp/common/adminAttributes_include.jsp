@@ -23,7 +23,7 @@ JSONArray json = CommonHelper.manager.include_adminAttribute(oid, module);
 				dataField : "badT",
 				headerText : "badT",
 				dataType : "string",
-				width : 120,
+				width : 200,
 				}]
 
 			function createAUIGridAdmin(columnLayout) {
