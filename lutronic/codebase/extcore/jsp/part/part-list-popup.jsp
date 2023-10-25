@@ -241,7 +241,7 @@ String rowId =request.getParameter("rowId")==null?"":request.getParameter("rowId
 				<option value="200">200</option>
 				<option value="300">300</option>
 			</select>
-			<input type="button" value="검색" title="검색">
+			<input type="button" value="검색" title="검색" onclick="loadGridData()" >
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -516,13 +516,14 @@ function createAUIGrid(columnLayout) {
 }
 
 function loadGridData() {
+	$("input[name=sessionid").val(0);
 	let params = new Object();
 	const url = getCallUrl("/part/list");
 	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-		"ecoNo", "eoNo" ];
-	const latest = !!document.querySelector("input[name=latest]:checked").value;
+		"ecoNo", "eoNo" ,"creatorOid","latest" ,"specification"];
+	var  latest = document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
-	params.latest = false;
+	params.latest = latest=="true"?true:false;
 	AUIGrid.showAjaxLoader(myGridID);
 	parent.openLayer();
 	call(url, params, function(data) {
