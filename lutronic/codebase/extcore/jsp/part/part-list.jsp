@@ -569,9 +569,15 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 					alert("편집할 부품을 선택하세요.");
 					return false;
 				}
-				const oid = items[0].oid;
-				const url = getCallUrl("/part/bom?oid=" + oid);
-				_popup(url, 1600, 800, "n");
+				
+				if (items.length > 1) {
+					alert("한개만 선택해 주세요.");
+					return false;
+				}
+				const oid = items[0].part_oid;
+				var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
+				_popup(url, "1400", "600", "n");
+				
 			};
 
 			document.addEventListener("keydown", function(event) {
