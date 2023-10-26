@@ -387,11 +387,9 @@
 				
 				const url = getCallUrl("/rohs/batch");
 				call(url, params, function(data) {
+					alert(data.msg);
 					if(data.result){
-						alert(data.msg);
-						location.reload();
-					}else{
-						alert(data.msg);
+						document.location.href = getCallUrl("/rohs/list");
 					}
 				});
 			}
