@@ -29,6 +29,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
@@ -76,12 +77,29 @@ public class DrawingController extends BaseController{
 		return model;
 	}
 	
-	@Description(value = "일괄 등록 페이지")
+	@Description(value = "도면 일괄 등록 페이지")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception{
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/drawing/drawing-batch.jsp");
 		return model;
+	}
+	
+	@Description(value = "도면 일괄 등록")
+	@ResponseBody
+	@PostMapping(value = "/batch")
+	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+//			DocumentHelper.service.batch(params);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 	
 	@Description(value = "도면 검색 리스트 리턴")
