@@ -9,4 +9,5 @@ String oid = request.getParameter("oid");
 	<jsp:param value="insert90" name="method" />
 	<jsp:param value="true" name="multi" />
 	<jsp:param value="200" name="height" />
+	<jsp:param value="true" name="header" />
 </jsp:include>

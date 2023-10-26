@@ -283,6 +283,7 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 			}
 
 			function loadGridData() {
+				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/ecpr/list");
 				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];

@@ -34,7 +34,6 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid"> 
-		<input type="hidden" name="lastNum" id="lastNum"> 
 		<input type="hidden" name="curPage" id="curPage"> 
 
 		<table class="search-table">
@@ -252,6 +251,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 			}
 
 			function loadGridData() {
+				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
 				const field = ["_psize","rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];

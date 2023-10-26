@@ -266,7 +266,7 @@ public final class StringUtil {
 	 * @param str 입력스트링
 	 */
 	public static String checkNull(String str){ 		
-		if(str == null || str == "null") return "";		
+		if(str == null || str.equals ("")) return "";		
 		return str;	
 	}
 	

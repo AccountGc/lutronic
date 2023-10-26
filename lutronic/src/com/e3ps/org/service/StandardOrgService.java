@@ -313,9 +313,9 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			trs.start();
 
 			for (LinkedHashMap<String, Object> edit : editRows) {
-				String oid = (String) edit.get("oid");
+				String oid = (String) edit.get("poid");
 				String auth = (String) edit.get("auth");
-				String department_oid = (String) edit.get("department_oid");
+				String department_oid = (String) edit.get("department_name");
 				String duty = (String) edit.get("duty");
 				People people = (People) CommonUtil.getObject(oid);
 
@@ -323,7 +323,6 @@ public class StandardOrgService extends StandardManager implements OrgService {
 					Department department = (Department) CommonUtil.getObject(department_oid);
 					people.setDepartment(department);
 				}
-
 				people.setDuty(duty);
 				people.setAuth(auth);
 				PersistenceHelper.manager.modify(people);

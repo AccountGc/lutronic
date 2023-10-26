@@ -29,9 +29,9 @@
 		<table class="create-table">
 			<colgroup>
 				<col width="150">
-				<col width="650">
+				<col width="*">
 				<col width="150">
-				<col width="650">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th class="req lb">EO 제목</th>
@@ -162,7 +162,9 @@
 				const secondarys = toArray("secondarys");
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const eoType = document.querySelector("input[name=eoType]:checked").value;
-
+				// 외부 메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+				
 				const temprary = JSON.parse(temp);
 
 				// 완제품
@@ -183,7 +185,8 @@
 					rows104 : rows104,
 					rows90 : rows90,
 					rows200 : rows200,
-					rows300 : rows300
+					rows300 : rows300,
+					external : external
 				}
 
 				if (temprary) {

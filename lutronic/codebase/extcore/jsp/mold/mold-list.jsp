@@ -25,7 +25,6 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="location" id="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
@@ -303,6 +302,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			}
 
 			function loadGridData() {
+				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/mold/list");
 				const field = ["_psize","number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];

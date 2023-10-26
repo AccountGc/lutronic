@@ -25,6 +25,7 @@ public class EoDTO {
 	private String number;
 	private String name;
 	private String eoType;
+	private String eoType_name;
 	private String model_name;
 	private String state;
 	private String creator;
@@ -63,6 +64,7 @@ public class EoDTO {
 		setNumber(eo.getEoNumber());
 		setName(eo.getEoName());
 		setEoType(eo.getEoType());
+		setEoType_name(convert(eo.getEoType()));
 //		modelInfo
 		// 모델 코드 처리??
 		if (eo.getModel() != null) {
@@ -97,6 +99,19 @@ public class EoDTO {
 			}			
 		}
 		return result;
+	}
+	
+	/*
+	 * ( EO 구분 변경
+	 */
+	private String convert(String eoType) throws Exception {
+		String rtn = "";
+		if ("DEV".equals(eoType)) {
+			rtn = "개발";
+		} else if ("PRODUCT".equals(eoType)) {
+			rtn = "양산";
+		}
+		return rtn;
 	}
 
 }

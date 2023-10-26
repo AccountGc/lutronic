@@ -15,7 +15,6 @@
 <%
 	EoDTO dto = (EoDTO) request.getAttribute("dto");
 	boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-	ArrayList<Map<String, String>> modelInfo =	dto.getModelInfo();
 %>
 
 </head>
@@ -76,8 +75,9 @@
 				<th class="req lb">제품명</th>
 				<td colspan="3" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
+						<jsp:param value="<%= dto.getOid() %>" name="oid" />
+						<jsp:param value="update" name="mode" />
+						<jsp:param value="insert300" name="method" />
 						<jsp:param value="MODEL" name="codeType" />
 						<jsp:param value="true" name="multi" />
 						<jsp:param value="150" name="height" />
@@ -121,6 +121,24 @@
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">외부 메일 지정</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+						<jsp:param value="update" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
 
 		<!-- 	관련 문서 -->
@@ -128,7 +146,8 @@
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="update" name="mode" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="150" name="height" />
+			<jsp:param value="250" name="height" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 	설변 활동 -->
@@ -143,45 +162,28 @@
 			<tr>
 				<td class="center">
 					<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
-					<input type="button" value="이전" title="이전" class="blue" onclick="back();">
+					<input type="button" value="이전" title="이전" class="blue" onclick="history.back();">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			var modelInfo=[];
-			<%= dto.getRows104()%>
 			document.addEventListener("DOMContentLoaded", function() {
-				<% if(modelInfo.size()!=0){
-					for(Map<String,String> item :modelInfo ){%>
-							var map ={
-									  "name" :"<%= item.get("name")%>"
-									, "code" : "<%= item.get("code")%>"
-									, "sort" : "<%= item.get("sort")%>"
-									, "description" :"<%= item.get("description")==null?"":item.get("description")%>"
-									, "enabled" : "<%= item.get("enabled")%>"
-									, "oid" : "<%= item.get("oid")%>"
-							};
-							modelInfo.push(map);
-					<%}
-				}%>
 				toFocus("name");
+				createAUIGrid8(columns8);
+				createAUIGrid9(columns9);
+				createAUIGrid300(columns300);
 				createAUIGrid104(columns104);
 				createAUIGrid90(columns90);
-				createAUIGrid300(columns300);
 				createAUIGrid200(columns200);
+				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
+				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);
-				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID200);
-				
-				
-				AUIGrid.setGridData(myGridID300, modelInfo);
 			});
 			
-		
-			
 			function modify() {
-
 				if (!confirm("수정 하시겠습니까?")) {
 					return false;
 				}
@@ -213,6 +215,13 @@
 				rows300 = rows300.filter(function(item){
 					return item.gridState!=	"removed";
 				});
+				// 외부메일
+				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+				external = external.filter(function(item){
+					return item.gridState!=	"removed";
+				});
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				
 				const url = getCallUrl("/eo/modify");
 				const params = {
@@ -226,26 +235,18 @@
 					rows90 : rows90,
 					rows200 : rows200,
 					rows300 : rows300,
+					external : external,
 					oid : $("#oid").val()
 				}
-				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
-// 					if (data.result) {
+					if (data.result) {
 						opener.loadGridData();
 						self.close();
-						
-// 						document.location.href = getCallUrl("/eo/list");
-// 					} else {
-// 						parent.closeLayer();
-// 					}
+					}
 				});
 			}
 
-			function back(){
-				document.location.href = getCallUrl("/eo/view?oid=" + $("#oid").val());
-			}
-			
 			function finder(id) {
 				axdom("#" + id).bindSelector({
 					reserveKeys : {
@@ -276,9 +277,11 @@
 			}
 
 			window.addEventListener("resize", function() {
+				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID9);
+				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);
-				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID200);
 			});
 		</script>
