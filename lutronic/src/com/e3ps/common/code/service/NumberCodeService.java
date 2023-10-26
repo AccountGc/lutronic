@@ -22,7 +22,7 @@ public interface NumberCodeService {
 	/**
 	 * 코드 저장
 	 */
-	public abstract void save(HashMap<String, List<NumberCodeDTO>> dataMap) throws Exception;
+	public abstract void save(HashMap<String, Object> dataMap) throws Exception;
 
 	/**
 	 * 국가코드 로더

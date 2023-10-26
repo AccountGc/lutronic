@@ -195,7 +195,7 @@
 					} ];
 					return menu;
 				});
-// 				loadGridData();
+				loadGridData();
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -205,9 +205,17 @@
 			}
 
 			function loadGridData() {
-				const type = document.getElementById("codeType").value = type;
+				const name = document.getElementById("name").value;
+				const code = document.getElementById("code").value;
+				const description = document.getElementById("description").value;
+				const enabled = document.querySelector("input[name=enabled]:checked").value;
+				const codeType = document.getElementById("codeType").value;
 				const params = {
-					type : type
+					name : name,
+					code: code,
+					description: description,
+					enabled: enabled,
+					codeType : codeType
 				}
 				const url = getCallUrl("/code/list");
 				parent.openLayer();
@@ -227,20 +235,21 @@
 			
 			// 행 추가
 			function addRow() {
-				const item = {
-					enabled : true,
-				};
-				AUIGrid.addRow(myGridID, item, "first");
+				const codeType = document.getElementById("codeType").value;
+				
+				if(codeType === ""){
+					alert("코드타입을 선택해주세요.");
+				}else{
+					const item = {
+						enabled : true,
+					};
+					AUIGrid.addRow(myGridID, item, "first");					
+				}
 			}
 
 			// 행 삭제
 			function deleteRow() {
 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				if (checkedItems.length === 0) {
-					alert("삭제할 행을 선택하세요.");
-					return false;
-				}
-
 				let check = true;
 				for (let i = checkedItems.length - 1; i >= 0; i--) {
 					const oid = checkedItems[i].item.oid;
@@ -250,7 +259,7 @@
 					const url = getCallUrl("/code/check");
 					call(url, params, function(data) {
 						if (!data.result) {
-							alet(data.msg);
+							alert(data.msg);
 							check = false;
 						}
 					}, "POST", false);
@@ -328,10 +337,15 @@
 			};
 
 			function save() {
+				// 추가된 행
 				const addedRowItems = AUIGrid.getAddedRowItems(myGridID);
-				logger(addedRowItems);
+				// 수정된 행
 				const editedRowItems = AUIGrid.getEditedRowItems(myGridID);
+				// 삭제된 행
 				const removedRowItems = AUIGrid.getRemovedItems(myGridID);
+				
+				const codeType = document.getElementById("codeType").value;
+				
 				if (addedRowItems.length == 0 && editedRowItems.length == 0 && removedRowItems.length == 0) {
 					alert("변경된 내용이 없습니다.");
 					return false;
@@ -340,15 +354,15 @@
 				if (!confirm("저장하시겠습니까?")) {
 					return false;
 				}
-				const codeType = document.getElementById("codeType").value;
 				const params = {
-					addRow : addedRowItems,
-					editRow : editedRowItems,
-					removeRow : removedRowItems,
-					codeType : codeType
+					addRows : addedRowItems,
+					editRows : editedRowItems,
+					removeRows : removedRowItems,
+					codeType : codeType,
 				}
 				const url = getCallUrl("/code/save");
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					if (data.result) {
 						alert(data.msg);

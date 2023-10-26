@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.dto.NumberCodeDTO;
@@ -234,12 +235,19 @@ public class NumberCodeHelper {
 		Map<String, Object> dataMap = new HashMap<>();
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		// 페이징 처리 안하는것으로 한다.
-		String type = (String) params.get("type");
+		String name = (String) params.get("name");
+		String code = (String) params.get("code");
+		String description = (String) params.get("description");
+		boolean enabled = "false".equals((String) params.get("enabled")) ? false : true;
+		String codeType = (String) params.get("codeType");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, type);
-		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, name);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.DESCRIPTION, description);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, enabled);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", 0L);
 		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
@@ -301,34 +309,36 @@ public class NumberCodeHelper {
 
 		QuerySpec query = new QuerySpec();
 		QueryResult result = null;
-		String type = n.getCode().toString();
-		switch (type) {
-		case "EOTYPE":
-			query.appendClassList(EChangeOrder.class, true);
-			QuerySpecUtils.toEquals(query, 0, EChangeOrder.class, EChangeOrder.ECO_TYPE, type);
-			result = PersistenceHelper.manager.find(query);
-			check = result.size() > 0 ? true : false;
-			break;
-		case "CHANGEPURPOSE":
-			// ???
+		if(n != null) {
+			String type = n.getCode().toString();
+			switch (type) {
+			case "EOTYPE":
+				query.appendClassList(EChangeOrder.class, true);
+				QuerySpecUtils.toEquals(query, 0, EChangeOrder.class, EChangeOrder.ECO_TYPE, type);
+				result = PersistenceHelper.manager.find(query);
+				check = result.size() > 0 ? true : false;
+				break;
+			case "CHANGEPURPOSE":
+				// ???
 //			query.appendClassList(EChangeOrder.class, true);
 //			QuerySpecUtils.toEquals(query, 0, EChangeOrder.class, EChangeOrder., type);
 //			result = PersistenceHelper.manager.find(query);
-
-			// 필드가 없는거 같은데?
+				
+				// 필드가 없는거 같은데?
 //			query.appendClassList(EChangeRequest.class, true);
 //			QuerySpecUtils.toLike(query, 0, EChangeRequest.class, "purpose", type);
 //			result = PersistenceHelper.manager.find(query);
 //			check = result.size() > 0 ? true : false;
-
-			break;
-		case "STOCKMANAGEMENT":
-			// 이것도 필드가 없는거 같은데
+				
+				break;
+			case "STOCKMANAGEMENT":
+				// 이것도 필드가 없는거 같은데
 //			query.appendClassList(EChangeOrder.class, true);
 //			QuerySpecUtils.toLike(query, 0, EChangeOrder.class, "stockPart", type);
 //			result = PersistenceHelper.manager.find(query);
 //			check = result.size() > 0 ? true : false;
-			break;
+				break;
+			}
 		}
 		return check;
 	}

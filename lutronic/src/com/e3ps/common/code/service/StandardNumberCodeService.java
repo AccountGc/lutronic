@@ -122,16 +122,20 @@ public class StandardNumberCodeService extends StandardManager implements Number
 	}
 
 	@Override
-	public void save(HashMap<String, List<NumberCodeDTO>> dataMap) throws Exception {
-		List<NumberCodeDTO> addRows = dataMap.get("addRows");
-		List<NumberCodeDTO> editRows = dataMap.get("editRows");
-		List<NumberCodeDTO> removeRows = dataMap.get("removeRows");
+	public void save(HashMap<String, Object> dataMap) throws Exception {
+		List<NumberCodeDTO> addRows = (List<NumberCodeDTO>) dataMap.get("addRows");
+		List<NumberCodeDTO> editRows = (List<NumberCodeDTO>) dataMap.get("editRows");
+		List<NumberCodeDTO> removeRows = (List<NumberCodeDTO>) dataMap.get("removeRows");
 		String codeType = (String) dataMap.get("codeType");
+		System.out.println("Service ========================>" + addRows.size());
+		System.out.println("Service ========================>" + editRows.size());
+		System.out.println("Service ========================>" + removeRows.size());
+		System.out.println("Service ========================>" + codeType);
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			for (NumberCodeDTO dto : editRows) {
+			for (NumberCodeDTO dto : addRows) {
 				String name = dto.getName();
 				String code = dto.getCode();
 				String description = dto.getDescription();

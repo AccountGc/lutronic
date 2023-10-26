@@ -226,7 +226,8 @@
 				// 삭제된 행
 				const removedRowItems = AUIGrid.getRemovedItems(myGridID);
 
-				if (addedRowItems.length === 0 && editedRowItems.length === 0 && removedRowItems.length === 0) {
+				if (addedRowItems.length == 0 && editedRowItems.length == 0 && removedRowItems.length == 0) {
+					alert("변경된 내용이 없습니다.");
 					return false;
 				}
 
@@ -234,11 +235,12 @@
 					return;
 				}
 
-				const params = new Object();
+				const params = {
+					addRow : addedRowItems,
+					editRow : editedRowItems,
+					removeRow : removedRowItems,
+				}
 				const url = getCallUrl("/admin/mail");
-				params.addRow = addedRowItems;
-				params.editRow = editedRowItems;
-				params.removeRow = removedRowItems;
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
