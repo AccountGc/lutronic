@@ -8,6 +8,23 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
+boolean header = request.getParameter("header")!=null ? Boolean.parseBoolean(request.getParameter("header")) : false;
+%>
+<%
+if (header) {
+%>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				완제품
+			</div>
+		</td>
+	</tr>
+</table>
+<%
+}
 %>
 <%
 if (create || update) {

@@ -64,8 +64,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<tr>
 				<th class="lb">제품명</th>
 				<td class="indent5"><%=dto.getModel_name()%></td>
-				<th>구분</th>
-				<td class="indent5" colspan="3"><%=dto.getEoType()%></td>
+				<th class="lb">구분</th>
+				<td class="indent5" colspan="3"><%=dto.getEoType_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
@@ -98,15 +98,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">완제품 품목</th>
-				<td colspan="5">
-					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-						<jsp:param value="view" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -178,6 +169,18 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					} else {
 						createAUIGrid90(columns90);
 					}
+					const isCreated300 = AUIGrid.isCreated(myGridID300); // MODEL
+					if (isCreated300) {
+						AUIGrid.resize(myGridID300);
+					} else {
+						createAUIGrid300(columns300);
+					}
+					const isCreated104 = AUIGrid.isCreated(myGridID104); // 완제품
+					if (isCreated104) {
+						AUIGrid.resize(myGridID104);
+					} else {
+						createAUIGrid104(columns104);
+					}
 					break;
 				case "tabs-4":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
@@ -203,9 +206,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			}
 		});
 
-		// 완제품
-		createAUIGrid104(columns104);
-		AUIGrid.resize(myGridID104);
 		createAUIGrid700(columns700);
 		AUIGrid.resize(myGridID700);
 	});

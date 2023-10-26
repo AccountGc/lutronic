@@ -217,11 +217,6 @@
 				});
 				// 외부메일
 				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
-				external = external.filter(function(item){
-					return item.gridState!=	"removed";
-				});
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				toRegister(params, addRows8); // 결재선 세팅
 				
 				const url = getCallUrl("/eo/modify");
 				const params = {
@@ -238,6 +233,8 @@
 					external : external,
 					oid : $("#oid").val()
 				}
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				toRegister(params, addRows8); // 결재선 세팅
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {

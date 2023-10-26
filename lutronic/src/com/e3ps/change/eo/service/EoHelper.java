@@ -12,6 +12,8 @@ import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.eo.column.EoColumn;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -275,8 +277,11 @@ public class EoHelper {
 			// 완제품
 			return JSONArray.fromObject(referenceComplete(eo, list));
 		} else if ("activity".equalsIgnoreCase(type)) {
-			// 완제품
+			// ECA
 			return JSONArray.fromObject(referenceActivity(eo, list));
+		} else if ("MODEL".equalsIgnoreCase(type)) {
+			// 제품
+			return JSONArray.fromObject(referenceCode(eo, list));
 		}
 		return JSONArray.fromObject(list);
 	}
@@ -375,5 +380,31 @@ public class EoHelper {
 		Object[] argObjects = { hash };
 
 		queue.addEntry(principal, methodName, className, argClasses, argObjects);
+	}
+	
+	/**
+	 * MODEL
+	 */
+	private Object referenceCode(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
+		String[] codes = eo.getModel() != null ? eo.getModel().split(",") : null;
+		
+		if(codes != null) {
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(NumberCode.class, true);
+			for(int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+			}
+			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "MODEL");
+			QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+			QueryResult result = PersistenceHelper.manager.find(query);
+			while (result.hasMoreElements()) {
+				Object[] obj = (Object[]) result.nextElement();
+				NumberCode n = (NumberCode) obj[0];
+				NumberCodeDTO dto = new NumberCodeDTO(n);
+				Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+				list.add(map);
+			}
+		}
+		return list;
 	}
 }
