@@ -6,6 +6,9 @@
    <Property name="wt.auth.form.enabled" overridable="true"
              targetFile="codebase/wt.properties"
              value="false"/>
+   <Property name="wt.auth.form.submitUrl" overridable="true"
+             targetFile="codebase/wt.properties"
+             value="$(wt.server.codebase)/login/j_security_check"/>             
    <Property name="wt.auth.handlers" overridable="true"
              targetFile="codebase/wt.properties"
              value="wt.auth.NullAuthentication,wt.httpgw.HTTPAuthentication"/>             
