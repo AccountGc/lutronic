@@ -310,10 +310,10 @@ public class StandardEoService extends StandardManager implements EoService {
 	public void modify(EoDTO dto) throws Exception {
 		ReferenceFactory rf = new ReferenceFactory();
 
-		ArrayList<Map<String, String>> rows104 = dto.getRows104();
-		ArrayList<Map<String, String>> rows200 = dto.getRows200();
-		ArrayList<Map<String, String>> rows300 = dto.getRows300();
-//		String model_oid = dto.getModel_oid();
+		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 제품
+		ArrayList<Map<String, String>> rows104 = dto.getRows104(); // 완제품
+		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // ECA
+		ArrayList<Map<String, String>> external = dto.getExternal(); // 외부메일
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -352,6 +352,11 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 첨부 파일
 			removeAttach(eo);
 			saveAttach(eo, dto);
+			
+			// 외부 메일 링크 삭제
+			MailUserHelper.service.deleteLink(dto.getOid());
+			// 외부 메일 링크 추가
+			MailUserHelper.service.saveLink(eo, external);
 
 			// 설변 활동 생성
 //			ActivityHelper.service.saveActivity(eo, rows200);

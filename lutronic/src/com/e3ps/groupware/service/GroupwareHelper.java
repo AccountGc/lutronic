@@ -38,6 +38,8 @@ import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.OrgHelper;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -64,6 +66,7 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
+import wt.util.WTAttributeNameIfc;
 import wt.workflow.engine.WfActivity;
 import wt.workflow.engine.WfEngineHelper;
 import wt.workflow.engine.WfProcess;
@@ -377,39 +380,20 @@ public class GroupwareHelper {
 		String name = (String) params.get("name");
 		String userId = (String) params.get("userId");
 		String oid = (String) params.get("oid"); // 부서 OID
+		long dOid = CommonUtil.getOIDLongValue(oid);
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(People.class, true);
 
 		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.ID, userId);
-
-		Department department = (Department) CommonUtil.getObject(oid);
-
-		if (query.getConditionCount() > 0) {
-			query.appendAnd();
-		}
-
-		query.appendOpenParen();
-		SearchCondition sc = new SearchCondition(People.class, "departmentReference.key.id", "=",
-				department.getPersistInfo().getObjectIdentifier().getId());
-		query.appendWhere(sc, new int[] { idx });
-
-		ArrayList<Department> departments = OrgHelper.manager.getSubDepartment(department, new ArrayList<Department>());
-		for (int i = 0; i < departments.size(); i++) {
-			Department sub = (Department) departments.get(i);
-			query.appendOr();
-			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
-			query.appendWhere(new SearchCondition(People.class, "departmentReference.key.id", "=", sfid),
-					new int[] { idx });
-		}
-		query.appendCloseParen();
+		QuerySpecUtils.toEqualsAnd(query, idx, People.class, "departmentReference.key.id", dOid);
 
 		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, true);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
-
+		
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			People people = (People) obj[0];

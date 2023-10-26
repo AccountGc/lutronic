@@ -127,7 +127,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
-					width : 120,
+					width : 150,
 					editable : false,
 					filter : {
 						showIcon : true,
@@ -313,6 +313,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			}
 
 			function loadGridData() {
+				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/org/organization");
 				const field = [ "_psize", "name", "userId", "oid" ];
@@ -370,9 +371,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				AUIGrid.resize(myGridID);
 				selectbox("_psize");
 			});
-
-			function exportExcel() {
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;

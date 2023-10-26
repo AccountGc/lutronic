@@ -172,6 +172,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				case "tabs-2":
 					break;
 				case "tabs-3":
+					const isCreated90 = AUIGrid.isCreated(myGridID90); // 문서
+					if (isCreated90) {
+						AUIGrid.resize(myGridID90);
+					} else {
+						createAUIGrid90(columns90);
+					}
 					break;
 				case "tabs-4":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
@@ -207,7 +213,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID104);
 		AUIGrid.resize(myGridID700);
-
+		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID50);
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
