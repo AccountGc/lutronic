@@ -358,7 +358,7 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						<a onclick="moveToPage(this, '/etc/create?type=clinical', '> 임상개발 문서관리 > 임상개발 문서등록');">임상개발 문서등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?type=clinical', > 임상개발  문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
+						<a onclick="moveToPage(this, '/etc/list?type=clinical', '> 임상개발  문서관리 > 임상개발 문서검색');">병리연구 문서검색</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 임상개발 문서관리 > 임상개발 문서결재');">임상개발 문서결재</a>

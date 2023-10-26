@@ -4,6 +4,7 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.doc.etc.service.EtcHelper"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -11,7 +12,8 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
-String location = (String) request.getAttribute("location");
+String type = (String) request.getAttribute("type");
+String location = EtcHelper.manager.toLocation(type);
 %>
 <!DOCTYPE html>
 <html>
@@ -235,7 +237,8 @@ String location = (String) request.getAttribute("location");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/etc/view?oid=" + oid);
+							const type = "<%= type %>";
+							const url = getCallUrl("/etc/view?oid=" + oid + "&type=" + type);
 							_popup(url, "", "", "f");
 						}
 					},
@@ -272,7 +275,7 @@ String location = (String) request.getAttribute("location");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/etc/view?oid=" + oid);
+							const url = getCallUrl("/etc/view?oid=" + oid + "&type=<%= type %>");
 							_popup(url, "", "", "f");
 						}
 					},

@@ -44,9 +44,8 @@ public class EtcController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
-		String location = EtcHelper.manager.toLocation(type);
 		ModelAndView model = new ModelAndView();
-		model.addObject("location", location);
+		model.addObject("type", type);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
@@ -129,10 +128,11 @@ public class EtcController extends BaseController {
 
 	@Description(value = "기타문서 상세보기")
 	@GetMapping(value = "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception {
+	public ModelAndView view(@RequestParam String oid, @RequestParam String type) throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		EtcDTO dto = new EtcDTO(oid);
+		model.addObject("type", type);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/document/etc/etc-view");
@@ -141,7 +141,7 @@ public class EtcController extends BaseController {
 	
 	@Description(value = "기타문서 수정 및 개정 페이지")
 	@GetMapping(value = "/update")
-	public ModelAndView update(@RequestParam String oid, @RequestParam String mode) throws Exception {
+	public ModelAndView update(@RequestParam String oid, @RequestParam String mode, @RequestParam String type) throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		EtcDTO dto = new EtcDTO(oid);
@@ -150,6 +150,7 @@ public class EtcController extends BaseController {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
+		model.addObject("type", type);
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);

@@ -29,11 +29,11 @@ iframe {
 		<td class="right">
 			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
 			<%
-			// 			if (dto.is_revise()) {
+			if (dto.is_revise()) {
 			%>
 			<input type="button" value="개정" title="개정" onclick="update('revise');">
 			<%
-			// 			}
+			}
 			%>
 			<input type="button" value="결재회수" title="결재회수">
 			<%

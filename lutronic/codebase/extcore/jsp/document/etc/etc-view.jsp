@@ -8,6 +8,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 EtcDTO dto = (EtcDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
+String type = (String) request.getAttribute("type");
 %>
 <style type="text/css">
 iframe {
@@ -29,11 +30,11 @@ iframe {
 		<td class="right">
 			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
 			<%
-			// 			if (dto.is_revise()) {
+			if (dto.is_revise()) {
 			%>
 			<input type="button" value="개정" title="개정" onclick="update('revise');">
 			<%
-			// 			}
+			}
 			%>
 			<input type="button" value="결재회수" title="결재회수">
 			<%
@@ -310,7 +311,8 @@ const oid = document.getElementById("oid").value;
 
 	//수정 및 개정
 	function update(mode) {
-		const url = getCallUrl("/etc/update?oid=" + oid + "&mode=" + mode);
+		const type = "<%= type %>";
+		const url = getCallUrl("/etc/update?oid=" + oid + "&mode=" + mode + "&type=" + type);
 		document.location.href = url;
 	};
 
