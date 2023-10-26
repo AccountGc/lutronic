@@ -225,7 +225,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		ArrayList<Map<String, String>> external =  dto.getExternal();
+		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -244,7 +244,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 			WTDocumentMaster master = (WTDocumentMaster) latest.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
-			
+
 			// 문서 이름 세팅..
 			if (name.length() > 0) {
 				if (name.indexOf("-") == -1) {
@@ -260,7 +260,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			latest.getTypeInfoWTDocument().setPtc_rht_1(content);
-			
+
 			PersistenceHelper.manager.save(latest);
 
 			// 폴더 이동
@@ -285,12 +285,12 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			deleteLink(latest);
 			// 관련 링크 세팅
 			saveLink(latest, dto);
-			
+
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(latest, external);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

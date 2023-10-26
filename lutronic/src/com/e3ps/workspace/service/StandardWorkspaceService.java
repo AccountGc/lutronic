@@ -441,11 +441,9 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				master.setState(WorkspaceHelper.STATE_MASTER_APPROVAL_COMPLETE);
 				PersistenceHelper.manager.modify(master);
 
-				afterApprovalAction(per);
+				afterApprovalAction(per, tapOid);
 			}
 			
-			createECN(tapOid);
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -486,7 +484,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	/**
 	 * 최종 결재 이후 시작할 함수
 	 */
-	private void afterApprovalAction(Persistable per) throws Exception {
+	private void afterApprovalAction(Persistable per, String tapOid) throws Exception {
 
 		// 객체 상태 승인됨으로 변경한다.
 		if (per instanceof LifeCycleManaged) {
@@ -502,6 +500,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				if ("CHANGE".equals(t)) {
 					System.out.println("ECO 결재 완료");
 					EcoHelper.manager.postAfterAction(e);
+					createECN(tapOid);
 					// EO
 				} else {
 					System.out.println("EO 결재 완료");
