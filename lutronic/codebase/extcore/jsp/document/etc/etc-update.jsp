@@ -29,7 +29,6 @@ iframe {
 }
 </style>
 <script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
-<%= location %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
@@ -57,15 +56,19 @@ iframe {
 	</colgroup>
 	<tr>
 		<th class="req lb">문서분류</th>
-		<td class="indent5" colspan="3">
+		<td class="indent5">
 			<input type="hidden" name="location" id="location" value="<%=dto.getLocation()%>">
 			<span id="locationText"><%=dto.getLocation()%></span>
 			<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 		</td>
+		<th class="lb">개정/수정사유</th>
+		<td class="indent5">
+			<input type="text" name="iterationNote" id="iterationNote" class="width-300">
+		</td>
 		<th class="req">문서 템플릿</th>
 		<td class="indent5">
 			<select name="formType" id="formType" class="width-200" onchange="loadForm();">
-				<option value=-"">선택</option>
+				<option value="">선택</option>
 				<%
 				for (FormTemplate formType : form) {
 				%>
@@ -83,7 +86,7 @@ iframe {
 		</td>
 		<th class="req">문서종류</th>
 		<td class="indent5">
-			<input type="text" name="documentName" id="documentName" class="width-300">
+			<input type="text" name="documentName" id="documentName" class="width-200" value="<%= dto.getName().indexOf("-") > -1 ? dto.getName().split("-")[0] : dto.getName() %>">
 			<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
 				<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 				</ul>
@@ -280,87 +283,6 @@ iframe {
 	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
-
-<!-- 	관련 CR -->
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 CR
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 CR</th>
-		<td class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/include_selectCr.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-</table>
-
-<!-- 	관련 ECPR -->
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 ECPR
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 ECPR</th>
-		<td class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/include_selectEcpr.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-</table>
-
-<!-- 	관련 ECO -->
-<table class="button-table">
-	<tr>
-		<td class="left">
-			<div class="header">
-				<img src="/Windchill/extcore/images/header.png">
-				관련 ECO
-			</div>
-		</td>
-	</tr>
-</table>
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">관련 ECO</th>
-		<td class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/eco_include.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-</table>
 
 <script type="text/javascript">
 	const oEditors = [];
