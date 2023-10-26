@@ -58,7 +58,7 @@ if(view || update){
 <%
 	} else {
 %>
-<div id="grid91" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid91" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
 	}
 %>
@@ -137,18 +137,7 @@ if(view || update){
 			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
-			<%
-				if(view) {
-			%>
-			showAutoNoDataMessage : true,
-			noDataMessage : "관련 품목이 없습니다.",
-			<%
-				} else {
-			%>
 			showAutoNoDataMessage : false,
-			<%
-				}			
-			%>
 			enableSorting : false,
 			softRemoveRowMode : true,
 			selectionMode : "multipleCells",

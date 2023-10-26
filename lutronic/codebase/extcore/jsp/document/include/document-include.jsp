@@ -71,7 +71,7 @@ if (header) {
 <%
 } else {
 %>
-<div id="grid90" style="height: <%if (data.size() == 0) {%>110px; <%} else {%>30px;<%}%> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid90" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
 }
 %>

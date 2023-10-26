@@ -53,7 +53,7 @@ if(view || update){
 <%
 	} else {
 %>
-<div id="grid105" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid105" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
 	}
 %>

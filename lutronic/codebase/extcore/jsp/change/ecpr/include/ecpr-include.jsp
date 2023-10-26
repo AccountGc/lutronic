@@ -52,7 +52,7 @@ if(view|| update){
 <%
 	} else {
 %>
-<div id="gridEcpr" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="gridEcpr" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
 	}
 %>
@@ -154,23 +154,23 @@ if(view|| update){
 	
 	function createAUIGridEcpr(columnLayout) {
 		const props = {
-			headerHeight : 30,
-			fillColumnSizeMode : false,
-			showRowNumColumn : true,
-			rowNumHeaderText : "번호",
-			showAutoNoDataMessage : false,
-			enableSorting : false,
-			softRemoveRowMode : true,
-			selectionMode : "multipleCells",
-			<%if (create || update) {%>
-			showStateColumn : true,
-			showRowCheckColumn : true,
-			<%}%>
-			<%if (!multi) {%>
-			rowCheckToRadio : true,
-			<%}%>
-			enableFilter : true,
-			autoGridHeight : true
+				headerHeight : 30,
+				fillColumnSizeMode : false,
+				showRowNumColumn : true,
+				rowNumHeaderText : "번호",
+				showAutoNoDataMessage : false,
+				enableSorting : false,
+				softRemoveRowMode : true,
+				selectionMode : "multipleCells",
+				<%if (create || update) {%>
+				showStateColumn : true,
+				showRowCheckColumn : true,
+				<%}%>
+				<%if (!multi) {%>
+				rowCheckToRadio : true,
+				<%}%>
+				enableFilter : true,
+				autoGridHeight : true
 		}
 		myGridIDEcpr = AUIGrid.create("#gridEcpr", columnLayout, props);
 		AUIGrid.setGridData(myGridIDEcpr, <%=data%>);
