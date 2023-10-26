@@ -106,36 +106,46 @@ public class NumberCodeController extends BaseController {
 	@Description(value = "코드 저장")
 	@PostMapping(value = "/save")
 	@ResponseBody
-	public Map<String, Object> save(@RequestBody Map<String, ArrayList<LinkedHashMap<String, Object>>> params)
+	public Map<String, Object> save(@RequestBody Map<String, Object> params)
 			throws Exception {
-		ArrayList<LinkedHashMap<String, Object>> addRows = params.get("addRows");
-		ArrayList<LinkedHashMap<String, Object>> editRows = params.get("editRows");
-		ArrayList<LinkedHashMap<String, Object>> removeRows = params.get("removeRows");
+		ArrayList<LinkedHashMap<String, Object>> addRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("addRows");
+		ArrayList<LinkedHashMap<String, Object>> editRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("editRows");
+		ArrayList<LinkedHashMap<String, Object>> removeRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("removeRows");
 		String codeType = (String) params.get("codeType");
+		System.out.println("Controller ========================>" + codeType);
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			ArrayList<NumberCodeDTO> addRow = new ArrayList<>();
-			for (LinkedHashMap<String, Object> add : addRows) {
-				NumberCodeDTO dto = mapper.convertValue(add, NumberCodeDTO.class);
-				addRow.add(dto);
+			if(addRows != null && addRows.size() > 0) {
+				System.out.println("Controller ========================>" + addRows.size());
+				for (LinkedHashMap<String, Object> add : addRows) {
+					NumberCodeDTO dto = mapper.convertValue(add, NumberCodeDTO.class);
+					addRow.add(dto);
+				}
 			}
 
 			ArrayList<NumberCodeDTO> editRow = new ArrayList<>();
-			for (LinkedHashMap<String, Object> edit : editRows) {
-				NumberCodeDTO dto = mapper.convertValue(edit, NumberCodeDTO.class);
-				editRow.add(dto);
+			if(editRows != null && editRows.size() > 0) {
+				System.out.println("Controller ========================>" + editRows.size());
+				for (LinkedHashMap<String, Object> edit : editRows) {
+					NumberCodeDTO dto = mapper.convertValue(edit, NumberCodeDTO.class);
+					editRow.add(dto);
+				}				
 			}
 
 			ArrayList<NumberCodeDTO> removeRow = new ArrayList<>();
-			for (LinkedHashMap<String, Object> remove : removeRows) {
-				NumberCodeDTO dto = mapper.convertValue(remove, NumberCodeDTO.class);
-				removeRow.add(dto);
+			if(removeRows != null && removeRows.size() > 0) {
+				System.out.println("Controller ========================>" + removeRows.size());
+				for (LinkedHashMap<String, Object> remove : removeRows) {
+					NumberCodeDTO dto = mapper.convertValue(remove, NumberCodeDTO.class);
+					removeRow.add(dto);
+				}
 			}
 
-			HashMap<String, List<NumberCodeDTO>> dataMap = new HashMap<>();
+			HashMap<String, Object> dataMap = new HashMap<>();
 			dataMap.put("codeType", codeType);
 			dataMap.put("addRows", addRow); // 추가행
 			dataMap.put("editRows", editRow); // 수정행
