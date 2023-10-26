@@ -20,17 +20,18 @@ String oid = request.getParameter("oid");
 <script type="text/javascript">
 	let myGridID700;
 	const columns700 = [ {
-		dataField : "",
+		dataField : "current",
 		headerText : "현황",
 		dataType : "string",
 		width : 100,
-		renderre : {
+		renderer : {
 			type : "ImageRenderer",
 			altField : null,
 			srcFunction : function(rowIndex, columnIndex, value, item) {
+				console.log(item);
 				switch (value) {
 				case "COMPLETED":
-					return "";
+					return "/Windchill/extcore/jsp/change/activity/images/task_complete.gif";
 				case "STAND":
 					return "";
 				case "PROGRESS":
@@ -87,8 +88,6 @@ String oid = request.getParameter("oid");
 			autoGridHeight : true
 		}
 		myGridID700 = AUIGrid.create("#grid700", columnLayout, props);
-		AUIGrid.setGridData(myGridID700,
-<%=EoHelper.manager.reference(oid, "activity")%>
-	);
+		AUIGrid.setGridData(myGridID700, <%=EoHelper.manager.reference(oid, "activity")%>);
 	}
 </script>

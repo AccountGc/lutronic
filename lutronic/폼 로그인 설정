@@ -96,3 +96,5 @@
                 <Realm className="org.apache.catalina.realm.JNDIRealm" connectionURL="ldap://plmdev.lutronic.com:389/ou=people,cn=AdministrativeLdap,cn=Windchill_11.1,o=ptc"            
                        connectionName="cn=Manager" connectionPassword="ldapadmin" userSubtree="true" userSearch="(uid={0})" commonRole="valid-user"/>
         </Realm>    	
+        
+5. Apache 및 서버 재시작        

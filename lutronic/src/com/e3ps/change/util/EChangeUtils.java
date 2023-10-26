@@ -194,8 +194,6 @@ public class EChangeUtils {
 			String oid = hash.get("oid");
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 			
-			
-			
 			// ECO 정보로 ECN 자동 생성
 			EcnHelper.service.create(eco);
 			
