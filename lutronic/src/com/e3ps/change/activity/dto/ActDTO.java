@@ -118,7 +118,6 @@ public class ActDTO {
 		// 완료에정일보다 오늘 날짜가 더 늦으면 지연
 		Timestamp today = new Timestamp(new Date().getTime());
 		Timestamp finish = act.getFinishDate();
-
 		if (finish.after(today)) {
 			current = "DELAY";
 		} else {
@@ -126,7 +125,7 @@ public class ActDTO {
 				current = "STAND";
 			} else if ("INWORK".equals(state)) {
 				current = "PROGRESS";
-			} else if ("COMPLETED".equals(act)) {
+			} else if ("COMPLETED".equals(state)) {
 				current = "COMPLETED";
 			}
 		}

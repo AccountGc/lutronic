@@ -64,7 +64,7 @@ for (int i = 0; i < list.size(); i++) {
 	</tr>
 		<tr>
 		<th class="lb">의견</th>
-		<td class="indent5" colspan="5"><%=map.get("description") %></td>
+		<td class="indent5" colspan="5"><%=map.get("description") != null ? map.get("description") : "" %></td>
 	</tr>
 	<tr>
 		<th class="lb">산출물</th>

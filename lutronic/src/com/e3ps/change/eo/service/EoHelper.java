@@ -278,7 +278,6 @@ public class EoHelper {
 			// 완제품
 			return JSONArray.fromObject(referenceActivity(eo, list));
 		}
-
 		return JSONArray.fromObject(list);
 	}
 
@@ -322,6 +321,7 @@ public class EoHelper {
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
+		System.out.println("si=" + list.size());
 		return JSONArray.fromObject(list);
 	}
 
