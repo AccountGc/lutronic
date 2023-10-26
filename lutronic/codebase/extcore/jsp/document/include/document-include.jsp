@@ -12,7 +12,7 @@ boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
 JSONArray data = null;
-if(view){
+if(view || update){
 	data = AUIGridUtil.include(oid, "doc");
 }
 %>
@@ -156,7 +156,7 @@ if (header) {
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,
@@ -169,9 +169,7 @@ if (header) {
 			autoGridHeight : true
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID90, <%=AUIGridUtil.include(oid, "doc")%>);
-		<%}%>
+		AUIGrid.setGridData(myGridID90, <%=data%>);
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드

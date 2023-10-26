@@ -12,7 +12,7 @@ boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
 JSONArray data = null;
-if(view){
+if(view || update){
 	data = AUIGridUtil.include(oid, "eco");
 }
 %>
@@ -140,9 +140,7 @@ if(view){
 			autoGridHeight : true
 		}
 		myGridID105 = AUIGrid.create("#grid105", columnLayout, props);
-		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID105, <%=AUIGridUtil.include(oid, "eco")%>);
-		<%}%>
+		AUIGrid.setGridData(myGridID105, <%=data%>);
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
