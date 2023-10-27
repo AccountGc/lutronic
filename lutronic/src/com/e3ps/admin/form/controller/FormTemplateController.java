@@ -125,7 +125,7 @@ public class FormTemplateController extends BaseController {
 
 	@Description(value = "문서 템플릿 삭제")
 	@ResponseBody
-	@GetMapping(value = "/delete")
+	@PostMapping(value = "/delete")
 	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {

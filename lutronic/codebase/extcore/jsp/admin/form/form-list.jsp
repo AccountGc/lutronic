@@ -189,15 +189,16 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 		function loadGridData() {
 			let params = new Object();
 			const url = getCallUrl("/form/list");
-			const field = [ "_psize", "name", "creator" ];
+			const field = [ "_psize", "name", "formType" ];
 			params = toField(params, field);
 			AUIGrid.showAjaxLoader(myGridID);
 			parent.openLayer();
 			call(url, params, function(data) {
 				AUIGrid.removeAjaxLoader(myGridID);
 				if (data.result) {
-					createPagingNavigator(data.curPage);
+					totalPage = Math.ceil(data.total / data.pageSize);
 					document.getElementById("sessionid").value = data.sessionid;
+					createPagingNavigator(data.curPage);
 					AUIGrid.setGridData(myGridID, data.list);
 				} else {
 					alert(data.msg);
