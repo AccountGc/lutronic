@@ -26,11 +26,8 @@ public class MailUserDTO {
 	/**
 	 * 변수
 	 */
-	@JsonIgnore
 	private ArrayList<Map<String, Object>> addRow = new ArrayList<Map<String, Object>>();
-	@JsonIgnore
 	private ArrayList<Map<String, Object>> editRow = new ArrayList<Map<String, Object>>();
-	@JsonIgnore
 	private ArrayList<Map<String, Object>> removeRow = new ArrayList<Map<String, Object>>();
 
 	public MailUserDTO() {
