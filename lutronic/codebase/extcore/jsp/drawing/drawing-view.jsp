@@ -109,7 +109,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th>주 부품</th>
-				<td><%=dto.getpNum()%></td>
+				<td><%=dto.getPNum()%></td>
 				<th>ApplicationType</th>
 				<td><%=dto.getApplicationType()%></td>
 			</tr>

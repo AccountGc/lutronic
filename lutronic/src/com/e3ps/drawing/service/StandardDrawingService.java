@@ -63,6 +63,7 @@ import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
+import wt.part.WTPartDescribeLink;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
 import wt.query.ClassAttribute;
@@ -2340,5 +2341,111 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 	public List<EpmData> include_DrawingList(String oid, String moduleType, String epmType) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void batch(ArrayList<Map<String, Object>> gridData) throws Exception {
+		Transaction trs = new Transaction();
+		try{
+			trs.start();
+			for (Map<String, Object> data : gridData) {
+				String primary = (String) data.get("primary");
+				String primaryName = (String) data.get("primaryName");
+				int dotIndex = primaryName.lastIndexOf(".");
+		        String fileName = primaryName.substring(0, dotIndex);
+				String fileEnd = fileName.substring(dotIndex).toLowerCase();
+				String extName = "";
+				String authoringType ="";
+				if (StringUtil.checkString(primary)) {
+					File file = new File(fileName);
+					extName = file.getName();
+					authoringType = EpmUtil.getAuthoringType(extName);
+				}
+				String extentionName = getPrefix(extName);
+				// 품목
+				ArrayList<Map<String, Object>> rows91 = (ArrayList<Map<String, Object>>) data.get("rows91");
+				for (Map<String, Object> row : rows91) {
+					String partOid = (String) row.get("part_oid");
+					WTPart part = (WTPart) CommonUtil.getObject(partOid);
+					String number = part.getNumber() + "." + extentionName;
+					String name = part.getName();
+					String unit = part.getDefaultUnit().toString();
+					String location = part.getLocation();
+					
+					String lifecycle = "LC_PART";
+					String applicationType = "MANUAL";
+					
+					EPMDocument epm = EPMDocument.newEPMDocument();
+					epm.setNumber(number);
+					epm.setName(name);
+					EPMDocumentMaster epmMaster = (EPMDocumentMaster)epm.getMaster();
+					epmMaster.setOwnerApplication(EPMApplicationType.toEPMApplicationType(applicationType));
+					EPMAuthoringAppType appType = EPMAuthoringAppType.toEPMAuthoringAppType(authoringType);
+					epmMaster.setAuthoringApplication(appType);
+					epmMaster.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
+					
+					//Folder  && LifeCycle  Setting
+					ReferenceFactory rf = new ReferenceFactory();
+					Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+					FolderHelper.assignLocation((FolderEntry) epm, folder);
+					
+					PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+					WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+					epm.setContainer(e3psProduct);
+					LifeCycleHelper.setLifeCycle(epm, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef));
+					
+					String newFileName = "";
+					String orgFileName = "";
+					String fileDir = WTProperties.getServerProperties().getProperty("wt.temp");
+					File file = null;
+					File rfile = null;
+					if (StringUtil.checkString(primary)) {
+						file = new File(fileDir + File.separator + fileName);
+						orgFileName = file.getAbsolutePath();
+						fileName = file.getName();
+						
+						if(isFileNameCheck(fileName)){
+							throw new Exception(Message.get("이미 등록된 파일입니다."));
+			            }
+						newFileName = fileDir + File.separator +fileName;
+						rfile = new File(newFileName);
+						file.renameTo(rfile);
+						file = rfile;
+
+						epm.setCADName(fileName);
+						EPMDocumentType docType = getEPMDocumentType(fileEnd);
+						epm.setDocType(docType);
+					}
+					epm = (EPMDocument)PersistenceHelper.manager.save(epm);
+					
+					if (!newFileName.equals("")) {
+						File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+						ApplicationData applicationData = ApplicationData.newApplicationData(epm);
+						applicationData.setRole(ContentRoleType.PRIMARY);
+						PersistenceHelper.manager.save(applicationData);
+						ContentServerHelper.service.updateContent(epm, applicationData, vault.getPath());
+					}
+					
+					EpmPublishUtil.publish(epm); 
+					File orgfile = new File(orgFileName);
+					file.renameTo(orgfile);
+					
+					EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
+    				PersistenceServerHelper.manager.insert(link);
+    				
+    				CommonHelper.service.copyIBAAttributes(part, epm);
+				}
+			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
 	}
 }

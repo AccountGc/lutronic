@@ -17,9 +17,11 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
+import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.org.People;
+import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
@@ -626,5 +628,21 @@ public class DrawingHelper {
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);
+	}
+	
+	/**
+	 * 주도면 존재여부 (true : 존재, false : 존재x)
+	 */
+	public boolean isExist(ArrayList<Map<String, Object>> rows91) throws Exception {
+		boolean isConnect = false;
+		for (Map<String, Object> map : rows91) {
+			String partNumber = (String) map.get("number");
+			WTPart part = PartHelper.service.getPart(partNumber);
+			EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
+			if (epm != null){
+				isConnect = true;
+			}
+		}
+        return isConnect;
 	}
 }

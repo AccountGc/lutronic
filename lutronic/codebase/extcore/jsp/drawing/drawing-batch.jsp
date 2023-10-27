@@ -49,28 +49,20 @@
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
 							const oid = item.oid;
-							const url = getCallUrl("/part/popup?method=insert91&multi=true");
+							const url = getCallUrl("/part/popup?method=insert91&multi=false&rowId=0&limit=true");
 							_popup(url, 1800, 900, "n");
 						}
 					}
 				} ]
 			}, {
-				dataField : "epm",
-				headerText : "주도면",
-				dataType : "string",
-				width : 500,
-			}, {
 				headerText : "첨부파일",
 				children : [ {
-					dataField : "secondaryName",
+					dataField : "primaryName",
 					headerText : "파일명",
 					width : 160,
 					editable : false,
-					renderer : {
-						type : "TemplateRenderer"
-					}
 				}, {
-					dataField : "secondary",
+					dataField : "primary",
 					headerText : "파일",
 					width : 160,
 					editable : false,
@@ -80,8 +72,8 @@
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
 							const oid = item.oid;
-							const url = getCallUrl("/aui/secondary?oid=" + oid + "&method=secondary");
-							_popup(url, 800, 400, "n");
+							const url = getCallUrl("/aui/primary?oid=" + oid + "&method=primary");
+							_popup(url, 800, 200, "n");
 						}
 					},
 				} ]
@@ -130,47 +122,26 @@
 			});
 			
 			// 품목추가
-			function insert91(arr, callBack) {
+			function insert91(arr, rowId) {
 				const rows91 = [];
-				let number = "";
-				arr.forEach(function(dd) {
-					const item = dd.item;
-					rows91.push(item);
-					number += item.number + "\n";
-					if(item.state!='작업 중'){
-						alert("부품이 작업중 상태가 아닙니다.");
-						return;
-					}
-				})
+				var item = arr[0].item;
+				rows91.push(item);
+				var number = item.number;
 				AUIGrid.updateRowsById(myGridID, {
 					oid : recentGridItem.oid,
 					rows91 : rows91,
-					partNumber : toRowsExp(number)
+					partNumber : number
 				});
-				callBack(true);
 			}
 			
 			// 첨부파일
-			function secondary(data) {
-				const cacheId = [];
-				let name = "";
-				for (let i = 0; i < data.length; i++) {
-					cacheId.push(data[i].cacheId);
-					name += data[i].name + "\n";
-				}
-				// 개행 처리
+			function primary(data) {
 				AUIGrid.updateRowsById(myGridID, {
 					oid : recentGridItem.oid,
-					secondary : cacheId,
-					secondaryName : toRowsExp(name)
+					primary : data.cacheId,
+					primaryName : data.name
 				});
-				// 초기화
 				recentGridItem = undefined;
-			}
-			
-			// 개행 처리 
-			function toRowsExp(value) {
-				return value.replace(/\r|\n|\r\n/g, "<br/>");
 			}
 			
 			// 추가
@@ -202,8 +173,8 @@
 						AUIGrid.showToastMessage(myGridID, rowIndex, 0, "품목을 선택해주세요.");
 						return false;
 					}
-					if (isNull(item.secondaryName)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "첨부파일을 선택하세요.");
+					if (isNull(item.primary)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 3, "첨부파일을 선택하세요.");
 						return false;
 					}
 				}
@@ -216,7 +187,6 @@
 				const params = {
 					gridData : gridData
 				}
-				debugger;
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {

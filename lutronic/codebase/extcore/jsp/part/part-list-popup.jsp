@@ -14,6 +14,7 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String rowId =request.getParameter("rowId")==null?"":request.getParameter("rowId").toString();
+boolean limit = request.getParameter("limit")==null?false:Boolean.parseBoolean(request.getParameter("limit"));
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -546,6 +547,13 @@ function addBtn() {
 		alert("추가할 행을 선택하세요.");
 		return false;
 	}
+	<%if(limit){%>
+		var state = checkedItems[0].item.state;
+		if(state!='작업 중'){
+			alert("부품이 작업 중인 상태는 등록할 수 없습니다.");
+			return false;
+		}
+	<%}%>
 	
 	openLayer();
 	<%if(!"".equals(rowId)){%>
