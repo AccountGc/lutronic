@@ -55,12 +55,13 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "number",
 		headerText : "도면 번호",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "name",
 		headerText : "도면명",
 		dataType : "string",
-		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -70,26 +71,37 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 				popup(url);
 			}
 		},
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "linkRefernceType",
 		headerText : "종속유형",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "modifyDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "oid",
 		visible : false
@@ -98,13 +110,15 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	function createAUIGrid2(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true
+			enableFilter : true,
+			autoGridHeight : true
 		}
 		refGridID = AUIGrid.create("#grid_ref", columnLayout, props);
 		AUIGrid.setGridData(refGridID, <%=json%>);
@@ -128,7 +142,9 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "number",
 		headerText : "도면 번호",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "name",
 		headerText : "도면명",
@@ -143,31 +159,44 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 				popup(url);
 			}
 		},
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "linkRefernceType",
 		headerText : "종속유형",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "modifyDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "oid",
 		visible : false
@@ -176,14 +205,15 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	function createAUIGrid3(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true,
-			fillColumnSizeMode: true,
+			enableFilter : true,
+			autoGridHeight : true
 		}
 		refbyGridID = AUIGrid.create("#grid_refby", columnLayout, props);
 		AUIGrid.setGridData(refbyGridID, <%=json%>);
@@ -207,12 +237,13 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataField : "number",
 		headerText : "품목 번호",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
-		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -222,26 +253,37 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 				_popup(url, 1600, 800, "n");
 			}
 		},
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "version",
 		headerText : "Rev.",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "modifyDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 180,
+		filter : {
+			showIcon : true,
+		},
 	}, {
 		dataField : "oid",
 		visible : false
@@ -250,14 +292,15 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	function createAUIGrid1(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
-			rowCheckToRadio : true,
-			fillColumnSizeMode: true,
+			enableFilter : true,
+			autoGridHeight : true
 		}
 		let dataList = [];
 		<% for(PartDTO part : partList) { %>
