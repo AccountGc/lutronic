@@ -83,7 +83,6 @@
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
-					<input type="button" value="목록 열기/닫기" title="목록 열기/닫기">
 					<input type="button" value="저장" title="저장" class="red" onclick="save();">
 				</td>
 			</tr>
@@ -257,6 +256,7 @@
 						oid : oid
 					}
 					const url = getCallUrl("/code/check");
+					logger(params);
 					call(url, params, function(data) {
 						if (!data.result) {
 							alert(data.msg);
@@ -366,7 +366,7 @@
 				call(url, params, function(data) {
 					if (data.result) {
 						alert(data.msg);
-						// 						loadGridData2(codeType);
+						loadGridData(codeType);
 					} else {
 						alert(data.msg);
 					}

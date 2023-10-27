@@ -35,7 +35,7 @@ public class NumberCodeDTO {
 		setCode(n.getCode());
 		setName(n.getName());
 		setSort(n.getSort());
-		setEnabled(!n.isDisabled());
+		setEnabled(n.isDisabled());
 		setDescription(n.getDescription());
 		setCodeType(n.getCodeType().getDisplay());
 	}
