@@ -147,16 +147,16 @@
 				}, {
 					dataField : "enabled",
 					headerText : "활성화",
-					dataType : "string",
-					width : 120,
-					renderer : {
-						type : "CheckBoxEditRenderer",
-						edtiable : false,
-					},
+					dataType : "boolean",
+					width : 100,
 					filter : {
 						showIcon : false,
 						inline : false
 					},
+					renderer : {
+						type : "CheckBoxEditRenderer",
+						editable : true
+					}
 				} ]
 			}
 
@@ -171,14 +171,14 @@
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					displayTreeOpen : false,
+					enableRowCheckShiftKey : true,
 					editable : true,
-// 					forceTreeView : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.bind(myGridID, "contextMenu", function(event) {
@@ -219,6 +219,7 @@
 				const url = getCallUrl("/code/list");
 				parent.openLayer();
 				call(url, params, function(data) {
+					logger(data);
 					if (data.result) {
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
