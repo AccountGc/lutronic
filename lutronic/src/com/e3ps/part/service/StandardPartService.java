@@ -270,16 +270,22 @@ public class StandardPartService extends StandardManager implements PartService 
 				ViewHelper.assignToView(part, ViewHelper.service.getView(view));
 			}
 
-			// 폴더 셋팅
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) part, folder);
-
+			
 			// 라이프사이클 셋팅
-			if (lifecycle.length() > 0) {
+			
+			if (temprary) {
+				setTemprary(part, lifecycle);
+			} else {
+				// 폴더 셋팅
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) part, folder);
+
+				// 문서 lifeCycle 설정
 				LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle,
 						wtContainerRef);
 				part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
 			}
+			
 
 			part = (WTPart) PersistenceHelper.manager.save(part);
 
@@ -4905,4 +4911,27 @@ public class StandardPartService extends StandardManager implements PartService 
 		return result;
 	}
 
+	
+	/**
+	 * 임시 저장함으로 이동시킬 함수
+	 */
+	private void setTemprary(WTPart part, String lifecycle) throws Exception {
+		setTemprary(part, lifecycle, "C");
+	}
+	
+	/**
+	 * 임시 저장함으로 이동시킬 함수 C 생성, R, U 개정 및 수정
+	 */
+	private void setTemprary(WTPart part, String lifecycle, String option) throws Exception {
+		String location = "/Default/임시저장함";
+		if ("C".equals(option)) {
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) part, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(part,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+		} else if ("U".equals(option) || "R".equals(option)) {
+
+		}
+	}
 }
