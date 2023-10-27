@@ -48,7 +48,7 @@
                 </td>
             </tr>
             <tr>
-                <th rowspan="2">물질</th>
+                <th class="lb" rowspan="2">물질</th>
                 <th class="lb">일괄등록</th>
                 <td class="indent5">
                     <input type="file" name="rohs" id="rohs">
