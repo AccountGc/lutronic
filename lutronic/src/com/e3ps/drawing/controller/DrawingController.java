@@ -29,15 +29,19 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
+import com.e3ps.mold.service.MoldHelper;
+import com.e3ps.part.service.PartHelper;
 
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMReferenceLink;
 import wt.org.WTUser;
+import wt.part.WTPart;
 import wt.session.SessionHelper;
 import wt.util.WTException;
 
@@ -91,7 +95,16 @@ public class DrawingController extends BaseController{
 	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-//			DocumentHelper.service.batch(params);
+			ArrayList<Map<String, Object>> gridData = (ArrayList<Map<String, Object>>) params.get("gridData");
+			for (Map<String, Object> data : gridData) {
+				ArrayList<Map<String, Object>> rows91 = (ArrayList<Map<String, Object>>) data.get("rows91");
+				if (DrawingHelper.manager.isExist(rows91)) {
+					result.put("result", FAIL);
+					result.put("msg", "주 도면이 존재합니다.");
+					return result;
+				}
+			}
+			DrawingHelper.service.batch(gridData);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
