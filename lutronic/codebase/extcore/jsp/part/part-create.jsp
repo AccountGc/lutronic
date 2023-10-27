@@ -26,7 +26,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<form>
 		<input type="hidden" name="wtPartType"		id="wtPartType"		 	value="separable"     />
 		<input type="hidden" name="source"			id="source"	      		value="make"            />
-		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
+		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_Default"  />
 		<input type="hidden" name="view"			id="view"        		value="Design" />
 		
 		<table class="button-table">
@@ -388,6 +388,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				// RoHs
 				const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				
 	            if(isEmpty(location)){
 					alert("품목구분을 입력하세요.");
 					return;					
@@ -473,7 +475,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						rows90 : rows90,
 						rows106 : rows106,
 				};
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/part/create");
 				
