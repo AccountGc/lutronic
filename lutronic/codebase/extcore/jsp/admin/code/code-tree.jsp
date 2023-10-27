@@ -40,7 +40,7 @@
 		}
 		const type = event.item.type;
 		const params = {
-			type : type
+			codeType : type
 		}
 		document.getElementById("codeType").value = type;
 		const url = getCallUrl("/code/list");
