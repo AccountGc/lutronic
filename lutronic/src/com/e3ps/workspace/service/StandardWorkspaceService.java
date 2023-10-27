@@ -456,31 +456,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		}
 	}
 
-	private void createECN(String tapOid) throws Exception {
-		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(tapOid);
-		EChangeNotice ecn = EChangeNotice.newEChangeNotice();
-		ecn.setEoName(eco.getEoName());
-		ecn.setEoNumber(eco.getEoNumber());
-		ecn.setModel(eco.getModel());
-		ecn.setEoCommentA(eco.getEoCommentA());
-		ecn.setEoCommentB(eco.getEoCommentB());
-		ecn.setEoCommentC(eco.getEoCommentC());
-		ecn.setEoCommentD(eco.getEoCommentD());
-		ecn.setEoCommentE(eco.getEoCommentE());
-		ecn.setEoType(eco.getEoType());
-		ecn.setEco(eco);
-		
-		String location = "/Default/설계변경/ECN";
-		String lifecycle = "LC_ECN";
-		
-		Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-		FolderHelper.assignLocation((FolderEntry) ecn, folder);
-		// 문서 lifeCycle 설정
-		LifeCycleHelper.setLifeCycle(ecn,
-				LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
-		ecn = (EChangeNotice) PersistenceHelper.manager.save(ecn);
-	}
-
 	/**
 	 * 최종 결재 이후 시작할 함수
 	 */
@@ -500,7 +475,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				if ("CHANGE".equals(t)) {
 					System.out.println("ECO 결재 완료");
 					EcoHelper.manager.postAfterAction(e);
-					createECN(tapOid);
 					// EO
 				} else {
 					System.out.println("EO 결재 완료");

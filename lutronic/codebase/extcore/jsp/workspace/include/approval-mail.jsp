@@ -37,7 +37,7 @@ JSONArray data = WorkspaceHelper.manager.getExternalMail(oid);
 		</td>
 	</tr>
 </table>
-<div id="grid10001" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid10001" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID10001;
 	const columns10001 = [ {

@@ -245,7 +245,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		importTable.setValue("IV_WERKS", "1000"); // 플랜트
 
 		// EO/ECO 헤더 정보 전송
-		JCoTable eoTable = function.getTableParameterList().getTable("ES_ECM");
+		JCoTable eoTable = function.getTableParameterList().getTable("ET_ECM");
 
 		eoTable.appendRow();
 		eoTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리??

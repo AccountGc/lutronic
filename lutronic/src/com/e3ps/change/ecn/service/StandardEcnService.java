@@ -57,10 +57,27 @@ public class StandardEcnService extends StandardManager implements EcnService {
 		try {
 			trs.start();
 
-			EChangeNotice ecn =EChangeNotice.newEChangeNotice();
-			// 나머지 정보들 대충 세팅 해서 일단 리스트 나오게
+			EChangeNotice ecn = EChangeNotice.newEChangeNotice();
+			ecn.setEoName(eco.getEoName());
+			ecn.setEoNumber(eco.getEoNumber());
+			ecn.setModel(eco.getModel());
+			ecn.setEoCommentA(eco.getEoCommentA());
+			ecn.setEoCommentB(eco.getEoCommentB());
+			ecn.setEoCommentC(eco.getEoCommentC());
+			ecn.setEoCommentD(eco.getEoCommentD());
+			ecn.setEoCommentE(eco.getEoCommentE());
+			ecn.setEoType(eco.getEoType());
 			ecn.setEco(eco);
-			PersistenceHelper.manager.save(ecn);
+
+			String location = "/Default/설계변경/ECN";
+			String lifecycle = "LC_ECN";
+
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) ecn, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(ecn,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+			ecn = (EChangeNotice) PersistenceHelper.manager.save(ecn);
 
 			trs.commit();
 			trs = null;

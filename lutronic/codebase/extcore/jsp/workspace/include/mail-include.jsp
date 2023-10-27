@@ -12,7 +12,7 @@ boolean update = "update".equals(mode);
 <div class="include">
 	<input type="button" value="외부 메일 추가" title="외부 메일 추가" class="blue" onclick="popup9();">
 	<input type="button" value="외부 메일 삭제" title="외부 메일 삭제" class="red" onclick="deleteRow9();">
-	<div id="grid9" style="height: 100px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+	<div id="grid9" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 	
 	<script type="text/javascript">
 		let myGridID9;

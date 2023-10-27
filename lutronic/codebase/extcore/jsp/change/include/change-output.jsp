@@ -21,9 +21,11 @@ for (int i = 0; i < list.size(); i++) {
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				산출물 등록<%
+				산출물<%
 				if (CommonUtil.isAdmin()) {
-				%>&nbsp;<%//=eoid%>
+				%>&nbsp;<%
+				//=eoid
+				%>
 				<%
 				}
 				%>
@@ -62,9 +64,9 @@ for (int i = 0; i < list.size(); i++) {
 			</jsp:include>
 		</td>
 	</tr>
-		<tr>
+	<tr>
 		<th class="lb">의견</th>
-		<td class="indent5" colspan="5"><%=map.get("description") != null ? map.get("description") : "" %></td>
+		<td class="indent5" colspan="5"><%=map.get("description") != null ? map.get("description") : ""%></td>
 	</tr>
 	<tr>
 		<th class="lb">산출물</th>

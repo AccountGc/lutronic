@@ -32,7 +32,7 @@ boolean update = "update".equals(mode);
 <div class="include">
 	<input type="button" value="결재선 추가" title="결재선 추가" class="blue" onclick="popup8();">
 	<input type="button" value="결재선 삭제" title="결재선 삭제" class="red" onclick="deleteRow8();">
-	<div id="grid8" style="height: 100px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+	<div id="grid8" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 	<script type="text/javascript">
 		let myGridID8;
 		const columns8 = [ {
