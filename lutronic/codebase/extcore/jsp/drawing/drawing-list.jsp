@@ -335,7 +335,7 @@ String userNm = sessionUser.getFullName();
 					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
-					width : 60,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -344,7 +344,7 @@ String userNm = sessionUser.getFullName();
 					dataField : "number",
 					headerText : "도면번호",
 					dataType : "string",
-					width : 180,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -359,10 +359,10 @@ String userNm = sessionUser.getFullName();
 						}
 					},
 				}, {
-					dataField : "description",
+					dataField : "thum",
 					headerText : "Thumbnail",
 					dataType : "string",
-					width : 380,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -371,7 +371,7 @@ String userNm = sessionUser.getFullName();
 					dataField : "name",
 					headerText : "도면명",
 					dataType : "string",
-					width : 180,
+					width : 250,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -386,10 +386,10 @@ String userNm = sessionUser.getFullName();
 						}
 					},
 				}, {
-					dataField : "state",
+					dataField : "location",
 					headerText : "도면분류",
 					dataType : "string",
-					width : 90,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
