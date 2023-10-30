@@ -10,7 +10,10 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 CrDTO dto = (CrDTO) request.getAttribute("dto");
 Map<String, Object> contentMap = dto.getContentMap();
-String aOid =contentMap.get("aoid")==null ?"":contentMap.get("aoid").toString();
+String aOid = "";
+if(contentMap!=null){
+	aOid =contentMap.get("aoid")==null ?"":contentMap.get("aoid").toString();
+}
 %>
 <!DOCTYPE html>
 <html>
