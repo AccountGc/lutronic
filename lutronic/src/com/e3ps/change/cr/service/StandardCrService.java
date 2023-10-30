@@ -115,16 +115,12 @@ public class StandardCrService extends StandardManager implements CrService {
 			String location = "/Default/설계변경/ECR";
 			String lifecycle = "LC_Default";
 
-			// 임시 서장함 이동
-			if (temprary) {
-				setTemprary(cr, lifecycle);
-			} else {
-				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-				FolderHelper.assignLocation((FolderEntry) cr, folder);		
-				// lifecycle 설정
-				LifeCycleHelper.setLifeCycle(cr,
-						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef()));
-			}
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) cr, folder);		
+			// lifecycle 설정
+			LifeCycleHelper.setLifeCycle(cr,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef()));
+			
 			cr = (EChangeRequest) PersistenceHelper.manager.save(cr);
 			
 			if (temprary) {
@@ -167,29 +163,6 @@ public class StandardCrService extends StandardManager implements CrService {
 		}
 	}
 	
-	/**
-	 * 임시 저장함으로 이동시킬 함수
-	 */
-	private void setTemprary(EChangeRequest cr, String lifecycle) throws Exception {
-		setTemprary(cr, lifecycle, "C");
-	}
-
-	/**
-	 * 임시 저장함으로 이동시킬 함수 C 생성, R, U 개정 및 수정
-	 */
-	private void setTemprary(EChangeRequest cr, String lifecycle, String option) throws Exception {
-		String location = "/Default/임시저장함";
-		if ("C".equals(option)) {
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) cr, folder);
-			// CR lifeCycle 설정
-			LifeCycleHelper.setLifeCycle(cr,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
-		} else if ("U".equals(option) || "R".equals(option)) {
-
-		}
-	}
-
 	/**
 	 * 관련 CR링크
 	 */
