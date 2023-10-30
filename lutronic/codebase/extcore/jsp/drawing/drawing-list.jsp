@@ -280,12 +280,12 @@ String userNm = sessionUser.getFullName();
 						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
+						<jsp:param value="623" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 605px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 595px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -498,6 +498,8 @@ String userNm = sessionUser.getFullName();
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+				_createAUIGrid(_columns);
+				AUIGrid.resize(_myGridID);
 				selectbox("state");
 				selectbox("cadDivision");
 				selectbox("cadType");
@@ -533,6 +535,7 @@ String userNm = sessionUser.getFullName();
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+				AUIGrid.resize(_myGridID);
 			});
 			
 			function spread(target) {

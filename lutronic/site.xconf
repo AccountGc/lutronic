@@ -104,6 +104,7 @@
    <Property name="wt.licenseUsage.initial.connectedToInternet" overridable="true"
              targetFile="codebase/wt.properties"
              value="0"/>
+             
 	<Property name="wt.manager.cmd.MethodServer.debug.args" overridable="true" 
 		targetFile="codebase/wt.properties"
 		value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"/> 
