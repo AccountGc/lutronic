@@ -127,10 +127,6 @@ public class StandardNumberCodeService extends StandardManager implements Number
 		List<NumberCodeDTO> editRows = (List<NumberCodeDTO>) dataMap.get("editRows");
 		List<NumberCodeDTO> removeRows = (List<NumberCodeDTO>) dataMap.get("removeRows");
 		String codeType = (String) dataMap.get("codeType");
-		System.out.println("Service ========================>" + addRows.size());
-		System.out.println("Service ========================>" + editRows.size());
-		System.out.println("Service ========================>" + removeRows.size());
-		System.out.println("Service ========================>" + codeType);
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -142,13 +138,14 @@ public class StandardNumberCodeService extends StandardManager implements Number
 				String sort = dto.getSort();
 				boolean enabled = dto.isEnabled();
 				String parentRowId = dto.getParentRowId();
-
+				
 				NumberCode parent = null;
 				if (StringUtil.checkString(parentRowId)) {
 					parent = (NumberCode) CommonUtil.getObject(parentRowId);
 				}
-
+				
 				NumberCode n = NumberCode.newNumberCode();
+				
 				n.setParent(parent);
 				n.setName(name);
 				n.setCode(code);

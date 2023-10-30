@@ -16,7 +16,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="결재회수" title="결재회수">
 			<input type="button" value="Erp전송" title="Erp전송" class="blue" onclick="modify();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">

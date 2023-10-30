@@ -26,7 +26,7 @@ public class EpmData {
 	public String number; // 도면번호
 	public String linkRefernceType;
 	public String icon;
-	public WTPart part;
+//	public WTPart part;
 	public String cadType;
 	public String creator;
 	private String modifier;
@@ -79,6 +79,7 @@ public class EpmData {
 		String cadName = master.getCADName();
 		setCadName(cadName);
 		setAttach(epm);
+		WTPart part = null;
 		// Creo의 드로잉은 경우 3D의 WTPArt
 		if (EpmUtil.isCreoDrawing(epm)) {
 			String number = epm.getNumber();
@@ -91,7 +92,7 @@ public class EpmData {
 
 		// 연관 파트 번호
 		if (part == null) {
-			part = getDrawingPart();
+			part = getDrawingPart(part);
 		}
 		if (part != null) {
 			pNum = part.getNumber();
@@ -103,11 +104,11 @@ public class EpmData {
 	}
 
 	// 연관 파트 번호
-	public String getpNum() {
+	public String getpNum(WTPart part) {
 		String pNum = "";
 		try {
 			if (part == null) {
-				part = getDrawingPart();
+				part = getDrawingPart(part);
 			}
 
 			if (part != null) {
@@ -133,7 +134,7 @@ public class EpmData {
 	 * 
 	 * @return
 	 */
-	public WTPart getDrawingPart() {
+	public WTPart getDrawingPart(WTPart part) {
 
 		try {
 

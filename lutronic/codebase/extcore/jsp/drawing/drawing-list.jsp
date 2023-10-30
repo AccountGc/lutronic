@@ -280,12 +280,12 @@ String userNm = sessionUser.getFullName();
 						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
+						<jsp:param value="623" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 605px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 595px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -335,7 +335,7 @@ String userNm = sessionUser.getFullName();
 					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
-					width : 60,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -344,7 +344,7 @@ String userNm = sessionUser.getFullName();
 					dataField : "number",
 					headerText : "도면번호",
 					dataType : "string",
-					width : 180,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -359,10 +359,10 @@ String userNm = sessionUser.getFullName();
 						}
 					},
 				}, {
-					dataField : "description",
+					dataField : "thum",
 					headerText : "Thumbnail",
 					dataType : "string",
-					width : 380,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -371,7 +371,7 @@ String userNm = sessionUser.getFullName();
 					dataField : "name",
 					headerText : "도면명",
 					dataType : "string",
-					width : 180,
+					width : 250,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -386,10 +386,10 @@ String userNm = sessionUser.getFullName();
 						}
 					},
 				}, {
-					dataField : "state",
+					dataField : "location",
 					headerText : "도면분류",
 					dataType : "string",
-					width : 90,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -498,6 +498,8 @@ String userNm = sessionUser.getFullName();
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+				_createAUIGrid(_columns);
+				AUIGrid.resize(_myGridID);
 				selectbox("state");
 				selectbox("cadDivision");
 				selectbox("cadType");
@@ -533,6 +535,7 @@ String userNm = sessionUser.getFullName();
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+				AUIGrid.resize(_myGridID);
 			});
 			
 			function spread(target) {

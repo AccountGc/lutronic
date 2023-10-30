@@ -104,6 +104,12 @@
    <Property name="wt.licenseUsage.initial.connectedToInternet" overridable="true"
              targetFile="codebase/wt.properties"
              value="0"/>
+             
+	<Property name="wt.manager.cmd.MethodServer.debug.args" overridable="true" 
+		targetFile="codebase/wt.properties"
+		value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"/> 
+
+
    <AddToProperty name="mapcredentials.admin.adapters"
                   value="com.lutronic.EnterpriseLdap^cn=Manager^encrypted.com.lutronic.EnterpriseLdap.cn=Manager"/>
    <!--Updated by wt.load.Installer.--><Property name="wt.sysadm.administrators" overridable="true"

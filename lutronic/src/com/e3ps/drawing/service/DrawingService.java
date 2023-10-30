@@ -1,5 +1,6 @@
 package com.e3ps.drawing.service;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -78,4 +79,6 @@ public interface DrawingService {
 			HttpServletResponse response) throws Exception;
 	
 	public void create(Map<String,Object> map) throws Exception;
+	
+	public void batch(ArrayList<Map<String, Object>> gridData) throws Exception;
 }

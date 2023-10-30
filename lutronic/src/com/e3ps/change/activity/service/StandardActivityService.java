@@ -141,7 +141,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				String oid = (String) editRow.get("oid");
 				String step = (String) editRow.get("step");
 				String name = (String) editRow.get("name");
-				String activity_name = (String) editRow.get("activity_name"); // code..
+				String activity_type = (String) editRow.get("activity_type"); // code..
 				int sort = (int) editRow.get("sort");
 				String activeUser_oid = (String) editRow.get("activeUser_oid"); // wtuser
 				EChangeActivityDefinition act = (EChangeActivityDefinition) CommonUtil.getObject(oid);
@@ -149,7 +149,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				act.setActiveUser((WTUser) CommonUtil.getObject(activeUser_oid));
 				act.setSortNumber(sort);
 				act.setStep(step);
-				act.setActiveType(activity_name);
+				act.setActiveType(activity_type);
 				PersistenceHelper.manager.modify(act);
 			}
 

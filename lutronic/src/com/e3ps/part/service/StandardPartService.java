@@ -270,16 +270,18 @@ public class StandardPartService extends StandardManager implements PartService 
 				ViewHelper.assignToView(part, ViewHelper.service.getView(view));
 			}
 
+			
+			// 라이프사이클 셋팅
+			
 			// 폴더 셋팅
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) part, folder);
 
-			// 라이프사이클 셋팅
-			if (lifecycle.length() > 0) {
-				LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle,
-						wtContainerRef);
-				part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
-			}
+			// 문서 lifeCycle 설정
+			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle,
+					wtContainerRef);
+			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+			
 
 			part = (WTPart) PersistenceHelper.manager.save(part);
 

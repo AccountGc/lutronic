@@ -273,19 +273,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				const url = getCallUrl("/workspace/agree");
 				const field = [ "name", "_psize", "submiterOid", "receiveFrom", "receiveTo" ];
 				params = toField(params, field);
-
-				const radios = document.getElementsByName("state");
-				let selectedValue;
-
-				for (let i = 0; i < radios.length; i++) {
-					if (radios[i].checked) {
-						selectedValue = radios[i].value;
-						break;
-					}
-				}
-				params.state = selectedValue;
+				const state = document.querySelector("input[name=state]:checked").value;
+				params.state = state;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {

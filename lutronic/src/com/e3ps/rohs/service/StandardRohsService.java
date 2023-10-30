@@ -700,17 +700,12 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			rohs.setDescription(description);
 			
 			String location = StringUtil.checkNull((String) params.get("location"));
-			// 임시 저장함 이동
-			if (temprary) {
-				setTemprary(rohs, lifecycle);
-			} else {
-				// 문서 분류쳬게 설정
-				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-				FolderHelper.assignLocation((FolderEntry) rohs, folder);
-				// 문서 lifeCycle 설정
-				LifeCycleHelper.setLifeCycle(rohs,
-						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
-			}
+			// 문서 분류쳬게 설정
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) rohs, folder);
+			// 문서 lifeCycle 설정
+			LifeCycleHelper.setLifeCycle(rohs,
+					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			
 	        rohs.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
 	        rohs = (ROHSMaterial)PersistenceHelper.manager.save(rohs);
@@ -1279,27 +1274,4 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		return result;
 	}
 	
-	/**
-	 * 임시 저장함으로 이동시킬 함수
-	 */
-	private void setTemprary(ROHSMaterial rohs, String lifecycle) throws Exception {
-		setTemprary(rohs, lifecycle, "C");
-	}
-
-	/**
-	 * 임시 저장함으로 이동시킬 함수 C 생성, R, U 개정 및 수정
-	 */
-	private void setTemprary(ROHSMaterial rohs, String lifecycle, String option) throws Exception {
-		String location = "/Default/임시저장함";
-		if ("C".equals(option)) {
-			// 문서 분류쳬게 설정
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) rohs, folder);
-			// 문서 lifeCycle 설정
-			LifeCycleHelper.setLifeCycle(rohs,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
-		} else if ("U".equals(option) || "R".equals(option)) {
-
-		}
-	}
 }

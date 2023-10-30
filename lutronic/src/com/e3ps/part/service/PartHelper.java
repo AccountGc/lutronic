@@ -236,7 +236,6 @@ public class PartHelper {
 			query.appendWhere(
 					new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false),
 					new int[] { idx });
-
 		}
 
 		// 최신 이터레이션.

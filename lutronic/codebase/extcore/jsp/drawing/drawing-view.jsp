@@ -58,10 +58,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<a href="#tabs-2">참조</a>
 		</li>
 		<li>
-			<a href="#tabs-3">이력 관리</a>
-		</li>
-		<li>
-			<a href="#tabs-5">관련 개발업무</a>
+			<a href="#tabs-4">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -74,54 +71,62 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>도면번호</th>
-				<td colspan="3"><%=dto.getNumber()%></td>
+				<th class="lb">도면번호</th>
+				<td class="indent5" colspan="3"><%=dto.getNumber()%></td>
 			</tr>
 			<tr>
-				<th>도면명</th>
-				<td><%=dto.getName()%></td>
-				<th>도면분류</th>
-				<td><%=dto.getLocation()%></td>
+				<th class="lb">도면명</th>
+				<td class="indent5"><%=dto.getName()%></td>
+				<th class="lb">도면분류</th>
+				<td class="indent5"><%=dto.getLocation()%></td>
 			</tr>
 			<tr>
-				<th>상태</th>
-				<td><%=dto.getState()%></td>
-				<th>Rev.</th>
-				<td></td>
+				<th class="lb">상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
+				<th class="lb">Rev.</th>
+				<td class="indent5"><%=dto.getVersion()%></td>
 			</tr>
 			<tr>
-				<th>등록자</th>
-				<td><%=dto.getCreator()%></td>
-				<th>수정자</th>
-				<td><%=dto.getModifier()%></td>
+				<th class="lb">등록자</th>
+				<td class="indent5"><%=dto.getCreator()%></td>
+				<th class="lb">수정자</th>
+				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
-				<th>등록일</th>
-				<td><%=dto.getCreateDate()%></td>
-				<th>수정일</th>
-				<td><%=dto.getModifyDate()%></td>
+				<th class="lb">등록일</th>
+				<td class="indent5"><%=dto.getCreateDate()%></td>
+				<th class="lb">수정일</th>
+				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
-				<th>도면구분</th>
-				<td><%=dto.getCadType()%></td>
-				<th>도면파일</th>
-				<td><%=dto.getCadName()%></td>
+				<th class="lb">도면구분</th>
+				<td class="indent5"><%=dto.getCadType()%></td>
+				<th class="lb">도면파일</th>
+				<td class="indent5"><%=dto.getCadName()%></td>
 			</tr>
 			<tr>
-				<th>주 부품</th>
-				<td><%=dto.getpNum()%></td>
-				<th>ApplicationType</th>
-				<td><%=dto.getApplicationType()%></td>
+				<th class="lb">주 부품</th>
+				<td class="indent5"><%=dto.getPNum()%></td>
+				<th class="lb">ApplicationType</th>
+				<td class="indent5"><%=dto.getApplicationType()%></td>
 			</tr>
 			<tr>
-				<th>dxf</th>
-				<td colspan="3"></td>
+				<th class="lb">dxf</th>
+				<td class="indent5" colspan="3"></td>
 			</tr>
 			<tr>
-				<th>첨부파일</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/common/content/include_secondaryFileView.jsp">
-						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
+				<th class="lb">주 첨부파일</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+					</jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">첨부파일</th>
+				<td class="indent5" colspan="3">
+					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -135,19 +140,10 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		</jsp:include>
 	</div>
 
-	<div id="tabs-3">
+	<div id="tabs-4">
 		<!-- 이력관리 -->
 		<jsp:include page="/extcore/jsp/drawing/drawing-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
-	
-	
-	<div id="tabs-5">
-		<!-- 관련 개발업무 -->
-		<jsp:include page="/extcore/jsp/development/include_viewDevelopment.jsp">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="drawing" name="moduleType"/>
 		</jsp:include>
 	</div>
 </div>
@@ -285,7 +281,6 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					} else {
 						createAUIGrid3(columnRefby);
 					}
-					
 					const isCreated3 = AUIGrid.isCreated(partGridID);
 					if (isCreated3) {
 						AUIGrid.resize(partGridID);
@@ -293,13 +288,18 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 						createAUIGrid1(columnPart);
 					}
 					break;
-				case "tabs-3":
-					
+				case "tabs-4":
 					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
 					if (isCreated50) {
 						AUIGrid.resize(myGridID50);
 					} else {
 						createAUIGrid50(columns50);
+					}
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 다운로드이력
+					if (isCreated10000) {
+						AUIGrid.resize(myGridID10000);
+					} else {
+						createAUIGrid10000(columns10000);
 					}
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
 					if (isCreated51) {
@@ -307,33 +307,18 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					} else {
 						createAUIGrid51(columns51);
 					}
-					
-					break;
-				case "tabs-5":
-					const isCreated4 = AUIGrid.isCreated(devGridID);
-					if (isCreated4) {
-						AUIGrid.resize(devGridID);
-					} else {
-						createAUIGrid4(columnDev);
-					}
 					break;
 				}
 			}
 		});
-		createAUIGrid2(columnRef);
-		AUIGrid.resize(refGridID);
-		createAUIGrid3(columnRefby);
-		AUIGrid.resize(refbyGridID);
-		createAUIGrid1(columnPart);
-		AUIGrid.resize(partGridID);
-		createAUIGrid4(columnDev);
-		AUIGrid.resize(devGridID);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(refGridID);
 		AUIGrid.resize(refbyGridID);
 		AUIGrid.resize(partGridID);
-		AUIGrid.resize(devGridID);
+		AUIGrid.resize(myGridID50);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID51);
 	});
 </script>

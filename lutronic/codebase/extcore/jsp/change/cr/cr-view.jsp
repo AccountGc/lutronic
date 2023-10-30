@@ -17,14 +17,6 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			</div>
 		</td>
 		<td class="right">
-			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-			<%
-			if(dto.isWithDraw()){
-			%>
-				<input type="button" value="결재회수" title="결재회수" class="" id="withDrawBtn">
-			<%	
-			}
-			%>
 			<%
 			if (dto.is_modify()) {
 			%>

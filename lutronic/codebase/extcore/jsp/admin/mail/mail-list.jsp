@@ -152,15 +152,19 @@
 			}
 
 			function loadGridData() {
-				let params = new Object();
-				const field = [ "name", "email", "_psize" ];
+				let params = {
+					name: toId("name"),
+					email: toId("email"),
+					_psize: toId("_psize"),
+				}
 				const enable = document.querySelector("input[name=enable]:checked").value;
 				const url = getCallUrl("/admin/mail");
-				params = toField(params, field);
 				params.enable = JSON.parse(enable);
 				AUIGrid.showAjaxLoader(myGridID);
+				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
+					logger(data);
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -202,9 +206,10 @@
 			});
 
 			// 추가
-
 			function addRow() {
-				const item = new Object();
+				const item = {
+					enable : true,
+				};
 				AUIGrid.addRow(myGridID, item, 'first');
 			}
 
@@ -241,6 +246,7 @@
 					removeRow : removedRowItems,
 				}
 				const url = getCallUrl("/admin/mail");
+				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);

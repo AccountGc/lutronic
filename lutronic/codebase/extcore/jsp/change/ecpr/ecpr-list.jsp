@@ -156,7 +156,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "number",
 					headerText : "ECPR 번호",
 					dataType : "string",
-					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -174,7 +173,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "name",
 					headerText : "ECPR 제목",
 					dataType : "string",
-					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -192,7 +190,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
-					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -201,7 +198,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
-					width : 250,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -210,7 +206,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
-					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -219,7 +214,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "writeDate",
 					headerText : "작성일",
 					dataType : "string",
-					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -228,7 +222,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -237,7 +230,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -246,7 +238,6 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 					dataField : "createdDate_txt",
 					headerText : "등록일",
 					dataType : "string",
-					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true

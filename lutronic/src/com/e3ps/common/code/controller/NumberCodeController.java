@@ -112,7 +112,6 @@ public class NumberCodeController extends BaseController {
 		ArrayList<LinkedHashMap<String, Object>> editRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("editRows");
 		ArrayList<LinkedHashMap<String, Object>> removeRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("removeRows");
 		String codeType = (String) params.get("codeType");
-		System.out.println("Controller ========================>" + codeType);
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 
@@ -120,7 +119,6 @@ public class NumberCodeController extends BaseController {
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			ArrayList<NumberCodeDTO> addRow = new ArrayList<>();
 			if(addRows != null && addRows.size() > 0) {
-				System.out.println("Controller ========================>" + addRows.size());
 				for (LinkedHashMap<String, Object> add : addRows) {
 					NumberCodeDTO dto = mapper.convertValue(add, NumberCodeDTO.class);
 					addRow.add(dto);
@@ -129,7 +127,6 @@ public class NumberCodeController extends BaseController {
 
 			ArrayList<NumberCodeDTO> editRow = new ArrayList<>();
 			if(editRows != null && editRows.size() > 0) {
-				System.out.println("Controller ========================>" + editRows.size());
 				for (LinkedHashMap<String, Object> edit : editRows) {
 					NumberCodeDTO dto = mapper.convertValue(edit, NumberCodeDTO.class);
 					editRow.add(dto);
@@ -138,7 +135,6 @@ public class NumberCodeController extends BaseController {
 
 			ArrayList<NumberCodeDTO> removeRow = new ArrayList<>();
 			if(removeRows != null && removeRows.size() > 0) {
-				System.out.println("Controller ========================>" + removeRows.size());
 				for (LinkedHashMap<String, Object> remove : removeRows) {
 					NumberCodeDTO dto = mapper.convertValue(remove, NumberCodeDTO.class);
 					removeRow.add(dto);
