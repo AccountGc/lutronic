@@ -778,17 +778,10 @@ public class WorkspaceHelper {
 			}
 
 			query.appendOpenParen();
-
-			SearchCondition sc = new SearchCondition(ApprovalLine.class, ApprovalLine.STATE, "=", STATE_AGREE_COMPLETE);
-			query.appendWhere(sc, new int[] { idx });
-			query.appendOr();
-
-			sc = new SearchCondition(ApprovalLine.class, ApprovalLine.STATE, "=", STATE_AGREE_READY);
-			query.appendWhere(sc, new int[] { idx });
-			query.appendOr();
-
-			sc = new SearchCondition(ApprovalLine.class, ApprovalLine.STATE, "=", STATE_AGREE_REJECT);
-			query.appendWhere(sc, new int[] { idx });
+			
+			QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_COMPLETE);
+			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
+			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_REJECT);
 
 			query.appendCloseParen();
 		}
