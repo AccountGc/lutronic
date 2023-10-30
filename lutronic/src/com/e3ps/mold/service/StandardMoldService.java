@@ -89,22 +89,17 @@ public class StandardMoldService extends StandardManager implements MoldService 
 			doc.setDescription(description);
 			doc.setNumber(number);
 			
-			// 임시 저장함 이동
-			if (temprary) {
-				setTemprary(doc, lifecycle);
-			} else {
-				// 문서 분류쳬게 설정
-		        Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-		        FolderHelper.assignLocation((FolderEntry)doc, folder);
-		        
-		        // 문서 Container 설정
-		        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
-		        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
-		        doc.setContainer(e3psProduct);
-		        
-		        // 문서 lifeCycle 설정
-		        LifeCycleHelper.setLifeCycle(doc, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
-			}
+			// 문서 분류쳬게 설정
+	        Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+	        FolderHelper.assignLocation((FolderEntry)doc, folder);
+	        
+	        // 문서 Container 설정
+	        PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
+	        WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
+	        doc.setContainer(e3psProduct);
+	        
+	        // 문서 lifeCycle 설정
+	        LifeCycleHelper.setLifeCycle(doc, LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef)); //Lifecycle
 			
 			doc = (WTDocument) PersistenceHelper.manager.save(doc);
 	        
@@ -144,29 +139,6 @@ public class StandardMoldService extends StandardManager implements MoldService 
 		} finally {
 			if (trs != null)
 				trs.rollback();
-		}
-	}
-	
-	/**
-	 * 임시 저장함으로 이동시킬 함수
-	 */
-	private void setTemprary(WTDocument doc, String lifecycle) throws Exception {
-		setTemprary(doc, lifecycle, "C");
-	}
-
-	/**
-	 * 임시 저장함으로 이동시킬 함수 C 생성, R, U 개정 및 수정
-	 */
-	private void setTemprary(WTDocument doc, String lifecycle, String option) throws Exception {
-		String location = "/Default/임시저장함";
-		if ("C".equals(option)) {
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) doc, folder);
-			// 문서 lifeCycle 설정
-			LifeCycleHelper.setLifeCycle(doc,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
-		} else if ("U".equals(option) || "R".equals(option)) {
-
 		}
 	}
 	
