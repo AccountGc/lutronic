@@ -428,7 +428,7 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						<a onclick="moveToPage(this, '/admin/downLoadHistory', '> 관리자 > 다운로드 이력관리');">다운로드 이력관리</a>
 					</li>
 					<li>
-						<a onclick="popup('/Windchill', 1600, 800);">Windchill</a>
+						<a onclick="window.open('/Windchill','','scrollbars=yes, resizable=yes,height=800, width=1600');">Windchill</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/form/list', '> 관리자 > 문서 템플릿관리');">문서 템플릿관리</a>
