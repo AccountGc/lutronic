@@ -1,7 +1,6 @@
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.change.activity.dto.DefDTO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="com.e3ps.change.beans.ROOTData"%>
 <%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.fc.PersistenceHelper"%>
@@ -151,7 +150,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 					inline : true
 				},
 			}, {
-				dataField : "activity_name",
+				dataField : "activity_type",
 				headerText : "활동구분",
 				dataType : "string",
 				width : 200,
@@ -407,7 +406,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 			function create(type) {
 				const oid = document.getElementById("root").value;
 				const url = getCallUrl("/activity/create?type=" + type + "&oid=" + oid);
-				_popup(url, 600, 500, "n");
+				_popup(url, 600, 550, "n");
 			}
 
 			// Root 수정

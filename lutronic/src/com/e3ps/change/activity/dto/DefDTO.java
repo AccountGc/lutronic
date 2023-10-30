@@ -30,6 +30,6 @@ public class DefDTO {
 		setOid(def.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(def.getName());
 		setSort(def.getSortNumber());
-		setDescription(def.getDescription());
+		setDescription(def.getDescription()==null?"":def.getDescription());
 	}
 }
