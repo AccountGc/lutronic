@@ -456,7 +456,8 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 						<ul class="nav nav-second-level collapse">
 							<li>
-								<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 합의함');">
+								<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
+<!-- 								<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 합의함');"> -->
 									합의함
 									<span class="label label-info float-right">
 										<%
@@ -466,7 +467,8 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 								</a>
 							</li>
 							<li>
-								<a onclick="moveToPage(this, '/groupware/listItem?state=approval', '> 나의 업무 > 결재함');">
+								<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
+<!-- 								<a onclick="moveToPage(this, '/groupware/listItem?state=approval', '> 나의 업무 > 결재함');"> -->
 									결재함
 									<span class="label label-info float-right">
 										<%
@@ -476,7 +478,8 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 								</a>
 							</li>
 							<li>
-								<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');">
+								<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
+<!-- 								<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');"> -->
 									수신함
 									<span class="label label-info float-right">
 										<%
@@ -486,10 +489,12 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 								</a>
 							</li>
 							<li>
-								<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a>
+								<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
+<!-- 								<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a> -->
 							</li>
 							<li>
-								<a onclick="moveToPage(this, '/groupware/changePassword', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a>
+								<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
+<!-- 								<a onclick="moveToPage(this, '/groupware/changePassword', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a> -->
 							</li>
 						</ul>
 					</li>
@@ -516,24 +521,28 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 						<ul class="nav nav-second-level collapse">
 							<li>
-								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a>
+								<a onclick="moveToPage(this, '/eco/list', '> 설계변경 > ECO 검색');">ECO 검색</a>
+<!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
 							</li>
 							<li>
-								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
+								<a onclick="moveToPage(this, '/eo/list', '> 설계변경 >EO 검색');">EO 검색</a>
+<!-- 								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a> -->
 							</li>
 						</ul>
 					</li>
 					<li>
-						<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');">
-							<i class="fa fa-pie-chart"></i>
-							<span class="nav-label">문서 검색</span>
-						</a>
+						<a onclick="moveToPage(this, '/doc/list', '> 문서관리 > 문서 검색');"><i class="fa fa-pie-chart"></i>문서 검색</a>
+<!-- 						<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');"> -->
+<!-- 							<i class="fa fa-pie-chart"></i> -->
+<!-- 							<span class="nav-label">문서 검색</span> -->
+<!-- 						</a> -->
 					</li>
 					<li>
-						<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');">
-							<i class="fa fa-files-o"></i>
-							<span class="nav-label">금형 검색</span>
-						</a>
+						<a onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"><i class="fa fa-files-o"></i>금형 검색</a>
+<!-- 						<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"> -->
+<!-- 							<i class="fa fa-files-o"></i> -->
+<!-- 							<span class="nav-label">금형 검색</span> -->
+<!-- 						</a> -->
 					</li>
 				</ul>
 			</li>
