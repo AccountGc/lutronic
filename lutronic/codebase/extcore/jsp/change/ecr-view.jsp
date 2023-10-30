@@ -20,14 +20,6 @@ ECRData dto = (ECRData) request.getAttribute("dto");
 			</div>
 		</td>
 		<td class="right">
-			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-			<%
-			if(dto.isWithDraw()){
-			%>
-				<input type="button" value="결재회수" title="결재회수" class="" id="withDrawBtn">
-			<%	
-			}
-			%>
 			<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
 			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">

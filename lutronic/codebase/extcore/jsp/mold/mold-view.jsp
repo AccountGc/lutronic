@@ -26,14 +26,6 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<%	
 			}
 			%>
-			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-			<%
-			if(dto.isWithDraw()){
-			%>
-				<input type="button" value="결재회수" title="결재회수" class="" id="withDrawBtn">
-			<%	
-			}
-			%>
 			<%
 			if(dto.getState().equals("INWORK") || dto.getState().equals("REWORK") || dto.getState().equals("TEMPRARY")){
 			%>

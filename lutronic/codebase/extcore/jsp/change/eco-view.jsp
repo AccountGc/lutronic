@@ -31,16 +31,6 @@ ECOData dto = (ECOData) request.getAttribute("dto");
 			</div>
 		</td>
 		<td class="right">
-			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
-			<%
-			if(dto.isWithDraw()){
-			%>
-				<input type="button" value="결재회수" title="결재회수" class="" id="withDrawBtn">
-			<%	
-			}
-			%>
-			<!-- ERP 전송&& 승인됨  && 관리자  && ERP 전송 hisotry 없을시 -->
-<!-- 			<input type="button" value="ERP 전송" title="ERP 전송" class="blue" id="erpSend"> -->
 			<%
 			if(dto.getState().equals("APPROVED")){
 				if(dto.getEoType().equals("CHANGE")){

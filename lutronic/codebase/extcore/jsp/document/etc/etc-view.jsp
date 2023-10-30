@@ -36,7 +36,6 @@ iframe {
 			<%
 			}
 			%>
-			<input type="button" value="결재회수" title="결재회수">
 			<%
 			if (dto.is_modify()) {
 			%>
