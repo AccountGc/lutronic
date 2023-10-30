@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -16,18 +15,13 @@ import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
-import com.e3ps.change.eo.dto.EoDTO;
-import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.erp.service.ERPHelper;
 import com.e3ps.org.service.MailUserHelper;
-import com.e3ps.part.service.PartSearchHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -35,6 +29,7 @@ import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
+import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -43,6 +38,7 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.State;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.pom.Transaction;
@@ -75,10 +71,9 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
 		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		boolean isSelf = dto.isSelf();
 		// 외부 메일
 		ArrayList<Map<String, String>> external = dto.getExternal();
-		
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -114,9 +109,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			eco = (EChangeOrder) PersistenceHelper.manager.save(eco);
 
-			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
-			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
-
 			// 첨부 파일 저장
 			saveAttach(eco, dto);
 
@@ -124,26 +116,30 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			saveLink(eco, dto);
 
 			// 완제품 연결
+			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
 			saveCompletePart(eco, plist);
 
 			// 변경 대상 품목 링크
+			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
 			saveEcoPart(eco, clist);
 
 			// 설변 활동 생성
 			ActivityHelper.service.saveActivity(eco, rows200);
-			
+
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(eco, external);
-			
-			// 결재 시작
-			if (isSelf) {
-				// 자가결재시
-				WorkspaceHelper.service.self(eco);
-			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(eco, agreeRows, approvalRows, receiveRows);
-				}
+
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(eco, agreeRows, approvalRows, receiveRows);
+			}
+
+			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
+			if (rows200.size() > 0) {
+				WorkspaceHelper.service.stand(eco);
+				// ECA 활동으로 변경
+				eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
+				LifeCycleHelper.service.setLifeCycleState(eco, State.toState("ACTIVITY"));
 			}
 
 			trs.commit();
@@ -182,20 +178,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 	}
 
 	/**
-	 * 완제품 연결
+	 * 완제품 연결 - ECO에서만 사용
 	 */
 	private void saveCompletePart(EChangeOrder eco, ArrayList<WTPart> plist) throws Exception {
 		for (WTPart part : plist) {
 			// ECO 이면서 A 면서 작업중인 것은 제외 한다.
-			if ("CHANGE".equals(eco.getEoType())) {
-				if (EcoHelper.manager.isSkip(part)) {
-					continue;
-				} else {
-					EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(),
-							eco);
-					link.setVersion(part.getVersionIdentifier().getSeries().getValue());
-					PersistenceServerHelper.manager.insert(link);
-				}
+			if (EcoHelper.manager.isSkip(part)) {
+				continue;
 			} else {
 				EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(),
 						eco);
@@ -212,10 +201,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		// ECPR 구분 있어야 할듯??
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		for (Map<String, String> row101 : rows101) {
-			String oid = row101.get("oid");
-			EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(oid);
-			RequestOrderLink link = RequestOrderLink.newRequestOrderLink(eco, ecr);
-			PersistenceServerHelper.manager.insert(link);
+			String gridState = row101.get("gridState");
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row101.get("oid");
+				EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(oid);
+				RequestOrderLink link = RequestOrderLink.newRequestOrderLink(eco, ecr);
+				PersistenceServerHelper.manager.insert(link);
+			}
 		}
 	}
 
@@ -297,7 +289,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			// 설변 활동 생성
 			ActivityHelper.service.deleteActivity(eco);
 			ActivityHelper.service.saveActivity(eco, rows200);
-			
+
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(dto.getOid());
 			// 외부 메일 링크 추가
@@ -397,9 +389,9 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			if (!"APPROVED".equals(state)) {
 				return;
 			}
-			
+
 			// eco 인경우
-			
+
 			// 완제품 제수집
 //			createCompleteProduction(eco); // 소스 개 십스레기..
 
@@ -430,7 +422,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				trs.rollback();
 		}
 	}
-	
+
 	/**
 	 * ECO 삭제
 	 */
@@ -439,13 +431,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
-			
+
 			PersistenceHelper.manager.delete(eco);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

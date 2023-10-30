@@ -74,7 +74,7 @@ public class DocumentDTO {
 	private ArrayList<Map<String, String>> rows100 = new ArrayList<>(); // 관련 EO
 	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 ECO
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
-	private ArrayList<Map<String, String>> rowsEcpr = new ArrayList<>(); // 관련 ECPR
+	private ArrayList<Map<String, String>> rows103 = new ArrayList<>(); // 관련 ECPR
 
 	// 결재 변수
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토

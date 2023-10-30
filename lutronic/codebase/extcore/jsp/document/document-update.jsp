@@ -370,7 +370,7 @@ iframe {
 		// 관련CR
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		// 관련ECPR
-		const rowsEcpr = AUIGrid.getGridDataWithState(myGridIDEcpr, "gridState");
+		const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 		// 외부 메일
 		const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
@@ -424,7 +424,7 @@ iframe {
 			rows91 : rows91,
 			rows100 : rows100,
 			rows101 : rows101,
-			rowsEcpr : rowsEcpr,
+			rows103 : rows103,
 			rows105 : rows105,
 			temprary : temprary,
 			// 외부 메일
@@ -456,7 +456,7 @@ iframe {
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);
 		createAUIGrid101(columns101);
-		createAUIGridEcpr(columnsEcpr);
+		createAUIGrid103(columns103);
 		createAUIGrid105(columns105);
 		createAUIGrid8(columns8);
 		createAUIGrid9(columns9)
@@ -464,7 +464,7 @@ iframe {
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridIDEcpr);
+		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID8);
 		AUIGrid.resize(myGridID9);
@@ -506,7 +506,7 @@ iframe {
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridIDEcpr);
+		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID8);
 		AUIGrid.resize(myGridID9);

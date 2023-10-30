@@ -58,4 +58,9 @@ public interface ActivityService {
 	 */
 	public abstract void complete(Map<String, Object> params) throws Exception;
 
+	/**
+	 * ECA 활동중 ECO 관련 품목 수정, 삭제 함수
+	 */
+	public abstract void replace(Map<String, Object> params) throws Exception;
+
 }

@@ -291,6 +291,7 @@ public class EcoHelper {
 
 	/**
 	 * 설변 대상 품목 제외
+	 * ECO 일경우 최초버전이면서 작업중인 항목은 제외한다.
 	 */
 	public boolean isSkip(WTPart pp) throws Exception {
 		String version = pp.getVersionIdentifier().getSeries().getValue();

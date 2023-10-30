@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Pattern;
 
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
@@ -15,16 +16,20 @@ import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.service.SAPHelper;
 
 import net.sf.json.JSONArray;
+import wt.enterprise.Master;
+import wt.enterprise.RevisionControlled;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
+import wt.util.WTException;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.BaselineMember;
 import wt.vc.baseline.ManagedBaseline;
@@ -190,16 +195,75 @@ public class EChangeUtils {
 	 */
 	public static void afterEcoAction(Hashtable<String, String> hash) throws Exception {
 		System.out.println("ECO 승인후 호출 !!!");
-		try {
-			String oid = hash.get("oid");
-			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
-			
-			// ECO 정보로 ECN 자동 생성
-			EcnHelper.service.create(eco);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
+		String oid = hash.get("oid");
+		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+
+		// ECO 정보로 ECN 자동 생성
+		EcnHelper.service.create(eco);
+	}
+
+	/**
+	 * 더미 부품 인지 체크
+	 */
+	public static boolean isDummy(String number) throws Exception {
+		boolean isDummy = true;
+
+		if (StringUtil.checkString(number)) {
+			if (number.length() == 10) {
+				if (Pattern.matches("^[0-9]+$", number)) {
+					// 숫자임
+					isDummy = false;
+				} else {
+					// 숫자아님
+					isDummy = true;
+				}
+			} else {
+				isDummy = true;
+			}
+		} else {
+			// 입력값 없음.
+			isDummy = true;
 		}
+		return isDummy;
+	}
+
+	/**
+	 * 현재 버전의 다음 버전 객체
+	 */
+	public static RevisionControlled getNext(RevisionControlled rc) throws Exception {
+		byte[] b = rc.getVersionIdentifier().getValue().getBytes();
+		b[b.length - 1] += 1;
+		QueryResult qr = VersionControlHelper.service.allVersionsOf(rc.getMaster());
+		RevisionControlled next = null;
+		while (qr.hasMoreElements()) {
+			RevisionControlled obj = ((RevisionControlled) qr.nextElement());
+			if (obj.getVersionIdentifier().getSeries().getValue().equals(new String(b))) {
+				next = obj;
+			}
+		}
+		if (next != null) {
+			return (RevisionControlled) VersionControlHelper.getLatestIteration(next, false);
+		}
+		return next;
+	}
+
+	/**
+	 * 현재 버전의 이전 버전 객체
+	 */
+	public static RevisionControlled getPrev(RevisionControlled rc) throws Exception {
+		byte[] b = rc.getVersionIdentifier().getValue().getBytes();
+		b[b.length - 1] -= 1;
+		QueryResult qr = VersionControlHelper.service.allVersionsOf(rc.getMaster());
+		RevisionControlled prev = null;
+		while (qr.hasMoreElements()) {
+			RevisionControlled obj = ((RevisionControlled) qr.nextElement());
+			if (obj.getVersionIdentifier().getSeries().getValue().equals(new String(b))) {
+				prev = obj;
+			}
+		}
+		if (prev != null) {
+			return (RevisionControlled) VersionControlHelper.getLatestIteration(prev, false);
+		}
+		return prev;
 	}
 }

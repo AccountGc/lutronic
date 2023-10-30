@@ -386,13 +386,13 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 		}
 
-		ArrayList<Map<String, String>> rowsEcpr = dto.getRowsEcpr();
+		ArrayList<Map<String, String>> rows103 = dto.getRows103();
 		// 관련ECPR
-		for (Map<String, String> rowEcpr : rowsEcpr) {
-			String gridState = rowEcpr.get("gridState");
+		for (Map<String, String> row103 : rows103) {
+			String gridState = row103.get("gridState");
 			// 신규 혹은 삭제만 있다. (added, removed
 			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
-				String oid = rowEcpr.get("oid");
+				String oid = row103.get("oid");
 				ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
 				DocumentECPRLink link = DocumentECPRLink.newDocumentECPRLink(doc, ecpr);
 				PersistenceServerHelper.manager.insert(link);

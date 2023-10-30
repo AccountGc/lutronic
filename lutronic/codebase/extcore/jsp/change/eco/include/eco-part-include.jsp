@@ -42,120 +42,18 @@ boolean create = "create".equals(mode);
 			<%
 			}
 			%>
-			<div id="grid500" style="height: 100px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid500" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <script type="text/javascript">
 	let myGridID500;
 	const columns500 = [ {
-		dataField : "group",
-		headerText : "그룹핑",
-		dataType : "string",
-		cellMerge : true,
-		width : 150,
-	}, {
-		dataField : "_3d",
-		headerText : "3D",
-		dataType : "string",
-		width : 60,
-		editable : false,
-		renderer : {
-			type : "ImageRenderer",
-			altField : null,
-			onClick : function(event) {
-			}
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "_2d",
-		headerText : "2D",
-		dataType : "string",
-		width : 60,
-		editable : false,
-		renderer : {
-			type : "ImageRenderer",
-			altField : null,
-			onClick : function(event) {
-			}
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "step",
-		headerText : "STEP",
-		dataType : "string",
-		width : 60,
-		editable : false,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "dxf",
-		headerText : "DXF",
-		dataType : "string",
-		width : 60,
-		editable : false,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		dataField : "pdf",
-		headerText : "PDF",
-		dataType : "string",
-		width : 60,
-		editable : false,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
-		headerText : "변경이력",
-		width : 80,
-		editable : false,
-		renderer : {
-			type : "IconRenderer",
-			iconPosition : "aisleCenter", // 아이콘 위치
-			iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-			iconHeight : 16,
-			iconTableRef : { // icon 값 참조할 테이블 레퍼런스
-				"default" : "/Windchill/extcore/images/help.gif" // default
-			},
-			onClick : function(event) {
-				const oid = event.item.part_oid;
-				const url = getCallUrl("/part/changeList?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
-		filter : {
-			showIcon : false,
-		},
-	}, {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
 		editable : false,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.part_oid;
-				const url = getCallUrl("/part/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
 		filter : {
 			showIcon : true,
 		},
@@ -164,79 +62,15 @@ boolean create = "create".equals(mode);
 		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
-		width : 380,
-		editable : false,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.part_oid;
-				const url = getCallUrl("/part/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "location",
-		headerText : "품목분류",
-		dataType : "string",
-		width : 180,
 		editable : false,
 		filter : {
 			showIcon : true,
 		},
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV.",
 		dataType : "string",
 		width : 90,
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "remarks",
-		headerText : "OEM Info.",
-		dataType : "string",
-		width : 100,
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "state",
-		headerText : "상태",
-		dataType : "string",
-		width : 100,
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "creator",
-		headerText : "등록자",
-		dataType : "string",
-		width : 140,
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "createdDate_txt",
-		headerText : "등록일",
-		dataType : "string",
-		width : 140,
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "modifiedDate_txt",
-		headerText : "수정일",
-		dataType : "string",
-		width : 140,
 		editable : false,
 		filter : {
 			showIcon : true,
@@ -277,7 +111,6 @@ boolean create = "create".equals(mode);
 			autoGridHeight : true,
 			enableCellMerge : true,
 			rowSelectionWithMerge : true,
-			editable : true
 		}
 		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
 		<%if (view || update) {%>

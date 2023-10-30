@@ -127,7 +127,7 @@ public class StandardEoService extends StandardManager implements EoService {
 			saveLink(eo, dto);
 
 			// 완제품 링크 및 검증
-			validateAndCompleteSave(eo, rows104);
+			validateAndSaveCompletePart(eo, rows104);
 
 			// 첨부 파일
 			saveAttach(eo, dto);
@@ -195,7 +195,7 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	}
 
-	private void validateAndCompleteSave(EChangeOrder eo, ArrayList<Map<String, String>> rows104) throws Exception {
+	private void validateAndSaveCompletePart(EChangeOrder eo, ArrayList<Map<String, String>> rows104) throws Exception {
 		// 완제품 연결
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
 		for (Map<String, String> map : rows104) {
@@ -212,11 +212,13 @@ public class StandardEoService extends StandardManager implements EoService {
 			}
 			list.add(part);
 		}
-		System.out.println("list=" + list);
-		completeSave(eo, list);
+		saveCompletePart(eo, list);
 	}
 
-	private void deleteCompleteSave(EChangeOrder eo) throws Exception {
+	/**
+	 * 완제품 연결 제거 함수
+	 */
+	private void deleteCompletePart(EChangeOrder eo) throws Exception {
 		// 완제품 삭제
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EOCompletePartLink.class, true);
@@ -229,31 +231,16 @@ public class StandardEoService extends StandardManager implements EoService {
 			EOCompletePartLink link = (EOCompletePartLink) obj[0];
 			PersistenceHelper.manager.delete(link);
 		}
-
 	}
 
-	private void completeSave(EChangeOrder eo, ArrayList<WTPart> list) throws Exception {
+	/**
+	 * 완제품 연결 함수
+	 */
+	private void saveCompletePart(EChangeOrder eo, ArrayList<WTPart> list) throws Exception {
 		for (WTPart part : list) {
-			String version = VersionControlHelper.getVersionIdentifier(part).getSeries().getValue();
-			String state = part.getState().toString();
-			// ECO 이면서 A 면서 작업중인 것은 제외 한다.
-			// 완제품 조건??
-			// 아래는 설계변경일 경우에만.. EO일경우 아님
-//			if ("CHANGE".equals(eo.getEoType())) {
-//				if (version.equals("A") && "INWORK".equals(state)) {
-//					continue;
-//				} else {
-//					EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(),
-//							eo);
-//					link.setVersion(version);
-//					PersistenceHelper.manager.save(link);
-//				}
-//			} else {
-
 			EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) part.getMaster(), eo);
-			link.setVersion(version);
+			link.setVersion(part.getVersionIdentifier().getSeries().getValue());
 			PersistenceHelper.manager.save(link);
-//			}
 		}
 	}
 
@@ -346,35 +333,21 @@ public class StandardEoService extends StandardManager implements EoService {
 			saveLink(eo, dto);
 
 //			 완제품 링크 및 검증
-			deleteCompleteSave(eo);
-			validateAndCompleteSave(eo, rows104);
+			deleteCompletePart(eo); // 지우고 새로 만드는거 맞음??
+			validateAndSaveCompletePart(eo, rows104);
 
 			// 첨부 파일
 			removeAttach(eo);
 			saveAttach(eo, dto);
-			
+
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(dto.getOid());
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(eo, external);
 
-			// 설변 활동 생성
-//			ActivityHelper.service.saveActivity(eo, rows200);
-
+			// 설변활동 어떻게 처리되는지...
 			ActivityHelper.service.deleteActivity(eo);
 			ActivityHelper.service.saveActivity(eo, rows200);
-
-			// 활동 생성
-//	    	boolean isActivity = ECAHelper.service.createActivity(req, eco);
-
-			// eco 상태 설정
-			/*
-			 * if(isActivity){
-			 * LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco,
-			 * State.toState("ACTIVITY")); }else{
-			 * LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged)eco,
-			 * State.toState("APPROVE_REQUEST")); }
-			 */
 
 			trs.commit();
 			trs = null;

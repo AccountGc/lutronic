@@ -11,10 +11,6 @@ boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
-JSONArray data = null;
-if(view || update){
-	data = AUIGridUtil.include(oid, "doc");
-}
 %>
 <table class="button-table">
 	<tr>
@@ -169,7 +165,8 @@ if (header) {
 			autoGridHeight : true
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		AUIGrid.setGridData(myGridID90, <%=data%>);
+		console.log(<%=AUIGridUtil.include(oid, "doc")%>);
+		AUIGrid.setGridData(myGridID90, <%=AUIGridUtil.include(oid, "doc")%>);
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
@@ -188,7 +185,7 @@ if (header) {
 		}
 
 		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			var rowIndex = checkedItems[i].rowIndex;
+			const rowIndex = checkedItems[i].rowIndex;
 			AUIGrid.removeRow(myGridID90, rowIndex);
 		}
 	}

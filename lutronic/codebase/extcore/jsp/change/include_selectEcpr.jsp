@@ -11,7 +11,7 @@ boolean isUpdate = "update".equals(mode);
 <div id="grid_ecpr" style="height: 150px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let ecprGridID;
-	const columnsEcpr = [ {
+	const columns103 = [ {
 		dataField : "eoNumber",
 		headerText : "ECPR 번호",
 		dataType : "string",
@@ -76,7 +76,7 @@ boolean isUpdate = "update".equals(mode);
 		visible : false
 	} ]
 
-	function createAUIGridECPR(columnLayout) {
+	function createAUIGrid103(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,

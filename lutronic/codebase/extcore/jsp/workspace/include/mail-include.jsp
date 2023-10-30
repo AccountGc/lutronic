@@ -43,19 +43,17 @@ boolean update = "update".equals(mode);
 		function createAUIGrid9(columnLayout) {
 			const props = {
 				headerHeight : 30,
-				fillColumnSizeMode : false,
 				showRowNumColumn : true,
 				rowNumHeaderText : "번호",
 				showAutoNoDataMessage : false,
+				showAutoNoDataMessage : false,
+				enableRowCheckShiftKey : true,
 				enableSorting : false,
-				softRemoveRowMode : false,
-				selectionMode : "multipleCells",
+				autoGridHeight : true,
 				<%if (create || update) {%>
 				showStateColumn : true,
 				showRowCheckColumn : true,
 				<%}%>
-				enableFilter : true,
-				autoGridHeight : true
 			}
 			myGridID9 = AUIGrid.create("#grid9", columnLayout, props);
 			<%if (view || update) {%>

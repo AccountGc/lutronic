@@ -251,10 +251,9 @@ public class StandardActivityService extends StandardManager implements Activity
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			EChangeActivity eChangeActivity = (EChangeActivity) obj[0];
-			PersistenceHelper.manager.delete(eChangeActivity);
+			EChangeActivity eca = (EChangeActivity) obj[0];
+			PersistenceHelper.manager.delete(eca);
 		}
-
 	}
 
 	@Override
@@ -432,5 +431,23 @@ public class StandardActivityService extends StandardManager implements Activity
 			}
 		}
 		return isEnd;
+	}
+
+	@Override
+	public void replace(Map<String, Object> params) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }

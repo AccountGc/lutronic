@@ -10,10 +10,6 @@ boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
-JSONArray data = null;
-if(view|| update){
-	data = AUIGridUtil.include(oid, "ecpr");
-}
 %>
 <table class="button-table">
 	<tr>
@@ -40,8 +36,8 @@ if(view|| update){
 			<%
 			if (create || update) {
 			%>
-			<input type="button" value="추가" title="추가" class="blue" onclick="popupEcpr();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRowEcpr();">
+			<input type="button" value="추가" title="추가" class="blue" onclick="popup103();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow103();">
 			<%
 			}
 			%>
@@ -57,8 +53,8 @@ if(view|| update){
 	}
 %>
 <script type="text/javascript">
-	let myGridIDEcpr;
-	const columnsEcpr = [ {
+	let myGridID103;
+	const columns103 = [ {
 		dataField : "number",
 		headerText : "ECPR 번호",
 		dataType : "string",
@@ -152,7 +148,7 @@ if(view|| update){
 		},
 	} ]
 	
-	function createAUIGridEcpr(columnLayout) {
+	function createAUIGrid103(columnLayout) {
 		const props = {
 				headerHeight : 30,
 				fillColumnSizeMode : false,
@@ -172,20 +168,20 @@ if(view|| update){
 				enableFilter : true,
 				autoGridHeight : true
 		}
-		myGridIDEcpr = AUIGrid.create("#gridEcpr", columnLayout, props);
-		AUIGrid.setGridData(myGridIDEcpr, <%=data%>);
+		myGridID103 = AUIGrid.create("#gridEcpr", columnLayout, props);
+		AUIGrid.setGridData(myGridID103, <%=AUIGridUtil.include(oid, "ecpr")%>);
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
-	function popupEcpr() {
+	function popup103() {
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/ecpr/popup?method=insertEcpr&multi=" + multi);
+		const url = getCallUrl("/ecpr/popup?method=insert103&multi=" + multi);
 		_popup(url, 1800, 900, "n");
 	}
 
 	
-	function deleteRowEcpr() {
-		const checkedItems = AUIGrid.getCheckedRowItems(myGridIDEcpr);
+	function deleteRow103() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID103);
 		if (checkedItems.length === 0) {
 			alert("삭제할 행을 선택하세요.");
 			return false;
@@ -193,17 +189,17 @@ if(view|| update){
 
 		for (let i = checkedItems.length - 1; i >= 0; i--) {
 			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridIDEcpr, rowIndex);
+			AUIGrid.removeRow(myGridID103, rowIndex);
 		}
 	}
 
-	function insertEcpr(arr, callBack) {
+	function insert103(arr, callBack) {
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
-			const unique = AUIGrid.isUniqueValue(myGridIDEcpr, "oid", item.oid);
+			const unique = AUIGrid.isUniqueValue(myGridID103, "oid", item.oid);
 			if (unique) {
-				AUIGrid.addRow(myGridIDEcpr, item, rowIndex);
+				AUIGrid.addRow(myGridID103, item, rowIndex);
 			} else {
 				// 중복은 그냥 경고 없이 처리 할지 합의?
 				alert(item.number + " ECPR은 이미 추가 되어있습니다.");

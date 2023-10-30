@@ -16,15 +16,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.EChangeActivity;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.org.service.OrgHelper;
 import com.e3ps.workspace.dto.EcaDTO;
 
 import net.sf.json.JSONArray;
+import wt.part.WTPart;
 
 @Controller
 @RequestMapping(value = "/activity/**")
@@ -202,6 +206,8 @@ public class ActivityController extends BaseController {
 		if (activityType.equals("ORDER_NUMBER")) {
 			model.setViewName("/extcore/jsp/workspace/activity/orderNumber.jsp");
 		} else if (activityType.equals("REVISE_BOM")) {
+			ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
+			model.addObject("list", list);
 			model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
 		} else if (activityType.equals("DOCUMENT")) {
 			model.setViewName("/extcore/jsp/workspace/activity/document.jsp");
@@ -259,5 +265,45 @@ public class ActivityController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "ECO 품목 교체 페이지 설변활동 중")
+	@GetMapping(value = "/replace")
+	public ModelAndView replace(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+		EChangeOrder eco = (EChangeOrder) eca.getEo();
+		ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
+		model.addObject("list", list);
+		model.addObject("eco", eco);
+		model.addObject("oid", eco.getPersistInfo().getObjectIdentifier().getStringValue());
+		model.addObject("popup:/activity/activity-replace-part");
+		return model;
+	}
+
+	@Description(value = "ECO 품목 교체 함수 설변활동 중")
+	@PostMapping(value = "/replace")
+	public Map<String, Object> replace(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.replace(params);
+//			result.put("msg", "설계변경 활동이 완료되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "ECO 품목 개정 페이지 설변활동 중")
+	@GetMapping(value = "/revise")
+	public ModelAndView revise(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
+		model.addObject("list", list);
+		model.addObject("popup:/activity/activity-revise-part");
+		return model;
 	}
 }

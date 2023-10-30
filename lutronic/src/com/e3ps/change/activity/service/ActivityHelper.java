@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECOChange;
@@ -11,22 +12,33 @@ import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.dto.DefDTO;
+import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.part.dto.PartData;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.util.PartUtil;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.epm.EPMDocument;
+import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
+import wt.part.WTPart;
+import wt.part.WTPartMaster;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
@@ -279,6 +291,117 @@ public class ActivityHelper {
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * ECO 활동 대상 품목들
+	 */
+	public ArrayList<Map<String, Object>> getEcoRevisePart(String oid) throws Exception {
+		return getEcoRevisePart(oid, false, false);
+	}
+
+	/**
+	 * ECO 활동 대상 품목들
+	 */
+	public ArrayList<Map<String, Object>> getEcoRevisePart(String oid, boolean dummyCheck, boolean isDist)
+			throws Exception {
+		Persistable per = CommonUtil.getObject(oid);
+		EChangeOrder eco = null;
+		if (per instanceof EChangeActivity) {
+			EChangeActivity eca = (EChangeActivity) per;
+			eco = (EChangeOrder) eca.getEo();
+		} else if (per instanceof EChangeOrder) {
+			eco = (EChangeOrder) per;
+		}
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		QuerySpec query = new QuerySpec();
+		int idx_link = query.appendClassList(EcoPartLink.class, true);
+		int idx_m = query.appendClassList(WTPartMaster.class, false);
+
+		ClassAttribute ca_m = new ClassAttribute(WTPartMaster.class, "thePersistInfo.theObjectIdentifier.id");
+		ClassAttribute ca_link = new ClassAttribute(EcoPartLink.class, "roleAObjectRef.key.id");
+
+		query.appendWhere(new SearchCondition(ca_m, "=", ca_link), new int[] { idx_m, idx_link });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(EcoPartLink.class, "roleBObjectRef.key.id", "=",
+				eco.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_link });
+
+		QuerySpecUtils.toOrderBy(query, idx_m, WTPartMaster.class, WTPartMaster.NUMBER, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		int cnt = 0;
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EcoPartLink link = (EcoPartLink) obj[0];
+			WTPartMaster master = link.getPart();
+
+			cnt++;
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("idx", cnt);
+
+			String link_oid = link.getPersistInfo().getObjectIdentifier().getStringValue();
+			boolean isDummy = EChangeUtils.isDummy(master.getNumber());
+			// 더미 제외
+			if (dummyCheck && isDummy) {
+				if (isDummy) {
+					continue;
+				}
+			}
+
+			String version = link.getVersion();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+			String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+			String next_oid = null;
+			String iteration = part.getIterationIdentifier().getSeries().getValue();
+
+			String key = part.getLifeCycleState().toString();
+			boolean revisable = "APPROVED".equals(key) || "DEV_APPROVED".equals(key);
+
+			WTPart nextPart = null;
+			EPMDocument epm = null;
+//			String isDisuse = "";
+			// if(link.isIsDelete()) isDisuse ="<b><font color='red'>√</font></b>";
+//			boolean isBOM = link.isBaseline();
+//			String isBOMCheck = "";
+//			String BOMValueCheck = "";
+//			if (isBOM) {
+//				isBOMCheck = "<b><font color='red'>√</font></b>";
+//				BOMValueCheck = "checked";
+//			}
+
+			if (link.isRevise()) {
+				nextPart = (WTPart) EChangeUtils.getNext(part);
+				part_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
+				next_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
+//				PartData nextData = new PartData(nextPart);
+			}
+
+			map.put("oid", oid);
+			map.put("part_oid", part_oid);
+			map.put("link_oid", link_oid);
+			map.put("part_number", part.getNumber());
+			map.put("part_creator", part.getCreatorFullName());
+			map.put("part_name", part.getName());
+			map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+			map.put("part_state", part.getLifeCycleState().getDisplay());
+			map.put("merge", false);
+
+			if (nextPart == null) {
+				map.put("next_number", "개정된 데이터가 없습니다.");
+				map.put("next_number", "개정된 데이터가 없습니다.");
+				map.put("next_state", "개정된 데이터가 없습니다.");
+				map.put("next_version", "개정된 데이터가 없습니다.");
+				map.put("next_creator", "개정된 데이터가 없습니다.");
+				map.put("epm_number", "개정된 데이터가 없습니다.");
+				map.put("reference", "개정된 데이터가 없습니다.");
+				map.put("merge", true);
+			}
+
+			list.add(map);
+		}
+
+		return list;
 	}
 
 }

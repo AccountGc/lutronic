@@ -408,11 +408,11 @@ const oid = document.getElementById("oid").value;
 					} else {
 						createAUIGrid101(columns101);
 					}
-					const isCreatedEcpr = AUIGrid.isCreated(myGridIDEcpr); // ECPR
+					const isCreatedEcpr = AUIGrid.isCreated(myGridID103); // ECPR
 					if (isCreatedEcpr) {
-						AUIGrid.resize(myGridIDEcpr);
+						AUIGrid.resize(myGridID103);
 					} else {
-						createAUIGridEcpr(columnsEcpr);
+						createAUIGrid103(columns103);
 					}
 					break;
 				case "tabs-3":
@@ -451,7 +451,7 @@ const oid = document.getElementById("oid").value;
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridIDEcpr);
+		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID50);
 		AUIGrid.resize(myGridID51);
 		AUIGrid.resize(myGridID10000);

@@ -246,11 +246,11 @@ iframe {
 		} else {
 			createAUIGrid101(columns101);
 		}
-		const isCreatedEcpr = AUIGrid.isCreated(myGridIDEcpr); // ECPR
+		const isCreatedEcpr = AUIGrid.isCreated(myGridID103); // ECPR
 		if (isCreatedEcpr) {
-			AUIGrid.resize(myGridIDEcpr);
+			AUIGrid.resize(myGridID103);
 		} else {
-			createAUIGridEcpr(columnsEcpr);
+			createAUIGrid103(columns103);
 		}
 	});
 
@@ -260,6 +260,6 @@ iframe {
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridIDEcpr);
+		AUIGrid.resize(myGridID103);
 	});
 </script>
