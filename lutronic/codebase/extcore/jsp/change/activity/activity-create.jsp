@@ -121,7 +121,7 @@ Map<String, String> actMap = (Map<String, String>) request.getAttribute("actMap"
 			}
 			
 			if (step.value === "") {
-				alert("STE{을 선택하세요.");
+				alert("STEP을 선택하세요.");
 				return false;
 			}
 				
