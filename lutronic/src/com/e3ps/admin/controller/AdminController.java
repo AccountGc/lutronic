@@ -1,6 +1,6 @@
 package com.e3ps.admin.controller;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.admin.dto.MailUserDTO;
 import com.e3ps.admin.service.AdminHelper;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
-import com.e3ps.change.beans.ROOTData;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ControllerUtil;
