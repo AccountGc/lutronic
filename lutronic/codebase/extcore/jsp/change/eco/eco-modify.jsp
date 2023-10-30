@@ -16,7 +16,10 @@
 	EcoDTO dto = (EcoDTO) request.getAttribute("dto");
 	boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	Map<String, Object> contentMap = dto.getContentMap();
-	String aOid =contentMap.get("aoid")==null ?"":contentMap.get("aoid").toString();
+	String aOid = "";
+	if(contentMap!=null){
+		aOid = contentMap.get("aoid")==null ?"":contentMap.get("aoid").toString();
+	}
 %>
 
 </head>

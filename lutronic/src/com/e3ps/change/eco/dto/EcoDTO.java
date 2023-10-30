@@ -11,6 +11,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.service.MailUserHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -78,16 +79,16 @@ public class EcoDTO {
 		setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 		setModifiedDate(eco.getModifyTimestamp());
 		setModifiedDate_text(eco.getModifyTimestamp().toString().substring(0, 10));
-		setEoCommentA(eco.getEoCommentA());
-		setEoCommentB(eco.getEoCommentB());
-		setEoCommentC(eco.getEoCommentC());
-		setEoCommentD(eco.getEoCommentD());
+		setEoCommentA(StringUtil.checkNull(eco.getEoCommentA()));
+		setEoCommentB(StringUtil.checkNull(eco.getEoCommentB()));
+		setEoCommentC(StringUtil.checkNull(eco.getEoCommentC()));
+		setEoCommentD(StringUtil.checkNull(eco.getEoCommentD()));
 		setLicensing(eco.getLicensingChange());
 		setLicensing_name(licensing(eco.getLicensingChange()));
 		setRiskType_name(risk(eco.getRiskType()));
 		setRiskType(eco.getRiskType());
 		setEoType(eco.getEoType());
-		setApproveDate(eco.getEoApproveDate());
+		setApproveDate(StringUtil.checkNull(eco.getEoApproveDate()));
 		if (eco.getModel() != null) {
 			setModel_name(EcoHelper.manager.displayToModel(eco.getModel()));
 		}
