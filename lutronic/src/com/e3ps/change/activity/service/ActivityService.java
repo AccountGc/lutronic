@@ -63,4 +63,9 @@ public interface ActivityService {
 	 */
 	public abstract void replace(Map<String, Object> params) throws Exception;
 
+	/**
+	 * ECO 대상품목 일괄 개정 함수
+	 */
+	public abstract void revise(Map<String, Object> params) throws Exception;
+
 }

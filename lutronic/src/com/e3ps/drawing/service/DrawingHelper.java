@@ -645,4 +645,8 @@ public class DrawingHelper {
 		}
         return isConnect;
 	}
+	
+	
+	
+	
 }

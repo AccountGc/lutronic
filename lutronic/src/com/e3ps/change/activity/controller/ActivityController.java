@@ -277,7 +277,7 @@ public class ActivityController extends BaseController {
 		model.addObject("list", list);
 		model.addObject("eco", eco);
 		model.addObject("oid", eco.getPersistInfo().getObjectIdentifier().getStringValue());
-		model.addObject("popup:/activity/activity-replace-part");
+		model.setViewName("popup:/change/activity/activity-replace-part");
 		return model;
 	}
 
@@ -301,9 +301,42 @@ public class ActivityController extends BaseController {
 	@GetMapping(value = "/revise")
 	public ModelAndView revise(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
-		model.addObject("list", list);
-		model.addObject("popup:/activity/activity-revise-part");
+		model.addObject("oid", oid);
+		model.setViewName("popup:/change/activity/activity-revise-part");
 		return model;
+	}
+
+	@Description(value = "ECO 개정 품목 데이터 가져오기")
+	@PostMapping(value = "/load")
+	@ResponseBody
+	public Map<String, Object> load(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, Object>> list = ActivityHelper.manager.load(params);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "ECO 품목 일괄 개정 함수")
+	@PostMapping(value = "/revise")
+	@ResponseBody
+	public Map<String, Object> revise(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.revise(params);
+			result.put("msg", "일괄 개정 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

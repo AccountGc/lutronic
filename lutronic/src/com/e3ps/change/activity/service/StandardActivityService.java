@@ -12,11 +12,13 @@ import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -24,6 +26,7 @@ import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.folder.Folder;
@@ -32,6 +35,8 @@ import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.State;
 import wt.org.WTUser;
+import wt.part.WTPart;
+import wt.part.WTPart;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
@@ -438,6 +443,51 @@ public class StandardActivityService extends StandardManager implements Activity
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void revise(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) params.get("data");
+		String oid = (String) params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+			EChangeOrder eco = (EChangeOrder) eca.getEo();
+			String message = "[" + eco.getEoNumber() + "]를 통해서 수정되었습니다.";
+
+			for (Map<String, Object> map : list) {
+				String part_oid = (String) map.get("part_oid");
+				String link_oid = (String) map.get("link_oid");
+
+				EcoPartLink link = (EcoPartLink) CommonUtil.getObject(link_oid);
+
+				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+
+				WTPart newPart = null;
+				EPMDocument newEpm = null;
+				
+				// 개정인데?? 체크인아웃??
+				if (epm != null) {
+
+				}
+
+				link.setRevise(false);
+				PersistenceHelper.manager.modify(link);
+			}
 
 			trs.commit();
 			trs = null;

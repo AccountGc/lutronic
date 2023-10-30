@@ -264,17 +264,30 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			// 추가 버튼 클릭 시 팝업창 메서드
 			function replace() {
 				const oid = document.getElementById("oid").value;
-				const url = getCallUrl("/activity/replace?oid-" + oid);
+				const url = getCallUrl("/activity/replace?oid=" + oid);
 				_popup(url, 1800, 900, "n");
 			}
 
 			function revise() {
+				const oid = document.getElementById("oid").value;
 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 				if (checkedItems.length === 0) {
 					alert("개정할 품목을 선택하세요.");
 					return false;
 				}
 
+				const arr = new Array();
+				const link = new Array();
+				for (let i = 0; i < checkedItems.length; i++) {
+					const item = checkedItems[i].item;
+					arr.push(item.part_oid);
+					link.push(item.link_oid);
+				}
+
+				const url = getCallUrl("/activity/revise?oid=" + oid);
+				const panel = _popup(url, 1500, 700, "n");
+				panel.list = arr;
+				panel.link = link;
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

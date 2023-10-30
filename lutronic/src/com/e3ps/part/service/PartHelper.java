@@ -1099,27 +1099,6 @@ public class PartHelper {
 	}
 
 	/**
-	 * 품목과 연관된 3D 캐드 가져오기
-	 */
-	public EPMDocument getEPMDocument(WTPart part) throws Exception {
-		EPMDocument epm = null;
-		if (part == null) {
-			return epm;
-		}
-
-		QueryResult result = null;
-		if (VersionControlHelper.isLatestIteration(part)) {
-			result = PersistenceHelper.manager.navigate(part, "buildSource", EPMBuildRule.class);
-		} else {
-			result = PersistenceHelper.manager.navigate(part, "builtBy", EPMBuildHistory.class);
-		}
-		if (result.hasMoreElements()) {
-			epm = (EPMDocument) result.nextElement();
-		}
-		return epm;
-	}
-
-	/**
 	 * 1품 1도인 업체에서만 사용가능
 	 */
 	public EPMDocument getEPMDocument2D(EPMDocument epm) throws Exception {
@@ -1444,4 +1423,26 @@ public class PartHelper {
 		}
 		return list;
 	}
+
+	/**
+	 * 부품과 연결된 도면 찾아오기
+	 */
+	public EPMDocument getEPMDocument(WTPart part) throws Exception {
+		EPMDocument epm = null;
+		if (part == null) {
+			return epm;
+		}
+
+		QueryResult result = null;
+		if (VersionControlHelper.isLatestIteration(part)) {
+			result = PersistenceHelper.manager.navigate(part, "buildSource", EPMBuildRule.class);
+		} else {
+			result = PersistenceHelper.manager.navigate(part, "builtBy", EPMBuildHistory.class);
+		}
+		if (result.hasMoreElements()) {
+			epm = (EPMDocument) result.nextElement();
+		}
+		return epm;
+	}
+
 }

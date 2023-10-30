@@ -404,4 +404,33 @@ public class ActivityHelper {
 		return list;
 	}
 
+	/**
+	 * ECO 개정 대상 품목 정보 가져오기
+	 */
+	public ArrayList<Map<String, Object>> load(Map<String, Object> params) throws Exception {
+		ArrayList<String> list = (ArrayList<String>) params.get("list");
+		ArrayList<Map<String, Object>> data = new ArrayList<Map<String, Object>>();
+		for (int i = 0; list != null && i < list.size(); i++) {
+			String oid = (String) list.get(i);
+			EcoPartLink link = (EcoPartLink) CommonUtil.getObject(oid);
+			WTPart part = PartHelper.service.getPart(link.getPart().getNumber(), link.getVersion());
+			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+			Map<String, Object> map = new HashMap<>();
+			map.put("part_name", part.getName());
+			map.put("part_number", part.getNumber());
+			map.put("state", part.getLifeCycleState().getDisplay());
+			map.put("version", part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+			map.put("latest", CommonUtil.isLatestVersion(part));
+			if (epm != null) {
+				map.put("epm_number", epm.getNumber());
+				mpa.put("epm_oid", epm.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
+			map.put("link_oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+			data.add(map);
+		}
+
+		return data;
+	}
 }
