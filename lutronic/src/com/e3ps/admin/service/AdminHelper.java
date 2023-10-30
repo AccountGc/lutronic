@@ -152,7 +152,7 @@ public class AdminHelper {
 		if (type != null && type.trim().length() > 0) {
 			if (qs.getConditionCount() > 0)
 				qs.appendAnd();
-			qs.appendWhere(new SearchCondition(DownloadHistory.class, DownloadHistory.D_OID, SearchCondition.LIKE,
+			qs.appendWhere(new SearchCondition(DownloadHistory.class, "persistReference.key.classname", SearchCondition.LIKE,
 					"%" + type + "%"), new int[] { idx });
 		}
 

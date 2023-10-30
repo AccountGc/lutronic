@@ -94,7 +94,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "userID",
+					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
 					width : 150,
@@ -103,7 +103,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "moduleInfo",
+					dataField : "info",
 					headerText : "해당모듈",
 					dataType : "string",
 					width : 180,
@@ -112,7 +112,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "downCount",
+					dataField : "cnt",
 					headerText : "다운횟수",
 					dataType : "string",
 					width : 120,
@@ -121,7 +121,7 @@
 						inline : true
 					},
 				}, {
-					dataField : "downTime",
+					dataField : "createdDate",
 					headerText : "다운시간",
 					dataType : "date",
 					formatString : "yyyy/mm/dd",
@@ -174,6 +174,9 @@
 				var params = new Object();
 				const field = ["manager","createdFrom","createdTo","_psize","type"];
 				params = toField(params, field);
+				if(params.type==""){
+					params.type = "EPMDocument";
+				}
 				var url = getCallUrl("/admin/downLoadHistory");
 				call(url, params, function(data) {
 					if (data.result) {
