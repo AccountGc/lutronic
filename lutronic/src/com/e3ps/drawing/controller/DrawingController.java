@@ -34,9 +34,11 @@ import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
+import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.mold.service.MoldHelper;
 import com.e3ps.part.service.PartHelper;
 
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMReferenceLink;
@@ -131,24 +133,6 @@ public class DrawingController extends BaseController{
 		return result;
 	}
 	
-//	/** 도면 검색 리스트 리턴
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping("/listDrawingAction")
-//	public Map<String,Object> listDrawingAction(HttpServletRequest request, HttpServletResponse response) {
-//		Map<String,Object> result = null;
-//		try {
-//			result = DrawingHelper.service.listDrawingAction(request, response);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return result;
-//	}
-	
 	@Description(value = "도면 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
@@ -166,18 +150,6 @@ public class DrawingController extends BaseController{
 		return result;
 	}
 	
-	/** 도면 등록
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@ResponseBody
-//	@RequestMapping("/createDrawingAction")
-//	public ResultData createDrawingAction(HttpServletRequest request, HttpServletResponse response) {
-//		Map<String,Object> map = DrawingHelper.service.requestDrawingMapping(request, response);
-//		return DrawingHelper.service.createDrawing(map);
-//	}
-	
 	@Description(value = "도면 상세 페이지")
 	@GetMapping(value =  "/view")
 	public ModelAndView view(@RequestParam String oid) throws Exception{
@@ -189,6 +161,19 @@ public class DrawingController extends BaseController{
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("/extcore/jsp/drawing/drawing-view.jsp");
+		return model;
+	}
+	
+	@Description(value = "도면 최신버전 이동")
+	@GetMapping(value = "/latest")
+	public ModelAndView latest(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EPMDocument latest = DrawingHelper.manager.latest(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		EpmData dto = new EpmData(latest);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/drawing/drawing-view");
 		return model;
 	}
 	
@@ -215,27 +200,6 @@ public class DrawingController extends BaseController{
 		List<Map<String,String>> list = DrawingHelper.service.cadTypeList();
 		return list;
 	}
-	
-	/** 도면 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewDrawing")
-	public ModelAndView viewDrawing(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		
-		EPMDocument doc = (EPMDocument)CommonUtil.getObject(oid);
-		EpmData epmData = new EpmData(doc);
-		
-		model.setViewName("popup:/drawing/viewDrawing");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("epmData", epmData);
-		return model;
-	}
-	
 	
 	@RequestMapping("/include_Reference")
 	public ModelAndView include_Reference(HttpServletRequest request, HttpServletResponse response) {
@@ -291,51 +255,7 @@ public class DrawingController extends BaseController{
 		result.put("distribute", distribute);
 		return result;
 	}
-//	/** 참조 항목
-//	 * @param request
-//	 * @param response
-//	 * @return
-//	 * @throws Exception
-//	 */
-//	@RequestMapping("/include_ReferenceBy")
-//	public ModelAndView include_ReferenceBy(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//		String title = StringUtil.checkReplaceStr(request.getParameter("title"),"참조 항목");
-//		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-//		ModelAndView model = new ModelAndView();
-//		model.setViewName("include:/drawing/include_ReferenceBy");
-//		
-//		List<EpmData> list = new ArrayList<EpmData>();
-//		String oid = request.getParameter("oid");
-//		if(StringUtil.checkString(oid)) {
-//			EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
-//			List<EPMReferenceLink> refList = EpmSearchHelper.service.getEPMReferenceList((EPMDocumentMaster)epm.getMaster());
-//			for(EPMReferenceLink link : refList) {
-//				EPMDocument epmdoc = link.getReferencedBy();
-//				EpmData data = new EpmData(epmdoc);
-//				
-//				data.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
-//				
-//				list.add(data);
-//			}
-//		}
-//		model.addObject("title",title);
-//		model.addObject("list", list);
-//		model.addObject("distribute", distribute);
-//		return model;
-//	}
 	
-//	/** 도면 삭제
-//	 * @param request
-//	 * @param response
-//	 * @param oid
-//	 * @return
-//	 */
-//	@ResponseBody
-//	@RequestMapping("/deleteDrwaingAction")
-//	public Map<String,Object> deleteDrwaingAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) {
-//		Map<String,Object> map = DrawingHelper.service.delete(oid);
-//		return map;
-//	}
 	@Description(value = "도면 삭제")
 	@ResponseBody
 	@PostMapping(value = "/delete")
@@ -365,85 +285,32 @@ public class DrawingController extends BaseController{
 		return model;
 	}
 	
-	/** 도면 수정 페이지
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/updateDrawing")
-	public ModelAndView updateDrawing(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid ) throws Exception {
+	@Description(value = "도면 수정 페이지")
+	@GetMapping(value = "/update")
+	public ModelAndView update(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		EPMDocument doc = (EPMDocument)CommonUtil.getObject(oid);
-		EpmData epmData = new EpmData(doc);
-		
-		model.setViewName("popup:/drawing/updateDrawing");
-		model.addObject("epmData", epmData);
+		EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
+		EpmData dto = new EpmData(epm);
+		model.addObject("dto", dto);
+		model.setViewName("/extcore/jsp/drawing/drawing-update.jsp");
 		return model;
 	}
 	
-	/** 도면 수정
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/updateDrawingAction")
-	public ModelAndView updateDrawingAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid ) {
-		FileRequest req = null;
-		
-		String viewName = "";
-		String msg = "";
-		
+	@Description(value = "도면 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/update")
+	public Map<String,Object> update(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			req = new FileRequest(request);
-			oid 				 = StringUtil.checkNull(req.getParameter("oid"));
-			String fid 			 = StringUtil.checkNull(req.getParameter("fid")); //folder oid
-			String location 	 = StringUtil.checkNull(req.getParameter("location")); //도면 분류
-			String pdmNumber 	 = StringUtil.checkNull(req.getParameter("pdmNumber")); //도면 번호
-			String pdmName 		 = StringUtil.checkNull(req.getParameter("pdmName")); //도면 이름
-			String primary 		 = StringUtil.checkNull(req.getParameter("PRIMARY")); //주 첨부파일
-			String description 	 = StringUtil.checkNull(req.getParameter("description")); //설명
-			String lifecycle 	 = StringUtil.checkNull(req.getParameter("lifecycle"));
-			String iterationNote = StringUtil.checkNull(req.getParameter("iterationNote"));
-			String isWG 		 = StringUtil.checkNull(req.getParameter("isWG"));
-			
-			System.out.println("primary :: "+primary);
-			
-			Hashtable<String,String> hash = new Hashtable<String,String>();
-			hash.put("oid" , oid);
-			hash.put("fid" , fid);
-			hash.put("location", location);
-			hash.put("number", pdmNumber);
-			hash.put("name", pdmName);
-			hash.put("primary" , primary);
-			hash.put("description" , description);
-			hash.put("iterationNote", iterationNote);
-			hash.put("isWG", isWG);
-			
-			String[] loc = req.getParameterValues("SECONDARY");
-			String[] deloc = req.getParameterValues("delocIds");
-			String[] partOid = req.getParameterValues("partOid");
-			
-			Hashtable rtnVal = DrawingHelper.service.modify(hash , loc , deloc, partOid);
-			
-			msg = (String)rtnVal.get("msg");
-	        String newOid = (String)rtnVal.get("oid");
-	        
-	        if("S".equals(StringUtil.checkNull((String)rtnVal.get("rslt")))) {
-	        	viewName = "/Windchill/" + CommonUtil.getOrgName() + "/drawing/viewDrawing.do?oid="+newOid;
-	        } else {
-	        	viewName = "/Windchill/" + CommonUtil.getOrgName() + "/drawing/viewDrawing.do?oid="+oid;
-	        }
-	        
+			DrawingHelper.service.update(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
 		} catch(Exception e) {
 			e.printStackTrace();
-		} finally {
-			if(req!=null) req.removeTempFiles();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
 		}
-        return ControllerUtil.redirect(viewName, msg);
+		return result;
 	}
 	
 	/** 관련 도면 추가

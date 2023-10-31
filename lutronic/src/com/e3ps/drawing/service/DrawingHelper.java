@@ -49,6 +49,8 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
+import wt.vc.config.ConfigHelper;
+import wt.vc.config.LatestConfigSpec;
 
 public class DrawingHelper {
 	public static final DrawingService service = ServiceFactory.getService(DrawingService.class);
@@ -614,7 +616,7 @@ public class DrawingHelper {
 		while (result.hasMoreElements()) {
 			EPMDocument d = (EPMDocument) result.nextElement();
 			Map<String, String> map = new HashMap<>();
-			EpmData data = new EpmData(epm);
+			EpmData data = new EpmData(d);
 			map.put("oid", data.getOid());
 			map.put("name", data.getName());
 			map.put("number", data.getNumber());
@@ -646,7 +648,17 @@ public class DrawingHelper {
         return isConnect;
 	}
 	
-	
-	
-	
+	/**
+	 * 최신버전 문서
+	 */
+	public EPMDocument latest(String oid) throws Exception {
+		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(epm.getMaster(), config);
+		if (result.hasMoreElements()) {
+			EPMDocument latest = (EPMDocument) result.nextElement();
+			return latest;
+		}
+		return null;
+	}
 }

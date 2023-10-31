@@ -80,5 +80,7 @@ public interface DrawingService {
 	
 	public void create(Map<String,Object> map) throws Exception;
 	
+	public void update(Map<String, Object> params) throws Exception;
+	
 	public void batch(ArrayList<Map<String, Object>> gridData) throws Exception;
 }

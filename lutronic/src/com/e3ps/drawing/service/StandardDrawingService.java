@@ -106,6 +106,7 @@ import com.e3ps.common.web.WebUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.distribute.util.MakeZIPUtil;
+import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.download.service.DownloadHistoryHelper;
@@ -114,6 +115,7 @@ import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.e3ps.drawing.util.EpmPublishUtil;
 import com.e3ps.groupware.notice.Notice;
+import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.org.People;
 import com.e3ps.part.dto.ExcelData;
 import com.e3ps.part.dto.PartData;
@@ -125,6 +127,7 @@ import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsQueryHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 import com.ptc.wvs.server.ui.UIHelper;
 import com.ptc.wvs.server.util.FileHelper;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -2199,46 +2202,36 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			String primary		 = StringUtil.checkNull((String) map.get("primary"));
 			String description 	 = StringUtil.checkNull((String) map.get("description"));
 			String lifecycle 	 = StringUtil.checkNull((String) map.get("lifecycle"));
-			String drwName		 = StringUtil.checkNull((String) map.get("name"));
+			String name		 = StringUtil.checkNull((String) map.get("name"));
 			String number 		 = StringUtil.checkNull((String) map.get("number"));
-			String partToDrwOid  = StringUtil.checkNull((String) map.get("partToDrwOid"));
+			boolean temprary = (boolean) map.get("temprary");
 			
+			// 결재
+			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) map.get("approvalRows");
+			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) map.get("agreeRows");
+			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) map.get("receiveRows");
 			
+			String applicationType = "MANUAL";
+			String extName = "";
+			String authoringType ="";
+			if(primary.length() > 0) {
+				extName = primary.split("/")[1];
+				authoringType = EpmUtil.getAuthoringType(extName);
+			}
+			String extentionName = getPrefix(extName);
 			
-			
-//			if (primary.length() == 0) {
-//            	primary = "";
-//				throw new Exception(Message.get("파일이 존재 하지 않습니다."));
-//			}
-//            
-//			String applicationType = "MANUAL";
-//			
-//			String extName = "";
-//			
-//			String authoringType ="";
-//			if(primary.length() > 0) {
-//				extName = primary.split("/")[1];
-//				authoringType = EpmUtil.getAuthoringType(extName);
-//			}
-//			
-//			String extentionName = getPrefix(extName);
 			EPMDocument epm = EPMDocument.newEPMDocument();
-			
-//			boolean partToDrwOidTemp = false;
-//			if(!partToDrwOid.equals("")){
-//				partToDrwOidTemp = true;
-//			}
-			
 			epm.setNumber(number);
-			epm.setName(drwName);
-			epm.setDescription(description); 
+			epm.setName(name);
+			epm.setDescription(description);
+			
 			// 수정필요
 			EPMDocumentMaster epmMaster = (EPMDocumentMaster)epm.getMaster();
 			EPMContextHelper.setApplication(EPMApplicationType.toEPMApplicationType("EPM"));
 			epmMaster.setOwnerApplication(EPMContextHelper.getApplication());
 			EPMAuthoringAppType appType = EPMAuthoringAppType.toEPMAuthoringAppType("CATIAV5");
 			epmMaster.setAuthoringApplication(appType);
-			epmMaster.setCADName(drwName);
+			epmMaster.setCADName(name);
 			EPMDocumentType documetType = EPMDocumentType.toEPMDocumentType("CADCOMPONENT");
 			epmMaster.setDocType(documetType);
 			System.out.println("setDocType      : " + epmMaster.getDocType());
@@ -2268,20 +2261,12 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			if (primary.length() > 0) {
 				String cacheId = primary.split("/")[0];
 				CachedContentDescriptor cacheDs = new CachedContentDescriptor(cacheId);
-
 				
 				file = new File(cacheDs.getContentIdentity());
 				orgFileName = file.getAbsolutePath();
 				fileDir = file.getParent();
-				System.out.println("primary.split1                   : "+primary.split("\\\\").length);
-				System.out.println("primary.spl2                   : "+file);
+				
 				fileName = primary.split("/")[1];
-				
-//				file = CommonContentHelper.manager.getFileFromCacheId(cacheId);
-//				orgFileName = file.getAbsolutePath();
-//				fileDir = file.getParent();
-//				fileName = file.getName();
-				
 				
 				if(isFileNameCheck(fileName)){
 	            	throw new Exception(Message.get("중복된 파일입니다."));
@@ -2300,28 +2285,31 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			}
 			epm = (EPMDocument)PersistenceHelper.manager.save(epm);
 			
-			// 첨부 파일
-			String[] secondary = (String[])map.get("secondary");
-			if(secondary != null) {
-				CommonContentHelper.service.attach(epm, null, secondary);
-			}else {
-				CommonContentHelper.service.attach(epm, primary, secondary);
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				LifeCycleHelper.service.setLifeCycleState(epm, state);
 			}
 			
-			//EpmUtil.createRelation(epm3D, epm);
-			String[] partOids = (String[])map.get("partOids");
-			if(partOids != null) {
-				for(String partOid : partOids) {
-					WTPart part = (WTPart)CommonUtil.getObject(partOid);
-					EPMDescribeLink describeLink = EPMDescribeLink.newEPMDescribeLink(part, epm);
-					PersistenceServerHelper.manager.insert(describeLink);
-				}
+			// 첨부 파일 저장
+ 			saveAttach(epm, map);
+			
+			ArrayList<Map<String, String>> partList = (ArrayList<Map<String, String>>) map.get("partList");
+			// 관련품목
+			for (Map<String, String> partMap : partList) {
+				String oid = partMap.get("oid");
+				WTPart part = (WTPart) CommonUtil.getObject(oid);
+				EPMDescribeLink describeLink = EPMDescribeLink.newEPMDescribeLink(part, epm);
+				PersistenceServerHelper.manager.insert(describeLink);
 			}
 			
-			System.out.println("orgFileName       :   "+orgFileName);
-			EpmPublishUtil.publish(epm);  //��ǥ�۾�
+			EpmPublishUtil.publish(epm);
 			File orgfile = new File(orgFileName);
 			file.renameTo(orgfile);
+			
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(epm, agreeRows, approvalRows, receiveRows);
+			}
 			
 			trs.commit();
 			trs = null;
@@ -2334,9 +2322,33 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 				trs.rollback();
 			}
 		}
-		
 	}
+	
+	/**
+	 * 첨부 파일 저장
+	 */
+	private void saveAttach(EPMDocument epm, Map<String, Object> map) throws Exception {
+		String primary	= StringUtil.checkNull((String) map.get("primary"));
+		ArrayList<String> secondarys = (ArrayList<String>) map.get("secondarys");
 
+		if (StringUtil.checkString(primary)) {
+			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+			ApplicationData applicationData = ApplicationData.newApplicationData(epm);
+			applicationData.setRole(ContentRoleType.PRIMARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(epm, applicationData, vault.getPath());
+		}
+
+		for (int i = 0; i < secondarys.size(); i++) {
+			String cacheId = secondarys.get(i);
+			File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
+			ApplicationData applicationData = ApplicationData.newApplicationData(epm);
+			applicationData.setRole(ContentRoleType.SECONDARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(epm, applicationData, vault.getPath());
+		}
+	}
+	
 	@Override
 	public List<EpmData> include_DrawingList(String oid, String moduleType, String epmType) throws Exception {
 		// TODO Auto-generated method stub
@@ -2445,6 +2457,90 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 		} finally {
 			if (trs != null) {
 				trs.rollback();
+			}
+		}
+	}
+
+	@Override
+	public void update(Map<String, Object> params) throws Exception {
+		String oid = StringUtil.checkNull((String) params.get("oid"));
+		EPMDocument orgEpm = (EPMDocument) CommonUtil.getObject(oid);
+		if(orgEpm!=null){
+			String location = StringUtil.checkNull((String) params.get("location"));
+			String primary = StringUtil.checkNull((String) params.get("primary"));
+			String description = StringUtil.checkNull((String) params.get("description"));
+			String iterationNote = StringUtil.checkNull((String) params.get("iterationNote"));
+			
+			EPMDocument newEpm = (EPMDocument)getWorkingCopy(orgEpm);
+			newEpm.setDescription(description);
+			newEpm = (EPMDocument) PersistenceHelper.manager.modify(newEpm);
+			
+			if(primary.length() > 0) {
+				ContentItem item = null;
+				QueryResult result = ContentHelper.service.getContentsByRole ((ContentHolder)newEpm ,ContentRoleType.PRIMARY );
+				while (result.hasMoreElements ()) {
+					item = (ContentItem) result.nextElement ();
+					CommonContentHelper.service.delete(newEpm, item);
+				}
+				result.reset();
+				String fileName = primary.split("/")[1];
+				String TempCadName = newEpm.getCADName();
+				System.out.println("primary :: "+primary);
+				System.out.println("fileName :: "+fileName);
+				System.out.println("TempCadName :: "+TempCadName);
+				
+				if(!TempCadName.equals(fileName)){
+					throw new Exception(Message.get("파일명이 다릅니다."));
+	            }
+			}
+			
+			QueryResult result = ContentHelper.service.getContentsByRole(newEpm, ContentRoleType.SECONDARY);
+			while (result.hasMoreElements()) {
+				ContentItem item = (ContentItem) result.nextElement();
+				ContentServerHelper.service.deleteContent(newEpm, item);
+			}
+			
+			// 첨부파일 저장
+			saveAttach(newEpm, params);
+			
+			// 관련품목
+			QueryResult partResults = PersistenceHelper.manager.navigate(newEpm, "describes", EPMDescribeLink.class, false);
+            while ( partResults.hasMoreElements() ) {
+            	EPMDescribeLink link = (EPMDescribeLink) partResults.nextElement();
+                PersistenceServerHelper.manager.remove(link);
+            }
+            
+            ArrayList<Map<String, String>> partList = (ArrayList<Map<String, String>>) params.get("partList");
+			for (Map<String, String> partMap : partList) {
+				String partOid = partMap.get("oid");
+				WTPart part = (WTPart) CommonUtil.getObject(partOid);
+				EPMDescribeLink describeLink = EPMDescribeLink.newEPMDescribeLink(part, newEpm);
+				PersistenceServerHelper.manager.insert(describeLink);
+			}
+			
+			newEpm = (EPMDocument) PersistenceHelper.manager.refresh(newEpm);
+			
+			// Check-in
+			if(WorkInProgressHelper.isCheckedOut(newEpm)){
+				newEpm = (EPMDocument) WorkInProgressHelper.service.checkin(newEpm, StringUtil.checkNull(iterationNote));
+			}
+			
+			if(location.length() > 0){
+				Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+				newEpm = (EPMDocument) FolderHelper.service.changeFolder((FolderEntry) newEpm, folder);
+			}
+			
+			/*BuildRule History*/
+			EPMBuildRule buildRule=PartSearchHelper.service.getBuildRule(newEpm);
+			if(buildRule !=null){
+				WTPart part=(WTPart)buildRule.getBuildTarget();
+				EPMBuildHistory history = EPMBuildHistory.newEPMBuildHistory(orgEpm, part, buildRule.getUniqueID(),
+						buildRule.getBuildType());
+				PersistenceServerHelper.manager.insert(history);
+			}
+			
+			if( newEpm != null ){
+				EpmPublishUtil.publish(newEpm);
 			}
 		}
 	}

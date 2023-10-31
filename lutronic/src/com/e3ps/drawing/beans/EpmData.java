@@ -45,6 +45,7 @@ public class EpmData {
 	private String pdf;
 	private String step;
 	private String dxf;
+	private String description;
 
 	public EpmData(EPMDocument epm) throws Exception {
 //		super(epm);
@@ -101,6 +102,11 @@ public class EpmData {
 
 		setApplicationType(epm.getOwnerApplication().toString());
 		setVersion(epm.getVersionIdentifier().getValue() + "." + epm.getIterationIdentifier().getValue());
+		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
+		if (isLatest() && (getState().equals("INWORK") || getState().equals("TEMPRARY") || getState().equals("BATCHAPPROVAL") || getState().equals("REWORK"))) {
+			setUpdate(true);
+		}
+		setDescription(StringUtil.checkNull(epm.getDescription()));
 	}
 
 	// 연관 파트 번호

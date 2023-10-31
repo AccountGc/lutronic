@@ -234,12 +234,10 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				
 				var url = getCallUrl("/mold/update");
 				call(url, params, function(data) {
+					alert(data.msg);
 					if(data.result){
-						alert(data.msg);
 						opener.loadGridData();
 						self.close();
-					}else{
-						alert(data.msg);
 					}
 				});
 			});

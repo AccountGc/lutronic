@@ -34,16 +34,6 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<%	
 			}
 			%>
-			<%
-			if(dto.isLatest){
-			%>
-				<input type="button" value="최신버전" title="최신버전" class="" id="latestBtn">
-			<%	
-			}
-			%>
-<!-- 			<input type="button" value="버전이력" title="버전이력" class="" id="versionBtn"> -->
-<!-- 			<input type="button" value="다운로드이력" title="다운로드이력" class="" id="downloadBtn"> -->
-			<input type="button" value="결재이력" title="결재이력" class="" id="approveBtn">
 			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
 		</td>
 	</tr>
@@ -84,7 +74,19 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				<th class="lb">상태</th>
 				<td class="indent5"><%=dto.getState()%></td>
 				<th class="lb">Rev.</th>
-				<td class="indent5"><%=dto.getVersion()%></td>
+				<td class="indent5">
+					<%=dto.getVersion()%>
+					<%
+					if (!dto.isLatest()) {
+					%>
+					&nbsp;
+					<b>
+						<a href="javascript:latest();">(최신버전으로)</a>
+					</b>
+					<%
+					}
+					%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
@@ -152,8 +154,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 	//수정
 	$("#updateBtn").click(function () {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		openLayer();
+		const url = getCallUrl("/drawing/update?oid=" + oid);
 		document.location.href = url;
 	})
 	
@@ -182,84 +183,10 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		});
 	})
 			
-	//개정
-	$("#reviseBtn").click(function () {
-		var url	= getURLString("doc", "reviseDocumentPopup", "do") + "?oid="+$("#oid").val()+"&module=rohs";
-		openOtherName(url,"reviseDocumentPopup","350","200","status=no,scrollbars=yes,resizable=yes");
-	})
-	
-	//버전이력
-	$("#versionBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/versionHistory?oid=" + oid + "&distribute=true");
-		popup(url, 830, 600);
-	})
-	
-	//다운로드 이력
-	$("#downloadBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/downloadHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	//결재 이력
-	$("#approveBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
 	//최신버전
 	$("#lastestBtn").click(function() {
-		var oid = this.value;
-		openView(oid);
-	})
-	
-	//copy
-	$('#copyRohs').click(function() {
-		var url = getURLString("rohs", "copyRohs", "do") + '?oid='+$('#oid').val();
-		openOtherName(url,"copyRohs","830","300","status=no,scrollbars=yes,resizable=yes");
-	})
-	
-	//결재 회수
-	$("#withDrawBtn").click(function() {
-		var url	= getURLString("common", "withDrawPopup", "do") + "?oid="+$("#oid").val();
-		openOtherName(url,"withDrawBtn","400","220","status=no,scrollbars=yes,resizable=yes");
-	})
-	
-	//일괄 다운로드
-	$("#batchSecondaryDown").click(function() {
-		var form = $("form[name=rohsViewForm]").serialize();
-		var url	= getURLString("common", "batchSecondaryDown", "do");
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			
-			error:function(data){
-				var msg = "데이터 검색오류";
-				alert(msg);
-			},
-			
-			success:function(data){
-				console.log(data.message);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
-					alert(data.message);
-				}
-			}
-			,beforeSend: function() {
-				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
-				gfn_EndShowProcessing();
-	        }
-		});
-		
+		const url = getCallUrl("/drawing/latest?oid=" + oid);
+		_popup(url, 1600, 550, "n");
 	})
 	
 	document.addEventListener("DOMContentLoaded", function() {
@@ -295,7 +222,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					} else {
 						createAUIGrid50(columns50);
 					}
-					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 다운로드이력
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력
 					if (isCreated10000) {
 						AUIGrid.resize(myGridID10000);
 					} else {

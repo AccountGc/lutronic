@@ -25,7 +25,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png"> 
-				<%if(moduleType=="" && !moduleType.equals("eco") || moduleType.equals("doc")){%>관련품목<%}else{%>설계변경 부품<%	}%>
+				<%if(moduleType.equals("eco") || moduleType.equals("doc") || moduleType.equals("drawing")){%>관련품목<%}else{%>설계변경 부품<%	}%>
 			</div>
 		</td>
 	</tr>
@@ -41,7 +41,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 	<tr>
 		<th class="lb">
 			<%
-			if(moduleType=="" && !moduleType.equals("eco") || moduleType.equals("doc")){
+			if(moduleType.equals("eco") || moduleType.equals("doc") || moduleType.equals("drawing")){
 			%>
 				관련품목
 			<%	
@@ -53,7 +53,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			%>
 			
 		</th>
-		<td colspan="3">
+		<td class="indent5" colspan="3">
 			<%
 			if (isCreate || isUpdate) {
 			%>
