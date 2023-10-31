@@ -61,7 +61,6 @@ public class StandardCrService extends StandardManager implements CrService {
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
 		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		boolean isSelf = dto.isSelf();
 		// 외부 메일
 		ArrayList<Map<String, String>> external = dto.getExternal();
 		Transaction trs = new Transaction();
@@ -140,15 +139,9 @@ public class StandardCrService extends StandardManager implements CrService {
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(cr, external);
 			
-			// 결재 시작
-			if (isSelf) {
-				// 자가결재시
-				WorkspaceHelper.service.self(cr);
-			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(cr, agreeRows, approvalRows, receiveRows);
-				}
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(cr, agreeRows, approvalRows, receiveRows);
 			}
 
 			trs.commit();
