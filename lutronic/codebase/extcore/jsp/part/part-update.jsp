@@ -608,7 +608,7 @@ function update(temp) {
 			location : toId("location"),
 			// 링크 데이터
 			rows90 : rows90,
-			rowsRohs : rowsRohs,
+			rows106 : rows106,
 	};
 	
 	const url = getCallUrl("/part/update");

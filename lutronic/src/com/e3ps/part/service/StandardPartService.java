@@ -596,7 +596,7 @@ public class StandardPartService extends StandardManager implements PartService 
 					if (primary.length() > 0) {
 						params.put("oid", CommonUtil.getOIDString(part));
 						params.put("epmfid", fid);
-						params.put("lifecycle", "LC_PART");
+						params.put("lifecycle", "LC_Default");
 						epm = DrawingHelper.service.createEPM(params);
 						EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
 						PersistenceServerHelper.manager.insert(link);
@@ -625,18 +625,18 @@ public class StandardPartService extends StandardManager implements PartService 
 				}
 
 				// 관련 ROHS
-				ArrayList<Map<String, String>> rowsRohs = (ArrayList<Map<String, String>>) params.get("rowsRohs");
+				ArrayList<Map<String, String>> rows106s = (ArrayList<Map<String, String>>) params.get("rows106");
 				// 기존 관련 ROHS 연결 해제
 				List<PartToRohsLink> list = RohsHelper.manager.getPartToRohsLinkList(part);
 				for (PartToRohsLink link : list) {
 					PersistenceServerHelper.manager.remove(link);
 				}
 				// 관련 ROHS 연결
-				for (Map<String, String> rowRohs : rowsRohs) {
-					String gridState = rowRohs.get("gridState");
+				for (Map<String, String> rows106 : rows106s) {
+					String gridState = rows106.get("gridState");
 					// 신규 혹은 삭제만 있다. (added, removed
 					if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
-						String rohsOid = rowRohs.get("oid");
+						String rohsOid = rows106.get("oid");
 						ROHSMaterial ref = (ROHSMaterial) CommonUtil.getObject(rohsOid);
 						PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, ref);
 						PersistenceHelper.manager.save(link);
