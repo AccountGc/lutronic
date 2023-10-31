@@ -200,7 +200,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			boolean temprary = (boolean) params.get("temprary");
 			// 결재
 			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
-			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
+			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows"); 
 			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
 
 			// 주 도면
@@ -525,12 +525,17 @@ public class StandardPartService extends StandardManager implements PartService 
 				String oldPartName = part.getName();
 
 				part = (WTPart) getWorkingCopy(part);
-
+				boolean temprary = (boolean) params.get("temprary");
 				String partName1 = StringUtil.checkNull((String) params.get("partName1")); // 품목명1 (NumberCode)
 				String partName2 = StringUtil.checkNull((String) params.get("partName2")); // 품목명2 (NumberCode)
 				String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
 				String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
 
+				// 결재
+				ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
+				ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
+				ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
+				
 				String partName = "";
 				String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
 				for (int i = 0; i < partNames.length; i++) {
@@ -665,6 +670,18 @@ public class StandardPartService extends StandardManager implements PartService 
 				if (partData.isGENERIC(part)) {
 					copyInstanceAttribute(part, params);
 				}
+				
+				
+				if (!temprary) {
+					State state = State.toState("INWORK");
+					LifeCycleHelper.service.setLifeCycleState(part, state);
+					
+					// 결재시작
+					if (approvalRows.size() > 0) {
+						WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
+					}
+				}
+				
 				trx.commit();
 				trx = null;
 
