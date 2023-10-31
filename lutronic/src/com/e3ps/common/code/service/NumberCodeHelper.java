@@ -237,7 +237,7 @@ public class NumberCodeHelper {
 		String name = (String) params.get("name");
 		String code = (String) params.get("code");
 		String description = (String) params.get("description");
-		boolean enabled = "false".equals((String) params.get("enabled")) ? false : true;
+		boolean enabled = "true".equals((String) params.get("enabled")) ? true : false;
 		String codeType = (String) params.get("codeType");
 
 		QuerySpec query = new QuerySpec();
