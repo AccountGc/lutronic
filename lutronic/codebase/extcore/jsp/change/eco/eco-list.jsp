@@ -1,9 +1,10 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 %>
 <!DOCTYPE html>
 <html>
@@ -52,10 +53,13 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+                        for (Map<String,String> lifecycle : lifecycleList) {
+                        %>
+                        <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+                        <%
+                        }
+                        %>
 					</select>
 				</td>
 			</tr>
@@ -75,26 +79,13 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				</td>
 				<th>승인일</th>
 				<td class="indent5">
-					<input type="text" name="createdFrom" id="modifiedFrom" class="width-100">
+					<input type="text" name="approveFrom" id="approveFrom" class="width-100">
 					~
-					<input type="text" name="createdTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+					<input type="text" name="approveTo" id="approveTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">프로젝트 코드</th>
-				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
 				<th>인허가변경</th>
 				<td>
 					&nbsp;
@@ -135,7 +126,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					</div>
 				</td>
 				<th>위험통제</th>
-				<td>
+				<td colspan="3">
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="riskType" value="" checked="checked">
@@ -338,9 +329,11 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
-				const field = [ "name", "number" ];
+				const field = ["_psize","name","number","creatorOid","createdFrom","createdTo","approveFrom","approveTo","state"];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
+				params.licensing = $('input[name=licensing]:checked').val();
+				params.riskType = $('input[name=riskType]:checked').val();
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

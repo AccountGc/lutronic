@@ -64,7 +64,7 @@ public class CrHelper {
 		// 상태
 		QuerySpecUtils.toState(query, idx, EChangeRequest.class, state);
 		// 등록자
-		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, creator);
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATOR, creator);
 		//등록일
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
@@ -76,7 +76,7 @@ public class CrHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
 		
 		//작성부서
-		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
 		
 		//작성일
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DATE, writedFrom,
@@ -90,6 +90,8 @@ public class CrHelper {
 		
 		// 변경구분
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CHANGE_SECTION, changeSection);
+		
+		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, true);
 		
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

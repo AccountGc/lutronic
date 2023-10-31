@@ -88,7 +88,7 @@ public class MoldHelper {
 		QuerySpecUtils.creatorQuery(query, idx, WTDocument.class, creator);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTDocument.class, WTDocument.CREATE_TIMESTAMP, modifiedFrom,
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, modifiedFrom,
 				modifiedTo);
 		QuerySpecUtils.toState(query, idx, WTDocument.class, state);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.DESCRIPTION, description);

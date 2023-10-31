@@ -294,6 +294,7 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("number");
 				const columns = loadColumnLayout("ecpr-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
