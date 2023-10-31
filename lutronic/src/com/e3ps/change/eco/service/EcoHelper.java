@@ -28,6 +28,7 @@ import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -63,86 +64,33 @@ public class EcoHelper {
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
 		String eoType = (String) params.get("eoType");
-
-		String predate = (String) params.get("predate");
-		String postdate = (String) params.get("postdate");
-
-		String creator = (String) params.get("creator");
+		String createdFrom = (String) params.get("createdFrom");
+		String createdTo = (String) params.get("createdTo");
+		String creatorOid = (String) params.get("creatorOid");
 		String state = (String) params.get("state");
+		String approveFrom = (String) params.get("approveFrom");
+		String approveTo = (String) params.get("approveTo");
 
 		String licensing = (String) params.get("licensing");
-
-		String model = (String) params.get("model");
-
-		String sortCheck = (String) params.get("sortCheck");
-		String sortValue = (String) params.get("sortValue");
 		String riskType = (String) params.get("riskType");
-		String preApproveDate = (String) params.get("preApproveDate");
-		String postApproveDate = (String) params.get("postApproveDate");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
-
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
-
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
-
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, predate,
-				postdate);
-
+		QuerySpecUtils.creatorQuery(query, idx, EChangeOrder.class, creatorOid);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
+				createdTo);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
-				preApproveDate, postApproveDate);
-
-		// 등록자
-//		if (creator.length() > 0) {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			People pp = (People) CommonUtil.getObject(creator);
-//			long longOid = CommonUtil.getOIDLongValue(pp.getUser());
-//			qs.appendWhere(new SearchCondition(ecoClass, "creator.key.id", SearchCondition.EQUAL, longOid),
-//					new int[] { ecoIdx });
-//		}
-
+				approveFrom, approveTo);
+		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
 		if (StringUtil.checkString(eoType)) {
 			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, eoType);
 		} else {
 			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "CHANGE");
 		}
-
-		// 인허가 구분
-//		if (licensing.length() > 0) {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			if (licensing.equals("NONE")) {
-//				qs.appendWhere(
-//						new SearchCondition(ecoClass, EChangeOrder.LICENSING_CHANGE, SearchCondition.IS_NULL, true),
-//						new int[] { ecoIdx });
-//			} else {
-//				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.LICENSING_CHANGE, SearchCondition.EQUAL,
-//						licensing, false), new int[] { ecoIdx });
-//			}
-//
-//		}
-
-		// 인허가 구분
-//		if (riskType.length() > 0) {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			if (riskType.equals("NONE")) {
-//				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.RISK_TYPE, SearchCondition.IS_NULL, true),
-//						new int[] { ecoIdx });
-//			} else {
-//				qs.appendWhere(
-//						new SearchCondition(ecoClass, EChangeOrder.RISK_TYPE, SearchCondition.EQUAL, riskType, false),
-//						new int[] { ecoIdx });
-//			}
-//
-//		}
-
-		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.LICENSING_CHANGE, licensing);
+		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.RISK_TYPE, riskType);
 
 		if (rows104.size() > 0) {
 			if (query.getConditionCount() > 0) {
@@ -169,61 +117,7 @@ public class EcoHelper {
 			}
 			query.appendCloseParen();
 		}
-
-//		if (sortValue != null && sortValue.length() > 0) {
-//			// System.out.println("sortCheck="+sortCheck+"\tsortValue="+sortValue);
-//			if ("true".equals(sortCheck)) {
-//
-//				if (!"creator.key.id".equals(sortValue)) {
-//					if (!"PROCESSDATE".equals(sortValue)) {
-//						qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class, sortValue), true),
-//								new int[] { ecoIdx });
-//					}
-//				} else {
-//
-//					if (qs.getConditionCount() > 0)
-//						qs.appendAnd();
-//					int idx_user = qs.appendClassList(WTUser.class, false);
-//					int idx_people = qs.appendClassList(People.class, false);
-//
-//					ClassAttribute ca = new ClassAttribute(EChangeOrder.class, "creator.key.id");
-//					ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-//					qs.appendWhere(new SearchCondition(ca, "=", ca2), new int[] { ecoIdx, idx_user });
-//					ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-//					qs.appendAnd();
-//					qs.appendWhere(new SearchCondition(ca2, "=", ca3), new int[] { idx_user, idx_people });
-//					SearchUtil.setOrderBy(qs, People.class, idx_people, People.NAME, "sort", true);
-//				}
-//
-//			} else {
-//
-//				if (!"creator.key.id".equals(sortValue)) {
-//					if (!"PROCESSDATE".equals(sortValue)) {
-//						qs.appendOrderBy(new OrderBy(new ClassAttribute(EChangeOrder.class, sortValue), false),
-//								new int[] { ecoIdx });
-//					}
-//				} else {
-//
-//					if (qs.getConditionCount() > 0)
-//						qs.appendAnd();
-//					int idx_user = qs.appendClassList(WTUser.class, false);
-//					int idx_people = qs.appendClassList(People.class, false);
-//
-//					ClassAttribute ca = new ClassAttribute(EChangeOrder.class, "creator.key.id");
-//					ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-//					qs.appendWhere(new SearchCondition(ca, "=", ca2), new int[] { ecoIdx, idx_user });
-//					ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-//					qs.appendAnd();
-//					qs.appendWhere(new SearchCondition(ca2, "=", ca3), new int[] { idx_user, idx_people });
-//					SearchUtil.setOrderBy(qs, People.class, idx_people, People.NAME, "sort", false);
-//				}
-//			}
-//		} else {
-//			qs.appendOrderBy(new OrderBy(new ClassAttribute(ecoClass, EChangeOrder.EO_APPROVE_DATE), true),
-//					new int[] { ecoIdx });
-//			qs.appendOrderBy(new OrderBy(new ClassAttribute(ecoClass, EChangeOrder.CREATE_TIMESTAMP), true),
-//					new int[] { ecoIdx });
-//		}
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

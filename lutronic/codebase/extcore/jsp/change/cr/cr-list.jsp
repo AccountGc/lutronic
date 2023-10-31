@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
@@ -5,6 +7,8 @@
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 %>
 <!DOCTYPE html>
 <html>
@@ -53,10 +57,13 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (Map<String,String> lifecycle : lifecycleList) {
+						%>
+						<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -87,11 +94,20 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
 					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>작성부서</th>
 				<td class="indent5">
-					<input type="text" name="createDepart" id="createDepart" data-multi="false" class="width-200">
+					<select name="createDepart" id="createDepart" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 				<th>작성일</th>
 				<td class="indent5">
@@ -106,7 +122,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				<td class="indent5">
 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
 					<input type="hidden" name="proposerOid" id="proposerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
 				</td>
 				<th>변경구분</th>
 				<td class="indent5">
@@ -344,7 +360,8 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				finderUser("writer");
 				finderUser("proposer");
 				twindate("created");
-				twindate("modified");
+				twindate("approve");
+				twindate("writed");
 				selectbox("_psize");
 				selectbox("model");
 				selectbox("changeSection");

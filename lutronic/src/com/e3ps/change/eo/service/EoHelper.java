@@ -22,6 +22,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.org.People;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 
@@ -61,47 +62,32 @@ public class EoHelper {
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
 		String eoType = (String) params.get("eoType");
-
-		String predate = (String) params.get("predate");
-		String postdate = (String) params.get("postdate");
-
-		String creator = (String) params.get("creator");
+		String createdFrom = (String) params.get("createdFrom");
+		String createdTo = (String) params.get("createdTo");
+		String creatorOid = (String) params.get("creatorOid");
+		String approveFrom = (String) params.get("approveFrom");
+		String approveTo = (String) params.get("approveTo");
 		String state = (String) params.get("state");
-
-		String licensing = (String) params.get("licensing");
-
 		String model = (String) params.get("model");
-
-		String sortCheck = (String) params.get("sortCheck");
-		String sortValue = (String) params.get("sortValue");
-		String riskType = (String) params.get("riskType");
-		String preApproveDate = (String) params.get("preApproveDate");
-		String postApproveDate = (String) params.get("postApproveDate");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
 
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
-
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
-
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, predate,
-				postdate);
-
+		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
+		if(creatorOid.length() > 0) {
+			if( query.getConditionCount() > 0 ) {
+				query.appendAnd();
+			}
+			People pp = (People)CommonUtil.getObject(creatorOid);
+			long longOid = CommonUtil.getOIDLongValue(pp.getUser());
+			query.appendWhere(new SearchCondition(EChangeOrder.class, "creator.key.id", SearchCondition.EQUAL , longOid), new int[] {idx});
+		}
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
+				createdTo);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
-				preApproveDate, postApproveDate);
-
-		// 등록자
-//		if (creator.length() > 0) {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			People pp = (People) CommonUtil.getObject(creator);
-//			long longOid = CommonUtil.getOIDLongValue(pp.getUser());
-//			qs.appendWhere(new SearchCondition(ecoClass, "creator.key.id", SearchCondition.EQUAL, longOid),
-//					new int[] { ecoIdx });
-//		}
-
+				approveFrom, approveTo);
 		if (StringUtil.checkString(eoType)) {
 			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, eoType);
 		} else {
@@ -114,40 +100,7 @@ public class EoHelper {
 			QuerySpecUtils.toEquals(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, "PRODUCT");
 			query.appendCloseParen();
 		}
-
-		// 인허가 구분
-//		if (licensing.length() > 0) {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			if (licensing.equals("NONE")) {
-//				qs.appendWhere(
-//						new SearchCondition(ecoClass, EChangeOrder.LICENSING_CHANGE, SearchCondition.IS_NULL, true),
-//						new int[] { ecoIdx });
-//			} else {
-//				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.LICENSING_CHANGE, SearchCondition.EQUAL,
-//						licensing, false), new int[] { ecoIdx });
-//			}
-//
-//		}
-
-		// 인허가 구분
-//		if (riskType.length() > 0) {
-//			if (qs.getConditionCount() > 0) {
-//				qs.appendAnd();
-//			}
-//			if (riskType.equals("NONE")) {
-//				qs.appendWhere(new SearchCondition(ecoClass, EChangeOrder.RISK_TYPE, SearchCondition.IS_NULL, true),
-//						new int[] { ecoIdx });
-//			} else {
-//				qs.appendWhere(
-//						new SearchCondition(ecoClass, EChangeOrder.RISK_TYPE, SearchCondition.EQUAL, riskType, false),
-//						new int[] { ecoIdx });
-//			}
-//
-//		}
-
-		QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
 
 		if (rows104.size() > 0) {
 			if (query.getConditionCount() > 0) {

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
@@ -18,6 +19,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
@@ -62,8 +64,8 @@ public class EcprHelper {
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.EO_NUMBER, number);
 			//상태
 			QuerySpecUtils.toState(query, idx, ECPRRequest.class, state);
-			//등록자//creator.key.id
-			QuerySpecUtils.creatorQuery(query, idx, ECPRRequest.class, creator);
+			// 등록자
+			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.CREATOR, creator);
 			//등록일
 			QuerySpecUtils.toTimeGreaterAndLess(query, idx, ECPRRequest.class, ECPRRequest.CREATE_TIMESTAMP, createdFrom,
 					createdTo);
@@ -71,12 +73,7 @@ public class EcprHelper {
 			QuerySpecUtils.toTimeGreaterAndLess(query, idx, ECPRRequest.class, ECPRRequest.APPROVE_DATE, approveFrom,
 					approveTo);
 			//작성자
-			if(writer.length() > 0) {
-				if( query.getConditionCount() > 0 ) {
-					query.appendAnd();
-				}
-				query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.WRITER, SearchCondition.LIKE , "%"+writer+"%", false), new int[] {idx});
-			}
+			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.WRITER, writer);
 			//작성부서
 			QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.CREATE_DEPART, createDepart);
 			//작성일
