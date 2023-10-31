@@ -7,6 +7,7 @@ import java.util.Map;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.temprary.column.TempraryColumn;
 
@@ -38,7 +39,10 @@ public class TempraryHelper {
 		ReferenceFactory rf = new ReferenceFactory();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(LifeCycleManaged.class, true);
-
+		
+		String number = StringUtil.checkNull((String) params.get("number"));
+		String name = StringUtil.checkNull((String) params.get("name"));
+		String dataType = StringUtil.checkNull((String) params.get("dataType"));
 		
 		
 		// 단순 상태값으로만??/
@@ -49,8 +53,42 @@ public class TempraryHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			TempraryColumn data = new TempraryColumn(obj);
 			if(CommonUtil.isLatestVersion(rf.getReference(data.getOid()).getObject())) {
-				list.add(data);
+				boolean check =true;
+				String temNumber = data.getNumber();
+				String temName = data.getName();
+				String temDataType = data.getDataType();
+				
+				if((!"".equals(number) && temNumber.indexOf(number)>=0)) {
+					check=true;
+				}else if((!"".equals(number) && temNumber.indexOf(number)<0)) {
+					check=false;
+				}
+				
+				
+				if(!"".equals(name) && temName.indexOf(name)>=0 && check) {
+					check =true;
+				}else if((!"".equals(name) && temName.indexOf(name)<0)) {
+					check=false;
+				}
+				
+				
+				if(!"".equals(dataType) && temDataType.equals(dataType) && check) {
+					check =true;
+				}else if(!"".equals(dataType) && !temDataType.equals(dataType)) {
+					check=false;
+				}
+				
+				if(check) {
+					list.add(data);
+				}
+				
+//				list.add(data);
 			}
+			
+			
+			
+			
+			
 		}
 
 		map.put("list", list);
