@@ -283,11 +283,19 @@ public class ActivityController extends BaseController {
 
 	@Description(value = "ECO 품목 교체 함수 설변활동 중")
 	@PostMapping(value = "/replace")
+	@ResponseBody
 	public Map<String, Object> replace(@RequestBody Map<String, Object> params) throws Exception {
+		ArrayList<LinkedHashMap<String, Object>> addRows = (ArrayList<LinkedHashMap<String, Object>>) params
+				.get("addRows");
+		ArrayList<LinkedHashMap<String, Object>> removeRows = (ArrayList<LinkedHashMap<String, Object>>) params
+				.get("removeRows");
+		String oid = (String) params.get("oid");
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			ActivityHelper.service.replace(params);
-//			result.put("msg", "설계변경 활동이 완료되었습니다.");
+
+			ActivityHelper.service.replace(addRows, removeRows, oid);
+
+			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -322,7 +330,7 @@ public class ActivityController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECO 품목 일괄 개정 함수")
 	@PostMapping(value = "/revise")
 	@ResponseBody

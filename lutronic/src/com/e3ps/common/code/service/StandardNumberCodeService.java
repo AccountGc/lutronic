@@ -138,20 +138,20 @@ public class StandardNumberCodeService extends StandardManager implements Number
 				String sort = dto.getSort();
 				boolean enabled = dto.isEnabled();
 				String parentRowId = dto.getParentRowId();
-				
+
 				NumberCode parent = null;
 				if (StringUtil.checkString(parentRowId)) {
 					parent = (NumberCode) CommonUtil.getObject(parentRowId);
 				}
-				
+
 				NumberCode n = NumberCode.newNumberCode();
-				
+
 				n.setParent(parent);
 				n.setName(name);
 				n.setCode(code);
 				n.setDescription(description);
 				n.setSort(sort);
-				n.setDisabled(enabled);
+				n.setDisabled(!enabled);
 				n.setCodeType(NumberCodeType.toNumberCodeType(codeType));
 				PersistenceHelper.manager.save(n);
 			}
@@ -170,7 +170,7 @@ public class StandardNumberCodeService extends StandardManager implements Number
 				n.setCode(code);
 				n.setDescription(description);
 				n.setSort(sort);
-				n.setDisabled(enabled);
+				n.setDisabled(!enabled);
 				PersistenceHelper.manager.modify(n);
 			}
 

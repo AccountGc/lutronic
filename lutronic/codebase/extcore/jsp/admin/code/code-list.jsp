@@ -42,7 +42,7 @@
 					<input type="text" name="description" id="description" class="width-200">
 				</td>
 				<th>활성화</th>
-				<td class="indent5">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="enabled" value="false" checked="checked">
@@ -155,10 +155,10 @@
 					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
-						showLabel: true,
+// 						showLabel: true,
 						editable : true,
-						checkValue: false,
-						unCheckValue: true,
+// 						checkValue: "true",
+// 						unCheckValue: "false",
 					}
 				} ]
 			}

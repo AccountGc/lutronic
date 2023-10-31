@@ -59,13 +59,14 @@ public interface ActivityService {
 	public abstract void complete(Map<String, Object> params) throws Exception;
 
 	/**
-	 * ECA 활동중 ECO 관련 품목 수정, 삭제 함수
-	 */
-	public abstract void replace(Map<String, Object> params) throws Exception;
-
-	/**
 	 * ECO 대상품목 일괄 개정 함수
 	 */
 	public abstract void revise(Map<String, Object> params) throws Exception;
+
+	/**
+	 * EO 대상 품목 수정
+	 */
+	public abstract void replace(ArrayList<LinkedHashMap<String, Object>> addRows,
+			ArrayList<LinkedHashMap<String, Object>> removeRows, String oid) throws Exception;
 
 }

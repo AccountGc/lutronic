@@ -8,7 +8,7 @@ String oid = (String) request.getAttribute("oid");
 EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
 ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("list");
 %>
-
+<input type="hidden" name="oid" id="oid" value="<%=oid%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -18,7 +18,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="추가" title="추가" onclick="insert();">
+			<input type="button" value="추가" title="추가" onclick="popup100();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow();">
 			<input type="button" value="저장" title="저장" class="blue" onclick="save();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -57,6 +57,16 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 				_popup(url, 1600, 700, "n");
 			}
 		}
+	}, {
+		headerText : "",
+		dataField : "part_oid",
+		dataType : "string",
+		visible : false
+	}, {
+		headerText : "",
+		dataField : "link_oid",
+		dataType : "string",
+		visible : false
 	} ];
 
 	function createAUIGrid(columnLayout) {
@@ -96,14 +106,52 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 		if (!confirm("저장 하시겠습니까?")) {
 			return false;
 		}
+		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/activity/replace");
-		const data = AUIGrid.getGridData(myGridID);
+		const addRows = AUIGrid.getAddedRowItems(myGridID);
+		const removeRows = AUIGrid.getRemovedItems(myGridID);
 		const params = {
-			data : data
+			addRows : addRows,
+			removeRows : removeRows,
+			oid : oid
 		};
+		parent.openLayer();
 		call(url, params, function(data) {
+			console.log(data);
 			alert(data.msg);
+			if (data.result) {
+				opener.document.location.reload();
+				self.close();
+			}
+			parent.closeLayer();
 		})
+	}
+
+	function popup100() {
+		const url = getCallUrl("/part/popup?method=insert100&multi=true");
+		_popup(url, 1600, 800, "n");
+	}
+
+	function insert100(arr, callBack) {
+		let msg = "";
+		for (let i = 0; i < arr.length; i++) {
+			const dd = arr[i];
+			const rowIndex = dd.rowIndex;
+			const item = dd.item;
+			const newItem = new Object();
+			newItem.part_number = item.number;
+			newItem.part_name = item.name;
+			newItem.part_version = item.version;
+			newItem.part_oid = item.part_oid;
+			const unique = AUIGrid.isUniqueValue(myGridID, "part_oid", newItem.part_oid);
+			if (unique) {
+				AUIGrid.addRow(myGridID, newItem, rowIndex);
+			} else {
+				msg = item.number + " 품목은 이미 추가 되어있습니다.";
+				break;
+			}
+		}
+		callBack(true, false, msg);
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

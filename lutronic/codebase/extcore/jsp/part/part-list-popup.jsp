@@ -560,17 +560,28 @@ function addBtn() {
 		opener.<%=method%>(checkedItems,"<%=rowId%>" );
 		self.close();
 	<%}else{%>
-		opener.<%=method%>(checkedItems, function(res) {
+		opener.<%=method%>(checkedItems, function(res, close, msg) {
 			if(res) {
 				setTimeout(function() {
 					closeLayer();
 				}, 500);
 			}
+			trigger(close, msg);
 		})
 	<%}%>
-	
-	
-	
+}
+
+function trigger(close, msg) {
+	// 메세지 주고 창닫기
+	if(close && msg != "") {
+		// true, msg...
+		alert(msg);
+		self.close();
+	}
+	// 메세지 주고 창안닫기
+	if(!close && msg != "") {
+		alert(msg);
+	}
 }
 
 document.addEventListener("DOMContentLoaded", function() {

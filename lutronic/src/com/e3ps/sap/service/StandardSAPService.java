@@ -268,20 +268,22 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		int idx = 1;
 		for (WTPart part : list) {
 			// 완제품에 해당하는 BOM 목록들..
+//			System.out.println("root=" + part.getNumber());
 			ArrayList<SAPBomDTO> dataList = SAPHelper.manager.getterBomData(part);
 
 			System.out.println("BOM 리스트 항목 개수  = " + dataList.size());
 
 			for (SAPBomDTO dto : dataList) {
-				System.out.println("n = " + dto.getParentPartNumber());
-				//				System.out.println(dto.toString());
+				System.out.println("p = " + dto.getParentPartNumber() + ", c = " + dto.getChildPartNumber());
+				// System.out.println(dto.toString());
 				bomTable.insertRow(idx);
 				bomTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리?
 				bomTable.setValue("SEQNO", df.format(seq)); // 항목번호
-				bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 기존 모품번
-				bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 기존 자품번
-				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 신규 모품번
-				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 신규 자품번
+				// EO 일경우 NEW 에만
+				bomTable.setValue("MATNR_NEW", dto.getParentPartNumber()); // 기존 모품번
+				bomTable.setValue("IDNRK_NEW", dto.getChildPartNumber()); // 기존 자품번
+//				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 신규 모품번
+//				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 신규 자품번
 				bomTable.setValue("MENGE", dto.getQty()); // 수량
 				bomTable.setValue("MEINS", dto.getUnit()); // 단위
 				seq++;

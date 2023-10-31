@@ -23,8 +23,8 @@ public class SAPBomDTO {
 	private String unit;
 
 	public SAPBomDTO(WTPartUsageLink link) throws Exception {
-		WTPartMaster parent = link.getUses();
-		WTPart child = link.getUsedBy();
+		WTPart parent = link.getUsedBy();
+		WTPartMaster child = link.getUses();
 		setParentPartNumber(parent.getNumber());
 		setChildPartNumber(child.getNumber());
 		setQty(link.getQuantity().getAmount());

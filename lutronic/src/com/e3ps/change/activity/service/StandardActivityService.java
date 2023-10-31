@@ -439,24 +439,6 @@ public class StandardActivityService extends StandardManager implements Activity
 	}
 
 	@Override
-	public void replace(Map<String, Object> params) throws Exception {
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
-		}
-	}
-
-	@Override
 	public void revise(Map<String, Object> params) throws Exception {
 		ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) params.get("data");
 		String oid = (String) params.get("oid");
@@ -479,7 +461,7 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				WTPart newPart = null;
 				EPMDocument newEpm = null;
-				
+
 				// 개정인데?? 체크인아웃??
 				if (epm != null) {
 
@@ -487,6 +469,42 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				link.setRevise(false);
 				PersistenceHelper.manager.modify(link);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void replace(ArrayList<LinkedHashMap<String, Object>> addRows,
+			ArrayList<LinkedHashMap<String, Object>> removeRows, String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+
+			for (LinkedHashMap<String, Object> map : addRows) {
+				String part_oid = (String) map.get("part_oid");
+				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+				EcoPartLink link = EcoPartLink.newEcoPartLink(part.getMaster(), eco);
+				link.setVersion(part.getVersionIdentifier().getSeries().getValue());
+				link.setBaseline(true);
+				PersistenceHelper.manager.save(link);
+			}
+
+			for (LinkedHashMap<String, Object> map : removeRows) {
+				String link_oid = (String) map.get("link_oid");
+				EcoPartLink link = (EcoPartLink) CommonUtil.getObject(link_oid);
+				PersistenceHelper.manager.delete(link);
 			}
 
 			trs.commit();
