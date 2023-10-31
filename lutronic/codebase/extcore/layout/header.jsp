@@ -26,6 +26,7 @@ boolean isClinical = (boolean) request.getAttribute("isClinical");
 
 PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 %>
+<%@include file="/extcore/jsp/common/script.jsp"%>
 <nav class="navbar-default navbar-static-side" role="navigation" id="navigation">
 	<div class="sidebar-collapse">
 		<ul class="nav metismenu" id="side-menu">
@@ -552,3 +553,57 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 		</ul>
 	</div>
 </nav>
+<script>
+window.onload = function(){
+	checkPopUP();	
+}
+
+function checkPopUP(){
+	
+	const url = getCallUrl("/notice/popup");
+	call(url, null, function(data) {
+		if (data) {
+			let position = 0 ;
+			for(var i = 0 ;  i < data.length ; i++ ){
+				position = position +40;
+				const oid = data[i].oid;
+				if(mainIsPopup(oid)){
+					mainPopUP(oid, position);
+				}
+			}
+		} else {
+			alert(data.msg);
+		}
+	});
+	
+}
+
+function mainPopUP(oid){
+	const url = getCallUrl("/notice/view?oid=" + oid);
+	_popup(url, 600, 450, "n");
+}	
+
+function  mainIsPopup(oid) {
+    let isPopup = false;
+    cValue = getNoticeCookie(oid);
+    if(!cValue){
+    	isPopup = true;
+    }
+	return isPopup
+}	
+
+//쿠키 가져오기
+function getNoticeCookie(cName) {
+     cName = cName + '=';
+     const cookieData = document.cookie;
+     let start = cookieData.indexOf(cName);
+     let cValue = '';
+     if(start != -1){
+          start += cName.length;
+          let end = cookieData.indexOf(';', start);
+          if(end == -1)end = cookieData.length;
+          cValue = cookieData.substring(start, end);
+     }
+     return unescape(cValue);
+}
+</script>

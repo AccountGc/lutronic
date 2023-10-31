@@ -149,6 +149,7 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 		String title = (String) params.get("title");
 		String contents = (String) params.get("contents");
 		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
+		boolean isPopup = (boolean) params.get("isPopup");
 		try {
 			trs.start();
 
@@ -156,6 +157,7 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 			notice.setTitle(title);
 			notice.setContents(contents);
 			notice.setOwner(SessionHelper.manager.getPrincipalReference());
+			notice.setIsPopup(isPopup);
 			PersistenceHelper.manager.save(notice);
 
 			for (int i = 0; i < secondarys.size(); i++) {

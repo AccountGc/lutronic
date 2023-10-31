@@ -1,7 +1,12 @@
 package com.e3ps.groupware.notice.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -133,6 +138,20 @@ public class NoticeController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+	
+	@Description(value = "팝업 공지사항 불러오기")
+	@ResponseBody
+	@PostMapping(value = "/popup")
+	public List<NoticeDTO> popupNoticeAction() throws Exception {
+		List<NoticeDTO> returnData = new ArrayList<NoticeDTO>();
+		try {
+			returnData = NoticeHelper.service.getPopUpNotice();
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return returnData;
 	}
 
 }
