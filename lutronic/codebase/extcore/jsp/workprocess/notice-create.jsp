@@ -86,12 +86,15 @@
 			contents : contents.value,
 			secondarys : secondarys
 		}
+		const isPopup = document.querySelector("input[name=isPopup]:checked").value;
+		params.isPopup = JSON.parse(isPopup);
 
 		if (!confirm("등록하시겠습니까?")) {
 			return false;
 		}
 
 		const url = getCallUrl("/notice/create");
+		logger(params);
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
