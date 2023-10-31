@@ -45,7 +45,7 @@
 				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="enabled" value="true" checked="checked">
+						<input type="radio" name="enabled" value="false" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>ON</b>
@@ -54,7 +54,7 @@
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="enabled" value="false">
+						<input type="radio" name="enabled" value="true">
 						<div class="state p-success">
 							<label>
 								<b>OFF</b>
@@ -155,7 +155,10 @@
 					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
-						editable : true
+						showLabel: true,
+						editable : true,
+						checkValue: false,
+						unCheckValue: true,
 					}
 				} ]
 			}
@@ -241,7 +244,7 @@
 					alert("코드타입을 선택해주세요.");
 				}else{
 					const item = {
-						enabled : true,
+						enabled : false,
 					};
 					AUIGrid.addRow(myGridID, item, "first");					
 				}
