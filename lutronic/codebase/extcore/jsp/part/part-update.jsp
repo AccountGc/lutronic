@@ -547,7 +547,7 @@ function update(temp) {
 	
 	// 관련문서
 	const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
-    
+	const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 	// RoHs
 	const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 
@@ -580,11 +580,18 @@ function update(temp) {
 		if (!confirm("임시저장하시겠습니까??")) {
 			return false;
 		}
+		
+		if (addRows8.length > 0) {
+			alert("결재선 지정을 해지해주세요.")
+			return false;
+		}
+		
 	} else {
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
 	}
+	
 	
 	const params ={
 			oid : toId("oid"),
@@ -611,11 +618,14 @@ function update(temp) {
 			rows106 : rows106,
 	};
 	
+	toRegister(params, addRows8);
+	
 	const url = getCallUrl("/part/update");
 	call(url, params, function(data) {
 		if (data.result) {
 			alert("수정 성공하였습니다.");
 			document.location.href = getCallUrl("/part/view?oid=" + data.oid);
+			opener.loadGridData();
 		} else {
 			alert("수정 실패하였습니다. \n" + data.msg);
 		}
