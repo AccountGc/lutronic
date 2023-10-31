@@ -245,7 +245,7 @@
 					editRow : editedRowItems,
 					removeRow : removedRowItems,
 				}
-				const url = getCallUrl("/admin/mail");
+				const url = getCallUrl("/admin/mailSave");
 				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {

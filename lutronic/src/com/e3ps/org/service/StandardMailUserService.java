@@ -327,43 +327,49 @@ public class StandardMailUserService extends StandardManager implements MailUser
 	}
 
 	@Override
-	public void mail(MailUserDTO dto) throws Exception {
-		ArrayList<Map<String, Object>> addRow = dto.getAddRow();
-		ArrayList<Map<String, Object>> editRow = dto.getEditRow();
-		ArrayList<Map<String, Object>> removeRow = dto.getRemoveRow();
+	public void mailSave(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> addRow = (ArrayList<Map<String, Object>>) params.get("addRow");
+		ArrayList<Map<String, Object>> editRow = (ArrayList<Map<String, Object>>) params.get("editRow");
+		ArrayList<Map<String, Object>> removeRow = (ArrayList<Map<String, Object>>) params.get("removeRow");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			for (Map<String, Object> map : addRow) {
-				String name = (String) map.get("name");
-				String email = (String) map.get("email");
-				boolean enable = (boolean) map.get("enable");
-
-				MailUser mail = MailUser.newMailUser();
-				mail.setName(name);
-				mail.setEmail(email);
-				mail.setIsDisable(enable);
-				PersistenceHelper.manager.save(mail);
+			if(addRow != null) {
+				for (Map<String, Object> map : addRow) {
+					String name = (String) map.get("name");
+					String email = (String) map.get("email");
+					boolean enable = (boolean) map.get("enable");
+					
+					MailUser mail = MailUser.newMailUser();
+					mail.setName(name);
+					mail.setEmail(email);
+					mail.setIsDisable(enable);
+					PersistenceHelper.manager.save(mail);
+				}
 			}
 
-			for (Map<String, Object> map : editRow) {
-				String oid = (String) map.get("oid");
-				String name = (String) map.get("name");
-				String email = (String) map.get("email");
-				boolean enable = (boolean) map.get("enable");
-				MailUser mail = (MailUser) CommonUtil.getObject(oid);
-				mail.setName(name);
-				mail.setEmail(email);
-				mail.setIsDisable(enable);
-				PersistenceHelper.manager.modify(mail);
+			if(editRow != null) {
+				for (Map<String, Object> map : editRow) {
+					String oid = (String) map.get("oid");
+					String name = (String) map.get("name");
+					String email = (String) map.get("email");
+					boolean enable = (boolean) map.get("enable");
+					MailUser mail = (MailUser) CommonUtil.getObject(oid);
+					mail.setName(name);
+					mail.setEmail(email);
+					mail.setIsDisable(enable);
+					PersistenceHelper.manager.modify(mail);
+				}
 			}
 
 			// 삭제
-			for (Map<String, Object> map : removeRow) {
-				String oid = (String) map.get("oid");
-				MailUser mail = (MailUser) CommonUtil.getObject(oid);
-				PersistenceHelper.manager.delete(mail);
+			if(removeRow != null) {
+				for (Map<String, Object> map : removeRow) {
+					String oid = (String) map.get("oid");
+					MailUser mail = (MailUser) CommonUtil.getObject(oid);
+					PersistenceHelper.manager.delete(mail);
+				}				
 			}
 
 			trs.commit();
