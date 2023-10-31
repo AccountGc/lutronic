@@ -169,7 +169,9 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 				autoGridHeight : true
 		}
 		myGridID103 = AUIGrid.create("#gridEcpr", columnLayout, props);
+		<% if(view || update){ %>
 		AUIGrid.setGridData(myGridID103, <%=AUIGridUtil.include(oid, "ecpr")%>);
+		<% } %>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드

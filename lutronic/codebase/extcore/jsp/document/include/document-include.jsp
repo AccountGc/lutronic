@@ -165,8 +165,9 @@ if (header) {
 			autoGridHeight : true
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		console.log(<%=AUIGridUtil.include(oid, "doc")%>);
+		<% if(view || update){ %>
 		AUIGrid.setGridData(myGridID90, <%=AUIGridUtil.include(oid, "doc")%>);
+		<% } %>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
