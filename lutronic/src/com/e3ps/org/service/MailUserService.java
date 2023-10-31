@@ -37,7 +37,7 @@ public interface MailUserService {
 	/**
 	 * 외부메일 저장
 	 */
-	public abstract void mail(MailUserDTO dto) throws Exception;
+	public abstract void mailSave(Map<String, Object> params) throws Exception;
 
 	/**
 	 * 외부 메일 유저 링크 등록 - 객제 결재시

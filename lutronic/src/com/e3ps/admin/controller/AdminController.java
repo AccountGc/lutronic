@@ -248,11 +248,11 @@ public class AdminController extends BaseController {
 
 	@Description(value = "외부 메일 저장")
 	@ResponseBody
-	@PutMapping(value = "/mail")
-	public Map<String, Object> mail(@RequestBody MailUserDTO dto) throws Exception {
+	@PutMapping(value = "/mailSave")
+	public Map<String, Object> mailSave(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			MailUserHelper.service.mail(dto);
+			MailUserHelper.service.mailSave(params);
 			result.put("result", SUCCESS);
 			result.put("msg", SAVE_MSG);
 		} catch (Exception e) {
