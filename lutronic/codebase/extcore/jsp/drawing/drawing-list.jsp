@@ -472,6 +472,7 @@ String userNm = sessionUser.getFullName();
 
 			function loadGridData() {
  				let params = new Object();
+ 				$("input[name=sessionid").val(0);
  				const url = getCallUrl("/drawing/list");
 				const field = ["_psize", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
  				params = toField(params, field);
