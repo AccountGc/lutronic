@@ -60,12 +60,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5"></td>
 			</tr>
 			<tr>
-				<th class="lb">인허가 변경</th>
-				<td class="indent5"></td>
-				<th>위험통제</th>
-				<td class="indent5"></td>
-			</tr>
-			<tr>
 				<th class="lb">수정일</th>
 				<td class="indent5"></td>
 				<th>승인일</th>

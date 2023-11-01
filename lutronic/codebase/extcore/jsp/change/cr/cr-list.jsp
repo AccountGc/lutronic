@@ -365,6 +365,7 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 				selectbox("_psize");
 				selectbox("model");
 				selectbox("changeSection");
+				selectbox("createDepart");
 			});
 
 			document.addEventListener("keydown", function(event) {

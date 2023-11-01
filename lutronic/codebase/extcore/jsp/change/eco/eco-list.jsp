@@ -66,7 +66,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 			<tr>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
@@ -366,16 +366,10 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
-				twindate("modified");
+				twindate("approve");
 				selectbox("_psize");
 				selectbox("model");
 			});
-
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;

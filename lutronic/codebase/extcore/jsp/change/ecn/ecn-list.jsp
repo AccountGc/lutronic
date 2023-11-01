@@ -1,9 +1,12 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 %>
 <!DOCTYPE html>
 <html>
@@ -52,17 +55,20 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+                        for (Map<String,String> lifecycle : lifecycleList) {
+                        %>
+                        <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+                        <%
+                        }
+                        %>
 					</select>
 				</td>
 			</tr>
 			<tr>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
@@ -73,16 +79,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
-				<th>승인일</th>
-				<td class="indent5">
-					<input type="text" name="createdFrom" id="modifiedFrom" class="width-100">
-					~
-					<input type="text" name="createdTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">프로젝트 코드</th>
+				<th>프로젝트 코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -94,84 +91,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						}
 						%>
 					</select>
-				</td>
-				<th>인허가변경</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>전체</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" id="licensing" value="NONE">
-						<div class="state p-success">
-							<label>
-								<b>N/A</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="0">
-						<div class="state p-success">
-							<label>
-								<b>불필요</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="1">
-						<div class="state p-success">
-							<label>
-								<b>필요</b>
-							</label>
-						</div>
-					</div>
-				</td>
-				<th>위험통제</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>전체</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" id="riskType" value="NONE">
-						<div class="state p-success">
-							<label>
-								<b>N/A</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="0">
-						<div class="state p-success">
-							<label>
-								<b>불필요</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="1">
-						<div class="state p-success">
-							<label>
-								<b>필요</b>
-							</label>
-						</div>
-					</div>
 				</td>
 			</tr>
 			<tr class="hidden">
@@ -249,24 +168,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 						}
 					},
 				}, {
-					dataField : "licensing",
-					headerText : "인허가변경",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "riskType",
-					headerText : "위험 통제",
-					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
@@ -288,15 +189,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "approveDate",
-					headerText : "승인일",
-					dataType : "string",
 					width : 100,
 					filter : {
 						showIcon : true,
@@ -336,7 +228,7 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/ecn/list");
-				const field = [ "name", "number" ];
+				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params = toField(params, field);
@@ -375,12 +267,6 @@ ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("
 				selectbox("_psize");
 				selectbox("model");
 			});
-
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
