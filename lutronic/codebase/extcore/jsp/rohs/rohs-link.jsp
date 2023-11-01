@@ -18,14 +18,20 @@
 	<form>
 		<table class="button-table">
 			<tr>
-				<td>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						물질 일괄링크
+					</div>
+				</td>
+				<td class="right">
 					<input type="button" value="등록" title="등록" onclick="saveBtn();"> 
 					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> 
 					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 370px; border-top: 1px solid #3180c3; width: 50%;"></div>
+		<div id="grid_wrap" style="height: 370px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
 			const columns = [ {

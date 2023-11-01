@@ -20,6 +20,16 @@
 		<input type="hidden" name="lastNum" id="lastNum"> 
 		<input type="hidden" name="curPage" id="curPage">
 		 <input type="hidden" name="oid" id="oid">
+		 <table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						부품 현황
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>

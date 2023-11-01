@@ -29,6 +29,16 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="location" id="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
 		<input type="hidden" name="searchType" id="searchType" value="MOLD">
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						금형 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 		
 		<table class="search-table">
 			<colgroup>

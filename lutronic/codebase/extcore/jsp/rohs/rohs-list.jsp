@@ -35,6 +35,16 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid"> 
 		<input type="hidden" name="curPage" id="curPage"> 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						물질 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>

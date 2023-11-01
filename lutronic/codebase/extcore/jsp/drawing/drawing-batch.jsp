@@ -14,7 +14,13 @@
 	<form>
 		<table class="button-table">
 			<tr>
-				<td>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						주 도면 일괄등록
+					</div>
+				</td>
+				<td class="right">
 					<input type="button" value="등록" title="등록" onclick="batch();">
 					<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
 					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow();">

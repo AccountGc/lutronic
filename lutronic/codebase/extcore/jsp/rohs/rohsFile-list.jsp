@@ -32,6 +32,17 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="lastNum" id="lastNum"> 
 		<input type="hidden" name="curPage" id="curPage"> 
 		<input type="hidden" name="oid" id="oid">
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						파일 검색
+					</div>
+				</td>
+			</tr>
+		</table>
+		
 
 		<table class="search-table">
 			<colgroup>
