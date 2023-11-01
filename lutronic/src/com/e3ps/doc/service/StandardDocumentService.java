@@ -216,7 +216,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		try {
 			trs.start();
 			DocumentType docType = DocumentType.toDocumentType(documentType);
-			String number = getDocumentNumberSeq(docType.getLongDescription());
+			String interalnumber = dto.getInteralnumber();
 			WTDocument doc = WTDocument.newWTDocument();
 			doc.setDocType(docType);
 
@@ -226,7 +226,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			} else {
 				doc.setName(documentName);
 			}
-			doc.setNumber(number);
+			doc.setNumber(interalnumber);
 			doc.setDescription(description);
 			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
 
