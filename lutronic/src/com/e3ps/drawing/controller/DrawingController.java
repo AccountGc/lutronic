@@ -43,6 +43,7 @@ import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMReferenceLink;
 import wt.org.WTUser;
+import wt.part.QuantityUnit;
 import wt.part.WTPart;
 import wt.session.SessionHelper;
 import wt.util.WTException;
@@ -61,6 +62,7 @@ public class DrawingController extends BaseController{
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		List<Map<String,String>> cadTypeList = DrawingHelper.manager.cadTypeList();
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		WTUser sessionUser  = (WTUser) SessionHelper.manager.getPrincipal();
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
@@ -71,6 +73,7 @@ public class DrawingController extends BaseController{
 		model.addObject("finishList", finishList);
 		model.addObject("sessionUser", sessionUser);
 		model.addObject("cadTypeList", cadTypeList);
+		model.addObject("unitList", unitList);
 		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
 		return model;
 	}
