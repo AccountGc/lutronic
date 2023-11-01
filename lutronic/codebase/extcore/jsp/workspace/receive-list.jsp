@@ -264,22 +264,22 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			}
 
 			function receives() {
-				const list = AUIGrid.getCheckedRowItems(myGridID);
+				const list = AUIGrid.getCheckedRowItemsAll(myGridID);
 				if (list.length === 0) {
 					alert("일괄수신처리 할 결재를 선택하세요.");
+					return false;
+				}
+				if (!confirm("일괄 수신처리 하시겠습니까?")) {
 					return false;
 				}
 				const url = getCallUrl("/workspace/receives");
 				const params = {
 					list : list
 				};
-				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						loadGridData();
-					} else {
-						parent.closeLayer();
 					}
 				})
 			}

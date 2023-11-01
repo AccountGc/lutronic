@@ -618,6 +618,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			for (Map<String, String> map : list) {
 				String oid = map.get("oid");
 				ApprovalLine line = (ApprovalLine) CommonUtil.getObject(oid);
+				line.setDescription("수신확인합니다");
 				line.setState(WorkspaceHelper.STATE_RECEIVE_COMPLETE);
 				line.setCompleteTime(new Timestamp(new Date().getTime()));
 				PersistenceHelper.manager.modify(line);
