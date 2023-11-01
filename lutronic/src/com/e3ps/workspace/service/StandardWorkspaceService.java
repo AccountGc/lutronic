@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -18,6 +19,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.sap.service.SAPHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
@@ -35,6 +37,7 @@ import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.ownership.Ownership;
+import wt.part.WTPart;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.services.StandardManager;
@@ -671,6 +674,40 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				processTarget[0] = null;
 				processTarget[1] = doc.getNumber();
 				processTarget[2] = doc.getName();
+			}else if(per instanceof WTPart) {
+				WTPart part = (WTPart) CommonUtil.getObject(tapOid);
+				creatorName = part.getCreatorFullName();
+				processTarget[0] = null;
+				processTarget[1] = part.getNumber();
+				processTarget[2] = part.getName();
+			}else if(per instanceof EChangeOrder) {
+				EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(tapOid);
+				creatorName = eo.getCreatorFullName();
+				description = StringUtil.checkNull(eo.getEoCommentA());
+				processTarget[0] = null;
+				processTarget[1] = eo.getEoNumber();
+				processTarget[2] = eo.getEoName();
+			}else if(per instanceof EChangeRequest) {
+				EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(tapOid);
+				creatorName = cr.getCreatorFullName();
+				description = StringUtil.checkNull(cr.getEoCommentB());
+				processTarget[0] = null;
+				processTarget[1] = cr.getEoNumber();
+				processTarget[2] = cr.getEoName();
+			}else if(per instanceof ECPRRequest) {
+				ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(tapOid);
+				creatorName = ecpr.getCreatorFullName();
+				description = StringUtil.checkNull(ecpr.getEoCommentB());
+				processTarget[0] = null;
+				processTarget[1] = ecpr.getEoNumber();
+				processTarget[2] = ecpr.getEoName();
+			}else if(per instanceof ROHSMaterial) {
+				ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(tapOid);
+				creatorName = rohs.getCreatorFullName();
+				description = StringUtil.checkNull(rohs.getDescription());
+				processTarget[0] = null;
+				processTarget[1] = rohs.getNumber();
+				processTarget[2] = rohs.getName();
 			}
 
 			String viewString = processTarget[1] + " (" + processTarget[2] + ")";
