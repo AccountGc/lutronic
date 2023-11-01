@@ -1008,8 +1008,6 @@ public class PartHelper {
 		result.put("bomType", bomType);
 
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		// part = EulPartHelper.service.getPart(part.getNumber());
-		PartData pd = new PartData(part);
 
 		BomBroker broker = new BomBroker();
 		ArrayList list = new ArrayList();
