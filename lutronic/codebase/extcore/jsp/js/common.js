@@ -1654,6 +1654,27 @@ function _popup(url, width, height, opt) {
 	return panel;
 }
 
+function _popup2(url, width, height, position, opt) {
+	
+	var popW = width;
+	var popH = height;
+	var left =  ((screen.width - 1000)/ 2)+ position;
+	var top = ((screen.height - 600) / 2)+ position ;
+
+	if (opt == "no" || opt == "n") {
+		opt = "scrollbars=yes resizable=yes";
+	}
+
+	if (opt == "" || opt == undefined || opt == "full" || opt == "f") {
+		popW = screen.width;
+		popH = screen.height;
+		opt = "scrollbars=yes, resizable=yes, fullscreen=yes";
+	}
+	// 중복 생성 방지?
+	var panel = window.open(url, "", opt + ", top=" + (top - 50) + ", left=" + left + ", height=" + popH + ", width=" + popW);
+	return panel;
+}
+
 /**************************************************************
 *                    배포에서 Baseline BoM 다운
 ****************************************************************/

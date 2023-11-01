@@ -94,6 +94,20 @@ public class NoticeController extends BaseController {
 		model.setViewName("popup:/workprocess/notice-view");
 		return model;
 	}
+	
+	@Description(value = "공지사항 상세 페이지")
+	@GetMapping(value = "/viewPopup")
+	public ModelAndView viewPopup(@RequestParam String oid) throws Exception {
+		NoticeHelper.service.updateCount(oid);
+		Notice notice = (Notice) CommonUtil.getObject(oid);
+		NoticeDTO data = new NoticeDTO(notice);
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("data", data);
+		model.setViewName("popup:/workprocess/notice-view-popup");
+		return model;
+	}
 
 	@Description(value = "공지사항 수정 페이지")
 	@GetMapping(value = "/modify")

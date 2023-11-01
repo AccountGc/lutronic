@@ -565,7 +565,7 @@ function checkPopUP(){
 		if (data) {
 			let position = 0 ;
 			for(var i = 0 ;  i < data.length ; i++ ){
-				position = position +40;
+				position += 5;
 				const oid = data[i].oid;
 				if(mainIsPopup(oid)){
 					mainPopUP(oid, position);
@@ -578,9 +578,9 @@ function checkPopUP(){
 	
 }
 
-function mainPopUP(oid){
-	const url = getCallUrl("/notice/view?oid=" + oid);
-	_popup(url, 600, 450, "n");
+function mainPopUP(oid, position){
+	const url = getCallUrl("/notice/viewPopup?oid=" + oid);
+	_popup2(url, 600, 450, position, "n");
 }	
 
 function  mainIsPopup(oid) {
