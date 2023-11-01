@@ -78,66 +78,49 @@
 <form name=PartTreeForm id="PartTreeForm" method="post">
 
 
-<input type="hidden" name="oid" id="oid" value="<%= oid %>"/>
-
-<input type="hidden" name="oid2" id="oid2"/>
-
-
-<table>
-
-	<tr align=center>
-	    <td valign="top" style="padding:0px 0px 0px 0px">
-		    <table border="0" cellpadding="1" cellspacing="0" class="tablehead" align=center style="padding-bottom:10px">
-		   		<tr> 
-		   			<td height="30" width="93%" align="center"><B><%= title %> BOM</B></td>
-		   		</tr>
-			</table>
-		    <table  border="0" cellpadding="0" cellspacing="0" align="center"  style="table-layout:fixed">
-		    	<tr height="30">
-		    		<td width="40%" align="left">
-						<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
-							<option value="expandAll">전체확장</option>
-							<option value="1" selected>1레벨</option>
-							<option value="2">2레벨</option>
-							<option value="3">3레벨</option>
-							<option value="4">4레벨</option>
-							<option value="5">5레벨</option>
-						</select>
-						
-						<select name="desc" id="desc" class="AXSelect width-100">
-							<option value="true" >정전개</option>
-							<option value="false">역전개</option>
-			    		</select>
-						<input type="checkbox" name="checkDummy" id="checkDummy" value="true"  onchange="viewAUIPartBomAction()" checked> 더미제외
-			    	</td>
-			    	
-		    		<td  align="right">
-		    			<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();">
-						<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
-									
-		    		</td>
-		    	</tr>
-		    </table>
-		</td>
-	</tr>
+	<input type="hidden" name="oid" id="oid" value="<%= oid %>"/>
 	
-	<tr align=center>
-		<td valign="top" style="padding:0px 0px 0px 0px">
+	<input type="hidden" name="oid2" id="oid2"/>
+
+	<table>
+		<tr align=center>
+		    <td height="30" width="93%" align="center">
+			   	<B><%= title %> BOM</B>
+			</td>
+		</tr>
 		
-    		<div id="partTree" ></div>
-		</td>
-	</tr>
-	<tr>
-		
-		<td>
-			<div id="grid_wrap" style="height:500px; margin-top: 2px; border-top: 3px solid #244b9c;">
-			</div>
-		</td>
-	</tr>
+	
 	
 
-</table>
+	</table>
 
+	<table class="button-table">
+		<tr height="30">
+			<td width="40%" align="left">
+				<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
+					<option value="expandAll">전체확장</option>
+					<option value="1" selected>1레벨</option>
+					<option value="2">2레벨</option>
+					<option value="3">3레벨</option>
+					<option value="4">4레벨</option>
+					<option value="5">5레벨</option>
+				</select>
+				
+				<select name="desc" id="desc" class="AXSelect width-100">
+					<option value="true" >정전개</option>
+					<option value="false">역전개</option>
+		 		</select>
+				<input type="checkbox" name="checkDummy" id="checkDummy" value="true"  onchange="viewAUIPartBomAction()" checked> 더미제외
+		 	</td>
+				 	
+			<td  align="right">
+					<input type="button" value="저장" title="저장" class="gray" onclick="saveBtn();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+			</td>
+		</tr>
+    </table>
+
+	<div id="grid_wrap" style="height:500px; margin-top: 2px; border-top: 3px solid #244b9c;"></div>
 </form>
 
 <script type="text/javascript">
