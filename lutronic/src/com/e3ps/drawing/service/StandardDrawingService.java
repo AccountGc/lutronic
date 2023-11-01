@@ -2483,9 +2483,10 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 					CommonContentHelper.service.delete(newEpm, item);
 				}
 				result.reset();
-				String fileName = primary.split("/")[1];
+				File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+				String fileName = vault.getName();
 				String TempCadName = newEpm.getCADName();
-				System.out.println("primary :: "+primary);
+				System.out.println("primary :: "+vault);
 				System.out.println("fileName :: "+fileName);
 				System.out.println("TempCadName :: "+TempCadName);
 				

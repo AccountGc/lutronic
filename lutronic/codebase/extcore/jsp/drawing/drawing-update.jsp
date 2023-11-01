@@ -17,7 +17,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 <body>
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-		<input type="hidden" name="location" id="location" value="/Default/금형문서">
+		<input type="hidden" name="location" id="location" value="/Default/PART_Drawing">
 		<table class="button-table">
 			<tr>
 				<td class="left">
