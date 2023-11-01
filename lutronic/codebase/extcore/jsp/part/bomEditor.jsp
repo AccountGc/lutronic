@@ -563,15 +563,6 @@ function getViews() {
 		viewAUIPartBomAction('0', $('#oid').val(), "true", '');
 	})
 	
-	<%----------------------------------------------------------
-	*                      Drawing Down 버튼
-	----------------------------------------------------------%>
-	/*
-	$("#drawingDown").click(function() {
-		$("#PartTreeForm").attr("method", "post");
-		$("#PartTreeForm").attr("action", getURLString("drawing", "partTreeDrawingDown", "do")).submit();
-	})
-	*/
 	
 	<%----------------------------------------------------------
 	*                      정전개 / 역전개 변경시
