@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -74,7 +76,9 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		boolean temprary = dto.isTemprary();
-		
+
+		// 설별 활동 링크 OID
+		String oid = dto.getOid();
 		// 결재
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
@@ -82,12 +86,11 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		// 외부 메일
 		ArrayList<Map<String, String>> external = dto.getExternal();
 		boolean isSelf = dto.isSelf();
-
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 			DocumentType docType = DocumentType.toDocumentType(documentType);
-			String number = getDocumentNumberSeq(docType.getLongDescription());
+			String interalnumber = dto.getInteralnumber();
 			WTDocument doc = WTDocument.newWTDocument();
 			doc.setDocType(docType);
 
@@ -97,7 +100,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			} else {
 				doc.setName(documentName);
 			}
-			doc.setNumber(number);
+			doc.setNumber(interalnumber);
 			doc.setDescription(description);
 			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
 
@@ -126,6 +129,14 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(doc, external);
+
+			// 설변활동 링크
+			if (StringUtil.checkString(oid)) {
+				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+				DocumentActivityLink link = DocumentActivityLink
+						.newDocumentActivityLink((WTDocumentMaster) doc.getMaster(), eca);
+				PersistenceHelper.manager.save(link);
+			}
 
 			// 결재 시작
 			if (isSelf) {
