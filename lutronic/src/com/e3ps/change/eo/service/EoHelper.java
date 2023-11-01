@@ -80,13 +80,13 @@ public class EoHelper {
 		QuerySpecUtils.toCreator(query, idx, EChangeOrder.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
-		if(approveFrom.length() > 0) {
+		if(approveFrom != null && approveFrom.length() > 0) {
 			if( query.getConditionCount() > 0 ) {
 				query.appendAnd();
 			}
 			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , approveFrom), new int[] {idx});
 		}
-		if(approveTo.length() > 0) {
+		if(approveTo != null && approveTo.length() > 0) {
 			if( query.getConditionCount() > 0 ) {
 				query.appendAnd();
 			}
@@ -106,7 +106,7 @@ public class EoHelper {
 		}
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.MODEL, model);
 
-		if (rows104.size() > 0) {
+		if (rows104 != null && rows104.size() > 0) {
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
