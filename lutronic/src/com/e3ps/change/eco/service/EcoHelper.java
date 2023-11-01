@@ -118,7 +118,7 @@ public class EcoHelper {
 				if (i != 0) {
 					query.appendOr();
 				}
-				String oid = row.get("oid");
+				String oid = row.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(oid);
 				long ids = part.getMaster().getPersistInfo().getObjectIdentifier().getId();
 				query.appendWhere(new SearchCondition(EOCompletePartLink.class,
