@@ -189,7 +189,9 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 						type : "ButtonRenderer",
 						labelText : "BOM 비교",
 						onclick : function(rowIndex, columnIndex, value, item) {
-
+							const oid = item.part_oid;
+							const url = getCallUrl("/bom/view?oid=" + oid);
+							_popup(url, "", "", "f");
 						}
 					}
 				} ]
@@ -209,6 +211,20 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 					enableFilter : true,
 					autoGridHeight : true,
 					enableCellMerge : true,
+
+					rowCheckableFunction : function(rowIndex, isChecked, item) {
+						if (item.part_state !== "승인됨") {
+							return false;
+						}
+						return true;
+					},
+
+					rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+						if (item.part_state !== "승인됨") {
+							return false; // false 반환하면 disabled 처리됨
+						}
+						return true;
+					},
 
 					cellColMergeFunction : function(rowIndex, columnIndex, item) {
 						if (item.merge === true) {

@@ -356,7 +356,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			// 샘플링 실제는 2D여부 확인해서 전송
 			insertTable.setValue("ZDWGNO", part.getNumber() + ".DRW"); // 도면번호
 
-			String v = part.getVersionIdentifier().getSeries().getValue();
+			String v = part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue();
 			insertTable.setValue("ZEIVR", v); // 버전
 			// 테스트 용으로 전송
 			insertTable.setValue("ZPREPO", "X"); // 선구매필요

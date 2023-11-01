@@ -567,4 +567,22 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
+	
+	
+	@Description(value = "관리자 권한 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/force")
+	public Map<String, Object> force(@RequestBody DocumentDTO dto) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.force(dto);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

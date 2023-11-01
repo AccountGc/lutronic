@@ -36,6 +36,13 @@ iframe {
 			}
 			%>
 			<%
+				if(isAdmin) {
+			%>
+			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="blue" onclick="update('modify');">
+			<%
+				}
+			%>
+			<%
 			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="update('modify');">

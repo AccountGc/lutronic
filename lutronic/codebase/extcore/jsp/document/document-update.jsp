@@ -16,6 +16,7 @@ ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("f
 JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 String mode = (String) request.getAttribute("mode");
+boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 String title = "";
 if ("modify".equals(mode)) {
 	title = "수정";
@@ -40,6 +41,13 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="button" value="관리자권한 수정" title="관리자 권한 수정" class="red" onclick="force();">
+			<%
+			}
+			%>
 			<input type="button" value="<%=title%>" title="<%=title%>" class="red" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="뒤로" title="뒤로" class="" onclick="history.go(-1);">
@@ -88,7 +96,7 @@ iframe {
 		</td>
 		<th class="req">문서종류</th>
 		<td class="indent5">
-			<input type="text" name="documentName" id="documentName" class="width-200" value="<%= dto.getName().indexOf("-") > -1 ? dto.getName().split("-")[0] : dto.getName() %>">
+			<input type="text" name="documentName" id="documentName" class="width-200" value="<%=dto.getName().indexOf("-") > -1 ? dto.getName().split("-")[0] : dto.getName()%>">
 			<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
 				<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 				</ul>
@@ -334,6 +342,35 @@ iframe {
 		}, "GET");
 	}
 
+	function force() {
+		
+		if(!confirm("수정 하시겠습니까?")) {
+			return false;
+		}
+		
+		const oid = document.getElementById("oid").value;
+		const secondarys = toArray("secondarys");
+		const primary = document.querySelector("input[name=primary]");
+		const url = getCallUrl("/doc/force");
+		const params = {
+				oid : oid,
+				secondarys : secondarys,
+				primary : primary.value,
+			};
+			
+			logger(params);
+			parent.openLayer();
+			call(url, params, function(data) {
+				alert(data.msg);
+				if (data.result) {
+					opener.loadGridData();
+					self.close();
+				} else {
+					parent.closeLayer();
+				}
+			});
+	}
+	
 	// 문서 등록
 	function <%=mode%>(temp) {
 		// temp 임시저장 여부 처리

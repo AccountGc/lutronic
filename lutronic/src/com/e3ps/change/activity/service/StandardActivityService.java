@@ -14,7 +14,7 @@ import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.iba.IBAUtil;ort com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.WCUtil;
@@ -28,20 +28,22 @@ import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
+import wt.iba.value.IBAHolder;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.WTPart;
-import wt.part.WTPart;
-import wt.pom.Transaction;
+import wt.part.WTPartDescribeLink;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.vc.VersionControlHelper;
 
 public class StandardActivityService extends StandardManager implements ActivityService {
 
@@ -459,7 +461,18 @@ public class StandardActivityService extends StandardManager implements Activity
 				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
 				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 
-				WTPart newPart = null;
+				// 개정
+				WTPart newPart = (WTPart) VersionControlHelper.service.newVersion(part);
+				VersionControlHelper.setNote(part, message);
+				PersistenceHelper.manager.save(newPart);
+
+				// IBA 속성처리
+				removeAttr((IBAHolder) newPart, newPart.getVersionIdentifier().getSeries().getValue());
+				// 기타 부품 연관 처리
+				copyLink(part, newPart);
+
+				// ROHS 물질 연결
+
 				EPMDocument newEpm = null;
 
 				// 개정인데?? 체크인아웃??
@@ -467,7 +480,7 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				}
 
-				link.setRevise(false);
+				link.setRevise(true);
 				PersistenceHelper.manager.modify(link);
 			}
 
@@ -481,6 +494,30 @@ public class StandardActivityService extends StandardManager implements Activity
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 기존부품과 연관 되어 있던 데이터들 연결
+	 */
+	private void copyLink(WTPart part, WTPart newPart) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
+		while (qr.hasMoreElements()) {
+			WTDocument doc = (WTDocument) qr.nextElement();
+			WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(newPart, doc);
+			PersistenceServerHelper.manager.insert(link);
+		}
+
+		qr.reset();
+
+	}
+
+	/**
+	 * IBA 속성 값 삭제 및 REV 속성 추가
+	 */
+	private void removeAttr(IBAHolder holder, String v) throws Exception {
+		IBAUtil.deleteIBA(holder, "APR", "string");
+		IBAUtil.deleteIBA(holder, "CHK", "string");
+		IBAUtil.changeIBAValue(holder, "REV", v, "string");
 	}
 
 	@Override

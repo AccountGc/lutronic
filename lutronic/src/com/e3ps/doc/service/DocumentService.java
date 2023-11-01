@@ -53,4 +53,9 @@ public interface DocumentService {
 	 */
 	public abstract void modify(DocumentDTO dto) throws Exception;
 
+	/**
+	 * 관리자 권한 문서 수정
+	 */
+	public abstract void force(DocumentDTO dto) throws Exception;
+
 }

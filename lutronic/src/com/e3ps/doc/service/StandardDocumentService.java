@@ -729,19 +729,45 @@ public class StandardDocumentService extends StandardManager implements Document
 	/**
 	 * 첨부 파일 삭제
 	 */
-	private void removeAttach(WTDocument workCopy) throws Exception {
-		QueryResult result = ContentHelper.service.getContentsByRole(workCopy, ContentRoleType.PRIMARY);
+	private void removeAttach(WTDocument doc) throws Exception {
+		QueryResult result = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
 		if (result.hasMoreElements()) {
 			ContentItem item = (ContentItem) result.nextElement();
-			ContentServerHelper.service.deleteContent(workCopy, item);
+			ContentServerHelper.service.deleteContent(doc, item);
 		}
 
 		result.reset();
-		result = ContentHelper.service.getContentsByRole(workCopy, ContentRoleType.SECONDARY);
+		result = ContentHelper.service.getContentsByRole(doc, ContentRoleType.SECONDARY);
 		while (result.hasMoreElements()) {
 			ContentItem item = (ContentItem) result.nextElement();
-			ContentServerHelper.service.deleteContent(workCopy, item);
+			ContentServerHelper.service.deleteContent(doc, item);
 		}
+	}
+
+	@Override
+	public void force(DocumentDTO dto) throws Exception {
+		String oid = dto.getOid();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+			removeAttach(doc);
+
+			saveAttach(doc, dto);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
 	}
 
 }
