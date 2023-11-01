@@ -69,7 +69,7 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
 					<input type="hidden" name="writerOid" id="writerOid"> 
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>작성부서</th>
 				<td class="indent5">
@@ -94,7 +94,7 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 				<td class="indent5">
 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
 					<input type="hidden" name="proposerOid" id="proposerOid"> 
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
 				</td>
 				<th>변경구분</th>
 				<td class="indent5">
