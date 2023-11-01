@@ -64,7 +64,7 @@ public class TempraryColumn {
 		}else if(lcm instanceof EChangeRequest) {
 			// CR 
 			EChangeRequest cr = (EChangeRequest) lcm;
-			setName(cr.getName());
+			setName(cr.getEoName());
 			setNumber(cr.getEoNumber());
 			setDataType("CR");
 			setCreator(cr.getCreatorFullName());
