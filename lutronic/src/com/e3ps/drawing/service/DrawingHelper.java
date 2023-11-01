@@ -93,6 +93,10 @@ public class DrawingHelper {
 			String finish           = StringUtil.checkNull((String)params.get("finish"));
 			String remarks          = StringUtil.checkNull((String)params.get("remarks"));
 			String specification    = StringUtil.checkNull((String)params.get("specification"));
+			String createdFrom = StringUtil.checkNull((String) params.get("createdFrom"));
+			String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
+			String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
+			String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
 
 			
 			String temp = "";
@@ -174,6 +178,10 @@ public class DrawingHelper {
 				if(query.getConditionCount() > 0) { query.appendAnd(); }
 				query.appendWhere(new SearchCondition(EPMDocument.class,"thePersistInfo.modifyStamp", SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate_modify)), new int[]{idx});
 			}
+			
+			
+			QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.CREATE_TIMESTAMP, createdFrom, createdTo);
+			QuerySpecUtils.toTimeGreaterAndLess(query, idx, EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP, modifiedFrom,modifiedTo);
 			
 			// 프로젝트 코드
 			if (model.length() > 0) {
