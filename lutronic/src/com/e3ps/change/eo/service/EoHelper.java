@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivity;
+import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
@@ -76,18 +77,21 @@ public class EoHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
 		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
-		if(creatorOid.length() > 0) {
+		QuerySpecUtils.toCreator(query, idx, EChangeOrder.class, creatorOid);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
+				createdTo);
+		if(approveFrom.length() > 0) {
 			if( query.getConditionCount() > 0 ) {
 				query.appendAnd();
 			}
-			People pp = (People)CommonUtil.getObject(creatorOid);
-			long longOid = CommonUtil.getOIDLongValue(pp.getUser());
-			query.appendWhere(new SearchCondition(EChangeOrder.class, "creator.key.id", SearchCondition.EQUAL , longOid), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , approveFrom), new int[] {idx});
 		}
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
-				createdTo);
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
-				approveFrom, approveTo);
+		if(approveTo.length() > 0) {
+			if( query.getConditionCount() > 0 ) {
+				query.appendAnd();
+			}
+			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {idx});
+		}
 		if (StringUtil.checkString(eoType)) {
 			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, eoType);
 		} else {
@@ -118,7 +122,7 @@ public class EoHelper {
 				if (i != 0) {
 					query.appendOr();
 				}
-				String oid = row.get("oid");
+				String oid = row.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(oid);
 				long ids = part.getMaster().getPersistInfo().getObjectIdentifier().getId();
 				query.appendWhere(new SearchCondition(EOCompletePartLink.class,

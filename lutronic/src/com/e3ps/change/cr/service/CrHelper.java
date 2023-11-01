@@ -69,19 +69,37 @@ public class CrHelper {
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		//승인일
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.APPROVE_DATE, approveFrom,
-				approveTo);
-		
+		if(approveFrom.length() > 0) {
+			if( query.getConditionCount() > 0 ) {
+				query.appendAnd();
+			}
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , approveFrom), new int[] {idx});
+		}
+		if(approveTo.length() > 0) {
+			if( query.getConditionCount() > 0 ) {
+				query.appendAnd();
+			}
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {idx});
+		}
 		//작성자
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
 		
 		//작성부서
-		QuerySpecUtils.toEqualsAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
+		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
 		
 		//작성일
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DATE, writedFrom,
-				writedTo);
-		
+		if(writedFrom.length() > 0) {
+			if( query.getConditionCount() > 0 ) {
+				query.appendAnd();
+			}
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.CREATE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , writedFrom), new int[] {idx});
+		}
+		if(writedTo.length() > 0) {
+			if( query.getConditionCount() > 0 ) {
+				query.appendAnd();
+			}
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.CREATE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , writedTo), new int[] {idx});
+		}
 		//제안자
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.PROPOSER, proposer);
 		
