@@ -6,9 +6,6 @@
 <%@ taglib prefix="f"	uri="/WEB-INF/functions.tld"			%>
 
 
-<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
-
-
 <style type="text/css">
 	/* 계층 트리 아이콘  Windchill/jsp/js/dhtmlx/imgs/dhxgrid_skyblue/tree/plus.gif*/
 	.aui-grid-tree-plus-icon {
@@ -83,11 +80,8 @@
 <form name=PartTreeForm id="PartTreeForm" method="post">
 
 	<input type="hidden" name="viewName" id="viewName" value="<%= view %>" />
-	
 	<input type="hidden" name="oid" id="oid" value="<%= oid %>"/>
-	
 	<input type="hidden" name="oid2" id="oid2"/>
-	
 	<input type="hidden" name="baseline2" id="baseline2" value="<%= baseline %>"/>
 
 	<table>	
@@ -100,7 +94,7 @@
 	   	<tr height="30">
 	   		<td width="40%" align="left">
 				
-				<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
+				<select id="depthSelect" onchange="showItemsOnDepth()" class="width-120">
 					<option value="expandAll">전체확장</option>
 					<option value="1" selected>1레벨</option>
 					<option value="2">2레벨</option>
@@ -109,7 +103,7 @@
 					<option value="5">5레벨</option>
 				</select>
 							
-				<select name="desc" id="desc" class="AXSelect width-100">
+				<select name="desc" id="desc" class="width-100">
 					<option value="true" >정전개</option>
 					<option value="false">역전개</option>
 	    		</select>
@@ -117,10 +111,9 @@
 	    	</td>
 				    	
 	   		<td  align="right">
-				<select name="baselineView" id="baselineView"  class="AXSelect width-150">
+				<select name="baselineView" id="baselineView"  class="width-150">
 		    		<option value="" selected="selected" disabled="disabled">-- Baseline 보기 --</option>
 		    		<option value="<c:out value='${lastedoid }'/>"  ><c:out value='${number }'/>[BOM]</option>
-	    			</option>
 		    		<c:forEach items="${list }" var="baseline">
 		    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
 		    				<c:out value="${baseline.baseName }" />
@@ -128,7 +121,7 @@
 		    		</c:forEach>
 	    		</select>
 				    		
-				<select name="baseline" id="baseline"  class="AXSelect width-150">
+				<select name="baseline" id="baseline"  class="width-150">
 		    		<option value="" selected="selected" disabled="disabled">-- Baseline 비교--</option>
 	    			<c:forEach items="${list }" var="baseline">
 		    			<option value='<c:out value="${baseline.baseOid }" />' title="<c:out value="${baseline.partOid }" />">
@@ -138,17 +131,11 @@
 	    		</select>
 	    		
 				<input type="button" value="상위품목" title="상위품목" id="upItem">
-				
 				<input type="button" value="하위품목" title="하위품목" id="downItem">
-				
 				<input type="button" value="END ITEM" title="END ITEM" id="endItem">
-				
 				<input type="button" value="EXCEL" title="EXCEL" id="excelDown">
-				
 				<input type="button" value="첨부" title="첨부" id="attachDown">
-				
 				<input type="button" value="도면" title="도면" id="drawingDown">
-				
 				<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 							
 	   		</td>

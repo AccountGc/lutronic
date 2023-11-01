@@ -97,7 +97,7 @@
 	<table class="button-table">
 		<tr height="30">
 			<td width="40%" align="left">
-				<select id="depthSelect" onchange="showItemsOnDepth()" class="AXSelect width-120">
+				<select id="depthSelect" onchange="showItemsOnDepth()" class="width-120">
 					<option value="expandAll">전체확장</option>
 					<option value="1" selected>1레벨</option>
 					<option value="2">2레벨</option>
@@ -106,7 +106,7 @@
 					<option value="5">5레벨</option>
 				</select>
 				
-				<select name="desc" id="desc" class="AXSelect width-100">
+				<select name="desc" id="desc" class="width-100">
 					<option value="true" >정전개</option>
 					<option value="false">역전개</option>
 		 		</select>
@@ -563,15 +563,6 @@ function getViews() {
 		viewAUIPartBomAction('0', $('#oid').val(), "true", '');
 	})
 	
-	<%----------------------------------------------------------
-	*                      Drawing Down 버튼
-	----------------------------------------------------------%>
-	/*
-	$("#drawingDown").click(function() {
-		$("#PartTreeForm").attr("method", "post");
-		$("#PartTreeForm").attr("action", getURLString("drawing", "partTreeDrawingDown", "do")).submit();
-	})
-	*/
 	
 	<%----------------------------------------------------------
 	*                      정전개 / 역전개 변경시
