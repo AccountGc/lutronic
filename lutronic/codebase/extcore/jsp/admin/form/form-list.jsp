@@ -23,6 +23,16 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						문서 템플릿관리
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="174">
@@ -75,7 +85,7 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 	<table>
 		<tr>
 			<td valign="top">
-				<div id="grid_wrap" style="height: 700px; border-top: 1px solid #3180c3;"></div>
+				<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
 				<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 				<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 			</td>

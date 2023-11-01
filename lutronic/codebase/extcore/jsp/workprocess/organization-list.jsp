@@ -82,12 +82,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/workprocess/department-tree.jsp">
-						<jsp:param value="698" name="height" />
+						<jsp:param value="670" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 665px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>

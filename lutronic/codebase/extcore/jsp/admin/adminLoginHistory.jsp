@@ -22,6 +22,16 @@
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						접속이력관리
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="130">

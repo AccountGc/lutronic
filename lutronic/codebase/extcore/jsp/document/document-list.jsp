@@ -204,7 +204,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
 				</td>
 			</tr>
@@ -221,7 +221,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="563" name="height" />
+						<jsp:param value="535" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>

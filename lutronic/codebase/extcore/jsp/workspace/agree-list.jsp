@@ -114,12 +114,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="조회" title="조회" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">

@@ -23,6 +23,16 @@
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="type" id="type" />
 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						다운로드 이력관리
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -71,7 +81,7 @@
 			</colgroup>
 			<tr>
 				<td valign="top">
-					<div id="grid_type" style="height: 670px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_type" style="height: 705px; border-top: 1px solid #3180c3;"></div>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
