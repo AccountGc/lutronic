@@ -140,6 +140,14 @@ public class PartHelper {
 				modifiedTo);
 		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creatorOid);
 		QuerySpecUtils.toState(query, idx, WTPart.class, state);
+		
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		SearchCondition sc = new SearchCondition(WTPart.class, "state.state", "<>", "TEMPRARY");
+		query.appendWhere(sc, new int[] { idx });
+		
+		
 		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
 		// EcoDate
 //		if (ecoPostdate.length() > 0 || ecoPredate.length() > 0) {
