@@ -97,7 +97,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 							const approvals = [];
 							const agrees = [];
 							const receives = [];
-							const oid = item.id;
+							const _$uid = item._$uid;
 							const url = getCallUrl("/workspace/popup");
 							const p = _popup(url, 1400, 900, "n");
 							p.approvals = approvals;
@@ -503,7 +503,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "파일선택",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/aui/primary?oid=" + oid + "&method=primary");
 							_popup(url, 800, 200, "n");
 						}
@@ -529,7 +529,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "파일선택",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/aui/secondary?oid=" + oid + "&method=secondary");
 							_popup(url, 800, 400, "n");
 						}
@@ -558,7 +558,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "부품추가",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/part/popup?method=insert91&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
@@ -587,7 +587,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "문서추가",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/doc/popup?method=insert90&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
@@ -616,7 +616,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "EO추가",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/eo/popup?method=insert100&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
@@ -645,7 +645,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "CR추가",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/cr/popup?method=insert101&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
@@ -675,7 +675,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "ECPR추가",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/ecpr/popup?method=insertEcpr&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
@@ -704,7 +704,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 						labelText : "ECO추가",
 						onclick : function(rowIndex, columnIndex, value, item) {
 							recentGridItem = item;
-							const oid = item.oid;
+							const oid = item._$uid;
 							const url = getCallUrl("/eco/popup?method=insert105&multi=true");
 							_popup(url, 1800, 900, "n");
 						}
@@ -714,7 +714,6 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-					rowIdField : "oid",
 					editable : true,
 					headerHeight : 35,
 					showRowNumColumn : true,
@@ -817,7 +816,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				}
 				
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					rows8 : rows8,
 					receive : toRowsExp(rece),
 					approval : toRowsExp(appro),
@@ -843,7 +842,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					// 					}
 				})
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					rows91 : rows91,
 					partNumber : toRowsExp(number)
 				});
@@ -868,7 +867,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					// 					}
 				})
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					rows90 : rows90,
 					docNumber : toRowsExp(number)
 				});
@@ -885,7 +884,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					number += item.number + "\n";
 				})
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					rows100 : rows100,
 					eoNumber : toRowsExp(number)
 				});
@@ -902,7 +901,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					number += item.number + "\n";
 				})
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					rows101 : rows101,
 					crNumber : toRowsExp(number)
 				});
@@ -919,7 +918,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					number += item.number + "\n";
 				})
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					rowsEcpr : rowsEcpr,
 					ecprNumber : toRowsExp(number)
 				});
@@ -936,7 +935,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 					number += item.number + "\n";
 				})
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					rows105 : rows105,
 					ecoNumber : toRowsExp(number)
 				});
@@ -945,7 +944,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 
 			function primary(data) {
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					primary : data.cacheId,
 					primaryName : data.name
 				});
@@ -961,7 +960,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				}
 				// 개행 처리
 				AUIGrid.updateRowsById(myGridID, {
-					oid : recentGridItem.oid,
+					_$uid : recentGridItem._$uid,
 					secondary : cacheId,
 					secondaryName : toRowsExp(name)
 				});
@@ -974,7 +973,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				const gridData = AUIGrid.getGridData(myGridID);
 				for (let i = 0; i < gridData.length; i++) {
 					const item = gridData[i];
-					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item.oid);
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item._$uid);
 
 					if (isNull(item.location)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "저장위치를 선택하세요.");
