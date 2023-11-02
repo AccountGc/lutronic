@@ -1,9 +1,10 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="../login/css/login.css" type="text/css" />
+<title>LUTRONIC PDM</title>
 </head>
 <body>
 	<form method="post" action="j_security_check">
@@ -44,30 +45,30 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-		function _login() {
-			document.forms[0].submit();
-		}
-	
-		document.addEventListener("keydown", function(event) {
-			const keyCode = event.keyCode || event.which;
-			if (keyCode === 13) {
-				_login();
+			function _login() {
+				document.forms[0].submit();
 			}
-		})
-		
-		document.addEventListener("DOMContentLoaded", function() {
-			const j_username = document.getElementById("j_username").focus();
-		})
-		
-		const container = document.getElementById("container")
-		toggle = () => {
-			container.classList.toggle("sign-in")
-		};
-		
-		setTimeout(() => {
-			container.classList.add("sign-in")
-		}, 200);
-</script>
+
+			document.addEventListener("keydown", function(event) {
+				const keyCode = event.keyCode || event.which;
+				if (keyCode === 13) {
+					_login();
+				}
+			})
+
+			document.addEventListener("DOMContentLoaded", function() {
+				const j_username = document.getElementById("j_username").focus();
+			})
+			
+			const container = document.getElementById("container")
+			toggle = () => {
+				container.classList.toggle("sign-in")
+			};
+			
+			setTimeout(() => {
+				container.classList.add("sign-in")
+			}, 200);
+		</script>
 	</form>
 </body>
 </html>
