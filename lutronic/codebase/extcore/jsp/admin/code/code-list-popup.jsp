@@ -160,7 +160,7 @@ String codeType = (String) request.getAttribute("codeType");
 	function loadGridData() {
 		const type = document.getElementById("codeType").value;
 		const params = {
-			type : type
+			codeType : type
 		}
 		const url = getCallUrl("/code/list");
 		openLayer();

@@ -59,7 +59,10 @@ String oid = (String) request.getAttribute("oid");
 		headerText : "참조항목",
 		dataField : "reference",
 		dataType : "string",
-		width : 300
+		width : 300,
+		renderer : {
+			type : "TemplateRenderer"
+		}
 	} ];
 
 	function createAUIGrid(columnLayout) {
@@ -119,8 +122,8 @@ String oid = (String) request.getAttribute("oid");
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				document.location.reload();
 				opener.document.location.reload();
+				self.close();
 			}
 			parent.closeLayer();
 		})

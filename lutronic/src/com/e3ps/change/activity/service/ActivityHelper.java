@@ -351,7 +351,7 @@ public class ActivityHelper {
 			String version = link.getVersion();
 			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
 			String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
-			String next_oid = null;
+			String next_oid = "";
 			String iteration = part.getIterationIdentifier().getSeries().getValue();
 
 			String key = part.getLifeCycleState().toString();
@@ -381,6 +381,7 @@ public class ActivityHelper {
 			map.put("merge", false);
 
 			if (!link.isRevise()) {
+				map.put("next_oid", next_oid);
 				map.put("next_number", "개정된 데이터가 없습니다.");
 				map.put("next_number", "개정된 데이터가 없습니다.");
 				map.put("next_state", "개정된 데이터가 없습니다.");
@@ -399,6 +400,13 @@ public class ActivityHelper {
 						+ nextPart.getIterationIdentifier().getSeries().getValue());
 				map.put("next_creator", nextPart.getCreatorFullName());
 				map.put("next_state", nextPart.getLifeCycleState().getDisplay());
+
+				epm = PartHelper.manager.getEPMDocument(nextPart);
+				if (epm != null) {
+					map.put("epm_number", epm.getNumber());
+				} else {
+					map.put("epm_number", "");
+				}
 			}
 
 			list.add(map);
