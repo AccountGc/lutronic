@@ -17,6 +17,17 @@
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						BOM 전송현황
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>
@@ -121,7 +132,7 @@
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+		<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
 		<script type="text/javascript">
 			let myGridID;

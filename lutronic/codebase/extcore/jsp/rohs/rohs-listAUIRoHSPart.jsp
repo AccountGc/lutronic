@@ -20,6 +20,16 @@
 		<input type="hidden" name="lastNum" id="lastNum"> 
 		<input type="hidden" name="curPage" id="curPage">
 		 <input type="hidden" name="oid" id="oid">
+		 <table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						부품 현황
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>
@@ -108,7 +118,6 @@
 						imgHeight : 16, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
 						altField : "color", // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
 						srcFunction : function(rowIndex, columnIndex, value, item) {
-							debugger;
 							switch(value) {
 								case 0:
 								return "/Windchill/extcore/images/task_ready.gif";

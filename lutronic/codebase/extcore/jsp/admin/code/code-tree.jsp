@@ -7,7 +7,7 @@
 <%@page import="com.e3ps.common.code.NumberCodeType"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!-- 폴더 그리드 리스트 -->
-<div id="_grid_wrap" style="height: 700px; border-top: 1px solid #3180c3;"></div>
+<div id="_grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
 <script type="text/javascript">
 	let _myGridID;
 	const _columns = [ {

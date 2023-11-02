@@ -1,3 +1,4 @@
+<%@page import="wt.part.QuantityUnit"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
@@ -11,6 +12,7 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
+QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>
 <html>
@@ -167,10 +169,13 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 				<td class="indent5">
 					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (QuantityUnit unit : unitList) {
+						%>
+						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>무게</th>
@@ -269,12 +274,12 @@ ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute(
 						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="623" name="height" />
+						<jsp:param value="605" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 595px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>

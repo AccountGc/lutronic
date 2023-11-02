@@ -99,6 +99,8 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
+		
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -106,6 +108,7 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
+		model.addObject("unitList", unitList);
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
 	}

@@ -29,6 +29,16 @@ String location = EtcHelper.manager.toLocation(type);
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						문서 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -196,7 +206,7 @@ String location = EtcHelper.manager.toLocation(type);
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
 				</td>
 			</tr>
@@ -213,12 +223,12 @@ String location = EtcHelper.manager.toLocation(type);
 						<jsp:param value="<%=location%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="593" name="height" />
+						<jsp:param value="535" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>

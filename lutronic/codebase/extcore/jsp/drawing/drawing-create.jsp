@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
@@ -43,9 +44,14 @@
 			<tr>
 				<th class="req lb">도면분류</th>
 				<td class="indent5" colspan="3">
-					<span id="locationName">
-               			/Default/PART_Drawing
-               		</span>
+				
+					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
+					<span id="locationText"> /Default/PART_Drawing </span>
+					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
+				
+<!-- 					<span id="locationName"> -->
+<!--                			/Default/PART_Drawing -->
+<!--                		</span> -->
 				</td>
 			</tr>
 			<tr>
@@ -199,6 +205,13 @@
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(myGridID8);
 			});
+			
+			function folder() {
+				const location = decodeURIComponent("/Default/PART_Drawing");
+				const url = getCallUrl("/folder/popup?location=" + location);
+				_popup(url, 500, 600, "n");
+			}
+			
 		</script>
 	</form>
 </body>

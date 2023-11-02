@@ -19,6 +19,17 @@
 <body>
 	<form>
 		<input type="hidden" name="codeType" id="codeType">
+		
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						코드체계관리
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -82,7 +93,7 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 					<input type="button" value="저장" title="저장" class="red" onclick="save();">
 				</td>
 			</tr>
@@ -99,7 +110,7 @@
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 700px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>

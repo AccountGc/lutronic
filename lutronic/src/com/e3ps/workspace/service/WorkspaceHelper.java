@@ -31,6 +31,7 @@ import com.e3ps.workspace.dto.ApprovalLineDTO;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
@@ -491,6 +492,9 @@ public class WorkspaceHelper {
 		} else if (per instanceof WTPart) {
 			WTPart part = (WTPart) per;
 			name = part.getNumber() + " [" + part.getName() + "]";
+		} else if (per instanceof EPMDocument) {
+			EPMDocument epm = (EPMDocument) per;
+			name = epm.getNumber() + " [" + epm.getName() + "]";
 		}
 
 		return name;

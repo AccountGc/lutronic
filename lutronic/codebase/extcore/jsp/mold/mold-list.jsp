@@ -29,6 +29,16 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="location" id="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
 		<input type="hidden" name="searchType" id="searchType" value="MOLD">
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						금형 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 		
 		<table class="search-table">
 			<colgroup>
@@ -78,7 +88,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
 					<input type="hidden" name="creatorOid" id="creatorOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
@@ -184,7 +194,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+		<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
 			let myGridID;

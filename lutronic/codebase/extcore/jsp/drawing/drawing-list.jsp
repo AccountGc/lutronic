@@ -1,3 +1,4 @@
+<%@page import="wt.part.QuantityUnit"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
@@ -18,6 +19,7 @@ List<Map<String,String>> cadTypeList = (List<Map<String,String>>) request.getAtt
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 String userOid = CommonUtil.getOIDString(sessionUser);
 String userNm = sessionUser.getFullName();
+QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>
 <html>
@@ -34,6 +36,16 @@ String userNm = sessionUser.getFullName();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						도면 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>
@@ -47,9 +59,14 @@ String userNm = sessionUser.getFullName();
 			<tr>
 				<th>도면분류</th>
 				<td class="indent5">
-					<span id="locationName">
-						/Default/PART_Drawing
-					</span>
+					<input type="hidden" name="oid" id="oid">
+					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
+					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
+<%-- 					<input type="hidden" name="locationName" id="locationName" value="<%=DrawingHelper.ROOTLOCATION%>"> --%>
+<%-- 					<span id="locationName"><%=DrawingHelper.ROOTLOCATION%></span> --%>
+<!-- 					<span id="locationName"> -->
+<!-- 						/Default/PART_Drawing -->
+<!-- 					</span> -->
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
@@ -184,10 +201,13 @@ String userNm = sessionUser.getFullName();
 				<td class="indent5">
 					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (QuantityUnit unit : unitList) {
+						%>
+						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>무게</th>
@@ -472,8 +492,9 @@ String userNm = sessionUser.getFullName();
 
 			function loadGridData() {
  				let params = new Object();
+ 				$("input[name=sessionid").val(0);
  				const url = getCallUrl("/drawing/list");
-				const field = ["_psize", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				const field = ["_psize", "location", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
  				params = toField(params, field);
  				AUIGrid.showAjaxLoader(myGridID);
  				call(url, params, function(data) {
