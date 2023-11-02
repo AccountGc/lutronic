@@ -44,7 +44,7 @@ public class BomController extends BaseController {
 	public Map<String, Object> loadStructure(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-//			BomHelper.manager.loadStructure(params);
+			BomHelper.manager.loadStructure(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

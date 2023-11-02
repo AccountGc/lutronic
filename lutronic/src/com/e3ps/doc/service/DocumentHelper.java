@@ -651,11 +651,4 @@ public class DocumentHelper {
 		}
 		return list;
 	}
-
-	/**
-	 * BOM 뷰 화면
-	 */
-	public void loadStructure(Map<String, Object> params) throws Exception {
-		String oid = (String) params.get("oid");
-	}
 }

@@ -1,8 +1,10 @@
 package com.e3ps.sap.service;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -16,6 +18,7 @@ import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
@@ -240,6 +243,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 		int seq = 1; // ??
 		DecimalFormat df = new DecimalFormat("0000");
+		Timestamp t = new Timestamp(new Date().getTime());
+		String today = t.toString().substring(0, 10).replaceAll("-", "");
 
 		JCoParameterList importTable = function.getImportParameterList();
 		importTable.setValue("IV_WERKS", "1000"); // 플랜트
@@ -250,7 +255,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		eoTable.appendRow();
 		eoTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리??
 		eoTable.setValue("ZECMID", "EO"); // EO/ECO 구분
-		eoTable.setValue("DATUV", "");
+		eoTable.setValue("DATUV", today); // 보내는 날짜
 		eoTable.setValue("AEGRU", "초도발행"); // 변경사유 테스트 일단 한줄
 		eoTable.setValue("AETXT", "첫줄 테스트"); // 변경 내역 첫줄만 일단 테스트
 		eoTable.setValue("AETXT_L", "테스트1<br>테스트2<br>테스트3"); // 변경 내역 전체 내용
@@ -274,10 +279,11 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			System.out.println("BOM 리스트 항목 개수  = " + dataList.size());
 
 			for (SAPBomDTO dto : dataList) {
-				System.out.println("p = " + dto.getParentPartNumber() + ", c = " + dto.getChildPartNumber());
+				System.out.println("p = " + dto.getParentPartNumber() + ", c = " + dto.getChildPartNumber()
+						+ ", unit = " + dto.getUnit());
 				// System.out.println(dto.toString());
 				bomTable.insertRow(idx);
-				bomTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리?
+				bomTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 12자리?
 				bomTable.setValue("SEQNO", df.format(seq)); // 항목번호
 				// EO 일경우 NEW 에만
 				bomTable.setValue("MATNR_NEW", dto.getParentPartNumber()); // 기존 모품번
@@ -286,6 +292,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 //				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 신규 자품번
 				bomTable.setValue("MENGE", dto.getQty()); // 수량
 				bomTable.setValue("MEINS", dto.getUnit()); // 단위
+				bomTable.setValue("AENNR8", e.getEoNumber() + df.format(seq)); // 변경번호 12자리
+				// AENNR12
 				seq++;
 				idx++;
 			}

@@ -14,7 +14,8 @@ import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.iba.IBAUtil;ort com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.WCUtil;
@@ -27,6 +28,7 @@ import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.epm.EPMDocument;
+import wt.epm.structure.EPMDescribeLink;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -39,11 +41,13 @@ import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
+import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
+import wt.vc.struct.StructHelper;
 
 public class StandardActivityService extends StandardManager implements ActivityService {
 
@@ -477,6 +481,33 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				// 개정인데?? 체크인아웃??
 				if (epm != null) {
+					boolean isApproved = epm.getLifeCycleState().toString().equals("APPROVED");
+					if (isApproved) {
+						newEpm = (EPMDocument) VersionControlHelper.service.newVersion(epm);
+						VersionControlHelper.setNote(epm, message);
+						PersistenceHelper.manager.save(newEpm);
+						removeAttr((IBAHolder) newEpm, newEpm.getVersionIdentifier().getSeries().getValue());
+
+						QueryResult qr = PersistenceHelper.manager.navigate(epm, "describes", EPMDescribeLink.class);
+						while (qr.hasMoreElements()) {
+							WTPart p = (WTPart) qr.nextElement();
+							EPMDescribeLink newLink = EPMDescribeLink.newEPMDescribeLink(p, newEpm);
+							PersistenceServerHelper.manager.insert(newLink);
+						}
+					}
+				}
+
+				// 2D 도면 개정인데 체크해봐야함
+				if (newEpm != null) {
+
+				} else {
+					if (epm != null) {
+
+					}
+				}
+
+				// 관련 도면??
+				if (newPart != null) {
 
 				}
 

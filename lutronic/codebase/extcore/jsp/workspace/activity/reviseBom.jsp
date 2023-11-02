@@ -212,19 +212,19 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 					autoGridHeight : true,
 					enableCellMerge : true,
 
-					rowCheckableFunction : function(rowIndex, isChecked, item) {
-						if (item.part_state !== "승인됨") {
-							return false;
-						}
-						return true;
-					},
+// 					rowCheckableFunction : function(rowIndex, isChecked, item) {
+// 						if (item.part_state !== "승인됨") {
+// 							return false;
+// 						}
+// 						return true;
+// 					},
 
-					rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-						if (item.part_state !== "승인됨") {
-							return false; // false 반환하면 disabled 처리됨
-						}
-						return true;
-					},
+// 					rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+// 						if (item.part_state !== "승인됨") {
+// 							return false; // false 반환하면 disabled 처리됨
+// 						}
+// 						return true;
+// 					},
 
 					cellColMergeFunction : function(rowIndex, columnIndex, item) {
 						if (item.merge === true) {

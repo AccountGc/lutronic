@@ -104,7 +104,7 @@ String oid = (String) request.getAttribute("oid");
 	}
 
 	function revise() {
-		if (!confirm("해당 도면들을 일괄개정 하시겠습니까?")) {
+		if (!confirm("해당 품목 및 도면을 일괄개정 하시겠습니까?")) {
 			return false;
 		}
 
@@ -119,7 +119,8 @@ String oid = (String) request.getAttribute("oid");
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-
+				document.location.reload();
+				opener.document.location.reload();
 			}
 			parent.closeLayer();
 		})

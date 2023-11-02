@@ -369,13 +369,6 @@ public class ActivityHelper {
 //				BOMValueCheck = "checked";
 //			}
 
-			if (link.isRevise()) {
-				nextPart = (WTPart) EChangeUtils.getNext(part);
-				part_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
-				next_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
-//				PartData nextData = new PartData(nextPart);
-			}
-
 			map.put("oid", oid);
 			map.put("part_oid", part_oid);
 			map.put("link_oid", link_oid);
@@ -387,7 +380,7 @@ public class ActivityHelper {
 			map.put("part_state", part.getLifeCycleState().getDisplay());
 			map.put("merge", false);
 
-			if (nextPart == null) {
+			if (!link.isRevise()) {
 				map.put("next_number", "개정된 데이터가 없습니다.");
 				map.put("next_number", "개정된 데이터가 없습니다.");
 				map.put("next_state", "개정된 데이터가 없습니다.");
@@ -396,6 +389,16 @@ public class ActivityHelper {
 				map.put("epm_number", "개정된 데이터가 없습니다.");
 				map.put("reference", "개정된 데이터가 없습니다.");
 				map.put("merge", true);
+			} else {
+				nextPart = (WTPart) EChangeUtils.getNext(part);
+				part_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
+				next_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
+				map.put("next_oid", next_oid);
+				map.put("next_number", nextPart.getNumber());
+				map.put("next_version", nextPart.getVersionIdentifier().getSeries().getValue() + "."
+						+ nextPart.getIterationIdentifier().getSeries().getValue());
+				map.put("next_creator", nextPart.getCreatorFullName());
+				map.put("next_state", nextPart.getLifeCycleState().getDisplay());
 			}
 
 			list.add(map);
@@ -413,7 +416,7 @@ public class ActivityHelper {
 		for (int i = 0; list != null && i < list.size(); i++) {
 			String oid = (String) list.get(i);
 			EcoPartLink link = (EcoPartLink) CommonUtil.getObject(oid);
-			WTPart part = PartHelper.service.getPart(link.getPart().getNumber(), link.getVersion());
+			WTPart part = PartHelper.manager.getPart(link.getPart().getNumber(), link.getVersion());
 			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 			Map<String, Object> map = new HashMap<>();
 			map.put("part_name", part.getName());
@@ -424,7 +427,7 @@ public class ActivityHelper {
 			map.put("latest", CommonUtil.isLatestVersion(part));
 			if (epm != null) {
 				map.put("epm_number", epm.getNumber());
-				mpa.put("epm_oid", epm.getPersistInfo().getObjectIdentifier().getStringValue());
+				map.put("epm_oid", epm.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
 			map.put("link_oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
