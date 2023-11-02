@@ -141,7 +141,7 @@ function createAUIGrid(columnLayout) {
 	const props = {
 		headerHeight : 30,
 		showRowNumColumn : true,
-		showRowCheckColumn : true,
+		showRowCheckColumn : false,
 		rowNumHeaderText : "번호",
 		showAutoNoDataMessage : false,
 		selectionMode : "multipleCells",
