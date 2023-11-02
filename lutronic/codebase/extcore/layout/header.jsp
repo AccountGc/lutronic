@@ -507,7 +507,7 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 						<ul class="nav nav-second-level collapse">
 							<li>
-								<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">품목 검색</a>
+								<a onclick="moveToPage(this, '/distribute/listPart', '> 품목관리 > 품목 검색');">품목 검색</a>
 							</li>
 							<li>
 								<a onclick="moveToPage(this, '/distribute/listProduction', '> 품목관리 > 완제품 검색');">완제품 검색</a>
@@ -522,24 +522,24 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 						<ul class="nav nav-second-level collapse">
 							<li>
-								<a onclick="moveToPage(this, '/eco/list', '> 설계변경 > ECO 검색');">ECO 검색</a>
+								<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>
 <!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
 							</li>
 							<li>
-								<a onclick="moveToPage(this, '/eo/list', '> 설계변경 >EO 검색');">EO 검색</a>
+								<a onclick="moveToPage(this, '/distribute/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
 <!-- 								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a> -->
 							</li>
 						</ul>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/list', '> 문서관리 > 문서 검색');"><i class="fa fa-pie-chart"></i>문서 검색</a>
+						<a onclick="moveToPage(this, '/distribute/listDocument', '> 문서관리 > 문서 검색');"><i class="fa fa-pie-chart"></i>문서 검색</a>
 <!-- 						<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');"> -->
 <!-- 							<i class="fa fa-pie-chart"></i> -->
 <!-- 							<span class="nav-label">문서 검색</span> -->
 <!-- 						</a> -->
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"><i class="fa fa-files-o"></i>금형 검색</a>
+						<a onclick="moveToPage(this, '/distribute/listMold', '> 금형관리 > 금형 검색');"><i class="fa fa-files-o"></i>금형 검색</a>
 <!-- 						<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"> -->
 <!-- 							<i class="fa fa-files-o"></i> -->
 <!-- 							<span class="nav-label">금형 검색</span> -->
