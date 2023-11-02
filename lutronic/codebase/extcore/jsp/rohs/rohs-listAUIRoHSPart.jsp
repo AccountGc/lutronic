@@ -76,7 +76,7 @@
 					dataField : "level",
 					headerText : "Level",
 					dataType : "string",
-					width : 80,
+					width : 60,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -85,7 +85,6 @@
 					dataField : "partNumber",
 					headerText : "품번",
 					dataType : "string",
-					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -94,7 +93,6 @@
 					dataField : "partName",
 					headerText : "품목명",
 					dataType : "string",
-					width : 300,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -103,7 +101,6 @@
 					dataField : "partState",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -140,7 +137,6 @@
 					dataField : "rohsNumber",
 					headerText : "물질번호",
 					dataType : "string",
-					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -149,7 +145,6 @@
 					dataField : "rohsName",
 					headerText : "물질명",
 					dataType : "string",
-					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -158,7 +153,6 @@
 					dataField : "rohslifeState",
 					headerText : "물질 상태",
 					dataType : "string",
-					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -167,7 +161,6 @@
 					dataField : "fileName",
 					headerText : "파일명",
 					dataType : "string",
-					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -176,7 +169,6 @@
 					dataField : "docType",
 					headerText : "파일구분",
 					dataType : "string",
-					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -188,18 +180,17 @@
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					fillColumnSizeMode: true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					fillColumnSizeMode: true,
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

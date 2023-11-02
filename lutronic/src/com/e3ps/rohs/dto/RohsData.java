@@ -43,6 +43,7 @@ public class RohsData{
 	private String description;
 	private String fileType;
 	private String publicationDate;
+	private String fileName;
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 	
@@ -60,8 +61,8 @@ public class RohsData{
 		setStateDisplay(rohs.getLifeCycleState().getDisplay());
 		setCreator(rohs.getCreatorFullName());
 		setModifier(rohs.getModifierFullName());
-		setCreateDate(DateUtil.getDateString(rohs.getCreateTimestamp(),"a"));
-		setModifyDate(DateUtil.getDateString(rohs.getModifyTimestamp(),"a"));
+		setCreateDate(rohs.getCreateTimestamp().toString().substring(0, 10));
+		setModifyDate(rohs.getModifyTimestamp().toString().substring(0, 10));
 		// 협력업체
 		String manufacture = IBAUtil.getAttrValue(rohs, IBAKey.IBA_MANUFACTURE);
 		String manufactureDisplay = keyToValue(manufacture, IBAKey.IBA_MANUFACTURE);

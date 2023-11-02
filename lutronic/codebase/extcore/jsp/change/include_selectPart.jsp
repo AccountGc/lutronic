@@ -19,7 +19,9 @@ if(request.getParameter("multi")!=null){
 	multi = request.getParameter("multi").equals("true") ? true : false;
 }
 List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
+boolean header = request.getParameter("header")==null ? true : Boolean.parseBoolean(request.getParameter("header"));
 %>
+<%if(header){%>
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -30,6 +32,8 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		</td>
 	</tr>
 </table>
+<%} %>
+
 
 <table class="create-table">
 	<colgroup>
@@ -39,6 +43,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		<col width="*">
 	</colgroup>
 	<tr>
+		<%if(header){%>
 		<th class="lb">
 			<%
 			if(moduleType.equals("eco") || moduleType.equals("doc") || moduleType.equals("drawing")){
@@ -53,6 +58,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			%>
 			
 		</th>
+		<%} %>
 		<td class="indent5" colspan="3">
 			<%
 			if (isCreate || isUpdate) {
