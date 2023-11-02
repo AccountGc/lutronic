@@ -90,7 +90,7 @@ public class MoldDTO {
 		setCreateDate(doc.getCreateTimestamp().toString().substring(0, 10));
 		setModifyDate(doc.getModifyTimestamp().toString().substring(0, 10));
 		setIteration(doc.getIterationIdentifier().getSeries().getValue());
-		setVersion(doc.getVersionIdentifier().getSeries().getValue());
+		setVersion(doc.getVersionIdentifier().getValue() + "." + doc.getIterationIdentifier().getValue());
 		setDescription(doc.getDescription());
 		setLocation(doc.getLocation());
 		setDocumentType(doc.getDocType().toString());

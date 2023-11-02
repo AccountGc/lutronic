@@ -76,7 +76,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">REV</th>
 				<td class="indent5">
-					<%=dto.getVersion()%>.<%=dto.getIteration()%>
+					<%=dto.getVersion()%>
 					<%
 					if (!dto.isLatest()) {
 					%>
@@ -216,6 +216,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 	
 	// 최신버전으로 페이지 이동
 	function latest() {
+		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/mold/latest?oid=" + oid);
 		_popup(url, 1600, 550, "n");
 	}
