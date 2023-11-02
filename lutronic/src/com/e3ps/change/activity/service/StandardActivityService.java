@@ -240,7 +240,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			LifeCycleHelper.setLifeCycle(eca,
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
-			eca = (EChangeActivity) PersistenceHelper.manager.save(eca);
+			eca = (EChangeActivity) PersistenceHelper.manager.save(eca);				
 			sort++;
 
 			// STEP1 코드

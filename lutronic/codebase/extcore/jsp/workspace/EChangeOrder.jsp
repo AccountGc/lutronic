@@ -206,27 +206,26 @@ String type = eChangeOrder.getEoType();
 		</tr>
 	</table>
 
-	<jsp:include page="/extcore/jsp/change/eo/include/eo-reference-include.jsp">
+	<!-- 	관련 문서 -->
+	<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 		<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		<jsp:param value="view" name="mode" />
+		<jsp:param value="insert90" name="method" />
+		<jsp:param value="true" name="multi" />
+		<jsp:param value="true" name="multi" />
+		<jsp:param value="false" name="header" />
 	</jsp:include>
-	<script type="text/javascript">
-
-	document.addEventListener("DOMContentLoaded", function() {
-		// 완제품
-		createAUIGrid104(columns104);
-		AUIGrid.resize(myGridID104);
-		const isCreated90 = AUIGrid.isCreated(myGridID90); // 관련문서
-		if (isCreated90) {
-			AUIGrid.resize(myGridID90);
-		} else {
-			createAUIGrid90(columns90);
-		}
-	});
 	
-	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID104);
-	});
-</script>
+	<!-- 	관련 MODEL -->
+	<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
+		<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		<jsp:param value="view" name="mode" />
+		<jsp:param value="insert300" name="method" />
+		<jsp:param value="MODEL" name="codeType" />
+		<jsp:param value="true" name="multi" />
+		<jsp:param value="300" name="height" />
+		<jsp:param value="true" name="header" />
+	</jsp:include>
 <% }%>
 
 

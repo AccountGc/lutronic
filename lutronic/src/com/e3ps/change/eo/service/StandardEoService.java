@@ -133,7 +133,7 @@ public class StandardEoService extends StandardManager implements EoService {
 			saveAttach(eo, dto);
 
 			// 설변 활동 생성
-			ActivityHelper.service.saveActivity(eo, rows200);
+			ActivityHelper.service.saveActivity(eo, rows200);				
 
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(eo, external);

@@ -114,7 +114,6 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 		<jsp:include page="<%=url%>">
 			<jsp:param value="<%=tapOid%>" name="tapOid" />
 		</jsp:include>
-		
 	</div>
 </div>
 
@@ -288,6 +287,21 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 					}
 					break;
 				case "tabs-2":
+					// 완제품
+					createAUIGrid104(columns104);
+					AUIGrid.resize(myGridID104);
+					const isCreated90 = AUIGrid.isCreated(myGridID90); // 관련문서
+					if (isCreated90) {
+						AUIGrid.resize(myGridID90);
+					} else {
+						createAUIGrid90(columns90);
+					}
+					const isCreated300 = AUIGrid.isCreated(myGridID300); // MODEL
+					if (isCreated300) {
+						AUIGrid.resize(myGridID300);
+					} else {
+						createAUIGrid300(columns300);
+					}
 					break;
 				}
 			}
@@ -301,6 +315,9 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
+		AUIGrid.resize(myGridID104);
+		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID300);
 	});
 	
 	
