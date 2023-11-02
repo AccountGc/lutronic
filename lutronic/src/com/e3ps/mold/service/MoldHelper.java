@@ -15,6 +15,7 @@ import com.e3ps.doc.DocLocation;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.mold.dto.MoldDTO;
+import com.e3ps.rohs.ROHSMaterial;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -83,6 +84,10 @@ public class MoldHelper {
 			}
 		}
 		
+		// 상태 임시저장 제외
+    	if(query.getConditionCount() > 0) { query.appendAnd(); }
+    	query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
+    	
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NUMBER, docNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NAME, docName);
 		QuerySpecUtils.creatorQuery(query, idx, WTDocument.class, creator);
