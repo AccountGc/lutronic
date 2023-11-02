@@ -1183,8 +1183,28 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					gridData : gridData
 				}
 				params.gridData.forEach((param)=>{
-					params.rows8 && toRegister(param, param.rows8);	
-				})
+					toRegister(param, param.rows8);	
+				});
+				
+				params.gridData.forEach((param)=>{
+					if(isEmpty(param.rows90)){
+						param.rows90=[];
+					}
+				});
+				
+				params.gridData.forEach((param)=>{
+					if(isEmpty(param.rows106)){
+						param.rows106=[];
+					}
+				});
+				
+				params.gridData.forEach((param)=>{
+					if(isEmpty(param.secondary)){
+						param.secondary=[];
+					}
+				});
+				
+				
 				parent.openLayer();
 				logger(params);
 				call(url, params, function(data) {
