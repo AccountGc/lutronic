@@ -261,6 +261,72 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "_3d",
+					headerText : "3D",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "ImageRenderer",
+						altField : null,
+						onClick : function(event) {
+						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "_2d",
+					headerText : "2D",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "ImageRenderer",
+						altField : null,
+						onClick : function(event) {
+						}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "step",
+					headerText : "STEP",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "dxf",
+					headerText : "DXF",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
+					dataField : "pdf",
+					headerText : "PDF",
+					dataType : "string",
+					width : 60,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
+				}, {
 					headerText : "변경이력",
 					width : 80,
 					renderer : {
@@ -272,11 +338,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							"default" : "/Windchill/extcore/images/help.gif" // default
 						},
 						onClick : function(event) {
-							const oid = event.item.oid;
+							const oid = event.item.part_oid;
 							const url = getCallUrl("/part/changeList?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
-					}
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
 				}, {
 					dataField : "number",
 					headerText : "품목번호",
@@ -286,9 +356,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
+							const oid = item.part_oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {
@@ -299,14 +369,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "name",
 					headerText : "품목명",
 					dataType : "string",
+					style : "aui-left",
 					width : 380,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
+							const oid = item.part_oid;
 							const url = getCallUrl("/part/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 					filter : {
@@ -324,12 +395,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					},
 				}, {
 					dataField : "version",
-					headerText : "REV.",
+					headerText : "Rev.",
 					dataType : "string",
 					width : 90,
-					renderer : {
-						type : "TemplateRenderer"
-					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -362,9 +430,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "createdDate",
 					headerText : "등록일",
-					dataType : "string",
+					dataType : "date",
 					width : 140,
 					filter : {
 						showIcon : true,
@@ -373,7 +441,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}, {
 					dataField : "modifiedDate",
 					headerText : "수정일",
-					dataType : "string",
+					dataType : "date",
 					width : 140,
 					filter : {
 						showIcon : true,
@@ -386,7 +454,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					width : 80,
 					filter : {
 						showIcon : true,
-						inline : true
+						inline : false
 					},
 				} ]
 			}
