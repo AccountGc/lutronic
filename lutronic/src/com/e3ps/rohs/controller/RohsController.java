@@ -326,6 +326,8 @@ public class RohsController extends BaseController {
 	@GetMapping(value = "/listRohsFile")
 	public ModelAndView listRohsFile() {
 		ModelAndView model = new ModelAndView();
+		List<Map<String,String>> typeList = RohsHelper.manager.rohsFileType();
+		model.addObject("typeList", typeList);
 		model.setViewName("/extcore/jsp/rohs/rohsFile-list.jsp");
 		return model;
 	}

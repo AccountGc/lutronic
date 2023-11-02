@@ -39,6 +39,8 @@ import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
 
 import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
@@ -63,6 +65,7 @@ import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
 
 public class RohsHelper {
@@ -300,68 +303,54 @@ public class RohsHelper {
 		ArrayList<RohsData> list = new ArrayList<>();
     	
 		String fileType = StringUtil.checkNull((String)params.get("fileType"));
-		String publication_Start = StringUtil.checkNull((String)params.get("publication_Start"));
-		String publication_End = StringUtil.checkNull((String)params.get("publication_End"));
+		String publicationFrom = StringUtil.checkNull((String)params.get("publicationFrom"));
+		String publicationTo = StringUtil.checkNull((String)params.get("publicationTo"));
 		String fileName = StringUtil.checkNull((String)params.get("fileName"));
 		
-		QuerySpec spec = new QuerySpec();
-		int idx = spec.addClassList(ROHSContHolder.class, true);
-		int idx2 = spec.addClassList(ROHSMaterial.class, false);
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(ROHSContHolder.class, true);
+		int idx2 = query.addClassList(ROHSMaterial.class, false);
 		
-		spec.appendWhere(new SearchCondition(ROHSContHolder.class,"rohsReference.key.id",
-				ROHSMaterial.class,"thePersistInfo.theObjectIdentifier.id"),new int[]{idx,idx2});
+		QuerySpecUtils.toInnerJoin(query, ROHSContHolder.class, ROHSMaterial.class, "rohsReference.key.id",
+				"thePersistInfo.theObjectIdentifier.id", idx, idx2);
 		
-		if(spec.getConditionCount() > 0) { spec.appendAnd(); }
-		spec.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx2});
-       
-    	SearchUtil.addLastVersionCondition(spec, ROHSMaterial.class, idx2);
+		if(query.getConditionCount() > 0) { query.appendAnd(); }
+    	query.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx2});
+    	
+    	SearchUtil.addLastVersionCondition(query, ROHSMaterial.class, idx2);
 		
-		
-		
-		if(fileType.length() > 0) {
-			if(spec.getConditionCount() > 0) {
-				spec.appendAnd();
+    	QuerySpecUtils.toEqualsAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_TYPE, fileType);
+    	QuerySpecUtils.toLikeAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_NAME, fileName.toUpperCase());
+    	if(publicationFrom.length() > 0) {
+			if(query.getConditionCount() > 0){
+				query.appendAnd();
 			}
-			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.FILE_TYPE, SearchCondition.EQUAL, fileType), new int[] {idx});
+			query.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.GREATER_THAN_OR_EQUAL, publicationFrom), new int[] {idx});
 		}
-		
-		if(fileName.length() > 0) {
-			if(spec.getConditionCount() > 0) {
-				spec.appendAnd();
+		if(publicationTo.length() > 0) {
+			if(query.getConditionCount() > 0){
+				query.appendAnd();
 			}
-			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.FILE_NAME, SearchCondition.LIKE, "%"+fileName.toUpperCase()+"%",false), new int[] {idx});
+			query.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.LESS_THAN_OR_EQUAL, publicationTo), new int[] {idx});
 		}
+    	QuerySpecUtils.toOrderBy(query, idx, ROHSContHolder.class, ROHSContHolder.ROHS_REFERENCE + ".key.id", false);
 		
-		
-		
-		if(publication_Start.length() > 0) {
-			if(spec.getConditionCount() > 0){
-				spec.appendAnd();
-			}
-			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.GREATER_THAN_OR_EQUAL, publication_Start), new int[] {idx});
-		}
-		
-		
-		if(publication_End.length() > 0) {
-			if(spec.getConditionCount() > 0){
-				spec.appendAnd();
-			}
-			spec.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.LESS_THAN_OR_EQUAL, publication_End), new int[] {idx});
-		}
-		
-		SearchUtil.setOrderBy(spec, ROHSContHolder.class, idx, ROHSContHolder.ROHS_REFERENCE + ".key.id", false);
-		
-		PageQueryUtils pager = new PageQueryUtils(params, spec);
+		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ROHSContHolder holder = (ROHSContHolder) obj[0];
-			
 			RoHSHolderData data = new RoHSHolderData(holder);
 			RohsData rData = new RohsData(data.getRohs());
+			rData.setFileName(data.getFileName());
 			list.add(rData);
 		}
 		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
 			
     	return map;
 	}
@@ -475,6 +464,7 @@ public class RohsHelper {
 		
 		returnMap.put("totalLevel", totalLevl);
 		returnMap.put("partRohslist", partRohslist);
+		
 		/*
 		System.out.println("list =" + partRohlist.size());
 		
@@ -502,14 +492,26 @@ public class RohsHelper {
 	public Map<String, Object> listRoHSProduct(Map<String, Object> params) throws Exception {
 		ArrayList<Map<String, Object>> partList = (ArrayList<Map<String, Object>>) params.get("partList");
 		Map<String,Object> result = new HashMap<String,Object>();
-		List<PartData> list = new ArrayList<>(); 
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(); 
 		
 		if(partList!=null) {
-			for(Map<String, Object> map : partList) {
-				String partOid = (String) map.get("partOid");
-				WTPart part = (WTPart)CommonUtil.getObject(partOid);
-				PartData data = new PartData(part);
-				list.add(data);
+			for(Map<String, Object> part : partList) {
+				String partOid = (String) part.get("oid");
+				WTPart wtpart = (WTPart)CommonUtil.getObject(partOid);
+				PartDTO dto = new PartDTO(wtpart);
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("number", dto.getNumber());
+				map.put("name", dto.getName());
+				map.put("creator", dto.getCreator());
+				map.put("createDate", dto.getCreateDate());
+				map.put("state", dto.getState());
+				Map<String, Object> dataMap = RohsUtil.getProductRoHsState(partOid);
+				Double totalState = (Double) dataMap.get("totalState");
+				Double totalCount = (Double) dataMap.get("totalCount");
+				Double passCount = (Double) dataMap.get("passCount");
+				String rohsState = totalState+" % ("+passCount+"/"+totalCount+")";
+				map.put("rohsState", rohsState);
+				list.add(map);
 			}
 		}
 		result.put("list", list);

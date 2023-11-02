@@ -30,6 +30,12 @@
 				</td>
 			</tr>
 		</table>
+		<!-- 제품 -->
+		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="false" name="header" />
+		</jsp:include>
 
 		<table class="button-table">
 			<tr>
@@ -46,7 +52,7 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
@@ -60,25 +66,14 @@
 					dataField : "number",
 					headerText : "제품코드",
 					dataType : "string",
-					width : 140,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
-// 					renderer : {
-// 						type : "LinkRenderer",
-// 						baseUrl : "javascript",
-// 						jsCallback : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.oid;
-// 							const url = getCallUrl("/rohs/view?oid=" + oid);
-// 							popup(url, 1600, 800);
-// 						}
-// 					},
 				}, {
 					dataField : "name",
 					headerText : "제품명",
 					dataType : "string",
-					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -87,7 +82,6 @@
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -96,7 +90,6 @@
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -105,7 +98,7 @@
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -114,7 +107,6 @@
 					dataField : "rohsState",
 					headerText : "RoHs 상태",
 					dataType : "string",
-					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -126,18 +118,17 @@
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					fillColumnSizeMode: true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : true,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					fillColumnSizeMode: true,
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -151,10 +142,12 @@
 				});
 			}
 
-			function loadGridData(dataArr) {
+			function loadGridData() {
 				let params = new Object();
+				const field = ["_psize"];
+				params.partList = AUIGrid.getGridData(partGridID);
+				params = toField(params, field);
 				const url = getCallUrl("/rohs/listRoHSProduct");
-				params.partList = dataArr;
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
@@ -178,6 +171,8 @@
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
+				createAUIGrid2(columnsPart);
+				AUIGrid.resize(partGridID);
 				selectbox("_psize");
 			});
 
@@ -194,22 +189,8 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
+				AUIGrid.resize(partGridID);
 			});
-			
-			$("#searchBtn").click(function(){
-				const url = getCallUrl("/part/listPopup");
-				_popup(url, 1500, 700, "n");
-			});
-			
-			function append(items){
-				var data = new Object();
-				var dataArr = new Array();
-				for(var i=0; i<items.length; i++){
-					data.partOid = items[i].part_oid;
-					dataArr.push(data);
-				}
-				loadGridData(dataArr);
-			}
 			
 			function deleteBtn(){
 				const checked = AUIGrid.getCheckedRowItems(partGridID);
