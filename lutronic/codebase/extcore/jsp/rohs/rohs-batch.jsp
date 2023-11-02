@@ -33,7 +33,7 @@
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 370px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 740px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
 			const lifecycleList = [{"code": "LC_Default", "value": "기본결재"}, {"code": "LC_Default_NonWF", "value": "일괄결재"}];
