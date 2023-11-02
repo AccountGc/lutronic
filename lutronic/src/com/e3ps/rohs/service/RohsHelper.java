@@ -91,8 +91,6 @@ public class RohsHelper {
     		String creator 			= StringUtil.checkNull((String) params.get("creatorOid"));
     		String state 			= StringUtil.checkNull((String) params.get("state"));
     		String manufacture 		= StringUtil.checkNull((String) params.get("manufacture"));
-    		String sortValue 		= StringUtil.checkNull((String) params.get("sortValue"));
-    		String sortCheck 		= StringUtil.checkNull((String) params.get("sortCheck"));
 			
 			if(!StringUtil.checkString(islastversion)) {
 	    		islastversion = "true";
@@ -104,6 +102,10 @@ public class RohsHelper {
 	    	if("true".equals(islastversion)) {
 				 SearchUtil.addLastVersionCondition(query, ROHSMaterial.class, idx);
 			}
+	    	
+	    	// 상태 임시저장 제외
+	    	if(query.getConditionCount() > 0) { query.appendAnd(); }
+	    	query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
 			
 	    	//문서번호
 	    	if(rohsNumber.length() > 0){
@@ -176,80 +178,7 @@ public class RohsHelper {
 				manufacture = "";
 			}
 			
-	    	//소팅
-	    	if (sortCheck == null) sortCheck = "true";
-			if(sortValue != null && sortValue.length() > 0) {
-				if("true".equals(sortCheck)){
-					if( "creator".equals(sortValue)){
-						if(query.getConditionCount() > 0) query.appendAnd();
-						int idx_user = query.appendClassList(WTUser.class, false);
-						int idx_people = query.appendClassList(People.class, false);
-						
-						ClassAttribute ca = new ClassAttribute(ROHSMaterial.class, "creator.key.id");
-			            ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-			            query.appendWhere(new SearchCondition(ca, "=", ca2), new int[]{idx, idx_user});
-						ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-						query.appendAnd();
-						query.appendWhere(new SearchCondition(ca2, "=", ca3), new int[]{idx_user, idx_people});
-						SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort" , true);
-					}else if("manufacture".equals(sortValue)){
-						
-						
-						
-						AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MANUFACTURE);
-						if (aview != null) {
-							if (query.getConditionCount() > 0) {
-								query.appendAnd();
-							}
-							int _idx = query.appendClassList(StringValue.class, false);
-							query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", ROHSMaterial.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
-							query.appendAnd();
-							query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
-							
-							query.appendOrderBy(new OrderBy(new ClassAttribute(StringValue.class,"value"), true), new int[] { _idx });
-						
-						}
-					}else{
-						query.appendOrderBy(new OrderBy(new ClassAttribute(ROHSMaterial.class,sortValue), true), new int[] { idx });
-						
-					}
-				}else{
-					if( "creator".equals(sortValue)){
-						if(query.getConditionCount() > 0) query.appendAnd();
-						int idx_user = query.appendClassList(WTUser.class, false);
-						int idx_people = query.appendClassList(People.class, false);
-						
-						ClassAttribute ca = new ClassAttribute(ROHSMaterial.class, "creator.key.id");
-			            ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-			            query.appendWhere(new SearchCondition(ca, "=", ca2), new int[]{idx, idx_user});
-						ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-						query.appendAnd();
-						query.appendWhere(new SearchCondition(ca2, "=", ca3), new int[]{idx_user, idx_people});
-						SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort" , false);
-					
-						
-					}else if("manufacture".equals(sortValue)){
-						AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MANUFACTURE);
-						if (aview != null) {
-							if (query.getConditionCount() > 0) {
-								query.appendAnd();
-							}
-							int _idx = query.appendClassList(StringValue.class, false);
-							query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", ROHSMaterial.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
-							query.appendAnd();
-							query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
-							
-							query.appendOrderBy(new OrderBy(new ClassAttribute(StringValue.class,"value"), false), new int[] { _idx });
-						
-						}
-					}else{
-						query.appendOrderBy(new OrderBy(new ClassAttribute(ROHSMaterial.class,sortValue), false), new int[] { idx });
-					}
-				}
-			}else{
-				//query.appendOrderBy(new OrderBy(new ClassAttribute(ROHSMaterial.class,"thePersistInfo.createStamp"), true), new int[] { idx }); 
-				SearchUtil.setOrderBy(query, ROHSMaterial.class, idx, ROHSMaterial.MODIFY_TIMESTAMP, "sort", true);
-			}
+			SearchUtil.setOrderBy(query, ROHSMaterial.class, idx, ROHSMaterial.MODIFY_TIMESTAMP, "sort", true);
 			
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
