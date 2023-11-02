@@ -59,9 +59,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<th>도면분류</th>
 				<td class="indent5">
-					<span id="locationName">
-						/Default/PART_Drawing
-					</span>
+					<input type="hidden" name="oid" id="oid">
+					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
+					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
+<%-- 					<input type="hidden" name="locationName" id="locationName" value="<%=DrawingHelper.ROOTLOCATION%>"> --%>
+<%-- 					<span id="locationName"><%=DrawingHelper.ROOTLOCATION%></span> --%>
+<!-- 					<span id="locationName"> -->
+<!-- 						/Default/PART_Drawing -->
+<!-- 					</span> -->
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
@@ -489,7 +494,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
  				let params = new Object();
  				$("input[name=sessionid").val(0);
  				const url = getCallUrl("/drawing/list");
-				const field = ["_psize", "locationName", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				const field = ["_psize", "location", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
  				params = toField(params, field);
  				AUIGrid.showAjaxLoader(myGridID);
  				call(url, params, function(data) {

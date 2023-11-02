@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.query.SearchUtil;
@@ -37,6 +38,7 @@ import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderHelper;
+import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.FloatValue;
@@ -97,21 +99,55 @@ public class DrawingHelper {
 			String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
 			String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
 			String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
-
 			
-			String temp = "";
-			Folder folder = null;
-			if (location == null || location.length() == 0) {
-				location = "/Default/PART_Drawing";
+			Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+			
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
 			}
-			if(foid!=null && foid.length() > 0){
-				folder = (Folder)rf.getReference(foid).getObject();
-				location = FolderHelper.getFolderPath( folder );
-				temp = folder.getName();
-			}else{
-				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-				foid="";
+
+			int folder_idx = query.addClassList(IteratedFolderMemberLink.class, false);
+			SearchCondition sc1 = new SearchCondition(
+					new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId"),
+					SearchCondition.EQUAL, new ClassAttribute(EPMDocument.class, "iterationInfo.branchId"));
+			sc1.setFromIndicies(new int[] { folder_idx, idx }, 0);
+			sc1.setOuterJoin(0);
+			query.appendWhere(sc1, new int[] { folder_idx, idx });
+
+			query.appendAnd();
+			ArrayList folders = CommonFolderHelper.service.getFolderTree(folder);
+			query.appendOpenParen();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
+					SearchCondition.EQUAL, folder.getPersistInfo().getObjectIdentifier().getId()),
+					new int[] { folder_idx });
+
+			for (int fi = 0; fi < folders.size(); fi++) {
+				String[] s = (String[]) folders.get(fi);
+				Folder sf = (Folder) rf.getReference(s[2]).getObject();
+				query.appendOr();
+				query.appendWhere(
+						new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id",
+								SearchCondition.EQUAL, sf.getPersistInfo().getObjectIdentifier().getId()),
+						new int[] { folder_idx });
 			}
+			query.appendCloseParen();
+			
+			
+			
+			
+//			String temp = "";
+//			Folder folder = null;
+//			if (location == null || location.length() == 0) {
+//				location = "/Default/PART_Drawing";
+//			}
+//			if(foid!=null && foid.length() > 0){
+//				folder = (Folder)rf.getReference(foid).getObject();
+//				location = FolderHelper.getFolderPath( folder );
+//				temp = folder.getName();
+//			}else{
+//				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+//				foid="";
+//			}
 			
 			// 최신 이터레이션
 			if("true".equals(islastversion)) {
