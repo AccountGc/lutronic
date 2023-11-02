@@ -28,6 +28,6 @@ public class SAPBomDTO {
 		setParentPartNumber(parent.getNumber());
 		setChildPartNumber(child.getNumber());
 		setQty(link.getQuantity().getAmount());
-		setUnit(link.getQuantity().getUnit().toString());
+		setUnit(link.getQuantity().getUnit().toString().toUpperCase());
 	}
 }

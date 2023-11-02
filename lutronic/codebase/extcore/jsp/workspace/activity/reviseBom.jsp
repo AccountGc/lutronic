@@ -169,7 +169,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			}, {
 				headerText : "BOM",
 				children : [ {
-					dataField : "number",
+					dataField : "",
 					dataType : "string",
 					headerText : "BOM 편집",
 					width : 120,
@@ -177,11 +177,15 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 						type : "ButtonRenderer",
 						labelText : "BOM 편집",
 						onclick : function(rowIndex, columnIndex, value, item) {
-
+							const next_oid = item.next_oid;
+							alert(next_oid);
+							if(next_oid === "") {
+								return false;
+							}
 						}
 					}
 				}, {
-					dataField : "name",
+					dataField : "",
 					dataType : "string",
 					headerText : "BOM 비교",
 					width : 120,

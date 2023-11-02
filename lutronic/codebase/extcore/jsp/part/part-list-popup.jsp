@@ -13,8 +13,8 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
-String rowId =request.getParameter("rowId")==null?"":request.getParameter("rowId").toString();
-boolean limit = request.getParameter("limit")==null?false:Boolean.parseBoolean(request.getParameter("limit"));
+String rowId = request.getParameter("rowId") == null ? "" : request.getParameter("rowId").toString();
+boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoolean(request.getParameter("limit"));
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -242,7 +242,7 @@ boolean limit = request.getParameter("limit")==null?false:Boolean.parseBoolean(r
 				<option value="200">200</option>
 				<option value="300">300</option>
 			</select>
-			<input type="button" value="검색" title="검색" onclick="loadGridData()" >
+			<input type="button" value="검색" title="검색" onclick="loadGridData()">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -547,7 +547,7 @@ function addBtn() {
 		alert("추가할 행을 선택하세요.");
 		return false;
 	}
-	<%if(limit){%>
+	<%if (limit) {%>
 		var state = checkedItems[0].item.state;
 		if(state!='작업 중'){
 			alert("부품이 작업 중인 상태는 등록할 수 없습니다.");
@@ -556,10 +556,10 @@ function addBtn() {
 	<%}%>
 	
 	openLayer();
-	<%if(!"".equals(rowId)){%>
+	<%if (!"".equals(rowId)) {%>
 		opener.<%=method%>(checkedItems,"<%=rowId%>" );
 		self.close();
-	<%}else{%>
+	<%} else {%>
 		opener.<%=method%>(checkedItems, function(res, close, msg) {
 			if(res) {
 				setTimeout(function() {
@@ -573,14 +573,19 @@ function addBtn() {
 
 function trigger(close, msg) {
 	// 메세지 주고 창닫기
-	if(close && msg != "") {
+	if(close && msg !== "") {
 		// true, msg...
 		alert(msg);
 		self.close();
 	}
 	// 메세지 주고 창안닫기
-	if(!close && msg != "") {
+	if(!close && (msg !== "" && msg !== undefined)) {
 		alert(msg);
+	}
+	
+	// 그냥 창닫기
+	if(!close && msg === "") {
+		self.close();
 	}
 }
 

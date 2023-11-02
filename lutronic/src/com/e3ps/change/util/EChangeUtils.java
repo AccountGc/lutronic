@@ -181,7 +181,10 @@ public class EChangeUtils {
 
 //		ERPHelper.service.sendERP(eco);
 
-			SAPHelper.service.sendSapToEo(eo, completeParts);
+			// 개발일 경우 전송 하지 않는다.
+			if (!eo.getEoType().equals("PRODUCT")) {
+				SAPHelper.service.sendSapToEo(eo, completeParts);
+			}
 
 			EoHelper.service.saveBaseline(eo, completeParts);
 		} catch (Exception e) {

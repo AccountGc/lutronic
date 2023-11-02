@@ -693,7 +693,7 @@ public class DrawingHelper {
 	}
 	
 	/**
-	 * 최신버전 문서
+	 * 최신버전 도면
 	 */
 	public EPMDocument latest(String oid) throws Exception {
 		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);

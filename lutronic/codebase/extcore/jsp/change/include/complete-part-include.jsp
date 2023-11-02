@@ -135,7 +135,7 @@ if (create || update) {
 				alert(item.number + " 품목은 이미 추가 되어있습니다.");
 			}
 		})
-		callBack(true);
+		callBack(true, false, "");
 	}
 
 	function deleteRow104() {
