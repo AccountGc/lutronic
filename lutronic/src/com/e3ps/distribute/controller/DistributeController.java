@@ -18,19 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import wt.doc.WTDocument;
-import wt.epm.EPMDocument;
-import wt.fc.ReferenceFactory;
-import wt.org.WTUser;
-import wt.part.WTPart;
-import wt.session.SessionHelper;
-import wt.util.WTException;
-import wt.util.WTRuntimeException;
-import wt.vc.baseline.Baseline;
-import wt.vc.baseline.ManagedBaseline;
-import wt.vc.views.View;
-import wt.vc.views.ViewHelper;
-
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.beans.ECOData;
@@ -55,14 +42,24 @@ import com.e3ps.groupware.notice.Notice;
 import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.groupware.service.GroupwareHelper;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.PartSearchHelper;
-import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
+
+import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
+import wt.org.WTUser;
+import wt.part.QuantityUnit;
+import wt.part.WTPart;
+import wt.session.SessionHelper;
+import wt.util.WTException;
+import wt.util.WTRuntimeException;
+import wt.vc.baseline.ManagedBaseline;
 
 @Controller
 @RequestMapping(value = "/distribute/**")
@@ -212,22 +209,26 @@ public class DistributeController extends BaseController {
 		return model;
 	}
 	
-	/**	품목 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listPart")
-	public ModelAndView listPart(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "품목 검색 페이지")
+	@GetMapping(value = "/listPart")
+	public ModelAndView listPart() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
+		
 		ModelAndView model = new ModelAndView();
-		
-		
-		model.addObject("ecoPredate", DateUtil.getPreviousMonth(3));
-		model.addObject("menu", "menu11");
-		model.addObject("module","distribute");
-		model.addObject("folderType","PART");
-		model.addObject("production","false");
-		model.setViewName("distribute:/distribute/listPart");
+		model.addObject("modelList", modelList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
+		model.addObject("unitList", unitList);
+		model.setViewName("/extcore/jsp/distribute/distribute-part-list.jsp");
 		return model;
 	}
 	
@@ -317,37 +318,16 @@ public class DistributeController extends BaseController {
 //		return model;
 //	}
 	
-	/**	EO 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listEO")
-	public ModelAndView listEO(HttpServletRequest request, HttpServletResponse response) {
+	@Description(value = "EO 검색 페이지")
+	@GetMapping(value = "/listEO")
+	public ModelAndView listEO() throws Exception{
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu21");
-		model.addObject("module","distribute");
-		model.setViewName("distribute:/distribute/listEO");
+		model.addObject("modelList", modelList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.setViewName("/extcore/jsp/distribute/distribute-eo-list.jsp");
 		return model;
-	}
-	
-	/** EO 검색  Action
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/listEOAction")
-	public List<Map<String,Object>> listEOAction(HttpServletRequest request, HttpServletResponse response){
-		List<Map<String,Object>> result = null;
-		try {
-			 result = ECOSearchHelper.service.listAUIEOAction(request, response);//ECRSearchHelper.service.listECRAction(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-		
 	}
 	
 	@ResponseBody
@@ -363,37 +343,14 @@ public class DistributeController extends BaseController {
 		return map;
 	}
 		
-	/**	ECO 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listECO")
+	@Description(value="ECO 검색 페이지")
+	@GetMapping(value = "/listECO")
 	public ModelAndView listECO(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu22");
-		model.addObject("module","distribute");
-		model.setViewName("distribute:/distribute/listECO");
+		model.addObject("lifecycleList", lifecycleList);
+		model.setViewName("/extcore/jsp/distribute/distribute-eco-list.jsp");
 		return model;
-	}
-	
-	/** ECO 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/listECOAction")
-	public List<Map<String,Object>> listECOAction(HttpServletRequest request, HttpServletResponse response){
-		List<Map<String,Object>> result = null;
-		try {
-			result = ECOSearchHelper.service.listAUIECOAction(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return result;
-		
 	}
 	
 	@ResponseBody
@@ -410,70 +367,39 @@ public class DistributeController extends BaseController {
 		
 	}
 	
-	/** 문서 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/listDocument")
-	public ModelAndView listDocument(HttpServletRequest request, HttpServletResponse response) {
-		
+	@Description(value = "문서검색 페이지")
+	@GetMapping(value = "/listDocument")
+	public ModelAndView listDocument() throws Exception{
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		ModelAndView model = new ModelAndView();
-		model.addObject("predate_modify", DateUtil.getPreviousMonth(3));
-		model.addObject("menu", "menu31");
-		model.addObject("module","distribute");
-		model.addObject("folderType","DOC");
-		model.setViewName("distribute:/distribute/listDocument");
+		model.addObject("preserationList", preserationList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("modelList", modelList);
+		model.addObject("docTypeList", docTypeList);
+		model.setViewName("/extcore/jsp/distribute/distribute-document-list.jsp");
 		return model;
 	}
 	
-	/** 문서 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/listDocumentAction")
-	public List<Map<String,Object>> listDocumentAction(HttpServletRequest request, HttpServletResponse response){
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		try {
-			list = DocumentHelper.service.listAUIDocumentAction(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-	
-	/** 문서 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/listPagingDocumentAction")
-	public Map<String,Object> listPagingDocumentAction(HttpServletRequest request, HttpServletResponse response){
-		Map<String,Object> map =  new HashMap<>();
-		try {
-			map = DocumentHelper.service.listPagingAUIDocumentAction(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return map;
-	}
-	
-	/** 금형 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
+	@Description(value = "금형 검색 페이지")
 	@RequestMapping("/listMold")
-	public ModelAndView listMold(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView listMold() throws Exception{
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu41");
-		model.addObject("module","distribute");
-		model.setViewName("distribute:/distribute/listMold");
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("moldTypeList", moldTypeList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("sessionUser", sessionUser);
+		model.setViewName("/extcore/jsp/distribute/distribute-mold-list.jsp");
 		return model;
 	}
 	
