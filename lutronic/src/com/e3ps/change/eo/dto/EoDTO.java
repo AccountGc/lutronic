@@ -76,9 +76,9 @@ public class EoDTO {
 		setCreator(eo.getCreatorFullName());
 		setCreatedDate(eo.getCreateTimestamp().toString().substring(0, 10));
 		setModifiedDate(eo.getModifyTimestamp().toString().substring(0, 10));
-		setEoCommentA(eo.getEoCommentA());
-		setEoCommentB(eo.getEoCommentB());
-		setEoCommentC(eo.getEoCommentC());
+		setEoCommentA(eo.getEoCommentA()==null?"":eo.getEoCommentA());
+		setEoCommentB(eo.getEoCommentB()==null?"":eo.getEoCommentB());
+		setEoCommentC(eo.getEoCommentC()==null?"":eo.getEoCommentC());
 	}
 
 	private ArrayList<Map<String, String>> getModel(String model) throws Exception {
