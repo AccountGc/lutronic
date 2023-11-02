@@ -677,7 +677,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			DocumentType docType = DocumentType.toDocumentType((String) params.get("docType"));
 			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
 			String description = StringUtil.checkNull((String) params.get("description"));
-			boolean temprary = params.get("description").equals("true")?true:false;
+			boolean temprary = (boolean) params.get("temprary");
 			
 			// 결재
 			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");

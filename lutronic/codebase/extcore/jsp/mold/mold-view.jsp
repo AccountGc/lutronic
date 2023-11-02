@@ -27,7 +27,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			}
 			%>
 			<%
-			if(dto.getState().equals("INWORK") || dto.getState().equals("REWORK") || dto.getState().equals("TEMPRARY")){
+			if(dto.getState().equals("INWORK") || dto.getState().equals("REWORK")){
 			%>
 				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 				<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
