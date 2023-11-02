@@ -90,7 +90,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</tr>
 			<tr>
 				<th>프로젝트코드</th>
-				<td class="indent5">
+				<td class="indent5" colspan="5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<%

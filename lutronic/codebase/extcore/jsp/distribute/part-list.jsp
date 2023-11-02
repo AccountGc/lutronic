@@ -1,7 +1,9 @@
+<%@page import="wt.part.QuantityUnit"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.drawing.service.DrawingHelper"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -10,12 +12,7 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-boolean popup = false;
-if (request.getParameter("popup") != null) {
-	popup = true;
-}
+QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>
 <html>
@@ -25,13 +22,24 @@ if (request.getParameter("popup") != null) {
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
+		
+		<input name="state" type="hidden"  value="APPROVED" />
+
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						완제품 검색
+					</div>
+				</td>
+			</tr>
+		</table>
 
 		<table class="search-table">
 			<colgroup>
@@ -46,8 +54,8 @@ if (request.getParameter("popup") != null) {
 				<th>품목분류</th>
 				<td class="indent5">
 					<input type="hidden" name="oid" id="oid">
-					<input type="hidden" name="location" id="location">
-					<span id="locationText">/Default/PART_Drawing </span>
+					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
+					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
@@ -82,7 +90,7 @@ if (request.getParameter("popup") != null) {
 			</tr>
 			<tr>
 				<th>프로젝트코드</th>
-				<td class="indent5">
+				<td class="indent5" colspan="5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<%
@@ -93,37 +101,6 @@ if (request.getParameter("popup") != null) {
 						}
 						%>
 					</select>
-				</td>
-				<th>상태</th>
-				<td class="indent5">
-					<select name="state" id="state" class="width-200">
-						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
-					</select>
-				</td>
-				<th>REV</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="true" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>최신REV</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="">
-						<div class="state p-success">
-							<label>
-								<b>모든REV</b>
-							</label>
-						</div>
-					</div>
 				</td>
 			</tr>
 			<tr class="hidden">
@@ -163,10 +140,13 @@ if (request.getParameter("popup") != null) {
 				<td class="indent5">
 					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (QuantityUnit unit : unitList) {
+						%>
+						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 				<th>무게</th>
@@ -238,58 +218,21 @@ if (request.getParameter("popup") != null) {
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
-					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
+					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
 						<option value="30">30</option>
 						<option value="50">50</option>
-						<option value="100">100</option>
+						<option value="100" selected="selected">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn">
-					<input type="button" value="초기화" title="초기화" id="btnReset">
-					<%
-					if (popup) {
-					%>
-					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
-					<%
-					}
-					%>
+					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
 
-		<%
-		if (popup) {
-		%>
-		<table>
-			<colgroup>
-				<col width="230">
-				<col width="10">
-				<col width="*">
-			</colgroup>
-			<tr>
-				<td valign="top">
-					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
-						<jsp:param value="list" name="mode" />
-						<jsp:param value="633" name="height" />
-					</jsp:include>
-				</td>
-				<td valign="top">&nbsp;</td>
-				<td valign="top">
-					<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
-					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-				</td>
-			</tr>
-		</table>
-		<%
-		} else {
-		%>
 		<table>
 			<colgroup>
 				<col width="230">
@@ -302,20 +245,18 @@ if (request.getParameter("popup") != null) {
 						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="670" name="height" />
+						<jsp:param value="605" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
 			</tr>
 		</table>
-		<%
-		}
-		%>
+
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
@@ -479,12 +420,15 @@ if (request.getParameter("popup") != null) {
 			}
 
 			function loadGridData() {
+				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/distribute/listProduction");
-				const field = [ "_psize", "locationName", "islastversion", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "manufacture", "mat", "finish", "remarks", "specification",
-						"ecoNo", "eoNo" ];
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
+					"ecoNo", "eoNo","creatorOid","latest" ,"specification"];
 				params = toField(params, field);
+				params.latest = false;
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -495,10 +439,12 @@ if (request.getParameter("popup") != null) {
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("partNumber");
 				const columns = loadColumnLayout("part-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -517,10 +463,11 @@ if (request.getParameter("popup") != null) {
 				selectbox("mat");
 				selectbox("finish");
 				selectbox("manufacture");
+				selectbox("_psize");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
-				selectbox("_psize");
+				$("#_psize").bindSelectSetValue(100);
 			});
 
 			function editBOM() {
@@ -529,16 +476,16 @@ if (request.getParameter("popup") != null) {
 					alert("편집할 부품을 선택하세요.");
 					return false;
 				}
-				const oid = items[0].oid;
-				const url = getCallUrl("/part/bom?oid=" + oid);
-				popup(url, 1600, 800);
+				
+				if (items.length > 1) {
+					alert("한개만 선택해 주세요.");
+					return false;
+				}
+				const oid = items[0].part_oid;
+				var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
+				_popup(url, "1400", "600", "n");
+				
 			};
-
-			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
@@ -555,16 +502,6 @@ if (request.getParameter("popup") != null) {
 				AUIGrid.resize(myGridID);
 			});
 
-			function addBtn() {
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("추가할 부품을 선택하세요.");
-					return false;
-				}
-				opener.append(items);
-				self.close();
-			}
-
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');
 				// 버근가..
@@ -574,7 +511,7 @@ if (request.getParameter("popup") != null) {
 					const display = style.getPropertyValue("display");
 					if (display === "none") {
 						el.style.display = "table-row";
-						target.value = "접기";
+						target.value = "▲접기";
 						selectbox("state");
 						selectbox("model");
 						selectbox("productmethod");
@@ -589,7 +526,7 @@ if (request.getParameter("popup") != null) {
 						twindate("modified");
 					} else {
 						el.style.display = "none";
-						target.value = "펼치기";
+						target.value = "▼펼치기";
 						selectbox("state");
 						selectbox("model");
 						selectbox("productmethod");
