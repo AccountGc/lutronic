@@ -5,6 +5,7 @@
 <head>
 <link rel="stylesheet" href="../login/css/login.css" type="text/css" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
 <title>LUTRONIC PDM</title>
 </head>
 <body>
@@ -40,6 +41,7 @@
 				<div class="col align-items-center flex-col">
 					<div class="text sign-in">
 						<h2>LUTRONIC</h2>
+						<h2>PDM SYSTEM</h2>
 					</div>
 					<div class="img sign-in"></div>
 				</div>
@@ -48,6 +50,7 @@
 		<script type="text/javascript">
 			function _login() {
 				document.forms[0].submit();
+				$checkId = $("#checkId");
 			}
 
 			document.addEventListener("keydown", function(event) {
@@ -69,6 +72,58 @@
 			setTimeout(() => {
 				container.classList.add("sign-in")
 			}, 200);
+			
+			//아이디저장
+			$(document).ready(function(){
+				var idChk = getCookie("idChk");
+				if(idChk!=""){
+					$("#j_username").val(idChk); 
+				}
+				 
+				if($("#j_username").val() != ""){ 
+					$("#idSaveCheck").attr("checked", true); 
+				}
+				 
+				$("#checkId").change(function(){ 
+					if($("#checkId").is(":checked")){ 
+						setCookie("idChk", $("#j_username").val(), 7); 
+					}else{ 
+						deleteCookie("idChk");
+					}
+				});
+				 
+				$("#j_username").keyup(function(){ 
+					if($("#checkId").is(":checked")){
+						setCookie("idChk", $("#j_username").val(), 7); 
+					}
+				});
+			});
+			function setCookie(cookieName, value, exdays){
+			    var exdate = new Date();
+			    exdate.setDate(exdate.getDate() + exdays);
+			    var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString());
+			    document.cookie = cookieName + "=" + cookieValue;
+			}
+			 
+			function deleteCookie(cookieName){
+				var expireDate = new Date();
+				expireDate.setDate(expireDate.getDate() - 1);
+				document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
+			}
+				 
+			function getCookie(cookieName) {
+				cookieName = cookieName + '=';
+				var cookieData = document.cookie;
+				var start = cookieData.indexOf(cookieName);
+				var cookieValue = '';
+				if(start != -1){
+					start += cookieName.length;
+					var end = cookieData.indexOf(';', start);
+					if(end == -1)end = cookieData.length;
+					cookieValue = cookieData.substring(start, end);
+				}
+				return unescape(cookieValue);
+			}
 		</script>
 	</form>
 </body>
