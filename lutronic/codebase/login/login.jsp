@@ -49,14 +49,7 @@
 		<script type="text/javascript">
 			function _login() {
 				document.forms[0].submit();
-				$checkId = $("#checkId");
-				
-				if(document.loginForm.checkId.checked === true) {
-					setCookie("j_username", document.loginForm.j_username.value, 30);
-				} else {
-					setCookie("j_username", document.loginForm.j_username.value, 0);
-				}
-			}
+			};
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
@@ -66,8 +59,30 @@
 			})
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const j_username = document.getElementById("j_username").focus();
+				const j_username = document.getElementById("j_username");
+				const j_password = document.getElementById("j_password");
+				const checkId = document.getElementById("checkId");
+				
+				//
+				const savedUsername = localStorage.getItem("cookie");
+				if (savedUsername) {
+					j_username.value = savedUsername;
+					checkId.checked = true;
+					j_password.focus();
+				} else {
+					j_username.focus();
+				}
 			})
+			
+			//아이디 저장하기 위해 체크박스에 이벤트 리스너를 추가합니다.
+			checkId.addEventListener("change", function() {
+				const j_username = document.getElementById("j_username");
+				if (checkId.checked) {
+					localStorage.setItem("cookie", j_username.value);
+				} else {
+					localStorage.removeItem("cookie");
+				}
+			});
 			
 			const container = document.getElementById("container")
 			toggle = () => {
@@ -78,34 +93,6 @@
 				container.classList.add("sign-in")
 			}, 200);
 			
-			//아이디저장
-			window.onload = function() {
-		        if (getCookie("j_username")) {
-		            document.loginForm.j_username.value = getCookie("j_username");
-		            document.loginForm.checkId.checked = true;
-// 		            const j_password = document.getElementById("j_password").focus();
-		        }
-		    }
-			function setCookie(name, value, expiredays) {
-			    const todayDate = new Date();
-			    todayDate.setDate(todayDate.getDate() + expiredays);
-			    document.cookie = name + "=" + escape(value) + "; path=/; expires="
-			        + todayDate.toGMTString() + ";"
-			}
-				 
-			function getCookie(name) {
-			    const search = name + "=";
-			    if (document.cookie.length > 0) {
-			        offset = document.cookie.indexOf(search);
-			        if (offset != -1) {
-			            offset += search.length;
-			            end = document.cookie.indexOf(";", offset);
-			            if (end == -1)
-			                end = document.cookie.length;
-			            return unescape(document.cookie.substring(offset, end));
-			        }
-			    }
-			}
 		</script>
 	</form>
 </body>
