@@ -5,11 +5,10 @@
 <head>
 <link rel="stylesheet" href="../login/css/login.css" type="text/css" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.min.js" /></script>
 <title>LUTRONIC PDM</title>
 </head>
 <body>
-	<form method="post" action="j_security_check">
+	<form method="post" action="j_security_check" id="loginForm">
 		<div id="container" class="container">
 			<div class="row">
 				<div class="col align-items-center flex-col sign-up">
@@ -28,7 +27,7 @@
 								<i class='bx bxs-lock-alt'></i>
 								<input type="password" placeholder="비밀번호" id="j_password" name="j_password">
 							</div>
-							<input type="checkbox" name="checkId" id="checkId" value="checkbox" style="margin-bottom: 20px;">
+							<input type="checkbox" name="checkId" id="checkId" style="margin-bottom: 20px;">
 							<label for="checkId">&nbsp;ID저장</label>
 							<input type="button" id="login" value="로그인" onclick="_login();">
 						</div>
@@ -51,6 +50,12 @@
 			function _login() {
 				document.forms[0].submit();
 				$checkId = $("#checkId");
+				
+				if(document.loginForm.checkId.checked === true) {
+					setCookie("j_username", document.loginForm.j_username.value, 30);
+				} else {
+					setCookie("j_username", document.loginForm.j_username.value, 0);
+				}
 			}
 
 			document.addEventListener("keydown", function(event) {
@@ -74,55 +79,32 @@
 			}, 200);
 			
 			//아이디저장
-			$(document).ready(function(){
-				var idChk = getCookie("idChk");
-				if(idChk!=""){
-					$("#j_username").val(idChk); 
-				}
-				 
-				if($("#j_username").val() != ""){ 
-					$("#idSaveCheck").attr("checked", true); 
-				}
-				 
-				$("#checkId").change(function(){ 
-					if($("#checkId").is(":checked")){ 
-						setCookie("idChk", $("#j_username").val(), 7); 
-					}else{ 
-						deleteCookie("idChk");
-					}
-				});
-				 
-				$("#j_username").keyup(function(){ 
-					if($("#checkId").is(":checked")){
-						setCookie("idChk", $("#j_username").val(), 7); 
-					}
-				});
-			});
-			function setCookie(cookieName, value, exdays){
-			    var exdate = new Date();
-			    exdate.setDate(exdate.getDate() + exdays);
-			    var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString());
-			    document.cookie = cookieName + "=" + cookieValue;
-			}
-			 
-			function deleteCookie(cookieName){
-				var expireDate = new Date();
-				expireDate.setDate(expireDate.getDate() - 1);
-				document.cookie = cookieName + "= " + "; expires=" + expireDate.toGMTString();
+			window.onload = function() {
+		        if (getCookie("j_username")) {
+		            document.loginForm.j_username.value = getCookie("j_username");
+		            document.loginForm.checkId.checked = true;
+// 		            const j_password = document.getElementById("j_password").focus();
+		        }
+		    }
+			function setCookie(name, value, expiredays) {
+			    const todayDate = new Date();
+			    todayDate.setDate(todayDate.getDate() + expiredays);
+			    document.cookie = name + "=" + escape(value) + "; path=/; expires="
+			        + todayDate.toGMTString() + ";"
 			}
 				 
-			function getCookie(cookieName) {
-				cookieName = cookieName + '=';
-				var cookieData = document.cookie;
-				var start = cookieData.indexOf(cookieName);
-				var cookieValue = '';
-				if(start != -1){
-					start += cookieName.length;
-					var end = cookieData.indexOf(';', start);
-					if(end == -1)end = cookieData.length;
-					cookieValue = cookieData.substring(start, end);
-				}
-				return unescape(cookieValue);
+			function getCookie(name) {
+			    const search = name + "=";
+			    if (document.cookie.length > 0) {
+			        offset = document.cookie.indexOf(search);
+			        if (offset != -1) {
+			            offset += search.length;
+			            end = document.cookie.indexOf(";", offset);
+			            if (end == -1)
+			                end = document.cookie.length;
+			            return unescape(document.cookie.substring(offset, end));
+			        }
+			    }
 			}
 		</script>
 	</form>
