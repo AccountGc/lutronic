@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
@@ -7,6 +8,9 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -387,6 +391,12 @@
 					}
 					parent.closeLayer();
 				});
+			}
+			
+			function exportExcel() {
+			    const exceptColumnFields = [ "enabled" ];
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("코드체계관리 리스트", "코드체계관리", "코드체계관리 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>

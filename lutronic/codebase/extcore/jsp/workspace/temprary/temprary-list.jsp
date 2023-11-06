@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="wt.doc.DocumentType"%>
@@ -6,6 +7,9 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -242,9 +246,8 @@
 			});
 
 			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("임시저장함 리스트", "임시저장함", "임시저장함 리스트", [], sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {

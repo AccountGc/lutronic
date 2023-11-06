@@ -1,7 +1,9 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -77,7 +79,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 		</table>
-
 
 		<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
@@ -290,6 +291,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+				const exceptColumnFields = [ "reads", "point" ];
+				const sessionName = "<%=user.getFullName()%>";
+				exportToExcel("결재함 리스트", "결재함", "결재함 리스트", exceptColumnFields, sessionName);
+			}
 		</script>
 	</form>
 </body>

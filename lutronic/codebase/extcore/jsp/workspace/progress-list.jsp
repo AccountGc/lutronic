@@ -1,7 +1,9 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -233,6 +235,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+				const exceptColumnFields = [ "point" ];
+				const sessionName = "<%=user.getFullName()%>";
+				exportToExcel("진행함 리스트", "진행함", "진행함 리스트", exceptColumnFields, sessionName);
+			}
 		</script>
 	</form>
 </body>

@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -6,6 +7,7 @@
 String oid = (String) request.getAttribute("oid");
 JSONArray list = (JSONArray) request.getAttribute("list");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -397,6 +399,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("조직도 리스트", "조직도", "조직도 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>

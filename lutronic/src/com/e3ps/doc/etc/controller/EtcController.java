@@ -44,12 +44,26 @@ public class EtcController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
+		String location = EtcHelper.manager.toLocation(type);
+		String title = "";
+		if(location.contains("생산본부")){
+			title = "생산본부";
+		}else if(location.contains("병리연구")){
+			title = "병리연구";
+		}else if(location.contains("임상개발")){
+			title = "임상개발";
+		}else if(location.contains("RA팀")){
+			title = "RA팀";
+		}else if(location.contains("화장품")){
+			title = "화장품";
+		}
 		ModelAndView model = new ModelAndView();
 		model.addObject("type", type);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
+		model.addObject("title", title);
 		model.setViewName("/extcore/jsp/document/etc/etc-list.jsp");
 		return model;
 	}

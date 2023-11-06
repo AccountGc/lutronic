@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
@@ -9,6 +10,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -346,6 +348,11 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 			$("#createBtn").click(function(){
 				location.href = getCallUrl("/ecpr/create");
 			});
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("ECPR 리스트", "ECPR", "ECPR 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>

@@ -120,7 +120,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('rohs-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('rohs-list');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -305,6 +305,11 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    exportToExcel("물질 리스트", "물질", "물질 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>

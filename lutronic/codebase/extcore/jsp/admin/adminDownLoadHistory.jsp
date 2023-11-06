@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.fc.PersistenceHelper"%>
 <%@page import="com.e3ps.common.code.NumberCodeType"%>
@@ -6,7 +7,7 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// NumberCode c = NumberCode.newNumberCode();
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -289,6 +290,11 @@
 			$("#searchBtn").click(function() {
 				loadGridData();
 			});
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("다운로드 이력관리 리스트", "다운로드 이력관리", "다운로드 이력관리 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>

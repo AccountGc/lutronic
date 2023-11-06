@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.part.QuantityUnit"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
@@ -13,6 +14,7 @@ ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAtt
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -215,8 +217,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-part-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-part-list');">
 					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 				</td>
@@ -513,7 +515,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("partNumber");
-				const columns = loadColumnLayout("part-list");
+				const columns = loadColumnLayout("distribute-part-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -609,6 +611,12 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						twindate("modified");
 					}
 				}
+			}
+			
+			function exportExcel() {
+				const exceptColumnFields = [ "_3d", "_2d", "step", "dxf", "pdf" ];
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("품목 리스트", "품목", "품목 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>

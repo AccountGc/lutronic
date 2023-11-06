@@ -232,6 +232,11 @@ List<Map<String,String>> typeList = (List<Map<String,String>>) request.getAttrib
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    exportToExcel("파일 검색 리스트", "파일 검색", "파일 검색 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>

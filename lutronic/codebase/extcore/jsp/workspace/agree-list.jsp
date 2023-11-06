@@ -1,7 +1,9 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -293,9 +295,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			}
 
 			function exportExcel() {
-				const exceptColumnFields = [ "reads", "point" ];
-				const sessionName = document.getElementById("sessionName").value;
-				exportToExcel("합의함 리스트", "검토함", "검토함 리스트", exceptColumnFields, sessionName);
+				const exceptColumnFields = [ "reads" ];
+				const sessionName = "<%=user.getFullName()%>";
+				exportToExcel("합의함 리스트", "합의함", "합의함 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

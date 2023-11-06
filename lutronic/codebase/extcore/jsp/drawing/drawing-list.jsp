@@ -273,7 +273,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');">
 					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);"> 
 				</td>
 				<td class="right">
@@ -538,9 +538,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			});
 
 			function exportExcel() {
-// 				const exceptColumnFields = [ "primary" ];
-// 				const sessionName = document.getElementById("sessionName").value;
-// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+			    const exceptColumnFields = [ "step", "dxf", "pdf", "thum" ];
+			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    exportToExcel("도면 리스트", "도면", "도면 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {

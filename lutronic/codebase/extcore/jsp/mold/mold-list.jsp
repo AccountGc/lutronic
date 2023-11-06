@@ -367,6 +367,11 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    exportToExcel("금형 리스트", "금형", "금형 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>

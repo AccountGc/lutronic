@@ -1,8 +1,8 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -16,7 +16,9 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> <input type="hidden" name="lastNum" id="lastNum"> <input type="hidden" name="curPage" id="curPage"> <input type="hidden" name="oid" id="oid">
+		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="curPage" id="curPage"> 
+		<input type="hidden" name="oid" id="oid">
 
 		<table class="button-table">
 			<tr>
@@ -126,7 +128,8 @@
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div> 
+		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
 		<script type="text/javascript">
 			let myGridID;
@@ -296,9 +299,8 @@
 			});
 
 			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("EO&ECO 전송 현황 리스트", "EO&ECO 전송 현황", "EO&ECO 전송 현황 리스트", [], sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {

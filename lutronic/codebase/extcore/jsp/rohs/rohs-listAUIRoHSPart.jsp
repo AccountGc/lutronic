@@ -1,8 +1,8 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -269,6 +269,11 @@
 			function append(items){
 				$("#partNumber").val(items[0].item.number);
 				$("#partOid").val(items[0].item.part_oid);
+			}
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("부품 현황 리스트", "부품 현황", "부품 현황 리스트", [], sessionName);
 			}
 		</script>
 	</form>

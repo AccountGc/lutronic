@@ -1,8 +1,8 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -203,6 +203,11 @@
 					const rowIndex = checked[i].rowIndex;
 					AUIGrid.removeRow(partGridID, rowIndex);
 				}
+			}
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("제품 현황 리스트", "제품 현황", "제품 현황 리스트", [], sessionName);
 			}
 		</script>
 	</form>

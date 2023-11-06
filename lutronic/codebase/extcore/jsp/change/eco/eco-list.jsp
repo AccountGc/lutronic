@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
@@ -5,6 +6,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -420,6 +422,11 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 						AUIGrid.resize(myGridID104);
 					}
 				}
+			}
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("ECO 리스트", "ECO", "ECO 리스트", [], sessionName);
 			}
 		</script>
 	</form>

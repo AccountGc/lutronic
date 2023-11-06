@@ -1,5 +1,9 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -246,6 +250,11 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+				const sessionName = "<%=user.getFullName()%>";
+				exportToExcel("ECA활동함 리스트", "ECA활동함", "ECA활동함 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>

@@ -7,6 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -240,6 +241,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		function create() {
 			const url = getCallUrl("/notice/create");
 			_popup(url, 1500, 650, "n");
+		}
+		
+		function exportExcel() {
+			const exceptColumnFields = [ "isPopup", "secondary" ];
+			const sessionName = "<%=user.getFullName()%>";
+			exportToExcel("공지사항 리스트", "공지사항", "공지사항 리스트", exceptColumnFields, sessionName);
 		}
 	</script>
 </body>

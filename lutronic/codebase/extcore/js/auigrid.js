@@ -218,7 +218,7 @@ function exportToExcel(fileName, headerName, sheetName, exceptColumnFields, crea
 		footers: [{
 			text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
 		}, {
-			text: "COPYRIGHT 2023 KEKOREA", height: 24, style:
+			text: "COPYRIGHT 2023 LUTRONIC", height: 24, style:
 				{ textAlign: "right", fontWeight: "bold", color: "#ffffff", background: "#222222" }
 		}]
 	});

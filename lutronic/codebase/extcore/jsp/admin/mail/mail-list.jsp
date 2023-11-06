@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="com.e3ps.org.MailUser"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.fc.PersistenceHelper"%>
@@ -6,6 +7,9 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -266,6 +270,12 @@
 						parent.closeLayer();
 					}
 				}, "PUT");
+			}
+			
+			function exportExcel() {
+			    const exceptColumnFields = [ "enable" ];
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("외부메일관리 리스트", "외부메일관리", "외부메일관리 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>

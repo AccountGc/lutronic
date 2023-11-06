@@ -9,6 +9,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("formType");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -249,6 +250,11 @@ ArrayList<NumberCode> formType = (ArrayList<NumberCode>) request.getAttribute("f
 		function create() {
 			const url = getCallUrl("/form/create");
 			document.location.href = url;
+		}
+		
+		function exportExcel() {
+		    const sessionName = "<%=user.getFullName()%>";
+		    exportToExcel("문서 템플릿관리 리스트", "문서 템플릿관리", "문서 템플릿관리 리스트", [], sessionName);
 		}
 	</script>
 </body>
