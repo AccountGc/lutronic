@@ -37,9 +37,9 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<tr>
 				<th class="req lb">도면분류</th>
 				<td class="indent5" colspan="3">
-					<span id="locationName">
-               			/Default/PART_Drawing
-               		</span>
+					<input type="hidden" name="location" id="location" value="<%=dto.getLocation()%>">
+					<span id="locationText"><%=dto.getLocation()%></span>
+					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 				</td>
 			</tr>
 			<tr>
@@ -104,6 +104,12 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			</tr>
 		</table>
 		<script type="text/javascript">
+			function folder() {
+				const location = decodeURIComponent("/Default/PART_Drawing");
+				const url = getCallUrl("/folder/popup?location=" + location);
+				_popup(url, 500, 600, "n");
+			}
+			
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID8);
