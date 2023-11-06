@@ -13,7 +13,7 @@
 				</h5>
 			</div>
 			<div class="modal-body" style="width: 100%; margin: 0 auto;">
-				<textarea rows="10" name="data" style="width: 95%; box-sizing: border-box;"></textarea>
+				<textarea rows="10" name="data" id="replyA" style="width: 95%; box-sizing: border-box;"></textarea>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-success" onclick="_reply();">
@@ -39,7 +39,7 @@
 				</h5>
 			</div>
 			<div class="modal-body" style="width: 100%; margin: 0 auto;">
-				<textarea rows="10" name="data" style="width: 95%; box-sizing: border-box;"></textarea>
+				<textarea rows="10" name="data" id="replyB" style="width: 95%; box-sizing: border-box;"></textarea>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-success" onclick="modify();">
@@ -95,7 +95,7 @@
 			if(data.result) {
 				document.getElementById("moid").value = oid;
 				var comment = data.comments;
-				comment = comment.replaceAll("<br>","\n");
+				comment = comment.replaceAll("<br/>","\n");
 				document.getElementsByName("data")[1].value = comment;
 			} else {
 				alert(data.msg);
@@ -134,9 +134,10 @@
 
 	function modify() {
 		const oid = document.getElementById("moid").value;
-		const comment = document.getElementsByName("data")[1];
+		const comment = document.getElementById("replyB").value;
+// 		const comment = document.getElementsByName("data")[1];
 		const depth = document.getElementById("mdepth").value;
-		if (comment.value === "") {
+		if (comment === "") {
 			alert("수정 내용을 입력하세요.");
 			comment.focus();
 			return false;
@@ -145,9 +146,10 @@
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
-		const params = {
+		let params = new Object();
+		params = {
 			oid : oid,
-			comment : comment.value,
+			comment : comment,
 			depth : depth
 		}
 		

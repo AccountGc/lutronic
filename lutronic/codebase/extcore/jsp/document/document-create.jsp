@@ -63,7 +63,7 @@ iframe {
 					<span id="locationText"> /Default/문서 </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 				</td>
-				<th class="req">문서 템플릿</th>
+				<th class="req lb">문서 템플릿</th>
 				<td class="indent5">
 					<select name="formType" id="formType" class="width-200" onchange="loadForm();">
 						<option value="">선택</option>
@@ -86,8 +86,8 @@ iframe {
 				<td class="indent5">
 					<input type="text" name="documentName" id="documentName" class="width-300">
 				</td>
-				<th class="req">결재방식</th>
-				<td>
+				<th class="req lb">결재방식</th>
+				<td class="indent5">
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
@@ -125,7 +125,7 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th class="req">보존기간</th>
+				<th class="req lb">보존기간</th>
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
 						<%
@@ -138,7 +138,7 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th>프로젝트코드</th>
+				<th class="lb">프로젝트코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -166,11 +166,11 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th>내부 문서번호</th>
+				<th class="req lb">내부 문서번호</th>
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
 				</td>
-				<th>작성자</th>
+				<th class="lb">작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" class="width-200">
 				</td>
@@ -205,7 +205,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">결재</th>
-				<td colspan="5">
+				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -214,7 +214,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">외부 메일 지정</th>
-				<td colspan="5">
+				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -372,6 +372,11 @@ iframe {
 
 				if (isNull(documentType.value)) {
 					alert("문서유형을 선택해주세요.");
+					return false;
+				}
+				
+				if (isNull(interalnumber.value)) {
+					alert("내부문서번호를 입력해주세요.");
 					return false;
 				}
 

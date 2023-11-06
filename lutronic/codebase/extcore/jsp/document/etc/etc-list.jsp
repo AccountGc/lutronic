@@ -495,7 +495,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				items.forEach((item)=>{
 				    oids.push(item.oid)
 				});
-				document.location.href = "/Windchill/eSolution/content/downloadZIP?oids=" + oids;
+				document.location.href = "/Windchill/plm/content/downloadZIP?oids=" + oids;
 			}
 		</script>
 	</form>

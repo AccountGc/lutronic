@@ -70,7 +70,7 @@ public class StandardCommentsService extends StandardManager implements Comments
 				QuerySpec query = new QuerySpec();
 				int idx = query.appendClassList(Comments.class, true);
 				long longOid = CommonUtil.getOIDLongValue(oid);
-				QuerySpecUtils.toEquals(query, idx, Comments.class, "replyReference.key.id", longOid);
+				QuerySpecUtils.toEquals(query, idx, Comments.class, "thePersistInfo.theObjectIdentifier.id", longOid);
 				QueryResult result = PersistenceHelper.manager.find(query);
 				
 				while (result.hasMoreElements()) {
