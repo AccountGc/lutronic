@@ -146,8 +146,7 @@
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
-		let params = new Object();
-		params = {
+		const params = {
 			oid : oid,
 			comment : comment,
 			depth : depth
