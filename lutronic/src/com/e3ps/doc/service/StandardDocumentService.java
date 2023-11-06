@@ -36,6 +36,7 @@ import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.groupware.workprocess.AppPerLink;
 import com.e3ps.groupware.workprocess.AsmApproval;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -174,8 +175,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			MailUserHelper.service.deleteLink(oid);
 
 			// 결재 이력 삭제
-			doc = (WTDocument) WorkspaceHelper.service.removeHistory(doc);
-
+			WFItemHelper.service.deleteWFItem(doc);
 			// 다 통과시 삭제
 			PersistenceHelper.manager.delete(doc);
 

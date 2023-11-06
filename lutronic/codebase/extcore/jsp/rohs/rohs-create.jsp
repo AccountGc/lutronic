@@ -276,7 +276,7 @@
 					alert("입력된 물질번호가 없습니다.");
 					return;
 				}
-				params.rohsName = $("#rohsNumber").val();
+				params.rohsNumber = $("#rohsNumber").val();
 				var url = getCallUrl("/rohs/rohsCheck");
 				call(url, params, function(data) {
 					if(data.result){

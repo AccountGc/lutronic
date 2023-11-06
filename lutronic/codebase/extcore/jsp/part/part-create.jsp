@@ -26,7 +26,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<form>
 		<input type="hidden" name="wtPartType"		id="wtPartType"		 	value="separable"     />
 		<input type="hidden" name="source"			id="source"	      		value="make"            />
-		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_Default"  />
+		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
 		<input type="hidden" name="view"			id="view"        		value="Design" />
 		
 		<table class="button-table">

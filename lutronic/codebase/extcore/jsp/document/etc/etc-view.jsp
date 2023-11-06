@@ -333,6 +333,20 @@ const oid = document.getElementById("oid").value;
 			}
 		}, "DELETE");
 	}
+	
+	//내용인쇄
+	function print() {
+		const content = document.getElementById("content").value;
+		const printWindow = window.open('', '_blank'); // 새 창 열기
+		printWindow.document.open();
+		printWindow.document.write('<html><head><title></title></head><body>');
+		// 출력할 내용 추가
+		printWindow.document.write('<pre>' + content + '</pre>');
+
+		printWindow.document.write('</body></html>');
+		printWindow.document.close();
+		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
+	}
 
 	//일괄 다운로드
 	function batchSecondaryDown() {
