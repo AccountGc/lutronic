@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
@@ -7,6 +8,7 @@
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -136,8 +138,8 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('eo-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('eo-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-eo-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-eo-list');">
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
@@ -307,7 +309,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("number");
-				const columns = loadColumnLayout("eo-list");
+				const columns = loadColumnLayout("distribute-eo-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -375,6 +377,11 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 						AUIGrid.resize(myGridID104);
 					}
 				}
+			}
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("EO 리스트", "EO", "EO 리스트", [], sessionName);
 			}
 		</script>
 	</form>

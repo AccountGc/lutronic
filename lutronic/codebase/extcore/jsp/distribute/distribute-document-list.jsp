@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="wt.doc.DocumentType"%>
@@ -11,6 +12,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -163,8 +165,8 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-document-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-document-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -407,7 +409,7 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("number");
-				const columns = loadColumnLayout("document-list");
+				const columns = loadColumnLayout("distribute-document-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -429,9 +431,9 @@ JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 			});
 
 			function exportExcel() {
-				// 				const exceptColumnFields = [ "primary" ];
-				// 				const sessionName = document.getElementById("sessionName").value;
-				// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
+				const exceptColumnFields = [ "primary","secondary" ];
+				const sessionName = "<%=user.getFullName()%>";
+				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {

@@ -1,3 +1,4 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.change.activity.dto.DefDTO"%>
 <%@page import="java.util.ArrayList"%>
@@ -14,6 +15,7 @@ ArrayList<DefDTO> list = (ArrayList<DefDTO>) request.getAttribute("list");
 JSONArray alist = (JSONArray) request.getAttribute("alist");
 JSONArray ulist = (JSONArray) request.getAttribute("ulist");
 JSONArray slist = (JSONArray) request.getAttribute("slist");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -29,6 +31,16 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 
+		<table class="button-table">
+			<tr>
+				<td class="left">
+					<div class="header">
+						<img src="/Windchill/extcore/images/header.png">
+						설계변경관리
+					</div>
+				</td>
+			</tr>
+		</table>
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -57,6 +69,9 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 						<input type="button" value="루트 추가" title="루트 추가" class="blue" onclick="create('root');">
 					</div>
 					<div id="actLayer">
+						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+						<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('activity-list');">
+						<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('activity-list');">
 						<input type="button" value="루트 수정" title="루트 수정" onclick="modify();">
 						<input type="button" value="루트 삭제" title="루트 삭제" class="red" onclick="_delete()">
 						<input type="button" value="활동추가" title="활동추가" class="blue" onclick="create('act');">
@@ -75,7 +90,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 700px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -86,204 +101,206 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 		<%=alist%>
 			const ulist =
 		<%=ulist%>
-			const columns = [ {
-				dataField : "step",
-				headerText : "단계",
-				dataType : "string",
-				width : 120,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
-				renderer : {
-					type : "IconRenderer",
-					iconWidth : 16,
-					iconHeight : 16,
-					iconPosition : "aisleRight",
-					iconTableRef : {
-						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+			function _layout() {
+				return [ {
+					dataField : "step",
+					headerText : "단계",
+					dataType : "string",
+					width : 120,
+					filter : {
+						showIcon : true,
+						inline : true
 					},
-					onClick : function(event) {
-						AUIGrid.openInputer(event.pid);
-					}
-				},
-				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-					let retStr = "";
-					for (let i = 0, len = slist.length; i < len; i++) {
-						if (slist[i]["key"] == value) {
-							retStr = slist[i]["value"];
-							break;
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
 						}
-					}
-					return retStr == "" ? value : retStr;
-				},
-				editRenderer : {
-					type : "ComboBoxRenderer",
-					list : slist,
-					matchFromFirst : false,
-					autoCompleteMode : true, // 자동완성 모드 설정
-					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-					keyField : "key",
-					valueField : "value",
-					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-						let isValid = false;
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
 						for (let i = 0, len = slist.length; i < len; i++) {
-							if (slist[i]["value"] == newValue) {
-								isValid = true;
+							if (slist[i]["key"] == value) {
+								retStr = slist[i]["value"];
 								break;
 							}
 						}
-						return {
-							"validate" : isValid,
-							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-						};
-					}
-				},
-			}, {
-				dataField : "name",
-				headerText : "활동명",
-				dataType : "string",
-				style : "aui-left",
-				filter : {
-					showIcon : true,
-					inline : true
-				},
-			}, {
-				dataField : "activity_type",
-				headerText : "활동구분",
-				dataType : "string",
-				width : 200,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
-				renderer : {
-					type : "IconRenderer",
-					iconWidth : 16,
-					iconHeight : 16,
-					iconPosition : "aisleRight",
-					iconTableRef : {
-						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						return retStr == "" ? value : retStr;
 					},
-					onClick : function(event) {
-						AUIGrid.openInputer(event.pid);
-					}
-				},
-				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-					let retStr = "";
-					for (let i = 0, len = alist.length; i < len; i++) {
-						if (alist[i]["key"] == value) {
-							retStr = alist[i]["value"];
-							break;
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						list : slist,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = slist.length; i < len; i++) {
+								if (slist[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
 						}
-					}
-					return retStr == "" ? value : retStr;
-				},
-				editRenderer : {
-					type : "ComboBoxRenderer",
-					list : alist,
-					matchFromFirst : false,
-					autoCompleteMode : true, // 자동완성 모드 설정
-					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-					keyField : "key",
-					valueField : "value",
-					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-						let isValid = false;
+					},
+				}, {
+					dataField : "name",
+					headerText : "활동명",
+					dataType : "string",
+					style : "aui-left",
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "activity_type",
+					headerText : "활동구분",
+					dataType : "string",
+					width : 200,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
 						for (let i = 0, len = alist.length; i < len; i++) {
-							if (alist[i]["value"] == newValue) {
-								isValid = true;
+							if (alist[i]["key"] == value) {
+								retStr = alist[i]["value"];
 								break;
 							}
 						}
-						return {
-							"validate" : isValid,
-							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-						};
-					}
-				},
-			}, {
-				dataField : "sort",
-				headerText : "정렬",
-				dataType : "numeric",
-				width : 100,
-				formatString : "###0",
-				editRenderer : {
-					type : "InputEditRenderer",
-					onlyNumeric : true,
-					maxlength : 2,
-				},
-				filter : {
-					showIcon : true,
-					inline : true
-				},
-			}, {
-				dataField : "department_name",
-				headerText : "담당부서",
-				dataType : "string",
-				width : 150,
-				editable : false,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
-			}, {
-				dataField : "activeUser_oid",
-				headerText : "담당자",
-				dataType : "string",
-				width : 150,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
-				renderer : {
-					type : "IconRenderer",
-					iconWidth : 16,
-					iconHeight : 16,
-					iconPosition : "aisleRight",
-					iconTableRef : {
-						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						return retStr == "" ? value : retStr;
 					},
-					onClick : function(event) {
-						AUIGrid.openInputer(event.pid);
-					}
-				},
-				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-					let retStr = "";
-					for (let i = 0, len = ulist.length; i < len; i++) {
-						if (ulist[i]["key"] == value) {
-							retStr = ulist[i]["value"];
-							break;
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						list : alist,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = alist.length; i < len; i++) {
+								if (alist[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
 						}
-					}
-					return retStr == "" ? value : retStr;
-				},
-				editRenderer : {
-					type : "ComboBoxRenderer",
-					list : ulist,
-					matchFromFirst : false,
-					autoCompleteMode : true, // 자동완성 모드 설정
-					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-					keyField : "key",
-					valueField : "value",
-					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-						let isValid = false;
+					},
+				}, {
+					dataField : "sort",
+					headerText : "정렬",
+					dataType : "numeric",
+					width : 100,
+					formatString : "###0",
+					editRenderer : {
+						type : "InputEditRenderer",
+						onlyNumeric : true,
+						maxlength : 2,
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "department_name",
+					headerText : "담당부서",
+					dataType : "string",
+					width : 150,
+					editable : false,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "activeUser_oid",
+					headerText : "담당자",
+					dataType : "string",
+					width : 150,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
 						for (let i = 0, len = ulist.length; i < len; i++) {
-							if (ulist[i]["value"] == newValue) {
-								isValid = true;
+							if (ulist[i]["key"] == value) {
+								retStr = ulist[i]["value"];
 								break;
 							}
 						}
-						return {
-							"validate" : isValid,
-							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-						};
-					}
-				},
-			} ]
-
+						return retStr == "" ? value : retStr;
+					},
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						list : ulist,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = ulist.length; i < len; i++) {
+								if (ulist[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
+				} ]
+			}
+			
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
@@ -362,6 +379,7 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				const columns = loadColumnLayout("activity-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -487,18 +505,11 @@ JSONArray slist = (JSONArray) request.getAttribute("slist");
 			$("#root").change(function() {
 				loadGridData();
 			})
-		</script>
-	</form>
-</body>
-</html>		}
-					parent.closeLayer();
-				}, "DELETE");
+			
+			function exportExcel() {
+			    const sessionName = "<%=user.getFullName()%>";
+			    exportToExcel("설계변경관리 리스트", "설계변경관리", "설계변경관리 리스트", [], sessionName);
 			}
-
-			// AXISJ SELECT BOX 바인딩이... 퓨어 스크립트가 안먹히네
-			$("#root").change(function() {
-				loadGridData();
-			})
 		</script>
 	</form>
 </body>

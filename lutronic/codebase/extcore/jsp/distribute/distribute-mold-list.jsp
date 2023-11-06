@@ -145,8 +145,8 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('mold-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('mold-list');"> 
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-mold-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-mold-list');"> 
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -300,7 +300,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				const columns = loadColumnLayout("mold-list");
+				const columns = loadColumnLayout("distribute-mold-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({
@@ -332,6 +332,11 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function exportExcel() {
+			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    exportToExcel("금형 리스트", "금형", "금형 리스트", [], sessionName);
+			}
 		</script>
 	</form>
 </body>
