@@ -30,6 +30,11 @@
 						<img src="/Windchill/extcore/images/header.png"> RoHS 수정
 					</div>
 				</td>
+				<td class="right">
+					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+				</td>
 			</tr>
 		</table>
 		<table class="create-table">
@@ -109,8 +114,9 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="수정"  title="수정"  class="blue"  id="updateBtn">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
 		</table>
@@ -131,7 +137,7 @@
 			});
 			
 			var nameChk = "<%=data.getName()%>";
-			$("#updateBtn").click(function(){
+			function update(){
 				if(isEmpty($("#rohsName").val())) {
 					alert("물질명을 입력하세요.");
 					return;
@@ -186,7 +192,7 @@
 						alert(data.msg);
 					}
 				});
-			});
+			}
 			
 			$("#NameCheck").click(function() {
 				var params = new Object();

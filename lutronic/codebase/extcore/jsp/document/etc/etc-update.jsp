@@ -42,6 +42,7 @@ iframe {
 		<td class="right">
 			<input type="button" value="<%=title %>" title="<%=title %>" class="red" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -283,7 +284,15 @@ iframe {
 	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
-
+<table class="button-table">
+	<tr>
+		<td class="center">
+			<input type="button" value="<%=title %>" title="<%=title %>" class="red" onclick="<%=mode%>('false');">
+			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+		</td>
+	</tr>
+</table>
 <script type="text/javascript">
 	const oEditors = [];
 	nhn.husky.EZCreator.createInIFrame({

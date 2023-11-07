@@ -36,7 +36,7 @@
 				</td>
 				<td class="right">
 					<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
-					<input type="button" value="이전" title="이전" class="blue" onclick="history.back();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
 					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
@@ -200,7 +200,8 @@
 			<tr>
 				<td class="center">
 					<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
 		</table>

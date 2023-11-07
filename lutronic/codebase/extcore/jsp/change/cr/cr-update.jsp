@@ -35,8 +35,9 @@ if(contentMap!=null){
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="수정" title="수정" class="red" onclick="update('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
+					<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
 		</table>
@@ -199,6 +200,16 @@ if(contentMap!=null){
 			<jsp:param value="150" name="height" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
+		
+		<table class="button-table">
+			<tr>
+				<td class="center">
+					<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+				</td>
+			</tr>
+		</table>
 
 		<script type="text/javascript">
 			function update(temp) {

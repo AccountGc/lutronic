@@ -25,6 +25,11 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 						<img src="/Windchill/extcore/images/header.png"> 도면 수정
 					</div>
 				</td>
+				<td class="right">
+					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+				</td>
 			</tr>
 		</table>
 		<table class="create-table">
@@ -98,8 +103,9 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="수정"  title="수정"  class="blue"  id="updateBtn">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
 		</table>
@@ -122,7 +128,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				AUIGrid.resize(partGridID);
 			});
 			
-			$("#updateBtn").click(function(){
+			function update(){
 				const primary = document.querySelector("input[name=primary]");
 				if(primary == null){
 					alert("주 첨부파일을 첨부해주세요.");
@@ -156,7 +162,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 						self.close();
 					}
 				});
-			});
+			}
 		</script>
 	</form>	
 </body>
