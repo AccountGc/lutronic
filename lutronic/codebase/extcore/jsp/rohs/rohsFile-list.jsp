@@ -1,22 +1,11 @@
+<%@page import="wt.session.SessionHelper"%>
 <%@page import="java.util.List"%>
-<%@page import="wt.fc.PersistenceHelper"%>
-<%@page import="wt.fc.QueryResult"%>
-<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
-<%@page import="wt.fc.PagingQueryResult"%>
-<%@page import="com.e3ps.common.util.PageQueryUtils"%>
-<%@page import="wt.util.WTAttributeNameIfc"%>
-<%@page import="com.e3ps.common.util.QuerySpecUtils"%>
-<%@page import="wt.doc.WTDocumentMaster"%>
-<%@page import="com.e3ps.rohs.ROHSMaterial"%>
-<%@page import="wt.query.QuerySpec"%>
-<%@page import="com.e3ps.rohs.dto.RohsData"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 List<Map<String,String>> typeList = (List<Map<String,String>>) request.getAttribute("typeList");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -234,7 +223,7 @@ List<Map<String,String>> typeList = (List<Map<String,String>>) request.getAttrib
 			});
 			
 			function exportExcel() {
-			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    const sessionName = "<%=user.getFullName()%>";
 			    exportToExcel("파일 검색 리스트", "파일 검색", "파일 검색 리스트", [], sessionName);
 			}
 		</script>

@@ -77,7 +77,7 @@ public class EcprDTO {
 		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
-		setApproveDate(cr.getApproveDate());
+		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
 		setCreateDepart_name(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
 		setWriter_name(CommonUtil.getUserNameFromOid(cr.getWriter()));
 		setWriter_oid(CommonUtil.getUserOid(cr.getWriter()));

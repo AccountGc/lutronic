@@ -91,14 +91,14 @@ public class CrDTO {
 		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
-		setApproveDate(cr.getApproveDate());
-		setCreateDepart_name(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE"));
-		setWriter_name(cr.getWriter());
-		setProposer_name(cr.getProposer());
-		setChangeSection(NumberCodeHelper.manager.getNumberCodeName(cr.getChangeSection(), "CHANGESECTION"));
-		setEoCommentA(cr.getEoCommentA());
-		setEoCommentB(cr.getEoCommentB());
-		setEoCommentC(cr.getEoCommentC());
+		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
+		setCreateDepart_name(StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
+		setWriter_name(StringUtil.checkNull(cr.getWriter()));
+		setProposer_name(StringUtil.checkNull(cr.getProposer()));
+		setChangeSection(StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getChangeSection(), "CHANGESECTION")));
+		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
+		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
+		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
 		
 		
 		// 따로 추가
@@ -109,7 +109,7 @@ public class CrDTO {
 		setModifiedDate(cr.getModifyTimestamp());
 		setModifiedDate_text(cr.getModifyTimestamp().toString().substring(0, 10));
 		setCreator(cr.getCreatorFullName());
-		setWriteDate(cr.getCreateDate());
+		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(cr.getModel());
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));

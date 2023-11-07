@@ -98,7 +98,7 @@ public class EpmData {
 		if (part != null) {
 			pNum = part.getNumber();
 		}
-		setPNum(pNum);
+		setPNum(StringUtil.checkNull(pNum));
 
 		setApplicationType(epm.getOwnerApplication().toString());
 		setVersion(epm.getVersionIdentifier().getValue() + "." + epm.getIterationIdentifier().getValue());
