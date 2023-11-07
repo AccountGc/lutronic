@@ -126,7 +126,7 @@
 			<tr>
 				<th class="lb">
 					설계변경 부품 내역파일
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;">
+<!-- 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;"> -->
 				</th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
@@ -164,11 +164,11 @@
 
 
 		<!-- 설계변경 품목 -->
-		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
-			<jsp:param value="" name="oid" />
-			<jsp:param value="create" name="mode" />
-			<jsp:param value="true" name="multi" />
-		</jsp:include>
+<%-- 		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
+<%-- 			<jsp:param value="" name="oid" /> --%>
+<%-- 			<jsp:param value="create" name="mode" /> --%>
+<%-- 			<jsp:param value="true" name="multi" /> --%>
+<%-- 		</jsp:include> --%>
 
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
@@ -208,7 +208,7 @@
 				const licensing = document.querySelector("input[name=licensing]:checked").value;
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
-				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+// 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
 				// 외부 메일
 				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
@@ -253,7 +253,7 @@
 					eoCommentD : eoCommentD,
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
-					rows500 : rows500, // 설변품목
+// 					rows500 : rows500, // 설변품목
 					temprary : temprary,
 					// 외부 메일
 					external : external
@@ -277,11 +277,11 @@
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid101(columns101);
 				createAUIGrid200(columns200);
-				createAUIGrid500(columns500);
+// 				createAUIGrid500(columns500);
 				createAUIGrid8(columns8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID101);
-				AUIGrid.resize(myGridID500);
+// 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
@@ -289,7 +289,7 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID101);
-				AUIGrid.resize(myGridID500);
+// 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);

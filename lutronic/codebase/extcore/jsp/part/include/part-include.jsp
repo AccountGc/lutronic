@@ -15,10 +15,7 @@ boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
-JSONArray data = null;
-if(view || update){
-	data = AUIGridUtil.include(oid, "part");
-}
+JSONArray data = AUIGridUtil.include(oid, "part");
 %>
 <table class="button-table">
 	<tr>

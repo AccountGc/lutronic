@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Vector;
 
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECOChange;
@@ -12,26 +11,24 @@ import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.util.PartUtil;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.epm.EPMDocument;
-import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
@@ -119,7 +116,7 @@ public class ActivityHelper {
 	 */
 	public Map<String, String> getActMap() throws Exception {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("ORDER_NUMBER", "진채번");
+//		map.put("ORDER_NUMBER", "진채번");
 		map.put("REVISE_BOM", "개정/BOM 변경");
 		map.put("DOCUMENT", "산출물 등록");
 		return map;
@@ -297,14 +294,6 @@ public class ActivityHelper {
 	 * ECO 활동 대상 품목들
 	 */
 	public ArrayList<Map<String, Object>> getEcoRevisePart(String oid) throws Exception {
-		return getEcoRevisePart(oid, false, false);
-	}
-
-	/**
-	 * ECO 활동 대상 품목들
-	 */
-	public ArrayList<Map<String, Object>> getEcoRevisePart(String oid, boolean dummyCheck, boolean isDist)
-			throws Exception {
 		Persistable per = CommonUtil.getObject(oid);
 		EChangeOrder eco = null;
 		if (per instanceof EChangeActivity) {
@@ -339,76 +328,106 @@ public class ActivityHelper {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("idx", cnt);
 
-			String link_oid = link.getPersistInfo().getObjectIdentifier().getStringValue();
-			boolean isDummy = EChangeUtils.isDummy(master.getNumber());
-			// 더미 제외
-			if (dummyCheck && isDummy) {
-				if (isDummy) {
-					continue;
-				}
-			}
+//			boolean isDummy = EChangeUtils.isDummy(master.getNumber());
+//			// 더미 제외
+//			if (dummyCheck && isDummy) {
+//				if (isDummy) {
+//					continue;
+//				}
+//			}
 
 			String version = link.getVersion();
 			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+			boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+			// 승인됨의 경우 개정 프로세스
+			// 나머지 작업중인건 개정된 부품쪽으로 이동f
+
+			String link_oid = link.getPersistInfo().getObjectIdentifier().getStringValue();
 			String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
-			String next_oid = "";
-			String iteration = part.getIterationIdentifier().getSeries().getValue();
-
-			String key = part.getLifeCycleState().toString();
-			boolean revisable = "APPROVED".equals(key) || "DEV_APPROVED".equals(key);
-
-			WTPart nextPart = null;
-			EPMDocument epm = null;
-//			String isDisuse = "";
-			// if(link.isIsDelete()) isDisuse ="<b><font color='red'>√</font></b>";
-//			boolean isBOM = link.isBaseline();
-//			String isBOMCheck = "";
-//			String BOMValueCheck = "";
-//			if (isBOM) {
-//				isBOMCheck = "<b><font color='red'>√</font></b>";
-//				BOMValueCheck = "checked";
-//			}
-
-			map.put("oid", oid);
-			map.put("part_oid", part_oid);
+			boolean isRevise = link.isRevise(); // 개정여부?
+			map.put("oid", oid); // 활동 혹은 ECO OID
 			map.put("link_oid", link_oid);
-			map.put("part_number", part.getNumber());
-			map.put("part_creator", part.getCreatorFullName());
-			map.put("part_name", part.getName());
-			map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
-					+ part.getIterationIdentifier().getSeries().getValue());
-			map.put("part_state", part.getLifeCycleState().getDisplay());
-			map.put("merge", false);
+			if (isApproved) {
+				// 개정 데이터
+				map.put("part_oid", part_oid);
+				map.put("part_number", part.getNumber());
+				map.put("part_creator", part.getCreatorFullName());
+				map.put("part_name", part.getName());
+				map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
+						+ part.getIterationIdentifier().getSeries().getValue());
+				map.put("part_state", part.getLifeCycleState().getDisplay());
 
-			if (!link.isRevise()) {
-				map.put("next_oid", next_oid);
-				map.put("next_number", "개정된 데이터가 없습니다.");
-				map.put("next_number", "개정된 데이터가 없습니다.");
-				map.put("next_state", "개정된 데이터가 없습니다.");
-				map.put("next_version", "개정된 데이터가 없습니다.");
-				map.put("next_creator", "개정된 데이터가 없습니다.");
-				map.put("epm_number", "개정된 데이터가 없습니다.");
-				map.put("reference", "개정된 데이터가 없습니다.");
-				map.put("merge", true);
-			} else {
-				nextPart = (WTPart) EChangeUtils.getNext(part);
-				part_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
-				next_oid = nextPart.getPersistInfo().getObjectIdentifier().getStringValue();
-				map.put("next_oid", next_oid);
-				map.put("next_number", nextPart.getNumber());
-				map.put("next_version", nextPart.getVersionIdentifier().getSeries().getValue() + "."
-						+ nextPart.getIterationIdentifier().getSeries().getValue());
-				map.put("next_creator", nextPart.getCreatorFullName());
-				map.put("next_state", nextPart.getLifeCycleState().getDisplay());
-
-				epm = PartHelper.manager.getEPMDocument(nextPart);
-				if (epm != null) {
-					map.put("epm_number", epm.getNumber());
+				// 개절된 데이터가 없을 경우
+				if (!isRevise) {
+					map.put("next_oid", "");
+					map.put("group", "");
+					map.put("next_number", "개정된 데이터가 없습니다.");
+					map.put("next_name", "개정된 데이터가 없습니다.");
+					map.put("next_state", "개정된 데이터가 없습니다.");
+					map.put("next_version", "개정된 데이터가 없습니다.");
+					map.put("next_creator", "개정된 데이터가 없습니다.");
+					map.put("epm_number", "개정된 데이터가 없습니다.");
+					map.put("reference", "개정된 데이터가 없습니다.");
+					map.put("after", true);
+					map.put("afterMerge", true);
 				} else {
-					map.put("epm_number", "");
-				}
-			}
+					WTPart next_part = (WTPart) EChangeUtils.getNext(part);
 
+					String group = EChangeUtils.manager.getPartGroup(next_part);
+
+					// 개정데이터가 있을경우
+					map.put("group", group);
+					map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("next_number", next_part.getNumber());
+					map.put("next_name", next_part.getName());
+					map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
+							+ next_part.getIterationIdentifier().getSeries().getValue());
+					map.put("next_creator", next_part.getCreatorFullName());
+					map.put("next_state", next_part.getLifeCycleState().getDisplay());
+					map.put("after", false);
+					map.put("afterMerge", false);
+				}
+				map.put("prev", false);
+			} else {
+
+				// 이전 부품
+				WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
+
+				String group = EChangeUtils.manager.getPartGroup(part);
+
+				// 개정데이터가 있을경우
+				map.put("group", group);
+				map.put("next_oid", part_oid);
+				map.put("next_number", part.getNumber());
+				map.put("next_name", part.getName());
+				map.put("next_version", part.getVersionIdentifier().getSeries().getValue() + "."
+						+ part.getIterationIdentifier().getSeries().getValue());
+				map.put("next_creator", part.getCreatorFullName());
+				map.put("next_state", part.getLifeCycleState().getDisplay());
+
+				if (pre_part == null) {
+					map.put("part_oid", "");
+					map.put("part_number", "개정전 데이터가 없습니다.");
+					map.put("part_name", "개정전 데이터가 없습니다.");
+					map.put("part_state", "개정전 데이터가 없습니다.");
+					map.put("part_version", "개정전 데이터가 없습니다.");
+					map.put("part_creator", "개정전 데이터가 없습니다.");
+
+					map.put("preMerge", true);
+					map.put("prev", true);
+				} else {
+					map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("part_number", pre_part.getNumber());
+					map.put("part_name", pre_part.getName());
+					map.put("part_state", pre_part.getLifeCycleState().getDisplay());
+					map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+							+ pre_part.getIterationIdentifier().getSeries().getValue());
+					map.put("part_creator", pre_part.getCreatorFullName());
+					map.put("preMerge", false);
+					map.put("prev", false);
+				}
+				map.put("after", false);
+			}
 			list.add(map);
 		}
 
@@ -443,5 +462,38 @@ public class ActivityHelper {
 		}
 
 		return data;
+	}
+
+	/**
+	 * ECO 연관 CR 가져오기
+	 */
+	public ArrayList<Map<String, String>> getEcoRefCr(String oid) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		Persistable per = CommonUtil.getObject(oid);
+		EChangeOrder eco = null;
+		if (per instanceof EChangeActivity) {
+			EChangeActivity eca = (EChangeActivity) per;
+			eco = (EChangeOrder) eca.getEo();
+		} else if (per instanceof EChangeOrder) {
+			eco = (EChangeOrder) per;
+		}
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(RequestOrderLink.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, RequestOrderLink.class, RequestOrderLink.ECO_TYPE, eco.getEoType());
+		QuerySpecUtils.toEqualsAnd(query, idx, RequestOrderLink.class, "roleAObjectRef.key.id", eco);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			RequestOrderLink link = (RequestOrderLink) obj[0];
+			Map<String, String> map = new HashMap<>();
+			EChangeRequest cr = link.getEcr();
+			map.put("oid", cr.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("number", cr.getEoNumber());
+			list.add(map);
+		}
+
+		return list;
 	}
 }

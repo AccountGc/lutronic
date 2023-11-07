@@ -25,8 +25,6 @@ public class ActDTO {
 	private String name;
 	private String step;
 	private String step_name;
-//	private String active_type;
-//	private String active_name;
 	private String activity_type;
 	private String activity_name;
 	private String activeUser_oid;

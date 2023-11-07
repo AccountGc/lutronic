@@ -69,4 +69,14 @@ public interface ActivityService {
 	public abstract void replace(ArrayList<LinkedHashMap<String, Object>> addRows,
 			ArrayList<LinkedHashMap<String, Object>> removeRows, String oid) throws Exception;
 
+	/**
+	 * ECO 활동중 이전 품목 추가
+	 */
+	public abstract void prev(Map<String, Object> params) throws Exception;
+
+	/**
+	 * ECO 활동 중 품목 그룹핑 함수
+	 */
+	public abstract void saveGroup(Map<String, Object> params) throws Exception;
+
 }

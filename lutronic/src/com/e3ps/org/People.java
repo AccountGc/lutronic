@@ -26,6 +26,7 @@ import com.ptc.windchill.annotations.metadata.Serialization;
 
 import wt.content.ContentHolder;
 import wt.fc.Item;
+import wt.org.WTUser;
 import wt.util.WTException;
 
 @GenAsPersistable(superClass = Item.class, interfaces = {
@@ -73,8 +74,23 @@ import wt.util.WTException;
 
 		foreignKeys = {
 
-				@GeneratedForeignKey(name = "WTUserPeopleLink", foreignKeyRole = @ForeignKeyRole(name = "user", type = wt.org.WTUser.class, constraints = @PropertyConstraints(required = true)), myRole = @MyRole(name = "people", cardinality = Cardinality.ZERO_TO_ONE)),
-				@GeneratedForeignKey(name = "DepartmentPeopleLink", foreignKeyRole = @ForeignKeyRole(name = "department", type = Department.class), myRole = @MyRole(name = "people")) })
+				@GeneratedForeignKey(name = "WTUserPeopleLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "user", type = WTUser.class,
+
+								constraints = @PropertyConstraints(required = true)),
+
+						myRole = @MyRole(name = "people", cardinality = Cardinality.ZERO_TO_ONE)),
+
+				@GeneratedForeignKey(name = "DepartmentPeopleLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "department", type = Department.class),
+
+						myRole = @MyRole(name = "people"))
+
+		}
+
+)
 public class People extends _People {
 
 	static final long serialVersionUID = 1;

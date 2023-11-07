@@ -12,13 +12,16 @@ import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.PartGroupLink;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -47,7 +50,6 @@ import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
-import wt.vc.struct.StructHelper;
 
 public class StandardActivityService extends StandardManager implements ActivityService {
 
@@ -216,7 +218,7 @@ public class StandardActivityService extends StandardManager implements Activity
 		for (Map<String, String> map : list) {
 			String step_name = map.get("step_name");
 			String name = map.get("name");
-			String active_type = map.get("active_type");
+			String activity_type = map.get("activity_type");
 			String activeUser_oid = map.get("activeUser_oid");
 			String finishDate = map.get("finishDate");
 
@@ -225,7 +227,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			EChangeActivity eca = EChangeActivity.newEChangeActivity();
 			eca.setStep(step_name);
 			eca.setName(name);
-			eca.setActiveType(active_type);
+			eca.setActiveType(activity_type);
 			eca.setActiveUser(user);
 			eca.setFinishDate(DateUtil.convertDate(finishDate));
 			eca.setSortNumber(sort);
@@ -240,7 +242,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			LifeCycleHelper.setLifeCycle(eca,
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
-			eca = (EChangeActivity) PersistenceHelper.manager.save(eca);				
+			eca = (EChangeActivity) PersistenceHelper.manager.save(eca);
 			sort++;
 
 			// STEP1 코드
@@ -573,6 +575,72 @@ public class StandardActivityService extends StandardManager implements Activity
 				String link_oid = (String) map.get("link_oid");
 				EcoPartLink link = (EcoPartLink) CommonUtil.getObject(link_oid);
 				PersistenceHelper.manager.delete(link);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void prev(Map<String, Object> params) throws Exception {
+		String prev = (String) params.get("prev");
+		String after = (String) params.get("after");
+		String oid = (String) params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+
+			WTPart prePart = (WTPart) CommonUtil.getObject(prev);
+			WTPart afterPart = (WTPart) CommonUtil.getObject(after);
+
+			PartToPartLink link = PartToPartLink.newPartToPartLink(prePart, afterPart);
+			link.setEco((EChangeOrder) eca.getEo());
+			PersistenceHelper.manager.save(link);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void saveGroup(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (Map<String, Object> map : editRows) {
+				String next_oid = (String) map.get("next_oid");
+				WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
+
+				String group = (String) map.get("group");
+				String[] groups = group.split(",");
+
+				for (String s : groups) {
+
+					System.out.println("s=" + s);
+
+					EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s);
+					PartGroupLink link = PartGroupLink.newPartGroupLink(nextPart, ecr);
+					PersistenceHelper.manager.save(link);
+				}
 			}
 
 			trs.commit();

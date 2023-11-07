@@ -24,6 +24,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDevConnection;
 import com.e3ps.sap.dto.SAPBomDTO;
+import com.e3ps.sap.util.SAPUtil;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoFunction;
@@ -338,28 +339,25 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		for (WTPart part : list) {
 			insertTable.insertRow(idx);
 
+			System.out.println("자재 마스터 전송 : " + part.getNumber());
+
 			// 샘플로 넣기
 			insertTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 8자리
 			insertTable.setValue("MATNR", part.getNumber()); // 자재번호
 			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
 			insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
 
-			String ZSPEC = IBAUtil.getStringValue(part, "SPECIFICATION");
-			insertTable.setValue("ZSPEC", ZSPEC); // 사양
+			String ZSPEC_CODE = IBAUtil.getStringValue(part, "SPECIFICATION");
+			insertTable.setValue("ZSPEC", SAPUtil.sapValue(ZSPEC_CODE, "SPECIFICATION")); // 사양
 
-			String ZMODEL = IBAUtil.getStringValue(part, "MODEL");
-			insertTable.setValue("ZMODEL", ZMODEL); // Model:프로젝트
+			String ZMODEL_CODE = IBAUtil.getStringValue(part, "MODEL");
+			insertTable.setValue("ZMODEL", SAPUtil.sapValue(ZMODEL_CODE, "MODEL")); // Model:프로젝트
 
 			String ZPRODM_CODE = IBAUtil.getStringValue(part, "PRODUCTMETHOD");
-			NumberCode ZPRODM_N = NumberCodeHelper.manager.getNumberCode(ZPRODM_CODE, "PRODUCTMETHOD");
-			if (ZPRODM_N != null) {
-				insertTable.setValue("ZPRODM", ZPRODM_N.getName()); // 제작방법
-			} else {
-				insertTable.setValue("ZPRODM", ""); // 제작방법
-			}
+			insertTable.setValue("ZPRODM", SAPUtil.sapValue(ZPRODM_CODE, "PRODUCTMETHOD")); // 제작방법
 
-			String ZDEPT = IBAUtil.getStringValue(part, "DEPTCODE");
-			insertTable.setValue("ZDEPT", ZDEPT); // 설계부서
+			String ZDEPT_CODE = IBAUtil.getStringValue(part, "DEPTCODE");
+			insertTable.setValue("ZDEPT", SAPUtil.sapValue(ZDEPT_CODE, "DEPTCODE")); // 부서
 
 			// 샘플링 실제는 2D여부 확인해서 전송
 			insertTable.setValue("ZDWGNO", part.getNumber() + ".DRW"); // 도면번호
@@ -374,6 +372,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		}
 
 		function.execute(destination);
+
 		JCoParameterList result = function.getExportParameterList();
 		Object r_type = result.getValue("EV_STATUS");
 		Object r_msg = result.getValue("EV_MESSAGE");

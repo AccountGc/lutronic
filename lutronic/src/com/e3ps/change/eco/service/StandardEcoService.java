@@ -66,7 +66,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentC = dto.getEoCommentC();
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
-		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+//		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		// 결재
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
@@ -85,13 +85,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			number = number + seqNo;
 
-			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
+//			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
 
 			EChangeOrder eco = EChangeOrder.newEChangeOrder();
 			eco.setEoName(name);
 			eco.setEoNumber(number);
 			eco.setEoType("CHANGE");
-			eco.setModel((String) dataMap.get("model"));
+//			eco.setModel((String) dataMap.get("model"));
 			eco.setLicensingChange(licensing);
 			eco.setEoCommentA(eoCommentA);
 			eco.setEoCommentB(eoCommentB);
@@ -116,12 +116,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			saveLink(eco, dto);
 
 			// 완제품 연결
-			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
-			saveCompletePart(eco, plist);
+//			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
+//			saveCompletePart(eco, plist);
 
 			// 변경 대상 품목 링크
-			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
-			saveEcoPart(eco, clist);
+//			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
+//			saveEcoPart(eco, clist);
 
 			// 설변 활동 생성
 			ActivityHelper.service.saveActivity(eco, rows200);
@@ -206,6 +206,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				String oid = row101.get("oid");
 				EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(oid);
 				RequestOrderLink link = RequestOrderLink.newRequestOrderLink(eco, ecr);
+				link.setEcoType(eco.getEoType());
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
@@ -253,11 +254,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		try {
 			trs.start();
 
-			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
+//			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
 
 			EChangeOrder eco = (EChangeOrder) rf.getReference(dto.getOid()).getObject();
 			eco.setEoName(name);
-			eco.setModel((String) dataMap.get("model"));
+			// 설별 활동에서 처리
+//			eco.setModel((String) dataMap.get("model"));
 			eco.setLicensingChange(licensing);
 			eco.setEoCommentA(eoCommentA);
 			eco.setEoCommentB(eoCommentB);
@@ -267,8 +269,8 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
 
-			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
-			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
+//			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
+//			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
 
 			// 첨부 파일 저장
 			removeAttach(eco);
@@ -279,12 +281,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			saveLink(eco, dto);
 
 			// 완제품 연결
-			deleteCompletPart(eco);
-			saveCompletePart(eco, plist);
+//			deleteCompletPart(eco);
+//			saveCompletePart(eco, plist);
 
 			// 변경 대상 품목 링크
-			deleteEcoPart(eco);
-			saveEcoPart(eco, clist);
+//			deleteEcoPart(eco);
+//			saveEcoPart(eco, clist);
 
 			// 설변 활동 생성
 			ActivityHelper.service.deleteActivity(eco);

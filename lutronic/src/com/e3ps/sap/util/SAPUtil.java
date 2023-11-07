@@ -16,21 +16,16 @@ public class SAPUtil {
 
 	}
 
-	public String splitToCommaValue(String value, String codeType) throws Exception {
-		// IBA코드값이 여러개로, 처리된것들
-		String rtn = "";
-		if (!StringUtil.checkString(value)) {
-			return "";
+	/**
+	 * NUMBER 코드의 값을 코드:값 < 으로 변경하여 SAP로 전송
+	 */
+	public static String sapValue(String code, String codeType) throws Exception {
+		String rtn = code;
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(code, codeType);
+		if (n != null) {
+			String value = n.getName();
+			rtn += ":" + value;
 		}
-
-		String[] ss = value.split(",");
-		for (String s : ss) {
-			NumberCode n = NumberCodeHelper.manager.getNumberCode(s.trim(), codeType);
-			if(n != null) {
-				rtn += n.getdi
-			}
-		}
-
 		return rtn;
 	}
 }

@@ -116,7 +116,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dateType : "string",
 		width : 150
 	}, {
-		dataField : "active_type",
+		dataField : "activity_type",
 		headerText : "활동구분",
 		dateType : "string",
 		width : 150,

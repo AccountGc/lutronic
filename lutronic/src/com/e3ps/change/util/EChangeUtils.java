@@ -9,7 +9,9 @@ import java.util.regex.Pattern;
 
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.PartGroupLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eo.service.EoHelper;
@@ -19,6 +21,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.service.DepartmentHelper;
+import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.service.SAPHelper;
 
@@ -181,8 +184,9 @@ public class EChangeUtils {
 
 //		ERPHelper.service.sendERP(eco);
 
+			System.out.println("EOTYPE = " + eo.getEoType());
 			// 개발일 경우 전송 하지 않는다.
-			if (!eo.getEoType().equals("PRODUCT")) {
+			if (eo.getEoType().trim().equals("PRODUCT")) {
 				SAPHelper.service.sendSapToEo(eo, completeParts);
 			}
 
@@ -268,5 +272,48 @@ public class EChangeUtils {
 			return (RevisionControlled) VersionControlHelper.getLatestIteration(prev, false);
 		}
 		return prev;
+	}
+
+	/**
+	 * ECO와 연관 시켜 이전품목 이력 품목
+	 */
+	public WTPart getEcoPrePart(EChangeOrder eco, WTPart after) throws Exception {
+		WTPart pre_part = null;
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(PartToPartLink.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "ecoReference.key.id", eco);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "roleBObjectRef.key.id", after);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			PartToPartLink link = (PartToPartLink) obj[0];
+			pre_part = link.getPrev();
+		}
+		return pre_part;
+	}
+
+	/**
+	 * ECO 관련 목품 그룹핑 정보
+	 */
+	public String getPartGroup(WTPart next_part) throws Exception {
+		String group = "";
+
+		int idx = 0;
+		QueryResult result = PersistenceHelper.manager.navigate(next_part, "ecr", PartGroupLink.class);
+		while (result.hasMoreElements()) {
+			EChangeRequest ecr = (EChangeRequest) result.nextElement();
+
+			// 2
+			if (result.size() - 1 == idx) {
+				group += ecr.getEoNumber();
+			} else {
+				group += ecr.getEoNumber() + ", ";
+			}
+			idx++;
+		}
+
+		return group;
 	}
 }

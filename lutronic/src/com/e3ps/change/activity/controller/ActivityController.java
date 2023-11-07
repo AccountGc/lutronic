@@ -206,8 +206,10 @@ public class ActivityController extends BaseController {
 		if (activityType.equals("ORDER_NUMBER")) {
 			model.setViewName("/extcore/jsp/workspace/activity/orderNumber.jsp");
 		} else if (activityType.equals("REVISE_BOM")) {
+			ArrayList<Map<String, String>> clist = ActivityHelper.manager.getEcoRefCr(oid);
 			ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
 			model.addObject("list", list);
+			model.addObject("clist", JSONArray.fromObject(clist));
 			model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
 		} else if (activityType.equals("DOCUMENT")) {
 			model.setViewName("/extcore/jsp/workspace/activity/document.jsp");
@@ -347,4 +349,48 @@ public class ActivityController extends BaseController {
 		}
 		return result;
 	}
+
+	@Description(value = "ECO 이전 품목 추가 페이지, 설변활동 중")
+	@GetMapping(value = "/prePart")
+	public ModelAndView prePart(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.addObject("oid", oid);
+		model.setViewName("popup:/change/activity/activity-prev-part");
+		return model;
+	}
+
+	@Description(value = "ECO 이전품목")
+	@PostMapping(value = "/prev")
+	@ResponseBody
+	public Map<String, Object> prev(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.prev(params);
+			result.put("msg", "이전품목이 추가 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "ECO 그룹핑 함수")
+	@PostMapping(value = "/saveGroup")
+	@ResponseBody
+	public Map<String, Object> saveGroup(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ActivityHelper.service.saveGroup(params);
+			result.put("msg", "선택한 품목들이 그룹핑 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 }

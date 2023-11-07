@@ -264,9 +264,7 @@ public class EcoHelper {
 	private Object referenceActivity(EChangeOrder eco, ArrayList<Map<String, Object>> list) throws Exception {
 		JSONArray j = new JSONArray();
 		ArrayList<EChangeActivity> colletActivityList = ActivityHelper.manager.colletActivity(eco);
-		System.out.println(colletActivityList.size());
 		for (EChangeActivity item : colletActivityList) {
-
 			ActDTO dto = new ActDTO(item);
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
