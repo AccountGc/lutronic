@@ -112,7 +112,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		},
 	}, {
 		dataField : "name",
-		headerText : "활동면",
+		headerText : "활동명",
 		dateType : "string",
 		width : 150
 	}, {
