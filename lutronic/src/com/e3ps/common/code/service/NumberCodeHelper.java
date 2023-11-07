@@ -367,4 +367,26 @@ public class NumberCodeHelper {
 		}
 		return list;
 	}
+	
+	/**
+	 * 나라 코드 가져오기
+	 */
+	public ArrayList<Map<String, String>> getCountry() throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "NATION");
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode n = (NumberCode) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("code", n.getCode());
+			map.put("name", n.getName());
+			list.add(map);
+		}
+		return list;
+	}
 }
