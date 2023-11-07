@@ -73,7 +73,7 @@ public class MoldHelper {
 		
 		// 버전 검색
 		if("true".equals(islastversion)) {
-			SearchUtil.addLastVersionCondition(query, WTDocument.class, idx);;
+			SearchUtil.addLastVersionCondition(query, WTDocument.class, idx);
 		}
 		
 		// 일괄 결재시 타입에 따른 LC 상태 검색

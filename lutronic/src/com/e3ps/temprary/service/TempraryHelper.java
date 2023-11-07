@@ -53,7 +53,7 @@ public class TempraryHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			TempraryColumn data = new TempraryColumn(obj);
-			if("품목".equals(data.getDataType()) || "도면".equals(data.getDataType())) {
+			if("품목".equals(data.getDataType()) || "도면".equals(data.getDataType()) || "ROHS".equals(data.getDataType())) {
 				if(CommonUtil.isLatestVersion(rf.getReference(data.getOid()).getObject())) {
 					boolean check =true;
 					String temNumber = data.getNumber();

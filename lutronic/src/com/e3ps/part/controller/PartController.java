@@ -2274,4 +2274,58 @@ public class PartController extends BaseController {
 		cell.setCellStyle(style);
 
 	}
+	
+	@RequestMapping("/viewAUIPartBom")
+	public ModelAndView viewAUIPartBom(HttpServletRequest request, HttpServletResponse response) {
+		ModelAndView model = new ModelAndView();
+	
+		String oid = request.getParameter("oid");
+		String baseline = request.getParameter("baseline");
+		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
+		String desc = StringUtil.checkReplaceStr(request.getParameter("desc"), "true");
+		String view = request.getParameter("view");
+		String title = "";
+		String number = "";
+
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		number = part.getNumber();
+		List<Map<String, String>> list = null;
+		try {
+			list = ChangeHelper.service.getGroupingBaseline(oid, "", "");
+			title = number;
+			if (!"".equals(baseline)) {
+				ManagedBaseline line = (ManagedBaseline) CommonUtil.getObject(baseline);
+				if (line != null) {
+					title = line.getName();
+				}
+			}
+		} catch (Exception e) {
+			list = new ArrayList<Map<String, String>>();
+			e.printStackTrace();
+		}
+		String lastedoid = oid;
+		WTPart lastedpart = part;
+		if (!PartSearchHelper.service.isLastPart(part)) {
+			try {
+				lastedpart = (WTPart) ObjectUtil.getLatestObject((Master) part.getMaster());
+				lastedoid = CommonUtil.getOIDString(lastedpart);
+			} catch (WTException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		model.addObject("title", title);
+		model.addObject("oid", oid);
+		model.addObject("lastedoid", lastedoid);
+
+		model.addObject("number", number);
+		model.addObject("list", list);
+		model.addObject("baseline", baseline);
+		model.addObject("allBaseline", allBaseline);
+		model.addObject("desc", desc);
+		// model.addObject("bsobj", bsobj);
+		model.addObject("view", view);
+		model.setViewName("popup:/part/viewAUIPartBom");
+		return model;
+	}
 }
