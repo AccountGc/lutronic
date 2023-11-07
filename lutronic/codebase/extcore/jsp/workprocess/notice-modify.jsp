@@ -69,7 +69,8 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 	<tr>
 		<td class="center">
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
-			<input type="button" value="뒤로" title="뒤로" onclick="history.go(-1);">
+			<input type="button" value="이전" title="이전" onclick="history.go(-1);">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>

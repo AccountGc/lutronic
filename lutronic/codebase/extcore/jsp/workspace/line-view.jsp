@@ -43,7 +43,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 			<%
 			}
 			%>
-			<input type="button" value="닫기" title="닫기" class="blue" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>

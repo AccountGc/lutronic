@@ -64,7 +64,7 @@
 	<tr>
 		<td class="center">
 			<input type="button" value="등록" title="등록" class="blue" onclick="create();">
-			<input type="button" value="닫기" title="닫기" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>

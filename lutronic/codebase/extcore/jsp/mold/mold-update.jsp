@@ -29,6 +29,11 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 						<img src="/Windchill/extcore/images/header.png"> 금형 수정
 					</div>
 				</td>
+				<td class="right">
+					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+				</td>
 			</tr>
 		</table>
 		<table class="create-table">
@@ -176,8 +181,9 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="수정"  title="수정"  class="blue"  id="updateBtn">
-					<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
+					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
+					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
 		</table>
@@ -197,7 +203,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				AUIGrid.resize(myGridID90);
 			});
 			
-			$("#updateBtn").click(function(){
+			function update(){
 				if(isEmpty($("#moldtype").val())) {
 					alert("금형타입을 선택하세요.");
 					return;
@@ -240,7 +246,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 						self.close();
 					}
 				});
-			});
+			}
 		</script>
 	</form>	
 </body>
