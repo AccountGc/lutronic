@@ -17,6 +17,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.rohs.ROHSMaterial;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -57,6 +58,9 @@ public class CrHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeRequest.class, true);
 		
+		// 상태 임시저장 제외
+    	if(query.getConditionCount() > 0) { query.appendAnd(); }
+    	query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
 		// 제목
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.EO_NAME, name);
 		// 번호

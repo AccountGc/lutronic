@@ -35,7 +35,7 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 		<td class="indent5"><%=data.getCreator()%></td>
 		<th>등록일</th>
 		<td class="indent5">
-<%-- 			<%=data.getCreateDate()%> --%>
+			<%=data.getCreatedDate()%>
 		</td>
 	</tr>
 	<tr>
@@ -43,9 +43,7 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 		<td class="indent5"><%=data.getCount()%></td>
 		<th>팝업</th>
 		<td class="indent5">
-			<%
-			//=data.isPopup()
-			%>
+			<%=data.isPopup()%>
 		</td>
 	</tr>
 	<tr>

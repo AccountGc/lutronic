@@ -29,7 +29,7 @@ public class NoticeHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, Notice.class, Notice.TITLE, name);
 		QuerySpecUtils.toCreator(query, idx, Notice.class, creatorOid);
 
-		QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, false);
+		QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, true);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

@@ -137,7 +137,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					inline : true
 				},
 			}, {
-				dataField : "isPopup",
+				dataField : "popup",
 				headerText : "팝업",
 				dataType : "string",
 				width : 170,

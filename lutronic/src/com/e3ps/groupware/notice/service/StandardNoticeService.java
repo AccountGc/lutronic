@@ -58,13 +58,14 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 		String title = (String) params.get("title");
 		String contents = (String) params.get("contents");
 		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
+		boolean isPopup = (boolean) params.get("isPopup");
 		try {
 			trs.start();
 
 			Notice notice = (Notice) CommonUtil.getObject(oid);
 			notice.setTitle(title);
 			notice.setContents(contents);
-//			notice.setIsPopup(isPopup);
+			notice.setIsPopup(isPopup);
 			notice = (Notice) PersistenceHelper.manager.modify(notice);
 
 			QueryResult result = ContentHelper.service.getContentsByRole(notice, ContentRoleType.SECONDARY);

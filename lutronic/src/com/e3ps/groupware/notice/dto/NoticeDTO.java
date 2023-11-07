@@ -27,14 +27,15 @@ import lombok.Setter;
 @Setter
 public class NoticeDTO {
 
-	public String oid;
-	public String title;
-	public String creator;
+	private String oid;
+	private String title;
+	private String creator;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
-	public String contents;
-	public int count;
+	private String contents;
+	private int count;
 	private String secondary;
+	private boolean isPopup;
 
 	public NoticeDTO() {
 
@@ -48,5 +49,6 @@ public class NoticeDTO {
 		setContents(notice.getContents());
 		setCount(notice.getCount());
 		setSecondary(AUIGridUtil.secondary(notice));
+		setPopup(notice.isIsPopup());
 	}
 }

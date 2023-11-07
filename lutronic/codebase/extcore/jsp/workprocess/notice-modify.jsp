@@ -31,7 +31,7 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 		<td>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="isPopup" value="true" checked="checked">
+				<input type="radio" name="isPopup" value="true" <%if (true==data.isPopup()) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>팝업 O</b>
@@ -40,7 +40,7 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="isPopup" value="false">
+				<input type="radio" name="isPopup" value="false" <%if (false==data.isPopup()) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>팝업 X</b>
@@ -94,7 +94,10 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 			contents : contents,
 			secondarys : secondarys
 		}
-
+		
+		const isPopup = document.querySelector("input[name=isPopup]:checked").value;
+		params.isPopup = JSON.parse(isPopup);
+		
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
