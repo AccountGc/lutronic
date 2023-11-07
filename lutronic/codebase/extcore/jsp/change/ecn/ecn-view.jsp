@@ -1,9 +1,12 @@
+<%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.e3ps.change.ecn.dto.EcnDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 EcnDTO dto = (EcnDTO) request.getAttribute("dto");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getCountry();
 %>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
@@ -22,134 +25,78 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 	</tr>
 </table>
-
-<div id="tabs">
-	<ul>
-		<li>
-			<a href="#tabs-1">기본 정보</a>
-		</li>
-		<li>
-			<a href="#tabs-2">설변 활동</a>
-		</li>
-	</ul>
-	<div id="tabs-1">
-		<!-- 기본 정보 -->
-		<table class="view-table">
-			<colgroup>
-				<col width="130">
-				<col width="450">
-				<col width="130">
-				<col width="450">
-			</colgroup>
-			<tr>
-				<th class="lb">ECN 제목</th>
-				<td class="indent5"><%=dto.getName()%></td>
-				<th>ECN 번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
-			</tr>
-			<tr>
-				<th class="lb">상태</th>
-				<td class="indent5"></td>
-				<th>등록자</th>
-				<td class="indent5"></td>
-			</tr>
-			<tr>
-				<th class="lb">구분</th>
-				<td class="indent5"></td>
-				<th>등록일</th>
-				<td class="indent5"></td>
-			</tr>
-			<tr>
-				<th class="lb">수정일</th>
-				<td class="indent5"></td>
-				<th>승인일</th>
-				<td class="indent5"></td>
-			</tr>
-			<tr>
-				<th class="lb">변경사항</th>
-				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">변경사유</th>
-				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">특기사항</th>
-				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentC" rows="5"></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">기타사항</th>
-				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentD" rows="5"></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">계변경 부품 내역파일</th>
-				<td class="indent5" colspan="3">
-					<font color="red">
-						<b>등록된 계변경 부품 내역파일이 없습니다.</b>
-					</font>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
-		</table>
-	</div>
-	
-	<div id="tabs-2">
-		<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="250" name="height" />
-		</jsp:include>
-	</div>
-</div>
+<div id="grid_ecn" style="height: 740px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 
 <script type="text/javascript">
-	const oid = document.getElementById("oid").value;
-
-	function autoHeight() {
-		const eoCommentC = document.getElementById("eoCommentC");
-		eoCommentC.style.height = "auto";
-		eoCommentC.style.height = "500px";
-		// 		const style = window.getComputedStyle(eoCommentC);
-		// 		console.log(style);
-
-	}
-
-	document.addEventListener("DOMContentLoaded", function() {
-		$("#tabs").tabs({
-			active : 0,
-			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
-				switch (tabId) {
-				case "tabs-1":
-					break;
-				case "tabs-2":
-					const isCreated200 = AUIGrid.isCreated(myGridID200); // 설변 활동
-					if (isCreated200) {
-						AUIGrid.resize(myGridID200);
-					} else {
-						createAUIGrid200(columns200);
-					}
-					break;
-				}
+	let myGridID;
+	const columns = [ {
+		dataField : "name",
+		headerText : "품목명",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "number",
+		headerText : "품목번호",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "version",
+		headerText : "Rev.",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		headerText : "확정 인허가일",
+		children : [ {
+			<%
+			int i=1;
+			for(Map<String,String> map : list){
+			%>	
+				dataField : "<%=map.get("code")%>",
+				headerText : "<%=map.get("name")%>",
+				dataType : "string",
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			<%if(i!=list.size()){%>
+			}, {
+			<%}
+				i++;
 			}
-		});
-
-		autoHeight();
+			%>
+		}]
+	} ]
+	
+	function createAUIGrid(columnLayout) {
+		const props = {
+			headerHeight : 30,
+			fillColumnSizeMode : false,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			enableSorting : false,
+			softRemoveRowMode : false,
+			selectionMode : "multipleCells",
+			enableFilter : true,
+			autoGridHeight : true,
+			wordWrap : true,
+		}
+		myGridID = AUIGrid.create("#grid_ecn", columnLayout, props);
+// 		AUIGrid.setGridData(myGridID,"");
+	}
+	
+	document.addEventListener("DOMContentLoaded", function() {
+		createAUIGrid(columns);
+		AUIGrid.resize(myGridID);
 	});
 	
 	function _delete() {

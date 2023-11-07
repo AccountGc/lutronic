@@ -102,7 +102,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">계변경 부품 내역파일</th>
+				<th class="lb">설계변경 부품 내역파일</th>
 				<td class="indent5" colspan="3">
 					<%
 					Map<String, Object> contentMap = dto.getContentMap();
