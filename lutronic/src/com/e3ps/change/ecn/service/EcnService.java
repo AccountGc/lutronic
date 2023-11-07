@@ -1,7 +1,8 @@
 package com.e3ps.change.ecn.service;
 
+import java.util.Map;
+
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.ecn.dto.EcnDTO;
 
 import wt.method.RemoteInterface;
 
@@ -17,4 +18,5 @@ public interface EcnService {
 	 * ECO 결재 후 ECN 자동 생성
 	 */
 	public abstract void create(EChangeOrder eco) throws Exception;
+
 }

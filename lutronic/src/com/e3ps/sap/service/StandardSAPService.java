@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
@@ -13,11 +14,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
-import com.e3ps.common.code.NumberCode;
+import com.e3ps.change.PartToSendLink;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
@@ -384,5 +387,57 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	public void sendSapToEco(EChangeOrder e) throws Exception {
 		// 결재완료 안에서 동작하기에 트랜젝션 제외
 		System.out.println("ECO SAP SEND START");
+	}
+
+	@Override
+	public void sendSapToEcn(Map<String, Object> params) throws Exception {
+		System.out.println("ECN SAP SEND START!!");
+		String oid = (String) params.get("oid");
+
+//		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+//		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_003");
+//		if (function == null) {
+//			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
+//		}
+
+		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
+
+			for (Map<String, Object> editRow : editRows) {
+				String part_oid = (String) editRow.get("part_oid");
+				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+
+				ArrayList<Map<String, String>> countrys = NumberCodeHelper.manager.getCountry();
+				for (Map<String, String> country : countrys) {
+					String sendDate = (String) editRow.get(country.get("code") + "_date");
+					if (sendDate != null) {
+						PartToSendLink link = PartToSendLink.newPartToSendLink();
+						link.setNation(country.get("code"));
+						link.setPart(part);
+						link.setEcn(ecn);
+						link.setIsSend(true);
+						link.setSendDate(DateUtil.convertDate(sendDate));
+						PersistenceHelper.manager.save(link);
+					}
+				}
+
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+
+		System.out.println("ECN SAP SEND END!!");
 	}
 }

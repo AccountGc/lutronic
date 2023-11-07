@@ -15,15 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecn.dto.EcnDTO;
 import com.e3ps.change.ecn.service.EcnHelper;
-import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.sap.service.SAPHelper;
 
 @Controller
 @RequestMapping(value = "/ecn/**")
@@ -63,10 +62,28 @@ public class EcnController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		EcnDTO dto = new EcnDTO(oid);
+		ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getCountry();
+		model.addObject("list", list);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/change/ecn/ecn-view");
 		return model;
 	}
-	
+
+	@Description(value = "ECN ERP 전송 함수")
+	@ResponseBody
+	@PostMapping(value = "/send")
+	public Map<String, Object> send(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			SAPHelper.service.sendSapToEcn(params);
+			result.put("result", SUCCESS);
+			result.put("msg", "전송 되었습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

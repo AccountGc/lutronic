@@ -515,6 +515,11 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				link.setRevise(true);
 				PersistenceHelper.manager.modify(link);
+
+				PartToPartLink pLink = PartToPartLink.newPartToPartLink(part, newPart);
+				pLink.setEco(eco);
+				PersistenceHelper.manager.save(pLink);
+
 			}
 
 			trs.commit();
@@ -626,21 +631,39 @@ public class StandardActivityService extends StandardManager implements Activity
 		try {
 			trs.start();
 
+			String oid = (String) params.get("oid");
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+			EChangeOrder eco = (EChangeOrder)eca.getEo();
+				
 			for (Map<String, Object> map : editRows) {
 				String next_oid = (String) map.get("next_oid");
+
 				WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
 
 				String group = (String) map.get("group");
 				String[] groups = group.split(",");
-
 				for (String s : groups) {
-
-					System.out.println("s=" + s);
-
-					EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s);
+					EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
 					PartGroupLink link = PartGroupLink.newPartGroupLink(nextPart, ecr);
+					link.setEco(eco);
 					PersistenceHelper.manager.save(link);
 				}
+
+				String delivery = (String) map.get("delivery");
+				String complete = (String) map.get("complete");
+				String inner = (String) map.get("inner");
+				String order = (String) map.get("order");
+				String partStateCode = (String) map.get("partStateCode");
+				String link_oid = (String) map.get("link_oid");
+
+				EcoPartLink eLink = (EcoPartLink) CommonUtil.getObject(link_oid);
+				eLink.setPartStateCode(partStateCode);
+				eLink.setDelivery(delivery);
+				eLink.setComplete(complete);
+				eLink.setInner(inner);
+				eLink.setOrders(order);
+				PersistenceHelper.manager.modify(eLink);
+
 			}
 
 			trs.commit();

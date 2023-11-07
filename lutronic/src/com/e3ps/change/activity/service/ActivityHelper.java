@@ -318,15 +318,12 @@ public class ActivityHelper {
 
 		QuerySpecUtils.toOrderBy(query, idx_m, WTPartMaster.class, WTPartMaster.NUMBER, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);
-		int cnt = 0;
 		while (qr.hasMoreElements()) {
 			Object[] obj = (Object[]) qr.nextElement();
 			EcoPartLink link = (EcoPartLink) obj[0];
 			WTPartMaster master = link.getPart();
 
-			cnt++;
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("idx", cnt);
 
 //			boolean isDummy = EChangeUtils.isDummy(master.getNumber());
 //			// 더미 제외
@@ -347,6 +344,11 @@ public class ActivityHelper {
 			boolean isRevise = link.isRevise(); // 개정여부?
 			map.put("oid", oid); // 활동 혹은 ECO OID
 			map.put("link_oid", link_oid);
+			map.put("delivery", link.getDelivery());
+			map.put("complete", link.getComplete());
+			map.put("inner", link.getInner());
+			map.put("order", link.getOrders());
+			map.put("part_state_code", link.getPartStateCode());
 			if (isApproved) {
 				// 개정 데이터
 				map.put("part_oid", part_oid);
@@ -373,7 +375,7 @@ public class ActivityHelper {
 				} else {
 					WTPart next_part = (WTPart) EChangeUtils.getNext(part);
 
-					String group = EChangeUtils.manager.getPartGroup(next_part);
+					String group = EChangeUtils.manager.getPartGroup(next_part, eco);
 
 					// 개정데이터가 있을경우
 					map.put("group", group);
@@ -393,7 +395,7 @@ public class ActivityHelper {
 				// 이전 부품
 				WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
 
-				String group = EChangeUtils.manager.getPartGroup(part);
+				String group = EChangeUtils.manager.getPartGroup(part, eco);
 
 				// 개정데이터가 있을경우
 				map.put("group", group);

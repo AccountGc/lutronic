@@ -6,8 +6,16 @@
 <%
 EcnDTO dto = (EcnDTO) request.getAttribute("dto");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getCountry();
+ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.getAttribute("list");
 %>
+
+<style type="text/css">
+.isSend {
+	background-color: #dedede !important;
+	color: red !important;
+	font-weight: bold !important;
+}
+</style>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -19,63 +27,102 @@ ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getCountry();
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="Erp전송" title="Erp전송" class="blue" onclick="modify();">
+			<input type="button" value="ERP전송" title="ERP전송" class="blue" onclick="send();">
+			<%
+			if (isAdmin) {
+			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
+			<%
+			}
+			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
-<div id="grid_ecn" style="height: 740px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid_wrap" style="height: 740px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
+		dataField : "ecoNumber",
+		headerText : "ECO 번호",
+		dataType : "string",
+		width : 100,
+		editable : false
+	}, {
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		width : 200,
+		editable : false,
 	}, {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		width : 120,
+		editable : false
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		width : 100,
+		editable : false
 	}, {
 		headerText : "확정 인허가일",
 		children : [ {
 			<%
-			int i=1;
-			for(Map<String,String> map : list){
+			int i = 1;
+			for (Map<String, String> map : list) {
+				String dataField = map.get("code");
 			%>	
-				dataField : "<%=map.get("code")%>",
+				dataField : "<%=dataField%>_date",
 				headerText : "<%=map.get("name")%>",
-				dataType : "string",
-				filter : {
-					showIcon : true,
-					inline : true
+				dataType : "date",
+				dateInputFormat : "yyyy-mm-dd", // 실제 데이터의 형식 지정
+				formatString : "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
+				width : 160,
+				styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+					const isSend = item.isSend;
+					if("<%=dataField%>_isSend" === true) {
+						return "isSend";
+					}
+					return null;
+				},				
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : { // icon 값 참조할 테이블 레퍼런스
+						"default" : "/Windchill/extcore/component/AUIGrid/images/calendar-icon.png" // default
+					},
+					onClick : function(event) {
+						// 달력 아이콘 클릭하면 실제로 달력을 띄움.
+						// 즉, 수정으로 진입함.
+						AUIGrid.openInputer(event.pid);
+					}
 				},
-			<%if(i!=list.size()){%>
+				editRenderer : {
+					type : "CalendarRenderer",
+					defaultFormat : "yyyy-mm-dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+					showPlaceholder : true, // defaultFormat 설정된 값으로 플래스홀더 표시
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
+					onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+					showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+					showTodayBtn : true, // 오늘 날짜 선택 버턴 출력
+					showUncheckDateBtn : true, // 날짜 선택 해제 버턴 출력
+					todayText : "오늘 선택", // 오늘 날짜 버턴 텍스트
+					uncheckDateText : "날짜 선택 해제", // 날짜 선택 해제 버턴 텍스트
+					uncheckDateValue : "-", // 날짜 선택 해제 버턴 클릭 시 적용될 값.
+				}				
+			<%if (i != list.size()) {%>
 			}, {
 			<%}
-				i++;
-			}
-			%>
+i++;
+}%>
 		}]
 	} ]
-	
+
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
@@ -84,21 +131,62 @@ ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getCountry();
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			showRowCheckColumn : true,
 			selectionMode : "multipleCells",
-			enableFilter : true,
 			autoGridHeight : true,
-			wordWrap : true,
+			enableCellMerge : true,
+			editable : true
 		}
-		myGridID = AUIGrid.create("#grid_ecn", columnLayout, props);
-// 		AUIGrid.setGridData(myGridID,"");
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+		console.log(<%=dto.getList()%>);
+		AUIGrid.setGridData(myGridID,
+<%=dto.getList()%>
+	);
+		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);
 	});
 	
+	function auiCellEditBeginHandler(event) {
+		const item = event.item;
+		if(item.isSend === true) {
+			return false;
+		}
+		return true;
+	}
+
+	function send() {
+
+		const editRows = AUIGrid.getEditedRowItems(myGridID);
+
+		if (editRows.length === 0) {
+			alert("수정 내역이 없습니다.");
+			return false;
+		}
+
+		if (!confirm("수정 내용을 SAP로 전송 하시겠습니까?")) {
+			return false;
+		}
+
+		const url = getCallUrl("/ecn/send");
+		const oid = document.getElementById("oid").value;
+		const params = {
+			oid : oid,
+			editRows : editRows
+		};
+		openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			}
+			closeLayer();
+		})
+	}
+
 	function _delete() {
 
 		if (!confirm("삭제 하시겠습니까?")) {

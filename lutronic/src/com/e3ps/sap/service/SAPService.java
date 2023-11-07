@@ -1,6 +1,7 @@
 package com.e3ps.sap.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
@@ -33,9 +34,12 @@ public interface SAPService {
 
 	/**
 	 * SAP ECO 전송
-	 * 
-	 * @param e
 	 */
 	public abstract void sendSapToEco(EChangeOrder e) throws Exception;
+
+	/**
+	 * SAP ECN 전송
+	 */
+	public abstract void sendSapToEcn(Map<String, Object> params) throws Exception;
 
 }

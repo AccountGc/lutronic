@@ -137,7 +137,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "number",
 					headerText : "ECN번호",
 					dataType : "string",
-					width : 150,
+					width : 230,
 					filter : {
 						showIcon : true,
 						inline : true

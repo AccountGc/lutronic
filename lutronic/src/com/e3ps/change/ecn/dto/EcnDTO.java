@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.e3ps.change.EChangeNotice;
+import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.org.service.MailUserHelper;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.sf.json.JSONArray;
 
 @Getter
 @Setter
@@ -19,15 +21,11 @@ public class EcnDTO {
 	private String number;
 	private String eoCommentA;
 	private String eoCommentB;
+	private String eoCommentC;
+	private String eoCommentD;
+	private String eoCommentE;
 	
-	// 결재 변수
-	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
-	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
-	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
-	private boolean self; // 자가 결재
-	
-	private boolean temprary;
-
+	private JSONArray list = new JSONArray();
 
 	public EcnDTO() {
 
@@ -41,5 +39,11 @@ public class EcnDTO {
 		setOid(ecn.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(ecn.getEoName());
 		setNumber(ecn.getEoNumber());
+		setEoCommentA(ecn.getEoCommentA());
+		setEoCommentB(ecn.getEoCommentB());
+		setEoCommentC(ecn.getEoCommentC());
+		setEoCommentD(ecn.getEoCommentD());
+		setEoCommentE(ecn.getEoCommentE());
+		setList(EcnHelper.manager.getEcnGroupPart(ecn));
 	}
 }

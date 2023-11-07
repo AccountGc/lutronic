@@ -297,19 +297,27 @@ public class EChangeUtils {
 	/**
 	 * ECO 관련 목품 그룹핑 정보
 	 */
-	public String getPartGroup(WTPart next_part) throws Exception {
+	public String getPartGroup(WTPart next_part, EChangeOrder eco) throws Exception {
 		String group = "";
 
 		int idx = 0;
-		QueryResult result = PersistenceHelper.manager.navigate(next_part, "ecr", PartGroupLink.class);
+
+		QuerySpec query = new QuerySpec();
+		int i = query.appendClassList(PartGroupLink.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartGroupLink.class, "roleAObjectRef.key.id", next_part);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartGroupLink.class, "ecoReference.key.id", eco);
+		QueryResult result = PersistenceHelper.manager.find(query);
+//		QueryResult result = PersistenceHelper.manager.navigate(next_part, "ecr", PartGroupLink.class);
 		while (result.hasMoreElements()) {
-			EChangeRequest ecr = (EChangeRequest) result.nextElement();
+			Object[] obj = (Object[]) result.nextElement();
+			PartGroupLink link = (PartGroupLink) obj[0];
+			EChangeRequest ecr = link.getEcr();
 
 			// 2
 			if (result.size() - 1 == idx) {
-				group += ecr.getEoNumber();
+				group += ecr.getPersistInfo().getObjectIdentifier().getStringValue();
 			} else {
-				group += ecr.getEoNumber() + ", ";
+				group += ecr.getPersistInfo().getObjectIdentifier().getStringValue() + ", ";
 			}
 			idx++;
 		}

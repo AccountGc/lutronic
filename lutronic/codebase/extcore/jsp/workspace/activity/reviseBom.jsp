@@ -14,6 +14,11 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 <meta charset="UTF-8">
 <title></title>
 <style type="text/css">
+.aui-red {
+	font-weight: bold !important;
+	color: red !important;
+}
+
 .preMerge {
 	font-weight: bold !important;
 	color: red !important;
@@ -94,7 +99,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
 						산출물
-						<input type="button" value="그룹저장" title="그룹저장" onclick="saveGroup();">
+						<input type="button" value="저장" title="저장" onclick="saveGroup();">
 					</div>
 				</td>
 				<td class="right">
@@ -109,6 +114,36 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 		<div id="grid_wrap" style="height: 470px; border-top: 1px solid #3180c3;"></div>
 		<script>
 			let myGridiD;
+			const part_result_code = [ {
+				key : "O",
+				value : "그대로 사용(O)"
+			}, {
+				key : "R",
+				value : "수정하여 사용(R)"
+			}, {
+				key : "N",
+				value : "신규변경품으로(N)"
+			}, {
+				key : "S",
+				value : "폐기(S)"
+			}, {
+				key : "-",
+				value : "-"
+			}, ]
+
+			const part_state_code = [ {
+				key : "N",
+				value : "신규(N)"
+			}, {
+				key : "D",
+				value : "삭제(D)"
+			}, {
+				key : "R",
+				value : "변경(R)"
+			}, {
+				key : "C",
+				value : "전용(C)"
+			}, ];
 			const list =
 		<%=clist%>
 			const columns = [ {
@@ -139,7 +174,6 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					valueField : "number",
 				},
 				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-					logger(value);
 					if (value !== undefined) {
 						let retStr = "";
 						const valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
@@ -191,7 +225,14 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					dataType : "string",
 					headerText : "상태",
 					editable : false,
-					width : 100
+					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value == "승인됨") {
+							return "aui-red";
+						}
+						return null;
+					}
+
 				} ]
 			}, {
 				headerText : "개정 후",
@@ -233,17 +274,265 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					editable : false,
 					headerText : "상태",
 					width : 100
-				}, {
-					dataField : "epm_number",
-					dataType : "string",
-					headerText : "주도면",
-					editable : false,
-				}, {
-					dataField : "reference",
-					dataType : "string",
-					editable : false,
-					headerText : "참조항목",
 				} ]
+			}, {
+				dataField : "part_state_code",
+				headerText : "부품<br>상태<br>코드",
+				dataType : "string",
+				width : 80,
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				editRenderer : {
+					type : "ComboBoxRenderer",
+					autoCompleteMode : true,
+					autoEasyMode : true,
+					matchFromFirst : false,
+					showEditorBtnOver : false,
+					list : part_state_code,
+					keyField : "key",
+					valueField : "value",
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						for (let i = 0, len = part_state_code.length; i < len; i++) {
+							if (part_state_code[i]["value"] == newValue) {
+								isValid = true;
+								break;
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
+				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = part_state_code.length; i < len; i++) {
+						if (part_state_code[i]["key"] == value) {
+							retStr = part_state_code[i]["value"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},
+			}, {
+				headerText : "기존 부품/장비",
+				children : [ {
+					headerText : "납풍 장비",
+					dataField : "delivery",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						autoCompleteMode : true,
+						autoEasyMode : true,
+						matchFromFirst : false,
+						showEditorBtnOver : false,
+						list : part_result_code,
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = part_result_code.length; i < len; i++) {
+								if (part_result_code[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = part_result_code.length; i < len; i++) {
+							if (part_result_code[i]["key"] == value) {
+								retStr = part_result_code[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+				}, {
+					headerText : "완성 장비",
+					dataField : "complete",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						autoCompleteMode : true,
+						autoEasyMode : true,
+						matchFromFirst : false,
+						showEditorBtnOver : false,
+						list : part_result_code,
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = part_result_code.length; i < len; i++) {
+								if (part_result_code[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = part_result_code.length; i < len; i++) {
+							if (part_result_code[i]["key"] == value) {
+								retStr = part_result_code[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+				}, {
+					headerText : "사내 재고",
+					dataField : "inner",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						autoCompleteMode : true,
+						autoEasyMode : true,
+						matchFromFirst : false,
+						showEditorBtnOver : false,
+						list : part_result_code,
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = part_result_code.length; i < len; i++) {
+								if (part_result_code[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = part_result_code.length; i < len; i++) {
+							if (part_result_code[i]["key"] == value) {
+								retStr = part_result_code[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+				}, {
+					headerText : "발주 부품",
+					dataField : "order",
+					dataType : "string",
+					width : 120,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						autoCompleteMode : true,
+						autoEasyMode : true,
+						matchFromFirst : false,
+						showEditorBtnOver : false,
+						list : part_result_code,
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = part_result_code.length; i < len; i++) {
+								if (part_result_code[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = part_result_code.length; i < len; i++) {
+							if (part_result_code[i]["key"] == value) {
+								retStr = part_result_code[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+				} ]
+			}, {
+				headerText : "중량(g)",
+				dataField : "",
+				dataType : "string",
+				width : 100
 			}, {
 				headerText : "BOM",
 				children : [ {
@@ -297,20 +586,6 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					editableOnFixedCell : true,
 					enableCellMerge : true,
 					editable : true,
-					// 					rowCheckableFunction : function(rowIndex, isChecked, item) {
-					// 						if (item.part_state !== "승인됨") {
-					// 							return false;
-					// 						}
-					// 						return true;
-					// 					},
-
-					// 					rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-					// 						if (item.part_state !== "승인됨") {
-					// 							return false; // false 반환하면 disabled 처리됨
-					// 						}
-					// 						return true;
-					// 					},
-
 					cellColMergeFunction : function(rowIndex, columnIndex, item) {
 						if (item.preMerge === true) {
 							return true;
@@ -320,6 +595,8 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 						}
 						return false;
 					},
+					useContextMenu : true,
+					enableRightDownFocus : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.setGridData(myGridID,
@@ -329,17 +606,13 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 
 			function complete() {
 				const data = AUIGrid.getGridData(myGridID);
-				let merge = false;
-				for (let i = 0; i < data.length; i++) {
-					if (data[i].merge === true) {
-						merge = true;
-						break;
-					}
-				}
 
-				if (merge) {
-					alert("개정작업을 안한 품목이 존재합니다.");
-					return false;
+				for (let i = 0; i < data.length; i++) {
+					const group = data[i].group;
+					if (group === "") {
+						alert("그룹핑이 안된 품목들이 존재합니다.");
+						return false;
+					}
 				}
 
 				const oid = document.getElementById("oid").value;
@@ -354,7 +627,6 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					description : description,
 					secondarys : secondarys
 				};
-				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -410,7 +682,6 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					after : oid,
 					oid : soid
 				};
-				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					callBack(true, true, data.msg);
@@ -455,7 +726,20 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				}
 
 				const editRows = AUIGrid.getEditedRowItems(myGridID);
-				logger(editRows);
+
+				if (editRows.length === 0) {
+					alert("수정 내역이 없습니다.");
+					return false;
+				}
+
+				for (let i = 0; i < editRows.length; i++) {
+					const next_oid = editRows[i].next_oid;
+					if (next_oid === "") {
+						alert("개정 후 품목이 없습니다.");
+						return false;
+					}
+				}
+
 				const url = getCallUrl("/activity/saveGroup");
 				const oid = document.getElementById("oid").value;
 				parent.openLayer();

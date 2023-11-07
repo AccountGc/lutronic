@@ -259,7 +259,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert("코드타입을 선택해주세요.");
 				}else{
 					const item = {
-						enabled : false,
+						enabled : true,
 					};
 					AUIGrid.addRow(myGridID, item, "first");					
 				}

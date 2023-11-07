@@ -34,7 +34,15 @@ import wt.util.WTException;
 
 								constraints = @PropertyConstraints(required = true)),
 
-						myRole = @MyRole(name = "ecn", cardinality = Cardinality.ZERO_TO_ONE))
+						myRole = @MyRole(name = "ecn", cardinality = Cardinality.ONE)),
+
+				@GeneratedForeignKey(
+
+						foreignKeyRole = @ForeignKeyRole(name = "cr", type = EChangeRequest.class,
+
+								constraints = @PropertyConstraints(required = true)),
+
+						myRole = @MyRole(name = "ecn", cardinality = Cardinality.ONE))
 
 		}
 
