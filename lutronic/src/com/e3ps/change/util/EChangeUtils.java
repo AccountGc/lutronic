@@ -11,6 +11,7 @@ import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartGroupLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.service.EcnHelper;
@@ -26,13 +27,12 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.service.SAPHelper;
 
 import net.sf.json.JSONArray;
-import wt.enterprise.Master;
 import wt.enterprise.RevisionControlled;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.part.WTPart;
+import wt.part.WTPartMaster;
 import wt.query.QuerySpec;
-import wt.util.WTException;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.BaselineMember;
 import wt.vc.baseline.ManagedBaseline;
@@ -182,9 +182,6 @@ public class EChangeUtils {
 			System.out.println("EO 대상 품목 개수 =  " + list.size());
 //		completeProduct(partList, eco);
 
-//		ERPHelper.service.sendERP(eco);
-
-			System.out.println("EOTYPE = " + eo.getEoType());
 			// 개발일 경우 전송 하지 않는다.
 			if (eo.getEoType().trim().equals("PRODUCT")) {
 				SAPHelper.service.sendSapToEo(eo, completeParts);
@@ -205,8 +202,18 @@ public class EChangeUtils {
 		String oid = hash.get("oid");
 		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
+		// SAP 전송
+		SAPHelper.service.sendSapToEco(eco);
+
+		// 완제품 재수집
+
+		// 부품 도면 상태 변경 - 전송 후 상태값을 변경해야 할듯
+
+		// 베이스 라인 생성
+
 		// ECO 정보로 ECN 자동 생성
 		EcnHelper.service.create(eco);
+
 	}
 
 	/**
@@ -279,17 +286,19 @@ public class EChangeUtils {
 	 */
 	public WTPart getEcoPrePart(EChangeOrder eco, WTPart after) throws Exception {
 		WTPart pre_part = null;
-
+		WTPartMaster master = after.getMaster();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(PartToPartLink.class, true);
 
 		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "ecoReference.key.id", eco);
-		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "roleBObjectRef.key.id", after);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "roleBObjectRef.key.id", master);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			PartToPartLink link = (PartToPartLink) obj[0];
-			pre_part = link.getPrev();
+			WTPartMaster m = link.getPrev();
+			String version = link.getPreVersion();
+			pre_part = PartHelper.manager.getPart(m.getNumber(), version);
 		}
 		return pre_part;
 	}
@@ -323,5 +332,37 @@ public class EChangeUtils {
 		}
 
 		return group;
+	}
+
+	/**
+	 * ECO 진행시 변경된 품목 리스트 - 개정 혹은 이전품에 대한 내용
+	 */
+	public ArrayList<WTPart> getEcoParts(EChangeOrder eco) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+		while (result.hasMoreElements()) {
+			EcoPartLink link = (EcoPartLink) result.nextElement();
+			WTPartMaster master = link.getPart();
+			String version = link.getVersion();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+			boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+
+			// 개정 케이스 - 이전품목을 가여와야한다.
+			if (isApproved) {
+				// 진짜 다음 버전으로 올리는 케이스 인데..
+				WTPart next_part = (WTPart) getNext(part);
+				list.add(next_part);
+//				list.add(part);// 이전것도 일단 보낸다???
+				// 애시당초 변경된건을 넣은 케이스
+			} else {
+				list.add(part);
+				WTPart pre_part = SAPHelper.manager.getPre(part, eco);
+				if (pre_part != null) {
+//					list.add(pre_part);
+				}
+			}
+		}
+
+		return list;
 	}
 }

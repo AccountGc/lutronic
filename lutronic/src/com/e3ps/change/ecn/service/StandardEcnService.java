@@ -128,18 +128,13 @@ public class StandardEcnService extends StandardManager implements EcnService {
 					} else {
 						group = EChangeUtils.manager.getPartGroup(part, eco);
 					}
-
 					// 그룹핑은 개정 품목 및 신규 품목에 묶고 있는중..
 					// 품목 이력은 Eco 품목을 기준으로 이후 품목을 가져오도록 설정..
-
 					if (group.contains(oid)) {
-						System.out.println("해당 OID 포함 = " + oid);
 						EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
 						PersistenceHelper.manager.save(eLink);
 					}
-
 				}
-
 			}
 
 			trs.commit();

@@ -15,8 +15,6 @@ import wt.part.WTPartUsageLink;
 @ToString
 public class SAPBomDTO {
 
-	private String parentPartNumber;
-	private String childPartNumber;
 	private String newParentPartNumber;
 	private String newChildPartNumber;
 	private double qty = 0D;
@@ -25,8 +23,8 @@ public class SAPBomDTO {
 	public SAPBomDTO(WTPartUsageLink link) throws Exception {
 		WTPart parent = link.getUsedBy();
 		WTPartMaster child = link.getUses();
-		setParentPartNumber(parent.getNumber());
-		setChildPartNumber(child.getNumber());
+		setNewParentPartNumber(parent.getNumber());
+		setNewChildPartNumber(child.getNumber());
 		setQty(link.getQuantity().getAmount());
 		setUnit(link.getQuantity().getUnit().toString().toUpperCase());
 	}

@@ -40,6 +40,8 @@ import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.iba.value.IBAHolder;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleTemplate;
+import wt.lifecycle.LifeCycleTemplateReference;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.WTPart;
@@ -470,7 +472,14 @@ public class StandardActivityService extends StandardManager implements Activity
 				// 개정
 				WTPart newPart = (WTPart) VersionControlHelper.service.newVersion(part);
 				VersionControlHelper.setNote(part, message);
-				PersistenceHelper.manager.save(newPart);
+				newPart = (WTPart) PersistenceHelper.manager.save(newPart);
+				newPart = (WTPart) PersistenceHelper.manager.refresh(newPart);
+
+				// 라이프사이클 재지정
+
+				LifeCycleTemplateReference lct = LifeCycleHelper.service.getLifeCycleTemplateReference("LC_PART",
+						WCUtil.getWTContainerRef());
+				LifeCycleHelper.service.reassign(newPart, lct);
 
 				// IBA 속성처리
 				removeAttr((IBAHolder) newPart, newPart.getVersionIdentifier().getSeries().getValue());
@@ -516,7 +525,9 @@ public class StandardActivityService extends StandardManager implements Activity
 				link.setRevise(true);
 				PersistenceHelper.manager.modify(link);
 
-				PartToPartLink pLink = PartToPartLink.newPartToPartLink(part, newPart);
+				PartToPartLink pLink = PartToPartLink.newPartToPartLink(part.getMaster(), newPart.getMaster());
+				pLink.setPreVersion(part.getVersionIdentifier().getSeries().getValue());
+				pLink.setAfterVersion(newPart.getVersionIdentifier().getSeries().getValue());
 				pLink.setEco(eco);
 				PersistenceHelper.manager.save(pLink);
 
@@ -608,7 +619,9 @@ public class StandardActivityService extends StandardManager implements Activity
 			WTPart prePart = (WTPart) CommonUtil.getObject(prev);
 			WTPart afterPart = (WTPart) CommonUtil.getObject(after);
 
-			PartToPartLink link = PartToPartLink.newPartToPartLink(prePart, afterPart);
+			PartToPartLink link = PartToPartLink.newPartToPartLink(prePart.getMaster(), afterPart.getMaster());
+			link.setPreVersion(prePart.getVersionIdentifier().getSeries().getValue());
+			link.setAfterVersion( afterPart.getVersionIdentifier().getSeries().getValue());
 			link.setEco((EChangeOrder) eca.getEo());
 			PersistenceHelper.manager.save(link);
 
@@ -633,8 +646,8 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			String oid = (String) params.get("oid");
 			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
-			EChangeOrder eco = (EChangeOrder)eca.getEo();
-				
+			EChangeOrder eco = (EChangeOrder) eca.getEo();
+
 			for (Map<String, Object> map : editRows) {
 				String next_oid = (String) map.get("next_oid");
 

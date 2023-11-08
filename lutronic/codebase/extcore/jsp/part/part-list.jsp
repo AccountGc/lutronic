@@ -429,6 +429,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "Rev.",
 					dataType : "string",
 					width : 90,
+					renderer : {
+						type : "TemplateRenderer"	
+					},
 					filter : {
 						showIcon : true,
 						inline : true

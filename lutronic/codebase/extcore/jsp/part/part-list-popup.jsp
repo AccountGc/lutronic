@@ -412,6 +412,9 @@ const columns = [ {
 	headerText : "Rev.",
 	dataType : "string",
 	width : 90,
+	renderer : {
+		type : "TemplateRenderer"	
+	},
 	filter : {
 		showIcon : true,
 		inline : true
@@ -521,10 +524,11 @@ function loadGridData() {
 	let params = new Object();
 	const url = getCallUrl("/part/list");
 	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-		"ecoNo", "eoNo" ,"creatorOid","latest" ,"specification"];
-	var  latest = document.querySelector("input[name=latest]:checked").value;
+		"ecoNo", "eoNo" ,"creatorOid","specification"];
+	const  latest = document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
-	params.latest = latest=="true"?true:false;
+// 	params.latest = JSON.parse(latest);
+	params.latest = false;
 	AUIGrid.showAjaxLoader(myGridID);
 	parent.openLayer();
 	call(url, params, function(data) {
@@ -578,13 +582,12 @@ function trigger(close, msg) {
 		alert(msg);
 		self.close();
 	}
-	// 메세지 주고 창안닫기
-	if(!close && (msg !== "" && msg !== undefined)) {
-		alert(msg);
-	}
 	
-	// 그냥 창닫기
-	if(!close && msg === "") {
+	if(!close) {
+		if((msg !== "" && msg !== undefined)) {
+			alert(msg);
+		}
+	} else {
 		self.close();
 	}
 }

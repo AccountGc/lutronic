@@ -98,11 +98,9 @@ public class EcnHelper {
 			for (Map<String, String> country : countrys) {
 				String dataField = country.get("code");
 				PartToSendLink sLink = getSendLink(ecn, part, dataField);
-				System.out.println("sLink=" + sLink);
 				if (sLink != null) {
-					map.put(dataField + "_date", countrys);
 					map.put(dataField + "_isSend", sLink.getIsSend());
-					map.put("sendDate", sLink.getSendDate().toString().substring(0, 10));
+					map.put(dataField + "_date", sLink.getSendDate().toString().substring(0, 10));
 				}
 			}
 

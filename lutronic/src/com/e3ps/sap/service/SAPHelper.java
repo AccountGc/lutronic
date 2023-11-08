@@ -6,16 +6,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EcoPartLink;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDevConnection;
 import com.e3ps.sap.dto.SAPBomDTO;
+import com.e3ps.sap.dto.SAPReverseBomDTO;
 import com.ptc.core.query.report.bom.server.WTPartUsageIdCollector;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -34,7 +39,10 @@ import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
 import wt.pom.DBProperties;
 import wt.pom.WTConnection;
+import wt.query.ClassAttribute;
+import wt.query.OrderBy;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
@@ -421,4 +429,152 @@ public class SAPHelper {
 		}
 	}
 
+	/**
+	 * BOM 역전개 데이터 검색후 SAP 전송에 맞게 가공
+	 */
+	public ArrayList<SAPReverseBomDTO> getReverseBomData(WTPart end, EChangeOrder eco) throws Exception {
+		ArrayList<SAPReverseBomDTO> list = new ArrayList<SAPReverseBomDTO>();
+		WTPartMaster master = (WTPartMaster) end.getMaster();
+		QuerySpec query = new QuerySpec();
+
+		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+		int idx_part = query.appendClassList(WTPart.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+
+		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+		sc.setOuterJoin(0);
+		query.appendAnd();
+		query.appendWhere(sc, new int[] { idx_usage, idx_part });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
+				new int[] { idx_part });
+
+		View view = ViewHelper.service.getView(end.getViewName());
+		if (view != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
+					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
+		}
+
+		String state = end.getLifeCycleState().toString();
+		if (state != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+		}
+
+		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
+
+		query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, "master>number"), true),
+				new int[] { idx_part });
+
+		QueryResult re = PersistenceHelper.manager.find(query);
+		while (re.hasMoreElements()) {
+			Object obj[] = (Object[]) re.nextElement();
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart p = (WTPart) obj[1];
+			SAPReverseBomDTO dto = new SAPReverseBomDTO(end, p, link, eco);
+			list.add(dto);
+			getReverseBomData(p, list, eco);
+		}
+		return list;
+	}
+
+	/**
+	 * BOM 역전개 데이터 검색후 SAP 전송에 맞게 가공
+	 */
+	private ArrayList<SAPReverseBomDTO> getReverseBomData(WTPart end, ArrayList<SAPReverseBomDTO> list,
+			EChangeOrder eco) throws Exception {
+		WTPartMaster master = (WTPartMaster) end.getMaster();
+		QuerySpec query = new QuerySpec();
+
+		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+		int idx_part = query.appendClassList(WTPart.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+
+		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+		sc.setOuterJoin(0);
+		query.appendAnd();
+		query.appendWhere(sc, new int[] { idx_usage, idx_part });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
+				new int[] { idx_part });
+
+		View view = ViewHelper.service.getView(end.getViewName());
+		if (view != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
+					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
+		}
+
+		String state = end.getLifeCycleState().toString();
+		if (state != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+		}
+
+		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
+
+		query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, "master>number"), true),
+				new int[] { idx_part });
+
+		QueryResult re = PersistenceHelper.manager.find(query);
+		while (re.hasMoreElements()) {
+			Object obj[] = (Object[]) re.nextElement();
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart p = (WTPart) obj[1];
+			SAPReverseBomDTO dto = new SAPReverseBomDTO(end, p, link, eco);
+			list.add(dto);
+			getReverseBomData(p, list, eco);
+		}
+		return list;
+	}
+
+	/**
+	 * ECO 최하위 품목 모으기..
+	 */
+	public ArrayList<WTPart> getEcoEndParts(EChangeOrder eco) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+		while (result.hasMoreElements()) {
+			EcoPartLink link = (EcoPartLink) result.nextElement();
+			WTPartMaster master = link.getPart();
+			String version = link.getVersion();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+			View view = ViewHelper.service.getView(part.getViewName());
+			WTPartConfigSpec configSpec = WTPartConfigSpec
+					.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+			QueryResult qr = WTPartHelper.service.getUsesWTParts(part, configSpec);
+			if (qr.size() == 0) {
+				list.add(part);
+			}
+		}
+		return list;
+	}
+	
+	/**
+	 * 이전 품목
+	 */
+	public WTPart getPre(WTPart after, EChangeOrder eco) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(PartToPartLink.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "roleBObjectRef.key.id",
+				(WTPartMaster) after.getMaster());
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "ecoReference.key.id", eco);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		WTPart pre_part = null;
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			PartToPartLink link = (PartToPartLink) obj[0];
+			WTPartMaster m = link.getPrev();
+			String version = link.getPreVersion();
+			pre_part = PartHelper.manager.getPart(m.getNumber(), version);
+		}
+		return pre_part;
+	}
 }

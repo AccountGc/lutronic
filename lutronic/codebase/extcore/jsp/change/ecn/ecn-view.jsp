@@ -70,11 +70,9 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 	}, {
 		headerText : "확정 인허가일",
 		children : [ {
-			<%
-			int i = 1;
-			for (Map<String, String> map : list) {
-				String dataField = map.get("code");
-			%>	
+			<%int i = 1;
+for (Map<String, String> map : list) {
+	String dataField = map.get("code");%>	
 				dataField : "<%=dataField%>_date",
 				headerText : "<%=map.get("name")%>",
 				dataType : "date",
@@ -82,8 +80,8 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 				formatString : "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
 				width : 160,
 				styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-					const isSend = item.isSend;
-					if("<%=dataField%>_isSend" === true) {
+					const isSend = item.<%=dataField%>_isSend;
+					if(isSend === true) {
 						return "isSend";
 					}
 					return null;
@@ -152,7 +150,11 @@ i++;
 	
 	function auiCellEditBeginHandler(event) {
 		const item = event.item;
-		if(item.isSend === true) {
+		const dataField = event.dataField;
+		const rowIndex = event.rowIndex;
+		const isSend = AUIGrid.getCellValue(myGridID, rowIndex, dataField);
+		if(isSend !== undefined) {
+			alert("SAP로 전송 완료된 값입니다.");
 			return false;
 		}
 		return true;
