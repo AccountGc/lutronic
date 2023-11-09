@@ -20,14 +20,14 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		</td>
 		<td class="right">
 			<%
-			if(dto.getState().equals("APPROVED")){
+			if(dto.getState().equals("APPROVED") || isAdmin){
 			%>
 				<input type="button" value="개정" title="개정" class="" id="reviseBtn">
 			<%	
 			}
 			%>
 			<%
-			if(dto.getState().equals("INWORK") || dto.getState().equals("REWORK")){
+			if(dto.isModify() || isAdmin){
 			%>
 				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 				<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
