@@ -283,9 +283,15 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoCommentA(dto.getEoCommentA());
 			cr.setEoCommentB(dto.getEoCommentB());
 			cr.setEoCommentC(dto.getEoCommentC());
-
+			
 			cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
 
+			// 임시저장 상태인 경우
+			if(cr.getLifeCycleState().toString().equals("TEMPRARY")){
+				State state = State.toState("INWORK");
+				LifeCycleHelper.service.setLifeCycleState(cr, state);
+			}
+			
 			// 첨부 파일 삭제
 			removeAttach(cr);
 			saveAttach(cr, dto);

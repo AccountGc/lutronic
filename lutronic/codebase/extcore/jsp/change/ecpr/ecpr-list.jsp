@@ -58,12 +58,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<select name="state" id="state" class="width-200" >
 						<option value="">선택</option>
 						<%
-                        for (Map<String,String> lifecycle : lifecycleList) {
-                        %>
+						for (Map<String,String> lifecycle : lifecycleList) {
+							if(!lifecycle.get("code").equals("TEMPRARY")){
+						%>
                         <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
                         <%
-                        }
-                        %>
+							}
+						}
+						%>
 					</select>
 				</td>
 			</tr>

@@ -58,6 +58,10 @@ public class EcprHelper {
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(ECPRRequest.class, true);
 			
+			// 상태 임시저장 제외
+	    	if(query.getConditionCount() > 0) { query.appendAnd(); }
+	    	query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
+			
 			//제목
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.EO_NAME, name);
 			//번호
