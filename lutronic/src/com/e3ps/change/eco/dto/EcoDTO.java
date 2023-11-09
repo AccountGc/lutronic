@@ -101,7 +101,7 @@ public class EcoDTO {
 	 * 위험통제 디스플레이
 	 */
 	private String risk(String s) throws Exception {
-		if ("".equals(s)) {
+		if ("NONE".equals(s)) {
 			return "N/A";
 		} else if ("0".equals(s)) {
 			return "불필요";

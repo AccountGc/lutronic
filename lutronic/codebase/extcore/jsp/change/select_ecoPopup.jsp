@@ -86,7 +86,7 @@
 				<th>위험통제</th>
 				<td>&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="riskType" value="true" checked="NONE">
+						<input type="radio" name="riskType" value="NONE" checked="checked">
 						<div class="state p-success">
 							<label> <b>선택안됨</b>
 							</label>

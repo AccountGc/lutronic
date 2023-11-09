@@ -17,6 +17,8 @@ public class EcoColumn {
 	private String name;
 	private String licensing;
 	private String riskType;
+	private String licensing_name;
+	private String riskType_name;
 	private String state;
 	private String creator;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -38,10 +40,40 @@ public class EcoColumn {
 		setName(eco.getEoName());
 		setLicensing(eco.getLicensingChange());
 		setRiskType(eco.getRiskType());
+		setLicensing_name(licensing(eco.getLicensingChange()));
+		setRiskType_name(risk(eco.getRiskType()));
 		setState(eco.getLifeCycleState().getDisplay());
 		setCreator(eco.getCreatorFullName());
 		setCreatedDate(eco.getCreateTimestamp());
 		setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate(eco.getEoApproveDate());
+	}
+	
+	/**
+	 * 위험통제 디스플레이
+	 */
+	private String risk(String s) throws Exception {
+		if ("NONE".equals(s)) {
+			return "N/A";
+		} else if ("0".equals(s)) {
+			return "불필요";
+		} else if ("1".equals(s)) {
+			return "필요";
+		}
+		return "";
+	}
+
+	/**
+	 * 인허가 디스플레이
+	 */
+	private String licensing(String s) throws Exception {
+		if ("NONE".equals(s)) {
+			return "N/A";
+		} else if ("0".equals(s)) {
+			return "불필요";
+		} else if ("1".equals(s)) {
+			return "필요";
+		}
+		return "";
 	}
 }
