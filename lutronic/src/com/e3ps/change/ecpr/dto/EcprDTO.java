@@ -64,6 +64,8 @@ public class EcprDTO {
 
 	// 외부 메일 변수
 	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
+	
+	private boolean temprary;
 
 	public EcprDTO() {
 

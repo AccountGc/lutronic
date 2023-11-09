@@ -173,11 +173,10 @@
 				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/drawing/create");
 				call(url, params, function(data) {
+					alert(data.msg);
 					if(data.result){
 						location.href = getCallUrl("/drawing/list");
 					}
-					
-					parent.closeLayer();
 				});
 			}
 			

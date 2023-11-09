@@ -28,6 +28,7 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -56,6 +57,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
+		boolean temprary = dto.isTemprary();
 		// 결재
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
@@ -127,6 +129,12 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			LifeCycleHelper.setLifeCycle(ecpr,
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			ecpr = (ECPRRequest) PersistenceHelper.manager.save(ecpr);
+			
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
+			}
 
 			// 첨부 파일 저장
 			saveAttach(ecpr, dto);
@@ -300,6 +308,12 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoCommentC(eoCommentC);
 			
 			ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
+			
+			// 임시저장 상태인 경우
+			if(ecpr.getLifeCycleState().toString().equals("TEMPRARY")){
+				State state = State.toState("INWORK");
+				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
+			}
 			
 			// 첨부 파일 삭제
 			removeAttach(ecpr);
