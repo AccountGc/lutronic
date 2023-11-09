@@ -18,14 +18,14 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		</td>
 		<td class="right">
 			<%
-			if (dto.is_modify()) {
+			if (dto.is_modify() || isAdmin) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<%
 			}
 			%>
 			<%
-			if (dto.is_delete()) {
+			if (dto.is_delete() || isAdmin) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%

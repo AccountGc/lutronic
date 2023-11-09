@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.beans.CommentsDTO;
@@ -60,6 +61,10 @@ public class MoldDTO {
 	private String approvaltype_name;
 	private String approvaltype_code;
 	
+	private WTDocument doc;
+	// auth
+	private boolean isModify = false;
+	
 	// 변수용
 	private String lifecycle;
 	private String primary;
@@ -97,6 +102,9 @@ public class MoldDTO {
 		setDocumentTypeDisplay(doc.getDocType().getDisplay());
 		setIBAAttributes(doc);
 		setIterationNote(doc.getIterationNote());
+		
+		setDoc(doc);
+		setAuth();
 	}
 	
 	/**
@@ -201,16 +209,38 @@ public class MoldDTO {
   	   	return false;
 	}
 	
-	 /**
-	  * Owner 유무 체크
-	  * @return
-	  */
-		public boolean isOwner(){
-			try{
-				return SessionHelper.getPrincipal().getName().equals(getCreator());
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return false;
+	/**
+	 * Owner 유무 체크
+	 * @return
+	 */
+	public boolean isOwner(){
+		try{
+			return SessionHelper.getPrincipal().getName().equals(getCreator());
+		}catch(Exception e){
+			e.printStackTrace();
 		}
+		return false;
+	}
+	
+	/**
+	 * 권한 설정
+	 */
+	private void setAuth() throws Exception {
+		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
+		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
+			setModify(true);
+		}
+	}
+	
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(String state) throws Exception {
+		boolean check = false;
+		String compare = getDoc().getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
+	}
 }
