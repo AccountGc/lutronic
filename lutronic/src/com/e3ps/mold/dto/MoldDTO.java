@@ -61,7 +61,6 @@ public class MoldDTO {
 	private String approvaltype_name;
 	private String approvaltype_code;
 	
-	private WTDocument doc;
 	// auth
 	private boolean isModify = false;
 	
@@ -103,8 +102,7 @@ public class MoldDTO {
 		setIBAAttributes(doc);
 		setIterationNote(doc.getIterationNote());
 		
-		setDoc(doc);
-		setAuth();
+		setAuth(doc);
 	}
 	
 	/**
@@ -225,9 +223,9 @@ public class MoldDTO {
 	/**
 	 * 권한 설정
 	 */
-	private void setAuth() throws Exception {
+	private void setAuth(WTDocument doc) throws Exception {
 		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
-		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
+		if (check("INWORK",doc) || check("TEMPRARY",doc) || check("BATCHAPPROVAL",doc) || check("REWORK",doc)) {
 			setModify(true);
 		}
 	}
@@ -235,9 +233,9 @@ public class MoldDTO {
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(String state,WTDocument doc) throws Exception {
 		boolean check = false;
-		String compare = getDoc().getLifeCycleState().toString();
+		String compare = doc.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}

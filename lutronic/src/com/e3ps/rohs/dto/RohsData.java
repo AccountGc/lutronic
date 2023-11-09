@@ -42,7 +42,6 @@ public class RohsData{
 	private String publicationDate;
 	private String fileName;
 	
-	private ROHSMaterial rohs;
 	// auth
 	private boolean isModify = false;
 	
@@ -85,8 +84,7 @@ public class RohsData{
 		}
 		setComments(CommentsHelper.manager.comments(rohs));
 		
-		setRohs(rohs);
-		setAuth();
+		setAuth(rohs);
 	}
 	
 	/**
@@ -128,9 +126,9 @@ public class RohsData{
 	/**
 	 * 권한 설정
 	 */
-	private void setAuth() throws Exception {
+	private void setAuth(ROHSMaterial rohs) throws Exception {
 		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 재작업))
-		if (check("INWORK") || check("TEMPRARY") || check("REWORK")) {
+		if (check("INWORK",rohs) || check("TEMPRARY",rohs) || check("REWORK",rohs)) {
 			setModify(true);
 		}
 	}
@@ -138,9 +136,9 @@ public class RohsData{
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(String state,ROHSMaterial rohs) throws Exception {
 		boolean check = false;
-		String compare = getRohs().getLifeCycleState().toString();
+		String compare = rohs.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}
