@@ -133,7 +133,9 @@ public class StandardEoService extends StandardManager implements EoService {
 			saveAttach(eo, dto);
 
 			// 설변 활동 생성
-			ActivityHelper.service.saveActivity(eo, rows200);				
+			if (rows200.size() > 0) {
+				ActivityHelper.service.saveActivity(eo, rows200);				
+			}
 
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(eo, external);
@@ -345,9 +347,11 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(eo, external);
 
-			// 설변활동 어떻게 처리되는지...
-			ActivityHelper.service.deleteActivity(eo);
-			ActivityHelper.service.saveActivity(eo, rows200);
+			if(rows200.size()>0){
+				// 설변활동 어떻게 처리되는지...
+				ActivityHelper.service.deleteActivity(eo);
+				ActivityHelper.service.saveActivity(eo, rows200);
+			}
 
 			trs.commit();
 			trs = null;

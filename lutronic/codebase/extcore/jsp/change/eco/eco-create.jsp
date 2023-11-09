@@ -124,7 +124,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">
+				<th class="req lb">
 					설계변경 부품 내역파일
 <!-- 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;"> -->
 				</th>
