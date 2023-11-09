@@ -276,7 +276,7 @@ public class NumberCodeHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", parent);
-		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, true);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false); // false==0 true==1
 		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -290,7 +290,7 @@ public class NumberCodeHelper {
 			map.put("description", dto.getDescription());
 			map.put("sort", dto.getSort());
 			map.put("enabled", dto.isEnabled());
-			recursive(n, data);
+			recursive(n, map);
 			list.add(map);
 		}
 		data.put("children", list);
