@@ -246,7 +246,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
-					dataField : "licensing",
+					dataField : "licensing_name",
 					headerText : "인허가변경",
 					dataType : "string",
 					width : 120,
@@ -255,7 +255,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
-					dataField : "riskType",
+					dataField : "riskType_name",
 					headerText : "위험 통제",
 					dataType : "string",
 					width : 120,
