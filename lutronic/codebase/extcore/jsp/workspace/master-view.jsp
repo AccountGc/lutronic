@@ -102,8 +102,6 @@ String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
 		});
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
-		createAUIGrid10001(columns10001);
-		AUIGrid.resize(myGridID10001);
 		// 		createAUIGrid(columns);
 		// 		AUIGrid.resize(myGridID);
 		finderUser("reassignUser");
@@ -111,6 +109,5 @@ String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID10000);
-		AUIGrid.resize(myGridID10001);
 	});
 </script>
