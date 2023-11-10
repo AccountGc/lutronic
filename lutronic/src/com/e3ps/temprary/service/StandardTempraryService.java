@@ -29,6 +29,8 @@ public class StandardTempraryService extends StandardManager implements Temprary
 			if ("$$MMDocument".equals(doc.getDocType().toString())) {
 				// 금형
 				return "mold";
+			} else if("$$ROHS".equals(doc.getDocType().toString())){
+				return "ROHS";
 			}else {
 				// 문서
 				return "doc";

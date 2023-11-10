@@ -186,6 +186,7 @@
 
 		<script type="text/javascript">
 			function create(temp) {
+				// 임시저장
 				const temprary = JSON.parse(temp);
 				// 결재선
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);

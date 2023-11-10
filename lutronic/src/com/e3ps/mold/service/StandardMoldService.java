@@ -19,7 +19,6 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -118,16 +117,9 @@ public class StandardMoldService extends StandardManager implements MoldService 
  			// 문서 관련 객체 데이터 처리
 			saveLink(doc, dto);
 	        
-			boolean isSelf = dto.isSelf();
-			// 결재 시작
-			if (isSelf) {
-				// 자가결재시
-				WorkspaceHelper.service.self(doc);
-			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
-				}
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
 			}
 			
 			trs.commit();
@@ -276,6 +268,12 @@ public class StandardMoldService extends StandardManager implements MoldService 
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String iterationNote = dto.getIterationNote();
+		boolean temprary = dto.isTemprary();
+		
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		
 		WTDocument doc = null;
 		WTDocument olddoc = null;
@@ -336,6 +334,18 @@ public class StandardMoldService extends StandardManager implements MoldService 
  				State state = State.toState("INWORK");
  				LifeCycleHelper.service.setLifeCycleState(doc, state);
  			}
+ 			
+ 			// 임시저장 하겠다 한 경우
+ 			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(doc, state);
+			}
+ 			
+ 			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
+			}
             
 			trs.commit();
 			trs = null;

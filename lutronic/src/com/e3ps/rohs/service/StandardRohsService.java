@@ -298,77 +298,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		
 	}
 	
-	@Override
-	public Map<String,Object> listRoHSDataAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		int page = StringUtil.getIntParameter(request.getParameter("page"), 1);
-		int rows = StringUtil.getIntParameter(request.getParameter("rows"), 10);
-		int formPage = StringUtil.getIntParameter(request.getParameter("formPage"), 15);
-		
-		String sessionId = request.getParameter("sessionId");
-		
-		PagingQueryResult qr = null;
-		
-		if(StringUtil.checkString(sessionId)) {
-			
-			qr = PagingSessionHelper.fetchPagingSession((page - 1) * rows, rows, Long.valueOf(sessionId));
-		}else {
-			QuerySpec query = RohsQueryHelper.service.listRoHSDataAction(request, response);
-			
-			qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, query, true);
-			
-		}
-
-		PageControl control = new PageControl(qr, page, formPage, rows);
-	    int totalPage   = control.getTotalPage();
-	    int startPage   = control.getStartPage();
-	    int endPage     = control.getEndPage();
-	    int listCount   = control.getTopListCount();
-	    int totalCount  = control.getTotalCount();
-	    int currentPage = control.getCurrentPage();
-	    int rowCount    = control.getTopListCount();
-	    String param    = control.getParam();
-		
-		StringBuffer xmlBuf = new StringBuffer();
-	    xmlBuf.append("<?xml version='1.0' encoding='UTF-8'?>");
-	    xmlBuf.append("<rows>");
-	    
-		while(qr.hasMoreElements()){	
-			Object[] o = (Object[]) qr.nextElement();
-			ROHSContHolder holder = (ROHSContHolder) o[0];
-			
-			RoHSHolderData data = new RoHSHolderData(holder);
-			RohsData rData = new RohsData(data.getRohs());
-			
-			xmlBuf.append("<row id='"+ data.oid +"'>");
-			xmlBuf.append("<cell><![CDATA[" + (rowCount--) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + rData.getManufactureDisplay(true) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[<a href=javascript:openView('" + rData.oid + "')>" + rData.name + "</a>]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.fileName + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + data.publicationDate + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + DateUtil.subString(rData.createDate, 0, 10) + "]]></cell>");
-			xmlBuf.append("<cell><![CDATA[" + rData.creator + "]]></cell>");
-			xmlBuf.append("</row>" );
-			
-		}
-		xmlBuf.append("</rows>");
-		
-		Map<String,Object> result = new HashMap<String,Object>();
-		
-		result.put("formPage"       , formPage);
-		result.put("rows"           , rows);
-		result.put("totalPage"      , totalPage);
-		result.put("startPage"      , startPage);
-		result.put("endPage"        , endPage);
-		result.put("listCount"      , listCount);
-		result.put("totalCount"     , totalCount);
-		result.put("currentPage"    , currentPage);
-		result.put("param"          , param);
-		result.put("sessionId"      , qr.getSessionId()==0 ? "" : qr.getSessionId());
-		result.put("xmlString"      , xmlBuf);
-		
-		return result;
-	}
-	
 	private Map<String,Object> setPartROHMap(Map<String,Object> partRohsMap, Map<String,Object> partMap){
 		
 		partRohsMap.put("partOid", partMap.get("partOid"));
@@ -685,7 +614,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
 			// 외부 메일
 			ArrayList<Map<String, String>> external =  (ArrayList<Map<String, String>>) params.get("external");
-			boolean isSelf = false;
 			
 			// 문서 기본 정보 설정
 			rohs = ROHSMaterial.newROHSMaterial();
@@ -755,15 +683,9 @@ public class StandardRohsService extends StandardManager implements RohsService 
             // 외부 메일 링크 저장
  			MailUserHelper.service.saveLink(rohs, external);
  			
- 			// 결재 시작
-			if (isSelf) {
-				// 자가결재시
-				WorkspaceHelper.service.self(rohs);
-			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(rohs, agreeRows, approvalRows, receiveRows);
-				}
+ 			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(rohs, agreeRows, approvalRows, receiveRows);
 			}
             
             trs.commit();
@@ -921,6 +843,12 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		try {
 			trx.start();
 			String oid = StringUtil.checkNull((String) params.get("oid"));
+			boolean temprary = (boolean) params.get("temprary");
+			
+			// 결재
+			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
+			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
+			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
 			
 			if(oid.length() > 0) {
 			
@@ -1018,6 +946,18 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	                docMaster = (WTDocumentMaster)IdentityHelper.service.changeIdentity(docMaster, identity);
 	            }
 	            new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
+	            
+	            // 임시저장 하겠다 한 경우
+	 			if (temprary) {
+					State state = State.toState("TEMPRARY");
+					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+					LifeCycleHelper.service.setLifeCycleState(new_material, state);
+				}
+	 			
+	 			// 결재시작
+				if (approvalRows.size() > 0) {
+					WorkspaceHelper.service.register(new_material, agreeRows, approvalRows, receiveRows);
+				}
 			}
 			
 			trx.commit();

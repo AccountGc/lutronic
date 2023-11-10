@@ -547,19 +547,6 @@ public class RohsController extends BaseController {
 		return model;
 	}
 	
-	@ResponseBody
-	@RequestMapping("/listRoHSDataAction")
-	public Map<String,Object> listRoHSDataAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> result = null;
-		try {
-			result = RohsHelper.service.listRoHSDataAction(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-			result = new HashMap<String,Object>();
-		}
-		return result;
-	}
-	
 	/** 부품의 BOM에서 ROHS 파일 다운로드
 	 * @param request
 	 * @param response
