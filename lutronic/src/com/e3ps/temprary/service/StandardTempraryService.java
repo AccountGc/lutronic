@@ -5,7 +5,6 @@ import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.doc.dto.DocumentDTO;
 
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
@@ -23,12 +22,11 @@ public class StandardTempraryService extends StandardManager implements Temprary
 	}
 	
 	@Override
-	public String getViewIdentity(String oid) throws Exception {
+	public String getViewIdentity(String oid) {
 		Persistable per = CommonUtil.getObject(oid);
 		if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
-			DocumentDTO dto = new DocumentDTO(doc);
-			if(dto.getDocumentType_name().equals("금형문서")) {
+			if ("$$MMDocument".equals(doc.getDocType().toString())) {
 				// 금형
 				return "mold";
 			}else {
