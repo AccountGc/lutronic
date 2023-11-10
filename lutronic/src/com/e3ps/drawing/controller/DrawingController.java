@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,6 +35,7 @@ import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.mold.service.MoldHelper;
 import com.e3ps.part.service.PartHelper;
@@ -62,6 +64,7 @@ public class DrawingController extends BaseController{
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		List<Map<String,String>> cadTypeList = DrawingHelper.manager.cadTypeList();
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_PART", "");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		WTUser sessionUser  = (WTUser) SessionHelper.manager.getPrincipal();
 		ModelAndView model = new ModelAndView();
@@ -74,6 +77,7 @@ public class DrawingController extends BaseController{
 		model.addObject("sessionUser", sessionUser);
 		model.addObject("cadTypeList", cadTypeList);
 		model.addObject("unitList", unitList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
 		return model;
 	}
@@ -258,11 +262,10 @@ public class DrawingController extends BaseController{
 		result.put("distribute", distribute);
 		return result;
 	}
-	
 	@Description(value = "도면 삭제")
 	@ResponseBody
-	@PostMapping(value = "/delete")
-	public Map<String,Object> deleteDrwaingAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) {
+	@DeleteMapping(value = "/delete")
+	public Map<String,Object> deleteDrwaingAction(@RequestParam String oid) {
 		Map<String,Object> result = DrawingHelper.service.delete(oid);
 		if ((boolean) result.get("result")) {
 			result.put("msg", DELETE_MSG);

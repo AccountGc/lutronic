@@ -289,6 +289,12 @@ public class StandardMoldService extends StandardManager implements MoldService 
             doc.setDescription(description);
             doc = (WTDocument) PersistenceHelper.manager.modify(doc);
             
+            // 임시저장 상태인 경우
+ 			if(doc.getLifeCycleState().toString().equals("TEMPRARY")){
+ 				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(doc, state);
+ 			}
+            
             // 첨부 파일 클리어
  			removeAttach(doc);
  			// 첨부파일 저장

@@ -7,7 +7,8 @@ public interface TempraryService {
 
 	/**
 	 * OID 값으로 주소 구분 하기
+	 * @throws Exception 
 	 */
-	String getViewIdentity(String oid);
+	String getViewIdentity(String oid) throws Exception;
 
 }

@@ -175,7 +175,7 @@
 				call(url, params, function(data) {
 					alert(data.msg);
 					if(data.result){
-						location.href = getCallUrl("/drawing/list");
+						document.location.href = getCallUrl("/drawing/list");
 					}
 				});
 			}

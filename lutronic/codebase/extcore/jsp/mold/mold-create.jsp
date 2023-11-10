@@ -163,6 +163,7 @@
 		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="doc" name="moduleType" />
 		</jsp:include>
 		<br>
 		

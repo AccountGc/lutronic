@@ -926,8 +926,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 					//return msg;	
 				}
 				
-				EpmData data = new EpmData(epm);
-				if(data.getPart() != null){
+				if(DrawingHelper.service.getWTPart(epm) != null){
 					result = false;
 					msg = Message.get("도면과 연계된 품목이 존재하여 삭제할 수 없습니다.");
 					//return msg;
@@ -2542,6 +2541,12 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			
 			if( newEpm != null ){
 				EpmPublishUtil.publish(newEpm);
+			}
+			
+			// 임시저장 상태인 경우
+			if(newEpm.getLifeCycleState().toString().equals("TEMPRARY")){
+				State state = State.toState("INWORK");
+				LifeCycleHelper.service.setLifeCycleState(newEpm, state);
 			}
 		}
 	}

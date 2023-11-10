@@ -67,6 +67,8 @@ import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
+import wt.vc.config.ConfigHelper;
+import wt.vc.config.LatestConfigSpec;
 
 public class RohsHelper {
 	public static final RohsService service = ServiceFactory.getService(RohsService.class);
@@ -893,5 +895,19 @@ public class RohsHelper {
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);
+	}
+	
+	/**
+	 * 최신버전
+	 */
+	public ROHSMaterial latest(String oid) throws Exception {
+		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
+		LatestConfigSpec config = new LatestConfigSpec();
+		QueryResult result = ConfigHelper.service.filteredIterationsOf(rohs.getMaster(), config);
+		if (result.hasMoreElements()) {
+			ROHSMaterial latest = (ROHSMaterial) result.nextElement();
+			return latest;
+		}
+		return null;
 	}
 }

@@ -25,11 +25,14 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 
+import wt.doc.WTDocument;
 import wt.org.WTUser;
 import wt.session.SessionHelper;
 
@@ -260,6 +263,19 @@ public class RohsController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+	
+	@Description(value = "물질 최신버전 이동")
+	@GetMapping(value = "/latest")
+	public ModelAndView latest(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		ROHSMaterial latest = RohsHelper.manager.latest(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		RohsData dto = new RohsData(latest);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/rohs/rohs-view");
+		return model;
 	}
 	
 	@Description(value = "물질 일괄등록 페이지")

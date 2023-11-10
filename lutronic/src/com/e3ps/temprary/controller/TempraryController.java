@@ -47,7 +47,7 @@ public class TempraryController extends BaseController {
 	@Description(value = "OID 값으로 주소 구분 하기")
 	@ResponseBody
 	@PostMapping(value = "/identity")
-	public String identity(@RequestBody String oid) {
+	public String identity(@RequestBody String oid) throws Exception {
 		return TempraryHelper.service.getViewIdentity(oid);
 	}
 	

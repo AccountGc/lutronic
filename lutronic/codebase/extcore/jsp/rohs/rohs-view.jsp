@@ -90,7 +90,19 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				<th class="lb">상태</th>
 				<td class="indent5"><%=dto.getStateDisplay()%></td>
 				<th class="lb">Rev.</th>
-				<td class="indent5"><%=dto.getVersion()%></td>
+				<td class="indent5">
+					<%=dto.getVersion()%>
+					<%
+					if (!dto.isLatest()) {
+					%>
+					&nbsp;
+					<b>
+						<a href="javascript:latest();">(최신버전으로)</a>
+					</b>
+					<%
+					}
+					%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
@@ -300,6 +312,13 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
 		_popup(url, 1500, 550, "n");
 	})
+	
+	// 최신버전으로 페이지 이동
+	function latest() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/rohs/latest?oid=" + oid);
+		_popup(url, 1600, 550, "n");
+	}
 	
 	//일괄 다운로드
 	$("#batchSecondaryDown").click(function() {

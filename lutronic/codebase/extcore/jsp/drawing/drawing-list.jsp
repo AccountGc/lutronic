@@ -16,6 +16,7 @@ ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAtt
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 List<Map<String,String>> cadTypeList = (List<Map<String,String>>) request.getAttribute("cadTypeList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 String userOid = CommonUtil.getOIDString(sessionUser);
 String userNm = sessionUser.getFullName();
@@ -163,10 +164,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (Map<String,String> lifecycle : lifecycleList) {
+							if(!lifecycle.get("code").equals("TEMPRARY")){
+						%>
+							<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<%
+							}
+						}
+						%>
 					</select>
 				</td>
 				<th>제작방법</th>
@@ -494,8 +500,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
  				let params = new Object();
  				$("input[name=sessionid").val(0);
  				const url = getCallUrl("/drawing/list");
-				const field = ["_psize", "location", "islastversion", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				const field = ["_psize", "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
  				params = toField(params, field);
+ 				params.islastversion = $('input[name=islastversion]:checked').val();
  				AUIGrid.showAjaxLoader(myGridID);
  				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
