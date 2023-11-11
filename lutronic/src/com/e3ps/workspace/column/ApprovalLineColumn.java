@@ -153,7 +153,14 @@ public class ApprovalLineColumn {
 		Persistable per = master.getPersist();
 		String persistType = "없음";
 		if (per instanceof WTDocument) {
-			persistType = "문서";
+			WTDocument doc = (WTDocument) per;
+			if ("$$MMDocument".equals(doc.getDocType().toString())) {
+				persistType = "금형";
+			} else if("$$ROHS".equals(doc.getDocType().toString())){
+				persistType = "ROHS";
+			}else {
+				persistType = "문서";
+			}
 		} else if (per instanceof WTPart) {
 			persistType = "품목";
 		} else if (per instanceof EPMDocument) {

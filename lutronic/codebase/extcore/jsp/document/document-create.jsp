@@ -375,7 +375,7 @@ iframe {
 					return false;
 				}
 				
-				if (isNull(interalnumber.value)) {
+				if (isNull(interalnumber)) {
 					alert("내부문서번호를 입력해주세요.");
 					return false;
 				}

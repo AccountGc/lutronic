@@ -161,6 +161,10 @@ public class DrawingHelper {
 				SearchUtil.addLastVersionCondition(query, EPMDocument.class, idx);;
 			}
 			
+			// 상태 임시저장 제외
+	    	if(query.getConditionCount() > 0) { query.appendAnd(); }
+	    	query.appendWhere(new SearchCondition(EPMDocument.class, EPMDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
+			
 			//Working Copy 제외
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();

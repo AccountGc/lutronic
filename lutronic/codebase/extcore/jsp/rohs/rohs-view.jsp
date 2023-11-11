@@ -30,14 +30,14 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			%>
 				<input type="button" value="물질복사" title="물질복사" class="" id="copyRohs">
 				<%
-				if(dto.getState().equals("APPROVED")){
+				if(dto.getState().equals("APPROVED") || isAdmin){
 				%>
 					<input type="button" value="개정" title="개정" class="" id="reviseBtn">
 				<%	
 				}
 				%>
 				<%
-				if(dto.getState().equals("INWORK") || dto.getState().equals("REWORK")){
+				if(dto.isModify() || isAdmin){
 				%>
 					<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 					<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
@@ -90,7 +90,19 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				<th class="lb">상태</th>
 				<td class="indent5"><%=dto.getStateDisplay()%></td>
 				<th class="lb">Rev.</th>
-				<td class="indent5"><%=dto.getVersion()%></td>
+				<td class="indent5">
+					<%=dto.getVersion()%>
+					<%
+					if (!dto.isLatest()) {
+					%>
+					&nbsp;
+					<b>
+						<a href="javascript:latest();">(최신버전으로)</a>
+					</b>
+					<%
+					}
+					%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
@@ -300,6 +312,13 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
 		_popup(url, 1500, 550, "n");
 	})
+	
+	// 최신버전으로 페이지 이동
+	function latest() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/rohs/latest?oid=" + oid);
+		_popup(url, 1600, 550, "n");
+	}
 	
 	//일괄 다운로드
 	$("#batchSecondaryDown").click(function() {

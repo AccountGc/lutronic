@@ -270,6 +270,7 @@
 					primary : primary.value,
 					rows101 : rows101,
 					rows300 : rows300,
+					temprary : temprary,
 					// 외부 메일
 					external : external
 				}

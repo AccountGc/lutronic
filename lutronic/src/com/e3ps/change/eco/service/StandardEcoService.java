@@ -67,6 +67,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+		boolean temprary = dto.isTemprary();
 		// 결재
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
@@ -108,6 +109,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			LifeCycleHelper.setLifeCycle(eco,
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			eco = (EChangeOrder) PersistenceHelper.manager.save(eco);
+			
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(eco, state);
+			}
 
 			// 첨부 파일 저장
 			saveAttach(eco, dto);
@@ -124,7 +131,9 @@ public class StandardEcoService extends StandardManager implements EcoService {
 //			saveEcoPart(eco, clist);
 
 			// 설변 활동 생성
-			ActivityHelper.service.saveActivity(eco, rows200);
+			if(rows200.size()>0) {
+				ActivityHelper.service.saveActivity(eco, rows200);
+			}
 
 			// 외부 메일 링크 저장
 			MailUserHelper.service.saveLink(eco, external);
@@ -268,6 +277,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			eco.setRiskType(riskType);
 
 			eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
+			
+			// 임시저장 상태인 경우
+			if(eco.getLifeCycleState().toString().equals("TEMPRARY")){
+				State state = State.toState("INWORK");
+				LifeCycleHelper.service.setLifeCycleState(eco, state);
+			}
 
 //			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
 //			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
@@ -289,8 +304,10 @@ public class StandardEcoService extends StandardManager implements EcoService {
 //			saveEcoPart(eco, clist);
 
 			// 설변 활동 생성
-			ActivityHelper.service.deleteActivity(eco);
-			ActivityHelper.service.saveActivity(eco, rows200);
+			if(rows200.size()>0) {
+				ActivityHelper.service.deleteActivity(eco);
+				ActivityHelper.service.saveActivity(eco, rows200);
+			}
 
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(dto.getOid());

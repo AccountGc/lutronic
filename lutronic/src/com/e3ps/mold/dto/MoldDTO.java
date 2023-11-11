@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.beans.CommentsDTO;
@@ -60,6 +61,9 @@ public class MoldDTO {
 	private String approvaltype_name;
 	private String approvaltype_code;
 	
+	// auth
+	private boolean isModify = false;
+	
 	// 변수용
 	private String lifecycle;
 	private String primary;
@@ -72,7 +76,6 @@ public class MoldDTO {
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
 	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
 	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
-	private boolean self; // 자가 결재
 	
 	public MoldDTO() {
 		
@@ -97,6 +100,8 @@ public class MoldDTO {
 		setDocumentTypeDisplay(doc.getDocType().getDisplay());
 		setIBAAttributes(doc);
 		setIterationNote(doc.getIterationNote());
+		
+		setAuth(doc);
 	}
 	
 	/**
@@ -201,16 +206,38 @@ public class MoldDTO {
   	   	return false;
 	}
 	
-	 /**
-	  * Owner 유무 체크
-	  * @return
-	  */
-		public boolean isOwner(){
-			try{
-				return SessionHelper.getPrincipal().getName().equals(getCreator());
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return false;
+	/**
+	 * Owner 유무 체크
+	 * @return
+	 */
+	public boolean isOwner(){
+		try{
+			return SessionHelper.getPrincipal().getName().equals(getCreator());
+		}catch(Exception e){
+			e.printStackTrace();
 		}
+		return false;
+	}
+	
+	/**
+	 * 권한 설정
+	 */
+	private void setAuth(WTDocument doc) throws Exception {
+		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
+		if (check("INWORK",doc) || check("TEMPRARY",doc) || check("BATCHAPPROVAL",doc) || check("REWORK",doc)) {
+			setModify(true);
+		}
+	}
+	
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(String state,WTDocument doc) throws Exception {
+		boolean check = false;
+		String compare = doc.getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
+	}
 }

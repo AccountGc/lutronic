@@ -48,16 +48,7 @@ public class TempraryColumn {
 	 * 기본객체 설정값
 	 */
 	private void setInfo(LifeCycleManaged lcm) throws Exception {
-		 if(lcm instanceof ROHSMaterial) {
-			// 물질
-			ROHSMaterial rohs = (ROHSMaterial) lcm;
-			setName(rohs.getName());
-			setNumber(rohs.getNumber());
-			setDataType("ROHS");
-			setCreator(rohs.getCreatorFullName());
-			setCreatedDate(rohs.getCreateTimestamp());
-			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
-		 }else if (lcm instanceof WTDocument) {
+		 if(lcm instanceof WTDocument) {
 			// 문서
 			WTDocument doc = (WTDocument) lcm;
 			setName(doc.getName());
@@ -67,8 +58,10 @@ public class TempraryColumn {
 			setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
 			if ("$$MMDocument".equals(doc.getDocType().toString())) {
 				setDataType("금형");
-			} else {
-				setDataType("문서");				
+			} else if("$$ROHS".equals(doc.getDocType().toString())){
+				setDataType("ROHS");
+			}else {
+				setDataType("문서");	
 			}
 		}else if(lcm instanceof EChangeRequest) {
 			// CR 

@@ -1,9 +1,7 @@
 package com.e3ps.change.eo.dto;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
@@ -11,8 +9,6 @@ import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.org.service.MailUserHelper;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,7 +30,11 @@ public class EoDTO {
 	private String eoCommentA = "";
 	private String eoCommentB = "";
 	private String eoCommentC = "";
-
+	
+	private EChangeOrder eo;
+	// auth
+	private boolean isModify = false;
+	
 	// 변수용
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows104 = new ArrayList<>(); // 완제품
@@ -79,6 +79,9 @@ public class EoDTO {
 		setEoCommentA(eo.getEoCommentA()==null?"":eo.getEoCommentA());
 		setEoCommentB(eo.getEoCommentB()==null?"":eo.getEoCommentB());
 		setEoCommentC(eo.getEoCommentC()==null?"":eo.getEoCommentC());
+		
+		setEo(eo);
+		setAuth();
 	}
 
 	private ArrayList<Map<String, String>> getModel(String model) throws Exception {
@@ -113,5 +116,26 @@ public class EoDTO {
 		}
 		return rtn;
 	}
-
+	
+	/**
+	 * 권한 설정
+	 */
+	private void setAuth() throws Exception {
+		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
+		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
+			setModify(true);
+		}
+	}
+	
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(String state) throws Exception {
+		boolean check = false;
+		String compare = getEo().getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
+	}
 }

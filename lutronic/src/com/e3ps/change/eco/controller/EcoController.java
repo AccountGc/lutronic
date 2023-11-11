@@ -32,7 +32,7 @@ public class EcoController extends BaseController {
 	@Description(value = "ECO 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_ECO", "");
 		ModelAndView model = new ModelAndView();
 		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/change/eco/eco-list.jsp");

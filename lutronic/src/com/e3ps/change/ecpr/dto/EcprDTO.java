@@ -49,6 +49,10 @@ public class EcprDTO {
 	private String proposer;
 	private String changeCode;
 	private String model;
+	
+	private ECPRRequest ecpr;
+	// auth
+	private boolean isModify = false;
 
 	// 변수용
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
@@ -64,6 +68,8 @@ public class EcprDTO {
 
 	// 외부 메일 변수
 	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
+	
+	private boolean temprary;
 
 	public EcprDTO() {
 
@@ -98,6 +104,9 @@ public class EcprDTO {
 		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
+		
+		setEcpr(cr);
+		setAuth();
 	}
 
 	/**
@@ -137,5 +146,27 @@ public class EcprDTO {
 	public String getChangeCode() throws Exception {
 		this.changeCode = NumberCodeHelper.manager.getNumberCodeName(this.changeSection, "CHANGESECTION");
 		return changeCode;
+	}
+	
+	/**
+	 * 권한 설정
+	 */
+	private void setAuth() throws Exception {
+		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
+		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
+			setModify(true);
+		}
+	}
+	
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(String state) throws Exception {
+		boolean check = false;
+		String compare = getEcpr().getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
 	}
 }

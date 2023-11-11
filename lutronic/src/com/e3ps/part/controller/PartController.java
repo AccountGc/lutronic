@@ -59,11 +59,15 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.drawing.service.DrawingHelper;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.service.RohsHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
@@ -99,6 +103,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_PART", "");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 		
 		ModelAndView model = new ModelAndView();
@@ -109,6 +114,7 @@ public class PartController extends BaseController {
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
 		model.addObject("unitList", unitList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/part/part-list.jsp");
 		return model;
 	}
@@ -2326,6 +2332,19 @@ public class PartController extends BaseController {
 		// model.addObject("bsobj", bsobj);
 		model.addObject("view", view);
 		model.setViewName("popup:/part/viewAUIPartBom");
+		return model;
+	}
+	
+	@Description(value = "품목 최신버전 이동")
+	@GetMapping(value = "/latest")
+	public ModelAndView latest(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTPart latest = PartHelper.manager.latest(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		PartDTO dto = new PartDTO(latest);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/part/part-view");
 		return model;
 	}
 }

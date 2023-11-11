@@ -7,15 +7,9 @@
 <%
 ReferenceFactory rf = new ReferenceFactory();
 String tapOid = request.getParameter("tapOid");
-
 EChangeOrder eChangeOrder =(EChangeOrder) rf.getReference(tapOid).getObject();
-
-
 String type = eChangeOrder.getEoType(); 
 %>
-
-
-
 
 <% if("CHANGE".equals(type)){
 	EcoDTO dto = new EcoDTO(tapOid);
@@ -82,7 +76,7 @@ String type = eChangeOrder.getEoType();
 			</td>
 		</tr>
 		<tr>
-			<th class="lb">계변경 부품 내역파일</th>
+			<th class="lb">설계변경 부품 내역파일</th>
 			<td class="indent5" colspan="3">
 				<%
 				Map<String, Object> contentMap = dto.getContentMap();
@@ -98,7 +92,7 @@ String type = eChangeOrder.getEoType();
 				} else {
 				%>
 				<font color="red">
-					<b>등록된 계변경 부품 내역파일이 없습니다.</b>
+					<b>등록된 설계변경 부품 내역파일이 없습니다.</b>
 				</font>
 				<%
 				}
@@ -114,6 +108,18 @@ String type = eChangeOrder.getEoType();
 			</td>
 		</tr>
 	</table>
+	<!-- 설계변경 활동 -->
+	<jsp:include page="/extcore/jsp/change/activity/include/activity-include.jsp">
+		<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		<jsp:param value="view" name="mode" />
+		<jsp:param value="250" name="height" />
+	</jsp:include>
+	<!-- 설계변경 품목 -->
+	<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
+		<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		<jsp:param value="view" name="mode" />
+		<jsp:param value="true" name="multi" />
+	</jsp:include>
 	
 	<script type="text/javascript">
 
@@ -123,12 +129,22 @@ String type = eChangeOrder.getEoType();
 		eoCommentC.style.height = "500px";
 		// 		const style = window.getComputedStyle(eoCommentC);
 		// 		console.log(style);
-
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-
 		autoHeight();
+		const isCreated200 = AUIGrid.isCreated(myGridID200); // 설변 활동
+		if (isCreated200) {
+			AUIGrid.resize(myGridID200);
+		} else {
+			createAUIGrid200(columns200);
+		}
+		const isCreated500 = AUIGrid.isCreated(myGridID500); // 설변 품목
+		if (isCreated500) {
+			AUIGrid.resize(myGridID500);
+		} else {
+			createAUIGrid500(columns500);
+		}
 	});
 	
 </script>
@@ -226,6 +242,29 @@ String type = eChangeOrder.getEoType();
 		<jsp:param value="300" name="height" />
 		<jsp:param value="true" name="header" />
 	</jsp:include>
+	
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", function() {
+			const isCreated90 = AUIGrid.isCreated(myGridID90); // 문서
+			if (isCreated90) {
+				AUIGrid.resize(myGridID90);
+			} else {
+				createAUIGrid90(columns90);
+			}
+			const isCreated300 = AUIGrid.isCreated(myGridID300); // MODEL
+			if (isCreated300) {
+				AUIGrid.resize(myGridID300);
+			} else {
+				createAUIGrid300(columns300);
+			}
+			const isCreated104 = AUIGrid.isCreated(myGridID104); // 완제품
+			if (isCreated104) {
+				AUIGrid.resize(myGridID104);
+			} else {
+				createAUIGrid104(columns104);
+			}
+		});
+	</script>
 <% }%>
 
 

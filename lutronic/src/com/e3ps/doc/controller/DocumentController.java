@@ -41,6 +41,7 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.groupware.workprocess.service.WFItemHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
@@ -113,12 +114,14 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		ModelAndView model = new ModelAndView();
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;
 	}

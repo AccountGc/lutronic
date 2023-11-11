@@ -27,6 +27,7 @@ public class PartDTO {
 	private String modifier;
 	private String modifyDate;
 	private String ecoNo;
+	private boolean isLatest;
 	
 	private String epmOid;
 	
@@ -51,5 +52,6 @@ public class PartDTO {
 		setModifier(part.getModifierFullName());
 		setModifyDate(part.getModifyTimestamp().toString().substring(0, 10));
 		setComments(CommentsHelper.manager.comments(part));
+		setLatest(CommonUtil.isLatestVersion(part));
 	}
 }

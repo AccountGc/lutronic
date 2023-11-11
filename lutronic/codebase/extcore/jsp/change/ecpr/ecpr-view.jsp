@@ -18,9 +18,14 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			</div>
 		</td>
 		<td class="right">
-			<!-- 회수 권한 승인중 && 소유자 || 관리자 -->
+			<%
+			if (isAdmin || dto.isModify()) {
+			%>
 			<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
 			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+			<%
+			}
+			%>
 			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
 		</td>
 	</tr>

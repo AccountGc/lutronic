@@ -166,10 +166,8 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		}
 	
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/drawing/delete");
-		const params = new Object();
-		params.oid = oid;
-		call(url, params, function(data) {
+		const url = getCallUrl("/drawing/delete?oid=" + oid);
+		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
@@ -178,16 +176,17 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					parent.opener.$("#sessionId").val("");
 					parent.opener.lfn_Search();
 				}
-				window.close();
+				self.close();
 			}
-		});
+		}, "DELETE");
 	})
 			
 	//최신버전
-	$("#lastestBtn").click(function() {
+	function latest() {
+		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/drawing/latest?oid=" + oid);
 		_popup(url, 1600, 550, "n");
-	})
+	}
 	
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({

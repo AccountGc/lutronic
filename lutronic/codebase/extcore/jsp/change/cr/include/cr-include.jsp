@@ -178,7 +178,9 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 				autoGridHeight : true
 		}
 		myGridID101 = AUIGrid.create("#grid101", columnLayout, props);
+		<%if (view || update) {%>
 		AUIGrid.setGridData(myGridID101, <%=AUIGridUtil.include(oid, "cr")%>);
+		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드

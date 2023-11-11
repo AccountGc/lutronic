@@ -125,20 +125,28 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">상태</th>
 				<td class="indent5">
-					<%-- 					<%=data.getLifecycle()%> --%>
+					<%=dto.getState()%>
 				</td>
 				<th class="lb">Rev.</th>
 				<td class="indent5">
-					<%-- 					<%=data.getVersion()%>.<%=data.getIteration %>(<%=data.getViewName %>) --%>
+					<%=dto.getVersion()%>
+					<%
+					if (!dto.isLatest()) {
+					%>
+					&nbsp;
+					<b>
+						<a href="javascript:latest();">(최신버전으로)</a>
+					</b>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
 				<th class="lb">수정자</th>
-				<td class="indent5">
-					<%-- 					<%=data.getModifier()%> --%>
-				</td>
+				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
@@ -363,6 +371,13 @@ $("#deleteBtn").click(function () {
 		}
 	});
 })
+
+// 최신버전으로 페이지 이동
+function latest() {
+	const oid = document.getElementById("oid").value;
+	const url = getCallUrl("/part/latest?oid=" + oid);
+	_popup(url, 1600, 550, "n");
+}
 
 //댓글 등록
 $("#commentsBtn").click(function () {

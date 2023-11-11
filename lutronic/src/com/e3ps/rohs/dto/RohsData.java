@@ -2,14 +2,12 @@ package com.e3ps.rohs.dto;
 
 import java.util.ArrayList;
 
-import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
@@ -17,7 +15,6 @@ import com.e3ps.rohs.service.RohsHelper;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.doc.WTDocument;
 import wt.session.SessionHelper;
 
 @Getter
@@ -44,6 +41,10 @@ public class RohsData{
 	private String fileType;
 	private String publicationDate;
 	private String fileName;
+	
+	// auth
+	private boolean isModify = false;
+	
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 	
@@ -82,6 +83,8 @@ public class RohsData{
 			setPublicationDate(StringUtil.checkNull(ch.getPublicationDate()));
 		}
 		setComments(CommentsHelper.manager.comments(rohs));
+		
+		setAuth(rohs);
 	}
 	
 	/**
@@ -118,5 +121,27 @@ public class RohsData{
 	 */
 	private String keyToValue(String code, String codeType) throws Exception {
 		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
+	}
+	
+	/**
+	 * 권한 설정
+	 */
+	private void setAuth(ROHSMaterial rohs) throws Exception {
+		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 재작업))
+		if (check("INWORK",rohs) || check("TEMPRARY",rohs) || check("REWORK",rohs)) {
+			setModify(true);
+		}
+	}
+	
+	/**
+	 * 상태값 여부 체크
+	 */
+	private boolean check(String state,ROHSMaterial rohs) throws Exception {
+		boolean check = false;
+		String compare = rohs.getLifeCycleState().toString();
+		if (compare.equals(state)) {
+			check = true;
+		}
+		return check;
 	}
 }

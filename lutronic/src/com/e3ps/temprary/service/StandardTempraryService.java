@@ -7,6 +7,7 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
 
 import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.fc.Persistable;
 import wt.part.WTPart;
 import wt.services.StandardManager;
@@ -24,8 +25,16 @@ public class StandardTempraryService extends StandardManager implements Temprary
 	public String getViewIdentity(String oid) {
 		Persistable per = CommonUtil.getObject(oid);
 		if (per instanceof WTDocument) {
-			// 문서
-			return "doc";
+			WTDocument doc = (WTDocument) per;
+			if ("$$MMDocument".equals(doc.getDocType().toString())) {
+				// 금형
+				return "mold";
+			} else if("$$ROHS".equals(doc.getDocType().toString())){
+				return "ROHS";
+			}else {
+				// 문서
+				return "doc";
+			}
 		} else if (per instanceof EChangeOrder) {
 			EChangeOrder eco = (EChangeOrder) per;
 			if (eco.getEoType().equals("CHANGE")) {
@@ -47,6 +56,9 @@ public class StandardTempraryService extends StandardManager implements Temprary
 		} else if (per instanceof WTPart) {
 			// 부품
 			return "part";
+		}else if (per instanceof EPMDocument) {
+			// 부품
+			return "drawing";
 		}
 		return null;
 	}
