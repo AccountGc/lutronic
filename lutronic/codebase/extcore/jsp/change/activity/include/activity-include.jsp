@@ -110,12 +110,14 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 				};
 			}
 		},
-	}, {
-		dataField : "name",
-		headerText : "활동명",
-		dateType : "string",
-		width : 150
-	}, {
+	}, 
+// 	{
+// 		dataField : "name",
+// 		headerText : "활동명",
+// 		dateType : "string",
+// 		width : 150
+// 	}, 
+	{
 		dataField : "activity_type",
 		headerText : "활동구분",
 		dateType : "string",
@@ -221,7 +223,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		dataType : "date",
 		dateInputFormat : "yyyy-mm-dd", // 실제 데이터의 형식 지정
 		formatString : "yyyy년 mm월 dd일", // 실제 데이터 형식을 어떻게 표시할지 지정
-		width : 160,
+		width : 200,
 		renderer : {
 			type : "IconRenderer",
 			iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨

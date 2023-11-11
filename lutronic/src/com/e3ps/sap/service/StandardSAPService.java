@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
@@ -26,6 +27,7 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.util.PartUtil;
 import com.e3ps.sap.conn.SAPDevConnection;
 import com.e3ps.sap.dto.SAPBomDTO;
 import com.e3ps.sap.dto.SAPReverseBomDTO;
@@ -296,6 +298,15 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		JCoParameterList result = function.getExportParameterList();
 		Object r_type = result.getValue("EV_STATUS");
 		Object r_msg = result.getValue("EV_MESSAGE");
+
+		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
+		rtnTable.firstRow();
+		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+		}
+
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 		System.out.println("종료 SAP 인터페이스 - EO BOM FUN : ZPPIF_PDM_002");
@@ -328,17 +339,21 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
 		// 자재는 한번에 넘기고 함수 호출
 		for (WTPart part : list) {
-			insertTable.insertRow(idx);
 
 			String number = part.getNumber();
 			// 전송 제외 품목
-			if (skip(number)) {
+//			if (SAPHelper.manager.skipEight(number)) {
+//				continue;
+//			}
+
+			if (SAPHelper.manager.skipLength(number)) {
 				continue;
 			}
 
 			System.out.println("전송된 자재 번호 = " + number);
 
 			// 샘플로 넣기
+			insertTable.insertRow(idx);
 			insertTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 8자리
 			insertTable.setValue("MATNR", number); // 자재번호
 			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
@@ -382,18 +397,6 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 		System.out.println("종료 SAP 인터페이스 - EO 자재마스터 FUN : ZPPIF_PDM_001");
-	}
-
-	/**
-	 * 품번 기준 전송 제외 품목
-	 */
-	private boolean skip(String number) throws Exception {
-
-		if (number.startsWith("8")) {
-			return true;
-		}
-
-		return false;
 	}
 
 	@Override
@@ -465,6 +468,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 				bomTable.setValue("MENGE", dto.getQty()); // 수량
 				bomTable.setValue("MEINS", dto.getUnit()); // 단위
 				bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
+
 				idx++;
 			}
 

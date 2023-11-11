@@ -4,6 +4,7 @@
 <%
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 JSONArray docList = dto.getDocList();
+boolean complete = docList.size() > 0;
 %>
 <!DOCTYPE html>
 <html>
@@ -202,7 +203,11 @@ JSONArray docList = dto.getDocList();
 			}
 
 			function complete() {
-				const oid = document.getElementById("oid").value;
+		<%if (!complete) {%>
+			alert("등록된 산출물이 하나도 없습니다.");
+				return false;
+		<%}%>
+			const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
 				if (!confirm("설변활동을 완료 하시겠습니까?")) {
 					return false;
@@ -227,7 +232,7 @@ JSONArray docList = dto.getDocList();
 
 			function link() {
 				const oid = document.getElementById("oid").value;
-				const url = getCallUrl("/doc/link?oid="+oid);
+				const url = getCallUrl("/doc/link?oid=" + oid);
 				_popup(url, 1600, 800, "n");
 			}
 

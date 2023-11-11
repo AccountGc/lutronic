@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EcoPartLink;
@@ -400,6 +401,11 @@ public class SAPHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+
+			if (SAPHelper.manager.skipLength(p.getNumber())) {
+				continue;
+			}
+
 			SAPBomDTO dto = new SAPBomDTO(link);
 			list.add(dto);
 			getterBomData(p, list);
@@ -423,6 +429,9 @@ public class SAPHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+			if (SAPHelper.manager.skipLength(p.getNumber())) {
+				continue;
+			}
 			SAPBomDTO dto = new SAPBomDTO(link);
 			list.add(dto);
 			getterBomData(p, list);
@@ -556,7 +565,7 @@ public class SAPHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 이전 품목
 	 */
@@ -576,5 +585,34 @@ public class SAPHelper {
 			pre_part = PartHelper.manager.getPart(m.getNumber(), version);
 		}
 		return pre_part;
+	}
+
+	/**
+	 * 길이 및 정규식 제외
+	 */
+	public boolean skipLength(String number) throws Exception {
+		if (number.length() > 10) {
+//			System.out.println("10자리 초과 품번 = " + number);
+			return true;
+		}
+
+		if (!(Pattern.matches("^[0-9]+$", number))) {
+//			System.out.println("숫자가 아닌 내용이 포함된 품번 = " + number);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 8번 품번 제외
+	 */
+	public boolean skipEight(String number) throws Exception {
+
+		if (number.startsWith("8")) {
+//			System.out.println("8로 시작하는 품번 = " + number);
+			return true;
+		}
+		// 정규식으로 알파벳 제외한다..
+		return false;
 	}
 }

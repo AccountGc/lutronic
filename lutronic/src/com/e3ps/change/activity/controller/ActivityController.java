@@ -393,4 +393,21 @@ public class ActivityController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "설변활동중 주도면 및 참조도면")
+	@GetMapping(value = "/reference")
+	public ModelAndView reference(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+
+		model.setViewName("/extcore/jsp/change/activity/activity-reference.jsp");
+		return model;
+	}
+
+	@Description(value = "설변활동중 BOM 에디터")
+	@GetMapping(value = "/editor")
+	public ModelAndView editor(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.addObject("oid", oid);
+		model.setViewName("/extcore/jsp/change/activity/activity-bom-editor.jsp");
+		return model;
+	}
 }

@@ -202,14 +202,14 @@ public class StandardEoService extends StandardManager implements EoService {
 			String oid = map.get("part_oid");
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
 			Map<String, Object> m = EoHelper.manager.validatePart(part);
-			if (!(boolean) m.get("result")) {
-				throw new Exception((String) m.get("msg"));
-			}
-
-			Map<String, Object> c = EoHelper.manager.checkerCompletePart(part);
-			if (!(boolean) c.get("result")) {
-				throw new Exception((String) c.get("msg"));
-			}
+//			if (!(boolean) m.get("result")) {
+//				throw new Exception((String) m.get("msg"));
+//			}
+//
+//			Map<String, Object> c = EoHelper.manager.checkerCompletePart(part);
+//			if (!(boolean) c.get("result")) {
+//				throw new Exception((String) c.get("msg"));
+//			}
 			list.add(part);
 		}
 		saveCompletePart(eo, list);

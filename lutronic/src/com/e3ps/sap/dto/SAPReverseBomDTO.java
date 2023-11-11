@@ -25,7 +25,7 @@ public class SAPReverseBomDTO {
 	private String newChildPartNumber;
 	private String newParentPartVersion;
 	private String newChildPartVersion;
-	private double qty = 0D;
+	private int qty = 0;
 	private String unit;
 
 	public SAPReverseBomDTO(WTPart child, WTPart parent, WTPartUsageLink link, EChangeOrder eco) throws Exception {
@@ -40,11 +40,14 @@ public class SAPReverseBomDTO {
 		setNewChildPartNumber(child.getNumber());
 		if (pre_parent != null) {
 			setParentPartNumber(pre_parent.getNumber());
+		} else {
+			// 최상위 까지 가면 기존꺼가 들어간다..
+			setParentPartNumber(parent.getNumber());
 		}
 		if (pre_child != null) {
 			setChildPartNumber(pre_child.getNumber());
 		}
-		setQty(link.getQuantity().getAmount());
+		setQty((int) link.getQuantity().getAmount());
 		setUnit(link.getQuantity().getUnit().toString().toUpperCase());
 	}
 

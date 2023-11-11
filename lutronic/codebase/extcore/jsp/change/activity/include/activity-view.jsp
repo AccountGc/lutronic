@@ -45,11 +45,13 @@ String oid = request.getParameter("oid");
 		dataField : "step_name",
 		headerText : "단계",
 		dataType : "string",
-	}, {
-		dataField : "name",
-		headerText : "활동명",
-		dataType : "string",
-	}, {
+	}, 
+// 	{
+// 		dataField : "name",
+// 		headerText : "활동명",
+// 		dataType : "string",
+// 	},
+	{
 		dataField : "activity_name",
 		headerText : "활동구분",
 		dataType : "string",

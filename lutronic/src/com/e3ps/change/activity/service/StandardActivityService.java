@@ -228,7 +228,7 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			EChangeActivity eca = EChangeActivity.newEChangeActivity();
 			eca.setStep(step_name);
-			eca.setName(name);
+//			eca.setName(name);
 			eca.setActiveType(activity_type);
 			eca.setActiveUser(user);
 			eca.setFinishDate(DateUtil.convertDate(finishDate));

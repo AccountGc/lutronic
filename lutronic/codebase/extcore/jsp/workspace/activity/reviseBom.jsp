@@ -533,43 +533,43 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				dataField : "",
 				dataType : "string",
 				width : 100
-			}, 
-// 			{
-// 				headerText : "BOM",
-// 				children : [ {
-// 					dataField : "",
-// 					dataType : "string",
-// 					editable : false,
-// 					headerText : "BOM 편집",
-// 					width : 120,
-// 					renderer : {
-// 						type : "ButtonRenderer",
-// 						labelText : "BOM 편집",
-// 						onclick : function(rowIndex, columnIndex, value, item) {
-// 							const next_oid = item.next_oid;
-// 							alert(next_oid);
-// 							if (next_oid === "") {
-// 								return false;
-// 							}
-// 						}
-// 					}
-// 				}, {
-// 					dataField : "",
-// 					dataType : "string",
-// 					editable : false,
-// 					headerText : "BOM 비교",
-// 					width : 120,
-// 					renderer : {
-// 						type : "ButtonRenderer",
-// 						labelText : "BOM 비교",
-// 						onclick : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.part_oid;
-// 							const url = getCallUrl("/bom/view?oid=" + oid);
-// 							_popup(url, "", "", "f");
-// 						}
-// 					}
-// 				} ]
-// 			} 
+			},
+			// 			{
+			// 				headerText : "BOM",
+			// 				children : [ {
+			// 					dataField : "",
+			// 					dataType : "string",
+			// 					editable : false,
+			// 					headerText : "BOM 편집",
+			// 					width : 120,
+			// 					renderer : {
+			// 						type : "ButtonRenderer",
+			// 						labelText : "BOM 편집",
+			// 						onclick : function(rowIndex, columnIndex, value, item) {
+			// 							const next_oid = item.next_oid;
+			// 							alert(next_oid);
+			// 							if (next_oid === "") {
+			// 								return false;
+			// 							}
+			// 						}
+			// 					}
+			// 				}, {
+			// 					dataField : "",
+			// 					dataType : "string",
+			// 					editable : false,
+			// 					headerText : "BOM 비교",
+			// 					width : 120,
+			// 					renderer : {
+			// 						type : "ButtonRenderer",
+			// 						labelText : "BOM 비교",
+			// 						onclick : function(rowIndex, columnIndex, value, item) {
+			// 							const oid = item.part_oid;
+			// 							const url = getCallUrl("/bom/view?oid=" + oid);
+			// 							_popup(url, "", "", "f");
+			// 						}
+			// 					}
+			// 				} ]
+			// 			} 
 			]
 
 			function createAUIGrid(columnLayout) {
@@ -601,7 +601,9 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					enableRightDownFocus : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.setGridData(myGridID, <%=JSONArray.fromObject(list)%>);
+				AUIGrid.setGridData(myGridID,
+		<%=JSONArray.fromObject(list)%>
+			);
 				AUIGrid.bind(myGridID, "contextMenu", function(event) {
 					const menu = [ {
 						label : "주 도면 및 참조도면",
@@ -618,13 +620,20 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 			}
 
 			function auiContextHandler(event) {
-				logger(event);
+				const item = event.item;
+				const next_oid = item.next_oid; // 개정후의 데이터를 보여주는거로
+				if (next_oid === "") {
+					alert("개정 후 데이터가 없습니다.");
+					return false;
+				}
 				switch (event.contextIndex) {
 				case 0:
 					// 도면
+					_popup(getCallUrl("/activity/reference?oid=" + next_oid), 1200, 500, "n");
 					break;
 				case 1:
 					// bom 에디터
+					_popup(getCallUrl("/activity/editor?oid=" + next_oid), 1600, 750, "n");
 					break;
 				case 2:
 					// bom 비교
@@ -634,6 +643,11 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 
 			function complete() {
 				const data = AUIGrid.getGridData(myGridID);
+
+				if (data.length === 0) {
+					alert("설변 대상 품목이 하나도 없습니다.");
+					return false;
+				}
 
 				for (let i = 0; i < data.length; i++) {
 					const group = data[i].group;

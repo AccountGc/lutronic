@@ -107,12 +107,19 @@ String oid = (String) request.getAttribute("oid");
 	}
 
 	function revise() {
+		const data = AUIGrid.getGridData(myGridID);
+
+		if (data.length === 0) {
+			alert("개정 대상 품목이 없습니다.");
+			return false;
+		}
+
 		if (!confirm("해당 품목 및 도면을 일괄개정 하시겠습니까?")) {
 			return false;
 		}
 
 		const oid = document.getElementById("oid").value;
-		const data = AUIGrid.getGridData(myGridID);
+
 		const params = {
 			data : data,
 			oid : oid
