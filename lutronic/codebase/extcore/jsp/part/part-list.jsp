@@ -15,7 +15,7 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
@@ -110,12 +110,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-							<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-							}
+						}
 						}
 						%>
 					</select>
@@ -182,7 +182,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<%
 						for (QuantityUnit unit : unitList) {
 						%>
-						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<option value="<%=unit.toString()%>"><%=unit.getDisplay()%></option>
 						<%
 						}
 						%>
@@ -267,7 +267,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
@@ -656,8 +656,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			
 			function exportExcel() {
 			    const exceptColumnFields = [ "_3d", "_2d", "step", "dxf", "pdf" ];
-			    const sessionName = "<%=user.getFullName()%>";
-			    exportToExcel("품목 리스트", "품목", "품목 리스트", exceptColumnFields, sessionName);
+			    const sessionName = "<%=user.getFullName()%>
+			";
+				exportToExcel("품목 리스트", "품목", "품목 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>

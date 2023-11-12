@@ -621,6 +621,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 
 			function auiContextHandler(event) {
 				const item = event.item;
+				const oid = document.getElementById("oid").value;
 				const next_oid = item.next_oid; // 개정후의 데이터를 보여주는거로
 				if (next_oid === "") {
 					alert("개정 후 데이터가 없습니다.");
@@ -633,7 +634,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					break;
 				case 1:
 					// bom 에디터
-					_popup(getCallUrl("/activity/editor?oid=" + next_oid), 1600, 750, "n");
+					_popup(getCallUrl("/activity/editor?oid=" + next_oid + "&eoid=" + oid), 1800, 750, "n");
 					break;
 				case 2:
 					// bom 비교

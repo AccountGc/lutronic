@@ -133,9 +133,13 @@ public class PartHelper {
 		int idx = query.addClassList(WTPart.class, true);
 
 		// 상태 임시저장 제외
-    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-    	query.appendWhere(new SearchCondition(WTPart.class, WTPart.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
-    	
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(
+				new SearchCondition(WTPart.class, WTPart.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"),
+				new int[] { idx });
+
 		QuerySpecUtils.toCI(query, idx, WTPart.class);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
@@ -144,14 +148,13 @@ public class PartHelper {
 				modifiedTo);
 		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creatorOid);
 		QuerySpecUtils.toState(query, idx, WTPart.class, state);
-		
+
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
 		SearchCondition sc = new SearchCondition(WTPart.class, "state.state", "<>", "TEMPRARY");
 		query.appendWhere(sc, new int[] { idx });
-		
-		
+
 		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
 		// EcoDate
 //		if (ecoPostdate.length() > 0 || ecoPredate.length() > 0) {
@@ -209,6 +212,11 @@ public class PartHelper {
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_SPECIFICATION, specification);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_CHANGENO, ecoNo);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
+
+		if (!StringUtil.checkString(location)) {
+			location = "/Default/PART_Drawing";
+		}
+
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 
 		if (!"/Default/PART_Drawing".equals(location)) {
@@ -441,11 +449,11 @@ public class PartHelper {
 //	}
 
 	public Map<String, Object> listProduction(@RequestBody Map<String, Object> params) throws Exception {
-		
+
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
 		ReferenceFactory rf = new ReferenceFactory();
-		
+
 		String location = StringUtil.checkNull((String) params.get("location"));
 		String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
 		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
@@ -470,10 +478,10 @@ public class PartHelper {
 		String ecoNo = StringUtil.checkNull((String) params.get("ecoNo"));
 		String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
 		boolean latest = (boolean) params.get("latest");
-		
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
-		
+
 		QuerySpecUtils.toCI(query, idx, WTPart.class);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
@@ -482,16 +490,15 @@ public class PartHelper {
 				modifiedTo);
 		QuerySpecUtils.creatorQuery(query, idx, WTPart.class, creatorOid);
 		QuerySpecUtils.toState(query, idx, WTPart.class, state);
-		
+
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
 		SearchCondition sc = new SearchCondition(WTPart.class, "state.state", "<>", "TEMPRARY");
 		query.appendWhere(sc, new int[] { idx });
-		
-		
+
 		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
-		
+
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MODEL, model);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_PRODUCTMETHOD, productmethod);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_DEPTCODE, deptcode);
@@ -504,7 +511,7 @@ public class PartHelper {
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_CHANGENO, ecoNo);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_ECONO, eoNo);
 		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
-		
+
 		if (!"/Default/PART_Drawing".equals(location)) {
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();
@@ -543,7 +550,7 @@ public class PartHelper {
 					new SearchCondition(WTPart.class, "master>number", SearchCondition.NOT_LIKE, "%DEL%", false),
 					new int[] { idx });
 		}
-		
+
 		// Working Copy 제외
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
@@ -555,10 +562,9 @@ public class PartHelper {
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
-		query.appendWhere(
-				new SearchCondition(WTPart.class, "master>number", SearchCondition.LIKE, "1_________", false),
+		query.appendWhere(new SearchCondition(WTPart.class, "master>number", SearchCondition.LIKE, "1_________", false),
 				new int[] { idx });
-		
+
 		// 최신 이터레이션.
 		if (latest) {
 			QuerySpecUtils.toLatest(query, idx, WTPart.class);

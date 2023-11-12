@@ -401,8 +401,13 @@ public class SAPHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+			WTPartMaster child = link.getUses();
 
-			if (SAPHelper.manager.skipLength(p.getNumber())) {
+			if (SAPHelper.manager.skipLength(child.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipEight(child.getNumber())) {
 				continue;
 			}
 
@@ -429,7 +434,11 @@ public class SAPHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
-			if (SAPHelper.manager.skipLength(p.getNumber())) {
+			WTPartMaster child = link.getUses();
+			if (SAPHelper.manager.skipLength(child.getNumber())) {
+				continue;
+			}
+			if (SAPHelper.manager.skipEight(child.getNumber())) {
 				continue;
 			}
 			SAPBomDTO dto = new SAPBomDTO(link);

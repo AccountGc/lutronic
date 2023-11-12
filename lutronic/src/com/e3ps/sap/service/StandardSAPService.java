@@ -44,6 +44,8 @@ import wt.fc.PersistenceServerHelper;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
+import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleTemplate;
 import wt.org.WTUser;
 import wt.part.Quantity;
 import wt.part.QuantityUnit;
@@ -209,6 +211,10 @@ public class StandardSAPService extends StandardManager implements SAPService {
 							WCUtil.getWTContainerRef());
 					FolderHelper.assignLocation((FolderEntry) part, folder);
 
+					LifeCycleTemplate lct = LifeCycleHelper.service.getLifeCycleTemplate("LC_PART",
+							WCUtil.getWTContainerRef());
+					part = (WTPart) LifeCycleHelper.setLifeCycle(part, lct);
+
 					PersistenceHelper.manager.save(part);
 				}
 			}
@@ -302,9 +308,10 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
 		rtnTable.firstRow();
 		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			Object IDNRK_NEW = rtnTable.getValue("IDNRK_NEW");
 			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
 			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
-			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG + ", IDNRK_NEW=" + IDNRK_NEW);
 		}
 
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
@@ -342,9 +349,9 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 			String number = part.getNumber();
 			// 전송 제외 품목
-//			if (SAPHelper.manager.skipEight(number)) {
-//				continue;
-//			}
+			if (SAPHelper.manager.skipEight(number)) {
+				continue;
+			}
 
 			if (SAPHelper.manager.skipLength(number)) {
 				continue;
@@ -479,6 +486,16 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		JCoParameterList result = function.getExportParameterList();
 		Object r_type = result.getValue("EV_STATUS");
 		Object r_msg = result.getValue("EV_MESSAGE");
+
+		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
+		rtnTable.firstRow();
+		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+//			Object IDNRK_NEW = rtnTable.getValue("IDNRK_NEW");
+			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+		}
+
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 		System.out.println("종료 SAP 인터페이스 - ECO BOM FUN : ZPPIF_PDM_002");

@@ -20,6 +20,7 @@ import com.e3ps.controller.BaseController;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.bom.service.BomHelper;
 
+import net.sf.json.JSONArray;
 import wt.part.WTPart;
 
 @Controller
@@ -38,13 +39,80 @@ public class BomController extends BaseController {
 		return model;
 	}
 
-	@Description(value="BOM 뷰")
-	@PostMapping(value="/loadStructure")
+	@Description(value = "BOM 뷰")
+	@PostMapping(value = "/loadStructure")
 	@ResponseBody
 	public Map<String, Object> loadStructure(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			BomHelper.manager.loadStructure(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 에디터 LAZY 로드")
+	@GetMapping(value = "/lazyLoad")
+	@ResponseBody
+	public Map<String, Object> lazyLoad(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, Object>> list = BomHelper.manager.lazyLoad(oid);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 품목 제거")
+	@PostMapping(value = "/removeLink")
+	@ResponseBody
+	public Map<String, Object> removeLink(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			BomHelper.service.removeLink(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 체크아웃 취소 제거")
+	@GetMapping(value = "/undoCheckOut")
+	@ResponseBody
+	public Map<String, Object> undoCheckOut(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			Map<String, Object> item = BomHelper.service.undoCheckOut(oid);
+			result.put("item", item);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 리로드")
+	@GetMapping(value = "/reload")
+	@ResponseBody
+	public Map<String, Object> reload(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			JSONArray tree = BomHelper.manager.loadEditor(oid);
+			result.put("tree", tree);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

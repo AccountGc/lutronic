@@ -25,6 +25,7 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.org.service.OrgHelper;
+import com.e3ps.part.bom.service.BomHelper;
 import com.e3ps.workspace.dto.EcaDTO;
 
 import net.sf.json.JSONArray;
@@ -404,10 +405,18 @@ public class ActivityController extends BaseController {
 
 	@Description(value = "설변활동중 BOM 에디터")
 	@GetMapping(value = "/editor")
-	public ModelAndView editor(@RequestParam String oid) throws Exception {
+	public ModelAndView editor(@RequestParam String oid, @RequestParam String eoid) throws Exception {
 		ModelAndView model = new ModelAndView();
+		WTPart root = (WTPart) CommonUtil.getObject(oid);
+		EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(eoid);
+		EChangeOrder eco = (EChangeOrder) eca.getEo();
+		JSONArray tree = BomHelper.manager.loadEditor(root);
 		model.addObject("oid", oid);
-		model.setViewName("/extcore/jsp/change/activity/activity-bom-editor.jsp");
+		model.addObject("eco", eco);
+		model.addObject("eoid", eco.getPersistInfo().getObjectIdentifier().getStringValue());
+		model.addObject("tree", tree);
+		model.addObject("root", root);
+		model.setViewName("popup:/change/activity/activity-bom-editor");
 		return model;
 	}
 }
