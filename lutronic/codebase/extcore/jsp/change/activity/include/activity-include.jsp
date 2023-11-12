@@ -274,12 +274,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		myGridID200 = AUIGrid.create("#grid200", columnLayout, props);
 		<%if (view || update) {%>
 		AUIGrid.setGridData(myGridID200, <%=AUIGridUtil.include(oid, "activity")%>);
-		<%}else{%>
+		<%} else {%>
 		auiReadyHandler();
 		<%}%>
-		
-		
-		
 		AUIGrid.bind(myGridID200, "keyDown", auiKeyDownHandler);
 		AUIGrid.bind(myGridID200, "cellEditEnd", auiCellEditEndHandler);
 	}
@@ -304,6 +301,9 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 	}
 
 	function auiReadyHandler() {
+// 		const item = {
+// 			step : "EOSTEP1"
+// 		};
 		AUIGrid.addRow(myGridID200, {}, "first");
 	}
 
