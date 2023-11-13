@@ -42,6 +42,7 @@ public class EoDTO {
 	private ArrayList<Map<String, String>> rows200 = new ArrayList<>(); // ECA
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 제품코드
 	private ArrayList<Map<String, String>> modelInfo = new ArrayList<>();
+	private boolean temprary;
 
 	// 결재 변수
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토

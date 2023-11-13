@@ -656,8 +656,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			
 			function exportExcel() {
 			    const exceptColumnFields = [ "_3d", "_2d", "step", "dxf", "pdf" ];
-			    const sessionName = "<%=user.getFullName()%>
-			";
+			    const sessionName = "<%=user.getFullName()%>";
 				exportToExcel("품목 리스트", "품목", "품목 리스트", exceptColumnFields, sessionName);
 			}
 		</script>

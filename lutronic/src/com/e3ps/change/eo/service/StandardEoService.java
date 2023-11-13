@@ -25,6 +25,7 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.service.SAPHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
+import wt.clients.folder.FolderTaskLogic;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentItem;
@@ -299,10 +300,16 @@ public class StandardEoService extends StandardManager implements EoService {
 	public void modify(EoDTO dto) throws Exception {
 		ReferenceFactory rf = new ReferenceFactory();
 
+		boolean temprary = dto.isTemprary();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 제품
 		ArrayList<Map<String, String>> rows104 = dto.getRows104(); // 완제품
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // ECA
 		ArrayList<Map<String, String>> external = dto.getExternal(); // 외부메일
+		
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -327,9 +334,18 @@ public class StandardEoService extends StandardManager implements EoService {
 			eo.setEoCommentA(dto.getEoCommentA());
 			eo.setEoCommentB(dto.getEoCommentB());
 			eo.setEoCommentC(dto.getEoCommentC());
-
+			
 			eo = (EChangeOrder) PersistenceHelper.manager.modify(eo);
-
+			
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(eo, state);
+			}else {
+				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(eo, state);
+			}
+			
 			// 관련 링크들
 			deleteLink(eo);
 			saveLink(eo, dto);
@@ -341,18 +357,23 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 첨부 파일
 			removeAttach(eo);
 			saveAttach(eo, dto);
-
+			
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(dto.getOid());
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(eo, external);
+			
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
+			}
 
 			if(rows200.size()>0){
 				// 설변활동 어떻게 처리되는지...
 				ActivityHelper.service.deleteActivity(eo);
 				ActivityHelper.service.saveActivity(eo, rows200);
 			}
-
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

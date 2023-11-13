@@ -671,12 +671,14 @@ public class StandardPartService extends StandardManager implements PartService 
 					copyInstanceAttribute(part, params);
 				}
 				
-				
-				if (!temprary) {
-					State state = State.toState("INWORK");
+				if (temprary) {
+					State state = State.toState("TEMPRARY");
 					LifeCycleHelper.service.setLifeCycleState(part, state);
-					
-					// 결재시작
+				}else {
+					State state = State.toState("INWORK");
+	 				LifeCycleHelper.service.setLifeCycleState(part, state);
+	 				
+	 				// 결재시작
 					if (approvalRows.size() > 0) {
 						WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
 					}

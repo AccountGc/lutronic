@@ -48,9 +48,8 @@ iframe {
 			<%
 			}
 			%>
-			<input type="button" value="<%=title%>" title="<%=title%>" class="red" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
-			<input type="button" value="뒤로" title="뒤로" class="" onclick="history.go(-1);">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -298,6 +297,23 @@ iframe {
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
+<table class="button-table">
+	<tr>
+		<td class="center">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="button" value="관리자권한 수정" title="관리자 권한 수정" class="red" onclick="force();">
+			<%
+			}
+			%>
+			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
+			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+		</td>
+	</tr>
+</table>		
+
 <script type="text/javascript">
 	const oEditors = [];
 	nhn.husky.EZCreator.createInIFrame({
@@ -410,6 +426,8 @@ iframe {
 		const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 		// 외부 메일
 		const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+		// 결재선
+		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
@@ -433,6 +451,10 @@ iframe {
 			if (!confirm("임시저장하시겠습니까?")){
 				return false;
 			}	
+			if (addRows8.length > 0) {
+				alert("결재선 지정을 해지해주세요.")
+				return false;
+			}
 		} else {
 			if (!confirm("<%=title%>하시겠습니까?")) {
 				return false;
@@ -469,7 +491,7 @@ iframe {
 		};
 		
 		logger(params);
-		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+		
 		toRegister(params, addRows8); // 결재선 세팅
 		parent.openLayer();
 		call(url, params, function(data) {

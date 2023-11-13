@@ -596,6 +596,12 @@ public class StandardDocumentService extends StandardManager implements Document
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
 		ArrayList<Map<String, String>> external = dto.getExternal();
+		boolean temprary = dto.isTemprary();
+		
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 
 		Transaction trs = new Transaction();
 		try {
@@ -663,6 +669,21 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(workCopy, external);
 
+			// 임시저장 하겠다 한 경우
+ 			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
+			}else {
+				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
+			}
+ 			
+ 			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(workCopy, agreeRows, approvalRows, receiveRows);
+			}
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

@@ -36,7 +36,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="수정" title="수정" class="red" onclick="update('false');">
+			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -324,7 +324,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="수정" title="수정" class="red" onclick="update('false');">
+			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -549,6 +549,7 @@ function update(temp) {
 	
 	// 관련문서
 	const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
+	// 결재선
 	const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 	// RoHs
 	const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
@@ -593,7 +594,6 @@ function update(temp) {
 			return false;
 		}
 	}
-	
 	
 	const params ={
 			oid : toId("oid"),

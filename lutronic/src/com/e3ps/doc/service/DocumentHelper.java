@@ -15,6 +15,7 @@ import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
@@ -78,7 +79,7 @@ public class DocumentHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<DocumentColumn> list = new ArrayList<>();
 
-		boolean latest = (boolean) params.get("latest");
+		String latest = (String) params.get("latest");
 		String location = (String) params.get("location");
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
@@ -260,9 +261,14 @@ public class DocumentHelper {
 		}
 		query.appendCloseParen();
 
-		// 최신 이터레이션.
-		if (latest) {
-			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
+		// 최신 이터레이션
+		if("true".equals(latest)) {
+			if(query.getConditionCount() > 0) { query.appendAnd(); }
+			query.appendWhere(VersionControlHelper.getSearchCondition(WTDocument.class, true), new int[]{idx});
+		}
+		// 버전 검색
+		if("true".equals(latest)) {
+			SearchUtil.addLastVersionCondition(query, WTDocument.class, idx);
 		}
 
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
