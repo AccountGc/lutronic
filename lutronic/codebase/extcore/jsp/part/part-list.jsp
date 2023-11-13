@@ -115,7 +115,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-						}
+							}
 						}
 						%>
 					</select>

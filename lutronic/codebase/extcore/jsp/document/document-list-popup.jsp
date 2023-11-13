@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.doc.DocumentType"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
@@ -8,6 +10,7 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
@@ -83,10 +86,15 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<td class="indent5">
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
-				<option value="INWORK">작업 중</option>
-				<option value="UNDERAPPROVAL">승인 중</option>
-				<option value="APPROVED">승인됨</option>
-				<option value="RETURN">반려됨</option>
+				<%
+				for (Map<String,String> lifecycle : lifecycleList) {
+					if(!lifecycle.get("code").equals("TEMPRARY")){
+				%>
+					<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+				<%
+					}
+				}
+				%>
 			</select>
 		</td>
 		<th>수정자</th>

@@ -44,8 +44,10 @@ public class EoController extends BaseController {
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_ECO", "");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("method", method);
 		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/change/eo/eo-list-popup");

@@ -97,8 +97,10 @@ public class RohsController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		List<Map<String,String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
+		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("method", method);
 		model.setViewName("popup:/rohs/rohs-list-popup");
 		return model;

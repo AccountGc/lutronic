@@ -1,3 +1,5 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
@@ -5,6 +7,7 @@
 <%
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 %>
@@ -44,10 +47,15 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<td class="indent5">
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
-				<option value="INWORK">작업 중</option>
-				<option value="UNDERAPPROVAL">승인 중</option>
-				<option value="APPROVED">승인됨</option>
-				<option value="RETURN">반려됨</option>
+				<%
+				for (Map<String,String> lifecycle : lifecycleList) {
+					if(!lifecycle.get("code").equals("TEMPRARY")){
+				%>
+					<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+				<%
+					}
+				}
+				%>
 			</select>
 		</td>
 	</tr>

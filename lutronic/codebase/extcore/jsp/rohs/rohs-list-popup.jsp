@@ -1,21 +1,11 @@
-<%@page import="wt.fc.PersistenceHelper"%>
-<%@page import="wt.fc.QueryResult"%>
-<%@page import="java.util.HashMap"%>
+<%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
-<%@page import="wt.fc.PagingQueryResult"%>
-<%@page import="com.e3ps.common.util.PageQueryUtils"%>
-<%@page import="wt.util.WTAttributeNameIfc"%>
-<%@page import="com.e3ps.common.util.QuerySpecUtils"%>
-<%@page import="wt.doc.WTDocumentMaster"%>
-<%@page import="com.e3ps.rohs.ROHSMaterial"%>
-<%@page import="wt.query.QuerySpec"%>
-<%@page import="com.e3ps.rohs.dto.RohsData"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 String method = (String) request.getAttribute("method");
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
@@ -55,10 +45,15 @@ String method = (String) request.getAttribute("method");
 		<td class="indent5">
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
-				<option value="INWORK">작업 중</option>
-				<option value="UNDERAPPROVAL">승인 중</option>
-				<option value="APPROVED">승인됨</option>
-				<option value="RETURN">반려됨</option>
+				<%
+				for (Map<String,String> lifecycle : lifecycleList) {
+					if(!lifecycle.get("code").equals("TEMPRARY")){
+				%>
+					<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+				<%
+					}
+				}
+				%>
 			</select>
 		</td>
 		<th>수정일</th>

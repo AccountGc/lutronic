@@ -128,6 +128,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_PART", "");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -135,6 +136,7 @@ public class PartController extends BaseController {
 		model.addObject("productmethodList", productmethodList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("finishList", finishList);
+		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("method", method);
 		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/part/part-list-popup");

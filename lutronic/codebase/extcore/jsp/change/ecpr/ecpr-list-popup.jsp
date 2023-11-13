@@ -35,9 +35,11 @@ boolean multi = (boolean) request.getAttribute("multi");
 				<option value="">선택</option>
 				<%
 				for (Map<String,String> lifecycle : lifecycleList) {
+					if(!lifecycle.get("code").equals("TEMPRARY")){
 				%>
 				<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
 				<%
+					}
 				}
 				%>
 			</select>
