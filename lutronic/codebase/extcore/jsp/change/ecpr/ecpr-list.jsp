@@ -181,7 +181,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/ecpr/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -198,7 +198,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/ecpr/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {

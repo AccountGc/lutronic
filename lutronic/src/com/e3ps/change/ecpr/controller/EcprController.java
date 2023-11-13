@@ -112,7 +112,7 @@ public class EcprController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/change/ecpr/ecpr-view.jsp");
+		model.setViewName("popup:/change/ecpr/ecpr-view");
 		return model;
 	}
 	

@@ -213,10 +213,23 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 				const temprary = JSON.parse(temp);
-
-				if (!confirm("수정 하시겠습니까?")) {
-					return;
-				}				
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if (addRows8.length > 0) {
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("수정 하시겠습니까?")) {
+						return false;
+					}
+				}			
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
@@ -274,7 +287,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					// 외부 메일
 					external : external,
 				}
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				
 				toRegister(params, addRows8); // 결재선 세팅
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;

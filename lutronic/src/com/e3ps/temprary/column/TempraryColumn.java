@@ -74,27 +74,22 @@ public class TempraryColumn {
 			setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
 		} else if (lcm instanceof EChangeOrder) {
 			EChangeOrder eco = (EChangeOrder) lcm;
+			setName(eco.getEoName());
+			setNumber(eco.getEoNumber());
+			setCreator(eco.getCreatorFullName());
+			setCreatedDate(eco.getCreateTimestamp());
+			setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 			if (eco.getEoType().equals("CHANGE")) {
 				// ECO
-				setName(eco.getName());
-				setNumber(eco.getEoNumber());
 				setDataType("ECO");
-				setCreator(eco.getCreatorFullName());
-				setCreatedDate(eco.getCreateTimestamp());
-				setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 			} else {
 				// EO
-				setName(eco.getName());
-				setNumber(eco.getEoNumber());
 				setDataType("EO");
-				setCreator(eco.getCreatorFullName());
-				setCreatedDate(eco.getCreateTimestamp());
-				setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 			}
 		} else if (lcm instanceof EChangeNotice) {
 			// ECN
 			EChangeNotice ecn = (EChangeNotice) lcm;
-			setName(ecn.getName());
+			setName(ecn.getEoName());
 			setNumber(ecn.getEoNumber());
 			setDataType("ECN");
 			setCreator(ecn.getCreatorFullName());
@@ -103,7 +98,7 @@ public class TempraryColumn {
 		} else if (lcm instanceof ECPRRequest) {
 			// ECPR
 			ECPRRequest ecpr = (ECPRRequest) lcm;
-			setName(ecpr.getName());
+			setName(ecpr.getEoName());
 			setNumber(ecpr.getEoNumber());
 			setDataType("ECPR");
 			setCreator(ecpr.getCreatorFullName());

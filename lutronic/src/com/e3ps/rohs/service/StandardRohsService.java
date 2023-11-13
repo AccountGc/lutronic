@@ -845,6 +845,9 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			String oid = StringUtil.checkNull((String) params.get("oid"));
 			boolean temprary = (boolean) params.get("temprary");
 			
+			// 외부 메일
+			ArrayList<Map<String, String>> external =  (ArrayList<Map<String, String>>) params.get("external");
+			
 			// 결재
 			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
 			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
@@ -947,11 +950,19 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	            }
 	            new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
 	            
+	            // 외부 메일 링크 삭제
+				MailUserHelper.service.deleteLink(oid);
+				// 외부 메일 링크 추가
+				MailUserHelper.service.saveLink(new_material, external);
+	            
 	            // 임시저장 하겠다 한 경우
 	 			if (temprary) {
 					State state = State.toState("TEMPRARY");
 					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 					LifeCycleHelper.service.setLifeCycleState(new_material, state);
+				}else {
+					State state = State.toState("INWORK");
+	 				LifeCycleHelper.service.setLifeCycleState(new_material, state);
 				}
 	 			
 	 			// 결재시작

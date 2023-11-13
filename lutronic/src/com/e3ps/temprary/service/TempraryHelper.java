@@ -53,7 +53,38 @@ public class TempraryHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			TempraryColumn data = new TempraryColumn(obj);
-			if(CommonUtil.isLatestVersion(rf.getReference(data.getOid()).getObject())) {
+			if("품목".equals(data.getDataType()) || "도면".equals(data.getDataType()) || "ROHS".equals(data.getDataType()) || "금형".equals(data.getDataType()) || "문서".equals(data.getDataType())) {
+				if(CommonUtil.isLatestVersion(rf.getReference(data.getOid()).getObject())) {
+					boolean check =true;
+					String temNumber = data.getNumber();
+					String temName = data.getName();
+					String temDataType = data.getDataType();
+					
+					if((!"".equals(number) && temNumber.indexOf(number)>=0)) {
+						check=true;
+					}else if((!"".equals(number) && temNumber.indexOf(number)<0)) {
+						check=false;
+					}
+					
+					
+					if(!"".equals(name) && temName.indexOf(name)>=0 && check) {
+						check =true;
+					}else if((!"".equals(name) && temName.indexOf(name)<0)) {
+						check=false;
+					}
+					
+					
+					if(!"".equals(dataType) && temDataType.equals(dataType) && check) {
+						check =true;
+					}else if(!"".equals(dataType) && !temDataType.equals(dataType)) {
+						check=false;
+					}
+					
+					if(check) {
+						list.add(data);
+					}
+				}
+			}else {
 				boolean check =true;
 				String temNumber = data.getNumber();
 				String temName = data.getName();
@@ -83,6 +114,7 @@ public class TempraryHelper {
 					list.add(data);
 				}
 			}
+			
 		}
 
 		map.put("list", list);

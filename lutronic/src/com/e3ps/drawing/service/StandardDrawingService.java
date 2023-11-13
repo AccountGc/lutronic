@@ -2469,6 +2469,12 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			String primary = StringUtil.checkNull((String) params.get("primary"));
 			String description = StringUtil.checkNull((String) params.get("description"));
 			String iterationNote = StringUtil.checkNull((String) params.get("iterationNote"));
+			boolean temprary = (boolean) params.get("temprary");
+			
+			// 결재
+			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
+			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
+			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
 			
 			EPMDocument newEpm = (EPMDocument)getWorkingCopy(orgEpm);
 			newEpm.setDescription(description);
@@ -2543,10 +2549,19 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 				EpmPublishUtil.publish(newEpm);
 			}
 			
-			// 임시저장 상태인 경우
-			if(newEpm.getLifeCycleState().toString().equals("TEMPRARY")){
-				State state = State.toState("INWORK");
+			// 임시저장 하겠다 한 경우
+ 			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(newEpm, state);
+			}else {
+				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(newEpm, state);
+			}
+ 			
+ 			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(newEpm, agreeRows, approvalRows, receiveRows);
 			}
 		}
 	}

@@ -257,8 +257,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+		boolean temprary = dto.isTemprary();
 		// 외부 메일
 		ArrayList<Map<String, String>> external = dto.getExternal();
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -278,10 +283,13 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
 			
-			// 임시저장 상태인 경우
-			if(eco.getLifeCycleState().toString().equals("TEMPRARY")){
-				State state = State.toState("INWORK");
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(eco, state);
+			}else {
+				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(eco, state);
 			}
 
 //			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
@@ -313,6 +321,11 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			MailUserHelper.service.deleteLink(dto.getOid());
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(eco, external);
+			
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(eco, agreeRows, approvalRows, receiveRows);
+			}
 
 			trs.commit();
 			trs = null;

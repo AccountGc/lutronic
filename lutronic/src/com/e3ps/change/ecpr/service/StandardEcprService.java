@@ -253,8 +253,13 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
+		boolean temprary = dto.isTemprary();
 		// 외부 메일
 		ArrayList<Map<String, String>> external = dto.getExternal();
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 
 		Transaction trs = new Transaction();
 		try {
@@ -309,10 +314,13 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			
 			ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
 			
-			// 임시저장 상태인 경우
-			if(ecpr.getLifeCycleState().toString().equals("TEMPRARY")){
-				State state = State.toState("INWORK");
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
+			}else {
+				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
 			}
 			
 			// 첨부 파일 삭제
@@ -327,6 +335,11 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			MailUserHelper.service.deleteLink(dto.getOid());
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(ecpr, external);
+			
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(ecpr, agreeRows, approvalRows, receiveRows);
+			}
 			
 			trs.commit();
 			trs = null;

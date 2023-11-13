@@ -232,6 +232,10 @@ public class StandardCrService extends StandardManager implements CrService {
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
 		// 외부 메일
 		ArrayList<Map<String, String>> external = dto.getExternal();
+		// 결재
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		
 //		String model_oid = dto.getModel_oid();
 		Transaction trs = new Transaction();
@@ -286,12 +290,6 @@ public class StandardCrService extends StandardManager implements CrService {
 			
 			cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
 
-			// 임시저장 상태인 경우
-			if(cr.getLifeCycleState().toString().equals("TEMPRARY")){
-				State state = State.toState("INWORK");
-				LifeCycleHelper.service.setLifeCycleState(cr, state);
-			}
-			
 			// 첨부 파일 삭제
 			removeAttach(cr);
 			saveAttach(cr, dto);
@@ -305,6 +303,20 @@ public class StandardCrService extends StandardManager implements CrService {
 			// 외부 메일 링크 추가
 			MailUserHelper.service.saveLink(cr, external);
 
+			// 결재시작
+			if (approvalRows.size() > 0) {
+				WorkspaceHelper.service.register(cr, agreeRows, approvalRows, receiveRows);
+			}
+			
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(cr, state);
+			}else {
+				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(cr, state);
+			}
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

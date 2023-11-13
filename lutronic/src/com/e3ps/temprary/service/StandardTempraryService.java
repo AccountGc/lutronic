@@ -30,7 +30,7 @@ public class StandardTempraryService extends StandardManager implements Temprary
 				// 금형
 				return "mold";
 			} else if("$$ROHS".equals(doc.getDocType().toString())){
-				return "ROHS";
+				return "rohs";
 			}else {
 				// 문서
 				return "doc";

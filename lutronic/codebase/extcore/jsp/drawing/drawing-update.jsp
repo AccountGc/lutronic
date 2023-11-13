@@ -26,8 +26,8 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					</div>
 				</td>
 				<td class="right">
-					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
-					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
@@ -103,8 +103,8 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="수정"  title="수정"  class="blue" onclick="update();">
-					<input type="button" value="이전" title="이전" onclick="history.back();">
+					<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="update('true');">
 					<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 				</td>
 			</tr>
@@ -128,15 +128,29 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				AUIGrid.resize(partGridID);
 			});
 			
-			function update(){
+			function update(temp) {
+				const temprary = JSON.parse(temp);
 				const primary = document.querySelector("input[name=primary]");
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				if(primary == null){
 					alert("주 첨부파일을 첨부해주세요.");
 					return;
 				}
 				
-				if (!confirm("수정 하시겠습니까?")) {
-					return;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+					if (addRows8.length > 0) {
+						alert("결재선 지정을 해지해주세요.")
+						return false;
+					}
+					
+				} else {
+					if (!confirm("수정 하시겠습니까?")) {
+						return false;
+					}
 				}
 				
 				const oid = toId("oid");
@@ -151,9 +165,11 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					description : description,
 					primary : primary.value,
 					secondarys : secondarys,
-					partList : partList
+					partList : partList,
+					temprary : temprary
 				}
 				
+				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/drawing/update");
 				call(url, params, function(data) {
 					alert(data.msg);

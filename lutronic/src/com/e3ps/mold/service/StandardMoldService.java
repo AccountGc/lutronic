@@ -314,6 +314,16 @@ public class StandardMoldService extends StandardManager implements MoldService 
             	doc = (WTDocument) FolderHelper.service.changeFolder((FolderEntry) doc, folder);
             }
 			
+			// 임시저장 하겠다 한 경우
+ 			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(doc, state);
+			}else {
+				State state = State.toState("INWORK");
+ 				LifeCycleHelper.service.setLifeCycleState(doc, state);
+			}
+			
 			WTDocumentMaster master = (WTDocumentMaster) doc.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 			// 문서 이름 세팅..
@@ -329,19 +339,6 @@ public class StandardMoldService extends StandardManager implements MoldService 
 			
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 			
-			// 임시저장 상태인 경우
- 			if(doc.getLifeCycleState().toString().equals("TEMPRARY")){
- 				State state = State.toState("INWORK");
- 				LifeCycleHelper.service.setLifeCycleState(doc, state);
- 			}
- 			
- 			// 임시저장 하겠다 한 경우
- 			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(doc, state);
-			}
- 			
  			// 결재시작
 			if (approvalRows.size() > 0) {
 				WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
