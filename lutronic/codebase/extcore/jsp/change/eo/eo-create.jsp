@@ -11,6 +11,7 @@
 </head>
 <body>
 	<form>
+		<input type="hidden" name="eoType" id="eoType" value="PRODUCT">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -35,29 +36,8 @@
 			</colgroup>
 			<tr>
 				<th class="req lb">EO 제목</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<input type="text" name="name" id="name" class="width-400">
-				</td>
-				<th class="req lb">EO 구분</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="eoType" value="DEV" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>개발</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="eoType" value="PRODUCT">
-						<div class="state p-success">
-							<label>
-								<b>양산</b>
-							</label>
-						</div>
-					</div>
 				</td>
 			</tr>
 			<tr>
@@ -161,7 +141,7 @@
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				const eoType = document.querySelector("input[name=eoType]:checked").value;
+				const eoType = toId("eoType");
 				// 외부 메일
 				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				

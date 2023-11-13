@@ -1,6 +1,6 @@
 package com.e3ps.distribute.controller;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,15 +20,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.beans.ECOData;
-import com.e3ps.change.beans.ECRData;
 import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.distribute.util.DistributeUtil;

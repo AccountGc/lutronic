@@ -21,7 +21,7 @@
 <body>
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-		
+		<input type="hidden" name="eoType" id="eoType" value="<%=dto.getEoType()%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -46,29 +46,8 @@
 			</colgroup>
 			<tr>
 				<th class="req lb">EO 제목</th>
-				<td class="indent5" >
+				<td class="indent5" colspan="3">
 					<input type="text" name="name" id="name" class="width-400" value="<%=dto.getName()%>">
-				</td>
-				<th class="req lb">EO 구분</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="eoType" value="DEV" <% if("DEV".equals(dto.getEoType())){%>checked="checked"<%}%>>
-						<div class="state p-success">
-							<label>
-								<b>개발</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="eoType" value="PRODUCT" <% if("PRODUCT".equals(dto.getEoType())){%>checked="checked"<%}%>>
-						<div class="state p-success">
-							<label>
-								<b>양산</b>
-							</label>
-						</div>
-					</div>
 				</td>
 			</tr>
 			<tr>
