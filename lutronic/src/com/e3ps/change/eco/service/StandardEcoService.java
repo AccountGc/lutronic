@@ -86,7 +86,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 
 			number = number + seqNo;
 
-//			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
+			Map<String, Object> dataMap = EcoHelper.manager.dataMap(rows500);
 
 			EChangeOrder eco = EChangeOrder.newEChangeOrder();
 			eco.setEoName(name);

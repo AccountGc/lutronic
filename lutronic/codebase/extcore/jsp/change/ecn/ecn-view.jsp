@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.change.ecn.service.EcnHelper"%>
 <%@page import="com.e3ps.change.EChangeRequest"%>
 <%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
 <%@page import="java.util.ArrayList"%>
@@ -23,13 +24,18 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 <%
 int idx = 1;
 for (EChangeRequest ecr : crList) {
+	String eoid = ecr.getPersistInfo().getObjectIdentifier().getStringValue();
 %>
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				ECN (<font color="red"><b><%=ecr.getEoNumber()%></b></font>)
+				ECN (
+				<font color="red">
+					<b><%=ecr.getEoNumber()%></b>
+				</font>
+				)
 			</div>
 		</td>
 		<td class="right">
@@ -51,11 +57,21 @@ for (EChangeRequest ecr : crList) {
 <script type="text/javascript">
 	let myGridID<%=idx%>;
 	const columns<%=idx%> = [ {
-		dataField : "ecoNumber",
-		headerText : "ECO 번호",
+		dataField : "crNumber",
+		headerText : "CR 번호",
 		dataType : "string",
-		width : 100,
-		editable : false
+		width : 150,
+		editable : false,
+		cellMerge : true,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.cr_oid;
+				const url = getCallUrl("/cr/view?oid=" + oid);
+				_popup(url, "", "", "f");
+			}
+		},		
 	}, {
 		dataField : "name",
 		headerText : "품목명",
@@ -72,15 +88,14 @@ for (EChangeRequest ecr : crList) {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 100,
+		width : 80,
 		editable : false
 	}, {
 		headerText : "확정 인허가일",
 		children : [ {
-		<%
-			int i = 1;
-			for (Map<String, String> map : list) {
-				String dataField = map.get("code");%>	
+		<%int i = 1;
+for (Map<String, String> map : list) {
+	String dataField = map.get("code");%>	
 				dataField : "<%=dataField%>_date",
 				headerText : "<%=map.get("name")%>",
 				dataType : "date",
@@ -123,37 +138,29 @@ for (EChangeRequest ecr : crList) {
 				}				
 			<%if (i != list.size()) {%>
 			}, {
-		<%
-			}
-			i++;
-		}
-		%>
+		<%}
+i++;
+}%>
 		}]
 	} ]
 
 	function createAUIGrid<%=idx%>(columnLayout) {
 		const props = {
+			enableCellMerge : true,
 			headerHeight : 30,
 			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			showRowCheckColumn : true,
+// 			showRowCheckColumn : true,
 			selectionMode : "multipleCells",
 			autoGridHeight : true,
-			enableCellMerge : true,
 			editable : true
 		}
 		myGridID<%=idx%> = AUIGrid.create("#grid_wrap<%=idx%>", columnLayout, props);
 		AUIGrid.bind(myGridID<%=idx%>, "cellEditBegin", auiCellEditBeginHandler<%=idx%>);
-		
-		// V스크롤 체인지 핸들러.
-// 		AUIGrid.bind(myGridID "vScrollChange", function (event) {
-// 			//console.log(event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition);
-// 			AUIGrid.setRowPosition(myGridID2, event.position); // 수평 스크롤 이동 시킴..
-// 		});
-
+		AUIGrid.setGridData(myGridID<%=idx%>, <%=EcnHelper.manager.data(ecr, dto.getOid())%>);
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
@@ -164,19 +171,22 @@ for (EChangeRequest ecr : crList) {
 	function auiCellEditBeginHandler<%=idx%>(event) {
 		const item = event.item;
 		const dataField = event.dataField;
+		console.log(dataField);
 		const rowIndex = event.rowIndex;
 		const isSend = AUIGrid.getCellValue(myGridID<%=idx%>, rowIndex, dataField);
-		if(isSend !== undefined) {
-			alert("SAP로 전송 완료된 값입니다.");
-			return false;
-		}
+		const send = item.send;
+		console.log(isSend);
+		console.log(send);
+// 		if(isSend !== undefined && send !== undefined) {
+// 			alert("SAP로 전송 완료된 값입니다.");
+// 			return false;
+// 		}
 		return true;
 	}
 
 	function send<%=idx%>() {
 
 		const editRows = AUIGrid.getEditedRowItems(myGridID<%=idx%>);
-
 		if (editRows.length === 0) {
 			alert("수정 내역이 없습니다.");
 			return false;
@@ -188,10 +198,13 @@ for (EChangeRequest ecr : crList) {
 
 		const url = getCallUrl("/ecn/send");
 		const oid = document.getElementById("oid").value;
+		const eoid = "<%=eoid%>";
 		const params = {
 			oid : oid,
+			eoid : eoid,
 			editRows : editRows
 		};
+		logger(params);
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);

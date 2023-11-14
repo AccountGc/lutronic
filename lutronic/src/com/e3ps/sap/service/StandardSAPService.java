@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.PartToSendLink;
 import com.e3ps.change.util.EChangeUtils;
@@ -569,6 +570,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	public void sendSapToEcn(Map<String, Object> params) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - ECN 확정인허가일 FUN : ZPPIF_PDM_003");
 		String oid = (String) params.get("oid");
+		String eoid = (String) params.get("eoid");
+		EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(eoid);
 
 		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_003");
@@ -600,6 +603,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 					if (sendDate != null && send == null) {
 						PartToSendLink link = PartToSendLink.newPartToSendLink();
 						String name = country.get("name");
+						link.setEcr(ecr);;
 						link.setNation(code);
 						link.setPart(part);
 						link.setEcn(ecn);

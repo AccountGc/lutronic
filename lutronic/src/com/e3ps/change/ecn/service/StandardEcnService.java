@@ -124,21 +124,23 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				WTPartMaster master = link.getPart();
 				String version = link.getVersion();
 				WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
-//				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
-//				String group = "";
-//				if (isApproved) {
-//					WTPart next_part = (WTPart) EChangeUtils.getNext(part);
-//					group = EChangeUtils.manager.getPartGroup(next_part, eco);
-//				} else {
-//					group = EChangeUtils.manager.getPartGroup(part, eco);
-//				}
-//				// 그룹핑은 개정 품목 및 신규 품목에 묶고 있는중..
-//				// 품목 이력은 Eco 품목을 기준으로 이후 품목을 가져오도록 설정..
-//				if (group.contains(oid)) {
-				// 모든 품목을 ECN 에 일단 묶고 보여주는데서 처리한다..
-				EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
-				PersistenceHelper.manager.save(eLink);
-//				}
+				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+				String group = "";
+				if (isApproved) {
+					WTPart next_part = (WTPart) EChangeUtils.getNext(part);
+					group = EChangeUtils.manager.getPartGroup(next_part, eco);
+				} else {
+					group = EChangeUtils.manager.getPartGroup(part, eco);
+				}
+
+				String[] groups = group.split(",");
+				for (String s : groups) {
+					EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
+					System.out.println("ecr=" + ecr);
+					EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
+					eLink.setEcr(ecr);
+					PersistenceHelper.manager.save(eLink);
+				}
 			}
 
 			trs.commit();

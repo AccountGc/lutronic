@@ -1,9 +1,11 @@
 package com.e3ps.change.activity.service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECOChange;
@@ -41,6 +43,8 @@ import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.vc.config.ConfigHelper;
+import wt.vc.config.LatestConfigSpec;
 
 public class ActivityHelper {
 
@@ -499,5 +503,53 @@ public class ActivityHelper {
 		}
 
 		return list;
+	}
+
+	/**
+	 * 설변활동시 자동으로 이전 품목 가져와서 등록
+	 */
+	public WTPart prevPart(String number) throws Exception {
+		WTPart prevPart = null;
+
+		// 10자리가 아닐 경우 패스.
+		if (number.length() != 10) {
+			return null;
+		}
+
+		// 숫자아님
+		if (!Pattern.matches("^[0-9]+$", number)) {
+			return null;
+		}
+
+		String end = number.substring(8);
+		// 최신품목임 00 리비전
+		if ("00".equals(end)) {
+			return null;
+		}
+
+
+		DecimalFormat df = new DecimalFormat("00");
+		
+		int prevSeq = Integer.parseInt(end) - 1;
+		String front = number.substring(0, 8);
+		String prevNumber = front + df.format(prevSeq);
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTPartMaster.class, true);
+		QuerySpecUtils.toEquals(query, idx, WTPartMaster.class, WTPartMaster.NUMBER, prevNumber);
+		System.out.println(query);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			WTPartMaster m = (WTPartMaster) obj[0];
+			LatestConfigSpec config = new LatestConfigSpec();
+			QueryResult qr = ConfigHelper.service.filteredIterationsOf(m, config);
+			if (qr.hasMoreElements()) {
+				WTPart latest = (WTPart) qr.nextElement();
+				return latest;
+			}
+		}
+
+		return prevPart;
 	}
 }

@@ -326,7 +326,7 @@ public class StandardActivityService extends StandardManager implements Activity
 		String oid = (String) params.get("oid"); // eca oid
 		String description = (String) params.get("description"); // 완료 의견
 		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
-		String ecnUserOid = (String) params.get("ecnUserOid");
+//		String ecnUserOid = (String) params.get("ecnUserOid");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -335,13 +335,15 @@ public class StandardActivityService extends StandardManager implements Activity
 			eca.setDescription(description);
 			PersistenceHelper.manager.modify(eca);
 
-			if (StringUtil.checkString(ecnUserOid)) {
-				WTUser ecnUser = (WTUser) CommonUtil.getObject(ecnUserOid);
-				EChangeOrder eco = (EChangeOrder) eca.getEo();
-				// ecn 담당자 설정
-				eco.setEcnUser(ecnUser);
-				eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
-			}
+			EChangeOrder eco = (EChangeOrder) eca.getEo();
+
+//			if (StringUtil.checkString(ecnUserOid)) {
+//				WTUser ecnUser = (WTUser) CommonUtil.getObject(ecnUserOid);
+//				EChangeOrder eco = (EChangeOrder) eca.getEo();
+//				// ecn 담당자 설정
+//				eco.setEcnUser(ecnUser);
+//				eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
+//			}
 
 			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
 				String cacheId = secondarys.get(i);
@@ -390,7 +392,9 @@ public class StandardActivityService extends StandardManager implements Activity
 				WorkspaceHelper.service.start(eca.getEo());
 			}
 
-			// EChangeActivity
+			// ECO 일경우 처리
+
+			afterActivityAction(eco);
 
 			trs.commit();
 			trs = null;
@@ -402,6 +406,18 @@ public class StandardActivityService extends StandardManager implements Activity
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 설변 활동 완료후 ECO 작업
+	 */
+	private void afterActivityAction(EChangeOrder eco) throws Exception {
+		String eoType = eco.getEoType();
+
+		if ("CHANGE".equals(eoType)) {
+			// 완제품 링크...
+		}
+
 	}
 
 	/**
@@ -587,11 +603,21 @@ public class StandardActivityService extends StandardManager implements Activity
 			for (LinkedHashMap<String, Object> map : addRows) {
 				String part_oid = (String) map.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+				// 새로 추가된 품번인데.. 히스토리 만들기 위해 검색한다..
 				EcoPartLink link = EcoPartLink.newEcoPartLink(part.getMaster(), eco);
 				link.setVersion(part.getVersionIdentifier().getSeries().getValue());
 				link.setBaseline(true);
-				link.setPreOrder(true);
+				link.setPreOrder(false);
 				PersistenceHelper.manager.save(link);
+
+				WTPart	 prevPart = ActivityHelper.manager.prevPart(part.getNumber());
+				if (prevPart != null) {
+					PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(), part.getMaster());
+					pLink.setPreVersion(prevPart.getVersionIdentifier().getSeries().getValue());
+					pLink.setAfterVersion(part.getVersionIdentifier().getSeries().getValue());
+					pLink.setEco(eco);
+					PersistenceHelper.manager.save(pLink);
+				}
 			}
 
 			for (LinkedHashMap<String, Object> map : removeRows) {

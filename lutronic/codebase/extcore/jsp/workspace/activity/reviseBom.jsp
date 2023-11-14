@@ -197,6 +197,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				dataField : "preOrder",
 				dataType : "boolean",
 				width : 80,
+				editable : false,
 				renderer : {
 					type : "CheckboxEditRenderer",
 					editable : true

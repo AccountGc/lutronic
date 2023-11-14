@@ -23,7 +23,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName() %>">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
 			<tr>
@@ -139,6 +139,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "ECN번호",
 					dataType : "string",
 					width : 230,
+					cellMerge : true,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -169,6 +170,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							const url = getCallUrl("/ecn/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
+					},
+				}, {
+					dataField : "model",
+					headerText : "제품명",
+					dataType : "string",
+					width : 150,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "state",
+					headerText : "상태",
+					dataType : "string",
+					width : 130,
+					filter : {
+						showIcon : true,
+						inline : true
 					},
 				}, {
 					dataField : "state",
@@ -211,6 +230,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function createAUIGrid(columnLayout) {
 				const props = {
+					enableCellMerge : true,
 					headerHeight : 30,
 					showRowNumColumn : true,
 					showRowCheckColumn : true,

@@ -45,6 +45,14 @@ import wt.util.WTException;
 
 						myRole = @MyRole(name = "send", cardinality = Cardinality.ONE)),
 
+				@GeneratedForeignKey(name = "PartSendEcrLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "ecr", type = EChangeRequest.class,
+
+								constraints = @PropertyConstraints(required = true)),
+
+						myRole = @MyRole(name = "send", cardinality = Cardinality.ONE)),
+
 		}
 
 )

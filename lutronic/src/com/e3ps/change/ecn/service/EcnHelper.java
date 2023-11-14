@@ -72,15 +72,38 @@ public class EcnHelper {
 	}
 
 	/**
-	 * ECN 이랑 그룹핑된 품목정보
+	 * 국가별 SAP 전송 이력 데이터 가져오기
 	 */
-	public JSONArray getEcnGroupPart(EChangeNotice ecn) throws Exception {
-		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	private PartToSendLink getSendLink(EChangeNotice ecn, WTPart part, String nation, EChangeRequest ecr)
+			throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(PartToSendLink.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "partReference.key.id", part);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "ecnReference.key.id", ecn);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "ecrReference.key.id", ecr);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, PartToSendLink.NATION, nation);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			PartToSendLink link = (PartToSendLink) obj[0];
+			return link;
+
+		}
+		return null;
+	}
+
+	/**
+	 * ECN CR 별 품목 목록
+	 */
+	public JSONArray data(EChangeRequest ecr, String oid) throws Exception {
+		EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
 		EChangeOrder eco = ecn.getEco();
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EcnToPartLink.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, EcnToPartLink.class, "roleAObjectRef.key.id", ecn);
+		QuerySpecUtils.toEqualsAnd(query, idx, EcnToPartLink.class, "ecrReference.key.id", ecr);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
@@ -88,6 +111,8 @@ public class EcnHelper {
 			WTPart part = link.getPart();
 			Map<String, Object> map = new HashMap<>();
 
+			map.put("crNumber", ecr.getEoNumber());
+			map.put("cr_oid", ecr.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("oid", ecn.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("ecoNumber", eco.getEoNumber());
@@ -100,9 +125,10 @@ public class EcnHelper {
 			ArrayList<Map<String, String>> countrys = NumberCodeHelper.manager.getCountry();
 			for (Map<String, String> country : countrys) {
 				String dataField = country.get("code");
-				PartToSendLink sLink = getSendLink(ecn, part, dataField);
+				PartToSendLink sLink = getSendLink(ecn, part, dataField, ecr);
 				if (sLink != null) {
 					map.put(dataField + "_isSend", sLink.getIsSend());
+					map.put("send", sLink.getIsSend());
 					map.put(dataField + "_date", sLink.getSendDate().toString().substring(0, 10));
 				}
 			}
@@ -111,24 +137,5 @@ public class EcnHelper {
 		}
 
 		return JSONArray.fromObject(list);
-	}
-
-	/**
-	 * 국가별 SAP 전송 이력 데이터 가져오기
-	 */
-	private PartToSendLink getSendLink(EChangeNotice ecn, WTPart part, String nation) throws Exception {
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(PartToSendLink.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "partReference.key.id", part);
-		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "ecnReference.key.id", ecn);
-		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, PartToSendLink.NATION, nation);
-		QueryResult result = PersistenceHelper.manager.find(query);
-		if (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			PartToSendLink link = (PartToSendLink) obj[0];
-			return link;
-
-		}
-		return null;
 	}
 }
