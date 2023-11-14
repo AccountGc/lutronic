@@ -26,6 +26,7 @@ public class CrColumn {
 	private Timestamp createdDate;
 	private String createdDate_txt;
 	private String creator;
+	private String writeDate;
 
 	public CrColumn() {
 
@@ -49,5 +50,6 @@ public class CrColumn {
 		setCreatedDate(cr.getCreateTimestamp());
 		setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
 		setCreator(cr.getCreatorFullName());
+		setWriteDate(cr.getCreateDate());
 	}
 }
