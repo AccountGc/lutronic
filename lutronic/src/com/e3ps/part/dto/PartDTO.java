@@ -10,6 +10,8 @@ import com.e3ps.rohs.ROHSMaterial;
 import lombok.Getter;
 import lombok.Setter;
 import wt.part.WTPart;
+import wt.vc.views.View;
+import wt.vc.views.ViewHelper;
 
 @Getter
 @Setter
@@ -30,6 +32,7 @@ public class PartDTO {
 	private boolean isLatest;
 	
 	private String epmOid;
+	private String viewName;
 	
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
@@ -53,5 +56,7 @@ public class PartDTO {
 		setModifyDate(part.getModifyTimestamp().toString().substring(0, 10));
 		setComments(CommentsHelper.manager.comments(part));
 		setLatest(CommonUtil.isLatestVersion(part));
+		View view = ViewHelper.getView(part);
+		setViewName(view == null ? "" : view.getName());
 	}
 }

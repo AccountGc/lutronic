@@ -25,6 +25,7 @@ import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.message.Message;
+import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
@@ -40,6 +41,7 @@ import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
@@ -286,37 +288,20 @@ public class DistributeController extends BaseController {
 		return result;
 	}
 	
-//	@ResponseBody
-//	@RequestMapping("/listPagingPartAction")
-//	public Map<String,Object> listPagingPartAction(HttpServletRequest request, HttpServletResponse response) {
-//		
-//		Map<String,Object> map = new HashMap<String,Object>();
-//		try {
-//			map = PartHelper.service.listPagingAUIPartAction(request, response);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			
-//		}
-//		return map;
-//	}
-	
-	/**	완제품검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-//	@RequestMapping("/listProduction")
-//	public ModelAndView listProduction(HttpServletRequest request, HttpServletResponse response) {
-//		ModelAndView model = new ModelAndView();
-//		model.addObject("menu", "menu12");
-//		model.addObject("module","distribute");
-//		model.addObject("folderType","PART");
-//		model.addObject("production","true");
-//		//model.addObject("folderType","PART");
-//		
-//		model.setViewName("distribute:/distribute/listPart");
-//		return model;
-//	}
+	@Description(value = "완제품 상세보기")
+	@RequestMapping("/productView")
+	public ModelAndView productView(@RequestParam(value = "oid") String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		PartDTO dto = new PartDTO(part);
+		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
+
+		model.addObject("isAdmin", CommonUtil.isAdmin());
+		model.addObject("dto", dto);
+		model.addAllObjects(map);
+		model.setViewName("popup:/distribute/product-view");
+		return model;
+	}
 	
 	@Description(value = "EO 검색 페이지")
 	@GetMapping(value = "/listEO")
@@ -401,24 +386,6 @@ public class DistributeController extends BaseController {
 		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/jsp/distribute/distribute-mold-list.jsp");
 		return model;
-	}
-	
-	/** 금형 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/listMoldAction")
-	public List<Map<String,Object>> listMoldAction(HttpServletRequest request, HttpServletResponse response){
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		try {
-			list = DocumentHelper.service.listAUIDocumentAction(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return list;
 	}
 	
 	/**	품목 상세보기
