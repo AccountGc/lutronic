@@ -20,6 +20,7 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
@@ -325,6 +326,7 @@ public class StandardActivityService extends StandardManager implements Activity
 		String oid = (String) params.get("oid"); // eca oid
 		String description = (String) params.get("description"); // 완료 의견
 		ArrayList<String> secondarys = (ArrayList<String>) params.get("secondarys");
+		String ecnUserOid = (String) params.get("ecnUserOid");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -333,10 +335,16 @@ public class StandardActivityService extends StandardManager implements Activity
 			eca.setDescription(description);
 			PersistenceHelper.manager.modify(eca);
 
-			System.out.println(params);
+			if (StringUtil.checkString(ecnUserOid)) {
+				WTUser ecnUser = (WTUser) CommonUtil.getObject(ecnUserOid);
+				EChangeOrder eco = (EChangeOrder) eca.getEo();
+				// ecn 담당자 설정
+				eco.setEcnUser(ecnUser);
+				eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
+			}
+
 			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
 				String cacheId = secondarys.get(i);
-				System.out.println("저장됩니다.");
 				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
 				ApplicationData applicationData = ApplicationData.newApplicationData(eca);
 				applicationData.setRole(ContentRoleType.SECONDARY);
@@ -367,8 +375,6 @@ public class StandardActivityService extends StandardManager implements Activity
 			}
 			// ES001 ES002 ES003 ES004
 			// 스텝 코드 순서
-			System.out.println("마지막 작업이 끝났어요 = " + isLast);
-
 			int last = Integer.parseInt(step.substring(4));
 			String nextStep = step.substring(0, 4) + (last + 1); // ES001 -> ES002
 			// 마지막일경우 다음 스텝의 ECA 활동을 작업중으로 변경처리한다.
@@ -584,6 +590,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				EcoPartLink link = EcoPartLink.newEcoPartLink(part.getMaster(), eco);
 				link.setVersion(part.getVersionIdentifier().getSeries().getValue());
 				link.setBaseline(true);
+				link.setPreOrder(true);
 				PersistenceHelper.manager.save(link);
 			}
 
@@ -621,7 +628,7 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			PartToPartLink link = PartToPartLink.newPartToPartLink(prePart.getMaster(), afterPart.getMaster());
 			link.setPreVersion(prePart.getVersionIdentifier().getSeries().getValue());
-			link.setAfterVersion( afterPart.getVersionIdentifier().getSeries().getValue());
+			link.setAfterVersion(afterPart.getVersionIdentifier().getSeries().getValue());
 			link.setEco((EChangeOrder) eca.getEo());
 			PersistenceHelper.manager.save(link);
 
@@ -649,6 +656,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
 
 			for (Map<String, Object> map : editRows) {
+				boolean preOrder = (boolean) map.get("preOrder");
 				String next_oid = (String) map.get("next_oid");
 
 				WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
@@ -670,6 +678,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				String link_oid = (String) map.get("link_oid");
 
 				EcoPartLink eLink = (EcoPartLink) CommonUtil.getObject(link_oid);
+				eLink.setPreOrder(preOrder);
 				eLink.setPartStateCode(partStateCode);
 				eLink.setDelivery(delivery);
 				eLink.setComplete(complete);

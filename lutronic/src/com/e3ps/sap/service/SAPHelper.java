@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.e3ps.change.EChangeOrder;
@@ -19,10 +17,10 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.conn.SAPDevConnection;
 import com.e3ps.sap.dto.SAPBomDTO;
 import com.e3ps.sap.dto.SAPReverseBomDTO;
-import com.ptc.core.query.report.bom.server.WTPartUsageIdCollector;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoFunction;
@@ -74,8 +72,9 @@ public class SAPHelper {
 	 * 자재마스터 테스트용 품목 OID 숫자값, EO/ECO NUMBER
 	 */
 	public void ZPPIF_PDM_001_TEST(long id, String AENNR8) throws Exception {
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");
+		System.out.println("destination=" + destination);
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
 		}

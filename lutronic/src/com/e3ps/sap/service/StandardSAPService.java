@@ -28,7 +28,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.util.PartUtil;
-import com.e3ps.sap.conn.SAPDevConnection;
+import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.dto.SAPBomDTO;
 import com.e3ps.sap.dto.SAPReverseBomDTO;
 import com.e3ps.sap.util.SAPUtil;
@@ -241,7 +241,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	 */
 	private void sendToSapEoBom(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - EO BOM FUN : ZPPIF_PDM_002");
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -325,7 +325,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	 */
 	private void sendToSapEoPart(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - EO 자재마스터 FUN : ZPPIF_PDM_001");
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		System.out.println("destination=" + destination);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -422,7 +423,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	private void sendToSapEcoBom(EChangeOrder eco) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - ECO BOM FUN : ZPPIF_PDM_002");
 		// 결재완료 안에서 동작하기에 트랜젝션 제외
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_002");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -506,7 +507,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	 */
 	private void sendToSapEcoPart(EChangeOrder eco) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - ECO 자재마스터 FUN : ZPPIF_PDM_001");
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
@@ -569,7 +570,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		System.out.println("시작 SAP 인터페이스 - ECN 확정인허가일 FUN : ZPPIF_PDM_003");
 		String oid = (String) params.get("oid");
 
-		JCoDestination destination = JCoDestinationManager.getDestination(SAPDevConnection.DESTINATION_NAME);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_003");
 		if (function == null) {
 			throw new RuntimeException("STFC_CONNECTION not found in SAP.");

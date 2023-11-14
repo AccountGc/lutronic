@@ -342,6 +342,7 @@ public class ActivityHelper {
 			String link_oid = link.getPersistInfo().getObjectIdentifier().getStringValue();
 			String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
 			boolean isRevise = link.isRevise(); // 개정여부?
+			boolean preOrder = link.getPreOrder();
 			map.put("oid", oid); // 활동 혹은 ECO OID
 			map.put("link_oid", link_oid);
 			map.put("delivery", link.getDelivery());
@@ -349,6 +350,7 @@ public class ActivityHelper {
 			map.put("inner", link.getInner());
 			map.put("order", link.getOrders());
 			map.put("part_state_code", link.getPartStateCode());
+			map.put("preOrder", preOrder);
 			if (isApproved) {
 				// 개정 데이터
 				map.put("part_oid", part_oid);

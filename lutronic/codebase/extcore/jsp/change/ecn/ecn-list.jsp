@@ -7,7 +7,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -23,6 +23,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName() %>">
 
 		<table class="button-table">
 			<tr>
@@ -58,12 +59,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-                        for (Map<String,String> lifecycle : lifecycleList) {
-                        %>
-                        <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
-                        <%
-                        }
-                        %>
+						for (Map<String, String> lifecycle : lifecycleList) {
+						%>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -174,6 +175,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					dataType : "string",
 					width : 130,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "worker",
+					headerText : "담당자",
+					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -316,10 +326,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}
-			
+
 			function exportExcel() {
-			    const sessionName = "<%=user.getFullName()%>";
-			    exportToExcel("ECN 리스트", "ECN", "ECN 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("ECN 리스트", "ECN", "ECN 리스트", [], sessionName);
 			}
 		</script>
 	</form>

@@ -79,10 +79,15 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 			</tr>
 			<tr>
 				<th class="lb">업무위임</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="text" name="reassignUser" id="reassignUser">
 					<input type="hidden" name="reassignUserOid" id="reassignUserOid">
 					<input type="button" title="위임" value="위임" onclick="reassign();">
+				</td>
+				<th>ECN 담당자</th>
+				<td class="indent5">
+					<input type="text" name="ecnUser" id="ecnUser">
+					<input type="hidden" name="ecnUserOid" id="ecnUserOid">
 				</td>
 			</tr>
 			<tr>
@@ -187,6 +192,15 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 						return tempValueArr.sort().join(", "); // 정렬시켜서 보여주기.
 					}
 				},
+			}, {
+				headerText : "선구매<br>여부",
+				dataField : "preOrder",
+				dataType : "boolean",
+				width : 80,
+				renderer : {
+					type : "CheckboxEditRenderer",
+					editable : true
+				}
 			}, {
 				headerText : "개정 전",
 				children : [ {
@@ -533,44 +547,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				dataField : "",
 				dataType : "string",
 				width : 100
-			},
-			// 			{
-			// 				headerText : "BOM",
-			// 				children : [ {
-			// 					dataField : "",
-			// 					dataType : "string",
-			// 					editable : false,
-			// 					headerText : "BOM 편집",
-			// 					width : 120,
-			// 					renderer : {
-			// 						type : "ButtonRenderer",
-			// 						labelText : "BOM 편집",
-			// 						onclick : function(rowIndex, columnIndex, value, item) {
-			// 							const next_oid = item.next_oid;
-			// 							alert(next_oid);
-			// 							if (next_oid === "") {
-			// 								return false;
-			// 							}
-			// 						}
-			// 					}
-			// 				}, {
-			// 					dataField : "",
-			// 					dataType : "string",
-			// 					editable : false,
-			// 					headerText : "BOM 비교",
-			// 					width : 120,
-			// 					renderer : {
-			// 						type : "ButtonRenderer",
-			// 						labelText : "BOM 비교",
-			// 						onclick : function(rowIndex, columnIndex, value, item) {
-			// 							const oid = item.part_oid;
-			// 							const url = getCallUrl("/bom/view?oid=" + oid);
-			// 							_popup(url, "", "", "f");
-			// 						}
-			// 					}
-			// 				} ]
-			// 			} 
-			]
+			} ];
 
 			function createAUIGrid(columnLayout) {
 				const props = {
@@ -584,7 +561,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					selectionMode : "multipleCells",
 					showRowCheckColumn : true,
 					enableFilter : true,
-					fixedColumnCount : 1,
+					fixedColumnCount : 2,
 					editableOnFixedCell : true,
 					enableCellMerge : true,
 					editable : true,
@@ -657,6 +634,11 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 						return false;
 					}
 				}
+				const ecnUserOid = document.getElementById("ecnUserOid").value;
+				if (ecnUserOid === "") {
+					alert("ECN 담당자를 선택하세요.");
+					return false;
+				}
 
 				const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
@@ -668,7 +650,8 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				const params = {
 					oid : oid,
 					description : description,
-					secondarys : secondarys
+					secondarys : secondarys,
+					ecnUserOid : ecnUserOid
 				};
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -803,6 +786,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				finderUser("reassignUser");
+				finderUser("ecnUser");
 			})
 
 			window.addEventListener("resize", function() {

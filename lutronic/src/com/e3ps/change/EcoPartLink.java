@@ -35,8 +35,10 @@ import wt.util.WTException;
 				@GeneratedProperty(name = "inner", type = String.class),
 
 				@GeneratedProperty(name = "orders", type = String.class),
-				
+
 				@GeneratedProperty(name = "partStateCode", type = String.class),
+
+				@GeneratedProperty(name = "preOrder", type = Boolean.class)
 
 		},
 

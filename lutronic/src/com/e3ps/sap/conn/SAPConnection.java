@@ -84,7 +84,7 @@ public class SAPConnection {
 	public static void createDestinationDataFile(String destinationName, Properties connectProperties) {
 
 		File destCfg = new File(destinationName + ".jcoDestination");
-		if (destCfg.isFile()) {
+		if (!destCfg.isFile()) {
 			return;
 		}
 

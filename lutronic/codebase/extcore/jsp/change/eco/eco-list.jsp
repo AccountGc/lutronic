@@ -5,7 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -56,12 +56,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-                        <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
-                        <%
-							}
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<%
+						}
 						}
 						%>
 					</select>
@@ -174,7 +174,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td colspan="5" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode"/>
+						<jsp:param value="create" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -333,7 +333,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
-				const field = ["_psize","name","number","creatorOid","createdFrom","createdTo","approveFrom","approveTo","state"];
+				const field = [ "name", "number", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.licensing = $('input[name=licensing]:checked').val();
@@ -341,6 +341,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -425,10 +426,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}
-			
+
 			function exportExcel() {
-			    const sessionName = "<%=user.getFullName()%>";
-			    exportToExcel("ECO 리스트", "ECO", "ECO 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("ECO 리스트", "ECO", "ECO 리스트", [], sessionName);
 			}
 		</script>
 	</form>

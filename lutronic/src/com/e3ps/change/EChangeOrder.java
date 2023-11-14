@@ -4,6 +4,7 @@ package com.e3ps.change;
 import java.util.Vector;
 
 import com.e3ps.common.util.OwnPersistable;
+import com.e3ps.org.Department;
 import com.ptc.windchill.annotations.metadata.Cardinality;
 import com.ptc.windchill.annotations.metadata.ColumnProperties;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
@@ -37,7 +38,13 @@ import wt.util.WTException;
 
 						foreignKeyRole = @ForeignKeyRole(name = "worker", type = WTUser.class),
 
-						myRole = @MyRole(name = "eco", cardinality = Cardinality.ZERO_TO_ONE))
+						myRole = @MyRole(name = "eco", cardinality = Cardinality.ZERO_TO_ONE)),
+
+				@GeneratedForeignKey(name = "EcnUserLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "ecnUser", type = WTUser.class),
+
+						myRole = @MyRole(name = "eco"))
 
 		}
 

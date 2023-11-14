@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.change.EChangeRequest"%>
 <%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Map"%>
@@ -5,6 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 EcnDTO dto = (EcnDTO) request.getAttribute("dto");
+ArrayList<EChangeRequest> crList = dto.getList();
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.getAttribute("list");
 %>
@@ -18,16 +20,20 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 </style>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
+<%
+int idx = 1;
+for (EChangeRequest ecr : crList) {
+%>
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				ECN 상세보기
+				ECN (<font color="red"><b><%=ecr.getEoNumber()%></b></font>)
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="ERP전송" title="ERP전송" class="blue" onclick="send();">
+			<input type="button" value="ERP전송" title="ERP전송" class="blue" onclick="send<%=idx%>();">
 			<%
 			if (isAdmin) {
 			%>
@@ -39,11 +45,12 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 		</td>
 	</tr>
 </table>
-<div id="grid_wrap" style="height: 740px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid_wrap<%=idx%>" style="height: 80px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+
 
 <script type="text/javascript">
-	let myGridID;
-	const columns = [ {
+	let myGridID<%=idx%>;
+	const columns<%=idx%> = [ {
 		dataField : "ecoNumber",
 		headerText : "ECO 번호",
 		dataType : "string",
@@ -70,9 +77,10 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 	}, {
 		headerText : "확정 인허가일",
 		children : [ {
-			<%int i = 1;
-for (Map<String, String> map : list) {
-	String dataField = map.get("code");%>	
+		<%
+			int i = 1;
+			for (Map<String, String> map : list) {
+				String dataField = map.get("code");%>	
 				dataField : "<%=dataField%>_date",
 				headerText : "<%=map.get("name")%>",
 				dataType : "date",
@@ -115,13 +123,15 @@ for (Map<String, String> map : list) {
 				}				
 			<%if (i != list.size()) {%>
 			}, {
-			<%}
-i++;
-}%>
+		<%
+			}
+			i++;
+		}
+		%>
 		}]
 	} ]
 
-	function createAUIGrid(columnLayout) {
+	function createAUIGrid<%=idx%>(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			fillColumnSizeMode : false,
@@ -135,24 +145,27 @@ i++;
 			enableCellMerge : true,
 			editable : true
 		}
-		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		console.log(<%=dto.getList()%>);
-		AUIGrid.setGridData(myGridID,
-<%=dto.getList()%>
-	);
-		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);
+		myGridID<%=idx%> = AUIGrid.create("#grid_wrap<%=idx%>", columnLayout, props);
+		AUIGrid.bind(myGridID<%=idx%>, "cellEditBegin", auiCellEditBeginHandler<%=idx%>);
+		
+		// V스크롤 체인지 핸들러.
+// 		AUIGrid.bind(myGridID "vScrollChange", function (event) {
+// 			//console.log(event.type + ", position : " + event.position + ", (min : " + event.minPosition + ", max : " + event.maxPosition);
+// 			AUIGrid.setRowPosition(myGridID2, event.position); // 수평 스크롤 이동 시킴..
+// 		});
+
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-		createAUIGrid(columns);
-		AUIGrid.resize(myGridID);
+		createAUIGrid<%=idx%>(columns<%=idx%>);
+		AUIGrid.resize(myGridID<%=idx%>);
 	});
 	
-	function auiCellEditBeginHandler(event) {
+	function auiCellEditBeginHandler<%=idx%>(event) {
 		const item = event.item;
 		const dataField = event.dataField;
 		const rowIndex = event.rowIndex;
-		const isSend = AUIGrid.getCellValue(myGridID, rowIndex, dataField);
+		const isSend = AUIGrid.getCellValue(myGridID<%=idx%>, rowIndex, dataField);
 		if(isSend !== undefined) {
 			alert("SAP로 전송 완료된 값입니다.");
 			return false;
@@ -160,9 +173,9 @@ i++;
 		return true;
 	}
 
-	function send() {
+	function send<%=idx%>() {
 
-		const editRows = AUIGrid.getEditedRowItems(myGridID);
+		const editRows = AUIGrid.getEditedRowItems(myGridID<%=idx%>);
 
 		if (editRows.length === 0) {
 			alert("수정 내역이 없습니다.");
@@ -209,3 +222,7 @@ i++;
 		}, "DELETE");
 	}
 </script>
+<%
+idx++;
+}
+%>

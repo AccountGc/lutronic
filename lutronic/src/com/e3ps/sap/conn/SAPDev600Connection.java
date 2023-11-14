@@ -11,9 +11,9 @@ import com.e3ps.common.jdf.config.ConfigImpl;
 
 import wt.util.WTProperties;
 
-public class SAPDevConnection {
+public class SAPDev600Connection {
 
-	protected static String properties_filename = "sap_dev.properties";
+	protected static String properties_filename = "sap_dev_600.properties";
 	protected static Properties sapProps = null;
 
 	public static String DESTINATION_NAME = "";
@@ -26,13 +26,13 @@ public class SAPDevConnection {
 	public static void setSAPInit() {
 
 		Config conf = ConfigImpl.getInstance();
-		System.out.println("erp_dev.destination = " + conf.getString("erp_dev.destination"));
+		System.out.println("erp_dev_600.destination = " + conf.getString("erp_dev_600.destination"));
 		System.out.println("erp.send = " + conf.getString("erp.send"));
-		DESTINATION_NAME = conf.getString("erp_dev.destination");
+		DESTINATION_NAME = conf.getString("erp_dev_600.destination");
 
 //		isSAPSend = conf.getString("erp.send").equals("true") ? true : false;
 
-		System.out.println("==== setSAPInit ====");
+		System.out.println("==== setSAPInit600 ====");
 		System.out.println("DESTINATION_NAME =" + DESTINATION_NAME);
 		System.out.println("isSAPSend =" + isSAPSend);
 		if (isSAPSend) {
@@ -68,20 +68,13 @@ public class SAPDevConnection {
 	}
 
 	public static void createDestinationDataFile(String destinationName, Properties connectProperties) {
-
 		File destCfg = new File(destinationName + ".jcoDestination");
-		System.out.println("destC1fg.isFile() =" + destCfg.isFile());
 		if (!destCfg.isFile()) {
 			return;
 		}
-
-		System.out.println("destCfg.isFile() =" + destCfg.isFile());
-		System.out.println(destCfg.getAbsolutePath());
 		try {
 			FileOutputStream fos = new FileOutputStream(destCfg, false);
 			connectProperties.store(fos, "for tests only !");
-			System.out.println("connectProperties =" + connectProperties);
-			System.out.println("fos =" + fos.getFD().toString());
 			fos.close();
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to create the destination files", e);

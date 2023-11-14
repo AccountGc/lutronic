@@ -32,8 +32,75 @@ public class BomHelper {
 	/**
 	 * BOM 뷰 화면
 	 */
-	public void loadStructure(Map<String, Object> params) throws Exception {
+	public JSONArray loadStructure(Map<String, Object> params) throws Exception {
+		String baseLine = (String) params.get("baseLine"); // 베이스 라인 OID
+		boolean skip = (boolean) params.get("skip"); // 더미 품목 제외
 		String oid = (String) params.get("oid");
+		WTPart root = (WTPart) CommonUtil.getObject(oid);
+		JSONArray list = new JSONArray();
+		JSONObject rootNode = new JSONObject();
+		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+		rootNode.put("thumb", ThumbnailUtil.thumbnailSmall(root));
+		rootNode.put("level", 1);
+		rootNode.put("number", root.getNumber());
+		rootNode.put("name", root.getName());
+		rootNode.put("state", root.getLifeCycleState().getDisplay());
+		rootNode.put("version", root.getVersionIdentifier().getSeries().getValue() + "."
+				+ root.getIterationIdentifier().getSeries().getValue());
+		rootNode.put("creator", root.getCreatorFullName());
+		rootNode.put("isRoot", true);
+		rootNode.put("link", "");
+
+		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
+		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
+		if (isCheckOut) {
+			rootNode.put("isCheckOut", isCheckOut);
+		}
+		if (isWorkCopy) {
+			rootNode.put("isWorkCopy", isWorkCopy);
+		}
+
+		JSONArray children = new JSONArray();
+
+		View view = ViewHelper.service.getView(root.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
+		int level = 2;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart p = (WTPart) obj[1];
+			JSONObject node = new JSONObject();
+			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("poid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("thumb", ThumbnailUtil.thumbnailSmall(p));
+			node.put("level", level);
+			node.put("number", p.getNumber());
+			node.put("name", p.getName());
+			node.put("state", p.getLifeCycleState().getDisplay());
+			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ p.getIterationIdentifier().getSeries().getValue());
+			node.put("creator", p.getCreatorFullName());
+			node.put("isRoot", false);
+			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
+			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+			if (isCheckOut) {
+				node.put("isCheckOut", isCheckOut);
+			}
+			if (isWorkCopy) {
+				node.put("isWorkCopy", isWorkCopy);
+			}
+//			loadEditor(p, node, level);
+			children.add(node);
+		}
+		rootNode.put("children", children);
+		list.add(rootNode);
+		return list;
 	}
 
 	/**
@@ -46,7 +113,6 @@ public class BomHelper {
 		if (isCheckOut) {
 			root = (WTPart) WorkInProgressHelper.service.workingCopyOf(root);
 		}
-
 		return loadEditor(root);
 	}
 
@@ -107,11 +173,9 @@ public class BomHelper {
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
-				System.out.println("체111크아웃");
 				node.put("isCheckOut", isCheckOut);
 			}
 			if (isWorkCopy) {
-				System.out.println("자식이..복사본 객체???");
 				node.put("isWorkCopy", isWorkCopy);
 			}
 //			loadEditor(p, node, level);

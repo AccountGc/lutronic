@@ -1,16 +1,17 @@
 package com.e3ps.change.ecn.dto;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import com.e3ps.change.EChangeNotice;
-import com.e3ps.change.ecn.service.EcnHelper;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.RequestOrderLink;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.org.service.MailUserHelper;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.sf.json.JSONArray;
+import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 
 @Getter
 @Setter
@@ -24,8 +25,9 @@ public class EcnDTO {
 	private String eoCommentC;
 	private String eoCommentD;
 	private String eoCommentE;
-	
-	private JSONArray list = new JSONArray();
+
+//	private JSONArray list = new JSONArray();
+	private ArrayList<EChangeRequest> list = new ArrayList<EChangeRequest>();
 
 	public EcnDTO() {
 
@@ -44,6 +46,18 @@ public class EcnDTO {
 		setEoCommentC(ecn.getEoCommentC());
 		setEoCommentD(ecn.getEoCommentD());
 		setEoCommentE(ecn.getEoCommentE());
-		setList(EcnHelper.manager.getEcnGroupPart(ecn));
+//		setList(EcnHelper.manager.getEcnGroupPart(ecn));
+		setCr(ecn);
+	}
+
+	private void setCr(EChangeNotice ecn) throws Exception {
+		ArrayList<EChangeRequest> crList = new ArrayList<EChangeRequest>();
+		EChangeOrder eco = ecn.getEco();
+		QueryResult result = PersistenceHelper.manager.navigate(eco, "ecr", RequestOrderLink.class);
+		while (result.hasMoreElements()) {
+			EChangeRequest ecr = (EChangeRequest) result.nextElement();
+			crList.add(ecr);
+		}
+		setList(crList);
 	}
 }

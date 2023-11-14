@@ -62,6 +62,7 @@ public class EcnController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		EcnDTO dto = new EcnDTO(oid);
+
 		ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getCountry();
 		model.addObject("list", list);
 		model.addObject("isAdmin", isAdmin);

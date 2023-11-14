@@ -77,26 +77,31 @@ public class EcoHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
-		
+
 		// 상태 임시저장 제외
-    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-    	query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.LIFE_CYCLE_STATE,
+				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
 		QuerySpecUtils.toCreator(query, idx, EChangeOrder.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
-		if(approveFrom.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+		if (approveFrom.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , approveFrom), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
+					SearchCondition.GREATER_THAN_OR_EQUAL, approveFrom), new int[] { idx });
 		}
-		if(approveTo.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+		if (approveTo.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
+					SearchCondition.LESS_THAN_OR_EQUAL, approveTo), new int[] { idx });
 		}
 		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
 		if (StringUtil.checkString(eoType)) {
@@ -134,6 +139,7 @@ public class EcoHelper {
 		}
 		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
 
+		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -199,8 +205,7 @@ public class EcoHelper {
 	}
 
 	/**
-	 * 설변 대상 품목 제외
-	 * ECO 일경우 최초버전이면서 작업중인 항목은 제외한다.
+	 * 설변 대상 품목 제외 ECO 일경우 최초버전이면서 작업중인 항목은 제외한다.
 	 */
 	public boolean isSkip(WTPart pp) throws Exception {
 		String version = pp.getVersionIdentifier().getSeries().getValue();

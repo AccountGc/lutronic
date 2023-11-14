@@ -19,7 +19,9 @@ import wt.util.WTException;
 
 		properties = {
 
-				@GeneratedProperty(name = "ecoType", type = String.class) },
+				@GeneratedProperty(name = "ecoType", type = String.class)
+
+		},
 
 		roleA = @GeneratedRole(name = "eco", type = EChangeOrder.class),
 

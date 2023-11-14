@@ -384,7 +384,7 @@ public class ActivityController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			ActivityHelper.service.saveGroup(params);
-			result.put("msg", "선택한 품목들이 그룹핑 되었습니다.");
+			result.put("msg", "저장되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
