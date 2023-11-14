@@ -79,7 +79,7 @@ public class DocumentHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<DocumentColumn> list = new ArrayList<>();
 
-		String latest = (String) params.get("latest");
+		boolean latest = (boolean) params.get("latest");
 		String location = (String) params.get("location");
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
@@ -261,14 +261,9 @@ public class DocumentHelper {
 		}
 		query.appendCloseParen();
 
-		// 최신 이터레이션
-		if("true".equals(latest)) {
-			if(query.getConditionCount() > 0) { query.appendAnd(); }
-			query.appendWhere(VersionControlHelper.getSearchCondition(WTDocument.class, true), new int[]{idx});
-		}
-		// 버전 검색
-		if("true".equals(latest)) {
-			SearchUtil.addLastVersionCondition(query, WTDocument.class, idx);
+		// 최신 이터레이션.
+		if (latest) {
+			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		}
 
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
