@@ -30,7 +30,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		
-		<input type="hidden" name="state" id="state" value="APPROVED">
+		<input name="state" type="hidden"  value="APPROVED" />
 
 		<table class="button-table">
 			<tr>
