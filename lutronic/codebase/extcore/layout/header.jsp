@@ -522,12 +522,12 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						</a>
 						<ul class="nav nav-second-level collapse">
 							<li>
-								<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>
-<!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
-							</li>
-							<li>
 								<a onclick="moveToPage(this, '/distribute/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
 <!-- 								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a> -->
+							</li>
+							<li>
+								<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>
+<!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
 							</li>
 						</ul>
 					</li>
