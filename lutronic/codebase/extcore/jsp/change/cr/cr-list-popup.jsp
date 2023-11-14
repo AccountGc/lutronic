@@ -228,8 +228,8 @@ const columns = [ {
 		inline : true
 	},
 }, {
-	dataField : "approveDate",
-	headerText : "승인일",
+	dataField : "writeDate",
+	headerText : "작성일",
 	dataType : "string",
 	filter : {
 		showIcon : true,

@@ -257,8 +257,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
-					dataField : "approveDate",
-					headerText : "승인일",
+					dataField : "writeDate",
+					headerText : "작성일",
 					dataType : "date",
 					width : 100,
 					filter : {
