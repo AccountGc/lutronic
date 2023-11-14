@@ -533,8 +533,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/part/list");
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-						"ecoNo", "eoNo","creatorOid","latest" ,"specification"];
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
+						"ecoNo", "eoNo","creatorOid", "specification"];
 				var  latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest =  latest=="true"?true:false;

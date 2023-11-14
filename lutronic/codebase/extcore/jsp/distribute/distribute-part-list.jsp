@@ -30,7 +30,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		
-		<input name="state" type="hidden"  value="APPROVED" />
+		<input type="hidden" name="state" value="APPROVED">
 
 		<table class="button-table">
 			<tr>
@@ -494,9 +494,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				let params = new Object();
 				const url = getCallUrl("/part/list");
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-						"ecoNo", "eoNo","creatorOid","latest" ,"specification"];
+						"ecoNo", "eoNo","creatorOid","specification"];
 				params = toField(params, field);
-				params.latest = false;
+				params.latest = true;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {

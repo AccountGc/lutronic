@@ -105,14 +105,12 @@ public class PartHelper {
 		ReferenceFactory rf = new ReferenceFactory();
 
 		String location = StringUtil.checkNull((String) params.get("location"));
-		String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
 		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
 		String partName = StringUtil.checkNull((String) params.get("partName"));
 		String createdFrom = StringUtil.checkNull((String) params.get("createdFrom"));
 		String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
 		String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
 		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
-		String creator = StringUtil.checkNull((String) params.get("creator"));
 		String creatorOid = StringUtil.checkNull((String) params.get("creatorOid"));
 		String state = StringUtil.checkNull((String) params.get("state"));
 		String model = StringUtil.checkNull((String) params.get("model"));
@@ -455,14 +453,12 @@ public class PartHelper {
 		ReferenceFactory rf = new ReferenceFactory();
 
 		String location = StringUtil.checkNull((String) params.get("location"));
-		String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
 		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
 		String partName = StringUtil.checkNull((String) params.get("partName"));
 		String createdFrom = StringUtil.checkNull((String) params.get("createdFrom"));
 		String createdTo = StringUtil.checkNull((String) params.get("createdTo"));
 		String modifiedFrom = StringUtil.checkNull((String) params.get("modifiedFrom"));
 		String modifiedTo = StringUtil.checkNull((String) params.get("modifiedTo"));
-		String creator = StringUtil.checkNull((String) params.get("creator"));
 		String creatorOid = StringUtil.checkNull((String) params.get("creatorOid"));
 		String state = StringUtil.checkNull((String) params.get("state"));
 		String model = StringUtil.checkNull((String) params.get("model"));
