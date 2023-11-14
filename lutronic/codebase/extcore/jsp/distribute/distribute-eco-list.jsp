@@ -5,7 +5,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -21,9 +20,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="state" id="state" value="APPROVED">
 		
-		<input name="state" type="hidden"  value="APPROVED" />
-
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -174,7 +172,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-eco-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-eco-list');">
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -210,7 +207,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/eco/view?oid=" + oid);
+							const url = getCallUrl("/distribute/ecoView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -228,7 +225,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/eco/view?oid=" + oid);
+							const url = getCallUrl("/distribute/ecoView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -354,7 +351,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(myGridID104);
-				selectbox("state");
 				finderUser("creator");
 				twindate("created");
 				twindate("approve");
@@ -378,10 +374,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID104);
 			});
 
-			// 등록
-			function create() {
-				location.href = getCallUrl("/eco/create");
-			}
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');
 				// 버근가..

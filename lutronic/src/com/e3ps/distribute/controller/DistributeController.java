@@ -20,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.eco.dto.EcoDTO;
+import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.code.NumberCode;
@@ -41,6 +43,7 @@ import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.groupware.service.GroupwareHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
@@ -249,6 +252,21 @@ public class DistributeController extends BaseController {
 		return list;
 	}
 	
+	@Description(value = "품목 상세보기")
+	@RequestMapping("/partView")
+	public ModelAndView partView(@RequestParam(value = "oid") String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		PartDTO dto = new PartDTO(part);
+		Map<String, String> map = CommonHelper.manager.getAttributes(oid, "view");
+
+		model.addObject("isAdmin", CommonUtil.isAdmin());
+		model.addObject("dto", dto);
+		model.addAllObjects(map);
+		model.setViewName("popup:/distribute/part-view");
+		return model;
+	}
+	
 	@Description(value = "완제품 검색 페이지")
 	@GetMapping(value = "/listProduction")
 	public ModelAndView listProduction() throws Exception{
@@ -307,10 +325,8 @@ public class DistributeController extends BaseController {
 	@GetMapping(value = "/listEO")
 	public ModelAndView listEO() throws Exception{
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
-		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/distribute/distribute-eo-list.jsp");
 		return model;
 	}
@@ -327,13 +343,23 @@ public class DistributeController extends BaseController {
 		
 		return map;
 	}
+	
+	@Description(value = "EO 상세보기")
+	@GetMapping(value = "/eoView")
+	public ModelAndView eoView(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		EoDTO dto = new EoDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/distribute/eo-view");
+		return model;
+	}
 		
 	@Description(value="ECO 검색 페이지")
 	@GetMapping(value = "/listECO")
 	public ModelAndView listECO(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
-		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/distribute/distribute-eco-list.jsp");
 		return model;
 	}
@@ -349,7 +375,18 @@ public class DistributeController extends BaseController {
 		}
 		
 		return map;
-		
+	}
+	
+	@Description(value = "ECO 상세보기")
+	@GetMapping(value = "/ecoView")
+	public ModelAndView ecoView(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		EcoDTO dto = new EcoDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/distribute/eco-view");
+		return model;
 	}
 	
 	@Description(value = "문서검색 페이지")
@@ -365,6 +402,18 @@ public class DistributeController extends BaseController {
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
 		model.setViewName("/extcore/jsp/distribute/distribute-document-list.jsp");
+		return model;
+	}
+	
+	@Description(value = "문서 상세보기")
+	@GetMapping(value = "/documentView")
+	public ModelAndView documentView(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		DocumentDTO dto = new DocumentDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/distribute/document-view");
 		return model;
 	}
 	
@@ -388,167 +437,19 @@ public class DistributeController extends BaseController {
 		return model;
 	}
 	
-	/**	품목 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewPart")
-	public ModelAndView viewPart(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
+	@Description(value = "금형 상세 페이지")
+	@GetMapping(value = "/moldView")
+	public ModelAndView moldView(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
-		
-		PartData partData = new PartData(part);
-		
-		model.addObject("oid",oid);
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("partData", partData);
-		model.setViewName("popup:/distribute/viewPart");
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		MoldDTO dto = new MoldDTO(doc);
+
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/distribute/mold-view");
 		return model;
 	}
-	
-	/**	품목 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewProduct")
-	public ModelAndView viewProduct(HttpServletRequest request, HttpServletResponse response, @RequestParam(value="oid") String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
-		
-		PartData partData = new PartData(part);
-		
-		model.addObject("oid",oid);
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("partData", partData);
-		model.setViewName("popup:/distribute/viewProduct");
-		return model;
-	}
-	
-	/** 도면 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewDrawing")
-	public ModelAndView viewDrawing(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		
-		EPMDocument doc = (EPMDocument)CommonUtil.getObject(oid);
-		EpmData epmData = new EpmData(doc);
-		
-		model.setViewName("popup:/distribute/viewDrawing");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("epmData", epmData);
-		return model;
-	}
-	
-	/**	문서 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewDocument")
-	public ModelAndView viewDocument(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		WTDocument doc = (WTDocument)CommonUtil.getObject(oid);
-		DocumentDTO docData = new DocumentDTO(doc);
-		
-		model.setViewName("popup:/distribute/viewDocument");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("docData", docData);
-		return model;
-	}
-	/**	rohs 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewRohs")
-	public ModelAndView viewRohs(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-		RohsData rohsData = new RohsData(rohs);
-		
-		List<Map<String,Object>> list = RohsHelper.service.getRohsContent(oid); 
-		
-		model.setViewName("popup:/distribute/viewRohs");
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.addObject("rohsData", rohsData);
-		model.addObject("list", list);
-		return model;
-	}
-	
-	
-	/**	ECR 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewECR")
-	public ModelAndView viewECR(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		EChangeRequest ecr = (EChangeRequest)CommonUtil.getObject(oid);
-		ECRData ecrData = new ECRData(ecr);
-		model.setViewName("popup:/distribute/viewECR");
-		model.addObject("ecrData", ecrData);
-		return model;
-	}
-	
-	/** 공지사항 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewNotice")
-	public ModelAndView viewNotice(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) throws Exception{
-		
-		NoticeHelper.service.updateCount(oid);
-		
-		Notice notice = (Notice)CommonUtil.getObject(oid);
-		NoticeDTO noticeData = new NoticeDTO(notice);
-		
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu1");
-		model.addObject("module", "workprocess");
-		model.addObject("noticeData", noticeData);
-		
-		model.setViewName("distribute:/distribute/viewNotice");
-		return model;
-	}
-	
-	/** 공지사항 검색 페이지
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/listNotice")
-	public ModelAndView listNotice(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.addObject("isAdmin", CommonUtil.isAdmin());
-		model.setViewName("distribute:/distribute/listNotice");
-		return model;
-	}
-	
-	
-	
-	
 	
 	/***********************************************************************************************/
 	
@@ -708,24 +609,6 @@ public class DistributeController extends BaseController {
 	
 		return model;
 	}
-	
-	/**	viewECO 상세보기
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/viewECO")
-	public ModelAndView viewECO(HttpServletRequest request, HttpServletResponse response,@RequestParam(value="oid") String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
-		EChangeOrder eco = (EChangeOrder)CommonUtil.getObject(oid);
-		ECOData ecoData = new ECOData(eco);
-		model.setViewName("popup:/distribute/viewECO");
-		model.addObject("ecoData", ecoData);
-		return model;
-	}
-	
 	
 	/**
 	 * 최신 Baseline

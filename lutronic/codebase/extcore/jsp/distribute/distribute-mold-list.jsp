@@ -29,8 +29,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="location" id="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
 		<input type="hidden" name="searchType" id="searchType" value="MOLD">
-		
-		<input name="state" type="hidden"  value="APPROVED" />
+		<input type="hidden" name="state" id="state" value="APPROVED">
 		
 		<table class="button-table">
 			<tr>
@@ -180,7 +179,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/mold/view?oid=" + oid);
+							const url = getCallUrl("/distribute/moldView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -198,7 +197,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/mold/view?oid=" + oid);
+							const url = getCallUrl("/distribute/moldView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -308,7 +307,6 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				});
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
-				selectbox("state");
 				selectbox("manufacture");
 				selectbox("moldtype");
 				selectbox("deptcode");

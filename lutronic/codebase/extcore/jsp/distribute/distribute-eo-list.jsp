@@ -7,7 +7,6 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -23,9 +22,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="state" id="state" value="APPROVED">
 		
-		<input name="state" type="hidden"  value="APPROVED" />
-
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -109,7 +107,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th class="b">프로젝트 코드</th>
+				<th>프로젝트 코드</th>
 				<td class="indent5" colspan="5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -141,7 +139,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-eo-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-eo-list');">
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
-					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -176,7 +173,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/eo/view?oid=" + oid);
+							const url = getCallUrl("/distribute/eoView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -194,7 +191,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/eo/view?oid=" + oid);
+							const url = getCallUrl("/distribute/eoView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -286,7 +283,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/eo/list");
-				const field = [ "_psize", "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
+				const field = [ "_psize", "name", "number", "createdFrom", "createdTo", "creatorOid", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo", "state"];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.eoType = $('input[name=eoType]:checked').val();
@@ -319,7 +316,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(myGridID104);
-				selectbox("state");
 				finderUser("creator");
 				twindate("created");
 				twindate("approve");
@@ -342,11 +338,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(myGridID104);
 			});
-
-			// 등록
-			function create() {
-				location.href = getCallUrl("/eo/create");
-			}
 
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');
