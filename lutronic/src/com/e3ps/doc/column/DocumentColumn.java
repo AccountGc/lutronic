@@ -60,7 +60,8 @@ public class DocumentColumn {
 		setLocation(doc.getLocation());
 		setVersion(setVersionInfo(doc));
 		setState(doc.getLifeCycleState().getDisplay());
-		setWriter(IBAUtil.getStringValue(doc, "DSGN"));
+		String writer_oid = IBAUtil.getStringValue(doc, "DSGN");
+		setWriter(CommonUtil.getUserNameFromOid(writer_oid));
 		setCreator(doc.getCreatorName());
 		setCreatedDate(doc.getCreateTimestamp());
 		setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
