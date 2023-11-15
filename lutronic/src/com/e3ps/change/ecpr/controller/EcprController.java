@@ -65,10 +65,12 @@ public class EcprController extends BaseController {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("sectionList", sectionList);
 		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("method", method);
 		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/change/ecpr/ecpr-list-popup");

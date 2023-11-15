@@ -126,7 +126,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th class="req lb">제품명</th>
+				<th>제품명</th>
 				<td class="indent5" colspan="3">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>

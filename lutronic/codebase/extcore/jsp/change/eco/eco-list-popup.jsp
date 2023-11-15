@@ -74,10 +74,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 		</td>
 		<th>승인일</th>
 		<td class="indent5">
-			<input type="text" name="createdFrom" id="modifiedFrom" class="width-100">
+			<input type="text" name="approveFrom" id="approveFrom" class="width-100">
 			~
-			<input type="text" name="createdTo" id="modifiedTo" class="width-100">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+			<input type="text" name="approveTo" id="approveTo" class="width-100">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
 		</td>
 	</tr>
 	<tr>
@@ -208,231 +208,225 @@ boolean multi = (boolean) request.getAttribute("multi");
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">
-let myGridID;
-const columns = [ {
-	dataField : "number",
-	headerText : "ECO번호",
-	dataType : "string",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.oid;
-			const url = getCallUrl("/eco/view?oid=" + oid);
-			popup(url, 1600, 800);
-		}
-	},
-}, {
-	dataField : "name",
-	headerText : "ECO제목",
-	dataType : "string",
-	style : "aui-left",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.oid;
-			const url = getCallUrl("/eco/view?oid=" + oid);
-			popup(url, 1600, 800);
-		}
-	},
-}, {
-	dataField : "licensing",
-	headerText : "인허가변경",
-	dataType : "string",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "riskType",
-	headerText : "위험 통제",
-	dataType : "string",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "state",
-	headerText : "상태",
-	dataType : "string",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "creator",
-	headerText : "등록자",
-	dataType : "string",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "createdDate",
-	headerText : "등록일",
-	dataType : "date",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "approveDate_txt",
-	headerText : "승인일",
-	dataType : "string",
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-} ]
-
-function createAUIGrid(columnLayout) {
-	const props = {
-		headerHeight : 30,
-		showRowNumColumn : true,
-		showRowCheckColumn : true,
-		<%if (!multi) {%>
-		rowCheckToRadio : true,
-		<%}%>
-		rowNumHeaderText : "번호",
-		showAutoNoDataMessage : false,
-		selectionMode : "multipleCells",
-		enableMovingColumn : true,
-		enableFilter : true,
-		showInlineFilter : false,
-		useContextMenu : true,
-		enableRightDownFocus : true,
-		filterLayerWidth : 320,
-		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-	};
-	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-	loadGridData();
-	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-		hideContextMenu();
-	});
-	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-		hideContextMenu();
-	});
-}
-
-function loadGridData() {
-	let params = new Object();
-	const url = getCallUrl("/eco/list");
-	const field = [ "_psize", "name", "number" ];
-	const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
-	params.rows104 = rows104;
-	params = toField(params, field);
-	AUIGrid.showAjaxLoader(myGridID);
-	parent.openLayer();
-	call(url, params, function(data) {
-		AUIGrid.removeAjaxLoader(myGridID);
-		if (data.result) {
-			totalPage = Math.ceil(data.total / data.pageSize);
-			document.getElementById("sessionid").value = data.sessionid;
-			createPagingNavigator(data.curPage);
-			AUIGrid.setGridData(myGridID, data.list);
-		} else {
-			alert(data.msg);
-		}
-		parent.closeLayer();
-	});
-}
-
-function <%=method%>() {
-	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-	if (checkedItems.length === 0) {
-		alert("추가할 행을 선택하세요.");
-		return false;
+	let myGridID;
+	const columns = [ {
+		dataField : "number",
+		headerText : "ECO번호",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/eco/view?oid=" + oid);
+				popup(url, 1600, 800);
+			}
+		},
+	}, {
+		dataField : "name",
+		headerText : "ECO제목",
+		dataType : "string",
+		style : "aui-left",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/eco/view?oid=" + oid);
+				popup(url, 1600, 800);
+			}
+		},
+	}, {
+		dataField : "licensing_name",
+		headerText : "인허가변경",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "riskType_name",
+		headerText : "위험 통제",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "creator",
+		headerText : "등록자",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "createdDate",
+		headerText : "등록일",
+		dataType : "date",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
+		dataField : "approveDate",
+		headerText : "승인일",
+		dataType : "string",
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	} ]
+	
+	function createAUIGrid(columnLayout) {
+		const props = {
+			headerHeight : 30,
+			showRowNumColumn : true,
+			showRowCheckColumn : true,
+			<%if (!multi) {%>
+			rowCheckToRadio : true,
+			<%}%>
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			selectionMode : "multipleCells",
+			enableMovingColumn : true,
+			enableFilter : true,
+			showInlineFilter : false,
+			useContextMenu : true,
+			enableRightDownFocus : true,
+			filterLayerWidth : 320,
+			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+		};
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+		loadGridData();
+		AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+		AUIGrid.bind(myGridID, "vScrollChange", function(event) {
+			hideContextMenu();
+		});
+		AUIGrid.bind(myGridID, "hScrollChange", function(event) {
+			hideContextMenu();
+		});
 	}
 	
-	openLayer();
-	opener.<%=method%>(checkedItems, function(res) {
-		if(res) {
-			setTimeout(function() {
-				closeLayer();
-			}, 500);
+	function loadGridData() {
+		let params = new Object();
+		const url = getCallUrl("/eco/list");
+		const field = [ "name", "number", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
+		const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
+		params.rows104 = rows104;
+		params = toField(params, field);
+		AUIGrid.showAjaxLoader(myGridID);
+		parent.openLayer();
+		call(url, params, function(data) {
+			AUIGrid.removeAjaxLoader(myGridID);
+			if (data.result) {
+				totalPage = Math.ceil(data.total / data.pageSize);
+				document.getElementById("sessionid").value = data.sessionid;
+				createPagingNavigator(data.curPage);
+				AUIGrid.setGridData(myGridID, data.list);
+			} else {
+				alert(data.msg);
+			}
+			parent.closeLayer();
+		});
+	}
+	
+	function <%=method%>() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length === 0) {
+			alert("추가할 행을 선택하세요.");
+			return false;
+		}
+		
+		openLayer();
+		opener.<%=method%>(checkedItems, function(res) {
+			if(res) {
+				setTimeout(function() {
+					closeLayer();
+				}, 500);
+			}
+		})
+	}
+	
+	document.addEventListener("DOMContentLoaded", function() {
+		toFocus("number");
+		const contenxtHeader = genColumnHtml(columns);
+		$("#h_item_ul").append(contenxtHeader);
+		$("#headerMenu").menu({
+			select : headerMenuSelectHandler
+		});
+		createAUIGrid(columns);
+		createAUIGrid104(columns104);
+		AUIGrid.resize(myGridID);
+		AUIGrid.resize(myGridID104);
+		selectbox("state");
+		finderUser("creator");
+		twindate("created");
+		twindate("modified");
+		selectbox("_psize");
+		selectbox("model");
+	});
+	
+	document.addEventListener("keydown", function(event) {
+		const keyCode = event.keyCode || event.which;
+		if (keyCode === 13) {
+			loadGridData();
 		}
 	})
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-	toFocus("number");
-	const contenxtHeader = genColumnHtml(columns);
-	$("#h_item_ul").append(contenxtHeader);
-	$("#headerMenu").menu({
-		select : headerMenuSelectHandler
+	
+	document.addEventListener("click", function(event) {
+		hideContextMenu();
+	})
+	
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID);
+		AUIGrid.resize(myGridID104);
 	});
-	createAUIGrid(columns);
-	createAUIGrid104(columns104);
-	AUIGrid.resize(myGridID);
-	AUIGrid.resize(myGridID104);
-	selectbox("state");
-	finderUser("creator");
-	twindate("created");
-	twindate("modified");
-	selectbox("_psize");
-	selectbox("model");
-});
-
-function exportExcel() {
-	// 				const exceptColumnFields = [ "primary" ];
-	// 				const sessionName = document.getElementById("sessionName").value;
-	// 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-}
-
-document.addEventListener("keydown", function(event) {
-	const keyCode = event.keyCode || event.which;
-	if (keyCode === 13) {
-		loadGridData();
-	}
-})
-
-document.addEventListener("click", function(event) {
-	hideContextMenu();
-})
-
-window.addEventListener("resize", function() {
-	AUIGrid.resize(myGridID);
-	AUIGrid.resize(myGridID104);
-});
-
-function spread(target) {
-	const e = document.querySelectorAll('.hidden');
-	// 버근가..
-	for (let i = 0; i < e.length; i++) {
-		const el = e[i];
-		const style = window.getComputedStyle(el);
-		const display = style.getPropertyValue("display");
-		if (display === "none") {
-			el.style.display = "table-row";
-			target.value = "▲접기";
-			selectbox("state");
-			finderUser("creator");
-			twindate("created");
-			twindate("modified");
-			selectbox("_psize");
-			selectbox("model");
-			AUIGrid.resize(myGridID104);
-		} else {
-			el.style.display = "none";
-			target.value = "▼펼치기";
-			selectbox("state");
-			finderUser("creator");
-			twindate("created");
-			twindate("modified");
-			selectbox("_psize");
-			selectbox("model");
-			AUIGrid.resize(myGridID104);
+	
+	function spread(target) {
+		const e = document.querySelectorAll('.hidden');
+		// 버근가..
+		for (let i = 0; i < e.length; i++) {
+			const el = e[i];
+			const style = window.getComputedStyle(el);
+			const display = style.getPropertyValue("display");
+			if (display === "none") {
+				el.style.display = "table-row";
+				target.value = "▲접기";
+				selectbox("state");
+				finderUser("creator");
+				twindate("created");
+				twindate("modified");
+				selectbox("_psize");
+				selectbox("model");
+				AUIGrid.resize(myGridID104);
+			} else {
+				el.style.display = "none";
+				target.value = "▼펼치기";
+				selectbox("state");
+				finderUser("creator");
+				twindate("created");
+				twindate("modified");
+				selectbox("_psize");
+				selectbox("model");
+				AUIGrid.resize(myGridID104);
+			}
 		}
 	}
-}
 </script>

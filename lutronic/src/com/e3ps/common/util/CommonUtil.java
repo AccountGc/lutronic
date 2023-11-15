@@ -403,7 +403,7 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	}
 
 	public static String getUserNameFromOid(String ida2a2) throws WTException {
-		if(ida2a2==null) {
+		if(ida2a2==null || ida2a2.equals("")) {
 			return "";
 		}
 		String oid = "wt.org.WTUser:" + ida2a2;
