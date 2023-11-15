@@ -35,6 +35,7 @@ public class CrDTO {
 	private String approveDate;
 	private String createDepart_name;
 	private String writer_name;
+	private String writer_oid;
 	private String proposer_name;
 	private String primary;
 	private String changeSection;
@@ -59,7 +60,6 @@ public class CrDTO {
 	private boolean _modify = false;
 
 	// 변수용
-	private String writer_oid;
 	private String proposer_oid;
 	private String createDepart_code;
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
@@ -93,7 +93,8 @@ public class CrDTO {
 		setNumber(cr.getEoNumber());
 		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
 		setCreateDepart_name(StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
-		setWriter_name(StringUtil.checkNull(cr.getWriter()));
+		setWriter_name(CommonUtil.getUserNameFromOid(cr.getWriter()));
+		setWriter_oid(CommonUtil.getUserOid(cr.getWriter()));
 		setProposer_name(StringUtil.checkNull(cr.getProposer()));
 		setChangeSection(StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getChangeSection(), "CHANGESECTION")));
 		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));

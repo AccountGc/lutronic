@@ -42,16 +42,16 @@ public class EcprHelper {
 			String name = StringUtil.checkNull((String)params.get("name"));
 			String number = StringUtil.checkNull((String)params.get("number"));
 			String state = StringUtil.checkNull((String)params.get("state"));
-			String creator = StringUtil.checkNull((String)params.get("creator"));
+			String creator = StringUtil.checkNull((String)params.get("creatorOid"));
 			String createdFrom = StringUtil.checkNull((String)params.get("createdFrom"));
 			String createdTo = StringUtil.checkNull((String)params.get("createdTo"));
 			String approveFrom = StringUtil.checkNull((String)params.get("approveFrom"));
 			String approveTo = StringUtil.checkNull((String)params.get("approveTo"));
-			String writer = StringUtil.checkNull((String)params.get("writer"));
+			String writer = StringUtil.checkNull((String)params.get("writerOid"));
 			String createDepart = StringUtil.checkNull((String)params.get("createDepart"));
 			String writedFrom = StringUtil.checkNull((String)params.get("writedFrom"));
 			String writedTo = StringUtil.checkNull((String)params.get("writedTo"));
-			String proposer = StringUtil.checkNull((String)params.get("proposer"));
+//			String proposer = StringUtil.checkNull((String)params.get("proposer"));
 			String changeSection = StringUtil.checkNull((String)params.get("changeSection"));
 			String model = StringUtil.checkNull((String)params.get("model"));
 			
@@ -69,7 +69,7 @@ public class EcprHelper {
 			//상태
 			QuerySpecUtils.toState(query, idx, ECPRRequest.class, state);
 			// 등록자
-			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.CREATOR, creator);
+			QuerySpecUtils.toCreatorQuery(query, idx, ECPRRequest.class, creator);
 			//등록일
 			QuerySpecUtils.toTimeGreaterAndLess(query, idx, ECPRRequest.class, ECPRRequest.CREATE_TIMESTAMP, createdFrom,
 					createdTo);
@@ -87,7 +87,9 @@ public class EcprHelper {
 				query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {idx});
 			}
 			//작성자
-			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.WRITER, writer);
+			if(writer!="") {
+				QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.WRITER, Long.toString(CommonUtil.getOIDLongValue(writer)));
+			}
 			//작성부서
 			QuerySpecUtils.toEqualsAnd(query, idx, ECPRRequest.class, ECPRRequest.CREATE_DEPART, createDepart);
 			//작성일
@@ -104,7 +106,7 @@ public class EcprHelper {
 				query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.CREATE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , writedTo), new int[] {idx});
 			}
 			//제안자
-			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.PROPOSER, proposer);
+//			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.PROPOSER, proposer);
 			//변경구분
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.CHANGE_SECTION, changeSection);
 			//제품명

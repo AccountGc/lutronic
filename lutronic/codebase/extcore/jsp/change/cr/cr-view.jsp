@@ -84,16 +84,14 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<td><%=dto.getWriteDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">제안자</th>
-				<td><%=dto.getProposer_name()%></td>
+<!-- 				<th class="lb">제안자</th> -->
+<%-- 				<td><%=dto.getProposer_name()%></td> --%>
+				<th class="lb">제품명</th>
+				<td><%=dto.getModel()%></td>
 				<th>변경부분</th>
 				<td><%=dto.getChangeSection()%></td>
 				<th>승인일</th>
 				<td><%=dto.getApproveDate()%></td>
-			</tr>
-			<tr>
-				<th class="lb">제품명</th>
-				<td colspan="5"><%=dto.getModel()%></td>
 			</tr>
 			<tr>
 				<th class="lb">변경사유</th>

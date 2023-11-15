@@ -105,14 +105,14 @@ if(contentMap!=null){
 					</jsp:include>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">제안자</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer_name() : ""%>">
-					<input type="hidden" name="proposerOid" id="proposerOid" value="<%= dto.getProposer_oid()%>">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">제안자</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<%-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer_name() : ""%>"> --%>
+<%-- 					<input type="hidden" name="proposerOid" id="proposerOid" value="<%= dto.getProposer_oid()%>"> --%>
+<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">변경구분</th>
 				<td class="indent5" colspan="3">
@@ -265,8 +265,8 @@ if(contentMap!=null){
 					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
 					createDepart_code : toId("createDepart"),
-					writer_name : toId("writer"),
-					proposer_name : toId("proposer"),
+					writer_oid : toId("writerOid"),
+// 					proposer_name : toId("proposer"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -303,7 +303,7 @@ if(contentMap!=null){
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");
-				finderUser("proposer");
+// 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				createAUIGrid8(columns8);

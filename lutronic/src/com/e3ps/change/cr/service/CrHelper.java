@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
@@ -42,16 +43,16 @@ public class CrHelper {
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
 		String state = (String) params.get("state");
-		String creator = (String) params.get("creator");
+		String creator = (String) params.get("creatorOid");
 		String createdFrom = (String) params.get("createdFrom");
 		String createdTo = (String) params.get("createdTo");
 		String approveFrom = (String) params.get("approveFrom");
 		String approveTo = (String) params.get("approveTo");
-		String writer = (String) params.get("writer");
+		String writer = (String) params.get("writerOid");
 		String createDepart = (String) params.get("createDepart");
 		String writedFrom = (String) params.get("writedFrom");
 		String writedTo = (String) params.get("writedTo");
-		String proposer = (String) params.get("proposer");
+//		String proposer = (String) params.get("proposer");
 		String changeSection = (String)params.get("changeSection");
 		String model = (String) params.get("model");
 
@@ -68,7 +69,7 @@ public class CrHelper {
 		// 상태
 		QuerySpecUtils.toState(query, idx, EChangeRequest.class, state);
 		// 등록자
-		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATOR, creator);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeRequest.class, creator);
 		//등록일
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
@@ -86,7 +87,9 @@ public class CrHelper {
 			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {idx});
 		}
 		//작성자
-		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, writer);
+		if(writer!="") {
+			QuerySpecUtils.toEqualsAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, Long.toString(CommonUtil.getOIDLongValue(writer)));
+		}
 		
 		//작성부서
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
@@ -105,7 +108,7 @@ public class CrHelper {
 			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.CREATE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , writedTo), new int[] {idx});
 		}
 		//제안자
-		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.PROPOSER, proposer);
+//		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.PROPOSER, proposer);
 		
 		//프로젝트 코드
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.MODEL, model);

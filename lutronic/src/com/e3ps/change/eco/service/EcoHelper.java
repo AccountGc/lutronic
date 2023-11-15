@@ -86,7 +86,7 @@ public class EcoHelper {
 				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
-		QuerySpecUtils.toCreator(query, idx, EChangeOrder.class, creatorOid);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		if (approveFrom.length() > 0) {
