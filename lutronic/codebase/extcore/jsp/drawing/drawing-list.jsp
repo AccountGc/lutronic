@@ -448,7 +448,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						inline : true
 					},
 				}, {
-					dataField : "predate",
+					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 140,
@@ -457,7 +457,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						inline : true
 					},
 				}, {
-					dataField : "predate_modify",
+					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "string",
 					width : 140,
