@@ -256,7 +256,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		String eoCommentC = dto.getEoCommentC();
 		String eoCommentD = dto.getEoCommentD();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
-		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
+//		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		boolean temprary = dto.isTemprary();
 		// 외부 메일
 		ArrayList<Map<String, String>> external = dto.getExternal();

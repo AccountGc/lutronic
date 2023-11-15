@@ -169,11 +169,11 @@ if (contentMap != null) {
 	</tr>
 </table>
 <!-- 설계변경 품목 -->
-<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
-    <jsp:param value="<%=dto.getOid()%>" name="oid" />
-    <jsp:param value="update" name="mode" />
-    <jsp:param value="true" name="multi" />
-</jsp:include>
+<%-- <jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
+<%--     <jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+<%--     <jsp:param value="update" name="mode" /> --%>
+<%--     <jsp:param value="true" name="multi" /> --%>
+<%-- </jsp:include> --%>
 <!-- 관련 CR -->
 <jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
     <jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -242,10 +242,10 @@ if (contentMap != null) {
             return item.gridState != "removed";
         });
 
-        var rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
-        rows500 = rows500.filter(function(item) {
-            return item.gridState != "removed";
-        });
+//         var rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+//         rows500 = rows500.filter(function(item) {
+//             return item.gridState != "removed";
+//         });
 
     	// 외부 메일
 		const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
@@ -271,7 +271,7 @@ if (contentMap != null) {
             eoCommentD : eoCommentD,
 			rows101 : rows101, // 관련CR
 			rows200 : rows200, // 설변활동
-			rows500 : rows500, // 설변품목
+// 			rows500 : rows500, // 설변품목
 			external : external,
 			temprary : temprary,
 			oid : oid
@@ -294,11 +294,11 @@ if (contentMap != null) {
 	document.addEventListener("DOMContentLoaded", function() {
 		createAUIGrid101(columns101);
 		createAUIGrid200(columns200);
-		createAUIGrid500(columns500);
+// 		createAUIGrid500(columns500);
 		createAUIGrid8(columns8);
 		createAUIGrid9(columns9);
 		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridID500);
+// 		AUIGrid.resize(myGridID500);
 		AUIGrid.resize(myGridID200);
 		AUIGrid.resize(myGridID8);
 		AUIGrid.resize(myGridID9);
@@ -306,7 +306,7 @@ if (contentMap != null) {
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridID500);
+// 		AUIGrid.resize(myGridID500);
 		AUIGrid.resize(myGridID200);
 		AUIGrid.resize(myGridID8);
 		AUIGrid.resize(myGridID9);

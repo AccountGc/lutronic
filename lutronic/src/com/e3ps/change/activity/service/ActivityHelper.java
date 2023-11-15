@@ -24,6 +24,8 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -41,6 +43,7 @@ import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTAttributeNameIfc;
 
 public class ActivityHelper {
 
@@ -222,14 +225,27 @@ public class ActivityHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		WTUser sessionUser = CommonUtil.sessionUser();
+		String name = (String) params.get("name");
+		String submiterOid = (String) params.get("submiterOid");
+		String receiveFrom = (String) params.get("receiveFrom");
+		String receiveTo = (String) params.get("receiveTo");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeActivity.class, true);
+		int idx2 = query.appendClassList(EChangeOrder.class, false);
+		
+		QuerySpecUtils.toInnerJoin(query, EChangeActivity.class, EChangeOrder.class, "eoReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx2);
+		
 		// 관리자가 아닐경우
 		if (!CommonUtil.isAdmin()) {
 			QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "activeUserReference.key.id", sessionUser);
 		}
 		QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "state.state", "INWORK");
+		QuerySpecUtils.toLikeAnd(query, idx2, EChangeOrder.class, EChangeOrder.EO_NAME, name);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeActivity.class, submiterOid);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, receiveFrom,
+				receiveTo);
 		QuerySpecUtils.toOrderBy(query, idx, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

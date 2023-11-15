@@ -37,9 +37,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		<li>
 			<a href="#tabs-2">설변 활동</a>
 		</li>
-		<li>
-			<a href="#tabs-3">설변 품목</a>
-		</li>
+<!-- 		<li> -->
+<!-- 			<a href="#tabs-3">설변 품목</a> -->
+<!-- 		</li> -->
 		<li>
 			<a href="#tabs-4">이력 관리</a>
 		</li>
@@ -150,13 +150,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</jsp:include>
 	</div>
 	
-	<div id="tabs-3">
-		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="view" name="mode" />
-			<jsp:param value="true" name="multi" />
-		</jsp:include>
-	</div>
+<!-- 	<div id="tabs-3"> -->
+<%-- 		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
+<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+<%-- 			<jsp:param value="view" name="mode" /> --%>
+<%-- 			<jsp:param value="true" name="multi" /> --%>
+<%-- 		</jsp:include> --%>
+<!-- 	</div> -->
 	
 	<div id="tabs-4">
 		<!-- 이력관리 -->
@@ -194,14 +194,14 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						createAUIGrid200(columns200);
 					}
 					break;
-				case "tabs-3":
-					const isCreated500 = AUIGrid.isCreated(myGridID500); // 설변 활동
-					if (isCreated500) {
-						AUIGrid.resize(myGridID500);
-					} else {
-						createAUIGrid500(columns500);
-					}
-					break;
+// 				case "tabs-3":
+// 					const isCreated500 = AUIGrid.isCreated(myGridID500); // 설변 활동
+// 					if (isCreated500) {
+// 						AUIGrid.resize(myGridID500);
+// 					} else {
+// 						createAUIGrid500(columns500);
+// 					}
+// 					break;
 				case "tabs-4":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
 					if (isCreated51) {
