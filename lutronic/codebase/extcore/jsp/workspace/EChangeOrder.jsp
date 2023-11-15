@@ -115,11 +115,11 @@ String type = eChangeOrder.getEoType();
 		<jsp:param value="250" name="height" />
 	</jsp:include>
 	<!-- 설계변경 품목 -->
-	<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
-		<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		<jsp:param value="view" name="mode" />
-		<jsp:param value="true" name="multi" />
-	</jsp:include>
+<%-- 	<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
+<%-- 		<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+<%-- 		<jsp:param value="view" name="mode" /> --%>
+<%-- 		<jsp:param value="true" name="multi" /> --%>
+<%-- 	</jsp:include> --%>
 	
 	<script type="text/javascript">
 
@@ -139,12 +139,12 @@ String type = eChangeOrder.getEoType();
 		} else {
 			createAUIGrid200(columns200);
 		}
-		const isCreated500 = AUIGrid.isCreated(myGridID500); // 설변 품목
-		if (isCreated500) {
-			AUIGrid.resize(myGridID500);
-		} else {
-			createAUIGrid500(columns500);
-		}
+// 		const isCreated500 = AUIGrid.isCreated(myGridID500); // 설변 품목
+// 		if (isCreated500) {
+// 			AUIGrid.resize(myGridID500);
+// 		} else {
+// 			createAUIGrid500(columns500);
+// 		}
 	});
 	
 </script>
