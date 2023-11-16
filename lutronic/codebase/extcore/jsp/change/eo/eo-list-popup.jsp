@@ -286,7 +286,7 @@ function createAUIGrid(columnLayout) {
 function loadGridData() {
 	let params = new Object();
 	const url = getCallUrl("/eo/list");
-	const field = [ "_psize", "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
+	const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
 	const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 	params.rows104 = rows104;
 	params = toField(params, field);

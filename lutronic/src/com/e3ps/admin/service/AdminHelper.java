@@ -141,7 +141,7 @@ public class AdminHelper {
 	 */
 	public Map<String, Object> downLoadHistory(Map<String, Object> params) throws Exception {
 		String type = StringUtil.checkNull((String) params.get("type"));
-		String userId = StringUtil.checkNull((String) params.get("manager"));
+		String userId = StringUtil.checkNull((String) params.get("managerOid"));
 		String predate = StringUtil.checkNull((String) params.get("createdFrom"));
 		String postdate = StringUtil.checkNull((String) params.get("createdTo"));
 

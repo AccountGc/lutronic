@@ -18,7 +18,6 @@
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -229,13 +228,14 @@
 				
 				var url = getCallUrl("/rohs/update");
 				toRegister(params, addRows8); // 결재선 세팅
+				openLayer();
 				call(url, params, function(data) {
+					alert(data.msg);
 					if(data.result){
-						alert(data.msg);
 						opener.loadGridData();
 						self.close();
-					}else{
-						alert(data.msg);
+					} else {
+						closeLayer();
 					}
 				});
 			}

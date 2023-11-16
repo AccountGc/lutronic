@@ -308,7 +308,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "writerOid", "createDepart", "writedFrom", "writedTo", "changeSection", "model" ];
 		params = toField(params, field);
 		AUIGrid.showAjaxLoader(myGridID);
-		parent.openLayer();
+		openLayer();
 		logger(params);
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);

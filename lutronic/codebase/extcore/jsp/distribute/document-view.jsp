@@ -91,7 +91,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
-				<td class="indent5"><%=dto.getWriter()%></td>
+				<td class="indent5"><%=dto.getWriter_name()%></td>
 				<th>보존기간</th>
 				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>

@@ -44,9 +44,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th>유저 검색</th>
 				<td class="indent5">
-					<input type="text" name="tempmanager" id="tempmanager" data-multi="false" class="width-200"> 
-					<input type="hidden" name="manager" id="manager"> 
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+					<input type="text" name="manager" id="manager" data-multi="false" class="width-200"> 
+					<input type="hidden" name="managerOid" id="managerOid"> 
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manager')">
 				</td>
 				<th>다운로드일</th>
 				<td class="indent5">
@@ -183,12 +183,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function loadGridData() {
 				var params = new Object();
-				const field = ["manager","createdFrom","createdTo","_psize","type"];
+				const field = ["managerOid","createdFrom","createdTo","type"];
 				params = toField(params, field);
 				if(params.type==""){
 					params.type = "EPMDocument";
 				}
 				var url = getCallUrl("/admin/downLoadHistory");
+				parent.openLayer();
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -198,6 +199,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 
@@ -212,7 +214,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				createAUIGridType(typeColumns);
 				selectbox("_psize");
 				twindate("created");
-				finderUser("tempmanager");
+				finderUser("manager");
 			});
 
 			document.addEventListener("keydown", function(event) {

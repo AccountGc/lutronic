@@ -409,7 +409,7 @@ function loadGridData() {
 	params = toField(params, field);
 	params.latest = JSON.parse(latest);
 	AUIGrid.showAjaxLoader(myGridID);
-	parent.openLayer();
+	openLayer();
 	logger(params);
 	call(url, params, function(data) {
 		AUIGrid.removeAjaxLoader(myGridID);

@@ -151,7 +151,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/workspace/reject");
-				const field = [ "name", "_psize" ];
+				const field = [ "name" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

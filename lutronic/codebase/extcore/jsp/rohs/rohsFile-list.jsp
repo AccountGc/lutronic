@@ -15,7 +15,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form name="listRoHSData" id="listRoHSData" >
@@ -177,9 +176,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/rohs/listRohsFile");
-				const field = [ "_psize","fileType","publicationFrom","publicationTo","fileName" ];
+				const field = [ "fileType","publicationFrom","publicationTo","fileName" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -190,6 +190,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 

@@ -169,7 +169,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				let params = {
 					name: toId("name"),
 					email: toId("email"),
-					_psize: toId("_psize"),
 				}
 				const enable = document.querySelector("input[name=enable]:checked").value;
 				const url = getCallUrl("/admin/mail");

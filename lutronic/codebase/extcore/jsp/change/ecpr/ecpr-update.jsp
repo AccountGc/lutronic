@@ -292,11 +292,14 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/update");
+				openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						opener.loadGridData();
 						self.close();
+					} else {
+						closeLayer();
 					}
 				});
 			}

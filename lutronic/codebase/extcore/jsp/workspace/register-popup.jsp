@@ -815,6 +815,7 @@ function moveRow() {
 				name : name
 		}
 		AUIGrid.showAjaxLoader(myGridID5000);
+		openLayer();
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID5000);
 			if (data.result) {
@@ -822,6 +823,7 @@ function moveRow() {
 			} else {
 				alert(data.msg);
 			}
+			closeLayer();
 		})
 	}
 	

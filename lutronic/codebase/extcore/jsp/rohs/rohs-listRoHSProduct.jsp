@@ -12,7 +12,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -149,6 +148,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				params = toField(params, field);
 				const url = getCallUrl("/rohs/listRoHSProduct");
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -159,6 +159,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 

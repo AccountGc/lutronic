@@ -29,7 +29,6 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -258,9 +257,10 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
-				const field = ["_psize","rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
+				const field = ["rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -271,6 +271,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 

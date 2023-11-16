@@ -12,7 +12,6 @@ String oid = (String) request.getParameter("oid");
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 <div style="display: flex; gap: 5px; border: 1px solid #3180c3; padding: 5px">

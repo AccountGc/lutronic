@@ -136,9 +136,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function loadGridData() {
 				var params = new Object();
-				const field = ["userName","userId","_psize"];
+				const field = ["userName","userId"];
 				params = toField(params, field);
 				var url = getCallUrl("/admin/loginHistory");
+				parent.openLayer();
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -147,6 +148,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 

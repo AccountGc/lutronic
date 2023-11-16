@@ -12,7 +12,6 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -171,11 +170,14 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				
 				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/drawing/update");
+				openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if(data.result){
 						opener.loadGridData();
 						self.close();
+					} else {
+						closeLayer();
 					}
 				});
 			}

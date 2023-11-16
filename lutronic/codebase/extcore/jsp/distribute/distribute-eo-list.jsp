@@ -283,7 +283,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/eo/list");
-				const field = [ "_psize", "name", "number", "createdFrom", "createdTo", "creatorOid", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo", "state"];
+				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo", "state"];
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				params.rows104 = rows104;
 				params.eoType = $('input[name=eoType]:checked').val();

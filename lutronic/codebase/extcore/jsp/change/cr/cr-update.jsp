@@ -282,16 +282,15 @@ if(contentMap!=null){
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/cr/modify");
-				parent.openLayer();
 				logger(params);
-				parent.openLayer();
+				openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						opener.loadGridData();
 						self.close();
 					} else {
-						parent.closeLayer();
+						closeLayer();
 					}
 				});
 			}

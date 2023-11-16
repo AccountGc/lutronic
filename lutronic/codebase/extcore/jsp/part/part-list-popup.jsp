@@ -538,7 +538,7 @@ function loadGridData() {
 // 	params.latest = JSON.parse(latest);
 	params.latest = false;
 	AUIGrid.showAjaxLoader(myGridID);
-	parent.openLayer();
+	openLayer();
 	call(url, params, function(data) {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
@@ -549,7 +549,7 @@ function loadGridData() {
 		} else {
 			alert(data.msg);
 		}
-		parent.closeLayer();
+		closeLayer();
 	});
 }
 	
