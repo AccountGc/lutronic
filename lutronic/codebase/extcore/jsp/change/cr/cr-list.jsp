@@ -122,12 +122,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>제안자</th>
-				<td class="indent5">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
-					<input type="hidden" name="proposerOid" id="proposerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
-				</td>
+<!-- 				<th>제안자</th> -->
+<!-- 				<td class="indent5"> -->
+<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
+<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+<!-- 				</td> -->
 				<th>변경구분</th>
 				<td class="indent5">
 					<select name="changeSection" id="changeSection" class="width-200">
@@ -142,7 +142,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</select>
 				</td>
 				<th class="req lb">프로젝트 코드</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<%
@@ -257,8 +257,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
-					dataField : "approveDate",
-					headerText : "승인일",
+					dataField : "writeDate",
+					headerText : "작성일",
 					dataType : "date",
 					width : 100,
 					filter : {
@@ -326,7 +326,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/cr/list");
-				const field = [ "name", "number", "state", "creator", "createdFrom", "createdTo", "approveFrom", "approveTo", "writer", "createDepart", "writedFrom", "writedTo", "proposer", "changeSection", "model" ];
+				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "writerOid", "createDepart", "writedFrom", "writedTo", "changeSection", "model" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -362,7 +362,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("state");
 				finderUser("creator");
 				finderUser("writer");
-				finderUser("proposer");
+// 				finderUser("proposer");
 				twindate("created");
 				twindate("approve");
 				twindate("writed");

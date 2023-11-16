@@ -402,6 +402,14 @@ public class SAPHelper {
 			WTPart p = (WTPart) obj[1];
 			WTPartMaster child = link.getUses();
 
+			if (SAPHelper.manager.skipLength(part.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipEight(part.getNumber())) {
+				continue;
+			}
+
 			if (SAPHelper.manager.skipLength(child.getNumber())) {
 				continue;
 			}
@@ -492,6 +500,23 @@ public class SAPHelper {
 			Object obj[] = (Object[]) re.nextElement();
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+
+			if (SAPHelper.manager.skipEight(end.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(end.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipEight(p.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(p.getNumber())) {
+				continue;
+			}
+
 			SAPReverseBomDTO dto = new SAPReverseBomDTO(end, p, link, eco);
 			list.add(dto);
 			getReverseBomData(p, list, eco);

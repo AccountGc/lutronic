@@ -80,7 +80,7 @@ public class EoHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
 		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
-		QuerySpecUtils.toCreator(query, idx, EChangeOrder.class, creatorOid);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		if(approveFrom != null && approveFrom.length() > 0) {

@@ -50,7 +50,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
 		String writer_oid = dto.getWriter_oid();
-		String proposer_oid = dto.getProposer_oid();
+//		String proposer_oid = dto.getProposer_oid();
 		String eoCommentA = dto.getEoCommentA();
 		String eoCommentB = dto.getEoCommentB();
 		String eoCommentC = dto.getEoCommentC();
@@ -110,10 +110,10 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
-			if(!proposer_oid.equals("")) {
-				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
-				ecpr.setProposer(Long.toString(proposerOid));	
-			}
+//			if(!proposer_oid.equals("")) {
+//				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
+//				ecpr.setProposer(Long.toString(proposerOid));	
+//			}
 			
 			ecpr.setChangeSection(changeSection);
 			ecpr.setEoCommentA(eoCommentA);
@@ -246,7 +246,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
 		String writer_oid = dto.getWriter_oid();
-		String proposer_oid = dto.getProposer_oid();
+//		String proposer_oid = dto.getProposer_oid();
 		String eoCommentA = dto.getEoCommentA();
 		String eoCommentB = dto.getEoCommentB();
 		String eoCommentC = dto.getEoCommentC();
@@ -303,10 +303,10 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
-			if(!proposer_oid.equals("")) {
-				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
-				ecpr.setProposer(Long.toString(proposerOid));
-			}
+//			if(!proposer_oid.equals("")) {
+//				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
+//				ecpr.setProposer(Long.toString(proposerOid));
+//			}
 			ecpr.setChangeSection(changeSection);
 			ecpr.setEoCommentA(eoCommentA);
 			ecpr.setEoCommentB(eoCommentB);

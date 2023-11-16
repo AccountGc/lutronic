@@ -71,7 +71,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th>등록자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> 
+					<input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				</td>
 				<th>등록일</th>
 				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
 					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
@@ -105,12 +107,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				
 			</tr>
 			<tr>
-				<th>제안자</th>
-				<td class="indent5">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
-					<input type="hidden" name="proposerOid" id="proposerOid"> 
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
-				</td>
+<!-- 				<th>제안자</th> -->
+<!-- 				<td class="indent5"> -->
+<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+<!-- 					<input type="hidden" name="proposerOid" id="proposerOid">  -->
+<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+<!-- 				</td> -->
 				<th>변경구분</th>
 				<td class="indent5">
 					<select name="changeSection" id="changeSection" class="width-200">
@@ -124,8 +126,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th class="req lb">제품명</th>
-				<td class="indent5" >
+				<th>제품명</th>
+				<td class="indent5" colspan="3">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
 						<%
@@ -292,7 +294,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/ecpr/list");
-				const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
+				const field = ["_psize","name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection"];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				call(url, params, function(data) {
@@ -321,7 +323,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("state");
 				finderUser("creator");
 				finderUser("writer");
-				finderUser("proposer");
+// 				finderUser("proposer");
 				twindate("created");
 				twindate("approve");
 				twindate("writed");

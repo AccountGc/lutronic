@@ -566,6 +566,22 @@ public class QuerySpecUtils {
 				creator.getPersistInfo().getObjectIdentifier().getId());
 		query.appendWhere(sc, new int[] { idx });
 	}
+	
+	/**
+	 * 일반적인 등록자
+	 */
+	public static void toCreatorQuery(QuerySpec query, int idx, Class clazz, String oid) throws Exception {
+		if (StringUtil.isNull(oid)) {
+			return;
+		}
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		WTUser creator = (WTUser) CommonUtil.getObject(oid);
+		SearchCondition sc = new SearchCondition(clazz, "creator.key.id", "=",
+				creator.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+	}
 
 	/**
 	 * 일반적인 수정자

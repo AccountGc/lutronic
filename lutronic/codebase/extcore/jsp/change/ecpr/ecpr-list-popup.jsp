@@ -8,6 +8,7 @@
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 %>
@@ -60,11 +61,20 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
 			<input type="hidden" name="writerOid" id="writerOid"> 
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 		</td>
 		<th>작성부서</th>
 		<td class="indent5">
-			<input type="text" name="createDepart" id="createDepart" data-multi="false" class="width-200">
+			<select name="createDepart" id="createDepart" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode deptcode : deptcodeList) {
+				%>
+				<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+				<%
+				}
+				%>
+			</select>
 		</td>
 		<th>작성일</th>
 		<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
@@ -72,12 +82,12 @@ boolean multi = (boolean) request.getAttribute("multi");
 		
 	</tr>
 	<tr>
-		<th>제안자</th>
-		<td class="indent5">
-			<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
-			<input type="hidden" name="proposerOid" id="proposerOid"> 
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
-		</td>
+<!-- 		<th>제안자</th> -->
+<!-- 		<td class="indent5"> -->
+<!-- 			<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+<!-- 			<input type="hidden" name="proposerOid" id="proposerOid">  -->
+<!-- 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"> -->
+<!-- 		</td> -->
 		<th>변경구분</th>
 		<td class="indent5">
 			<select name="changeSection" id="changeSection" class="width-200">
@@ -91,8 +101,8 @@ boolean multi = (boolean) request.getAttribute("multi");
 				%>
 			</select>
 		</td>
-		<th class="req lb">프로젝트 코드</th>
-		<td class="indent5" >
+		<th>프로젝트 코드</th>
+		<td class="indent5" colspan="3">
 			<select name="model" id="model" class="width-200">
 				<option value="">선택</option>
 				<%
@@ -264,7 +274,7 @@ function createAUIGrid(columnLayout) {
 function loadGridData() {
 	let params = new Object();
 	const url = getCallUrl("/ecpr/list");
-	const field = ["_psize","name","number", "createdFrom", "createdTo", "creator", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writer", "proposer", "model", "changeSection"];
+	const field = ["_psize","name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection"];
 	params = toField(params, field);
 	AUIGrid.showAjaxLoader(myGridID);
 	call(url, params, function(data) {
@@ -291,13 +301,14 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("state");
 	finderUser("creator");
 	finderUser("writer");
-	finderUser("proposer");
+//		finderUser("proposer");
 	twindate("created");
 	twindate("approve");
 	twindate("writed");
 	selectbox("_psize");
 	selectbox("changeSection");
 	selectbox("model");
+	selectbox("createDepart");
 });
 
 document.addEventListener("keydown", function(event) {

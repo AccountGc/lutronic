@@ -28,35 +28,6 @@ iframe {
 		</td>
 		<td class="right">
 			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
-			<%
-			if (dto.is_revise()) {
-			%>
-			<input type="button" value="개정" title="개정" onclick="update('revise');">
-			<%
-			}
-			%>
-			<%
-				if(isAdmin) {
-			%>
-			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="blue" onclick="update('modify');">
-			<%
-				}
-			%>
-			<%
-			if (dto.is_modify()) {
-			%>
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('modify');">
-			<%
-			}
-			%>
-			<%
-			if (dto.is_delete()) {
-			%>
-			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
-			<%
-			}
-			%>
-			<!-- 			<input type="button" value="최신Rev." title="최신Rev."> -->
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -96,16 +67,6 @@ iframe {
 				<th class="lb">REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>.<%=dto.getIteration()%>
-					<%
-					if (!dto.isLatest()) {
-					%>
-					&nbsp;
-					<b>
-						<a href="javascript:latest();">(최신버전으로)</a>
-					</b>
-					<%
-					}
-					%>
 				</td>
 				<th>등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
@@ -130,7 +91,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
-				<td class="indent5"><%=dto.getWriter_name()%></td>
+				<td class="indent5"><%=dto.getWriter()%></td>
 				<th>보존기간</th>
 				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>
@@ -306,12 +267,6 @@ iframe {
 		},
 	});
 
-	// 최신버전으로 페이지 이동
-	function latest() {
-		const url = getCallUrl("/doc/latest?oid=" + oid);
-		document.location.href = url;
-	}
-
 	//내용인쇄
 	function print(mode) {
 		const content = document.getElementById("content").value;
@@ -324,30 +279,6 @@ iframe {
 		printWindow.document.write('</body></html>');
 		printWindow.document.close();
 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
-	}
-
-	//수정 및 개정
-	function update(mode) {
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		document.location.href = url;
-	}
-
-	//삭제
-	function _delete() {
-		if (!confirm("삭제 하시겠습니까?")) {
-			return false;
-		}
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		openLayer();
-		call(url, null, function(data) {
-			alert(data.msg);
-			if (data.result) {
-				self.close();
-				opener.loadGridData();
-			} else {
-				closeLayer();
-			}
-		}, "DELETE");
 	}
 
 	//일괄 다운로드

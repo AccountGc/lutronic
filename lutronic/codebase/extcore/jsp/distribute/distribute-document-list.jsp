@@ -27,7 +27,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input name="state" type="hidden"  value="APPROVED" />
+		<input type="hidden" name="state" id="state" value="APPROVED">
 
 		<table class="button-table">
 			<tr>
@@ -96,9 +96,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>수정자</th>
+				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
+					<input type="hidden" name="writerOid" id="writerOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>수정일</th>
@@ -217,7 +218,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/doc/view?oid=" + oid);
+							const url = getCallUrl("/distribute/documentView?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
 					},
@@ -254,7 +255,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/doc/view?oid=" + oid);
+							const url = getCallUrl("/distribute/documentView?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
 					},
@@ -387,9 +388,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description"];
+				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description"];
 				params = toField(params, field);
-				params.latest = true;
+				params.latest = false;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				logger(params);

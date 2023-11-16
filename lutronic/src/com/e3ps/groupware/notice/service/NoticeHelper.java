@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.groupware.notice.Notice;
 import com.e3ps.groupware.notice.dto.NoticeDTO;
+import com.e3ps.rohs.ROHSMaterial;
 
 import wt.fc.PagingQueryResult;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 
 public class NoticeHelper {
@@ -27,7 +30,11 @@ public class NoticeHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(Notice.class, true);
 		QuerySpecUtils.toLikeAnd(query, idx, Notice.class, Notice.TITLE, name);
-		QuerySpecUtils.toCreator(query, idx, Notice.class, creatorOid);
+		//등록자
+    	if(creatorOid.length() > 0){
+    		if(query.getConditionCount() > 0) { query.appendAnd(); } 
+    		query.appendWhere(new SearchCondition(Notice.class,"owner.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(creatorOid)), new int[]{idx});
+    	}
 
 		QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, true);
 

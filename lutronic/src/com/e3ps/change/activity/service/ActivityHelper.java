@@ -43,6 +43,7 @@ import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTAttributeNameIfc;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
 
@@ -226,15 +227,29 @@ public class ActivityHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		WTUser sessionUser = CommonUtil.sessionUser();
+		String name = (String) params.get("name");
+		String submiterOid = (String) params.get("submiterOid");
+		String receiveFrom = (String) params.get("receiveFrom");
+		String receiveTo = (String) params.get("receiveTo");
 
 		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(EChangeActivity.class, true);
+		int idx_eca = query.appendClassList(EChangeActivity.class, true);
+		int idx_eco = query.appendClassList(EChangeOrder.class, false);
+
+		QuerySpecUtils.toInnerJoin(query, EChangeActivity.class, EChangeOrder.class, "eoReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx_eca, idx_eco);
+
 		// 관리자가 아닐경우
 		if (!CommonUtil.isAdmin()) {
-			QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "activeUserReference.key.id", sessionUser);
+			QuerySpecUtils.toEqualsAnd(query, idx_eca, EChangeActivity.class, "activeUserReference.key.id",
+					sessionUser);
 		}
-		QuerySpecUtils.toEqualsAnd(query, idx, EChangeActivity.class, "state.state", "INWORK");
-		QuerySpecUtils.toOrderBy(query, idx, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
+		QuerySpecUtils.toEqualsAnd(query, idx_eca, EChangeActivity.class, "state.state", "INWORK");
+		QuerySpecUtils.toLikeAnd(query, idx_eco, EChangeOrder.class, EChangeOrder.EO_NAME, name);
+		QuerySpecUtils.toCreatorQuery(query, idx_eca, EChangeActivity.class, submiterOid);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP,
+				receiveFrom, receiveTo);
+		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -527,9 +542,8 @@ public class ActivityHelper {
 			return null;
 		}
 
-
 		DecimalFormat df = new DecimalFormat("00");
-		
+
 		int prevSeq = Integer.parseInt(end) - 1;
 		String front = number.substring(0, 8);
 		String prevNumber = front + df.format(prevSeq);

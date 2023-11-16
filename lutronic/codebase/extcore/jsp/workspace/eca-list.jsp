@@ -35,7 +35,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>결재 제목</th>
+				<th>EO/ECO 제목</th>
 				<td colspan="3" class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
@@ -47,7 +47,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="submiterOid" id="submiterOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('submiter')">
 				</td>
-				<th>수신일</th>
+				<th>도착일</th>
 				<td class="indent5">
 					<input type="text" name="receiveFrom" id="receiveFrom" class="width-100">
 					~
@@ -61,8 +61,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<td class="left">
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('approval-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('approval-list');">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('eca-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('eca-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -202,7 +202,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/activity/eca");
-				const field = [ "name" ];
+				const field = [ "name","submiterOid","receiveFrom","receiveTo" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -223,7 +223,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				const columns = loadColumnLayout("approval-list");
+				const columns = loadColumnLayout("eca-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
 				$("#headerMenu").menu({

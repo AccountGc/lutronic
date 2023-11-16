@@ -86,7 +86,7 @@ public class EcoHelper {
 				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
-		QuerySpecUtils.toCreator(query, idx, EChangeOrder.class, creatorOid);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
 		if (approveFrom.length() > 0) {
@@ -171,7 +171,7 @@ public class EcoHelper {
 			clist.add(part);
 
 			// 제품명 담기
-			model = putModel(model, part, mlist);
+//			model = putModel(model, part, mlist);
 
 			plist = PartHelper.manager.collectEndItem(part, plist);
 		}
@@ -184,7 +184,7 @@ public class EcoHelper {
 				plist.remove(i);
 				continue;
 			}
-			putModel(model, pp, mlist);
+//			putModel(model, pp, mlist);
 		}
 		map.put("model", model);
 		map.put("plist", plist);
@@ -192,17 +192,7 @@ public class EcoHelper {
 		return map;
 	}
 
-	/**
-	 * 제품명 담기
-	 */
-	private String putModel(String model, WTPart part, ArrayList<String> mlist) throws Exception {
-		String m = IBAUtil.getAttrValue(part, "MODEL");
-		if (!mlist.contains(m)) {
-			model = model + "," + m;
-			mlist.add(m);
-		}
-		return model;
-	}
+
 
 	/**
 	 * 설변 대상 품목 제외 ECO 일경우 최초버전이면서 작업중인 항목은 제외한다.

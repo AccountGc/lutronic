@@ -51,7 +51,7 @@ public class EcnHelper {
 		QuerySpecUtils.toState(query, idx, EChangeNotice.class, state);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeNotice.class, EChangeNotice.CREATE_TIMESTAMP,
 				createdFrom, createdTo);
-		QuerySpecUtils.toCreator(query, idx, EChangeNotice.class, creatorOid);
+		QuerySpecUtils.toCreatorQuery(query, idx, EChangeNotice.class, creatorOid);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeNotice.class, EChangeNotice.MODEL, model);
 		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.CREATE_TIMESTAMP, true);
 

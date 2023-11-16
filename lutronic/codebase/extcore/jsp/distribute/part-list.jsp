@@ -29,8 +29,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		
-		<input name="state" type="hidden"  value="APPROVED" />
+		<input type="hidden" name="state" id="state" value="APPROVED">
 
 		<table class="button-table">
 			<tr>
@@ -493,8 +492,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/distribute/listProduction");
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-					"ecoNo", "eoNo","creatorOid","latest" ,"specification"];
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
+					"ecoNo", "eoNo","creatorOid","latest" ,"specification", "state"];
 				params = toField(params, field);
 				params.latest = true;
 				AUIGrid.showAjaxLoader(myGridID);
@@ -525,7 +524,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				_createAUIGrid(_columns);
 				AUIGrid.resize(_myGridID);
-				selectbox("state");
 				selectbox("model");
 				selectbox("productmethod");
 				selectbox("deptcode");
@@ -582,7 +580,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if (display === "none") {
 						el.style.display = "table-row";
 						target.value = "▲접기";
-						selectbox("state");
 						selectbox("model");
 						selectbox("productmethod");
 						selectbox("deptcode");
@@ -597,7 +594,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					} else {
 						el.style.display = "none";
 						target.value = "▼펼치기";
-						selectbox("state");
 						selectbox("model");
 						selectbox("productmethod");
 						selectbox("deptcode");

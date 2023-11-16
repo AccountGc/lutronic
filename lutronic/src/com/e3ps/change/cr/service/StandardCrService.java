@@ -47,8 +47,8 @@ public class StandardCrService extends StandardManager implements CrService {
 		String approveDate = dto.getApproveDate();
 		String writeDate = dto.getWriteDate();
 		String createDepart_code = dto.getCreateDepart_code();
-		String writer_name = dto.getWriter_name();
-		String proposer_name= dto.getProposer_name();
+		String writer = dto.getWriter_oid();
+//		String proposer_name= dto.getProposer_name();
 		String eoCommentA = dto.getEoCommentA();
 		String eoCommentB = dto.getEoCommentB();
 		String eoCommentC = dto.getEoCommentC();
@@ -98,14 +98,17 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoNumber(number);
 			cr.setCreateDate(writeDate);
 
-			cr.setWriter(writer_name);				
+			if(!writer.equals("")) {
+				long writerOid = CommonUtil.getOIDLongValue(writer);
+				cr.setWriter(Long.toString(writerOid));
+			}
 			cr.setApproveDate(approveDate);
 			
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
 			cr.setModel(model);
 
-			cr.setProposer(proposer_name);				
+//			cr.setProposer(proposer_name);				
 			cr.setChangeSection(changeSection);
 			cr.setEoCommentA(eoCommentA);
 			cr.setEoCommentB(eoCommentB);
@@ -275,14 +278,17 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoNumber(dto.getNumber());
 			cr.setCreateDate(dto.getWriteDate());
 
-			cr.setWriter(dto.getWriter_name());				
+			if(!dto.getWriter_oid().equals("")) {
+				long writerOid = CommonUtil.getOIDLongValue(dto.getWriter_oid());
+				cr.setWriter(Long.toString(writerOid));
+			}
 			cr.setApproveDate(dto.getApproveDate());
 			
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
 			cr.setModel(model);
 
-			cr.setProposer(dto.getProposer_name());				
+//			cr.setProposer(dto.getProposer_name());				
 			cr.setChangeSection(changeSection);
 			cr.setEoCommentA(dto.getEoCommentA());
 			cr.setEoCommentB(dto.getEoCommentB());

@@ -525,6 +525,15 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		ArrayList<WTPart> list = EChangeUtils.manager.getEcoParts(eco);
 		for (WTPart part : list) {
 
+			String number = part.getNumber();
+			if (SAPHelper.manager.skipEight(number)) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(number)) {
+				continue;
+			}			
+			
 			insertTable.insertRow(idx);
 			String v = part.getVersionIdentifier().getSeries().getValue();
 			System.out.println("ECO(" + eco.getEoNumber() + ") 자재 마스터 전송 품번 : " + part.getNumber() + ", 변경 버전 = " + v);

@@ -93,14 +93,14 @@
 					</jsp:include>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">제안자</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
-					<input type="hidden" name="proposerOid" id="proposerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">제안자</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
+<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">변경구분</th>
 				<td class="indent5" colspan="3">
@@ -262,7 +262,7 @@
 					approveDate : toId("approveDate"),
 					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
-					proposer_oid : toId("proposerOid"),
+// 					proposer_oid : toId("proposerOid"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -292,7 +292,7 @@
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");
-				finderUser("proposer");
+// 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				createAUIGrid8(columns8);

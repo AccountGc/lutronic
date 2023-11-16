@@ -15,6 +15,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartGroupLink;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -24,6 +25,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.dto.SAPReverseBomDTO;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -47,12 +49,18 @@ import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
+import wt.part.WTPartMaster;
+import wt.part.WTPartUsageLink;
 import wt.pom.Transaction;
+import wt.query.ClassAttribute;
+import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
+import wt.vc.views.View;
+import wt.vc.views.ViewHelper;
 
 public class StandardActivityService extends StandardManager implements ActivityService {
 
@@ -416,8 +424,91 @@ public class StandardActivityService extends StandardManager implements Activity
 
 		if ("CHANGE".equals(eoType)) {
 			// 완제품 링크...
+			ArrayList<WTPart> list = new ArrayList<WTPart>(); // 품목 리스트 담기..
+			QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+			String model = "";
+			while (qr.hasMoreElements()) {
+				EcoPartLink link = (EcoPartLink) qr.nextElement();
+				WTPartMaster m = link.getPart();
+				String v = link.getVersion();
+				WTPart part = PartHelper.manager.getPart(m.getNumber(), v);
+
+				// 대상 품목의 BOM 전개 ..
+				reverseStructure(part, list);
+			}
+
+			// 완제품만 넣을것..
+			ArrayList<WTPart> clist = new ArrayList<WTPart>();
+			ArrayList<String> mlist = new ArrayList<String>();
+			System.out.println("list=" + list.size());
+			for (WTPart p : list) {
+				String number = p.getNumber();
+
+				// 완제품
+				String firstNumber = number.substring(0, 1);
+				String endNumber = number.substring(5, 8);// number.substring(5,number.length());
+				if (firstNumber.equals("1") && !endNumber.endsWith("000")) { // 6,7,8이 000인경우
+					if (!clist.contains(p)) {
+						clist.add(p);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * ECO 시 역전개하여 품목 가져오기
+	 */
+	public void reverseStructure(WTPart end, ArrayList<WTPart> list) throws Exception {
+		if (!list.contains(end)) {
+			list.add(end);
+		}
+		WTPartMaster master = (WTPartMaster) end.getMaster();
+		QuerySpec query = new QuerySpec();
+
+		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+		int idx_part = query.appendClassList(WTPart.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+
+		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+		sc.setOuterJoin(0);
+		query.appendAnd();
+		query.appendWhere(sc, new int[] { idx_usage, idx_part });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
+				new int[] { idx_part });
+
+		View view = ViewHelper.service.getView(end.getViewName());
+		if (view != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
+					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
+		String state = end.getLifeCycleState().toString();
+		if (state != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+		}
+
+		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
+
+		query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, "master>number"), true),
+				new int[] { idx_part });
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart p = (WTPart) obj[1];
+			if (!list.contains(p)) {
+				list.add(p);
+			}
+			reverseStructure(p, list);
+		}
 	}
 
 	/**
@@ -610,7 +701,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				link.setPreOrder(false);
 				PersistenceHelper.manager.save(link);
 
-				WTPart	 prevPart = ActivityHelper.manager.prevPart(part.getNumber());
+				WTPart prevPart = ActivityHelper.manager.prevPart(part.getNumber());
 				if (prevPart != null) {
 					PartToPartLink pLink = PartToPartLink.newPartToPartLink(prevPart.getMaster(), part.getMaster());
 					pLink.setPreVersion(prevPart.getVersionIdentifier().getSeries().getValue());

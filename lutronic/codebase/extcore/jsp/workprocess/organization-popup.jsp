@@ -165,6 +165,7 @@ boolean isMulti = Boolean.parseBoolean(multi);
 	}
 
 	function loadGridData() {
+		$("input[name=sessionid").val(0);
 		let params = new Object();
 		const url = getCallUrl("/org/organization");
 		const field = [ "_psize", "name", "userId", "oid" ];

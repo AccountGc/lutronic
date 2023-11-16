@@ -85,14 +85,12 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				<td><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
-				<th>제안자</th>
-				<td><%=dto.getProposer()%></td>
+<!-- 				<th>제안자</th> -->
+<%-- 				<td><%=dto.getProposer()%></td> --%>
+				<th>제품명</th>
+				<td><%=dto.getModel()%></td>
 				<th>변경구분</th>
 				<td><%=dto.getChangeCode()%></td>
-			</tr>
-			<tr>
-				<th>제품명</th>
-				<td colspan="3"><%=dto.getModel()%></td>
 			</tr>
 			<tr>
 				<th>변경사유</th>

@@ -57,8 +57,8 @@ public class EpmData {
 		setCadType(epm.getDocType().toString());
 		setCreator(epm.getCreatorFullName());
 		setModifier(epm.getModifierFullName());
-		setCreateDate(DateUtil.getDateString(epm.getCreateTimestamp(), "a"));
-		setModifyDate(DateUtil.getDateString(epm.getModifyTimestamp(), "a"));
+		setCreateDate(epm.getCreateTimestamp().toString().substring(0, 10));
+		setModifyDate(epm.getModifyTimestamp().toString().substring(0, 10));
 		// true이면 동기화 버튼 활성화, false 이면 비활성
 		boolean isDRW = epm.getDocType().toString().equals("CADDRAWING");
 		if (!isDRW) {

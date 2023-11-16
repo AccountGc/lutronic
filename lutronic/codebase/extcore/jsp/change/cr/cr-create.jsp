@@ -81,14 +81,14 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">제안자</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200">
-					<input type="hidden" name="proposerOid" id="proposerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')">
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">제안자</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
+<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="req lb">제품명</th>
 				<td colspan="3" class="indent5 pt5">
@@ -263,8 +263,8 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
 					createDepart_code : toId("createDepart"),
-					writer_name : toId("writer"),
-					proposer_name : toId("proposer"),
+					writer_oid : toId("writerOid"),
+// 					proposer_name : toId("proposer"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -299,7 +299,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");
-				finderUser("proposer");
+// 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				createAUIGrid8(columns8);
