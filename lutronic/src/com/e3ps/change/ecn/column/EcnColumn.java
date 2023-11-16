@@ -18,10 +18,10 @@ public class EcnColumn {
 	private String name;
 	private String state;
 	private String creator;
-	private String worker;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
+	private String worker_oid;
 
 	public EcnColumn() {
 
@@ -37,8 +37,10 @@ public class EcnColumn {
 		setName(ecn.getEoName());
 		setState(ecn.getLifeCycleState().getDisplay());
 		setCreator(ecn.getCreatorFullName());
-		setWorker(ecn.getOwnership().getOwner().getFullName());
 		setCreatedDate(ecn.getCreateTimestamp());
 		setCreatedDate_txt(ecn.getCreateTimestamp().toString().substring(0, 10));
+		setWorker_oid(
+				ecn.getWorker() != null ? ecn.getWorker().getPersistInfo().getObjectIdentifier().getStringValue() : "");
+		;
 	}
 }

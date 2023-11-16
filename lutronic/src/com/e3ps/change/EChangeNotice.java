@@ -8,6 +8,7 @@ import com.ptc.windchill.annotations.metadata.GeneratedForeignKey;
 import com.ptc.windchill.annotations.metadata.MyRole;
 import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 
+import wt.org.WTUser;
 //import com.e3ps.change.EChangeOrder;
 //import java.io.Externalizable;
 //import java.io.IOException;
@@ -34,6 +35,14 @@ import wt.util.WTException;
 								constraints = @PropertyConstraints(required = true)),
 
 						myRole = @MyRole(name = "ecn", cardinality = Cardinality.ONE)),
+
+				@GeneratedForeignKey(name = "EcnWorkerLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "worker", type = WTUser.class,
+
+								constraints = @PropertyConstraints(required = false)),
+
+						myRole = @MyRole(name = "ecn", cardinality = Cardinality.ONE))
 
 		}
 

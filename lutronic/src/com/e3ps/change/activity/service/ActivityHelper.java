@@ -570,15 +570,13 @@ public class ActivityHelper {
 	/**
 	 * 해당품목과 관련된 3D, 2D 참조 도면
 	 */
-	public Map<String, JSONArray> reference(String oid) throws Exception {
-		Map<String, JSONArray> result = new HashMap<>();
+	public Map<String, ArrayList<Map<String, Object>>> reference(String oid) throws Exception {
+		Map<String, ArrayList<Map<String, Object>>> result = new HashMap<>();
 
 		if (!StringUtil.checkString(oid)) {
 			return result;
 		}
-		WTPart part = (WTPart)CommonUtil.getObject(oid);
-		
-		
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
 
 		return result;
 	}

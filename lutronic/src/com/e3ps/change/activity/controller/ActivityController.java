@@ -398,8 +398,8 @@ public class ActivityController extends BaseController {
 	@GetMapping(value = "/reference")
 	public ModelAndView reference(@RequestParam String pre, @RequestParam String next) throws Exception {
 		ModelAndView model = new ModelAndView();
-		Map<String, JSONarray> preData = ActivityHelper.manager.reference(pre);
-		JSONArray nextData = ActivityHelper.manager.reference(next);
+		Map<String, ArrayList<Map<String, Object>>> preData = ActivityHelper.manager.reference(pre);
+		Map<String, ArrayList<Map<String, Object>>> nextData = ActivityHelper.manager.reference(next);
 		model.addObject("preData", preData);
 		model.addObject("nextData", nextData);
 		model.setViewName("/extcore/jsp/change/activity/activity-reference.jsp");

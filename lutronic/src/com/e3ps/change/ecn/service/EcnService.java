@@ -19,4 +19,9 @@ public interface EcnService {
 	 */
 	public abstract void create(EChangeOrder eco) throws Exception;
 
+	/**
+	 * ECN 담당자 저장 RA팀 업무
+	 */
+	public abstract void save(Map<String, Object> params) throws Exception;
+
 }

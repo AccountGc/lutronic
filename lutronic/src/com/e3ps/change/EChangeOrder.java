@@ -44,12 +44,6 @@ import wt.util.WTException;
 
 						myRole = @MyRole(name = "eco", cardinality = Cardinality.ZERO_TO_ONE)),
 
-				@GeneratedForeignKey(name = "EcnUserLink",
-
-						foreignKeyRole = @ForeignKeyRole(name = "ecnUser", type = WTUser.class),
-
-						myRole = @MyRole(name = "eco"))
-
 		}
 
 )

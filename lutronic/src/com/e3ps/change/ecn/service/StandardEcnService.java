@@ -1,16 +1,16 @@
 package com.e3ps.change.ecn.service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcnToPartLink;
 import com.e3ps.change.EcoPartLink;
-import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -24,6 +24,7 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.org.WTUser;
 import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
@@ -141,6 +142,34 @@ public class StandardEcnService extends StandardManager implements EcnService {
 					eLink.setEcr(ecr);
 					PersistenceHelper.manager.save(eLink);
 				}
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void save(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (Map<String, Object> editRow : editRows) {
+				String oid = (String) editRow.get("oid");
+				String worker_oid = (String) editRow.get("worker_oid");
+				EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
+				WTUser worker = (WTUser) CommonUtil.getObject(worker_oid);
+				ecn.setWorker(worker);
+				PersistenceHelper.manager.modify(ecn);
 			}
 
 			trs.commit();
