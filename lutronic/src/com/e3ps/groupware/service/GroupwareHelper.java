@@ -389,7 +389,7 @@ public class GroupwareHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.ID, userId);
 		QuerySpecUtils.toEqualsAnd(query, idx, People.class, "departmentReference.key.id", dOid);
 
-		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, true);
+		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
