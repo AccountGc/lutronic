@@ -133,6 +133,7 @@ public class BomHelper {
 		rootNode.put("creator", root.getCreatorFullName());
 		rootNode.put("isRoot", true);
 		rootNode.put("link", "");
+		rootNode.put("qty", 1);
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
@@ -170,6 +171,7 @@ public class BomHelper {
 			node.put("creator", p.getCreatorFullName());
 			node.put("isRoot", false);
 			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("qty", link.getQuantity().getAmount());
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
@@ -215,6 +217,7 @@ public class BomHelper {
 			node.put("creator", p.getCreatorFullName());
 			node.put("isRoot", false);
 			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("qty", link.getQuantity().getAmount());
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {

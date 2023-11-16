@@ -1,3 +1,4 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
@@ -9,6 +10,7 @@
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+JSONArray list = (JSONArray) request.getAttribute("list");
 %>
 <!DOCTYPE html>
 <html>
@@ -96,14 +98,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</select>
 				</td>
 			</tr>
-			<tr class="hidden">
-				<th class="lb">완제품 품목</th>
-				<td colspan="5" class="indent5">
-					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
-						<jsp:param value="" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 
 		<table class="button-table">
@@ -112,7 +106,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecn-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecn-list');">
-					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
+					<input type="button" value="저장" title="저장" onclick="save();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -123,7 +117,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="300">300</option>
 					</select>
 
-					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
@@ -133,17 +127,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
 			let myGridID;
+			const list =
+		<%=list%>
+			;
 			function _layout() {
 				return [ {
 					dataField : "model",
 					headerText : "제품명",
 					dataType : "string",
 					width : 200,
+					editable : false,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-// 							const oid = item.oid;
+							// 							const oid = item.oid;
 							const oid = "com.e3ps.change.EChangeNotice:670334";
 							const url = getCallUrl("/ecn/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
@@ -159,6 +157,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 230,
 					cellMerge : true,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -169,6 +168,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					style : "aui-left",
 					cellMerge : true,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -178,18 +178,61 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					dataType : "string",
 					width : 130,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "worker",
+					dataField : "worker_oid",
 					headerText : "담당자",
-					dataType : "string",
-					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
+					dateType : "string",
+					width : 150,
+					editable : true,
+					renderer : {
+						type : "IconRenderer",
+						iconWidth : 16,
+						iconHeight : 16,
+						iconPosition : "aisleRight",
+						iconTableRef : {
+							"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+						},
+						onClick : function(event) {
+							AUIGrid.openInputer(event.pid);
+						}
+					},
+					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+						let retStr = "";
+						for (let i = 0, len = list.length; i < len; i++) {
+							if (list[i]["key"] == value) {
+								retStr = list[i]["value"];
+								break;
+							}
+						}
+						return retStr == "" ? value : retStr;
+					},
+					editRenderer : {
+						type : "ComboBoxRenderer",
+						list : list,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						keyField : "key",
+						valueField : "value",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = list.length; i < len; i++) {
+								if (list[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 				}, {
 					dataField : "creator",
@@ -197,6 +240,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 100,
 					cellMerge : true,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -207,6 +251,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "date",
 					width : 100,
 					cellMerge : true,
+					editable : false,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -216,6 +261,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function createAUIGrid(columnLayout) {
 				const props = {
+					editable : true,
 					enableCellMerge : true,
 					headerHeight : 30,
 					showRowNumColumn : true,
@@ -245,41 +291,64 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function loadGridData() {
 
-				$.ajax({
-					type : "POST",
-					url : "/Windchill/extcore/jsp/change/ecn/sample.json",
-					dataType : "JSON",
-					crossDomain : true,
-					// 					data: params,
-					// 					async: async,
-					contentType : "application/json; charset=UTF-8",
-					beforeSend : function() {
-					},
-					success : function(res) {
-						AUIGrid.setGridData(myGridID, res);
-					},
-				})
+				// 				$.ajax({
+				// 					type : "POST",
+				// 					url : "/Windchill/extcore/jsp/change/ecn/sample.json",
+				// 					dataType : "JSON",
+				// 					crossDomain : true,
+				// 					// 					data: params,
+				// 					// 					async: async,
+				// 					contentType : "application/json; charset=UTF-8",
+				// 					beforeSend : function() {
+				// 					},
+				// 					success : function(res) {
+				// 						AUIGrid.setGridData(myGridID, res);
+				// 					},
+				// 				})
 
-				// 				let params = new Object();
-				// 				const url = getCallUrl("/ecn/list");
-				// 				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
-				// 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
-				// 				params.rows104 = rows104;
-				// 				params = toField(params, field);
-				// 				AUIGrid.showAjaxLoader(myGridID);
-				// 				parent.openLayer();
-				// 				call(url, params, function(data) {
-				// 					AUIGrid.removeAjaxLoader(myGridID);
-				// 					if (data.result) {
-				// 						totalPage = Math.ceil(data.total / data.pageSize);
-				// 						document.getElementById("sessionid").value = data.sessionid;
-				// 						createPagingNavigator(data.curPage);
-				// 						AUIGrid.setGridData(myGridID, data.list);
-				// 					} else {
-				// 						alert(data.msg);
-				// 					}
-				// 					parent.closeLayer();
-				// 				});
+				let params = new Object();
+				const url = getCallUrl("/ecn/list");
+				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
+				params = toField(params, field);
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
+					if (data.result) {
+						totalPage = Math.ceil(data.total / data.pageSize);
+						document.getElementById("sessionid").value = data.sessionid;
+						createPagingNavigator(data.curPage);
+						AUIGrid.setGridData(myGridID, data.list);
+					} else {
+						alert(data.msg);
+					}
+					parent.closeLayer();
+				});
+			}
+
+			function save() {
+				const editRows = AUIGrid.getEditedRowItems(myGridID);
+				if (editRows.length === 0) {
+					alert("수정사항이 없습니다.");
+					return false;
+				}
+
+				if (!confirm("저장하시겠습니까?")) {
+					return false;
+				}
+
+				const url = getCallUrl("/ecn/save");
+				const params = {
+					editRows : editRows
+				};
+				parent.openLayer();
+				call(url, params, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						loadGridData();
+					}
+					parent.closeLayer();
+				})
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
@@ -291,9 +360,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					select : headerMenuSelectHandler
 				});
 				createAUIGrid(columns);
-				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(myGridID104);
 				selectbox("state");
 				finderUser("creator");
 				twindate("created");
@@ -315,39 +382,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(myGridID104);
 			});
-
-			function spread(target) {
-				const e = document.querySelectorAll('.hidden');
-				// 버근가..
-				for (let i = 0; i < e.length; i++) {
-					const el = e[i];
-					const style = window.getComputedStyle(el);
-					const display = style.getPropertyValue("display");
-					if (display === "none") {
-						el.style.display = "table-row";
-						target.value = "▲접기";
-						selectbox("state");
-						finderUser("creator");
-						twindate("created");
-						twindate("modified");
-						selectbox("_psize");
-						selectbox("model");
-						AUIGrid.resize(myGridID104);
-					} else {
-						el.style.display = "none";
-						target.value = "▼펼치기";
-						selectbox("state");
-						finderUser("creator");
-						twindate("created");
-						twindate("modified");
-						selectbox("_psize");
-						selectbox("model");
-						AUIGrid.resize(myGridID104);
-					}
-				}
-			}
 
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;

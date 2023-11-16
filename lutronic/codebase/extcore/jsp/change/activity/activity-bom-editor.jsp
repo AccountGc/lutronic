@@ -151,6 +151,11 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		dataType : "string",
 		width : 80
 	}, {
+		dataField : "qty",
+		headerText : "수량",
+		dataType : "numeric",
+		width : 60
+	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
@@ -224,16 +229,21 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			}, {
 				label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 			}, {
-				label : "기존삽입",
+				label : "하위추가",
+				callback : auiContextHandler
+			}, {
+				label : "개정",
 				callback : auiContextHandler
 			}, {
 				label : "제거",
 				callback : auiContextHandler
 			}, {
-				label : "교체",
+				label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+			}, {
+				label : "신규품목교체",
 				callback : auiContextHandler
 			}, {
-				label : "개정",
+				label : "기존품목교체",
 				callback : auiContextHandler
 			} ];
 			return menu;
@@ -416,7 +426,7 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			return false;
 		}
 	}
-	
+
 	function replace() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID2);
 		if (checkedItems.length === 0) {
@@ -424,7 +434,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			return false;
 		}
 	}
-
 
 	document.addEventListener("keydown", function(event) {
 		const keyCode = event.keyCode || event.which;

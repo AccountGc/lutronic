@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.dto.EcnDTO;
 import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.common.code.NumberCode;
@@ -22,7 +23,10 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.org.service.OrgHelper;
 import com.e3ps.sap.service.SAPHelper;
+
+import net.sf.json.JSONArray;
 
 @Controller
 @RequestMapping(value = "/ecn/**")
@@ -34,6 +38,8 @@ public class EcnController extends BaseController {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
 		ModelAndView model = new ModelAndView();
+		JSONArray list = OrgHelper.manager.toJsonWTUser();
+		model.addObject("list", list);
 		model.addObject("modelList", modelList);
 		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/change/ecn/ecn-list.jsp");
@@ -80,6 +86,23 @@ public class EcnController extends BaseController {
 			SAPHelper.service.sendSapToEcn(params);
 			result.put("result", SUCCESS);
 			result.put("msg", "전송 되었습니다.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "ECN 담당자 지정 함수")
+	@PostMapping(value = "/save")
+	@ResponseBody
+	public Map<String, Object> save(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcnHelper.service.save(params);
+			result.put("msg", "담당자가 지정되었습니다.");
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
