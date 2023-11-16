@@ -255,23 +255,23 @@ function expand() {
 let pageButtonCount = 10;
 let currentPage = 1;
 let totalPage;
-function createPagingNavigator(goPage) {
+function createPagingNavigator(goPage, sessionid) {
 	let retStr = "";
 	let prevPage = parseInt((goPage - 1) / pageButtonCount) * pageButtonCount;
 	let nextPage = ((parseInt((goPage - 1) / pageButtonCount)) * pageButtonCount) + pageButtonCount + 1;
 	prevPage = Math.max(0, prevPage);
 	nextPage = Math.min(nextPage, totalPage);
 	// 처음
-	retStr += "<a href='javascript:moveToPage(1)'><span class='aui-grid-paging-number aui-grid-paging-first'>first</span></a>";
+	retStr += "<a href='javascript:moveToPage(1, " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-first'>first</span></a>";
 
 	// 이전
-	retStr += "<a href='javascript:moveToPage(" + Math.max(1, prevPage) + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
+	retStr += "<a href='javascript:moveToPage(" + Math.max(1, prevPage) + ", " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-prev'>prev</span></a>";
 
 	for (let i = (prevPage + 1), len = (pageButtonCount + prevPage); i <= len; i++) {
 		if (goPage == i) {
 			retStr += "<span class='aui-grid-paging-number aui-grid-paging-number-selected'>" + i + "</span>";
 		} else {
-			retStr += "<a href='javascript:moveToPage(" + i + ")'><span class='aui-grid-paging-number'>";
+			retStr += "<a href='javascript:moveToPage(" + i + ", " + sessionid + ")'><span class='aui-grid-paging-number'>";
 			retStr += i;
 			retStr += "</span></a>";
 		}
@@ -282,10 +282,10 @@ function createPagingNavigator(goPage) {
 	}
 
 	// 다음
-	retStr += "<a href='javascript:moveToPage(" + nextPage + ")'><span class='aui-grid-paging-number aui-grid-paging-next'>next</span></a>";
+	retStr += "<a href='javascript:moveToPage(" + nextPage + ", " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-next'>next</span></a>";
 
 	// 마지막
-	retStr += "<a href='javascript:moveToPage(" + totalPage + ")'><span class='aui-grid-paging-number aui-grid-paging-last'>last</span></a>";
+	retStr += "<a href='javascript:moveToPage(" + totalPage + ", " + sessionid + ")'><span class='aui-grid-paging-number aui-grid-paging-last'>last</span></a>";
 
 	document.getElementById("grid_paging").innerHTML = retStr;
 }
@@ -294,9 +294,10 @@ function createPagingNavigator(goPage) {
 /**
  * 페이지 이동 스크립트
  */
-function moveToPage(goPage) {
+function moveToPage(goPage, sessionid) {
 	createPagingNavigator(goPage);
 	currentPage = goPage;
+//	document.getElementById("sessionid").value = sessionid;
 	document.getElementById("curPage").value = goPage;
 	loadGridData();
 }

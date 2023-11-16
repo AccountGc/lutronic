@@ -55,6 +55,7 @@ public class EcnHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeNotice.class, EChangeNotice.MODEL, model);
 		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.CREATE_TIMESTAMP, true);
 
+		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {

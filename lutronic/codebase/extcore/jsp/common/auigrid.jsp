@@ -11,4 +11,4 @@
 <script src="/Windchill/extcore/component/AUIGrid/pdfkit/FileSaver.min.js"></script>
 
 <!-- AUIGrid custom function -->
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js?v=3343"></script>
+<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js?v=3334203"></script>

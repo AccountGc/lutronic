@@ -312,12 +312,14 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+// 				document.getElementById("sessionid").value = 0;
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+// 						document.getElementById("sessionid").value = data.sessionid;
+// 						document.getElementById("curPage").value = data.curPage;
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
