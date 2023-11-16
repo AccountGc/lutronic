@@ -13,19 +13,18 @@ import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartGroupLink;
-import com.e3ps.change.eco.service.EcoHelper;
+import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.sap.dto.SAPReverseBomDTO;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -43,7 +42,6 @@ import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.iba.value.IBAHolder;
 import wt.lifecycle.LifeCycleHelper;
-import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.LifeCycleTemplateReference;
 import wt.lifecycle.State;
 import wt.org.WTUser;
@@ -443,7 +441,6 @@ public class StandardActivityService extends StandardManager implements Activity
 			System.out.println("list=" + list.size());
 			for (WTPart p : list) {
 				String number = p.getNumber();
-
 				// 완제품
 				String firstNumber = number.substring(0, 1);
 				String endNumber = number.substring(5, 8);// number.substring(5,number.length());
@@ -452,8 +449,30 @@ public class StandardActivityService extends StandardManager implements Activity
 						clist.add(p);
 					}
 				}
+				putModel(model, p, mlist);
 			}
+
+			for (WTPart pp : clist) {
+				System.out.println("제품 = " + pp.getNumber());
+				EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink((WTPartMaster) pp.getMaster(), eco);
+				link.setVersion(pp.getVersionIdentifier().getSeries().getValue());
+				PersistenceServerHelper.manager.insert(link);
+			}
+			eco.setModel(model);
+			PersistenceHelper.manager.modify(eco);
 		}
+	}
+
+	/**
+	 * 제품명 담기
+	 */
+	private String putModel(String model, WTPart part, ArrayList<String> mlist) throws Exception {
+		String m = IBAUtil.getAttrValue(part, "MODEL");
+		if (!mlist.contains(m)) {
+			model = model + "," + m;
+			mlist.add(m);
+		}
+		return model;
 	}
 
 	/**
@@ -762,8 +781,9 @@ public class StandardActivityService extends StandardManager implements Activity
 	}
 
 	@Override
-	public void saveGroup(Map<String, Object> params) throws Exception {
+	public void saveData(Map<String, Object> params) throws Exception {
 		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
+		ArrayList<Map<String, Object>> removeRows = (ArrayList<Map<String, Object>>) params.get("removeRows");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -803,6 +823,22 @@ public class StandardActivityService extends StandardManager implements Activity
 				eLink.setOrders(order);
 				PersistenceHelper.manager.modify(eLink);
 
+			}
+
+			for (Map<String, Object> removeRow : removeRows) {
+				String part_oid = (String) removeRow.get("part_oid");
+				WTPart prePart = (WTPart) CommonUtil.getObject(part_oid);
+				WTPartMaster master = (WTPartMaster) prePart.getMaster();
+				QuerySpec query = new QuerySpec();
+				int idx = query.appendClassList(PartToPartLink.class, true);
+				QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "ecoReference.key.id", eco);
+				QuerySpecUtils.toEqualsAnd(query, idx, PartToPartLink.class, "roleAObjectRef.key.id", master);
+				QueryResult result = PersistenceHelper.manager.find(query);
+				if (result.hasMoreElements()) {
+					Object[] obj = (Object[]) result.nextElement();
+					PartToPartLink link = (PartToPartLink) obj[0];
+					PersistenceHelper.manager.delete(link);
+				}
 			}
 
 			trs.commit();

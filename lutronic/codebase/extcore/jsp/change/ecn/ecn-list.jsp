@@ -135,6 +135,25 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "model",
+					headerText : "제품명",
+					dataType : "string",
+					width : 200,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+// 							const oid = item.oid;
+							const oid = "com.e3ps.change.EChangeNotice:670334";
+							const url = getCallUrl("/ecn/view?oid=" + oid);
+							_popup(url, 1600, 800, "n");
+						}
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "number",
 					headerText : "ECN번호",
 					dataType : "string",
@@ -144,47 +163,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showIcon : true,
 						inline : true
 					},
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/ecn/view?oid=" + oid);
-							_popup(url, 1600, 800, "n");
-						}
-					},
 				}, {
 					dataField : "name",
 					headerText : "ECN제목",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/ecn/view?oid=" + oid);
-							_popup(url, 1600, 800, "n");
-						}
-					},
-				}, {
-					dataField : "model",
-					headerText : "제품명",
-					dataType : "string",
-					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "state",
-					headerText : "상태",
-					dataType : "string",
-					width : 130,
+					cellMerge : true,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -212,6 +196,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
+					cellMerge : true,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -221,6 +206,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
+					cellMerge : true,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -258,26 +244,42 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function loadGridData() {
-				let params = new Object();
-				const url = getCallUrl("/ecn/list");
-				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
-				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
-				params.rows104 = rows104;
-				params = toField(params, field);
-				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
-				call(url, params, function(data) {
-					AUIGrid.removeAjaxLoader(myGridID);
-					if (data.result) {
-						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
-						AUIGrid.setGridData(myGridID, data.list);
-					} else {
-						alert(data.msg);
-					}
-					parent.closeLayer();
-				});
+
+				$.ajax({
+					type : "POST",
+					url : "/Windchill/extcore/jsp/change/ecn/sample.json",
+					dataType : "JSON",
+					crossDomain : true,
+					// 					data: params,
+					// 					async: async,
+					contentType : "application/json; charset=UTF-8",
+					beforeSend : function() {
+					},
+					success : function(res) {
+						AUIGrid.setGridData(myGridID, res);
+					},
+				})
+
+				// 				let params = new Object();
+				// 				const url = getCallUrl("/ecn/list");
+				// 				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
+				// 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
+				// 				params.rows104 = rows104;
+				// 				params = toField(params, field);
+				// 				AUIGrid.showAjaxLoader(myGridID);
+				// 				parent.openLayer();
+				// 				call(url, params, function(data) {
+				// 					AUIGrid.removeAjaxLoader(myGridID);
+				// 					if (data.result) {
+				// 						totalPage = Math.ceil(data.total / data.pageSize);
+				// 						document.getElementById("sessionid").value = data.sessionid;
+				// 						createPagingNavigator(data.curPage);
+				// 						AUIGrid.setGridData(myGridID, data.list);
+				// 					} else {
+				// 						alert(data.msg);
+				// 					}
+				// 					parent.closeLayer();
+				// 				});
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

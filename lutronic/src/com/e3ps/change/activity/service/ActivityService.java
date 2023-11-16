@@ -75,8 +75,8 @@ public interface ActivityService {
 	public abstract void prev(Map<String, Object> params) throws Exception;
 
 	/**
-	 * ECO 활동 중 품목 그룹핑 함수
+	 * ECO 활동 중 품목 데이터 저장
 	 */
-	public abstract void saveGroup(Map<String, Object> params) throws Exception;
+	public abstract void saveData(Map<String, Object> params) throws Exception;
 
 }

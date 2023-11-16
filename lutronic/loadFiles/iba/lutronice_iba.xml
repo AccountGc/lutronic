@@ -438,4 +438,16 @@
 		<csvlogicalIdentifier>WEIGHT</csvlogicalIdentifier>
 	</csvAttrDefinizer>
 
+	<csvAttrDefinizer handler="wt.iba.definition.DefinitionLoaderWithCache.createAttrDefinizer">
+		<csvname>PREORDER</csvname>
+		<csvhierarchyDisplayName />
+		<csvorganizerPaths>Part</csvorganizerPaths>
+		<csvdefinitionPaths />
+		<csvdisplay_name>무게</csvdisplay_name>
+		<csvdescription>ECO 진행시 입력</csvdescription>
+		<csvdata_type>boolean</csvdata_type>
+		<csvQoMName />
+		<csvnameValuePairs />
+		<csvlogicalIdentifier>PREORDER</csvlogicalIdentifier>
+	</csvAttrDefinizer>
 </NmLoader>

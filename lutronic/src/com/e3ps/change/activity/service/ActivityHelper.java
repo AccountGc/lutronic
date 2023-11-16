@@ -394,7 +394,7 @@ public class ActivityHelper {
 					map.put("after", true);
 					map.put("afterMerge", true);
 				} else {
-					WTPart next_part = (WTPart) EChangeUtils.getNext(part);
+					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 
 					String group = EChangeUtils.manager.getPartGroup(next_part, eco);
 
@@ -565,5 +565,21 @@ public class ActivityHelper {
 		}
 
 		return prevPart;
+	}
+
+	/**
+	 * 해당품목과 관련된 3D, 2D 참조 도면
+	 */
+	public Map<String, JSONArray> reference(String oid) throws Exception {
+		Map<String, JSONArray> result = new HashMap<>();
+
+		if (!StringUtil.checkString(oid)) {
+			return result;
+		}
+		WTPart part = (WTPart)CommonUtil.getObject(oid);
+		
+		
+
+		return result;
 	}
 }

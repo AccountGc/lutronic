@@ -244,7 +244,7 @@ public class EChangeUtils {
 	/**
 	 * 현재 버전의 다음 버전 객체
 	 */
-	public static RevisionControlled getNext(RevisionControlled rc) throws Exception {
+	public RevisionControlled getNext(RevisionControlled rc) throws Exception {
 		byte[] b = rc.getVersionIdentifier().getValue().getBytes();
 		b[b.length - 1] += 1;
 		QueryResult qr = VersionControlHelper.service.allVersionsOf(rc.getMaster());

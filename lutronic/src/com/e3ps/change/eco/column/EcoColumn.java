@@ -15,6 +15,7 @@ public class EcoColumn {
 	private String oid;
 	private String number;
 	private String name;
+	private String sendType;
 	private String licensing;
 	private String riskType;
 	private String licensing_name;
@@ -38,6 +39,7 @@ public class EcoColumn {
 		setOid(eco.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(eco.getEoNumber());
 		setName(eco.getEoName());
+		setSendType(eco.getSendType());
 		setLicensing(eco.getLicensingChange());
 		setRiskType(eco.getRiskType());
 		setLicensing_name(licensing(eco.getLicensingChange()));

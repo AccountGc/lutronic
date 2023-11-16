@@ -59,6 +59,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 	@Override
 	public void create(EcoDTO dto) throws Exception {
 		String name = dto.getName();
+		String sendType = dto.getSendType();
 		String riskType = dto.getRiskType();
 		String licensing = dto.getLicensing();
 		String eoCommentA = dto.getEoCommentA();
@@ -87,6 +88,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			number = number + seqNo;
 
 			EChangeOrder eco = EChangeOrder.newEChangeOrder();
+			eco.setSendType(sendType);
 			eco.setEoName(name);
 			eco.setEoNumber(number);
 			eco.setEoType("CHANGE");

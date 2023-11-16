@@ -246,6 +246,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
+					dataField : "sendType",
+					headerText : "전송타입",
+					dataType : "string",
+					width : 80,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "licensing_name",
 					headerText : "인허가변경",
 					dataType : "string",

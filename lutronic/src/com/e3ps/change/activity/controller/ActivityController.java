@@ -378,12 +378,12 @@ public class ActivityController extends BaseController {
 	}
 
 	@Description(value = "ECO 그룹핑 함수")
-	@PostMapping(value = "/saveGroup")
+	@PostMapping(value = "/saveData")
 	@ResponseBody
 	public Map<String, Object> saveGroup(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			ActivityHelper.service.saveGroup(params);
+			ActivityHelper.service.saveData(params);
 			result.put("msg", "저장되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -396,9 +396,12 @@ public class ActivityController extends BaseController {
 
 	@Description(value = "설변활동중 주도면 및 참조도면")
 	@GetMapping(value = "/reference")
-	public ModelAndView reference(@RequestParam String oid) throws Exception {
+	public ModelAndView reference(@RequestParam String pre, @RequestParam String next) throws Exception {
 		ModelAndView model = new ModelAndView();
-
+		Map<String, JSONarray> preData = ActivityHelper.manager.reference(pre);
+		JSONArray nextData = ActivityHelper.manager.reference(next);
+		model.addObject("preData", preData);
+		model.addObject("nextData", nextData);
 		model.setViewName("/extcore/jsp/change/activity/activity-reference.jsp");
 		return model;
 	}

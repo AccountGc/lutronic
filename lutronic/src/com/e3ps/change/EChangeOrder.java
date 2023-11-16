@@ -30,7 +30,11 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "eul", type = Vector.class, columnProperties = @ColumnProperties(persistent = false)),
 
-				@GeneratedProperty(name = "riskType", type = String.class) },
+				@GeneratedProperty(name = "riskType", type = String.class),
+
+				@GeneratedProperty(name = "sendType", type = String.class)
+
+		},
 
 		foreignKeys = {
 

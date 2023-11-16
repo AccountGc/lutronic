@@ -79,16 +79,16 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 			</tr>
 			<tr>
 				<th class="lb">업무위임</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<input type="text" name="reassignUser" id="reassignUser">
 					<input type="hidden" name="reassignUserOid" id="reassignUserOid">
 					<input type="button" title="위임" value="위임" onclick="reassign();">
 				</td>
-				<th>ECN 담당자</th>
-				<td class="indent5">
-					<input type="text" name="ecnUser" id="ecnUser">
-					<input type="hidden" name="ecnUserOid" id="ecnUserOid">
-				</td>
+				<!-- 				<th>ECN 담당자</th> -->
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<input type="text" name="ecnUser" id="ecnUser"> -->
+				<!-- 					<input type="hidden" name="ecnUserOid" id="ecnUserOid"> -->
+				<!-- 				</td> -->
 			</tr>
 			<tr>
 				<th class="lb">의견</th>
@@ -103,8 +103,9 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						산출물
-						<input type="button" value="저장" title="저장" onclick="saveGroup();">
+						설변품목
+						<input type="button" value="저장" title="저장" onclick="save();">
+						<input type="button" value="이전품목삭제" title="이전품목삭제" class="red" onclick="deleteRow();">
 					</div>
 				</td>
 				<td class="right">
@@ -196,7 +197,8 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				headerText : "선구매<br>여부",
 				dataField : "preOrder",
 				dataType : "boolean",
-				width : 80,
+				width : 60,
+				minWidth : 60,
 				editable : false,
 				renderer : {
 					type : "CheckboxEditRenderer",
@@ -552,13 +554,14 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 
 			function createAUIGrid(columnLayout) {
 				const props = {
+					showStateColumn : true,
 					headerHeight : 30,
 					fillColumnSizeMode : false,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					enableSorting : false,
-					softRemoveRowMode : false,
+					softRemoveRowMode : true,
 					selectionMode : "multipleCells",
 					showRowCheckColumn : true,
 					enableFilter : true,
@@ -592,6 +595,9 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					}, {
 						label : "BOM 비교",
 						callback : auiContextHandler
+					}, {
+						label : "BOM 역전개",
+						callback : auiContextHandler
 					} ];
 					return menu;
 				});
@@ -601,6 +607,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				const item = event.item;
 				const oid = document.getElementById("oid").value;
 				const next_oid = item.next_oid; // 개정후의 데이터를 보여주는거로
+				const part_oid = item.part_oid;
 				if (next_oid === "") {
 					alert("개정 후 데이터가 없습니다.");
 					return false;
@@ -608,7 +615,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				switch (event.contextIndex) {
 				case 0:
 					// 도면
-					_popup(getCallUrl("/activity/reference?oid=" + next_oid), 1200, 500, "n");
+					_popup(getCallUrl("/activity/reference?pre=" + part_oid + "&next=" + next_oid), 1200, 500, "n");
 					break;
 				case 1:
 					// bom 에디터
@@ -616,6 +623,10 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					break;
 				case 2:
 					// bom 비교
+					break;
+				case 3:
+					// bom 역전개
+					_popup(getCallUrl("/activity/reverse?oid=" + next_oid + "&eoid=" + oid), 1800, 750, "n");
 					break;
 				}
 			};
@@ -635,11 +646,11 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 						return false;
 					}
 				}
-				const ecnUserOid = document.getElementById("ecnUserOid").value;
-				if (ecnUserOid === "") {
-					alert("ECN 담당자를 선택하세요.");
-					return false;
-				}
+				// 				const ecnUserOid = document.getElementById("ecnUserOid").value;
+				// 				if (ecnUserOid === "") {
+				// 					alert("ECN 담당자를 선택하세요.");
+				// 					return false;
+				// 				}
 
 				const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
@@ -652,7 +663,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					oid : oid,
 					description : description,
 					secondarys : secondarys,
-					ecnUserOid : ecnUserOid
+				// 					ecnUserOid : ecnUserOid
 				};
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -747,14 +758,15 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				panel.link = link;
 			}
 
-			function saveGroup() {
+			function save() {
 				if (!confirm("저장 하시겠습니까?")) {
 					return false;
 				}
 
 				const editRows = AUIGrid.getEditedRowItems(myGridID);
+				const removeRows = AUIGrid.getRemovedItems(myGridID);
 
-				if (editRows.length === 0) {
+				if (editRows.length === 0 && removeRows.length === 0) {
 					alert("수정 내역이 없습니다.");
 					return false;
 				}
@@ -767,12 +779,13 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					}
 				}
 
-				const url = getCallUrl("/activity/saveGroup");
+				const url = getCallUrl("/activity/saveData");
 				const oid = document.getElementById("oid").value;
 				parent.openLayer();
 				const params = {
 					editRows : editRows,
-					oid : oid
+					oid : oid,
+					removeRows : removeRows
 				};
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -783,11 +796,24 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				})
 			}
 
+			function deleteRow() {
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				if (checkedItems.length === 0) {
+					alert("이전품목을 삭제할 행을 선택하세요.");
+					return false;
+				}
+
+				for (let i = checkedItems.length - 1; i >= 0; i--) {
+					const rowIndex = checkedItems[i].rowIndex;
+					AUIGrid.removeRow(myGridID, rowIndex);
+				}
+			}
+
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 				finderUser("reassignUser");
-				finderUser("ecnUser");
+				// 				finderUser("ecnUser");
 			})
 
 			window.addEventListener("resize", function() {

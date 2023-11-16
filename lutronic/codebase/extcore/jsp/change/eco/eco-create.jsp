@@ -34,8 +34,38 @@
 			</colgroup>
 			<tr>
 				<th class="req lb">ECO 제목</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-400">
+				</td>
+				<th class="req">ECO 타입</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="sendType" value="ECO" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>ECO</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="sendType" value="SCO">
+						<div class="state p-success">
+							<label>
+								<b>SCO</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="sendType" value="ORDER">
+						<div class="state p-success">
+							<label>
+								<b>선구매</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -126,7 +156,7 @@
 			<tr>
 				<th class="req lb">
 					설계변경 부품 내역파일
-<!-- 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;"> -->
+					<!-- 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;"> -->
 				</th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
@@ -164,11 +194,11 @@
 
 
 		<!-- 설계변경 품목 -->
-<%-- 		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
-<%-- 			<jsp:param value="" name="oid" /> --%>
-<%-- 			<jsp:param value="create" name="mode" /> --%>
-<%-- 			<jsp:param value="true" name="multi" /> --%>
-<%-- 		</jsp:include> --%>
+		<%-- 		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
+		<%-- 			<jsp:param value="" name="oid" /> --%>
+		<%-- 			<jsp:param value="create" name="mode" /> --%>
+		<%-- 			<jsp:param value="true" name="multi" /> --%>
+		<%-- 		</jsp:include> --%>
 
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
@@ -208,52 +238,53 @@
 				const licensing = document.querySelector("input[name=licensing]:checked").value;
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
-// 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
+				// 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
 				// 외부 메일
 				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
-				
+
 				const temprary = JSON.parse(temp);
 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				
-				if(isEmpty(name.value)){
+				const sendType = document.querySelector("input[name=sendType]:checked");
+				if (isEmpty(name.value)) {
 					alert("ECO 제목을 입력해주세요.");
 					return;
 				}
-				
-				if(primary == null){
+
+				if (primary == null) {
 					alert("설계변경 부품 내역파일을 첨부해주세요.");
 					return;
 				}
-				
+
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-					
+
 					if (addRows8.length > 0) {
 						alert("결재선 지정을 해지해주세요.")
 						return false;
 					}
-					
+
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
 				}
-				
+
 				const params = {
 					name : name.value,
 					riskType : riskType,
 					licensing : licensing,
 					secondarys : secondarys,
 					primary : primary.value,
+					sendType : sendType,
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
 					eoCommentC : eoCommentC,
 					eoCommentD : eoCommentD,
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
-// 					rows500 : rows500, // 설변품목
+					// 					rows500 : rows500, // 설변품목
 					temprary : temprary,
 					// 외부 메일
 					external : external
@@ -272,16 +303,15 @@
 				});
 			}
 
-
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid101(columns101);
 				createAUIGrid200(columns200);
-// 				createAUIGrid500(columns500);
+				// 				createAUIGrid500(columns500);
 				createAUIGrid8(columns8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID500);
+				// 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
@@ -289,7 +319,7 @@
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID500);
+				// 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);

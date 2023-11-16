@@ -1,7 +1,6 @@
 
 package com.e3ps.change;
 
-//import wt.util.WTPropertyVetoException;
 import com.ptc.windchill.annotations.metadata.Cardinality;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;

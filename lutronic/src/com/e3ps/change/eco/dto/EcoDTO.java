@@ -27,6 +27,7 @@ public class EcoDTO {
 	private String number;
 	private String state;
 	private String creator;
+	private String sendType;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
@@ -44,11 +45,11 @@ public class EcoDTO {
 	private String eoType;
 	private String approveDate = "";
 	private String model_name;
-	
+
 	private EChangeOrder eco;
 	// auth
 	private boolean isModify = false;
-	
+
 	// 변수용
 	private String primary;
 	private ArrayList<String> secondarys = new ArrayList<>();
@@ -57,15 +58,15 @@ public class EcoDTO {
 	private ArrayList<Map<String, String>> rows500 = new ArrayList<>(); // 대상품목
 
 	private Map<String, Object> contentMap = null;
-	
+
 	// 결재 변수
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
 	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
 	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
-	
+
 	// 외부 메일 변수
 	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
-	
+
 	private boolean temprary;
 
 	public EcoDTO() {
@@ -100,7 +101,7 @@ public class EcoDTO {
 			setModel_name(EcoHelper.manager.displayToModel(eco.getModel()));
 		}
 		setContentMap(ContentUtils.getContentByRole(eco, "ECO"));
-		
+
 		setEco(eco);
 		setAuth();
 	}
@@ -132,7 +133,7 @@ public class EcoDTO {
 		}
 		return "";
 	}
-	
+
 	/**
 	 * 권한 설정
 	 */
@@ -142,7 +143,7 @@ public class EcoDTO {
 			setModify(true);
 		}
 	}
-	
+
 	/**
 	 * 상태값 여부 체크
 	 */
