@@ -226,7 +226,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/workspace/receive");
-				const field = [ "name", "receiveFrom", "receiveTo", "submiterOid", "_psize" ];
+				const field = [ "name", "receiveFrom", "receiveTo", "submiterOid" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

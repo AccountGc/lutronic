@@ -329,7 +329,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/org/organization");
-				const field = [ "_psize", "name", "userId", "oid" ];
+				const field = [ "name", "userId", "oid" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

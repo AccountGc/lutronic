@@ -495,14 +495,14 @@ iframe {
 		logger(params);
 		
 		toRegister(params, addRows8); // 결재선 세팅
-		parent.openLayer();
+		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
 				self.close();
 			} else {
-				parent.closeLayer();
+				closeLayer();
 			}
 		});
 	}

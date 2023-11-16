@@ -332,7 +332,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		params.rows104 = rows104;
 		params = toField(params, field);
 		AUIGrid.showAjaxLoader(myGridID);
-		parent.openLayer();
+		openLayer();
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
@@ -343,7 +343,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			} else {
 				alert(data.msg);
 			}
-			parent.closeLayer();
+			closeLayer();
 		});
 	}
 	

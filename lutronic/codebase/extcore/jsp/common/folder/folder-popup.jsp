@@ -45,8 +45,8 @@ String location = (String) request.getAttribute("location");
 		}
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		tree();
-		AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
-		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
+		AUIGrid.bind(myGridID, "cellDoubleClick", auiCellDoubleClick);
+		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
 	}
 
 	function auiCellClick(event) {
@@ -82,12 +82,14 @@ String location = (String) request.getAttribute("location");
 		const params = {
 			location : location
 		}
+		openLayer();
 		call(url, params, function(data) {
 			if (data.result) {
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);
 			}
+			closeLayer();
 		});
 	}
 </script>

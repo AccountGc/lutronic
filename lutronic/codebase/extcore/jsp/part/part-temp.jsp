@@ -17,7 +17,6 @@ if(request.getParameter("popup")!=null){
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 <div id="grid_ver" style="height: 300px; border-top: 1px solid #3180c3; margin: 5px;"></div>

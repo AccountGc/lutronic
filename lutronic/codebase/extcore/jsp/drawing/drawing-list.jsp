@@ -30,7 +30,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -500,10 +499,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
  				let params = new Object();
  				$("input[name=sessionid").val(0);
  				const url = getCallUrl("/drawing/list");
-				const field = ["_psize", "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
  				params = toField(params, field);
  				params.islastversion = $('input[name=islastversion]:checked').val();
  				AUIGrid.showAjaxLoader(myGridID);
+ 				parent.openLayer();
  				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -514,6 +514,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 

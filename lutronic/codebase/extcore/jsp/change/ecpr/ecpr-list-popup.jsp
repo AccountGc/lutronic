@@ -274,9 +274,10 @@ function createAUIGrid(columnLayout) {
 function loadGridData() {
 	let params = new Object();
 	const url = getCallUrl("/ecpr/list");
-	const field = ["_psize","name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection"];
+	const field = ["name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection"];
 	params = toField(params, field);
 	AUIGrid.showAjaxLoader(myGridID);
+	openLayer();
 	call(url, params, function(data) {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
@@ -287,6 +288,7 @@ function loadGridData() {
 		} else {
 			alert(data.msg);
 		}
+		closeLayer();
 	});
 }
 

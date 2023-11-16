@@ -159,18 +159,6 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 		});
 	})
 	
-	$("#approveBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/groupware/workHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
-	$("#downloadBtn").click(function () {
-		const oid = document.querySelector("#oid").value;
-		const url = getCallUrl("/common/downloadHistory?oid=" + oid);
-		popup(url, 830, 600);
-	})
-	
 	//결재 회수
 	$("#withDrawBtn").click(function() {
 		const oid = $("#oid").val();

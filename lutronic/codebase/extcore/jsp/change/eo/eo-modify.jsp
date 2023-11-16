@@ -233,11 +233,14 @@
 				}
 				
 				toRegister(params, addRows8); // 결재선 세팅
+				openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						opener.loadGridData();
 						self.close();
+					} else {
+						closeLayer();
 					}
 				});
 			}

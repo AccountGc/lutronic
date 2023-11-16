@@ -623,6 +623,7 @@ function update(temp) {
 	toRegister(params, addRows8);
 	
 	const url = getCallUrl("/part/update");
+	openLayer();
 	call(url, params, function(data) {
 		if (data.result) {
 			alert("수정 성공하였습니다.");
@@ -630,6 +631,7 @@ function update(temp) {
 			opener.loadGridData();
 		} else {
 			alert("수정 실패하였습니다. \n" + data.msg);
+			closeLayer();
 		}
 	});
 };

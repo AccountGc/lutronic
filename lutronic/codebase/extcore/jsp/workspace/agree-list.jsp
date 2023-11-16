@@ -273,7 +273,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/workspace/agree");
-				const field = [ "name", "_psize", "submiterOid", "receiveFrom", "receiveTo" ];
+				const field = [ "name", "submiterOid", "receiveFrom", "receiveTo" ];
 				params = toField(params, field);
 				const state = document.querySelector("input[name=state]:checked").value;
 				params.state = state;

@@ -20,7 +20,6 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -281,10 +280,11 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/mold/list");
-				const field = ["_psize","number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];
+				const field = ["number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];
 				params = toField(params, field);
 				params.islastversion = "false";
 				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -295,6 +295,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 

@@ -224,7 +224,7 @@ function createAUIGrid(columnLayout) {
 function loadGridData() {
 	let params = new Object();
 	const url = getCallUrl("/rohs/list");
-	const field = ["_psize","rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
+	const field = ["rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
 	params = toField(params, field);
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();

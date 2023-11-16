@@ -200,7 +200,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		function loadGridData() {
 			let params = new Object();
 			const url = getCallUrl("/form/list");
-			const field = [ "_psize", "name", "formType" ];
+			const field = [ "name", "formType" ];
 			params = toField(params, field);
 			AUIGrid.showAjaxLoader(myGridID);
 			parent.openLayer();

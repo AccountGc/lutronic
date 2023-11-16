@@ -112,13 +112,13 @@
 
 	function loadGridData() {
 		let params = new Object();
-		const field = [ "name", "email", "_psize" ];
+		const field = [ "name", "email" ];
 		const enable = true;
 		const url = getCallUrl("/admin/mail");
 		params = toField(params, field);
 		params.enable = JSON.parse(enable);
 		AUIGrid.showAjaxLoader(myGridID);
-		parent.openLayer();
+		openLayer();
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
@@ -129,7 +129,7 @@
 			} else {
 				alert(data.msg);
 			}
-			parent.closeLayer();
+			closeLayer();
 		});
 	}
 

@@ -12,7 +12,6 @@
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
 </head>
 <body>
 	<form>
@@ -168,6 +167,7 @@
 				params = toField(params, field);
 				
 				var url = getCallUrl("/groupware/workItem");
+				parent.openLayer();
 				call(url, params, function(data) {
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -177,6 +177,7 @@
 					} else {
 						alert(data.msg);
 					}
+					parent.closeLayer();
 				});
 			}
 	
