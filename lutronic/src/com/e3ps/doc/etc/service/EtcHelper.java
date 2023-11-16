@@ -89,7 +89,7 @@ public class EtcHelper {
 		String model = (String) params.get("model");
 		String deptcode = (String) params.get("deptcode");
 		String interalnumber = (String) params.get("interalnumber");
-		String writer = (String) params.get("writer");
+		String writer = (String) params.get("writerOid");
 		String description = (String) params.get("description");
 
 		QuerySpec query = new QuerySpec();
@@ -186,7 +186,7 @@ public class EtcHelper {
 			deptcode = "";
 		}
 		
-		// 등록자
+		// 작성자
 		if (writer.length() > 0) {
 			AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_DSGN);
 			if (aview != null) {
@@ -198,7 +198,7 @@ public class EtcHelper {
 				query.appendAnd();
 				query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
 				query.appendAnd();
-				query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + writer + "%").toUpperCase(), false), new int[] { _idx });
+				query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.EQUAL, Long.toString(CommonUtil.getOIDLongValue(writer)), false), new int[] { _idx });
 			}
 		} else {
 			deptcode = "";
