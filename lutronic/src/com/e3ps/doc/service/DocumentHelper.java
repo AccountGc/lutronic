@@ -211,7 +211,7 @@ public class DocumentHelper {
 			deptcode = "";
 		}
 
-		// 등록자
+		// 작성자
 		if (writer.length() > 0) {
 			AttributeDefDefaultView aview = IBADefinitionHelper.service
 					.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_DSGN);

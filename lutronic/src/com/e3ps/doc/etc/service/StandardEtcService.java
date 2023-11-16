@@ -395,7 +395,10 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String preseration_code = dto.getPreseration_code();
 		dto.setIBAValue(doc, preseration_code, "PRESERATION");
 		// 작성자
-		String writer = dto.getWriter();
+		String writer = "";
+		if(!dto.getWriter().equals("")) {
+			writer = Long.toString(CommonUtil.getOIDLongValue(dto.getWriter()));
+		}
 		dto.setIBAValue(doc, writer, "DSGN");
 		// 결재 유형
 		String approvalType_code = dto.getLifecycle().equals("LC_Default") ? "DEFAUT" : "BATCH";
