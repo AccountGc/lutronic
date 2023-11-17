@@ -281,6 +281,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		const url = getCallUrl("/rohs/delete");
 		let params = new Object();
 		params.oid = oid;
+		openLayer();
 		call(url, params, function(data) {
 			if (data.result) {
 				alert(data.msg);
@@ -288,6 +289,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				self.close();
 			}else{
 				alert(data.msg);
+				clsoeLayer();
 			}
 		});
 	})

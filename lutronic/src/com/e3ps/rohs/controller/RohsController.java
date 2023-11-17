@@ -153,7 +153,7 @@ public class RohsController extends BaseController {
 		model.addObject("contentList", contentList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("typeList", typeList);
-		model.setViewName("/extcore/jsp/rohs/rohs-update.jsp");
+		model.setViewName("popup:/rohs/rohs-update");
 		return model;
 	}
 	

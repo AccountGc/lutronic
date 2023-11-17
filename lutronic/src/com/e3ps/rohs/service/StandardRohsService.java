@@ -666,7 +666,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
  			MailUserHelper.service.saveLink(rohs, external);
  			
  			// 결재시작
-			if (approvalRows.size() > 0) {
+			if (approvalRows!=null) {
 				WorkspaceHelper.service.register(rohs, agreeRows, approvalRows, receiveRows);
 			}
             
@@ -948,7 +948,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				}
 	 			
 	 			// 결재시작
-				if (approvalRows.size() > 0) {
+				if (approvalRows!=null) {
 					WorkspaceHelper.service.register(new_material, agreeRows, approvalRows, receiveRows);
 				}
 			}

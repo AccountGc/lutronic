@@ -329,7 +329,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 
 			// 결재시작
-			if (approvalRows.size() > 0) {
+			if (approvalRows!=null) {
 				WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
 			}
 
@@ -670,7 +670,7 @@ public class StandardPartService extends StandardManager implements PartService 
 	 				LifeCycleHelper.service.setLifeCycleState(part, state);
 	 				
 	 				// 결재시작
-					if (approvalRows.size() > 0) {
+					if (approvalRows!=null) {
 						WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
 					}
 				}
