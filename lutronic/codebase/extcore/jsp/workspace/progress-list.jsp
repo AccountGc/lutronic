@@ -18,6 +18,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -238,7 +240,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			
 			function exportExcel() {
 				const exceptColumnFields = [ "point" ];
-				const sessionName = "<%=user.getFullName()%>";
+				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("진행함 리스트", "진행함", "진행함 리스트", exceptColumnFields, sessionName);
 			}
 		</script>

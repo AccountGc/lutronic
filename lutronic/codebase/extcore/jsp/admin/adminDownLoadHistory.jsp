@@ -23,6 +23,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="type" id="type" />
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
 			<tr>
@@ -99,7 +100,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "userName",
 					headerText : "이름",
 					dataType : "string",
-					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -108,7 +108,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
-					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -117,7 +116,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "info",
 					headerText : "해당모듈",
 					dataType : "string",
-					width : 180,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -132,11 +130,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
-					dataField : "createdDate",
+					dataField : "createdDate_txt",
 					headerText : "다운시간",
 					dataType : "date",
-					formatString : "yyyy/mm/dd",
-					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -145,7 +141,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "describe",
 					headerText : "다운사유",
 					dataType : "string",
-					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -156,19 +151,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : false,
-					showRowCheckColumn : false,
-// 					rowNumHeaderText : "번호",
-					fillColumnSizeMode: true,
-					showAutoNoDataMessage : true,
+					showRowNumColumn : true,
+					showRowCheckColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -294,7 +289,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			});
 			
 			function exportExcel() {
-			    const sessionName = "<%=user.getFullName()%>";
+			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("다운로드 이력관리 리스트", "다운로드 이력관리", "다운로드 이력관리 리스트", [], sessionName);
 			}
 		</script>

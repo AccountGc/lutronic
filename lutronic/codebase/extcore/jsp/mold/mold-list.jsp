@@ -10,7 +10,7 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> moldTypeList = (ArrayList<NumberCode>) request.getAttribute("moldTypeList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+WTUser user = (WTUser) request.getAttribute("sessionUser");
 %>
 <!DOCTYPE html>
 <html>
@@ -28,6 +28,8 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="location" id="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
 		<input type="hidden" name="searchType" id="searchType" value="MOLD">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -370,7 +372,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 			});
 			
 			function exportExcel() {
-			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("금형 리스트", "금형", "금형 리스트", [], sessionName);
 			}
 		</script>

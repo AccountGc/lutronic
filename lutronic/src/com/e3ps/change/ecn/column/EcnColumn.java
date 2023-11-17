@@ -40,6 +40,6 @@ public class EcnColumn {
 		setCreatedDate(ecn.getCreateTimestamp());
 		setCreatedDate_txt(ecn.getCreateTimestamp().toString().substring(0, 10));
 		setWorker_oid(
-				ecn.getWorker() != null ? ecn.getWorker().getPersistInfo().getObjectIdentifier().getStringValue() : "");
-fs	}
+		ecn.getWorker() != null ? ecn.getWorker().getPersistInfo().getObjectIdentifier().getStringValue() : "");
+	}
 }

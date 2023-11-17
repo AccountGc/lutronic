@@ -17,7 +17,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+WTUser user = (WTUser) request.getAttribute("sessionUser");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 %>
@@ -34,6 +34,8 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid"> 
 		<input type="hidden" name="curPage" id="curPage"> 
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -308,7 +310,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 			});
 			
 			function exportExcel() {
-			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("물질 리스트", "물질", "물질 리스트", [], sessionName);
 			}
 		</script>

@@ -34,8 +34,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 <body>
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
-		<input type="hidden" name="lastNum" id="lastNum">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -547,7 +548,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 
 			function exportExcel() {
 			    const exceptColumnFields = [ "step", "dxf", "pdf", "thum" ];
-			    const sessionName = "<%=sessionUser.getFullName()%>";
+			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("도면 리스트", "도면", "도면 리스트", exceptColumnFields, sessionName);
 			}
 

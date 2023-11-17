@@ -23,6 +23,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <body>
 	<form>
 		<input type="hidden" name="codeType" id="codeType">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		
 		<table class="button-table">
 			<tr>
@@ -395,7 +396,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			
 			function exportExcel() {
 			    const exceptColumnFields = [ "enabled" ];
-			    const sessionName = "<%=user.getFullName()%>";
+			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("코드체계관리 리스트", "코드체계관리", "코드체계관리 리스트", exceptColumnFields, sessionName);
 			}
 		</script>

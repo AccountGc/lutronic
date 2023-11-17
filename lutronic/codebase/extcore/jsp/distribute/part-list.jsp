@@ -30,6 +30,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="state" id="state" value="APPROVED">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
 			<tr>
@@ -610,8 +611,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 			
 			function exportExcel() {
-				const exceptColumnFields = [ "_3d", "_2d", "step", "dxf", "pdf" ];
-			    const sessionName = "<%=user.getFullName()%>";
+				const exceptColumnFields = [ "_3d", "_2d" ];
+			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("완제품 리스트", "완제품", "완제품 리스트", exceptColumnFields, sessionName);
 			}
 		</script>

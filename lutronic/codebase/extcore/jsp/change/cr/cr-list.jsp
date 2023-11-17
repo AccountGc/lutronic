@@ -25,6 +25,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
 			<tr>
@@ -388,7 +389,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			});
 			
 			function exportExcel() {
-			    const sessionName = "<%=user.getFullName()%>";
+			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("CR 리스트", "CR", "CR 리스트", [], sessionName);
 			}
 		</script>
