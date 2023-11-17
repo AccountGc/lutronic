@@ -137,7 +137,7 @@ public class EcoHelper {
 			}
 			query.appendCloseParen();
 		}
-		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.MODIFY_TIMESTAMP, true);
 
 		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);

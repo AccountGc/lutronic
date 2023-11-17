@@ -53,7 +53,7 @@ public class EcnHelper {
 				createdFrom, createdTo);
 		QuerySpecUtils.toCreatorQuery(query, idx, EChangeNotice.class, creatorOid);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeNotice.class, EChangeNotice.MODEL, model);
-		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.CREATE_TIMESTAMP, true);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.MODIFY_TIMESTAMP, true);
 
 		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);

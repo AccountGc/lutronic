@@ -15,7 +15,6 @@ import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;

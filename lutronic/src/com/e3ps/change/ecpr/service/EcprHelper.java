@@ -6,20 +6,17 @@ import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
-import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
@@ -112,7 +109,7 @@ public class EcprHelper {
 			//제품명
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.MODEL, model);
 			
-			SearchUtil.setOrderBy(query, ECPRRequest.class, idx, ECPRRequest.MODIFY_TIMESTAMP, "sort", true);
+			QuerySpecUtils.toOrderBy(query, idx, ECPRRequest.class, ECPRRequest.MODIFY_TIMESTAMP, true);
 			
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();

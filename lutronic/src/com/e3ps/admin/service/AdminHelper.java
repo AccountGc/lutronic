@@ -1,16 +1,13 @@
 
 package com.e3ps.admin.service;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.e3ps.admin.dto.MailUserDTO;
 import com.e3ps.change.EChangeActivityDefinition;
-import com.e3ps.change.EChangeActivityDefinitionRoot;
-import com.e3ps.change.beans.EADData;
-import com.e3ps.change.beans.ROOTData;
 import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.service.GenNumberHelper;
 import com.e3ps.common.history.LoginHistory;
@@ -25,8 +22,6 @@ import com.e3ps.download.beans.DownloadDTO;
 import com.e3ps.org.MailUser;
 
 import wt.fc.PagingQueryResult;
-import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;

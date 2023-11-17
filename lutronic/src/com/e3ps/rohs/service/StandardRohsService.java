@@ -1,6 +1,6 @@
 package com.e3ps.rohs.service;
 
-import java.io.File; 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,44 +10,30 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 import com.e3ps.common.beans.BatchDownData;
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.AttributeKey.IBAKey;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.POIUtil;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.common.web.WebUtil;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.distribute.util.MakeZIPUtil;
 import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.dto.ObjectComarator;
-import com.e3ps.part.dto.PartData;
 import com.e3ps.part.dto.PartTreeData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.util.BomBroker;
@@ -57,7 +43,6 @@ import com.e3ps.rohs.ROHSAttr;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
-import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -69,13 +54,10 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
-import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.doc.WTDocumentMasterIdentity;
 import wt.enterprise.RevisionControlled;
 import wt.fc.IdentityHelper;
-import wt.fc.PagingQueryResult;
-import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -416,7 +398,7 @@ public class StandardRohsService extends StandardManager implements RohsService 
         qs.appendAnd();
         qs.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.NUMBER, SearchCondition.EQUAL, rohsNumber), new int[] { 0 });
 
-        SearchUtil.addLastVersionCondition(qs, ROHSMaterial.class, 0);
+        QuerySpecUtils.toLatest(qs, 0, ROHSMaterial.class);
 
         QueryResult qr = PersistenceHelper.manager.find(qs);
         if ( qr.hasMoreElements() ) {

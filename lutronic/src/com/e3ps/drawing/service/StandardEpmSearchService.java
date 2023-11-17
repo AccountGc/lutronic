@@ -32,6 +32,7 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.EpmLocation;
 import com.e3ps.drawing.REFDWGLink;
@@ -244,11 +245,7 @@ public class StandardEpmSearchService extends StandardManager implements EpmSear
     		qs.appendWhere(new SearchCondition(EPMReferenceLink.class,"referenceType",
     											SearchCondition.EQUAL,"DRAWING"),new int[]{idxA}); //DRAWING
     		//최신 이터레이션
-    		qs.appendAnd();
-    		qs.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[] { idxB });
-    		
-    		//최신 버전
-    		SearchUtil.addLastVersionCondition(qs, EPMDocument.class, idxB);
+    		QuerySpecUtils.toLatest(qs, idxB, EPMDocument.class);
 
 			QueryResult rt =PersistenceHelper.manager.find(qs);
 			while(rt.hasMoreElements()){

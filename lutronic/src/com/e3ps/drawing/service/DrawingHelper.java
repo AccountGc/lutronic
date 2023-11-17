@@ -9,7 +9,6 @@ import java.util.Vector;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
@@ -18,15 +17,11 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
-import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.drawing.beans.EpmData;
-import com.e3ps.org.People;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
-import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.EPMDocumentType;
@@ -37,16 +32,13 @@ import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
-import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.FloatValue;
 import wt.iba.value.StringValue;
-import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.query.ClassAttribute;
-import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -81,8 +73,6 @@ public class DrawingHelper {
 			String creator 		    = StringUtil.checkNull((String)params.get("creatorOid"));
 			String state 	        = StringUtil.checkNull((String)params.get("state"));	
 			String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
-			String sortValue 	    = StringUtil.checkNull((String)params.get("sortValue"));
-			String sortCheck 	    = StringUtil.checkNull((String)params.get("sortCheck"));
 			String autoCadLink 	    = StringUtil.checkNull((String)params.get("autoCadLink"));
 			String unit             = StringUtil.checkNull((String)params.get("unit"));     
 			String model            = StringUtil.checkNull((String)params.get("model"));   
@@ -148,18 +138,6 @@ public class DrawingHelper {
 //				folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
 //				foid="";
 //			}
-			
-			// 최신 이터레이션
-			if("true".equals(islastversion)) {
-				if(query.getConditionCount() > 0) { query.appendAnd(); }
-				query.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[]{idx});
-			}
-			
-			// 버전 검색
-//			if(!StringUtil.checkString(islastversion)) islastversion = "true";
-			if("true".equals(islastversion)) {
-				SearchUtil.addLastVersionCondition(query, EPMDocument.class, idx);;
-			}
 			
 			// 상태 임시저장 제외
 	    	if(query.getConditionCount() > 0) { query.appendAnd(); }
@@ -453,46 +431,9 @@ public class DrawingHelper {
 				query.appendCloseParen();
 			
 			}
-				
-			//����
-			if(sortCheck == null) sortCheck = "true";
-			if(sortValue != null && sortValue.length() > 0) {
-				if("true".equals(sortCheck)){
-					if( !"creator".equals(sortValue)){
-						query.appendOrderBy(new OrderBy(new ClassAttribute(EPMDocument.class,sortValue), true), new int[] { idx });
-					}else{
-						if(query.getConditionCount() > 0) query.appendAnd();
-						int idx_user = query.appendClassList(WTUser.class, false);
-						int idx_people = query.appendClassList(People.class, false);
-						
-			            ClassAttribute ca = new ClassAttribute(EPMDocument.class, "iterationInfo.creator.key.id");
-			            ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-			            query.appendWhere(new SearchCondition(ca, "=", ca2), new int[]{idx, idx_user});
-						ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-						query.appendAnd();
-						query.appendWhere(new SearchCondition(ca2, "=", ca3), new int[]{idx_user, idx_people});
-						SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort" , true);
-					}
-					
-				}else{
-					if( !"creator".equals(sortValue)){
-						query.appendOrderBy(new OrderBy(new ClassAttribute(EPMDocument.class,sortValue), false), new int[] { idx });
-					}else{
-						if(query.getConditionCount() > 0) query.appendAnd();
-						int idx_user = query.appendClassList(WTUser.class, false);
-						int idx_people = query.appendClassList(People.class, false);
-						
-			            ClassAttribute ca = new ClassAttribute(EPMDocument.class, "iterationInfo.creator.key.id");
-			            ClassAttribute ca2 = new ClassAttribute(WTUser.class, "thePersistInfo.theObjectIdentifier.id");
-			            query.appendWhere(new SearchCondition(ca, "=", ca2), new int[]{idx, idx_user});
-						ClassAttribute ca3 = new ClassAttribute(People.class, "userReference.key.id");
-						query.appendAnd();
-						query.appendWhere(new SearchCondition(ca2, "=", ca3), new int[]{idx_user, idx_people});
-						SearchUtil.setOrderBy(query, People.class, idx_people, People.NAME, "sort" , false);
-					}
-				}
-			}else{
-				query.appendOrderBy(new OrderBy(new ClassAttribute(EPMDocument.class, EPMDocument.MODIFY_TIMESTAMP), true), new int[] { idx });    
+			// 최신 이터레이션
+			if ("true".equals(islastversion)) {
+				QuerySpecUtils.toLatest(query, idx, EPMDocument.class);
 			}
 			
 //			QueryResult result = PersistenceHelper.manager.find(query);

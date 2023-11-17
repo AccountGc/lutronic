@@ -1,6 +1,6 @@
 package com.e3ps.admin.service;
 
-import java.io.File;
+import java.io.File; 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -14,20 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.e3ps.change.EChangeActivityDefinition;
 import com.e3ps.change.EChangeActivityDefinitionRoot;
 import com.e3ps.common.content.FileRequest;
-import com.e3ps.common.history.LoginHistory;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.download.DownloadHistory;
 import com.e3ps.download.beans.DownloadDTO;
 import com.e3ps.org.Department;
-import com.e3ps.org.MailUser;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.CompanyState;
-import com.e3ps.org.dto.PeopleDTO;
-import com.e3ps.org.service.MailUserHelper;
 
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;

@@ -3,8 +3,8 @@ package com.e3ps.drawing.util;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.ptc.wvs.common.util.WVSProperties;
@@ -116,7 +116,7 @@ public class EpmPublishUtil {
 			if (!StringUtil.checkString(islastversion))
 				islastversion = "true";
 			if ("true".equals(islastversion)) {
-				SearchUtil.addLastVersionCondition(qs, EPMDocument.class, idx);
+				QuerySpecUtils.toLatest(qs, idx, EPMDocument.class);
 			}
 
 			QueryResult qr = PersistenceHelper.manager.find(qs);

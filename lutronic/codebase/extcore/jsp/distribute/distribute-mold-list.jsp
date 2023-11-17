@@ -10,7 +10,7 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> moldTypeList = (ArrayList<NumberCode>) request.getAttribute("moldTypeList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
+WTUser user = (WTUser) request.getAttribute("sessionUser");
 %>
 <!DOCTYPE html>
 <html>

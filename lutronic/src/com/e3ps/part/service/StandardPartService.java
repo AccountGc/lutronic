@@ -1,6 +1,6 @@
 package com.e3ps.part.service;
 
-import java.io.File;
+import java.io.File; 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -45,7 +45,6 @@ import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.POIUtil;
@@ -54,14 +53,9 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.common.web.WebUtil;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.distribute.util.MakeZIPUtil;
-import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.e3ps.drawing.service.DrawingHelper;
@@ -80,10 +74,7 @@ import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
-import com.e3ps.rohs.service.RohsQueryHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -2447,7 +2438,7 @@ public class StandardPartService extends StandardManager implements PartService 
 
 				query.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[] { idx });
 
-				SearchUtil.addLastVersionCondition(query, EPMDocument.class, idx);
+				QuerySpecUtils.toLatest(query, idx, EPMDocument.class);
 
 				if (query.getConditionCount() > 0) {
 					query.appendAnd();
@@ -2481,7 +2472,7 @@ public class StandardPartService extends StandardManager implements PartService 
 		qs.appendAnd();
 		qs.appendWhere(new SearchCondition(WTPart.class, "master>number", "=", number), new int[] { 0 });
 
-		SearchUtil.addLastVersionCondition(qs, WTPart.class, 0);
+		QuerySpecUtils.toLatest(qs, 0, WTPart.class);
 
 		QueryResult qr = PersistenceHelper.manager.find(qs);
 		if (qr.hasMoreElements()) {

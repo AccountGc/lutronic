@@ -8,6 +8,9 @@ import java.beans.PropertyDescriptor;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.part.dto.PartTreeData;
+
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.introspection.ClassInfo;
@@ -28,9 +31,6 @@ import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
-
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.part.dto.PartTreeData;
 
 public class BomBroker {
 
@@ -390,8 +390,8 @@ public PartTreeData getOneleveTreeAsc(WTPart part,Baseline baseline) throws Exce
 				qs.appendWhere(new SearchCondition(WTPart.class, "state.state",
 						"=", state.toString()), new int[] { index2 });
 			}
-
-			SearchUtil.addLastVersionCondition(qs, WTPart.class, index2);
+			
+			QuerySpecUtils.toLatest(qs, index2, WTPart.class);
 
 			ClassInfo classinfo = WTIntrospector.getClassInfo(WTPart.class);
 			PropertyDescriptor dd = classinfo.getPropertyDescriptor("number");

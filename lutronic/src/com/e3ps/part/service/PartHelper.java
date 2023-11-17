@@ -15,22 +15,17 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.EcrPartLink;
 import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.common.beans.VersionData;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.column.DocumentColumn;
-import com.e3ps.org.People;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartDTO;
@@ -46,7 +41,6 @@ import com.e3ps.rohs.service.RohsHelper;
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
-import wt.enterprise.RevisionControlled;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.build.EPMBuildHistory;
@@ -62,14 +56,7 @@ import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.folder.SubFolder;
 import wt.iba.definition.StringDefinition;
-import wt.iba.definition.litedefinition.AttributeDefDefaultView;
-import wt.iba.definition.service.IBADefinitionHelper;
-import wt.iba.value.IBAHolder;
-import wt.iba.value.StringValue;
-import wt.introspection.ClassInfo;
-import wt.introspection.WTIntrospector;
 import wt.lifecycle.State;
-import wt.org.WTUser;
 import wt.part.PartDocHelper;
 import wt.part.WTPart;
 import wt.part.WTPartConfigSpec;
@@ -77,12 +64,9 @@ import wt.part.WTPartDescribeLink;
 import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
-import wt.pds.DatabaseInfoUtilities;
 import wt.query.ClassAttribute;
-import wt.query.KeywordExpression;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
-import wt.query.RelationalExpression;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
@@ -324,7 +308,7 @@ public class PartHelper {
 						EcrPartLink link = (EcrPartLink) qr.nextElement();
 						String version = link.getVersion();
 						WTPartMaster master = (WTPartMaster) link.getPart();
-						WTPart part = PartHelper.service.getPart(master.getNumber(), version);
+						WTPart part = PartHelper.service.getPart(master.getNumber());
 						PartDTO data = new PartDTO(part);
 
 						list.add(data);
@@ -340,7 +324,7 @@ public class PartHelper {
 						WTPartMaster master = (WTPartMaster) link.getPart();
 						String version = link.getVersion();
 
-						WTPart part = PartHelper.service.getPart(master.getNumber(), version);
+						WTPart part = PartHelper.service.getPart(master.getNumber());
 						PartDTO data = new PartDTO(part);
 						// if(link.isBaseline()) data.setBaseline("checked");
 
@@ -385,51 +369,51 @@ public class PartHelper {
 		return JSONArray.fromObject(list);
 	}
 
-	public List<CommentsData> commentsList(String oid) throws Exception {
-		List<CommentsData> comList = new ArrayList<CommentsData>();
-		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		QuerySpec qs = new QuerySpec();
-		int idx = qs.appendClassList(Comments.class, true);
+//	public List<CommentsData> commentsList(String oid) throws Exception {
+//		List<CommentsData> comList = new ArrayList<CommentsData>();
+//		WTPart part = (WTPart) CommonUtil.getObject(oid);
+//		QuerySpec qs = new QuerySpec();
+//		int idx = qs.appendClassList(Comments.class, true);
+//
+//		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=",
+//				part.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx });
+//		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cNum"), false), new int[] { idx });
+//		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "thePersistInfo.createStamp"), false),
+//				new int[] { idx });
+//
+//		QueryResult result = PersistenceHelper.manager.find(qs);
+//		while (result.hasMoreElements()) {
+//			Object[] obj = (Object[]) result.nextElement();
+//			CommentsData data = new CommentsData((Comments) obj[0]);
+//			comList.add(data);
+//		}
+//		return comList;
+//	}
 
-		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=",
-				part.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx });
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "cNum"), false), new int[] { idx });
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(Comments.class, "thePersistInfo.createStamp"), false),
-				new int[] { idx });
-
-		QueryResult result = PersistenceHelper.manager.find(qs);
-		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			CommentsData data = new CommentsData((Comments) obj[0]);
-			comList.add(data);
-		}
-		return comList;
-	}
-
-	public int getCommentsChild(Comments com) throws Exception {
-		WTPart part = com.getWtpart();
-		int count = 0;
-		QuerySpec qs = new QuerySpec();
-		int idx = qs.appendClassList(Comments.class, true);
-		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=",
-				part.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx });
-		qs.appendAnd();
-		qs.appendWhere(new SearchCondition(Comments.class, "oPerson", "=", com.getOwner().getFullName()),
-				new int[] { idx });
-		qs.appendAnd();
-		qs.appendWhere(new SearchCondition(Comments.class, "cNum", "=", com.getCNum()), new int[] { idx });
-		qs.appendAnd();
-		qs.appendWhere(new SearchCondition(Comments.class, "cStep", ">", com.getCStep()), new int[] { idx });
-		qs.appendAnd();
-		qs.appendWhere(new SearchCondition(Comments.class, "deleteYN", "=", "N"), new int[] { idx });
-
-		QueryResult result = PersistenceHelper.manager.find(qs);
-		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			count++;
-		}
-		return count;
-	}
+//	public int getCommentsChild(Comments com) throws Exception {
+//		WTPart part = com.getWtpart();
+//		int count = 0;
+//		QuerySpec qs = new QuerySpec();
+//		int idx = qs.appendClassList(Comments.class, true);
+//		qs.appendWhere(new SearchCondition(Comments.class, "wtpartReference.key.id", "=",
+//				part.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx });
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "oPerson", "=", com.getOwner().getFullName()),
+//				new int[] { idx });
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "cNum", "=", com.getCNum()), new int[] { idx });
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "cStep", ">", com.getCStep()), new int[] { idx });
+//		qs.appendAnd();
+//		qs.appendWhere(new SearchCondition(Comments.class, "deleteYN", "=", "N"), new int[] { idx });
+//
+//		QueryResult result = PersistenceHelper.manager.find(qs);
+//		while (result.hasMoreElements()) {
+//			Object[] obj = (Object[]) result.nextElement();
+//			count++;
+//		}
+//		return count;
+//	}
 
 //	public JSONArray include_ChangeECOView(String oid, String moduleType) throws Exception {
 //		List<ECOData> list = new ArrayList<ECOData>();

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -15,11 +14,10 @@ import com.e3ps.doc.DocLocation;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.mold.dto.MoldDTO;
-import com.e3ps.rohs.ROHSMaterial;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
-import wt.epm.EPMDocument;
+import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -29,6 +27,7 @@ import wt.iba.value.StringValue;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
+import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
 
 public class MoldHelper {
@@ -42,9 +41,6 @@ public class MoldHelper {
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<MoldDTO> list = new ArrayList<>();
-
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(WTDocument.class, true);
 
 		String location = StringUtil.checkNull((String) params.get("location"));
 		String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
@@ -65,15 +61,19 @@ public class MoldHelper {
 		String searchType = StringUtil.checkNull((String) params.get("searchType"));
 		String moldNumber = StringUtil.checkNull((String) params.get("moldnumber"));
 
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTDocument.class, true);
+		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
+		
+		query.setAdvancedQueryEnabled(true);
+		query.setDescendantQuery(false);
+
+		QuerySpecUtils.toInnerJoin(query, WTDocument.class, WTDocumentMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		
 		// 최신 이터레이션
 		if("true".equals(islastversion)) {
-			if(query.getConditionCount() > 0) { query.appendAnd(); }
-			query.appendWhere(VersionControlHelper.getSearchCondition(WTDocument.class, true), new int[]{idx});
-		}
-		
-		// 버전 검색
-		if("true".equals(islastversion)) {
-			SearchUtil.addLastVersionCondition(query, WTDocument.class, idx);
+			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		}
 		
 		// 일괄 결재시 타입에 따른 LC 상태 검색
@@ -241,8 +241,8 @@ public class MoldHelper {
 
 			query.appendWhere(new SearchCondition(DocLocation.class, "loc", SearchCondition.LIKE, location + "%"), new int[] { folder_idx });
 		}
-    	
-		SearchUtil.setOrderBy(query, WTDocument.class, idx, WTDocument.MODIFY_TIMESTAMP, "sort", true);
+		
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

@@ -116,7 +116,7 @@ public class CrHelper {
 		// 변경구분
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CHANGE_SECTION, changeSection);
 		
-		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, true);
+		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.MODIFY_TIMESTAMP, true);
 		
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

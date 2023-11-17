@@ -17,9 +17,9 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
 List<Map<String,String>> cadTypeList = (List<Map<String,String>>) request.getAttribute("cadTypeList");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
-WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-String userOid = CommonUtil.getOIDString(sessionUser);
-String userNm = sessionUser.getFullName();
+WTUser user = (WTUser) request.getAttribute("sessionUser");
+String userOid = CommonUtil.getOIDString(user);
+String userNm = user.getFullName();
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>

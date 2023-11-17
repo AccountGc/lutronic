@@ -6,31 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.EcrToEcrLink;
-import com.e3ps.change.cr.column.CrColumn;
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.column.DocumentColumn;
-import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.org.People;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartDTO;
-import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.util.PartUtil;
 import com.e3ps.rohs.PartToRohsLink;
@@ -39,15 +24,11 @@ import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
-import com.e3ps.workspace.ApprovalLine;
-import com.e3ps.workspace.ApprovalMaster;
 
 import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
-import wt.doc.WTDocument;
 import wt.enterprise.RevisionControlled;
 import wt.fc.PagingQueryResult;
-import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -55,17 +36,14 @@ import wt.fc.ReferenceFactory;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
-import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
-import wt.query.QueryException;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
-import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
@@ -102,7 +80,7 @@ public class RohsHelper {
 	    	query.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx});
 	    	
 	    	if("true".equals(islastversion)) {
-				 SearchUtil.addLastVersionCondition(query, ROHSMaterial.class, idx);
+	    		QuerySpecUtils.toLatest(query, idx, ROHSMaterial.class);
 			}
 	    	
 	    	// 상태 임시저장 제외
@@ -180,7 +158,7 @@ public class RohsHelper {
 				manufacture = "";
 			}
 			
-			SearchUtil.setOrderBy(query, ROHSMaterial.class, idx, ROHSMaterial.MODIFY_TIMESTAMP, "sort", true);
+			QuerySpecUtils.toOrderBy(query, idx, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, true);
 			
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
@@ -248,7 +226,7 @@ public class RohsHelper {
 		if(query.getConditionCount() > 0) { query.appendAnd(); }
     	query.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx2});
     	
-    	SearchUtil.addLastVersionCondition(query, ROHSMaterial.class, idx2);
+    	QuerySpecUtils.toLatest(query, idx2, ROHSMaterial.class);
 		
     	QuerySpecUtils.toEqualsAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_TYPE, fileType);
     	QuerySpecUtils.toLikeAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_NAME, fileName.toUpperCase());
@@ -581,27 +559,6 @@ public class RohsHelper {
 			list.add(dto);
 		}
 		return list;
-//		String vr = CommonUtil.getVROID(rohs);
-//		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
-//		
-//		QuerySpec qs = new QuerySpec();
-//		int idx1= qs.addClassList(WTPart.class, true);
-//        
-//        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-//    	qs.appendWhere(VersionControlHelper.getSearchCondition(WTPart.class, true), new int[]{idx1});
-//       
-//    	if(islastversion) {
-//        	SearchUtil.addLastVersionCondition(qs, WTPart.class, idx1);
-//		}
-//    	SearchUtil.setOrderBy(qs, WTPart.class, idx1, WTPart.NUMBER, false);
-//		
-//		QueryResult rt =PersistenceHelper.manager.navigate(rohs,"part", qs,true);
-//		while(rt.hasMoreElements()){
-//			WTPart part = (WTPart)rt.nextElement();
-//			PartData data = new PartData(part);
-//			list.add(data);
-//		}
-//		return list;
 	}
 	
 	public ROHSContHolder getRohsContHolder(ROHSMaterial rohs) throws Exception {
@@ -653,15 +610,15 @@ public class RohsHelper {
 	public List<RohsData>  getPartROHSList(WTPart part, boolean islastversion) throws Exception {
 		QuerySpec qs = new QuerySpec();
 		int idx1= qs.addClassList(ROHSMaterial.class, true);
-        int idx2 = qs.addClassList(PartToRohsLink.class, true);
+//        int idx2 = qs.addClassList(PartToRohsLink.class, true);
         
         if(qs.getConditionCount() > 0) { qs.appendAnd(); }
     	qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx1});
         
         if(islastversion) {
-         	SearchUtil.addLastVersionCondition(qs, ROHSMaterial.class, idx1);
+        	QuerySpecUtils.toLatest(qs, idx1, ROHSMaterial.class);
 		}
-    	SearchUtil.setOrderBy(qs, ROHSMaterial.class, idx1, ROHSMaterial.NUMBER, false);
+        QuerySpecUtils.toOrderBy(qs, idx1, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, false);
 	
 		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs",qs,true);
 		List<RohsData> list = new ArrayList<RohsData>();
@@ -750,9 +707,9 @@ public class RohsHelper {
     	qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx1});
         
         if(islastversion) {
-         	SearchUtil.addLastVersionCondition(qs, ROHSMaterial.class, idx1);
+        	QuerySpecUtils.toLatest(qs, idx1, ROHSMaterial.class);
 		}
-    	SearchUtil.setOrderBy(qs, ROHSMaterial.class, idx1, ROHSMaterial.NUMBER, false);
+        QuerySpecUtils.toOrderBy(qs, idx1, ROHSMaterial.class, ROHSMaterial.NUMBER, false);
 	
 		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs",qs,true);
 		List<RohsData> list = new ArrayList<RohsData>();

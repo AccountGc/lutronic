@@ -331,63 +331,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : false
 					},
 				}, {
-					dataField : "step",
-					headerText : "STEP",
-					dataType : "string",
-					width : 60,
-					renderer : {
-						type : "TemplateRenderer"
-					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-				}, {
-					dataField : "dxf",
-					headerText : "DXF",
-					dataType : "string",
-					width : 60,
-					renderer : {
-						type : "TemplateRenderer"
-					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-				}, {
-					dataField : "pdf",
-					headerText : "PDF",
-					dataType : "string",
-					width : 60,
-					renderer : {
-						type : "TemplateRenderer"
-					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-				}, {
-					headerText : "변경이력",
-					width : 80,
-					renderer : {
-						type : "IconRenderer",
-						iconPosition : "aisleCenter", // 아이콘 위치
-						iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-						iconHeight : 16,
-						iconTableRef : { // icon 값 참조할 테이블 레퍼런스
-							"default" : "/Windchill/extcore/images/help.gif" // default
-						},
-						onClick : function(event) {
-							const oid = event.item.part_oid;
-							const url = getCallUrl("/part/changeList?oid=" + oid);
-							_popup(url, 1600, 800, "n");
-						}
-					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-				}, {
 					dataField : "number",
 					headerText : "품목번호",
 					dataType : "string",
@@ -490,15 +433,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showIcon : true,
 						inline : true
 					},
-				}, {
-					dataField : "ecoNo",
-					headerText : "BOM",
-					dataType : "string",
-					width : 80,
-					filter : {
-						showIcon : true,
-						inline : false
-					},
 				} ]
 			}
 
@@ -521,7 +455,34 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "contextMenu", function(event) {
+					const menu = [ {
+						label : "일괄 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "step 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "dxf 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "pdf 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "속성보기",
+						callback : auiContextHandler
+					}, {
+						label : "BOM 보기",
+						callback : auiContextHandler
+					}, {
+						label : "BOM 에디터",
+						callback : auiContextHandler
+					}, {
+						label : "변경이력보기",
+						callback : auiContextHandler
+					} ];
+					return menu;
+				});
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -613,6 +574,27 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function auiContextHandler(event) {
+				switch (event.contextIndex) {
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
+				case 4:
+					break;
+				case 5:
+					break;
+				case 6:
+					break;
+				case 7:
+					break;
+				}
+			};
 
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');

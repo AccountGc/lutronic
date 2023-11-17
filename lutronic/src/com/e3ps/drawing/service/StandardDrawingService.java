@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
@@ -19,6 +18,40 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.eclipse.mylyn.commons.net.WebUtil;
+
+import com.e3ps.common.beans.ResultData;
+import com.e3ps.common.content.FileRequest;
+import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.service.CommonHelper;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.POIUtil;
+import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.WCUtil;
+import com.e3ps.development.devActive;
+import com.e3ps.development.devOutPutLink;
+import com.e3ps.distribute.util.MakeZIPUtil;
+import com.e3ps.doc.service.DocumentQueryHelper;
+import com.e3ps.download.service.DownloadHistoryHelper;
+import com.e3ps.drawing.EpmLocation;
+import com.e3ps.drawing.beans.EpmData;
+import com.e3ps.drawing.beans.EpmUtil;
+import com.e3ps.drawing.util.EpmPublishUtil;
+import com.e3ps.org.People;
+import com.e3ps.part.dto.PartTreeData;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.service.PartSearchHelper;
+import com.e3ps.part.util.BomBroker;
+import com.e3ps.part.util.PartUtil;
+import com.e3ps.workspace.service.WorkspaceHelper;
+import com.ptc.wvs.server.ui.UIHelper;
+import com.ptc.wvs.server.util.FileHelper;
+import com.ptc.wvs.server.util.PublishUtils;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -28,13 +61,10 @@ import wt.content.ContentHolder;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
-import wt.doc.DocumentType;
-import wt.doc.WTDocument;
 import wt.epm.EPMApplicationType;
 import wt.epm.EPMAuthoringAppType;
 import wt.epm.EPMContextHelper;
 import wt.epm.EPMDocument;
-import wt.epm.EPMDocumentHelper;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.EPMDocumentType;
 import wt.epm.build.EPMBuildHistory;
@@ -42,7 +72,6 @@ import wt.epm.build.EPMBuildRule;
 import wt.epm.interfaces.EPMDependencyMaster;
 import wt.epm.structure.EPMDescribeLink;
 import wt.epm.structure.EPMReferenceLink;
-import wt.epm.util.EPMSearchHelper;
 import wt.fc.PagingQueryResult;
 import wt.fc.PagingSessionHelper;
 import wt.fc.PersistenceHelper;
@@ -63,7 +92,6 @@ import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
-import wt.part.WTPartDescribeLink;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
 import wt.query.ClassAttribute;
@@ -87,55 +115,11 @@ import wt.vc.wip.WorkInProgressException;
 import wt.vc.wip.WorkInProgressHelper;
 import wt.vc.wip.Workable;
 
-import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.content.FileRequest;
-import com.e3ps.common.content.service.CommonContentHelper;
-import com.e3ps.common.iba.AttributeKey;
-import com.e3ps.common.iba.IBAUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.query.SearchUtil;
-import com.e3ps.common.service.CommonHelper;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.POIUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
-import com.e3ps.common.web.WebUtil;
-import com.e3ps.development.devActive;
-import com.e3ps.development.devOutPutLink;
-import com.e3ps.distribute.util.MakeZIPUtil;
-import com.e3ps.doc.DocumentToDocumentLink;
-import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.doc.service.DocumentQueryHelper;
-import com.e3ps.download.service.DownloadHistoryHelper;
-import com.e3ps.drawing.EpmLocation;
-import com.e3ps.drawing.beans.EpmData;
-import com.e3ps.drawing.beans.EpmUtil;
-import com.e3ps.drawing.util.EpmPublishUtil;
-import com.e3ps.groupware.notice.Notice;
-import com.e3ps.mold.dto.MoldDTO;
-import com.e3ps.org.People;
-import com.e3ps.part.dto.ExcelData;
-import com.e3ps.part.dto.PartData;
-import com.e3ps.part.dto.PartTreeData;
-import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.PartSearchHelper;
-import com.e3ps.part.util.BomBroker;
-import com.e3ps.part.util.PartUtil;
-import com.e3ps.rohs.PartToRohsLink;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.service.RohsQueryHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
-import com.ptc.wvs.server.ui.UIHelper;
-import com.ptc.wvs.server.util.FileHelper;
-import com.ptc.wvs.server.util.PublishUtils;
-
 @SuppressWarnings("serial")
 public class StandardDrawingService extends StandardManager implements DrawingService {
 	
-	static final String BLANK_IMG = WebUtil.getHost()+"netmarkets/images/blank24x16.gif";
+	static final String BLANK_IMG = "";
+//	static final String BLANK_IMG = WebUtil.getHost()+"netmarkets/images/blank24x16.gif";
 	public static final String ROOTLOCATION = "/Default/PART_Drawing";
 	
 	public static StandardDrawingService newStandardDrawingService() throws Exception {
@@ -415,14 +399,12 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 				foid="";
 			}
 			
-			// 최신 이터레이션
-			if(query.getConditionCount() > 0) { query.appendAnd(); }
-			query.appendWhere(VersionControlHelper.getSearchCondition(EPMDocument.class, true), new int[]{idx});
 			
 			// 버전 검색
 			if(!StringUtil.checkString(islastversion)) islastversion = "true";
-			if("true".equals(islastversion)) {
-				SearchUtil.addLastVersionCondition(query, EPMDocument.class, idx);;
+			// 최신 이터레이션
+			if ("true".equals(islastversion)) {
+				QuerySpecUtils.toLatest(query, idx, EPMDocument.class);
 			}
 			
 			//Working Copy 제외
@@ -1139,7 +1121,7 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			 qs.appendWhere(VersionControlHelper.getSearchCondition(class1, true), new int[] { i });
 			 
 			 // �ֽ� ����
-			 SearchUtil.addLastVersionCondition(qs, class1, i);
+			 QuerySpecUtils.toLatest(qs, i, class1);
 			
 			 qs.appendAnd();
 			 qs.appendWhere(new SearchCondition(class1, EPMDocument.NUMBER, SearchCondition.EQUAL,number), new int[] { i });
