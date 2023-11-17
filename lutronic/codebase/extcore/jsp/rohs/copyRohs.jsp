@@ -111,12 +111,14 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 			params.docType = $("#docType").val();
 			params.location = $("#location").val();
 			var url = getCallUrl("/rohs/copyRohs");
+			openLayer();
 			call(url, params, function(data) {
 				if(data.result){
 					alert("복사가 완료되었습니다.");
 					self.close();
 				}else{
 					alert(data.msg);
+					closeLayer();
 				}
 			});
 		});

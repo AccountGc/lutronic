@@ -30,6 +30,7 @@ import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.iba.AttributeKey.ECOKey;
 import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
@@ -143,7 +144,7 @@ public class StandardPartSearchService extends StandardManager implements PartSe
 			qs.appendWhere(VersionControlHelper.getSearchCondition(cls, true), new int[] { idx });
 			 
 			// 최신 버젼
-			SearchUtil.addLastVersionCondition(qs, cls, idx);
+			QuerySpecUtils.toLatest(qs, idx, cls);
 			
 			qs.appendAnd();
 			qs.appendWhere(new SearchCondition(cls,"thePersistInfo.theObjectIdentifier.id",SearchCondition.EQUAL,CommonUtil.getOIDLongValue(part)),new int[] {idx});

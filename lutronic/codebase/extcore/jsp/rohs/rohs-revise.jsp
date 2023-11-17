@@ -62,13 +62,15 @@ String oid = (String) request.getParameter("oid");
 		params.lifecycle = $('input[name=lifecycle]:checked').val();
 		params.oid = $("#oid").val();
 		const url = getCallUrl("/rohs/reviseRohs");
+		openLayer();
 		call(url, params, function(data) {
 			if(data.result){
 				alert("개정 성공하였습니다.");
 				self.close();
-				location.reload();
+				opener.location.reload();
 			}else{
 				alert(data.msg);
+				closeLayer();
 			}
 		});
 	});

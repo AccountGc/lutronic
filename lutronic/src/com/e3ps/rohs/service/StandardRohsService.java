@@ -239,18 +239,21 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		CommonContentHelper.service.delete(newRohs);
 		
 		List<ROHSContHolder> list = RohsHelper.manager.getROHSContHolder(oldRohs);
-		for(ROHSContHolder rHolder :  list){
-			ApplicationData app = rHolder.getApp();
-			String appOid = CommonUtil.getOIDString(app);
-			String file = CommonContentHelper.service.copyApplicationData(appOid);
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("roleType", app.getRole().toString());
-			map.put("file", file);
-			map.put("fileName", rHolder.getFileName());
-			map.put("fileType", rHolder.getFileType());
-			map.put("publicationDate", rHolder.getPublicationDate());
-			createROHSContHolder(newRohs, map);
+		if(list.size()>0) {
+			for(ROHSContHolder rHolder :  list){
+				ApplicationData app = rHolder.getApp();
+				String appOid = CommonUtil.getOIDString(app);
+				String file = CommonContentHelper.service.copyApplicationData(appOid);
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("roleType", app.getRole().toString());
+				map.put("file", file);
+				map.put("fileName", rHolder.getFileName());
+				map.put("fileType", rHolder.getFileType());
+				map.put("publicationDate", rHolder.getPublicationDate());
+				createROHSContHolder(newRohs, map);
+			}
 		}
+		
 	}
 	
 	/**

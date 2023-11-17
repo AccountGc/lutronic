@@ -247,7 +247,7 @@ public class RohsController extends BaseController {
 	@GetMapping(value = "/reviseRohs")
 	public ModelAndView reviseRohs(@RequestParam String oid) throws Exception{
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/rohs/rohs-revise.jsp");
+		model.setViewName("popup:/rohs/rohs-revise");
 		return model;
 	}
 	
