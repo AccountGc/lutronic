@@ -169,15 +169,15 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					</jsp:include>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">결재</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">결재</th> -->
+<!-- 				<td colspan="3"> -->
+<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+<%-- 						<jsp:param value="" name="oid" /> --%>
+<%-- 						<jsp:param value="create" name="mode" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">외부 메일 지정</th>
 				<td colspan="3">
@@ -213,17 +213,17 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 				const temprary = JSON.parse(temp);
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 					
-					if (addRows8.length > 0) {
-						alert("결재선 지정을 해지해주세요.")
-						return false;
-					}
+// 					if (addRows8.length > 0) {
+// 						alert("결재선 지정을 해지해주세요.")
+// 						return false;
+// 					}
 					
 				} else {
 					if (!confirm("수정 하시겠습니까?")) {
@@ -288,7 +288,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					external : external,
 				}
 				
-				toRegister(params, addRows8); // 결재선 세팅
+// 				toRegister(params, addRows8); // 결재선 세팅
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/update");
@@ -314,18 +314,18 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 // 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
-				createAUIGrid8(columns8);
+// 				createAUIGrid8(columns8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});
 		</script>

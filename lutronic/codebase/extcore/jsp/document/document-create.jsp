@@ -205,15 +205,15 @@ iframe {
 					</jsp:include>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">결재</th>
-				<td colspan="5" class="indent5">
-					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">결재</th> -->
+<!-- 				<td colspan="5" class="indent5"> -->
+<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+<%-- 						<jsp:param value="" name="oid" /> --%>
+<%-- 						<jsp:param value="create" name="mode" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">외부 메일 지정</th>
 				<td colspan="5" class="indent5">
@@ -347,7 +347,7 @@ iframe {
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 				const url = getCallUrl("/doc/create");
 
@@ -392,10 +392,10 @@ iframe {
 						return false;
 					}
 
-					if (addRows8.length > 0) {
-						alert("결재선 지정을 해지해주세요.")
-						return false;
-					}
+// 					if (addRows8.length > 0) {
+// 						alert("결재선 지정을 해지해주세요.")
+// 						return false;
+// 					}
 
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
@@ -430,7 +430,7 @@ iframe {
 					external : external
 				};
 				logger(params);
-				toRegister(params, addRows8); // 결재선 세팅
+// 				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -455,7 +455,7 @@ iframe {
 				createAUIGrid101(columns101);
 				createAUIGrid103(columns103);
 				createAUIGrid105(columns105);
-				createAUIGrid8(columns8);
+// 				createAUIGrid8(columns8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
@@ -463,7 +463,7 @@ iframe {
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID103);
 				AUIGrid.resize(myGridID105);
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 
 				// 문서명 규칙
@@ -504,7 +504,7 @@ iframe {
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID103);
 				AUIGrid.resize(myGridID105);
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});
 		</script>

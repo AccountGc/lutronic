@@ -96,15 +96,15 @@
                     <input type="text" name="publicationDate" id="publicationDate" class="width-100" value="<%=data.getPublicationDate() == null ? "" : data.getPublicationDate()%>">
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">결재</th>
-				<td colspan="3" class="indent5">
-					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">결재</th> -->
+<!-- 				<td colspan="3" class="indent5"> -->
+<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+<%-- 						<jsp:param value="" name="oid" /> --%>
+<%-- 						<jsp:param value="create" name="mode" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">외부 메일 지정</th>
 				<td colspan="3" class="indent5">
@@ -146,8 +146,8 @@
 				AUIGrid.resize(partGridID);
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
-				createAUIGrid8(columns8);
-				AUIGrid.resize(myGridID8);
+// 				createAUIGrid8(columns8);
+// 				AUIGrid.resize(myGridID8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID9);
 			});
@@ -155,7 +155,7 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(rohsGridID);
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});
 			
@@ -164,7 +164,7 @@
 				// 임시저장
 				const temprary = JSON.parse(temp);
 				// 결재선
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				// 외부 메일
 				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
@@ -203,10 +203,10 @@
 						return false;
 					}
 					
-					if (addRows8.length > 0) {
-						alert("결재선 지정을 해지해주세요.")
-						return false;
-					}
+// 					if (addRows8.length > 0) {
+// 						alert("결재선 지정을 해지해주세요.")
+// 						return false;
+// 					}
 					
 				} else {
 					if (!confirm("수정 하시겠습니까?")) {
@@ -227,7 +227,7 @@
 				params.external = external;
 				
 				var url = getCallUrl("/rohs/update");
-				toRegister(params, addRows8); // 결재선 세팅
+// 				toRegister(params, addRows8); // 결재선 세팅
 				openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);

@@ -213,15 +213,15 @@ iframe {
 			</jsp:include>
 		</td>
 	</tr>
-	<tr>
-		<th class="lb">결재</th>
-		<td colspan="5">
-			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-				<jsp:param value="<%=dto.getOid()%>" name="oid" />
-				<jsp:param value="update" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
+<!-- 	<tr> -->
+<!-- 		<th class="lb">결재</th> -->
+<!-- 		<td colspan="5"> -->
+<%-- 			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+<%-- 				<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+<%-- 				<jsp:param value="update" name="mode" /> --%>
+<%-- 			</jsp:include> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
 	<tr>
 		<th class="lb">외부 메일 지정</th>
 		<td colspan="5">
@@ -436,8 +436,8 @@ iframe {
 			external : external
 		};
 		logger(params);
-		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-		toRegister(params, addRows8); // 결재선 세팅
+// 		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 		toRegister(params, addRows8); // 결재선 세팅
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
@@ -463,7 +463,7 @@ iframe {
 		createAUIGrid101(columns101);
 		createAUIGrid103(columns103);
 		createAUIGrid105(columns105);
-		createAUIGrid8(columns8);
+// 		createAUIGrid8(columns8);
 		createAUIGrid9(columns9)
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
@@ -471,7 +471,7 @@ iframe {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-		AUIGrid.resize(myGridID8);
+// 		AUIGrid.resize(myGridID8);
 		AUIGrid.resize(myGridID9);
 		$("#documentType").bindSelectDisabled(true);
 		
@@ -515,7 +515,7 @@ iframe {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-		AUIGrid.resize(myGridID8);
+// 		AUIGrid.resize(myGridID8);
 		AUIGrid.resize(myGridID9);
 	});
 </script>

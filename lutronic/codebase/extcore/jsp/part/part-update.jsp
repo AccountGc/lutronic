@@ -238,15 +238,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<input type="text" name="specification" id="specification" class="width-200" value="<% if (data.getSpecification() != null) { %><%= data.getSpecification() %><% } %>">
 		</td>
 	</tr>
-	<tr>
-		<th class="lb">결재</th>
-		<td colspan="3">
-			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-				<jsp:param value="" name="oid" />
-				<jsp:param value="create" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
+<!-- 	<tr> -->
+<!-- 		<th class="lb">결재</th> -->
+<!-- 		<td colspan="3"> -->
+<%-- 			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+<%-- 				<jsp:param value="" name="oid" /> --%>
+<%-- 				<jsp:param value="create" name="mode" /> --%>
+<%-- 			</jsp:include> --%>
+<!-- 		</td> -->
+<!-- 	</tr> -->
 </table>
 
 <!-- 	주도면 -->
@@ -340,10 +340,10 @@ function folder() {
 document.addEventListener("DOMContentLoaded", function() {
 	createAUIGrid90(columns90);
 	createAUIGrid106(columns106);
-	createAUIGrid8(columns8);
+// 	createAUIGrid8(columns8);
 	AUIGrid.resize(myGridID90);
 	AUIGrid.resize(myGridID106);
-	AUIGrid.resize(myGridID8);
+// 	AUIGrid.resize(myGridID8);
 	document.getElementById("partName1").focus();
 	selectbox("state");
 	selectbox("model");
@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", function() {
 window.addEventListener("resize", function() {
 	AUIGrid.resize(docGridID);
 	AUIGrid.resize(myGridID106);
-	AUIGrid.resize(myGridID8);
+// 	AUIGrid.resize(myGridID8);
 });
 
 //품목명 입력 시 
@@ -550,7 +550,7 @@ function update(temp) {
 	// 관련문서
 	const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 	// 결재선
-	const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 	const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 	// RoHs
 	const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 
@@ -584,10 +584,10 @@ function update(temp) {
 			return false;
 		}
 		
-		if (addRows8.length > 0) {
-			alert("결재선 지정을 해지해주세요.")
-			return false;
-		}
+// 		if (addRows8.length > 0) {
+// 			alert("결재선 지정을 해지해주세요.")
+// 			return false;
+// 		}
 		
 	} else {
 		if (!confirm("수정하시겠습니까?")) {
@@ -620,7 +620,7 @@ function update(temp) {
 			rows106 : rows106,
 	};
 	
-	toRegister(params, addRows8);
+// 	toRegister(params, addRows8);
 	
 	const url = getCallUrl("/part/update");
 	openLayer();

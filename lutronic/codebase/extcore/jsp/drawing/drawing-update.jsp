@@ -80,15 +80,15 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					</jsp:include>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">결재</th>
-				<td colspan="5">
-					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-						<jsp:param value="update" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">결재</th> -->
+<!-- 				<td colspan="5"> -->
+<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+<%-- 						<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+<%-- 						<jsp:param value="update" name="mode" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 		</table>
 		
 		<!-- 관련 품목 -->
@@ -116,21 +116,21 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			}
 			
 			document.addEventListener("DOMContentLoaded", function() {
-				createAUIGrid8(columns8);
-				AUIGrid.resize(myGridID8);
+// 				createAUIGrid8(columns8);
+// 				AUIGrid.resize(myGridID8);
 				createAUIGrid2(columnsPart);
 				AUIGrid.resize(partGridID);
 			});
 		
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(partGridID);
 			});
 			
 			function update(temp) {
 				const temprary = JSON.parse(temp);
 				const primary = document.querySelector("input[name=primary]");
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				if(primary == null){
 					alert("주 첨부파일을 첨부해주세요.");
 					return;
@@ -141,10 +141,10 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 						return false;
 					}
 					
-					if (addRows8.length > 0) {
-						alert("결재선 지정을 해지해주세요.")
-						return false;
-					}
+// 					if (addRows8.length > 0) {
+// 						alert("결재선 지정을 해지해주세요.")
+// 						return false;
+// 					}
 					
 				} else {
 					if (!confirm("수정 하시겠습니까?")) {
@@ -168,7 +168,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					temprary : temprary
 				}
 				
-				toRegister(params, addRows8); // 결재선 세팅
+// 				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/drawing/update");
 				openLayer();
 				call(url, params, function(data) {

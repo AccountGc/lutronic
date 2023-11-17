@@ -274,15 +274,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<input type="text" name="specification" id="specification" class="width-200">
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">결재</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">결재</th> -->
+<!-- 				<td colspan="3"> -->
+<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+<%-- 						<jsp:param value="" name="oid" /> --%>
+<%-- 						<jsp:param value="create" name="mode" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 		</table>
 		
 		<table class="button-table">
@@ -388,7 +388,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				// RoHs
 				const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 	            if(isEmpty(location)){
 					alert("품목구분을 입력하세요.");
@@ -432,10 +432,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return false;
 					}
 					
-					if (addRows8.length > 0) {
-						alert("결재선 지정을 해지해주세요.")
-						return false;
-					}
+// 					if (addRows8.length > 0) {
+// 						alert("결재선 지정을 해지해주세요.")
+// 						return false;
+// 					}
 					
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
@@ -475,7 +475,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						rows90 : rows90,
 						rows106 : rows106,
 				};
-				toRegister(params, addRows8); // 결재선 세팅
+// 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/part/create");
 				
 				call(url, params, function(data) {
@@ -489,10 +489,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			document.addEventListener("DOMContentLoaded", function() {
 				createAUIGrid90(columns90);
 				createAUIGrid106(columns106);
-				createAUIGrid8(columns8);
+// 				createAUIGrid8(columns8);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID106);
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 				numberCodeList('partType1', '');
 				selectbox("partType2");
 				selectbox("partType3");
@@ -512,7 +512,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(docGridID);
 				AUIGrid.resize(myGridID106);
-				AUIGrid.resize(myGridID8);
+// 				AUIGrid.resize(myGridID8);
 			});
 			
 			// 품목구분(partType1) 변경 메서드
