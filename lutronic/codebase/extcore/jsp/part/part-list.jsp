@@ -116,7 +116,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-							}
+						}
 						}
 						%>
 					</select>
@@ -240,11 +240,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr class="hidden">
-				<th>ECO No.</th>
+				<th>ECO NO</th>
 				<td class="indent5">
 					<input type="text" name="ecoNo" id="ecoNo" class="width-300">
 				</td>
-				<th>Eo No.</th>
+				<th>EO NO</th>
 				<td class="indent5" colspan="3">
 					<input type="text" name="eoNo" id="eoNo" class="width-300">
 				</td>
@@ -378,11 +378,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "REV.",
 					dataType : "string",
 					width : 90,
 					renderer : {
-						type : "TemplateRenderer"	
+						type : "TemplateRenderer"
 					},
 					filter : {
 						showIcon : true,
@@ -460,13 +460,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "일괄 다운로드",
 						callback : auiContextHandler
 					}, {
-						label : "step 다운로드",
+						label : "STEP 다운로드",
 						callback : auiContextHandler
 					}, {
-						label : "dxf 다운로드",
+						label : "DXF 다운로드",
 						callback : auiContextHandler
 					}, {
-						label : "pdf 다운로드",
+						label : "PDF 다운로드",
 						callback : auiContextHandler
 					}, {
 						label : "속성보기",
@@ -495,11 +495,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/part/list");
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-						"ecoNo", "eoNo","creatorOid", "specification"];
-				var  latest = document.querySelector("input[name=latest]:checked").value;
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
+				var latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
-				params.latest =  latest=="true"?true:false;
+				params.latest = latest == "true" ? true : false;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -549,15 +548,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					alert("편집할 부품을 선택하세요.");
 					return false;
 				}
-				
+
 				if (items.length > 1) {
 					alert("한개만 선택해 주세요.");
 					return false;
 				}
 				const oid = items[0].part_oid;
-				var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
+				var url = getCallUrl("/part/bomEditor") + "?oid=" + oid;
 				_popup(url, "1400", "600", "n");
-				
+
 			};
 
 			document.addEventListener("keydown", function(event) {
@@ -574,24 +573,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function auiContextHandler(event) {
+				const item = event.item;
+				const part_oid = item.part_oid;
+				let url;
+				// 				AUIGrid.setCheckedRowsByIds(myGridID, item._$uid);
 				switch (event.contextIndex) {
 				case 0:
+					//일괄
 					break;
 				case 1:
+					//STEP
 					break;
 				case 2:
+					//DXF
 					break;
 				case 3:
+					//PDF
 					break;
 				case 4:
+					//속성
 					break;
 				case 5:
+					//BOM 뷰
+					url = getCallUrl("/bom/view?oid=" + part_oid);
+					_popup(url, 1600, 800, "n");
 					break;
 				case 6:
+					//BOM에디터
 					break;
 				case 7:
+					// 관련 도면
 					break;
 				}
 			};
@@ -636,10 +649,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}
-			
+
 			function exportExcel() {
-                const exceptColumnFields = [ "_3d", "_2d" ];
-			    const sessionName = document.getElementById("sessionName").value;
+				const exceptColumnFields = [ "_3d", "_2d" ];
+				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("품목 리스트", "품목", "품목 리스트", exceptColumnFields, sessionName);
 			}
 		</script>

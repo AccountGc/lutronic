@@ -76,8 +76,6 @@ public interface PartService {
 
 	List<Map<String, Object>> partChange(String partOid) throws Exception;
 
-	List<Map<String, Object>> partExpandAction(String partOid, String moduleType, String desc) throws Exception;
-
 	Map<String, Object> selectEOPartAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	List<Map<String, Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response)
@@ -112,8 +110,6 @@ public interface PartService {
 
 	ResultData batchBomDrawingDownAction(String oid, String describe, String ecoOid);
 
-	ResultData attributeCleaning(Map<String, Object> param) throws Exception;
-
 	ResultData batchBomSelectDownAction(String oid, List<Map<String, Object>> itemList, String describe,
 			String downType, String describeType);
 
@@ -139,5 +135,17 @@ public interface PartService {
 	public Map<String, Object> partCheckOut(Map<String, Object> params) throws Exception;
 
 	public Map<String, Object> partUndoCheckOut(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 속성 클린
+	 */
+	public abstract void _clean(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 속성 변경
+	 * 
+	 * @param params
+	 */
+	public abstract void attrUpdate(Map<String, Object> params) throws Exception;
 
 }

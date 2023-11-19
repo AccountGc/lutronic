@@ -31,6 +31,10 @@ import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.epm.EPMDocument;
+import wt.epm.EPMDocumentMaster;
+import wt.epm.build.EPMBuildHistory;
+import wt.epm.build.EPMBuildRule;
+import wt.epm.structure.EPMReferenceLink;
 import wt.fc.PagingQueryResult;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
@@ -44,6 +48,7 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
+import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
 
@@ -577,6 +582,45 @@ public class ActivityHelper {
 			return result;
 		}
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+		ArrayList<Map<String, Object>> list3d = new ArrayList<>();
+		ArrayList<Map<String, Object>> list2d = new ArrayList<>();
+
+		QueryResult qr = null;
+		if (VersionControlHelper.isLatestIteration(part)) {
+			qr = PersistenceHelper.manager.navigate(part, "buildSource", EPMBuildRule.class);
+		} else {
+			qr = PersistenceHelper.manager.navigate(part, "builtBy", EPMBuildHistory.class);
+		}
+		while (qr.hasMoreElements()) {
+			EPMDocument epm = (EPMDocument) qr.nextElement();
+			Map<String, Object> map3d = new HashMap<>();
+			map3d.put("name", epm.getName());
+			map3d.put("number", epm.getNumber());
+			map3d.put("version", epm.getVersionIdentifier().getSeries().getValue());
+			map3d.put("state", epm.getLifeCycleState().getDisplay());
+			list3d.add(map3d);
+
+			EPMDocumentMaster m = (EPMDocumentMaster) epm.getMaster();
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(EPMReferenceLink.class, true);
+			QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "roleBObjectRef.key.id", m);
+			QueryResult rs = PersistenceHelper.manager.find(query);
+			while (rs.hasMoreElements()) {
+				Object[] obj = (Object[]) rs.nextElement();
+				EPMReferenceLink link = (EPMReferenceLink) obj[0];
+				EPMDocument epm2D = link.getReferencedBy();
+				Map<String, Object> map2d = new HashMap<>();
+				map2d.put("name", epm2D.getName());
+				map2d.put("number", epm2D.getNumber());
+				map2d.put("version", epm2D.getVersionIdentifier().getSeries().getValue());
+				map2d.put("state", epm2D.getLifeCycleState().getDisplay());
+				map2d.put("refType", link.getReferenceType().getDisplay());
+				list2d.add(map2d);
+			}
+		}
+		result.put("3d", list3d);
+		result.put("2d", list2d);
 
 		return result;
 	}

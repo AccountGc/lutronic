@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 <head>
-<link rel="stylesheet" href="../login/css/login.css" type="text/css" />
+<link rel="stylesheet" href="/Windchill/login/css/login.css" type="text/css" />
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>LUTRONIC PDM</title>
 </head>

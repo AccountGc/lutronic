@@ -1,6 +1,6 @@
 package com.e3ps.part.service;
 
-import java.io.File; 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -43,6 +43,7 @@ import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
@@ -141,7 +142,6 @@ import wt.vc.wip.CheckoutLink;
 import wt.vc.wip.WorkInProgressHelper;
 import wt.vc.wip.Workable;
 
-@SuppressWarnings("serial")
 public class StandardPartService extends StandardManager implements PartService {
 
 	public static StandardPartService newStandardPartService() throws Exception {
@@ -191,7 +191,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			boolean temprary = (boolean) params.get("temprary");
 			// 결재
 			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
-			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows"); 
+			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
 			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
 
 			// 주 도면
@@ -261,18 +261,15 @@ public class StandardPartService extends StandardManager implements PartService 
 				ViewHelper.assignToView(part, ViewHelper.service.getView(view));
 			}
 
-			
 			// 라이프사이클 셋팅
-			
+
 			// 폴더 셋팅
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) part, folder);
 
 			// 문서 lifeCycle 설정
-			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle,
-					wtContainerRef);
+			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
 			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
-			
 
 			part = (WTPart) PersistenceHelper.manager.save(part);
 
@@ -329,7 +326,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 
 			// 결재시작
-			if (approvalRows!=null) {
+			if (approvalRows != null) {
 				WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
 			}
 
@@ -523,10 +520,11 @@ public class StandardPartService extends StandardManager implements PartService 
 				String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
 
 				// 결재
-				ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
+				ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params
+						.get("approvalRows");
 				ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
 				ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
-				
+
 				String partName = "";
 				String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
 				for (int i = 0; i < partNames.length; i++) {
@@ -661,20 +659,20 @@ public class StandardPartService extends StandardManager implements PartService 
 				if (partData.isGENERIC(part)) {
 					copyInstanceAttribute(part, params);
 				}
-				
+
 				if (temprary) {
 					State state = State.toState("TEMPRARY");
 					LifeCycleHelper.service.setLifeCycleState(part, state);
-				}else {
+				} else {
 					State state = State.toState("INWORK");
-	 				LifeCycleHelper.service.setLifeCycleState(part, state);
-	 				
-	 				// 결재시작
-					if (approvalRows!=null) {
+					LifeCycleHelper.service.setLifeCycleState(part, state);
+
+					// 결재시작
+					if (approvalRows != null) {
 						WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
 					}
 				}
-				
+
 				trx.commit();
 				trx = null;
 
@@ -2839,82 +2837,6 @@ public class StandardPartService extends StandardManager implements PartService 
 		return result;
 	}
 
-	@Override
-	public List<Map<String, Object>> partExpandAction(String partOid, String moduleType, String desc) throws Exception {
-
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
-		ReferenceFactory rf = new ReferenceFactory();
-		WTPart part = (WTPart) rf.getReference(partOid).getObject();
-
-		View[] views = ViewHelper.service.getAllViews();
-
-		String view = views[0].getName();
-
-		ArrayList result = new ArrayList();
-
-		BomBroker broker = new BomBroker();
-		PartTreeData root = broker.getTree(part, !"false".equals(desc), null, ViewHelper.service.getView(view));
-		broker.setHtmlForm(root, result);
-
-		String[] lineStack = new String[50];
-		for (int i = 0; i < result.size(); i++) {
-			PartTreeData data = (PartTreeData) result.get(i);
-			boolean isSelect = true;
-
-			if ("ECO".equals(moduleType) || "EO".equals(moduleType)) {
-				isSelect = PartSearchHelper.service.isSelectEO(data.part, moduleType);
-			}
-			if (part.getNumber().equals(data.part.getNumber())) {
-				isSelect = false;
-			}
-
-			//// System.out.println("data.part =" + data.part.getNumber() + ":"+isSelect);
-			String icon = CommonUtil.getObjectIconImageTag(data.part);
-
-			String proudctOid = "";
-			String plocation = "";
-
-			String line = "";
-			for (int j = 1; j < data.level; j++) {
-
-				String empty = lineStack[j];
-				if (empty == null) {
-					empty = "empty";
-				}
-				line += "<img src='/Windchill/jsp/part/images/tree/" + empty + ".gif'></img>";
-			}
-
-			String lineImg = "";
-			if (data.level > 0) {
-				if ("join".equals(data.lineImg)) {
-					lineStack[data.level] = "line";
-				} else
-					lineStack[data.level] = "empty";
-
-				lineImg += "<img src='/Windchill/jsp/part/images/tree/" + data.lineImg + ".gif' border=0></img>";
-			}
-
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("isSelect", isSelect);
-			map.put("line", line);
-			map.put("lineImg", lineImg);
-			map.put("icon", icon);
-			map.put("partOid", data.part.getPersistInfo().getObjectIdentifier().toString());
-			map.put("partNumber", data.number);
-			map.put("level", data.level);
-			map.put("partName", data.name);
-			map.put("partState", data.part.getLifeCycleState().getDisplay(Message.getLocale()));
-			map.put("partVersion", data.version);
-			map.put("partIteration", part.getIterationIdentifier().getSeries().getValue());
-			map.put("partView", data.part.getViewName());
-			map.put("partUnit", data.unit);
-			map.put("partQuantity", data.quantity);
-
-			list.add(map);
-		}
-		return list;
-	}
 
 	@Override
 	public Map<String, Object> selectEOPartAction(HttpServletRequest request, HttpServletResponse response)
@@ -4322,50 +4244,6 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 
 	@Override
-	public ResultData attributeCleaning(Map<String, Object> param) throws Exception {
-		ResultData data = new ResultData();
-		String oid = (String) param.get("oid");
-		System.out.println(oid);
-		try {
-			WTPart part = (WTPart) CommonUtil.getObject(oid);
-			// String ver =""
-			System.out.println("part.getVersionIdentifier().getValue()                : "
-					+ part.getVersionIdentifier().getValue());
-
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_REV, part.getVersionIdentifier().getValue(), "string");
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, part.getName(), "string");
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_CHANGENO, "", "string");
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_CHANGEDATE, "", "string");
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_ECONO, "", "string");
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_ECODATE, "", "string");
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_APR, "", "string");
-			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_CHK, "", "string");
-
-			EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
-			if (epm != null) {
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_REV, part.getVersionIdentifier().getValue(),
-						"string");
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_DES, part.getName(), "string");
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHANGENO, "", "string");
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHANGEDATE, "", "string");
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_ECONO, "", "string");
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_ECODATE, "", "string");
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_APR, "", "string");
-				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHK, "", "string");
-			}
-
-			data.setResult(true);
-			data.setMessage("속성이 초기화 되었습니다.");
-		} catch (Exception e) {
-			e.printStackTrace();
-			data.setResult(false);
-			data.setMessage("속성 초기화시 에러가 발생 하였습니다.");
-		}
-
-		return data;
-	}
-
-	@Override
 	public ResultData updateAUIPartChangeAction(Map<String, Object> param) {
 		ResultData data = new ResultData();
 
@@ -4917,4 +4795,70 @@ public class StandardPartService extends StandardManager implements PartService 
 		return result;
 	}
 
+	@Override
+	public void _clean(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+			IBAUtils.updateIBA(part, "REV", part.getVersionIdentifier().getSeries().getValue(), "s");
+			IBAUtils.updateIBA(part, "DES", part.getName(), "s");
+			IBAUtils.updateIBA(part, "CHANGENO", "", "s");			
+			IBAUtils.updateIBA(part, "CHANGEDATE", "", "s");
+			IBAUtils.updateIBA(part, "ECONO", "", "s");
+			IBAUtils.updateIBA(part, "ECODATE", "", "s");
+			IBAUtils.updateIBA(part, "ECODATE", "APR", "s");
+			IBAUtils.updateIBA(part, "ECODATE", "CHK", "s");
+			
+
+//			EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
+//			if (epm != null) {
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_REV, part.getVersionIdentifier().getValue(),
+//						"string");
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_DES, part.getName(), "string");
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHANGENO, "", "string");
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHANGEDATE, "", "string");
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_ECONO, "", "string");
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_ECODATE, "", "string");
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_APR, "", "string");
+//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHK, "", "string");
+//			}
+//			
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void attrUpdate(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		String value = (String) params.get("value");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+			IBAUtils.createIBA(part, "MANUFACTURE", value, "s");
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

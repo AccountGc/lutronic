@@ -10,8 +10,6 @@ EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
 JSONArray data = (JSONArray) request.getAttribute("tree");
 %>
 <style type="text/css">
-/*평쳤을때 이미지*/
-/*데이터 앞 이미지*/
 .aui-grid-tree-branch-icon {
 	display: inline-block;
 	width: 16px;
@@ -253,7 +251,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 	};
 
 	function auiLazyHandler(event) {
-		console.log(event);
 		const item = event.item;
 		const oid = item.oid;
 		const url = getCallUrl("/bom/lazyLoad?oid=" + oid);

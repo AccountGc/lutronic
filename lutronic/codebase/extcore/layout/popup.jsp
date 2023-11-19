@@ -9,6 +9,7 @@
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <link rel="stylesheet" href="/Windchill/extcore/component/ax5ui-mask/dist/ax5mask.css">
+<!-- <link rel="sStylesheet" href="/Windchill/login/css/login.css" type="text/css" /> -->
 <script type="text/javascript" src="/Windchill/extcore/component/ax5core/dist/ax5core.min.js"></script>
 <script type="text/javascript" src="/Windchill/extcore/component/ax5ui-mask/dist/ax5mask.min.js"></script>
 </head>

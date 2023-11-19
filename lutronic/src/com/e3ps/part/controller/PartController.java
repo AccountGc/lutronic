@@ -54,20 +54,14 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.part.service.PartSearchHelper;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.service.RohsHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
@@ -78,7 +72,6 @@ import wt.content.ContentServerHelper;
 import wt.enterprise.Master;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
-import wt.folder.Folder;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
 import wt.representation.Representation;
@@ -105,7 +98,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_PART", "");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -1541,24 +1534,6 @@ public class PartController extends BaseController {
 	}
 
 	/**
-	 * 속성 Cleaning
-	 * 
-	 * @param request
-	 * @param response
-	 * @param oid
-	 * @return
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/attributeCleaning", method = RequestMethod.POST)
-	public ResultData attributeCleaning(@RequestBody Map<String, Object> param) throws Exception {
-
-		ResultData result = PartHelper.service.attributeCleaning(param);
-
-		return result;
-	}
-
-	/**
 	 * AUI 그리드 BOM
 	 * 
 	 * @param request
@@ -2282,11 +2257,11 @@ public class PartController extends BaseController {
 		cell.setCellStyle(style);
 
 	}
-	
+
 	@RequestMapping("/viewAUIPartBom")
 	public ModelAndView viewAUIPartBom(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-	
+
 		String oid = request.getParameter("oid");
 		String baseline = request.getParameter("baseline");
 		String allBaseline = StringUtil.checkReplaceStr(request.getParameter("allBaseline"), "false");
@@ -2336,7 +2311,7 @@ public class PartController extends BaseController {
 		model.setViewName("popup:/part/viewAUIPartBom");
 		return model;
 	}
-	
+
 	@Description(value = "품목 최신버전 이동")
 	@GetMapping(value = "/latest")
 	public ModelAndView latest(@RequestParam String oid) throws Exception {
@@ -2348,5 +2323,101 @@ public class PartController extends BaseController {
 		model.addObject("dto", dto);
 		model.setViewName("popup:/part/part-view");
 		return model;
+	}
+
+	@Description(value = "상위 품목")
+	@GetMapping(value = "/upper")
+	public ModelAndView upper(@RequestParam String oid, @RequestParam(required = false) String baseline)
+			throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		JSONArray upper = PartHelper.manager.upper(oid, baseline);
+		model.addObject("upper", upper);
+		model.addObject("part", part);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/part/part-upper");
+		return model;
+	}
+
+	@Description(value = "하위 품목")
+	@GetMapping(value = "/lower")
+	public ModelAndView lower(@RequestParam String oid, @RequestParam(required = false) String baseline)
+			throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		JSONArray lower = PartHelper.manager.lower(oid, baseline);
+		model.addObject("lower", lower);
+		model.addObject("part", part);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/part/part-lower");
+		return model;
+	}
+
+	@Description(value = "완제품")
+	@GetMapping(value = "/end")
+	public ModelAndView end(@RequestParam String oid, @RequestParam(required = false) String baseline)
+			throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		JSONArray end = PartHelper.manager.end(oid, baseline);
+		model.addObject("end", end);
+		model.addObject("part", part);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/part/part-end");
+		return model;
+	}
+
+	@Description(value = "품목속성")
+	@GetMapping(value = "/attr")
+	public ModelAndView attr(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		Map<String, Object> attr = PartHelper.manager.attr(part);
+		ArrayList<NumberCode> list = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		model.addObject("list", list);
+		model.addObject("oid", oid);
+		model.addObject("attr", attr);
+		model.addObject("part", part);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/part/part-attr");
+		return model;
+	}
+
+	@Description(value = "품목 속성 클린")
+	@ResponseBody
+	@PostMapping(value = "/_clean")
+	public Map<String, Object> _clean(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			PartHelper.service._clean(params);
+			result.put("msg", "속성이 CLEANING 되었습니다..");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "품목 속성 수정")
+	@ResponseBody
+	@PostMapping(value = "/attrUpdate")
+	public Map<String, Object> attrUpdate(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			PartHelper.service.attrUpdate(params);
+			result.put("msg", "속성이 변경되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

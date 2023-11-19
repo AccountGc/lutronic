@@ -6,7 +6,6 @@
 <%
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("list");
-JSONArray clist = (JSONArray) request.getAttribute("clist");
 %>
 <!DOCTYPE html>
 <html>
@@ -150,49 +149,17 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 				key : "C",
 				value : "전용(C)"
 			}, ];
-			const list =
-		<%=clist%>
 			const columns = [ {
-				headerText : "그룹핑",
-				width : 150,
-				dataField : "group",
+				headerText : "선구매<br>여부",
+				dataField : "preOrder",
+				dataType : "boolean",
+				width : 60,
+				minWidth : 60,
+				editable : false,
 				renderer : {
-					type : "IconRenderer",
-					iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-					iconHeight : 16,
-					iconPosition : "aisleRight",
-					iconTableRef : { // icon 값 참조할 테이블 레퍼런스
-						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png" // default
-					},
-					onClick : function(event) {
-						// 아이콘을 클릭하면 수정으로 진입함.
-						AUIGrid.openInputer(event.pid);
-					}
-				},
-				editRenderer : {
-					type : "DropDownListRenderer",
-					showEditorBtn : false,
-					showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
-					multipleMode : true, // 다중 선택 모드(기본값 : false)
-					showCheckAll : true, // 다중 선택 모드에서 전체 체크 선택/해제 표시(기본값:false);
-					list : list,
-					keyField : "oid",
-					valueField : "number",
-				},
-				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-					if (value !== undefined) {
-						let retStr = "";
-						const valueArr = value.split(", "); // 구분자 기본값은 ", " 임.
-						const tempValueArr = [];
-
-						for (let i = 0, len = list.length; i < len; i++) {
-							if (valueArr.indexOf(list[i]["oid"]) >= 0) {
-								tempValueArr.push(list[i]["number"]);
-							}
-						}
-						return tempValueArr.sort().join(", "); // 정렬시켜서 보여주기.
-					}
-				},
+					type : "CheckboxEditRenderer",
+					editable : true
+				}
 			}, {
 				headerText : "개정 전",
 				children : [ {
@@ -554,7 +521,6 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					selectionMode : "multipleCells",
 					showRowCheckColumn : true,
 					enableFilter : true,
-					fixedColumnCount : 1,
 					editableOnFixedCell : true,
 					enableCellMerge : true,
 					editable : true,
@@ -628,19 +594,6 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					return false;
 				}
 
-				for (let i = 0; i < data.length; i++) {
-					const group = data[i].group;
-					if (group === "") {
-						alert("그룹핑이 안된 품목들이 존재합니다.");
-						return false;
-					}
-				}
-				// 				const ecnUserOid = document.getElementById("ecnUserOid").value;
-				// 				if (ecnUserOid === "") {
-				// 					alert("ECN 담당자를 선택하세요.");
-				// 					return false;
-				// 				}
-
 				const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
 				if (!confirm("설변활동을 완료 하시겠습니까?")) {
@@ -652,7 +605,6 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					oid : oid,
 					description : description,
 					secondarys : secondarys,
-				// 					ecnUserOid : ecnUserOid
 				};
 				parent.openLayer();
 				call(url, params, function(data) {

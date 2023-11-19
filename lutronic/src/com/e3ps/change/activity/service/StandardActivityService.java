@@ -22,6 +22,7 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
@@ -799,12 +800,14 @@ public class StandardActivityService extends StandardManager implements Activity
 				WTPart nextPart = (WTPart) CommonUtil.getObject(next_oid);
 
 				String group = (String) map.get("group");
-				String[] groups = group.split(",");
-				for (String s : groups) {
-					EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
-					PartGroupLink link = PartGroupLink.newPartGroupLink(nextPart, ecr);
-					link.setEco(eco);
-					PersistenceHelper.manager.save(link);
+				if (StringUtil.checkString(group)) {
+					String[] groups = group.split(",");
+					for (String s : groups) {
+						EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
+						PartGroupLink link = PartGroupLink.newPartGroupLink(nextPart, ecr);
+						link.setEco(eco);
+						PersistenceHelper.manager.save(link);
+					}
 				}
 
 				String delivery = (String) map.get("delivery");
@@ -821,6 +824,11 @@ public class StandardActivityService extends StandardManager implements Activity
 				eLink.setComplete(complete);
 				eLink.setInner(inner);
 				eLink.setOrders(order);
+
+				if (preOrder) {
+					IBAUtil.createIba(nextPart, "boolean", "PREORDER", "true");
+				}
+
 				PersistenceHelper.manager.modify(eLink);
 
 			}

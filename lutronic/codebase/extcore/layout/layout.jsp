@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="/Windchill/extcore/css/animate.css">
 <link rel="stylesheet" href="/Windchill/extcore/css/layout.css">
 <link rel="stylesheet" href="/Windchill/extcore/component/ax5ui-mask/dist/ax5mask.css">
+<!-- <link rel="stylesheet" href="/Windchill/login/css/login.css" type="text/css" /> -->
 <title><tiles:insertAttribute name="title" ignore="false"></tiles:insertAttribute></title>
 </head>
 <body class="fixed-sidebar">

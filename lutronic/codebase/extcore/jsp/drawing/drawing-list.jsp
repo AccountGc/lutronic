@@ -137,11 +137,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						%>
 					</select>
 				</td>
-				<th>Rev.</th>
-				<td class="indent5">
+				<th>REV</th>
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" id="islastversion"name="islastversion" value="true" checked="checked">
+						<input type="radio" id="latest"name="latest" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>최신버전</b>
@@ -501,8 +501,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
  				$("input[name=sessionid").val(0);
  				const url = getCallUrl("/drawing/list");
 				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				const latest = $("input[name=latest]:checked").val();
  				params = toField(params, field);
- 				params.islastversion = $('input[name=islastversion]:checked').val();
+ 				params.latest = JSON.parse(latest);
  				AUIGrid.showAjaxLoader(myGridID);
  				parent.openLayer();
  				call(url, params, function(data) {

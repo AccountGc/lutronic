@@ -39,21 +39,6 @@ public class BomController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "BOM 뷰")
-	@PostMapping(value = "/loadStructure")
-	@ResponseBody
-	public Map<String, Object> loadStructure(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			BomHelper.manager.loadStructure(params);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
 
 	@Description(value = "BOM 에디터 LAZY 로드")
 	@GetMapping(value = "/lazyLoad")
@@ -113,6 +98,41 @@ public class BomController extends BaseController {
 		try {
 			JSONArray tree = BomHelper.manager.loadEditor(oid);
 			result.put("tree", tree);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 뷰 LAZY LOAD")
+	@PostMapping(value = "/lazyLoad")
+	@ResponseBody
+	public Map<String, Object> lazyLoad(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, Object>> list = BomHelper.manager.lazyLoad(params);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+
+	@Description(value = "BOM 뷰")
+	@PostMapping(value = "/loadStructure")
+	@ResponseBody
+	public Map<String, Object> loadStructure(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			JSONArray list = BomHelper.manager.loadStructure(params);
+			result.put("list", list);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

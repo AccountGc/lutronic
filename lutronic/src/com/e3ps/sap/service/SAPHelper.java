@@ -562,12 +562,10 @@ public class SAPHelper {
 
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 
-		query.appendOrderBy(new OrderBy(new ClassAttribute(WTPart.class, "master>number"), true),
-				new int[] { idx_part });
-
-		QueryResult re = PersistenceHelper.manager.find(query);
-		while (re.hasMoreElements()) {
-			Object obj[] = (Object[]) re.nextElement();
+		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
 			SAPReverseBomDTO dto = new SAPReverseBomDTO(end, p, link, eco);

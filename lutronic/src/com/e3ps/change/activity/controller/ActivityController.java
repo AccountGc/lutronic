@@ -207,11 +207,23 @@ public class ActivityController extends BaseController {
 		if (activityType.equals("ORDER_NUMBER")) {
 			model.setViewName("/extcore/jsp/workspace/activity/orderNumber.jsp");
 		} else if (activityType.equals("REVISE_BOM")) {
-			ArrayList<Map<String, String>> clist = ActivityHelper.manager.getEcoRefCr(oid);
+			EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+			EChangeOrder eco = (EChangeOrder) eca.getEo();
+			String sendType = eco.getSendType();
 			ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
-			model.addObject("list", list);
-			model.addObject("clist", JSONArray.fromObject(clist));
-			model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
+			if ("ECO".equals(sendType)) {
+				ArrayList<Map<String, String>> clist = ActivityHelper.manager.getEcoRefCr(oid);
+				model.addObject("list", list);
+				model.addObject("clist", JSONArray.fromObject(clist));
+				model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
+			} else if ("ORDER".equals(sendType)) {
+				model.addObject("list", list);
+				model.setViewName("/extcore/jsp/workspace/activity/order.jsp");
+			} else if ("SCO".equals(sendType)) {
+				model.addObject("list", list);
+				model.setViewName("/extcore/jsp/workspace/activity/sco.jsp");
+			}
+
 		} else if (activityType.equals("DOCUMENT")) {
 			model.setViewName("/extcore/jsp/workspace/activity/document.jsp");
 		}
@@ -402,7 +414,7 @@ public class ActivityController extends BaseController {
 		Map<String, ArrayList<Map<String, Object>>> nextData = ActivityHelper.manager.reference(next);
 		model.addObject("preData", preData);
 		model.addObject("nextData", nextData);
-		model.setViewName("/extcore/jsp/change/activity/activity-reference.jsp");
+		model.setViewName("popup:/change/activity/activity-reference");
 		return model;
 	}
 

@@ -42,6 +42,10 @@ public class ThumbnailUtil {
 	 * 작은 썸네일
 	 */
 	public static String thumbnailSmall(Representable per) throws Exception {
+		System.out.println("per=" + per);
+		if (per == null) {
+			return "";
+		}
 		Representable thum = (Representable) per;
 		String thumnail = FileHelper.getViewContentURLForType(PublishUtils.findRepresentable(thum),
 				ContentRoleType.THUMBNAIL_SMALL);

@@ -15,9 +15,9 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.EcrPartLink;
 import com.e3ps.change.service.ECOSearchHelper;
-import com.e3ps.common.comments.Comments;
 import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -37,16 +37,17 @@ import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
+import com.ptc.wpcfg.pdmabstr.PROEDependency;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
-import wt.epm.build.EPMBuildHistory;
 import wt.epm.build.EPMBuildRule;
 import wt.epm.structure.EPMDescribeLink;
 import wt.epm.structure.EPMReferenceLink;
+import wt.epm.structure.EPMStructureHelper;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -59,17 +60,20 @@ import wt.iba.definition.StringDefinition;
 import wt.lifecycle.State;
 import wt.part.PartDocHelper;
 import wt.part.WTPart;
+import wt.part.WTPartBaselineConfigSpec;
 import wt.part.WTPartConfigSpec;
 import wt.part.WTPartDescribeLink;
 import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
+import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
-import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.vc.VersionControlHelper;
+import wt.vc.baseline.Baseline;
+import wt.vc.baseline.BaselineMember;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
 import wt.vc.views.View;
@@ -677,24 +681,6 @@ public class PartHelper {
 	}
 
 	/**
-	 * 1품 1도인 업체에서만 사용가능
-	 */
-	public EPMDocument getEPMDocument2D(EPMDocument epm) throws Exception {
-		EPMDocumentMaster m = (EPMDocumentMaster) epm.getMaster();
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(EPMReferenceLink.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "roleBObjectRef.key.id", m);
-		QuerySpecUtils.toEqualsAnd(query, idx, EPMReferenceLink.class, "referenceType", "DRAWING");
-		QueryResult result = PersistenceHelper.manager.find(query);
-		if (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			EPMReferenceLink link = (EPMReferenceLink) obj[0];
-			return link.getReferencedBy();
-		}
-		return null;
-	}
-
-	/**
 	 * 품목 폴더 가져오기
 	 */
 	public JSONArray recurcive() throws Exception {
@@ -1003,24 +989,242 @@ public class PartHelper {
 	}
 
 	/**
-	 * 부품과 연결된 도면 찾아오기
+	 * 완제품
 	 */
-	public EPMDocument getEPMDocument(WTPart part) throws Exception {
-		EPMDocument epm = null;
-		if (part == null) {
-			return epm;
+	public JSONArray end(String oid, String baseline) throws Exception {
+		JSONArray end = new JSONArray();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		View view = ViewHelper.service.getView(part.getViewName());
+		State state = part.getLifeCycleState();
+		WTPartMaster master = (WTPartMaster) part.getMaster();
+		QueryResult qr = null;
+
+		if (StringUtil.checkString(baseline)) {
+
+		} else {
+
 		}
 
-		QueryResult result = null;
-		if (VersionControlHelper.isLatestIteration(part)) {
-			result = PersistenceHelper.manager.navigate(part, "buildSource", EPMBuildRule.class);
-		} else {
-			result = PersistenceHelper.manager.navigate(part, "builtBy", EPMBuildHistory.class);
-		}
-		if (result.hasMoreElements()) {
-			epm = (EPMDocument) result.nextElement();
-		}
-		return epm;
+		return end;
 	}
 
+	/**
+	 * 하위품목
+	 */
+	public JSONArray lower(String oid, String baseline) throws Exception {
+		JSONArray lower = new JSONArray();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		View view = ViewHelper.service.getView(part.getViewName());
+		State state = part.getLifeCycleState();
+
+		// 베이스라인
+		QueryResult qr = null;
+		if (StringUtil.checkString(baseline)) {
+			Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
+			WTPartBaselineConfigSpec configSpec = WTPartBaselineConfigSpec.newWTPartBaselineConfigSpec(baseLine);
+			qr = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		} else {
+			WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+			qr = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		}
+
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			Map<String, String> map = new HashMap<>();
+			map.put("number", p.getNumber());
+			map.put("name", p.getName());
+			map.put("state", p.getLifeCycleState().getDisplay());
+			map.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+			lower.add(map);
+		}
+
+		return lower;
+	}
+
+	/**
+	 * 상위품목
+	 */
+	public JSONArray upper(String oid, String baseline) throws Exception {
+		JSONArray upper = new JSONArray();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		View view = ViewHelper.service.getView(part.getViewName());
+		State state = part.getLifeCycleState();
+		WTPartMaster master = (WTPartMaster) part.getMaster();
+		QueryResult qr = null;
+		if (StringUtil.checkString(baseline)) {
+			QuerySpec query = new QuerySpec();
+			int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+			int idx_part = query.appendClassList(WTPart.class, true);
+
+			QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+			SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+					"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+			sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+			sc.setOuterJoin(0);
+			query.appendAnd();
+			query.appendWhere(sc, new int[] { idx_usage, idx_part });
+
+			if (state != null) {
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+						new int[] { idx_part });
+			}
+
+			if (baseline != null) {
+				Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
+				int idx_b = query.addClassList(BaselineMember.class, false);
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id",
+						BaselineMember.class, "roleBObjectRef.key.id"), new int[] { idx_part, idx_b });
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(BaselineMember.class, "roleAObjectRef.key.id", "=",
+						baseLine.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_b });
+			}
+			QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
+			qr = PersistenceHelper.manager.find(query);
+		} else {
+			QuerySpec query = new QuerySpec();
+			int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+			int idx_part = query.appendClassList(WTPart.class, true);
+
+			QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+			SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+					"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+			sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+			sc.setOuterJoin(0);
+			query.appendAnd();
+			query.appendWhere(sc, new int[] { idx_usage, idx_part });
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
+					new int[] { idx_part });
+
+			if (view != null) {
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
+						view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
+			}
+
+			if (state != null) {
+				query.appendAnd();
+				query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+			}
+			QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
+			QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
+			qr = PersistenceHelper.manager.find(query);
+		}
+
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			Map<String, String> map = new HashMap<>();
+			map.put("number", p.getNumber());
+			map.put("name", p.getName());
+			map.put("state", p.getLifeCycleState().getDisplay());
+			map.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+			upper.add(map);
+		}
+
+		return upper;
+	}
+
+	/**
+	 * 품목 속성
+	 */
+	public Map<String, Object> attr(WTPart part) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String model = IBAUtils.getStringValue(part, "MODEL");
+		String productmethod = IBAUtils.getStringValue(part, "PRODUCTMETHOD");
+		String deptcode = IBAUtils.getStringValue(part, "DEPTCODE");
+		String unit = part.getDefaultUnit().toString().toUpperCase();
+		float weight = IBAUtils.getFloatValue(part, "WEIGHT");
+		String manufacture = IBAUtils.getStringValue(part, "MANUFACTURE");
+		String mat = IBAUtils.getStringValue(part, "MAT");
+		String finish = IBAUtils.getStringValue(part, "FINISH");
+		String remarks = IBAUtils.getStringValue(part, "REMARKS");
+		String specification = IBAUtils.getStringValue(part, "SPECIFICATION");
+		String eoNo = IBAUtils.getStringValue(part, "ECONO");
+		String eoDate = IBAUtils.getStringValue(part, "ECODATE");
+		String chk = IBAUtils.getStringValue(part, "CHK");
+		String apr = IBAUtils.getStringValue(part, "APR");
+		String rev = IBAUtils.getStringValue(part, "REV");
+		String des = IBAUtils.getStringValue(part, "DES");
+		String ecoNo = IBAUtils.getStringValue(part, "CHANGENO");
+		String ecoDate = IBAUtils.getStringValue(part, "CHANGEDATE");
+
+		result.put("model", model != null ? model : "");
+		result.put("productmethod", productmethod != null ? productmethod : "");
+		result.put("deptcode", deptcode != null ? deptcode : "");
+		result.put("unit", unit);
+		result.put("weight", weight);
+		result.put("manufacture", manufacture != null ? manufacture : "");
+		result.put("mat", mat != null ? mat : "");
+		result.put("finish", finish != null ? finish : "");
+		result.put("remarks", remarks != null ? remarks : "");
+		result.put("specification", specification != null ? specification : "");
+		result.put("eoNo", eoNo != null ? eoNo : "");
+		result.put("eoDate", eoDate != null ? eoDate : "");
+		result.put("chk", chk != null ? chk : "");
+		result.put("apr", apr != null ? apr : "");
+		result.put("rev", rev != null ? rev : "");
+		result.put("des", des != null ? des : "");
+		result.put("ecoNo", ecoNo != null ? ecoNo : "");
+		result.put("ecoDate", ecoDate != null ? ecoDate : "");
+		return result;
+	}
+
+	/**
+	 * 부품과 연결된 EPMDocument 가져오는 함수
+	 */
+	public EPMDocument getEPMDocument(WTPart part) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(part, EPMBuildRule.BUILD_SOURCE_ROLE, EPMBuildRule.class);
+		System.out.println("부품과 연결된 도면 = " + qr.size());
+		if (qr.hasMoreElements()) {
+			EPMDocument e = (EPMDocument) qr.nextElement();
+			return e;
+		}
+		return null;
+	}
+
+	/**
+	 * 3D모델과 연결된 2D가져오는 함수
+	 */
+	public EPMDocument getEPMDocument2D(EPMDocument epm) throws Exception {
+		EPMDocumentMaster m = (EPMDocumentMaster) epm.getMaster();
+		QueryResult qr = EPMStructureHelper.service.navigateReferencedBy(m, null, false);
+		while (qr.hasMoreElements()) {
+			EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
+			if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
+				return ref.getReferencedBy();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 3D모델과 연결된 2D가져오는 함수 부품으로 바로 찾기 원할 경우
+	 */
+	public EPMDocument getEPMDocument2D(WTPart part) throws Exception {
+		EPMDocument epm = getEPMDocument(part);
+		if (epm != null) {
+			EPMDocumentMaster m = (EPMDocumentMaster) epm.getMaster();
+			QueryResult qr = EPMStructureHelper.service.navigateReferencedBy(m, null, false);
+			while (qr.hasMoreElements()) {
+				EPMReferenceLink ref = (EPMReferenceLink) qr.nextElement();
+				if (ref.getDepType() == PROEDependency.DEP_T_DRAW) {
+					return ref.getReferencedBy();
+				}
+			}
+		}
+		return null;
+	}
 }
