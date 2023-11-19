@@ -40,7 +40,7 @@ JSONArray lower = (JSONArray) request.getAttribute("lower");
 		headerText : "상태",
 		dataField : "state",
 		dataType : "string",
-		width : 100
+		width : 80
 	}, {
 		headerText : "REV",
 		dataField : "version",

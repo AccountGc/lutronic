@@ -57,7 +57,7 @@ public class PartColumn {
 		setName(part.getName());
 		setLocation(part.getLocation());
 		setVersion(setVersionInfo(part));
-		setRemarks(IBAUtil.getAttrValue(part, AttributeKey.IBAKey.IBA_REMARKS));
+		setRemarks(IBAUtil.getAttrValue(part, "REMARKS"));
 		setState(part.getLifeCycleState().getDisplay());
 		setCreator(part.getCreatorName());
 		setCreatedDate(part.getCreateTimestamp());
@@ -65,7 +65,7 @@ public class PartColumn {
 		setModifier(part.getModifierName());
 		setModifiedDate(part.getModifyTimestamp());
 		setModifiedDate_txt(part.getModifyTimestamp().toString().substring(0, 10));
-		setAttach(part);
+		setThumbnail(part);
 		setPreOrder(IBAUtil.getBooleanValue(part, "PREORDER"));
 	}
 
@@ -85,7 +85,7 @@ public class PartColumn {
 		}
 	}
 
-	private void setAttach(WTPart part) throws Exception {
+	private void setThumbnail(WTPart part) throws Exception {
 		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 		// 3D 캐드 세팅..
 		if (epm != null) {

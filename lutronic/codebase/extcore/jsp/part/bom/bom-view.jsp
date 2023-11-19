@@ -8,6 +8,20 @@ String oid = root.getPersistInfo().getObjectIdentifier().getStringValue();
 ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) request.getAttribute("baseline");
 %>
 <style type="text/css">
+.ap {
+	font-weight: bold !important;
+	color: blue !important;
+}
+
+.nd {
+	font-weight: bold !important;
+	color: red !important;
+}
+
+.exist {
+	font-weight: bold !important;
+}
+
 .aui-grid-tree-branch-icon {
 	display: inline-block;
 	width: 16px;
@@ -77,6 +91,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 					</label>
 				</div>
 			</div>
+			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 		</td>
 		<td class="right">
 			<select name="baseline" id="baseline" class="AXSelect width-150" onchange="reloadTree();">
@@ -136,10 +151,20 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		dataType : "string",
 		width : 300
 	}, {
-		dataField : "dwgNo",
+		dataField : "dwg_no",
 		headerText : "도면번호",
 		dataType : "string",
 		width : 140,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value == "AP") {
+				return "ap";
+			} else if (value === "ND") {
+				return "nd";
+			} else {
+				return "exist";
+			}
+			return null;
+		}
 	}, {
 		dataField : "name",
 		headerText : "부품명",
@@ -153,7 +178,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		width : 80
 	}, {
 		dataField : "remarks",
-		headerText : "OEM Info.",
+		headerText : "OEM Info",
 		dataType : "string",
 		width : 150
 	}, {
@@ -165,7 +190,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		dataField : "modifier",
 		headerText : "수정자",
 		dataType : "string",
-		width : 100,
+		width : 80,
 	}, {
 		dataField : "spec",
 		headerText : "사양",
@@ -175,11 +200,11 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		dataField : "qty",
 		headerText : "수량",
 		dataType : "string",
-		width : 100,
+		width : 80,
 		postfix : "개"
 	}, {
 		dataField : "ecoNo",
-		headerText : "ECO NO.",
+		headerText : "ECO NO",
 		dataType : "string",
 		width : 150,
 	}, {
@@ -213,11 +238,11 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 			selectionMode : "multipleCells",
 			displayTreeOpen : true,
 			editable : false,
-			treeColumnIndex : 2,
+			treeColumnIndex : 3,
 			enableFilter : true,
 			flat2tree : true,
 			enableSorting : false,
-			fixedColumnCount : 3,
+			fixedColumnCount : 4,
 			treeLazyMode : true,
 			treeLevelIndent : 17,
 			useContextMenu : true,
@@ -253,7 +278,18 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 			}, {
 				label : "도면",
 				callback : auiContextHandler
-			} ];
+			}, {
+				label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+			}, {
+				label : "CREO VIEW 오픈",
+				callback : auiContextHandler
+			}, {
+				label : "썸네일 보기(3D)",
+				callback : auiContextHandler
+			}, {
+				label : "썸네일 보기(2D)",
+				callback : auiContextHandler
+			}, ];
 			return menu;
 		});
 	}
@@ -261,6 +297,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 	function auiContextHandler(event) {
 		const item = event.item;
 		const oid = item.oid;
+		const root = document.getElementById("oid").value;
 		const baseline = document.getElementById("baseline").value;
 		let url;
 		switch (event.contextIndex) {
@@ -283,6 +320,31 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		case 4:
 			url = getCallUrl("/part/attr?oid=" + oid);
 			_popup(url, 1000, 500, "n");
+			break;
+		case 6: // 엑셀
+			break;
+		case 7: // 첨부
+			url = getCallUrl("/bom/batch?oid=" + root + "&target=attach");
+			_popup(url, 650, 310, "n");
+			break;
+		case 8: // 도면
+			url = getCallUrl("/bom/batch?oid=" + root + "&target=epm");
+			_popup(url, 650, 310, "n");
+			break;
+		case 10:
+			break;
+		case 11:
+			url = getCallUrl("/part/thumbnail?oid=" + oid);
+			_popup(url, 800, 600, "n");
+			break;
+		case 12:
+			// AP도 못보게..
+			if(item.dwg_oid === "" || item.dwg_oid.indexOf("WTDocument") > -1) {
+				alert("2D 도면이 존재하지 않습니다.");
+				return false;
+			}
+			url = getCallUrl("/part/thumbnail?oid=" + item.dwg_oid);
+			_popup(url, 800, 600, "n");
 			break;
 		}
 	}
@@ -321,7 +383,6 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 			desc : JSON.parse(sort),
 			baseline : baseline
 		};
-		logger(params);
 		openLayer();
 		AUIGrid.showAjaxLoader(myGridID);
 		call(url, params, function(data) {
@@ -347,7 +408,6 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 			desc : JSON.parse(sort),
 			baseline : baseline
 		};
-		logger(params);
 		openLayer();
 		AUIGrid.showAjaxLoader(myGridID);
 		call(url, params, function(data) {
@@ -366,13 +426,34 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		const skip = document.querySelector("input[name=skip]").checked;
 		const baseline = document.getElementById("baseline").value;
 		// 모든 레벨 열기
-		if (depth === 0) {
+		if (Number(depth) === 0) {
+			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
+			for (let j = 0; j < grid.length; j++) {
+				const item = grid[j];
+				const oid = item.oid;
+				const level = item.level;
+				const params = {
+					oid : oid,
+					skip : JSON.parse(skip),
+					level : level,
+					desc : JSON.parse(sort),
+					baseline : baseline
+				};
 
-			// 특정레벨
+				const url = getCallUrl("/bom/lazyLoad")
+				call(url, params, function(data) {
+					grid[j].children = data.list;
+					grid[j] = _recursion(grid[j], skip, sort, baseline);
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+					AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+				}, "POST", false);
+			}
+			const tree = AUIGrid.getTreeGridData(myGridID);
+			AUIGrid.setGridData(myGridID, tree);
+			AUIGrid.expandAll(myGridID);
 		} else {
 			for (let i = 0; i < depth; i++) {
 				const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", i + 1);
-
 				for (let j = 0; j < grid.length; j++) {
 					const item = grid[j];
 					const oid = item.oid;
@@ -386,22 +467,114 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 					};
 
 					const url = getCallUrl("/bom/lazyLoad")
-					openLayer();
 					call(url, params, function(data) {
 						grid[j].children = data.list;
-						logger(grid[j]);
+						if (depth - 1 != grid[j]._$depth) {
+							grid[j] = recursion(grid[j], depth, skip, sort, baseline);
+						}
+
 						const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
-						console.log(rowIndex);
-						AUIGrid.updateRow(myGridID, grid[j]);
-						// 						AUIGrid.setGridData(myGridID, AUIGrid.getTreeGridData(myGridID));
-						// 						AUIGrid.expandAll(myGridID);
-						closeLayer();
-						logger(grid[j]);
-					})
+						AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+					}, "POST", false);
 				}
 			}
-
+			end(depth);
 		}
+	}
+
+	function _recursion(parent, skip, sort, baseline) {
+		const grid = parent.children;
+		for (let i = 0; i < grid.length; i++) {
+			const item = grid[i];
+			const oid = item.oid;
+			const level = item.level;
+			const params = {
+				oid : oid,
+				skip : JSON.parse(skip),
+				level : level,
+				desc : JSON.parse(sort),
+				baseline : baseline
+			};
+
+			const url = getCallUrl("/bom/lazyLoad")
+			call(url, params, function(data) {
+				grid[i].children = data.list;
+				grid[i] = _recursion(grid[i], skip, sort, baseline);
+				parent.children[i] = grid[i];
+			}, "POSt", false);
+		}
+		return parent;
+	}
+
+	function recursion(parent, depth, skip, sort, baseline) {
+		const grid = parent.children;
+		for (let i = 0; i < grid.length; i++) {
+			const item = grid[i];
+			const oid = item.oid;
+			const level = item.level;
+			const params = {
+				oid : oid,
+				skip : JSON.parse(skip),
+				level : level,
+				desc : JSON.parse(sort),
+				baseline : baseline
+			};
+
+			const url = getCallUrl("/bom/lazyLoad")
+			call(url, params, function(data) {
+				grid[i].children = data.list;
+				if (depth - 1 != grid[i]._$depth) {
+					grid[i] = recursion(grid[i], depth, skip, sort, baseline);
+				}
+				parent.children[i] = grid[i];
+			}, "POSt", false);
+		}
+		return parent;
+	}
+
+	function end(depth) {
+		const data = AUIGrid.getTreeGridData(myGridID);
+		AUIGrid.setGridData(myGridID, data);
+		AUIGrid.showItemsOnDepth(myGridID, depth);
+	}
+
+	function expandAll() {
+		AUIGrid.expandAll(myGridID);
+	}
+
+	window.gridData = function(mode) {
+		if (mode === "ALL") {
+			const skip = document.getElementById("skip").value;
+			const sort = document.getElementById("sort").value;
+			const baseline = document.getElementById("baseline").value;
+			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
+			for (let j = 0; j < grid.length; j++) {
+				const item = grid[j];
+				const oid = item.oid;
+				const level = item.level;
+				const params = {
+					oid : oid,
+					skip : JSON.parse(skip),
+					level : level,
+					desc : JSON.parse(sort),
+					baseline : baseline
+				};
+
+				const url = getCallUrl("/bom/lazyLoad")
+				call(url, params, function(data) {
+					grid[j].children = data.list;
+					grid[j] = _recursion(grid[j], skip, sort, baseline);
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+					AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+				}, "POST", false);
+			}
+			const tree = AUIGrid.getTreeGridData(myGridID);
+			AUIGrid.setGridData(myGridID, tree);
+			AUIGrid.expandAll(myGridID);
+		}
+
+		const gridData = AUIGrid.getGridData(myGridID);
+		return gridData
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

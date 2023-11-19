@@ -705,42 +705,6 @@ public class CommonController extends BaseController {
 		return model;
 	}
 
-	@RequestMapping("/include_adminAttribute")
-	public ModelAndView include_adminAttribute(HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
-
-		String oid = request.getParameter("oid");
-		Object object = CommonUtil.getObject(oid);
-
-		String module = request.getParameter("module");
-
-		HashMap has = null;
-		if ("part".equals(module)) {
-			has = IBAUtil.getAttributes((WTPart) object);
-		} else if ("drawing".equals(module)) {
-			has = IBAUtil.getAttributes((EPMDocument) object);
-		} else if ("doc".equals(module)) {
-			has = IBAUtil.getAttributes((WTDocument) object);
-		}
-
-		String temp = has.toString();
-		StringTokenizer tokens = new StringTokenizer(temp, ", ");
-
-		List<String> list = new ArrayList<String>();
-
-		while (tokens.hasMoreTokens()) {
-			String badT = (String) tokens.nextToken();
-			list.add(badT);
-		}
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("list", list);
-		model.addObject("module", module);
-		model.setViewName("include:/common/include_adminAttribute");
-		return model;
-
-	}
-
 	@ResponseBody
 	@RequestMapping("/getVROid")
 	public String getVROid(HttpServletRequest request, HttpServletResponse response) {
@@ -982,21 +946,6 @@ public class CommonController extends BaseController {
 		}
 
 		return data;
-	}
-
-	@ResponseBody
-	@RequestMapping("/batchDownDescribe")
-	public List<Map<String, String>> batchDownDescribe(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String, String>> list = null;
-
-		try {
-			list = CommonUtil.getBatchDescribeList();
-		} catch (Exception e) {
-			e.printStackTrace();
-			list = new ArrayList<Map<String, String>>();
-		}
-
-		return list;
 	}
 
 	/**

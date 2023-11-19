@@ -13,9 +13,7 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 PartDTO dto = (PartDTO) request.getAttribute("dto");
-
 WTPart part = (WTPart)CommonUtil.getObject(dto.getOid());
-
 List<CommentsDTO> list = dto.getComments();
 String pnum = (String) request.getAttribute("pnum");
 WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
@@ -32,9 +30,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="BOM" title="BOM" id="auiBom">
-			<input type="button" value="BOM Editor" title="BOM Editor" id="bomE">
-			<input type="button" value="Compare" title="Compare" id="Compare">
+			<input type="button" value="BOM" title="BOM" onclick="view();">
+			<input type="button" value="BOM Editor" title="BOM Editor">
+			<input type="button" value="COMPARE" title="COMPARE">
 			<%
 			if ("DEATH".equals(dto.getState()) && isAdmin) {
 			%>
@@ -42,7 +40,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%
 			}
 			%>
-			<input type="button" value="속성 Clearing" title="속성 Clearing" id="attributeCleaning">
+			<input type="button" value="속성 CLEARING" class="red" title="속성 CLEARING" onclick="_clean();">
 			<%
 			if (isAdmin) {
 			%>
@@ -79,23 +77,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<li>
 			<a href="#tabs-4">관련 객체</a>
 		</li>
-		<%
-		if (isAdmin) {
-		%>
-		<li>
-			<a href="#tabs-5">관리자 속성</a>
-		</li>
-		<%
-		}
-		%>
 		<li>
 			<a href="#tabs-6">환경규제문서</a>
 		</li>
 		<li>
 			<a href="#tabs-7">이력 관리</a>
-		</li>
-		<li>
-			<a href="#tabs-8">관련 품목</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -127,7 +113,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getState()%>
 				</td>
-				<th class="lb">Rev.</th>
+				<th class="lb">REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>
 					<%
@@ -304,42 +290,22 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		</jsp:include>
 	</div>
 
-	<%
-	if (isAdmin) {
-	%>
-	<!-- 관리자 속성 -->
-	<div id="tabs-5">
-		<jsp:include page="/extcore/jsp/common/adminAttributes_include.jsp">
-			<jsp:param value="part" name="module" />
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
-	<%
-	}
-	%>
-
-	<!-- 환경규제문서 -->
-	<div id="tabs-6">
-<%-- 		<jsp:include page="/extcore/jsp/document/include_environmentalRegulatoryDocument.jsp"> --%>
-<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
-<%-- 		</jsp:include> --%>
-	</div>
-	
 	<!-- 이력관리 -->
 	<div id="tabs-7">
 		<jsp:include page="/extcore/jsp/part/include/part-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
-	<!-- 관련품목 -->
-	<div id="tabs-8">
-		<jsp:include page="/extcore/jsp/part/include/part-related-include.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
 	
 </div>
 <script type="text/javascript">
+// BOM 뷰
+function view() {
+	const oid = document.getElementById("oid").value;
+	const url = getCallUrl("/bom/view?oid=" + oid);
+	_popup(url, 1600, 800, "n");
+}
+
 // 수정
 function update () {
 	const oid = document.getElementById("oid").value;
@@ -609,6 +575,25 @@ $("#commentsBtn").click(function () {
 			},
 		});
 	});
+	
+	function _clean() {
+		if (!confirm("속성 CLEANING을 하시겠습니까?")) {
+			return false;
+		}
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/_clean");
+		const params = {
+			oid : oid
+		};
+		openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			}
+			closeLayer();
+		})
+	}
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(drawingGridID);
@@ -674,22 +659,6 @@ $("#restore").click(function() {
 $('#changeDev').click(function() {
 	if (confirm("변경하시겠습니까?")){ 
 		partStateChange('INWORK');
-	}
-})
-
-$("#attributeCleaning").click(function() {
-	if (confirm("속성 Clearing 하시겠습니까?")){ 
-		
-		var form = $("form[name=partViewForm]").serialize();
-		var url	= getCallUrl("/part/attributeCleaning");
-		var params = {"oid": $("#oid").val() };
-
-		call(url, params, function(data) {
-			alert(data.message);
-			if(data.result) {
-				location.reload();
-			}
-		},"POST");
 	}
 })
 	

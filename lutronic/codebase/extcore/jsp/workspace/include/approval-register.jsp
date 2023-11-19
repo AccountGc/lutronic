@@ -46,13 +46,13 @@ boolean update = "update".equals(mode);
 			dataType : "string",
 			width : 130,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if (value == "기안") {
+				if (value === "기안") {
 					return "submit";
-				} else if (value == "결재") {
+				} else if (value === "결재") {
 					return "approval";
-				} else if (value == "수신") {
+				} else if (value === "수신") {
 					return "receive";
-				} else if (value == "합의") {
+				} else if (value === "합의") {
 					return "agree";
 				}
 				return null;

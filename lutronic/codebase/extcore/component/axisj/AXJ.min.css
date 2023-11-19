@@ -4946,9 +4946,9 @@ button, button:hover {
 }
 
 .AXScrollSmall {
-	position: relative;
+/*	position: relative;*/
 	overflow: hidden;
-	height : 300px !important;
+/*	height : 300px !important;*/
 }
 
 .AXScrollSmall .scrollTrack {
@@ -6449,7 +6449,7 @@ button, button:hover {
 	background: #fff;
 	box-shadow: 0 1px #e9eced;
 	overflow: hidden;
-	height: 350px !important; 
+/*	height: 350px !important; */
 }
 
 .AXselectExpandBox .selectExpandScroll {

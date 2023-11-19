@@ -34,6 +34,9 @@ public class ThumbnailUtil {
 	 * 작은 썸네일
 	 */
 	public static String thumbnailSmall(String oid) throws Exception {
+		if (!StringUtil.checkString(oid)) {
+			return "";
+		}
 		Representable representable = (Representable) CommonUtil.getObject(oid);
 		return thumbnailSmall(representable);
 	}
@@ -42,7 +45,6 @@ public class ThumbnailUtil {
 	 * 작은 썸네일
 	 */
 	public static String thumbnailSmall(Representable per) throws Exception {
-		System.out.println("per=" + per);
 		if (per == null) {
 			return "";
 		}

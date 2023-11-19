@@ -120,41 +120,4 @@ public class CommonHelper {
     	
     	return map;
     }
-	
-	/**
-	 * 관리자 속성 가져오기
-	 */
-	public JSONArray include_adminAttribute(String oid, String module) {
-		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
-		try {
-			
-			Map<String,String> map = new HashMap<String,String>();
-			
-			Object object = CommonUtil.getObject(oid);
-			
-			HashMap has = null;
-			if("part".equals(module)) {
-				has = IBAUtil.getAttributes((WTPart)object);
-			}else if("drawing".equals(module)) {
-				has = IBAUtil.getAttributes((EPMDocument)object);
-			}else if("doc".equals(module)) {
-				has = IBAUtil.getAttributes((WTDocument)object);
-			}
-			
-			String temp = has.toString();
-			StringTokenizer tokens = new StringTokenizer(temp,", ");
-			
-			while(tokens.hasMoreTokens()){
-				String badT = (String)tokens.nextToken();
-				map.put("badT", badT);
-				
-				list.add(map);
-			}
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return JSONArray.fromObject(list);
-	}
 }

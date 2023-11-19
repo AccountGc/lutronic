@@ -2837,7 +2837,6 @@ public class StandardPartService extends StandardManager implements PartService 
 		return result;
 	}
 
-
 	@Override
 	public Map<String, Object> selectEOPartAction(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
@@ -4806,27 +4805,25 @@ public class StandardPartService extends StandardManager implements PartService 
 
 			IBAUtils.updateIBA(part, "REV", part.getVersionIdentifier().getSeries().getValue(), "s");
 			IBAUtils.updateIBA(part, "DES", part.getName(), "s");
-			IBAUtils.updateIBA(part, "CHANGENO", "", "s");			
+			IBAUtils.updateIBA(part, "CHANGENO", "", "s");
 			IBAUtils.updateIBA(part, "CHANGEDATE", "", "s");
 			IBAUtils.updateIBA(part, "ECONO", "", "s");
 			IBAUtils.updateIBA(part, "ECODATE", "", "s");
-			IBAUtils.updateIBA(part, "ECODATE", "APR", "s");
-			IBAUtils.updateIBA(part, "ECODATE", "CHK", "s");
-			
+			IBAUtils.updateIBA(part, "APR", "", "s");
+			IBAUtils.updateIBA(part, "CHK", "", "s");
 
-//			EPMDocument epm = DrawingHelper.service.getEPMDocument(part);
-//			if (epm != null) {
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_REV, part.getVersionIdentifier().getValue(),
-//						"string");
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_DES, part.getName(), "string");
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHANGENO, "", "string");
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHANGEDATE, "", "string");
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_ECONO, "", "string");
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_ECODATE, "", "string");
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_APR, "", "string");
-//				IBAUtil.changeIBAValue(epm, AttributeKey.IBAKey.IBA_CHK, "", "string");
-//			}
-//			
+			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+			if (epm != null) {
+				IBAUtils.updateIBA(epm, "REV", epm.getVersionIdentifier().getSeries().getValue(), "s");
+				IBAUtils.updateIBA(epm, "DES", epm.getName(), "s");
+				IBAUtils.updateIBA(epm, "CHANGENO", "", "s");
+				IBAUtils.updateIBA(epm, "CHANGEDATE", "", "s");
+				IBAUtils.updateIBA(epm, "ECONO", "", "s");
+				IBAUtils.updateIBA(epm, "ECODATE", "", "s");
+				IBAUtils.updateIBA(epm, "APR", "", "s");
+				IBAUtils.updateIBA(epm, "CHK", "", "s");
+			}
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

@@ -1,7 +1,6 @@
 package com.e3ps.part.bom.service;
 
-a.util.HashMap;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,17 +10,22 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ThumbnailUtil;
+import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.service.PartSearchHelper;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
+import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.lifecycle.State;
 import wt.part.WTPart;
 import wt.part.WTPartBaselineConfigSpec;
 import wt.part.WTPartConfigSpec;
+import wt.part.WTPartDescribeLink;
 import wt.part.WTPartHelper;
 import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
@@ -201,7 +205,6 @@ public class BomHelper {
 	 * BOM 뷰 화면
 	 */
 	public JSONArray loadStructure(Map<String, Object> params) throws Exception {
-		System.out.println(params);
 		JSONArray list = new JSONArray();
 		boolean desc = (boolean) params.get("desc"); // 정전개
 		String baseline = (String) params.get("baseline");
@@ -211,7 +214,6 @@ public class BomHelper {
 			if (StringUtil.checkString(baseline)) {
 				list = descendants(list, oid, skip, baseline);
 			} else {
-				System.out.println("여기 실행..");
 				list = descendants(list, oid, skip);
 			}
 		} else { // 역전개
@@ -230,7 +232,7 @@ public class BomHelper {
 	 */
 	private JSONArray ancestor(JSONArray list, String oid, boolean skip) throws Exception {
 		WTPart end = (WTPart) CommonUtil.getObject(oid);
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(end);
+		String[] endRtn = getDwgInfo(end);
 		View view = ViewHelper.service.getView(end.getViewName());
 		String state = end.getLifeCycleState().toString();
 
@@ -238,11 +240,12 @@ public class BomHelper {
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", end.getPersistInfo().getObjectIdentifier().getStringValue());
 		rootNode.put("thumb_3d", ThumbnailUtil.thumbnailSmall(end));
-		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(endRtn[1]));
 		rootNode.put("level", 1);
 		rootNode.put("number", end.getNumber());
 		rootNode.put("name", end.getName());
-		rootNode.put("dwgNo", epm_d != null ? epm_d.getNumber() : "NO");
+		rootNode.put("dwg_no", endRtn[0]);
+		rootNode.put("dwg_oid", endRtn[1]);
 		rootNode.put("state", end.getLifeCycleState().getDisplay());
 		rootNode.put("version", end.getVersionIdentifier().getSeries().getValue() + "."
 				+ end.getIterationIdentifier().getSeries().getValue());
@@ -310,12 +313,13 @@ public class BomHelper {
 					continue;
 				}
 			}
-			EPMDocument epm_child_d = PartHelper.manager.getEPMDocument2D(p);
+			String[] childRtn = getDwgInfo(p);
 			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_child_d));
-			node.put("dwgNo", epm_child_d != null ? epm_child_d.getNumber() : "NO");
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
@@ -354,16 +358,17 @@ public class BomHelper {
 	private JSONArray ancestor(JSONArray list, String oid, boolean skip, String baseline) throws Exception {
 		WTPart end = (WTPart) CommonUtil.getObject(oid);
 		String state = end.getLifeCycleState().toString();
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(end);
+		String[] endRtn = getDwgInfo(end);
 		// 역전개 루트
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", end.getPersistInfo().getObjectIdentifier().getStringValue());
 		rootNode.put("thumb_3d", ThumbnailUtil.thumbnailSmall(end));
-		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(endRtn[1]));
 		rootNode.put("level", 1);
 		rootNode.put("number", end.getNumber());
 		rootNode.put("name", end.getName());
-		rootNode.put("dwgNo", epm_d != null ? epm_d.getNumber() : "NO");
+		rootNode.put("dwg_no", endRtn[0]);
+		rootNode.put("dwg_oid", endRtn[1]);
 		rootNode.put("state", end.getLifeCycleState().getDisplay());
 		rootNode.put("version", end.getVersionIdentifier().getSeries().getValue() + "."
 				+ end.getIterationIdentifier().getSeries().getValue());
@@ -433,15 +438,16 @@ public class BomHelper {
 					continue;
 				}
 			}
-			EPMDocument epm_child_d = PartHelper.manager.getEPMDocument2D(p);
+			String[] childRtn = getDwgInfo(p);
 			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_child_d));
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
-			node.put("dwgNo", epm_child_d != null ? epm_child_d.getNumber() : "NO");
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -476,15 +482,16 @@ public class BomHelper {
 	 */
 	private JSONArray descendants(JSONArray list, String oid, boolean skip) throws Exception {
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(root);
+		String[] rootRtn = getDwgInfo(root);
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		rootNode.put("thumb_3d", ThumbnailUtil.thumbnailSmall(root));
-		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(rootRtn[1]));
 		rootNode.put("level", 1);
 		rootNode.put("number", root.getNumber());
 		rootNode.put("name", root.getName());
-		rootNode.put("dwgNo", epm_d.getNumber());
+		rootNode.put("dwg_no", rootRtn[0]);
+		rootNode.put("dwg_oid", rootRtn[1]);
 		rootNode.put("state", root.getLifeCycleState().getDisplay());
 		rootNode.put("version", root.getVersionIdentifier().getSeries().getValue() + "."
 				+ root.getIterationIdentifier().getSeries().getValue());
@@ -526,15 +533,16 @@ public class BomHelper {
 					continue;
 				}
 			}
-			EPMDocument epm_child_d = PartHelper.manager.getEPMDocument2D(p);
+			String[] childRtn = getDwgInfo(p);
 			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_child_d));
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
-			node.put("dwgNo", epm_child_d != null ? epm_child_d.getNumber() : "NO");
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -568,14 +576,14 @@ public class BomHelper {
 	 */
 	private JSONArray descendants(JSONArray list, String oid, boolean skip, String baseline) throws Exception {
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(root);
-		System.out.println("epm_d=" + epm_d);
+		String[] rootRtn = getDwgInfo(root);
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		rootNode.put("thumb_3d", ThumbnailUtil.thumbnailSmall(root));
-		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+		rootNode.put("thumb_2d", ThumbnailUtil.thumbnailSmall(rootRtn[1]));
 		rootNode.put("level", 1);
-		rootNode.put("dwgNo", epm_d != null ? epm_d.getNumber() : "NO");
+		rootNode.put("dwg_no", rootRtn[0]);
+		rootNode.put("dwg_oid", rootRtn[1]);
 		rootNode.put("number", root.getNumber());
 		rootNode.put("name", root.getName());
 		rootNode.put("state", root.getLifeCycleState().getDisplay());
@@ -620,15 +628,16 @@ public class BomHelper {
 				}
 			}
 
-			EPMDocument epm_child_d = PartHelper.manager.getEPMDocument2D(p);
+			String[] childRtn = getDwgInfo(p);
 			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_child_d));
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
-			node.put("dwgNo", epm_child_d != null ? epm_child_d.getNumber() : "NO");
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -690,7 +699,6 @@ public class BomHelper {
 	private ArrayList<Map<String, Object>> ancestor(ArrayList<Map<String, Object>> list, String oid, boolean skip,
 			int level) throws Exception {
 		WTPart end = (WTPart) CommonUtil.getObject(oid);
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(end);
 		View view = ViewHelper.service.getView(end.getViewName());
 		String state = end.getLifeCycleState().toString();
 		WTPartMaster master = (WTPartMaster) end.getMaster();
@@ -737,15 +745,16 @@ public class BomHelper {
 					continue;
 				}
 			}
-
+			String[] childRtn = getDwgInfo(p);
 			Map<String, Object> node = new HashMap<>();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
-			node.put("dwgNo", epm_d != null ? epm_d.getNumber() : "NO");
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -778,7 +787,6 @@ public class BomHelper {
 	private ArrayList<Map<String, Object>> ancestor(ArrayList<Map<String, Object>> list, String oid, boolean skip,
 			String baseline, int level) throws Exception {
 		WTPart end = (WTPart) CommonUtil.getObject(oid);
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(end);
 		String state = end.getLifeCycleState().toString();
 		WTPartMaster master = (WTPartMaster) end.getMaster();
 		QuerySpec query = new QuerySpec();
@@ -826,15 +834,16 @@ public class BomHelper {
 					continue;
 				}
 			}
-
+			String[] childRtn = getDwgInfo(p);
 			Map<String, Object> node = new HashMap<>();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
-			node.put("dwgNo", epm_d != null ? epm_d.getNumber() : "NO");
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -866,7 +875,6 @@ public class BomHelper {
 	private ArrayList<Map<String, Object>> descendants(ArrayList<Map<String, Object>> list, String oid, boolean skip,
 			int level) throws Exception {
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(root);
 		View view = ViewHelper.service.getView(part.getViewName());
 		State state = part.getLifeCycleState();
 		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
@@ -885,15 +893,16 @@ public class BomHelper {
 					continue;
 				}
 			}
-
+			String[] childRtn = getDwgInfo(p);
 			Map<String, Object> node = new HashMap<>();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
-			node.put("dwgNo", epm_d != null ? epm_d.getNumber() : "NO");
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -925,7 +934,6 @@ public class BomHelper {
 	private ArrayList<Map<String, Object>> descendants(ArrayList<Map<String, Object>> list, String oid, boolean skip,
 			String baseline, int level) throws Exception {
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(part);
 		Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
 		WTPartBaselineConfigSpec configSpec = WTPartBaselineConfigSpec.newWTPartBaselineConfigSpec(baseLine);
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -943,15 +951,16 @@ public class BomHelper {
 					continue;
 				}
 			}
-
+			String[] childRtn = getDwgInfo(p);
 			Map<String, Object> node = new HashMap<>();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb_3d", ThumbnailUtil.thumbnailSmall(p));
-			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(epm_d));
+			node.put("thumb_2d", ThumbnailUtil.thumbnailSmall(childRtn[1]));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
-			node.put("dwgNo", epm_d != null ? epm_d.getNumber() : "NO");
+			node.put("dwg_no", childRtn[0]);
+			node.put("dwg_oid", childRtn[1]);
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -975,5 +984,89 @@ public class BomHelper {
 			list.add(node);
 		}
 		return list;
+	}
+
+	/**
+	 * BOM 뷰에서 사용할 도면 여부체크
+	 */
+	private String[] getDwgInfo(WTPart part) throws Exception {
+		String[] rtn = new String[2];
+		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+		boolean exist = false;
+		if (epm != null) {
+			EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(epm);
+			if (epm_d != null) {
+				rtn[0] = epm_d.getNumber();
+				rtn[1] = epm_d.getPersistInfo().getObjectIdentifier().getStringValue();
+			} else {
+				exist = true;
+				// 무조건 잇음..
+				if (epm.getAuthoringApplication().toString().equals("MANUAL")) {
+					rtn[0] = epm.getNumber();
+					rtn[1] = epm.getPersistInfo().getObjectIdentifier().getStringValue();
+					exist = false;
+				}
+			}
+		} else {
+			exist = true;
+		}
+
+		// 3D 없을시 체크???
+		if (exist) {
+			WTDocument doc = hasAP(part, "$$APDocument");
+			if (doc != null) {
+				rtn[0] = "AP";
+				rtn[1] = doc.getPersistInfo().getObjectIdentifier().getStringValue();
+			} else {
+				rtn[0] = "ND";
+				rtn[1] = "";
+			}
+		}
+		return rtn;
+	}
+
+	/**
+	 * AP 문서..
+	 */
+	private WTDocument hasAP(WTPart part, String docType) throws Exception {
+		QuerySpec query = new QuerySpec();
+
+		int idx_p = query.addClassList(WTPart.class, false);
+		int idx_d = query.addClassList(WTDocument.class, true);
+		int idx_l = query.addClassList(WTPartDescribeLink.class, false);
+
+		query.setAdvancedQueryEnabled(true);
+
+		query.appendJoin(idx_l, "roleA", idx_p);
+		query.appendJoin(idx_l, "roleB", idx_d);
+		query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id",
+				SearchCondition.EQUAL, CommonUtil.getOIDLongValue(part)), new int[] { idx_p });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.DOC_TYPE, SearchCondition.EQUAL, docType),
+				new int[] { idx_d });
+
+		QueryResult qr = PersistenceServerHelper.manager.query(query);
+		if (qr.size() == 1) {
+			Object obj[] = (Object[]) qr.nextElement();
+			WTDocument doc = (WTDocument) obj[0];
+			return doc;
+		}
+		return null;
+	}
+
+	/**
+	 * BOM 첨부파일, 도면 일괄 다운로드
+	 */
+	public File batch(Map<String, Object> params) throws Exception {
+		ArrayList<String> arr = (ArrayList<String>) params.get("arr");
+		String target = (String) params.get("target");
+		String reason = (String) params.get("reason");
+		String description = (String) params.get("description");
+
+		for (String oid : arr) {
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+		}
+
+		return null;
 	}
 }

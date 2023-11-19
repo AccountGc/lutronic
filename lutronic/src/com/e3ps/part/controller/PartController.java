@@ -1743,49 +1743,6 @@ public class PartController extends BaseController {
 
 		return list;
 	}
-	/*
-	 * @ResponseBody
-	 * 
-	 * @RequestMapping("/isCheckNumber") public boolean
-	 * isCheckNumber(HttpServletRequest request, HttpServletResponse response) {
-	 * 
-	 * String num = request.getParameter("num"); boolean chk =
-	 * PartHelper.service.isDubleCheck(num); return chk; }
-	 */
-
-	/**
-	 * 속성 수정
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@RequestMapping("/attributeChange")
-	public ResultData attributeChange(HttpServletRequest request, HttpServletResponse response) {
-		ResultData data = new ResultData();
-		try {
-			String oid = request.getParameter("oid");
-			String value = request.getParameter("value");
-			String numberCodeType = request.getParameter("numberCodeType");
-
-			WTPart part = (WTPart) CommonUtil.getObject(oid);
-			// System.out.println(part.getNumber()+","+oid +" ," + value+ ","
-			// +numberCodeType);
-
-			IBAUtil.changeIBAValue(part, numberCodeType, value);
-
-			data.setResult(true);
-			data.setMessage("속성이 수정 되었습니다.");
-		} catch (Exception e) {
-			data.setResult(true);
-			data.setMessage("속성 수정시 에러가 발생 하였습니다.");
-			e.printStackTrace();
-		}
-
-		return data;
-	}
 
 	/**
 	 * BOMEditor 팝업 화면
@@ -2419,5 +2376,16 @@ public class PartController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "썸네일")
+	@GetMapping(value = "/thumbnail")
+	public ModelAndView thumbnail(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("oid", oid);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("/extcore/jsp/part/part-tumbnail.jsp");
+		return model;
 	}
 }

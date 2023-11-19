@@ -749,48 +749,6 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		return dest;
 	}
 
-	/**
-	 * 일괄 다운로드 사유
-	 * 
-	 * @return
-	 */
-	public static Map<String, String> getBatchDescribe() {
-		TreeMap<String, String> map = new TreeMap<String, String>();
-
-		map.put("1", "공정 검토용");
-		map.put("2", "제작 발주용");
-		map.put("3", "수입 검사용");
-		map.put("4", "인증용");
-		map.put("5", "ROHS 확인용");
-		map.put("6", "기타");
-		return map;
-	}
-
-	/**
-	 * 일괄 다운로드 리스트
-	 * 
-	 * @return
-	 */
-	public static List<Map<String, String>> getBatchDescribeList() {
-
-		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
-
-		Map<String, String> map = new HashMap<String, String>();// getStatusMap();
-		map = getBatchDescribe();
-
-		Iterator it = map.keySet().iterator();
-
-		while (it.hasNext()) {
-			Map<String, String> mapStatus = new HashMap<String, String>();
-			String code = (String) it.next();
-			mapStatus.put("code", code);
-			mapStatus.put("name", map.get(code));
-
-			list.add(mapStatus);
-		}
-
-		return list;
-	}
 
 	/**
 	 * 최신버전의 객체인지 확인

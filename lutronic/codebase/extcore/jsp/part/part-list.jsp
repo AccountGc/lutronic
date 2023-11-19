@@ -257,7 +257,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('part-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('part-list');">
-					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
@@ -457,6 +456,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", function(event) {
 					const menu = [ {
+						label : "썸네일 보기(3D)",
+						callback : auiContextHandler
+					}, {
+						label : "썸네일 보기(2D)",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
 						label : "일괄 다운로드",
 						callback : auiContextHandler
 					}, {
@@ -469,6 +476,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "PDF 다운로드",
 						callback : auiContextHandler
 					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
 						label : "속성보기",
 						callback : auiContextHandler
 					}, {
@@ -479,6 +488,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						callback : auiContextHandler
 					}, {
 						label : "변경이력보기",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "상위품목",
+						callback : auiContextHandler
+					}, {
+						label : "하위품목",
+						callback : auiContextHandler
+					}, {
+						label : "완제품",
 						callback : auiContextHandler
 					} ];
 					return menu;
@@ -542,23 +562,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("#_psize").bindSelectSetValue(100);
 			});
 
-			function editBOM() {
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("편집할 부품을 선택하세요.");
-					return false;
-				}
-
-				if (items.length > 1) {
-					alert("한개만 선택해 주세요.");
-					return false;
-				}
-				const oid = items[0].part_oid;
-				var url = getCallUrl("/part/bomEditor") + "?oid=" + oid;
-				_popup(url, "1400", "600", "n");
-
-			};
-
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -581,30 +584,51 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				// 				AUIGrid.setCheckedRowsByIds(myGridID, item._$uid);
 				switch (event.contextIndex) {
 				case 0:
-					//일괄
+					url = getCallUrl("/part/thumbnail?oid=" + part_oid);
+					_popup(url, 800, 600, "n");
 					break;
 				case 1:
-					//STEP
-					break;
-				case 2:
-					//DXF
+					url = getCallUrl("/part/thumbnail?oid=" + part_oid);
+					_popup(url, 800, 600, "n");
 					break;
 				case 3:
-					//PDF
+					//일괄
 					break;
 				case 4:
-					//속성
+					//STEP
 					break;
 				case 5:
+					//DXF
+					break;
+				case 6:
+					//PDF
+					break;
+				case 8:
+					//속성
+					url = getCallUrl("/part/attr?oid=" + part_oid);
+					_popup(url, 1000, 500, "n");
+					break;
+				case 9:
 					//BOM 뷰
 					url = getCallUrl("/bom/view?oid=" + part_oid);
 					_popup(url, 1600, 800, "n");
 					break;
-				case 6:
+				case 10:
 					//BOM에디터
 					break;
-				case 7:
-					// 관련 도면
+				case 11:
+					break;
+				case 13:
+					url = getCallUrl("/part/upper?oid=" + part_oid);
+					_popup(url, 600, 430, "n");
+					break;
+				case 14:
+					url = getCallUrl("/part/lower?oid=" + part_oid);
+					_popup(url, 600, 430, "n");
+					break;
+				case 15:
+					url = getCallUrl("/part/end?oid=" + part_oid);
+					_popup(url, 600, 430, "n");
 					break;
 				}
 			};

@@ -1,14 +1,15 @@
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="/Windchill/login/css/login.css" type="text/css" />
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
 <title>LUTRONIC PDM</title>
+<link rel="stylesheet" href="/Windchill/login/css/login.css" type="text/css">
 </head>
 <body>
-	<form method="post" action="j_security_check" id="loginForm">
+	<form method="post" action="j_security_check">
 		<div id="container" class="container">
 			<div class="row">
 				<div class="col align-items-center flex-col sign-up">

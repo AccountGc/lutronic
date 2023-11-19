@@ -1,5 +1,6 @@
 package com.e3ps.part.bom.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.bom.service.BomHelper;
 
 import net.sf.json.JSONArray;
@@ -38,7 +38,6 @@ public class BomController extends BaseController {
 		model.setViewName("popup:/part/bom/bom-view");
 		return model;
 	}
-
 
 	@Description(value = "BOM 에디터 LAZY 로드")
 	@GetMapping(value = "/lazyLoad")
@@ -123,7 +122,6 @@ public class BomController extends BaseController {
 		}
 		return result;
 	}
-	
 
 	@Description(value = "BOM 뷰")
 	@PostMapping(value = "/loadStructure")
@@ -133,6 +131,41 @@ public class BomController extends BaseController {
 		try {
 			JSONArray list = BomHelper.manager.loadStructure(params);
 			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 뷰서 도면 및 첨부파일 일괄 다운로드")
+	@GetMapping(value = "/batch")
+	public ModelAndView batch(@RequestParam String oid, @RequestParam String target) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		String title = "";
+		if ("attach".equals(target)) {
+			model.addObject("title", "첨부파일");
+		} else if ("epm".equals(target)) {
+			model.addObject("title", "도면");
+		}
+		model.addObject("oid", oid);
+		model.addObject("target", target);
+		model.addObject("part", part);
+		model.setViewName("popup:/part/bom/bom-batch");
+		return model;
+	}
+	
+	@Description(value = "BOM 첨부파일, 도면 일괄 다운로드")
+	@PostMapping(value = "/batch")
+	@ResponseBody
+	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			File file = BomHelper.manager.batch(params);
+			result.put("path", file.getPath());
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

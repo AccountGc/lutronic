@@ -571,9 +571,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					enableRightDownFocus : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.setGridData(myGridID,
-		<%=JSONArray.fromObject(list)%>
-			);
+				AUIGrid.setGridData(myGridID, <%=JSONArray.fromObject(list)%>);
 				AUIGrid.bind(myGridID, "contextMenu", function(event) {
 					const menu = [ {
 						label : "주 도면 및 참조도면",
