@@ -2385,7 +2385,7 @@ public class PartController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("oid", oid);
 		model.addObject("isAdmin", isAdmin);
-		model.setViewName("/extcore/jsp/part/part-tumbnail.jsp");
+		model.setViewName("/extcore/jsp/part/part-thumbnail.jsp");
 		return model;
 	}
 }

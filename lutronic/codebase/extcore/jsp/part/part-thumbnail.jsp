@@ -54,6 +54,14 @@ if (representation != null) {
 			});
 		});
 	};
+
+	document.addEventListener("keydown", function(event) {
+		const keyCode = event.keyCode || event.which;
+		console.log(keyCode);
+		if (keyCode === 27) {
+			self.close();
+		}
+	})
 <%}%>
 	
 </script>
