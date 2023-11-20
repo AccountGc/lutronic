@@ -76,6 +76,9 @@ import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
+import com.ptc.wvs.client.beans.PublishConfigSpec;
+import com.ptc.wvs.common.ui.Publisher;
+import com.ptc.wvs.server.util.PublishUtils;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -128,6 +131,8 @@ import wt.pom.Transaction;
 import wt.pom.WTConnection;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.representation.Representable;
+import wt.representation.Representation;
 import wt.services.StandardManager;
 import wt.session.SessionHelper;
 import wt.util.WTException;
@@ -4846,6 +4851,42 @@ public class StandardPartService extends StandardManager implements PartService 
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
 
 			IBAUtils.createIBA(part, "MANUFACTURE", value, "s");
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void publish(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+			Representable representable = PublishUtils.findRepresentable(part);
+			Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+			if (representation != null) {
+				PersistenceHelper.manager.delete(representation);
+			}
+
+			Publisher publisher = new Publisher();
+			PublishConfigSpec pcs = new PublishConfigSpec();
+			boolean viewableLink = true;
+			boolean forceRepublish = false;
+			boolean isPublished = publisher.doPublish(viewableLink, forceRepublish, oid,
+					pcs.getEPMActiveNavigationCriteria(false, null), pcs.getPartActiveNavigationCriteria(null), true,
+					null, null, pcs.getStructureType(), null, 1);
+
+			if (isPublished) {
+				System.out.println("재변환 성공");
+			}
 
 			trs.commit();
 			trs = null;

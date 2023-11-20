@@ -24,6 +24,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+.preOrder {
+	background-color: rgb(200, 255, 203) !important;
+}
+</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -377,7 +382,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "version",
-					headerText : "REV.",
+					headerText : "REV",
 					dataType : "string",
 					width : 90,
 					renderer : {
@@ -418,7 +423,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
-					width : 140,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -427,7 +432,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "date",
-					width : 140,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -450,7 +455,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableRowCheckShiftKey : true
+					enableRowCheckShiftKey : true,
+					rowStyleFunction : function(rowIndex, item) {
+						if (item.preOrder) {
+							return "preOrder";
+						}
+						return "";
+					}
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -498,7 +509,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "하위품목",
 						callback : auiContextHandler
 					}, {
-						label : "완제품",
+						label : "END ITEM",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "재변환",
 						callback : auiContextHandler
 					} ];
 					return menu;
@@ -596,12 +612,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				case 4:
 					//STEP
+					url = getCallUrl("/drawing/step?oid=" + part_oid);
+					document.location.href = url;
 					break;
 				case 5:
 					//DXF
+					url = getCallUrl("/drawing/dxf?oid=" + part_oid);
+					document.location.href = url;
 					break;
 				case 6:
 					//PDF
+					url = getCallUrl("/drawing/pdf?oid=" + part_oid);
+					document.location.href = url;
 					break;
 				case 8:
 					//속성
@@ -614,7 +636,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					_popup(url, 1600, 800, "n");
 					break;
 				case 10:
-					//BOM에디터
+					url = getCallUrl("/bom/editor?oid=" + part_oid);
+					_popup(url, 1800, 800, "n");
 					break;
 				case 11:
 					break;
@@ -630,8 +653,23 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					url = getCallUrl("/part/end?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
+				case 17:
+					publish(part_oid);
+					break;
 				}
 			};
+
+			// 재변환
+			function publish(oid) {
+				const url = getCallUrl("/part/publish?oid=" + oid);
+				parent.openLayer();
+				call(url, null, function(data) {
+					alert(data.msg);
+					if (data.result) {
+						loadGridData();
+					}
+				}, "GET");
+			}
 
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');

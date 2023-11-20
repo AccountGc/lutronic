@@ -4,9 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = (String) request.getAttribute("oid");
-String eoid = (String) request.getAttribute("eoid");
 WTPart root = (WTPart) request.getAttribute("root");
-EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
 JSONArray data = (JSONArray) request.getAttribute("tree");
 %>
 <style type="text/css">
@@ -49,7 +47,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 }
 </style>
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
-<input type="hidden" name="eoid" id="eoid" value="<%=eoid%>">
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
 <table class="button-table">
@@ -61,7 +58,15 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 				<b>
 					<font color="red"><%=root.getNumber()%></font>
 				</b>
-				) 에디터
+				) 에디터 &nbsp;
+				<select name="depth" id="depth" onchange="loadDepth();" class="AXSelect width-120">
+					<option value="0">전체확장</option>
+					<option value="1">1레벨</option>
+					<option value="2" selected="selected">2레벨</option>
+					<option value="3">3레벨</option>
+					<option value="4">4레벨</option>
+					<option value="5">5레벨</option>
+				</select>
 			</div>
 		</td>
 	</tr>
@@ -122,6 +127,7 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		headerText : "",
 		dataType : "string",
 		width : 40,
+		editable : false,
 		renderer : {
 			type : "ImageRenderer",
 			altField : null,
@@ -132,32 +138,39 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		dataField : "level",
 		headerText : "레벨",
 		dataType : "string",
-		width : 60
+		width : 45,
+		editable : false
 	}, {
 		dataField : "number",
 		headerText : "부품번호",
 		dataType : "string",
+		width : 250,
+		editable : false
 	}, {
 		dataField : "name",
 		headerText : "부품명",
 		dataType : "string",
-		width : 250,
+		width : 200,
+		editable : false,
 		style : "aui-left"
-	}, {
-		dataField : "version",
-		headerText : "REV",
-		dataType : "string",
-		width : 80
 	}, {
 		dataField : "qty",
 		headerText : "수량",
 		dataType : "numeric",
-		width : 60
+		width : 60,
+		postfix : "개"
+	}, {
+		dataField : "version",
+		headerText : "REV",
+		dataType : "string",
+		width : 80,
+		editable : false
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 80,
+		editable : false,
 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 			if (value == "승인됨") {
 				return "approved";
@@ -168,17 +181,18 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		dataField : "creator",
 		headerText : "작성자",
 		dataType : "string",
-		width : 80
+		width : 80,
+		editable : false
 	} ];
 	function createAUIGrid(columnLayout) {
 		const props = {
+			editable : true,
 			headerHeight : 30,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			selectionMode : "multipleCells",
 			displayTreeOpen : true,
-			editable : false,
 			treeColumnIndex : 2,
 			enableFilter : true,
 			flat2tree : true,
@@ -190,6 +204,7 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			enableRightDownFocus : true,
 			rowCheckToRadio : true,
 			showRowCheckColumn : true,
+			enableDrop : true,
 			treeIconFunction : function(rowIndex, isBranch, isOpen, depth, item) {
 				let imgSrc = "/Windchill/wtcore/images/part.gif";
 				const isCheckOut = item.isCheckOut;
@@ -210,11 +225,18 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		AUIGrid.setGridData(myGridID,
 <%=data%>
 	);
+
 		AUIGrid.showItemsOnDepth(myGridID, 2);
+		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEnd);
 		AUIGrid.bind(myGridID, "contextMenu", function(event) {
 			const item = event.item;
 			const isWorkCopy = item.isWorkCopy;
+			const isRevise = item.isRevise;
 			const menu = [ {
+				label : "개정",
+				callback : auiContextHandler,
+				disable : !isRevise
+			}, {
 				label : "체크아웃",
 				callback : auiContextHandler,
 				disable : isWorkCopy
@@ -246,9 +268,16 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			} ];
 			return menu;
 		});
-
 		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyHandler)
 	};
+
+	function auiCellEditEnd(event) {
+		const item = event.item;
+		const dataField = event.dataField;
+		if (dataField === "qty") {
+			logger(item);
+		}
+	}
 
 	function auiLazyHandler(event) {
 		const item = event.item;
@@ -278,6 +307,16 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		let url;
 		let params;
 		switch (event.contextIndex) {
+		case 0: // 개정
+			url = getCallUrl("/bom/revise?oid=" + oid);
+			openLayer();
+			call(url, null, function(data) {
+				if (data.result) {
+					reload(root);
+				}
+				closeLayer();
+			}, "GET");
+			break;
 		case 0:
 			break;
 		case 1:
@@ -385,8 +424,14 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			selectionMode : "multipleCells",
 			enableMovingColumn : true,
 			rowCheckToRadio : true,
+			showDragKnobColumn : true,
+			enableDrop : false,
+			dropToOthers : true,
 		};
 		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout2, props);
+		AUIGrid.bind(myGridID2, "dropEnd", function(event) {
+			logger(event);
+		});
 		loadGridData();
 	}
 
@@ -444,5 +489,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		AUIGrid.resize(myGridID);
 		createAUIGrid2(columnLayout2);
 		AUIGrid.resize(myGridID2);
+		selectbox("depth");
 	})
 </script>

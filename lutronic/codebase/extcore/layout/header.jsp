@@ -185,9 +185,9 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 					<li>
 						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 품목 일괄등록');">품목 일괄등록</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/part/editor', '> 품목관리 > BOM EDITOR');">BOM EDITOR</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/part/editor', '> 품목관리 > BOM EDITOR');">BOM EDITOR</a> -->
+<!-- 					</li> -->
 				</ul>
 			</li>
 			<%

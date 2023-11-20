@@ -143,9 +143,12 @@ public interface PartService {
 
 	/**
 	 * 속성 변경
-	 * 
-	 * @param params
 	 */
 	public abstract void attrUpdate(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 품목 재변환 요청
+	 */
+	public abstract void publish(String oid) throws Exception;
 
 }

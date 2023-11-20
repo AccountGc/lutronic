@@ -73,7 +73,7 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 	</tr>
 </table>
 <script type="text/javascript">
-	let partGridID;
+	let partGridID; 
 	const columnsPart = [ {
 		dataField : "number",
 		headerText : "품목번호",

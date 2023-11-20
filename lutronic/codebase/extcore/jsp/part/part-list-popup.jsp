@@ -104,7 +104,7 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 				%>
 				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 				<%
-					}
+				}
 				}
 				%>
 			</select>
@@ -313,76 +313,10 @@ const columns = [ {
 		inline : false
 	},
 }, {
-	dataField : "step",
-	headerText : "STEP",
-	dataType : "string",
-	width : 60,
-	renderer : {
-		type : "TemplateRenderer"
-	},
-	filter : {
-		showIcon : false,
-		inline : false
-	},
-}, {
-	dataField : "dxf",
-	headerText : "DXF",
-	dataType : "string",
-	width : 60,
-	renderer : {
-		type : "TemplateRenderer"
-	},
-	filter : {
-		showIcon : false,
-		inline : false
-	},
-}, {
-	dataField : "pdf",
-	headerText : "PDF",
-	dataType : "string",
-	width : 60,
-	renderer : {
-		type : "TemplateRenderer"
-	},
-	filter : {
-		showIcon : false,
-		inline : false
-	},
-}, {
-	headerText : "변경이력",
-	width : 80,
-	renderer : {
-		type : "IconRenderer",
-		iconPosition : "aisleCenter", // 아이콘 위치
-		iconWidth : 16, // icon 사이즈, 지정하지 않으면 rowHeight에 맞게 기본값 적용됨
-		iconHeight : 16,
-		iconTableRef : { // icon 값 참조할 테이블 레퍼런스
-			"default" : "/Windchill/extcore/images/help.gif" // default
-		},
-		onClick : function(event) {
-			const oid = event.item.oid;
-			const url = getCallUrl("/part/changeList?oid=" + oid);
-			_popup(url, 1600, 800, "n");
-		}
-	},
-	filter : {
-		showIcon : false,
-		inline : false
-	},
-}, {
 	dataField : "number",
 	headerText : "품목번호",
 	dataType : "string",
 	width : 180,
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.part_oid;
-			const url = getCallUrl("/part/view?oid=" + oid);
-			_popup(url, 1600, 800, "n");
-		}
-	},
 	filter : {
 		showIcon : true,
 		inline : true
@@ -393,15 +327,6 @@ const columns = [ {
 	dataType : "string",
 	style : "aui-left",
 	width : 380,
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.oid;
-			const url = getCallUrl("/part/view?oid=" + oid);
-			_popup(url, 1600, 800, "n");
-		}
-	},
 	filter : {
 		showIcon : true,
 		inline : true
@@ -417,11 +342,11 @@ const columns = [ {
 	},
 }, {
 	dataField : "version",
-	headerText : "Rev.",
+	headerText : "REV",
 	dataType : "string",
 	width : 90,
 	renderer : {
-		type : "TemplateRenderer"	
+		type : "TemplateRenderer"
 	},
 	filter : {
 		showIcon : true,
@@ -458,7 +383,7 @@ const columns = [ {
 	dataField : "createdDate",
 	headerText : "등록일",
 	dataType : "date",
-	width : 140,
+	width : 100,
 	filter : {
 		showIcon : true,
 		inline : true
@@ -467,34 +392,12 @@ const columns = [ {
 	dataField : "modifiedDate",
 	headerText : "수정일",
 	dataType : "date",
-	width : 140,
+	width : 100,
 	filter : {
 		showIcon : true,
 		inline : true
 	},
-}, {
-	dataField : "ecoNo",
-	headerText : "BOM",
-	dataType : "string",
-	width : 80,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "version",
-	headerText : "version",
-	visible : false
-}, {
-	dataField : "dwgNo",
-	headerText : "dwgNo",
-	visible : false
-}, {
-	dataField : "modifier",
-	headerText : "modifier",
-	visible : false
 } ]
-
 
 function createAUIGrid(columnLayout) {
 	const props = {

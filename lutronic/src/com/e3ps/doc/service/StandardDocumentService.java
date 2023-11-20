@@ -174,8 +174,9 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
 
-			// 결재 이력 삭제
-			WFItemHelper.service.deleteWFItem(doc);
+			// 결재이력삭제
+			doc = (WTDocument) WorkspaceHelper.service.removeHistory(doc);
+
 			// 다 통과시 삭제
 			PersistenceHelper.manager.delete(doc);
 
@@ -391,7 +392,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		dto.setIBAValue(doc, preseration_code, "PRESERATION");
 		// 작성자
 		String writer = "";
-		if(!dto.getWriter_oid().equals("")) {
+		if (!dto.getWriter_oid().equals("")) {
 			writer = Long.toString(CommonUtil.getOIDLongValue(dto.getWriter_oid()));
 		}
 		dto.setIBAValue(doc, writer, "DSGN");
@@ -600,7 +601,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String iterationNote = dto.getIterationNote();
 		ArrayList<Map<String, String>> external = dto.getExternal();
 		boolean temprary = dto.isTemprary();
-		
+
 		// 결재
 		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
 		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
@@ -673,20 +674,20 @@ public class StandardDocumentService extends StandardManager implements Document
 			MailUserHelper.service.saveLink(workCopy, external);
 
 			// 임시저장 하겠다 한 경우
- 			if (temprary) {
+			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
-			}else {
+			} else {
 				State state = State.toState("INWORK");
- 				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
+				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
 			}
- 			
- 			// 결재시작
+
+			// 결재시작
 			if (approvalRows.size() > 0) {
 				WorkspaceHelper.service.register(workCopy, agreeRows, approvalRows, receiveRows);
 			}
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

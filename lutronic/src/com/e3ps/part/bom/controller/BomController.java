@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.EChangeActivity;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
@@ -157,7 +159,7 @@ public class BomController extends BaseController {
 		model.setViewName("popup:/part/bom/bom-batch");
 		return model;
 	}
-	
+
 	@Description(value = "BOM 첨부파일, 도면 일괄 다운로드")
 	@PostMapping(value = "/batch")
 	@ResponseBody
@@ -173,5 +175,18 @@ public class BomController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "BOM 에디터")
+	@GetMapping(value = "/editor")
+	public ModelAndView editor(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTPart root = (WTPart) CommonUtil.getObject(oid);
+		JSONArray tree = BomHelper.manager.loadEditor(root);
+		model.addObject("oid", oid);
+		model.addObject("tree", tree);
+		model.addObject("root", root);
+		model.setViewName("popup:/part/bom/bom-editor");
+		return model;
 	}
 }

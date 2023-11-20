@@ -1,9 +1,11 @@
 package com.e3ps.part.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,6 +33,10 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.Description;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,6 +62,7 @@ import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
@@ -203,14 +210,6 @@ public class PartController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
-	}
-
-	@Description(value = "BOM EDITOR 페이지")
-	@GetMapping(value = "/editor")
-	public ModelAndView editor() {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/part/bom/bom-editor.jsp");
-		return model;
 	}
 
 	/**
@@ -2387,5 +2386,22 @@ public class PartController extends BaseController {
 		model.addObject("isAdmin", isAdmin);
 		model.setViewName("/extcore/jsp/part/part-thumbnail.jsp");
 		return model;
+	}
+
+	@Description(value = "품목 재변환")
+	@ResponseBody
+	@GetMapping(value = "/publish")
+	public Map<String, Object> publish(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			PartHelper.service.publish(oid);
+			result.put("msg", "재변환이 요청 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

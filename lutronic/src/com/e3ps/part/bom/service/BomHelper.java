@@ -4,15 +4,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ThumbnailUtil;
-import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.service.PartSearchHelper;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -49,6 +48,15 @@ public class BomHelper {
 	 * 더미 품목
 	 */
 	private boolean skip(WTPart p) throws Exception {
+		String number = p.getNumber();
+		if (number.length() > 10) {
+			return true;
+		}
+
+		if (!Pattern.matches("^[0-9]+$", number)) {
+			return true;
+		}
+
 		return false;
 	}
 
@@ -81,6 +89,7 @@ public class BomHelper {
 				+ root.getIterationIdentifier().getSeries().getValue());
 		rootNode.put("creator", root.getCreatorFullName());
 		rootNode.put("isRoot", true);
+		rootNode.put("isRevise", root.getLifeCycleState().toString().equals("APPROVED"));
 		rootNode.put("link", "");
 		rootNode.put("qty", 1);
 
@@ -119,6 +128,7 @@ public class BomHelper {
 					+ p.getIterationIdentifier().getSeries().getValue());
 			node.put("creator", p.getCreatorFullName());
 			node.put("isRoot", false);
+			node.put("isRevise", p.getLifeCycleState().toString().equals("APPROVED"));
 			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("qty", link.getQuantity().getAmount());
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
@@ -129,7 +139,15 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
-//			loadEditor(p, node, level);
+
+//			boolean isLazy = isLazy(p, view, state, skip);
+//			if (!isLazy) {
+//				node.put("isLazy", false);
+//				node.put("children", new JSONArray());
+//			} else {
+//				node.put("isLazy", true);
+//			}
+
 			children.add(node);
 		}
 		rootNode.put("children", children);
@@ -344,6 +362,15 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(master, view, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
 			children.add(node);
 		}
 
@@ -469,6 +496,15 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(master, baseline, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
 			children.add(node);
 		}
 
@@ -564,6 +600,15 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(p, view, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
 			children.add(node);
 		}
 		rootNode.put("children", children);
@@ -660,6 +705,15 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(p, baseLine, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
 			children.add(node);
 		}
 		rootNode.put("children", children);
@@ -775,6 +829,14 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(master, view, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
 			list.add(node);
 		}
 		return list;
@@ -864,6 +926,15 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(master, baseline, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
 			list.add(node);
 		}
 		return list;
@@ -923,6 +994,14 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(p, view, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
 			list.add(node);
 		}
 		return list;
@@ -981,6 +1060,15 @@ public class BomHelper {
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
 			}
+
+			boolean isLazy = isLazy(p, baseLine, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
 			list.add(node);
 		}
 		return list;
@@ -1068,5 +1156,155 @@ public class BomHelper {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 정전개 하위가 잇는지 없는지 판단 - 베이스라인
+	 */
+	private boolean isLazy(WTPart parent, Baseline baseLine, boolean skip) throws Exception {
+		WTPartBaselineConfigSpec configSpec = WTPartBaselineConfigSpec.newWTPartBaselineConfigSpec(baseLine);
+		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
+		boolean isLazy = false;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			if (skip) {
+				if (skip(p)) {
+					continue;
+				}
+			}
+			isLazy = true;
+			break;
+		}
+		return isLazy;
+	}
+
+	/**
+	 * 정전개 하위가 잇는지 없는지 판단
+	 */
+	private boolean isLazy(WTPart parent, View view, State state, boolean skip) throws Exception {
+		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
+		boolean isLazy = false;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			if (skip) {
+				if (skip(p)) {
+					continue;
+				}
+			}
+			isLazy = true;
+			break;
+		}
+		return isLazy;
+	}
+
+	/**
+	 * 역전개 레이지 로드 여부 확인
+	 */
+	private boolean isLazy(WTPartMaster master, View view, String state, boolean skip) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+		int idx_part = query.appendClassList(WTPart.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+		sc.setOuterJoin(0);
+		query.appendAnd();
+		query.appendWhere(sc, new int[] { idx_usage, idx_part });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
+				new int[] { idx_part });
+
+		if (view != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
+					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
+		}
+
+		if (state != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+		}
+
+		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		boolean isLazy = false;
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			if (skip) {
+				if (skip(p)) {
+					continue;
+				}
+			}
+			isLazy = true;
+			break;
+		}
+		return isLazy;
+	}
+
+	/**
+	 * 베이스 라인 역전개 레이즈 로드 여부 확인
+	 */
+	private boolean isLazy(WTPartMaster master, String baseline, String state, boolean skip) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
+		int idx_part = query.appendClassList(WTPart.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx_usage, WTPartUsageLink.class, "roleBObjectRef.key.id", master);
+		SearchCondition sc = new SearchCondition(new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id"),
+				"=", new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+		sc.setFromIndicies(new int[] { idx_usage, idx_part }, 0);
+		sc.setOuterJoin(0);
+		query.appendAnd();
+		query.appendWhere(sc, new int[] { idx_usage, idx_part });
+
+		if (state != null) {
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+					new int[] { idx_part });
+		}
+
+		if (baseline != null) {
+			Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
+			int idx_b = query.addClassList(BaselineMember.class, false);
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(WTPart.class, "thePersistInfo.theObjectIdentifier.id",
+					BaselineMember.class, "roleBObjectRef.key.id"), new int[] { idx_part, idx_b });
+			query.appendAnd();
+			query.appendWhere(new SearchCondition(BaselineMember.class, "roleAObjectRef.key.id", "=",
+					baseLine.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_b });
+		}
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		boolean isLazy = false;
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			if (skip) {
+				if (skip(p)) {
+					continue;
+				}
+			}
+			isLazy = true;
+			break;
+		}
+		return isLazy;
 	}
 }

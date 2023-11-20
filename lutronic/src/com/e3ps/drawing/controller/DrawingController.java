@@ -1,5 +1,8 @@
 package com.e3ps.drawing.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Description;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +39,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
@@ -39,34 +47,45 @@ import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.mold.service.MoldHelper;
 import com.e3ps.part.service.PartHelper;
+import com.ptc.wvs.server.util.PublishUtils;
 
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentHolder;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
 import wt.epm.structure.EPMReferenceLink;
+import wt.fc.Persistable;
+import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
+import wt.representation.Representable;
+import wt.representation.Representation;
 import wt.session.SessionHelper;
+import wt.util.FileUtil;
 import wt.util.WTException;
 
 @Controller
 @RequestMapping(value = "/drawing/**")
-public class DrawingController extends BaseController{
-	
+public class DrawingController extends BaseController {
+
 	@Description(value = "도면 검색 페이지")
 	@GetMapping(value = "/list")
-	public ModelAndView list() throws Exception{
+	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
-		List<Map<String,String>> cadTypeList = DrawingHelper.manager.cadTypeList();
+		List<Map<String, String>> cadTypeList = DrawingHelper.manager.cadTypeList();
 		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_PART", "");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
-		WTUser sessionUser  = (WTUser) SessionHelper.manager.getPrincipal();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -81,7 +100,7 @@ public class DrawingController extends BaseController{
 		model.setViewName("/extcore/jsp/drawing/drawing-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "도면 등록 페이지")
 	@GetMapping(value = "/create")
 	public ModelAndView create() {
@@ -89,15 +108,15 @@ public class DrawingController extends BaseController{
 		model.setViewName("/extcore/jsp/drawing/drawing-create.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "도면 일괄 등록 페이지")
 	@GetMapping(value = "/batch")
-	public ModelAndView batch() throws Exception{
+	public ModelAndView batch() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/drawing/drawing-batch.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "도면 일괄 등록")
 	@ResponseBody
 	@PostMapping(value = "/batch")
@@ -123,12 +142,12 @@ public class DrawingController extends BaseController{
 		}
 		return result;
 	}
-	
+
 	@Description(value = "도면 검색 리스트 리턴")
 	@ResponseBody
 	@PostMapping(value = "/list")
-	public Map<String,Object> list(@RequestBody Map<String, Object> params) {
-		Map<String,Object> result = new HashMap<String, Object>();
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = DrawingHelper.manager.list(params);
 			result.put("result", SUCCESS);
@@ -139,38 +158,38 @@ public class DrawingController extends BaseController{
 		}
 		return result;
 	}
-	
+
 	@Description(value = "도면 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> create(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DrawingHelper.service.create(params);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "도면 상세 페이지")
-	@GetMapping(value =  "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception{
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		EPMDocument doc = (EPMDocument)CommonUtil.getObject(oid);
+		EPMDocument doc = (EPMDocument) CommonUtil.getObject(oid);
 		EpmData dto = new EpmData(doc);
-		
+
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("/extcore/jsp/drawing/drawing-view.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "도면 최신버전 이동")
 	@GetMapping(value = "/latest")
 	public ModelAndView latest(@RequestParam String oid) throws Exception {
@@ -183,90 +202,96 @@ public class DrawingController extends BaseController{
 		model.setViewName("popup:/drawing/drawing-view");
 		return model;
 	}
-	
-	/** CAD 구분 리스트 리턴
+
+	/**
+	 * CAD 구분 리스트 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/cadDivisionList")
-	public List<Map<String,String>> cadDivisionList(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = DrawingHelper.service.cadDivisionList();
+	public List<Map<String, String>> cadDivisionList(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, String>> list = DrawingHelper.service.cadDivisionList();
 		return list;
 	}
-	
-	/** CAD 타입 리스트 리턴
+
+	/**
+	 * CAD 타입 리스트 리턴
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/cadTypeList")
-	public List<Map<String,String>> cadTypeList(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,String>> list = DrawingHelper.service.cadTypeList();
+	public List<Map<String, String>> cadTypeList(HttpServletRequest request, HttpServletResponse response) {
+		List<Map<String, String>> list = DrawingHelper.service.cadTypeList();
 		return list;
 	}
-	
+
 	@RequestMapping("/include_Reference")
 	public ModelAndView include_Reference(HttpServletRequest request, HttpServletResponse response) {
-		String title = StringUtil.checkReplaceStr(request.getParameter("title"),"참조");
+		String title = StringUtil.checkReplaceStr(request.getParameter("title"), "참조");
 		String moduleType = request.getParameter("moduleType");
 		String oid = request.getParameter("oid");
 		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
 		List<EpmData> list = null;
 		try {
-			list = DrawingHelper.service.include_Reference(oid,moduleType);
+			list = DrawingHelper.service.include_Reference(oid, moduleType);
 			// HashSet 데이터 형태로 생성되면서 중복 제거됨
 			HashSet<EpmData> hs = new HashSet<EpmData>(list);
 
 			// ArrayList 형태로 다시 생성
 			list = new ArrayList<EpmData>(hs);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			list = new ArrayList<EpmData>();
 			e.printStackTrace();
 		}
 		ModelAndView model = new ModelAndView();
 		model.setViewName("include:/drawing/include_Reference");
-		model.addObject("title",title);
+		model.addObject("title", title);
 		model.addObject("moduleType", moduleType);
 		model.addObject("list", list);
-		model.addObject("distribute",distribute);
+		model.addObject("distribute", distribute);
 		return model;
 	}
-	
+
 	@Description(value = "참조 항목")
 	@PostMapping("/include_ReferenceBy")
 	@ResponseBody
-	public Map<String,Object> include_ReferenceBy(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String,Object> result = new HashMap<String,Object>();
-		String title = StringUtil.checkReplaceStr((String)params.get("title"),"참조 항목");
-		String distribute = StringUtil.checkNull((String)params.get("distribute"));
-		
+	public Map<String, Object> include_ReferenceBy(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String title = StringUtil.checkReplaceStr((String) params.get("title"), "참조 항목");
+		String distribute = StringUtil.checkNull((String) params.get("distribute"));
+
 		List<EpmData> list = new ArrayList<EpmData>();
-		String oid = (String)params.get("oid");
-		if(StringUtil.checkString(oid)) {
-			EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
-			List<EPMReferenceLink> refList = EpmSearchHelper.service.getEPMReferenceList((EPMDocumentMaster)epm.getMaster());
-			for(EPMReferenceLink link : refList) {
+		String oid = (String) params.get("oid");
+		if (StringUtil.checkString(oid)) {
+			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
+			List<EPMReferenceLink> refList = EpmSearchHelper.service
+					.getEPMReferenceList((EPMDocumentMaster) epm.getMaster());
+			for (EPMReferenceLink link : refList) {
 				EPMDocument epmdoc = link.getReferencedBy();
 				EpmData data = new EpmData(epmdoc);
-				
+
 				data.setLinkRefernceType(link.getReferenceType().getDisplay(Message.getLocale()));
-				
+
 				list.add(data);
 			}
 		}
-		result.put("title",title);
+		result.put("title", title);
 		result.put("list", list);
 		result.put("distribute", distribute);
 		return result;
 	}
+
 	@Description(value = "도면 삭제")
 	@ResponseBody
 	@DeleteMapping(value = "/delete")
-	public Map<String,Object> deleteDrwaingAction(@RequestParam String oid) {
-		Map<String,Object> result = DrawingHelper.service.delete(oid);
+	public Map<String, Object> deleteDrwaingAction(@RequestParam String oid) {
+		Map<String, Object> result = DrawingHelper.service.delete(oid);
 		if ((boolean) result.get("result")) {
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
@@ -276,8 +301,10 @@ public class DrawingController extends BaseController{
 		}
 		return result;
 	}
-	
-	/** 도면 선택 페이지
+
+	/**
+	 * 도면 선택 페이지
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -290,36 +317,38 @@ public class DrawingController extends BaseController{
 		model.setViewName("popup:/drawing/selectDrawingPopup");
 		return model;
 	}
-	
+
 	@Description(value = "도면 수정 페이지")
 	@GetMapping(value = "/update")
 	public ModelAndView update(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		EPMDocument epm = (EPMDocument)CommonUtil.getObject(oid);
+		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
 		EpmData dto = new EpmData(epm);
 		model.addObject("dto", dto);
 		model.setViewName("/extcore/jsp/drawing/drawing-update.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "도면 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/update")
-	public Map<String,Object> update(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> update(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DrawingHelper.service.update(params);
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
-	/** 관련 도면 추가
+
+	/**
+	 * 관련 도면 추가
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -330,15 +359,15 @@ public class DrawingController extends BaseController{
 		String oid = request.getParameter("oid");
 		String title = request.getParameter("title");
 		String paramName = request.getParameter("paramName");
-		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"),"");
-		
+		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"), "");
+
 		List<EpmData> list = null;
 		try {
-			list = DrawingHelper.service.include_DrawingList(oid,moduleType, epmType);
-		} catch(Exception e) {
+			list = DrawingHelper.service.include_DrawingList(oid, moduleType, epmType);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("moduleType", moduleType);
 		model.addObject("oid", oid);
@@ -348,8 +377,10 @@ public class DrawingController extends BaseController{
 		model.setViewName("include:/drawing/include_DrawingSelect");
 		return model;
 	}
-	
-	/** 관련 도면 보기
+
+	/**
+	 * 관련 도면 보기
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -360,16 +391,16 @@ public class DrawingController extends BaseController{
 		String oid = request.getParameter("oid");
 		String title = request.getParameter("title");
 		String paramName = request.getParameter("paramName");
-		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"),"");
+		String epmType = StringUtil.checkReplaceStr(request.getParameter("epmType"), "");
 		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-		//System.out.println("include_DrawingView distribute =" + distribute);
+		// System.out.println("include_DrawingView distribute =" + distribute);
 		List<EpmData> list = null;
 		try {
-			list = DrawingHelper.service.include_DrawingList(oid,moduleType,epmType);
-		} catch(Exception e) {
+			list = DrawingHelper.service.include_DrawingList(oid, moduleType, epmType);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("moduleType", moduleType);
 		model.addObject("epmType", epmType);
@@ -381,16 +412,18 @@ public class DrawingController extends BaseController{
 		model.setViewName("include:/drawing/include_DrawingView");
 		return model;
 	}
-	
-	/** 도면 미리보기
+
+	/**
+	 * 도면 미리보기
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@RequestMapping("/thumbview")
-	public ModelAndView thumbview(HttpServletRequest request, HttpServletResponse response){
+	public ModelAndView thumbview(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		
+
 		Map<String, Object> thumbInfoMap;
 		try {
 			thumbInfoMap = DrawingHelper.service.thumbView(request);
@@ -401,16 +434,16 @@ public class DrawingController extends BaseController{
 		model.setViewName("include:/drawing/thumbview");
 		return model;
 	}
-	
+
 	@RequestMapping("/include_drawingLink")
 	public ModelAndView include_drawingLink(HttpServletRequest request, HttpServletResponse response) {
 		String module = request.getParameter("module");
 		String oid = request.getParameter("oid");
 		String title = StringUtil.checkReplaceStr(request.getParameter("title"), Message.get("관련 도면"));
 		String enabled = StringUtil.checkReplaceStr(request.getParameter("enabled"), "false");
-		
+
 		List<EpmData> list = DrawingHelper.service.include_drawingLink(module, oid);
-		
+
 		ModelAndView model = new ModelAndView();
 		model.setViewName("empty:/drawing/include_drawingLink");
 		model.addObject("module", module);
@@ -420,22 +453,22 @@ public class DrawingController extends BaseController{
 		model.addObject("enabled", Boolean.valueOf(enabled));
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/linkDrawingAction")
 	public ResultData linkDrawingAction(HttpServletRequest request, HttpServletResponse response) {
 		return DrawingHelper.service.linkDrawingAction(request, response);
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/deleteDrwaingLinkAction")
 	public ResultData deleteDrwaingLinkAction(HttpServletRequest request, HttpServletResponse response) {
 		return DrawingHelper.service.deleteDrawingLinkAction(request, response);
 	}
-	
-	
-	
-	/** 도면 삭제
+
+	/**
+	 * 도면 삭제
+	 * 
 	 * @param request
 	 * @param response
 	 * @param oid
@@ -443,78 +476,82 @@ public class DrawingController extends BaseController{
 	 */
 	@ResponseBody
 	@RequestMapping("/updateNameAction")
-	public ResultData updateNameAction(HttpServletRequest request, HttpServletResponse response, @RequestParam("oid")String oid) {
-	
+	public ResultData updateNameAction(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam("oid") String oid) {
+
 		return DrawingHelper.service.updateNameAction(request, response);
 	}
-	
+
 	@RequestMapping("/createPackageDrawing")
 	public ModelAndView createPackageDrawing(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu3");
-		model.addObject("module","drawing");
+		model.addObject("module", "drawing");
 		model.setViewName("default:/drawing/createPackageDrawing");
 		return model;
 	}
-	
+
 	@RequestMapping("/createPackageDrawingAction")
 	public ModelAndView createPackageDrawingAction(HttpServletRequest request, HttpServletResponse response) {
 		String xmlString = "";
 
 		xmlString = DrawingHelper.service.createPackageDrawingAction(request, response);
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("xmlString", xmlString);
 		model.setViewName("empty:/drawing/createPackageDrawingAction");
 		return model;
 	}
-	/**  BOM Drawing 다운
+
+	/**
+	 * BOM Drawing 다운
+	 * 
 	 * @param request
 	 * @param response
 	 */
-	@RequestMapping(value="partTreeDrawingDown")
+	@RequestMapping(value = "partTreeDrawingDown")
 	public ModelAndView partTreeDrawingDown(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
-		
+
 		try {
 			DrawingHelper.service.partTreeDrawingDown(request, response);
-			
-			
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-				//model.addObject("xmlString", xmlString);
-				model.setViewName("empty:/drawing/createPackageDrawingAction");
+		// model.addObject("xmlString", xmlString);
+		model.setViewName("empty:/drawing/createPackageDrawingAction");
 		return model;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/cadRePublish")
 	public ResultData cadRePublish(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		String oid = StringUtil.checkNull(request.getParameter("oid"));
-		
+
 		return EpmSearchHelper.service.cadRePublish(oid);
-		
+
 	}
-	
-	/**  부품 상태 수정
+
+	/**
+	 * 부품 상태 수정
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("/showThumAction")
-	public Map<String,Object> showThumAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String,Object> map = new HashMap<String, Object>();
-		
-		try{
+	public Map<String, Object> showThumAction(HttpServletRequest request, HttpServletResponse response) {
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		try {
 			String oid = request.getParameter("oid");
 			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
 			EpmData data = new EpmData(epm);
-			
-			if(data.getThum() != null) {
+
+			if (data.getThum() != null) {
 				String num = data.number.replaceAll(" ", "_");
 				String imgpath = data.getThum();
 				String copyTag = data.getCopyTag();
@@ -522,16 +559,191 @@ public class DrawingController extends BaseController{
 				map.put("imgpath", imgpath);
 				map.put("copyTag", copyTag);
 				map.put("result", true);
-			}else{
+			} else {
 				map.put("result", false);
 			}
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			map.put("result", false);
 		}
-		
-		
 		return map;
+	}
+
+	@Description(value = "SAP 에서 호출할 주소")
+	@GetMapping(value = "/viewToSap")
+	public ModelAndView viewToSap(@RequestParam String number, @RequestParam String version) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTPart part = PartHelper.manager.getPart(number, version);
+		if (part != null) {
+			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+			if (epm != null) {
+				model.setViewName("/extcore/jsp/part/part-thumbnail.jsp");
+			}
+		}
+		return model;
+	}
+
+	@Description(value = "PDF 다운로드")
+	@GetMapping(value = "/pdf")
+	public ResponseEntity<byte[]> pdf(@RequestParam String oid) {
+		HttpHeaders headers = new HttpHeaders();
+		byte[] bytes = null;
+		try {
+
+			Persistable per = CommonUtil.getObject(oid);
+			EPMDocument epm = null;
+			if (per instanceof WTPart) {
+				WTPart part = (WTPart) per;
+				epm = PartHelper.manager.getEPMDocument(part);
+			} else if (per instanceof EPMDocument) {
+				epm = (EPMDocument) per;
+			}
+			if (epm != null) {
+				EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(epm);
+				if (epm_d != null) {
+					Representable representable = PublishUtils.findRepresentable(epm_d);
+					Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+					if (representation != null) {
+						QueryResult result = ContentHelper.service.getContentsByRole(representation,
+								ContentRoleType.ADDITIONAL_FILES);
+						while (result.hasMoreElements()) {
+							ApplicationData data = (ApplicationData) result.nextElement();
+							String ext = FileUtil.getExtension(data.getFileName());
+							if (!"dxf".equalsIgnoreCase(ext)) {
+								continue;
+							}
+							// 다운로드 이력 생성..
+							DownloadHistoryHelper.service.create(oid);
+
+							InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+
+							ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+							byte[] buffer = new byte[1024];
+							int length;
+							while ((length = is.read(buffer)) != -1) {
+								byteArrayOutputStream.write(buffer, 0, length);
+							}
+
+							bytes = byteArrayOutputStream.toByteArray();
+							String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+
+							headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+							headers.setContentLength(bytes.length);
+							headers.setContentDispositionFormData("attachment", name);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+	}
+
+	@Description(value = "STEP 다운로드")
+	@GetMapping(value = "/step")
+	public ResponseEntity<byte[]> step(@RequestParam String oid) {
+		HttpHeaders headers = new HttpHeaders();
+		byte[] bytes = null;
+		try {
+
+			Persistable per = CommonUtil.getObject(oid);
+			EPMDocument epm = null;
+			if (per instanceof WTPart) {
+				WTPart part = (WTPart) per;
+				epm = PartHelper.manager.getEPMDocument(part);
+			} else if (per instanceof EPMDocument) {
+				epm = (EPMDocument) per;
+			}
+			if (epm != null) {
+				QueryResult result = ContentHelper.service.getContentsByRole(epm, ContentRoleType.SECONDARY);
+				while (result.hasMoreElements()) {
+					ApplicationData data = (ApplicationData) result.nextElement();
+					String ext = FileUtil.getExtension(data.getFileName());
+					if (!"stp".equalsIgnoreCase(ext)) {
+						continue;
+					}
+					// 다운로드 이력 생성..
+					DownloadHistoryHelper.service.create(oid);
+
+					InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+
+					ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+					byte[] buffer = new byte[1024];
+					int length;
+					while ((length = is.read(buffer)) != -1) {
+						byteArrayOutputStream.write(buffer, 0, length);
+					}
+
+					bytes = byteArrayOutputStream.toByteArray();
+					String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+
+					headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+					headers.setContentLength(bytes.length);
+					headers.setContentDispositionFormData("attachment", name);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+	}
+
+	@Description(value = "DXF 다운로드")
+	@GetMapping(value = "/dxf")
+	public ResponseEntity<byte[]> dxf(@RequestParam String oid) {
+		HttpHeaders headers = new HttpHeaders();
+		byte[] bytes = null;
+		try {
+
+			Persistable per = CommonUtil.getObject(oid);
+			EPMDocument epm = null;
+			if (per instanceof WTPart) {
+				WTPart part = (WTPart) per;
+				epm = PartHelper.manager.getEPMDocument(part);
+			} else if (per instanceof EPMDocument) {
+				epm = (EPMDocument) per;
+			}
+			if (epm != null) {
+				EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(epm);
+				if (epm_d != null) {
+					Representable representable = PublishUtils.findRepresentable(epm_d);
+					Representation representation = PublishUtils.getRepresentation(representable, true, null, false);
+					if (representation != null) {
+						QueryResult result = ContentHelper.service.getContentsByRole(representation,
+								ContentRoleType.SECONDARY);
+						while (result.hasMoreElements()) {
+							ApplicationData data = (ApplicationData) result.nextElement();
+							String ext = FileUtil.getExtension(data.getFileName());
+							if (!"dxf".equalsIgnoreCase(ext)) {
+								continue;
+							}
+							// 다운로드 이력 생성..
+							DownloadHistoryHelper.service.create(oid);
+
+							InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+
+							ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+							byte[] buffer = new byte[1024];
+							int length;
+							while ((length = is.read(buffer)) != -1) {
+								byteArrayOutputStream.write(buffer, 0, length);
+							}
+
+							bytes = byteArrayOutputStream.toByteArray();
+							String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+
+							headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+							headers.setContentLength(bytes.length);
+							headers.setContentDispositionFormData("attachment", name);
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
 	}
 }

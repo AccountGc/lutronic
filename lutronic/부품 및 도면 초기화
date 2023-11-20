@@ -1,0 +1,15 @@
+1. SQL 접속
+
+2. Table DROP 
+	-> %WT_HOME%\db\sql3\wnc\Foundation\wt\part 아래 DROP SQL 문 실행
+	-> %WT_HOME%\db\sql3\wnc\Foundation\wt\epm 아래 DROP SQL 문 실행
+	
+3. Table CREATE
+	-> %WT_HOME%\db\sql3\wnc\Foundation\wt\part 아래 MAKE SQL 문 실행
+	-> %WT_HOME%\db\sql3\wnc\Foundation\wt\epm 아래 MAKE SQL 문 실행
+	
+4. epmAuthoringAppVersion.xml 로드
+	-> Shell -> java wt.load.LoadFromFile -d %WT_HOME%\loadFiles\epmAuthoringAppVersion.xml -u 관리자계정 -p 관리자패스워드
+	
+5. 기존 존재하는 작업공간 사용 불가능 
+	-> 삭제 후 신규로 작업공간 생성하여 사용

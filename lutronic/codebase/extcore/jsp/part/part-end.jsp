@@ -30,7 +30,16 @@ JSONArray end = (JSONArray) request.getAttribute("end");
 		headerText : "품목번호",
 		dataField : "number",
 		dataType : "string",
-		width : 140
+		width : 140,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},		
 	}, {
 		headerText : "품목번호",
 		dataField : "name",

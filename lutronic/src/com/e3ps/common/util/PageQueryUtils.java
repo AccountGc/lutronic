@@ -26,7 +26,6 @@ public class PageQueryUtils {
 		if (StringUtil.isNull(sessionid)) {
 			sessionid = "0";
 		}
-		System.out.println("+sessionid=" + sessionid);
 		this.query = query;
 		this.sessionid = Long.parseLong(sessionid);
 	}

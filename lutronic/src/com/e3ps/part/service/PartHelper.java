@@ -990,10 +990,22 @@ public class PartHelper {
 	public JSONArray end(String oid, String baseline) throws Exception {
 		JSONArray end = new JSONArray();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		ArrayList<WTPart> list = new ArrayList<>();
 		if (StringUtil.checkString(baseline)) {
-			endRecursive(end, part, baseline);
+			endRecursive(list, part, baseline);
 		} else {
-			endRecursive(end, part);
+			endRecursive(list, part);
+		}
+
+		for (WTPart p : list) {
+			Map<String, String> map = new HashMap<>();
+			map.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("number", p.getNumber());
+			map.put("name", p.getName());
+			map.put("state", p.getLifeCycleState().getDisplay());
+			map.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ p.getIterationIdentifier().getSeries().getValue());
+			end.add(map);
 		}
 		return end;
 	}
@@ -1001,7 +1013,7 @@ public class PartHelper {
 	/**
 	 * 완제품 재귀함수
 	 */
-	private void endRecursive(JSONArray end, WTPart part) throws Exception {
+	private void endRecursive(ArrayList<WTPart> list, WTPart part) throws Exception {
 		WTPartMaster master = (WTPartMaster) part.getMaster();
 		View view = ViewHelper.service.getView(part.getViewName());
 		State state = part.getLifeCycleState();
@@ -1034,14 +1046,9 @@ public class PartHelper {
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.size() == 0) {
-			Map<String, String> map = new HashMap<>();
-			map.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("number", part.getNumber());
-			map.put("name", part.getName());
-			map.put("state", part.getLifeCycleState().getDisplay());
-			map.put("version", part.getVersionIdentifier().getSeries().getValue() + "."
-					+ part.getIterationIdentifier().getSeries().getValue());
-			end.add(map);
+			if (!list.contains(part)) {
+				list.add(part);
+			}
 		}
 		while (qr.hasMoreElements()) {
 			Object obj[] = (Object[]) qr.nextElement();
@@ -1049,14 +1056,14 @@ public class PartHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
-			endRecursive(end, p);
+			endRecursive(list, p);
 		}
 	}
 
 	/**
 	 * 완제품 베이스라인 재귀함수
 	 */
-	private void endRecursive(JSONArray end, WTPart part, String baseline) throws Exception {
+	private void endRecursive(ArrayList<WTPart> list, WTPart part, String baseline) throws Exception {
 		WTPartMaster master = (WTPartMaster) part.getMaster();
 		State state = part.getLifeCycleState();
 		QuerySpec query = new QuerySpec();
@@ -1090,14 +1097,10 @@ public class PartHelper {
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.size() == 0) {
-			Map<String, String> map = new HashMap<>();
-			map.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("number", part.getNumber());
-			map.put("name", part.getName());
-			map.put("state", part.getLifeCycleState().getDisplay());
-			map.put("version", part.getVersionIdentifier().getSeries().getValue() + "."
-					+ part.getIterationIdentifier().getSeries().getValue());
-			end.add(map);
+
+			if (!list.contains(part)) {
+				list.add(part);
+			}
 		}
 
 		while (qr.hasMoreElements()) {
@@ -1106,7 +1109,7 @@ public class PartHelper {
 				continue;
 			}
 			WTPart p = (WTPart) obj[1];
-			endRecursive(end, p, baseline);
+			endRecursive(list, p, baseline);
 		}
 	}
 
@@ -1287,7 +1290,7 @@ public class PartHelper {
 	}
 
 	/**
-	 * 부품과 연결된 EPMDocument 가져오는 함수
+	 * 부품과 연결된 도면 가져오는 함수
 	 */
 	public EPMDocument getEPMDocument(WTPart part) throws Exception {
 		QueryResult qr = PersistenceHelper.manager.navigate(part, EPMBuildRule.BUILD_SOURCE_ROLE, EPMBuildRule.class);

@@ -15,11 +15,11 @@ ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("ma
 ArrayList<NumberCode> productmethodList = (ArrayList<NumberCode>) request.getAttribute("productmethodList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> finishList = (ArrayList<NumberCode>) request.getAttribute("finishList");
-List<Map<String,String>> cadTypeList = (List<Map<String,String>>) request.getAttribute("cadTypeList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> cadTypeList = (List<Map<String, String>>) request.getAttribute("cadTypeList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) request.getAttribute("sessionUser");
-String userOid = CommonUtil.getOIDString(user);
-String userNm = user.getFullName();
+String oid = user.getPersistInfo().getObjectIdentifier().getStringValue();
+String userName = user.getFullName();
 QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>
@@ -36,7 +36,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -63,16 +63,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<input type="hidden" name="oid" id="oid">
 					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
 					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
-<%-- 					<input type="hidden" name="locationName" id="locationName" value="<%=DrawingHelper.ROOTLOCATION%>"> --%>
-<%-- 					<span id="locationName"><%=DrawingHelper.ROOTLOCATION%></span> --%>
-<!-- 					<span id="locationName"> -->
-<!-- 						/Default/PART_Drawing -->
-<!-- 					</span> -->
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
-					<input type="text" name="creator" id="creator" value="<%=userNm%>" data-multi="false" class="width-300">
-					<input type="hidden" name="creatorOid" id="creatorOid" value="<%=userOid%>">
+					<input type="text" name="creator" id="creator" value="<%=userName%>" data-multi="false" class="width-200">
+					<input type="hidden" name="creatorOid" id="creatorOid" value="<%=oid%>">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>등록일</th>
@@ -83,23 +78,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
-<!-- 				<th>CAD 구분</th> -->
-<!-- 				<td class="indent5"> -->
-<!-- 					<select name="cadDivision" id="cadDivision" class="width-200"> -->
-<!-- 						<option value="">선택</option> -->
-<!-- 						<option value="INWORK">작업 중</option> -->
-<!-- 						<option value="UNDERAPPROVAL">승인 중</option> -->
-<!-- 						<option value="APPROVED">승인됨</option> -->
-<!-- 						<option value="RETURN">반려됨</option> -->
-<!-- 					</select> -->
-<!-- 				</td> -->
 			<tr>
 				<th>도면번호</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300">
 				</td>
 				<th>도면명</th>
-				<td class="indent5" >
+				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
 				<th>수정일</th>
@@ -129,7 +114,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<select name="cadType" id="cadType" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> cadType : cadTypeList) {
+						for (Map<String, String> cadType : cadTypeList) {
 						%>
 						<option value="<%=cadType.get("code")%>"><%=cadType.get("name")%></option>
 						<%
@@ -141,19 +126,19 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<td>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" id="latest"name="latest" value="true" checked="checked">
+						<input type="radio" id="latest" name="latest" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
-								<b>최신버전</b>
+								<b>최신REV</b>
 							</label>
 						</div>
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" id="islastversion"name="islastversion" value="">
+						<input type="radio" id="islastversion" name="islastversion" value="">
 						<div class="state p-success">
 							<label>
-								<b>모든버전</b>
+								<b>모든REV</b>
 							</label>
 						</div>
 					</div>
@@ -165,12 +150,12 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-							<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-							}
+						}
 						}
 						%>
 					</select>
@@ -210,7 +195,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (QuantityUnit unit : unitList) {
 						%>
-						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<option value="<%=unit.toString()%>"><%=unit.getDisplay()%></option>
 						<%
 						}
 						%>
@@ -218,7 +203,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 				<th>무게</th>
 				<td class="indent5">
-					<input type="text" name="weight1" id="weight1" class="width-100"> ~ 
+					<input type="text" name="weight1" id="weight1" class="width-100">
+					~
 					<input type="text" name="weight2" id="weight2" class="width-100">
 				</td>
 				<th>Manufacturer</th>
@@ -277,10 +263,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('drawing-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('drawing-list');">
-					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);"> 
+					<input type="button" value="펼치기" title="펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -322,36 +308,30 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "step",
-					headerText : "STEP",
+					dataField : "_3d",
+					headerText : "3D",
 					dataType : "string",
 					width : 60,
 					renderer : {
-						type : "TemplateRenderer"
+						type : "ImageRenderer",
+						altField : null,
+						onClick : function(event) {
+						}
 					},
 					filter : {
 						showIcon : false,
 						inline : false
 					},
 				}, {
-					dataField : "dxf",
-					headerText : "DXF",
+					dataField : "_2d",
+					headerText : "2D",
 					dataType : "string",
 					width : 60,
 					renderer : {
-						type : "TemplateRenderer"
-					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
-				}, {
-					dataField : "pdf",
-					headerText : "PDF",
-					dataType : "string",
-					width : 60,
-					renderer : {
-						type : "TemplateRenderer"
+						type : "ImageRenderer",
+						altField : null,
+						onClick : function(event) {
+						}
 					},
 					filter : {
 						showIcon : false,
@@ -381,17 +361,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/drawing/view?oid=" + oid);
-							_popup(url, 1600, 800,"n");
+							_popup(url, 1600, 800, "n");
 						}
-					},
-				}, {
-					dataField : "thum",
-					headerText : "Thumbnail",
-					dataType : "string",
-					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "name",
@@ -408,7 +379,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/drawing/view?oid=" + oid);
-							_popup(url, 1600, 800,"n");
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -422,7 +393,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "REV",
 					dataType : "string",
 					width : 100,
 					filter : {
@@ -430,7 +401,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						inline : true
 					},
 				}, {
-					dataField : "stateDisplay",
+					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
@@ -442,25 +413,25 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 140,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "createDate",
+					dataField : "createdDate",
 					headerText : "등록일",
-					dataType : "string",
-					width : 140,
+					dataType : "date",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
 					},
 				}, {
-					dataField : "modifyDate",
+					dataField : "modifiedDate",
 					headerText : "수정일",
-					dataType : "string",
-					width : 140,
+					dataType : "date",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -497,16 +468,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			}
 
 			function loadGridData() {
- 				let params = new Object();
- 				$("input[name=sessionid").val(0);
- 				const url = getCallUrl("/drawing/list");
-				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification"];
+				let params = new Object();
+				$("input[name=sessionid").val(0);
+				const url = getCallUrl("/drawing/list");
+				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification" ];
 				const latest = $("input[name=latest]:checked").val();
- 				params = toField(params, field);
- 				params.latest = JSON.parse(latest);
- 				AUIGrid.showAjaxLoader(myGridID);
- 				parent.openLayer();
- 				call(url, params, function(data) {
+				params = toField(params, field);
+				params.latest = JSON.parse(latest);
+				AUIGrid.showAjaxLoader(myGridID);
+				parent.openLayer();
+				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
@@ -548,9 +519,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			});
 
 			function exportExcel() {
-			    const exceptColumnFields = [ "step", "dxf", "pdf", "thum" ];
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("도면 리스트", "도면", "도면 리스트", exceptColumnFields, sessionName);
+				const exceptColumnFields = [ "step", "dxf", "pdf", "thum" ];
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("도면 리스트", "도면", "도면 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {
@@ -568,7 +539,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(_myGridID);
 			});
-			
+
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');
 				// 버근가..

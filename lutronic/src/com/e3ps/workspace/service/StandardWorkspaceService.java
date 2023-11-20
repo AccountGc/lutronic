@@ -19,6 +19,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.groupware.workprocess.service.AsmApprovalHelper;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.sap.service.SAPHelper;
 import com.e3ps.workspace.ApprovalLine;
@@ -810,8 +811,15 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 	@Override
 	public Persistable removeHistory(Persistable per) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
+		if (m != null) {
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
+			for (ApprovalLine line : list) {
+				PersistenceHelper.manager.delete(line);
+			}
+		}
+		PersistenceHelper.manager.delete(m);
+		return PersistenceHelper.manager.refresh(per);
 	}
 
 	@Override

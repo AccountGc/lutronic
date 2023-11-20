@@ -89,9 +89,11 @@ public class PartColumn {
 		EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 		// 3D 캐드 세팅..
 		if (epm != null) {
-			EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
-			if (epm2D != null) {
-				set_2d(ThumbnailUtil.thumbnailSmall(epm2D));
+			EPMDocument epm_d = PartHelper.manager.getEPMDocument2D(epm);
+			setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
+			if (epm_d != null) {
+				set_2d(ThumbnailUtil.thumbnailSmall(epm_d));
+				setDrawing_oid(epm_d.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
 		}
 	}

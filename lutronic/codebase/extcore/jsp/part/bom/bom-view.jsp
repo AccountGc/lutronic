@@ -251,6 +251,9 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		loadGridData();
 		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyLoadHandler);
+		AUIGrid.bind(myGridID, "treeOpenChange", function( event ) {
+			console.log(event.item);
+		});
 		AUIGrid.bind(myGridID, "contextMenu", function(event) {
 			const menu = [ {
 				label : "품목정보보기",
@@ -262,7 +265,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 				label : "하위품목",
 				callback : auiContextHandler
 			}, {
-				label : "완제품",
+				label : "END ITEM",
 				callback : auiContextHandler
 			}, {
 				label : "속성보기",
@@ -339,7 +342,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 			break;
 		case 12:
 			// AP도 못보게..
-			if(item.dwg_oid === "" || item.dwg_oid.indexOf("WTDocument") > -1) {
+			if (item.dwg_oid === "" || item.dwg_oid.indexOf("WTDocument") > -1) {
 				alert("2D 도면이 존재하지 않습니다.");
 				return false;
 			}
@@ -430,32 +433,8 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
 			for (let j = 0; j < grid.length; j++) {
 				const item = grid[j];
-				const oid = item.oid;
-				const level = item.level;
-				const params = {
-					oid : oid,
-					skip : JSON.parse(skip),
-					level : level,
-					desc : JSON.parse(sort),
-					baseline : baseline
-				};
-
-				const url = getCallUrl("/bom/lazyLoad")
-				call(url, params, function(data) {
-					grid[j].children = data.list;
-					grid[j] = _recursion(grid[j], skip, sort, baseline);
-					const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
-					AUIGrid.updateRow(myGridID, grid[j], rowIndex);
-				}, "POST", false);
-			}
-			const tree = AUIGrid.getTreeGridData(myGridID);
-			AUIGrid.setGridData(myGridID, tree);
-			AUIGrid.expandAll(myGridID);
-		} else {
-			for (let i = 0; i < depth; i++) {
-				const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", i + 1);
-				for (let j = 0; j < grid.length; j++) {
-					const item = grid[j];
+				const isLazy = item.isLazy;
+				if (isLazy) {
 					const oid = item.oid;
 					const level = item.level;
 					const params = {
@@ -469,13 +448,45 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 					const url = getCallUrl("/bom/lazyLoad")
 					call(url, params, function(data) {
 						grid[j].children = data.list;
-						if (depth - 1 != grid[j]._$depth) {
-							grid[j] = recursion(grid[j], depth, skip, sort, baseline);
-						}
-
+						grid[j] = _recursion(grid[j], skip, sort, baseline);
 						const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
 						AUIGrid.updateRow(myGridID, grid[j], rowIndex);
 					}, "POST", false);
+				}
+			}
+			const tree = AUIGrid.getTreeGridData(myGridID);
+			AUIGrid.setGridData(myGridID, tree);
+			AUIGrid.expandAll(myGridID);
+		} else {
+			for (let i = 0; i < depth; i++) {
+				const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", i + 1);
+				for (let j = 0; j < grid.length; j++) {
+					const item = grid[j];
+					const isLazy = item.isLazy;
+					const _$lazyRequested = item._$lazyRequested;
+					logger(_$lazyRequested);
+					if (isLazy && !_$lazyRequested) {
+						const oid = item.oid;
+						const level = item.level;
+						const params = {
+							oid : oid,
+							skip : JSON.parse(skip),
+							level : level,
+							desc : JSON.parse(sort),
+							baseline : baseline
+						};
+
+						const url = getCallUrl("/bom/lazyLoad")
+						call(url, params, function(data) {
+							grid[j].children = data.list;
+							if (depth - 1 != grid[j]._$depth) {
+								grid[j] = recursion(grid[j], depth, skip, sort, baseline);
+							}
+
+							const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+							AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+						}, "POST", false);
+					}
 				}
 			}
 			end(depth);
@@ -486,22 +497,25 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		const grid = parent.children;
 		for (let i = 0; i < grid.length; i++) {
 			const item = grid[i];
-			const oid = item.oid;
-			const level = item.level;
-			const params = {
-				oid : oid,
-				skip : JSON.parse(skip),
-				level : level,
-				desc : JSON.parse(sort),
-				baseline : baseline
-			};
+			const isLazy = item.isLazy;
+			if (isLazy) {
+				const oid = item.oid;
+				const level = item.level;
+				const params = {
+					oid : oid,
+					skip : JSON.parse(skip),
+					level : level,
+					desc : JSON.parse(sort),
+					baseline : baseline
+				};
 
-			const url = getCallUrl("/bom/lazyLoad")
-			call(url, params, function(data) {
-				grid[i].children = data.list;
-				grid[i] = _recursion(grid[i], skip, sort, baseline);
-				parent.children[i] = grid[i];
-			}, "POSt", false);
+				const url = getCallUrl("/bom/lazyLoad")
+				call(url, params, function(data) {
+					grid[i].children = data.list;
+					grid[i] = _recursion(grid[i], skip, sort, baseline);
+					parent.children[i] = grid[i];
+				}, "POSt", false);
+			}
 		}
 		return parent;
 	}
@@ -510,24 +524,28 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		const grid = parent.children;
 		for (let i = 0; i < grid.length; i++) {
 			const item = grid[i];
-			const oid = item.oid;
-			const level = item.level;
-			const params = {
-				oid : oid,
-				skip : JSON.parse(skip),
-				level : level,
-				desc : JSON.parse(sort),
-				baseline : baseline
-			};
+			const isLazy = item.isLazy;
+			const _$lazyRequested = item._$lazyRequested;
+			if (isLazy && !_$lazyRequested) {
+				const oid = item.oid;
+				const level = item.level;
+				const params = {
+					oid : oid,
+					skip : JSON.parse(skip),
+					level : level,
+					desc : JSON.parse(sort),
+					baseline : baseline
+				};
 
-			const url = getCallUrl("/bom/lazyLoad")
-			call(url, params, function(data) {
-				grid[i].children = data.list;
-				if (depth - 1 != grid[i]._$depth) {
-					grid[i] = recursion(grid[i], depth, skip, sort, baseline);
-				}
-				parent.children[i] = grid[i];
-			}, "POSt", false);
+				const url = getCallUrl("/bom/lazyLoad")
+				call(url, params, function(data) {
+					grid[i].children = data.list;
+					if (depth - 1 != grid[i]._$depth) {
+						grid[i] = recursion(grid[i], depth, skip, sort, baseline);
+					}
+					parent.children[i] = grid[i];
+				}, "POSt", false);
+			}
 		}
 		return parent;
 	}
