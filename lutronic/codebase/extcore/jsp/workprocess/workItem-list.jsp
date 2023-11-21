@@ -45,9 +45,9 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchItem">
-					<input type="button" value="일괄수신" title="일괄수신" id="batchReceive">
-					<input type="button" value="새로고침" title="새로고침" id="refreshBtn" onclick="javascript:location.reload();">
+					<input type="button" value="검색" title="검색" onclick="searchItem();">
+					<input type="button" value="일괄수신" title="일괄수신" onclick="batchReceive();">
+					<input type="button" value="새로고침" title="새로고침" onclick="javascript:location.reload();">
 				</td>
 			</tr>
 		</table>

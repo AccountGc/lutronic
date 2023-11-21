@@ -30,7 +30,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="BOM" title="BOM" id="auiBom">
+			<input type="button" value="BOM" title="BOM" onclick="auiBom();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -320,9 +320,9 @@ $(document).keydown(function(event) {
 	}
 })
 
-$("#auiBom").click(function() {
+function auiBom(){
 	auiBom(oid,'');
-});
+}
 
 $("#packageUpdate").click(function() {
 	const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);

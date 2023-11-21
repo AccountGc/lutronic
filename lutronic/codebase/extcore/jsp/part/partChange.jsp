@@ -15,8 +15,8 @@ String oid = (String) request.getAttribute("oid");
 							</div>
 						</td>
 						<td class="right">
-							<input type="button" value="저장" name="setNumber" id="setNumber" class="btnClose" >
-							<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
+							<input type="button" value="저장" class="red" onclick="setNumber();">
+							<input type="button" value="닫기" class="gray" onclick="self.close();">
 						</td>
 					</tr>
 				</table>

@@ -28,26 +28,26 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			<%
 			if(dto.isLatest()){
 			%>
-				<input type="button" value="물질복사" title="물질복사" class="" id="copyRohs">
+				<input type="button" value="물질복사" title="물질복사" onclick="copyRohs();">
 				<%
 				if(dto.getState().equals("APPROVED") || isAdmin){
 				%>
-					<input type="button" value="개정" title="개정" class="" id="reviseBtn">
+					<input type="button" value="개정" title="개정" onclick="reviseBtn();">
 				<%	
 				}
 				%>
 				<%
 				if(dto.isModify() || isAdmin){
 				%>
-					<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-					<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+					<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 				<%	
 				}
 				%>
 			<%	
 			}
 			%>
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -265,14 +265,14 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 
 <script type="text/javascript">
 	//수정
-	$("#updateBtn").click(function () {
+	function updateBtn(){
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/rohs/update?oid=" + oid);
 		document.location.href = url;
-	})
+	}
 	
 	//삭제
-	$("#deleteBtn").click(function () {
+	function deleteBtn(){
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
@@ -292,28 +292,21 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				clsoeLayer();
 			}
 		});
-	})
+	}
 			
 	//개정
-	$("#reviseBtn").click(function () {
+	function reviseBtn(){
 		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/reviseRohs?oid=" + oid);
 		document.location.href = url;
-	})
+	}
 	
 	//copy
-	$('#copyRohs').click(function() {
+	function copyRohs(){
 		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/copyRohs?oid=" + oid);
 		_popup(url, 1500, 550, "n");
-	})
-	
-	//결재 회수
-	$("#withDrawBtn").click(function() {
-		const oid = $("#oid").val();
-		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
-		_popup(url, 1500, 550, "n");
-	})
+	}
 	
 	// 최신버전으로 페이지 이동
 	function latest() {
@@ -321,41 +314,6 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		const url = getCallUrl("/rohs/latest?oid=" + oid);
 		_popup(url, 1600, 550, "n");
 	}
-	
-	//일괄 다운로드
-	$("#batchSecondaryDown").click(function() {
-		var form = $("form[name=rohsViewForm]").serialize();
-		var url	= getURLString("common", "batchSecondaryDown", "do");
-		$.ajax({
-			type:"POST",
-			url: url,
-			data:form,
-			dataType:"json",
-			async: true,
-			cache: false,
-			
-			error:function(data){
-				var msg = "데이터 검색오류";
-				alert(msg);
-			},
-			
-			success:function(data){
-				console.log(data.message);
-				if(data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName='+data.message+'&originFileName='+data.message;
-				}else {
-					alert(data.message);
-				}
-			}
-			,beforeSend: function() {
-				gfn_StartShowProcessing();
-	        }
-			,complete: function() {
-				gfn_EndShowProcessing();
-	        }
-		});
-		
-	})
 	
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({

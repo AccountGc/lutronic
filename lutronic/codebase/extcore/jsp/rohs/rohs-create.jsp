@@ -59,12 +59,12 @@
 				<th class="lb">물질번호</th>
 				<td class="indent5">
 					<input type="text" name="rohsNumber" id="rohsNumber" class="width-400">
-					&nbsp;<input type="button" value="번호 중복" title="번호 중복" id="NumberCheck">
+					&nbsp;<input type="button" value="번호 중복" title="번호 중복" onclick="NumberCheck();">
 				</td>
 				<th class="req lb">물질명</th>
 				<td class="indent5">
 					<input type="text" name="rohsName" id="rohsName" class="width-400">
-					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" id="NameCheck">
+					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" onclick="NameCheck();">
 					<input type="hidden" id="duplicationChk" value="F">
 				</td>
 			</tr>
@@ -239,12 +239,8 @@
 				});
 			};
 			
-			$("#listBtn").click(function() {
-				location.href = getCallUrl("/rohs/list");
-			});
-			
 			// 물질명 중복체크
-			$("#NameCheck").click(function() {
+			function NameCheck(){
 				var params = new Object();
 				if(isEmpty($("#rohsName").val())){
 					alert("입력된 물질명이 없습니다.");
@@ -266,10 +262,10 @@
 						alert(data.msg);
 					}
 				});
-			});
+			}
 			
 			// 번호 중복체크
-			$("#NumberCheck").click(function() {
+			function NumberCheck(){
 				var params = new Object();
 				if(isEmpty($("#rohsNumber").val())){
 					alert("입력된 물질번호가 없습니다.");
@@ -289,7 +285,7 @@
 						alert(data.msg);
 					}
 				});
-			});
+			}
 	
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("manufacture");

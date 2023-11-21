@@ -22,19 +22,19 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<%
 			if(dto.isNameSyschronization){
 			%>
-				<input type="button" value="Name 동기화" title="Name 동기화" class="" id="updateName">
+				<input type="button" value="Name 동기화" title="Name 동기화">
 			<%	
 			}
 			%>
 			<%
 			if(dto.isUpdate){
 			%>
-				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-				<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+				<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
+				<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 			<%	
 			}
 			%>
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -152,14 +152,14 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 
 <script type="text/javascript">
 	//수정
-	$("#updateBtn").click(function () {
+	function updateBtn(){
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/drawing/update?oid=" + oid);
 		document.location.href = url;
-	})
+	}
 	
 	//삭제
-	$("#deleteBtn").click(function () {
+	function deleteBtn(){
 	
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
@@ -179,7 +179,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				self.close();
 			}
 		}, "DELETE");
-	})
+	}
 			
 	//최신버전
 	function latest() {

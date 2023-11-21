@@ -30,7 +30,7 @@
 							</div>
 							<input type="checkbox" name="checkId" id="checkId" style="margin-bottom: 20px;">
 							<label for="checkId">&nbsp;ID저장</label>
-							<input type="button" id="login" value="로그인" onclick="_login();">
+							<input type="button" value="로그인" onclick="_login();">
 						</div>
 					</div>
 					<div class="form-wrapper"></div>

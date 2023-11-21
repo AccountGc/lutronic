@@ -33,9 +33,9 @@ boolean isAuth = (boolean) request.getAttribute("isAuth");
 						</td>
 						<td class="right">
 							<% if(isAuth){ %>
-								<input type="button" value="결재의견 수정" name="updateBtn" id="updateBtn" class="btnCRUD" onclick="update();">						
+								<input type="button" value="결재의견 수정" class="btnCRUD" onclick="update();">						
 							<% } %>
-							<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
+							<input type="button" value="닫기" class="gray" onclick="self.close();">
 						</td>
 					</tr>
 					<tr align="center">

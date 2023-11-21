@@ -19,7 +19,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>

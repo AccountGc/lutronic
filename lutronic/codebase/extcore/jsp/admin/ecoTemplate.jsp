@@ -31,7 +31,7 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="등록" title="등록" id="createBtn" class="blue">
+					<input type="button" value="등록" title="등록" class="blue">
 <!-- 					<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();"> -->
 				</td>
 			</tr>

@@ -51,14 +51,14 @@
 	<table class="button-table">
 		<tr>
 			<td class="center">
-				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-				<input type="button" value="닫기" name="닫기" class="gray" onclick="javascript:self.close();">
+				<input type="button" value="수정" title="수정" class="blue" onclick="update();">
+				<input type="button" value="닫기" name="닫기" class="gray" onclick="self.close();">
 			</td>
 		</tr>
 	</table>
 
 	<script type="text/javascript">
-		$("#updateBtn").click(function() {
+		function update(){
 			if(isEmpty($("#name").val())) {
 				alert("Name을 입력하세요.");
 				return;
@@ -92,7 +92,7 @@
 					alert(data.msg);
 				}
 			});
-		})
+		}
 
 		document.addEventListener("keydown", function(event) {
 			const keyCode = event.keyCode || event.which;

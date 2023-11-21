@@ -15,11 +15,11 @@ String oid = (String) request.getAttribute("oid");
 				<input type="checkbox" name="checkDummy" id="checkDummy" value="true" checked onchange="viewAUIPartBomAction()" > 더미제외
 				<select id="depthSelect" onchange="showItemsOnDepth()">
 				</select>
-				<input type="button" value="필터 초기화" title="필터 초기화"  id="filterInit">
+				<input type="button" value="필터 초기화" title="필터 초기화">
 			</td>
     		<td align=right>
-				<input type="button" value="속성 일괄 적용" title="속성 일괄 적용"  id="batchAttribute">
-				<input type="button" value="저장" title="저장"  id="updatePack">
+				<input type="button" value="속성 일괄 적용" title="속성 일괄 적용">
+				<input type="button" value="저장" title="저장">
 				<input type="button" value="닫기" title="닫기"  onclick="self.close();" >
 			</td>
 		</tr>

@@ -52,7 +52,7 @@
 		<table class="button-table">
 			<tr>
 				<td class="right">
-					<input type="button" value="등록" title="등록" class="blue" id="createBtn">
+					<input type="button" value="등록" title="등록" class="blue">
 				</td>
 			</tr>
 		</table>

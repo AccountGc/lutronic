@@ -36,7 +36,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%
 			if ("DEATH".equals(dto.getState()) && isAdmin) {
 			%>
-			<input type="button" value="복원" title="복원" id="restore">
+			<input type="button" value="복원" title="복원" onclick="restore();">
 			<%
 			}
 			%>
@@ -47,16 +47,16 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<%
 			}
 			%>
-			<input type="button" value="일괄 수정" title="일괄 수정" id="packageUpdate">
-			<input type="button" value="수정" title="수정" class="blue" id="updateBtn" onclick="update();">
-			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
-			<input type="button" value="채번" title="채번" id="orderNumber">
-			<input type="button" value="채번(새버전)" title="채번(새버전)" id="orderNumber_NewVersion">
+			<input type="button" value="일괄 수정" title="일괄 수정" onclick="packageUpdate();">
+			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+			<input type="button" value="채번" title="채번" onclick="orderNumber();">
+			<input type="button" value="채번(새버전)" title="채번(새버전)" onclick="orderNumber_NewVersion();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 			<%
 			if ("DEV_APPROVED".equals(dto.getState())) {
 			%>
-			<input type="button" value="상태변경" title="상태변경" id="changeDev">
+			<input type="button" value="상태변경" title="상태변경" onclick="changeDev();">
 			<%
 			}
 			%>
@@ -314,7 +314,7 @@ function update () {
 };
 
 //삭제
-$("#deleteBtn").click(function () {
+function deleteBtn(){
 	
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
@@ -336,7 +336,7 @@ $("#deleteBtn").click(function () {
 			window.close();
 		}
 	});
-})
+}
 
 // 최신버전으로 페이지 이동
 function latest() {
@@ -625,10 +625,10 @@ $("#auiBom").click(function() {
 	auiBom(oid,'');
 });
 
-$("#packageUpdate").click(function() {
+function packageUpdate(){
 	const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);
 	_popup(url, 1500, 600,"n");
-})
+}
 
 $("#bomE").click(function() {
 	var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
@@ -641,26 +641,26 @@ $("#Compare").click(function() {
 	_popup(str, 1300, 600,"n");
 })
 
-$("#orderNumber").click(function() {
+function orderNumber(){
 	const url = getCallUrl("/part/partChange?oid=" + oid);
 	_popup(url, 1500, 600,"n");
-})
+}
 
-$("#orderNumber_NewVersion").click(function() {
+function orderNumber_NewVersion(){
 	const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
 	_popup(url, 1500, 600,"n");
-})
+}
 
-$("#restore").click(function() {
+function restore(){
 	if (confirm("복원하시겠습니까?")){ 
 		partStateChange('INWORK');
 	}
-})
-$('#changeDev').click(function() {
+}
+function changeDev(){
 	if (confirm("변경하시겠습니까?")){ 
 		partStateChange('INWORK');
 	}
-})
+}
 	
 window.partStateChange = function(state) {
 	var url	= getURLString("part", "partStateChange", "do");

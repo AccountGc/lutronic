@@ -21,12 +21,12 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<%
 			if (isAdmin || dto.isModify()) {
 			%>
-			<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-			<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 			<%
 			}
 			%>
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -136,13 +136,13 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 	</div>
 </div>
 <script type="text/javascript">
-	$("#updateBtn").click(function () {
+	function update(){
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/ecpr/update?oid=" + oid);
 		document.location.href = url;
-	})
+	}
 
-	$("#deleteBtn").click(function () {
+	function deleteBtn(){
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
@@ -157,7 +157,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				self.close();
 			}
 		});
-	})
+	}
 	
 	//결재 회수
 	$("#withDrawBtn").click(function() {

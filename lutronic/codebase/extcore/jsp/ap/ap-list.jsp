@@ -170,8 +170,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="조회" title="조회" onclick="loadGridData();">
-					<input type="button" value="초기화" title="초기화" id="btnReset" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>

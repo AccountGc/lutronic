@@ -230,7 +230,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn" onclick="loadGridData();">
+					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>

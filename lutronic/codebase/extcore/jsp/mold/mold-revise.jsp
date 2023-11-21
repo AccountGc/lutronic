@@ -19,8 +19,8 @@ String oid = (String) request.getParameter("oid");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="이전" title="이전" onclick="javascript:history.back();">
-			<input type="button" value="개정" title="개정" class="blue" id="reviseBtn">
+			<input type="button" value="이전" title="이전" onclick="history.back();">
+			<input type="button" value="개정" title="개정" class="blue" onclick="revise();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -53,7 +53,7 @@ String oid = (String) request.getParameter("oid");
 	</tr>
 </table>
 <script type="text/javascript">
-	$("#reviseBtn").click(function() {
+	function revise(){
 		if (!confirm("개정 하시겠습니까?")) {
 			return;
 		}
@@ -71,5 +71,5 @@ String oid = (String) request.getParameter("oid");
 				alert(data.msg);
 			}
 		});
-	});
+	}
 </script>

@@ -32,7 +32,7 @@ String distribute = (String) request.getAttribute("distribute");
 							</div>
 						</td>
 						<td class="right">
-							<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
+							<input type="button" value="닫기" class="btnClose" onclick="self.close();">
 						</td>
 					</tr>
 				</table>

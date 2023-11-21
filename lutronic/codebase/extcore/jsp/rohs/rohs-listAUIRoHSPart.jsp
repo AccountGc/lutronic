@@ -40,7 +40,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<input type="text" name="partNumber" id="partNumber" class="width-300" readonly>
 					<input type="hidden" name="partOid" id="partOid" />
-					<input type="button" value="조회" title="조회" id="searchPart">
+					<input type="button" value="조회" title="조회" onclick="searchPart();">
 				</td>
 			</tr>
 		</table>
@@ -60,8 +60,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="검색" title="검색" id="searchBtn">
-					<input type="button" value="일괄다운" title="일괄다운" id="batchROHSDown">
+					<input type="button" value="검색" title="검색" onclick="searchBtn();">
+					<input type="button" value="일괄다운" title="일괄다운" onclick="batchROHSDown();">
 				</td>
 			</tr>
 		</table>
@@ -252,20 +252,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			});
 			
 			// 검색
-			$("#searchBtn").click(function(){
+			function searchBtn(){
 				if(isEmpty($("#partNumber").val())){
 					alert("부품번호를 선택해 주세요.");
 					return false;
 				}
 				
 				loadGridData();
-			});
+			}
 			
 			// 부품 조회
-			$("#searchPart").click(function(){
+			function searchPart(){
 				const url = getCallUrl("/part/popup?method=append&multi=false&rowId=0");
 				_popup(url, 1500, 700, "n");
-			});
+			}
 			
 			function append(items){
 				$("#partNumber").val(items[0].item.number);

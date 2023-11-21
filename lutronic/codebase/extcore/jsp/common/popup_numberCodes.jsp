@@ -46,10 +46,10 @@
 						<option value="200">200</option>
 						<option value="300">300</option>
 					</select>
-					<input type="button" value="선택" title="선택" class="green"id="selectBtn">
-					<input type="button" value="검색" title="검색"  class="blue"  id="searchBtn">
-					<input type="button" value="초기화" title="초기화" class="gray"  id="btnReset">
-					<input type="button" value="닫기" title="닫기" class="gray"  id="closeBtn">
+					<input type="button" value="선택" title="선택" class="green">
+					<input type="button" value="검색" title="검색"  class="blue">
+					<input type="button" value="초기화" title="초기화" class="gray">
+					<input type="button" value="닫기" title="닫기" class="gray">
 				</td>
 			</tr>
 		</table>

@@ -20,13 +20,13 @@ String oid = (String) request.getAttribute("oid");
 			<table class="button-table">
 				<tr>
 					<td class="left">
-						<input type="button" value="펼치기" name="depthAllSelect" id="depthAllSelect" >
+						<input type="button" value="펼치기" name="depthAllSelect">
 					</td>
 					<td class="right">
-						<input type="button" value="필터 초기화" name="filterInit" id="filterInit" >
-						<input type="button" value="속성 일괄 적용" name="batchAttribute" id="batchAttribute" >
-						<input type="button" value="저장" name="setNumber" id="setNumber"  class="btnCRUD">
-						<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
+						<input type="button" value="필터 초기화" name="filterInit">
+						<input type="button" value="속성 일괄 적용" name="batchAttribute">
+						<input type="button" value="저장" name="setNumber" class="btnCRUD">
+						<input type="button" value="닫기" name="closeBtn" class="btnClose" onclick="self.close();">
 					</td>
 				</tr>
 			</table>

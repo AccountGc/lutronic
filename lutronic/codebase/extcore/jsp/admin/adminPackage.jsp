@@ -65,8 +65,8 @@
         <table class="button-table">
             <tr>
                 <td class="center">
-                    <input type="button" value="등록" title="등록" id="uploadFile" class="blue">
-                    <input type="button" value="초기화" title="초기화" id="btnReset">
+                    <input type="button" value="등록" title="등록" class="blue">
+                    <input type="button" value="초기화" title="초기화">
                 </td>
             </tr>
         </table>

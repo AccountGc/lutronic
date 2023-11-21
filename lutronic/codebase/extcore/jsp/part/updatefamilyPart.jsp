@@ -28,8 +28,8 @@ String oid = (String) request.getAttribute("oid");
 					</tr>
 					<tr>
 						<td class="right">
-							<input type="button" value="저장" name="updatefamily" id="updatefamily" class="blue"  >
-							<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="btnClose" onclick="self.close();">
+							<input type="button" value="저장" name="updatefamily" class="blue" >
+							<input type="button" value="닫기" name="closeBtn" class="btnClose" onclick="self.close();">
 						</td>
 					</tr>
 				</table>

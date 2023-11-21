@@ -25,8 +25,8 @@ String oid = request.getParameter("oid");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="회수" name="withDrawAction" id="withDrawAction">
-			<input type="button" value="닫기" name="closeBtn" id="closeBtn" class="gray" onclick="self.close();">
+			<input type="button" value="회수" >
+			<input type="button" value="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -59,9 +59,4 @@ String oid = request.getParameter("oid");
 </table>
 
 <script type="text/javascript">
-	$('#withDrawAction').click(function() {
-		if (!confirm("결재 회수 하시겠습니까?")) {
-			return;
-		}
-	});
 </script>

@@ -165,15 +165,15 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button"  value="등록"  title="등록"  class="blue"  id="createBtn">
-					<input type="button" value="초기화" title="초기화" id="resetBtn">
-					<input type="button" value="목록" title="목록" id="listBtn">
+					<input type="button"  value="등록"  title="등록"  class="blue" onclick="create();">
+					<input type="button" value="초기화" title="초기화">
+					<input type="button" value="목록" title="목록" onclick="list();">
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
-			$("#createBtn").click(function() {
+			function create(){
 				if(isEmpty($("#lifecycle").val())) {
 					alert("결재방식을 선택하세요.");
 					return;
@@ -210,11 +210,11 @@
 						alert(data.msg);
 					}
 				});
-			});
+			}
 			
-			$("#listBtn").click(function() {
+			function list(){
 				location.href = getCallUrl("/mold/list");
-			});
+			}
 		
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("manufacture");

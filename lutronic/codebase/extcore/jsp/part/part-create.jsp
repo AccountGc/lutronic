@@ -123,7 +123,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<th class="lb">SEQ <br><span style="color:red;">(3자리)</span></th>
 				<td class="indent5">
 					<input type="text" name="seq" id="seq" class="width-200">
-					<input type="button" id="seqList" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" >
+					<input type="button" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" onclick="seqList();">
 				</td>
 				<td class="indent5" colspan="3">
 					<div id="partTypeNum" style="padding-left: 45%;font-weight:bold; vertical-align:middle; float: left;"></div>
@@ -556,11 +556,11 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			})
 			
 			// SEQ 현황보기 클릭 시 메서드
-			$("#seqList").click(function() {
+			function seqList(){
 				const partNumber = $("#partType1").val()+$("#partType2").val()+$("#partType3").val()+$("#seq").val();
 				const url = getCallUrl("/part/searchSeqList?partNumber=" + partNumber);
 				_popup(url, 900, 450, "n");
-			})
+			}
 		    
 			// 기타 입력 중 발생 메서드
 			$("#etc").keypress(function (event) {

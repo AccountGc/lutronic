@@ -22,19 +22,19 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<%
 			if(dto.getState().equals("APPROVED") || isAdmin){
 			%>
-				<input type="button" value="개정" title="개정" class="" id="reviseBtn">
+				<input type="button" value="개정" title="개정" onclick="revise();">
 			<%	
 			}
 			%>
 			<%
 			if(dto.isModify() || isAdmin){
 			%>
-				<input type="button" value="수정" title="수정" class="blue" id="updateBtn">
-				<input type="button" value="삭제" title="삭제" class="red" id="deleteBtn">
+				<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
+				<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 			<%	
 			}
 			%>
-			<input type="button" value="닫기" title="닫기" class="gray" id="closeBtn" onclick="self.close();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
@@ -183,14 +183,14 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 
 <script type="text/javascript">
 	//수정
-	$("#updateBtn").click(function () {
+	function updateBtn(){
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/mold/update?oid=" + oid);
 		document.location.href = url;
-	})
+	}
 			
 	//삭제
-	$("#deleteBtn").click(function () {
+	function deleteBtn(){
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
@@ -205,14 +205,14 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				self.close();
 			}
 		});
-	})
+	}
 			
 	//개정
-	$("#reviseBtn").click(function () {
+	function revise(){
 		const oid = $("#oid").val();
 		const url = getCallUrl("/mold/revise?oid=" + oid);
 		document.location.href = url;
-	})
+	}
 	
 	// 최신버전으로 페이지 이동
 	function latest() {

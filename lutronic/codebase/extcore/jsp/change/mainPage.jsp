@@ -20,7 +20,7 @@
 		<!-- 설계변경 진행상황 (EO 기준) -->
 		<jsp:include page="/extcore/jsp/change/eo-progress.jsp"></jsp:include>
 
-		<input type="button" value="차트 열기/닫기" title="차트 열기/닫기" id="chartBtn">
+		<input type="button" value="차트 열기/닫기" title="차트 열기/닫기" onclick="chartBtn();">
 
 		<div id="chartDiv" style="display: none;">
 			<div style="display: flex; width: 100%; justify-content: space-between;">
@@ -46,7 +46,7 @@
 
 			// 차트 열기/닫기
 			var isChartExpanded = false;
-			$("#chartBtn").click(function() {
+			function chartBtn(){
 				if (!isChartExpanded) {
 					$("#chartDiv").show();
 					isChartExpanded = true;
@@ -54,7 +54,7 @@
 					$("#chartDiv").hide();
 					isChartExpanded = false;
 				}
-			});
+			}
 		</script>
 		<style>
 div.left {

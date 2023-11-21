@@ -36,7 +36,7 @@
 	<table class="button-table">
 		<tr>
 			<td class="center">
-				<input type="button"  value="변환요청"  title="변환요청"  class="btnCRUD"  id="createBtn" name="createBtn">
+				<input type="button"  value="변환요청"  title="변환요청"  class="btnCRUD">
 			</td>
 		</tr>
 	</table>

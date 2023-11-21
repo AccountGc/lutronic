@@ -47,7 +47,7 @@
 				<th class="req lb">물질명</th>
 				<td class="indent5">
 					<input type="text" name="rohsName" id="rohsName" class="width-500" value="<%=data.getName()%>">
-					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" id="NameCheck">
+					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" onclick="NameCheck();">
 					<input type="hidden" id="duplicationChk" value="F">
 				</td>
 				<th class="req lb">협력업체</th>
@@ -240,7 +240,7 @@
 				});
 			}
 			
-			$("#NameCheck").click(function() {
+			function NameCheck(){
 				var params = new Object();
 				if(isEmpty($("#rohsName").val())){
 					alert("입력된 물질명이 없습니다.");
@@ -262,7 +262,7 @@
 						alert(data.msg);
 					}
 				});
-			});
+			}
 			
 		</script>
 	</form>	
