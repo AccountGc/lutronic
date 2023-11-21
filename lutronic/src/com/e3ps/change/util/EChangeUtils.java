@@ -203,7 +203,7 @@ public class EChangeUtils {
 		EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
 
 		// SAP 전송
-		SAPHelper.service.sendSapToEco(eco);
+//		SAPHelper.service.sendSapToEco(eco);
 
 		// 완제품 재수집
 

@@ -77,11 +77,6 @@ public class StandardEcnService extends StandardManager implements EcnService {
 
 			EChangeNotice ecn = EChangeNotice.newEChangeNotice();
 
-			Ownership ownership = Ownership.newOwnership(eco.getEcnUser());
-
-			System.out.println("ownership=" + ownership);
-
-			ecn.setOwnership(ownership); // 담당자 세팅
 			ecn.setEoName(eco.getEoName());
 			ecn.setEoNumber(number);
 			ecn.setModel(eco.getModel());
@@ -128,7 +123,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
 				String group = "";
 				if (isApproved) {
-					WTPart next_part = (WTPart) EChangeUtils.getNext(part);
+					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 					group = EChangeUtils.manager.getPartGroup(next_part, eco);
 				} else {
 					group = EChangeUtils.manager.getPartGroup(part, eco);

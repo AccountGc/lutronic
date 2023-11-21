@@ -225,14 +225,14 @@ public class StandardEcoService extends StandardManager implements EcoService {
 	 * ECO 첨부파일
 	 */
 	private void saveAttach(EChangeOrder eco, EcoDTO dto) throws Exception {
-		String primary = dto.getPrimary();
-		if (StringUtil.checkString(primary)) {
-			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-			ApplicationData applicationData = ApplicationData.newApplicationData(eco);
-			applicationData.setRole(ContentRoleType.toContentRoleType("ECO"));
-			PersistenceHelper.manager.save(applicationData);
-			ContentServerHelper.service.updateContent(eco, applicationData, vault.getPath());
-		}
+//		String primary = dto.getPrimary();
+//		if (StringUtil.checkString(primary)) {
+//			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+//			ApplicationData applicationData = ApplicationData.newApplicationData(eco);
+//			applicationData.setRole(ContentRoleType.toContentRoleType("ECO"));
+//			PersistenceHelper.manager.save(applicationData);
+//			ContentServerHelper.service.updateContent(eco, applicationData, vault.getPath());
+//		}
 
 		ArrayList<String> secondarys = dto.getSecondarys();
 		for (int i = 0; i < secondarys.size(); i++) {
@@ -249,6 +249,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 	public void modify(EcoDTO dto) throws Exception {
 		ReferenceFactory rf = new ReferenceFactory();
 		String name = dto.getName();
+		String sendType = dto.getSendType();
 		String riskType = dto.getRiskType();
 		String licensing = dto.getLicensing();
 		String eoCommentA = dto.getEoCommentA();
@@ -280,6 +281,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			eco.setEoCommentC(eoCommentC);
 			eco.setEoCommentD(eoCommentD);
 			eco.setRiskType(riskType);
+			eco.setSendType(sendType);
 
 			eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
 
@@ -344,13 +346,14 @@ public class StandardEcoService extends StandardManager implements EcoService {
 	 * 첨부 파일 삭제
 	 */
 	private void removeAttach(EChangeOrder eco) throws Exception {
-		EcoDTO ecoDto = new EcoDTO(eco);
-		ReferenceFactory rf = new ReferenceFactory();
-		ApplicationData ad = (ApplicationData) rf.getReference(ecoDto.getContentMap().get("aoid").toString())
-				.getObject();
-		ContentServerHelper.service.deleteContent(eco, ad);
+		QueryResult result = ContentHelper.service.getContentsByRole(eco, ContentRoleType.toContentRoleType("ECO"));
+		if (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(eco, item);
+		}
 
-		QueryResult result = ContentHelper.service.getContentsByRole(eco, ContentRoleType.SECONDARY);
+		result.reset();
+		result = ContentHelper.service.getContentsByRole(eco, ContentRoleType.SECONDARY);
 		while (result.hasMoreElements()) {
 			ContentItem item = (ContentItem) result.nextElement();
 			ContentServerHelper.service.deleteContent(eco, item);

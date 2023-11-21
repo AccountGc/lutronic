@@ -142,7 +142,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							// 							const oid = item.oid;
-							const oid = "com.e3ps.change.EChangeNotice:670334";
+							const oid = "com.e3ps.change.EChangeNotice:1227724";
 							const url = getCallUrl("/ecn/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
@@ -291,41 +291,41 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 
 			function loadGridData() {
 
-				// 				$.ajax({
-				// 					type : "POST",
-				// 					url : "/Windchill/extcore/jsp/change/ecn/sample.json",
-				// 					dataType : "JSON",
-				// 					crossDomain : true,
-				// 					// 					data: params,
-				// 					// 					async: async,
-				// 					contentType : "application/json; charset=UTF-8",
-				// 					beforeSend : function() {
-				// 					},
-				// 					success : function(res) {
-				// 						AUIGrid.setGridData(myGridID, res);
-				// 					},
-				// 				})
+								$.ajax({
+									type : "POST",
+									url : "/Windchill/extcore/jsp/change/ecn/sample.json",
+									dataType : "JSON",
+									crossDomain : true,
+									// 					data: params,
+									// 					async: async,
+									contentType : "application/json; charset=UTF-8",
+									beforeSend : function() {
+									},
+									success : function(res) {
+										AUIGrid.setGridData(myGridID, res);
+									},
+								})
 
-				let params = new Object();
-				const url = getCallUrl("/ecn/list");
-				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
-				params = toField(params, field);
-				AUIGrid.showAjaxLoader(myGridID);
-				parent.openLayer();
-// 				document.getElementById("sessionid").value = 0;
-				call(url, params, function(data) {
-					AUIGrid.removeAjaxLoader(myGridID);
-					if (data.result) {
-						totalPage = Math.ceil(data.total / data.pageSize);
-// 						document.getElementById("sessionid").value = data.sessionid;
-// 						document.getElementById("curPage").value = data.curPage;
-						createPagingNavigator(data.curPage, data.sessionid);
-						AUIGrid.setGridData(myGridID, data.list);
-					} else {
-						alert(data.msg);
-					}
-					parent.closeLayer();
-				});
+// 				let params = new Object();
+// 				const url = getCallUrl("/ecn/list");
+// 				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
+// 				params = toField(params, field);
+// 				AUIGrid.showAjaxLoader(myGridID);
+// 				parent.openLayer();
+// // 				document.getElementById("sessionid").value = 0;
+// 				call(url, params, function(data) {
+// 					AUIGrid.removeAjaxLoader(myGridID);
+// 					if (data.result) {
+// 						totalPage = Math.ceil(data.total / data.pageSize);
+// // 						document.getElementById("sessionid").value = data.sessionid;
+// // 						document.getElementById("curPage").value = data.curPage;
+// 						createPagingNavigator(data.curPage, data.sessionid);
+// 						AUIGrid.setGridData(myGridID, data.list);
+// 					} else {
+// 						alert(data.msg);
+// 					}
+// 					parent.closeLayer();
+// 				});
 			}
 
 			function save() {

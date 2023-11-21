@@ -153,17 +153,17 @@
 					<textarea name="eoCommentD" id="eoCommentD" rows="10"></textarea>
 				</td>
 			</tr>
-			<tr>
-				<th class="req lb">
-					설계변경 부품 내역파일
-					<!-- 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;"> -->
-				</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
-						<jsp:param value="" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="req lb"> -->
+<!-- 					설계변경 부품 내역파일 -->
+<!-- 										<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;"> -->
+<!-- 				</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<%-- 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp"> --%>
+<%-- 						<jsp:param value="" name="oid" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
@@ -172,15 +172,15 @@
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="3"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
+			<tr>
+				<th class="lb">결재</th>
+				<td colspan="3">
+					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
+						<jsp:param value="" name="oid" />
+						<jsp:param value="create" name="mode" />
+					</jsp:include>
+				</td>
+			</tr>
 			<tr>
 				<th class="lb">외부 메일 지정</th>
 				<td colspan="3">
@@ -233,7 +233,7 @@
 				const eoCommentC = toId("eoCommentC");
 				const eoCommentD = toId("eoCommentD");
 				const secondarys = toArray("secondarys");
-				const primary = document.querySelector("input[name=primary]");
+// 				const primary = document.querySelector("input[name=primary]");
 				const riskType = document.querySelector("input[name=riskType]:checked").value;
 				const licensing = document.querySelector("input[name=licensing]:checked").value;
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
@@ -243,17 +243,17 @@
 				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				const temprary = JSON.parse(temp);
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				const sendType = document.querySelector("input[name=sendType]:checked");
+				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+				const sendType = document.querySelector("input[name=sendType]:checked").value;
 				if (isEmpty(name.value)) {
 					alert("ECO 제목을 입력해주세요.");
 					return;
 				}
 
-				if (primary == null) {
-					alert("설계변경 부품 내역파일을 첨부해주세요.");
-					return;
-				}
+// 				if (primary == null) {
+// 					alert("설계변경 부품 내역파일을 첨부해주세요.");
+// 					return;
+// 				}
 
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -276,7 +276,7 @@
 					riskType : riskType,
 					licensing : licensing,
 					secondarys : secondarys,
-					primary : primary.value,
+// 					primary : primary.value,
 					sendType : sendType,
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
@@ -290,7 +290,7 @@
 					external : external
 				};
 				logger(params);
-// 				toRegister(params, addRows8); // 결재선 세팅
+				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/eco/create");
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -308,12 +308,12 @@
 				createAUIGrid101(columns101);
 				createAUIGrid200(columns200);
 				// 				createAUIGrid500(columns500);
-// 				createAUIGrid8(columns8);
+				createAUIGrid8(columns8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID101);
-				// 				AUIGrid.resize(myGridID500);
+// 								AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
-// 				AUIGrid.resize(myGridID8);
+				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});
 

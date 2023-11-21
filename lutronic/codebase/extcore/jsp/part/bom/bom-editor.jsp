@@ -5,7 +5,6 @@
 <%
 String oid = (String) request.getAttribute("oid");
 WTPart root = (WTPart) request.getAttribute("root");
-JSONArray data = (JSONArray) request.getAttribute("tree");
 %>
 <style type="text/css">
 .aui-grid-tree-branch-icon {
@@ -59,6 +58,14 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 					<font color="red"><%=root.getNumber()%></font>
 				</b>
 				) 에디터 &nbsp;
+				<div class="pretty p-switch">
+					<input type="checkbox" name="skip" id="skip" value="true" checked="checked" onchange="reloadTree();">
+					<div class="state p-success">
+						<label>
+							<b>더미제외</b>
+						</label>
+					</div>
+				</div>
 				<select name="depth" id="depth" onchange="loadDepth();" class="AXSelect width-120">
 					<option value="0">전체확장</option>
 					<option value="1">1레벨</option>
@@ -144,7 +151,7 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		dataField : "number",
 		headerText : "부품번호",
 		dataType : "string",
-		width : 250,
+		// 		width : 250,
 		editable : false
 	}, {
 		dataField : "name",
@@ -222,11 +229,7 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			}
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		AUIGrid.setGridData(myGridID,
-<%=data%>
-	);
-
-		AUIGrid.showItemsOnDepth(myGridID, 2);
+		loadTree();
 		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEnd);
 		AUIGrid.bind(myGridID, "contextMenu", function(event) {
 			const item = event.item;
@@ -271,6 +274,26 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyHandler)
 	};
 
+	function loadTree() {
+		const oid = document.getElementById("oid").value;
+		const skip = document.querySelector("input[name=skip]").checked;
+		const url = getCallUrl("/bom/loadEditor");
+		const params = {
+			oid : oid,
+			skip : JSON.parse(skip),
+		};
+		openLayer();
+		AUIGrid.showAjaxLoader(myGridID);
+		call(url, params, function(data) {
+			AUIGrid.removeAjaxLoader(myGridID);
+			if (data.result) {
+				AUIGrid.setGridData(myGridID, data.list);
+				AUIGrid.showItemsOnDepth(myGridID, 2);
+			}
+			closeLayer();
+		})
+	}
+
 	function auiCellEditEnd(event) {
 		const item = event.item;
 		const dataField = event.dataField;
@@ -282,15 +305,19 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 	function auiLazyHandler(event) {
 		const item = event.item;
 		const oid = item.oid;
-		const url = getCallUrl("/bom/lazyLoad?oid=" + oid);
-
-		call(url, null, function(data) {
-			const list = data.list;
-			for (let i = 0; i < list.length; i++) {
-				list[i].level = event.item._$depth + 1;
-			}
-			event.response(list);
-		}, "GET");
+		const skip = document.querySelector("input[name=skip]").checked;
+		const url = getCallUrl("/bom/editorLazyLoad");
+		const level = item.level;
+		const params = {
+			oid : oid,
+			skip : JSON.parse(skip),
+			level : level
+		};
+		openLayer();
+		call(url, params, function(data) {
+			closeLayer();
+			event.response(data.list);
+		});
 	}
 
 	function auiContextHandler(event) {
@@ -303,7 +330,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		const poid = item.poid; // 부모 OID
 		const isRoot = item.isRoot;
 		const rowIndex = event.rowIndex;
-		const eoid = document.getElementById("eoid").value;
 		let url;
 		let params;
 		switch (event.contextIndex) {
@@ -351,7 +377,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 				oid : oid,
 				link : item.link,
 				poid : poid,
-				eoid : eoid
 			};
 			openLayer();
 			call(url, params, function(data) {
@@ -389,7 +414,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 	}
 </script>
 
-// 부품 검색 부분 그리드
 <script type="text/javascript">
 	let myGridID2;
 	const columnLayout2 = [ {
@@ -445,7 +469,6 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 		params.latest = true;
 		AUIGrid.showAjaxLoader(myGridID2);
 		openLayer();
-		logger(params);
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID2);
 			if (data.result) {
@@ -475,6 +498,128 @@ JSONArray data = (JSONArray) request.getAttribute("tree");
 			alert("교체 할 품목을 선택하세요.");
 			return false;
 		}
+	}
+
+	function loadDepth() {
+		const depth = document.getElementById("depth").value;
+		const skip = document.querySelector("input[name=skip]").checked;
+		// 모든 레벨 열기
+		if (Number(depth) === 0) {
+			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
+			for (let j = 0; j < grid.length; j++) {
+				const item = grid[j];
+				const isLazy = item.isLazy;
+				if (isLazy) {
+					const oid = item.oid;
+					const level = item.level;
+					const params = {
+						oid : oid,
+						skip : JSON.parse(skip),
+						level : level,
+					};
+
+					const url = getCallUrl("/bom/editorLazyLoad")
+					call(url, params, function(data) {
+						grid[j].children = data.list;
+						grid[j] = _recursion(grid[j], skip);
+						const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+						AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+					}, "POST", false);
+				}
+			}
+			const tree = AUIGrid.getTreeGridData(myGridID);
+			AUIGrid.setGridData(myGridID, tree);
+			AUIGrid.expandAll(myGridID);
+		} else {
+			for (let i = 0; i < depth; i++) {
+				const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", i + 1);
+				for (let j = 0; j < grid.length; j++) {
+					const item = grid[j];
+					const isLazy = item.isLazy;
+					const _$lazyRequested = item._$lazyRequested;
+					if (isLazy && !_$lazyRequested) {
+						const oid = item.oid;
+						const level = item.level;
+						const params = {
+							oid : oid,
+							skip : JSON.parse(skip),
+							level : level,
+						};
+
+						const url = getCallUrl("/bom/editorLazyLoad")
+						call(url, params, function(data) {
+							grid[j].children = data.list;
+							if (depth - 1 != grid[j]._$depth) {
+								grid[j] = recursion(grid[j], depth, skip);
+							}
+
+							const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+							AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+						}, "POST", false);
+					}
+				}
+			}
+			end(depth);
+		}
+	}
+
+	function _recursion(parent, skip) {
+		const grid = parent.children;
+		for (let i = 0; i < grid.length; i++) {
+			const item = grid[i];
+			const isLazy = item.isLazy;
+			if (isLazy) {
+				const oid = item.oid;
+				const level = item.level;
+				const params = {
+					oid : oid,
+					skip : JSON.parse(skip),
+					level : level,
+				};
+
+				const url = getCallUrl("/bom/editorLazyLoad")
+				call(url, params, function(data) {
+					grid[i].children = data.list;
+					grid[i] = _recursion(grid[i], skip);
+					parent.children[i] = grid[i];
+				}, "POSt", false);
+			}
+		}
+		return parent;
+	}
+
+	function recursion(parent, depth, skip) {
+		const grid = parent.children;
+		for (let i = 0; i < grid.length; i++) {
+			const item = grid[i];
+			const isLazy = item.isLazy;
+			const _$lazyRequested = item._$lazyRequested;
+			if (isLazy && !_$lazyRequested) {
+				const oid = item.oid;
+				const level = item.level;
+				const params = {
+					oid : oid,
+					skip : JSON.parse(skip),
+					level : level,
+				};
+
+				const url = getCallUrl("/bom/lazyLoad")
+				call(url, params, function(data) {
+					grid[i].children = data.list;
+					if (depth - 1 != grid[i]._$depth) {
+						grid[i] = recursion(grid[i], depth, skip);
+					}
+					parent.children[i] = grid[i];
+				}, "POSt", false);
+			}
+		}
+		return parent;
+	}
+
+	function end(depth) {
+		const data = AUIGrid.getTreeGridData(myGridID);
+		AUIGrid.setGridData(myGridID, data);
+		AUIGrid.showItemsOnDepth(myGridID, depth);
 	}
 
 	document.addEventListener("keydown", function(event) {

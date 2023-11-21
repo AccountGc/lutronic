@@ -31,17 +31,14 @@ public class StandardBomService extends StandardManager implements BomService {
 		String poid = (String) params.get("poid"); // 부모
 		String oid = (String) params.get("oid"); // 자식
 		String link = (String) params.get("link");
-		String eoid = (String) params.get("eoid");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			WTPart parent = (WTPart) CommonUtil.getObject(poid);
-			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(eoid);
-			String msg = "ECO(" + eco.getEoNumber() + ")";
 			if (!WorkInProgressHelper.isCheckedOut(parent)) {
 				Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
-				CheckoutLink clink = WorkInProgressHelper.service.checkout(parent, cFolder, msg);
+				CheckoutLink clink = WorkInProgressHelper.service.checkout(parent, cFolder, "");
 				parent = (WTPart) clink.getWorkingCopy();
 			}
 
@@ -54,9 +51,7 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 			trs.commit();
 			trs = null;
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			trs.rollback();
 			throw e;

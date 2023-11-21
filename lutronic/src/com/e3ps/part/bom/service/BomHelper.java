@@ -63,20 +63,22 @@ public class BomHelper {
 	/**
 	 * 설변 활동 BOM 에디터
 	 */
-	public JSONArray loadEditor(String oid) throws Exception {
+	public JSONArray loadEditor(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		boolean skip = (boolean) params.get("skip");
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 		// 체크아웃시 체크아웃된 데이터 가져오기
 		if (isCheckOut) {
 			root = (WTPart) WorkInProgressHelper.service.workingCopyOf(root);
 		}
-		return loadEditor(root);
+		return loadEditor(root, skip);
 	}
 
 	/**
 	 * 설변 활동 BOM 에디터
 	 */
-	public JSONArray loadEditor(WTPart root) throws Exception {
+	public JSONArray loadEditor(WTPart root, boolean skip) throws Exception {
 		JSONArray list = new JSONArray();
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
@@ -105,8 +107,9 @@ public class BomHelper {
 		JSONArray children = new JSONArray();
 
 		View view = ViewHelper.service.getView(root.getViewName());
+		State state = root.getLifeCycleState();
 		WTPartConfigSpec configSpec = WTPartConfigSpec
-				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
 		int level = 2;
 		while (result.hasMoreElements()) {
@@ -116,6 +119,13 @@ public class BomHelper {
 			}
 			WTPartUsageLink link = (WTPartUsageLink) obj[0];
 			WTPart p = (WTPart) obj[1];
+
+			if (skip) {
+				if (skip(p)) {
+					continue;
+				}
+			}
+
 			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("poid", root.getPersistInfo().getObjectIdentifier().getStringValue());
@@ -140,61 +150,18 @@ public class BomHelper {
 				node.put("isWorkCopy", isWorkCopy);
 			}
 
-//			boolean isLazy = isLazy(p, view, state, skip);
-//			if (!isLazy) {
-//				node.put("isLazy", false);
-//				node.put("children", new JSONArray());
-//			} else {
-//				node.put("isLazy", true);
-//			}
+			boolean isLazy = isLazy(p, view, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
 
 			children.add(node);
 		}
 		rootNode.put("children", children);
 		list.add(rootNode);
-		return list;
-	}
-
-	/**
-	 * BOM 에디터 LAZY 로드
-	 */
-	public ArrayList<Map<String, Object>> lazyLoad(String oid) throws Exception {
-		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		WTPart parent = (WTPart) CommonUtil.getObject(oid);
-		View view = ViewHelper.service.getView(parent.getViewName());
-		WTPartConfigSpec configSpec = WTPartConfigSpec
-				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
-		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
-		while (result.hasMoreElements()) {
-			Object obj[] = (Object[]) result.nextElement();
-			if (!(obj[1] instanceof WTPart)) {
-				continue;
-			}
-			WTPartUsageLink link = (WTPartUsageLink) obj[0];
-			WTPart p = (WTPart) obj[1];
-			Map<String, Object> node = new HashMap<>();
-			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
-			node.put("poid", parent.getPersistInfo().getObjectIdentifier().getStringValue());
-			node.put("thumb", ThumbnailUtil.thumbnailSmall(p));
-			node.put("number", p.getNumber());
-			node.put("name", p.getName());
-			node.put("state", p.getLifeCycleState().getDisplay());
-			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
-					+ p.getIterationIdentifier().getSeries().getValue());
-			node.put("creator", p.getCreatorFullName());
-			node.put("isRoot", false);
-			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
-			node.put("qty", link.getQuantity().getAmount());
-			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
-			if (isCheckOut) {
-				node.put("isCheckOut", isCheckOut);
-			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
-			list.add(node);
-		}
 		return list;
 	}
 
@@ -1306,5 +1273,70 @@ public class BomHelper {
 			break;
 		}
 		return isLazy;
+	}
+
+	/**
+	 * BOM 에디터 레이지 로드
+	 */
+	public ArrayList<Map<String, Object>> editorLazyLoad(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		String oid = (String) params.get("oid");
+		boolean skip = (boolean) params.get("skip");
+		int level = (int) params.get("level");
+		WTPart parent = (WTPart) CommonUtil.getObject(oid);
+		View view = ViewHelper.service.getView(parent.getViewName());
+		State state = parent.getLifeCycleState();
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state));
+		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
+		++level;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart p = (WTPart) obj[1];
+
+			if (skip) {
+				if (skip(p)) {
+					continue;
+				}
+			}
+
+			Map<String, Object> node = new HashMap<>();
+			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("level", level);
+			node.put("poid", parent.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("thumb", ThumbnailUtil.thumbnailSmall(p));
+			node.put("number", p.getNumber());
+			node.put("name", p.getName());
+			node.put("state", p.getLifeCycleState().getDisplay());
+			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ p.getIterationIdentifier().getSeries().getValue());
+			node.put("creator", p.getCreatorFullName());
+			node.put("isRoot", false);
+			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("qty", link.getQuantity().getAmount());
+			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
+			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+			if (isCheckOut) {
+				node.put("isCheckOut", isCheckOut);
+			}
+			if (isWorkCopy) {
+				node.put("isWorkCopy", isWorkCopy);
+			}
+
+			boolean isLazy = isLazy(p, view, state, skip);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
+			list.add(node);
+		}
+		return list;
 	}
 }

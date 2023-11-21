@@ -419,6 +419,7 @@ public class StandardActivityService extends StandardManager implements Activity
 	 * 설변 활동 완료후 ECO 작업
 	 */
 	private void afterActivityAction(EChangeOrder eco) throws Exception {
+		eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
 		String eoType = eco.getEoType();
 
 		if ("CHANGE".equals(eoType)) {

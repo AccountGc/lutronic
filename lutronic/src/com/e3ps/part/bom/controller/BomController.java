@@ -42,12 +42,12 @@ public class BomController extends BaseController {
 	}
 
 	@Description(value = "BOM 에디터 LAZY 로드")
-	@GetMapping(value = "/lazyLoad")
+	@PostMapping(value = "/editorLazyLoad")
 	@ResponseBody
-	public Map<String, Object> lazyLoad(@RequestParam String oid) throws Exception {
+	public Map<String, Object> editorLazyLoad(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			ArrayList<Map<String, Object>> list = BomHelper.manager.lazyLoad(oid);
+			ArrayList<Map<String, Object>> list = BomHelper.manager.editorLazyLoad(params);
 			result.put("list", list);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -182,11 +182,26 @@ public class BomController extends BaseController {
 	public ModelAndView editor(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
-		JSONArray tree = BomHelper.manager.loadEditor(root);
 		model.addObject("oid", oid);
-		model.addObject("tree", tree);
 		model.addObject("root", root);
 		model.setViewName("popup:/part/bom/bom-editor");
 		return model;
+	}
+
+	@Description(value = "BOM 에디터 로드")
+	@PostMapping(value = "/loadEditor")
+	@ResponseBody
+	public Map<String, Object> loadEditor(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			JSONArray list = BomHelper.manager.loadEditor(params);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }
