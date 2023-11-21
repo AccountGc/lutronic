@@ -1,6 +1,7 @@
 package com.e3ps.rohs.service;
 
 import java.io.File;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -239,21 +240,20 @@ public class StandardRohsService extends StandardManager implements RohsService 
 		CommonContentHelper.service.delete(newRohs);
 		
 		List<ROHSContHolder> list = RohsHelper.manager.getROHSContHolder(oldRohs);
-		if(list.size()>0) {
-			for(ROHSContHolder rHolder :  list){
-				ApplicationData app = rHolder.getApp();
-				String appOid = CommonUtil.getOIDString(app);
-				String file = CommonContentHelper.service.copyApplicationData(appOid);
-				HashMap<String, Object> map = new HashMap<String, Object>();
-				map.put("roleType", app.getRole().toString());
-				map.put("file", file);
-				map.put("fileName", rHolder.getFileName());
-				map.put("fileType", rHolder.getFileType());
-				map.put("publicationDate", rHolder.getPublicationDate());
-				createROHSContHolder(newRohs, map);
-			}
+		for(ROHSContHolder rHolder :  list){
+			ApplicationData app = rHolder.getApp();
+			String file = CommonContentHelper.manager.getCacheId(app);
+
+//			String appOid = CommonUtil.getOIDString(app);
+//			String file = CommonContentHelper.service.copyApplicationData(appOid);
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("roleType", app.getRole().toString());
+			map.put("file", file);
+			map.put("fileName", rHolder.getFileName());
+			map.put("fileType", rHolder.getFileType());
+			map.put("publicationDate", rHolder.getPublicationDate());
+			createROHSContHolder(newRohs, map);
 		}
-		
 	}
 	
 	/**
@@ -263,24 +263,33 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	 * @throws Exception
 	 */
 	public void createROHSContHolder(ROHSMaterial rohs,HashMap<String, Object> map) throws Exception{
-		 	ROHSContHolder holder = ROHSContHolder.newROHSContHolder();
-	        
-		 	String roleType = (String)map.get("roleType");
-		 	String file = (String)map.get("file");
-		 	String fileName = (String)map.get("fileName");
-		 	String fileType = (String)map.get("fileType");
-		 	String publicationDate = (String)map.get("publicationDate");
-		 	
-	        ApplicationData app = CommonContentHelper.service.attachADDRole((ContentHolder)rohs, roleType, file,  false);
-	        
-	        holder.setFileName(fileName);
-	        holder.setFileType(fileType);
-	        holder.setPublicationDate(publicationDate);
-	        holder.setApp(app);
-	        holder.setRohs(rohs);
-	        
-	        PersistenceHelper.manager.save(holder);
-		
+	 	ROHSContHolder holder = ROHSContHolder.newROHSContHolder();
+        
+	 	String roleType = (String)map.get("roleType");
+	 	String file = (String)map.get("file");
+	 	String fileName = (String)map.get("fileName");
+	 	String fileType = (String)map.get("fileType");
+	 	String publicationDate = (String)map.get("publicationDate");
+	 	
+	 	File vault = CommonContentHelper.manager.getFileFromCacheId(file);
+		ApplicationData applicationData = ApplicationData.newApplicationData(rohs);
+		ContentRoleType contentroleType = ContentRoleType.toContentRoleType(roleType);
+		applicationData.setRole(contentroleType);
+		PersistenceHelper.manager.save(applicationData);
+		ContentServerHelper.service.updateContent(rohs, applicationData, vault.getPath());
+        
+        holder.setFileName(fileName);
+        holder.setFileType(fileType);
+        holder.setPublicationDate(publicationDate);
+        holder.setApp(applicationData);
+        holder.setRohs(rohs);
+        
+        PersistenceHelper.manager.save(holder);
+	
+        ROHSAttr rohsAttr = ROHSAttr.newROHSAttr();
+        rohsAttr.setPublicationDate(publicationDate);
+        rohsAttr.setApp(applicationData);
+        PersistenceHelper.manager.save(rohsAttr);
 	}
 	
 	private Map<String,Object> setPartROHMap(Map<String,Object> partRohsMap, Map<String,Object> partMap){
