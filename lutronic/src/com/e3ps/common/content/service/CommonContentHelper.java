@@ -39,6 +39,7 @@ import wt.services.ServiceFactory;
 import wt.util.EncodingConverter;
 import wt.util.FileUtil;
 import wt.util.WTAttributeNameIfc;
+import wt.util.WTException;
 import wt.util.WTProperties;
 
 public class CommonContentHelper {
@@ -278,7 +279,7 @@ public class CommonContentHelper {
 		JSONObject list = new JSONObject();
 		if (!StringUtil.isNull(oid)) {
 			ReferenceFactory rf = new ReferenceFactory();
-			ContentHolder holder = (ContentHolder) rf.getReference(oid).getObject();
+//			ContentHolder holder = (ContentHolder) rf.getReference(oid).getObject();
 			ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
 			List<ROHSContHolder> chList = RohsHelper.manager.getROHSContHolder(rohs);
 			
@@ -327,5 +328,32 @@ public class CommonContentHelper {
 			}
 		}	
 		return list;
+	}
+	
+	public String getCacheId(ApplicationData data) throws Exception {
+		InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+
+		File file = new File(savePath + File.separator + data.getFileName());
+		OutputStream outputStream = new FileOutputStream(file);
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = is.read(buffer)) > 0) {
+			outputStream.write(buffer, 0, length);
+		}
+		outputStream.close();
+
+		CacheDescriptor localCacheDescriptor = UploadToCacheHelper.service.getCacheDescriptor(1, true);
+		long folderId = localCacheDescriptor.getFolderId();
+		long streamId = localCacheDescriptor.getStreamIds()[0];
+
+		InputStream[] streams = new InputStream[1];
+		streams[0] = new FileInputStream(file);
+		long[] fileSize = new long[1];
+		fileSize[0] = file.length();
+
+		CachedContentDescriptor ccd = new CachedContentDescriptor(streamId, folderId, fileSize[0], 0,
+				file.getPath());
+
+		return ccd.getEncodedCCD();
 	}
 }

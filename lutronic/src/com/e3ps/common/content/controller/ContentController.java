@@ -185,7 +185,12 @@ public class ContentController {
 	public JSONObject list(HttpServletRequest request) throws Exception {
 		String oid = (String) request.getParameter("oid");
 		String roleType = (String) request.getParameter("roleType");
-		JSONObject list = CommonContentHelper.manager.list(oid, roleType);
+		JSONObject list = null;
+		if(oid.contains("ROHSMaterial")) {
+			list = CommonContentHelper.manager.rohsList(oid);
+		}else {
+			list = CommonContentHelper.manager.list(oid, roleType);
+		}
 		return list;
 	}
 

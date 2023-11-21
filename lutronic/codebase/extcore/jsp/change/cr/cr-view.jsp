@@ -141,8 +141,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td colspan="5">
-					class="indent5>
+				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid"/>
 					</jsp:include>
