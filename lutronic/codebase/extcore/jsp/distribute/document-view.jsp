@@ -148,7 +148,7 @@ iframe {
 			%>
 			<table class="view-table">
 				<tr>
-					<th class="lb" style="background-color: rgb(193, 235, 255); width: 100px">
+					<th class="lb" style="background-color: rgb(193, 235, 255); width: 133px">
 						<%=cm.getCreator()%>
 						<br>
 						<%=cm.getCreatedDate()%>
@@ -178,7 +178,7 @@ iframe {
 			<table class="view-table" style="border-top: none;">
 				<tr>
 					<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
-					<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 100px">
+					<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 133px">
 						<%=dd.getCreator()%>
 						<br>
 						<%=dd.getCreatedDate()%>
@@ -208,7 +208,7 @@ iframe {
 			%>
 			<table class="view-table">
 				<colgroup>
-					<col width="100">
+					<col width="136">
 					<col width="*">
 				</colgroup>
 				<tr>

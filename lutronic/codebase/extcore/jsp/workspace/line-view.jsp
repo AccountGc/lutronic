@@ -60,9 +60,9 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="400">
+				<col width="500">
 				<col width="130">
-				<col width="400">
+				<col width="500">
 			</colgroup>
 			<tr>
 				<th class="lb">결재 제목</th>

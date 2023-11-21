@@ -134,7 +134,7 @@ public class RohsController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/rohs/rohs-view.jsp");
+		model.setViewName("popup:/rohs/rohs-view");
 		return model;
 	}
 	

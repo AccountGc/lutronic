@@ -71,10 +71,10 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		<!-- 기본 정보 -->
 		<table class="view-table">
 			<colgroup>
-				<col width="150">
-				<col width="*">
-				<col width="150">
-				<col width="*">
+				<col width="130">
+				<col width="500">
+				<col width="130">
+				<col width="500">
 			</colgroup>
 			<tr>
 				<th class="lb">물질명</th>
@@ -141,7 +141,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			%>
 				<table class="view-table">
 					<tr>
-						<th class="lb" style="background-color: rgb(193, 235, 255); width: 100px">
+						<th class="lb" style="background-color: rgb(193, 235, 255); width: 155px">
 							<%=cm.getCreator()%>
 							<br>
 							<%=cm.getCreatedDate()%>
@@ -171,7 +171,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 					<table class="view-table" style="border-top: none;">
 						<tr>
 							<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
-							<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 100px">
+							<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 155px">
 								<%=dd.getCreator()%>
 								<br>
 								<%=dd.getCreatedDate()%>
@@ -201,7 +201,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			%>
 			<table class="view-table">
 				<colgroup>
-					<col width="100">
+					<col width="155">
 					<col width="*">
 				</colgroup>
 				<tr>

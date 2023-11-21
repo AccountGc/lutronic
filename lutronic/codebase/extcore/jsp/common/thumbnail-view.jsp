@@ -52,4 +52,4 @@ if (representation != null) {
 <%}%>
 	
 </script>
-<div id="CreoViewWebGLDiv" style="width: 400px; height: 95%; border: 0; margin: auto"></div>
+<div id="CreoViewWebGLDiv" style="height: 95%; border: 0; margin: auto"></div>

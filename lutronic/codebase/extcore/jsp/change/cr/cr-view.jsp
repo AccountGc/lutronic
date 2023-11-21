@@ -165,9 +165,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 </div>
 <script type="text/javascript">
 	function modify() {
-		const oid = document.getElementById("
-					oid").value;
-		const url=getCallUrl( "/cr/update?oid=" + oid);
+		const oid = document.getElementById("oid").value;
+		const url=getCallUrl("/cr/update?oid=" + oid);
 		document.location.href = url;
 	}
 
@@ -177,9 +176,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			return false;
 		}
 
-		const oid=document.getElementById( "oid").value;
-		const url=getCallUrl(
-					"/cr/delete?oid=" + oid);
+		const oid=document.getElementById("oid").value;
+		const url=getCallUrl("/cr/delete?oid=" + oid);
 		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
@@ -194,49 +192,52 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 	
 	
 // 	$("#approveBtn").click(function () {
-// 		var oid=$(
-					"#oid").val();
+// 		var oid=$("#oid").val();
 // 		var url=getURLString( "groupware", "historyWork", "do") + "?oid=" + oid;
 // 		openOtherName(url," window","830","600","status=no,scrollbars=yes,resizable=yes ");
 // 	})
 	
 // 	$("#downloadBtn").click(function () {
 // 		var oid=$( "#oid").val();
-// 		var
-					url=getURLString( "common", "downloadHistory", "do") + "?oid=" + oid;
+// 		var url=getURLString( "common", "downloadHistory", "do") + "?oid=" + oid;
 // 		openOtherName(url," window","830","600","status=no,scrollbars=yes,resizable=yes ");
-// 	}) document.addEventListener("DOMContentLoaded", function() {
+// 	}) 
+	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
 			activate :
 					function(event, ui) {
 				var tabId=ui.newPanel.prop( "id");
 				switch (tabId) {
-				case "tabs-2": const isCreated300=AUIGrid.isCreated(myGridID300); // ECO if (isCreated300) {
+				case "tabs-2": 
+					const isCreated300=AUIGrid.isCreated(myGridID300); // ECO 
+					if (isCreated300) {
 						AUIGrid.resize(myGridID300);
 					} else {
 						createAUIGrid300(columns300);
 					}
-					const
-					isCreated101=AUIGrid.isCreated(myGridID101); // CR if (isCreated101) {
+					const isCreated101=AUIGrid.isCreated(myGridID101); // CR 
+					if (isCreated101) {
 						AUIGrid.resize(myGridID101);
 					} else {
 						createAUIGrid101(columns101);
 					}
 					break;
-				case "tabs-3": const isCreated51=AUIGrid.isCreated(myGridID51); // 다운로드이력 if
-					(isCreated51) {
+				case "tabs-3": 
+					const isCreated51=AUIGrid.isCreated(myGridID51); // 다운로드이력 
+					if(isCreated51) {
 						AUIGrid.resize(myGridID51);
 					} else {
 						createAUIGrid51(columns51);
 					}
-					const isCreated10000=AUIGrid.isCreated(myGridID10000); // 결재이력 if
-					(isCreated10000) {
+					const isCreated10000=AUIGrid.isCreated(myGridID10000); // 결재이력 
+					if(isCreated10000) {
 						AUIGrid.resize(myGridID10000);
 					} else {
 						createAUIGrid10000(columns10000);
 					}
-					const isCreated10001=AUIGrid.isCreated(myGridID10001); // 외부 메일 if(isCreated10001) {
+					const isCreated10001=AUIGrid.isCreated(myGridID10001); // 외부 메일 
+					if(isCreated10001) {
 						AUIGrid.resize(myGridID10001);
 					} else {
 						createAUIGrid10001(columns10001);
@@ -252,4 +253,4 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 		AUIGrid.resize(myGridID300);
 	});
 
-					</script>
+</script>

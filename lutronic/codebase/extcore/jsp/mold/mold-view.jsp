@@ -59,11 +59,11 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="450">
+				<col width="350">
 				<col width="130">
-				<col width="450">
+				<col width="350">
 				<col width="130">
-				<col width="450">
+				<col width="350">
 			</colgroup>
 			<tr>
 				<th class="lb">금형번호</th>

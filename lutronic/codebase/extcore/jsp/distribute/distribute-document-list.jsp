@@ -44,11 +44,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
-				<col width="*">
+				<col width="350">
 				<col width="130">
-				<col width="*">
+				<col width="350">
 				<col width="130">
-				<col width="*">
+				<col width="350">
 			</colgroup>
 			<tr>
 				<th>문서 분류</th>

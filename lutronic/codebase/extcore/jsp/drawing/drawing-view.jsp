@@ -55,10 +55,10 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		<!-- 기본 정보 -->
 		<table class="view-table">
 			<colgroup>
-				<col width="150">
-				<col width="*">
-				<col width="150">
-				<col width="*">
+				<col width="130">
+				<col width="500">
+				<col width="130">
+				<col width="500">
 			</colgroup>
 			<tr>
 				<th class="lb">도면번호</th>

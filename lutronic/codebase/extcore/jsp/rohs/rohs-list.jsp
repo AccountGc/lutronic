@@ -156,7 +156,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/rohs/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
@@ -181,7 +181,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/rohs/view?oid=" + oid);
-							popup(url, 1600, 800);
+							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {

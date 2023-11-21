@@ -359,7 +359,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
+							const oid = item.epm_oid;
 							const url = getCallUrl("/drawing/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
@@ -377,7 +377,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
+							const oid = item.epm_oid;
 							const url = getCallUrl("/drawing/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}

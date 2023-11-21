@@ -91,6 +91,7 @@
 	function sendUpdate(oid, mdepth) {
 		document.getElementById("mdepth").value = mdepth;
 		const url = getCallUrl("/comments/get?oid=" + oid);
+		openLayer();
 		call(url, null, function(data) {
 			if(data.result) {
 				document.getElementById("moid").value = oid;
@@ -99,6 +100,7 @@
 				document.getElementsByName("data")[1].value = comment;
 			} else {
 				alert(data.msg);
+				closeLayer();
 			}
 		}, "GET");
 	}
@@ -122,12 +124,15 @@
 		if (!confirm("등록하시겠습니까?")) {
 			return false;
 		}
-
+		
+		openLayer();
 		const url = getCallUrl("/comments/reply");
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
+			}else{
+				closeLayer();
 			}
 		})
 	}
@@ -152,11 +157,14 @@
 			depth : depth
 		}
 		
+		openLayer();
 		const url = getCallUrl("/comments/modify");
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				document.location.reload();
+			}else{
+				closeLayer();
 			}
 		})
 	}

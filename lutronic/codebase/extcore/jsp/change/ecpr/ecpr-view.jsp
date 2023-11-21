@@ -47,74 +47,74 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 		<!-- 기본 정보 -->
 		<table class="view-table">
 			<colgroup>
-				<col width="13%">
-				<col width="37%">
-				<col width="13%">
-				<col width="37%">
+				<col width="130">
+				<col width="450">
+				<col width="130">
+				<col width="450">
 			</colgroup>
 			<tr>
-				<th>ECPR 제목</th>
-				<td colspan="3"><%=dto.getName()%></td>
+				<th class="lb">ECPR 제목</th>
+				<td colspan="3" class="indent5"><%=dto.getName()%></td>
 			</tr>
 			<tr>
-				<th>ECPR 번호</th>
-				<td><%=dto.getNumber()%></td>
-				<th>상태</th>
-				<td><%=dto.getState()%></td>
+				<th class="lb">ECPR 번호</th>
+				<td class="indent5"><%=dto.getNumber()%></td>
+				<th class="lb">상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
-				<th>등록자</th>
-				<td colspan="3"><%=dto.getCreator()%></td>
+				<th class="lb">등록자</th>
+				<td colspan="3" class="indent5"><%=dto.getCreator()%></td>
 			</tr>
 			<tr>
-				<th>등록일</th>
-				<td><%=dto.getCreatedDate()%></td>
-				<th>수정일</th>
-				<td><%=dto.getModifiedDate_text()%></td>
+				<th class="lb">등록일</th>
+				<td class="indent5"><%=dto.getCreatedDate()%></td>
+				<th class="lb">수정일</th>
+				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
 			</tr>
 			<tr>
-				<th>작성자</th>
-				<td><%=dto.getWriter_name()%></td>
-				<th>작성부서</th>
-				<td><%=dto.getCreateDepart_name() == null ? "" : dto.getCreateDepart_name()%></td>
+				<th class="lb">작성자</th>
+				<td class="indent5"><%=dto.getWriter_name()%></td>
+				<th class="lb">작성부서</th>
+				<td class="indent5"><%=dto.getCreateDepart_name() == null ? "" : dto.getCreateDepart_name()%></td>
 			</tr>
 			<tr>
-				<th>작성일</th>
-				<td><%=dto.getWriteDate()%></td>
-				<th>승인일</th>
-				<td><%=dto.getApproveDate()%></td>
+				<th class="lb">작성일</th>
+				<td class="indent5"><%=dto.getWriteDate()%></td>
+				<th class="lb">승인일</th>
+				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
 <!-- 				<th>제안자</th> -->
 <%-- 				<td><%=dto.getProposer()%></td> --%>
-				<th>제품명</th>
-				<td><%=dto.getModel()%></td>
-				<th>변경구분</th>
-				<td><%=dto.getChangeCode()%></td>
+				<th class="lb">제품명</th>
+				<td class="indent5"><%=dto.getModel()%></td>
+				<th class="lb">변경구분</th>
+				<td class="indent5"><%=dto.getChangeCode()%></td>
 			</tr>
 			<tr>
-				<th>변경사유</th>
-				<td colspan="3"><%=dto.getEoCommentA()%></td>
+				<th class="lb">변경사유</th>
+				<td colspan="3" class="indent5"><%=dto.getEoCommentA()%></td>
 			</tr>
 			<tr>
-				<th>변경사항</th>
-				<td colspan="3"><%=dto.getEoCommentB()%></td>
+				<th class="lb">변경사항</th>
+				<td colspan="3" class="indent5"><%=dto.getEoCommentB()%></td>
 			</tr>
 			<tr>
-				<th>참고사항</th>
-				<td colspan="3"><%=dto.getEoCommentC()%></td>
+				<th class="lb">참고사항</th>
+				<td colspan="3" class="indent5"><%=dto.getEoCommentC()%></td>
 			</tr>
 			<tr>
-				<th>주 첨부파일</th>
-				<td colspan="3">
+				<th class="lb">주 첨부파일</th>
+				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
 					</jsp:include>
 				</td>
 			</tr>
 			<tr>
-				<th>첨부파일</th>
-				<td colspan="3">
+				<th class="lb">첨부파일</th>
+				<td colspan="3" class="indent5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
 					</jsp:include>

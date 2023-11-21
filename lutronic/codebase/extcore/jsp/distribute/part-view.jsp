@@ -11,9 +11,7 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 PartDTO dto = (PartDTO) request.getAttribute("dto");
-
 WTPart part = (WTPart)CommonUtil.getObject(dto.getOid());
-
 List<CommentsDTO> list = dto.getComments();
 String pnum = (String) request.getAttribute("pnum");
 WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
@@ -49,35 +47,25 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<li>
 			<a href="#tabs-4">관련 객체</a>
 		</li>
-		<%
-		if (isAdmin) {
-		%>
-		<li>
-			<a href="#tabs-5">관리자 속성</a>
-		</li>
-		<%
-		}
-		%>
 		<li>
 			<a href="#tabs-6">환경규제문서</a>
 		</li>
 		<li>
 			<a href="#tabs-7">이력 관리</a>
 		</li>
-		<li>
-			<a href="#tabs-8">관련 품목</a>
-		</li>
 	</ul>
 	<div id="tabs-1">
 		<table class="view-table">
 			<colgroup>
-				<col width="150">
+				<col width="130">
 				<col width="500">
-				<col width="150">
-				<col width="500">
+				<col width="130">
+				<col width="320">
+				<col width="80">
+				<col width="100">
 			</colgroup>
 			<tr>
-				<th class="lb" colspan="5"><%=dto.getName()%></th>
+				<th class="lb" colspan="6"><%=dto.getName()%></th>
 			</tr>
 			<tr>
 				<th class="lb">품목번호</th>
@@ -86,7 +74,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
-				<td class="" align="center" rowspan="7">
+				<td class="" align="center" rowspan="5" colspan="2">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -116,7 +104,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -156,7 +144,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				%>
 				<table class="view-table">
 					<tr>
-						<th class="lb" style="background-color: rgb(193, 235, 255); width: 100px">
+						<th class="lb" style="background-color: rgb(193, 235, 255); width: 158px">
 							<%=cm.getCreator()%>
 							<br>
 							<%=cm.getCreatedDate()%>
@@ -186,7 +174,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<table class="view-table" style="border-top: none;">
 					<tr>
 						<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
-						<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 100px">
+						<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 158px">
 							<%=dd.getCreator()%>
 							<br>
 							<%=dd.getCreatedDate()%>
@@ -216,7 +204,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				%>
 				<table class="view-table">
 					<colgroup>
-						<col width="100">
+						<col width="160">
 						<col width="*">
 					</colgroup>
 					<tr>
@@ -264,43 +252,15 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		</jsp:include>
 	</div>
 
-	<%
-	if (isAdmin) {
-	%>
-	<!-- 관리자 속성 -->
-	<div id="tabs-5">
-		<jsp:include page="/extcore/jsp/common/adminAttributes_include.jsp">
-			<jsp:param value="part" name="module" />
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
-	<%
-	}
-	%>
-
-	<!-- 환경규제문서 -->
-	<div id="tabs-6">
-<%-- 		<jsp:include page="/extcore/jsp/document/include_environmentalRegulatoryDocument.jsp"> --%>
-<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
-<%-- 		</jsp:include> --%>
-	</div>
-	
 	<!-- 이력관리 -->
 	<div id="tabs-7">
 		<jsp:include page="/extcore/jsp/part/include/part-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
-	<!-- 관련품목 -->
-	<div id="tabs-8">
-		<jsp:include page="/extcore/jsp/part/include/part-related-include.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
 	
 </div>
 <script type="text/javascript">
-
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,

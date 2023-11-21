@@ -21,10 +21,10 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 </table>
 <table class="view-table">
 	<colgroup>
-		<col width="10%">
-		<col width="40%">
-		<col width="10%">
-		<col width="40%">
+		<col width="130">
+		<col width="500">
+		<col width="130">
+		<col width="500">
 	</colgroup>
 	<tr>
 		<th class="lb">제목</th>
