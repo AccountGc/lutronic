@@ -89,7 +89,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			<tr>
 				<th class="lb">상태</th>
 				<td class="indent5"><%=dto.getStateDisplay()%></td>
-				<th class="lb">Rev.</th>
+				<th class="lb">REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>
 					<%

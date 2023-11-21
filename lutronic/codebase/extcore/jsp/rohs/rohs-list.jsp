@@ -135,7 +135,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		
@@ -186,8 +186,9 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "REV",
 					dataType : "string",
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -212,6 +213,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "date",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -220,6 +222,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "date",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,

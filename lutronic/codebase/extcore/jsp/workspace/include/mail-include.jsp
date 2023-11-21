@@ -63,7 +63,7 @@ boolean update = "update".equals(mode);
 
 		function popup9() {
 			const url = getCallUrl("/workspace/mail");
-			const p = _popup(url, 1400, 860, "n");
+			const p = _popup(url, 700, 500, "n");
 		}
 
 		function deleteRow9() {

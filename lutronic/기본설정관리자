@@ -12,3 +12,8 @@
    
 5. 체크 인 후 객체 체크 아웃 명령 취소
 	-> 아니오 -> 예로 변경	
+	
+6. 객체 초기화 규칙
+	-> Document -> 마우스 우클릭 -> 편집 -> 이클립스 -> loadFiles -> init -> doc -> doc-rule.xml
+	-> Part -> 마우스 우클릭 -> 편집 -> 이클립스 -> loadFiles -> init -> part -> part-rule.xml
+	-> EPMDocument -> 마우스 우클릭 -> 편집 -> 이클립스 -> loadFiles -> init -> epm -> epm-rule.xml

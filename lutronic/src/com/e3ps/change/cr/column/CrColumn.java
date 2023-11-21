@@ -17,17 +17,17 @@ public class CrColumn {
 	private String oid;
 	private String name;
 	private String number;
-	private String changeSection;
 	private String model;
+	private String changeSection;
 	private String createDepart;
 	private String writer;
-	private String approveDate;
+	private String writeDate;
 	private String state;
+	private String creator;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
-	private String creator;
-	private String writeDate;
+	private String approveDate;
 
 	public CrColumn() {
 
@@ -41,16 +41,15 @@ public class CrColumn {
 		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
-		setChangeSection(CrHelper.manager.displayToSection(cr.getChangeSection()));
 		setModel(CrHelper.manager.displayToModel(cr.getModel()));
+		setChangeSection(CrHelper.manager.displayToSection(cr.getChangeSection()));
 		setCreateDepart(CrHelper.manager.displayToDept(cr.getCreateDepart()));
-		setWriter(CommonUtil.getUserNameFromOid(cr.getWriter()));
-		setApproveDate(cr.getApproveDate());
+		setWriter(cr.getWriter());
+		setWriteDate(cr.getCreateDate());
 		setState(cr.getLifeCycleState().getDisplay());
 		setCreator(cr.getCreatorFullName());
 		setCreatedDate(cr.getCreateTimestamp());
 		setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
-		setCreator(cr.getCreatorFullName());
-		setWriteDate(cr.getCreateDate());
+		setApproveDate(cr.getApproveDate());
 	}
 }

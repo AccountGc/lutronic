@@ -22,19 +22,19 @@
 
 <table class="search-table">
 	<colgroup>
-		<col width="130">
+		<col width="80">
 		<col width="*">
-		<col width="130">
+		<col width="80">
 		<col width="*">
 	</colgroup>
 	<tr>
 		<th>이름</th>
 		<td class="indent5">
-			<input type="text" name="name" id="name" class="width-200">
+			<input type="text" name="name" id="name" class="width-120">
 		</td>
 		<th>이메일</th>
 		<td class="indent5">
-			<input type="text" name="email" id="email" class="width-200">
+			<input type="text" name="email" id="email" class="width-120">
 		</td>
 	</tr>
 </table>
@@ -51,12 +51,12 @@
 				<option value="200">200</option>
 				<option value="300">300</option>
 			</select>
-			<input type="button" value="검색" title="검색" onclick="loadGridData();">
+			<input type="button" value="검색" title="검색" onclick="loaData();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>
-<div id="grid_wrap" style="height: 675px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 315px; border-top: 1px solid #3180c3;"></div>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">

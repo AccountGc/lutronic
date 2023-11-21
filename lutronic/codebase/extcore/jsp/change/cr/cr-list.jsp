@@ -8,7 +8,7 @@
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
@@ -61,12 +61,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-							<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-							}
+						}
 						}
 						%>
 					</select>
@@ -123,12 +123,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-<!-- 				<th>제안자</th> -->
-<!-- 				<td class="indent5"> -->
-<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
-<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
-<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-<!-- 				</td> -->
+				<!-- 				<th>제안자</th> -->
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+				<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
+				<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+				<!-- 				</td> -->
 				<th>변경구분</th>
 				<td class="indent5">
 					<select name="changeSection" id="changeSection" class="width-200">
@@ -178,7 +178,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 565px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 
@@ -225,7 +225,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "model",
 					headerText : "제품",
 					dataType : "string",
-					width : 200,
+					width : 220,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -234,7 +234,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
-					width : 200,
+					width : 220,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -243,7 +243,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
-					width : 150,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -293,6 +293,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showIcon : true,
 						inline : true
 					},
+				}, {
+					dataField : "approveDate",
+					headerText : "승인일",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
 				} ]
 			}
 
@@ -300,7 +309,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					showRowCheckColumn : true,
+					// 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -363,7 +372,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("state");
 				finderUser("creator");
 				finderUser("writer");
-// 				finderUser("proposer");
+				// 				finderUser("proposer");
 				twindate("created");
 				twindate("approve");
 				twindate("writed");
@@ -387,10 +396,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("CR 리스트", "CR", "CR 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("CR 리스트", "CR", "CR 리스트", [], sessionName);
 			}
 		</script>
 	</form>

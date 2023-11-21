@@ -81,14 +81,14 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">제안자</th> -->
-<!-- 				<td class="indent5" colspan="3"> -->
-<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
-<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
-<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-<!-- 				</td> -->
-<!-- 			</tr> -->
+			<!-- 			<tr> -->
+			<!-- 				<th class="lb">제안자</th> -->
+			<!-- 				<td class="indent5" colspan="3"> -->
+			<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+			<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
+			<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+			<!-- 				</td> -->
+			<!-- 			</tr> -->
 			<tr>
 				<th class="req lb">제품명</th>
 				<td colspan="3" class="indent5 pt5">
@@ -103,8 +103,8 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">변경구분</th>
-				<td class="indent5" colspan="3">
+				<th class="lb req">변경구분</th>
+				<td colspan="3">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
@@ -157,15 +157,15 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="3"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
+			<!-- 			<tr> -->
+			<!-- 				<th class="lb">결재</th> -->
+			<!-- 				<td colspan="3"> -->
+			<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
+			<%-- 						<jsp:param value="" name="oid" /> --%>
+			<%-- 						<jsp:param value="create" name="mode" /> --%>
+			<%-- 					</jsp:include> --%>
+			<!-- 				</td> -->
+			<!-- 			</tr> -->
 			<tr>
 				<th class="lb">외부 메일 지정</th>
 				<td colspan="3">
@@ -185,7 +185,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 			<jsp:param value="150" name="height" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="center">
@@ -200,10 +200,10 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 				const secondarys = toArray("secondarys");
-				
+
 				const temprary = JSON.parse(temp);
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				
+				// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
@@ -218,45 +218,50 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				changeSection.forEach(function(item) {
 					sections.push(item.value);
 				});
-				
-				if(isEmpty(name.value)){
+
+				if (isEmpty(name.value)) {
 					alert("CR 제목을 입력해주세요.");
 					name.focus();
 					return;
 				}
-				
-				if(isEmpty(number.value)){
+
+				if (isEmpty(number.value)) {
 					alert("CR 번호를 선택해주세요.");
 					number.focus();
 					return;
 				}
-				
-				if(rows300.length == 0){
-					alert("제품명을 입력해주세요.");
+
+				if (rows300.length == 0) {
+					alert("제품을 선택하세요.");
 					return;
 				}
-				
-				if(primary == null){
+
+				if (sections.length === 0) {
+					alert("변경구분을 선택하세요.");
+					return false;
+				}
+
+				if (primary == null) {
 					alert("주 첨부파일을 첨부해주세요.");
 					return;
 				}
-				
+
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-					
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
-					
+
+					// 					if (addRows8.length > 0) {
+					// 						alert("결재선 지정을 해지해주세요.")
+					// 						return false;
+					// 					}
+
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
 				}
-				
+
 				const params = {
 					name : name.value,
 					number : number.value,
@@ -264,7 +269,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					approveDate : toId("approveDate"),
 					createDepart_code : toId("createDepart"),
 					writer_oid : toId("writerOid"),
-// 					proposer_name : toId("proposer"),
+					// 					proposer_name : toId("proposer"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -277,7 +282,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					// 외부 메일
 					external : external
 				}
-// 				toRegister(params, addRows8); // 결재선 세팅
+				// 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/cr/create");
 				parent.openLayer();
 				logger(params);
@@ -299,21 +304,21 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");
-// 				finderUser("proposer");
+				// 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
-// 				createAUIGrid8(columns8);
+				// 				createAUIGrid8(columns8);
 				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID8);
+				// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID8);
+				// 				AUIGrid.resize(myGridID8);
 				AUIGrid.resize(myGridID9);
 			});
 		</script>

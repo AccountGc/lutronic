@@ -84,12 +84,12 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<td class="indent5"><%=dto.getWriteDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">제안자</th>
-				<td class="indent5"><%=dto.getProposer_name()%></td>
+				<!-- 				<th class="lb">제안자</th> -->
+				<%-- 				<td class="indent5"><%=dto.getProposer_name()%></td> --%>
 				<!-- 				<th class="lb">제품명</th> -->
 				<%-- 				<td><%=dto.getModel()%></td> --%>
-				<th>변경부분</th>
-				<td class="indent5"><%=dto.getChangeSection()%></td>
+				<th class="lb">변경부분</th>
+				<td class="indent5" colspan="3"><%=dto.getChangeSection()%></td>
 				<th>승인일</th>
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
@@ -120,7 +120,6 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<td colspan="5" class="indent5">
 					<%
 					Map<String, Object> contentMap = dto.getContentMap();
-					if (contentMap != null) {
 					%>
 					<div>
 						<a href="<%=contentMap.get("url")%>">
@@ -128,22 +127,13 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 							<img src="<%=contentMap.get("fileIcon")%>" style="position: relative; top: 1px;">
 						</a>
 					</div>
-					<%
-					} else {
-					%>
-					<font color="red">
-						<b>등록된 계변경 부품 내역파일이 없습니다.</b>
-					</font>
-					<%
-					}
-					%>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid"/>
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -165,18 +155,18 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 <script type="text/javascript">
 	function modify() {
 		const oid = document.getElementById("oid").value;
-		const url=getCallUrl("/cr/update?oid=" + oid);
+		const url = getCallUrl("/cr/update?oid=" + oid);
 		document.location.href = url;
 	}
 
 	function _delete() {
 
-		if (!confirm(" 삭제 하시겠습니까?")) {
+		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
 
-		const oid=document.getElementById("oid").value;
-		const url=getCallUrl("/cr/delete?oid=" + oid);
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/cr/delete?oid=" + oid);
 		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
@@ -186,57 +176,38 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			} else {
 				clsoeLayer();
 			}
-		}, " DELETE");
+		}, "DELETE");
 	}
-	
-	
-// 	$("#approveBtn").click(function () {
-// 		var oid=$("#oid").val();
-// 		var url=getURLString( "groupware", "historyWork", "do") + "?oid=" + oid;
-// 		openOtherName(url," window","830","600","status=no,scrollbars=yes,resizable=yes ");
-// 	})
-	
-// 	$("#downloadBtn").click(function () {
-// 		var oid=$( "#oid").val();
-// 		var url=getURLString( "common", "downloadHistory", "do") + "?oid=" + oid;
-// 		openOtherName(url," window","830","600","status=no,scrollbars=yes,resizable=yes ");
-// 	}) 
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
-			activate :
-					function(event, ui) {
-				var tabId=ui.newPanel.prop( "id");
+			activate : function(event, ui) {
+				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-2": 
-					const isCreated300=AUIGrid.isCreated(myGridID300); // ECO 
-					if (isCreated300) {
-						AUIGrid.resize(myGridID300);
-					} else {
-						createAUIGrid300(columns300);
-					}
-					const isCreated101=AUIGrid.isCreated(myGridID101); // CR 
+				case "tabs-2":
+					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR 
 					if (isCreated101) {
 						AUIGrid.resize(myGridID101);
 					} else {
 						createAUIGrid101(columns101);
 					}
 					break;
-				case "tabs-3": 
-					const isCreated51=AUIGrid.isCreated(myGridID51); // 다운로드이력 
-					if(isCreated51) {
+				case "tabs-3":
+					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력 
+					if (isCreated51) {
 						AUIGrid.resize(myGridID51);
 					} else {
 						createAUIGrid51(columns51);
 					}
-					const isCreated10000=AUIGrid.isCreated(myGridID10000); // 결재이력 
-					if(isCreated10000) {
+					const isCreated10000 = AUIGrid.isCreated(myGridID10000); // 결재이력 
+					if (isCreated10000) {
 						AUIGrid.resize(myGridID10000);
 					} else {
 						createAUIGrid10000(columns10000);
 					}
-					const isCreated10001=AUIGrid.isCreated(myGridID10001); // 외부 메일 
-					if(isCreated10001) {
+					const isCreated10001 = AUIGrid.isCreated(myGridID10001); // 외부 메일 
+					if (isCreated10001) {
 						AUIGrid.resize(myGridID10001);
 					} else {
 						createAUIGrid10001(columns10001);
@@ -249,7 +220,8 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridID300);
+		AUIGrid.resize(myGridID51);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	});
-
 </script>
