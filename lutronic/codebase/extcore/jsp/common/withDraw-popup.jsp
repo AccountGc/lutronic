@@ -39,7 +39,8 @@ String oid = request.getParameter("oid");
 	</colgroup>
 	<tr>
 		<th class="lb">결재 회수 방식 <span class="red">*</span></th>
-		<td class="indent5" colspan="3">
+		<td colspan="3">
+			&nbsp;
 			<div class="pretty p-switch">
 				<input type="radio" name="withDrawType" value="init" checked="checked">
 				<div class="state p-success">

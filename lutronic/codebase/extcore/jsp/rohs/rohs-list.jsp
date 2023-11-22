@@ -146,6 +146,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "number",
 					headerText : "물질번호",
 					dataType : "string",
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -163,6 +164,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "manufactureDisplay",
 					headerText : "협력업체",
 					dataType : "string",
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -197,6 +199,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -205,6 +208,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true

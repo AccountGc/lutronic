@@ -34,7 +34,8 @@ String oid = (String) request.getParameter("oid");
 	</colgroup>
 	<tr>
 		<th class="req lb">결재방식</th>
-		<td class="indent5" colspan="3">
+		<td colspan="3">
+			&nbsp;
 			<div class="pretty p-switch">
 				<input type="radio"name="lifecycle" value="LC_Default" checked="checked">
 				<div class="state p-success">

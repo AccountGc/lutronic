@@ -148,7 +148,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					<input type="text" name="moldnumber" id="moldnumber" class="width-300">
 				</td>
 				<th>Rev.</th>
-				<td class="indent5" >
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="islastversion" value="true" checked="checked">
@@ -206,7 +206,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "number",
 					headerText : "금형번호",
 					dataType : "string",
-					width : 295,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -224,7 +224,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "name",
 					headerText : "금형명",
 					dataType : "string",
-					width : 450,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -240,9 +239,9 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "REV",
 					dataType : "string",
-					width : 170,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -251,7 +250,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -260,7 +259,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 170,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -269,7 +268,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -278,7 +277,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true

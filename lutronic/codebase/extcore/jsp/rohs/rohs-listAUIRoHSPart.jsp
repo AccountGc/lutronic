@@ -84,6 +84,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "partNumber",
 					headerText : "품번",
 					dataType : "string",
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -100,6 +101,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "partState",
 					headerText : "상태",
 					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -136,6 +138,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "rohsNumber",
 					headerText : "물질번호",
 					dataType : "string",
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -152,6 +155,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "rohslifeState",
 					headerText : "물질 상태",
 					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -160,6 +164,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "fileName",
 					headerText : "파일명",
 					dataType : "string",
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -168,6 +173,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "docType",
 					headerText : "파일구분",
 					dataType : "string",
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true

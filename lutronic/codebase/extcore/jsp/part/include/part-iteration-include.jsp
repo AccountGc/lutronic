@@ -4,7 +4,6 @@
 <%@page import="com.e3ps.part.service.PartHelper"%>
 <%
 String oid = request.getParameter("oid");
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -16,13 +15,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 		</td>
 	</tr>
 </table>
-<table class="create-table">
-	<tr>
-		<td class="lb">
-			<div id="grid50" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-		</td>
-	</tr>
-</table>
+<div id="grid50" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID50;
 	const columns50 = [ {
@@ -132,6 +125,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID50 = AUIGrid.create("#grid50", columnLayout, props);
 		AUIGrid.setGridData(myGridID50, <%=PartHelper.manager.allIterationsOf(oid)%>);

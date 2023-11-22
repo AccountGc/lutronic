@@ -42,9 +42,10 @@ ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttri
 			&nbsp;<input type="button" value="번호 중복" title="번호 중복" onclick="NumberCheck();">
 		</td>
 		<th class="req lb">결재방식</th>
-		<td class="indent5">
+		<td>
+			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio"name="lifecycle" value="LC_Default">
+				<input type="radio" name="lifecycle" value="LC_Default">
 				<div class="state p-success">
 					<label> <b>기본결재</b>
 					</label>

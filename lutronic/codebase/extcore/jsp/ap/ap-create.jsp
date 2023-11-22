@@ -45,6 +45,7 @@
 			<tr>
 				<th>결재방식 <span class="red">*</span></th>
 				<td colspan="3">
+					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio"name="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">

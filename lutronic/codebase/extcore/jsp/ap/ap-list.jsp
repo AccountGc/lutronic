@@ -126,7 +126,7 @@ WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 				</td>
 				<th>Rev.</th>
-				<td class="indent5" colspan="3">
+				<td colspan="3">
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="islastversion" value="true" checked="checked">

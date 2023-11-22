@@ -150,9 +150,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
-						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+// 						totalPage = Math.ceil(data.total / data.pageSize);
+// 						document.getElementById("sessionid").value = data.sessionid;
+// 						createPagingNavigator(data.curPage);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

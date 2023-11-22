@@ -74,6 +74,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 			<tr>
 				<th class="req lb">결재방식</th>
 				<td>
+					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
 						<div class="state p-success">
