@@ -61,4 +61,21 @@ public class WorkDataController extends BaseController {
 		model.setViewName("/extcore/jsp/workspace/workData-view.jsp");
 		return model;
 	}
+
+	@Description(value = "결재 기안")
+	@ResponseBody
+	@PostMapping(value = "/_submit")
+	public Map<String, Object> _submit(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkDataHelper.service._submit(params);
+			result.put("msg", "결재가 기안되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

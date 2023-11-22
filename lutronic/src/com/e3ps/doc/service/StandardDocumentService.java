@@ -196,16 +196,8 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		boolean temprary = dto.isTemprary();
-
 		// 설별 활동 링크 OID
 		String oid = dto.getOid();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
-		boolean isSelf = dto.isSelf();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();

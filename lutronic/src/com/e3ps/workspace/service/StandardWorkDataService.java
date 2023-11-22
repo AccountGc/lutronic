@@ -1,5 +1,7 @@
 package com.e3ps.workspace.service;
 
+import java.util.Map;
+
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.workspace.WorkData;
 
@@ -30,6 +32,28 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			data.setPer(per);
 			data.setOwnership(ownership);
 			PersistenceHelper.manager.save(data);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void _submit(Map<String, Object> params) throws Exception {
+		String oid = (String)params.get("oid");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+
+			WorkData data = (WorkData)CommonUtil.getObject(oid);
 
 			trs.commit();
 			trs = null;

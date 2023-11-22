@@ -97,6 +97,23 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 			if (!confirm("기안 하시겠습니까?")) {
 				return false;
 			}
+			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+			const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+			const url = getCallUrl("/workData/_submit");
+			const params = {
+				oid : oid,
+				external : external
+			};
+			toRegister(params, addRows8); // 결재선 세팅
+			parent.openLayer();
+			logger(params);
+			call(url, params, function(data) {
+				alert(data.msg);
+				if (data.result) {
+					document.location.href = getCallUrl("/workData/list");
+				}
+				parent.closeLayer();
+			})
 
 		}
 
