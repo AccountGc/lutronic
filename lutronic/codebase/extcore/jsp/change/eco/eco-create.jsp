@@ -153,17 +153,6 @@
 					<textarea name="eoCommentD" id="eoCommentD" rows="10"></textarea>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="req lb"> -->
-<!-- 					설계변경 부품 내역파일 -->
-<!-- 										<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" style="position: relative; top: 2px;"> -->
-<!-- 				</th> -->
-<!-- 				<td class="indent5" colspan="3"> -->
-<%-- 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
@@ -174,20 +163,11 @@
 			</tr>
 		</table>
 
-
-		<!-- 설계변경 품목 -->
-		<%-- 		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp"> --%>
-		<%-- 			<jsp:param value="" name="oid" /> --%>
-		<%-- 			<jsp:param value="create" name="mode" /> --%>
-		<%-- 			<jsp:param value="true" name="multi" /> --%>
-		<%-- 		</jsp:include> --%>
-
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="150" name="height" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
 
@@ -196,8 +176,8 @@
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="250" name="height" />
 		</jsp:include>
+
 		<table class="button-table">
 			<tr>
 				<td class="center">
@@ -215,13 +195,10 @@
 				const eoCommentC = toId("eoCommentC");
 				const eoCommentD = toId("eoCommentD");
 				const secondarys = toArray("secondarys");
-// 				const primary = document.querySelector("input[name=primary]");
 				const riskType = document.querySelector("input[name=riskType]:checked").value;
 				const licensing = document.querySelector("input[name=licensing]:checked").value;
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
-				// 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
-
 				const temprary = JSON.parse(temp);
 				const sendType = document.querySelector("input[name=sendType]:checked").value;
 				if (isEmpty(name.value)) {
@@ -229,10 +206,15 @@
 					return;
 				}
 
-// 				if (primary == null) {
-// 					alert("설계변경 부품 내역파일을 첨부해주세요.");
-// 					return;
-// 				}
+				if (sendType.value === "") {
+					alert("ECO 타입을 선택하세요.");
+					return false;
+				}
+
+				if (rows200.length === 0) {
+					alert("설계변경 활동을 하나이상 추가하세요.");
+					return false;
+				}
 
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -250,7 +232,6 @@
 					riskType : riskType,
 					licensing : licensing,
 					secondarys : secondarys,
-// 					primary : primary.value,
 					sendType : sendType,
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
@@ -258,7 +239,6 @@
 					eoCommentD : eoCommentD,
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
-					// 					rows500 : rows500, // 설변품목
 					temprary : temprary,
 				};
 				logger(params);
@@ -276,17 +256,15 @@
 
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("name");
 				createAUIGrid101(columns101);
 				createAUIGrid200(columns200);
-				// 				createAUIGrid500(columns500);
 				AUIGrid.resize(myGridID101);
-// 								AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID101);
-				// 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
 			});
 		</script>

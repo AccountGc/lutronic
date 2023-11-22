@@ -150,6 +150,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			oid : oid
 		};
 
+		logger(rows200);
+		
 		if (name.value === "") {
 			alert("EO 제목을 입력하세요.");
 			name.focus();

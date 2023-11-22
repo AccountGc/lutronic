@@ -227,40 +227,42 @@ public class StandardActivityService extends StandardManager implements Activity
 
 		int sort = 0;
 		for (Map<String, String> map : list) {
-			String step_name = map.get("step_name");
-			String name = map.get("name");
-			String activity_type = map.get("activity_type");
-			String activeUser_oid = map.get("activeUser_oid");
-			String finishDate = map.get("finishDate");
+			String gridState = map.get("gridState");
+			if ("added".equals(gridState)) { // 신규 추가 된것만 일단 등록..
+				String step_name = map.get("step_name");
+				String activity_type = map.get("activity_type");
+				String activeUser_oid = map.get("activeUser_oid");
+				String finishDate = map.get("finishDate");
 
-			WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
+				WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
 
-			EChangeActivity eca = EChangeActivity.newEChangeActivity();
-			eca.setStep(step_name);
+				EChangeActivity eca = EChangeActivity.newEChangeActivity();
+				eca.setStep(step_name);
 //			eca.setName(name);
-			eca.setActiveType(activity_type);
-			eca.setActiveUser(user);
-			eca.setFinishDate(DateUtil.convertDate(finishDate));
-			eca.setSortNumber(sort);
-			eca.setEo(eo);
+				eca.setActiveType(activity_type);
+				eca.setActiveUser(user);
+				eca.setFinishDate(DateUtil.convertDate(finishDate));
+				eca.setSortNumber(sort);
+				eca.setEo(eo);
 
-			String location = "/Default/설계변경/ECA";
-			String lifecycle = "LC_ECA_PROCESS";
+				String location = "/Default/설계변경/ECA";
+				String lifecycle = "LC_ECA_PROCESS";
 
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) eca, folder);
-			// 문서 lifeCycle 설정
-			LifeCycleHelper.setLifeCycle(eca,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) eca, folder);
+				// 문서 lifeCycle 설정
+				LifeCycleHelper.setLifeCycle(eca,
+						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
-			eca = (EChangeActivity) PersistenceHelper.manager.save(eca);
-			sort++;
+				eca = (EChangeActivity) PersistenceHelper.manager.save(eca);
+				sort++;
 
-			// STEP1 코드
-			if (eca.getStep().equals("ES001")) {
-				State state = State.toState("INWORK");
-				// STEP01 단계부터 무조건 시작
-				LifeCycleHelper.service.setLifeCycleState(eca, state);
+				// STEP1 코드
+				if (eca.getStep().equals("ES001")) {
+					State state = State.toState("INWORK");
+					// STEP01 단계부터 무조건 시작
+					LifeCycleHelper.service.setLifeCycleState(eca, state);
+				}
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.activity.service.ActivityHelper;
@@ -274,8 +275,6 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	@Override
 	public void modify(EoDTO dto) throws Exception {
-		ReferenceFactory rf = new ReferenceFactory();
-
 		boolean temprary = dto.isTemprary();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 제품
 		ArrayList<Map<String, String>> rows104 = dto.getRows104(); // 완제품
@@ -298,7 +297,7 @@ public class StandardEoService extends StandardManager implements EoService {
 				}
 			}
 
-			EChangeOrder eo = (EChangeOrder) rf.getReference(dto.getOid()).getObject();
+			EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(dto.getOid());
 			eo.setEoName(dto.getName());
 			eo.setModel(model);
 			eo.setEoType(dto.getEoType());
@@ -328,12 +327,25 @@ public class StandardEoService extends StandardManager implements EoService {
 			saveAttach(eo, dto);
 
 			// 수정은 임시저
-//			if (rows200.size() > 0) {
-//				// 설변활동 어떻게 처리되는지...
-//				ActivityHelper.service.deleteActivity(eo);
-//				ActivityHelper.service.saveActivity(eo, rows200);
-//			}
-			
+			if (rows200.size() > 0) {
+
+				for (Map<String, String> row200 : rows200) {
+					String gridState = row200.get("gridState");
+					String oid = row200.get("oid");
+					if ("removed".equals(gridState)) {
+						EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+						PersistenceHelper.manager.delete(eca);
+						// 삭제..
+					} else if ("added".equals(gridState)) {
+						// 신규 추가
+//						ActivityHelper.service.saveActivity(eo, rows200);
+					} else {
+						// 변견 없음 수정..
+//						EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+					}
+				}
+			}
+
 			// 임시저장일 경우만 수정 가능한데...
 			if (rows200.size() > 0) {
 				if (temprary) {
@@ -352,7 +364,6 @@ public class StandardEoService extends StandardManager implements EoService {
 					WorkDataHelper.service.create(eo);
 				}
 			}
-
 
 			trs.commit();
 			trs = null;

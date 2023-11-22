@@ -33,11 +33,11 @@ String oid = request.getParameter("oid");
 				case "COMPLETED":
 					return "/Windchill/extcore/jsp/change/activity/images/task_complete.gif";
 				case "STAND":
-					return "";
+					return "/Windchill/extcore/jsp/change/activity/images/task_ready.gif";
 				case "PROGRESS":
-					return "";
-				case "COMPLETED":
-					return "";
+					return "/Windchill/extcore/jsp/change/activity/images/task_progress.gif";
+				case "DELAY":
+					return "/Windchill/extcore/jsp/change/activity/images/task_red.gif";
 				}
 			}
 		}

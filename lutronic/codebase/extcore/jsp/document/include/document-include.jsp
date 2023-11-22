@@ -165,6 +165,7 @@ if (header) {
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,

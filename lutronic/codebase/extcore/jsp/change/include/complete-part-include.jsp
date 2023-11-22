@@ -11,9 +11,9 @@ boolean create = "create".equals(mode);
 boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(request.getParameter("header")) : false;
 %>
 <div class="include">
-<%
-if (header) {
-%>
+	<%
+	if (header) {
+	%>
 	<table class="button-table">
 		<tr>
 			<td class="left">
@@ -134,6 +134,7 @@ if (header) {
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,

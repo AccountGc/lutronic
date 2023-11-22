@@ -97,6 +97,7 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
+			softRemoveRowMode : false,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,

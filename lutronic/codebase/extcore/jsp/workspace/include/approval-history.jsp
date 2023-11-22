@@ -72,7 +72,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 100
+		width : 80
 	}, {
 		dataField : "owner",
 		headerText : "담당자",
