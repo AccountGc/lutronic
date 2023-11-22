@@ -84,8 +84,9 @@ public class ActDTO {
 			NumberCode step = NumberCodeHelper.manager.getNumberCode(getStep(), "EOSTEP");
 			if (step != null) {
 				setStep_name(step.getName());
+				setStep(step.getName());
 			}
-			setStep_name(act.getStep());
+//			setStep_name(act.getStep());
 		}
 
 		setActivity_type(act.getActiveType());

@@ -73,18 +73,20 @@ for (int i = 0; i < list.size(); i++) {
 		<td colspan="5" style="padding-left: 11px;">
 			<table class="view-table" style="margin: 5px 0px 5px -5px;">
 				<colgroup>
-					<col width="130">
+					<col width="120">
 					<col width="*">
-					<col width="130">
-					<col width="130">
-					<col width="130">
-					<col width="130">
+					<col width="80">
+					<col width="80">
+					<col width="100">
+					<col width="100">
+					<col width="100">
 				</colgroup>
 				<tr>
-					<th class="lb">문서번호</th>
+					<th class="lb">내부문서번호</th>
 					<th class="lb">문서제목</th>
-					<th class="lb">REV</th>
 					<th class="lb">상태</th>
+					<th class="lb">REV</th>
+					<th class="lb">작성자</th>
 					<th class="lb">등록자</th>
 					<th class="lb">등록일</th>
 				</tr>
@@ -96,20 +98,11 @@ for (int i = 0; i < list.size(); i++) {
 				<tr>
 					<td class="center"><%=node.get("number")%></td>
 					<td class="indent5"><%=node.get("name")%></td>
-					<td class="center"><%=node.get("version")%></td>
 					<td class="center"><%=node.get("state")%></td>
+					<td class="center"><%=node.get("version")%></td>
+					<td class="center"><%=node.get("writer")%></td>
 					<td class="center"><%=node.get("creator")%></td>
-					<td class="center"><%=node.get("createdDate")%></td>
-				</tr>
-				<%
-				}
-				if (arr.size() == 0) {
-				%>
-				<tr>
-					<td class="center" colspan="6">
-						<b>
-							<font color="red">등록된 산출물이 없습니다.</font>
-						</b>
+					<td class="center"><%=node.get("createdDate_txt")%></td>
 				</tr>
 				<%
 				}

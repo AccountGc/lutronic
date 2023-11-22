@@ -473,23 +473,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("#_psize").bindSelectSetValue(100);
 			});
 
-			function editBOM() {
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("편집할 부품을 선택하세요.");
-					return false;
-				}
-				
-				if (items.length > 1) {
-					alert("한개만 선택해 주세요.");
-					return false;
-				}
-				const oid = items[0].part_oid;
-				var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
-				_popup(url, "1400", "600", "n");
-				
-			};
-
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {

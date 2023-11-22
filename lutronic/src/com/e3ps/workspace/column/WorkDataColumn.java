@@ -20,6 +20,7 @@ import wt.lifecycle.LifeCycleManaged;
 public class WorkDataColumn {
 
 	private String oid;
+	private boolean read;
 	private String poid;
 	private String work;
 	private String persistType;
@@ -41,6 +42,7 @@ public class WorkDataColumn {
 
 	public WorkDataColumn(WorkData workData) throws Exception {
 		setOid(workData.getPersistInfo().getObjectIdentifier().getStringValue());
+		setRead(workData.getReads());
 		setWork("결재선 지정");
 		setPoid(workData.getPer().getPersistInfo().getObjectIdentifier().getStringValue());
 		setInfo(workData.getPer());
@@ -66,7 +68,13 @@ public class WorkDataColumn {
 			EChangeOrder eco = (EChangeOrder) per;
 			setNumber(eco.getEoNumber());
 			setName(eco.getEoName());
-			setPersistType("ECO");
+
+			if (eco.getEoType().equals("CHANGE")) {
+				setPersistType("ECO");
+			} else {
+				setPersistType("EO");
+			}
+
 			setState(eco.getLifeCycleState().getDisplay());
 			setCreator(eco.getCreatorName());
 			setCreatedDate(eco.getCreateTimestamp());

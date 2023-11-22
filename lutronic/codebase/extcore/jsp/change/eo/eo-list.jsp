@@ -170,7 +170,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -180,7 +180,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "number",
 					headerText : "EO 번호",
 					dataType : "string",
-					width : 150,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -225,7 +225,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "eoType",
 					headerText : "구분",
 					dataType : "string",
-					width : 120,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -234,7 +234,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 120,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -273,7 +273,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -284,7 +283,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();

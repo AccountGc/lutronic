@@ -101,7 +101,20 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					</jsp:include>
 				</td>
 			</tr>
+			<tr>
+				<th class="lb">황제품</th>
+				<td colspan="5">
+					<!-- 완제품 품목 -->
+					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
+						<jsp:param value="view" name="mode" />
+						<jsp:param value="300" name="height" />
+						<jsp:param value="false" name="header" />
+					</jsp:include>
+				</td>
+			</tr>
 		</table>
+
 
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -159,6 +172,18 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
+					const isCreated104 = AUIGrid.isCreated(myGridID104); // 완제품
+					if (isCreated104) {
+						AUIGrid.resize(myGridID104);
+					} else {
+						createAUIGrid104(columns104);
+					}
+					const isCreated700 = AUIGrid.isCreated(myGridID700);
+					if (isCreated700) {
+						AUIGrid.resize(myGridID700);
+					} else {
+						createAUIGrid700(columns700);
+					}
 					break;
 				case "tabs-2":
 					break;
@@ -174,12 +199,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 						AUIGrid.resize(myGridID300);
 					} else {
 						createAUIGrid300(columns300);
-					}
-					const isCreated104 = AUIGrid.isCreated(myGridID104); // 완제품
-					if (isCreated104) {
-						AUIGrid.resize(myGridID104);
-					} else {
-						createAUIGrid104(columns104);
 					}
 					break;
 				case "tabs-4":
@@ -205,7 +224,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 		});
-
+		createAUIGrid104(columns104);
+		AUIGrid.resize(myGridID104);
 		createAUIGrid700(columns700);
 		AUIGrid.resize(myGridID700);
 	});
@@ -214,7 +234,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		AUIGrid.resize(myGridID104);
 		AUIGrid.resize(myGridID700);
 		AUIGrid.resize(myGridID90);
-		AUIGrid.resize(myGridID50);
+		AUIGrid.resize(myGridID300);
+		AUIGrid.resize(myGridID51);
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
 	});

@@ -45,13 +45,8 @@ String oid = request.getParameter("oid");
 		dataField : "step_name",
 		headerText : "단계",
 		dataType : "string",
-	}, 
-// 	{
-// 		dataField : "name",
-// 		headerText : "활동명",
-// 		dataType : "string",
-// 	},
-	{
+		width : 150,
+	}, {
 		dataField : "activity_name",
 		headerText : "활동구분",
 		dataType : "string",
@@ -59,23 +54,27 @@ String oid = request.getParameter("oid");
 		dataField : "department_name",
 		headerText : "담당부서",
 		dataType : "string",
+		width : 150,
 	}, {
 		dataField : "activeUser_name",
 		headerText : "담당자",
 		dataType : "string",
+		width : 100,
 	}, {
 		dataField : "finishDate",
 		headerText : "완료 요청일",
 		dataType : "string",
+		width : 100,
 	}, {
 		dataField : "state",
 		headerText : "상턔",
 		dataType : "string",
-		width : 100,
+		width : 80,
 	}, {
 		dataField : "completeDate",
 		headerText : "완료일",
 		dataType : "string",
+		width : 100,
 	} ]
 
 	function createAUIGrid700(columnLayout) {
@@ -90,6 +89,8 @@ String oid = request.getParameter("oid");
 			autoGridHeight : true
 		}
 		myGridID700 = AUIGrid.create("#grid700", columnLayout, props);
-		AUIGrid.setGridData(myGridID700, <%=EoHelper.manager.reference(oid, "activity")%>);
+		AUIGrid.setGridData(myGridID700,
+<%=EoHelper.manager.reference(oid, "activity")%>
+	);
 	}
 </script>

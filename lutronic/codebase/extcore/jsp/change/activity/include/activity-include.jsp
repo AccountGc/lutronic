@@ -15,7 +15,6 @@ boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
 boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
-String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150");
 %>
 <table class="button-table">
 	<tr>
@@ -44,7 +43,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			<%
 			}
 			%>
-			<div id="grid200" style="height: <%=height%>px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid200" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -298,13 +297,13 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			}
 		}
 		return true;
-	}
 
+	}
 	function auiReadyHandler() {
 // 		const item = {
 // 			step : "EOSTEP1"
 // 		};
-		AUIGrid.addRow(myGridID200, {}, "first");
+// 		AUIGrid.addRow(myGridID200, {}, "first");
 	}
 
 	function insertRow200() {

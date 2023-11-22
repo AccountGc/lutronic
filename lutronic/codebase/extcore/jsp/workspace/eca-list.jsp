@@ -80,7 +80,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		</table>
 
 
-		<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -90,7 +90,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "step",
 					headerText : "STEP",
 					dataType : "string",
-					width : 120,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -136,7 +136,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "activityUser",
 					headerText : "담당자",
 					dataType : "string",
-					width : 120,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -145,7 +145,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 120,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -155,7 +155,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "완료 요청일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd",
-					width : 140,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,

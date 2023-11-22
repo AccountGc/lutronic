@@ -91,7 +91,7 @@ public class PartHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
 		ReferenceFactory rf = new ReferenceFactory();
-
+		
 		String location = StringUtil.checkNull((String) params.get("location"));
 		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
 		String partName = StringUtil.checkNull((String) params.get("partName"));

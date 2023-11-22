@@ -26,6 +26,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -344,14 +345,6 @@ public class StandardActivityService extends StandardManager implements Activity
 
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
 
-//			if (StringUtil.checkString(ecnUserOid)) {
-//				WTUser ecnUser = (WTUser) CommonUtil.getObject(ecnUserOid);
-//				EChangeOrder eco = (EChangeOrder) eca.getEo();
-//				// ecn 담당자 설정
-//				eco.setEcnUser(ecnUser);
-//				eco = (EChangeOrder) PersistenceHelper.manager.modify(eco);
-//			}
-
 			for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
 				String cacheId = secondarys.get(i);
 				File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
@@ -361,7 +354,6 @@ public class StandardActivityService extends StandardManager implements Activity
 				ContentServerHelper.service.updateContent(eca, applicationData, vault.getPath());
 			}
 
-			// 승인됨으로 변경한다.
 			LifeCycleHelper.service.setLifeCycleState(eca, State.toState("COMPLETED"));
 
 			String step = eca.getStep();
@@ -394,9 +386,12 @@ public class StandardActivityService extends StandardManager implements Activity
 			// 모든 ECA가 끝났을 경우 EO, ECO상태값을변경한다.
 			boolean isEnd = isEnd(eca.getEo());
 			if (isEnd) {
-				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("APPROVING"));
+//				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("INWORK"));
+//				LifeCycleHelper.service.setLifeCycleState(eca.getEo(), State.toState("APPROVING"));
+				LifeCycleHelper.service.setLifeCycleState(eca, State.toState("COMPLETED"));
 				// 결재선들 시작 한다
-				WorkspaceHelper.service.start(eca.getEo());
+//				WorkspaceHelper.service.start(eca.getEo());
+				WorkDataHelper.service.create(eco);
 			}
 
 			// ECO 일경우 처리

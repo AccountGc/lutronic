@@ -93,7 +93,7 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 	<script type="text/javascript">
 		function _submit() {
 			const oid = document.getElementById("oid").value;
-
+			const description = document.getElementById("description").value;
 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 			if (addRows8.length === 0) {
 				alert("결재선을 지정하세요.");
@@ -105,7 +105,8 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 			const url = getCallUrl("/workData/_submit");
 			const params = {
 				oid : oid,
-				external : external
+				external : external,
+				description : description
 			};
 			toRegister(params, addRows8); // 결재선 세팅
 			if (!confirm("기안 하시겠습니까?")) {

@@ -2,7 +2,6 @@ package com.e3ps.change.eo.service;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -20,19 +19,15 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.sap.service.SAPHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
+import com.e3ps.workspace.service.WorkDataHelper;
 
-import wt.clients.folder.FolderTaskLogic;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
-import wt.fc.ObjectReference;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -52,7 +47,6 @@ import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.session.SessionHelper;
 import wt.util.WTException;
-import wt.vc.VersionControlHelper;
 import wt.vc.baseline.BaselineHelper;
 import wt.vc.baseline.ManagedBaseline;
 
@@ -69,15 +63,11 @@ public class StandardEoService extends StandardManager implements EoService {
 		ArrayList<Map<String, String>> rows104 = dto.getRows104();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
-//		String model_oid = dto.getModel_oid();
+		boolean temprary = dto.isTemprary();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-//			String type = "E";
-//			if (dto.getEoType().equals("DEV")) {
-//				type = "D";
-//			}
 			String number = "E" + DateUtil.getCurrentDateString("ym");
 			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
 
@@ -134,10 +124,23 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
 			if (rows200.size() > 0) {
-				WorkspaceHelper.service.stand(eo);
-				// ECA 활동으로 변경
-				eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
-				LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
+//				WorkspaceHelper.service.stand(eo);
+				// 설변활동이 있으면서 임시 활동일 경우...
+				if (temprary) {
+					State state = State.toState("TEMPRARY");
+					LifeCycleHelper.service.setLifeCycleState(eo, state);
+				} else {
+					eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
+					LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
+				}
+			} else {
+				if (temprary) {
+					State state = State.toState("TEMPRARY");
+					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+					LifeCycleHelper.service.setLifeCycleState(eo, state);
+				} else {
+					WorkDataHelper.service.create(eo);
+				}
 			}
 
 			trs.commit();
@@ -170,18 +173,11 @@ public class StandardEoService extends StandardManager implements EoService {
 
 	private void deleteLink(EChangeOrder eo) throws Exception {
 		// 관련문서 삭제
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(DocumentEOLink.class, true);
-		SearchCondition sc = new SearchCondition(DocumentEOLink.class, "roleBObjectRef.key.id", "=",
-				eo.getPersistInfo().getObjectIdentifier().getId());
-		query.appendWhere(sc, new int[] { idx });
-		QueryResult result = PersistenceHelper.manager.find(query);
+		QueryResult result = PersistenceHelper.manager.navigate(eo, "document", DocumentEOLink.class, false);
 		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			DocumentEOLink link = (DocumentEOLink) obj[0];
+			DocumentEOLink link = (DocumentEOLink) result.nextElement();
 			PersistenceHelper.manager.delete(link);
 		}
-
 	}
 
 	private void validateAndSaveCompletePart(EChangeOrder eo, ArrayList<Map<String, String>> rows104) throws Exception {
@@ -209,15 +205,9 @@ public class StandardEoService extends StandardManager implements EoService {
 	 */
 	private void deleteCompletePart(EChangeOrder eo) throws Exception {
 		// 완제품 삭제
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(EOCompletePartLink.class, true);
-		SearchCondition sc = new SearchCondition(EOCompletePartLink.class, "roleBObjectRef.key.id", "=",
-				eo.getPersistInfo().getObjectIdentifier().getId());
-		query.appendWhere(sc, new int[] { idx });
-		QueryResult result = PersistenceHelper.manager.find(query);
+		QueryResult result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class, false);
 		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			EOCompletePartLink link = (EOCompletePartLink) obj[0];
+			EOCompletePartLink link = (EOCompletePartLink) result.nextElement();
 			PersistenceHelper.manager.delete(link);
 		}
 	}
@@ -320,7 +310,6 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(eo, state);
 			} else {
 				State state = State.toState("INWORK");
@@ -331,7 +320,6 @@ public class StandardEoService extends StandardManager implements EoService {
 			deleteLink(eo);
 			saveLink(eo, dto);
 
-//			 완제품 링크 및 검증
 			deleteCompletePart(eo); // 지우고 새로 만드는거 맞음??
 			validateAndSaveCompletePart(eo, rows104);
 
@@ -339,11 +327,32 @@ public class StandardEoService extends StandardManager implements EoService {
 			removeAttach(eo);
 			saveAttach(eo, dto);
 
+			// 수정은 임시저
+//			if (rows200.size() > 0) {
+//				// 설변활동 어떻게 처리되는지...
+//				ActivityHelper.service.deleteActivity(eo);
+//				ActivityHelper.service.saveActivity(eo, rows200);
+//			}
+			
+			// 임시저장일 경우만 수정 가능한데...
 			if (rows200.size() > 0) {
-				// 설변활동 어떻게 처리되는지...
-				ActivityHelper.service.deleteActivity(eo);
-				ActivityHelper.service.saveActivity(eo, rows200);
+				if (temprary) {
+					State state = State.toState("TEMPRARY");
+					LifeCycleHelper.service.setLifeCycleState(eo, state);
+				} else {
+					eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
+					LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
+				}
+			} else {
+				if (temprary) {
+					State state = State.toState("TEMPRARY");
+					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+					LifeCycleHelper.service.setLifeCycleState(eo, state);
+				} else {
+					WorkDataHelper.service.create(eo);
+				}
 			}
+
 
 			trs.commit();
 			trs = null;

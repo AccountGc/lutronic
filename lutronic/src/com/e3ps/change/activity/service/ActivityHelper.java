@@ -20,6 +20,8 @@ import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.dto.DefDTO;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -265,7 +267,7 @@ public class ActivityHelper {
 			data.put("oid", eca.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("number", eo.getEoNumber());
 			data.put("name", eo.getEoName());
-			data.put("step", eca.getStep());
+			data.put("step", NumberCodeHelper.manager.getNumberCodeName(eca.getStep(), "EOSTEP"));
 			data.put("finishDate", eca.getFinishDate());
 			data.put("state", eca.getLifeCycleState().getDisplay());
 			data.put("activityName", getActName(eca.getActiveType()));
@@ -303,10 +305,12 @@ public class ActivityHelper {
 			Map<String, String> map = new HashMap<>();
 			map.put("oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("name", doc.getName());
-			map.put("number", doc.getNumber());
+//			map.put("number", doc.getNumber());
+			map.put("number", IBAUtils.getStringValue(doc, "INTERALNUMBER"));
 			map.put("version", doc.getVersionIdentifier().getSeries().getValue() + "."
 					+ doc.getIterationIdentifier().getSeries().getValue());
 			map.put("creator", doc.getCreatorFullName());
+			map.put("writer", IBAUtils.getStringValue(doc, "DSGN"));
 			map.put("state", doc.getLifeCycleState().getDisplay());
 			map.put("createdDate_txt", doc.getCreateTimestamp().toString().substring(0, 10));
 			list.add(map);

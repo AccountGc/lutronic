@@ -37,12 +37,12 @@
 			<tr>
 				<th class="req lb">EO 제목</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="name" id="name" class="width-400">
+					<input type="text" name="name" id="name" class="width-500">
 				</td>
 			</tr>
 			<tr>
 				<th class="req lb">제품명</th>
-				<td colspan="3" class="indent5 pt5">
+				<td colspan="3">
 					<jsp:include page="/extcore/jsp/admin/code/include/code-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -53,7 +53,7 @@
 			</tr>
 			<tr>
 				<th class="req lb">완제품 품목</th>
-				<td colspan="3" class="indent5 pt5">
+				<td colspan="3">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="" name="oid" />
 						<jsp:param value="create" name="mode" />
@@ -102,7 +102,6 @@
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="250" name="height" />
 		</jsp:include>
 
 		<table class="button-table">
@@ -117,15 +116,13 @@
 		<script type="text/javascript">
 			function create(temp) {
 
-				const name = toId("name");
+				const name = document.getElementById("name");
 				const eoCommentA = toId("eoCommentA");
 				const eoCommentB = toId("eoCommentB");
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
 				const eoType = toId("eoType");
-				
 				const temprary = JSON.parse(temp);
-
 				// 완제품
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				// 관련문서
@@ -135,7 +132,7 @@
 				// 제품
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 				const params = {
-					name : name,
+					name : name.value,
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
 					eoCommentC : eoCommentC,
@@ -146,6 +143,24 @@
 					rows200 : rows200,
 					rows300 : rows300,
 					temprary : temprary
+				}
+
+				if (name.value === "") {
+					alert("EO 제목을 입력하세요.");
+					name.focus();
+					return false;
+				}
+
+				if (rows300.length === 0) {
+					alert("제품명을 선택하세요.");
+					popup300();
+					return false;
+				}
+
+				if (rows104.length === 0) {
+					alert("완제품을 선택하세요.");
+					popup104();
+					return false;
 				}
 
 				if (temprary) {

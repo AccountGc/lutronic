@@ -101,35 +101,44 @@ boolean complete = docList.size() > 0;
 		<script type="text/javascript">
 			let myGridiD;
 			const columns = [ {
-				dataField : "number",
+				dataField : "interalnumber",
+				headerText : "내부 문서번호",
 				dataType : "string",
-				headerText : "문서번호",
-				width : 150
+				width : 120,
 			}, {
 				dataField : "name",
 				dataType : "string",
 				headerText : "문서제목",
-				style : "aui-left"
-			}, {
-				dataField : "number",
-				dataType : "string",
-				headerText : "문서번호",
-				width : 150
+				style : "aui-left",
+				renderer : {
+					type : "LinkRenderer",
+					baseUrl : "javascript",
+					jsCallback : function(rowIndex, columnIndex, value, item) {
+						const oid = item.oid;
+						const url = getCallUrl("/doc/view?oid=" + oid);
+						_popup(url, "", "", "f");
+					}
+				},				
 			}, {
 				dataField : "version",
 				dataType : "string",
 				headerText : "REV",
-				width : 100
+				width : 80
 			}, {
 				dataField : "state",
 				dataType : "string",
 				headerText : "상태",
-				width : 100
+				width : 80
+			}, {
+				dataField : "writer",
+				headerText : "작성자",
+				dataType : "string",
+				width : 100,
 			}, {
 				dataField : "creator",
+				headerText : "등록자",
 				dataType : "string",
-				headerText : "작성자",
-				width : 100
+				width : 100,
 			}, {
 				headerText : "",
 				dataType : "string",

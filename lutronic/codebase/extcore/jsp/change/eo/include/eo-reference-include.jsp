@@ -22,10 +22,3 @@ String oid = request.getParameter("oid");
 	<jsp:param value="300" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
-<!-- 완제품 품목 -->
-<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
-	<jsp:param value="<%=oid%>" name="oid" />
-	<jsp:param value="view" name="mode" />
-	<jsp:param value="300" name="height" />
-	<jsp:param value="true" name="header" />
-</jsp:include>

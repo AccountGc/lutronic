@@ -286,7 +286,6 @@ public class EoHelper {
 			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
 			list.add(map);
 		}
-		System.out.println("si=" + list.size());
 		return JSONArray.fromObject(list);
 	}
 

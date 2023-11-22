@@ -21,7 +21,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			</div>
 		</td>
 		<%
-			if(!header) {
+		if (!header) {
 		%>
 		<td class="right">
 			<%
@@ -34,7 +34,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			%>
 		</td>
 		<%
-			}
+		}
 		%>
 	</tr>
 </table>
@@ -75,9 +75,10 @@ if (header) {
 <script type="text/javascript">
 	let myGridID90;
 	const columns90 = [ {
-		dataField : "number",
-		headerText : "문서번호",
+		dataField : "interalnumber",
+		headerText : "내부 문서번호",
 		dataType : "string",
+		width : 120,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -86,9 +87,9 @@ if (header) {
 				const url = getCallUrl("/doc/view?oid=" + oid);
 				_popup(url, "", "", "f");
 			}
-		},		
+		},				
 		filter : {
-			showIcon : true,
+			inline : true
 		},
 	}, {
 		dataField : "name",
@@ -111,6 +112,7 @@ if (header) {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
+		width : 80,
 		filter : {
 			showIcon : true,
 		},
@@ -118,6 +120,7 @@ if (header) {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
+		width : 80,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -125,9 +128,18 @@ if (header) {
 			showIcon : true,
 		},
 	}, {
+		dataField : "writer",
+		headerText : "작성자",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -135,6 +147,7 @@ if (header) {
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -152,7 +165,6 @@ if (header) {
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
 			<%if (create || update) {%>
 			showStateColumn : true,
@@ -165,9 +177,9 @@ if (header) {
 			autoGridHeight : true
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);
-		<% if(view || update){ %>
+		<%if (view || update) {%>
 		AUIGrid.setGridData(myGridID90, <%=AUIGridUtil.include(oid, "doc")%>);
-		<% } %>
+		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
