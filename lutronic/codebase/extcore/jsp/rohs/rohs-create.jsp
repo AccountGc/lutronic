@@ -209,12 +209,14 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 					}
 				}
 				params.temprary = temprary;
+				parent.openLayer();
 				var url = getCallUrl("/rohs/create");
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						location.href = getCallUrl("/rohs/list");
 					}
+					parent.closeLayer();
 				});
 			};
 
@@ -274,17 +276,11 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 				AUIGrid.resize(partGridID);
 				createAUIGrid6(columnsRohs);
 				AUIGrid.resize(rohsGridID);
-				// 				createAUIGrid8(columns8);
-				// 				AUIGrid.resize(myGridID8);
-				createAUIGrid9(columns9);
-				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(rohsGridID);
-				// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

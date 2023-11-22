@@ -147,15 +147,6 @@
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="3" class="indent5"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
 		</table>
 		<br>
 		
@@ -188,8 +179,6 @@
 			function create(temp) {
 				// 임시저장
 				const temprary = JSON.parse(temp);
-				// 결재선
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const primary = document.querySelector("input[name=primary]");
 				if(isEmpty($("#name").val())) {
 					alert("문서명을 입력하세요.");
@@ -208,11 +197,6 @@
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-					
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
 					
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
@@ -240,12 +224,13 @@
 				params.temprary = temprary;
 				
 				var url = getCallUrl("/mold/create");
-// 				toRegister(params, addRows8); // 결재선 세팅
+				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if(data.result){
 						location.href = getCallUrl("/mold/list");
 					}
+					parent.closeLayer();
 				});
 			}
 			
@@ -262,14 +247,11 @@
 				AUIGrid.resize(partGridID);
 				createAUIGrid90(columns90);
 				AUIGrid.resize(myGridID90);
-// 				createAUIGrid8(columns8);
-// 				AUIGrid.resize(myGridID8);
 			});
 			
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(partGridID);
 				AUIGrid.resize(myGridID90);
-// 				AUIGrid.resize(myGridID8);
 			});
 
 		</script>

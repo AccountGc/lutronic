@@ -602,13 +602,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			String description = StringUtil.checkNull((String) params.get("description"));
 			boolean temprary = (boolean) params.get("temprary");
 			
-			// 결재
-			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
-			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
-			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
-			// 외부 메일
-			ArrayList<Map<String, String>> external =  (ArrayList<Map<String, String>>) params.get("external");
-			
 			// 문서 기본 정보 설정
 			rohs = ROHSMaterial.newROHSMaterial();
 			rohs.setName(rohsName);
@@ -673,14 +666,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
             map.put("approvalType", approvalType);
             map.put("manufacture", manufacture);
             CommonHelper.service.changeIBAValues(rohs, map);
-            
-            // 외부 메일 링크 저장
- 			MailUserHelper.service.saveLink(rohs, external);
- 			
- 			// 결재시작
-			if (approvalRows!=null) {
-				WorkspaceHelper.service.register(rohs, agreeRows, approvalRows, receiveRows);
-			}
             
             trs.commit();
 			trs = null;
@@ -839,14 +824,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			String oid = StringUtil.checkNull((String) params.get("oid"));
 			boolean temprary = (boolean) params.get("temprary");
 			
-			// 외부 메일
-			ArrayList<Map<String, String>> external =  (ArrayList<Map<String, String>>) params.get("external");
-			
-			// 결재
-			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
-			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
-			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
-			
 			if(oid.length() > 0) {
 			
 				ROHSMaterial old_material = (ROHSMaterial)CommonUtil.getObject(oid);
@@ -944,11 +921,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	            }
 	            new_material = (ROHSMaterial) PersistenceHelper.manager.refresh(new_material);
 	            
-	            // 외부 메일 링크 삭제
-				MailUserHelper.service.deleteLink(oid);
-				// 외부 메일 링크 추가
-				MailUserHelper.service.saveLink(new_material, external);
-	            
 	            // 임시저장 하겠다 한 경우
 	 			if (temprary) {
 					State state = State.toState("TEMPRARY");
@@ -957,11 +929,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				}else {
 					State state = State.toState("INWORK");
 	 				LifeCycleHelper.service.setLifeCycleState(new_material, state);
-				}
-	 			
-	 			// 결재시작
-				if (approvalRows!=null) {
-					WorkspaceHelper.service.register(new_material, agreeRows, approvalRows, receiveRows);
 				}
 			}
 			
