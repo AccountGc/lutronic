@@ -308,6 +308,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				const selItem = checkedItems[0].item;
 				const parentRowId = selItem.oid;
+				
+				if(parentRowId.indexOf("NumberCode") == -1){
+					alert("새로 추가한 행을 먼저 저장해주세요.");
+					return false;
+				}
+				
 				const newItem = new Object();
 				newItem.parentRowId = parentRowId;
 				newItem.enabled = true;
