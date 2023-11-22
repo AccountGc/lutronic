@@ -31,7 +31,7 @@ let myGridID;
 function _layout() {
 	return [ {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		width : 120,
 	}, {

@@ -44,7 +44,7 @@ if (isCreate || isUpdate) {
 		width : 180,
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		width : 180,
 	}, {

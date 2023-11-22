@@ -50,7 +50,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
 		String writer_oid = dto.getWriter_oid();
-//		String proposer_oid = dto.getProposer_oid();
 		String eoCommentA = dto.getEoCommentA();
 		String eoCommentB = dto.getEoCommentB();
 		String eoCommentC = dto.getEoCommentC();
@@ -58,13 +57,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		boolean isSelf = dto.isSelf();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -110,11 +102,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
-//			if(!proposer_oid.equals("")) {
-//				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
-//				ecpr.setProposer(Long.toString(proposerOid));	
-//			}
-			
 			ecpr.setChangeSection(changeSection);
 			ecpr.setEoCommentA(eoCommentA);
 			ecpr.setEoCommentB(eoCommentB);
@@ -142,20 +129,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			// 관련 CR 링크
 			saveLink(ecpr, rows101);
 			
-			// 외부 메일 링크 저장
-			MailUserHelper.service.saveLink(ecpr, external);
-			
-			// 결재 시작
-			if (isSelf) {
-				// 자가결재시
-				WorkspaceHelper.service.self(ecpr);
-			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(ecpr, agreeRows, approvalRows, receiveRows);
-				}
-			}
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -246,7 +219,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
 		String writer_oid = dto.getWriter_oid();
-//		String proposer_oid = dto.getProposer_oid();
 		String eoCommentA = dto.getEoCommentA();
 		String eoCommentB = dto.getEoCommentB();
 		String eoCommentC = dto.getEoCommentC();
@@ -254,12 +226,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 
 		Transaction trs = new Transaction();
 		try {
@@ -303,10 +269,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
 
-//			if(!proposer_oid.equals("")) {
-//				long proposerOid = CommonUtil.getOIDLongValue(proposer_oid);
-//				ecpr.setProposer(Long.toString(proposerOid));
-//			}
 			ecpr.setChangeSection(changeSection);
 			ecpr.setEoCommentA(eoCommentA);
 			ecpr.setEoCommentB(eoCommentB);
@@ -331,16 +293,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			deleteLink(ecpr);
 			saveLink(ecpr, rows101);
 			
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(dto.getOid());
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(ecpr, external);
-			
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(ecpr, agreeRows, approvalRows, receiveRows);
-			}
-			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -358,8 +310,8 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+			
 			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
-
 			PersistenceHelper.manager.delete(ecpr);
 
 			trs.commit();

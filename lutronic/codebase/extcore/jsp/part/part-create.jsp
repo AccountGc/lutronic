@@ -37,7 +37,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					</div>
 				</td>
 				<td class="right">
-						<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+						<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 						<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 					</td>
 				</tr>
@@ -190,7 +190,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">부서</span></th>
+				<th class="req lb">부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
@@ -203,7 +203,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						%>
 					</select>
 				</td>
-				<th class="req lb">단위</th>
+				<th class="req">단위</th>
 				<td class="indent5">
 					<select name="unit" id="unit" class="width-200">
 						<option value="">선택</option>
@@ -357,7 +357,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>

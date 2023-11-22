@@ -70,7 +70,7 @@ iframe {
 			<span id="locationText"><%=dto.getLocation()%></span>
 			<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 		</td>
-		<th class="lb">개정/수정사유</th>
+		<th>개정/수정사유</th>
 		<td class="indent5">
 			<input type="text" name="iterationNote" id="iterationNote" class="width-300">
 		</td>
@@ -222,24 +222,6 @@ iframe {
 		<td class="indent5" colspan="5">
 			<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 				<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			</jsp:include>
-		</td>
-	</tr>
-<!-- 	<tr> -->
-<!-- 		<th class="lb">결재</th> -->
-<!-- 		<td colspan="5"> -->
-<%-- 			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 				<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
-<%-- 				<jsp:param value="update" name="mode" /> --%>
-<%-- 			</jsp:include> --%>
-<!-- 		</td> -->
-<!-- 	</tr> -->
-	<tr>
-		<th class="lb">외부 메일 지정</th>
-		<td colspan="5">
-			<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-				<jsp:param value="<%=dto.getOid()%>" name="oid" />
-				<jsp:param value="update" name="mode" />
 			</jsp:include>
 		</td>
 	</tr>
@@ -426,10 +408,6 @@ iframe {
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		// 관련ECPR
 		const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
-		// 외부 메일
-		const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
-		// 결재선
-// 		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
@@ -453,10 +431,6 @@ iframe {
 			if (!confirm("임시저장하시겠습니까?")){
 				return false;
 			}	
-// 			if (addRows8.length > 0) {
-// 				alert("결재선 지정을 해지해주세요.")
-// 				return false;
-// 			}
 		} else {
 			if (!confirm("<%=title%>하시겠습니까?")) {
 				return false;
@@ -487,14 +461,11 @@ iframe {
 			rows101 : rows101,
 			rows103 : rows103,
 			rows105 : rows105,
-			temprary : temprary,
-			// 외부 메일
-			external : external
+			temprary : temprary
 		};
 		
 		logger(params);
 		
-// 		toRegister(params, addRows8); // 결재선 세팅
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
@@ -520,16 +491,12 @@ iframe {
 		createAUIGrid101(columns101);
 		createAUIGrid103(columns103);
 		createAUIGrid105(columns105);
-// 		createAUIGrid8(columns8);
-		createAUIGrid9(columns9)
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-// 		AUIGrid.resize(myGridID8);
-		AUIGrid.resize(myGridID9);
 		$("#documentType").bindSelectDisabled(true);
 		
 		// 문서명 규칙
@@ -570,7 +537,5 @@ iframe {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-// 		AUIGrid.resize(myGridID8);
-		AUIGrid.resize(myGridID9);
 	});
 </script>

@@ -33,15 +33,15 @@ iframe {
 		<tr>
 			<th class="lb">물질명</th>
 			<td class="indent5"><%=dto.getName()%></td>
-			<th class="lb">물질 번호</th>
+			<th>물질 번호</th>
 			<td class="indent5"><%=dto.getNumber()%></td>
-			<th class="lb">협력업체</th>
+			<th>협력업체</th>
 			<td class="indent5"><%=dto.getManufactureDisplay()%></td>
 		</tr>
 		<tr>
 			<th class="lb">상태</th>
 			<td class="indent5"><%=dto.getStateDisplay()%></td>
-			<th>Rev.</th>
+			<th>REV</th>
 			<td class="indent5"><%=dto.getVersion()%></td>
 			<th>등록자</th>
 			<td class="indent5"><%=dto.getCreator()%></td>

@@ -78,15 +78,6 @@ public class EtcDTO {
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rowsEcpr = new ArrayList<>(); // 관련 ECPR
 
-	// 결재 변수
-	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
-	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
-	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
-	private boolean self; // 자가 결재
-
-	// 외부 메일 변수
-	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
-
 	private boolean temprary;
 
 	public EtcDTO() {

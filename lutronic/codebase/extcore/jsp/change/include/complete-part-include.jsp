@@ -73,7 +73,7 @@ if (create || update) {
 		},
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		width : 120,
 		renderer : {

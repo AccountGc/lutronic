@@ -34,25 +34,25 @@ iframe {
 		<tr>
 			<th class="lb">품목번호</th>
 			<td class="indent5"><%=dto.getNumber()%></td>
-			<th class="lb">품목명</th>
+			<th>품목명</th>
 			<td class="indent5"><%=dto.getName()%></td>
-			<th class="lb">품목분류</th>
+			<th>품목분류</th>
 			<td class="indent5"><%=dto.getLocation()%></td>
 		</tr>
 		<tr>
 			<th class="lb">상태</th>
 			<td class="indent5"><%=dto.getState()%></td>
-			<th class="lb">Rev.</th>
+			<th>REV</th>
 			<td class="indent5"><%=dto.getVersion()%></td>
-			<th class="lb">등록자</th>
+			<th>등록자</th>
 			<td class="indent5"><%=dto.getCreator()%></td>
 		</tr>
 		<tr>
 			<th class="lb">등록일</th>
 			<td class="indent5"><%=dto.getCreateDate()%></td>
-			<th class="lb">수정자</th>
+			<th>수정자</th>
 			<td class="indent5"><%=dto.getModifier()%></td>
-			<th class="lb">수정일</th>
+			<th>수정일</th>
 			<td class="indent5"><%=dto.getModifyDate()%></td>
 		</tr>
 		<tr>

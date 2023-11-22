@@ -123,7 +123,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 						%>
 					</select>
 				</td>
-				<th class="req lb">금형타입</th>
+				<th class="req">금형타입</th>
 				<td class="indent5">
 					<select name="moldtype" id="moldtype" class="width-200">
 						<option value="">선택</option>
@@ -142,7 +142,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				<td class="indent5">
 					<input type="text" name="moldnumber" id="moldnumber" class="width-500" value="<%=dto.getMoldnumber()%>">
 				</td>
-				<th class="lb">금형개발비</th>
+				<th>금형개발비</th>
 				<td class="indent5">
 					<input type="text" name="moldcost" id="moldcost" class="width-500" value="<%=dto.getMoldcost()%>">
 				</td>
@@ -152,7 +152,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-500" value="<%=dto.getInteralnumber()%>">
 				</td>
-				<th class="lb">부서</th>
+				<th>부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>

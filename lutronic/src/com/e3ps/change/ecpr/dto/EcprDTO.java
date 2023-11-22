@@ -29,14 +29,12 @@ public class EcprDTO {
 	private String approveDate;
 	private String createDepart_name;
 	private String writer_name;
-	private String proposer_name;
 	private String primary;
 	private String changeSection;
 	private String eoCommentA;
 	private String eoCommentB;
 	private String eoCommentC;
 	private String writer_oid;
-	private String proposer_oid;
 
 	// 따로 추가
 	private String state;
@@ -46,7 +44,6 @@ public class EcprDTO {
 	private String creator;
 	private String createDepart;
 	private String writeDate;
-	private String proposer;
 	private String changeCode;
 	private String model;
 	
@@ -60,15 +57,6 @@ public class EcprDTO {
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 
-	// 결재 변수
-	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
-	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
-	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
-	private boolean self; // 자가 결재
-
-	// 외부 메일 변수
-	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
-	
 	private boolean temprary;
 
 	public EcprDTO() {
@@ -87,8 +75,6 @@ public class EcprDTO {
 		setCreateDepart_name(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
 		setWriter_name(CommonUtil.getUserNameFromOid(cr.getWriter()));
 		setWriter_oid(CommonUtil.getUserOid(cr.getWriter()));
-		setProposer_name(CommonUtil.getUserNameFromOid(cr.getProposer()));
-		setProposer_oid(CommonUtil.getUserOid(cr.getProposer()));
 		setChangeSection(cr.getChangeSection());
 		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
 		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
@@ -102,7 +88,6 @@ public class EcprDTO {
 		setCreator(cr.getCreatorFullName());
 		setCreateDepart(StringUtil.checkNull(cr.getCreateDepart()));
 		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
-		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
 		
 		setEcpr(cr);

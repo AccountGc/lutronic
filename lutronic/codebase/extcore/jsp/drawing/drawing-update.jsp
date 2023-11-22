@@ -51,7 +51,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-500" value="<%=dto.getNumber()%>" readonly>
 				</td>
-				<th class="req lb">도면명</th>
+				<th class="req">도면명</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-500" value="<%=dto.getName()%>" readonly>
 				</td>

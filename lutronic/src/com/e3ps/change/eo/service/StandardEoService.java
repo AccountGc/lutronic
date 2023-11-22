@@ -70,13 +70,7 @@ public class StandardEoService extends StandardManager implements EoService {
 		ArrayList<Map<String, String>> rows200 = dto.getRows200();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
 //		String model_oid = dto.getModel_oid();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		Transaction trs = new Transaction();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
 		try {
 			trs.start();
 
@@ -136,14 +130,6 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 설변 활동 생성
 			if (rows200.size() > 0) {
 				ActivityHelper.service.saveActivity(eo, rows200);
-			}
-
-			// 외부 메일 링크 저장
-			MailUserHelper.service.saveLink(eo, external);
-
-			// 결재 생성후
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
 			}
 
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
@@ -304,12 +290,7 @@ public class StandardEoService extends StandardManager implements EoService {
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 제품
 		ArrayList<Map<String, String>> rows104 = dto.getRows104(); // 완제품
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // ECA
-		ArrayList<Map<String, String>> external = dto.getExternal(); // 외부메일
 
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -357,16 +338,6 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 첨부 파일
 			removeAttach(eo);
 			saveAttach(eo, dto);
-
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(dto.getOid());
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(eo, external);
-
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(eo, agreeRows, approvalRows, receiveRows);
-			}
 
 			if (rows200.size() > 0) {
 				// 설변활동 어떻게 처리되는지...

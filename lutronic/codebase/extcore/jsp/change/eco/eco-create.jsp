@@ -20,8 +20,8 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -172,24 +172,6 @@
 					</jsp:include>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">결재</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 
 
@@ -219,7 +201,7 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
@@ -239,11 +221,8 @@
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 				// 				const rows500 = AUIGrid.getGridDataWithState(myGridID500, "gridState");
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				const temprary = JSON.parse(temp);
-				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const sendType = document.querySelector("input[name=sendType]:checked").value;
 				if (isEmpty(name.value)) {
 					alert("ECO 제목을 입력해주세요.");
@@ -259,11 +238,6 @@
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
 
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
@@ -286,11 +260,8 @@
 					rows200 : rows200, // 설변활동
 					// 					rows500 : rows500, // 설변품목
 					temprary : temprary,
-					// 외부 메일
-					external : external
 				};
 				logger(params);
-				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/eco/create");
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -308,21 +279,15 @@
 				createAUIGrid101(columns101);
 				createAUIGrid200(columns200);
 				// 				createAUIGrid500(columns500);
-				createAUIGrid8(columns8);
-				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID101);
 // 								AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
-				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID101);
 				// 				AUIGrid.resize(myGridID500);
 				AUIGrid.resize(myGridID200);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

@@ -163,14 +163,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			trs.start();
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(oid);
-
-			// 결재이력삭제
-			doc = (WTDocument) WorkspaceHelper.service.removeHistory(doc);
-
-			// 다 통과시 삭제
 			PersistenceHelper.manager.delete(doc);
 
 			trs.commit();
@@ -233,9 +225,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 문서 관련 객체 데이터 처리
 			saveLink(doc, dto);
 
-			// 외부 메일 링크 저장
-			MailUserHelper.service.saveLink(doc, external);
-
 			// 설변활동 링크
 			if (StringUtil.checkString(oid)) {
 				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
@@ -243,17 +232,6 @@ public class StandardDocumentService extends StandardManager implements Document
 						.newDocumentActivityLink((WTDocumentMaster) doc.getMaster(), eca);
 				PersistenceHelper.manager.save(link);
 			}
-
-			// 결재 시작
-//			if (isSelf) {
-//				// 자가결재시
-//				WorkspaceHelper.service.self(doc);
-//			} else {
-//				// 결재시작
-//				if (approvalRows.size() > 0) {
-//					WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
-//				}
-//			}
 
 			doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
 
@@ -264,7 +242,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			} else {
 				// 작업함으로 이동 시킨다
 				WorkDataHelper.service.create(doc);
-				;
 			}
 
 			trs.commit();
@@ -501,7 +478,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -562,11 +538,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 관련 링크 세팅
 			saveLink(latest, dto);
 
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(oid);
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(latest, external);
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -590,13 +561,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		ArrayList<Map<String, String>> external = dto.getExternal();
 		boolean temprary = dto.isTemprary();
-
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
 
 		Transaction trs = new Transaction();
 		try {
@@ -659,11 +624,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
 
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(oid);
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(workCopy, external);
-
 			// 임시저장 하겠다 한 경우
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
@@ -672,11 +632,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			} else {
 				State state = State.toState("INWORK");
 				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
-			}
-
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(workCopy, agreeRows, approvalRows, receiveRows);
 			}
 
 			trs.commit();

@@ -40,7 +40,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="<%=title %>" title="<%=title %>" class="red" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title %>" title="<%=title %>" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -62,7 +62,7 @@ iframe {
 			<span id="locationText"><%=dto.getLocation()%></span>
 			<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 		</td>
-		<th class="lb">개정/수정사유</th>
+		<th>개정/수정사유</th>
 		<td class="indent5">
 			<input type="text" name="iterationNote" id="iterationNote" class="width-300">
 		</td>
@@ -213,24 +213,6 @@ iframe {
 			</jsp:include>
 		</td>
 	</tr>
-<!-- 	<tr> -->
-<!-- 		<th class="lb">결재</th> -->
-<!-- 		<td colspan="5"> -->
-<%-- 			<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 				<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
-<%-- 				<jsp:param value="update" name="mode" /> --%>
-<%-- 			</jsp:include> --%>
-<!-- 		</td> -->
-<!-- 	</tr> -->
-	<tr>
-		<th class="lb">외부 메일 지정</th>
-		<td colspan="5">
-			<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-				<jsp:param value="<%=dto.getOid()%>" name="oid" />
-				<jsp:param value="update" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
 </table>
 
 <!-- 관련 품목 -->
@@ -289,7 +271,7 @@ iframe {
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="<%=title %>" title="<%=title %>" class="red" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title %>" title="<%=title %>" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -376,8 +358,6 @@ iframe {
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		// 관련ECPR
 		const rowsEcpr = AUIGrid.getGridDataWithState(myGridID103, "gridState");
-		// 외부 메일
-		const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 		
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
@@ -431,13 +411,9 @@ iframe {
 			rows101 : rows101,
 			rowsEcpr : rowsEcpr,
 			rows105 : rows105,
-			temprary : temprary,
-			// 외부 메일
-			external : external
+			temprary : temprary
 		};
 		logger(params);
-// 		const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-// 		toRegister(params, addRows8); // 결재선 세팅
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
@@ -463,16 +439,12 @@ iframe {
 		createAUIGrid101(columns101);
 		createAUIGrid103(columns103);
 		createAUIGrid105(columns105);
-// 		createAUIGrid8(columns8);
-		createAUIGrid9(columns9)
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-// 		AUIGrid.resize(myGridID8);
-		AUIGrid.resize(myGridID9);
 		$("#documentType").bindSelectDisabled(true);
 		
 		// 문서명 규칙
@@ -515,7 +487,5 @@ iframe {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-// 		AUIGrid.resize(myGridID8);
-		AUIGrid.resize(myGridID9);
 	});
 </script>

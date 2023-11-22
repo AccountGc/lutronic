@@ -91,7 +91,7 @@ function _layout() {
 		},
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		width : 90,
 		filter : {

@@ -182,7 +182,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 	<tr>
-		<th>무게(g)</th>
+		<th class="lb">무게(g)</th>
 		<td class="indent5">
 			<input type="text" name="weight" id="weight" class="width-200" value="<% if (data.getWeight() != null) { %><%= data.getWeight() %><% } %>">
 		</td>
@@ -201,7 +201,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 	<tr>
-		<th>재질</th>
+		<th class="lb">재질</th>
 		<td class="indent5">
 			<select name="mat" id="mat" class="width-200">
 				<option value="">선택</option>
@@ -229,7 +229,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 	<tr>
-		<th>OEM Info.</th>
+		<th class="lb">OEM Info.</th>
 		<td class="indent5">
 			<input type="text" name="remarks" id="remarks" class="width-200" value="<% if (data.getRemark() != null) { %><%= data.getRemark() %><% } %>">
 		</td>

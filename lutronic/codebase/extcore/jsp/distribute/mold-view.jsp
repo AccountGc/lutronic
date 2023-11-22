@@ -125,17 +125,17 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">Manufacturer</th>
 				<td class="indent5"><%=dto.getManufacture_name() %></td>
-				<th class="lb">금형타입</th>
+				<th>금형타입</th>
 				<td class="indent5"><%=dto.getMoldtype_name() %></td>
-				<th class="lb">내부 문서번호</th>
+				<th>내부 문서번호</th>
 				<td class="indent5"><%=dto.getInteralnumber() %></td>
 			</tr>
 			<tr>
 				<th class="lb">부서</th>
 				<td class="indent5"><%=dto.getDeptcode_name() %></td>
-				<th class="lb">업체 금형번호</th>
+				<th>업체 금형번호</th>
 				<td class="indent5"><%=dto.getMoldnumber() %></td>
-				<th class="lb">금형개발비</th>
+				<th>금형개발비</th>
 				<td class="indent5"><%=dto.getMoldcost() %></td>
 			</tr>
 		</table>	

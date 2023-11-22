@@ -64,7 +64,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<tr>
 				<th class="lb">제품명</th>
 				<td class="indent5"><%=dto.getModel_name()%></td>
-				<th class="lb">구분</th>
+				<th>구분</th>
 				<td class="indent5" colspan="3"><%=dto.getEoType_name()%></td>
 			</tr>
 			<tr>

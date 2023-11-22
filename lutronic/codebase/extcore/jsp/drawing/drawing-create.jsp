@@ -28,8 +28,8 @@
 					</div>
 				</td>
 				<td class="right">
-						<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-						<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+						<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+						<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 					</td>
 				</tr>
 		</table>
@@ -58,7 +58,7 @@
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-500">
 				</td>
-				<th class="req lb">도면명</th>
+				<th class="req">도면명</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-500">
 				</td>
@@ -105,8 +105,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>

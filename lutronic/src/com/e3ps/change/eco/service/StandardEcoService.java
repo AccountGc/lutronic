@@ -69,12 +69,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		boolean temprary = dto.isTemprary();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -133,14 +127,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			// 설변 활동 생성
 			if (rows200.size() > 0) {
 				ActivityHelper.service.saveActivity(eco, rows200);
-			}
-
-			// 외부 메일 링크 저장
-			MailUserHelper.service.saveLink(eco, external);
-
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(eco, agreeRows, approvalRows, receiveRows);
 			}
 
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
@@ -259,12 +245,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		boolean temprary = dto.isTemprary();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+		
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -317,16 +298,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			if (rows200.size() > 0) {
 				ActivityHelper.service.deleteActivity(eco);
 				ActivityHelper.service.saveActivity(eco, rows200);
-			}
-
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(dto.getOid());
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(eco, external);
-
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(eco, agreeRows, approvalRows, receiveRows);
 			}
 
 			trs.commit();
@@ -468,9 +439,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			trs.start();
 
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(oid);
-
 			PersistenceHelper.manager.delete(eco);
 
 			trs.commit();

@@ -30,8 +30,8 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -82,7 +82,7 @@
 						%>
 					</select>
 				</td>
-				<th class="req lb">금형타입</th>
+				<th class="req">금형타입</th>
 				<td class="indent5">
 					<select name="moldtype" id="moldtype" class="width-200">
 						<option value="">선택</option>
@@ -101,7 +101,7 @@
 				<td class="indent5">
 					<input type="text" name="moldnumber" id="moldnumber" class="width-500">
 				</td>
-				<th class="lb">금형개발비</th>
+				<th>금형개발비</th>
 				<td class="indent5">
 					<input type="text" name="moldcost" id="moldcost" class="width-500">
 				</td>
@@ -111,7 +111,7 @@
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-500">
 				</td>
-				<th class="lb">부서</th>
+				<th>부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
@@ -178,8 +178,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>

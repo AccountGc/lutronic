@@ -71,19 +71,19 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			<tr>
 				<th class="lb">담당자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
-				<th class="lb">수신일</th>
+				<th>수신일</th>
 				<td class="indent5"><%=dto.getReceiveTime()%></td>
 			</tr>
 			<tr>
 				<th class="lb">구분</th>
 				<td class="indent5"><%=dto.getType()%></td>
-				<th class="lb">역할</th>
+				<th>역할</th>
 				<td class="indent5"><%=dto.getRole()%></td>
 			</tr>
 			<tr>
 				<th class="lb">기안자</th>
 				<td class="indent5"><%=dto.getSubmiter()%></td>
-				<th class="lb">상태</th>
+				<th>상태</th>
 				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>

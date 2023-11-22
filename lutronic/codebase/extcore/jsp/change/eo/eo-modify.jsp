@@ -100,24 +100,6 @@
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="3"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-						<jsp:param value="update" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 
 		<!-- 	관련 문서 -->
@@ -149,14 +131,10 @@
 		<script type="text/javascript">
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-// 				createAUIGrid8(columns8);
-				createAUIGrid9(columns9);
 				createAUIGrid300(columns300);
 				createAUIGrid104(columns104);
 				createAUIGrid90(columns90);
 				createAUIGrid200(columns200);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);
@@ -166,18 +144,11 @@
 			function update(temp) {
 				// 임시저장
 				const temprary = JSON.parse(temp);
-				// 결재선
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-					
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
 					
 				} else {
 					if (!confirm("수정 하시겠습니까?")) {
@@ -191,6 +162,7 @@
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
 				const eoType = toId("eoType");
+				const oid = document.getElementById("oid").value;
 				// 완제품
 				var rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				rows104 = rows104.filter(function(item){
@@ -212,8 +184,6 @@
 				rows300 = rows300.filter(function(item){
 					return item.gridState!=	"removed";
 				});
-				// 외부메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
 				const url = getCallUrl("/eo/modify");
 				const params = {
@@ -227,12 +197,10 @@
 					rows90 : rows90,
 					rows200 : rows200,
 					rows300 : rows300,
-					external : external,
 					temprary : temprary,
-					oid : $("#oid").val()
+					oid : oid
 				}
 				
-// 				toRegister(params, addRows8); // 결재선 세팅
 				openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -275,8 +243,6 @@
 			}
 
 			window.addEventListener("resize", function() {
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);

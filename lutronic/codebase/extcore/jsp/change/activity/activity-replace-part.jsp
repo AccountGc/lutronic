@@ -39,7 +39,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 		dataType : "string",
 		style : "aui-left"
 	}, {
-		headerText : "Rev",
+		headerText : "REV",
 		dataField : "part_version",
 		dataType : "string",
 		width : 140

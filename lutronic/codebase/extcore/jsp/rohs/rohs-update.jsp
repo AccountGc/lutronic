@@ -50,7 +50,7 @@
 					&nbsp;<input type="button" value="물질명 중복" title="물질명 중복" onclick="NameCheck();">
 					<input type="hidden" id="duplicationChk" value="F">
 				</td>
-				<th class="req lb">협력업체</th>
+				<th class="req">협력업체</th>
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 							<option value="">선택</option>
@@ -91,7 +91,7 @@
 						%>
 					</select>
 				</td>
-				<th class="lb">발행일</th>
+				<th>발행일</th>
 				<td class="indent5">
                     <input type="text" name="publicationDate" id="publicationDate" class="width-100" value="<%=data.getPublicationDate() == null ? "" : data.getPublicationDate()%>">
 				</td>

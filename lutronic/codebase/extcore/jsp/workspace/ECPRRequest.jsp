@@ -17,60 +17,60 @@ EcprDTO dto = new EcprDTO(tapOid);
 		<tr>
 			<th class="lb">ECPR 번호</th>
 			<td class="indent5"><%=dto.getNumber()%></td>
-			<th class="lb">ECPR 제목</th>
+			<th>ECPR 제목</th>
 			<td class="indent5"><%=dto.getName()%></td>
-			<th class="lb">상태</th>
+			<th>상태</th>
 			<td class="indent5"><%=dto.getState()%></td>
 		</tr>
 		<tr>
 			<th class="lb">등록자</th>
 			<td class="indent5"><%=dto.getCreator()%></td>
-			<th class="lb">등록일</th>
+			<th>등록일</th>
 			<td class="indent5"><%=dto.getCreatedDate()%></td>
-			<th class="lb">수정일</th>
+			<th>수정일</th>
 			<td class="indent5"><%=dto.getModifiedDate_text()%></td>
 		</tr>
 		<tr>
 			<th class="lb">작성자</th>
 			<td class="indent5"><%=dto.getWriter_name()%></td>
-			<th class="lb">작성부서</th>
+			<th>작성부서</th>
 			<td class="indent5"><%=dto.getCreateDepart_name()%></td>
-			<th class="lb">작성일</th>
+			<th>작성일</th>
 			<td class="indent5"><%=dto.getWriteDate()%></td>
 		</tr>
 		<tr>
 			<th class="lb">제안자</th>
 			<td class="indent5"><%=dto.getProposer_name()%></td>
-			<th class="lb">변경부분</th>
+			<th>변경부분</th>
 			<td class="indent5"><%=dto.getChangeSection()%></td>
-			<th class="lb">승인일</th>
+			<th>승인일</th>
 			<td class="indent5"><%=dto.getApproveDate()%></td>
 		</tr>
 		<tr>
 			<th class="lb">제품명</th>
-			<td colspan="5"><%=dto.getModel()%></td>
+			<td colspan="5" class="indent5"><%=dto.getModel()%></td>
 		</tr>
 		<tr>
 			<th class="lb">변경사유</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentA()%></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th class="lb">변경사항</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentB()%></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th class="lb">참고사항</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentC()%></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th class="lb">주 첨부파일</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 					<jsp:param value="<%=dto.getOid()%>" name="oid" />
 				</jsp:include>
@@ -78,7 +78,7 @@ EcprDTO dto = new EcprDTO(tapOid);
 		</tr>
 		<tr>
 			<th class="lb">첨부파일</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 					<jsp:param value="<%=dto.getOid()%>" name="oid" />
 				</jsp:include>

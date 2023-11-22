@@ -340,7 +340,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "REV",
 					dataType : "string",
 					width : 90,
 					filter : {

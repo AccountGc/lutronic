@@ -8,8 +8,6 @@
 <%@page import="wt.org.WTUser"%>
 <%@page import="com.e3ps.part.dto.PartDTO"%>
 <%@page import="net.sf.json.JSONArray"%>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 PartDTO dto = (PartDTO) request.getAttribute("dto");
@@ -100,7 +98,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">품목번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
-				<th class="lb">품목분류</th>
+				<th>품목분류</th>
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
@@ -115,7 +113,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getState()%>
 				</td>
-				<th class="lb">REV</th>
+				<th>REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>
 					<%
@@ -133,13 +131,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
-				<th class="lb">수정자</th>
+				<th>수정자</th>
 				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
 				<td class="indent5"><%=dto.getCreateDate()%></td>
-				<th class="lb">수정일</th>
+				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
@@ -301,171 +299,50 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	
 </div>
 <script type="text/javascript">
-// BOM 뷰
-function view() {
-	const oid = document.getElementById("oid").value;
-	const url = getCallUrl("/bom/view?oid=" + oid);
-	_popup(url, 1600, 800, "n");
-}
-
-// 수정
-function update () {
-	const oid = document.getElementById("oid").value;
-	const url = getCallUrl("/part/update?oid=" + oid);
-	document.location.href = url;
-};
-
-//삭제
-function deleteBtn(){
-	
-		if (!confirm("삭제 하시겠습니까?")) {
-			return false;
-		}
-	
-	const oid = document.getElementById("oid").value;
-	const url = getCallUrl("/part/delete");
-	const params = new Object();
-	params.oid = oid;
-	call(url, params, function(data) {
-		alert(data.msg);
-		if (data.result) {
-			if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
-				parent.opener.location.reload();
-			}else {
-				parent.opener.$("#sessionId").val("");
-				parent.opener.lfn_Search();
-			}
-			window.close();
-		}
-	});
-}
-
-// 최신버전으로 페이지 이동
-function latest() {
-	const oid = document.getElementById("oid").value;
-	const url = getCallUrl("/part/latest?oid=" + oid);
-	_popup(url, 1600, 550, "n");
-}
-
-//댓글 등록
-$("#commentsBtn").click(function () {
-	var param_num = "<%=pnum%>";
-		var num;
-		if(isEmpty(param_num)){
-			num = 0;
-		}else{
-			num = Number(param_num) +1;
-		}
-		var oid = document.getElementById("oid").value;
-		var comments = $("#comments").val();
-		if(isEmpty(comments)){
-			alert("댓글을 입력해주세요.");
-			return;
-		}
-		
-		if (!confirm("댓글을 등록 하시겠습니까?")) {
-			return;
-		}
-		
-		var params = {"oid": oid
-								, "comments" : comments
-								, "num" : num
-								, "step" : 0};
-		
-		var url = getCallUrl("/part/createComments");
-		call(url, params, function(data) {
-			if(data.result){
-				alert("댓글이 등록 되었습니다.");
-				location.reload();
-			}else{
-				alert(data.msg);
-			}
-		});
-	});
-	
-	var reNum;
-	var reStep;
-	var rePerson;
-	
-	//답글 Modal에 데이터 보냄
-	function modalSubmit(num, step, person){
-		reNum = num;
-		reStep = step;
-		rePerson = person;
+	// BOM 뷰
+	function view() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/bom/view?oid=" + oid);
+		_popup(url, 1600, 800, "n");
 	}
 	
-	//답글 등록
-	$("#replyCreateBtn").click(function () {
-		var comments = $("#replyCreate").val();
-		if(isEmpty(comments)){
-			alert("답글을 입력해주세요.");
-			return;
-		}
+	// 수정
+	function update () {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/update?oid=" + oid);
+		document.location.href = url;
+	};
+	
+	//삭제
+	function deleteBtn(){
 		
-		if (!confirm("답글을 등록 하시겠습니까?")) {
-			return;
-		}
-		var oid = document.getElementById("oid").value;
-		var params = {"oid": oid
-								, "comments" : comments
-								, "num" : reNum
-								, "step" : reStep+1
-								, "person" : rePerson};
-		
-		var url = getCallUrl("/part/createComments");
-		call(url, params, function(data) {
-			if(data.result){
-				alert("답글이 등록 되었습니다.");
-				location.reload();
-			}else{
-				alert(data.msg);
+			if (!confirm("삭제 하시겠습니까?")) {
+				return false;
 			}
-		});
-	})
-	
-	var updateOid;
-	//수정 Modal에 데이터 보냄
-	function modalUpSubmit(oid, reply){
-		updateOid = oid;
-		$("#replyModify").val(reply);
-	}
-	
-	//댓글 수정
-	$("#replyModifyBtn").click(function () {
-		var reply = $("#replyModify").val();
 		
-		if (!confirm("수정 하시겠습니까?")) {
-			return;
-		}
-		
-		var params = {"oid": updateOid
-								, "comments" : reply};
-		
-		var url = getCallUrl("/part/updateComments");
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/delete");
+		const params = new Object();
+		params.oid = oid;
 		call(url, params, function(data) {
-			if(data.result){
-				alert(data.msg);
-				location.reload();
-			}else{
-				alert(data.msg);
-			}
-		});
-	})
-	
-	//댓글 삭제
-	function replyDeleteBtn(oid){
-		if (!confirm("삭제 하시겠습니까?")) {
-			return;
-		}
-		var url = getCallUrl("/part/deleteComments?oid=" + oid);
-		call(url, null, function(data) {
+			alert(data.msg);
 			if (data.result) {
-				alert(data.msg);
-				location.reload();
-			} else {
-				alert(data.msg);
+				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+					parent.opener.location.reload();
+				}else {
+					parent.opener.$("#sessionId").val("");
+					parent.opener.lfn_Search();
+				}
+				window.close();
 			}
-		}, "GET");
+		});
+	}
+
+	// 최신버전으로 페이지 이동
+	function latest() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/part/latest?oid=" + oid);
+		_popup(url, 1600, 550, "n");
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

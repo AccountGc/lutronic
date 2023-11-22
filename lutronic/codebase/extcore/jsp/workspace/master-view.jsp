@@ -52,9 +52,9 @@ String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
 			<tr>
 				<th class="lb">수신일</th>
 				<td class="indent5"><%=dto.getReceiveTime()%></td>
-				<th class="lb">기안자</th>
+				<th>기안자</th>
 				<td class="indent5"><%=dto.getSubmiter()%></td>
-				<th class="lb">상태</th>
+				<th>상태</th>
 				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>

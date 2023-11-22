@@ -58,7 +58,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		dataType : "string",
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 	}, {
 		dataField : "creator",

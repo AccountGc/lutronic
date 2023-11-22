@@ -147,14 +147,14 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				<td class="indent5">
 					<input type="text" name="moldnumber" id="moldnumber" class="width-300">
 				</td>
-				<th>Rev.</th>
+				<th>REV</th>
 				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="islastversion" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
-								<b>최신Rev.</b>
+								<b>최신REV</b>
 							</label>
 						</div>
 					</div>
@@ -163,7 +163,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						<input type="radio" name="islastversion" value="">
 						<div class="state p-success">
 							<label>
-								<b>모든Rev.</b>
+								<b>모든REV</b>
 							</label>
 						</div>
 					</div>

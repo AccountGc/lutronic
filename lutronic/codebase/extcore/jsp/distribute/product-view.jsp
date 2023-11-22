@@ -85,7 +85,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getState()%>
 				</td>
-				<th class="lb">Rev.</th>
+				<th class="lb">REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>(<%=dto.getViewName()%>)
 				</td>

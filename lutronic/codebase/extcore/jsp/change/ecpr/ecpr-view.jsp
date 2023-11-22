@@ -59,7 +59,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">ECPR 번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
-				<th class="lb">상태</th>
+				<th>상태</th>
 				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
@@ -69,19 +69,19 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			<tr>
 				<th class="lb">등록일</th>
 				<td class="indent5"><%=dto.getCreatedDate()%></td>
-				<th class="lb">수정일</th>
+				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
 				<td class="indent5"><%=dto.getWriter_name()%></td>
-				<th class="lb">작성부서</th>
+				<th>작성부서</th>
 				<td class="indent5"><%=dto.getCreateDepart_name() == null ? "" : dto.getCreateDepart_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성일</th>
 				<td class="indent5"><%=dto.getWriteDate()%></td>
-				<th class="lb">승인일</th>
+				<th>승인일</th>
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
@@ -89,7 +89,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 <%-- 				<td><%=dto.getProposer()%></td> --%>
 				<th class="lb">제품명</th>
 				<td class="indent5"><%=dto.getModel()%></td>
-				<th class="lb">변경구분</th>
+				<th>변경구분</th>
 				<td class="indent5"><%=dto.getChangeCode()%></td>
 			</tr>
 			<tr>

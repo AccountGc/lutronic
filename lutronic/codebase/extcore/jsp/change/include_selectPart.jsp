@@ -92,7 +92,7 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 		},
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		filter : {
 			showIcon : true,

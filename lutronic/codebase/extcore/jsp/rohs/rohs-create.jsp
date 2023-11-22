@@ -44,8 +44,8 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -135,27 +135,9 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 						%>
 					</select>
 				</td>
-				<th class="lb">발행일</th>
+				<th>발행일</th>
 				<td class="indent5">
 					<input type="text" name="publicationDate" id="publicationDate" class="width-100">
-				</td>
-			</tr>
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">결재</th> -->
-			<!-- 				<td colspan="3" class="indent5"> -->
-			<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-			<%-- 						<jsp:param value="" name="oid" /> --%>
-			<%-- 						<jsp:param value="create" name="mode" /> --%>
-			<%-- 					</jsp:include> --%>
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="3" class="indent5">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
 				</td>
 			</tr>
 		</table>
@@ -174,8 +156,8 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -184,12 +166,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 			var nameChk;
 
 			function create(temp) {
-
 				const temprary = JSON.parse(temp);
-				// 결재선
-				// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				if (isEmpty($("#rohsName").val())) {
 					alert("물질명을 입력하세요.");
@@ -226,19 +203,12 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 						return false;
 					}
 
-					// 					if (addRows8.length > 0) {
-					// 						alert("결재선 지정을 해지해주세요.")
-					// 						return false;
-					// 					}
-
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
 				}
 				params.temprary = temprary;
-				params.external = external;
-				// 				toRegister(params, addRows8); // 결재선 세팅
 				var url = getCallUrl("/rohs/create");
 				call(url, params, function(data) {
 					alert(data.msg);

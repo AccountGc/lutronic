@@ -54,7 +54,7 @@ boolean isUpdate = "update".equals(mode);
 		}
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		filter : {
 			showIcon : true,

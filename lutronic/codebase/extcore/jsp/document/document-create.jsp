@@ -43,7 +43,7 @@ iframe {
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -63,7 +63,7 @@ iframe {
 					<span id="locationText"> /Default/문서 </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 				</td>
-				<th class="req lb">문서 템플릿</th>
+				<th class="req">문서 템플릿</th>
 				<td class="indent5">
 					<select name="formType" id="formType" class="width-200" onchange="loadForm();">
 						<option value="">선택</option>
@@ -86,7 +86,7 @@ iframe {
 				<td class="indent5">
 					<input type="text" name="documentName" id="documentName" class="width-300">
 				</td>
-				<th class="req lb">결재방식</th>
+				<th class="req">결재방식</th>
 				<td>
 					&nbsp;
 					<div class="pretty p-switch">
@@ -125,7 +125,7 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th class="req lb">보존기간</th>
+				<th class="req">보존기간</th>
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
 						<%
@@ -138,7 +138,7 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th class="lb">프로젝트코드</th>
+				<th>프로젝트코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200">
 						<option value="">선택</option>
@@ -166,11 +166,11 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th class="req lb">내부 문서번호</th>
+				<th class="req">내부 문서번호</th>
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
 				</td>
-				<th class="lb">작성자</th>
+				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
 					<input type="hidden" name="writerOid" id="writerOid">
@@ -205,24 +205,6 @@ iframe {
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="5" class="indent5"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
-<!-- 			<tr> -->
-<!-- 				<th class="lb">외부 메일 지정</th> -->
-<!-- 				<td colspan="5" class="indent5"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
 		</table>
 
 		<!-- 관련 품목 -->
@@ -278,7 +260,7 @@ iframe {
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -347,7 +329,6 @@ iframe {
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 				const url = getCallUrl("/doc/create");
 
@@ -363,8 +344,6 @@ iframe {
 				const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				if (isNull(documentName.value)) {
 					alert("문서종류를 입력해주세요.");
@@ -391,11 +370,6 @@ iframe {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
 
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
@@ -425,12 +399,9 @@ iframe {
 					rows101 : rows101,
 					rows103 : rows103,
 					rows105 : rows105,
-					temprary : temprary,
-					// 외부 메일
-					external : external
+					temprary : temprary
 				};
 				logger(params);
-// 				toRegister(params, addRows8); // 결재선 세팅
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -455,16 +426,12 @@ iframe {
 				createAUIGrid101(columns101);
 				createAUIGrid103(columns103);
 				createAUIGrid105(columns105);
-// 				createAUIGrid8(columns8);
-				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID91);
 				AUIGrid.resize(myGridID100);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID103);
 				AUIGrid.resize(myGridID105);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 
 				// 문서명 규칙
 				$("#documentName").bindSelector({
@@ -504,8 +471,6 @@ iframe {
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID103);
 				AUIGrid.resize(myGridID105);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

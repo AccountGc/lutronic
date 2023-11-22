@@ -103,7 +103,7 @@ function _layout() {
 	}, 
 	{
 		dataField: "rev",
-		headerText: "Rev.",
+		headerText: "REV",
 		editable : false,
 		width : "5%",
 		filter : {

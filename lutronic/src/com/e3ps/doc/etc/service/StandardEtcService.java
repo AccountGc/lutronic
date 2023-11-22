@@ -79,13 +79,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 		// 설별 활동 링크 OID
 		String oid = dto.getOid();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
-		boolean isSelf = dto.isSelf();
+		
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -127,26 +121,12 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			// 문서 관련 객체 데이터 처리
 			saveLink(doc, dto);
 
-			// 외부 메일 링크 저장
-			MailUserHelper.service.saveLink(doc, external);
-
 			// 설변활동 링크
 			if (StringUtil.checkString(oid)) {
 				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
 				DocumentActivityLink link = DocumentActivityLink
 						.newDocumentActivityLink((WTDocumentMaster) doc.getMaster(), eca);
 				PersistenceHelper.manager.save(link);
-			}
-
-			// 결재 시작
-			if (isSelf) {
-				// 자가결재시
-				WorkspaceHelper.service.self(doc);
-			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
-				}
 			}
 
 			trs.commit();
@@ -208,7 +188,6 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		ArrayList<Map<String, String>> external = dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -269,11 +248,6 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			// 관련 링크 세팅
 			saveLink(latest, dto);
 
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(oid);
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(latest, external);
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -297,7 +271,6 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
-		ArrayList<Map<String, String>> external =  dto.getExternal();
 
 		Transaction trs = new Transaction();
 		try {
@@ -360,11 +333,6 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
 			
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(oid);
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(workCopy, external);
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

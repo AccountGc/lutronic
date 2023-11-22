@@ -71,7 +71,7 @@ String oid = (String) request.getParameter("oid");
 					<tr>
 						<th class="lb">상태</th>
 						<td class="indent5">승인됨</td>
-						<th class="lb">Rev.</th>
+						<th class="lb">REV</th>
 						<td class="indent5">D.1</td>
 					</tr>
 					<tr>
@@ -116,7 +116,7 @@ const column = [ {
 			},
 		}, {
 			dataField : "version",
-			headerText : "Rev.",
+			headerText : "REV",
 			dataType : "string",
 			width : 90,
 			filter : {

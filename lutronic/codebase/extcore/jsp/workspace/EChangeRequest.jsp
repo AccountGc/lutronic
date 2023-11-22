@@ -20,61 +20,61 @@ CrDTO dto = new CrDTO(tapOid);
 		</colgroup>
 		<tr>
 			<th class="lb">CR 번호</th>
-			<td><%=dto.getNumber()%></td>
+			<td class="indent5"><%=dto.getNumber()%></td>
 			<th>CR 제목</th>
-			<td><%=dto.getName()%></td>
+			<td class="indent5"><%=dto.getName()%></td>
 			<th>상태</th>
-			<td><%=dto.getState()%></td>
+			<td class="indent5"><%=dto.getState()%></td>
 		</tr>
 		<tr>
 			<th class="lb">등록자</th>
-			<td><%=dto.getCreator()%></td>
+			<td class="indent5"><%=dto.getCreator()%></td>
 			<th>등록일</th>
-			<td><%=dto.getCreatedDate_text()%></td>
+			<td class="indent5"><%=dto.getCreatedDate_text()%></td>
 			<th>수정일</th>
-			<td><%=dto.getModifiedDate_text()%></td>
+			<td class="indent5"><%=dto.getModifiedDate_text()%></td>
 		</tr>
 		<tr>
 			<th class="lb">작성자</th>
-			<td><%=dto.getWriter_name()%></td>
+			<td class="indent5"><%=dto.getWriter_name()%></td>
 			<th>작성부서</th>
-			<td><%=dto.getCreateDepart_name()%></td>
+			<td class="indent5"><%=dto.getCreateDepart_name()%></td>
 			<th>작성일</th>
-			<td><%=dto.getWriteDate()%></td>
+			<td class="indent5"><%=dto.getWriteDate()%></td>
 		</tr>
 		<tr>
 			<th class="lb">제안자</th>
-			<td><%=dto.getProposer_name()%></td>
+			<td class="indent5"><%=dto.getProposer_name()%></td>
 			<th>변경부분</th>
-			<td><%=dto.getChangeSection()%></td>
+			<td class="indent5"><%=dto.getChangeSection()%></td>
 			<th>승인일</th>
-			<td><%=dto.getApproveDate()%></td>
+			<td class="indent5"><%=dto.getApproveDate()%></td>
 		</tr>
 		<tr>
 			<th class="lb">제품명</th>
-			<td colspan="5"><%=dto.getModel()%></td>
+			<td colspan="5" class="indent5"><%=dto.getModel()%></td>
 		</tr>
 		<tr>
 			<th class="lb">변경사유</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentA()%></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th class="lb">변경사항</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentB()%></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th class="lb">참고사항</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentC()%></textarea>
 			</td>
 		</tr>
 		<tr>
 			<th class="lb">주 첨부파일</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<%
 				Map<String, Object> contentMap = dto.getContentMap();
 				if (contentMap != null) {
@@ -98,7 +98,7 @@ CrDTO dto = new CrDTO(tapOid);
 		</tr>
 		<tr>
 			<th class="lb">첨부파일</th>
-			<td colspan="5">
+			<td colspan="5" class="indent5">
 				<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 					<jsp:param value="<%= dto.getOid() %>" name="oid"/>
 				</jsp:include>

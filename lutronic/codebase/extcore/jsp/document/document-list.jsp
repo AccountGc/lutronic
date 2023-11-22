@@ -174,14 +174,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th>버전</th>
+				<th>REV</th>
 				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="latest" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
-								<b>최신버전</b>
+								<b>최신REV</b>
 							</label>
 						</div>
 					</div>
@@ -190,7 +190,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<input type="radio" name="latest" value="false">
 						<div class="state p-success">
 							<label>
-								<b>모든버전</b>
+								<b>모든REV</b>
 							</label>
 						</div>
 					</div>

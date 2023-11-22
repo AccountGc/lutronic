@@ -83,13 +83,13 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			<tr>
 				<th class="lb">물질 번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
-				<th class="lb">협력업체</th>
+				<th>협력업체</th>
 				<td class="indent5"><%=dto.getManufactureDisplay()%></td>
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
 				<td class="indent5"><%=dto.getStateDisplay()%></td>
-				<th class="lb">Rev.</th>
+				<th>REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>
 					<%
@@ -107,19 +107,19 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 			<tr>
 				<th class="lb">등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
-				<th class="lb">수정자</th>
+				<th>수정자</th>
 				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
 				<td class="indent5"><%=dto.getCreateDate()%></td>
-				<th class="lb">수정일</th>
+				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
 				<th class="lb">결재방식</th>
 				<td class="indent5"><%=dto.getApprovalTypeDisplay() == null ? "" : dto.getApprovalTypeDisplay()%></td>
-				<th class="lb">설명</th>
+				<th>설명</th>
 				<td class="indent5"><%=dto.getDescription() == null ? "" : dto.getDescription()%></td>
 			</tr>
 		</table>

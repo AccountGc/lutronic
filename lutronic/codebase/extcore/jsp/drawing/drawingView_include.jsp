@@ -52,7 +52,7 @@
 		width : 100,
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		width : 100,
 	}, {

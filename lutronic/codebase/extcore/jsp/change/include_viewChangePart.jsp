@@ -42,7 +42,7 @@ JSONArray json = ChangeWfHelper.manager.wf_CheckPart(oid, checkDummy, distribute
 			editable : false
 		}, {
 			dataField : "version",
-			headerText : "Rev.",
+			headerText : "REV",
 			width : 100,
 			editable : false
 		}, {
@@ -65,7 +65,7 @@ JSONArray json = ChangeWfHelper.manager.wf_CheckPart(oid, checkDummy, distribute
 			editable : false
 		}, {
 			dataField : "version",
-			headerText : "Rev.",
+			headerText : "REV",
 			width : 100,
 			editable : false
 		}, {

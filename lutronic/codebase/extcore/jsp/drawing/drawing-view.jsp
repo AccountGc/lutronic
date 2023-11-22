@@ -67,13 +67,13 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<tr>
 				<th class="lb">도면명</th>
 				<td class="indent5"><%=dto.getName()%></td>
-				<th class="lb">도면분류</th>
+				<th>도면분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
 			</tr>
 			<tr>
 				<th class="lb">상태</th>
 				<td class="indent5"><%=dto.getStateDisplay()%></td>
-				<th class="lb">Rev.</th>
+				<th>REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>
 					<%
@@ -91,25 +91,25 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			<tr>
 				<th class="lb">등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
-				<th class="lb">수정자</th>
+				<th>수정자</th>
 				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
 				<td class="indent5"><%=dto.getCreateDate()%></td>
-				<th class="lb">수정일</th>
+				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>
 				<th class="lb">도면구분</th>
 				<td class="indent5"><%=dto.getCadType()%></td>
-				<th class="lb">도면파일</th>
+				<th>도면파일</th>
 				<td class="indent5"><%=dto.getCadName()%></td>
 			</tr>
 			<tr>
 				<th class="lb">주 부품</th>
 				<td class="indent5"><%=dto.getPNum()%></td>
-				<th class="lb">ApplicationType</th>
+				<th>ApplicationType</th>
 				<td class="indent5"><%=dto.getApplicationType()%></td>
 			</tr>
 			<tr>

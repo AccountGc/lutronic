@@ -87,24 +87,6 @@
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="3"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 
 		<!-- 	관련 문서 -->
@@ -140,10 +122,7 @@
 				const eoCommentB = toId("eoCommentB");
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				const eoType = toId("eoType");
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 				
 				const temprary = JSON.parse(temp);
 
@@ -166,7 +145,7 @@
 					rows90 : rows90,
 					rows200 : rows200,
 					rows300 : rows300,
-					external : external
+					temprary : temprary
 				}
 
 				if (temprary) {
@@ -174,18 +153,12 @@
 						return false;
 					}
 
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
-
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
 				}
 
-// 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/eo/create");
 				logger(params);
 				parent.openLayer();
@@ -234,14 +207,10 @@
 				createAUIGrid90(columns90);
 				createAUIGrid300(columns300);
 				createAUIGrid200(columns200);
-// 				createAUIGrid8(columns8);
-				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID104);
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID200);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
@@ -249,8 +218,6 @@
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID200);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

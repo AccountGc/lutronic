@@ -100,17 +100,9 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">제안자</th> -->
-<!-- 				<td class="indent5" colspan="3"> -->
-<%-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer_name() : ""%>"> --%>
-<%-- 					<input type="hidden" name="proposerOid" id="proposerOid" value="<%= dto.getProposer_oid()%>"> --%>
-<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-<!-- 				</td> -->
-<!-- 			</tr> -->
 			<tr>
 				<th class="lb">변경구분</th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
@@ -169,24 +161,6 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="3"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-						<jsp:param value="update" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 
 		<!-- 	관련 CR -->
@@ -213,17 +187,11 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 				const temprary = JSON.parse(temp);
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-					
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
 					
 				} else {
 					if (!confirm("수정 하시겠습니까?")) {
@@ -235,8 +203,6 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -275,7 +241,6 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					approveDate : toId("approveDate"),
 					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
-// 					proposer_oid : toId("proposerOid"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -283,12 +248,9 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					primary : primary.value,
 					rows101 : rows101,
 					rows300 : rows300,
-					temprary : temprary,
-					// 외부 메일
-					external : external,
+					temprary : temprary
 				}
 				
-// 				toRegister(params, addRows8); // 결재선 세팅
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/update");
@@ -311,22 +273,15 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");
-// 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
-// 				createAUIGrid8(columns8);
-				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

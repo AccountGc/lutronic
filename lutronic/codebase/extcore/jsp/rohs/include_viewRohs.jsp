@@ -96,7 +96,7 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			dataType : "string",
 		}, {
 			dataField : "version",
-			headerText : "Rev.",
+			headerText : "REV",
 			dataType : "string",
 		}, {
 			dataField : "creator",

@@ -171,7 +171,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		},
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		filter : {
 			showIcon : true,
@@ -265,7 +265,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 		},
 	}, {
 		dataField : "version",
-		headerText : "Rev.",
+		headerText : "REV",
 		dataType : "string",
 		filter : {
 			showIcon : true,

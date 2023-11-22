@@ -68,7 +68,7 @@ boolean create = "create".equals(mode);
 		},
 	}, {
 		dataField : "version",
-		headerText : "REV.",
+		headerText : "REV",
 		dataType : "string",
 		width : 90,
 		editable : false,

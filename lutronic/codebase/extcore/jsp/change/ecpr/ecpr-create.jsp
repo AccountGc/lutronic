@@ -25,8 +25,8 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -42,7 +42,7 @@
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th class="req lb">ECPR 번호</th>
+				<th class="req">ECPR 번호</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300">
 				</td>
@@ -53,7 +53,7 @@
 					<input type="text" name="writeDate" id="writeDate" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
 				</td>
-				<th class="lb">승인일</th>
+				<th>승인일</th>
 				<td class="indent5">
 					<input type="text" name="approveDate" id="approveDate" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="createDate('approveDate');">
@@ -73,7 +73,7 @@
 						%>
 					</select>
 				</td>
-				<th class="lb">작성자</th>
+				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200"> 
 					<input type="hidden" name="writerOid" id="writerOid"> 
@@ -93,17 +93,9 @@
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">제안자</th> -->
-<!-- 				<td class="indent5" colspan="3"> -->
-<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
-<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
-<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-<!-- 				</td> -->
-<!-- 			</tr> -->
 			<tr>
 				<th class="lb">변경구분</th>
-				<td colspan="3">
+				<td colspan="3" class="indent5">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
@@ -156,24 +148,6 @@
 					</jsp:include>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">결재</th> -->
-<!-- 				<td colspan="3" class="indent5"> -->
-<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 						<jsp:param value="create" name="mode" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="3" class="indent5">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 		
 		<!-- 	관련 CR -->
@@ -188,8 +162,8 @@
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -200,15 +174,12 @@
 				const number = document.getElementById("number");
 				
 				const temprary = JSON.parse(temp);
-// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 	
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 	
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -244,11 +215,6 @@
 						return false;
 					}
 					
-// 					if (addRows8.length > 0) {
-// 						alert("결재선 지정을 해지해주세요.")
-// 						return false;
-// 					}
-					
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
@@ -262,7 +228,6 @@
 					approveDate : toId("approveDate"),
 					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
-// 					proposer_oid : toId("proposerOid"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -270,14 +235,11 @@
 					primary : primary.value,
 					rows101 : rows101,
 					rows300 : rows300,
-					temprary : temprary,
-					// 외부 메일
-					external : external
+					temprary : temprary
 				}
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/create");
-// 				toRegister(params, addRows8); // 결재선 세팅
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
@@ -292,22 +254,15 @@
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");
-// 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
-// 				createAUIGrid8(columns8);
-				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 	
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 			
 		</script>

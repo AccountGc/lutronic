@@ -70,7 +70,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">품목번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
-				<th class="lb">품목분류</th>
+				<th>품목분류</th>
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
@@ -85,7 +85,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getState()%>
 				</td>
-				<th class="lb">Rev.</th>
+				<th>REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>(<%=dto.getViewName()%>)
 				</td>
@@ -93,13 +93,13 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th class="lb">등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
-				<th class="lb">수정자</th>
+				<th>수정자</th>
 				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
 				<td class="indent5"><%=dto.getCreateDate()%></td>
-				<th class="lb">수정일</th>
+				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifyDate()%></td>
 			</tr>
 			<tr>

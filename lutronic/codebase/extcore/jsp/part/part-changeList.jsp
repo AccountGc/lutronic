@@ -41,7 +41,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		headerText : "변경이력",
 		children : [{
 			dataField : "version",
-			headerText : "Rev.",
+			headerText : "REV",
 			dataType : "string",
 			width: 120,
 		}, {

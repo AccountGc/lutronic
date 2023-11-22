@@ -49,7 +49,7 @@ if(request.getParameter("popup")!=null){
 		width : 180,
 	}, {
 		dataField : "version",
-		headerText : "Rev",
+		headerText : "REV",
 		dataType : "string",
 		width : 180,
 	}, {
