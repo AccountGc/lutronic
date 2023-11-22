@@ -10,10 +10,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 CrDTO dto = (CrDTO) request.getAttribute("dto");
 Map<String, Object> contentMap = dto.getContentMap();
-String aOid = "";
-if (contentMap != null) {
-	aOid = contentMap.get("aoid") == null ? "" : contentMap.get("aoid").toString();
-}
+String oid = (String) contentMap.get("aoid");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -147,7 +144,7 @@ if (contentMap != null) {
 		<th class="req lb">주 첨부파일</th>
 		<td class="indent5" colspan="3">
 			<jsp:include page="/extcore/jsp/common/attach-eco.jsp">
-				<jsp:param value="<%=aOid%>" name="oid" />
+				<jsp:param value="<%=oid%>" name="oid" />
 				<jsp:param value="modify" name="mode" />
 				<jsp:param value="ECR" name="roleType" />
 			</jsp:include>
@@ -159,24 +156,6 @@ if (contentMap != null) {
 			<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
 				<jsp:param value="<%=dto.getOid()%>" name="oid" />
 				<jsp:param value="modify" name="mode" />
-			</jsp:include>
-		</td>
-	</tr>
-	<!-- 			<tr> -->
-	<!-- 				<th class="lb">결재</th> -->
-	<!-- 				<td colspan="3"> -->
-	<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-	<%-- 						<jsp:param value="" name="oid" /> --%>
-	<%-- 						<jsp:param value="create" name="mode" /> --%>
-	<%-- 					</jsp:include> --%>
-	<!-- 				</td> -->
-	<!-- 			</tr> -->
-	<tr>
-		<th class="lb">외부 메일 지정</th>
-		<td colspan="3">
-			<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-				<jsp:param value="<%=dto.getOid()%>" name="oid" />
-				<jsp:param value="update" name="mode" />
 			</jsp:include>
 		</td>
 	</tr>
@@ -207,18 +186,11 @@ if (contentMap != null) {
 		const number = document.getElementById("number");
 		const temprary = JSON.parse(temp);
 		const secondarys = toArray("secondarys");
-		// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 
 		if (temprary) {
 			if (!confirm("임시저장하시겠습니까??")) {
 				return false;
 			}
-
-			// 					if (addRows8.length > 0) {
-			// 						alert("결재선 지정을 해지해주세요.")
-			// 						return false;
-			// 					}
-
 		} else {
 			if (!confirm("수정 하시겠습니까?")) {
 				return false;
@@ -229,8 +201,6 @@ if (contentMap != null) {
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		// 모델
 		const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
-		// 외부 메일
-		const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 		// 변경 구분 배열 처리
 		const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -274,7 +244,6 @@ if (contentMap != null) {
 			approveDate : toId("approveDate"),
 			createDepart_code : toId("createDepart"),
 			writer_oid : toId("writerOid"),
-			// 					proposer_name : toId("proposer"),
 			eoCommentA : toId("eoCommentA"),
 			eoCommentB : toId("eoCommentB"),
 			eoCommentC : toId("eoCommentC"),
@@ -284,11 +253,8 @@ if (contentMap != null) {
 			rows101 : rows101,
 			rows300 : rows300,
 			temprary : temprary,
-			// 외부 메일
-			external : external,
 		}
 
-		// 				toRegister(params, addRows8); // 결재선 세팅
 		const url = getCallUrl("/cr/modify");
 		logger(params);
 		openLayer();
@@ -310,21 +276,14 @@ if (contentMap != null) {
 		date("approveDate");
 		selectbox("createDepart");
 		finderUser("writer");
-		// 				finderUser("proposer");
 		createAUIGrid300(columns300);
 		createAUIGrid101(columns101);
-		// 				createAUIGrid8(columns8);
-		createAUIGrid9(columns9);
 		AUIGrid.resize(myGridID300);
 		AUIGrid.resize(myGridID101);
-		// 				AUIGrid.resize(myGridID8);
-		AUIGrid.resize(myGridID9);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID300);
 		AUIGrid.resize(myGridID101);
-		// 				AUIGrid.resize(myGridID8);
-		AUIGrid.resize(myGridID9);
 	});
 </script>

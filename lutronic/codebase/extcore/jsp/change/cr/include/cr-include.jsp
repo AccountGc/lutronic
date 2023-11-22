@@ -43,7 +43,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			<%
 			}
 			%>
-			<div id="grid101" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid101" style="height: 50px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
@@ -60,6 +60,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "number",
 		headerText : "CR 번호",
 		dataType : "string",
+		width : 150,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -78,6 +79,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		headerText : "CR 제목",
 		dataType : "string",
 		style : "aui-left",
+		width : 350,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -95,6 +97,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "model",
 		headerText : "제품",
 		dataType : "string",
+		width : 220,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -103,6 +106,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "changeSection",
 		headerText : "변경구분",
 		dataType : "string",
+		width : 220,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -111,6 +115,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "createDepart",
 		headerText : "작성부서",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -119,6 +124,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "writer",
 		headerText : "작성자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -127,6 +133,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "approveDate",
 		headerText : "승인일",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -135,6 +142,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
+		width : 80,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -143,6 +151,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -151,6 +160,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -159,23 +169,23 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 	
 	function createAUIGrid101(columnLayout) {
 		const props = {
-				headerHeight : 30,
-				fillColumnSizeMode : false,
-				showRowNumColumn : true,
-				rowNumHeaderText : "번호",
-				showAutoNoDataMessage : false,
-				enableSorting : false,
-				softRemoveRowMode : true,
-				selectionMode : "multipleCells",
-				<%if (create || update) {%>
-				showStateColumn : true,
-				showRowCheckColumn : true,
-				<%}%>
-				<%if (!multi) {%>
-				rowCheckToRadio : true,
-				<%}%>
-				enableFilter : true,
-				autoGridHeight : true
+			headerHeight : 30,
+			fillColumnSizeMode : false,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			enableSorting : false,
+			softRemoveRowMode : true,
+			selectionMode : "multipleCells",
+			<%if (create || update) {%>
+			showStateColumn : true,
+			showRowCheckColumn : true,
+			<%}%>
+			<%if (!multi) {%>
+			rowCheckToRadio : true,
+			<%}%>
+			enableFilter : true,
+			autoGridHeight : true
 		}
 		myGridID101 = AUIGrid.create("#grid101", columnLayout, props);
 		<%if (view || update) {%>

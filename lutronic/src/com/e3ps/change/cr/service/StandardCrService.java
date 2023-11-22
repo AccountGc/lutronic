@@ -13,6 +13,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -56,13 +57,7 @@ public class StandardCrService extends StandardManager implements CrService {
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
-		
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -73,13 +68,13 @@ public class StandardCrService extends StandardManager implements CrService {
 			for (int i = 0; i < rows300.size(); i++) {
 				Map<String, String> row300 = rows300.get(i);
 				String oid = row300.get("oid");
-				if(oid != null) {
+				if (oid != null) {
 					NumberCode n = (NumberCode) CommonUtil.getObject(oid);
 					if (rows300.size() - 1 == i) {
 						model += n.getCode();
 					} else {
 						model += n.getCode() + ",";
-					}					
+					}
 				}
 			}
 
@@ -98,12 +93,12 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoNumber(number);
 			cr.setCreateDate(writeDate);
 
-			if(!writer.equals("")) {
+			if (!writer.equals("")) {
 				long writerOid = CommonUtil.getOIDLongValue(writer);
 				cr.setWriter(Long.toString(writerOid));
 			}
 			cr.setApproveDate(approveDate);
-			
+
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
 			cr.setModel(model);
@@ -118,18 +113,12 @@ public class StandardCrService extends StandardManager implements CrService {
 			String lifecycle = "LC_Default";
 
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) cr, folder);		
+			FolderHelper.assignLocation((FolderEntry) cr, folder);
 			// lifecycle 설정
 			LifeCycleHelper.setLifeCycle(cr,
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef()));
-			
+
 			cr = (EChangeRequest) PersistenceHelper.manager.save(cr);
-			
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(cr, state);
-			}
 
 //			String[] ecrOids = (String[]) req.getParameterValues("ecrOid");
 //			updateECRToECRLink(ecr, ecrOids, false);
@@ -138,13 +127,13 @@ public class StandardCrService extends StandardManager implements CrService {
 
 			// 관련 CR 링크
 			saveLink(cr, rows101);
-			
-			// 외부 메일 링크 저장
-			MailUserHelper.service.saveLink(cr, external);
-			
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(cr, agreeRows, approvalRows, receiveRows);
+
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(cr, state);
+			} else {
+				WorkDataHelper.service.create(cr);
 			}
 
 			trs.commit();
@@ -158,7 +147,7 @@ public class StandardCrService extends StandardManager implements CrService {
 				trs.rollback();
 		}
 	}
-	
+
 	/**
 	 * 관련 CR링크
 	 */
@@ -205,13 +194,13 @@ public class StandardCrService extends StandardManager implements CrService {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
 			// 외부 메일 링크 삭제
 			MailUserHelper.service.deleteLink(oid);
-			
+
 			PersistenceHelper.manager.delete(cr);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -226,40 +215,34 @@ public class StandardCrService extends StandardManager implements CrService {
 
 	@Override
 	public void modify(CrDTO dto) throws Exception {
-		
+
 		String createDepart_code = dto.getCreateDepart_code();
 		boolean temprary = dto.isTemprary();
-		
+
 		ArrayList<String> sections = dto.getSections();
 		ArrayList<Map<String, String>> rows101 = dto.getRows101();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
-		// 외부 메일
-		ArrayList<Map<String, String>> external = dto.getExternal();
-		// 결재
-		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
-		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
-		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
-		
+
 //		String model_oid = dto.getModel_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			// 모델 배열 처리
 			String model = "";
 			for (int i = 0; i < rows300.size(); i++) {
 				Map<String, String> row300 = rows300.get(i);
 				String oid = row300.get("oid");
 				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
-				if(n != null) {
+				if (n != null) {
 					if (rows300.size() - 1 == i) {
 						model += n.getCode();
 					} else {
 						model += n.getCode() + ",";
-					}					
+					}
 				}
 			}
-			
+
 			String changeSection = "";
 			for (int i = 0; i < sections.size(); i++) {
 				String value = sections.get(i);
@@ -271,19 +254,17 @@ public class StandardCrService extends StandardManager implements CrService {
 			}
 
 			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(dto.getOid());
-			
-			
-			
+
 			cr.setEoName(dto.getName());
 			cr.setEoNumber(dto.getNumber());
 			cr.setCreateDate(dto.getWriteDate());
 
-			if(!dto.getWriter_oid().equals("")) {
+			if (!dto.getWriter_oid().equals("")) {
 				long writerOid = CommonUtil.getOIDLongValue(dto.getWriter_oid());
 				cr.setWriter(Long.toString(writerOid));
 			}
 			cr.setApproveDate(dto.getApproveDate());
-			
+
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
 			cr.setModel(model);
@@ -293,7 +274,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoCommentA(dto.getEoCommentA());
 			cr.setEoCommentB(dto.getEoCommentB());
 			cr.setEoCommentC(dto.getEoCommentC());
-			
+
 			cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
 
 			// 첨부 파일 삭제
@@ -303,26 +284,16 @@ public class StandardCrService extends StandardManager implements CrService {
 			// 링크 삭제
 			deleteLink(cr);
 			saveLink(cr, rows101);
-			
-			// 외부 메일 링크 삭제
-			MailUserHelper.service.deleteLink(dto.getOid());
-			// 외부 메일 링크 추가
-			MailUserHelper.service.saveLink(cr, external);
 
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(cr, agreeRows, approvalRows, receiveRows);
-			}
-			
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(cr, state);
-			}else {
+			} else {
 				State state = State.toState("INWORK");
- 				LifeCycleHelper.service.setLifeCycleState(cr, state);
+				LifeCycleHelper.service.setLifeCycleState(cr, state);
 			}
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

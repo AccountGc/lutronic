@@ -30,6 +30,8 @@ public class WorkDataHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WorkData.class, true);
 
+		QuerySpecUtils.toBooleanAnd(query, idx, WorkData.class, WorkData.PROCESS, false);
+
 		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, false);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();

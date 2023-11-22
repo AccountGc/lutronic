@@ -63,7 +63,7 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">결재선 지정</th>
+				<th class="req lb">결재선 지정</th>
 				<td>
 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
 						<jsp:param value="" name="oid" />
@@ -94,10 +94,13 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 		function _submit() {
 			const oid = document.getElementById("oid").value;
 
-			if (!confirm("기안 하시겠습니까?")) {
+			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+			if (addRows8.length === 0) {
+				alert("결재선을 지정하세요.");
+				addRows8();
 				return false;
 			}
-			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+
 			const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 			const url = getCallUrl("/workData/_submit");
 			const params = {
@@ -105,6 +108,10 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 				external : external
 			};
 			toRegister(params, addRows8); // 결재선 세팅
+			if (!confirm("기안 하시겠습니까?")) {
+				return false;
+			}
+
 			parent.openLayer();
 			logger(params);
 			call(url, params, function(data) {
@@ -117,12 +124,27 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 
 		}
 
+		function read() {
+			const oid = document.getElementById("oid").value;
+			const url = getCallUrl("/workData/read?oid=" + oid);
+			openLayer();
+			call(url, null, function(data) {
+				if (data.result) {
+					opener.loadGridData();
+				} else {
+					alert(data.msg);
+				}
+				closeLayer();
+			}, "GET");
+		}
+		
 		document.addEventListener("DOMContentLoaded", function() {
 			toFocus("description");
 			createAUIGrid8(columns8);
 			createAUIGrid9(columns9);
 			AUIGrid.resize(myGridID8)
 			AUIGrid.resize(myGridID9);
+			read();
 		})
 
 		window.addEventListener("resize", function() {

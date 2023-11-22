@@ -17,7 +17,7 @@ public interface WorkspaceService {
 	/**
 	 * 결재 등록
 	 */
-	public abstract void register(Persistable per, ArrayList<Map<String, String>> agreeRows,
+	public abstract void register(Persistable per, String description, ArrayList<Map<String, String>> agreeRows,
 			ArrayList<Map<String, String>> approvalRows, ArrayList<Map<String, String>> receiveRows) throws Exception;
 
 	/**
@@ -98,7 +98,7 @@ public interface WorkspaceService {
 	 * 설변활동 결재 시작
 	 */
 	public abstract void start(Persistable per) throws Exception;
-	
+
 	/**
 	 * 합의 반려
 	 */

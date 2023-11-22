@@ -83,7 +83,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	}
 
 	@Override
-	public void register(Persistable per, ArrayList<Map<String, String>> agreeRows,
+	public void register(Persistable per, String description, ArrayList<Map<String, String>> agreeRows,
 			ArrayList<Map<String, String>> approvalRows, ArrayList<Map<String, String>> receiveRows) throws Exception {
 		boolean isAgree = !agreeRows.isEmpty();
 
@@ -116,7 +116,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		startLine.setStartTime(startTime);
 		startLine.setType(WorkspaceHelper.SUBMIT_LINE);
 		startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
-		startLine.setDescription(ownership.getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
+		if (StringUtil.checkString(description)) {
+			startLine.setDescription(description);
+			;
+		} else {
+			startLine.setDescription(ownership.getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
+		}
 		startLine.setState(WorkspaceHelper.STATE_SUBMIT_COMPLETE);
 		startLine.setCompleteTime(startTime);
 

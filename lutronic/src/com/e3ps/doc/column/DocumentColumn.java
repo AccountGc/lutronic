@@ -3,7 +3,7 @@ package com.e3ps.doc.column;
 import java.sql.Timestamp;
 
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.doc.service.DocumentHelper;
@@ -54,14 +54,13 @@ public class DocumentColumn {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 		setLatest(CommonUtil.isLatestVersion(doc));
 		setNumber(doc.getNumber());
-		setInteralnumber(IBAUtil.getStringValue(doc, "INTERALNUMBER"));
-		setModel(keyToValue(IBAUtil.getStringValue(doc, "MODEL"), "MODEL"));
+		setInteralnumber(IBAUtils.getStringValue(doc, "INTERALNUMBER"));
+		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
 		setName(doc.getName());
 		setLocation(doc.getLocation());
 		setVersion(setVersionInfo(doc));
 		setState(doc.getLifeCycleState().getDisplay());
-		String writer_oid = IBAUtil.getStringValue(doc, "DSGN");
-		setWriter(CommonUtil.getUserNameFromOid(writer_oid));
+		setWriter(IBAUtils.getStringValue(doc, "DSGN"));
 		setCreator(doc.getCreatorName());
 		setCreatedDate(doc.getCreateTimestamp());
 		setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));

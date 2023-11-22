@@ -189,7 +189,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "number",
 					headerText : "CR 번호",
 					dataType : "string",
-					width : 120,
+					width : 150,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -208,6 +208,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "CR 제목",
 					dataType : "string",
 					style : "aui-left",
+					width : 350,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -270,7 +271,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true

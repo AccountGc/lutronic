@@ -18,6 +18,7 @@ import com.e3ps.controller.BaseController;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.dto.WorkDataDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 @Controller
 @RequestMapping(value = "/workData/**")
@@ -65,11 +66,27 @@ public class WorkDataController extends BaseController {
 	@Description(value = "결재 기안")
 	@ResponseBody
 	@PostMapping(value = "/_submit")
-	public Map<String, Object> _submit(@RequestBody Map<String, Object> params) throws Exception {
+	public Map<String, Object> _submit(@RequestBody WorkDataDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			WorkDataHelper.service._submit(params);
+			WorkDataHelper.service._submit(dto);
 			result.put("msg", "결재가 기안되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "작업함 읽음 처리")
+	@ResponseBody
+	@GetMapping(value = "/read")
+	public Map<String, Object> read(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkDataHelper.service.read(oid);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -13,7 +13,7 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
@@ -42,7 +42,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
-		
+
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
@@ -104,12 +104,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-							<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-							}
+						}
 						}
 						%>
 					</select>
@@ -247,11 +247,32 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
-				return [ {
-					dataField : "number",
-					headerText : "문서번호",
+				return [
+				// 				{
+				// 					dataField : "number",
+				// 					headerText : "문서번호",
+				// 					dataType : "string",
+				// 					width : 180,
+				// 					renderer : {
+				// 						type : "LinkRenderer",
+				// 						baseUrl : "javascript",
+				// 						jsCallback : function(rowIndex, columnIndex, value, item) {
+				// 							const oid = item.oid;
+				// 							const url = getCallUrl("/doc/view?oid=" + oid);
+				// 							_popup(url, "", "", "f");
+				// 						}
+				// 					},
+				// 					filter : {
+				// 						showIcon : true,
+				// 						inline : true
+				// 					},
+				// 				}, 
+				{
+					dataField : "name",
+					headerText : "문서명",
 					dataType : "string",
-					width : 180,
+					style : "aui-left",
+					width : 350,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -284,25 +305,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
-					dataField : "name",
-					headerText : "문서명",
-					dataType : "string",
-					style : "aui-left",
-					width : 350,
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/doc/view?oid=" + oid);
-							_popup(url, "", "", "f");
-						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
 					dataField : "location",
 					headerText : "문서분류",
 					dataType : "string",
@@ -328,7 +330,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -473,7 +475,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			});
 
 			function exportExcel() {
-				const exceptColumnFields = [ "primary","secondary" ];
+				const exceptColumnFields = [ "primary", "secondary" ];
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}

@@ -443,7 +443,6 @@ public class WorkspaceController extends BaseController {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
-//			ErrorLogHelper.service.create(e.toString(), "/workspace/reject", "반려함 조회 함수");
 		}
 		return result;
 	}

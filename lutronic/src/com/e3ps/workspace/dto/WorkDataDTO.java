@@ -3,7 +3,10 @@ package com.e3ps.workspace.dto;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.workspace.WorkData;
 
 import lombok.Getter;
@@ -30,6 +33,8 @@ public class WorkDataDTO {
 	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
 	// 외부 메일 변수
 	private ArrayList<Map<String, String>> external = new ArrayList<Map<String, String>>();
+
+	private String description;
 
 	public WorkDataDTO() {
 
@@ -58,6 +63,27 @@ public class WorkDataDTO {
 			setState(doc.getLifeCycleState().getDisplay());
 			setCreator(doc.getCreatorName());
 			setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
+		} else if (per instanceof EChangeRequest) {
+			EChangeRequest ecr = (EChangeRequest) per;
+			setNumber(ecr.getEoNumber());
+			setName(ecr.getEoName());
+			setState(ecr.getLifeCycleState().getDisplay());
+			setCreator(ecr.getCreatorName());
+			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
+		} else if (per instanceof EChangeOrder) {
+			EChangeOrder eco = (EChangeOrder) per;
+			setNumber(eco.getEoNumber());
+			setName(eco.getEoName());
+			setState(eco.getLifeCycleState().getDisplay());
+			setCreator(eco.getCreatorName());
+			setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
+		} else if (per instanceof ROHSMaterial) {
+			ROHSMaterial rohs = (ROHSMaterial) per;
+			setNumber(rohs.getNumber());
+			setName(rohs.getName());
+			setState(rohs.getLifeCycleState().getDisplay());
+			setCreator(rohs.getCreatorName());
+			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
 		}
 	}
 }

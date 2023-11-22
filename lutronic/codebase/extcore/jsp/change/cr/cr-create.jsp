@@ -26,7 +26,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
@@ -81,14 +81,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 			</tr>
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">제안자</th> -->
-			<!-- 				<td class="indent5" colspan="3"> -->
-			<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
-			<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
-			<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
 			<tr>
 				<th class="req lb">제품명</th>
 				<td colspan="3" class="indent5 pt5">
@@ -157,24 +149,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					</jsp:include>
 				</td>
 			</tr>
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">결재</th> -->
-			<!-- 				<td colspan="3"> -->
-			<%-- 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp"> --%>
-			<%-- 						<jsp:param value="" name="oid" /> --%>
-			<%-- 						<jsp:param value="create" name="mode" /> --%>
-			<%-- 					</jsp:include> --%>
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="3">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
 		</table>
 
 		<!-- 	관련 CR -->
@@ -189,7 +163,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 		<table class="button-table">
 			<tr>
 				<td class="center">
-					<input type="button" value="기안" title="기안" class="red" onclick="create('false');">
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
@@ -202,15 +176,12 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				const secondarys = toArray("secondarys");
 
 				const temprary = JSON.parse(temp);
-				// 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
 
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
-				// 외부 메일
-				const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -250,12 +221,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-
-					// 					if (addRows8.length > 0) {
-					// 						alert("결재선 지정을 해지해주세요.")
-					// 						return false;
-					// 					}
-
 				} else {
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
@@ -269,7 +234,6 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					approveDate : toId("approveDate"),
 					createDepart_code : toId("createDepart"),
 					writer_oid : toId("writerOid"),
-					// 					proposer_name : toId("proposer"),
 					eoCommentA : toId("eoCommentA"),
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
@@ -279,21 +243,16 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					rows101 : rows101,
 					rows300 : rows300,
 					temprary : temprary,
-					// 외부 메일
-					external : external
 				}
-				// 				toRegister(params, addRows8); // 결재선 세팅
 				const url = getCallUrl("/cr/create");
-				parent.openLayer();
 				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						document.location.href = getCallUrl("/cr/list");
-					} else {
-						parent.closeLayer();
 					}
+					parent.closeLayer();
 				});
 			}
 
@@ -304,22 +263,15 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				date("approveDate");
 				selectbox("createDepart");
 				finderUser("writer");
-				// 				finderUser("proposer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
-				// 				createAUIGrid8(columns8);
-				createAUIGrid9(columns9);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-				// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
-				// 				AUIGrid.resize(myGridID8);
-				AUIGrid.resize(myGridID9);
 			});
 		</script>
 	</form>

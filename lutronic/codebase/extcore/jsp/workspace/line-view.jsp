@@ -8,7 +8,7 @@ int idx = jsp.indexOf(".");
 
 jsp = jsp.substring(jsp.lastIndexOf(".") + 1);
 String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
-String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getStringValue();
+String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStringValue();
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -118,8 +118,8 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 </div>
 
 <script type="text/javascript">
-	const oid = document.getElementById("oid").value;
 	function reassign() {
+		const oid = document.getElementById("oid").value;
 		const reassignUser = document.getElementById("reassignUser");
 		const reassignUserOid = document.getElementById("reassignUserOid").value;
 		if (isNull(reassignUser.value)) {
@@ -150,6 +150,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	}
 
 	function _receive() {
+		const oid = document.getElementById("oid").value;
 		if (!confirm("수신확인 하시겠습니까?")) {
 			return false;
 		}
@@ -172,6 +173,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	}
 
 	function _unagree() {
+		const oid = document.getElementById("oid").value;
 		const description = document.getElementById("description").value;
 		if (!confirm("합의 반려 하시겠습니까?")) {
 			return false;
@@ -193,6 +195,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	}
 
 	function _reject() {
+		const oid = document.getElementById("oid").value;
 		const description = document.getElementById("description").value;
 		if (!confirm("반려 하시겠습니까?")) {
 			return false;
@@ -215,6 +218,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	}
 
 	function _agree() {
+		const oid = document.getElementById("oid").value;
 		const description = document.getElementById("description").value;
 		if (!confirm("합의완료 하시겠습니까?")) {
 			return false;
@@ -236,6 +240,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	}
 
 	function _approval() {
+		const oid = document.getElementById("oid").value;
 		const description = document.getElementById("description").value;
 		if (!confirm("승인 하시겠습니까?")) {
 			return false;
@@ -244,7 +249,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 		const params = {
 			oid : oid,
 			description : description,
-			tapOid : "<%= tapOid %>",
+			tapOid : "<%=tapOid%>",
 		}
 		openLayer();
 		call(url, params, function(data) {
@@ -259,6 +264,7 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 	}
 
 	function read() {
+		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/workspace/read?oid=" + oid);
 		openLayer();
 		call(url, null, function(data) {
@@ -319,7 +325,4 @@ String tapOid =dto.getPersist().getPersistInfo().getObjectIdentifier().getString
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID300);
 	});
-	
-	
-	
 </script>

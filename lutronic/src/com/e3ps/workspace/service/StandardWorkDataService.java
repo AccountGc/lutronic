@@ -1,9 +1,12 @@
 package com.e3ps.workspace.service;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.WorkData;
+import com.e3ps.workspace.dto.WorkDataDTO;
 
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
@@ -46,14 +49,48 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 	}
 
 	@Override
-	public void _submit(Map<String, Object> params) throws Exception {
-		String oid = (String)params.get("oid");
+	public void _submit(WorkDataDTO dto) throws Exception {
+		String oid = dto.getOid();
+		String description = dto.getDescription();
+		ArrayList<Map<String, String>> agreeRows = dto.getAgreeRows();
+		ArrayList<Map<String, String>> approvalRows = dto.getApprovalRows();
+		ArrayList<Map<String, String>> receiveRows = dto.getReceiveRows();
+		ArrayList<Map<String, String>> external = dto.getExternal();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
+			WorkData data = (WorkData) CommonUtil.getObject(oid);
+			data.setProcess(true);
+			PersistenceHelper.manager.modify(data);
 
-			WorkData data = (WorkData)CommonUtil.getObject(oid);
+			// 외부 메일 연결
+			MailUserHelper.service.saveLink(data.getPer(), external);
+
+			// 결재 필수..
+			WorkspaceHelper.service.register(data.getPer(), description, agreeRows, approvalRows, receiveRows);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void read(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WorkData data = (WorkData) CommonUtil.getObject(oid);
+			data.setReads(true);
+			PersistenceHelper.manager.modify(data);
 
 			trs.commit();
 			trs = null;

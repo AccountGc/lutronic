@@ -18,6 +18,8 @@ import wt.util.WTException;
 		properties = {
 
 				@GeneratedProperty(name = "reads", type = Boolean.class, javaDoc = "결재 확인 여부", initialValue = "false"),
+				
+				@GeneratedProperty(name = "process", type = Boolean.class, javaDoc = "결재선 지정 완료 여부", initialValue = "false"),
 
 		},
 
