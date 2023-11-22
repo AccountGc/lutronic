@@ -292,7 +292,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
 				const exceptColumnFields = [ "reads", "point" ];
 				const sessionName = document.getElementById("sessionName").value;

@@ -214,15 +214,15 @@ iframe {
 <%-- 					</jsp:include> --%>
 <!-- 				</td> -->
 <!-- 			</tr> -->
-			<tr>
-				<th class="lb">외부 메일 지정</th>
-				<td colspan="5" class="indent5">
-					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">외부 메일 지정</th> -->
+<!-- 				<td colspan="5" class="indent5"> -->
+<%-- 					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp"> --%>
+<%-- 						<jsp:param value="" name="oid" /> --%>
+<%-- 						<jsp:param value="create" name="mode" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 		</table>
 
 		<!-- 관련 품목 -->

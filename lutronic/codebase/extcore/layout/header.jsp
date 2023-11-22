@@ -54,7 +54,7 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						<a onclick="moveToPage(this, '/notice/list', '> 나의업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 작업함');">
+						<a onclick="moveToPage(this, '/workData/list', '> 나의업무 > 작업함');">
 							작업함
 							<span class="label label-info float-right">
 								<%
