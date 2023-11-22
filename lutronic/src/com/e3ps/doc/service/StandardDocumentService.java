@@ -38,6 +38,7 @@ import com.e3ps.groupware.workprocess.AppPerLink;
 import com.e3ps.groupware.workprocess.AsmApproval;
 import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -239,12 +240,6 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			doc = (WTDocument) PersistenceHelper.manager.save(doc);
 
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(doc, state);
-			}
-
 			// 첨부 파일 저장
 			saveAttach(doc, dto);
 
@@ -266,14 +261,26 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 
 			// 결재 시작
-			if (isSelf) {
-				// 자가결재시
-				WorkspaceHelper.service.self(doc);
+//			if (isSelf) {
+//				// 자가결재시
+//				WorkspaceHelper.service.self(doc);
+//			} else {
+//				// 결재시작
+//				if (approvalRows.size() > 0) {
+//					WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
+//				}
+//			}
+
+			doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(doc, state);
 			} else {
-				// 결재시작
-				if (approvalRows.size() > 0) {
-					WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
-				}
+				// 작업함으로 이동 시킨다
+				WorkDataHelper.service.create(doc);
+				;
 			}
 
 			trs.commit();
