@@ -93,7 +93,7 @@ iframe {
 					</div>
 				</td>
 				<th class="req lb">결재방식</th>
-				<td class="indent5">
+				<td>
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">

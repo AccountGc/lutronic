@@ -103,7 +103,7 @@
 <!-- 			</tr> -->
 			<tr>
 				<th class="lb">변경구분</th>
-				<td class="indent5" colspan="3">
+				<td colspan="3">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {

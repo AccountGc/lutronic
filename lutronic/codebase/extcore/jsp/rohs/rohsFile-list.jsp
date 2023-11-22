@@ -97,6 +97,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "manufactureDisplay",
 					headerText : "업체명",
 					dataType : "string",
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -113,6 +114,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "fileName",
 					headerText : "파일명",
 					dataType : "string",
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -121,6 +123,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "publicationDate",
 					headerText : "발행일자",
 					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -129,6 +132,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "date",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true,
@@ -137,6 +141,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "creator",
 					headerText : "작성자",
 					dataType : "date",
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true,

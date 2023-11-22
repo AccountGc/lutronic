@@ -45,13 +45,10 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">속성</a>
+			<a href="#tabs-2">관련 객체</a>
 		</li>
 		<li>
-			<a href="#tabs-3">관련 객체</a>
-		</li>
-		<li>
-			<a href="#tabs-4">이력 관리</a>
+			<a href="#tabs-3">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -128,14 +125,13 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				</td>
 			</tr>
 		</table>
-	</div>
-	<div id="tabs-2">
+		
 		<!-- 속성 -->
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 속성
+						<img src="/Windchill/extcore/images/header.png"> 금형 속성
 					</div>
 				</td>
 			</tr>
@@ -165,15 +161,15 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				<th class="lb">금형개발비</th>
 				<td class="indent5"><%=dto.getMoldcost() %></td>
 			</tr>
-		</table>	
+		</table>
 	</div>
-	<div id="tabs-3">
+	<div id="tabs-2">
 		<!-- 관련 객체 -->
 		<jsp:include page="/extcore/jsp/mold/include/mold-reference-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
-	<div id="tabs-4">
+	<div id="tabs-3">
 		<!-- 이력관리 -->
 		<jsp:include page="/extcore/jsp/mold/include/mold-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -234,7 +230,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-3":
+				case "tabs-2":
 					const isCreated2 = AUIGrid.isCreated(partGridID); // 품목
 					if (isCreated2) {
 						AUIGrid.resize(partGridID);
@@ -248,7 +244,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 						createAUIGrid90(columns90);
 					}
 					break;
-				case "tabs-4":
+				case "tabs-3":
 					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
 					if (isCreated50) {
 						AUIGrid.resize(myGridID50);

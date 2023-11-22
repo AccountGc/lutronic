@@ -169,7 +169,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "number",
 					headerText : "금형번호",
 					dataType : "string",
-					width : 295,
+					width : 200,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -179,7 +179,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/distribute/moldView?oid=" + oid);
+							const url = getCallUrl("/mold/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -187,7 +187,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "name",
 					headerText : "금형명",
 					dataType : "string",
-					width : 450,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -197,15 +196,15 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/distribute/moldView?oid=" + oid);
+							const url = getCallUrl("/mold/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
 				}, {
 					dataField : "version",
-					headerText : "Rev.",
+					headerText : "REV",
 					dataType : "string",
-					width : 170,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -214,7 +213,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -223,7 +222,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 170,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -232,7 +231,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -241,7 +240,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "string",
-					width : 170,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
