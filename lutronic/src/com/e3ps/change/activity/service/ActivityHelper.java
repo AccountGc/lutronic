@@ -364,6 +364,7 @@ public class ActivityHelper {
 			String version = link.getVersion();
 			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
 			boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+			boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
 			// 승인됨의 경우 개정 프로세스
 			// 나머지 작업중인건 개정된 부품쪽으로 이동f
 
@@ -390,7 +391,7 @@ public class ActivityHelper {
 				map.put("part_state", part.getLifeCycleState().getDisplay());
 
 				// 개절된 데이터가 없을 경우
-				if (!isRevise) {
+				if (!isRevise && !isFour) {
 					map.put("next_oid", "");
 					map.put("group", "");
 					map.put("next_number", "개정된 데이터가 없습니다.");
@@ -403,8 +404,8 @@ public class ActivityHelper {
 					map.put("after", true);
 					map.put("afterMerge", true);
 				} else {
-					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 
+					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 					String group = EChangeUtils.manager.getPartGroup(next_part, eco);
 
 					// 개정데이터가 있을경우

@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>LUTRONIC PDM</title>
 <link rel="stylesheet" href="/Windchill/login/css/login.css" type="text/css">
+<script type="text/javascript" src="/Windchill/extcore/component/axisj/jquery/jquery-1.12.3.min.js"></script>
 </head>
 <body>
 	<form method="post" action="j_security_check">
@@ -49,8 +50,42 @@
 		</div>
 		<script type="text/javascript">
 			function _login() {
-				document.forms[0].submit();
-			};
+				const j_username = document.getElementById("j_username");
+				const j_password = document.getElementById("j_password");
+
+				if (j_username.value === "") {
+					alert("아이디를 입력하세요.");
+					j_username.focus();
+					return false;
+				}
+
+				if (j_password.value === "") {
+					alert("비밀번호를 입력하세요.");
+					j_password.focus();
+					return false;
+				}
+
+				const params = {
+						j_username:j_username.value
+				}
+				const url = "/Windchill/plm/login";
+				$.ajax({
+					type : "POST",
+					url : url,
+					data : JSON.stringify(params),
+					dataType : "JSON",
+					crossDomain : true,
+					async : true,
+					contentType : "application/json; charset=UTF-8",
+					success : function(res) {
+						if (res.result) {
+							document.forms[0].submit();
+						} else {
+							alert(data.msg);
+						}
+					},
+				})
+			}
 
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
@@ -63,7 +98,7 @@
 				const j_username = document.getElementById("j_username");
 				const j_password = document.getElementById("j_password");
 				const checkId = document.getElementById("checkId");
-				
+
 				//
 				const savedUsername = localStorage.getItem("cookie");
 				if (savedUsername) {
@@ -74,7 +109,7 @@
 					j_username.focus();
 				}
 			})
-			
+
 			//아이디 저장하기 위해 체크박스에 이벤트 리스너를 추가합니다.
 			checkId.addEventListener("change", function() {
 				const j_username = document.getElementById("j_username");
@@ -93,7 +128,6 @@
 			setTimeout(() => {
 				container.classList.add("sign-in")
 			}, 200);
-			
 		</script>
 	</form>
 </body>

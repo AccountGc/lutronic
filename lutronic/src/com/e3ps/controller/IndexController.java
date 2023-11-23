@@ -1,8 +1,11 @@
 package com.e3ps.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -12,19 +15,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
-
-import net.sf.json.JSONArray;
-import wt.org.WTUser;
 
 @Controller
 public class IndexController extends BaseController {
+
+	@Description(value = "로그인")
+	@PostMapping(value = "/login")
+	@ResponseBody
+	public Map<String, Object> login(@RequestBody Map<String, String> params, HttpServletRequest request)
+			throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			String j_username = (String) params.get("j_username");
+			result = LoginHistoryHelper.service.create(j_username, request);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Description(value = "로그아웃")
+	@GetMapping(value = "/logout")
+	public void logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
+		System.out.println("로그아웃!");
+		response.sendRedirect("/Windchill/login/index.html");
+	}
 
 	@Description(value = "메인 페이지")
 	@GetMapping(value = "/index")
@@ -50,6 +79,9 @@ public class IndexController extends BaseController {
 		PeopleDTO dto = new PeopleDTO(people);
 		String department_name = dto.getDepartment_name();
 		String auths = dto.getAuth();
+
+		int workData = WorkDataHelper.manager.count();
+
 		Map<String, Integer> count = WorkspaceHelper.manager.count();
 		boolean isWork = CommonUtil.isAdmin();
 		boolean isDoc = CommonUtil.isAdmin();
@@ -82,6 +114,7 @@ public class IndexController extends BaseController {
 
 		// 결재 재수
 		model.addObject("coun", count);
+		model.addObject("workData", workData);
 
 		model.addObject("isRa", isRa);
 		model.addObject("isProduction", isProduction);

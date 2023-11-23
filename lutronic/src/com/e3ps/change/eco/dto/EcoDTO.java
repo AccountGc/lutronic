@@ -73,6 +73,7 @@ public class EcoDTO {
 		setOid(eco.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(eco.getEoName());
 		setNumber(eco.getEoNumber());
+		setSendType(eco.getSendType());
 		setState(eco.getLifeCycleState().getDisplay());
 		setCreator(eco.getCreatorFullName());
 		setCreatedDate(eco.getCreateTimestamp());

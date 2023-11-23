@@ -539,14 +539,8 @@ public class WorkspaceHelper {
 		return count;
 	}
 
-	public boolean isLastLine(ApprovalMaster master) throws Exception {
-		return false;
-	}
-
 	/**
 	 * 결재라인 가져오기
-	 * 
-	 * @throws Exception
 	 */
 	public ArrayList<ApprovalLine> getApprovalLines(ApprovalMaster master) throws Exception {
 		ArrayList<ApprovalLine> list = new ArrayList<>();
@@ -782,7 +776,7 @@ public class WorkspaceHelper {
 			}
 
 			query.appendOpenParen();
-			
+
 			QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_COMPLETE);
 			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
 			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_REJECT);

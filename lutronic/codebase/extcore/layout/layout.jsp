@@ -34,10 +34,10 @@
 	<script src="/Windchill/extcore/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 	<script src="/Windchill/extcore/js/plugins/inspinia.js"></script>
 	<script src="/Windchill/extcore/js/plugins/gritter/jquery.gritter.min.js"></script>
-	
+
 	<script type="text/javascript" src="/Windchill/extcore/js/auigrid.js"></script>
-	<script type="text/javascript" src="/Windchill/jsp/js/dhtmlx/dhtmlx.js" ></script>
-	
+	<script type="text/javascript" src="/Windchill/jsp/js/dhtmlx/dhtmlx.js"></script>
+
 	<script type="text/javascript">
 		const cover = new ax5.ui.mask();
 		const iframe = document.getElementById("content");
@@ -74,17 +74,12 @@
 			cover.close();
 		}
 
-// 		function logout() {
-// 			if (!confirm("로그아웃 하시겠습니까?")) {
-// 				return false;
-// 			}
-// 			document.execCommand("ClearAuthenticationCache");
-// 			document.location.href = "/Windchill/login/logout.jsp";
-// 		}
-
 		function _logout() {
+			if (!confirm("로그아웃 하시겠습니까?")) {
+				return false;
+			}
 			document.execCommand("ClearAuthenticationCache");
-			document.location.href = "/Windchill/login/logout.jsp";
+			document.location.href = getCallUrl("/logout");
 		}
 
 		function index() {

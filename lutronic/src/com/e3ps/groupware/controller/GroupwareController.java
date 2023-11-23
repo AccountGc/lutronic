@@ -100,8 +100,6 @@ public class GroupwareController extends BaseController {
 		return returnData;
 	}
 
-	
-
 	/**
 	 * 공지사항 등록
 	 * 
@@ -141,7 +139,6 @@ public class GroupwareController extends BaseController {
 //		return ControllerUtil.redirect("/Windchill/" + CommonUtil.getOrgName() + "/groupware/listNotice.do", msg);
 //	}
 
-	
 	@Description(value = "사용자정보 상세 페이지")
 	@GetMapping(value = "/userInfoView")
 	public ModelAndView userInfoView(@RequestParam String oid) throws Exception {
@@ -684,7 +681,7 @@ public class GroupwareController extends BaseController {
 	@GetMapping(value = "/password")
 	public ModelAndView password() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/workprocess/password.jsp");
+		model.setViewName("popup:/workprocess/password");
 		return model;
 	}
 

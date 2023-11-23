@@ -12,7 +12,7 @@
 		</div>
 		<ul class="nav navbar-top-links navbar-right">
 			<li>
-				<a href="javascript:logout();" title="로그아웃">
+				<a href="javascript:_logout();" title="로그아웃">
 					<i class="fa fa-sign-out"></i>
 					<b>로그아웃</b>
 				</a>

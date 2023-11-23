@@ -25,6 +25,9 @@ boolean isPathological = (boolean) request.getAttribute("isPathological");
 boolean isClinical = (boolean) request.getAttribute("isClinical");
 
 PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
+
+// 결재 개수
+int workData = (int) request.getAttribute("workData");
 %>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <nav class="navbar-default navbar-static-side" role="navigation" id="navigation">
@@ -55,14 +58,22 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/workData/list', '> 나의업무 > 작업함');">
-							작업함
+							결재선 지정
+							<span class="label label-info float-right">
+								<%=workData%>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/activity/eca', '> 나의업무 > ECA 활동함');">
+							ECA 활동함
 							<span class="label label-info float-right">
 								<%
 								//=count.get("check")
 								%>
 							</span>
 						</a>
-					</li>
+					</li>					
 					<li>
 						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
 							결재함
@@ -76,16 +87,6 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
 							합의함
-							<span class="label label-info float-right">
-								<%
-								//=count.get("check")
-								%>
-							</span>
-						</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/activity/eca', '> 나의업무 > ECA 활동함');">
-							ECA 활동함
 							<span class="label label-info float-right">
 								<%
 								//=count.get("check")
@@ -143,7 +144,8 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
+						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
+<!-- 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a> -->
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a>
@@ -426,14 +428,14 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 					<li>
 						<a onclick="moveToPage(this, '/code/list', '> 관리자 > 코드체계관리');">코드체계관리</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/activity/list', '> 관리자 > 설계변경관리');">설계변경관리</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/activity/list', '> 관리자 > 설계변경관리');">설계변경관리</a> -->
+<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/admin/mail', '> 관리자 > 외부메일관리');">외부메일관리</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/admin/loginHistory', '> 관리자 > 접속이력관리');">접속이력관리</a>
+						<a onclick="moveToPage(this, '/loginHistory/list', '> 관리자 > 접속이력관리');">접속이력관리</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/admin/downLoadHistory', '> 관리자 > 다운로드 이력관리');">다운로드 이력관리</a>

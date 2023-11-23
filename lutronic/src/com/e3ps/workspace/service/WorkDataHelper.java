@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.workspace.ApprovalLine;
@@ -12,6 +13,8 @@ import com.e3ps.workspace.column.ApprovalLineColumn;
 import com.e3ps.workspace.column.WorkDataColumn;
 
 import wt.fc.PagingQueryResult;
+import wt.fc.PersistenceHelper;
+import wt.org.WTUser;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
 
@@ -30,6 +33,12 @@ public class WorkDataHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WorkData.class, true);
 
+		// 관리자가 아니면 자기것만
+		if (!CommonUtil.isAdmin()) {
+			WTUser user = CommonUtil.sessionUser();
+			QuerySpecUtils.toEquals(query, idx, WorkData.class, "ownership.owner.key.id", user);
+		}
+
 		QuerySpecUtils.toBooleanAnd(query, idx, WorkData.class, WorkData.PROCESS, false);
 
 		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, true);
@@ -47,5 +56,24 @@ public class WorkDataHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	/**
+	 * 결재해야할 개수
+	 */
+	public int count() throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WorkData.class, true);
+
+		// 관리자가 아니면 자기것만
+		if (!CommonUtil.isAdmin()) {
+			WTUser user = CommonUtil.sessionUser();
+			QuerySpecUtils.toEquals(query, idx, WorkData.class, "ownership.owner.key.id", user);
+		}
+
+		QuerySpecUtils.toBooleanAnd(query, idx, WorkData.class, WorkData.PROCESS, false);
+
+		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, true);
+		return PersistenceHelper.manager.find(query).size();
 	}
 }

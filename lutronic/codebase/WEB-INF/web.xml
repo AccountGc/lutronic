@@ -1041,6 +1041,7 @@
 			<web-resource-name>Anonymously accessible resources</web-resource-name>
 			<description>Resources which must not require form-based authentication for proper operation</description>
 			<url-pattern>/login/*</url-pattern>
+			<url-pattern>/plm/login</url-pattern>
 			<url-pattern>/protocolAuth/*</url-pattern>
 			<url-pattern>/servlet/JNLPGeneratorServlet/*</url-pattern>
 			<url-pattern>/servlet/ProwtGW/*</url-pattern>

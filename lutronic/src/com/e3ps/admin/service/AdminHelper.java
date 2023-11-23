@@ -1,7 +1,7 @@
 
 package com.e3ps.admin.service;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,63 +75,6 @@ public class AdminHelper {
 	}
 
 	/**
-	 * 접속 이력 리스트
-	 */
-	public Map<String, Object> loginHistory(Map<String, Object> params) throws Exception {
-		String userName = (String) params.get("userName");
-		String userId = (String) params.get("userId");
-
-		QuerySpec qs = new QuerySpec();
-		int idx = qs.appendClassList(LoginHistory.class, true);
-
-		if (userName != null && userName.trim().length() > 0) {
-			if (qs.getConditionCount() > 0)
-				qs.appendAnd();
-			qs.appendWhere(new SearchCondition(LoginHistory.class, "name", SearchCondition.LIKE, "%" + userName + "%"),
-					new int[] { idx });
-		}
-
-		if (userId != null && userId.trim().length() > 0) {
-			if (qs.getConditionCount() > 0)
-				qs.appendAnd();
-			qs.appendWhere(new SearchCondition(LoginHistory.class, "id", SearchCondition.LIKE, "%" + userId + "%"),
-					new int[] { idx });
-		}
-
-		qs.appendOrderBy(new OrderBy(new ClassAttribute(LoginHistory.class, "thePersistInfo.createStamp"), true),
-				new int[] { idx });
-
-		PageQueryUtils pager = new PageQueryUtils(params, qs);
-		PagingQueryResult result = pager.find();
-
-//	    long querystart = System.currentTimeMillis();
-//	    qr = PageQueryBroker.openPagingSession((page - 1) * rows, rows, qs, true);
-//	    long queryend = System.currentTimeMillis();
-//	    System.out.println("queryResult " + (queryend-querystart));
-
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-		while (result.hasMoreElements()) {
-			Object[] o = (Object[]) result.nextElement();
-			LoginHistory history = (LoginHistory) o[0];
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("oid", history.getPersistInfo().getObjectIdentifier().toString());
-			map.put("name", history.getName());
-			map.put("id", history.getId());
-			map.put("createDate", DateUtil.getDateString(history.getPersistInfo().getCreateStamp(), "a"));
-			list.add(map);
-		}
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("list", list);
-		map.put("topListCount", pager.getTotal());
-		map.put("pageSize", pager.getPsize());
-		map.put("total", pager.getTotalSize());
-		map.put("sessionid", pager.getSessionId());
-		map.put("curPage", pager.getCpage());
-		return map;
-	}
-
-	/**
 	 * 다운로드 이력 리스트
 	 */
 	public Map<String, Object> downLoadHistory(Map<String, Object> params) throws Exception {
@@ -147,8 +90,8 @@ public class AdminHelper {
 		if (type != null && type.trim().length() > 0) {
 			if (qs.getConditionCount() > 0)
 				qs.appendAnd();
-			qs.appendWhere(new SearchCondition(DownloadHistory.class, "persistReference.key.classname", SearchCondition.LIKE,
-					"%" + type + "%"), new int[] { idx });
+			qs.appendWhere(new SearchCondition(DownloadHistory.class, "persistReference.key.classname",
+					SearchCondition.LIKE, "%" + type + "%"), new int[] { idx });
 		}
 
 		if (userId.length() > 0) {

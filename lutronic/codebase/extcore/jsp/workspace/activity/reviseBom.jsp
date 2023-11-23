@@ -666,7 +666,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 			function replace() {
 				const oid = document.getElementById("oid").value;
 				const url = getCallUrl("/activity/replace?oid=" + oid);
-				_popup(url, 1800, 900, "n");
+				_popup(url, 1400, 600, "n");
 			}
 
 			// 이전 부품 추가..

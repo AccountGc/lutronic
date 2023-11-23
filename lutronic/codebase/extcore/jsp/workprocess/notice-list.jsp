@@ -164,7 +164,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			const props = {
 				headerHeight : 30,
 				showRowNumColumn : true,
-				showRowCheckColumn : true,
 				rowNumHeaderText : "번호",
 				showAutoNoDataMessage : false,
 				selectionMode : "multipleCells",
@@ -175,7 +174,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				enableRightDownFocus : true,
 				filterLayerWidth : 320,
 				filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-				enableRowCheckShiftKey : true
 			};
 			myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 			loadGridData();

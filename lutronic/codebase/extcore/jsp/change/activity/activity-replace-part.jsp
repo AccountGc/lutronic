@@ -14,7 +14,11 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				ECO (<%=eco.getEoNumber()%>) 품목변경
+				ECO (
+				<b>
+					<font color="red"><%=eco.getEoNumber()%></font>
+				</b>
+				) 품목변경
 			</div>
 		</td>
 		<td class="right">
@@ -42,7 +46,22 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 		headerText : "REV",
 		dataField : "part_version",
 		dataType : "string",
-		width : 140
+		width : 100
+	}, {
+		headerText : "상태",
+		dataField : "part_state",
+		dataType : "string",
+		width : 80
+	}, {
+		headerText : "등록자",
+		dataField : "part_creator",
+		dataType : "string",
+		width : 100
+	}, {
+		headerText : "등록일",
+		dataField : "part_createdDate",
+		dataType : "string",
+		width : 100
 	}, {
 		headerText : "BOM 전개",
 		dataField : "",
@@ -53,8 +72,8 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			labelText : "BOM",
 			onclick : function(rowIndex, columnIndex, value, item) {
 				const oid = item.part_oid;
-				const url = getCallUrl("/part/");
-				_popup(url, 1600, 700, "n");
+				const url = getCallUrl("/bom/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
 			}
 		}
 	}, {
@@ -84,9 +103,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			showStateColumn : true,
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		AUIGrid.setGridData(myGridID,
-<%=JSONArray.fromObject(list)%>
-	);
+		AUIGrid.setGridData(myGridID, <%=JSONArray.fromObject(list)%>);
 	}
 
 	function deleteRow() {
@@ -117,7 +134,6 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 		};
 		parent.openLayer();
 		call(url, params, function(data) {
-			console.log(data);
 			alert(data.msg);
 			if (data.result) {
 				opener.document.location.reload();
@@ -143,6 +159,9 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			newItem.part_name = item.name;
 			newItem.part_version = item.version;
 			newItem.part_oid = item.part_oid;
+			newItem.part_state = item.state;
+			newItem.part_creator = item.creator;
+			newItem.part_createdDate = item.createdDate;
 			const unique = AUIGrid.isUniqueValue(myGridID, "part_oid", newItem.part_oid);
 			if (unique) {
 				AUIGrid.addRow(myGridID, newItem, rowIndex);

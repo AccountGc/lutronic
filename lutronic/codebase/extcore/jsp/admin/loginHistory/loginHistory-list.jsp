@@ -55,9 +55,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('loginHistory-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('loginHistory-list');"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('loginHistory-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('loginHistory-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -78,6 +78,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
+					dataField : "ip",
+					headerText : "접속 IP",
+					dataType : "string",
+					width : 150,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
@@ -90,7 +99,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
-					width : 400,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "department_name",
+					headerText : "부서",
+					dataType : "string",
+					width : 150,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "duty",
+					headerText : "직급",
+					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -99,7 +125,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "createDate",
 					headerText : "접속시간",
 					dataType : "string",
-					width : 120,
+					width : 170,
+					formatString : "yyyy-mm-dd HH:MM:ss",
 					filter : {
 						showIcon : true,
 						inline : true
@@ -110,15 +137,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
-					showRowNumColumn : false,
-					showRowCheckColumn : false,
-// 					rowNumHeaderText : "번호",
-					fillColumnSizeMode: true,
-					showAutoNoDataMessage : true,
+					showRowNumColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
-					showInlineFilter : false,
+					showInlineFilter : true,
 					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
@@ -136,10 +161,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function loadGridData() {
-				var params = new Object();
-				const field = ["userName","userId"];
+				let params = new Object();
+				const field = [ "userName", "userId" ];
 				params = toField(params, field);
-				var url = getCallUrl("/admin/loginHistory");
+				const url = getCallUrl("/loginHistory/list");
 				parent.openLayer();
 				call(url, params, function(data) {
 					if (data.result) {
@@ -154,6 +179,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("userName");
 				const columns = loadColumnLayout("loginHistory-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -178,10 +204,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("접속이력관리 리스트", "접속이력관리", "접속이력관리 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("접속이력관리 리스트", "접속이력관리", "접속이력관리 리스트", [], sessionName);
 			}
 		</script>
 	</form>
