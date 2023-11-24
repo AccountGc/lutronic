@@ -15,8 +15,10 @@ iframe {
 }
 </style>
 <script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
+<input type="hidden" name="imgData" id="imgData">
 
 <table class="button-table">
 	<tr>
@@ -284,8 +286,6 @@ iframe {
 
 </div>
 
-
-
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
 	// 에디터 로드가 느려서 처리..
@@ -311,19 +311,60 @@ iframe {
 		const url = getCallUrl("/doc/latest?oid=" + oid);
 		document.location.href = url;
 	}
-
-	//내용인쇄
-	function print(mode) {
-		const content = document.getElementById("content").value;
-		const printWindow = window.open('', '_blank'); // 새 창 열기
-		printWindow.document.open();
-		printWindow.document.write('<html><head><title></title></head><body>');
-		// 출력할 내용 추가
-		printWindow.document.write('<pre>' + content + '</pre>');
-
-		printWindow.document.write('</body></html>');
-		printWindow.document.close();
-		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
+	
+	// 자식창 저장 변수
+	var printWindow;
+	
+	function print() {
+		var sw=screen.width;
+	 	var sh=screen.height;
+	 	var w=1000;//가로길이
+	 	var h=800;//세로길이
+	 	var xpos=(sw-w)/2; //화면에 띄울 위치
+	 	var ypos=(sh-h)/2; //중앙
+	 	
+	 	const content = document.getElementById("content").value;
+	 	localStorage.setItem("data", content);
+	 	printWindow = window.open("/Windchill/extcore/jsp/document/document-print.jsp","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
+	}
+	
+	// 인쇄 화면 이미지로 저장
+	function goPrint(div){
+// 		div = div[0]
+		html2canvas(div).then(function(canvas){
+			var image = canvas.toDataURL("image/png"); 
+			$("#imgData").val(image);
+			const imgData = document.getElementById("imgData").value;
+			let params = new Object();
+			params.imgData = imgData;
+		
+			const url = getCallUrl("/doc/image");
+			call(url, params, function(data) {
+				if (data.result) {
+					printWindow.document.getElementById("newContent").innerHTML = "<img src='"+data.imgSrc+"'>";
+					imgDel(data.imgSrc);
+				}else{
+					alert(data.msg);
+				}
+			});
+		});
+	}
+	
+	// 이미지 삭제
+	function imgDel(imgSrc){
+		setTimeout(function() {
+			printWindow.print();
+		}, 2000);
+		
+		let params = new Object();
+		params.imgSrc = imgSrc;
+		
+		const url = getCallUrl("/doc/imgDel");
+		call(url, params, function(data) {
+			if (!data.result) {
+				alert(data.msg);
+			}
+		});
 	}
 
 	//수정 및 개정
