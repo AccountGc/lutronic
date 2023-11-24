@@ -206,7 +206,7 @@ iframe {
 	<tr>
 		<th class="lb">문서설명</th>
 		<td colspan="5" class="indent5">
-			<textarea name="description" id="description" rows="5"><%=dto.getDescription()%></textarea>
+			<textarea name="description" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
 		</td>
 	</tr>
 	<tr>
