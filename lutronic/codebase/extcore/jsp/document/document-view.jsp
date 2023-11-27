@@ -323,9 +323,15 @@ iframe {
 	 	var xpos=(sw-w)/2; //화면에 띄울 위치
 	 	var ypos=(sh-h)/2; //중앙
 	 	
+	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
 	 	const content = document.getElementById("content").value;
-	 	localStorage.setItem("data", content);
-	 	printWindow = window.open("/Windchill/extcore/jsp/document/document-print.jsp","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
+		printWindow.document.open();
+		printWindow.document.write('<html><head><style type="text/css">@page {size: auto;margin-top: 30mm;}@media print {html, body {border: 1px solid white;height: 99%;page-break-after: avoid;page-break-before: avoid;}}</style></head><body>');
+		//출력할 내용 추가
+		printWindow.document.write('<pre>' + content + '</pre>');
+		printWindow.document.write('</body></html>');
+		printWindow.document.close();
+		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
 	}
 	
 	// 인쇄 화면 이미지로 저장
