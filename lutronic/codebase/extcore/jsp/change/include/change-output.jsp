@@ -131,3 +131,35 @@ if (i != list.size() - 1) {
 <%
 }
 %>
+<%
+	if(list.size() == 0) {
+%>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				산출물<%
+				if (CommonUtil.isAdmin()) {
+				%>&nbsp;<%
+				//=eoid
+				%>
+				<%
+				}
+				%>
+			</div>
+		</td>
+	</tr>
+</table>
+<table class="view-table">
+	<tr>
+		<td class="center">
+			<font color="red">
+				<b>ECO와 관련된 산출물이 없습니다.</b>
+			</font>
+		</td>
+	</tr>
+</table>
+<%
+	}
+%>

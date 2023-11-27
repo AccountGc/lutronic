@@ -4,8 +4,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -15,6 +17,7 @@ import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
+import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.SequenceDao;
@@ -22,6 +25,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -38,15 +42,20 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.State;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.pom.Transaction;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.vc.VersionControlHelper;
+import wt.vc.baseline.BaselineHelper;
+import wt.vc.baseline.ManagedBaseline;
 
 public class StandardEcoService extends StandardManager implements EcoService {
 
@@ -245,7 +254,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		boolean temprary = dto.isTemprary();
-		
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -385,49 +394,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		}
 	}
 
-	@Override
-	public void complete(EChangeOrder eco) throws Exception {
-		String state = eco.getLifeCycleState().toString();
-		Transaction trs = new Transaction();
-		try {
-			trs.start();
-
-			if (!"APPROVED".equals(state)) {
-				return;
-			}
-
-			// eco 인경우
-
-			// 완제품 제수집
-//			createCompleteProduction(eco); // 소스 개 십스레기..
-
-//			this.completePart(eco);
-
-			// ERP 전송
-			// System.out.println("3.[ChangeECOHelper]{completeECO} = " +eco.getEoNumber()
-			// +" ERP 전송");
-//			ERPHelper.service.sendERP(eco);
-
-			// Baseline 생성
-			// System.out.println("2.[ChangeECOHelper]{completeECO} = " +eco.getEoNumber()
-			// +" Baseline 생성");
-
-//			createECOBaseline(eco);
-
-			// 완료가 되면 ECN 자동 생성한다.
-			EcnHelper.service.create(eco);
-
-			trs.commit();
-			trs = null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			trs.rollback();
-			throw e;
-		} finally {
-			if (trs != null)
-				trs.rollback();
-		}
-	}
 
 	/**
 	 * ECO 삭제
@@ -451,5 +417,88 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	/**
+	 * 베이스 라인 저장 함수
+	 */
+	@Override
+	public void saveBaseline(EChangeOrder eo, ArrayList<EOCompletePartLink> completeParts) throws Exception {
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		for (EOCompletePartLink link : completeParts) {
+			String version = link.getVersion();
+			WTPartMaster master = (WTPartMaster) link.getCompletePart();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+			list.add(part);
+		}
+
+		for (WTPart part : list) {
+			String state = part.getLifeCycleState().toString();
+			String v = part.getVersionIdentifier().getSeries().getValue();
+			boolean isApproved = state.equals("APPROVED");
+			boolean isFirst = v.equals("A");
+
+			// 승인된게 아니면서
+//			if (!isApproved) {
+//				// A버전이 아닌거?
+//				if (!isFirst) {
+//					System.out.println("number = " + part.getNumber() + ", version = "
+//							+ part.getVersionIdentifier().getSeries().getValue() + "."
+//							+ part.getIterationIdentifier().getSeries().getValue());
+//
+//					ObjectReference orf = (ObjectReference) VersionControlHelper.getPredecessor(part);
+//					if (orf != null) {
+//						WTPart prev = (WTPart) orf.getObject();
+//						if (prev != null) {
+//							System.out.println("prev = " + prev.getVersionIdentifier().getSeries().getValue() + "."
+//									+ prev.getIterationIdentifier().getSeries().getValue());
+//						}
+//					}
+//					part = (WTPart) VersionControlHelper.service.predecessorOf(part);
+//					if (part != null) {
+//						System.out.println("part = " + part.getVersionIdentifier().getSeries().getValue() + "."
+//								+ part.getIterationIdentifier().getSeries().getValue());
+//					}
+//				}
+//			}
+
+			boolean isBaseline = true;
+			String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+			List<Map<String, String>> baseLine = EChangeUtils.manager.getBaseline(oid);
+			for (Map<String, String> map : baseLine) {
+				String baseLine_name = map.get("baseLine_name");
+				if (baseLine_name.equals(eo.getEoNumber())) {
+					isBaseline = false;
+					break;
+				}
+			}
+			if (isBaseline) {
+				saveBaseLine(part, eo);
+			}
+		}
+	}
+
+	/**
+	 * EO 베이스 라인 저장
+	 */
+	@Override
+	public void saveBaseLine(WTPart part, EChangeOrder eo) throws Exception {
+		String name = eo.getEoNumber() + ":" + part.getNumber();
+		String location = "/Default/설계변경/Baseline";
+		Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+		LifeCycleTemplate lct = (LifeCycleTemplate) part.getLifeCycleTemplate().getObject();
+		Vector v = new Vector();
+		// 베이스 라인 대상 부품 수집
+		EChangeUtils.manager.collectBaseLineParts(part, v);
+		ManagedBaseline managedbaseline = ManagedBaseline.newManagedBaseline();
+		managedbaseline.setName(name);
+		managedbaseline.setDescription(eo.getEoNumber() + "관련 베이스 라인 작성");
+		managedbaseline = (ManagedBaseline) LifeCycleHelper.setLifeCycle(managedbaseline, lct);
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		SessionHelper.manager.setAdministrator();
+		FolderHelper.assignLocation((FolderEntry) managedbaseline, folder);
+		managedbaseline = (ManagedBaseline) PersistenceHelper.manager.save(managedbaseline);
+		managedbaseline = (ManagedBaseline) BaselineHelper.service.addToBaseline(v, managedbaseline);
+		SessionHelper.manager.setPrincipal(user.getName());
 	}
 }

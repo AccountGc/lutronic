@@ -833,6 +833,7 @@ public class PartHelper {
 	public static boolean isTopNumber(String number) {
 		String firstNumber = number.substring(0, 1);
 		String endNumber = number.substring(5, 8);// number.substring(5,number.length());
+		System.out.println("endNumber=" + endNumber);
 		if (firstNumber.equals("1") && !endNumber.endsWith("000")) { // 6,7,8이 000인경우
 			return true;
 		}
@@ -968,7 +969,7 @@ public class PartHelper {
 			return list;
 		}
 
-		WTPartStandardConfigSpec spec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+		WTPartStandardConfigSpec spec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
 		WTPartConfigSpec configSpec = WTPartConfigSpec.newWTPartConfigSpec(spec);
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
 		while (result.hasMoreElements()) {
@@ -1044,17 +1045,20 @@ public class PartHelper {
 					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
-		}
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+//		}
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.size() == 0) {
-			if (part.getNumber().startsWith("1")) {
-				if (!list.contains(part)) {
-					list.add(part);
+			if (!isCollectNumber(part.getNumber())) {
+				System.out.println("숫자이고..");
+				if (isTopNumber(part.getNumber())) {
+					if (!list.contains(part)) {
+						list.add(part);
+					}
 				}
 			}
 		}
@@ -1086,11 +1090,11 @@ public class PartHelper {
 		query.appendAnd();
 		query.appendWhere(sc, new int[] { idx_usage, idx_part });
 
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
-					new int[] { idx_part });
-		}
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+//					new int[] { idx_part });
+//		}
 
 		if (baseline != null) {
 			Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
@@ -1105,10 +1109,11 @@ public class PartHelper {
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.size() == 0) {
-
-			if (part.getNumber().startsWith("1")) {
-				if (!list.contains(part)) {
-					list.add(part);
+			if (!isCollectNumber(part.getNumber())) {
+				if (isTopNumber(part.getNumber())) {
+					if (!list.contains(part)) {
+						list.add(part);
+					}
 				}
 			}
 		}
@@ -1139,7 +1144,9 @@ public class PartHelper {
 			WTPartBaselineConfigSpec configSpec = WTPartBaselineConfigSpec.newWTPartBaselineConfigSpec(baseLine);
 			qr = WTPartHelper.service.getUsesWTParts(part, configSpec);
 		} else {
-			WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+//			WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
+			WTPartConfigSpec configSpec = WTPartConfigSpec
+					.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 			qr = WTPartHelper.service.getUsesWTParts(part, configSpec);
 		}
 
@@ -1185,11 +1192,11 @@ public class PartHelper {
 			query.appendAnd();
 			query.appendWhere(sc, new int[] { idx_usage, idx_part });
 
-			if (state != null) {
-				query.appendAnd();
-				query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
-						new int[] { idx_part });
-			}
+//			if (state != null) {
+//				query.appendAnd();
+//				query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+//						new int[] { idx_part });
+//			}
 
 			if (baseline != null) {
 				Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
@@ -1420,7 +1427,9 @@ public class PartHelper {
 		View view = ViewHelper.service.getView(root.getViewName());
 		State state = root.getLifeCycleState();
 		JSONArray children = new JSONArray();
-		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+//		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
 		int level = 2;
 		while (result.hasMoreElements()) {
@@ -1495,7 +1504,9 @@ public class PartHelper {
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		View view = ViewHelper.service.getView(part.getViewName());
 		State state = part.getLifeCycleState();
-		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+//		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
 		++level;
 		while (result.hasMoreElements()) {
@@ -1535,7 +1546,9 @@ public class PartHelper {
 	 * 정전개 하위가 잇는지 없는지 판단
 	 */
 	private boolean isLazy(WTPart parent, View view, State state) throws Exception {
-		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+//		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
 		boolean isLazy = false;
 		while (result.hasMoreElements()) {

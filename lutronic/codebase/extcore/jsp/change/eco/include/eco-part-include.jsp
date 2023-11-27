@@ -132,7 +132,7 @@ String oid = request.getParameter("oid");
 	</tr>
 </table>
 
-<div id="grid510" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid510" style="height: 60px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID510;
 	const columns510 = [ {

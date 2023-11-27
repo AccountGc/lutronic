@@ -9,6 +9,7 @@ import java.util.Map;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcnToPartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.util.EChangeUtils;
@@ -18,6 +19,7 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 
+import net.sf.json.JSONArray;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.folder.Folder;
@@ -65,78 +67,19 @@ public class StandardEcnService extends StandardManager implements EcnService {
 	}
 
 	@Override
-	public void create(EChangeOrder eco) throws Exception {
+	public void save(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			Date currentDate = new Date();
-			String number = "N" + new SimpleDateFormat("yyMM", Locale.KOREA).format(currentDate);
-			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeNotice", EChangeNotice.EO_NUMBER);
-			number = number + seqNo;
-
-			EChangeNotice ecn = EChangeNotice.newEChangeNotice();
-
-			ecn.setEoName(eco.getEoName());
-			ecn.setEoNumber(number);
-			ecn.setModel(eco.getModel());
-			ecn.setEoCommentA(eco.getEoCommentA());
-			ecn.setEoCommentB(eco.getEoCommentB());
-			ecn.setEoCommentC(eco.getEoCommentC());
-			ecn.setEoCommentD(eco.getEoCommentD());
-			ecn.setEoCommentE(eco.getEoCommentE());
-			ecn.setEoType(eco.getEoType());
-			ecn.setEco(eco);
-
-			String location = "/Default/설계변경/ECN";
-			String lifecycle = "LC_ECN";
-
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-			FolderHelper.assignLocation((FolderEntry) ecn, folder);
-			// 문서 lifeCycle 설정
-			LifeCycleHelper.setLifeCycle(ecn,
-					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
-			ecn = (EChangeNotice) PersistenceHelper.manager.save(ecn);
-
-			// 설변 품목 개수 만큼 돈다..
-			QuerySpec query = new QuerySpec();
-			int idx_link = query.appendClassList(EcoPartLink.class, true);
-			int idx_m = query.appendClassList(WTPartMaster.class, false);
-
-			ClassAttribute ca_m = new ClassAttribute(WTPartMaster.class, "thePersistInfo.theObjectIdentifier.id");
-			ClassAttribute ca_link = new ClassAttribute(EcoPartLink.class, "roleAObjectRef.key.id");
-
-			query.appendWhere(new SearchCondition(ca_m, "=", ca_link), new int[] { idx_m, idx_link });
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(EcoPartLink.class, "roleBObjectRef.key.id", "=",
-					eco.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_link });
-
-			QuerySpecUtils.toOrderBy(query, idx_m, WTPartMaster.class, WTPartMaster.NUMBER, false);
-			QueryResult qr = PersistenceHelper.manager.find(query);
-
-			while (qr.hasMoreElements()) {
-				Object[] obj = (Object[]) qr.nextElement();
-				EcoPartLink link = (EcoPartLink) obj[0];
-				WTPartMaster master = link.getPart();
-				String version = link.getVersion();
-				WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
-				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
-				String group = "";
-				if (isApproved) {
-					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
-					group = EChangeUtils.manager.getPartGroup(next_part, eco);
-				} else {
-					group = EChangeUtils.manager.getPartGroup(part, eco);
-				}
-
-				String[] groups = group.split(",");
-				for (String s : groups) {
-					EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
-					System.out.println("ecr=" + ecr);
-					EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
-					eLink.setEcr(ecr);
-					PersistenceHelper.manager.save(eLink);
-				}
+			for (Map<String, Object> editRow : editRows) {
+				String oid = (String) editRow.get("oid");
+				String worker_oid = (String) editRow.get("worker_oid");
+				EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
+				WTUser worker = (WTUser) CommonUtil.getObject(worker_oid);
+				ecn.setWorker(worker);
+				PersistenceHelper.manager.modify(ecn);
 			}
 
 			trs.commit();
@@ -152,19 +95,77 @@ public class StandardEcnService extends StandardManager implements EcnService {
 	}
 
 	@Override
-	public void save(Map<String, Object> params) throws Exception {
-		ArrayList<Map<String, Object>> editRows = (ArrayList<Map<String, Object>>) params.get("editRows");
+	public void create(EChangeOrder eco, ArrayList<EcoPartLink> ecoParts, ArrayList<EOCompletePartLink> completeParts)
+			throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			for (Map<String, Object> editRow : editRows) {
-				String oid = (String) editRow.get("oid");
-				String worker_oid = (String) editRow.get("worker_oid");
-				EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
-				WTUser worker = (WTUser) CommonUtil.getObject(worker_oid);
-				ecn.setWorker(worker);
-				PersistenceHelper.manager.modify(ecn);
+			// 완제품개수만큼 ECN이 발행된다???
+
+//			Date currentDate = new Date();
+//			String number = "N" + new SimpleDateFormat("yyMM", Locale.KOREA).format(currentDate);
+//			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeNotice", EChangeNotice.EO_NUMBER);
+//			number = number + seqNo;
+
+			for (EOCompletePartLink link : completeParts) {
+				EChangeNotice ecn = EChangeNotice.newEChangeNotice();
+				WTPartMaster m = link.getCompletePart();
+
+				ecn.setPartName(m.getName()); // 완제품 명으로 하냐.. 번호로하냐
+				ecn.setPartNumber(m.getNumber());
+				ecn.setEoName(eco.getEoName());
+				ecn.setEoNumber("N" + eco.getEoNumber());
+				ecn.setModel(eco.getModel());
+				ecn.setEoCommentA(eco.getEoCommentA());
+				ecn.setEoCommentB(eco.getEoCommentB());
+				ecn.setEoCommentC(eco.getEoCommentC());
+				ecn.setEoCommentD(eco.getEoCommentD());
+				ecn.setEoCommentE(eco.getEoCommentE());
+				ecn.setEoType(eco.getEoType());
+				ecn.setEco(eco);
+
+				String location = "/Default/설계변경/ECN";
+				String lifecycle = "LC_ECN";
+
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				FolderHelper.assignLocation((FolderEntry) ecn, folder);
+				// 문서 lifeCycle 설정
+				LifeCycleHelper.setLifeCycle(ecn,
+						LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
+				ecn = (EChangeNotice) PersistenceHelper.manager.save(ecn);
+
+				for (EcoPartLink l : ecoParts) {
+					WTPartMaster master = l.getPart();
+					String version = l.getVersion();
+					WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+
+					ArrayList<WTPart> end = PartHelper.manager.collectEndItem(part, new ArrayList<WTPart>());
+					for (WTPart endPart : end) {
+						WTPartMaster endMaster = (WTPartMaster) endPart.getMaster();
+						// 최종품목이 포함되어있을 경우??
+						if (endMaster.getPersistInfo().getObjectIdentifier().getId() == m.getPersistInfo()
+								.getObjectIdentifier().getId()) {
+							boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+							String group = "";
+							if (isApproved) {
+								WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
+								group = EChangeUtils.manager.getPartGroup(next_part, eco);
+							} else {
+								group = EChangeUtils.manager.getPartGroup(part, eco);
+							}
+
+							String[] groups = group.split(",");
+							for (String s : groups) {
+								EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
+								EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
+								eLink.setEcr(ecr);
+								eLink.setCompletePart(endMaster);
+								PersistenceHelper.manager.save(eLink);
+							}
+						}
+					}
+				}
 			}
 
 			trs.commit();

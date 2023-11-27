@@ -39,7 +39,7 @@ public class EcaDTO {
 		setEoType(eca.getEo().getEoType());
 		setCreatedDate_txt(eca.getCreateTimestamp().toString().substring(0, 16));
 		setActivityUser_txt(eca.getActiveUser().getFullName());
-		setFinishDate_txt(eca.getFinishDate().toString().substring(0, 10));
+		setFinishDate_txt(eca.getFinishDate() != null ? eca.getFinishDate().toString().substring(0, 10) : "");
 		setState(eca.getLifeCycleState().getDisplay());
 		setDocList(ActivityHelper.manager.docList(eca));
 	}

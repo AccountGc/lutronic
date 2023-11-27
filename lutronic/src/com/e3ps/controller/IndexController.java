@@ -115,7 +115,7 @@ public class IndexController extends BaseController {
 		}
 
 		// 결재 재수
-		model.addObject("coun", count);
+		model.addObject("count", count);
 		model.addObject("workData", workData);
 		model.addObject("eca", eca);
 

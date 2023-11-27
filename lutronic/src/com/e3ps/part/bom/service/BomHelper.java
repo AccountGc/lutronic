@@ -109,7 +109,7 @@ public class BomHelper {
 		View view = ViewHelper.service.getView(root.getViewName());
 		State state = root.getLifeCycleState();
 		WTPartConfigSpec configSpec = WTPartConfigSpec
-				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state));
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
 		int level = 2;
 		while (result.hasMoreElements()) {
@@ -275,10 +275,10 @@ public class BomHelper {
 					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
-		}
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+//		}
 
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
@@ -398,11 +398,11 @@ public class BomHelper {
 		query.appendAnd();
 		query.appendWhere(sc, new int[] { idx_usage, idx_part });
 
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
-					new int[] { idx_part });
-		}
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+//					new int[] { idx_part });
+//		}
 
 		if (baseline != null) {
 			Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
@@ -520,7 +520,9 @@ public class BomHelper {
 		View view = ViewHelper.service.getView(root.getViewName());
 		State state = root.getLifeCycleState();
 		JSONArray children = new JSONArray();
-		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
 		int level = 2;
 		while (result.hasMoreElements()) {
@@ -744,10 +746,10 @@ public class BomHelper {
 					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
-		}
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+//		}
 
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
@@ -830,11 +832,11 @@ public class BomHelper {
 		query.appendAnd();
 		query.appendWhere(sc, new int[] { idx_usage, idx_part });
 
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
-					new int[] { idx_part });
-		}
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state.toString()),
+//					new int[] { idx_part });
+//		}
 
 		if (baseline != null) {
 			Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
@@ -915,7 +917,9 @@ public class BomHelper {
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		View view = ViewHelper.service.getView(part.getViewName());
 		State state = part.getLifeCycleState();
-		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+//		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
 		++level;
 		while (result.hasMoreElements()) {
@@ -1153,7 +1157,9 @@ public class BomHelper {
 	 * 정전개 하위가 잇는지 없는지 판단
 	 */
 	private boolean isLazy(WTPart parent, View view, State state, boolean skip) throws Exception {
-		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+//		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
 		boolean isLazy = false;
 		while (result.hasMoreElements()) {
@@ -1287,7 +1293,7 @@ public class BomHelper {
 		View view = ViewHelper.service.getView(parent.getViewName());
 		State state = parent.getLifeCycleState();
 		WTPartConfigSpec configSpec = WTPartConfigSpec
-				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state));
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
 		++level;
 		while (result.hasMoreElements()) {

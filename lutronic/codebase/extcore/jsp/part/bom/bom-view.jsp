@@ -388,6 +388,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		openLayer();
 		AUIGrid.showAjaxLoader(myGridID);
 		call(url, params, function(data) {
+			logger(data);
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
 				AUIGrid.setGridData(myGridID, data.list);

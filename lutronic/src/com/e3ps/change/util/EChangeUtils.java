@@ -15,6 +15,7 @@ import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartGroupLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.service.EcnHelper;
+import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
@@ -206,13 +207,19 @@ public class EChangeUtils {
 //		SAPHelper.service.sendSapToEco(eco);
 
 		// 완제품 재수집
+		ArrayList<EOCompletePartLink> completeParts = EcoHelper.manager.completeParts(eco);
+		ArrayList<EcoPartLink> ecoParts = EcoHelper.manager.ecoParts(eco);
+		System.out.println("ECO 완제품 개수 = " + completeParts.size());
+		System.out.println("ECO 대상품목 개수 = " + ecoParts.size());
 
 		// 부품 도면 상태 변경 - 전송 후 상태값을 변경해야 할듯
-
+		EcoHelper.manager.setIBAAndState(ecoParts, completeParts);
+		
 		// 베이스 라인 생성
-
+		EcoHelper.service.saveBaseline(eco, completeParts);
+		
 		// ECO 정보로 ECN 자동 생성
-		EcnHelper.service.create(eco);
+		EcnHelper.service.create(eco, ecoParts, completeParts);
 
 	}
 

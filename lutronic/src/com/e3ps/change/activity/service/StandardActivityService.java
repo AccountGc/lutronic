@@ -756,30 +756,36 @@ public class StandardActivityService extends StandardManager implements Activity
 					pLink.setEco(eco);
 					PersistenceHelper.manager.save(pLink);
 				}
+
+				// 완제품 링크 해야 할거같음..
+				JSONArray end = PartHelper.manager.end(part_oid, null);
+				for (int i = 0; i < end.size(); i++) {
+					Map<String, String> m = (Map<String, String>) end.get(i);
+					String s = m.get("oid");
+					WTPart endPart = (WTPart) CommonUtil.getObject(s);
+					WTPartMaster mm = (WTPartMaster) endPart.getMaster();
+
+					
+					QuerySpec query = new QuerySpec();
+					int idx = query.appendClassList(EOCompletePartLink.class, true);
+					QuerySpecUtils.toEqualsAnd(query, idx, EOCompletePartLink.class, "roleAObjectRef.key.id", mm);
+					QuerySpecUtils.toEqualsAnd(query, idx, EOCompletePartLink.class, "roleBObjectRef.key.id", eco);
+//					QueryResult qr = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
+					QueryResult qr = PersistenceHelper.manager.find(query);
+					System.out.println("qr="+qr.size());
+					// 링크된게 없을 경우에만..
+					if (qr.size() == 0) {
+						EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink(mm, eco);
+						cLink.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
+						PersistenceHelper.manager.save(cLink);
+					}
+				}
 			}
 
 			for (LinkedHashMap<String, Object> map : removeRows) {
 				String link_oid = (String) map.get("link_oid");
 				EcoPartLink link = (EcoPartLink) CommonUtil.getObject(link_oid);
 				PersistenceHelper.manager.delete(link);
-			}
-
-			// 완제품 링크 해야 할거같음..
-
-			JSONArray end = PartHelper.manager.end(oid, null);
-			for (int i = 0; i < end.size(); i++) {
-				Map<String, String> m = (Map<String, String>) end.get(i);
-				String part_oid = m.get("oid");
-				WTPart endPart = (WTPart) CommonUtil.getObject(part_oid);
-				WTPartMaster mm = (WTPartMaster) endPart.getMaster();
-
-				QueryResult qr = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
-				// 링크된게 없을 경우에만..
-				if (qr.size() == 0) {
-					EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink(mm, eco);
-					link.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
-					PersistenceHelper.manager.save(link);
-				}
 			}
 
 			result.put("isExist", false);

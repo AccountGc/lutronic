@@ -1,11 +1,12 @@
 package com.e3ps.change.eco.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
-import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -16,25 +17,26 @@ import com.e3ps.change.activity.dto.ActDTO;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.eco.column.EcoColumn;
-import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.AttributeKey.IBAKey;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.part.PartToPartLink;
-import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
-import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.iba.value.IBAHolder;
+import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.State;
 import wt.org.WTPrincipal;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
@@ -382,5 +384,117 @@ public class EcoHelper {
 		Object[] argObjects = { hash };
 
 		queue.addEntry(principal, methodName, className, argClasses, argObjects);
+	}
+
+	/**
+	 * ECO와 연결된 완제품 리스트
+	 */
+	public ArrayList<EOCompletePartLink> completeParts(Object obj) throws Exception {
+		ArrayList<EOCompletePartLink> list = new ArrayList<EOCompletePartLink>();
+		QueryResult result = null;
+		if (obj instanceof EChangeOrder) {
+			EChangeOrder eco = (EChangeOrder) obj;
+			result = PersistenceHelper.manager.navigate(eco, "completePart", EOCompletePartLink.class, false);
+		} else if (obj instanceof WTPart) {
+			WTPart part = (WTPart) obj;
+			result = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EOCompletePartLink.class, false);
+		}
+
+		while (result.hasMoreElements()) {
+			EOCompletePartLink link = (EOCompletePartLink) result.nextElement();
+			list.add(link);
+		}
+		return list;
+	}
+
+	/**
+	 * ECO 관련 품목 수집
+	 */
+	public ArrayList<EcoPartLink> ecoParts(Object obj) throws Exception {
+		ArrayList<EcoPartLink> list = new ArrayList<EcoPartLink>();
+		QueryResult result = null;
+		if (obj instanceof EChangeOrder) {
+			EChangeOrder eco = (EChangeOrder) obj;
+			result = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+		} else if (obj instanceof WTPart) {
+			WTPart part = (WTPart) obj;
+			result = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class, false);
+		}
+
+		while (result.hasMoreElements()) {
+			EcoPartLink link = (EcoPartLink) result.nextElement();
+			list.add(link);
+		}
+		return list;
+	}
+
+	/**
+	 * IBA 값 세팅 및 상태 변경
+	 */
+	public void setIBAAndState(ArrayList<EcoPartLink> ecoParts, ArrayList<EOCompletePartLink> completeParts)
+			throws Exception {
+		// 설변대상 품목
+		for (EcoPartLink link : ecoParts) {
+			EChangeOrder eco = link.getEco();
+			WTPartMaster m = link.getPart();
+			String v = link.getVersion();
+			WTPart part = PartHelper.manager.getPart(m.getNumber(), v);
+
+			if (part != null) {
+				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+				if (!isApproved) {
+					LifeCycleHelper.service.setLifeCycleState(part, State.toState("APPROVED"));
+					part = (WTPart) PersistenceHelper.manager.refresh(part);
+				}
+
+				// 최종승인일..
+				String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+				IBAUtils.appendIBA(part, "CHANGENO", eco.getEoNumber(), "s");
+				IBAUtils.appendIBA(part, "CHANGEDATE", today, "s");
+
+				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+				if (epm != null) {
+					IBAUtils.appendIBA(epm, "CHANGENO", eco.getEoNumber(), "s");
+					IBAUtils.appendIBA(epm, "CHANGEDATE", today, "s");
+				}
+			}
+
+			// 메카가 아닐경우에만 멀 하는데..???
+//			if(!ChangeUtil.isMeca(location)){
+//				IBAUtil.changeIBAValue((IBAHolder)rc, AttributeKey.IBAKey.IBA_APR, approveName , "string");
+//				IBAUtil.changeIBAValue((IBAHolder)rc,  AttributeKey.IBAKey.IBA_CHK, checkerName , "string");
+//			}
+
+			// EO,ECO시 누적으로 등록
+//			String changeNo = StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder) rc, IBAKey.IBA_CHANGENO));
+//			String changeDate = StringUtil.checkNull(IBAUtil.getAttrValue((IBAHolder) rc, IBAKey.IBA_CHANGEDATE));
+		}
+
+		// 완제품
+		for (EOCompletePartLink link : completeParts) {
+			EChangeOrder eco = link.getEco();
+			WTPartMaster m = link.getCompletePart();
+			String v = link.getVersion();
+			WTPart part = PartHelper.manager.getPart(m.getNumber(), v);
+			if (part != null) {
+				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+				if (!isApproved) {
+					LifeCycleHelper.service.setLifeCycleState(part, State.toState("APPROVED"));
+					part = (WTPart) PersistenceHelper.manager.refresh(part);
+				}
+
+				// 최종승인일..
+				String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+				IBAUtils.appendIBA(part, "CHANGENO", eco.getEoNumber(), "s");
+				IBAUtils.appendIBA(part, "CHANGEDATE", today, "s");
+
+				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+				if (epm != null) {
+					IBAUtils.appendIBA(epm, "CHANGENO", eco.getEoNumber(), "s");
+					IBAUtils.appendIBA(epm, "CHANGEDATE", today, "s");
+				}
+			}
+		}
+
 	}
 }

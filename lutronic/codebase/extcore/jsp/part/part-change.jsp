@@ -342,12 +342,12 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 			treeLazyMode : true,
 			treeLevelIndent : 17,
 
-			rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-				if (item.disabled) {
-					return false; // false 반환하면 disabled 처리됨
-				}
-				return true;
-			}
+// 			rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
+// 				if (item.disabled) {
+// 					return false; // false 반환하면 disabled 처리됨
+// 				}
+// 				return true;
+// 			}
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		loadGridData();

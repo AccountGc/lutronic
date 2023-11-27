@@ -127,7 +127,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "reads",
+					dataField : "read",
 					headerText : "확인",
 					dataType : "boolean",
 					width : 60,

@@ -77,9 +77,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
 							결재함
 							<span class="label label-info float-right">
-								<%
-								//=count.get("check")
-								%>
+								<%=count.get("approval")%>
 							</span>
 						</a>
 					</li>
@@ -87,9 +85,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
 							합의함
 							<span class="label label-info float-right">
-								<%
-								//=count.get("check")
-								%>
+								<%=count.get("agree")%>
 							</span>
 						</a>
 					</li>
@@ -97,9 +93,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/workspace/progress', '> 나의업무 > 진행함');">
 							진행함
 							<span class="label label-info float-right">
-								<%
-								//=count.get("ing")
-								%>
+								<%=count.get("progress")%>
 							</span>
 						</a>
 					</li>
@@ -107,9 +101,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/workspace/complete', '> 나의업무 > 완료함');">
 							완료함
 							<span class="label label-info float-right">
-								<%
-								//=count.get("complete")
-								%>
+								<%=count.get("complete")%>
 							</span>
 						</a>
 					</li>
@@ -117,9 +109,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
 							수신함
 							<span class="label label-info float-right">
-								<%
-								//=count.get("receive")
-								%>
+								<%=count.get("receive")%>
 							</span>
 						</a>
 					</li>
@@ -127,15 +117,10 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');">
 							반려함
 							<span class="label label-info float-right">
-								<%
-								//=count.get("receive")
-								%>
+								<%=count.get("reject")%>
 							</span>
 						</a>
 					</li>
-					<!-- 					<li> -->
-					<!-- 						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의업무 > 일괄결재 검색');">일괄결재 검색</a> -->
-					<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a>
 					</li>
@@ -144,7 +129,6 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
-						<!-- 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a> -->
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a>
@@ -469,44 +453,33 @@ int eca = (int) request.getAttribute("eca");
 						<ul class="nav nav-second-level collapse">
 							<li>
 								<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
-									<!-- 								<a onclick="moveToPage(this, '/groupware/listItem?state=check', '> 나의 업무 > 합의함');"> -->
 									합의함
 									<span class="label label-info float-right">
-										<%
-										//=count.get("check")
-										%>
+										<%=count.get("agree")%>
 									</span>
 								</a>
 							</li>
 							<li>
 								<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
-									<!-- 								<a onclick="moveToPage(this, '/groupware/listItem?state=approval', '> 나의 업무 > 결재함');"> -->
 									결재함
 									<span class="label label-info float-right">
-										<%
-										//=count.get("approval")
-										%>
+										<%=count.get("approval")%>
 									</span>
 								</a>
 							</li>
 							<li>
 								<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
-									<!-- 								<a onclick="moveToPage(this, '/groupware/listItem?state=receive', '> 나의 업무 > 수신함');"> -->
 									수신함
 									<span class="label label-info float-right">
-										<%
-										//=count.get("receive")
-										%>
+										<%=count.get("receive")%>
 									</span>
 								</a>
 							</li>
 							<li>
 								<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
-								<!-- 								<a onclick="moveToPage(this, '/groupware/listCompanyTree', '> 나의 업무 > 조직도');">조직도</a> -->
 							</li>
 							<li>
 								<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
-								<!-- 								<a onclick="moveToPage(this, '/groupware/changePassword', '> 나의 업무 > 비밀번호변경');">비밀번호 변경</a> -->
 							</li>
 						</ul>
 					</li>

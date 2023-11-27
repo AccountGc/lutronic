@@ -18,7 +18,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -119,6 +119,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "EO/ECO 번호",
 					dataType : "string",
 					width : 120,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const t = item.t;
+							const oid = item.eoid;
+							let url;
+							if (t === "CHANGE") {
+								url = getCallUrl("/eco/view?oid=" + oid);
+							} else {
+								url = getCallUrl("/eo/view?oid=" + oid);
+							}
+							_popup(url, 1600, 800, "n");
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -204,7 +219,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/activity/eca");
-				const field = [ "name","submiterOid","receiveFrom","receiveTo" ];
+				const field = [ "name", "submiterOid", "receiveFrom", "receiveTo" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -252,7 +267,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("ECA활동함 리스트", "ECA활동함", "ECA활동함 리스트", [], sessionName);

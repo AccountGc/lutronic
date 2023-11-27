@@ -200,7 +200,7 @@ public class IBAUtils {
 	}
 
 	/**
-	 * IBA 속성 생성
+	 * IBA 속성 생성 및 수정
 	 */
 	public static void createIBA(IBAHolder holder, String attrName, String value, String type) throws Exception {
 
@@ -283,6 +283,54 @@ public class IBAUtils {
 				b.setValue(Boolean.parseBoolean(value));
 				PersistenceHelper.manager.modify(b);
 			}
+		}
+	}
+
+	/**
+	 * IBA 속성 중복 생성
+	 */
+	public static void appendIBA(IBAHolder holder, String attrName, String value, String type) throws Exception {
+
+		if ("s".equalsIgnoreCase(type) || "string".equalsIgnoreCase(type)) {
+			StringValue sv = new StringValue();
+			StringDefinition sd = getStringDefinition(attrName);
+			if (sd == null)
+				return;
+
+			sv.setValue(value);
+			sv.setDefinitionReference((StringDefinitionReference) sd.getAttributeDefinitionReference());
+			sv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(holder)));
+			PersistenceHelper.manager.save(sv);
+		} else if ("f".equalsIgnoreCase(type) || "float".equalsIgnoreCase(type)) {
+			FloatValue fv = new FloatValue();
+			FloatDefinition fd = getFloatDefinition(attrName);
+			if (fd == null)
+				return;
+
+			fv.setValue(Float.parseFloat(value));
+			fv.setDefinitionReference((FloatDefinitionReference) fd.getAttributeDefinitionReference());
+			fv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(holder)));
+			PersistenceHelper.manager.save(fv);
+		} else if ("i".equalsIgnoreCase(type) || "integer".equalsIgnoreCase(type)) {
+			IntegerValue iv = new IntegerValue();
+			IntegerDefinition id = getIntegerDefinition(attrName);
+			if (id == null)
+				return;
+
+			iv.setValue(Integer.parseInt(value));
+			iv.setDefinitionReference((IntegerDefinitionReference) id.getAttributeDefinitionReference());
+			iv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(holder)));
+			PersistenceHelper.manager.save(iv);
+		} else if ("b".equalsIgnoreCase(type) || "boolean".equalsIgnoreCase(type)) {
+			BooleanValue bv = new BooleanValue();
+			BooleanDefinition bd = getBooleanDefinition(attrName);
+			if (bd == null)
+				return;
+
+			bv.setValue(Boolean.parseBoolean(value));
+			bv.setDefinitionReference((BooleanDefinitionReference) bd.getAttributeDefinitionReference());
+			bv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(holder)));
+			PersistenceHelper.manager.save(bv);
 		}
 	}
 

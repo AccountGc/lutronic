@@ -1,3 +1,5 @@
+<%@page import="wt.session.SessionHelper"%>
+<%@page import="wt.org.WTUser"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="net.sf.json.JSONArray"%>
@@ -7,6 +9,7 @@
 EcaDTO dto = (EcaDTO) request.getAttribute("dto");
 ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("list");
 JSONArray clist = (JSONArray) request.getAttribute("clist");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
 <html>
@@ -38,6 +41,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 <body>
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
+		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -104,6 +108,7 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
 						설변품목
+						<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 						<input type="button" value="저장" title="저장" onclick="save();">
 						<input type="button" value="이전품목삭제" title="이전품목삭제" class="red" onclick="deleteRow();">
 					</div>
@@ -802,6 +807,11 @@ JSONArray clist = (JSONArray) request.getAttribute("clist");
 					const rowIndex = checkedItems[i].rowIndex;
 					AUIGrid.removeRow(myGridID, rowIndex);
 				}
+			}
+			
+			function exportExcel() {
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("설변품목 리스트", "설변품목", "설변품목 리스트", [], sessionName);
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

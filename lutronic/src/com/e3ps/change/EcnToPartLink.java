@@ -11,6 +11,7 @@ import com.ptc.windchill.annotations.metadata.PropertyConstraints;
 
 import wt.fc.ObjectToObjectLink;
 import wt.part.WTPart;
+import wt.part.WTPartMaster;
 import wt.util.WTException;
 
 @GenAsBinaryLink(superClass = ObjectToObjectLink.class,
@@ -30,6 +31,14 @@ import wt.util.WTException;
 				@GeneratedForeignKey(name = "EcrEcnLink",
 
 						foreignKeyRole = @ForeignKeyRole(name = "ecr", type = EChangeRequest.class,
+
+								constraints = @PropertyConstraints(required = true)),
+
+						myRole = @MyRole(name = "ecn", cardinality = Cardinality.ONE)),
+
+				@GeneratedForeignKey(name = "PartEcnLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "completePart", type = WTPartMaster.class,
 
 								constraints = @PropertyConstraints(required = true)),
 

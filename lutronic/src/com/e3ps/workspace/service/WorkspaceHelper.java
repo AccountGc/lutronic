@@ -528,8 +528,14 @@ public class WorkspaceHelper {
 	 * 결재 개수
 	 */
 	public Map<String, Integer> count() throws Exception {
+		Map<String, Object> params = new HashMap<>();
 		Map<String, Integer> count = new HashMap<>();
-
+		count.put("approval", (int) approval(params).get("total"));
+		count.put("agree", (int) agree(params).get("total"));
+		count.put("receive", (int) receive(params).get("total"));
+		count.put("complete", (int) complete(params).get("total"));
+		count.put("reject", (int) reject(params).get("total"));
+		count.put("progress", (int) progress(params).get("total"));
 		return count;
 	}
 

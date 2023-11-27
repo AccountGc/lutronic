@@ -216,6 +216,30 @@
 					return false;
 				}
 
+				for (let i = 0; i < rows200.length; i++) {
+					const dd = rows200[i];
+					const activeUser_oid = AUIGrid.getCellValue(myGridID200, i, "activeUser_oid");
+					const activity_type = AUIGrid.getCellValue(myGridID200, i, "activity_type");
+					const finishDate = AUIGrid.getCellValue(myGridID200, i, "finishDate");
+					const step = AUIGrid.getCellValue(myGridID200, i, "step");
+					if (step === undefined) {
+						AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
+						return false;
+					}
+					if (activity_type === undefined) {
+						AUIGrid.showToastMessage(myGridID200, i, 2, "활동구분을 선택하세요.");
+						return false;
+					}
+					if (activeUser_oid === undefined) {
+						AUIGrid.showToastMessage(myGridID200, i, 3, "담당자를 선택하세요.");
+						return false;
+					}
+					if (finishDate === undefined) {
+						AUIGrid.showToastMessage(myGridID200, i, 4, "완료예정일을 선택하세요.");
+						return false;
+					}
+				}
+
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;

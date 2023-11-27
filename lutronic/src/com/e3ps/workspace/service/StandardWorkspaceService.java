@@ -484,6 +484,17 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			per = (Persistable) LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, state);
 			per = PersistenceHelper.manager.refresh(per);
 
+			// 일괄결재일경우 대상도.. 변경
+			if (per instanceof AsmApproval) {
+				AsmApproval asm = (AsmApproval) per;
+				QueryResult result = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
+				while (result.hasMoreElements()) {
+					Persistable persistable = (Persistable) result.nextElement();
+					LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
+							State.toState("APPROVED"));
+				}
+			}
+
 			// EO/ ECO
 			if (per instanceof EChangeOrder) {
 				EChangeOrder e = (EChangeOrder) per;
@@ -568,6 +579,15 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		if (per instanceof LifeCycleManaged) {
 			LifeCycleManaged lcm = (LifeCycleManaged) per;
 			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("RETURN"));
+
+			if (lcm instanceof AsmApproval) {
+				AsmApproval asm = (AsmApproval) per;
+				QueryResult result = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
+				while (result.hasMoreElements()) {
+					Persistable persistable = (Persistable) result.nextElement();
+					LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable, State.toState("RETURN"));
+				}
+			}
 		}
 	}
 

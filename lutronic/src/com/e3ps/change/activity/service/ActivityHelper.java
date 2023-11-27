@@ -265,6 +265,8 @@ public class ActivityHelper {
 			EChangeOrder eo = (EChangeOrder) eca.getEo();
 			Map<String, Object> data = new HashMap<>();
 			data.put("oid", eca.getPersistInfo().getObjectIdentifier().getStringValue());
+			data.put("eoid", eo.getPersistInfo().getObjectIdentifier().getStringValue());
+			data.put("t", eo.getEoType());
 			data.put("number", eo.getEoNumber());
 			data.put("name", eo.getEoName());
 			data.put("step", NumberCodeHelper.manager.getNumberCodeName(eca.getStep(), "EOSTEP"));
@@ -665,6 +667,7 @@ public class ActivityHelper {
 			WTPart part = PartHelper.manager.getPart(master.getNumber(), link.getVersion());
 			Map<String, Object> map = new HashMap<>();
 
+			map.put("link_oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("part_name", part.getName());
 			map.put("part_number", part.getNumber());

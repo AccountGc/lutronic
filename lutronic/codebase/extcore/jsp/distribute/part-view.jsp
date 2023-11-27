@@ -121,7 +121,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
-		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+		<jsp:include page="/extcore/jsp/common/attributes-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="part" name="module" />
 		</jsp:include>
