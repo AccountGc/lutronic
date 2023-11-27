@@ -26,14 +26,14 @@ import com.e3ps.groupware.workprocess.service.WFItemHelper;
 @Controller
 @RequestMapping(value = "/ecpr/**")
 public class EcprController extends BaseController {
-	
+
 	@Description(value = "ECPR 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		model.addObject("modelList", modelList);
 		model.addObject("sectionList", sectionList);
@@ -42,15 +42,15 @@ public class EcprController extends BaseController {
 		model.setViewName("/extcore/jsp/change/ecpr/ecpr-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "ECPR 검색 Action")
 	@ResponseBody
 	@PostMapping(value = "/list")
-	public Map<String,Object> list(@RequestBody Map<String, Object> params){
-		Map<String,Object> result = null;
+	public Map<String, Object> list(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = null;
 		try {
-			 result = EcprHelper.manager.list(params);
-			 result.put("result", SUCCESS);
+			result = EcprHelper.manager.list(params);
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
@@ -58,13 +58,13 @@ public class EcprController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "관련 ECPR 팝업 페이지")
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
@@ -76,7 +76,7 @@ public class EcprController extends BaseController {
 		model.setViewName("popup:/change/ecpr/ecpr-list-popup");
 		return model;
 	}
-	
+
 	@Description(value = "ECPR 등록 페이지")
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
@@ -105,10 +105,10 @@ public class EcprController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECPR 상세 페이지")
 	@GetMapping(value = "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception{
+	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		EcprDTO dto = new EcprDTO(oid);
 		boolean isAdmin = CommonUtil.isAdmin();
@@ -117,7 +117,7 @@ public class EcprController extends BaseController {
 		model.setViewName("popup:/change/ecpr/ecpr-view");
 		return model;
 	}
-	
+
 	@Description(value = "ECPR 수정 페이지")
 	@GetMapping(value = "/update")
 	public ModelAndView update(@RequestParam String oid) throws Exception {
@@ -133,11 +133,11 @@ public class EcprController extends BaseController {
 		model.setViewName("/extcore/jsp/change/ecpr/ecpr-update.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "ECPR 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/update")
-	public Map<String, Object> update(@RequestBody EcprDTO dto) throws Exception{
+	public Map<String, Object> update(@RequestBody EcprDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			EcprHelper.service.update(dto);
@@ -150,7 +150,7 @@ public class EcprController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECPR 삭제 함수")
 	@ResponseBody
 	@PostMapping(value = "/delete")
@@ -164,7 +164,7 @@ public class EcprController extends BaseController {
 				result.put("msg", "ecpr과 연결된 cr이 있습니다.");
 				return result;
 			}
-			
+
 			EcprHelper.service.delete(oid);
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);

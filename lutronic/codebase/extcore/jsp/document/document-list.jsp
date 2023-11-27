@@ -207,6 +207,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
+					<input type="button" value="일괄 결재" title="일괄 결재" class="blue" onclick="register();">
+					<input type="button" value="추가" title="추가" class="red" onclick="addRow();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -217,7 +219,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
+					<!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
 				</td>
 			</tr>
 		</table>
@@ -435,7 +437,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				params.latest = JSON.parse(latest);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
-				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
@@ -480,6 +481,40 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
+			
+			// 일괄결재 팝업
+			let p;
+			function register() {
+				const url = getCallUrl("/doc/register");
+				p = _popup(url, 1000, 600, "n");
+			}
+			
+			function addRow() {
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				if(checkedItems.length ===0) {
+					alert("일괄결재 등록할 문서를 선택하세요.");
+					return false;
+				}
+				
+				for(let i=0; i<checkedItems.length; i++) {
+					const item = checkedItems[i].item;
+					const interalnumber = item.interalnumber;
+					if(item.state !== "일괄결재") {
+						alert(interalnumber+ "문서는 일괄결재 가능한 문서가 아닙니다.");
+						return false;
+					}
+					
+					if(!item.latest) {
+						alert(interalnumber+ "문서는 최신REV의 문서가 아닙니다.");
+						return false;
+					}
+				}
+				
+			    if (p && !p.closed) {
+			        p.receive(checkedItems);
+			    }
+			}
+			
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {

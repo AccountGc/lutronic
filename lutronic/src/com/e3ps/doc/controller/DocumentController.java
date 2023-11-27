@@ -30,7 +30,6 @@ import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
@@ -41,7 +40,6 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
@@ -114,7 +112,7 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		ModelAndView model = new ModelAndView();
 		model.addObject("preserationList", preserationList);
@@ -148,7 +146,7 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
 		ModelAndView model = new ModelAndView();
 		model.addObject("preserationList", preserationList);
@@ -334,7 +332,7 @@ public class DocumentController extends BaseController {
 	@GetMapping(value = "/register")
 	public ModelAndView register() throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/document/document-register.jsp");
+		model.setViewName("popup:/document/document-register");
 		return model;
 	}
 
@@ -345,6 +343,7 @@ public class DocumentController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			DocumentHelper.service.register(params);
+			result.put("msg", "일괄결재가 등록 되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -411,40 +410,6 @@ public class DocumentController extends BaseController {
 		model.addObject("parentOid", parentOid);
 		model.addObject("type", type);
 		model.setViewName("popup:/document/createDocumentLink");
-		return model;
-	}
-
-	@ResponseBody
-	@RequestMapping("/createDocumentLinkAction")
-	public Map<String, Object> createDocumentLinkAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Object> map = null;
-
-		try {
-			map = DocumentHelper.service.createDocumentLinkAction(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-			map = new HashMap<String, Object>();
-		}
-
-		return map;
-	}
-
-	@RequestMapping("/include_documentLink")
-	public ModelAndView include_documentLink(HttpServletRequest request, HttpServletResponse response) {
-		String module = request.getParameter("module");
-		String oid = request.getParameter("oid");
-		String title = StringUtil.checkReplaceStr(request.getParameter("title"), Message.get("관련 문서"));
-		String enabled = StringUtil.checkReplaceStr(request.getParameter("enabled"), "false");
-
-		List<DocumentDTO> list = DocumentHelper.service.include_documentLink(module, oid);
-
-		ModelAndView model = new ModelAndView();
-		model.setViewName("empty:/document/include_documentLink");
-		model.addObject("module", module);
-		model.addObject("oid", oid);
-		model.addObject("title", title);
-		model.addObject("list", list);
-		model.addObject("enabled", Boolean.valueOf(enabled));
 		return model;
 	}
 
@@ -572,8 +537,7 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
-	
-	
+
 	@Description(value = "관리자 권한 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/force")

@@ -89,7 +89,7 @@ if (header) {
 			}
 		},				
 		filter : {
-			inline : true
+			showIcon : true,
 		},
 	}, {
 		dataField : "name",

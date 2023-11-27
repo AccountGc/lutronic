@@ -1,11 +1,9 @@
 package com.e3ps.part.controller;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,10 +31,6 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.annotation.Description;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,15 +49,13 @@ import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
-import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.download.service.DownloadHistoryHelper;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.part.bom.service.BomHelper;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
@@ -103,7 +95,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_PART", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
 		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
 
 		ModelAndView model = new ModelAndView();
@@ -128,7 +120,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_PART", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -244,8 +236,8 @@ public class PartController extends BaseController {
 	}
 
 	@Description(value = "부품 등록시 SEQ 버튼")
-	@GetMapping(value = "/searchSeqList")
-	public ModelAndView searchSeqList(HttpServletRequest request, HttpServletResponse response) {
+	@GetMapping(value = "/seq")
+	public ModelAndView seq(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		String partNumber = request.getParameter("partNumber");
 		model.addObject("partNumber", partNumber);
@@ -517,37 +509,30 @@ public class PartController extends BaseController {
 	}
 
 	@Description(value = "채번 페이지 이동")
-	@GetMapping(value = "/partChange")
-	public ModelAndView partChange(@RequestParam String oid) {
-
-		List<Map<String, Object>> list = null;
-
-//		try {
-//			list = PartHelper.service.partChange(oid);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			list = new ArrayList<Map<String,Object>>();
-//		}
-//		
-//		List<NumberCodeData> partType = CodeHelper.service.topCodeToList("PARTTYPE");
-
+	@GetMapping(value = "/change")
+	public ModelAndView change(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
+		ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getOneLevel("PARTTYPE");
+		ArrayList<Map<String, String>> partName1 = NumberCodeHelper.manager.getOneLevel("PARTNAME1");
+		ArrayList<Map<String, String>> partName2 = NumberCodeHelper.manager.getOneLevel("PARTNAME2");
+		ArrayList<Map<String, String>> partName3= NumberCodeHelper.manager.getOneLevel("PARTNAME3");
+		model.addObject("partName1", JSONArray.fromObject(partName1));
+		model.addObject("partName2", JSONArray.fromObject(partName2));
+		model.addObject("partName3", JSONArray.fromObject(partName3));
+		model.addObject("list", JSONArray.fromObject(list));
 		model.addObject("oid", oid);
-//		model.addObject("list", list);
-//		model.addObject("partType", partType);
-		model.setViewName("popup:/part/partChange");
+		model.setViewName("popup:/part/part-change");
 		return model;
 	}
 
 	@Description(value = "채번 리스트 가져오기")
 	@ResponseBody
 	@PostMapping(value = "/partChange")
-	public Map<String, Object> partChange(@RequestBody Map<String, Object> params) {
-
+	public Map<String, Object> partChange(@RequestBody Map<String, Object> params) throws Exception {
 		List<Map<String, Object>> list = null;
 		Map<String, Object> result = new HashMap<String, Object>();
+		List<NumberCodeDTO> partType = CodeHelper.service.topCodeToList("PARTTYPE");
 		String oid = (String) params.get("oid");
-
 		try {
 			list = PartHelper.service.partChange(oid);
 			result.put("result", SUCCESS);
@@ -555,11 +540,7 @@ public class PartController extends BaseController {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
-			list = new ArrayList<Map<String, Object>>();
 		}
-
-		List<NumberCodeDTO> partType = CodeHelper.service.topCodeToList("PARTTYPE");
-
 		result.put("oid", oid);
 		result.put("list", list);
 		result.put("partType", partType);
@@ -1399,13 +1380,13 @@ public class PartController extends BaseController {
 		return list;
 	}
 
-	@Description(value = "품목등록 seqList 검색 메서드")
+	@Description(value = "품목등록 SEQ 검색 메서드")
 	@ResponseBody
-	@PostMapping(value = "/searchSeqAction")
-	public Map<String, Object> searchSeqAction(@RequestBody Map<String, Object> params) {
-		Map<String, Object> map = null;
+	@PostMapping(value = "/seq")
+	public Map<String, Object> seq(@RequestBody Map<String, Object> params) {
+		Map<String, Object> map = new HashMap<>();
 		try {
-			map = PartHelper.service.searchSeqAction(params);
+			map = PartHelper.manager.seq(params);
 			map.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2396,6 +2377,40 @@ public class PartController extends BaseController {
 		try {
 			PartHelper.service.publish(oid);
 			result.put("msg", "재변환이 요청 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "채번용 페이지")
+	@PostMapping(value = "/load")
+	@ResponseBody
+	public Map<String, Object> load(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			JSONArray list = PartHelper.manager.load(params);
+			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "채번 뷰 LAZY LOAD")
+	@PostMapping(value = "/lazyLoad")
+	@ResponseBody
+	public Map<String, Object> lazyLoad(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, Object>> list = PartHelper.manager.lazyLoad(params);
+			result.put("list", list);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -251,9 +251,6 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		loadGridData();
 		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyLoadHandler);
-		AUIGrid.bind(myGridID, "treeOpenChange", function( event ) {
-			console.log(event.item);
-		});
 		AUIGrid.bind(myGridID, "contextMenu", function(event) {
 			const menu = [ {
 				label : "품목정보보기",
@@ -369,8 +366,10 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 		const url = getCallUrl("/bom/lazyLoad")
 		openLayer();
 		call(url, params, function(data) {
-			closeLayer();
-			event.response(data.list);
+			if (data.result) {
+				closeLayer();
+				event.response(data.list);
+			}
 		})
 	}
 

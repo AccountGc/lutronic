@@ -94,10 +94,20 @@ for (int i = 0; i < list.size(); i++) {
 				JSONArray arr = (JSONArray) map.get("data");
 				for (int k = 0; k < arr.size(); k++) {
 					JSONObject node = (JSONObject) arr.get(k);
+					String _oid = (String) node.get("oid");
+					String url = "/Windchill/plm/doc/view?oid=" + _oid;
 				%>
 				<tr>
-					<td class="center"><%=node.get("number")%></td>
-					<td class="indent5"><%=node.get("name")%></td>
+					<td class="center">
+						<a href="javascript:_popup('<%=url%>', 1600, 800, 'n');">
+							<%=node.get("number")%>
+						</a>
+					</td>
+					<td class="indent5">
+						<a href="javascript:_popup('<%=url%>', 1600, 800, 'n');">
+							<%=node.get("name")%>
+						</a>
+					</td>
 					<td class="center"><%=node.get("state")%></td>
 					<td class="center"><%=node.get("version")%></td>
 					<td class="center"><%=node.get("writer")%></td>

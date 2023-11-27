@@ -26,7 +26,8 @@
 7. 상태값 추가, 첨부파일 타입, 문서 타입 추가
 	- Shell -> ResourceBuild.bat wt.lifecycle.**
 	- Shell -> ResourceBuild.bat wt.content.**
-	- Shell -> ResourceBuild.bat wt.doc.** 
+	- Shell -> ResourceBuild.bat wt.doc.**
+	- Shell -> ResourceBuild.bat wt.epm.** 
 	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.code.** -Dbundle.buildLocales=true
 	- codebase -> ant -f MakeJar.xml
 	

@@ -29,6 +29,8 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import wt.content.ApplicationData;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
@@ -701,13 +703,40 @@ public class StandardActivityService extends StandardManager implements Activity
 	}
 
 	@Override
-	public void replace(ArrayList<LinkedHashMap<String, Object>> addRows,
+	public Map<String, Object> replace(ArrayList<LinkedHashMap<String, Object>> addRows,
 			ArrayList<LinkedHashMap<String, Object>> removeRows, String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
+			boolean isExist = false;
+			String msg = "";
+
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+
+			// 설변 진행중이 있는지 확인 하는 부분
+			for (LinkedHashMap<String, Object> map : addRows) {
+				String part_oid = (String) map.get("part_oid");
+				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
+				QueryResult qr = PersistenceHelper.manager.navigate(part, "eco", EcoPartLink.class);
+				while (qr.hasMoreElements()) {
+					EChangeOrder ee = (EChangeOrder) qr.nextElement();
+					// 작업중 혹은 승인중?
+					if (ee.getLifeCycleState().toString().equals("INWORK")
+							|| ee.getLifeCycleState().toString().equals("APPROVING")) {
+						isExist = true;
+						msg = part.getNumber() + " 품목은 EO/ECO(" + ee.getEoNumber() + ")에서 설계변경이 진행중인 품목입니다.";
+						break;
+					}
+				}
+			}
+
+			if (isExist) {
+				result.put("isExist", isExist);
+				result.put("msg", msg);
+				return result;
+			}
 
 			for (LinkedHashMap<String, Object> map : addRows) {
 				String part_oid = (String) map.get("part_oid");
@@ -735,6 +764,25 @@ public class StandardActivityService extends StandardManager implements Activity
 				PersistenceHelper.manager.delete(link);
 			}
 
+			// 완제품 링크 해야 할거같음..
+
+			JSONArray end = PartHelper.manager.end(oid, null);
+			for (int i = 0; i < end.size(); i++) {
+				Map<String, String> m = (Map<String, String>) end.get(i);
+				String part_oid = m.get("oid");
+				WTPart endPart = (WTPart) CommonUtil.getObject(part_oid);
+				WTPartMaster mm = (WTPartMaster) endPart.getMaster();
+
+				QueryResult qr = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
+				// 링크된게 없을 경우에만..
+				if (qr.size() == 0) {
+					EOCompletePartLink link = EOCompletePartLink.newEOCompletePartLink(mm, eco);
+					link.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
+					PersistenceHelper.manager.save(link);
+				}
+			}
+
+			result.put("isExist", false);
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -745,6 +793,7 @@ public class StandardActivityService extends StandardManager implements Activity
 			if (trs != null)
 				trs.rollback();
 		}
+		return result;
 	}
 
 	@Override

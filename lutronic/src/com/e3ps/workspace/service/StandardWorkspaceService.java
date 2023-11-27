@@ -8,7 +8,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
-import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.eco.service.EcoHelper;
@@ -18,21 +17,17 @@ import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
-import com.e3ps.groupware.workprocess.service.AsmApprovalHelper;
 import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.sap.service.SAPHelper;
+import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
+import com.e3ps.workspace.AsmApproval;
 
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
-import wt.folder.Folder;
-import wt.folder.FolderEntry;
-import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
@@ -220,14 +215,27 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 		if (per instanceof LifeCycleManaged) {
 			LifeCycleManaged lcm = (LifeCycleManaged) per;
-
-			if (lcm instanceof EChangeOrder) {
-				// EO..
-
-			} else if (lcm instanceof WTDocument) {
-				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
-			} else if (lcm instanceof EChangeRequest) {
-				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+			// 상태값 변경
+			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+//			if (lcm instanceof EChangeOrder) {
+//				// EO..
+//
+//			} else if (lcm instanceof WTDocument) {
+//				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+//			} else if (lcm instanceof EChangeRequest) {
+//				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+//			} else if (lcm instanceof AsmApproval) {
+//				AsmApproval asm = (AsmApproval) per;
+//				LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+//			}
+			if (lcm instanceof AsmApproval) {
+				AsmApproval asm = (AsmApproval) per;
+				QueryResult result = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
+				while (result.hasMoreElements()) {
+					Persistable persistable = (Persistable) result.nextElement();
+					LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) persistable,
+							State.toState("APPROVING"));
+				}
 			}
 		}
 		// 일괄 격제 관련해서 처리

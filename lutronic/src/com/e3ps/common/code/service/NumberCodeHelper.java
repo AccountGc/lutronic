@@ -74,7 +74,7 @@ public class NumberCodeHelper {
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		int i = 0;
-		
+
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode numberCode = (NumberCode) obj[0];
@@ -151,7 +151,7 @@ public class NumberCodeHelper {
 		query.appendWhere(
 				new SearchCondition(NumberCode.class, "parentReference.key.id", SearchCondition.EQUAL, parentLongOid),
 				new int[] { idx });
-		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.NAME, false);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
 
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -264,7 +264,7 @@ public class NumberCodeHelper {
 			recursive(n, data);
 			list.add(data);
 		}
-		map.put("list", list);		
+		map.put("list", list);
 		return map;
 	}
 
@@ -306,9 +306,9 @@ public class NumberCodeHelper {
 
 		QuerySpec query = new QuerySpec();
 		QueryResult result = null;
-		if(n != null) {
+		if (n != null) {
 			String code = n.getCode();
-			if(code != null)  {
+			if (code != null) {
 				String type = code.toString();
 				switch (type) {
 				case "EOTYPE":
@@ -322,13 +322,13 @@ public class NumberCodeHelper {
 //			query.appendClassList(EChangeOrder.class, true);
 //			QuerySpecUtils.toEquals(query, 0, EChangeOrder.class, EChangeOrder., type);
 //			result = PersistenceHelper.manager.find(query);
-					
+
 					// 필드가 없는거 같은데?
 //			query.appendClassList(EChangeRequest.class, true);
 //			QuerySpecUtils.toLike(query, 0, EChangeRequest.class, "purpose", type);
 //			result = PersistenceHelper.manager.find(query);
 //			check = result.size() > 0 ? true : false;
-					
+
 					break;
 				case "STOCKMANAGEMENT":
 					// 이것도 필드가 없는거 같은데
@@ -367,7 +367,7 @@ public class NumberCodeHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * 나라 코드 가져오기
 	 */
@@ -385,6 +385,30 @@ public class NumberCodeHelper {
 			Map<String, String> map = new HashMap<>();
 			map.put("code", n.getCode());
 			map.put("name", n.getName());
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * 품목 분류 1레벨
+	 */
+	public ArrayList<Map<String, String>> getOneLevel(String codeType) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", 0L);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode n = (NumberCode) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("name", "[" + n.getCode() + "] " + n.getName());
+			map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
 			list.add(map);
 		}
 		return list;

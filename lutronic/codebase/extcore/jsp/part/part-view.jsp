@@ -48,7 +48,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<input type="button" value="일괄 수정" title="일괄 수정" onclick="packageUpdate();">
 			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
 			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
-			<input type="button" value="채번" title="채번" onclick="orderNumber();">
+			<input type="button" value="채번" title="채번" onclick="change();">
 			<input type="button" value="채번(새버전)" title="채번(새버전)" onclick="orderNumber_NewVersion();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 			<%
@@ -520,8 +520,8 @@ $("#Compare").click(function() {
 	_popup(str, 1300, 600,"n");
 })
 
-function orderNumber(){
-	const url = getCallUrl("/part/partChange?oid=" + oid);
+function change(){
+	const url = getCallUrl("/part/change?oid=" + oid);
 	_popup(url, 1500, 600,"n");
 }
 

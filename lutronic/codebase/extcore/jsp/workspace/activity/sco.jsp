@@ -609,7 +609,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			function replace() {
 				const oid = document.getElementById("oid").value;
 				const url = getCallUrl("/activity/replace?oid=" + oid);
-				_popup(url, 1800, 900, "n");
+				_popup(url, 1000, 600, "n");
 			}
 
 			// 이전 부품 추가..
@@ -627,6 +627,12 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 				}
 
 				const item = checkedItems[0].item;
+				const number = item.next_number;
+				const isFour = number.substring(0, 1);
+				if (isFour === "4") {
+					alert("4번으로 시작하는 품번은 이전 품목이 존재 할수 없는 품목입니다.");
+					return false;
+				}
 				const prev = item.prev;
 				if (prev === false) {
 					const number = item.next_number;

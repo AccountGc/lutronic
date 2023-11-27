@@ -7,6 +7,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
 
 import lombok.Getter;
@@ -67,11 +68,17 @@ public class WorkDataDTO {
 			EChangeRequest ecr = (EChangeRequest) per;
 			setNumber(ecr.getEoNumber());
 			setName(ecr.getEoName());
+			setPersistType("CR");
 			setState(ecr.getLifeCycleState().getDisplay());
 			setCreator(ecr.getCreatorName());
 			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
 		} else if (per instanceof EChangeOrder) {
 			EChangeOrder eco = (EChangeOrder) per;
+			if (eco.getEoType().equals("CHANGE")) {
+				setPersistType("ECO");
+			} else {
+				setPersistType("EO");
+			}
 			setNumber(eco.getEoNumber());
 			setName(eco.getEoName());
 			setState(eco.getLifeCycleState().getDisplay());
@@ -81,9 +88,18 @@ public class WorkDataDTO {
 			ROHSMaterial rohs = (ROHSMaterial) per;
 			setNumber(rohs.getNumber());
 			setName(rohs.getName());
+			setPersistType("ROHS");
 			setState(rohs.getLifeCycleState().getDisplay());
 			setCreator(rohs.getCreatorName());
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
+		} else if (per instanceof AsmApproval) {
+			AsmApproval asm = (AsmApproval) per;
+			setNumber(asm.getNumber());
+			setName(asm.getName());
+			setPersistType("일괄결재");
+			setState(asm.getLifeCycleState().getDisplay());
+			setCreator(asm.getCreatorName());
+			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
 		}
 	}
 }

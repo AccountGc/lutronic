@@ -149,19 +149,7 @@ public class PartTreeData implements java.io.Serializable{
     }
     
     public boolean isChange() {
-    	
     	return PartUtil.isChange(this.number);
-    	/*
-		String parttype = String.valueOf(this.number.charAt(0));
-		return (("1".equals(parttype) 
-				|| "2".equals(parttype) 
-				|| "3".equals(parttype) 
-				|| "4".equals(parttype) 
-				|| "7".equals(parttype) 
-				|| "8".equals(parttype) 
-				|| "9".equals(parttype) ) 
-				&& (this.number.length() == 10));
-		*/
 	}
     
     public String getDwgNo() {

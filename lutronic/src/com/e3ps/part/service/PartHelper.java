@@ -19,13 +19,16 @@ import com.e3ps.common.folder.beans.CommonFolderHelper;
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.message.Message;
+import com.e3ps.common.query.SearchUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.org.People;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartDTO;
@@ -40,6 +43,7 @@ import com.e3ps.rohs.service.RohsHelper;
 import com.ptc.wpcfg.pdmabstr.PROEDependency;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
@@ -58,6 +62,7 @@ import wt.folder.IteratedFolderMemberLink;
 import wt.folder.SubFolder;
 import wt.iba.definition.StringDefinition;
 import wt.lifecycle.State;
+import wt.org.WTUser;
 import wt.part.PartDocHelper;
 import wt.part.WTPart;
 import wt.part.WTPartBaselineConfigSpec;
@@ -68,6 +73,7 @@ import wt.part.WTPartMaster;
 import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
 import wt.query.ClassAttribute;
+import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -91,7 +97,7 @@ public class PartHelper {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<PartColumn> list = new ArrayList<>();
 		ReferenceFactory rf = new ReferenceFactory();
-		
+
 		String location = StringUtil.checkNull((String) params.get("location"));
 		String partNumber = StringUtil.checkNull((String) params.get("partNumber"));
 		String partName = StringUtil.checkNull((String) params.get("partName"));
@@ -1046,8 +1052,10 @@ public class PartHelper {
 		QuerySpecUtils.toOrderBy(query, idx_part, WTPart.class, WTPart.NUMBER, true);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.size() == 0) {
-			if (!list.contains(part)) {
-				list.add(part);
+			if (part.getNumber().startsWith("1")) {
+				if (!list.contains(part)) {
+					list.add(part);
+				}
 			}
 		}
 		while (qr.hasMoreElements()) {
@@ -1098,8 +1106,10 @@ public class PartHelper {
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.size() == 0) {
 
-			if (!list.contains(part)) {
-				list.add(part);
+			if (part.getNumber().startsWith("1")) {
+				if (!list.contains(part)) {
+					list.add(part);
+				}
 			}
 		}
 
@@ -1333,5 +1343,209 @@ public class PartHelper {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 품목등록시 SEQ 리스트 보기
+	 */
+	public Map<String, Object> seq(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		String partNumber = (String) params.get("partNumber");
+		QuerySpec query = new QuerySpec();
+
+		int idx = query.appendClassList(WTPart.class, true);
+		QuerySpecUtils.toLikeRightAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
+		QuerySpecUtils.toLatest(query, idx, WTPart.class);
+
+		QuerySpecUtils.toOrderBy(query, idx, WTPart.class, WTPart.MODIFY_TIMESTAMP, true);
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			WTPart part = (WTPart) obj[0];
+			Map<String, String> data = new HashMap<>();
+			data.put("number", part.getNumber());
+			data.put("name", part.getName());
+			data.put("location", part.getLocation());
+			data.put("version", part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+			data.put("state", part.getLifeCycleState().getDisplay());
+			data.put("creator", part.getCreatorFullName());
+			data.put("createdDate", part.getCreateTimestamp().toString().substring(0, 10));
+			data.put("modifitedDate", part.getModifyTimestamp().toString().substring(0, 10));
+			data.put("remarks", IBAUtils.getStringValue(part, "REMARKS"));
+			list.add(data);
+		}
+
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
+	}
+
+	/**
+	 * 채번용 페이지
+	 */
+	public JSONArray load(Map<String, Object> params) throws Exception {
+		JSONArray list = new JSONArray();
+		String oid = (String) params.get("oid");
+		return descendants(list, oid);
+	}
+
+	/**
+	 * 채번용 페이지
+	 */
+	private JSONArray descendants(JSONArray list, String oid) throws Exception {
+		WTPart root = (WTPart) CommonUtil.getObject(oid);
+		JSONObject rootNode = new JSONObject();
+		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+		rootNode.put("level", 1);
+		rootNode.put("number", root.getNumber());
+		rootNode.put("name", root.getName());
+		rootNode.put("version", root.getVersionIdentifier().getSeries().getValue() + "."
+				+ root.getIterationIdentifier().getSeries().getValue());
+		rootNode.put("partName4", root.getName());
+		// 숫자일 경우 채번됨..
+		if (!isUpdate(root.getNumber())) {
+			rootNode.put("disabled", true);
+			rootNode.put("checked", false);
+		} else {
+			rootNode.put("disabled", false);
+			rootNode.put("checked", true);
+		}
+		View view = ViewHelper.service.getView(root.getViewName());
+		State state = root.getLifeCycleState();
+		JSONArray children = new JSONArray();
+		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
+		int level = 2;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+
+			JSONObject node = new JSONObject();
+			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("level", level);
+			node.put("number", p.getNumber());
+			node.put("name", p.getName());
+			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ p.getIterationIdentifier().getSeries().getValue());
+			node.put("partName4", p.getName());
+			if (!isUpdate(p.getNumber())) {
+				node.put("disabled", true);
+				node.put("checked", false);
+			} else {
+				node.put("disabled", false);
+				node.put("checked", true);
+			}
+			boolean isLazy = isLazy(p, view, state);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+
+			children.add(node);
+		}
+		rootNode.put("children", children);
+		list.add(rootNode);
+		return list;
+	}
+
+	/**
+	 * 채번 가능 여부
+	 */
+	private boolean isUpdate(String number) throws Exception {
+		boolean isUpdate = true;
+		if (number.length() == 10) {
+			if (Pattern.matches("^[0-9]+$", number)) {
+				isUpdate = false;
+			} else {
+				isUpdate = true;
+			}
+		} else {
+			isUpdate = true;
+		}
+		return isUpdate;
+	}
+
+	/**
+	 * 채번 뷰에서 레이지 로드
+	 */
+	public ArrayList<Map<String, Object>> lazyLoad(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		String oid = (String) params.get("oid");
+		int level = (int) params.get("level");
+		return descendants(list, oid, level);
+	}
+
+	/**
+	 * 채번 뷰에서 레이지 로드
+	 */
+	private ArrayList<Map<String, Object>> descendants(ArrayList<Map<String, Object>> list, String oid, int level)
+			throws Exception {
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		View view = ViewHelper.service.getView(part.getViewName());
+		State state = part.getLifeCycleState();
+		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
+		++level;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPart p = (WTPart) obj[1];
+			Map<String, Object> node = new HashMap<>();
+			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("level", level);
+			node.put("number", p.getNumber());
+			node.put("name", p.getName());
+			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ p.getIterationIdentifier().getSeries().getValue());
+			node.put("partName4", p.getName());
+			if (!isUpdate(p.getNumber())) {
+				node.put("disabled", true);
+				node.put("checked", false);
+			} else {
+				node.put("disabled", false);
+				node.put("checked", true);
+			}
+			boolean isLazy = isLazy(p, view, state);
+			if (!isLazy) {
+				node.put("isLazy", false);
+				node.put("children", new JSONArray());
+			} else {
+				node.put("isLazy", true);
+			}
+			list.add(node);
+		}
+		return list;
+	}
+
+	/**
+	 * 정전개 하위가 잇는지 없는지 판단
+	 */
+	private boolean isLazy(WTPart parent, View view, State state) throws Exception {
+		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, state);
+		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
+		boolean isLazy = false;
+		while (result.hasMoreElements()) {
+			Object obj[] = (Object[]) result.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			isLazy = true;
+			break;
+		}
+		return isLazy;
 	}
 }

@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.session.SessionHelper"%>
@@ -63,8 +64,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>품목분류</th>
 				<td class="indent5">
 					<input type="hidden" name="oid" id="oid">
-					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
-					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
+					<input type="hidden" name="location" id="location" value="<%=PartHelper.PART_ROOT%>">
+					<span id="locationText"><%=PartHelper.PART_ROOT%></span>
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
@@ -286,15 +287,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
+						<jsp:param value="<%=PartHelper.PART_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="605" name="height" />
+						<jsp:param value="600" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>

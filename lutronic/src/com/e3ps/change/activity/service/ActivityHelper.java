@@ -303,7 +303,8 @@ public class ActivityHelper {
 			WTDocumentMaster m = link.getDoc();
 			WTDocument doc = DocumentHelper.manager.latest(m);
 			Map<String, String> map = new HashMap<>();
-			map.put("oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("oid", doc.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("name", doc.getName());
 //			map.put("number", doc.getNumber());
 			map.put("number", IBAUtils.getStringValue(doc, "INTERALNUMBER"));
@@ -390,7 +391,7 @@ public class ActivityHelper {
 						+ part.getIterationIdentifier().getSeries().getValue());
 				map.put("part_state", part.getLifeCycleState().getDisplay());
 
-				// 개절된 데이터가 없을 경우
+				// 개정된 데이터가 없을 경우
 				if (!isRevise && !isFour) {
 					map.put("next_oid", "");
 					map.put("group", "");
@@ -561,7 +562,6 @@ public class ActivityHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTPartMaster.class, true);
 		QuerySpecUtils.toEquals(query, idx, WTPartMaster.class, WTPartMaster.NUMBER, prevNumber);
-		System.out.println(query);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		if (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
@@ -628,5 +628,75 @@ public class ActivityHelper {
 		result.put("2d", list2d);
 
 		return result;
+	}
+
+	/**
+	 * 설변 대상 품목
+	 */
+	public JSONArray getEcoParts(String oid) throws Exception {
+		Persistable per = CommonUtil.getObject(oid);
+		EChangeOrder eco = null;
+		if (per instanceof EChangeActivity) {
+			EChangeActivity eca = (EChangeActivity) per;
+			eco = (EChangeOrder) eca.getEo();
+		} else if (per instanceof EChangeOrder) {
+			eco = (EChangeOrder) per;
+		}
+		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		QuerySpec query = new QuerySpec();
+		int idx_link = query.appendClassList(EcoPartLink.class, true);
+		int idx_m = query.appendClassList(WTPartMaster.class, false);
+
+		ClassAttribute ca_m = new ClassAttribute(WTPartMaster.class, "thePersistInfo.theObjectIdentifier.id");
+		ClassAttribute ca_link = new ClassAttribute(EcoPartLink.class, "roleAObjectRef.key.id");
+
+		query.appendWhere(new SearchCondition(ca_m, "=", ca_link), new int[] { idx_m, idx_link });
+		query.appendAnd();
+		query.appendWhere(new SearchCondition(EcoPartLink.class, "roleBObjectRef.key.id", "=",
+				eco.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_link });
+
+		QuerySpecUtils.toOrderBy(query, idx_m, WTPartMaster.class, WTPartMaster.NUMBER, false);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EcoPartLink link = (EcoPartLink) obj[0];
+			WTPartMaster master = link.getPart();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), link.getVersion());
+			Map<String, Object> map = new HashMap<>();
+
+			map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("part_name", part.getName());
+			map.put("part_number", part.getNumber());
+			map.put("part_state", part.getLifeCycleState().getDisplay());
+			map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+			map.put("part_createdDate", part.getCreateTimestamp().toString().substring(0, 10));
+			map.put("part_creator", part.getCreatorFullName());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 설변활동 개수
+	 */
+	public int count() throws Exception {
+		WTUser sessionUser = CommonUtil.sessionUser();
+		QuerySpec query = new QuerySpec();
+		int idx_eca = query.appendClassList(EChangeActivity.class, true);
+		int idx_eco = query.appendClassList(EChangeOrder.class, false);
+
+		QuerySpecUtils.toInnerJoin(query, EChangeActivity.class, EChangeOrder.class, "eoReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx_eca, idx_eco);
+
+		// 관리자가 아닐경우
+		if (!CommonUtil.isAdmin()) {
+			QuerySpecUtils.toEqualsAnd(query, idx_eca, EChangeActivity.class, "activeUserReference.key.id",
+					sessionUser);
+		}
+		QuerySpecUtils.toEqualsAnd(query, idx_eca, EChangeActivity.class, "state.state", "INWORK");
+		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
+		return PersistenceHelper.manager.find(query).size();
 	}
 }

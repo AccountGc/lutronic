@@ -38,7 +38,7 @@ public interface CodeService {
 	 * 
 	 */
 
-	List<NumberCodeDTO> topCodeToList(String key);
+	List<NumberCodeDTO> topCodeToList(String key) throws Exception;
 
 	QueryResult getTopCode(String key);
 
@@ -58,6 +58,6 @@ public interface CodeService {
 
 	List<NumberCodeDTO> numberParentCodeList(String codeType, String parentOid, boolean search);
 
-	List<String> autoSearchNameRtnName(String codeType, String name);
+	List<String> autoSearchNameRtnName(String codeType, String name) throws Exception;
 
 }

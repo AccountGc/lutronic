@@ -32,7 +32,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "riskType", type = String.class),
 
-				@GeneratedProperty(name = "sendType", type = String.class)
+				@GeneratedProperty(name = "sendType", type = String.class),
+
+				@GeneratedProperty(name = "ecprStart", type = Boolean.class)
 
 		},
 

@@ -5,26 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.ECOChange;
-import com.e3ps.change.ECPRRequest;
-import com.e3ps.change.EChangeNotice;
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.cr.dto.CrDTO;
-import com.e3ps.change.ecn.dto.EcnDTO;
-import com.e3ps.change.eco.dto.EcoDTO;
-import com.e3ps.change.ecpr.dto.EcprDTO;
-import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
+import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.column.ApprovalLineColumn;
 import com.e3ps.workspace.dto.ApprovalLineDTO;
@@ -40,7 +32,6 @@ import wt.lifecycle.LifeCycleManaged;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
-import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
 
@@ -495,6 +486,9 @@ public class WorkspaceHelper {
 		} else if (per instanceof EPMDocument) {
 			EPMDocument epm = (EPMDocument) per;
 			name = epm.getNumber() + " [" + epm.getName() + "]";
+		} else if (per instanceof AsmApproval) {
+			AsmApproval asm = (AsmApproval) per;
+			name = asm.getNumber() + " [" + asm.getName() + "]";
 		}
 
 		return name;
@@ -640,6 +634,30 @@ public class WorkspaceHelper {
 		QueryResult result = PersistenceHelper.manager.navigate(per, "lineMaster", PersistMasterLink.class);
 		if (result.hasMoreElements()) {
 			return (ApprovalMaster) result.nextElement();
+		}
+
+		// 일괄결재 일 경우
+		if (result.size() == 0) {
+			result.reset();
+			AsmApproval asm = WorkspaceHelper.manager.getAsmApproval(per);
+			if (asm != null) {
+				result = PersistenceHelper.manager.navigate(asm, "lineMaster", PersistMasterLink.class);
+				if (result.hasMoreElements()) {
+					return (ApprovalMaster) result.nextElement();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 일괄결재 객체
+	 */
+	public AsmApproval getAsmApproval(Persistable per) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(per, "approval", AppPerLink.class);
+		if (qr.hasMoreElements()) {
+			AsmApproval asm = (AsmApproval) qr.nextElement();
+			return asm;
 		}
 		return null;
 	}

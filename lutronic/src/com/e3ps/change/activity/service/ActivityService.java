@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 
 import wt.method.RemoteInterface;
@@ -66,7 +65,7 @@ public interface ActivityService {
 	/**
 	 * EO 대상 품목 수정
 	 */
-	public abstract void replace(ArrayList<LinkedHashMap<String, Object>> addRows,
+	public abstract Map<String, Object> replace(ArrayList<LinkedHashMap<String, Object>> addRows,
 			ArrayList<LinkedHashMap<String, Object>> removeRows, String oid) throws Exception;
 
 	/**

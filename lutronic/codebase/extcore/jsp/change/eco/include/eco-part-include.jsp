@@ -9,12 +9,118 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
-String mode = request.getParameter("mode");
-boolean multi = Boolean.parseBoolean(request.getParameter("multi"));
-boolean view = "view".equals(mode);
-boolean update = "update".equals(mode);
-boolean create = "create".equals(mode);
 %>
+<style type="text/css">
+.preMerge {
+	font-weight: bold !important;
+	color: red !important;
+	background-color: rgb(206, 222, 255) !important;
+}
+
+.afterMerge {
+	font-weight: bold !important;
+	color: red !important;
+	background-color: rgb(200, 255, 203) !important;
+}
+</style>
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				완제품 품목
+			</div>
+		</td>
+	</tr>
+</table>
+
+<div id="grid500" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<script type="text/javascript">
+	let myGridID500;
+	const columns500 = [ {
+		dataField : "number",
+		headerText : "품목번호",
+		dataType : "string",
+		width : 180,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "name",
+		headerText : "품목명",
+		dataType : "string",
+		style : "aui-left",
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "state",
+		headerText : "상태",
+		dataType : "string",
+		width : 80,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "version",
+		headerText : "REV",
+		dataType : "string",
+		width : 80,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "creator",
+		headerText : "등록자",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "createdDate_txt",
+		headerText : "등록일",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "",
+		headerText : "BOM",
+		dataType : "string",
+		width : 80,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "",
+		headerText : "도면",
+		dataType : "string",
+		width : 80,
+		filter : {
+			showIcon : true,
+		},
+	} ]
+
+	function createAUIGrid500(columnLayout) {
+		const props = {
+			headerHeight : 30,
+			showRowNumColumn : true,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			enableSorting : false,
+			selectionMode : "multipleCells",
+			enableFilter : true,
+			autoGridHeight : true,
+		}
+		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
+		AUIGrid.setGridData(myGridID500,
+<%=AUIGridUtil.include(oid, "complete")%>
+	);
+	}
+</script>
+
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -26,131 +132,161 @@ boolean create = "create".equals(mode);
 	</tr>
 </table>
 
-<table class="create-table">
-	<colgroup>
-		<col width="150">
-		<col width="*">
-	</colgroup>
-	<tr>
-		<th class="lb">설계변경 품목</th>
-		<td class="indent5 <%if (!view) {%>pt5 <%}%>">
-			<%
-			if (create || update) {
-			%>
-			<input type="button" value="추가" title="추가" class="blue" onclick="popup500();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow500();">
-			<%
-			}
-			%>
-			<div id="grid500" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-		</td>
-	</tr>
-</table>
+<div id="grid510" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
-	let myGridID500;
-	const columns500 = [ {
+	let myGridID510;
+	const columns510 = [ {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
-		editable : false,
 		filter : {
 			showIcon : true,
 		},
 	}, {
-		dataField : "name",
-		headerText : "품목명",
-		dataType : "string",
-		style : "aui-left",
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
+		headerText : "변경 전",
+		children : [ {
+			dataField : "part_name",
+			dataType : "string",
+			headerText : "품목명",
+			cellColMerge : true, // 셀 가로 병합 실행
+			cellColSpan : 4, // 셀 가로 병합 대상은 6개로 설정
+			renderer : {
+				type : "LinkRenderer",
+				baseUrl : "javascript",
+				jsCallback : function(rowIndex, columnIndex, value, item) {
+					const oid = item.part_oid;
+					if (oid === "") {
+						return false;
+					}
+					const url = getCallUrl("/part/view?oid=" + oid);
+					_popup(url, 1600, 800, "n");
+				}
+			},
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (item.preMerge === true) {
+					return "preMerge";
+				}
+				return null;
+			},
+		}, {
+			dataField : "part_state",
+			dataType : "string",
+			headerText : "상태",
+			width : 80,
+		}, {
+			dataField : "part_version",
+			dataType : "string",
+			headerText : "REV",
+			width : 80,
+		}, {
+			dataField : "part_creator",
+			dataType : "string",
+			headerText : "등록자",
+			width : 100,
+		} ]
 	}, {
-		dataField : "version",
-		headerText : "REV",
-		dataType : "string",
-		width : 90,
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
+		headerText : "변경 후",
+		children : [ {
+			dataField : "next_name",
+			dataType : "string",
+			headerText : "품목명",
+			cellColMerge : true, // 셀 가로 병합 실행
+			cellColSpan : 4, // 셀 가로 병합 대상은 6개로 설정
+			renderer : {
+				type : "LinkRenderer",
+				baseUrl : "javascript",
+				jsCallback : function(rowIndex, columnIndex, value, item) {
+					const oid = item.next_oid;
+					if (oid === "") {
+						return false;
+					}
+					const url = getCallUrl("/part/view?oid=" + oid);
+					_popup(url, 1600, 800, "n");
+				}
+			},
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (item.afterMerge === true) {
+					return "afterMerge";
+				}
+				return null;
+			},
+		}, {
+			dataField : "next_state",
+			dataType : "string",
+			headerText : "상태",
+			width : 80,
+		}, {
+			dataField : "next_version",
+			dataType : "string",
+			headerText : "REV",
+			width : 80,
+		}, {
+			dataField : "next_creator",
+			dataType : "string",
+			headerText : "등록자",
+			width : 100,
+		} ]
 	}, {
-		dataField : "ecoNo",
 		headerText : "BOM",
-		dataType : "string",
-		width : 80,
-		editable : false,
-		filter : {
-			showIcon : true,
-		},
-	}, {
-		dataField : "part_oid",
-		dataType : "string",
-		visible : false
+		children : [ {
+			dataField : "",
+			dataType : "string",
+			headerText : "",
+			width : 140,
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "BOM 비교",
+				onClick : function(event) {
+					const oid = event.item.next_oid;
+				}
+			}
+		}, {
+			dataField : "",
+			dataType : "string",
+			headerText : "",
+			width : 140,
+			renderer : {
+				type : "ButtonRenderer",
+				labelText : "BOM 보기",
+				onClick : function(event) {
+					const oid = event.item.next_oid;
+					if (oid === "") {
+						alert("변경후 품목이 없습니다.");
+						return false;
+					}
+					const url = getCallUrl("/bom/view?oid=" + oid);
+					_popup(url, 1600, 800, "n");
+				}
+			}
+		} ]
 	} ]
-	
-	function createAUIGrid500(columnLayout) {
+
+	function createAUIGrid510(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
-			<%if (create || update) {%>
-			showStateColumn : true,
-			showRowCheckColumn : true,
-			<%}%>
-			<%if (!multi) {%>
-			rowCheckToRadio : true,
-			<%}%>
 			enableFilter : true,
 			autoGridHeight : true,
+			fillColumnSizeMode : true,
 			enableCellMerge : true,
-			rowSelectionWithMerge : true,
+			cellColMergeFunction : function(rowIndex, columnIndex, item) {
+				if (item.preMerge === true) {
+					return true;
+				}
+				if (item.afterMerge === true) {
+					return true;
+				}
+				return false;
+			},
 		}
-		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
-		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID500, <%=AUIGridUtil.include(oid, "part")%>);
-		<%}%>
+		myGridID510 = AUIGrid.create("#grid510", columnLayout, props);
+		AUIGrid.setGridData(myGridID510,
+<%=AUIGridUtil.include(oid, "part")%>
+	);
 	}
-
-	// 추가 버튼 클릭 시 팝업창 메서드
-	function popup500() {
-		const multi = "<%=multi%>";
-		const url = getCallUrl("/part/popup?method=insert500&multi=" + multi);
-		_popup(url, 1800, 900, "n");
-	}
-
-
-	function deleteRow500() {
-		const checkedItems = AUIGrid.getCheckedRowItems(myGridID500);
-		if (checkedItems.length === 0) {
-			alert("삭제할 행을 선택하세요.");
-			return false;
-		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID500, rowIndex);
-		}
-	}
-
-	function insert500(arr, callBack) {
-		arr.forEach(function(dd) {
-			const rowIndex = dd.rowIndex;
-			const item = dd.item;
-			const unique = AUIGrid.isUniqueValue(myGridID500, "part_oid", item.part_oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID500, item, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.number + " 품목은 이미 추가 되어있습니다.");
-			}
-		})
-		callBack(true);
-	}	
 </script>

@@ -3,47 +3,28 @@
 <%
 String partNumber = request.getParameter("partNumber");
 %>
-<input type="hidden" name="partNumber" id="partNumber"  value="<%= partNumber %>"/>
-<input type="hidden" name="_psize"  id="_psize"  value="10"/>
-<table border="0"  height="100%"  cellspacing="0" cellpadding="0" width="100%" style="table-layout:auto">
-		<tr>
-			<td align="left" valign=top height=42>
-				<table cellspacing="0" cellpadding="0" border=0 width=100% height=29 class="Subinfo_img_bg">
-					<tr>
-						<td></td>
-						<td>
-							&nbsp;
-<!-- 							<img src='/Windchill/jsp/portal/images/base_design/Sub_Right_ico.gif' width='10' height='9' /> -->
-							&nbsp; 품목 관리 > 품목 검색
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-</table>
-
-<table width="100%" border="0" cellpadding="0" cellspacing="3" >
-    <tr>
-		<td>
-			<div id="grid_wrap" style="border-top: 1px solid #3180c3;"></div>
-		</td>
-	</tr>
+<input type="hidden" name="sessionid" id="sessionid">
+<input type="hidden" name="curPage" id="curPage">
+<input type="hidden" name="partNumber" id="partNumber" value="<%=partNumber%>" />
+<input type="hidden" name="_psize" id="_psize" value="10" />
+<table class="button-table">
 	<tr>
-		<td>
-			<table width="100%" border="0" cellpadding="2" cellspacing="1" align="center" valign=top>
-				<tr height="35">
-					<td>
-						<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-					</td>
-				</tr>
-			</table>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				SEQ 현황
+			</div>
+		</td>
+		<td class="right">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
+<div id="grid_wrap" style="height: 330px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <script type="text/javascript">
-let myGridID;
-function _layout() {
-	return [{
+	let myGridID;
+	const columns = [ {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
@@ -66,7 +47,7 @@ function _layout() {
 		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
-		width : 380,
+		width : 350,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -93,7 +74,7 @@ function _layout() {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 90,
+		width : 80,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -102,7 +83,7 @@ function _layout() {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 100,
+		width : 80,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -111,84 +92,86 @@ function _layout() {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 140,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
 		},
 	}, {
-		dataField : "createDate",
+		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "string",
-		width : 140,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
 		},
 	}, {
-		dataField : "modifiedDate",
+		dataField : "modifitedDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 140,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
 		}
-	}]
-}
-	
-function createAUIGrid(columnLayout) {
-	const props = {
-		headerHeight : 30,
-		showRowNumColumn : true,
-		showRowCheckColumn : false,
-		rowNumHeaderText : "번호",
-		showAutoNoDataMessage : false,
-		selectionMode : "multipleCells",
-		enableMovingColumn : true,
-		enableFilter : true,
-		showInlineFilter : false,
-		useContextMenu : true,
-		enableRowCheckShiftKey : true,
-		enableRightDownFocus : true,
-		filterLayerWidth : 320,
-		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-	};
-	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-	loadGridData();
-	AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
-	AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-		hideContextMenu();
-	});
-	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-		hideContextMenu();
-	});
-}
+	}, {
+		dataField : "remarks",
+		headerText : "OEM Info.",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	} ]
 
-function loadGridData() {
-	let params = new Object();
-	const url = getCallUrl("/part/searchSeqAction");
-	const partNumber = document.querySelector("#partNumber").value;
-	const _psize = document.querySelector("#_psize").value;
-	params.partNumber = partNumber;
-	params._psize = _psize;
-	debugger;
-	AUIGrid.showAjaxLoader(myGridID);
-	call(url, params, function(data) {
-		AUIGrid.removeAjaxLoader(myGridID);
-		if (data.result) {
-			totalPage = Math.ceil(data.total / data.pageSize);
-// 			document.getElementById("sessionid").value = data.sessionid;
-			createPagingNavigator(data.curPage);
-			AUIGrid.setGridData(myGridID, data.list);
-		} else {
-			alert(data.msg);
-		}
-	});
-}
+	function createAUIGrid(columnLayout) {
+		const props = {
+			headerHeight : 30,
+			showRowNumColumn : true,
+			showRowCheckColumn : false,
+			rowNumHeaderText : "번호",
+			showAutoNoDataMessage : false,
+			selectionMode : "multipleCells",
+			enableFilter : true,
+			showInlineFilter : false,
+			enableRightDownFocus : true,
+			filterLayerWidth : 320,
+			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+		};
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+		loadGridData();
+	}
 
-document.addEventListener("DOMContentLoaded", function() {
-	const columns = loadColumnLayout("seq-list");
-	createAUIGrid(columns);
-});
+	function loadGridData() {
+		let params = new Object();
+		const url = getCallUrl("/part/seq");
+		const partNumber = document.querySelector("#partNumber").value;
+		const field = [ "partNumber" ];
+		params = toField(params, field);
+		openLayer();
+		AUIGrid.showAjaxLoader(myGridID);
+		call(url, params, function(data) {
+			AUIGrid.removeAjaxLoader(myGridID);
+			if (data.result) {
+				totalPage = Math.ceil(data.total / data.pageSize);
+				document.getElementById("sessionid").value = data.sessionid;
+				createPagingNavigator(data.curPage);
+				AUIGrid.setGridData(myGridID, data.list);
+			} else {
+				alert(data.msg);
+			}
+			closeLayer();
+		});
+	}
+
+	document.addEventListener("DOMContentLoaded", function() {
+		createAUIGrid(columns);
+		AUIGrid.resize(myGridID);
+	});
+
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID);
+	});
 </script>

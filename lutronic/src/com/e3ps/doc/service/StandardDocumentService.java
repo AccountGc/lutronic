@@ -23,18 +23,15 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.groupware.workprocess.AppPerLink;
-import com.e3ps.groupware.workprocess.AsmApproval;
-import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.AppPerLink;
+import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.service.WorkDataHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -58,9 +55,7 @@ import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
-import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
-import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.pdmlink.PDMLinkProduct;
@@ -215,6 +210,12 @@ public class StandardDocumentService extends StandardManager implements Document
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
 			doc = (WTDocument) PersistenceHelper.manager.save(doc);
+
+			// 상태값 변경
+			if ("LC_Default_NonWF".equals(lifecycle)) {
+				doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+				LifeCycleHelper.service.setLifeCycleState(doc, State.toState("BATCHAPPROVAL"), false);
+			}
 
 			// 첨부 파일 저장
 			saveAttach(doc, dto);
@@ -371,56 +372,54 @@ public class StandardDocumentService extends StandardManager implements Document
 
 	@Override
 	public void register(Map<String, Object> params) throws Exception {
+		String appName = (String) params.get("appName");
+		String description = (String) params.get("description");
+		String type = (String) params.get("type");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			String searchType = StringUtil.checkNull((String) params.get("searchType"));
-			String description = StringUtil.checkNull((String) params.get("description"));
 			String number = "";
-			if (searchType.length() > 0) {
-				if ("DOC".equals(searchType)) {
-					number = "NDBT";
-				} else if ("ROHS".equals(searchType)) {
-					number = "ROHSBT";
-				} else if ("MOLD".equals(searchType)) {
-					number = "MMBT";
-				}
+			if ("DOC".equals(type)) {
+				number = "NDBT";
+			} else if ("ROHS".equals(type)) {
+				number = "ROHSBT";
+			} else if ("MOLD".equals(type)) {
+				number = "MMBT";
 			}
+
 			String today = DateUtil.getDateString(new Date(), new SimpleDateFormat("yyyyMM"));
 			number = number.concat("-").concat(today).concat("-");
-			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "WTDocumentMaster", "WTDocumentNumber");
+			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "AsmApproval", "AsmNumber");
 			number = number + seqNo;
 
 			AsmApproval asm = AsmApproval.newAsmApproval();
 
-			String appName = StringUtil.checkNull((String) params.get("appName"));
 			asm.setNumber(number);
 			asm.setName(appName);
 			asm.setDescription(description);
 
-			// 문서 분류쳬게 설정
 			Folder folder = FolderTaskLogic.getFolder("/Default/AsmApproval", WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) asm, folder);
 
-			// 문서 lifeCycle 설정
-			PDMLinkProduct e3psProduct = WCUtil.getPDMLinkProduct();
-			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(e3psProduct);
 			LifeCycleHelper.setLifeCycle(asm,
-					LifeCycleHelper.service.getLifeCycleTemplate("LC_Default", wtContainerRef)); // Lifecycle
+					LifeCycleHelper.service.getLifeCycleTemplate("LC_Default", WCUtil.getWTContainerRef())); // Lifecycle
 
 			asm = (AsmApproval) PersistenceHelper.manager.save(asm);
 
-			ArrayList<Map<String, Object>> gridList = (ArrayList<Map<String, Object>>) params.get("gridList");
+			ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) params.get("list");
 
-			for (Map<String, Object> map : gridList) {
-				String docOid = (String) map.get("oid");
-				WTDocument doc = (WTDocument) CommonUtil.getObject(docOid);
-
+			for (Map<String, Object> map : list) {
+				String oid = (String) map.get("oid");
+				WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 				AppPerLink link = AppPerLink.newAppPerLink(doc, asm);
-				E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, asm.getLifeCycleState().toString());
-				PersistenceServerHelper.manager.insert(link);
+				LifeCycleHelper.service.setLifeCycleState(doc, State.toState(asm.getLifeCycleState().toString()));
+//				E3PSWorkflowHelper.service.changeLCState((LifeCycleManaged) doc, asm.getLifeCycleState().toString());
+				PersistenceHelper.manager.save(link);
 			}
+
+			// 결제선 지정 만들기
+			WorkDataHelper.service.create(asm);
 
 			trs.commit();
 			trs = null;

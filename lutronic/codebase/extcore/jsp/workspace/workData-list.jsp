@@ -159,7 +159,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "persistType",
 					headerText : "객체유형",
 					dataType : "string",
-					width : 120,
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true

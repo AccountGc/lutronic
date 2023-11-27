@@ -33,13 +33,10 @@ public interface PartService {
 
 	Map<String, Object> updatePartAction(Map<String, Object> params);
 
-	String createPackagePartAction(HttpServletRequest request, HttpServletResponse response);
-
 	ResultData changeNumber(HttpServletRequest req);
 
 	List<Map<String, Object>> partBomListGrid(String oid) throws Exception;
 
-	ResultData partStateChange(HttpServletRequest request, HttpServletResponse response);
 
 	ResultData updatePackagePartAction(HttpServletRequest request, HttpServletResponse response);
 
@@ -62,8 +59,6 @@ public interface PartService {
 
 	Hashtable modify(Map hash, String[] loc, String[] deloc) throws Exception;
 
-	Map<String, Object> getPartTreeAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
 	Map<String, Object> getBaseLineCompare(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	QuerySpec getEPMNumber(String number) throws Exception;
@@ -78,25 +73,13 @@ public interface PartService {
 
 	Map<String, Object> selectEOPartAction(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	List<Map<String, Object>> viewPartBomAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception;
-
-	Map<String, Object> searchSeqAction(Map<String, Object> params) throws Exception;
-
 	List<PartData> include_partLink(String module, String oid);
 
 	ResultData linkPartAction(HttpServletRequest request, HttpServletResponse response);
 
 	ResultData deletePartLinkAction(HttpServletRequest request, HttpServletResponse response);
 
-	List<Map<String, Object>> partInstanceGrid(String oid) throws Exception;
 
-	List<Map<String, Object>> listAUIPartAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception;
-	// Map<String, String> createProduct(Map<String, Object> hash) throws Exception;
-	// boolean isDubleCheck(String number);
-	// Map<String, Object> getBaselineinfo(String oid, String oid2, String baseline,
-	// String baseline2) throws Exception;
 
 	void partTreeSelectAttachDown(HttpServletRequest request, HttpServletResponse response, Map<String, Object> param)
 			throws Exception;
@@ -119,8 +102,6 @@ public interface PartService {
 
 	ResultData updateAUIPartChangeAction(Map<String, Object> param);
 
-	Map<String, Object> listPagingAUIPartAction(HttpServletRequest request, HttpServletResponse response)
-			throws Exception;
 
 	public void createComments(Map<String, Object> params) throws Exception;
 

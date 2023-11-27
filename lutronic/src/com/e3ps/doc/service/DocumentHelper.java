@@ -3,7 +3,6 @@ package com.e3ps.doc.service;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
@@ -20,19 +19,13 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.development.devActive;
-import com.e3ps.development.devOutPutLink;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
-import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.groupware.workprocess.AsmApproval;
-import com.e3ps.groupware.workprocess.service.AsmSearchHelper;
 import com.e3ps.part.column.PartColumn;
 
 import net.sf.json.JSONArray;
@@ -107,9 +100,12 @@ public class DocumentHelper {
 				WTAttributeNameIfc.ID_NAME, idx, idx_m);
 
 		// 상태 임시저장 제외
-    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-    	query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
-    	
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(new SearchCondition(WTDocument.class, WTDocument.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL,
+				"TEMPRARY"), new int[] { idx });
+
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.NUMBER, number);
 		QuerySpecUtils.toLikeAnd(query, idx, WTDocument.class, WTDocument.DESCRIPTION, description);
@@ -536,98 +532,6 @@ public class DocumentHelper {
 			map.put("key", t.toString());
 			map.put("value", t.getDisplay());
 			list.add(map);
-		}
-		return JSONArray.fromObject(list);
-	}
-
-	public JSONArray include_DocumentList(String oid, String moduleType) throws Exception {
-		ArrayList<Map<String, Object>> list = new ArrayList<>();
-		try {
-			if (StringUtil.checkString(oid)) {
-				if ("part".equals(moduleType)) {
-					WTPart part = (WTPart) CommonUtil.getObject(oid);
-					QueryResult qr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
-					while (qr.hasMoreElements()) {
-						WTDocument doc = (WTDocument) qr.nextElement();
-						DocumentDTO data = new DocumentDTO(doc);
-						// Part가 최신 버전이면 관련 문서가 최신 버전만 ,Part가 최신 버전이 아니면 모든 버전
-						if (CommonUtil.isLatestVersion(part)) {
-							if (data.isLatest()) {
-								Map<String, Object> map = new HashMap<>();
-								map.put("number", data.getNumber());
-								map.put("name", data.getName());
-								map.put("version", data.getVersion());
-								map.put("creator", data.getCreator());
-								map.put("createdDate", data.getCreatedDate());
-								list.add(map);
-							}
-						} else {
-							Map<String, Object> map = new HashMap<>();
-							map.put("number", data.getNumber());
-							map.put("name", data.getName());
-							map.put("version", data.getVersion());
-							map.put("creator", data.getCreator());
-							map.put("createdDate", data.getCreatedDate());
-							list.add(map);
-						}
-					}
-				} else if ("doc".equals(moduleType)) {
-					List<DocumentDTO> dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "used");
-					for (DocumentDTO data : dataList) {
-						Map<String, Object> map = new HashMap<>();
-						map.put("number", data.getNumber());
-						map.put("name", data.getName());
-						map.put("version", data.getVersion());
-						map.put("creator", data.getCreator());
-						map.put("createdDate", data.getCreatedDate());
-						list.add(map);
-					}
-
-					dataList = DocumentQueryHelper.service.getDocumentListToLinkRoleName(oid, "useBy");
-					for (DocumentDTO data : dataList) {
-						Map<String, Object> map = new HashMap<>();
-						map.put("number", data.getNumber());
-						map.put("name", data.getName());
-						map.put("version", data.getVersion());
-						map.put("creator", data.getCreator());
-						map.put("createdDate", data.getCreatedDate());
-						list.add(map);
-					}
-
-				} else if ("active".equals(moduleType)) {
-					devActive m = (devActive) CommonUtil.getObject(oid);
-					QueryResult qr = PersistenceHelper.manager.navigate(m, "output", devOutPutLink.class);
-
-					while (qr.hasMoreElements()) {
-						Object p = (Object) qr.nextElement();
-						if (p instanceof WTDocument) {
-							DocumentDTO data = new DocumentDTO((WTDocument) p);
-							Map<String, Object> map = new HashMap<>();
-							map.put("number", data.getNumber());
-							map.put("name", data.getName());
-							map.put("version", data.getVersion());
-							map.put("creator", data.getCreator());
-							map.put("createdDate", data.getCreatedDate());
-							list.add(map);
-						}
-					}
-				} else if ("asm".equals(moduleType)) {
-					AsmApproval asm = (AsmApproval) CommonUtil.getObject(oid);
-					List<WTDocument> aList = AsmSearchHelper.service.getObjectForAsmApproval(asm);
-					for (WTDocument doc : aList) {
-						DocumentDTO data = new DocumentDTO(doc);
-						Map<String, Object> map = new HashMap<>();
-						map.put("number", data.getNumber());
-						map.put("name", data.getName());
-						map.put("version", data.getVersion());
-						map.put("creator", data.getCreator());
-						map.put("createdDate", data.getCreatedDate());
-						list.add(map);
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return JSONArray.fromObject(list);
 	}

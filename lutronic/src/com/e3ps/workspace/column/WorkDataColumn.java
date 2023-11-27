@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
-import wt.lifecycle.LifeCycleManaged;
 
 @Getter
 @Setter
@@ -97,6 +96,23 @@ public class WorkDataColumn {
 			setCreator(rohs.getCreatorName());
 			setCreatedDate(rohs.getCreateTimestamp());
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
+		} else if (per instanceof AsmApproval) {
+			AsmApproval asm = (AsmApproval) per;
+			String number = asm.getNumber();
+			setNumber(number);
+
+			if (number.startsWith("NDBT")) {
+				setPersistType("일괄결재(문서)");
+			} else if (number.startsWith("ROHSBT")) {
+				setPersistType("일괄결재(ROHS)");
+			} else if (number.startsWith("MMBT")) {
+				setPersistType("일괄결재(금형문서)");
+			}
+			setName(asm.getName());
+			setState(asm.getLifeCycleState().getDisplay());
+			setCreator(asm.getCreatorName());
+			setCreatedDate(asm.getCreateTimestamp());
+			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
 		}
 	}
 }

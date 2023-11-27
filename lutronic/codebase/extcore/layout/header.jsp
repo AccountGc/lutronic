@@ -28,9 +28,10 @@ PeopleDTO dto = (PeopleDTO) request.getAttribute("dto");
 
 // 결재 개수
 int workData = (int) request.getAttribute("workData");
+int eca = (int) request.getAttribute("eca");
 %>
 <%@include file="/extcore/jsp/common/script.jsp"%>
-<nav class="navbar-default navbar-static-side" role="navigation" id="navigation">
+<nav class="54navbar-default navbar-static-side" role="navigation" id="navigation">
 	<div class="sidebar-collapse">
 		<ul class="nav metismenu" id="side-menu">
 			<li class="nav-header">
@@ -68,12 +69,10 @@ int workData = (int) request.getAttribute("workData");
 						<a onclick="moveToPage(this, '/activity/eca', '> 나의업무 > ECA 활동함');">
 							ECA 활동함
 							<span class="label label-info float-right">
-								<%
-								//=count.get("check")
-								%>
+								<%=eca%>
 							</span>
 						</a>
-					</li>					
+					</li>
 					<li>
 						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
 							결재함
@@ -134,9 +133,9 @@ int workData = (int) request.getAttribute("workData");
 							</span>
 						</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의업무 > 일괄결재 검색');">일괄결재 검색</a>
-					</li>
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/asmApproval/listAsm', '> 나의업무 > 일괄결재 검색');">일괄결재 검색</a> -->
+					<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a>
 					</li>
@@ -145,7 +144,7 @@ int workData = (int) request.getAttribute("workData");
 					</li>
 					<li>
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
-<!-- 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a> -->
+						<!-- 						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a> -->
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a>
@@ -172,9 +171,9 @@ int workData = (int) request.getAttribute("workData");
 					<li>
 						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄등록');">문서 일괄등록</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/doc/register', '> 문서관리 > 문서 일괄결재');">문서 일괄결재</a>
-					</li>
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/doc/register', '> 문서관리 > 문서 일괄결재');">문서 일괄결재</a> -->
+					<!-- 					</li> -->
 				</ul>
 			</li>
 			<%
@@ -189,13 +188,13 @@ int workData = (int) request.getAttribute("workData");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 품목 검색');">품목 검색</a>
+						<a onclick="moveToPage(this, '/part/list', '> 품목관리 > 제품/품목 검색');">제품/품목 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/part/create', '> 품목관리 > 품목 등록');">품목 등록</a>
+						<a onclick="moveToPage(this, '/part/create', '> 품목관리 > 제품/품목 등록');">제품/품목 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 품목 일괄등록');">품목 일괄등록</a>
+						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 제품/품목 일괄등록');">제품/품목 일괄등록</a>
 					</li>
 					<!-- 					<li> -->
 					<!-- 						<a onclick="moveToPage(this, '/part/editor', '> 품목관리 > BOM EDITOR');">BOM EDITOR</a> -->
@@ -428,9 +427,9 @@ int workData = (int) request.getAttribute("workData");
 					<li>
 						<a onclick="moveToPage(this, '/code/list', '> 관리자 > 코드체계관리');">코드체계관리</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/activity/list', '> 관리자 > 설계변경관리');">설계변경관리</a> -->
-<!-- 					</li> -->
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/activity/list', '> 관리자 > 설계변경관리');">설계변경관리</a> -->
+					<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/admin/mail', '> 관리자 > 외부메일관리');">외부메일관리</a>
 					</li>

@@ -6,7 +6,7 @@
 <%
 String oid = (String) request.getAttribute("oid");
 EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
-ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.getAttribute("list");
+JSONArray list = (JSONArray) request.getAttribute("list");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
 <table class="button-table">
@@ -103,7 +103,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 			showStateColumn : true,
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-		AUIGrid.setGridData(myGridID, <%=JSONArray.fromObject(list)%>);
+		AUIGrid.setGridData(myGridID, <%=list%>);
 	}
 
 	function deleteRow() {

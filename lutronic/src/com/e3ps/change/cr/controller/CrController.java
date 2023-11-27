@@ -33,7 +33,7 @@ public class CrController extends BaseController {
 	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
@@ -65,7 +65,7 @@ public class CrController extends BaseController {
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
@@ -106,7 +106,7 @@ public class CrController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "CR 삭제 함수")
 	@ResponseBody
 	@DeleteMapping(value = "/delete")
@@ -123,7 +123,7 @@ public class CrController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "CR 상세 페이지")
 	@GetMapping(value = "/view")
 	public ModelAndView view(@RequestParam String oid) throws Exception {
@@ -135,7 +135,7 @@ public class CrController extends BaseController {
 		model.setViewName("popup:/change/cr/cr-view");
 		return model;
 	}
-	
+
 	@Description(value = "CR 수정 페이지")
 	@GetMapping(value = "/update")
 	public ModelAndView update(@RequestParam String oid) throws Exception {
@@ -151,11 +151,11 @@ public class CrController extends BaseController {
 		model.setViewName("popup:/change/cr/cr-update");
 		return model;
 	}
-	
+
 	@Description(value = "CR 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/modify")
-	public Map<String, Object> modify(@RequestBody CrDTO dto) throws Exception{
+	public Map<String, Object> modify(@RequestBody CrDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			CrHelper.service.modify(dto);

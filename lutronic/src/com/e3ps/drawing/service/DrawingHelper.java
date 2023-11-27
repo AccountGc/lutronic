@@ -52,7 +52,7 @@ import wt.vc.config.LatestConfigSpec;
 public class DrawingHelper {
 	public static final DrawingService service = ServiceFactory.getService(DrawingService.class);
 	public static final DrawingHelper manager = new DrawingHelper();
-	public static final String ROOTLOCATION = "/Default/PART_Drawing";
+	public static final String PART_ROOT = "/Default/PART_Drawing";
 
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 

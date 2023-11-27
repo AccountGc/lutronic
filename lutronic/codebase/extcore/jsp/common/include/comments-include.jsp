@@ -91,11 +91,11 @@
 	function sendUpdate(oid, mdepth) {
 		document.getElementById("mdepth").value = mdepth;
 		const url = getCallUrl("/comments/get?oid=" + oid);
-		openLayer();
 		call(url, null, function(data) {
+			openLayer();
 			if(data.result) {
 				document.getElementById("moid").value = oid;
-				var comment = data.comments;
+				const comment = data.comments;
 				comment = comment.replaceAll("<br/>","\n");
 				document.getElementsByName("data")[1].value = comment;
 			} else {

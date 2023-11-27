@@ -15,7 +15,6 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,6 +53,10 @@ import wt.httpgw.URLFactory;
 import wt.iba.value.IBAHolder;
 import wt.inf.container.WTContainerRef;
 import wt.inf.library.WTLibrary;
+import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleTemplate;
+import wt.lifecycle.PhaseTemplate;
+import wt.lifecycle.State;
 import wt.method.RemoteMethodServer;
 import wt.org.OrganizationServicesHelper;
 import wt.org.WTPrincipal;
@@ -348,7 +351,7 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	}
 
 	public static boolean isSupervisor() throws Exception {
-		WTUser user = (WTUser)SessionHelper.manager.getPrincipal();
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		String name = user.getName();
 		return "wcadmin".equals(name);
 	}
@@ -403,7 +406,7 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	}
 
 	public static String getUserNameFromOid(String ida2a2) throws WTException {
-		if(ida2a2==null || ida2a2.equals("")) {
+		if (ida2a2 == null || ida2a2.equals("")) {
 			return "";
 		}
 		String oid = "wt.org.WTUser:" + ida2a2;
@@ -749,7 +752,6 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		return dest;
 	}
 
-
 	/**
 	 * 최신버전의 객체인지 확인
 	 */
@@ -790,9 +792,9 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		VersionReference reference = (VersionReference) map.get(persistable);
 		return reference.getObject();
 	}
-	
+
 	public static String getUserOid(String ida2a2) throws WTException {
-		if(ida2a2==null) {
+		if (ida2a2 == null) {
 			return "";
 		}
 		String oid = "wt.org.WTUser:" + ida2a2;
@@ -803,5 +805,20 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 		} else {
 			return "";
 		}
+	}
+
+	public static List<Map<String, String>> getLifeCycleState(String name) throws Exception {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		LifeCycleTemplate lct = LifeCycleHelper.service.getLifeCycleTemplate(name, WCUtil.getWTContainerRef());
+		Vector states = LifeCycleHelper.service.getPhaseTemplates(lct);
+		for (int i = 0; i < states.size(); i++) {
+			PhaseTemplate pt = (PhaseTemplate) states.get(i);
+			State state = pt.getPhaseState();
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("name", state.getDisplay());
+			map.put("code", state.toString());
+			list.add(map);
+		}
+		return list;
 	}
 }

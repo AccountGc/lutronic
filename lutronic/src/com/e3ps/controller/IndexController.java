@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
@@ -81,6 +82,7 @@ public class IndexController extends BaseController {
 		String auths = dto.getAuth();
 
 		int workData = WorkDataHelper.manager.count();
+		int eca = ActivityHelper.manager.count();
 
 		Map<String, Integer> count = WorkspaceHelper.manager.count();
 		boolean isWork = CommonUtil.isAdmin();
@@ -115,6 +117,7 @@ public class IndexController extends BaseController {
 		// 결재 재수
 		model.addObject("coun", count);
 		model.addObject("workData", workData);
+		model.addObject("eca", eca);
 
 		model.addObject("isRa", isRa);
 		model.addObject("isProduction", isProduction);

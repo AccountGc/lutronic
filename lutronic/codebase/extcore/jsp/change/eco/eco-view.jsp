@@ -35,10 +35,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">산출물</a>
+			<a href="#tabs-2">연관품목</a>
 		</li>
 		<li>
-			<a href="#tabs-3">이력 관리</a>
+			<a href="#tabs-3">산출물</a>
+		</li>
+		<li>
+			<a href="#tabs-4">이력 관리</a>
 		</li>
 	</ul>
 	<div id="tabs-1">
@@ -117,13 +120,17 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
-
 	<div id="tabs-2">
-		<jsp:include page="/extcore/jsp/change/include/change-output.jsp">
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-part-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
 	<div id="tabs-3">
+		<jsp:include page="/extcore/jsp/change/include/change-output.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+		</jsp:include>
+	</div>
+	<div id="tabs-4">
 		<!-- 이력관리 -->
 		<jsp:include page="/extcore/jsp/change/eco/include/eco-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
@@ -147,11 +154,23 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
+				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-1":
+				case "tabs-2":
+					const isCreated500 = AUIGrid.isCreated(myGridID500); // 다운로드이력
+					if (isCreated500) {
+						AUIGrid.resize(myGridID500);
+					} else {
+						createAUIGrid500(columns500);
+					}
+					const isCreated510 = AUIGrid.isCreated(myGridID510); // 다운로드이력
+					if (isCreated510) {
+						AUIGrid.resize(myGridID510);
+					} else {
+						createAUIGrid510(columns510);
+					}
 					break;
-				case "tabs-3":
+				case "tabs-4":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
 					if (isCreated51) {
 						AUIGrid.resize(myGridID51);
@@ -182,6 +201,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID700);
+		AUIGrid.resize(myGridID500);
+		AUIGrid.resize(myGridID510);
+		AUIGrid.resize(myGridID51);
+		AUIGrid.resize(myGridID10000);
+		AUIGrid.resize(myGridID10001);
 	})
 
 	function modify() {

@@ -184,7 +184,7 @@ public class StandardCodeService extends StandardManager implements CodeService 
 	}
 
 	@Override
-	public List<String> autoSearchNameRtnName(String codeType, String name) {
+	public List<String> autoSearchNameRtnName(String codeType, String name) throws Exception {
 		List<String> list = new ArrayList<String>();
 
 		QueryResult qr = autoSearchNameResult(codeType, name);
@@ -192,7 +192,7 @@ public class StandardCodeService extends StandardManager implements CodeService 
 			Object[] o = (Object[]) qr.nextElement();
 			NumberCode numbercode = (NumberCode) o[0];
 			NumberCodeDTO data = new NumberCodeDTO(numbercode);
-			list.add(data.name);
+			list.add(data.getName());
 		}
 
 		return list;
@@ -397,7 +397,7 @@ public class StandardCodeService extends StandardManager implements CodeService 
 	}
 
 	@Override
-	public List<NumberCodeDTO> topCodeToList(String key) {
+	public List<NumberCodeDTO> topCodeToList(String key) throws Exception {
 		List<NumberCodeDTO> list = new ArrayList<NumberCodeDTO>();
 		QueryResult qr = getTopCode(key);
 		while (qr.hasMoreElements()) {

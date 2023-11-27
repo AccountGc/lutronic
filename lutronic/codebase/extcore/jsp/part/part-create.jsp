@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
@@ -24,23 +25,24 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 </head>
 <body>
 	<form>
-		<input type="hidden" name="wtPartType"		id="wtPartType"		 	value="separable"     />
-		<input type="hidden" name="source"			id="source"	      		value="make"            />
-		<input type="hidden" name="lifecycle"   	id="lifecycle"			value="LC_PART"  />
-		<input type="hidden" name="view"			id="view"        		value="Design" />
-		
+		<input type="hidden" name="wtPartType" id="wtPartType" value="separable">
+		<input type="hidden" name="source" id="source" value="make">
+		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_PART">
+		<input type="hidden" name="view" id="view" value="Design">
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 채번 정보
+						<img src="/Windchill/extcore/images/header.png">
+						채번 정보
 					</div>
 				</td>
 				<td class="right">
-						<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-						<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
-					</td>
-				</tr>
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+				</td>
+			</tr>
 		</table>
 		<table class="create-table">
 			<colgroup>
@@ -53,17 +55,15 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<th class="req lb">품목분류</th>
 				<td class="indent5">
-					<input type="hidden" name="location"  id="location"  value="/Default/PART_Drawing">
-					<span id="locationText">
-						/Default/PART_Drawing
-					</span>
+					<input type="hidden" name="location" id="location" value="/Default/PART_Drawing">
+					<span id="locationText"><%=PartHelper.PART_ROOT%></span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 				</td>
 				<th class="req" rowspan="4">품목명</th>
 				<th class="lb">대제목</th>
 				<td class="indent5">
-					<input id="partName1" name="partName1" class='partName width-200' type="text" >
-					<div id="partName1Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
+					<input id="partName1" name="partName1" class='partName width-200' type="text">
+					<div id="partName1Search" style="width: 250px; display: none; border: 1px solid black; position: absolute; background-color: white;">
 						<ul id="partName1UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 						</ul>
 					</div>
@@ -72,16 +72,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<th class="req lb">품목구분</th>
 				<td class="indent5">
-					<select id="partType1" name="partType1"  class="width-200">
-						<option value="">
-							선택
-						</option>
+					<select id="partType1" name="partType1" class="width-200">
+						<option value="">선택</option>
 					</select>
 				</td>
 				<th class="lb">중제목</th>
 				<td class="indent5">
-					<input id="partName2" name="partName2" class='partName width-200' type="text" >
-					<div id="partName2Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
+					<input id="partName2" name="partName2" class='partName width-200' type="text">
+					<div id="partName2Search" style="width: 250px; display: none; border: 1px solid black; position: absolute; background-color: white;">
 						<ul id="partName2UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 						</ul>
 					</div>
@@ -90,16 +88,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<th class="req lb">대분류</th>
 				<td class="indent5">
-					<select id="partType2" name="partType2"  class="width-200">
-						<option value="">
-							선택
-						</option>
+					<select id="partType2" name="partType2" class="width-200">
+						<option value="">선택</option>
 					</select>
 				</td>
 				<th class="lb">소제목</th>
 				<td class="indent5">
-					<input id="partName3" name="partName3" class='partName width-200' type="text" >
-					<div id="partName3Search" style="width: 250px; display: none; border: 1px solid black ; position: absolute; background-color: white;">
+					<input id="partName3" name="partName3" class='partName width-200' type="text">
+					<div id="partName3Search" style="width: 250px; display: none; border: 1px solid black; position: absolute; background-color: white;">
 						<ul id="partName3UL" style="list-style-type: none; padding-left: 5px; text-align: left;">
 						</ul>
 					</div>
@@ -108,39 +104,43 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<th class="req lb">중분류</th>
 				<td class="indent5">
-					<select id="partType3" name="partType3"  class="width-200">
-						<option value="">
-							선택
-						</option>
+					<select id="partType3" name="partType3" class="width-200">
+						<option value="">선택</option>
 					</select>
 				</td>
-				<th class="lb">사용자 Key in</th>
+				<th class="lb">사용자 KEY IN</th>
 				<td class="indent5">
-					<input type="text"  class="partName width-200" name="partName4" id="partName4" >
+					<input type="text" class="partName width-200" name="partName4" id="partName4">
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">SEQ <br><span style="color:red;">(3자리)</span></th>
+				<th class="lb">
+					SEQ
+					<span style="color: red;">(3자리)</span>
+				</th>
 				<td class="indent5">
-					<input type="text" name="seq" id="seq" class="width-200">
+					<input type="text" name="seq" id="seq" class="width-200" maxlength="3">
 					<input type="button" class="btnSearch" value="SEQ 현황보기" title="SEQ 현황보기" onclick="seqList();">
 				</td>
-				<td class="indent5" colspan="3">
-					<div id="partTypeNum" style="padding-left: 45%;font-weight:bold; vertical-align:middle; float: left;"></div>
+				<td colspan="3" rowspan="3">
+					<div id="partTypeNum" style="font-size: 24px; padding-left: 45%; font-weight: bold; vertical-align: middle; float: left;"></div>
 					<div id="manualNum">
-						<div id="seqNum" style="font-weight:bold; vertical-align:middle; float: left;"></div>
-						<div id="etcNum" style="font-weight:bold; vertical-align:middle; float: left;"></div>
+						<div id="seqNum" style="font-size: 24px; font-weight: bold; vertical-align: middle; float: left;"></div>
+						<div id="etcNum" style="font-size: 24px; font-weight: bold; vertical-align: middle; float: left;"></div>
 					</div>
-					<br>
+					<div style="clear: both;"></div>
 					<div style="text-align: center;">
-						<span style="font-weight: bold; vertical-align: middle;" id="displayName"></span>
+						<span style="font-size: 24px; font-weight: bold; vertical-align: middle;" id="displayName"></span>
 					</div>
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">기타 <br><span style="color:red;">(2자리)</span></th>
+				<th class="lb">
+					기타
+					<span style="color: red;">(2자리)</span>
+				</th>
 				<td class="indent5" colspan="4">
-					<input type="text" name="etc" id="etc" class="width-200">
+					<input type="text" name="etc" id="etc" class="width-200" maxlength="2">
 				</td>
 			</tr>
 		</table>
@@ -148,12 +148,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 품목 속성
+						<img src="/Windchill/extcore/images/header.png">
+						품목 속성
 					</div>
 				</td>
 			</tr>
 		</table>
-		
+
 		<table class="create-table">
 			<colgroup>
 				<col width="150">
@@ -169,7 +170,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (NumberCode model : modelList) {
 						%>
-						<option value="<%=model.getCode() %>"><%=model.getName()%></option>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
 						<%
 						}
 						%>
@@ -182,7 +183,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (NumberCode productmethod : productmethodList) {
 						%>
-						<option value="<%=productmethod.getCode() %>"><%=productmethod.getName()%></option>
+						<option value="<%=productmethod.getCode()%>"><%=productmethod.getName()%></option>
 						<%
 						}
 						%>
@@ -197,7 +198,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (NumberCode deptcode : deptcodeList) {
 						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
@@ -210,7 +211,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (QuantityUnit unit : unitList) {
 						%>
-						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<option value="<%=unit.toString()%>"><%=unit.getDisplay()%></option>
 						<%
 						}
 						%>
@@ -229,7 +230,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (NumberCode manufacture : manufactureList) {
 						%>
-						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
 						<%
 						}
 						%>
@@ -244,7 +245,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (NumberCode mat : matList) {
 						%>
-						<option value="<%=mat.getCode() %>"><%=mat.getName()%></option>
+						<option value="<%=mat.getCode()%>"><%=mat.getName()%></option>
 						<%
 						}
 						%>
@@ -257,7 +258,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<%
 						for (NumberCode finish : finishList) {
 						%>
-						<option value="<%=finish.getCode() %>"><%=finish.getName()%></option>
+						<option value="<%=finish.getCode()%>"><%=finish.getName()%></option>
 						<%
 						}
 						%>
@@ -275,12 +276,13 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 		</table>
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 주 도면&nbsp;&nbsp;
+						<img src="/Windchill/extcore/images/header.png">
+						주 도면&nbsp;&nbsp;
 						<span class="red">(메카 : CAD파일), (광학/제어/파워/인증 : PDF파일)</span>
 					</div>
 				</td>
@@ -293,7 +295,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</colgroup>
 			<tr>
 				<th>주 도면</th>
-				<td class="indent5" >
+				<td class="indent5">
 					<jsp:include page="/extcore/jsp/common/attach-primary-drawing.jsp">
 						<jsp:param value="" name="oid" />
 					</jsp:include>
@@ -304,13 +306,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 첨부파일&nbsp;&nbsp;
+						<img src="/Windchill/extcore/images/header.png">
+						첨부파일&nbsp;&nbsp;
 						<span class="red">(제어/파워 : 배포파일)</span>
 					</div>
 				</td>
 			</tr>
 		</table>
-		
+
 		<table class="search-table">
 			<colgroup>
 				<col width="150">
@@ -325,7 +328,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 		</table>
-		
+
 		<!-- 관련 문서 -->
 		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 			<jsp:param value="" name="oid" />
@@ -334,9 +337,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="250" name="height" />
 			<jsp:param value="true" name="header" />
-			
+
 		</jsp:include>
-		
+
 		<!-- 관련 RoHS -->
 		<jsp:include page="/extcore/jsp/rohs/include/rohs-include.jsp">
 			<jsp:param value="" name="oid" />
@@ -344,7 +347,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<jsp:param value="insert106" name="method" />
 			<jsp:param value="true" name="multi" />
 		</jsp:include>
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="center">
@@ -538,8 +541,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			
 			// SEQ 현황보기 클릭 시 메서드
 			function seqList(){
-				const partNumber = $("#partType1").val()+$("#partType2").val()+$("#partType3").val()+$("#seq").val();
-				const url = getCallUrl("/part/searchSeqList?partNumber=" + partNumber);
+				const partType1 = document.getElementById("partType1").value;
+				const partType2 = document.getElementById("partType2").value;
+				const partType3 = document.getElementById("partType3").value;
+				const seq = document.getElementById("seq").value;
+				const partNumber = partType1+partType2+partType3+seq;
+				if(partNumber.length !== 8) {
+					alert("SEQ 현황을 보기 위해서 모든 채번 정보를 선택 및 입력하세요.");
+					return false;
+				}
+				const url = getCallUrl("/part/seq?partNumber=" + partNumber);
 				_popup(url, 900, 450, "n");
 			}
 		    

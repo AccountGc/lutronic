@@ -288,7 +288,7 @@ public class ActivityController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
 		EChangeOrder eco = (EChangeOrder) eca.getEo();
-		ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
+		JSONArray list = ActivityHelper.manager.getEcoParts(oid);
 		model.addObject("list", list);
 		model.addObject("eco", eco);
 		model.addObject("oid", eco.getPersistInfo().getObjectIdentifier().getStringValue());
@@ -308,7 +308,12 @@ public class ActivityController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 
-			ActivityHelper.service.replace(addRows, removeRows, oid);
+			result = ActivityHelper.service.replace(addRows, removeRows, oid);
+
+			if ((boolean) result.get("isExist")) {
+				result.put("result", FAIL);
+				return result;
+			}
 
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);

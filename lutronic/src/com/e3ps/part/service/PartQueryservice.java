@@ -13,5 +13,4 @@ public interface PartQueryservice {
 
 	QuerySpec listPartSearchQuery(HttpServletRequest request, HttpServletResponse response) throws Exception;
 	QuerySpec listPartApprovedSearchQuery(HttpServletRequest request, HttpServletResponse response) throws Exception;
-	QuerySpec searchSeqAction(Map<String, Object> params) throws Exception;
 }

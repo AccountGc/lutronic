@@ -1,18 +1,17 @@
 package com.e3ps.org.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.org.MailWTobjectLink;
+import com.e3ps.workspace.AsmApproval;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.fc.WTObject;
 import wt.services.ServiceFactory;
-import wt.util.WTException;
 
 public class MailUserHelper {
 	public static final MailUserService service = ServiceFactory.getService(MailUserService.class);
@@ -36,6 +35,19 @@ public class MailUserHelper {
 			MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
 			list.add(link);
 		}
+
+		if (qr.size() == 0) {
+			qr.reset();
+			AsmApproval asm = WorkspaceHelper.manager.getAsmApproval(per);
+			if (asm != null) {
+				qr = PersistenceHelper.manager.navigate((WTObject) asm, "user", MailWTobjectLink.class, false);
+				while (qr.hasMoreElements()) {
+					MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
+					list.add(link);
+				}
+			}
+		}
+
 		return list;
 	}
 }

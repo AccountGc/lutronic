@@ -32,7 +32,7 @@ public class EcoController extends BaseController {
 	@Description(value = "ECO 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_ECO", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_ECO");
 		ModelAndView model = new ModelAndView();
 		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/change/eco/eco-list.jsp");
@@ -43,7 +43,7 @@ public class EcoController extends BaseController {
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_ECO", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_ECO");
 		ModelAndView model = new ModelAndView();
 		model.addObject("modelList", modelList);
 		model.addObject("lifecycleList", lifecycleList);
@@ -134,7 +134,7 @@ public class EcoController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECO 삭제 함수")
 	@ResponseBody
 	@DeleteMapping(value = "/delete")
