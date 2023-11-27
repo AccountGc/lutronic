@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,18 +16,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.dto.EcnDTO;
 import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentECOLink;
+import com.e3ps.doc.DocumentECPRLink;
+import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.service.OrgHelper;
 import com.e3ps.sap.service.SAPHelper;
 
 import net.sf.json.JSONArray;
+import wt.part.WTPartDescribeLink;
 
 @Controller
 @RequestMapping(value = "/ecn/**")
@@ -36,7 +41,7 @@ public class EcnController extends BaseController {
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ModelAndView model = new ModelAndView();
 		JSONArray list = OrgHelper.manager.toJsonWTUser();
 		model.addObject("list", list);
@@ -66,12 +71,13 @@ public class EcnController extends BaseController {
 	@GetMapping(value = "/view")
 	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		boolean isAdmin = CommonUtil.isAdmin();
 		EcnDTO dto = new EcnDTO(oid);
-
+		boolean isAdmin = CommonUtil.isAdmin();
+		JSONArray arr = EcnHelper.manager.viewData(oid);
 		ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getCountry();
 		model.addObject("list", list);
 		model.addObject("isAdmin", isAdmin);
+		model.addObject("arr", arr);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/change/ecn/ecn-view");
 		return model;
@@ -102,6 +108,23 @@ public class EcnController extends BaseController {
 		try {
 			EcnHelper.service.save(params);
 			result.put("msg", "담당자가 지정되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "ECN 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcnHelper.service.delete(oid);
+			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

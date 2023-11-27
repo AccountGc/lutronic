@@ -1,3 +1,4 @@
+<%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.change.ecn.service.EcnHelper"%>
 <%@page import="com.e3ps.change.EChangeRequest"%>
 <%@page import="com.e3ps.common.code.service.NumberCodeHelper"%>
@@ -7,9 +8,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 EcnDTO dto = (EcnDTO) request.getAttribute("dto");
-ArrayList<EChangeRequest> crList = dto.getList();
+JSONArray arr = (JSONArray) request.getAttribute("arr");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.getAttribute("list");
+boolean edit = dto.isEditable();
 %>
 
 <style type="text/css">
@@ -21,25 +23,16 @@ ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.g
 </style>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-<%
-int idx = 1;
-for (EChangeRequest ecr : crList) {
-	String eoid = ecr.getPersistInfo().getObjectIdentifier().getStringValue();
-%>
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				ECN (
-				<font color="red">
-					<b><%=ecr.getEoNumber()%></b>
-				</font>
-				)
+				ECN 정보
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="ERP전송" title="ERP전송" class="blue" onclick="send<%=idx%>();">
+			<input type="button" value="ERP전송" title="ERP전송" class="blue" onclick="send();">
 			<%
 			if (isAdmin) {
 			%>
@@ -51,23 +44,38 @@ for (EChangeRequest ecr : crList) {
 		</td>
 	</tr>
 </table>
-<div id="grid_wrap<%=idx%>" style="height: 80px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid_wrap" style="height: 80px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 
 
 <script type="text/javascript">
-	let myGridID<%=idx%>;
-	const columns<%=idx%> = [ {
+	let myGridID;
+	const columns = [ {
+		dataField : "partNumber",
+		headerText : "제품번호",
+		dataType : "string",
+		width : 100,
+		editable : false,
+		cellMerge : true,
+	},{
+		dataField : "partName",
+		headerText : "제품명",
+		dataType : "string",
+		width : 250,
+// 		style : "aui-left",
+		editable : false,
+		cellMerge : true,
+	},{
 		dataField : "crNumber",
 		headerText : "CR 번호",
 		dataType : "string",
-		width : 150,
+		width : 140,
 		editable : false,
 		cellMerge : true,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
 			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.cr_oid;
+				const oid = item.coid;
 				const url = getCallUrl("/cr/view?oid=" + oid);
 				_popup(url, "", "", "f");
 			}
@@ -78,12 +86,30 @@ for (EChangeRequest ecr : crList) {
 		dataType : "string",
 		width : 200,
 		editable : false,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.poid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},	
 	}, {
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
 		width : 120,
-		editable : false
+		editable : false,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.poid;
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},			
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -144,7 +170,7 @@ i++;
 		}]
 	} ]
 
-	function createAUIGrid<%=idx%>(columnLayout) {
+	function createAUIGrid(columnLayout) {
 		const props = {
 			enableCellMerge : true,
 			headerHeight : 30,
@@ -156,24 +182,34 @@ i++;
 // 			showRowCheckColumn : true,
 			selectionMode : "multipleCells",
 			autoGridHeight : true,
-			editable : true
+			editable : true,
+			enableCellMerge : true,
 		}
-		myGridID<%=idx%> = AUIGrid.create("#grid_wrap<%=idx%>", columnLayout, props);
-		AUIGrid.bind(myGridID<%=idx%>, "cellEditBegin", auiCellEditBeginHandler<%=idx%>);
-		AUIGrid.setGridData(myGridID<%=idx%>, <%=EcnHelper.manager.data(ecr, dto.getOid())%>);
+		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
+		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);
+		logger(<%=arr%>);
+		AUIGrid.setGridData(myGridID, <%=arr%>);
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-		createAUIGrid<%=idx%>(columns<%=idx%>);
-		AUIGrid.resize(myGridID<%=idx%>);
+		createAUIGrid(columns);
+		AUIGrid.resize(myGridID);
 	});
 	
-	function auiCellEditBeginHandler<%=idx%>(event) {
+	function auiCellEditBeginHandler(event) {
+		<%
+			if(!edit) {
+		%>
+			alert("수정 권한이 없습니다.\n담당자 및 관리자만 수정가능합니다.");
+			return false;
+		<%
+			}
+		%>
 		const item = event.item;
 		const dataField = event.dataField;
 		console.log(dataField);
 		const rowIndex = event.rowIndex;
-		const isSend = AUIGrid.getCellValue(myGridID<%=idx%>, rowIndex, dataField);
+		const isSend = AUIGrid.getCellValue(myGridID, rowIndex, dataField);
 		const send = item.send;
 		console.log(isSend);
 		console.log(send);
@@ -184,9 +220,10 @@ i++;
 		return true;
 	}
 
-	function send<%=idx%>() {
+	function send() {
 
-		const editRows = AUIGrid.getEditedRowItems(myGridID<%=idx%>);
+		const editRows = AUIGrid.getEditedRowItems(myGridID);
+		logger(editRows);
 		if (editRows.length === 0) {
 			alert("수정 내역이 없습니다.");
 			return false;
@@ -198,10 +235,8 @@ i++;
 
 		const url = getCallUrl("/ecn/send");
 		const oid = document.getElementById("oid").value;
-		const eoid = "<%=eoid%>";
 		const params = {
 			oid : oid,
-			eoid : eoid,
 			editRows : editRows
 		};
 		logger(params);
@@ -209,7 +244,7 @@ i++;
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				document.location.reload();
+// 				document.location.reload();
 			}
 			closeLayer();
 		})
@@ -235,7 +270,3 @@ i++;
 		}, "DELETE");
 	}
 </script>
-<%
-idx++;
-}
-%>

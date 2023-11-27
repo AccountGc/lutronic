@@ -1,17 +1,11 @@
 package com.e3ps.change.ecn.dto;
 
-import java.util.ArrayList;
-
 import com.e3ps.change.EChangeNotice;
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.RequestOrderLink;
 import com.e3ps.common.util.CommonUtil;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
+import wt.org.WTUser;
 
 @Getter
 @Setter
@@ -25,9 +19,8 @@ public class EcnDTO {
 	private String eoCommentC;
 	private String eoCommentD;
 	private String eoCommentE;
-
-//	private JSONArray list = new JSONArray();
-	private ArrayList<EChangeRequest> list = new ArrayList<EChangeRequest>();
+	private String workId;
+	private boolean editable = false;
 
 	public EcnDTO() {
 
@@ -46,18 +39,17 @@ public class EcnDTO {
 		setEoCommentC(ecn.getEoCommentC());
 		setEoCommentD(ecn.getEoCommentD());
 		setEoCommentE(ecn.getEoCommentE());
-//		setList(EcnHelper.manager.getEcnGroupPart(ecn));
-		setCr(ecn);
+		setWorkId(ecn.getWorker() != null ? ecn.getWorker().getName() : "");
+		setAuth();
 	}
 
-	private void setCr(EChangeNotice ecn) throws Exception {
-		ArrayList<EChangeRequest> crList = new ArrayList<EChangeRequest>();
-		EChangeOrder eco = ecn.getEco();
-		QueryResult result = PersistenceHelper.manager.navigate(eco, "ecr", RequestOrderLink.class);
-		while (result.hasMoreElements()) {
-			EChangeRequest ecr = (EChangeRequest) result.nextElement();
-			crList.add(ecr);
+	private void setAuth() throws Exception {
+		WTUser user = CommonUtil.sessionUser();
+		if (user.getName().equals(getWorkId()) || CommonUtil.isAdmin()) {
+			setEditable(true);
 		}
-		setList(crList);
+//		if (user.getName().equals(getWorkId()) || CommonUtil.isAdmin()) {
+//			setEditable(true);
+//		}
 	}
 }

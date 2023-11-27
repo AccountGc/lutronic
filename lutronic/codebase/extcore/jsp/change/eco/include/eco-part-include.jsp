@@ -115,9 +115,7 @@ String oid = request.getParameter("oid");
 			autoGridHeight : true,
 		}
 		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
-		AUIGrid.setGridData(myGridID500,
-<%=AUIGridUtil.include(oid, "complete")%>
-	);
+		AUIGrid.setGridData(myGridID500, <%=AUIGridUtil.include(oid, "complete")%>);
 	}
 </script>
 

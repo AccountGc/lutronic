@@ -52,6 +52,13 @@ public class StandardEcnService extends StandardManager implements EcnService {
 			trs.start();
 
 			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
+
+			QueryResult qr = PersistenceHelper.manager.navigate(ecn, "part", EcnToPartLink.class, false);
+			while (qr.hasMoreElements()) {
+				EcnToPartLink link = (EcnToPartLink) qr.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+
 			PersistenceHelper.manager.delete(ecn);
 
 			trs.commit();
@@ -140,8 +147,12 @@ public class StandardEcnService extends StandardManager implements EcnService {
 					String version = l.getVersion();
 					WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
 
-					ArrayList<WTPart> end = PartHelper.manager.collectEndItem(part, new ArrayList<WTPart>());
-					for (WTPart endPart : end) {
+					JSONArray end = PartHelper.manager.end(part.getPersistInfo().getObjectIdentifier().getStringValue(),
+							null);
+					for (int k = 0; k < end.size(); k++) {
+						Map<String, String> endMap = (Map<String, String>) end.get(k);
+						String part_oid = endMap.get("oid");
+						WTPart endPart = (WTPart) CommonUtil.getObject(part_oid);
 						WTPartMaster endMaster = (WTPartMaster) endPart.getMaster();
 						// 최종품목이 포함되어있을 경우??
 						if (endMaster.getPersistInfo().getObjectIdentifier().getId() == m.getPersistInfo()
@@ -158,6 +169,8 @@ public class StandardEcnService extends StandardManager implements EcnService {
 							String[] groups = group.split(",");
 							for (String s : groups) {
 								EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
+								System.out.println("완제품 = " + endMaster.getNumber() + ", part=" + part.getNumber()
+										+ ", group = " + ecr.getEoNumber());
 								EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
 								eLink.setEcr(ecr);
 								eLink.setCompletePart(endMaster);

@@ -14,6 +14,10 @@ import lombok.Setter;
 public class EcnColumn {
 
 	private String oid;
+	private String partName;
+	private String partNumber;
+	private String ecoNumber;
+	private String eoid;
 	private String number;
 	private String name;
 	private String state;
@@ -33,6 +37,10 @@ public class EcnColumn {
 
 	public EcnColumn(EChangeNotice ecn) throws Exception {
 		setOid(ecn.getPersistInfo().getObjectIdentifier().getStringValue());
+		setPartName(ecn.getPartName());
+		setPartNumber(ecn.getPartNumber());
+		setEcoNumber(ecn.getEco().getEoNumber());
+		setEoid(ecn.getEco().getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(ecn.getEoNumber());
 		setName(ecn.getEoName());
 		setState(ecn.getLifeCycleState().getDisplay());
@@ -40,6 +48,6 @@ public class EcnColumn {
 		setCreatedDate(ecn.getCreateTimestamp());
 		setCreatedDate_txt(ecn.getCreateTimestamp().toString().substring(0, 10));
 		setWorker_oid(
-		ecn.getWorker() != null ? ecn.getWorker().getPersistInfo().getObjectIdentifier().getStringValue() : "");
+				ecn.getWorker() != null ? ecn.getWorker().getPersistInfo().getObjectIdentifier().getStringValue() : "");
 	}
 }

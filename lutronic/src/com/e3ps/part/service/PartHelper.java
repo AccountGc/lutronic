@@ -833,7 +833,6 @@ public class PartHelper {
 	public static boolean isTopNumber(String number) {
 		String firstNumber = number.substring(0, 1);
 		String endNumber = number.substring(5, 8);// number.substring(5,number.length());
-		System.out.println("endNumber=" + endNumber);
 		if (firstNumber.equals("1") && !endNumber.endsWith("000")) { // 6,7,8이 000인경우
 			return true;
 		}
@@ -1054,7 +1053,6 @@ public class PartHelper {
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		if (qr.size() == 0) {
 			if (!isCollectNumber(part.getNumber())) {
-				System.out.println("숫자이고..");
 				if (isTopNumber(part.getNumber())) {
 					if (!list.contains(part)) {
 						list.add(part);
@@ -1311,7 +1309,6 @@ public class PartHelper {
 	 */
 	public EPMDocument getEPMDocument(WTPart part) throws Exception {
 		QueryResult qr = PersistenceHelper.manager.navigate(part, EPMBuildRule.BUILD_SOURCE_ROLE, EPMBuildRule.class);
-//		System.out.println("부품과 연결된 도면 = " + qr.size());
 		if (qr.hasMoreElements()) {
 			EPMDocument e = (EPMDocument) qr.nextElement();
 			return e;

@@ -132,18 +132,47 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 			;
 			function _layout() {
 				return [ {
-					dataField : "model",
-					headerText : "제품명",
+					dataField : "partNumber",
+					headerText : "제품번호",
 					dataType : "string",
-					width : 200,
+					width : 150,
 					editable : false,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							// 							const oid = item.oid;
-							const oid = "com.e3ps.change.EChangeNotice:1227724";
+							const oid = item.oid;
 							const url = getCallUrl("/ecn/view?oid=" + oid);
+							_popup(url, 1400, 500, "n");
+						}
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "partName",
+					headerText : "제품명",
+					dataType : "string",
+					width : 250,
+					editable : false,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "ecoNumber",
+					headerText : "ECO 번호",
+					dataType : "string",
+					cellMerge : true,
+					editable : false,
+					width : 130,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.eoid;
+							const url = getCallUrl("/eco/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -155,7 +184,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					dataField : "number",
 					headerText : "ECN번호",
 					dataType : "string",
-					width : 230,
+					width : 100,
 					cellMerge : true,
 					editable : false,
 					filter : {
@@ -177,7 +206,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 130,
+					width : 100,
 					editable : false,
 					filter : {
 						showIcon : true,
@@ -187,7 +216,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					dataField : "worker_oid",
 					headerText : "담당자",
 					dateType : "string",
-					width : 150,
+					width : 100,
 					editable : true,
 					renderer : {
 						type : "IconRenderer",
@@ -241,6 +270,8 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					width : 100,
 					cellMerge : true,
 					editable : false,
+					mergeRef : "number",
+					mergePolicy : "restrict",
 					filter : {
 						showIcon : true,
 						inline : true
@@ -252,6 +283,8 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					width : 100,
 					cellMerge : true,
 					editable : false,
+					mergeRef : "number",
+					mergePolicy : "restrict",
 					filter : {
 						showIcon : true,
 						inline : true
@@ -291,20 +324,20 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 
 			function loadGridData() {
 
-// 								$.ajax({
-// 									type : "POST",
-// 									url : "/Windchill/extcore/jsp/change/ecn/sample.json",
-// 									dataType : "JSON",
-// 									crossDomain : true,
-// 									// 					data: params,
-// 									// 					async: async,
-// 									contentType : "application/json; charset=UTF-8",
-// 									beforeSend : function() {
-// 									},
-// 									success : function(res) {
-// 										AUIGrid.setGridData(myGridID, res);
-// 									},
-// 								})
+				// 								$.ajax({
+				// 									type : "POST",
+				// 									url : "/Windchill/extcore/jsp/change/ecn/sample.json",
+				// 									dataType : "JSON",
+				// 									crossDomain : true,
+				// 									// 					data: params,
+				// 									// 					async: async,
+				// 									contentType : "application/json; charset=UTF-8",
+				// 									beforeSend : function() {
+				// 									},
+				// 									success : function(res) {
+				// 										AUIGrid.setGridData(myGridID, res);
+				// 									},
+				// 								})
 
 				let params = new Object();
 				const url = getCallUrl("/ecn/list");
@@ -312,13 +345,13 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
-// 				document.getElementById("sessionid").value = 0;
+				// 				document.getElementById("sessionid").value = 0;
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-// 						document.getElementById("sessionid").value = data.sessionid;
-// 						document.getElementById("curPage").value = data.curPage;
+						// 						document.getElementById("sessionid").value = data.sessionid;
+						// 						document.getElementById("curPage").value = data.curPage;
 						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {

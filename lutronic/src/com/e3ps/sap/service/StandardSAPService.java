@@ -611,8 +611,6 @@ public class StandardSAPService extends StandardManager implements SAPService {
 	public void sendSapToEcn(Map<String, Object> params) throws Exception {
 		System.out.println("시작 SAP 인터페이스 - ECN 확정인허가일 FUN : ZPPIF_PDM_003");
 		String oid = (String) params.get("oid");
-		String eoid = (String) params.get("eoid");
-		EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(eoid);
 
 		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
 		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_003");
@@ -633,19 +631,20 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			int idx = 1;
 			JCoTable insertTable = function.getTableParameterList().getTable("ET_ECN");
 			for (Map<String, Object> editRow : editRows) {
-				String part_oid = (String) editRow.get("part_oid");
+				String coid = (String) editRow.get("coid");
+				String part_oid = (String) editRow.get("poid");
+				EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(coid);
 				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
 
 				ArrayList<Map<String, String>> countrys = NumberCodeHelper.manager.getCountry();
 				for (Map<String, String> country : countrys) {
 					String code = country.get("code");
 					String sendDate = (String) editRow.get(code + "_date");
-					Object send = editRow.get(code + "_isSend");
-					if (sendDate != null && send == null) {
+					boolean send = (boolean) editRow.get(code + "_isSend");
+					if (sendDate != null && !send) {
 						PartToSendLink link = PartToSendLink.newPartToSendLink();
 						String name = country.get("name");
 						link.setEcr(ecr);
-						;
 						link.setNation(code);
 						link.setPart(part);
 						link.setEcn(ecn);
@@ -674,7 +673,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 					}
 				}
 			}
-			function.execute(destination);
+//			function.execute(destination);
 			JCoParameterList result = function.getExportParameterList();
 			Object r_type = result.getValue("EV_STATUS");
 			Object r_msg = result.getValue("EV_MESSAGE");
