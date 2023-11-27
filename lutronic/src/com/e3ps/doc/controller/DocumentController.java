@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.folder.Folder;
 import wt.part.WTPartDescribeLink;
+import wt.util.WTProperties;
 
 @Controller
 @RequestMapping(value = "/doc")
@@ -546,6 +548,56 @@ public class DocumentController extends BaseController {
 		try {
 			DocumentHelper.service.force(dto);
 			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "이미지 파일로 저장")
+	@ResponseBody
+	@PostMapping(value = "/image")
+	public Map<String, Object> image(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			String imgData = (String) params.get("imgData");
+			FileOutputStream stream = null;
+			imgData = imgData.replaceAll("data:image/png;base64,", "");
+			byte[] file = org.apache.commons.codec.binary.Base64.decodeBase64(imgData);
+			System.out.println("file  :::::::: " + file + " || " + file.length);
+			// 현재 날짜/시간        
+			Date now = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			String fileName=  formatter.format(now);
+			String savePath = WTProperties.getServerProperties().getProperty("wt.codebase.location") + File.separator
+					+ "extcore" + File.separator;
+			stream = new FileOutputStream(savePath+fileName+".png");
+			stream.write(file);
+			stream.close();
+			
+			result.put("imgSrc", "/Windchill/extcore/"+fileName+".png");
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "이미지 파일 삭제")
+	@ResponseBody
+	@PostMapping(value = "/imgDel")
+	public Map<String, Object> imgDel(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			String imgSrc = (String) params.get("imgSrc");
+			File file = new File(imgSrc);
+			file.delete();
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
