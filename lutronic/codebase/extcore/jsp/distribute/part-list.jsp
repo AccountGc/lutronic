@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="wt.part.QuantityUnit"%>
 <%@page import="wt.org.WTUser"%>
@@ -56,8 +57,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>품목분류</th>
 				<td class="indent5">
 					<input type="hidden" name="oid" id="oid">
-					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
-					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
+					<input type="hidden" name="location" id="location" value="<%=PartHelper.PART_ROOT%>">
+					<span id="locationText"><%=PartHelper.PART_ROOT%></span>
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
@@ -244,7 +245,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
+						<jsp:param value="<%=PartHelper.PART_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
 						<jsp:param value="605" name="height" />
