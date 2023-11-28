@@ -343,7 +343,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 				}
         		
 				if (isDelete) {
-					WFItemHelper.service.deleteWFItem(rohs);
 					PersistenceHelper.manager.delete(rohs);
 					msg = Message.get("삭제되었습니다.");
 				}
