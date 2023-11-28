@@ -1,6 +1,6 @@
 package com.e3ps.distribute.controller;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.change.service.ChangeHelper;
@@ -34,27 +32,17 @@ import com.e3ps.controller.BaseController;
 import com.e3ps.distribute.util.DistributeUtil;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.drawing.beans.EpmData;
 import com.e3ps.erp.beans.BOMERPData;
 import com.e3ps.erp.beans.PARTERPData;
 import com.e3ps.erp.service.ERPSearchHelper;
-import com.e3ps.groupware.notice.Notice;
-import com.e3ps.groupware.notice.dto.NoticeDTO;
-import com.e3ps.groupware.notice.service.NoticeHelper;
 import com.e3ps.groupware.service.GroupwareHelper;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
 import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.part.dto.PartDTO;
-import com.e3ps.part.dto.PartData;
 import com.e3ps.part.service.BomSearchHelper;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.rohs.dto.RohsData;
-import com.e3ps.rohs.service.RohsHelper;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
-import wt.epm.EPMDocument;
 import wt.org.WTUser;
 import wt.part.QuantityUnit;
 import wt.part.WTPart;
@@ -234,24 +222,6 @@ public class DistributeController extends BaseController {
 		return model;
 	}
 	
-	/** 품목 데이터 검색
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/listPartAction")
-	public List<Map<String,Object>> listPartAction(HttpServletRequest request, HttpServletResponse response) {
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-		try {
-			list = PartHelper.service.listAUIPartAction(request, response);
-		} catch(Exception e) {
-			e.printStackTrace();
-			
-		}
-		return list;
-	}
-	
 	@Description(value = "품목 상세보기")
 	@RequestMapping("/partView")
 	public ModelAndView partView(@RequestParam(value = "oid") String oid) throws Exception {
@@ -423,7 +393,7 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
-		List<Map<String, String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
