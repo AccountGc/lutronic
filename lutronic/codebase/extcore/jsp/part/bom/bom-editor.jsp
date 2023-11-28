@@ -9,11 +9,12 @@ WTPart root = (WTPart) request.getAttribute("root");
 <link href="/Windchill/extcore/component/fancytree/src/skin-win8/ui.fancytree.css" rel="stylesheet">
 <script src="/Windchill/extcore/component/fancytree/src/jquery-ui-dependencies/jquery.fancytree.ui-deps.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.js"></script>
-<script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.clones.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.dnd5.js"></script>
-<script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.edit.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.filter.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.table.js"></script>
+<script src="//cdn.jsdelivr.net/npm/jquery-contextmenu@2.9.2/dist/jquery.contextMenu.min.js"></script>
+<script src="/Windchill/extcore/component/fancytree/3rd-party/extensions/contextmenu/js/jquery.fancytree.contextMenu.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/jquery-contextmenu@2.9.2/dist/jquery.contextMenu.min.css">
 
 <style type="text/css">
 #treetable {
@@ -42,9 +43,45 @@ WTPart root = (WTPart) request.getAttribute("root");
 #treetable td:first-child {
 	border-left: 1px solid #dedede;
 }
+
+#treetable td input[type='text'] {
+	border: 1px solid #a6a6a6;
+	background: #fff;
+	color: #333;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	font-size: 14px;
+	/* 	height: 15px; */
+	padding: 5px;
+}
 </style>
 
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
+
+<table class="button-table">
+	<tr>
+		<td class="left">
+			<div class="header">
+				<img src="/Windchill/extcore/images/header.png">
+				BOM 편집
+			</div>
+		</td>
+		<td class="right">
+			<select name="depth" id="depth" onchange="loadDepth();" class="AXSelect width-120">
+				<option value="0">전체확장</option>
+				<option value="1">1레벨</option>
+				<option value="2" selected="selected">2레벨</option>
+				<option value="3">3레벨</option>
+				<option value="4">4레벨</option>
+				<option value="5">5레벨</option>
+			</select>
+			&nbsp;
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+		</td>
+	</tr>
+</table>
+
 <table id="treetable">
 	<colgroup>
 		<col width="40px;"></col>
@@ -74,11 +111,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
 	const skip = true;
-	$(function() {
-		var sourceUrl = "https://cdn.jsdelivr.net/gh/mar10/assets@master/fancytree/ajax_101k.json";
+
+	document.addEventListener("DOMContentLoaded", function() {
 
 		$("#treetable").fancytree({
-			extensions : [ "clones", "dnd5", "edit", "filter", "table" ],
+			extensions : [ "dnd5", "filter", "table", "contextMenu" ],
 			checkbox : true,
 			quicksearch : true,
 			dnd5 : {
@@ -105,9 +142,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 					}
 				},
 			},
-			edit : {
-			// triggerStart: ["f2", "mac+enter", "shift+click"],
-			},
 			filter : {
 				autoExpand : true,
 			},
@@ -120,29 +154,123 @@ WTPart root = (WTPart) request.getAttribute("root");
 				url : "/Windchill/plm/bom/loadEditor?oid=" + oid + "&skip=" + skip,
 				type : "POST",
 			}),
+			preInit : function() {
+				openLayer();
+			},
+			init : function() {
+				closeLayer();
+			},
+			// 			postProcess : function() {
+			// 				openLayer();
+			// 			},
+			// 			loadChildren : function() {
+			// 				closeLayer();
+			// 			},
 			lazyLoad : function(event, data) {
-				data.result = {
-					url : "ajax-sub2.json"
+				const node = data.node;
+				const level = node.data.level;
+				const skip = true;
+				const params = {
+					oid : node.data.oid,
+					level : level,
+					skip : skip
 				}
+				data.result = {
+					url : "/Windchill/plm/bom/editorLazyLoad",
+					data : params,
+					type : "POST"
+				};
 			},
 			renderColumns : function(event, data) {
 				const node = data.node;
-				logger(node);
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
-				list[2].textContent = node.getIndexHier();
 				list[2].style.textAlign = "center";
-				tdList[3].textContent = node.getIndexHier();
-				tdList[4].textContent = node.getIndexHier();
+				list[2].textContent = node.data.thumb;
+				list[2].style.textAlign = "center";
+				list[2].textContent = node.data.level;
+				list[3].style.textAlign = "center";
+				list[3].textContent = node.data.number;
+				list[5].style.textAlign = "center";
+				list[5].textContent = node.data.qty + "개";
+				list[6].style.textAlign = "center";
+				list[6].textContent = node.data.version;
+				list[7].style.textAlign = "center";
+				list[7].textContent = node.data.state;
+				list[8].style.textAlign = "center";
+				list[8].textContent = node.data.creator;
+			},
+			contextMenu : {
+				menu : {
+					"cut" : {
+						"name" : "잘라내기",
+						"icon" : "cut"
+					},
+					"copy" : {
+						"name" : "복사",
+						"icon" : "copy"
+					},
+					"paste" : {
+						"name" : "붙여넣기",
+						"icon" : "paste"
+					},
+					"delete" : {
+						"name" : "삭제",
+						"icon" : "delete",
+						"disabled" : true
+					},
+					"sep1" : "---------",
+					"quit" : {
+						"name" : "Quit",
+						"icon" : "quit"
+					},
+					"sep2" : "---------",
+					"fold1" : {
+						"name" : "Sub group",
+						"items" : {
+							"fold1-key1" : {
+								"name" : "Foo bar"
+							},
+							"fold2" : {
+								"name" : "Sub group 2",
+								"items" : {
+									"fold2-key1" : {
+										"name" : "alpha"
+									},
+									"fold2-key2" : {
+										"name" : "bravo"
+									},
+									"fold2-key3" : {
+										"name" : "charlie"
+									}
+								}
+							},
+							"fold1-key3" : {
+								"name" : "delta"
+							}
+						}
+					},
+					"fold1a" : {
+						"name" : "Other group",
+						"items" : {
+							"fold1a-key1" : {
+								"name" : "echo"
+							},
+							"fold1a-key2" : {
+								"name" : "foxtrot"
+							},
+							"fold1a-key3" : {
+								"name" : "golf"
+							}
+						}
+					}
+				},
+				actions : function(node, action, options) {
+					$("#selected-action").text("Selected action '" + action + "' on node " + node + ".");
+				}
 			},
 		});
-
-		$("#expandAll").on("click", function(e) {
-			$.ui.fancytree.getTree().expandAll();
-		});
-		$("#collapseAll").on("click", function(e) {
-			$.ui.fancytree.getTree().expandAll(false);
-		});
-
+		selectbox("depth");
 	});
+	
 </script>

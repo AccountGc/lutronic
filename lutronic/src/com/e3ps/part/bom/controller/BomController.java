@@ -42,18 +42,14 @@ public class BomController extends BaseController {
 	@Description(value = "BOM 에디터 LAZY 로드")
 	@PostMapping(value = "/editorLazyLoad")
 	@ResponseBody
-	public Map<String, Object> editorLazyLoad(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
+	public JSONArray editorLazyLoad(@RequestParam Map<String, Object> params) throws Exception {
+		JSONArray list = new JSONArray();
 		try {
-			ArrayList<Map<String, Object>> list = BomHelper.manager.editorLazyLoad(params);
-			result.put("list", list);
-			result.put("result", SUCCESS);
+			list = BomHelper.manager.editorLazyLoad(params);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
 		}
-		return result;
+		return list;
 	}
 
 	@Description(value = "BOM 품목 제거")

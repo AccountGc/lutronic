@@ -86,6 +86,7 @@ public class BomHelper {
 		rootNode.put("level", 1);
 		rootNode.put("number", root.getNumber());
 		rootNode.put("name", root.getName());
+		rootNode.put("title", root.getName());
 		rootNode.put("state", root.getLifeCycleState().getDisplay());
 		rootNode.put("version", root.getVersionIdentifier().getSeries().getValue() + "."
 				+ root.getIterationIdentifier().getSeries().getValue());
@@ -94,10 +95,13 @@ public class BomHelper {
 		rootNode.put("isRevise", root.getLifeCycleState().toString().equals("APPROVED"));
 		rootNode.put("link", "");
 		rootNode.put("qty", 1);
+		rootNode.put("expanded", true);
+		rootNode.put("icon", "/Windchill/wtcore/images/part.gif");
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
 		if (isCheckOut) {
+			rootNode.put("icon", "/Windchill/wtcore/images/part_checkout.png");
 			rootNode.put("isCheckOut", isCheckOut);
 		}
 		if (isWorkCopy) {
@@ -133,6 +137,7 @@ public class BomHelper {
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
+			node.put("title", p.getName());
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
 					+ p.getIterationIdentifier().getSeries().getValue());
@@ -141,10 +146,13 @@ public class BomHelper {
 			node.put("isRevise", p.getLifeCycleState().toString().equals("APPROVED"));
 			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("expanded", false);
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+			node.put("icon", "/Windchill/wtcore/images/part.gif");
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
+				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
 			}
 			if (isWorkCopy) {
 				node.put("isWorkCopy", isWorkCopy);
@@ -152,12 +160,12 @@ public class BomHelper {
 
 			boolean isLazy = isLazy(p, view, state, skip);
 			if (!isLazy) {
-				node.put("isLazy", false);
-				node.put("children", new JSONArray());
+				node.put("lazy", false);
+//				node.put("expanded", false);
 			} else {
-				node.put("isLazy", true);
+				node.put("lazy", true);
+//				node.put("expanded", true);
 			}
-
 			children.add(node);
 		}
 		rootNode.put("children", children);
@@ -1284,11 +1292,10 @@ public class BomHelper {
 	/**
 	 * BOM 에디터 레이지 로드
 	 */
-	public ArrayList<Map<String, Object>> editorLazyLoad(Map<String, Object> params) throws Exception {
-		ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+	public JSONArray editorLazyLoad(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid");
-		boolean skip = (boolean) params.get("skip");
-		int level = (int) params.get("level");
+		boolean skip = Boolean.parseBoolean((String) params.get("skip"));
+		int level = Integer.parseInt((String) params.get("level"));
 		WTPart parent = (WTPart) CommonUtil.getObject(oid);
 		View view = ViewHelper.service.getView(parent.getViewName());
 		State state = parent.getLifeCycleState();
@@ -1296,6 +1303,7 @@ public class BomHelper {
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(parent, configSpec);
 		++level;
+		JSONArray list = new JSONArray();
 		while (result.hasMoreElements()) {
 			Object obj[] = (Object[]) result.nextElement();
 			if (!(obj[1] instanceof WTPart)) {
@@ -1310,12 +1318,13 @@ public class BomHelper {
 				}
 			}
 
-			Map<String, Object> node = new HashMap<>();
+			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("level", level);
 			node.put("poid", parent.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("thumb", ThumbnailUtil.thumbnailSmall(p));
 			node.put("number", p.getNumber());
+			node.put("title", p.getName());
 			node.put("name", p.getName());
 			node.put("state", p.getLifeCycleState().getDisplay());
 			node.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
@@ -1324,9 +1333,12 @@ public class BomHelper {
 			node.put("isRoot", false);
 			node.put("link", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("qty", link.getQuantity().getAmount());
+			node.put("expanded", false);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+			node.put("icon", "/Windchill/wtcore/images/part.gif");
 			if (isCheckOut) {
+				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
 				node.put("isCheckOut", isCheckOut);
 			}
 			if (isWorkCopy) {
@@ -1335,12 +1347,11 @@ public class BomHelper {
 
 			boolean isLazy = isLazy(p, view, state, skip);
 			if (!isLazy) {
-				node.put("isLazy", false);
-				node.put("children", new JSONArray());
+				node.put("lazy", false);
+//				node.put("children", new JSONArray());
 			} else {
-				node.put("isLazy", true);
+				node.put("lazy", true);
 			}
-
 			list.add(node);
 		}
 		return list;

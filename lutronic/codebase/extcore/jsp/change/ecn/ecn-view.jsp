@@ -12,6 +12,7 @@ JSONArray arr = (JSONArray) request.getAttribute("arr");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 ArrayList<Map<String, String>> list = (ArrayList<Map<String, String>>) request.getAttribute("list");
 boolean edit = dto.isEditable();
+// boolean edit = false;
 %>
 
 <style type="text/css">
@@ -208,14 +209,9 @@ i++;
 		}
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);
-		logger(<%=arr%>);
 		AUIGrid.setGridData(myGridID, <%=arr%>);
 	}
 
-	document.addEventListener("DOMContentLoaded", function() {
-		createAUIGrid(columns);
-		AUIGrid.resize(myGridID);
-	});
 	
 	function auiCellEditBeginHandler(event) {
 		<%if (!edit) {%>
@@ -285,4 +281,11 @@ i++;
 			}
 		}, "DELETE");
 	}
+	document.addEventListener("DOMContentLoaded", function() {
+		createAUIGrid(columns);
+		AUIGrid.resize(myGridID);
+	});
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID);
+	});
 </script>
