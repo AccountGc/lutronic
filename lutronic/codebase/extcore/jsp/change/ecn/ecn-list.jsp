@@ -143,7 +143,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/ecn/view?oid=" + oid);
-							_popup(url, 1400, 500, "n");
+							_popup(url, 1600, 500, "n");
 						}
 					},
 					filter : {

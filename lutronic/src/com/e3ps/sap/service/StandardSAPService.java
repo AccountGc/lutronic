@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
@@ -19,8 +18,10 @@ import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
+import com.e3ps.change.EcnToPartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartToSendLink;
+import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
@@ -29,7 +30,6 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
-import com.e3ps.part.util.PartUtil;
 import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.dto.SAPBomDTO;
 import com.e3ps.sap.dto.SAPReverseBomDTO;
@@ -631,6 +631,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			int idx = 1;
 			JCoTable insertTable = function.getTableParameterList().getTable("ET_ECN");
 			for (Map<String, Object> editRow : editRows) {
+				String link_oid = (String) editRow.get("oid");
 				String coid = (String) editRow.get("coid");
 				String part_oid = (String) editRow.get("poid");
 				EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(coid);
@@ -672,6 +673,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						idx++;
 					}
 				}
+				// 진행율 업데이트??
+				EcnHelper.service.update(link_oid);
 			}
 //			function.execute(destination);
 			JCoParameterList result = function.getExportParameterList();

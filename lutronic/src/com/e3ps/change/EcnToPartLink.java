@@ -22,7 +22,9 @@ import wt.util.WTException;
 
 		properties = {
 
-				@GeneratedProperty(name = "workEnd", type = Boolean.class)
+				@GeneratedProperty(name = "workEnd", type = Boolean.class),
+
+				@GeneratedProperty(name = "rate", type = Double.class)
 
 		},
 

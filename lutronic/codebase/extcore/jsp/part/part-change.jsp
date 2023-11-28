@@ -92,6 +92,7 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 		headerText : "부품구분",
 		dataType : "string",
 		width : 150,
+		editable : false,
 		renderer : {
 			type : "IconRenderer",
 			iconWidth : 16,
@@ -143,16 +144,19 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 		headerText : "대분류",
 		dataType : "string",
 		width : 150,
+		editable : false,
 	}, {
 		dataField : "partType3",
 		headerText : "중분류",
 		dataType : "string",
 		width : 150,
+		editable : false,
 	}, {
 		dataField : "seq",
 		headerText : "SEQ",
 		dataType : "numeric",
 		width : 80,
+		editable : false,
 		editRenderer : {
 			type : "InputEditRenderer",
 			onlyNumeric : true,
@@ -163,6 +167,7 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 		headerText : "기타",
 		dataType : "numeric",
 		width : 80,
+		editable : false,
 		editRenderer : {
 			type : "InputEditRenderer",
 			onlyNumeric : true,
@@ -173,6 +178,7 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 		headerText : "부품명1",
 		dataType : "string",
 		width : 250,
+		editable : false,
 		renderer : {
 			type : "IconRenderer",
 			iconWidth : 16,
@@ -223,6 +229,7 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 		headerText : "부품명2",
 		dataType : "string",
 		width : 250,
+		editable : false,
 		renderer : {
 			type : "IconRenderer",
 			iconWidth : 16,
@@ -273,6 +280,7 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 		headerText : "부품명3",
 		dataType : "string",
 		width : 250,
+		editable : false,
 		renderer : {
 			type : "IconRenderer",
 			iconWidth : 16,
@@ -323,6 +331,7 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 		headerText : "부품명4",
 		dataType : "string",
 		width : 250,
+		editable : false,
 	} ];
 
 	function createAUIGrid() {
