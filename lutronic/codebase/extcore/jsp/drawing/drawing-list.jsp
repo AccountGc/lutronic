@@ -61,8 +61,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<th>도면분류</th>
 				<td class="indent5">
 					<input type="hidden" name="oid" id="oid">
-					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
-					<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
+					<input type="hidden" name="location" id="location" value="<%=DrawingHelper.PART_ROOT%>">
+					<span id="locationText"><%=DrawingHelper.PART_ROOT%></span>
 				</td>
 				<th>등록자</th>
 				<td class="indent5">
@@ -289,7 +289,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-						<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
+						<jsp:param value="<%=DrawingHelper.PART_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
 						<jsp:param value="623" name="height" />
@@ -396,6 +396,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					headerText : "REV",
 					dataType : "string",
 					width : 100,
+					renderer : {
+						type : "TemplateRenderer"
+					},
 					filter : {
 						showIcon : true,
 						inline : true
