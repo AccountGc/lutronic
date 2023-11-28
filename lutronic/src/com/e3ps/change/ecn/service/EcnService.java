@@ -17,7 +17,6 @@ public interface EcnService {
 	 */
 	public abstract void delete(String oid) throws Exception;
 
-
 	/**
 	 * ECN 담당자 저장 RA팀 업무
 	 */
@@ -29,4 +28,8 @@ public interface EcnService {
 	public abstract void create(EChangeOrder eco, ArrayList<EcoPartLink> ecoParts,
 			ArrayList<EOCompletePartLink> completeParts) throws Exception;
 
+	/**
+	 * ECN 완료
+	 */
+	public abstract void complete(String oid) throws Exception;
 }

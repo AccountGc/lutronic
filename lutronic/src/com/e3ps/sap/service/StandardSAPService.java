@@ -641,7 +641,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 					String code = country.get("code");
 					String sendDate = (String) editRow.get(code + "_date");
 					boolean send = (boolean) editRow.get(code + "_isSend");
-					if (sendDate != null && !send) {
+					if (StringUtil.checkString(sendDate) && !send) {
 						PartToSendLink link = PartToSendLink.newPartToSendLink();
 						String name = country.get("name");
 						link.setEcr(ecr);

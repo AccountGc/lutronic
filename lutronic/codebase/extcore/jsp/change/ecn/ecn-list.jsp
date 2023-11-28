@@ -203,7 +203,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 						inline : true
 					},
 				}, {
-					dataField : "state",
+					dataField : "progress",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,

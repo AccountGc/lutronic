@@ -64,8 +64,8 @@ iframe {
 			</tr>
 			<tr>
 				<th class="req lb">내용</th>
-				<td colspan="5" class="indent5">
-					<textarea name="description" id="description" rows="35"></textarea>
+				<td colspan="5">
+					<textarea name="description" id="description" rows="33"></textarea>
 				</td>
 			</tr>
 		</table>
@@ -82,21 +82,24 @@ iframe {
 
 	<script type="text/javascript">
 		// 텍스트 편집기
-		const oEditors = [];
-		nhn.husky.EZCreator.createInIFrame({
-			oAppRef : oEditors,
-			elPlaceHolder : "description", //textarea ID 입력
-			sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
-			fCreator : "createSEditor2",
-			htParams : {
-				// 툴바 사용 여부 (true:사용/ false:사용하지 않음) 
-				bUseToolbar : true,
-				// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음) 
-				bUseVerticalResizer : false,
-				// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음) 
-				bUseModeChanger : true
-			}
-		});
+
+		setTimeout(function() {
+			const oEditors = [];
+			nhn.husky.EZCreator.createInIFrame({
+				oAppRef : oEditors,
+				elPlaceHolder : "description", //textarea ID 입력
+				sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
+				fCreator : "createSEditor2",
+				htParams : {
+					// 툴바 사용 여부 (true:사용/ false:사용하지 않음) 
+					bUseToolbar : true,
+					// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음) 
+					bUseVerticalResizer : false,
+					// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음) 
+					bUseModeChanger : true
+				}
+			});
+		}, 1000);
 
 		document.addEventListener("DOMContentLoaded", function() {
 			toFocus("name");

@@ -20,7 +20,7 @@ public class EcnColumn {
 	private String eoid;
 	private String number;
 	private String name;
-	private String state;
+	private String progress;
 	private String creator;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
@@ -43,7 +43,7 @@ public class EcnColumn {
 		setEoid(ecn.getEco().getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(ecn.getEoNumber());
 		setName(ecn.getEoName());
-		setState(ecn.getLifeCycleState().getDisplay());
+		setProgress(ecn.getProgress());
 		setCreator(ecn.getCreatorFullName());
 		setCreatedDate(ecn.getCreateTimestamp());
 		setCreatedDate_txt(ecn.getCreateTimestamp().toString().substring(0, 10));

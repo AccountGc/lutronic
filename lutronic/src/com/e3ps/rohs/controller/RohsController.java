@@ -25,56 +25,52 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.doc.service.DocumentHelper;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.mold.dto.MoldDTO;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 
-import wt.doc.WTDocument;
 import wt.org.WTUser;
 import wt.session.SessionHelper;
 
 @Controller
 @RequestMapping(value = "/rohs/**")
 public class RohsController extends BaseController {
-	
+
 	@ResponseBody
 	@RequestMapping("/rohsFileType")
-	public List<Map<String,String>> rohsFileType(HttpServletRequest request, HttpServletResponse response) {
+	public List<Map<String, String>> rohsFileType(HttpServletRequest request, HttpServletResponse response) {
 		return RohsHelper.service.rohsFileType();
 	}
-	
+
 	@Description(value = "물질 등록")
 	@GetMapping(value = "/create")
-	public ModelAndView create() throws Exception{
+	public ModelAndView create() throws Exception {
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
-		List<Map<String,String>> typeList = RohsHelper.manager.rohsFileType();
+		List<Map<String, String>> typeList = RohsHelper.manager.rohsFileType();
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/rohs/rohs-create.jsp");
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("typeList", typeList);
 		return model;
 	}
-	
+
 	@Description(value = "물질 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
-	public Map<String,Object> create(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> create(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			RohsHelper.service.create(params);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질검색")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
@@ -82,7 +78,7 @@ public class RohsController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
-		List<Map<String,String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
 		model.addObject("manufactureList", manufactureList);
@@ -90,14 +86,14 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "물질검색")
 	@GetMapping(value = "/listPopup")
 	public ModelAndView listPopup(@RequestParam String method) throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
-		List<Map<String,String>> lifecycleList = WFItemHelper.manager.lifecycleList("LC_Default", "");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
 		model.addObject("lifecycleList", lifecycleList);
@@ -105,7 +101,7 @@ public class RohsController extends BaseController {
 		model.setViewName("popup:/rohs/rohs-list-popup");
 		return model;
 	}
-	
+
 	@Description(value = "물질 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/list")
@@ -121,15 +117,15 @@ public class RohsController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질 상세 페이지")
-	@GetMapping(value =  "/view")
-	public ModelAndView view(@RequestParam String oid) throws Exception{
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
 		RohsData dto = new RohsData(rohs);
-		
-		List<Map<String,Object>> list = RohsHelper.manager.getRohsContent(oid);
+
+		List<Map<String, Object>> list = RohsHelper.manager.getRohsContent(oid);
 		model.addObject("list", list);
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
@@ -137,18 +133,18 @@ public class RohsController extends BaseController {
 		model.setViewName("popup:/rohs/rohs-view");
 		return model;
 	}
-	
+
 	@Description(value = "물질 수정 페이지")
-	@GetMapping(value =  "/update")
+	@GetMapping(value = "/update")
 	public ModelAndView update(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
 		RohsData data = new RohsData(rohs);
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
-		List<Map<String,String>> typeList = RohsHelper.manager.rohsFileType();
-		
-		List<Map<String,Object>> contentList = RohsHelper.manager.getRohsContent(oid);
-		
+		List<Map<String, String>> typeList = RohsHelper.manager.rohsFileType();
+
+		List<Map<String, Object>> contentList = RohsHelper.manager.getRohsContent(oid);
+
 		model.addObject("data", data);
 		model.addObject("contentList", contentList);
 		model.addObject("manufactureList", manufactureList);
@@ -156,32 +152,32 @@ public class RohsController extends BaseController {
 		model.setViewName("popup:/rohs/rohs-update");
 		return model;
 	}
-	
+
 	@Description(value = "물질 수정 함수")
 	@ResponseBody
 	@PostMapping(value = "/update")
-	public Map<String,Object> update(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> update(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			RohsHelper.service.update(params);
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질 삭제")
 	@ResponseBody
 	@PostMapping(value = "/delete")
-    public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
+	public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid");
-        return RohsHelper.service.delete(oid);
-    }
-	
+		return RohsHelper.service.delete(oid);
+	}
+
 	@Description(value = "물질 중복체크")
 	@ResponseBody
 	@PostMapping(value = "/rohsCheck")
@@ -197,7 +193,7 @@ public class RohsController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질 중복체크")
 	@ResponseBody
 	@PostMapping(value = "/rohsNameCheck")
@@ -213,12 +209,12 @@ public class RohsController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질복사 페이지")
 	@GetMapping(value = "/copyRohs")
-	public ModelAndView copyRohs(@RequestParam String oid) throws Exception{
+	public ModelAndView copyRohs(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
 		RohsData data = new RohsData(rohs);
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		model.addObject("data", data);
@@ -226,47 +222,47 @@ public class RohsController extends BaseController {
 		model.setViewName("popup:/rohs/copyRohs");
 		return model;
 	}
-	
+
 	@Description(value = "물질복사 함수")
 	@ResponseBody
 	@PostMapping(value = "/copyRohs")
-	public Map<String,Object> copyRohs(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> copyRohs(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			RohsHelper.service.copyRohs(params);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질 개정 페이지")
 	@GetMapping(value = "/reviseRohs")
-	public ModelAndView reviseRohs(@RequestParam String oid) throws Exception{
+	public ModelAndView reviseRohs(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("popup:/rohs/rohs-revise");
 		return model;
 	}
-	
+
 	@Description(value = "물질 개정 함수")
 	@ResponseBody
 	@PostMapping(value = "/reviseRohs")
-	public Map<String,Object> reviseRohs(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> reviseRohs(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			RohsHelper.service.reviseRohs(params);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질 최신버전 이동")
 	@GetMapping(value = "/latest")
 	public ModelAndView latest(@RequestParam String oid) throws Exception {
@@ -279,10 +275,10 @@ public class RohsController extends BaseController {
 		model.setViewName("popup:/rohs/rohs-view");
 		return model;
 	}
-	
+
 	@Description(value = "물질 일괄등록 페이지")
 	@GetMapping(value = "/batch")
-	public ModelAndView batch() throws Exception{
+	public ModelAndView batch() throws Exception {
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<RohsData> rohsList = RohsHelper.manager.totalList();
 		ModelAndView model = new ModelAndView();
@@ -291,32 +287,32 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-batch.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "물질 일괄등록 실행")
 	@ResponseBody
 	@PostMapping(value = "/batch")
-	public Map<String,Object> batch(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> batch(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			RohsHelper.service.batch(params);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "물질 일괄등록 첨부파일 페이지")
 	@GetMapping(value = "/attachFile")
-	public ModelAndView attachFile() throws Exception{
+	public ModelAndView attachFile() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("popup:/common/attach-multi");
 		return model;
 	}
-	
+
 	@Description(value = "물질 일괄링크")
 	@GetMapping(value = "/link")
 	public ModelAndView link() {
@@ -324,32 +320,32 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-link.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "물질 일괄링크 실행")
 	@ResponseBody
 	@PostMapping(value = "/link")
-	public Map<String,Object> link(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> link(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = RohsHelper.service.rohsLink(params);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());
 		}
 		return result;
 	}
-	
+
 	@Description(value = "파일검색 페이지")
 	@GetMapping(value = "/listRohsFile")
 	public ModelAndView listRohsFile() {
 		ModelAndView model = new ModelAndView();
-		List<Map<String,String>> typeList = RohsHelper.manager.rohsFileType();
+		List<Map<String, String>> typeList = RohsHelper.manager.rohsFileType();
 		model.addObject("typeList", typeList);
 		model.setViewName("/extcore/jsp/rohs/rohsFile-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "파일검색 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/listRohsFile")
@@ -365,7 +361,7 @@ public class RohsController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "부품현황 페이지")
 	@GetMapping(value = "/listAUIRoHSPart")
 	public ModelAndView listAUIRoHSPart() {
@@ -373,7 +369,7 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-listAUIRoHSPart.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "부품현황 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/listAUIRoHSPart")
@@ -389,7 +385,7 @@ public class RohsController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "제품현황 페이지")
 	@GetMapping(value = "/listRoHSProduct")
 	public ModelAndView listRoHSProduct() {
@@ -397,7 +393,7 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-listRoHSProduct.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "제품현황 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/listRoHSProduct")
@@ -413,7 +409,7 @@ public class RohsController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "일괄결재 페이지")
 	@GetMapping(value = "/all")
 	public ModelAndView all() {
@@ -421,8 +417,10 @@ public class RohsController extends BaseController {
 		model.setViewName("/extcore/jsp/rohs/rohs-all.jsp");
 		return model;
 	}
-	
-	/**	관련 문서 추가
+
+	/**
+	 * 관련 문서 추가
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -433,25 +431,25 @@ public class RohsController extends BaseController {
 		String title = request.getParameter("title");
 		String paramName = request.getParameter("paramName");
 		String type = request.getParameter("type");
-		String state = StringUtil.checkReplaceStr(request.getParameter("state"),"");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"),"");
+		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
+		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
 		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
 		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "rohs");
 		List<RohsData> list = new ArrayList<RohsData>();
 		List<RohsData> templist = new ArrayList<RohsData>();
 		try {
 			templist = RohsHelper.service.include_RohsView(oid, module, "composition");
-			for(RohsData data : templist){
-				
-				//최신 버전만 select
-				if(data.isLatest()){
+			for (RohsData data : templist) {
+
+				// 최신 버전만 select
+				if (data.isLatest()) {
 					list.add(data);
 				}
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			list = new ArrayList<RohsData>();
-			
+
 		}
 		ModelAndView model = new ModelAndView();
 		model.setViewName("include:/rohs/include_RohsSelect");
@@ -459,13 +457,15 @@ public class RohsController extends BaseController {
 		model.addObject("title", title);
 		model.addObject("paramName", paramName);
 		model.addObject("type", type);
-		model.addObject("state",state);
-		model.addObject("searchType",searchType);
-		model.addObject("lifecycle",lifecycle);
+		model.addObject("state", state);
+		model.addObject("searchType", searchType);
+		model.addObject("lifecycle", lifecycle);
 		return model;
 	}
-	
-	/** 문서 RoHS 팝업
+
+	/**
+	 * 문서 RoHS 팝업
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -476,19 +476,21 @@ public class RohsController extends BaseController {
 		String mode = StringUtil.checkReplaceStr(request.getParameter("mode"), "mutil");
 		String type = StringUtil.checkReplaceStr(request.getParameter("type"), "select");
 		String state = StringUtil.checkReplaceStr(request.getParameter("state"), "");
-		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"),"");
+		String searchType = StringUtil.checkReplaceStr(request.getParameter("searchType"), "");
 		String lifecycle = StringUtil.checkReplaceStr(request.getParameter("lifecycle"), "LC_Default");
-		
+
 		model.addObject("mode", mode);
 		model.addObject("type", type);
 		model.addObject("state", state);
-		model.addObject("searchType",searchType);
+		model.addObject("searchType", searchType);
 		model.addObject("lifecycle", lifecycle);
 		model.setViewName("popup:/rohs/selectRohsPopup");
 		return model;
 	}
-	
-	/**	관련 RoHS 보기
+
+	/**
+	 * 관련 RoHS 보기
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -501,15 +503,15 @@ public class RohsController extends BaseController {
 		String paramName = request.getParameter("paramName");
 		String module = StringUtil.checkReplaceStr(request.getParameter("module"), "rohs");
 		String distribute = StringUtil.checkNull(request.getParameter("distribute"));
-		//ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
+		// ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
 		List<RohsData> list = null;
 		try {
-			//list = RohsQueryHelper.service.getRepresentToLinkList(rohs,roleType);
+			// list = RohsQueryHelper.service.getRepresentToLinkList(rohs,roleType);
 			list = RohsHelper.service.include_RohsView(oid, module, roleType);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		ModelAndView model = new ModelAndView();
 		model.addObject("roleType", roleType);
 		model.addObject("oid", oid);
@@ -520,8 +522,10 @@ public class RohsController extends BaseController {
 		model.setViewName("include:/rohs/include_RohsView");
 		return model;
 	}
-	
-	/**	ROHS 개정
+
+	/**
+	 * ROHS 개정
+	 * 
 	 * @param request
 	 * @param response
 	 * @param oid
@@ -534,8 +538,10 @@ public class RohsController extends BaseController {
 //		ResultData data = RohsHelper.service.reviseUpdate(request, response);
 //		return data;
 //	}
-	
-	/** RoHS 자료검색
+
+	/**
+	 * RoHS 자료검색
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -544,31 +550,33 @@ public class RohsController extends BaseController {
 	public ModelAndView listRoHSData(HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView model = new ModelAndView();
 		model.addObject("menu", "menu4");
-		model.addObject("module","rohs");
+		model.addObject("module", "rohs");
 		model.setViewName("default:/rohs/listRoHSData");
 		return model;
 	}
-	
-	/** 부품의 BOM에서 ROHS 파일 다운로드
+
+	/**
+	 * 부품의 BOM에서 ROHS 파일 다운로드
+	 * 
 	 * @param request
 	 * @param response
 	 */
 	@ResponseBody
-	@RequestMapping(value="batchROHSDown", method={RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value = "batchROHSDown", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResultData batchROHSDown(HttpServletRequest request, HttpServletResponse response) {
 		ResultData returnData = new ResultData();
-		//System.out.println("Controllor batchROHSDown");
-		///System.out.println(" partNumber = "+request.getParameter("partNumber"));
+		// System.out.println("Controllor batchROHSDown");
+		/// System.out.println(" partNumber = "+request.getParameter("partNumber"));
 		try {
-			
+
 			returnData = RohsHelper.service.batchROHSDown(request, response);
-			//CommonHelper.service.batchSecondaryDown(request, response);//.service.batchSecondaryDown(request, response);
-			
-			
-		} catch(Exception e) {
+			// CommonHelper.service.batchSecondaryDown(request,
+			// response);//.service.batchSecondaryDown(request, response);
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-				
+
 		return returnData;
 	}
 }

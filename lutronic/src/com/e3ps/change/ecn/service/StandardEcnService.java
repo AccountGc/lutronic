@@ -1,9 +1,6 @@
 package com.e3ps.change.ecn.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 
 import com.e3ps.change.EChangeNotice;
@@ -14,8 +11,6 @@ import com.e3ps.change.EcnToPartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 
@@ -27,13 +22,9 @@ import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.org.WTUser;
-import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.pom.Transaction;
-import wt.query.ClassAttribute;
-import wt.query.QuerySpec;
-import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.util.WTException;
 
@@ -131,6 +122,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				ecn.setEoCommentE(eco.getEoCommentE());
 				ecn.setEoType(eco.getEoType());
 				ecn.setEco(eco);
+				ecn.setProgress("작업중 ");
 
 				String location = "/Default/설계변경/ECN";
 				String lifecycle = "LC_ECN";
@@ -181,6 +173,27 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				}
 			}
 
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void complete(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			EChangeNotice ecn = (EChangeNotice)CommonUtil.getObject(oid);
+			ecn.setProgress(oid);
+			
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

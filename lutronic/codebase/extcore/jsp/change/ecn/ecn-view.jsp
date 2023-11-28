@@ -197,26 +197,21 @@ i++;
 	});
 	
 	function auiCellEditBeginHandler(event) {
-		<%
-			if(!edit) {
-		%>
+		<%if (!edit) {%>
 			alert("수정 권한이 없습니다.\n담당자 및 관리자만 수정가능합니다.");
 			return false;
-		<%
-			}
-		%>
+		<%}%>
 		const item = event.item;
 		const dataField = event.dataField;
-		console.log(dataField);
+		const k = dataField.substring(0, dataField.lastIndexOf("_"));
 		const rowIndex = event.rowIndex;
-		const isSend = AUIGrid.getCellValue(myGridID, rowIndex, dataField);
-		const send = item.send;
-		console.log(isSend);
-		console.log(send);
-// 		if(isSend !== undefined && send !== undefined) {
-// 			alert("SAP로 전송 완료된 값입니다.");
-// 			return false;
-// 		}
+		const isSend = AUIGrid.getCellValue(myGridID, rowIndex, k + "_isSend");
+		
+		if(isSend) {
+			alert("이미 SAP로 전송된 인허가일이 있습니다.");
+			return false;
+		}
+		
 		return true;
 	}
 
@@ -244,7 +239,7 @@ i++;
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-// 				document.location.reload();
+				document.location.reload();
 			}
 			closeLayer();
 		})

@@ -30,8 +30,10 @@ import wt.util.WTException;
 		properties = {
 
 				@GeneratedProperty(name = "partName", type = String.class),
-				
-				@GeneratedProperty(name = "partNumber", type = String.class)
+
+				@GeneratedProperty(name = "partNumber", type = String.class),
+
+				@GeneratedProperty(name = "progress", type = String.class)
 
 		},
 
