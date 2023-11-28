@@ -20,6 +20,10 @@ boolean edit = dto.isEditable();
 	color: red !important;
 	font-weight: bold !important;
 }
+
+.workEnd {
+	background-color: rgb(200, 255, 203);
+}
 </style>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
@@ -50,6 +54,17 @@ boolean edit = dto.isEditable();
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
+		dataField : "rate",
+		headerText : "진행율",
+		dataType : "string",
+		width : 80,
+		editable : false,
+		renderer: {
+			type: "BarRenderer",
+			min: 0,
+			max: 100
+		},		
+	},{
 		dataField : "partNumber",
 		headerText : "제품번호",
 		dataType : "string",
@@ -184,6 +199,12 @@ i++;
 			autoGridHeight : true,
 			editable : true,
 			enableCellMerge : true,
+// 			rowStyleFunction: function (rowIndex, item) {
+// 				if (item.workEnd) {
+// 					return "workEnd";
+// 				}
+// 				return "";
+// 			}
 		}
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);

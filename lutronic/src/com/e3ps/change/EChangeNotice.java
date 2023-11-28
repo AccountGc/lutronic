@@ -33,7 +33,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "partNumber", type = String.class),
 
-				@GeneratedProperty(name = "progress", type = String.class)
+				@GeneratedProperty(name = "progress", type = String.class),
+
+				@GeneratedProperty(name = "rate", type = Double.class),
 
 		},
 

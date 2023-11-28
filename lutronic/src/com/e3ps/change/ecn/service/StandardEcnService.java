@@ -9,7 +9,9 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcnToPartLink;
 import com.e3ps.change.EcoPartLink;
+import com.e3ps.change.PartToSendLink;
 import com.e3ps.change.util.EChangeUtils;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
@@ -123,6 +125,7 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				ecn.setEoType(eco.getEoType());
 				ecn.setEco(eco);
 				ecn.setProgress("작업중 ");
+				ecn.setRate(0D);
 
 				String location = "/Default/설계변경/ECN";
 				String lifecycle = "LC_ECN";
@@ -191,9 +194,10 @@ public class StandardEcnService extends StandardManager implements EcnService {
 		try {
 			trs.start();
 
-			EChangeNotice ecn = (EChangeNotice)CommonUtil.getObject(oid);
-			ecn.setProgress(oid);
-			
+			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
+
+			ecn.setProgress("전송완료");
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -203,6 +207,43 @@ public class StandardEcnService extends StandardManager implements EcnService {
 		} finally {
 			if (trs != null)
 				trs.rollback();
+		}
+	}
+
+	@Override
+	public void update(String oid) throws Exception {
+		try {
+			EcnToPartLink link = (EcnToPartLink) CommonUtil.getObject(oid);
+			WTPart part = link.getPart();
+			EChangeNotice ecn = link.getEcn();
+			EChangeRequest cr = link.getEcr();
+
+			ArrayList<Map<String, String>> countrys = NumberCodeHelper.manager.getCountry();
+			int size = countrys.size();
+			int calc = countrys.size(); // 전체..개수 같다고 시작
+			for (Map<String, String> country : countrys) {
+				String code = country.get("code");
+				PartToSendLink sendLink = EcnHelper.manager.getSendLink(ecn, part, code, cr);
+				if (sendLink == null) {
+					calc--; // 없는거 만큼 하나식 숫자를 줄여나간다
+				}
+			}
+
+			double rate = 0D;
+			if (calc == 0) {
+				rate = 0D;
+			} else {
+				rate = (double) calc / size;
+			}
+
+			if (rate == 1D) {
+				link.setWorkEnd(true);
+			}
+			link.setRate(Math.round(100 * rate));
+			PersistenceHelper.manager.modify(link);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}
 }

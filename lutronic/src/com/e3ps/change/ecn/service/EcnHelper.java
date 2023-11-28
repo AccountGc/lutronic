@@ -56,7 +56,6 @@ public class EcnHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeNotice.class, EChangeNotice.MODEL, model);
 		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.MODIFY_TIMESTAMP, true);
 
-		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -76,13 +75,13 @@ public class EcnHelper {
 	/**
 	 * 국가별 SAP 전송 이력 데이터 가져오기
 	 */
-	private PartToSendLink getSendLink(EChangeNotice ecn, WTPart part, String nation, EChangeRequest ecr)
+	public PartToSendLink getSendLink(EChangeNotice ecn, WTPart part, String nation, EChangeRequest cr)
 			throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(PartToSendLink.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "partReference.key.id", part);
 		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "ecnReference.key.id", ecn);
-		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "ecrReference.key.id", ecr);
+		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, "ecrReference.key.id", cr);
 		QuerySpecUtils.toEqualsAnd(query, idx, PartToSendLink.class, PartToSendLink.NATION, nation);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		if (result.hasMoreElements()) {
@@ -112,6 +111,9 @@ public class EcnHelper {
 
 			Map<String, Object> map = new HashMap<>();
 
+			map.put("oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("workEnd", link.getWorkEnd());
+			map.put("rate", link.getRate()); // 진행율
 			map.put("partName", ecn.getPartName());
 			map.put("partNumber", ecn.getPartNumber());
 			map.put("ecoNumber", eco.getEoNumber());
@@ -136,5 +138,23 @@ public class EcnHelper {
 		}
 		Collections.sort(list, new EcnComparator());
 		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * EcnToPartLink 가져오기
+	 */
+	public EcnToPartLink getEcnToPartLink(EChangeNotice ecn, WTPart part, EChangeRequest cr) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EcnToPartLink.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, EcnToPartLink.class, "roleAObjectRef.key.id", ecn);
+		QuerySpecUtils.toEqualsAnd(query, idx, EcnToPartLink.class, "roleBObjectRef.key.id", part);
+		QuerySpecUtils.toEqualsAnd(query, idx, EcnToPartLink.class, "ecrReference.key.id", cr);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EcnToPartLink link = (EcnToPartLink) obj[0];
+			return link;
+		}
+		return null;
 	}
 }

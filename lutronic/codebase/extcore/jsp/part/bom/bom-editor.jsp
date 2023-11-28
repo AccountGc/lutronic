@@ -165,7 +165,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 		headerText : "수량",
 		dataType : "numeric",
 		width : 60,
-		postfix : "개"
+		postfix : "개",
+		editable : true
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -230,6 +231,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		loadTree();
+		AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBegin);
 		AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEnd);
 		AUIGrid.bind(myGridID, "contextMenu", function(event) {
 			const item = event.item;
@@ -273,6 +275,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 		});
 		AUIGrid.bind(myGridID, "treeLazyRequest", auiLazyHandler)
 	};
+
+	function auiCellEditBegin(event) {
+		logger(event);
+	}
 
 	function loadTree() {
 		const oid = document.getElementById("oid").value;
