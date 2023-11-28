@@ -1,0 +1,789 @@
+<html>
+<head>
+	<title>나모 크로스에디터 도움말</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="author" content="JIRANSOFT Co., Ltd." />
+	<link href="../common.css" rel="stylesheet" type="text/css" />
+	<link href="../icon.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<table class="t_center" class="center">
+    <tr>
+        <td width="923">
+            <h1>크로스에디터4 키워드</h1>
+            <p class="mtext">크로스에디터4의 메뉴, 툴바의 키워드 목록을 안내합니다.</p>
+			
+            <h3><a name="about_inifile">설정방법</a></h3>
+			<h5><a name="general">[Config.xml 설정]</a></h5>
+			<p class="mtext">에디터 설정파일(Config.xml)에 설정하는 경우 사용중인 모든 에디터에 일괄 적용됩니다.</p>
+			<div class="contents_code">
+				<pre class="scodedsc">&lt;UI&gt;
+    &lt;<b>UserToolbar</b>&gt;true&lt;<b>/UserToolbar</b>&gt;
+    &lt;<b>CreateToolbar</b>&gt;newdoc|spacebar|word_style|spacebar|word_color|cancelattribute|...&lt;<b>/CreateToolbar</b>&gt;
+&lt;/UI&gt;</pre>
+			</div>
+			<h5><a name="general">[API 설정]</a></h5>
+			<div class="contents_code">
+				<pre class="scodedsc">var CrossEditor = new NamoSE('namoeditor1');
+CrossEditor.params.<b>UserToolbar</b> = true;
+CrossEditor.params.<b>CreateToolbar</b> = "newdoc|spacebar|word_style|spacebar|word_color|cancelattribute|...";
+CrossEditor.EditorStart();</pre>
+			</div>
+            <h5><a name="general">[기본 설정]</a></h5>
+			<p class="mtext">에디터에서 제공하는 기본 키워드 조합 입니다.</p>
+            <div class="contents_code1">newdoc|fopen|saveas|autosave|print|spacebar|pagebreak|spacebar|undo|redo|cut|copy|paste|pastetext|insertcode|search|replace|selectall|spacebar|image|ce_imageeditor|backgroundimage|flash|insertchart|insertfile|spacebar|hyperlink|remove_hyperlink|bookmark|inserthorizontalrule|specialchars|emoticon|enter|tableinsert|tabledraginsert|spacebar|tablerowinsert|tablerowdelete|tablecolumninsert|tablecolumndelete|spacebar|tablecellmerge|tablecellsplit|spacebar|tablecellattribute|tablecellbgcolor|tableborder_group|spacebar|word_layer|spacebar|layout|spacebar|word_dir|spacebar|privacy|validation|spacebar|spacebar|spellchecker|enter|word_style|spacebar|word_color|cancelattribute|spacebar|word_script|spacebar|formatcopy|spacebar|word_justify|word_indentset|txtmargin|paragraphsetup|spacebar|word_listset|spacebar|blockquote|templatelist|insertdatetime|insertdatetimelist|enter|formatblock|fontname|fontsize|lineheight|spacebar|showruler|fixedwidth|fullscreen|responsive|tagcleaner|setup|help|information|responsive|topdf
+			</div>
+			
+            <h3><a name="options"></a>구성요소</h3>
+			<table border="0" width="60%" cellspacing="0" cellpadding="0" class="mtext" style="margin-left:35px;">
+                <tr>
+                    <td width="98" height="23">
+                        <p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p>
+                    </td>
+                    <td width="285" height="23">
+                        <p class="onlym">메뉴 그룹 (메뉴에서만 사용)</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="98" height="23">
+                        <p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p>
+                    </td>
+                    <td width="285" height="23">
+                        <p class="onlym">메뉴, 툴바에서 사용</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="98" height="23">
+                        <p><img src="images/key_menu.gif" width="42" height="15" border="0"></p>
+                    </td>
+                    <td width="285" height="23">
+                        <p class="onlym">메뉴 전용</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="98" height="23">
+                        <p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p>
+                    </td>
+                    <td width="285" height="23">
+                        <p class="onlym">툴바 전용</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="98" height="23">
+                        <p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p>
+                    </td>
+                    <td width="285" height="23">
+                        <p class="onlym">툴바 그룹 (툴바에서만 사용)</p>
+                    </td>
+                </tr>
+            </table>
+			<table class="paradsc2 fonts">
+                <tr>
+					<td class="eee center"><p><b>구분</b></p></td>
+                    <td class="eee center"><p><b>키워드</b></p></td>
+					<td class="eee center" colspan="2"><p><b>기능</b></p></td>
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>files</p></td>
+					<td><p></p></td>
+					<td><p>파일 그룹</p></td>
+				</tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>newdoc</p></td>
+					<td class="center"><p><img name="newdoc" title="새 문서" class="ce-icon-newdoc ce-icon-toolbar-default" id="newdoc" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="새 문서" src="../images/tb.png" status="default"></p></td>
+                    <td><p>새 문서</p></td>					
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>fopen</p></td>
+					<td class="center"><p><img name="fopen" title="파일 열기" class="ce-icon-fopen ce-icon-toolbar-default" id="fopen" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="파일 열기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>파일 열기</p></td>                    			
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>templatelist</p></td>
+					<td class="center"><p><img name="templatelist" title="템플릿" class="ce-icon-templatelist ce-icon-toolbar-default" id="templatelist" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="템플릿" src="../images/tb.png" status="default"></p></td>
+					<td><p>템플릿 목록</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>layout</p></td>
+					<td class="center"><p><img name="layout" title="레이아웃" class="ce-icon-layout ce-icon-toolbar-default" id="layout" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="레이아웃" src="../images/tb.png" status="default"></p></td>
+                    <td><p>레이아웃</p></td>
+				</tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>saveas</p></td>
+					<td class="center"><p><img name="saveas" title="저장하기" class="ce-icon-saveas ce-icon-toolbar-default" id="saveas" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="저장하기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>저장하기</p></td>                    
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>autosave</p></td>
+					<td class="center"><p><img name="autosave" title="자동 저장 불러오기" class="ce-icon-autosave ce-icon-toolbar-default" id="autosave" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="자동 저장 불러오기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>자동 저장 불러오기</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>topdf</p></td>
+					<td class="center"><p><img name="topdf" title="PDF로 저장하기" class="ce-icon-topdf ce-icon-toolbar-default" id="topdf" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="PDF로 저장하기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>PDF로 저장하기</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>print</p></td>
+					<td class="center"><p><img name="print" title="인쇄하기" class="ce-icon-print ce-icon-toolbar-default" id="print" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="인쇄하기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>인쇄하기</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>pagebreak</p></td>
+					<td class="center"><p><img name="pagebreak" title="페이지분할" class="ce-icon-pagebreak ce-icon-toolbar-default" id="pagebreak" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="페이지분할" src="../images/tb.png" status="default"></p></td>
+                    <td><p>페이지분할</p></td>
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>edits</p></td>
+					<td><p></p></td>
+					<td><p>편집 그룹</p></td>
+				</tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>undo</p></td>
+					<td class="center"><p><img name="undo" title="돌이킴" class="ce-icon-undo ce-icon-toolbar-default" id="undo" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="돌이킴" src="../images/tb.png" status="default"></p></td>
+                    <td><p>돌이킴</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>redo</p></td>
+					<td class="center"><p><img name="redo" title="되돌이킴" class="ce-icon-redo ce-icon-toolbar-default" id="redo" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="되돌이킴" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>되돌이킴</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>copy</p></td>
+					<td class="center"><p><img name="copy" title="복사하기" class="ce-icon-copy ce-icon-toolbar-default" id="copy" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="복사하기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>복사하기</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>cut</p></td>
+					<td class="center"><p><img name="cut" title="자르기" class="ce-icon-cut ce-icon-toolbar-default" id="cut" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="자르기" src="../images/tb.png" status="default"></p></td>
+					<td><p>자르기</p></td>
+                </tr>                
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>paste</p></td>
+					<td class="center"><p><img name="paste" title="붙여넣기" class="ce-icon-paste ce-icon-toolbar-default" id="paste" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="붙여넣기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>붙여넣기</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>pastetext</p></td>
+					<td class="center"><p><img name="pastetext" title="텍스트로 붙여넣기" class="ce-icon-pastetext ce-icon-toolbar-default" id="pastetext" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="텍스트로 붙여넣기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>텍스트로 붙여넣기</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>selectall</p></td>
+					<td class="center"><p><img name="selectall" title="전체선택" class="ce-icon-selectall ce-icon-toolbar-default" id="selectall" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="전체선택" src="../images/tb.png" status="default"></p></td>
+                    <td><p>전체 선택</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>search</p></td>
+					<td class="center"><p><img name="search" title="찾기" class="ce-icon-search ce-icon-toolbar-default" id="search" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="찾기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>찾기</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>replace</p></td>
+					<td class="center"><p><img name="replace" title="바꾸기" class="ce-icon-replace ce-icon-toolbar-default" id="replace" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="바꾸기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>바꾸기</p></td>	
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>views</p></td>
+					<td><p></p></td>
+					<td><p>보기 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>fullscreen</p></td>
+					<td class="center"><p><img name="fullscreen" title="전체화면" class="ce-icon-fullscreen ce-icon-toolbar-default" id="fullscreen" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="전체화면" src="../images/tb.png" status="default"></p></td>
+					<td><p>전체화면</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>showruler<br>(4.1.1.05 버전 이상)</p></td>
+					<td class="center"><p><img name="showruler" title="눈금자" class="ce-icon-showruler ce-icon-toolbar-default" id="showruler" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="눈금자" src="../images/tb.png" status="default"></p></td>
+					<td><p>눈금자</p></td>
+				</tr>				
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>fixedwidth</p></td>
+					<td class="center"><p><img name="fixedwidth" title="너비고정" class="ce-icon-fixedwidth ce-icon-toolbar-default" id="fixedwidth" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="너비고정" src="../images/tb.png" status="default"></p></td>
+					<td><p>너비고정</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_menu.gif" width="42" height="15" border="0"></p></td>
+					<td><p>edit</p></td>
+					<td><p></p></td>
+                    <td><p>편집</p></td>
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_menu.gif" width="42" height="15" border="0"></p></td>
+					<td><p>html</p></td>
+					<td><p></p></td>
+                    <td><p>HTML</p></td>
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_menu.gif" width="42" height="15" border="0"></p></td>
+					<td><p>preview</p></td>
+					<td><p></p></td>
+                    <td><p>미리보기</p></td>
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>inserts</p></td>
+					<td><p></p></td>
+					<td><p>삽입 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>backgroundimage</p></td>
+					<td class="center"><p><img name="backgroundimage" title="배경그림" class="ce-icon-backgroundimage ce-icon-toolbar-default" id="backgroundimage" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="배경그림" src="../images/tb.png" status="default"></p></td>
+                    <td><p>배경 그림</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>image</p></td>
+					<td class="center"><p><img name="image" title="그림넣기" class="ce-icon-image ce-icon-toolbar-default" id="image" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="그림넣기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>그림 넣기</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>flash</p></td>
+					<td class="center"><img name="flash" title="동영상" class="ce-icon-flash ce-icon-toolbar-default" id="flash" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="동영상" src="../images/tb.png" status="default"></p></td>
+                    <td><p>동영상</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>insertchart</p></td>
+					<td class="center"><p><img name="insertchart" title="차트" class="ce-icon-insertchart ce-icon-toolbar-default" id="insertchart" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="차트" src="../images/tb.png" status="default"></p></td>
+                    <td><p>차트</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>insertdatetime</p></td>
+					<td class="center"><p><img name="insertdatetime" title="날짜/시간 삽입" class="ce-icon-insertdatetime ce-icon-toolbar-default" id="insertdatetime" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="날짜/시간 삽입" src="../images/tb.png" status="default"></p></td>
+					<td><p>날짜/시간 삽입</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>insertdatetimelist</p></td>
+					<td class="center"><p><img name="insertdatetimelist" title="날짜/시간 삽입" class="ce-icon-insertdatetimelist ce-icon-toolbar-default" id="insertdatetimelist" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="날짜/시간 삽입" src="../images/tb.png" status="default"></p></td>
+					<td><p>날짜/시간 삽입 목록</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+                    <td><p>word_layer</p></td>
+					<td><p></p></td>
+                    <td><p>레이어 그룹</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>insertlayer</p></td>
+					<td class="center"><p><img name="insertlayer" title="레이어넣기" class="ce-icon-insertlayer ce-icon-toolbar-default" id="insertlayer" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="레이어넣기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>레이어넣기</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>moveforward</p></td>
+					<td class="center"><p><img name="moveforward" title="레이어 앞으로" class="ce-icon-moveforward ce-icon-toolbar-default" id="moveforward" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="레이어 앞으로" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>레이어 앞으로</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>movebackward</p></td>
+					<td class="center"><p><img name="movebackward" title="레이어 뒤로" class="ce-icon-movebackward ce-icon-toolbar-default" id="movebackward" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="레이어 뒤로" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>레이어 뒤로</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>insertfile</p></td>
+					<td class="center"><p><img name="insertfile" title="파일넣기" class="ce-icon-insertfile ce-icon-toolbar-default" id="insertfile" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="파일넣기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>파일 넣기</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>hyperlink</p></td>
+					<td class="center"><p><img name="hyperlink" title="하이퍼링크" class="ce-icon-hyperlink ce-icon-toolbar-default" id="hyperlink" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="하이퍼링크" src="../images/tb.png" status="default"></p></td>
+                    <td><p>하이퍼링크</p></td>
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>remove_hyperlink</p></td>
+					<td class="center"><p><img name="remove_hyperlink" title="하이퍼링크 제거" class="ce-icon-remove_hyperlink ce-icon-toolbar-default" id="remove_hyperlink" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="하이퍼링크 제거" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>하이퍼링크 제거</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>insertcode</p></td>
+					<td class="center"><p><img name="insertcode" title="코드 삽입" class="ce-icon-insertcode ce-icon-toolbar-default" id="insertcode" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="코드 삽입" src="../images/tb.png" status="default"></p></td>
+                    <td><p>코드 삽입</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>bookmark</p></td>
+					<td class="center"><p><img name="bookmark" title="책갈피" class="ce-icon-bookmark ce-icon-toolbar-default" id="bookmark" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="책갈피" src="../images/tb.png" status="default"></p></td>
+                    <td><p>책갈피</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>inserthorizontalrule</p></td>
+					<td class="center"><p><img name="inserthorizontalrule" title="수평선넣기" class="ce-icon-inserthorizontalrule ce-icon-toolbar-default" id="inserthorizontalrule" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="수평선넣기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>수평선 넣기</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>specialchars</p></td>
+					<td class="center"><p><img name="specialchars" title="특수기호" class="ce-icon-specialchars ce-icon-toolbar-default" id="specialchars" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="특수기호" src="../images/tb.png" status="default"></p></td>
+                    <td><p>특수기호</p></td>
+                </tr>
+                <tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>emoticon</p></td>
+					<td class="center"><p><img name="emoticon" title="이모티콘" class="ce-icon-emoticon ce-icon-toolbar-default" id="emoticon" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="이모티콘" src="../images/tb.png" status="default"></p></td>
+                    <td><p>이모티콘</p></td>
+                </tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>blockquote</p></td>
+					<td class="center"><p><img name="blockquote" title="인용구문" class="ce-icon-blockquote ce-icon-toolbar-default" id="blockquote" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="인용구문" src="../images/tb.png" status="default"></p></td>
+					<td><p>인용구문</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>formats</p></td>
+					<td><p></p></td>
+					<td><p>서식 그룹</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>formatblock</p></td>
+					<td class="center"><p><select class="panelselect" style="width: 65px;"><option value="1">서식</option></select></p></td>
+					<td><p>서식</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>fontname</p></td>
+					<td class="center"><p><select class="panelselect" style="width: 65px;"><option value="1">굴림</option></select></p></td>
+					<td><p>글꼴</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>fontsize</p></td>
+					<td class="center"><p><select class="panelselect" style="width: 65px;"><option value="1">10pt</option></select></p></td>
+					<td><p>글꼴 크기</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>lineheight</p></td>
+					<td class="center"><p><select class="panelselect" style="width: 65px;"><option value="1">120%</option></select></p></td>
+					<td><p>줄 간격</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+					<td><p>word_style</p></td>
+					<td><p></p></td>
+					<td><p>글자 속성 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>bold</p></td>
+					<td class="center"><p><img name="bold" title="진하게" class="ce-icon-bold ce-icon-toolbar-default" id="bold" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="진하게" src="../images/tb.png" status="default"></p></td>
+                    <td><p>진하게</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>italic</p></td>
+					<td class="center"><p><img name="italic" title="이탤릭" class="ce-icon-italic ce-icon-toolbar-default" id="italic" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="이탤릭" src="../images/tb.png" status="default"></p></td>
+                    <td><p>이탤릭</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>underline</p></td>
+					<td class="center"><p><img name="underline" title="밑줄" class="ce-icon-underline ce-icon-toolbar-default" id="underline" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="밑줄" src="../images/tb.png" status="default"></p></td>
+                    <td><p>밑줄</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>strikethrough</p></td>
+					<td class="center"><p><img name="strikethrough" title="취소선" class="ce-icon-strikethrough ce-icon-toolbar-default" id="strikethrough" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="취소선" src="../images/tb.png" status="default"></p></td>
+                    <td><p>취소선</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+					<td><p>word_script</p></td>
+					<td><p></p></td>
+					<td><p>첨자 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>subscript</p></td>
+					<td class="center"><p><img name="subscript" title="아랫첨자" class="ce-icon-subscript ce-icon-toolbar-default" id="subscript" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="아랫첨자" src="../images/tb.png" status="default"></p></td>
+                    <td><p>아랫첨자</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>superscript</p></td>
+					<td class="center"><p><img name="superscript" title="윗첨자" class="ce-icon-superscript ce-icon-toolbar-default" id="superscript" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="윗첨자" src="../images/tb.png" status="default"></p></td>
+                    <td><p>윗첨자</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>				
+					<td><p>formatcopy</p></td>
+					<td class="center"><p><img name="formatcopy" title="서식 복사" class="ce-icon-formatcopy ce-icon-toolbar-default" id="formatcopy" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="서식 복사" src="../images/tb.png" status="default"></p></td>
+					<td><p>서식 복사</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>formatpaste</p></td>
+					<td class="center"><p><img name="formatpaste" title="서식 붙여넣기" class="ce-icon-formatpaste ce-icon-toolbar-default" id="formatpaste" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="서식 붙여넣기" src="../images/tb.png" status="disable"></p></td>
+					<td><p>서식 붙여넣기</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>cancelattribute</p></td>
+					<td class="center"><p><img name="cancelattribute" title="모든글자 속성 지우기" class="ce-icon-cancelattribute ce-icon-toolbar-default" id="cancelattribute" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="모든글자 속성 지우기" src="../images/tb.png" status="default"></p></td>
+					<td><p>모든 글자 속성 지우기</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>txtmargin</p></td>
+					<td class="center"><p><img name="txtmargin" title="문단여백" class="ce-icon-txtmargin ce-icon-toolbar-default" id="txtmargin" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="문단여백" src="../images/tb.png" status="default"></p></td>
+					<td><p>문단여백</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>paragraphsetup</p></td>
+					<td class="center"><p><img name="paragraphsetup" title="문단" class="ce-icon-paragraphsetup ce-icon-toolbar-default" id="paragraphsetup" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="문단" src="../images/tb.png" status="default"></p></td>
+					<td><p>문단</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+					<td><p>word_listset</p></td>
+					<td><p></p></td>
+					<td><p>숫자, 기호 목록 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>numberset</p></td>
+					<td class="center"><p><img name="numberset" title="숫자목록" class="ce-icon-numberset ce-icon-toolbar-default" id="numberset" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="숫자목록" src="../images/tb.png" status="default"></p></td>
+                    <td><p>숫자목록</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>numbersettype</p></td>
+					<td class="center"><p><img name="numbersettype" title="목록스타일" class="ce-icon-numbersettype ce-icon-toolbar-default" id="numbersettype" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="목록스타일" src="../images/tb.png" status="default"></p></td>
+                    <td><p>목록스타일</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>markset</p></td>
+					<td class="center"><p><img name="markset" title="기호목록" class="ce-icon-markset ce-icon-toolbar-default" id="markset" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="기호목록" src="../images/tb.png" status="default"></p></td>
+                    <td><p>기호목록</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>marksettype</p></td>
+					<td class="center"><p><img name="marksettype" title="목록스타일" class="ce-icon-marksettype ce-icon-toolbar-default" id="marksettype" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="목록스타일" src="../images/tb.png" status="default"></p></td>
+                    <td><p>목록스타일</p></td>
+				</tr>
+                <tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+					<td><p>word_indentset</p></td>
+					<td><p></p></td>
+					<td><p>내어쓰기,들여쓰기 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>outdent</p></td>
+					<td class="center"><p><img name="outdent" title="내어쓰기" class="ce-icon-outdent ce-icon-toolbar-default" id="outdent" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="내어쓰기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>내어쓰기</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>indent</p></td>
+					<td class="center"><p><img name="indent" title="들여쓰기" class="ce-icon-indent ce-icon-toolbar-default" id="indent" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="들여쓰기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>들여쓰기</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+					<td><p>word_justify</p></td>
+					<td><p></p></td>
+					<td><p>글정렬 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>justifyleft</p></td>
+					<td class="center"><p><img name="justifyleft" title="왼쪽정렬" class="ce-icon-justifyleft ce-icon-toolbar-default" id="justifyleft" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="왼쪽정렬" src="../images/tb.png" status="default"></p></td>
+                    <td><p>왼쪽정렬</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>justifycenter</p></td>
+					<td class="center"><p><img name="justifycenter" title="가운데정렬" class="ce-icon-justifycenter ce-icon-toolbar-default" id="justifycenter" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="가운데정렬" src="../images/tb.png" status="default"></p></td>
+                    <td><p>가운데정렬</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>justifyright</p></td>
+					<td class="center"><p><img name="justifyright" title="오른쪽정렬" class="ce-icon-justifyright ce-icon-toolbar-default" id="justifyright" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="오른쪽정렬" src="../images/tb.png" status="default"></p></td>
+                    <td><p>오른쪽정렬</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>justifyfull</p></td>
+					<td class="center"><p><img name="justifyfull" title="양쪽맞춤" class="ce-icon-justifyfull ce-icon-toolbar-default" id="justifyfull" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="양쪽맞춤" src="../images/tb.png" status="default"></p></td>
+                    <td><p>양쪽맞춤</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+					<td><p>word_color</p></td>
+					<td><p></p></td>
+					<td><p>글자색 그룹</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>fontcolor</p></td>
+					<td class="center"><p><img name="fontcolor" title="글자색" class="ce-icon-fontcolor ce-icon-toolbar-default" id="fontcolor" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="글자색" src="../images/tb.png" status="default"></p></td>
+                    <td><p>글자색</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>fontbackgroundcolor</p></td>
+					<td class="center"><p><img name="fontbackgroundcolor" title="글자배경색" class="ce-icon-fontbackgroundcolor ce-icon-toolbar-default" id="fontbackgroundcolor" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="글자배경색" src="../images/tb.png" status="default"></p></td>
+                    <td><p>글자배경색</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gtoolbar.gif" width="80" height="15" border="0"></p></td>
+                    <td><p>word_dir</p></td>
+					<td><p></p></td>
+                    <td><p>글쓰기 방향 그룹</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>dirltr</p></td>
+					<td class="center"><p><img name="dirltr" title="글쓰기방향 좌에서 우로" class="ce-icon-dirltr ce-icon-toolbar-default" id="dirltr" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="글쓰기방향 좌에서 우로" src="../images/tb.png" status="default"></p></td>
+                    <td><p>글쓰기방향 좌에서 우로</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>dirrtl</p></td>
+					<td class="center"><p><img name="dirrtl" title="글쓰기방향 우에서 좌로" class="ce-icon-dirrtl ce-icon-toolbar-default" id="dirrtl" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="글쓰기방향 우에서 좌로" src="../images/tb.png" status="default"></p></td>
+                    <td><p>글쓰기방향 우에서 좌로</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>tables</p></td>
+					<td><p></p></td>
+					<td><p>표 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>tableinsert</p></td>
+					<td class="center"><p><img name="tableinsert" title="표만들기" class="ce-icon-tableinsert ce-icon-toolbar-default" id="tableinsert" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="표만들기" src="../images/tb.png" status="default"></p></td>
+					<td><p>표 만들기</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>tabledraginsert</p></td>
+					<td class="center"><p><img name="tabledraginsert" title="표 그리기" class="ce-icon-tabledraginsert ce-icon-toolbar-default" id="tabledraginsert" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="표 그리기" src="../images/tb.png" status="active"></p></td>
+					<td><p>표 그리기</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>tablerowinsert</p></td>
+					<td class="center"><p><img name="tablerowinsert" title="행 추가" class="ce-icon-tablerowinsert ce-icon-toolbar-default" id="tablerowinsert" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="행 추가" src="../images/tb.png" status="disable"></p></td>
+					<td><p>행 추가</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>tablerowdelete</p></td>
+					<td class="center"><p><img name="tablerowdelete" title="행 삭제" class="ce-icon-tablerowdelete ce-icon-toolbar-default" id="tablerowdelete" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="행 삭제" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>행 삭제</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>tablecolumninsert</p></td>
+					<td class="center"><p><img name="tablecolumninsert" title="열 추가" class="ce-icon-tablecolumninsert ce-icon-toolbar-default" id="tablecolumninsert" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="열 추가" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>열 추가</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>tablecolumndelete</p></td>
+					<td class="center"><p><img name="tablecolumndelete" title="열 삭제" class="ce-icon-tablecolumndelete ce-icon-toolbar-default" id="tablecolumndelete" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="열 삭제" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>열 삭제</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>tablecellmerge</p></td>
+					<td class="center"><p><img name="tablecellmerge" title="셀 병합" class="ce-icon-tablecellmerge ce-icon-toolbar-default" id="tablecellmerge" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="셀 병합" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>셀 병합</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>tablecellsplit</p></td>
+					<td class="center"><p><img name="tablecellsplit" title="셀 나누기" class="ce-icon-tablecellsplit ce-icon-toolbar-default" id="tablecellsplit" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="셀 나누기" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>셀 나누기</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>tablecellattribute</p></td>
+					<td class="center"><p><img name="tablecellattribute" title="셀 속성" class="ce-icon-tablecellattribute ce-icon-toolbar-default" id="tablecellattribute" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="셀 속성" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>셀 속성</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>tablecellbgcolor</p></td>
+					<td class="center"><p><img name="tablecellbgcolor" title="셀 배경색" class="ce-icon-tablecellbgcolor ce-icon-toolbar-default" id="tablecellbgcolor" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="셀 배경색" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>셀 배경색</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>tableborder</p></td>
+					<td class="center"><p><img name="tableborder" title="셀 테두리" class="ce-icon-tableborder ce-icon-toolbar-default" id="tableborder" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="셀 테두리" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>셀 테두리</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>tableborderlist</p></td>
+					<td class="center"><p><img name="tableborderlist" title="테두리 스타일" class="ce-icon-tableborderlist ce-icon-toolbar-default" id="tableborderlist" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: default;" alt="테두리 스타일" src="../images/tb.png" status="disable"></p></td>
+                    <td><p>테두리 스타일</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>tools</p></td>
+					<td><p></p></td>
+					<td><p>도구 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>spellchecker</p></td>
+					<td class="center"><p><img name="spellchecker" title="맞춤법 검사" class="ce-icon-spellchecker ce-icon-toolbar-default" id="spellchecker" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="맞춤법 검사" src="../images/tb.png" status="default"></p></td>
+                    <td><p>맞춤법 검사</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>ce_imageeditor</p></td>
+					<td class="center"><p><img name="ce_imageeditor" title="이미지 편집기" class="ce-icon-ce_imageeditor ce-icon-toolbar-default" id="ce_imageeditor" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="그림넣기" src="../images/tb.png" status="default"></p></td>
+                    <td><p>이미지 편집기</p></td>
+                </tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>validation</p></td>
+					<td class="center"><p><img name="validation" title="웹 접근성 검증" class="ce-icon-validation ce-icon-toolbar-default" id="validation" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="웹 접근성 검증" src="../images/tb.png" status="default"></p></td>
+                    <td><p>웹 접근성 검증</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>dict</p></td>
+					<td class="center"><p><img name="dict" title="사전" class="ce-icon-dict ce-icon-toolbar-default" id="dict" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="사전" src="../images/tb.png" status="default"></p></td>
+                    <td><p>사전</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>translator</p></td>
+					<td class="center"><p><img name="translator" title="번역" class="ce-icon-translator ce-icon-toolbar-default" id="translator" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="번역" src="../images/tb.png" status="default"></p></td>
+                    <td><p>번역</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+                    <td><p>privacy</p></td>
+					<td class="center"><p><img name="privacy" title="개인정보추출" class="ce-icon-privacy ce-icon-toolbar-default" id="privacy" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="개인정보추출" src="../images/tb.png" status="default"></p></td>
+                    <td><p>개인정보추출정보</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>responsive</p></td>
+					<td class="center"><p><img name="responsive" title="반응형 문서편집" class="ce-icon-responsive ce-icon-toolbar-default" id="responsive" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="반응형 문서편집" src="../images/tb.png" status="default"></p></td>
+					<td><p>반응형 문서편집</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>tagcleaner</p></td>
+					<td class="center"><p><img name="tagcleaner" title="태그 정리" class="ce-icon-tagcleaner ce-icon-toolbar-default" id="tagcleaner" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="태그 정리" src="../images/tb.png" status="default"></p></td>
+					<td><p>태그 정리</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>word</p></td>
+					<td class="center"><p><img name="word" title="워드연동" class="ce-icon-word ce-icon-toolbar-default" id="word" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="워드연동" src="../images/tb.png" status="default"></p></td>
+					<td><p>워드연동</p></td>				
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>setup</p></td>
+					<td class="center"><p><img name="setup" title="환경 설정" class="ce-icon-setup ce-icon-toolbar-default" id="setup" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="환경 설정" src="../images/tb.png" status="default"></p></td>
+					<td><p>환경 설정</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_gmenu.gif" width="70" height="15" border="0"></p></td>
+					<td><p>helps</p></td>
+					<td><p></p></td>
+					<td><p>도움말 그룹</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>help</p></td>
+					<td class="center"><p><img name="help" title="도움말" class="ce-icon-help ce-icon-toolbar-default" id="help" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="도움말" src="../images/tb.png" status="default"></p></td>
+					<td><p>도움말</p></td>
+				</tr>
+				<tr>
+					<td><p><img src="images/key_menu.gif" width="42" height="15" border="0"><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>information</p></td>
+					<td class="center"><p><img name="information" title="버전정보" class="ce-icon-information ce-icon-toolbar-default" id="information" style="margin: 1px 0px 0px 1px; padding: 0px; border: currentColor; border-image: none; cursor: pointer;" alt="버전정보" src="../images/tb.png" status="default"></p></td>
+					<td><p>버전 정보</p></td>
+				</tr>
+				<!--
+				<tr>
+					<td><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p></p></td>
+					<td><p>template</p></td>
+					<td><p>템플릿</p></td>
+				</tr>
+				<tr>
+					<td><p></p></td>
+					<td><p>photoeditor</p></td>
+					<td><p>나모 포토에디터</p></td>
+				</tr>
+				-->
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>space</p></td>
+					<td class="center"><p><img src="images/space.gif" style="margin: 0px; padding: 0px; border: currentColor; border-image: none; width: 18px; height: 18px;"></p></td>
+					<td><p>빈칸입력</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>spacebar</p></td>
+					<td class="center"><p><img name="spacebar" id="spacebar" style="margin: 0px; padding: 0px; border: currentColor; border-image: none; width: 18px; height: 18px;" alt="" src="images/spacebar.gif"></p></td>
+					<td><p>구분선</p></td>
+				</tr>
+				<tr>
+					<td class="center"><p><img src="images/key_toolbar.gif" width="42" height="15" border="0"></p></td>
+					<td><p>enter</p></td>
+					<td class="center"><p></p></td>
+					<td><p>줄바꿈</p></td>
+				</tr>
+            </table>			
+			<p>&nbsp;</p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
