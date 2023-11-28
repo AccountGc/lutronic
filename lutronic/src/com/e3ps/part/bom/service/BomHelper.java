@@ -65,7 +65,7 @@ public class BomHelper {
 	 */
 	public JSONArray loadEditor(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid");
-		boolean skip = (boolean) params.get("skip");
+		boolean skip = Boolean.parseBoolean((String) params.get("skip"));
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 		// 체크아웃시 체크아웃된 데이터 가져오기

@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.EChangeActivity;
-import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
@@ -191,17 +189,13 @@ public class BomController extends BaseController {
 	@Description(value = "BOM 에디터 로드")
 	@PostMapping(value = "/loadEditor")
 	@ResponseBody
-	public Map<String, Object> loadEditor(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
+	public JSONArray loadEditor(@RequestParam Map<String, Object> params) throws Exception {
+		JSONArray list = new JSONArray();
 		try {
-			JSONArray list = BomHelper.manager.loadEditor(params);
-			result.put("list", list);
-			result.put("result", SUCCESS);
+			list = BomHelper.manager.loadEditor(params);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
 		}
-		return result;
+		return list;
 	}
 }

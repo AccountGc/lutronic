@@ -638,7 +638,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				case 10:
 					url = getCallUrl("/bom/editor?oid=" + part_oid);
-					_popup(url, 1800, 800, "n");
+					_popup(url, 1600, 600, "n");
 					break;
 				case 11:
 					break;
