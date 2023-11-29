@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>DEXT5 Developer Manual</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <link href="../../css/sdkContents.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="dext5help_content_right">
+        <div class="right_con">
+            <h3 class="title">DEXT5 Editor :: getWrittenAreaSize</h3>
+            <p class="ttl">object getWrittenAreaSize(editor_id)</p>
+            <p class="txt">
+                생성된 에디터의 작성영역 및 작성영역에 작성된 크기(width, height)를 반환해줍니다.
+            </p>
+            <p class="mttl01">return value</p>
+            <p class="txt">
+                현재 생성되어있는 에디터의 작성영역(body)의 사이즈(min_width, min_height) 및 작성된 영역의 사이즈(width, height) <br />
+                ※ 작성된 영역의 사이즈는 생성된 에디터의 작성영역(body)의 사이즈보다 작을 수 없습니다.
+            </p>
+            <p class="mttl01">parameters</p>
+            <p class="txt">
+                <span class="firebrick">editor_id</span>&nbsp;&nbsp;API를 적용할 에디터의 id를 의미합니다.<br />
+            </p>
+            <p class="mttl01">remarks</p>
+            <p class="txt">
+                없음.
+            </p>
+            <p class="mttl01">sample code</p>
+            <div class="cord">
+                <pre class="pre">
+&#60;!-- ..... 생략 ..... --&#62;
+
+&#60;script type="text/javascript" src="dext5editor/js/dext5editor.js"&#62;&#60;/script&#62;	
+&#60;script type="text/javascript"&#62;
+
+    function writtenAreaSize(){
+        // id가 editor1인 에디터의 작성영역 및 작성영역에 작성된 크기(width, height)를 반환받습니다.
+        var sizeObj = DEXT5.getWrittenAreaSize('editor1');
+        
+        console.log("editorBodyWidth = " + sizeObj.min_width); // 현재 생성되어있는 에디터의 작성영역(body)의 width
+        console.log("editorBodyHeight = " + sizeObj.min_height); // 현재 생성되어있는 에디터의 작성영역(body)의 height
+        console.log("writtenAreaWidth = " + sizeObj.width); // 작성된 영역의 width (min_width 보다 작을 수 없습니다.)
+        console.log("writtenAreaHeight = " + sizeObj.height); // 작성된 영역의 height (min_height 보다 작을 수 없습니다.)
+    }
+
+&#60;/script&#62;	
+
+&#60;!-- ..... 생략 ..... --&#62;
+ 
+&#60;div style="width:900px;height:550px;"&#62; 
+ 
+    &#60;!-- 에디터 생성 --&#62;  
+    &#60;script type="text/javascript"&#62;
+        new Dext5editor('editor1');
+    &#60;/script&#62;
+
+&#60;/div&#62;
+
+&#60;!-- ..... 생략 ..... --&#62;
+
+&#60;/body&#62;
+&#60;/html&#62;
+        </pre>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

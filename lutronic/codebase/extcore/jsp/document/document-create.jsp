@@ -29,7 +29,7 @@ iframe {
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/namoeditor/js/namo_scripteditor.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 </head>
 <body>
 	<form>
@@ -180,20 +180,8 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="content" id="content" rows="30"></textarea>
 					<script type="text/javascript">
-						var CrossEditor = new NamoSE("content");
-						CrossEditor.params.Width = "95%";
-						CrossEditor.params.NewToolbar = true;
-						CrossEditor.params.NoUseLayerTracker = true;
-
-						CrossEditor.params.NamoAI = true;
-						CrossEditor.params.CreateToolbar = "formatblock|fontname|fontsize|lineheight|spacebar|bold|italic|underline|strikethrough|space|fontcolor|fontbackgroundcolor|cancelattribute|spacebar|justifyleft|justifycenter|justifyright|justifyfull|spacebar|outdent|indent|spacebar|numberset|numbersettype|markset|marksettype|spacebar|image|ce_imageeditor|flash|insertfile|spacebar|hyperlink|tabledraginsert|insertchart|specialchars|emoticon";
-
-						CrossEditor.params.SupportBrowser = 1;
-						CrossEditor.params.ResizeBar = false;
-						CrossEditor.params.DeleteCommand = ["fullscreen","dict","translator"];
-						CrossEditor.EditorStart();
+						new Dext5editor('content');
 					</script>
 				</td>
 			</tr>
@@ -311,8 +299,6 @@ iframe {
 				const formType = document.getElementById("formType");
 				const name = document.getElementById("docName");
 				const documentType = document.getElementById("documentType");
-				oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
-				const content = document.getElementById("content");
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
@@ -339,6 +325,8 @@ iframe {
 				const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+				// 내용
+				const content = DEXT5.getBodyValue("content");
 
 				if (isNull(documentName.value)) {
 					alert("문서종류를 입력해주세요.");
@@ -377,7 +365,7 @@ iframe {
 					lifecycle : lifecycle,
 					documentType_code : documentType.value,
 					description : description.value,
-					content : content.value,
+					content : content,
 					secondarys : secondarys,
 					primary : primary.value,
 					location : location.value,

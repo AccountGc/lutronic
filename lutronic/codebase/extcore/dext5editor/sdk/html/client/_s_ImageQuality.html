@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>DEXT5 Developer Manual</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="../../css/sdkContents.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="dext5help_content_right">
+<div class="right_con">             
+    <h3 class="title">DEXT5 Editor :: ImageQuality</h3>
+    <p class="ttl">
+        XML : &#60;image_quality&#62;.....&#60;/image_quality&#62;, Script : ImageQuality.Quality<br />
+        XML : &#60;image_quality worker_count="....."&#62;&#60;/image_quality&#62;, Script : ImageQuality.WorkerCount<br />
+        XML : &#60;image_quality extension="....."&#62;&#60;/image_quality&#62;, Script : ImageQuality.Extension<br />
+        XML : &#60;image_quality over_file_size="....."&#62;&#60;/image_quality&#62;, Script : ImageQuality.OverFileSize<br />
+    </p>
+    <p class="txt">
+        <b>Config 설정이 우선 적용됩니다.</b><br />
+        서버에 업로드되는 이미지의 품질을 설정 합니다.
+    </p> 
+    <p class="mttl01">remarks</p>
+    <span class="txt">
+        <span class="firebrick">Quality</span>&nbsp;&nbsp;기본값은 "1"이고 0.0 ~ 1.0까지 비율로 품질을 낮춥니다.<br />
+    </span><br />
+    <span class="txt">
+        <span class="firebrick">worker_count</span>&nbsp;&nbsp;브라우저의 Worker사용 개수를 설정합니다.<br />
+        <span style="padding-left:62px">&nbsp;&nbsp;&nbsp;&nbsp;기본값은 7 입니다.</span><br />
+        <span style="padding-left:62px;">&nbsp;&nbsp;&nbsp;&nbsp;파일 개수가 Worker 생성 개수보다 작은 경우는 파일 개수만큼만 Worker를 생성합니다.</span><br />
+    </span><br />
+    <span class="txt">
+        <span class="firebrick">extension</span>&nbsp;&nbsp;적용할 확장자를 설정합니다.<br />
+        <span style="padding-left:60px">콤마(',')로 구분합니다.</span><br />
+        <span style="padding-left:60px">기본값은 "" 이며 모든 이미지 파일 확장자에 적용됩니다.</span><br />
+    </span><br />
+    <span class="txt">
+        <span class="firebrick">over_file_size</span>&nbsp;&nbsp;특정 사이즈 이상인 경우에만 품질을 낮춥니다.<br />
+        <span style="padding-left:80px">파일단위를 포함한 값을 입력합니다.</span><br />
+        <span style="padding-left:80px">기본값은 "0" 이며 모든 이미지 파일 사이즈에 적용됩니다.</span><br />
+    </span><br />
+    <p class="mttl01">sample code</p>             
+    <div class="cord">
+        <pre class="pre">
+<b>1MB 이상의 jpg,png 파일의 이미지 품질을 50%(0.5)로 낮춥니다.</b>
+<b>Worker 사용시 최대 5개의 Worker를 생성합니다.</b>
+
+<b>XML</b>
+
+.....
+&#60;setting&#62;
+    .....
+    &#60;image_quality worker_count="5" extension="png,jpg" over_file_size="1MB"&#62;0.5&#60;/image_quality&#62;
+    .....
+&#60;/setting&#62;
+.....
+
+<b>Config</b>
+
+&#60;script type="text/javascript" src="dext5editor/js/dext5editor.js"&#62;&#60;/script&#62;	
+    
+&#60;!-- ..... 생략 ..... --&#62;
+    
+&#60;div style="width:900px;height:550px"&#62;    
+    &#60;script type="text/javascript"&#62;
+
+        DEXT5.config.ImageQuality = {
+            Quality: "0.5",
+            WorkerCount: "5",
+            Extension: "png,jpg",
+            OverFileSize: "1MB"
+        }
+
+        new Dext5editor("editor1");
+
+    &#60;/script&#62;       
+&#60;/div&#62;
+        </pre>  
+    </div>                   
+    </div>
+</div>
+</body>
+</html>
+
