@@ -16,7 +16,6 @@ iframe {
 	margin-top: 3px;
 }
 </style>
-<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
 
 <input type="hidden" name="tapOid" id="tapOid" value="<%=dto.getOid()%>">
 

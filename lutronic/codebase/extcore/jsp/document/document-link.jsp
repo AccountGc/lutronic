@@ -22,7 +22,7 @@ iframe {
 	margin-top: 3px;
 }
 </style>
-<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
 <table class="button-table">
 	<tr>
@@ -170,7 +170,9 @@ iframe {
 	<tr>
 		<th class="lb">내용</th>
 		<td colspan="5" class="indent5">
-			<textarea name="content" id="content" rows="30"></textarea>
+			<script type="text/javascript">
+				new Dext5editor('content');
+			</script>
 		</td>
 	</tr>
 	<tr>
@@ -257,26 +259,6 @@ iframe {
 </table>
 
 <script type="text/javascript">
-	const oEditors = [];
-	nhn.husky.EZCreator.createInIFrame({
-		oAppRef : oEditors,
-		elPlaceHolder : "content", //textarea ID 입력
-		sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
-		fCreator : "createSEditor2",
-		htParams : {
-			// 툴바 사용 여부 (true:사용/ false:사용하지 않음) 
-			bUseToolbar : true,
-			// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음) 
-			bUseVerticalResizer : false,
-			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음) 
-			bUseModeChanger : false
-		},
-		fOnAppLoad : function() {
-			//기존 저장된 내용의 text 내용을 에디터상에 뿌려주고자 할때 사용
-			// 					oEditors.getById["description"].exec("PASTE_HTML", [ "기존 DB에 저장된 내용을 에디터에 적용할 문구" ]);
-		},
-	});
-
 	function folder() {
 		const location = decodeURIComponent("/Default/문서");
 		const url = getCallUrl("/folder/popup?location=" + location);
@@ -307,8 +289,6 @@ iframe {
 		const formType = document.getElementById("formType");
 		const name = document.getElementById("docName");
 		const documentType = document.getElementById("documentType");
-		oEditors.getById["content"].exec("UPDATE_CONTENTS_FIELD", []);
-		const content = document.getElementById("content");
 		const description = document.getElementById("description");
 		const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 		const secondarys = toArray("secondarys");
@@ -335,6 +315,8 @@ iframe {
 		const rowsEcpr = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 		// 관련ECO
 		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+		// 내용
+		const content = DEXT5.getBodyValue("content");
 
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
@@ -369,7 +351,7 @@ iframe {
 			lifecycle : lifecycle,
 			documentType_code : documentType.value,
 			description : description.value,
-			content : content.value,
+			content : content,
 			secondarys : secondarys,
 			primary : primary.value,
 			location : location.value,

@@ -18,7 +18,7 @@ iframe {
 </style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 </head>
 <body>
 	<form>
@@ -53,7 +53,14 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="description" id="description" rows="35" readonly="readonly"><%=dto.getDescription() %></textarea>
+					<script type="text/javascript">
+						// 에디터를 view 모드로 설정합니다.
+						DEXT5.config.Mode = "view";
+						
+						new Dext5editor('description');
+						var description = '<%=dto.getDescription()%>';
+						DEXT5.setBodyValue(description, 'description');
+					</script>
 				</td>
 			</tr>
 		</table>
@@ -76,24 +83,6 @@ iframe {
 	</form>
 
 	<script type="text/javascript">
-		// 텍스트 편집기
-		const oEditors = [];
-		nhn.husky.EZCreator.createInIFrame({
-			oAppRef : oEditors,
-			elPlaceHolder : "description", //textarea ID 입력
-			sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
-			fCreator : "createSEditor2",
-			htParams : {
-				bUseToolbar : false,
-				bUseVerticalResizer : false,
-				bUseModeChanger : false
-			},
-			fOnAppLoad : function() {
-				oEditors.getById["description"].exec("DISABLE_WYSIWYG");
-				oEditors.getById["description"].exec("DISABLE_ALL_UI");
-			},
-		});
-
 		function _delete() {
 			const oid = document.getElementById("oid").value;
 

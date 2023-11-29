@@ -14,7 +14,7 @@ iframe {
 	margin-top: 3px;
 }
 </style>
-<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 
@@ -100,7 +100,14 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="content" id="content" rows="30"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
+					<script type="text/javascript">
+						// 에디터를 view 모드로 설정합니다.
+						DEXT5.config.Mode = "view";
+						
+						new Dext5editor('content');
+						var content = '<%=dto.getContent()%>';
+						DEXT5.setBodyValue(content, 'content');
+					</script>
 				</td>
 			</tr>
 			<tr>
@@ -249,33 +256,22 @@ iframe {
 
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
-	// 에디터 로드가 느려서 처리..
-	const oEditors = [];
-	nhn.husky.EZCreator.createInIFrame({
-		oAppRef : oEditors,
-		elPlaceHolder : "content", //textarea ID 입력
-		sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
-		fCreator : "createSEditor2",
-		htParams : {
-			bUseToolbar : false,
-			bUseVerticalResizer : false,
-			bUseModeChanger : false
-		},
-		fOnAppLoad : function() {
-			oEditors.getById["content"].exec("DISABLE_WYSIWYG");
-			oEditors.getById["content"].exec("DISABLE_ALL_UI");
-		},
-	});
 
 	//내용인쇄
-	function print(mode) {
-		const content = document.getElementById("content").value;
-		const printWindow = window.open('', '_blank'); // 새 창 열기
+	function print() {
+		var sw=screen.width;
+	 	var sh=screen.height;
+	 	var w=1000;//가로길이
+	 	var h=800;//세로길이
+	 	var xpos=(sw-w)/2; //화면에 띄울 위치
+	 	var ypos=(sh-h)/2; //중앙
+	 	
+	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
+	 	const content = DEXT5.getBodyValue("content");
 		printWindow.document.open();
-		printWindow.document.write('<html><head><title></title></head><body>');
-		// 출력할 내용 추가
+		printWindow.document.write('<html><head><style type="text/css">@page {size: auto;margin-top: 30mm;}@media print {html, body {border: 1px solid white;height: 99%;page-break-after: avoid;page-break-before: avoid;}}</style></head><body>');
+		//출력할 내용 추가
 		printWindow.document.write('<pre>' + content + '</pre>');
-
 		printWindow.document.write('</body></html>');
 		printWindow.document.close();
 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기

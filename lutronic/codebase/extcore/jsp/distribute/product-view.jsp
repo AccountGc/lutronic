@@ -114,7 +114,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
-		<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+		<jsp:include page="/extcore/jsp/common/attributes-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="part" name="module" />
 		</jsp:include>
@@ -225,20 +225,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		</jsp:include>
 	</div>
 
-	<%
-	if (isAdmin) {
-	%>
-	<!-- 관리자 속성 -->
-	<div id="tabs-3">
-		<jsp:include page="/extcore/jsp/common/adminAttributes_include.jsp">
-			<jsp:param value="part" name="module" />
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
-	<%
-	}
-	%>
-
 	<!-- 이력관리 -->
 	<div id="tabs-4">
 		<jsp:include page="/extcore/jsp/part/include/part-record-include.jsp">
@@ -274,16 +260,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						$(".comment-table").hide();
 					} else {
 						createAUIGrid106(columns106);
-						$(".comment-table").hide();
-					}
-					break;
-				case "tabs-3":
-					isCreated = AUIGrid.isCreated(adminGridID);
-					if (isCreated) {
-						AUIGrid.resize(adminGridID);
-						$(".comment-table").hide();
-					} else {
-						createAUIGridAdmin(columnsAdmin);
 						$(".comment-table").hide();
 					}
 					break;

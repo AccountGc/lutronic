@@ -17,7 +17,6 @@ iframe {
 	margin-top: 3px;
 }
 </style>
-<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
 
 <input type="hidden" name="tapOid" id="tapOid" value="<%=dto.getOid()%>">
 
@@ -75,7 +74,7 @@ iframe {
 			</td>
 		</tr>
 	</table>
-	<jsp:include page="/extcore/jsp/common/attributes_include.jsp">
+	<jsp:include page="/extcore/jsp/common/attributes-include.jsp">
 		<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		<jsp:param value="part" name="module" />
 	</jsp:include>
@@ -96,24 +95,6 @@ iframe {
 	<jsp:include page="/extcore/jsp/part/part-reference-include.jsp">
 		<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	</jsp:include>
-	<%
-	if (isAdmin) {
-	%>
-	<!-- 관리자 속성 -->
-	<div id="tabs-5">
-		<jsp:include page="/extcore/jsp/common/adminAttributes_include.jsp">
-			<jsp:param value="part" name="module" />
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
-	<%
-	}
-	%>
-	<!-- 관련품목 -->
-	<jsp:include page="/extcore/jsp/part/include/part-related-include.jsp">
-		<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	</jsp:include>
-
 	<%
 		if (list.size() !=0) {
 	%>
@@ -215,30 +196,6 @@ iframe {
 		} else {
 			createAUIGrid106(columns106);
 		}
-		const isCreatedAdmin = AUIGrid.isCreated(adminGridID); // 관리자속성
-		if (isCreatedAdmin) {
-			AUIGrid.resize(adminGridID);
-		} else {
-			createAUIGridAdmin(columnsAdmin);
-		}
-		const isCreated80 = AUIGrid.isCreated(myGridID80); // 상위 품목
-		if (isCreated80) {
-			AUIGrid.resize(myGridID80);
-		} else {
-			createAUIGrid80(columns80);
-		}
-		const isCreated81 = AUIGrid.isCreated(myGridID81); // 하위 품목
-		if (isCreated81) {
-			AUIGrid.resize(myGridID81);
-		} else {
-			createAUIGrid81(columns81);
-		}
-		const isCreated82 = AUIGrid.isCreated(myGridID82); // end item
-		if (isCreated82) {
-			AUIGrid.resize(myGridID82);
-		} else {
-			createAUIGrid82(columns82);
-		}
 	});
 
 	window.addEventListener("resize", function() {
@@ -246,9 +203,5 @@ iframe {
 		AUIGrid.resize(refbyGridID);
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID106);
-		AUIGrid.resize(adminGridID);
-		AUIGrid.resize(myGridID80);
-		AUIGrid.resize(myGridID81);
-		AUIGrid.resize(myGridID82);
 	});
 </script>
