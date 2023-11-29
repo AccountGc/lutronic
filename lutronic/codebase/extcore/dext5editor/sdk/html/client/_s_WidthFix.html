@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>DEXT5 Developer Manual</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="../../css/sdkContents.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="dext5help_content_right">
+<div class="right_con">             
+    <h3 class="title">DEXT5 Editor :: WidthFix</h3>
+    <p class="ttl">
+        XML : &#60;value&#62;.....&#60;/value&#62;, Script : config.WidthFix.Value<br />
+        XML : &#60;background_color&#62;.....&#60;/background_color&#62;, Script : config.WidthFix.BackgroundColor<br />
+        XML : &#60;default_view&#62;.....&#60;/default_view&#62;, Script : config.WidthFix.DefaultView<br />
+    </p>
+    <p class="txt">
+        <b>Config 설정이 우선 적용됩니다.</b><br />
+        <span class="txt">
+            <span class="firebrick">XML : value, Script : WidthFix.Value</span>&nbsp;&nbsp;너비를 고정할 width 값을 설정합니다.
+        </span><br />
+        <span class="txt">
+            <span class="firebrick">XML : background_color, Script : WidthFix.BackgroundColor</span>&nbsp;&nbsp;너비 고정 후 비활성화 영역의 배경 색상을 설정합니다.
+        </span><br />
+        <span class="txt">
+            <span class="firebrick">XML : default_view, Script : WidthFix.DefaultView</span>&nbsp;&nbsp;에디터 로드 시 너비고정을 적용할지 설정합니다.
+        </span><br />
+    </p> 
+    <p class="mttl01">remarks</p>
+    <p class="txt">
+        <span class="txt">
+            <span class="firebrick">XML : value, Script : WidthFix.Value</span>&nbsp;&nbsp;px 기준으로 설정이 됩니다.
+        </span><br />
+        <span class="txt">
+            <span class="firebrick">XML : default_view, Script : WidthFix.DefaultView</span>&nbsp;&nbsp;"0"으로 설정 시 에디터 로드 시 너비고정 안함, "1"로 설정 시 에디터 로드 시 너비고정을 합니다.
+        </span><br />
+    </p>   
+    <p class="mttl01">sample code</p>             
+    <div class="cord">
+        <pre class="pre">
+<b>너비고정을 680px로 에디터 로드 시 바로 적용이 되도록 설정합니다.</b>
+
+<b>XML</b>
+
+.....
+&#60;setting&#62;
+    .....
+    &#60;width_fix&#62;
+        &#60;value&#62;680px&#60;/value&#62;
+        &#60;background_color&#62;#f0f0f0&#60;/background_color&#62;
+        &#60;default_view&#62;1&#60;/default_view&#62;
+    &#60;/width_fix&#62;
+    .....
+&#60;/setting&#62;
+.....
+
+<b>Config</b>
+
+&#60;script type="text/javascript" src="dext5editor/js/dext5editor.js"&#62;&#60;/script&#62;	
+    
+&#60;!-- ..... 생략 ..... --&#62;
+    
+&#60;div style="width:900px;height:550px"&#62;    
+    &#60;script type="text/javascript"&#62;
+
+        DEXT5.config.WidthFix = {
+            Value: '680px',
+            BackgroundColor: '#f0f0f0',
+            DefaultView: '1'
+        };
+
+        new Dext5editor("editor1");
+
+    &#60;/script&#62;       
+&#60;/div&#62;
+        </pre>  
+    </div>                   
+    </div>
+</div>
+</body>
+</html>
+

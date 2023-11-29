@@ -14,8 +14,7 @@ iframe {
 	margin-top: 3px;
 }
 </style>
-<script type="text/javascript" src="/Windchill/extcore/smarteditor2/js/HuskyEZCreator.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <input type="hidden" name="imgData" id="imgData">
@@ -141,7 +140,14 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="content" id="content" rows="30"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
+					<script type="text/javascript">
+						// 에디터를 view 모드로 설정합니다.
+						DEXT5.config.Mode = "view";
+						
+						new Dext5editor('content');
+						var content = '<%=dto.getContent()%>';
+						DEXT5.setBodyValue(content, 'content');
+					</script>
 				</td>
 			</tr>
 			<tr>
@@ -288,32 +294,12 @@ iframe {
 
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
-	// 에디터 로드가 느려서 처리..
-	const oEditors = [];
-	nhn.husky.EZCreator.createInIFrame({
-		oAppRef : oEditors,
-		elPlaceHolder : "content", //textarea ID 입력
-		sSkinURI : "/Windchill/extcore/smarteditor2/SmartEditor2Skin.html", //martEditor2Skin.html 경로 입력
-		fCreator : "createSEditor2",
-		htParams : {
-			bUseToolbar : false,
-			bUseVerticalResizer : false,
-			bUseModeChanger : false
-		},
-		fOnAppLoad : function() {
-			oEditors.getById["content"].exec("DISABLE_WYSIWYG");
-			oEditors.getById["content"].exec("DISABLE_ALL_UI");
-		},
-	});
 
 	// 최신버전으로 페이지 이동
 	function latest() {
 		const url = getCallUrl("/doc/latest?oid=" + oid);
 		document.location.href = url;
 	}
-	
-	// 자식창 저장 변수
-	var printWindow;
 	
 	function print() {
 		var sw=screen.width;
@@ -324,7 +310,7 @@ iframe {
 	 	var ypos=(sh-h)/2; //중앙
 	 	
 	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
-	 	const content = document.getElementById("content").value;
+	 	const content = DEXT5.getBodyValue("content");
 		printWindow.document.open();
 		printWindow.document.write('<html><head><style type="text/css">@page {size: auto;margin-top: 30mm;}@media print {html, body {border: 1px solid white;height: 99%;page-break-after: avoid;page-break-before: avoid;}}</style></head><body>');
 		//출력할 내용 추가
@@ -334,45 +320,6 @@ iframe {
 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
 	}
 	
-	// 인쇄 화면 이미지로 저장
-	function goPrint(div){
-// 		div = div[0]
-		html2canvas(div).then(function(canvas){
-			var image = canvas.toDataURL("image/png"); 
-			$("#imgData").val(image);
-			const imgData = document.getElementById("imgData").value;
-			let params = new Object();
-			params.imgData = imgData;
-		
-			const url = getCallUrl("/doc/image");
-			call(url, params, function(data) {
-				if (data.result) {
-					printWindow.document.getElementById("newContent").innerHTML = "<img src='"+data.imgSrc+"'>";
-					imgDel(data.imgSrc);
-				}else{
-					alert(data.msg);
-				}
-			});
-		});
-	}
-	
-	// 이미지 삭제
-	function imgDel(imgSrc){
-		setTimeout(function() {
-			printWindow.print();
-		}, 2000);
-		
-		let params = new Object();
-		params.imgSrc = imgSrc;
-		
-		const url = getCallUrl("/doc/imgDel");
-		call(url, params, function(data) {
-			if (!data.result) {
-				alert(data.msg);
-			}
-		});
-	}
-
 	//수정 및 개정
 	function update(mode) {
 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);

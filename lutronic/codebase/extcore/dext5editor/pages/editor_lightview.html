@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Editor</title>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<script src="../config/editor_crossdomain_config.js?t=DEPLOYSTAMP" type="text/javascript"></script>
+	<script src="../js_dev/editor_lightview.js?t=DEPLOYSTAMP" type="text/javascript"></script>
+	<script type="text/javascript">
+		function dext_frame_loaded_event(_editor_id, _config, _frame) {
+			DEXTTOP.G_CURREDITOR = _frame;
+			DEXTTOP.DEXT5.DEXTMULTIPLE["dext_frame_" + _editor_id] = _frame;
+			_frame._FRAMEWIN = window;
+
+			var G_MAIN_ZINDEX = (_config.zIndex > 10000) ? _config.zIndex : 10000;
+
+			if (DEXTTOP.DEXT5.IsEditorLoadedHashTable == null) {
+                DEXTTOP.DEXT5.IsEditorLoadedHashTable = new DEXTTOP.DEXT5.util.hashTable();
+            }
+			DEXTTOP.DEXT5.IsEditorLoadedHashTable.setItem(_editor_id, "1");
+
+			var head = document.getElementsByTagName("head")[0];
+			var linkNode1 = document.createElement('link');
+			if (_config.lang != 'ko-kr') {
+				linkNode1.setAttribute('href', "../css_dev/editor_" + _config.lang + ".css?t=" + DEXTTOP.DEXT5.UrlStamp);
+			} else {
+				linkNode1.setAttribute('href', "../css_dev/editor.css?t=" + DEXTTOP.DEXT5.UrlStamp);
+			}
+			linkNode1.setAttribute('rel', "stylesheet");
+			linkNode1.setAttribute('type', "text/css");
+			head.appendChild(linkNode1);
+
+			try {
+                loadEditorFn(_editor_id, _config, _frame);
+			}
+			catch (e) {
+                DEXTTOP && DEXTTOP.DEXT5 && DEXTTOP.DEXT5.logMode && window && window.console && console.log(e);
+			}
+		}
+	</script>
+</head>
+	<body style="margin:0px; padding:0px;">
+        <div id="editorContentArea"></div>
+	</body>
+</html>

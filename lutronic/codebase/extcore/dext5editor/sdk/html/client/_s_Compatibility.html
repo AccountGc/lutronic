@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>DEXT5 Developer Manual</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link href="../../css/sdkContents.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="dext5help_content_right">
+<div class="right_con">            
+    <h3 class="title">DEXT5 Editor :: Compatibility</h3>
+    <p class="ttl">XML : &#60;dingbat_char&#62;.....&#60;/dingbat_char&#62;, Config : config.Compatibility.DingBatChar<br />
+    <p class="txt">
+        <b>Config 설정이 우선 적용됩니다.</b><br />
+        붙여넣기 및 SetAPI 사용 시 호환성 항목을 설정합니다.
+    </p> 
+    <p class="mttl01">remarks</p>
+    <p class="txt">
+        <span class="firebrick">XML : dingbat_char, Script : Compatibility.DingBatChar</span>&nbsp;&nbsp;DingBat Font를 특수문자로 변환합니다. <br />
+        기본값은 "0"이고, 특수문자 변환을 하지 않고, "1"로 설정 시 붙여넣기 및 SetAPI 동작 시 변환합니다 <br />"paste" 설정 시 붙여넣기 동작일 때만 변환하고, "set"으로 설정 시 SetAPI 동작일 때만 변환합니다.<br />
+        config/dext_dingbat_font.js 파일에 변환할 폰트 리스트와, 대체 할 문자 등을 정의할 수 있습니다.
+    </p>   
+    <p class="mttl01">sample code</p>             
+    <div class="cord">
+        <pre class="pre">
+<b>paste,setAPI 일때 DingBat font를 특수 문자로 변환합니다. </b>
+
+<b>XML</b>
+
+.....
+&#60;setting&#62;
+    .....
+    &#60;compatibility&#62;
+        .....
+        &#60;dingbat_char&#62;1&#60;/dingbat_char&#62;
+        .....
+    &#60;/compatibility&#62;
+    .....
+    .....
+&#60;/setting&#62;
+.....
+
+<b>Config</b>
+
+&#60;script type="text/javascript" src="dext5editor/js/dext5editor.js"&#62;&#60;/script&#62;	
+    
+&#60;!-- ..... 생략 ..... --&#62;
+    
+&#60;div style="width:900px;height:550px"&#62;    
+    &#60;script type="text/javascript"&#62;
+
+        DEXT5.config.Compatibility.DingBatChar = "1";
+
+        new Dext5editor("editor1");
+
+    &#60;/script&#62;       
+&#60;/div&#62;
+        </pre>  
+    </div>                   
+    </div>
+</div>
+</body>
+</html>
+

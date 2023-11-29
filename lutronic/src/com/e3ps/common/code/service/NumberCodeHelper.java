@@ -237,7 +237,7 @@ public class NumberCodeHelper {
 		String name = (String) params.get("name");
 		String code = (String) params.get("code");
 		String description = (String) params.get("description");
-		boolean enabled = "true".equals((String) params.get("enabled")) ? true : false;
+//		boolean enabled = "true".equals((String) params.get("enabled")) ? true : false;
 		String codeType = (String) params.get("codeType");
 
 		QuerySpec query = new QuerySpec();
@@ -246,7 +246,7 @@ public class NumberCodeHelper {
 		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
 		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.DESCRIPTION, description);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
-		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, enabled);
+//		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, enabled);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", 0L);
 		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
@@ -261,7 +261,7 @@ public class NumberCodeHelper {
 			data.put("description", dto.getDescription());
 			data.put("sort", dto.getSort());
 			data.put("enabled", dto.isEnabled());
-			recursive(n, data);
+			recursive(n, data, params);
 			list.add(data);
 		}
 		map.put("list", list);
@@ -271,12 +271,22 @@ public class NumberCodeHelper {
 	/**
 	 * 재귀 함수
 	 */
-	private void recursive(NumberCode parent, Map<String, Object> data) throws Exception {
+	private void recursive(NumberCode parent, Map<String, Object> data, Map<String, Object> params) throws Exception {
+		String name = (String) params.get("name");
+		String code = (String) params.get("code");
+		String description = (String) params.get("description");
+//		boolean enabled = "true".equals((String) params.get("enabled")) ? true : false;
+		String codeType = (String) params.get("codeType");
+		
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", parent);
-		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false); // false==0 true==1
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.NAME, name);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.CODE, code);
+		QuerySpecUtils.toLikeAnd(query, idx, NumberCode.class, NumberCode.DESCRIPTION, description);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+//		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, enabled);
 		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -290,7 +300,7 @@ public class NumberCodeHelper {
 			map.put("description", dto.getDescription());
 			map.put("sort", dto.getSort());
 			map.put("enabled", dto.isEnabled());
-			recursive(n, map);
+			recursive(n, map, params);
 			list.add(map);
 		}
 		data.put("children", list);

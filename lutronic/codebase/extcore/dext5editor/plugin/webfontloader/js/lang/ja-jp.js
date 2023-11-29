@@ -1,0 +1,1 @@
+(function(){var a={};try{G_DEPlugin&&(G_DEPlugin.webfontloader.lang=a,dext5_lang.plugins.webfontloader=a)}catch(b){DEXTTOP&&DEXTTOP.DEXT5&&DEXTTOP.DEXT5.logMode&&window&&window.console&&console.log(b)}})();
