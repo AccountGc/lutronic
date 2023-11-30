@@ -3,6 +3,7 @@ package com.e3ps.workspace.service;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.WorkData;
@@ -35,6 +36,9 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			data.setPer(per);
 			data.setOwnership(ownership);
 			PersistenceHelper.manager.save(data);
+			
+			// 메일발송하기!
+			MailUtil.manager.taskNoticeMail(null)
 
 			trs.commit();
 			trs = null;

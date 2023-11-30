@@ -179,7 +179,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent5">
+				<td colspan="5" class="indent5" style="padding-bottom: 8px;">
 					<script type="text/javascript">
 						new Dext5editor('content');
 					</script>

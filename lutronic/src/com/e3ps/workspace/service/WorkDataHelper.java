@@ -7,9 +7,7 @@ import java.util.Map;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.WorkData;
-import com.e3ps.workspace.column.ApprovalLineColumn;
 import com.e3ps.workspace.column.WorkDataColumn;
 
 import wt.fc.PagingQueryResult;

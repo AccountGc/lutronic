@@ -556,5 +556,21 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
-	
+
+	@Description(value = "문서 권한 체크 함수")
+	@ResponseBody
+	@GetMapping(value = "/isPermission")
+	public Map<String, Object> isPermission(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			boolean isPermission = DocumentHelper.manager.isPermission(oid);
+			result.put("isPermission", isPermission);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

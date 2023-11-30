@@ -43,6 +43,7 @@ import wt.folder.SubFolder;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
@@ -558,5 +559,18 @@ public class DocumentHelper {
 			list.add(map);
 		}
 		return list;
+	}
+
+	/**
+	 * 문서 사용자 권한 체크
+	 */
+	public boolean isPermission(String oid) throws Exception {
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+		WTUser user = CommonUtil.sessionUser();
+
+		// 없으면 false 리턴
+
+		return true;
 	}
 }

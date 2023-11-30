@@ -137,11 +137,12 @@ public class EcnController extends BaseController {
 	@Description(value = "ECN 완료 함수")
 	@ResponseBody
 	@PostMapping(value = "/complete")
-	public Map<String, Object> complete(@RequestBody Map<String, Object> params) throws Exception{
+	public Map<String, Object> complete(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			EcnHelper.service.complete(params);
-			result.put("result", "완료 처리 되었습니다.");
+			result.put("msg", "완료 처리 되었습니다.");
+			result.put("result", true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

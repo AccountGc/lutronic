@@ -7,9 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -20,44 +18,15 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-import wt.vc.sessioniteration.sessioniterationResource;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 
 import com.e3ps.common.jdf.config.ConfigEx;
 import com.e3ps.common.jdf.config.ConfigExImpl;
 
-/**
-* <pre>
-*
-*  JAVA 로 Mail 을 전송하는 Utility Class.
-*  컴파일 및 실행을 위해서는 JAVA mail 패키지 ( mail.jar ) 와 
-*  JAVA Activatiion Framework 의 패키지( activation.jar )가 필요하다. 
-*
-*  사용 방법 
-* 
-* SendMail mail = new SendMail() ;
-*          
-*  mail.setFromMailAddress("aaa@bbb.com","보내는사람이름");          
-*          
-*  mail.setToMailAddress("ccc@ddd.com", "TO로받는사람");
-*  //mail.setCcMailAddress("eee@fff.com", "CC로받는사람");
-*  //mail.setBccMailAddress("ggg@hhh.com", "BCC로받는사람");          
-*     
-*   mail.setSubject(" MAIL 제목을 넣으면 됩니다.");          
-*          
-*   String message = " Text 메일 메시지 내용 " ; 
-*   String htmlMessage = "<html><font color='red'> HTML 메일 메시지 내용</font></html>" ; 	   
-*   String[] fileNames = { "c:/attachFile1.zip","c:/attachFile2.txt"   } ;
-*
-*   mail.setHtmlAndFile(htmlMessage,fileNames);
-*   //mail.setHtml(htmlMessage);
-*   //mail.setText(message);  
-*
-*    mail.send();  // 메일 전송 
-*
-* </pre>
-* @author 차종호
-* @version 1.0, 01/01/03 
-*/
+import jclass.chart.FileDataSource;
+
 
 public class SendMail {
 	

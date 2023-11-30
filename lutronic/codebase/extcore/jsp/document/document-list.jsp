@@ -235,12 +235,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="535" name="height" />
+						<jsp:param value="565" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -427,6 +427,83 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 				});
 			}
+			
+			function auiContextMenuHandler(event) {
+				if (event.target == "header") { // 헤더 컨텍스트
+					if (nowHeaderMenuVisible) {
+						hideContextMenu();
+					}
+
+					nowHeaderMenuVisible = true;
+
+					// 컨텍스트 메뉴 생성된 dataField 보관.
+					currentDataField = event.dataField;
+
+					if (event.dataField == "id") { // ID 칼럼은 숨기기 못하게 설정
+						$("#h_item_4").addClass("ui-state-disabled");
+					} else {
+						$("#h_item_4").removeClass("ui-state-disabled");
+					}
+
+					// 헤더 에서 사용할 메뉴 위젯 구성
+					$("#headerMenu").menu({
+						select : headerMenuSelectHandler
+					});
+
+					$("#headerMenu").css({
+						left : event.pageX,
+						top : event.pageY
+					}).show();
+				} else {
+					hideContextMenu();
+					const menu = [ {
+						label : "문서 정보보기",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "주 첨부파일 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "첨부파일 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "버전이력보기",
+						callback : auiContextHandler
+					}, {
+						label : "결재이력보기",
+						callback : auiContextHandler
+					} ];
+					return menu;
+				}
+			}
+			
+			function auiContextHandler(event) {
+				const item = event.item;
+				const oid = item.oid;
+				const authUrl = getCallUrl("/doc/isPermission?oid="+oid);
+				let permission;
+				call(authUrl, null, function(data) {
+					if(data.result) {
+						permission = data.isPermission;
+					}
+				},"GET", false);
+				
+				if(permission) {
+					alert("권한 체크 필요해요!");
+				}
+				
+				let url;
+				switch (event.contextIndex) {
+				case 0:
+					url = getCallUrl("/doc/view?oid="+oid);
+					_popup(url, "", "", "f");
+					break;
+				}
+			}
+
 
 			function loadGridData() {
 				let params = new Object();
