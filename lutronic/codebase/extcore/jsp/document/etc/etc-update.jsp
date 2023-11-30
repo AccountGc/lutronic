@@ -188,9 +188,10 @@ iframe {
 	<tr>
 		<th class="lb">내용</th>
 		<td colspan="5" class="indent5">
+			<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getContent() != null ? dto.getContent() : "" %></textarea>
 			<script type="text/javascript">
 				new Dext5editor('content');
-				var content = '<%=dto.getContent()%>';
+				var content = document.getElementById("contents").value;
 				DEXT5.setBodyValue(content, 'content');
 			</script>
 		</td>

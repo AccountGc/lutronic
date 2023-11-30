@@ -68,9 +68,10 @@ iframe {
 			<tr>
 				<th class="req lb">내용</th>
 				<td colspan="5" class="indent5">
+					<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getDescription() != null ? dto.getDescription() : "" %></textarea>
 					<script type="text/javascript">
 						new Dext5editor('description');
-						var description = '<%=dto.getDescription()%>';
+						var description = document.getElementById("contents").value;
 						DEXT5.setBodyValue(description, 'description');
 					</script>
 				</td>

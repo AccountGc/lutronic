@@ -53,12 +53,13 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
+					<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getDescription() != null ? dto.getDescription() : "" %></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
 						DEXT5.config.Mode = "view";
 						
 						new Dext5editor('description');
-						var description = '<%=dto.getDescription()%>';
+						var description = document.getElementById("contents").value;
 						DEXT5.setBodyValue(description, 'description');
 					</script>
 				</td>
