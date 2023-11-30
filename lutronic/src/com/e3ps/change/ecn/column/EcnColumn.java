@@ -3,7 +3,6 @@ package com.e3ps.change.ecn.column;
 import java.sql.Timestamp;
 
 import com.e3ps.change.EChangeNotice;
-import com.e3ps.change.EChangeOrder;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;

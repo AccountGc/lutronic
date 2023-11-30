@@ -37,8 +37,13 @@ boolean edit = dto.isEditable();
 			</div>
 		</td>
 		<td class="right">
+			<%
+			if (edit) {
+			%>
+			<input type="button" value="완료" title="완료" class="red" onclick="complete();">
 			<input type="button" value="ERP전송" title="ERP전송" class="blue" onclick="send();">
 			<%
+			}
 			if (isAdmin) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
@@ -55,16 +60,21 @@ boolean edit = dto.isEditable();
 <script type="text/javascript">
 	let myGridID;
 	const columns = [ {
-		dataField : "rate",
-		headerText : "진행율",
+		dataField : "ecoNumber",
+		headerText : "ECO 번호",
 		dataType : "string",
-		width : 80,
+		width : 120,
 		editable : false,
-		renderer: {
-			type: "BarRenderer",
-			min: 0,
-			max: 100
-		},		
+		cellMerge : true,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.eoid;
+				const url = getCallUrl("/eco/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},			
 	},{
 		dataField : "partNumber",
 		headerText : "제품번호",
@@ -165,19 +175,18 @@ for (Map<String, String> map : list) {
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				editRenderer : {
-					type : "CalendarRenderer",
-					defaultFormat : "yyyy-mm-dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
-					showPlaceholder : true, // defaultFormat 설정된 값으로 플래스홀더 표시
-					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 출력 여부
-					onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-					showExtraDays : true, // 지난 달, 다음 달 여분의 날짜(days) 출력
-					showTodayBtn : true, // 오늘 날짜 선택 버턴 출력
-					showUncheckDateBtn : true, // 날짜 선택 해제 버턴 출력
-					todayText : "오늘 선택", // 오늘 날짜 버턴 텍스트
-					uncheckDateText : "날짜 선택 해제", // 날짜 선택 해제 버턴 텍스트
-					uncheckDateValue : "-", // 날짜 선택 해제 버턴 클릭 시 적용될 값.
-				}				
+				editRenderer: {
+					type: "CalendarRenderer",
+					defaultFormat: "yyyy/mm/dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
+					onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+					showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력
+					showTodayBtn: true, // 오늘 날짜 선택 버턴 출력
+					showUncheckDateBtn: true, // 날짜 선택 해제 버턴 출력
+					todayText: "오늘 선택", // 오늘 날짜 버턴 텍스트
+					uncheckDateText: "N/A", // 날짜 선택 해제 버턴 텍스트
+					uncheckDateValue: "N/A", // 날짜 선택 해제 버턴 클릭 시 적용될 값.
+				}		
 			<%if (i != list.size()) {%>
 			}, {
 		<%}
@@ -215,9 +224,9 @@ i++;
 	
 	function auiCellEditBeginHandler(event) {
 		<%if (!edit) {%>
-			alert("수정 권한이 없습니다.\n담당자 및 관리자만 수정가능합니다.");
-			return false;
-		<%}%>
+		alert("수정 권한이 없습니다.\n담당자 및 관리자만 수정가능합니다.");
+		return false;
+	<%}%>
 		const item = event.item;
 		const dataField = event.dataField;
 		const k = dataField.substring(0, dataField.lastIndexOf("_"));
@@ -281,6 +290,32 @@ i++;
 			}
 		}, "DELETE");
 	}
+	
+	function complete() {
+
+		if (!confirm("완료처리 하시겠습니까?")) {
+			return false;
+		}
+
+		const gridData = AUIGrid.getGridData(myGridID);
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/ecn/complete?oid=" + oid);
+		const params = {
+			gridData : gridData,
+			oid :oid
+		};
+		openLayer();
+		logger(params);
+		call(url, params, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				document.location.reload();
+			} else {
+				clsoeLayer();
+			}
+		}, "POST");
+	}
+	
 	document.addEventListener("DOMContentLoaded", function() {
 		createAUIGrid(columns);
 		AUIGrid.resize(myGridID);

@@ -18,7 +18,6 @@ import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
-import com.e3ps.change.EcnToPartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartToSendLink;
 import com.e3ps.change.ecn.service.EcnHelper;
@@ -650,7 +649,12 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						link.setPart(part);
 						link.setEcn(ecn);
 						link.setIsSend(true);
-						link.setSendDate(DateUtil.convertDate(sendDate));
+
+						if ("N/A".equalsIgnoreCase(sendDate)) {
+							link.setSendDate(DateUtil.convertDate("3000-12-31"));
+						} else {
+							link.setSendDate(DateUtil.convertDate(sendDate));
+						}
 						PersistenceHelper.manager.save(link);
 
 						WTUser sessionUser = CommonUtil.sessionUser();
@@ -663,7 +667,13 @@ public class StandardSAPService extends StandardManager implements SAPService {
 						insertTable.setValue("MATNR", part.getNumber());
 						insertTable.setValue("ZEIVR", part.getVersionIdentifier().getSeries().getValue());
 						insertTable.setValue("CNTRY", code);
-						insertTable.setValue("APRDT", sendDate.toString().substring(0, 10).replaceAll("-", ""));
+
+						if ("N/A".equalsIgnoreCase(sendDate)) {
+							insertTable.setValue("APRDT", "30001231");
+						} else {
+							insertTable.setValue("APRDT", sendDate.toString().substring(0, 10).replaceAll("-", ""));
+						}
+
 						insertTable.setValue("ENNAM", ecn.getCreatorFullName());
 						insertTable.setValue("ENDAT",
 								ecn.getCreateTimestamp().toString().substring(0, 10).replaceAll("-", ""));

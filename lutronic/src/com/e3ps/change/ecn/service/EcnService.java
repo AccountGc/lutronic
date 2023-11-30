@@ -31,10 +31,11 @@ public interface EcnService {
 	/**
 	 * ECN 완료
 	 */
-	public abstract void complete(String oid) throws Exception;
+	public abstract void complete(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * ECN 각 전송 단위별 진행율 계산 및 완료 처리
 	 */
 	public abstract void update(String oid) throws Exception;
+	
 }

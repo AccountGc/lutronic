@@ -1,6 +1,8 @@
 package com.e3ps.change.ecn.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.EChangeNotice;
@@ -13,6 +15,7 @@ import com.e3ps.change.PartToSendLink;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 
@@ -189,14 +192,39 @@ public class StandardEcnService extends StandardManager implements EcnService {
 	}
 
 	@Override
-	public void complete(String oid) throws Exception {
+	public void complete(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		ArrayList<Map<String, Object>> gridData = (ArrayList<Map<String, Object>>) params.get("gridData");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			EChangeNotice ecn = (EChangeNotice) CommonUtil.getObject(oid);
+			ecn.setProgress("완료");
 
-			ecn.setProgress("전송완료");
+			for (Map<String, Object> m : gridData) {
+				WTPart part = (WTPart) CommonUtil.getObject((String) m.get("poid"));
+				EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject((String) m.get("coid"));
+				ArrayList<Map<String, String>> countrys = NumberCodeHelper.manager.getCountry();
+				for (Map<String, String> country : countrys) {
+					String code = country.get("code");
+					String value = (String) m.get(code + "_date");
+					boolean isSend = (boolean) m.get(code + "_isSend");
+					if ("".equals(value) && !isSend) {
+						// 보낼거 다 보내고 완료 처리하는거로 한다 없는건 N/A로 강제기입
+						PartToSendLink link = PartToSendLink.newPartToSendLink();
+						link.setEcr(ecr);
+						link.setNation(code);
+						link.setPart(part);
+						link.setEcn(ecn);
+						link.setIsSend(true);
+						link.setSendDate(DateUtil.convertDate("3000-12-31"));
+						PersistenceHelper.manager.save(link);
+					}
+				}
+			}
+
+			PersistenceHelper.manager.modify(ecn);
 
 			trs.commit();
 			trs = null;
@@ -239,7 +267,8 @@ public class StandardEcnService extends StandardManager implements EcnService {
 			if (rate == 1D) {
 				link.setWorkEnd(true);
 			}
-			link.setRate(Math.round(100 * rate));
+//			link.setRate(Math.round(100 * rate));
+			link.setRate(100 * rate);
 			PersistenceHelper.manager.modify(link);
 		} catch (Exception e) {
 			e.printStackTrace();

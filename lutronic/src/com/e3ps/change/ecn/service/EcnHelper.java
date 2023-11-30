@@ -16,11 +16,16 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.org.People;
+import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.part.service.StandardPartService;
 
 import net.sf.json.JSONArray;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTUser;
+import wt.part.StandardWTPartService;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
@@ -36,6 +41,11 @@ public class EcnHelper {
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<EcnColumn> list = new ArrayList<>();
+
+		boolean isAdmin = CommonUtil.isAdmin();
+		People people = CommonUtil.sessionPeople();
+		PeopleDTO dto = new PeopleDTO(people);
+		String department_name = dto.getDepartment_name();
 
 		String name = (String) params.get("name");
 		String number = (String) params.get("number");
@@ -54,8 +64,21 @@ public class EcnHelper {
 				createdFrom, createdTo);
 		QuerySpecUtils.toCreatorQuery(query, idx, EChangeNotice.class, creatorOid);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeNotice.class, EChangeNotice.MODEL, model);
+
+		boolean isRA = false;
+		if ("".equals(department_name)) {
+			isRA = true;
+		}
+		// 관리자 아니고 RA 부서 일경우
+		if (!CommonUtil.isAdmin() && isRA) {
+			System.out.println("A");
+			WTUser sessionUser = CommonUtil.sessionUser();
+			QuerySpecUtils.toEquals(query, idx, EChangeNotice.class, "workerReference.key.id", sessionUser);
+		}
+
 		QuerySpecUtils.toOrderBy(query, idx, EChangeNotice.class, EChangeNotice.MODIFY_TIMESTAMP, true);
 
+		System.out.println(query);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -113,7 +136,7 @@ public class EcnHelper {
 
 			map.put("oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("workEnd", link.getWorkEnd());
-			map.put("rate", link.getRate()); // 진행율
+			map.put("rate", Math.round(link.getRate()));
 			map.put("partName", ecn.getPartName());
 			map.put("partNumber", ecn.getPartNumber());
 			map.put("ecoNumber", eco.getEoNumber());
@@ -130,8 +153,19 @@ public class EcnHelper {
 			for (Map<String, String> country : countrys) {
 				String code = country.get("code");
 				PartToSendLink sendLink = getSendLink(ecn, part, code, cr);
-				map.put(code + "_date", sendLink != null ? sendLink.getSendDate().toString().substring(0, 10) : "");
-				map.put(code + "_isSend", sendLink != null ? sendLink.getIsSend() : false);
+				if (sendLink != null) {
+					String ss = sendLink.getSendDate().toString().substring(0, 10);
+					if ("3000-12-31".equals(ss)) {
+						map.put(code + "_date", "N/A");
+					} else {
+						map.put(code + "_date", sendLink.getSendDate().toString().substring(0, 10));
+					}
+
+					map.put(code + "_isSend", sendLink.getIsSend());
+				} else {
+					map.put(code + "_date", "");
+					map.put(code + "_isSend", false);
+				}
 			}
 
 			list.add(map);
