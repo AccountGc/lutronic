@@ -288,7 +288,7 @@ iframe {
 				parent.openLayer();
 				call(url, null, function(data) {
 					if (data.result) {
-						oEditors.getById["content"].exec("PASTE_HTML", [ data.html ]);
+						DEXT5.setBodyValue(data.html, 'content');
 					} else {
 						alert(data.msg);
 					}
