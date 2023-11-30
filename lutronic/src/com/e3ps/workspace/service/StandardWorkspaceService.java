@@ -17,17 +17,21 @@ import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 import com.e3ps.workspace.AsmApproval;
+import com.e3ps.workspace.PerWorkDataLink;
+import com.e3ps.workspace.WorkData;
 
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.fc.WTObject;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.State;
@@ -944,6 +948,59 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			// 반려후 작업할 행위.. 객체 상태값 반려됨으로 처리한다.
 			afterRejectAction(m);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void withdraw(String oid) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			Persistable per = CommonUtil.getObject(oid);
+			ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
+
+			for (ApprovalLine line : list) {
+				PersistenceHelper.manager.delete(line);
+			}
+			PersistenceHelper.manager.delete(m);
+
+			per = (Persistable) PersistenceHelper.manager.refresh(per);
+
+			QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
+			if (qr.hasMoreElements()) {
+				WorkData d = (WorkData) qr.nextElement();
+				PersistenceHelper.manager.delete(d);
+			}
+
+			per = (Persistable) PersistenceHelper.manager.refresh(per);
+
+			qr.reset();
+			qr = PersistenceHelper.manager.navigate((WTObject) per, "user", MailWTobjectLink.class, false);
+			while (qr.hasMoreElements()) {
+				MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
+				PersistenceHelper.manager.delete(link);
+			}
+			per = (Persistable) PersistenceHelper.manager.refresh(per);
+
+			// 상태값 작업중으로 변경
+			if (per instanceof LifeCycleManaged) {
+				LifeCycleManaged lcm = (LifeCycleManaged) per;
+				LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("INWORK"));
+			}
+
+			WorkDataHelper.service.create(per);
 
 			trs.commit();
 			trs = null;

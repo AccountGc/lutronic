@@ -176,6 +176,10 @@ td.indent5 {
 	text-indent: 5px;
 }
 
+td.indent7 {
+	text-indent: 7px;
+}
+
 td.indent10 {
 	text-indent: 10px;
 }

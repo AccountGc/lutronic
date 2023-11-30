@@ -56,8 +56,10 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb">문서번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
+				<!-- 				<th class="lb">문서번호</th> -->
+				<%-- 				<td class="indent5"><%=dto.getNumber()%></td> --%>
+				<th>내부문서번호</th>
+				<td class="indent5"><%=dto.getInteralnumber()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
 				<th>상태</th>
@@ -84,10 +86,10 @@ iframe {
 			<tr>
 				<th class="lb">결재방식</th>
 				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
-				<th>내부문서번호</th>
-				<td class="indent5"><%=dto.getInteralnumber()%></td>
+				<!-- 				<th>내부문서번호</th> -->
+				<%-- 				<td class="indent5"><%=dto.getInteralnumber()%></td> --%>
 				<th>프로젝트 코드</th>
-				<td class="indent5"><%=dto.getModel_name()%></td>
+				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
@@ -100,7 +102,7 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getContent() != null ? dto.getContent() : "" %></textarea>
+					<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
 						DEXT5.config.Mode = "view";

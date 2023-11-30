@@ -506,4 +506,22 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "결재 회수")
+	@ResponseBody
+	@GetMapping(value = "/withdraw")
+	public Map<String, Object> withdraw(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WorkspaceHelper.service.withdraw(oid);
+			result.put("msg", "결재가 회수 되었습니다.");
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+//			ErrorLogHelper.service.create(e.toString(), "/workspace/_reset", "결재 초기화 함수");
+		}
+		return result;
+	}
 }

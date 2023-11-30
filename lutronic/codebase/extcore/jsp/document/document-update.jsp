@@ -41,13 +41,6 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<%
-			if (isAdmin) {
-			%>
-			<input type="button" value="관리자권한 수정" title="관리자 권한 수정" class="red" onclick="force();">
-			<%
-			}
-			%>
 			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -192,16 +185,16 @@ iframe {
 		</td>
 		<th>작성자</th>
 		<td class="indent5">
-			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%= dto.getWriter_name() != null ? dto.getWriter_name() : ""%>">
+			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter() != null ? dto.getWriter() : ""%>">
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">내용</th>
-		<td colspan="5" class="indent5">
-			<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getContent() != null ? dto.getContent() : "" %></textarea>
+		<td colspan="5" class="indent7 pb8">
+			<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 			<script type="text/javascript">
 				new Dext5editor('content');
-				var content = document.getElementById("contents").value;
+				const content = document.getElementById("contents").value;
 				DEXT5.setBodyValue(content, 'content');
 			</script>
 		</td>
@@ -235,7 +228,6 @@ iframe {
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
@@ -244,7 +236,6 @@ iframe {
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
@@ -253,7 +244,6 @@ iframe {
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
@@ -262,7 +252,6 @@ iframe {
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
@@ -271,7 +260,6 @@ iframe {
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
@@ -280,26 +268,18 @@ iframe {
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="250" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<%
-			if (isAdmin) {
-			%>
-			<input type="button" value="관리자권한 수정" title="관리자 권한 수정" class="red" onclick="force();">
-			<%
-			}
-			%>
 			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
-</table>		
+</table>
 
 <script type="text/javascript">
 
@@ -326,35 +306,6 @@ iframe {
 		}, "GET");
 	}
 
-	function force() {
-		
-		if(!confirm("수정 하시겠습니까?")) {
-			return false;
-		}
-		
-		const oid = document.getElementById("oid").value;
-		const secondarys = toArray("secondarys");
-		const primary = document.querySelector("input[name=primary]");
-		const url = getCallUrl("/doc/force");
-		const params = {
-				oid : oid,
-				secondarys : secondarys,
-				primary : primary.value,
-			};
-			
-			logger(params);
-			parent.openLayer();
-			call(url, params, function(data) {
-				alert(data.msg);
-				if (data.result) {
-					opener.loadGridData();
-					self.close();
-				} else {
-					parent.closeLayer();
-				}
-			});
-	}
-	
 	// 문서 등록
 	function <%=mode%>(temp) {
 		// temp 임시저장 여부 처리
@@ -403,8 +354,6 @@ iframe {
 			alert("문서유형을 선택해주세요.");
 			return false;
 		}
-
-		console.log(primary);
 
 		if (primary == null) {
 			alert("주 첨부파일을 첨부해주세요.");
@@ -463,6 +412,7 @@ iframe {
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
+		toFocus("iterationNote");
 		selectbox("formType");
 		selectbox("preseration");
 		selectbox("documentType");

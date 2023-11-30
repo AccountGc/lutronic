@@ -38,7 +38,7 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			PersistenceHelper.manager.save(data);
 			
 			// 메일발송하기!
-			MailUtil.manager.taskNoticeMail(null)
+//			MailUtil.manager.taskNoticeMail(null)
 
 			trs.commit();
 			trs = null;

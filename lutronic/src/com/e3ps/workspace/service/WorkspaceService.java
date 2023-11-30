@@ -103,4 +103,9 @@ public interface WorkspaceService {
 	 * 합의 반려
 	 */
 	public abstract void _unagree(Map<String, String> params) throws Exception;
+
+	/**
+	 * 결재 회수
+	 */
+	public abstract void withdraw(String oid) throws Exception;
 }

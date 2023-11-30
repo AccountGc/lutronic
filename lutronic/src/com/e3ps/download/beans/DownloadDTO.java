@@ -51,7 +51,7 @@ public class DownloadDTO {
 		setUserInfo(history);
 		setCnt(history.getCnt());
 		setCreatedDate(history.getCreateTimestamp());
-		setCreatedDate_txt(history.getCreateTimestamp().toString().substring(0, 10));
+		setCreatedDate_txt(history.getCreateTimestamp().toString());
 	}
 
 	/**

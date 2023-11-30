@@ -58,10 +58,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
 				</td>
-				<th>문서 번호</th>
+				<th>내부 문서번호</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 				</td>
+				<!-- 				<th>문서 번호</th> -->
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<input type="text" name="number" id="number" class="width-300"> -->
+				<!-- 				</td> -->
 				<th>문서명</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
@@ -143,7 +147,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</select>
 				</td>
 				<th>부서</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
 						<%
@@ -155,10 +159,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th>내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
-				</td>
+				<!-- 				<th>내부 문서번호</th> -->
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<input type="text" name="interalnumber" id="interalnumber" class="width-300"> -->
+				<!-- 				</td> -->
 			</tr>
 			<tr>
 				<th>보존기간</th>
@@ -249,27 +253,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
-				return [
-				// 				{
-				// 					dataField : "number",
-				// 					headerText : "문서번호",
-				// 					dataType : "string",
-				// 					width : 180,
-				// 					renderer : {
-				// 						type : "LinkRenderer",
-				// 						baseUrl : "javascript",
-				// 						jsCallback : function(rowIndex, columnIndex, value, item) {
-				// 							const oid = item.oid;
-				// 							const url = getCallUrl("/doc/view?oid=" + oid);
-				// 							_popup(url, "", "", "f");
-				// 						}
-				// 					},
-				// 					filter : {
-				// 						showIcon : true,
-				// 						inline : true
-				// 					},
-				// 				}, 
-				{
+				return [ {
 					dataField : "name",
 					headerText : "문서명",
 					dataType : "string",
@@ -293,6 +277,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "내부 문서번호",
 					dataType : "string",
 					width : 120,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							const url = getCallUrl("/doc/view?oid=" + oid);
+							_popup(url, "", "", "f");
+						}
+					},					
 					filter : {
 						showIcon : true,
 						inline : true
@@ -427,7 +420,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 				});
 			}
-			
+
 			function auiContextMenuHandler(event) {
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {
@@ -475,35 +468,42 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}, {
 						label : "결재이력보기",
 						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "결재회수",
+						callback : auiContextHandler
+					}, {
+						label : "인쇄하기",
+						callback : auiContextHandler
 					} ];
 					return menu;
 				}
 			}
-			
+
 			function auiContextHandler(event) {
 				const item = event.item;
 				const oid = item.oid;
-				const authUrl = getCallUrl("/doc/isPermission?oid="+oid);
+				const authUrl = getCallUrl("/doc/isPermission?oid=" + oid);
 				let permission;
 				call(authUrl, null, function(data) {
-					if(data.result) {
+					if (data.result) {
 						permission = data.isPermission;
 					}
-				},"GET", false);
-				
-				if(permission) {
+				}, "GET", false);
+
+				if (permission) {
 					alert("권한 체크 필요해요!");
 				}
-				
+
 				let url;
 				switch (event.contextIndex) {
 				case 0:
-					url = getCallUrl("/doc/view?oid="+oid);
+					url = getCallUrl("/doc/view?oid=" + oid);
 					_popup(url, "", "", "f");
 					break;
 				}
 			}
-
 
 			function loadGridData() {
 				let params = new Object();
@@ -529,7 +529,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				toFocus("number");
+				toFocus("interalnumber");
 				const columns = loadColumnLayout("document-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -558,40 +558,39 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
 			}
 
-			
 			// 일괄결재 팝업
 			let p;
 			function register() {
 				const url = getCallUrl("/doc/register");
 				p = _popup(url, 1000, 600, "n");
 			}
-			
+
 			function addRow() {
 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				if(checkedItems.length ===0) {
+				if (checkedItems.length === 0) {
 					alert("일괄결재 등록할 문서를 선택하세요.");
 					return false;
 				}
-				
-				for(let i=0; i<checkedItems.length; i++) {
+
+				for (let i = 0; i < checkedItems.length; i++) {
 					const item = checkedItems[i].item;
 					const interalnumber = item.interalnumber;
-					if(item.state !== "일괄결재") {
-						alert(interalnumber+ "문서는 일괄결재 가능한 문서가 아닙니다.");
+					if (item.state !== "일괄결재") {
+						alert(interalnumber + "문서는 일괄결재 가능한 문서가 아닙니다.");
 						return false;
 					}
-					
-					if(!item.latest) {
-						alert(interalnumber+ "문서는 최신REV의 문서가 아닙니다.");
+
+					if (!item.latest) {
+						alert(interalnumber + "문서는 최신REV의 문서가 아닙니다.");
 						return false;
 					}
 				}
-				
-			    if (p && !p.closed) {
-			        p.receive(checkedItems);
-			    }
+
+				if (p && !p.closed) {
+					p.receive(checkedItems);
+				}
 			}
-			
+
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -620,6 +619,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 				document.location.href = "/Windchill/plm/content/downloadZIP?oids=" + oids;
 			}
+			
 		</script>
 	</form>
 </body>

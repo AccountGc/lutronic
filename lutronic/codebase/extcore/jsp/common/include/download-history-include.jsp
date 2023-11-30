@@ -42,7 +42,7 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 		dataField : "userName",
 		headerText : "이름",
 		dataType : "string",
-		width : 150,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -51,7 +51,7 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 		dataField : "id",
 		headerText : "아이디",
 		dataType : "string",
-		width : 150,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -60,7 +60,7 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 		dataField : "duty",
 		headerText : "직급",
 		dataType : "string",
-		width : 150,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -74,21 +74,23 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 			showIcon : true,
 			inline : true
 		},
-	}, {
-		dataField : "count",
-		headerText : "다운로드횟수",
-		dataType : "numeric",
-		width : 100,
-		postfix : "회",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-	}, {
+	}, 
+// 	{
+// 		dataField : "count",
+// 		headerText : "다운로드횟수",
+// 		dataType : "numeric",
+// 		width : 100,
+// 		postfix : "회",
+// 		filter : {
+// 			showIcon : true,
+// 			inline : true
+// 		},
+// 	}, 
+	{
 		dataField : "createdDate",
 		headerText : "다운로드시간",
 		dataType : "string",
-		width : 110,
+		width : 150,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -98,7 +100,7 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 	function createAUIGrid51(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode : true,
+// 			fillColumnSizeMode : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
@@ -108,8 +110,6 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 			autoGridHeight : true
 		}
 		myGridID51 = AUIGrid.create("#grid51", columnLayout, props);
-		AUIGrid.setGridData(myGridID51,
-<%=data%>
-	);
+		AUIGrid.setGridData(myGridID51, <%=data%>);
 	}
 </script>

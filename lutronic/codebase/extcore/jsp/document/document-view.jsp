@@ -15,7 +15,6 @@ iframe {
 }
 </style>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
-
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <input type="hidden" name="imgData" id="imgData">
 
@@ -37,11 +36,12 @@ iframe {
 			}
 			%>
 			<%
-				if(isAdmin) {
+			if (dto.is_withdraw()) {
 			%>
-			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="blue" onclick="update('modify');">
+			<input type="button" value="결재회수" title="결재회수" class="red" onclick="withdraw();">
+			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="blue" onclick="force();">
 			<%
-				}
+			}
 			%>
 			<%
 			if (dto.is_modify()) {
@@ -86,8 +86,10 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb">문서번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
+				<!-- 				<th class="lb">문서번호</th> -->
+				<%-- 				<td class="indent5"><%=dto.getNumber()%></td> --%>
+				<th>내부문서번호</th>
+				<td class="indent5"><%=dto.getInteralnumber()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
 				<th>상태</th>
@@ -122,31 +124,31 @@ iframe {
 				<td class="indent5"><%=dto.getDocumentType_name()%></td>
 			</tr>
 			<tr>
-				<th class="lb">결재방식</th>
-				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
-				<th>내부문서번호</th>
-				<td class="indent5"><%=dto.getInteralnumber()%></td>
-				<th>프로젝트 코드</th>
-				<td class="indent5"><%=dto.getModel_name()%></td>
-			</tr>
-			<tr>
 				<th class="lb">작성자</th>
-				<td class="indent5"><%=dto.getWriter_name()%></td>
+				<td class="indent5"><%=dto.getWriter()%></td>
 				<th>보존기간</th>
 				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>
 				<td class="indent5"><%=dto.getDeptcode_name()%></td>
 			</tr>
 			<tr>
+				<th class="lb">결재방식</th>
+				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
+				<!-- 				<th>내부문서번호</th> -->
+				<%-- 				<td class="indent5"><%=dto.getInteralnumber()%></td> --%>
+				<th>프로젝트 코드</th>
+				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
+			</tr>
+			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent5">
-					<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getContent() != null ? dto.getContent() : "" %></textarea>
+				<td colspan="5" class="indent7 pb8">
+					<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
 						DEXT5.config.Mode = "view";
 						
 						new Dext5editor('content');
-						var content = document.getElementById("contents").value;
+						const content = document.getElementById("contents").value;
 						DEXT5.setBodyValue(content, 'content');
 					</script>
 				</td>
@@ -326,6 +328,11 @@ iframe {
 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
 		document.location.href = url;
 	}
+	
+	function force() {
+		const url = getCallUrl("/doc/force?oid=" + oid);
+		document.location.href = url;
+	}
 
 	//삭제
 	function _delete() {
@@ -344,6 +351,28 @@ iframe {
 			}
 		}, "DELETE");
 	}
+	
+
+	// 결재 회수
+	function withdraw() {
+		const oid = document.getElementById("oid").value;
+		
+		if(!confirm("진행중인 모든 결재 이력이 삭제되며, 결재선 지정단계로 되어집니다.\n진행하시겠습니까?")) {
+			return false;
+		}
+		const url = getCallUrl("/workspace/withdraw?oid="+oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if(data.result) {
+				opener.document.location.href = getCallUrl("/workData/list");
+				self.close();
+			} else {
+				closeLayer();
+			}
+		}, "GET");
+	}
+	
 
 	//일괄 다운로드
 	function batchSecondaryDown() {
@@ -383,7 +412,7 @@ iframe {
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
+				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
 					break;

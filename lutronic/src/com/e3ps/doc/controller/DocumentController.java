@@ -355,73 +355,8 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	/**
-	 * 일괄 등록(AUI) 메뉴 이동
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createAUIPackageDocument")
-	public ModelAndView createAUIPackageDocument(HttpServletRequest request, HttpServletResponse response) {
-		ModelAndView model = new ModelAndView();
-		model.addObject("menu", "menu3");
-		model.addObject("module", "document");
-		model.setViewName("default:/document/createAUIPackageDocument");
-		return model;
-	}
 
-	/**
-	 * 프로젝트 - 태스크 산출물 직접등록
-	 * 
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createDocumentPop")
-	public ModelAndView createDocumentPop(HttpServletRequest request, HttpServletResponse response) {
-		String parentOid = request.getParameter("parentOid");
-		String type = request.getParameter("type");
-		ModelAndView model = new ModelAndView();
 
-		model.addObject("oLocation", "/Default/Document");
-		model.addObject("parentOid", parentOid);
-		model.addObject("type", type);
-		model.setViewName("popup:/document/createDocumentPop");
-
-		return model;
-	}
-
-	/**
-	 * 프로젝트 - 태스크 산출물 링크등록
-	 * 
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@RequestMapping("/createDocumentLink")
-	public ModelAndView createDocumentLink(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String parentOid = request.getParameter("parentOid");
-		String type = request.getParameter("type");
-		ModelAndView model = new ModelAndView();
-		Folder folder = null;
-		folder = FolderTaskLogic.getFolder("/Default/Document", WCUtil.getWTContainerRef());
-		model.addObject("folder", folder.getFolderPath());
-		model.addObject("parentOid", parentOid);
-		model.addObject("type", type);
-		model.setViewName("popup:/document/createDocumentLink");
-		return model;
-	}
-
-	/**
-	 * 일괄 등록 추가 AUI
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
 	@RequestMapping("/batchDocumentCreate")
 	public ModelAndView batchDocumentCreate(HttpServletRequest request, HttpServletResponse response) {
 
@@ -444,84 +379,6 @@ public class DocumentController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "문서 양식 사진 업로드 창에 첨부 메서드")
-	@PostMapping(value = "/smarteditorMultiImageUpload")
-	public void smarteditorMultiImageUpload(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			// 파일정보
-			String sFileInfo = "";
-			// 파일명을 받는다 - 일반 원본파일명
-			String sFilename = request.getHeader("file-name");
-			// 파일 확장자
-			String sFilenameExt = sFilename.substring(sFilename.lastIndexOf(".") + 1);
-			// 확장자를소문자로 변경
-			sFilenameExt = sFilenameExt.toLowerCase();
-
-			// 이미지 검증 배열변수
-			String[] allowFileArr = { "jpg", "png", "bmp", "gif" };
-
-			// 확장자 체크
-			int nCnt = 0;
-			for (int i = 0; i < allowFileArr.length; i++) {
-				if (sFilenameExt.equals(allowFileArr[i])) {
-					nCnt++;
-				}
-			}
-
-			// 이미지가 아니라면
-			if (nCnt == 0) {
-				PrintWriter print = response.getWriter();
-				print.print("NOTALLOW_" + sFilename);
-				print.flush();
-				print.close();
-			} else {
-				// 디렉토리 설정 및 업로드
-
-				// 파일경로
-				String defaultPath = request.getSession().getServletContext().getRealPath("/");
-				String filePath = defaultPath + "img" + File.separator + "smarteditor2" + File.separator;
-				System.out.println("=======================>" + filePath);
-				File file = new File(filePath);
-
-				if (!file.exists()) {
-					file.mkdirs();
-				}
-
-				String sRealFileNm = "";
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-				String today = formatter.format(new java.util.Date());
-				sRealFileNm = today + UUID.randomUUID().toString() + sFilename.substring(sFilename.lastIndexOf("."));
-				String rlFileNm = filePath + sRealFileNm;
-
-				///////////////// 서버에 파일쓰기 /////////////////
-				InputStream inputStream = request.getInputStream();
-				OutputStream outputStream = new FileOutputStream(rlFileNm);
-				int numRead;
-				byte bytes[] = new byte[Integer.parseInt(request.getHeader("file-size"))];
-				while ((numRead = inputStream.read(bytes, 0, bytes.length)) != -1) {
-					outputStream.write(bytes, 0, numRead);
-				}
-				if (inputStream != null) {
-					inputStream.close();
-				}
-				outputStream.flush();
-				outputStream.close();
-
-				///////////////// 이미지 /////////////////
-				// 정보 출력
-				sFileInfo += "&bNewLine=true";
-				// img 태그의 title 속성을 원본파일명으로 적용시켜주기 위함
-				sFileInfo += "&sFileName=" + sFilename;
-				sFileInfo += "&sFileURL=" + filePath + sRealFileNm;
-				PrintWriter printWriter = response.getWriter();
-				printWriter.print(sFileInfo);
-				printWriter.flush();
-				printWriter.close();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Description(value = "문서 종료 바인더")
 	@ResponseBody
@@ -538,6 +395,18 @@ public class DocumentController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+	
+	@Description(value = "문서 관리자 강제 수정 페이지")
+	@GetMapping(value = "/force")
+	public ModelAndView force(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		DocumentDTO dto = new DocumentDTO(oid);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/document/document-force");
+		return model;
 	}
 
 	@Description(value = "관리자 권한 수정 함수")

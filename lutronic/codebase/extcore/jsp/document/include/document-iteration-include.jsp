@@ -19,19 +19,20 @@ String oid = request.getParameter("oid");
 <script type="text/javascript">
 	let myGridID50;
 	const columns50 = [ {
-		dataField : "number",
-		headerText : "문서번호",
+		dataField : "name",
+		headerText : "문서명",
 		dataType : "string",
-		width : 150,
+		style : "aui-left",
+		width : 350,
 		filter : {
 			showIcon : true,
 			inline : true
 		},
 	}, {
-		dataField : "name",
-		headerText : "문서명",
+		dataField : "interalnumber",
+		headerText : "내부 문서번호",
 		dataType : "string",
-		style : "aui-left",
+		width : 120,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -40,7 +41,7 @@ String oid = request.getParameter("oid");
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 90,
+		width : 80,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -52,7 +53,7 @@ String oid = request.getParameter("oid");
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 110,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -61,7 +62,7 @@ String oid = request.getParameter("oid");
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "string",
-		width : 110,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -70,7 +71,7 @@ String oid = request.getParameter("oid");
 		dataField : "modifier",
 		headerText : "수정자",
 		dataType : "string",
-		width : 110,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -79,7 +80,7 @@ String oid = request.getParameter("oid");
 		dataField : "modifiedDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 110,
+		width : 100,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -88,7 +89,7 @@ String oid = request.getParameter("oid");
 		dataField : "primary",
 		headerText : "주 첨부파일",
 		dataType : "string",
-		width : 90,
+		width : 80,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -100,7 +101,7 @@ String oid = request.getParameter("oid");
 		dataField : "secondary",
 		headerText : "첨부파일",
 		dataType : "string",
-		width : 110,
+		width : 100,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -122,7 +123,7 @@ String oid = request.getParameter("oid");
 	function createAUIGrid50(columnLayout) {
 		const props = {
 			headerHeight : 30,
-			fillColumnSizeMode : true,
+// 			fillColumnSizeMode : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
@@ -132,8 +133,6 @@ String oid = request.getParameter("oid");
 			autoGridHeight : true
 		}
 		myGridID50 = AUIGrid.create("#grid50", columnLayout, props);
-		AUIGrid.setGridData(myGridID50,
-<%=DocumentHelper.manager.allIterationsOf(oid)%>
-	);
+		AUIGrid.setGridData(myGridID50, <%=DocumentHelper.manager.allIterationsOf(oid)%>);
 	}
 </script>
