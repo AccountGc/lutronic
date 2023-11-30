@@ -2,7 +2,7 @@
 <dext5>
   <license>
     <product_key></product_key>
-    <license_key></license_key>
+    <license_key>BJrjXJ8OrJrhnJrPiuULRe74SuUtDb7kwuvrDHy6Em5rCzQrv85qBfMtQjQqQTMqQjh4QHUNQ660PxFdJfEqJfL6Jg7gQyL8BfctQexZQTeVJgttBc==</license_key>
     <mime_use mimeCharset="utf-8">0</mime_use>
     <print_preview></print_preview>
     <print_header>Header</print_header>
@@ -185,7 +185,7 @@
     <ie_compatible desc="IE 랜더링 모드을 설정합니다. 예) EmulateIE8 또는 8 등 버전만 입력 합니다."></ie_compatible>
     <xmlnsname></xmlnsname>
     <lang>ko-kr</lang>
-    <width>900px</width>
+    <width>99%</width>
     <height>550px</height>
     <skinname></skinname>
     <font_family>굴림</font_family>
