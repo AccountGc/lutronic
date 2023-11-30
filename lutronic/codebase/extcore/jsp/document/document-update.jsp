@@ -193,8 +193,6 @@ iframe {
 		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%= dto.getWriter_name() != null ? dto.getWriter_name() : ""%>">
-			<input type="hidden" name="writerOid" id="writerOid"  value="<%= dto.getWriter_oid() %>">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 		</td>
 	</tr>
 	<tr>
@@ -370,7 +368,7 @@ iframe {
 		const secondarys = toArray("secondarys");
 		const primary = document.querySelector("input[name=primary]");
 		const model = document.getElementById("model").value;
-		const writer = document.getElementById("writerOid").value;
+		const writer = document.getElementById("writer").value;
 		const interalnumber = document.getElementById("interalnumber").value;
 		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
@@ -436,7 +434,7 @@ iframe {
 			model_code : model,
 			deptcode_code : deptcode,
 			interalnumber : interalnumber,
-			writer_oid : writer,
+			writer : writer,
 			preseration_code : preseration,
 			documentName : documentName.value,
 			iterationNote : iterationNote,
@@ -470,7 +468,7 @@ iframe {
 		selectbox("documentType");
 		selectbox("model");
 		selectbox("deptcode");
-		finderUser("writer");
+// 		finderUser("writer");
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);
