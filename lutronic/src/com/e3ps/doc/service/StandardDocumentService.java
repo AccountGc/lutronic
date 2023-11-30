@@ -360,11 +360,11 @@ public class StandardDocumentService extends StandardManager implements Document
 		String preseration_code = dto.getPreseration_code();
 		dto.setIBAValue(doc, preseration_code, "PRESERATION");
 		// 작성자
-		String writer = "";
-		if (!dto.getWriter_oid().equals("")) {
-			writer = Long.toString(CommonUtil.getOIDLongValue(dto.getWriter_oid()));
-		}
-		dto.setIBAValue(doc, writer, "DSGN");
+//		String writer = "";
+//		if (!dto.getWriter_oid().equals("")) {
+//			writer = Long.toString(CommonUtil.getOIDLongValue(dto.getWriter_oid()));
+//		}
+		dto.setIBAValue(doc, dto.getWriter(), "DSGN");
 		// 결재 유형
 		String approvalType_code = dto.getLifecycle().equals("LC_Default") ? "DEFAUT" : "BATCH";
 		dto.setIBAValue(doc, approvalType_code, "APPROVALTYPE");

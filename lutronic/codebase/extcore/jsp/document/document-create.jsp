@@ -173,13 +173,11 @@ iframe {
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent5" style="padding-bottom: 8px;">
+				<td colspan="5" class="indent5 pb8">
 					<script type="text/javascript">
 						new Dext5editor('content');
 					</script>
@@ -268,7 +266,6 @@ iframe {
 		</table>
 
 		<script type="text/javascript">
-
 			function folder() {
 				const location = decodeURIComponent("/Default/문서");
 				const url = getCallUrl("/folder/popup?location=" + location);
@@ -304,13 +301,13 @@ iframe {
 				const secondarys = toArray("secondarys");
 				const primary = document.querySelector("input[name=primary]");
 				const model = document.getElementById("model").value;
-				const writer = document.getElementById("writerOid").value;
+				const writer = document.getElementById("writer").value;
 				const interalnumber = document.getElementById("interalnumber").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
-				
+
 				const url = getCallUrl("/doc/create");
 
 				// 관련문서
@@ -338,7 +335,7 @@ iframe {
 					alert("문서유형을 선택해주세요.");
 					return false;
 				}
-				
+
 				if (isNull(interalnumber)) {
 					alert("내부문서번호를 입력해주세요.");
 					return false;
@@ -372,7 +369,7 @@ iframe {
 					model_code : model,
 					deptcode_code : deptcode,
 					interalnumber : interalnumber,
-					writer_oid : writer,
+					writer : writer,
 					preseration_code : preseration,
 					documentName : documentName.value,
 					// 링크 데이터
@@ -401,7 +398,7 @@ iframe {
 				selectbox("documentType");
 				selectbox("model");
 				selectbox("deptcode");
-				finderUser("writer");
+				// 				finderUser("writer");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);

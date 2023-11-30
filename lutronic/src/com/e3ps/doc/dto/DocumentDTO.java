@@ -44,8 +44,9 @@ public class DocumentDTO {
 	private String modifiedDate;
 
 	// IBA
-	private String writer_name;
-	private String writer_oid;
+//	private String writer_name;
+//	private String writer_oid;
+	private String writer;
 	private String model_name;
 	private String model_code;
 	private String preseration_name;
@@ -118,10 +119,11 @@ public class DocumentDTO {
 	 */
 	private void setIBAAttributes(WTDocument doc) throws Exception {
 		// 작성자
-		String writer_oid = IBAUtil.getStringValue(doc, "DSGN");
-		String writer_name = CommonUtil.getUserNameFromOid(writer_oid);
-		setWriter_oid(writer_oid);
-		setWriter_name(writer_name);
+		String writer = IBAUtil.getStringValue(doc, "DSGN");
+		setWriter(writer);
+//		String writer_name = CommonUtil.getUserNameFromOid(writer_oid);
+//		setWriter_oid(writer_oid);
+//		setWriter_name(writer_name);
 		// 프로젝트 코드
 		String model_code = IBAUtil.getStringValue(doc, "MODEL");
 		String model_name = keyToValue(model_code, "MODEL");
