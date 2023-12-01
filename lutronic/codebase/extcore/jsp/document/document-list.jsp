@@ -133,38 +133,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>프로젝트코드</th>
-				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<th>부서</th>
-				<td class="indent5" colspan="3">
-					<select name="deptcode" id="deptcode" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<!-- 				<th>내부 문서번호</th> -->
-				<!-- 				<td class="indent5"> -->
-				<!-- 					<input type="text" name="interalnumber" id="interalnumber" class="width-300"> -->
-				<!-- 				</td> -->
-			</tr>
-			<tr>
 				<th>보존기간</th>
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
@@ -203,6 +171,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<input type="text" name="description" id="description" class="width-300">
 				</td>
+			</tr>			
+			<tr>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<select name="model" id="model" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>부서</th>
+				<td class="indent5" colspan="3">
+					<select name="deptcode" id="deptcode" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode deptcode : deptcodeList) {
+						%>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<!-- 				<th>내부 문서번호</th> -->
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<input type="text" name="interalnumber" id="interalnumber" class="width-300"> -->
+				<!-- 				</td> -->
 			</tr>
 		</table>
 		<table class="button-table">
