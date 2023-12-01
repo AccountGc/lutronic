@@ -309,7 +309,7 @@ iframe {
 				const primary = document.querySelector("input[name=primary]");
 				const model = document.getElementById("model").value;
 				const writer = document.getElementById("writerOid").value;
-				const interalnumber = document.getElementById("interalnumber").value;
+				const interalnumber = document.getElementById("interalnumber");
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
 				const documentName = document.getElementById("documentName");
@@ -375,7 +375,7 @@ iframe {
 					location : location.value,
 					model_code : model,
 					deptcode_code : deptcode,
-					interalnumber : interalnumber,
+					interalnumber : interalnumber.value,
 					writer : writer,
 					preseration_code : preseration,
 					documentName : documentName.value,
