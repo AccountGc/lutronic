@@ -515,7 +515,7 @@ public class PartController extends BaseController {
 		ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getOneLevel("PARTTYPE");
 		ArrayList<Map<String, String>> partName1 = NumberCodeHelper.manager.getOneLevel("PARTNAME1");
 		ArrayList<Map<String, String>> partName2 = NumberCodeHelper.manager.getOneLevel("PARTNAME2");
-		ArrayList<Map<String, String>> partName3= NumberCodeHelper.manager.getOneLevel("PARTNAME3");
+		ArrayList<Map<String, String>> partName3 = NumberCodeHelper.manager.getOneLevel("PARTNAME3");
 		model.addObject("partName1", JSONArray.fromObject(partName1));
 		model.addObject("partName2", JSONArray.fromObject(partName2));
 		model.addObject("partName3", JSONArray.fromObject(partName3));
@@ -2310,18 +2310,24 @@ public class PartController extends BaseController {
 	@Description(value = "품목속성")
 	@GetMapping(value = "/attr")
 	public ModelAndView attr(@RequestParam String oid) throws Exception {
-		ModelAndView model = new ModelAndView();
+		ModelAndView view = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
 		Map<String, Object> attr = PartHelper.manager.attr(part);
-		ArrayList<NumberCode> list = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
-		model.addObject("list", list);
-		model.addObject("oid", oid);
-		model.addObject("attr", attr);
-		model.addObject("part", part);
-		model.addObject("isAdmin", isAdmin);
-		model.setViewName("popup:/part/part-attr");
-		return model;
+		ArrayList<NumberCode> manufacture = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> model = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> productmethod = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> deptcode = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		view.addObject("deptcode", deptcode);
+		view.addObject("manufacture", manufacture);
+		view.addObject("productmethod", productmethod);
+		view.addObject("model", model);
+		view.addObject("oid", oid);
+		view.addObject("attr", attr);
+		view.addObject("part", part);
+		view.addObject("isAdmin", isAdmin);
+		view.setViewName("popup:/part/part-attr");
+		return view;
 	}
 
 	@Description(value = "품목 속성 클린")

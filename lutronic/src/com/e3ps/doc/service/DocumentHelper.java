@@ -573,4 +573,12 @@ public class DocumentHelper {
 
 		return true;
 	}
+
+	/**
+	 * 문서 이력 팝업창
+	 */
+	public ArrayList<DocumentColumn> iteraion(String oid) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

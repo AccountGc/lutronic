@@ -4,6 +4,7 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
 String oid = request.getParameter("oid");
+boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 %>
 <table class="button-table">
 	<tr>
@@ -13,6 +14,15 @@ String oid = request.getParameter("oid");
 				버전 이력
 			</div>
 		</td>
+		<%
+		if (popup) {
+		%>
+		<td class="right">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+		</td>
+		<%
+		}
+		%>
 	</tr>
 </table>
 <div id="grid50" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
@@ -123,7 +133,7 @@ String oid = request.getParameter("oid");
 	function createAUIGrid50(columnLayout) {
 		const props = {
 			headerHeight : 30,
-// 			fillColumnSizeMode : true,
+			// 			fillColumnSizeMode : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
@@ -135,4 +145,18 @@ String oid = request.getParameter("oid");
 		myGridID50 = AUIGrid.create("#grid50", columnLayout, props);
 		AUIGrid.setGridData(myGridID50, <%=DocumentHelper.manager.allIterationsOf(oid)%>);
 	}
+	<%
+		if(popup) {
+	%>
+	document.addEventListener("DOMContentLoaded", function() {
+		createAUIGrid50(columns50);
+		AUIGrid.resize(myGridID50);
+	})
+	
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID50);
+	})
+	<%
+		}
+	%>
 </script>

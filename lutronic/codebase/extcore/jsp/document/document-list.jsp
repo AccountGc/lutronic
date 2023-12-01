@@ -171,7 +171,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<input type="text" name="description" id="description" class="width-300">
 				</td>
-			</tr>			
+			</tr>
 			<tr>
 				<th>프로젝트코드</th>
 				<td class="indent5">
@@ -507,6 +507,25 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				case 2:
 					break;
 				case 3:
+					break;
+				case 5:
+					url = getCallUrl("/doc/iteration?oid=" + oid + "&popup=true");
+					_popup(url, 1600, 600, "n");
+					break;
+				case 8:
+					if(!confirm("진행중인 모든 결재 이력이 삭제되며, 결재선 지정단계로 되어집니다.\n진행하시겠습니까?")) {
+						return false;
+					}
+					url = getCallUrl("/workspace/withdraw?oid="+oid);
+					parent.openLayer();
+					call(url, null, function(data) {
+						alert(data.msg);
+						if(data.result) {
+							document.location.href = getCallUrl("/workData/list");
+						} else {
+							parent.closeLayer();
+						}
+					}, "GET");
 					break;
 				}
 			}

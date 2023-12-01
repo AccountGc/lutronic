@@ -2043,7 +2043,6 @@ public class StandardPartService extends StandardManager implements PartService 
 			map.put("disabled", disabled);
 			map.put("checked", checked);
 
-
 			String icon = CommonUtil.getObjectIconImageTag(data.part);
 			map.put("icon", icon);
 
@@ -3896,13 +3895,30 @@ public class StandardPartService extends StandardManager implements PartService 
 	@Override
 	public void attrUpdate(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid");
-		String value = (String) params.get("value");
+		String model = (String) params.get("model");
+		String deptcode = (String) params.get("deptcode");
+		String productmethod = (String) params.get("productmethod");
+		String manufacture = (String) params.get("manufacture");
+		String specification = (String) params.get("specification");
+		String mat = (String) params.get("mat");
+		String finish = (String) params.get("finish");
+		String weight = (String) params.get("weight");
+		String remarks = (String) params.get("remarks");
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
 
-			IBAUtils.createIBA(part, "MANUFACTURE", value, "s");
+			IBAUtils.createIBA(part, "MODEL", model, "s");
+			IBAUtils.createIBA(part, "PRODUCTMETHOD", productmethod, "s");
+			IBAUtils.createIBA(part, "DEPTCODE", deptcode, "s");
+			IBAUtils.createIBA(part, "WEIGHT", weight, "f");
+			IBAUtils.createIBA(part, "MANUFACTURE", manufacture, "s");
+			IBAUtils.createIBA(part, "MAT", mat, "s");
+			IBAUtils.createIBA(part, "FINISH", finish, "s");
+			IBAUtils.createIBA(part, "REMARKS", remarks, "s");
+			IBAUtils.createIBA(part, "SPECIFICATION", specification, "s");
 
 			trs.commit();
 			trs = null;

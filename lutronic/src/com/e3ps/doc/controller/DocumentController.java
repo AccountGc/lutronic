@@ -39,6 +39,7 @@ import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 
@@ -355,31 +356,6 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-
-
-	@RequestMapping("/batchDocumentCreate")
-	public ModelAndView batchDocumentCreate(HttpServletRequest request, HttpServletResponse response) {
-
-		String auiId = StringUtil.checkNull(request.getParameter("auiId"));
-		String mode = StringUtil.checkNull(request.getParameter("mode")); // single
-
-		String title = "일괄 추가 ";
-		if (mode.equals("single")) {
-			title = "수정[" + auiId + "]";
-		}
-		// System.out.println("batchCreate auiId =" + auiId);
-
-		ModelAndView model = new ModelAndView();
-		model.addObject("auiId", auiId);
-		model.addObject("mode", mode);
-		model.addObject("title", title);
-		model.addObject("oLocation", "/Default/Document");
-
-		model.setViewName("popup:/document/batchDocumentCreate");
-		return model;
-	}
-
-
 	@Description(value = "문서 종료 바인더")
 	@ResponseBody
 	@PostMapping(value = "/finder")
@@ -396,7 +372,7 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "문서 관리자 강제 수정 페이지")
 	@GetMapping(value = "/force")
 	public ModelAndView force(@RequestParam String oid) throws Exception {
@@ -441,5 +417,16 @@ public class DocumentController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "버전 객체 이터레이션 정보 페이지")
+	@GetMapping(value = "/iteration")
+	public ModelAndView iteration(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("oid", oid);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/document/include/document-iteration-include");
+		return model;
 	}
 }

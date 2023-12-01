@@ -8,7 +8,10 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 String oid = (String) request.getAttribute("oid");
 WTPart part = (WTPart) request.getAttribute("part");
 Map<String, Object> attr = (Map<String, Object>) request.getAttribute("attr");
-ArrayList<NumberCode> list = (ArrayList<NumberCode>) request.getAttribute("list");
+ArrayList<NumberCode> manufacture = (ArrayList<NumberCode>) request.getAttribute("manufacture");
+ArrayList<NumberCode> model = (ArrayList<NumberCode>) request.getAttribute("model");
+ArrayList<NumberCode> deptcode = (ArrayList<NumberCode>) request.getAttribute("deptcode");
+ArrayList<NumberCode> productmethod = (ArrayList<NumberCode>) request.getAttribute("productmethod");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
 <table class="button-table">
@@ -24,6 +27,7 @@ ArrayList<NumberCode> list = (ArrayList<NumberCode>) request.getAttribute("list"
 			</div>
 		</td>
 		<td class="right">
+			<input type="button" title="속성 변경" value="속성 변경" class="blue" onclick="attrUpdate();">
 			<input type="button" title="속성 CLEANING" value="속성 CLEANING" class="red" onclick="_clean();">
 			<input type="button" title="닫기" value="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -39,52 +43,201 @@ ArrayList<NumberCode> list = (ArrayList<NumberCode>) request.getAttribute("list"
 	</colgroup>
 	<tr>
 		<th class="lb">프로젝트코드</th>
-		<td class="indent5"><%=attr.get("model")%></td>
-		<th>제작방법</th>
-		<td class="indent5"><%=attr.get("productmethod")%></td>
-	</tr>
-	<tr>
-		<th class="lb">부서</th>
-		<td class="indent5"><%=attr.get("deptcode")%></td>
-		<th>단위</th>
-		<td class="indent5"><%=attr.get("unit")%></td>
-	</tr>
-	<tr>
-		<th class="lb">무게</th>
-		<td class="indent5"><%=attr.get("weight")%></td>
-		<th>MANUFACTURE</th>
 		<td class="indent5">
-			<select name="manufacture" id="manufacture" class="AXSelect" style="width: 250px; position: relative; bottom: 1px;">
+			<%
+			if (isAdmin) {
+			%>
+			<select style="position: relative; width: 200px;" name="model" id="model" class="AXSelect" style="width: 250px; position: relative; bottom: 1px;">
 				<option value="">선택</option>
 				<%
-				for (NumberCode n : list) {
-					String manufacture = (String) attr.get("manufacture");
+				for (NumberCode n : model) {
+					String value = (String) attr.get("model");
 					String selected = "";
-					if(n.getCode().equals(manufacture)) {
+					if (n.getCode().equals(value)) {
 						selected = "selected='selected'";
 					}
 				%>
-				<option value="<%=n.getCode()%>" <%=selected %>>[<%=n.getCode()%>]
+				<option value="<%=n.getCode()%>" <%=selected%>>[<%=n.getCode()%>]
 					<%=n.getName()%></option>
 				<%
 				}
 				%>
 			</select>
-			&nbsp;
-			<input style="position: relative; top: 2px;" type="button" title="속성 변경" value="속성 변경" class="blue" onclick="attrUpdate();">
+			<%
+			} else {
+			%>
+			<%=attr.get("model")%>
+			<%
+			}
+			%>
+		</td>
+		<th>제작방법</th>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<select style="position: relative; width: 200px;" name="productmethod" id="productmethod" class="AXSelect" style="width: 250px; position: relative; bottom: 1px;">
+				<option value="">선택</option>
+				<%
+				for (NumberCode n : productmethod) {
+					String value = (String) attr.get("productmethod");
+					String selected = "";
+					if (n.getCode().equals(value)) {
+						selected = "selected='selected'";
+					}
+				%>
+				<option value="<%=n.getCode()%>" <%=selected%>>[<%=n.getCode()%>]
+					<%=n.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+			<%
+			} else {
+			%>
+			<%=attr.get("productmethod")%>
+			<%
+			}
+			%>
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">부서</th>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<select style="position: relative; width: 200px;" name="deptcode" id="deptcode" class="AXSelect" style="width: 250px; position: relative; bottom: 1px;">
+				<option value="">선택</option>
+				<%
+				for (NumberCode n : deptcode) {
+					String value = (String) attr.get("deptcode");
+					String selected = "";
+					if (n.getCode().equals(value)) {
+						selected = "selected='selected'";
+					}
+				%>
+				<option value="<%=n.getCode()%>" <%=selected%>>[<%=n.getCode()%>]
+					<%=n.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+			<%
+			} else {
+			%>
+			<%=attr.get("deptcode")%>
+			<%
+			}
+			%>
+		</td>
+		<th>단위</th>
+		<td class="indent5"><%=attr.get("unit")%></td>
+	</tr>
+	<tr>
+		<th class="lb">무게</th>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="text" name="weight" id="weight" value="<%=attr.get("weight")%>">
+			<%
+			} else {
+			%>
+			<%=attr.get("weight")%>
+			<%
+			}
+			%>
+		</td>
+		<th>MANUFACTURE</th>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<select name="manufacture" id="manufacture" class="AXSelect" style="width: 250px; position: relative;">
+				<option value="">선택</option>
+				<%
+				for (NumberCode n : manufacture) {
+					String value = (String) attr.get("manufacture");
+					String selected = "";
+					if (n.getCode().equals(value)) {
+						selected = "selected='selected'";
+					}
+				%>
+				<option value="<%=n.getCode()%>" <%=selected%>>[<%=n.getCode()%>]
+					<%=n.getName()%></option>
+				<%
+				}
+				%>
+			</select>
+			<%
+			} else {
+			%>
+			<%=attr.get("manufacture")%>
+			<%
+			}
+			%>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">재질</th>
-		<td class="indent5"><%=attr.get("mat")%></td>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="text" name="mat" id="mat" value="<%=attr.get("mat")%>">
+			<%
+			} else {
+			%>
+			<%=attr.get("mat")%>
+			<%
+			}
+			%>
+		</td>
 		<th>후처리</th>
-		<td class="indent5"><%=attr.get("finish")%></td>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="text" name="finish" id="finish" value="<%=attr.get("finish")%>">
+			<%
+			} else {
+			%>
+			<%=attr.get("mat")%>
+			<%
+			}
+			%>
+		</td>
 	</tr>
 	<tr>
 		<th class="lb">OEM Info</th>
-		<td class="indent5"><%=attr.get("remarks")%></td>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="text" name="remarks" id="remarks" value="<%=attr.get("remarks")%>">
+			<%
+			} else {
+			%>
+			<%=attr.get("remarks")%>
+			<%
+			}
+			%>
+		</td>
 		<th>사양</th>
-		<td class="indent5"><%=attr.get("specification")%></td>
+		<td class="indent5">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="text" name="specification" id="specification" value="<%=attr.get("specification")%>">
+			<%
+			} else {
+			%>
+			<%=attr.get("specification")%>
+			<%
+			}
+			%>
+		</td>
 	</tr>
 	<tr>
 		<th class="lb">EO No</th>
@@ -115,6 +268,9 @@ ArrayList<NumberCode> list = (ArrayList<NumberCode>) request.getAttribute("list"
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
 		selectbox("manufacture");
+		selectbox("model");
+		selectbox("productmethod");
+		selectbox("deptcode");
 	})
 
 	function _clean() {
@@ -137,11 +293,19 @@ ArrayList<NumberCode> list = (ArrayList<NumberCode>) request.getAttribute("list"
 	}
 
 	function attrUpdate() {
-		const code = document.getElementById("manufacture").value;
-		if (code === "") {
-			alert("변경할 코드를 선택하세요.");
-			return false;
-		}
+		const manufacture = document.getElementById("manufacture").value;
+		const deptcode = document.getElementById("deptcode").value;
+		const model = document.getElementById("model").value;
+		const productmethod = document.getElementById("productmethod").value;
+		const specification = document.getElementById("specification").value;
+		const mat = document.getElementById("mat").value;
+		const remarks = document.getElementById("remarks").value;
+		const weight = document.getElementById("weight").value;
+		const finish = document.getElementById("finish").value;
+		// 		if (code === "") {
+		// 			alert("변경할 코드를 선택하세요.");
+		// 			return false;
+		// 		}
 
 		if (!confirm("속성변경을 하시겠습니까?")) {
 			return false;
@@ -150,8 +314,17 @@ ArrayList<NumberCode> list = (ArrayList<NumberCode>) request.getAttribute("list"
 		const url = getCallUrl("/part/attrUpdate");
 		const params = {
 			oid : oid,
-			value : code
+			manufacture : manufacture,
+			productmethod : productmethod,
+			deptcode : deptcode,
+			model : model,
+			finish : finish,
+			mat : mat,
+			remarks : remarks,
+			weight : weight,
+			specification : specification
 		};
+		logger(params);
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
