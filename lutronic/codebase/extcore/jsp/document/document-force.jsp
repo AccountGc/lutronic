@@ -138,54 +138,6 @@ iframe {
 	</tr>
 </table>
 
-<!-- 관련 품목 -->
-<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
-	<jsp:param value="true" name="multi" />
-	<jsp:param value="true" name="header" />
-</jsp:include>
-
-<!-- 	관련 문서 -->
-<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
-	<jsp:param value="true" name="multi" />
-	<jsp:param value="true" name="header" />
-</jsp:include>
-
-<!-- 	관련 EO -->
-<jsp:include page="/extcore/jsp/change/eo/include/eo-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
-	<jsp:param value="true" name="multi" />
-	<jsp:param value="true" name="header" />
-</jsp:include>
-
-<!-- 	관련 CR -->
-<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
-	<jsp:param value="true" name="multi" />
-	<jsp:param value="true" name="header" />
-</jsp:include>
-
-<!-- 	관련 ECPR -->
-<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
-	<jsp:param value="true" name="multi" />
-	<jsp:param value="true" name="header" />
-</jsp:include>
-
-<!-- 	관련 ECO -->
-<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
-	<jsp:param value="<%=dto.getOid()%>" name="oid" />
-	<jsp:param value="update" name="mode" />
-	<jsp:param value="true" name="multi" />
-	<jsp:param value="true" name="header" />
-</jsp:include>
-
 <table class="button-table">
 	<tr>
 		<td class="center">
@@ -232,26 +184,8 @@ iframe {
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-		createAUIGrid90(columns90);
-		createAUIGrid91(columns91);
-		createAUIGrid100(columns100);
-		createAUIGrid101(columns101);
-		createAUIGrid103(columns103);
-		createAUIGrid105(columns105);
-		AUIGrid.resize(myGridID90);
-		AUIGrid.resize(myGridID91);
-		AUIGrid.resize(myGridID100);
-		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridID103);
-		AUIGrid.resize(myGridID105);
 	});
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(myGridID90);
-		AUIGrid.resize(myGridID91);
-		AUIGrid.resize(myGridID100);
-		AUIGrid.resize(myGridID101);
-		AUIGrid.resize(myGridID103);
-		AUIGrid.resize(myGridID105);
 	});
 </script>

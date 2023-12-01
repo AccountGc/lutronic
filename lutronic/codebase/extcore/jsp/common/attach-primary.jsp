@@ -57,22 +57,13 @@ String mode = request.getParameter("mode");
 				form.appendChild(primaryTag);
 			},
 			onDelete : function() {
-				console.log(this);
-				const key = this.file._id_;
-				const el = document.getElementById(key);
+				// 주 첨부 파일은 무조건 하나니깐 그냥 삭제 처리한다...
+				const el = document.querySelector("input[name=primary]");
 				el.parentNode.removeChild(el);
-				
-				const primary = document.getElementsByName("primary");
-				const tag = primary[0];
-				console.log(tag);
-				console.log(key);
-				if(tag.id === key){
-					tag.parentNode.removeChild(tag);
-				}
 			}
 		})
-		<%if ("modify".equals(mode) || "revise".equals(mode)) {%>
-			const url = getCallUrl("/content/list?oid=<%=oid%>&roleType=primary");
+
+		const url = getCallUrl("/content/list?oid=<%=oid%>&roleType=primary");
 		call(url, null, function(res) {
 			if (res.primaryFile) {
 				const form = document.querySelector("form");
@@ -91,7 +82,6 @@ String mode = request.getParameter("mode");
 				$("#sign_preview").attr("src", imgurl);
 			}
 		});
-<%}%>
 	}
 	load();
 

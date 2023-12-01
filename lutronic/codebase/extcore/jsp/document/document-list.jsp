@@ -502,6 +502,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					url = getCallUrl("/doc/view?oid=" + oid);
 					_popup(url, "", "", "f");
 					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					break;
 				}
 			}
 

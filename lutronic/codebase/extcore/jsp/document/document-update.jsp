@@ -412,7 +412,7 @@ iframe {
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-		toFocus("iterationNote");
+// 		toFocus("iterationNote");
 		selectbox("formType");
 		selectbox("preseration");
 		selectbox("documentType");
