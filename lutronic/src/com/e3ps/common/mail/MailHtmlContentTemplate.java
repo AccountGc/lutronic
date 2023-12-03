@@ -1,9 +1,9 @@
 package com.e3ps.common.mail;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.Hashtable;
-
-import com.e3ps.common.jdf.config.ConfigEx;
-import com.e3ps.common.jdf.config.ConfigExImpl;
 
 public class MailHtmlContentTemplate {
 	protected Hashtable args = new java.util.Hashtable();
@@ -15,7 +15,6 @@ public class MailHtmlContentTemplate {
 		if (instance == null) {
 			instance = new MailHtmlContentTemplate();
 		}
-
 		return instance;
 	}
 
@@ -23,16 +22,13 @@ public class MailHtmlContentTemplate {
 		String htmlContent = "";
 		try {
 			args = hash;
-
 			if (template == null || template.equals("")) {
 				template = "mail_notice.html";
 			}
 			setHtmlTemplate(template);
-
 			if (htmlTemplateSource != null) {
 				htmlContent = parseTemplate(htmlTemplateSource);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -40,21 +36,18 @@ public class MailHtmlContentTemplate {
 	}
 
 	public void setHtmlTemplate(String template) {
-		java.io.BufferedReader in = null;
-		ConfigExImpl conf = ConfigEx.getInstance("eSolution");
-		String templatePath = conf.getString("mail.template.path");
+		BufferedReader in = null;
 		try {
+			File file = new File("D:" + File.separator + "ptc" + File.separator + "Windchill_11.1" + File.separator
+					+ "Windchill" + File.separator + "codebase" + File.separator + "mailTemplate" + File.separator
+					+ template);
 
-			java.io.File file = new java.io.File(templatePath + template);
-			// System.out.println("html template dir : " + file.getAbsolutePath());
-
-			in = new java.io.BufferedReader(new java.io.FileReader(file));
+			in = new BufferedReader(new FileReader(file));
 			StringBuffer buf = new StringBuffer();
 			String line;
 			while ((line = in.readLine()) != null) {
 				buf.append(line + "\n");
 			}
-
 			htmlTemplateSource = buf.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,7 +56,7 @@ public class MailHtmlContentTemplate {
 				if (in != null)
 					in.close();
 			} catch (Exception e) {
-
+				e.printStackTrace();
 			}
 		}
 	}
@@ -90,13 +83,11 @@ public class MailHtmlContentTemplate {
 					break;
 
 				String argname = remainder.substring(0, markEndPos).trim();
-				// System.out.println("<"+argname+">");
 				String value = (String) args.get(argname);
 				if (value != null)
 					content.append(value);
 				if (remainder.length() == markEndPos + 1)
 					break;
-
 				s = remainder.substring(markEndPos + 1);
 			}
 		} catch (Exception e) {

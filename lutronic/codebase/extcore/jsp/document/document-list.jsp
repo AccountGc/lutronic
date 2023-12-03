@@ -412,7 +412,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -421,7 +421,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function auiContextMenuHandler(event) {
+			function _auiContextMenuHandler(event) {
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {
 						hideContextMenu();
@@ -493,7 +493,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}, "GET", false);
 
 				if (permission) {
-					alert("권한 체크 필요해요!");
+// 					alert("권한 체크 필요해요!");
 				}
 
 				let url;
@@ -511,6 +511,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				case 5:
 					url = getCallUrl("/doc/iteration?oid=" + oid + "&popup=true");
 					_popup(url, 1600, 600, "n");
+					break;
+				case 6:
+					url = getCallUrl("/workspace/history?oid=" + oid + "&popup=true");
+					_popup(url, 1200, 400, "n");
 					break;
 				case 8:
 					if(!confirm("진행중인 모든 결재 이력이 삭제되며, 결재선 지정단계로 되어집니다.\n진행하시겠습니까?")) {
@@ -534,9 +538,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
 				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
+				document.getElementById("sessionid").value = 0;
 				params = toField(params, field);
-				const latest = $('input[name=latest]:checked').val();
+				const latest = document.querySelector("input[name=latest]:checked").value;
 				params.latest = JSON.parse(latest);
+				logger(params);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {

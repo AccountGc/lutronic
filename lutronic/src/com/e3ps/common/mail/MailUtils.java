@@ -48,6 +48,7 @@ public class MailUtils {
 
 		HashMap<String, String> to = new HashMap<>();
 		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
+		System.out.println("TO = " + toUser.getEMail() + ", Name = " + toUser.getFullName());
 		to.put(toUser.getEMail(), toUser.getFullName());
 
 		Hashtable<String, String> data = setParseData(lcm);

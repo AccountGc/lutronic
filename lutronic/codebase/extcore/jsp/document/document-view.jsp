@@ -356,11 +356,12 @@ iframe {
 	// 결재 회수
 	function withdraw() {
 		const oid = document.getElementById("oid").value;
-		
-		if(!confirm("진행중인 모든 결재 이력이 삭제되며, 결재선 지정단계로 되어집니다.\n진행하시겠습니까?")) {
-			return false;
+		let remain = false;
+		if(confirm("확인 버튼을 누를시 기존 결재선을 유지한채 결재를 회수 합니다.\n취소를 선택시 모든 결재선 및 결재 이력이 초기화 됩니다.")) {
+			remain = true;
 		}
-		const url = getCallUrl("/workspace/withdraw?oid="+oid);
+		const url = getCallUrl("/workspace/withdraw?oid="+oid + "&remain="+remain);
+		alert(url);
 		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);

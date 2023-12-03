@@ -266,7 +266,7 @@ public class ActivityHelper {
 			Map<String, Object> data = new HashMap<>();
 			data.put("oid", eca.getPersistInfo().getObjectIdentifier().getStringValue());
 			data.put("eoid", eo.getPersistInfo().getObjectIdentifier().getStringValue());
-			data.put("t", eo.getEoType());
+			data.put("type", "CHANGE".equals(eo.getEoType()) ? "ECO" : "EO");
 			data.put("number", eo.getEoNumber());
 			data.put("name", eo.getEoName());
 			data.put("step", NumberCodeHelper.manager.getNumberCodeName(eca.getStep(), "EOSTEP"));

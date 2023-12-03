@@ -55,7 +55,6 @@ public class PageQueryUtils {
 		if (this.sessionid <= 0) {
 			this.result = openPagingSession(0, this.psize, this.query);
 		} else {
-			System.out.println("패치..");
 			this.result = fetchPagingSession((this.cpage - 1) * this.psize, this.psize, this.sessionid);
 		}
 

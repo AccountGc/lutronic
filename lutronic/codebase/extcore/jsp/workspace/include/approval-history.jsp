@@ -3,6 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String oid = request.getParameter("oid");
+boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 JSONArray data = WorkspaceHelper.manager.history(oid);
 %>
 <style type="text/css">
@@ -35,6 +36,15 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 				결재 이력
 			</div>
 		</td>
+		<%
+		if(popup) {
+		%>
+		<td class="right">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+		</td>
+		<%
+		}
+		%>
 	</tr>
 </table>
 <div id="grid10000" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
@@ -106,8 +116,20 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			autoGridHeight : true
 		}
 		myGridID10000 = AUIGrid.create("#grid10000", columnLayout, props);
-		AUIGrid.setGridData(myGridID10000,
-<%=data%>
-	);
+		AUIGrid.setGridData(myGridID10000, <%=data%>	);
 	}
+	<%
+		if(popup) {
+	%>
+	document.addEventListener("DOMContentLoaded", function() {
+		createAUIGrid10000(columns10000);
+		AUIGrid.resize(myGridID10000);
+	})
+	
+	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID10000);
+	})
+	<%
+		}
+	%>
 </script>

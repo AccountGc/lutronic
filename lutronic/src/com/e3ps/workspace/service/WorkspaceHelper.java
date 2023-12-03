@@ -8,6 +8,7 @@ import com.e3ps.change.ECOChange;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
@@ -981,4 +982,5 @@ public class WorkspaceHelper {
 		}
 		return list;
 	}
+
 }

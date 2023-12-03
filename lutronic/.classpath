@@ -64,5 +64,6 @@
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/sapjco3.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/fasoo-jni-3.9.0u.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/fcwpkg_jni-1.9.0.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/javax.activation-1.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

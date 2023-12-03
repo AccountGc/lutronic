@@ -52,7 +52,7 @@ import wt.part.WTPartDescribeLink;
 import wt.util.WTProperties;
 
 @Controller
-@RequestMapping(value = "/doc")
+@RequestMapping(value = "/doc/**")
 public class DocumentController extends BaseController {
 
 	@Description(value = "문서 등록 페이지 - 설변활동 링크등록")
@@ -337,23 +337,6 @@ public class DocumentController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("popup:/document/document-register");
 		return model;
-	}
-
-	@Description(value = "문서 일괄결재 등록 실행")
-	@ResponseBody
-	@PostMapping(value = "/register")
-	public Map<String, Object> register(@RequestBody Map<String, Object> params) {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			DocumentHelper.service.register(params);
-			result.put("msg", "일괄결재가 등록 되었습니다.");
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
 	}
 
 	@Description(value = "문서 종료 바인더")

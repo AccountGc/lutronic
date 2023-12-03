@@ -506,14 +506,14 @@ public class WorkspaceController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "결재 회수")
 	@ResponseBody
 	@GetMapping(value = "/withdraw")
-	public Map<String, Object> withdraw(@RequestParam String oid) throws Exception {
+	public Map<String, Object> withdraw(@RequestParam String oid, @RequestParam String remain) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			WorkspaceHelper.service.withdraw(oid);
+			WorkspaceHelper.service.withdraw(oid, remain);
 			result.put("msg", "결재가 회수 되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -523,5 +523,16 @@ public class WorkspaceController extends BaseController {
 //			ErrorLogHelper.service.create(e.toString(), "/workspace/_reset", "결재 초기화 함수");
 		}
 		return result;
+	}
+
+	@Description(value = "결재 이력 팝업")
+	@GetMapping(value = "/history")
+	public ModelAndView history(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("oid", oid);
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/workspace/include/approval-history");
+		return model;
 	}
 }

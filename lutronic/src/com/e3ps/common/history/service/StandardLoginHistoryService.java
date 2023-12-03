@@ -39,12 +39,12 @@ public class StandardLoginHistoryService extends StandardManager implements Logi
 
 			SessionHelper.manager.setAdministrator();
 
-			WTUser user = OrganizationServicesMgr.getUser(j_username);
-			LoginHistory history = LoginHistory.newLoginHistory();
-			history.setIp(ip);
-			history.setId(j_username);
-			history.setName(user.getFullName());
-			PersistenceHelper.manager.save(history);
+//			WTUser user = OrganizationServicesMgr.getUser(j_username);
+//			LoginHistory history = LoginHistory.newLoginHistory();
+//			history.setIp(ip);
+//			history.setId(j_username);
+//			history.setName(user.getFullName());
+//			PersistenceHelper.manager.save(history);
 
 			trs.commit();
 			trs = null;

@@ -107,5 +107,5 @@ public interface WorkspaceService {
 	/**
 	 * 결재 회수
 	 */
-	public abstract void withdraw(String oid) throws Exception;
+	public abstract void withdraw(String oid, String remain) throws Exception;
 }

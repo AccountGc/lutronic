@@ -962,45 +962,51 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	}
 
 	@Override
-	public void withdraw(String oid) throws Exception {
+	public void withdraw(String oid, String remain) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
+			boolean _delete = Boolean.parseBoolean(remain);
+
 			Persistable per = CommonUtil.getObject(oid);
-			ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
-			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
+			// 안남기면 모두 삭제한다..
+			if (!_delete) {
+				ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
+				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
 
-			for (ApprovalLine line : list) {
-				PersistenceHelper.manager.delete(line);
+				for (ApprovalLine line : list) {
+					PersistenceHelper.manager.delete(line);
+				}
+				PersistenceHelper.manager.delete(m);
+
+				QueryResult qr = PersistenceHelper.manager.navigate((WTObject) per, "user", MailWTobjectLink.class,
+						false);
+				while (qr.hasMoreElements()) {
+					MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
+					PersistenceHelper.manager.delete(link);
+				}
+
+				qr.reset();
+				qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
+				if (qr.hasMoreElements()) {
+					WorkData d = (WorkData) qr.nextElement();
+					PersistenceHelper.manager.delete(d);
+				}
+				// 상태값 작업중으로 변경
+				if (per instanceof LifeCycleManaged) {
+					LifeCycleManaged lcm = (LifeCycleManaged) per;
+					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("INWORK"));
+				}
+				WorkDataHelper.service.create(per);
+			} else {
+				QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
+				if (qr.hasMoreElements()) {
+					WorkData d = (WorkData) qr.nextElement();
+					d.setProcess(false);
+					PersistenceHelper.manager.modify(d);
+				}
 			}
-			PersistenceHelper.manager.delete(m);
-
-			per = (Persistable) PersistenceHelper.manager.refresh(per);
-
-			QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
-			if (qr.hasMoreElements()) {
-				WorkData d = (WorkData) qr.nextElement();
-				PersistenceHelper.manager.delete(d);
-			}
-
-			per = (Persistable) PersistenceHelper.manager.refresh(per);
-
-			qr.reset();
-			qr = PersistenceHelper.manager.navigate((WTObject) per, "user", MailWTobjectLink.class, false);
-			while (qr.hasMoreElements()) {
-				MailWTobjectLink link = (MailWTobjectLink) qr.nextElement();
-				PersistenceHelper.manager.delete(link);
-			}
-			per = (Persistable) PersistenceHelper.manager.refresh(per);
-
-			// 상태값 작업중으로 변경
-			if (per instanceof LifeCycleManaged) {
-				LifeCycleManaged lcm = (LifeCycleManaged) per;
-				LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("INWORK"));
-			}
-
-			WorkDataHelper.service.create(per);
 
 			trs.commit();
 			trs = null;

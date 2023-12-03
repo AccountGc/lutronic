@@ -115,6 +115,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
+					dataField : "type",
+					headerText : "구분",
+					dataType : "string",
+					width : 80,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "number",
 					headerText : "EO/ECO 번호",
 					dataType : "string",

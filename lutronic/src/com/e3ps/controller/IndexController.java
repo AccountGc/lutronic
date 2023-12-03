@@ -113,6 +113,9 @@ public class IndexController extends BaseController {
 		if ("".equals(department_name)) {
 
 		}
+		
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
 
 		// 결재 재수
 		model.addObject("count", count);
@@ -134,6 +137,9 @@ public class IndexController extends BaseController {
 		model.addObject("isChange", isChange);
 		model.addObject("isEtc", isEtc);
 		model.addObject("dto", dto);
+		
+		
+		
 		model.setViewName("/extcore/layout/header.jsp");
 		return model;
 	}

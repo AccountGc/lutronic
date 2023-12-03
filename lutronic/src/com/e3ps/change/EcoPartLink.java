@@ -15,6 +15,12 @@ import wt.util.WTException;
 
 		properties = {
 
+				@GeneratedProperty(name = "rightPart", type = Boolean.class),
+
+				@GeneratedProperty(name = "leftPart", type = Boolean.class),
+
+				@GeneratedProperty(name = "past", type = Boolean.class, javaDoc = "고도화 이전 여부"),
+
 				@GeneratedProperty(name = "version", type = String.class, constraints = @PropertyConstraints(upperLimit = 10)),
 
 				@GeneratedProperty(name = "visible", type = boolean.class, initialValue = "true"),
