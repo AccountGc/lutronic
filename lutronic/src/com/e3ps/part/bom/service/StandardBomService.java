@@ -17,6 +17,7 @@ import wt.services.StandardManager;
 import wt.util.WTException;
 import wt.vc.wip.CheckoutLink;
 import wt.vc.wip.WorkInProgressHelper;
+import wt.vc.wip.WorkInProgressServerHelper;
 
 public class StandardBomService extends StandardManager implements BomService {
 
@@ -63,9 +64,9 @@ public class StandardBomService extends StandardManager implements BomService {
 	}
 
 	@Override
-	public Map<String, Object> undoCheckOut(String oid) throws Exception {
+	public Map<String, Object> undocheckout(String oid) throws Exception {
 		// 화면에서 막기에 체크 안한다..
-		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -73,8 +74,8 @@ public class StandardBomService extends StandardManager implements BomService {
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
 			WTPart origin = (WTPart) WorkInProgressHelper.service.undoCheckout(part);
 
-			result.put("oid", origin.getPersistInfo().getObjectIdentifier().getStringValue());
-			result.put("isCheckOut", false);
+			JSONObject node = BomHelper.manager.getNode(origin);
+			map.put("resNode", node);
 
 			trs.commit();
 		} catch (Exception e) {
@@ -85,29 +86,66 @@ public class StandardBomService extends StandardManager implements BomService {
 			if (trs != null)
 				trs.rollback();
 		}
-		return result;
+		return map;
 	}
 
 	@Override
 	public Map<String, Object> checkout(String oid) throws Exception {
 		Map<String, Object> map = new HashMap<>();
-		WTPart part = (WTPart) CommonUtil.getObject(oid);
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
 
-		WTPart workingCopy = null;
-		if (!WorkInProgressHelper.isCheckedOut(part)) {
-			Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
-			CheckoutLink clink = WorkInProgressHelper.service.checkout(part, cFolder, "");
-			workingCopy = (WTPart) clink.getWorkingCopy();
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+			WTPart workingCopy = null;
+			if (!WorkInProgressHelper.isCheckedOut(part)) {
+				Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
+				CheckoutLink clink = WorkInProgressHelper.service.checkout(part, cFolder, "");
+				workingCopy = (WTPart) clink.getWorkingCopy();
+			}
+
+			if (workingCopy != null) {
+				JSONObject node = BomHelper.manager.getNode(workingCopy);
+				map.put("resNode", node);
+			} else {
+				JSONObject node = BomHelper.manager.getNode(part);
+				map.put("resNode", node);
+			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+		} finally {
+			if (trs != null)
+				trs.rollback();
 		}
 
-		if (workingCopy != null) {
-			JSONObject node = BomHelper.manager.getNode(workingCopy);
-			map.put("resNode", node);
-		} else {
-			JSONObject node = BomHelper.manager.getNode(part);
-			map.put("resNode", node);
-		}
+		return map;
+	}
 
+	@Override
+	public Map<String, Object> checkin(String oid) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
+			WTPart newPart = (WTPart) WorkInProgressHelper.service.checkin(part, "");
+			JSONObject node = BomHelper.manager.getNode(newPart);
+
+			map.put("resNode", node);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 		return map;
 	}
 }

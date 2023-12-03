@@ -99,14 +99,14 @@ public class BomHelper {
 		rootNode.put("icon", "/Windchill/wtcore/images/part.gif");
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
-		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
+//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
 		if (isCheckOut) {
 			rootNode.put("icon", "/Windchill/wtcore/images/part_checkout.png");
 			rootNode.put("isCheckOut", isCheckOut);
 		}
-		if (isWorkCopy) {
-			rootNode.put("isWorkCopy", isWorkCopy);
-		}
+//		if (isWorkCopy) {
+//			rootNode.put("isWorkCopy", isWorkCopy);
+//		}
 
 		JSONArray children = new JSONArray();
 
@@ -148,15 +148,15 @@ public class BomHelper {
 			node.put("qty", link.getQuantity().getAmount());
 			node.put("expanded", false);
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			node.put("icon", "/Windchill/wtcore/images/part.gif");
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(p, view, state, skip);
 			if (!isLazy) {
@@ -253,13 +253,13 @@ public class BomHelper {
 		rootNode.put("manufacture", IBAUtils.getStringValue(end, "MANUFACTURE"));
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(end);
-		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(end);
+//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(end);
 		if (isCheckOut) {
 			rootNode.put("isCheckOut", isCheckOut);
 		}
-		if (isWorkCopy) {
-			rootNode.put("isWorkCopy", isWorkCopy);
-		}
+//		if (isWorkCopy) {
+//			rootNode.put("isWorkCopy", isWorkCopy);
+//		}
 
 		WTPartMaster master = (WTPartMaster) end.getMaster();
 		QuerySpec query = new QuerySpec();
@@ -330,13 +330,13 @@ public class BomHelper {
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(master, view, state, skip);
 			if (!isLazy) {
@@ -385,13 +385,13 @@ public class BomHelper {
 		rootNode.put("manufacture", IBAUtils.getStringValue(end, "MANUFACTURE"));
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(end);
-		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(end);
+//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(end);
 		if (isCheckOut) {
 			rootNode.put("isCheckOut", isCheckOut);
 		}
-		if (isWorkCopy) {
-			rootNode.put("isWorkCopy", isWorkCopy);
-		}
+//		if (isWorkCopy) {
+//			rootNode.put("isWorkCopy", isWorkCopy);
+//		}
 
 		WTPartMaster master = (WTPartMaster) end.getMaster();
 		QuerySpec query = new QuerySpec();
@@ -464,13 +464,13 @@ public class BomHelper {
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(master, baseline, state, skip);
 			if (!isLazy) {
@@ -517,13 +517,13 @@ public class BomHelper {
 		rootNode.put("manufacture", IBAUtils.getStringValue(root, "MANUFACTURE"));
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
-		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
+//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
 		if (isCheckOut) {
 			rootNode.put("isCheckOut", isCheckOut);
 		}
-		if (isWorkCopy) {
-			rootNode.put("isWorkCopy", isWorkCopy);
-		}
+//		if (isWorkCopy) {
+//			rootNode.put("isWorkCopy", isWorkCopy);
+//		}
 
 		View view = ViewHelper.service.getView(root.getViewName());
 		State state = root.getLifeCycleState();
@@ -570,13 +570,13 @@ public class BomHelper {
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(p, view, state, skip);
 			if (!isLazy) {
@@ -623,13 +623,13 @@ public class BomHelper {
 		rootNode.put("manufacture", IBAUtils.getStringValue(root, "MANUFACTURE"));
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
-		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
+//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
 		if (isCheckOut) {
 			rootNode.put("isCheckOut", isCheckOut);
 		}
-		if (isWorkCopy) {
-			rootNode.put("isWorkCopy", isWorkCopy);
-		}
+//		if (isWorkCopy) {
+//			rootNode.put("isWorkCopy", isWorkCopy);
+//		}
 
 		Baseline baseLine = (Baseline) CommonUtil.getObject(baseline);
 		JSONArray children = new JSONArray();
@@ -675,13 +675,13 @@ public class BomHelper {
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(p, baseLine, skip);
 			if (!isLazy) {
@@ -799,13 +799,13 @@ public class BomHelper {
 			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(master, view, state, skip);
 			if (!isLazy) {
@@ -896,13 +896,13 @@ public class BomHelper {
 			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(master, baseline, state, skip);
 			if (!isLazy) {
@@ -966,13 +966,13 @@ public class BomHelper {
 			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(p, view, state, skip);
 			if (!isLazy) {
@@ -1032,13 +1032,13 @@ public class BomHelper {
 			node.put("ecoNo", IBAUtils.getStringValue(p, "CHANGENO"));
 			node.put("manufacture", IBAUtils.getStringValue(p, "MANUFACTURE"));
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(p, baseLine, skip);
 			if (!isLazy) {
@@ -1335,15 +1335,15 @@ public class BomHelper {
 			node.put("qty", link.getQuantity().getAmount());
 			node.put("expanded", false);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
+//			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			node.put("icon", "/Windchill/wtcore/images/part.gif");
 			if (isCheckOut) {
 				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
 				node.put("isCheckOut", isCheckOut);
 			}
-			if (isWorkCopy) {
-				node.put("isWorkCopy", isWorkCopy);
-			}
+//			if (isWorkCopy) {
+//				node.put("isWorkCopy", isWorkCopy);
+//			}
 
 			boolean isLazy = isLazy(p, view, state, skip);
 			if (!isLazy) {
@@ -1363,17 +1363,21 @@ public class BomHelper {
 	public JSONObject getNode(WTPart part) throws Exception {
 		JSONObject node = new JSONObject();
 		node.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+		node.put("version", part.getVersionIdentifier().getSeries().getValue() + "."
+				+ part.getIterationIdentifier().getSeries().getValue());
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(part);
-		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(part);
+//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(part);
 		if (isCheckOut) {
-			System.out.println("체크아웃이냐?");
 			node.put("isCheckOut", isCheckOut);
 			node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
+		} else {
+			node.put("isCheckOut", isCheckOut);
+			node.put("icon", "/Windchill/wtcore/images/part.gif");
 		}
-		if (isWorkCopy) {
-			System.out.println("복사본이냐");
-			node.put("isWorkCopy", isWorkCopy);
-		}
+//		if (isWorkCopy) {
+//			System.out.println("복사본이냐");
+//			node.put("isWorkCopy", isWorkCopy);
+//		}
 		return node;
 	}
 }

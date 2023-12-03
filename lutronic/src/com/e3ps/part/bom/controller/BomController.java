@@ -68,14 +68,29 @@ public class BomController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "BOM 체크아웃 취소 제거")
-	@GetMapping(value = "/undoCheckOut")
+	@Description(value = "BOM 체크아웃 취소")
+	@GetMapping(value = "/undocheckout")
 	@ResponseBody
-	public Map<String, Object> undoCheckOut(@RequestParam String oid) throws Exception {
+	public Map<String, Object> undocheckout(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			Map<String, Object> item = BomHelper.service.undoCheckOut(oid);
-			result.put("item", item);
+			result = BomHelper.service.undocheckout(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 체크인")
+	@GetMapping(value = "/checkin")
+	@ResponseBody
+	public Map<String, Object> checkin(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = BomHelper.service.checkin(oid);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,12 +209,12 @@ public class BomController extends BaseController {
 		}
 		return list;
 	}
-	
+
 	@Description(value = "BOM 에디터 체크아웃")
 	@GetMapping(value = "/checkout")
 	@ResponseBody
 	public Map<String, Object> checkout(@RequestParam String oid) throws Exception {
-		 Map<String, Object> result = new HashMap<>();
+		Map<String, Object> result = new HashMap<>();
 		try {
 			result = BomHelper.service.checkout(oid);
 			result.put("result", SUCCESS);

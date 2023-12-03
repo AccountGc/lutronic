@@ -15,10 +15,15 @@ public interface BomService {
 	/**
 	 * 체크아웃 취소
 	 */
-	public abstract Map<String, Object> undoCheckOut(String oid) throws Exception;
+	public abstract Map<String, Object> undocheckout(String oid) throws Exception;
 
 	/**
 	 * 체크아웃후 변경된 노드 리턴
 	 */
 	public abstract Map<String, Object> checkout(String oid) throws Exception;
+
+	/**
+	 * 체크인 후 변경된 노드 리턴
+	 */
+	public abstract Map<String, Object> checkin(String oid) throws Exception;
 }

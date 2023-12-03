@@ -224,6 +224,14 @@ WTPart root = (WTPart) request.getAttribute("root");
 						"name" : "체크아웃",
 						"icon" : "quit"
 					},
+					"undocheckout" : {
+						"name" : "체크아웃취소",
+						"icon" : "quit"
+					},
+					"checkin" : {
+						"name" : "체크인",
+						"icon" : "quit"
+					},
 					"sep2" : "---------",
 					"fold1" : {
 						"name" : "Sub group",
@@ -266,7 +274,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 					}
 				},
 				actions : function(node, action, options) {
-					logger(options);
 					process(node, action);
 				}
 			},
@@ -279,14 +286,50 @@ WTPart root = (WTPart) request.getAttribute("root");
 		let url;
 		const oid = node.data.oid;
 		const params = new Object();
+		openLayer();
+		logger(oid);
 		if (action === "checkout") {
 			url = getCallUrl("/bom/checkout?oid=" + oid);
-			logger(params);
 			call(url, params, function(data) {
 				if (data.result) {
-
+					const resNode = data.resNode;
+					refresh(node, resNode);
 				}
+				closeLayer();
 			}, "GET");
+		} else if (action === "undocheckout") {
+			url = getCallUrl("/bom/undocheckout?oid=" + oid);
+			call(url, params, function(data) {
+				if (data.result) {
+					const resNode = data.resNode;
+					refresh(node, resNode);
+				}
+				closeLayer();
+			}, "GET");
+		} else if (action === "checkin") {
+			url = getCallUrl("/bom/checkin?oid=" + oid);
+			call(url, params, function(data) {
+				if (data.result) {
+					const resNode = data.resNode;
+					refresh(node, resNode);
+				}
+				closeLayer();
+			}, "GET");
+		}
+	}
+
+	function refresh(node, resNode) {
+		node.fromDict({
+			id : resNode.oid,
+			icon : resNode.icon,
+			data : {
+				oid : resNode.oid,
+				version : resNode.version
+			}
+		});
+		if (node.isLazy()) {
+			node.resetLazy();
+			node.load();
 		}
 	}
 
