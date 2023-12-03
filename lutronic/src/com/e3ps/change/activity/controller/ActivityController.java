@@ -430,7 +430,7 @@ public class ActivityController extends BaseController {
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
 		EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(eoid);
 		EChangeOrder eco = (EChangeOrder) eca.getEo();
-		JSONArray tree = BomHelper.manager.loadEditor(root);
+		JSONArray tree = BomHelper.manager.loadEditor(root, true);
 		model.addObject("oid", oid);
 		model.addObject("eco", eco);
 		model.addObject("eoid", eco.getPersistInfo().getObjectIdentifier().getStringValue());

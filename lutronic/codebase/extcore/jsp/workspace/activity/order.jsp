@@ -574,7 +574,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 					break;
 				case 1:
 					// bom 에디터
-					_popup(getCallUrl("/activity/editor?oid=" + next_oid + "&eoid=" + oid), 1800, 750, "n");
+					_popup(getCallUrl("/bom/editor?oid=" + next_oid + "&eoid=" + oid), 1800, 750, "n");
 					break;
 				case 2:
 					// bom 비교

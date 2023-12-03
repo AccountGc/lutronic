@@ -91,8 +91,8 @@ public class BomController extends BaseController {
 	public Map<String, Object> reload(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			JSONArray tree = BomHelper.manager.loadEditor(oid);
-			result.put("tree", tree);
+//			JSONArray tree = BomHelper.manager.loadEditor(oid, true);
+//			result.put("tree", tree);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,5 +193,21 @@ public class BomController extends BaseController {
 			e.printStackTrace();
 		}
 		return list;
+	}
+	
+	@Description(value = "BOM 에디터 체크아웃")
+	@GetMapping(value = "/checkout")
+	@ResponseBody
+	public Map<String, Object> checkout(@RequestParam String oid) throws Exception {
+		 Map<String, Object> result = new HashMap<>();
+		try {
+			result = BomHelper.service.checkout(oid);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

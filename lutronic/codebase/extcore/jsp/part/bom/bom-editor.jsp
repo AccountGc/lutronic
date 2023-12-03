@@ -220,8 +220,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 						"disabled" : true
 					},
 					"sep1" : "---------",
-					"quit" : {
-						"name" : "Quit",
+					"checkout" : {
+						"name" : "체크아웃",
 						"icon" : "quit"
 					},
 					"sep2" : "---------",
@@ -266,11 +266,247 @@ WTPart root = (WTPart) request.getAttribute("root");
 					}
 				},
 				actions : function(node, action, options) {
-					$("#selected-action").text("Selected action '" + action + "' on node " + node + ".");
+					logger(options);
+					process(node, action);
 				}
 			},
 		});
 		selectbox("depth");
 	});
-	
+
+	// 마우스 우클릭 액션
+	function process(node, action) {
+		let url;
+		const oid = node.data.oid;
+		const params = new Object();
+		if (action === "checkout") {
+			url = getCallUrl("/bom/checkout?oid=" + oid);
+			logger(params);
+			call(url, params, function(data) {
+				if (data.result) {
+
+				}
+			}, "GET");
+		}
+	}
+
+	$(function() {
+		// 		$("#bomEditView").contextmenu({
+		// 			delegate : "span.fancytree-node",
+		// 			menu : [ {
+		// 				title : "새 보기 버전",
+		// 				cmd : "newViewVersion",
+		// 				uiIcon : "ui-icon-newpart",
+		// 			}, {
+		// 				title : "----"
+		// 			}, {
+		// 				title : "확장",
+		// 				uiIcon : "ui-icon-expand",
+		// 				children : [ {
+		// 					title : "1 레벨",
+		// 					cmd : "l1expands",
+		// 					uiIcon : "ui-icon-expand",
+		// 				}, {
+		// 					title : "2 레벨",
+		// 					cmd : "l2expands",
+		// 					uiIcon : "ui-icon-expand",
+		// 				}, {
+		// 					title : "3 레벨",
+		// 					cmd : "l3expands",
+		// 					uiIcon : "ui-icon-expand",
+		// 				}, {
+		// 					title : "4 레벨",
+		// 					cmd : "l4expands",
+		// 					uiIcon : "ui-icon-expand",
+		// 				}, {
+		// 					title : "전체확장",
+		// 					cmd : "expands",
+		// 					uiIcon : "ui-icon-expand",
+		// 				}, {
+		// 					title : "전체축소",
+		// 					cmd : "collapse",
+		// 					uiIcon : "ui-icon-collapse",
+		// 				} ]
+		// 			}, {
+		// 				title : "----"
+		// 			}, {
+		// 				title : "삽입",
+		// 				uiIcon : "ui-icon-adds",
+		// 				cmd : "insert",
+		// 				disabled : true,
+		// 				children : [ {
+		// 					title : "신규부품추가",
+		// 					cmd : "addNewPart",
+		// 					uiIcon : "ui-icon-newpart",
+		// 				}, {
+		// 					title : "기존부품추가",
+		// 					cmd : "addExistPart",
+		// 					uiIcon : "ui-icon-oldpart",
+		// 				} ]
+		// 			}, {
+		// 				title : "구조변경",
+		// 				uiIcon : "ui-icon-structure",
+		// 				cmd : "struct",
+		// 				disabled : true,
+		// 				children : [ {
+		// 					title : "위로",
+		// 					cmd : "moveUp",
+		// 					uiIcon : "ui-icon-upPart",
+		// 					disabled : true,
+		// 				}, {
+		// 					title : "아래로",
+		// 					cmd : "moveDown",
+		// 					uiIcon : "ui-icon-downPart",
+		// 					disabled : true,
+		// 				}, {
+		// 					title : "오른쪽",
+		// 					cmd : "indent",
+		// 					uiIcon : "ui-icon-outdent",
+		// 					disabled : true,
+		// 				}, {
+		// 					title : "왼쪽",
+		// 					cmd : "outdent",
+		// 					uiIcon : "ui-icon-indent",
+		// 					disabled : true,
+		// 				} ]
+		// 			}, {
+		// 				title : "제거",
+		// 				cmd : "remove",
+		// 				uiIcon : "ui-icon-remove",
+		// 				disabled : true
+		// 			}, {
+		// 				title : "----"
+		// 			}, {
+		// 				title : "편집",
+		// 				uiIcon : "ui-icon-edits",
+		// 				children : [ {
+		// 					title : "개정",
+		// 					cmd : "revise",
+		// 					uiIcon : "ui-icon-revise",
+		// 					disabled : true
+		// 				}, {
+		// 					title : "체크인",
+		// 					cmd : "checkin",
+		// 					uiIcon : "ui-icon-checkin",
+		// 					disabled : true
+		// 				}, {
+		// 					title : "체크아웃",
+		// 					cmd : "checkout",
+		// 					uiIcon : "ui-icon-checkout",
+		// 					disabled : true
+		// 				}, {
+		// 					title : "체크아웃취소",
+		// 					cmd : "undocheckout",
+		// 					uiIcon : "ui-icon-undocheckout",
+		// 					disabled : true
+		// 				} ]
+		// 			}, {
+		// 				title : "----"
+		// 			}, {
+		// 				title : "잘라내기",
+		// 				cmd : "cut",
+		// 				uiIcon : "ui-icon-cut",
+		// 				disabled : true,
+		// 			}, {
+		// 				title : "복사하기",
+		// 				cmd : "copy",
+		// 				uiIcon : "ui-icon-copy",
+		// 				disabled : true,
+		// 			}, {
+		// 				title : "붙여넣기",
+		// 				cmd : "paste",
+		// 				uiIcon : "ui-icon-paste",
+		// 				disabled : true,
+		// 			}, {
+		// 				title : "비우기",
+		// 				cmd : "empty",
+		// 				uiIcon : "ui-icon-empty",
+		// 				disabled : true,
+		// 			}, ],
+		// 			beforeOpen : function(event, ui) {
+		// 				var node = $.ui.fancytree.getNode(ui.target);
+
+		// 				var type = node.type;
+		// 				var struct = true;
+		// 				if (type == "root") {
+		// 					struct = false;
+		// 				}
+
+		// 				refNode = node.getPrevSibling();
+		// 				var indent = true;
+		// 				if (refNode != undefined) {
+		// 					if (refNode != undefined) {
+		// 						if (node.data.treeKey === refNode.data.treeKey) {
+		// 							indent = false;
+		// 						}
+
+		// 						if (refNode.data.state === "릴리즈됨" || refNode.data.state === "결재 중" || refNode.data.state === "폐기") {
+		// 							indent = false;
+		// 						}
+		// 					}
+		// 				}
+
+		// 				var moveup = true;
+		// 				if (node.parent.data.state === "릴리즈됨" || node.parent.data.state === "결재 중" || node.parent.data.state === "폐기") {
+		// 					moveup = false;
+		// 				}
+
+		// 				var movedown = true;
+		// 				if (node.parent.data.state === "릴리즈됨" || node.parent.data.state === "결재 중" || node.parent.data.state === "폐기") {
+		// 					movedown = false;
+		// 				}
+
+		// 				var outdent = true;
+		// 				if (node.parent.parent != undefined) {
+		// 					if (node.parent.parent.data.state === "릴리즈됨" || node.parent.parent.data.state === "결재 중" || node.parent.parent.data.state === "폐기") {
+		// 						outdent = false;
+		// 					}
+		// 				}
+
+		// 				var remove = true;
+		// 				if (node.parent != undefined) {
+		// 					if (node.parent.data.state === "릴리즈됨" || node.parent.data.state === "결재 중" || node.parent.data.state === "폐기") {
+		// 						remove = false;
+		// 					}
+		// 				}
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "paste", !!CLIPBOARD);
+		// 				$("#bomEditView").contextmenu("enableEntry", "empty", !!CLIPBOARD);
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "remove", node.type !== "root" && remove);
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "insert", (node.data.state !== "릴리즈됨" && node.data.state !== "결재 중" && node.data.state !== "폐기"));
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "checkout", node.data.cstate === "c/i" && (node.data.state !== "릴리즈됨" && node.data.state !== "결재 중" && node.data.state !== "폐기"));
+		// 				$("#bomEditView").contextmenu("enableEntry", "checkin", node.data.cstate === "wrk" || node.data.cstate === "c/o");
+		// 				$("#bomEditView").contextmenu("enableEntry", "undocheckout", node.data.cstate === "wrk" || node.data.cstate === "c/o");
+		// 				$("#bomEditView").contextmenu("enableEntry", "revise", (node.data.cstate === "c/i" && node.data.state === "릴리즈됨"));
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "struct", (node.parent.data.state !== "릴리즈됨" && node.parent.data.state !== "결재 중" && node.parent.data.state !== "폐기"));
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "indent", (node.parent.data.state !== "릴리즈됨" && node.parent.data.state !== "결재 중" && node.parent.data.state !== "폐기") && (indent && struct));
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "outdent", (outdent && struct));
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "moveUp", (moveup && struct));
+		// 				$("#bomEditView").contextmenu("enableEntry", "moveDown", (movedown && struct));
+
+		// 				$("#bomEditView").contextmenu("enableEntry", "copy", node.type != "root");
+		// 				$("#bomEditView").contextmenu("enableEntry", "cut", node.type != "root");
+
+		// 				node.setActive();
+		// 			},
+		// 			select : function(event, ui) {
+		// 				var that = this;
+		// 				// delay the event, so the menu can close and the
+		// 				// click event does
+		// 				// not interfere with the edit control
+		// 				setTimeout(function() {
+		// 					$(that).trigger("nodeCommand", {
+		// 						cmd : ui.cmd
+		// 					});
+		// 				}, 100);
+		// 			},
+		// 		});
+	})
 </script>

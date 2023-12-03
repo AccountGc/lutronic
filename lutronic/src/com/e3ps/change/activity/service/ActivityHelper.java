@@ -353,9 +353,11 @@ public class ActivityHelper {
 			Object[] obj = (Object[]) qr.nextElement();
 			EcoPartLink link = (EcoPartLink) obj[0];
 			WTPartMaster master = link.getPart();
-
 			Map<String, Object> map = new HashMap<String, Object>();
-
+			String version = link.getVersion();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
+			boolean isPast = link.getPast(); // 고도화 전 데이터이냐 아니냐
+			if (!isPast) {
 //			boolean isDummy = EChangeUtils.isDummy(master.getNumber());
 //			// 더미 제외
 //			if (dummyCheck && isDummy) {
@@ -364,107 +366,113 @@ public class ActivityHelper {
 //				}
 //			}
 
-			String version = link.getVersion();
-			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
-			boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
-			boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
-			// 승인됨의 경우 개정 프로세스
-			// 나머지 작업중인건 개정된 부품쪽으로 이동f
+				boolean isRight = link.getRightPart();
+				boolean isLeft = link.getLeftPart();
 
-			String link_oid = link.getPersistInfo().getObjectIdentifier().getStringValue();
-			String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
-			boolean isRevise = link.isRevise(); // 개정여부?
-			boolean preOrder = link.getPreOrder();
-			map.put("oid", oid); // 활동 혹은 ECO OID
-			map.put("link_oid", link_oid);
-			map.put("delivery", link.getDelivery());
-			map.put("complete", link.getComplete());
-			map.put("inner", link.getInner());
-			map.put("order", link.getOrders());
-			map.put("part_state_code", link.getPartStateCode());
-			map.put("preOrder", preOrder);
-			if (isApproved) {
-				// 개정 데이터
-				map.put("part_oid", part_oid);
-				map.put("part_number", part.getNumber());
-				map.put("part_creator", part.getCreatorFullName());
-				map.put("part_name", part.getName());
-				map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
-						+ part.getIterationIdentifier().getSeries().getValue());
-				map.put("part_state", part.getLifeCycleState().getDisplay());
+				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
+				// 승인됨의 경우 개정 프로세스
+				// 나머지 작업중인건 개정된 부품쪽으로 이동f
 
-				// 개정된 데이터가 없을 경우
-				if (!isRevise && !isFour) {
-					map.put("next_oid", "");
-					map.put("group", "");
-					map.put("next_number", "개정된 데이터가 없습니다.");
-					map.put("next_name", "개정된 데이터가 없습니다.");
-					map.put("next_state", "개정된 데이터가 없습니다.");
-					map.put("next_version", "개정된 데이터가 없습니다.");
-					map.put("next_creator", "개정된 데이터가 없습니다.");
-					map.put("epm_number", "개정된 데이터가 없습니다.");
-					map.put("reference", "개정된 데이터가 없습니다.");
-					map.put("after", true);
-					map.put("afterMerge", true);
-				} else {
+				String link_oid = link.getPersistInfo().getObjectIdentifier().getStringValue();
+				String part_oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+				boolean isRevise = link.isRevise(); // 개정여부?
+				boolean preOrder = link.getPreOrder();
+				map.put("oid", oid); // 활동 혹은 ECO OID
+				map.put("link_oid", link_oid);
+				map.put("delivery", link.getDelivery());
+				map.put("complete", link.getComplete());
+				map.put("inner", link.getInner());
+				map.put("order", link.getOrders());
+				map.put("part_state_code", link.getPartStateCode());
+				map.put("preOrder", preOrder);
+//				if (isApproved) {
+				if(isLeft) {
+					// 개정 데이터
+					map.put("part_oid", part_oid);
+					map.put("part_number", part.getNumber());
+					map.put("part_creator", part.getCreatorFullName());
+					map.put("part_name", part.getName());
+					map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
+							+ part.getIterationIdentifier().getSeries().getValue());
+					map.put("part_state", part.getLifeCycleState().getDisplay());
 
-					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
-					String group = EChangeUtils.manager.getPartGroup(next_part, eco);
+					// 개정된 데이터가 없을 경우
+					if (!isRevise && !isFour) {
+						map.put("next_oid", "");
+						map.put("group", "");
+						map.put("next_number", "개정된 데이터가 없습니다.");
+						map.put("next_name", "개정된 데이터가 없습니다.");
+						map.put("next_state", "개정된 데이터가 없습니다.");
+						map.put("next_version", "개정된 데이터가 없습니다.");
+						map.put("next_creator", "개정된 데이터가 없습니다.");
+						map.put("epm_number", "개정된 데이터가 없습니다.");
+						map.put("reference", "개정된 데이터가 없습니다.");
+						map.put("after", true);
+						map.put("afterMerge", true);
+					} else {
+
+						WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
+						String group = EChangeUtils.manager.getPartGroup(next_part, eco);
+
+						// 개정데이터가 있을경우
+						map.put("group", group);
+						map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("next_number", next_part.getNumber());
+						map.put("next_name", next_part.getName());
+						map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
+								+ next_part.getIterationIdentifier().getSeries().getValue());
+						map.put("next_creator", next_part.getCreatorFullName());
+						map.put("next_state", next_part.getLifeCycleState().getDisplay());
+						map.put("after", false);
+						map.put("afterMerge", false);
+					}
+					map.put("prev", false);
+				} else if(isRight) {
+
+					// 이전 부품
+					WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
+
+					String group = EChangeUtils.manager.getPartGroup(part, eco);
 
 					// 개정데이터가 있을경우
 					map.put("group", group);
-					map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
-					map.put("next_number", next_part.getNumber());
-					map.put("next_name", next_part.getName());
-					map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
-							+ next_part.getIterationIdentifier().getSeries().getValue());
-					map.put("next_creator", next_part.getCreatorFullName());
-					map.put("next_state", next_part.getLifeCycleState().getDisplay());
+					map.put("next_oid", part_oid);
+					map.put("next_number", part.getNumber());
+					map.put("next_name", part.getName());
+					map.put("next_version", part.getVersionIdentifier().getSeries().getValue() + "."
+							+ part.getIterationIdentifier().getSeries().getValue());
+					map.put("next_creator", part.getCreatorFullName());
+					map.put("next_state", part.getLifeCycleState().getDisplay());
+
+					if (pre_part == null) {
+						map.put("part_oid", "");
+						map.put("part_number", "개정전 데이터가 없습니다.");
+						map.put("part_name", "개정전 데이터가 없습니다.");
+						map.put("part_state", "개정전 데이터가 없습니다.");
+						map.put("part_version", "개정전 데이터가 없습니다.");
+						map.put("part_creator", "개정전 데이터가 없습니다.");
+
+						map.put("preMerge", true);
+						map.put("prev", true);
+					} else {
+						map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("part_number", pre_part.getNumber());
+						map.put("part_name", pre_part.getName());
+						map.put("part_state", pre_part.getLifeCycleState().getDisplay());
+						map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
+								+ pre_part.getIterationIdentifier().getSeries().getValue());
+						map.put("part_creator", pre_part.getCreatorFullName());
+						map.put("preMerge", false);
+						map.put("prev", false);
+					}
 					map.put("after", false);
-					map.put("afterMerge", false);
 				}
-				map.put("prev", false);
+				list.add(map);
+				// 위로 고도화 데이터
 			} else {
-
-				// 이전 부품
-				WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
-
-				String group = EChangeUtils.manager.getPartGroup(part, eco);
-
-				// 개정데이터가 있을경우
-				map.put("group", group);
-				map.put("next_oid", part_oid);
-				map.put("next_number", part.getNumber());
-				map.put("next_name", part.getName());
-				map.put("next_version", part.getVersionIdentifier().getSeries().getValue() + "."
-						+ part.getIterationIdentifier().getSeries().getValue());
-				map.put("next_creator", part.getCreatorFullName());
-				map.put("next_state", part.getLifeCycleState().getDisplay());
-
-				if (pre_part == null) {
-					map.put("part_oid", "");
-					map.put("part_number", "개정전 데이터가 없습니다.");
-					map.put("part_name", "개정전 데이터가 없습니다.");
-					map.put("part_state", "개정전 데이터가 없습니다.");
-					map.put("part_version", "개정전 데이터가 없습니다.");
-					map.put("part_creator", "개정전 데이터가 없습니다.");
-
-					map.put("preMerge", true);
-					map.put("prev", true);
-				} else {
-					map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
-					map.put("part_number", pre_part.getNumber());
-					map.put("part_name", pre_part.getName());
-					map.put("part_state", pre_part.getLifeCycleState().getDisplay());
-					map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."
-							+ pre_part.getIterationIdentifier().getSeries().getValue());
-					map.put("part_creator", pre_part.getCreatorFullName());
-					map.put("preMerge", false);
-					map.put("prev", false);
-				}
-				map.put("after", false);
+				// 아래 과거 데이터
 			}
-			list.add(map);
 		}
 
 		return list;

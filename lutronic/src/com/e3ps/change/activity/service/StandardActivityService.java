@@ -16,7 +16,6 @@ import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.PartGroupLink;
-import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -27,10 +26,8 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import wt.content.ApplicationData;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
@@ -746,6 +743,18 @@ public class StandardActivityService extends StandardManager implements Activity
 				link.setVersion(part.getVersionIdentifier().getSeries().getValue());
 				link.setBaseline(true);
 				link.setPreOrder(false);
+
+				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
+//				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
+				// 승인된 데이터는 왼쪽으로
+				if (isApproved) {
+					link.setRightPart(false);
+					link.setLeftPart(true);
+				} else {
+					link.setLeftPart(false);
+					link.setRightPart(true);
+				}
+				link.setPast(false); // 과거 데이터가 아님
 				PersistenceHelper.manager.save(link);
 
 				WTPart prevPart = ActivityHelper.manager.prevPart(part.getNumber());
@@ -765,14 +774,11 @@ public class StandardActivityService extends StandardManager implements Activity
 					WTPart endPart = (WTPart) CommonUtil.getObject(s);
 					WTPartMaster mm = (WTPartMaster) endPart.getMaster();
 
-					
 					QuerySpec query = new QuerySpec();
 					int idx = query.appendClassList(EOCompletePartLink.class, true);
 					QuerySpecUtils.toEqualsAnd(query, idx, EOCompletePartLink.class, "roleAObjectRef.key.id", mm);
 					QuerySpecUtils.toEqualsAnd(query, idx, EOCompletePartLink.class, "roleBObjectRef.key.id", eco);
-//					QueryResult qr = PersistenceHelper.manager.navigate(mm, "eco", EOCompletePartLink.class);
 					QueryResult qr = PersistenceHelper.manager.find(query);
-					System.out.println("qr="+qr.size());
 					// 링크된게 없을 경우에만..
 					if (qr.size() == 0) {
 						EOCompletePartLink cLink = EOCompletePartLink.newEOCompletePartLink(mm, eco);

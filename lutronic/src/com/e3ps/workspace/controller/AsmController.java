@@ -1,6 +1,5 @@
 package com.e3ps.workspace.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.dto.DocumentDTO;
-import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.workspace.dto.AsmDTO;
 import com.e3ps.workspace.service.AsmHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
-
-import net.sf.json.JSONArray;
+import com.ptc.windchill.uwgm.proesrv.createesrdoc.AsmDocUtility;
 
 @Controller
 @RequestMapping(value = "/asm/**")
@@ -90,7 +85,7 @@ public class AsmController extends BaseController {
 	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
-		DocumentDTO dto = new DocumentDTO(oid);
+		AsmDTO dto = new AsmDTO(oid);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/workspace/asm-view");

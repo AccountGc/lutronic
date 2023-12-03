@@ -273,15 +273,17 @@ public class SendMail {
 
 	public void setHtmlAndFile(String htmlMessage, String[] fileNames) throws Exception {
 		MimeBodyPart htmlPart = new MimeBodyPart();
-		htmlPart.setDataHandler(new DataHandler(new ByteArrayDataSource2(htmlMessage, "text/html;charset=utf-8")));
-		htmlPart.setHeader("Content-Transfer-Encoding", "7bit");
+		htmlPart.setContent(htmlMessage, "text/html;charset=itf-8");
+//		htmlPart.setDataHandler(new DataHandler(new ByteArrayDataSource2(htmlMessage, "text/html;charset=euc-kr")));
+//		htmlPart.setHeader("Content-Transfer-Encoding", "7bit");
+//		htmlPart.setHeader("Content-Type", "multipart/mixed; charset=UTF-8");
 
 		MimeMultipart multiPart = new MimeMultipart();
 		multiPart.addBodyPart(htmlPart);
 
-		attachFileSourceArray(multiPart, fileNames);
+//		attachFileSourceArray(multiPart, fileNames);
 
-		multiPart.setSubType("mixed");
+//		multiPart.setSubType("mixed");
 		msg.setContent(multiPart);
 		msg.saveChanges();
 	}

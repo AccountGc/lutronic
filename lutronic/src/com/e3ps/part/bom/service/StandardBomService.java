@@ -3,9 +3,9 @@ package com.e3ps.part.bom.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.e3ps.change.EChangeOrder;
 import com.e3ps.common.util.CommonUtil;
 
+import net.sf.json.JSONObject;
 import wt.clients.vc.CheckInOutTaskLogic;
 import wt.fc.PersistenceHelper;
 import wt.folder.Folder;
@@ -86,5 +86,28 @@ public class StandardBomService extends StandardManager implements BomService {
 				trs.rollback();
 		}
 		return result;
+	}
+
+	@Override
+	public Map<String, Object> checkout(String oid) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+		WTPart workingCopy = null;
+		if (!WorkInProgressHelper.isCheckedOut(part)) {
+			Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
+			CheckoutLink clink = WorkInProgressHelper.service.checkout(part, cFolder, "");
+			workingCopy = (WTPart) clink.getWorkingCopy();
+		}
+
+		if (workingCopy != null) {
+			JSONObject node = BomHelper.manager.getNode(workingCopy);
+			map.put("resNode", node);
+		} else {
+			JSONObject node = BomHelper.manager.getNode(part);
+			map.put("resNode", node);
+		}
+
+		return map;
 	}
 }

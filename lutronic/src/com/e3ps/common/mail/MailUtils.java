@@ -1,32 +1,20 @@
 package com.e3ps.common.mail;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Vector;
 
 import com.e3ps.change.ECOChange;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
-import com.e3ps.common.jdf.config.ConfigEx;
-import com.e3ps.common.jdf.config.ConfigExImpl;
-import com.e3ps.common.message.Message;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.workspace.AsmApproval;
 
 import wt.doc.WTDocument;
-import wt.fc.WTObject;
 import wt.lifecycle.LifeCycleManaged;
-import wt.org.WTPrincipalReference;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.session.SessionHelper;
-import wt.workflow.definer.WfAssignedActivityTemplate;
-import wt.workflow.engine.WfActivity;
-import wt.workflow.engine.WfProcess;
-import wt.workflow.work.WorkItem;
 
 public class MailUtils {
 
@@ -39,7 +27,7 @@ public class MailUtils {
 	/**
 	 * 결재선 지정 메일
 	 */
-	public void sendWorkDataMail(LifeCycleManaged lcm, String workName) throws Exception {
+	public void sendWorkDataMail(LifeCycleManaged lcm, String workName, String loc) throws Exception {
 		Hashtable<String, Object> hash = new Hashtable<>();
 		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
 
@@ -48,12 +36,15 @@ public class MailUtils {
 
 		HashMap<String, String> to = new HashMap<>();
 		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
-		System.out.println("TO = " + toUser.getEMail() + ", Name = " + toUser.getFullName());
+		if (!StringUtil.checkString(toUser.getEMail())) {
+			throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
+		}
+
 		to.put(toUser.getEMail(), toUser.getFullName());
 
 		Hashtable<String, String> data = setParseData(lcm);
 		data.put("workName", workName);
-		data.put("gubun", workName);
+		data.put("Location", loc);
 
 		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
 		String mcontent = mhct.htmlContent(data, "mail_notice.html");
@@ -74,19 +65,49 @@ public class MailUtils {
 
 		String description = "";
 		String creatorName = "";
+		String type = "";
+		String viewString = "";
 		if (lcm instanceof WTPart) {
 			WTPart part = (WTPart) lcm;
 			creatorName = part.getCreatorFullName();
 			description = "";
+			type = "부품";
+			viewString = part.getNumber() + "-[" + part.getName() + "]";
 		} else if (lcm instanceof ECOChange) {
 			ECOChange e = (ECOChange) lcm;
 			creatorName = e.getCreatorFullName();
 			description = e.getEoCommentA();
+			if ("CHANGE".equals(e.getEoType())) {
+				type = "ECO";
+			} else {
+				type = "EO";
+			}
+			viewString = e.getEoNumber() + "-[" + e.getEoName() + "]";
 		} else if (lcm instanceof WTDocument) {
 			WTDocument doc = (WTDocument) lcm;
 			creatorName = doc.getCreatorFullName();
 			description = doc.getDescription();
+			if (doc.getDocType().toString().equals("$$MMDocument")) {
+				type = "금형문서";
+			} else {
+				type = "문서";
+			}
+			viewString = doc.getNumber() + "-[" + doc.getName() + "]";
+		} else if (lcm instanceof ROHSMaterial) {
+			ROHSMaterial rohs = (ROHSMaterial) lcm;
+			creatorName = rohs.getCreatorFullName();
+			description = rohs.getDescription();
+			type = "RoHS";
+			viewString = rohs.getNumber() + "-[" + rohs.getName() + "]";
+		} else if (lcm instanceof AsmApproval) {
+			AsmApproval asm = (AsmApproval) lcm;
+			creatorName = asm.getCreatorFullName();
+			description = asm.getDescription();
+			type = "일괄결재";
+			viewString = asm.getNumber() + "-[" + asm.getName() + "]";
 		}
+		hash.put("viewString", viewString);
+		hash.put("gubun", type);
 		hash.put("creatorName", creatorName);
 		hash.put("description", description);
 		return hash;
@@ -148,7 +169,9 @@ public class MailUtils {
 
 		mail.setToMailAddress(emailsArray, tonameArray);
 		mail.setSubject(subject);
-		mail.setHtmlAndFile(content, new String[] {});
+//		mail.setText(content, "UTF-8");
+		mail.setHtml(content);
+//		mail.setHtmlAndFile(content, new String[] {});
 		mail.send(); // 메일 전송
 	}
 }

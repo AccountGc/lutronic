@@ -1356,4 +1356,24 @@ public class BomHelper {
 		}
 		return list;
 	}
+
+	/**
+	 * 변경된 노드 리턴
+	 */
+	public JSONObject getNode(WTPart part) throws Exception {
+		JSONObject node = new JSONObject();
+		node.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(part);
+		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(part);
+		if (isCheckOut) {
+			System.out.println("체크아웃이냐?");
+			node.put("isCheckOut", isCheckOut);
+			node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
+		}
+		if (isWorkCopy) {
+			System.out.println("복사본이냐");
+			node.put("isWorkCopy", isWorkCopy);
+		}
+		return node;
+	}
 }

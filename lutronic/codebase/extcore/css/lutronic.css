@@ -315,8 +315,9 @@ input[type="button"].gray {
 	letter-spacing: 1px;
 	line-height: 20px;
 	padding: 0px 10px 25px 10px;
-	border: 1px solid darkgray;
-	background: darkgray;
+/*	border: 1px solid darkgray;*/
+/*	background: darkgray;*/
+	background: navy;
 }
 
 /** 로딩 레이어 CSS **/
