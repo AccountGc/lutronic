@@ -279,6 +279,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/asm/list?number=ROHSBT', '> 문서관리 > 일괄결재검색');">일괄결재검색</a>
 					</li>
+<<<<<<< HEAD
 					<li>
 						<a onclick="moveToPage(this, '/rohs/listRohsFile', '> RoHS > 파일 검색');">파일 검색</a>
 					</li>
@@ -561,6 +562,290 @@ int eca = (int) request.getAttribute("eca");
 			<%
 			}
 			%>
+=======
+				<li>
+					<a onclick="moveToPage(this, '/rohs/listRohsFile', '> RoHS > 파일 검색');">파일 검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/listAUIRoHSPart', '> RoHS > 부품 현황');">부품 현황</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/listRoHSProduct', '> RoHS > 제품 현황');">제품 현황</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/all', '> RoHS > 물질 일괄결재');">물질 일괄결재</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄등록');">물질 일괄등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄링크');">물질 일괄링크</a>
+				</li>
+			</ul>
+		</li>
+		<%
+		}
+		if (isMold) {
+		%>
+		<li>
+			<a href="#">
+				<i class="fa fa-files-o"></i>
+				<span class="nav-label">금형관리</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');">금형 검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/mold/create', '> 금형관리 > 금형 등록');">금형 등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/mold/all', '> 금형관리 > 금형 일괄결재');">금형 일괄결재</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/asm/list?number=MMBT', '> 문서관리 > 일괄결재검색');">일괄결재검색</a>
+				</li>
+			</ul>
+		</li>
+		<%
+		}
+		if (isEtc) {
+		%>
+		<li>
+			<a href="css_animation.html">
+				<i class="fa fa-magic"></i>
+				<span class="nav-label">생산본부 문서관리</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a onclick="moveToPage(this, '/etc/create?type=production', '> 생산본부 문서관리 > 생산본부 문서등록');">생산본부 문서등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?type=production', '> 생산본부 문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서결재');">생산본부 문서결재</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="css_animation.html">
+				<i class="fa fa-magic"></i>
+				<span class="nav-label">병리연구 문서관리</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a onclick="moveToPage(this, '/etc/create?type=pathological', '> 병리연구 문서관리 > 병리연구 문서등록');">병리연구 문서등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?type=pathological', '> 병리연구 문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?docType=production', '> 병리연구 문서관리 > 병리연구 문서결재');">병리연구 문서결재</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="css_animation.html">
+				<i class="fa fa-magic"></i>
+				<span class="nav-label">임상개발 문서관리</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a onclick="moveToPage(this, '/etc/create?type=clinical', '> 임상개발 문서관리 > 임상개발 문서등록');">임상개발 문서등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?type=clinical', '> 임상개발  문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?docType=production', '> 임상개발 문서관리 > 임상개발 문서결재');">임상개발 문서결재</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="css_animation.html">
+				<i class="fa fa-magic"></i>
+				<span class="nav-label">RA팀 문서관리</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a onclick="moveToPage(this, '/etc/create?type=ra', '> RA팀 문서관리 > RA팀 문서등록');">RA팀 문서등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?type=ra', '> RA팀 문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?docType=production', '> RA팀 문서관리 > RA팀 문서결재');">RA팀 문서결재</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<a href="css_animation.html">
+				<i class="fa fa-magic"></i>
+				<span class="nav-label">화장품 문서관리</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a onclick="moveToPage(this, '/etc/create?type=cosmetic', '> 화장품 문서관리 > RA팀 문서등록');">화장품 문서등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?type=cosmetic', '> 화장품 문서관리 >  문서검색');">화장품 문서검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/etc/list?docType=production', '> 화장품 문서관리 > 화장품 문서결재');">화장품 문서결재</a>
+				</li>
+			</ul>
+		</li>
+		<%
+		}
+		if (isAdmin) {
+		%>
+		<li>
+			<a href="css_animation.html">
+				<i class="fa fa-magic"></i>
+				<span class="nav-label">관리자</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a onclick="moveToPage(this, '/code/list', '> 관리자 > 코드체계관리');">코드체계관리</a>
+				</li>
+				<!-- 					<li> -->
+				<!-- 						<a onclick="moveToPage(this, '/activity/list', '> 관리자 > 설계변경관리');">설계변경관리</a> -->
+				<!-- 					</li> -->
+				<li>
+					<a onclick="moveToPage(this, '/admin/mail', '> 관리자 > 외부메일관리');">외부메일관리</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/loginHistory/list', '> 관리자 > 접속이력관리');">접속이력관리</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/admin/downLoadHistory', '> 관리자 > 다운로드 이력관리');">다운로드 이력관리</a>
+				</li>
+				<li>
+					<a onclick="window.open('/Windchill','','scrollbars=yes, resizable=yes,height=800, width=1600');">Windchill</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/form/list', '> 관리자 > 문서 템플릿관리');">문서 템플릿관리</a>
+				</li>
+			</ul>
+		</li>
+		<%
+		}
+		%>
+		<%
+		if (isAdmin) {
+		%>
+		<li>
+			<a href="css_animation.html">
+				<i class="fa fa-magic"></i>
+				<span class="nav-label">배포관리</span>
+				<span class="fa arrow"></span>
+			</a>
+			<ul class="nav nav-second-level collapse">
+				<li>
+					<a href="#">
+						<i class="fa fa-magic"></i>
+						<span class="nav-label">나의 업무</span>
+						<span class="fa arrow"></span>
+					</a>
+					<ul class="nav nav-second-level collapse">
+						<li>
+							<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
+								합의함
+								<span class="label label-info float-right">
+									<%=count.get("agree")%>
+								</span>
+							</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
+								결재함
+								<span class="label label-info float-right">
+									<%=count.get("approval")%>
+								</span>
+							</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
+								수신함
+								<span class="label label-info float-right">
+									<%=count.get("receive")%>
+								</span>
+							</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i class="fa fa-desktop"></i>
+						<span class="nav-label">품목검색</span>
+						<span class="fa arrow"></span>
+					</a>
+					<ul class="nav nav-second-level collapse">
+						<li>
+							<a onclick="moveToPage(this, '/distribute/listPart', '> 품목관리 > 품목 검색');">품목 검색</a>
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/distribute/listProduction', '> 품목관리 > 완제품 검색');">완제품 검색</a>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#">
+						<i class="fa fa-files-o"></i>
+						<span class="nav-label">설계변경</span>
+						<span class="fa arrow"></span>
+					</a>
+					<ul class="nav nav-second-level collapse">
+						<li>
+							<a onclick="moveToPage(this, '/distribute/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
+							<!-- 								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a> -->
+						</li>
+						<li>
+							<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>
+							<!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/distribute/listDocument', '> 문서관리 > 문서 검색');">
+						<i class="fa fa-pie-chart"></i>
+						문서 검색
+					</a>
+					<!-- 						<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');"> -->
+					<!-- 							<i class="fa fa-pie-chart"></i> -->
+					<!-- 							<span class="nav-label">문서 검색</span> -->
+					<!-- 						</a> -->
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/distribute/listMold', '> 금형관리 > 금형 검색');">
+						<i class="fa fa-files-o"></i>
+						금형 검색
+					</a>
+					<!-- 						<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"> -->
+					<!-- 							<i class="fa fa-files-o"></i> -->
+					<!-- 							<span class="nav-label">금형 검색</span> -->
+					<!-- 						</a> -->
+				</li>
+			</ul>
+		</li>
+		<%
+		}
+		%>
+>>>>>>> 33a98b3421cc571ad0a6244bdf6f4adc721fc337
 		</ul>
 	</div>
 </nav>
