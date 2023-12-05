@@ -279,26 +279,25 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/asm/list?number=ROHSBT', '> 문서관리 > 일괄결재검색');">일괄결재검색</a>
 					</li>
-				</ul>
-			<li>
-				<a onclick="moveToPage(this, '/rohs/listRohsFile', '> RoHS > 파일 검색');">파일 검색</a>
-			</li>
-			<li>
-				<a onclick="moveToPage(this, '/rohs/listAUIRoHSPart', '> RoHS > 부품 현황');">부품 현황</a>
-			</li>
-			<li>
-				<a onclick="moveToPage(this, '/rohs/listRoHSProduct', '> RoHS > 제품 현황');">제품 현황</a>
-			</li>
-			<li>
-				<a onclick="moveToPage(this, '/rohs/all', '> RoHS > 물질 일괄결재');">물질 일괄결재</a>
-			</li>
-			<li>
-				<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄등록');">물질 일괄등록</a>
-			</li>
-			<li>
-				<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄링크');">물질 일괄링크</a>
-			</li>
-		</ul>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/listRohsFile', '> RoHS > 파일 검색');">파일 검색</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/listAUIRoHSPart', '> RoHS > 부품 현황');">부품 현황</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/listRoHSProduct', '> RoHS > 제품 현황');">제품 현황</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/all', '> RoHS > 물질 일괄결재');">물질 일괄결재</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄등록');">물질 일괄등록</a>
+				</li>
+				<li>
+					<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄링크');">물질 일괄링크</a>
+				</li>
+			</ul>
 		</li>
 		<%
 		}
