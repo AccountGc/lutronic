@@ -215,6 +215,8 @@ public class EChangeUtils {
 		// ECO 정보로 ECN 자동 생성
 		EcnHelper.service.create(eco, ecoParts, completeParts);
 
+		SAPHelper.service.sendSapToEco(eco);
+
 		// 부품 도면 상태 변경 - 전송 후 상태값을 변경해야 할듯
 		EcoHelper.manager.setIBAAndState(ecoParts, completeParts);
 

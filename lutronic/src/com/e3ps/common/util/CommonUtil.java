@@ -93,9 +93,7 @@ public class CommonUtil implements wt.method.RemoteAccess, java.io.Serializable 
 	 */
 	public static People sessionPeople() throws Exception {
 		WTUser sessionUser = sessionUser();
-		System.out.println(sessionUser);
 		QueryResult result = PersistenceHelper.manager.navigate(sessionUser, "people", WTUserPeopleLink.class);
-		System.out.println("=" + result.size());
 		if (result.hasMoreElements()) {
 			People people = (People) result.nextElement();
 			return people;

@@ -51,6 +51,22 @@ public class BomController extends BaseController {
 		}
 		return list;
 	}
+	
+	@Description(value = "BOM 신규품목추가")
+	@PostMapping(value = "/append")
+	@ResponseBody
+	public Map<String, Object> append(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = BomHelper.service.append(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 
 	@Description(value = "BOM 품목 제거")
 	@PostMapping(value = "/removeLink")
@@ -58,7 +74,71 @@ public class BomController extends BaseController {
 	public Map<String, Object> removeLink(@RequestBody Map<String, String> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			BomHelper.service.removeLink(params);
+			result = BomHelper.service.removeLink(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 붙여넣기")
+	@PostMapping(value = "/paste")
+	@ResponseBody
+	public Map<String, Object> paste(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = BomHelper.service.paste(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "BOM 기존품목 교체")
+	@PostMapping(value = "/replace_exist")
+	@ResponseBody
+	public Map<String, Object> replace(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = BomHelper.service.replace_exist(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "BOM 기존품목 추가")
+	@PostMapping(value = "/exist")
+	@ResponseBody
+	public Map<String, Object> exist(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = BomHelper.service.exist(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+	
+	@Description(value = "BOM 드래그 앤 드랍")
+	@PostMapping(value = "/drop")
+	@ResponseBody
+	public Map<String, Object> drop(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = BomHelper.service.drop(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

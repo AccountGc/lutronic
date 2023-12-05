@@ -132,10 +132,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const t = item.t;
+							const t = item.type;
 							const oid = item.eoid;
 							let url;
-							if (t === "CHANGE") {
+							if (t === "ECO") {
 								url = getCallUrl("/eco/view?oid=" + oid);
 							} else {
 								url = getCallUrl("/eo/view?oid=" + oid);

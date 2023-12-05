@@ -73,27 +73,32 @@ public class EoHelper {
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeOrder.class, true);
-		
+
 		// 상태 임시저장 제외
-    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-    	query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.LIFE_CYCLE_STATE,
+				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_NUMBER, number);
 		QuerySpecUtils.toState(query, idx, EChangeOrder.class, state);
 		QuerySpecUtils.toCreatorQuery(query, idx, EChangeOrder.class, creatorOid);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, createdFrom,
 				createdTo);
-		if(approveFrom != null && approveFrom.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+		if (approveFrom != null && approveFrom.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , approveFrom), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
+					SearchCondition.GREATER_THAN_OR_EQUAL, approveFrom), new int[] { idx });
 		}
-		if(approveTo != null && approveTo.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+		if (approveTo != null && approveTo.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeOrder.class, EChangeOrder.EO_APPROVE_DATE,
+					SearchCondition.LESS_THAN_OR_EQUAL, approveTo), new int[] { idx });
 		}
 		if (StringUtil.checkString(eoType)) {
 			QuerySpecUtils.toEqualsAnd(query, idx, EChangeOrder.class, EChangeOrder.EO_TYPE, eoType);
@@ -263,14 +268,20 @@ public class EoHelper {
 	/**
 	 * EO 관련 완제품
 	 */
-	private Object referenceComplete(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
+	private ArrayList<Map<String, Object>> referenceComplete(EChangeOrder eo, ArrayList<Map<String, Object>> list)
+			throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class);
-		System.out.println("여기 실행되라고..");
 		while (result.hasMoreElements()) {
 			WTPartMaster master = (WTPartMaster) result.nextElement();
-			WTPart part = PartHelper.manager.latest(master);
-			PartColumn dto = new PartColumn(part);
-			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			WTPart part = PartHelper.manager.getLatest(master);
+			Map<String, Object> map = new HashMap<>();
+			map.put("number", part.getNumber());
+			map.put("name", part.getName());
+			map.put("state", part.getLifeCycleState().getDisplay());
+			map.put("version", part.getVersionIdentifier().getSeries().getValue() + "."
+					+ part.getIterationIdentifier().getSeries().getValue());
+			map.put("creator", part.getCreatorFullName());
+			map.put("createdDate_txt", part.getCreateTimestamp().toString().substring(0, 10));
 			list.add(map);
 		}
 		return list;
@@ -340,18 +351,18 @@ public class EoHelper {
 
 		queue.addEntry(principal, methodName, className, argClasses, argObjects);
 	}
-	
+
 	/**
 	 * MODEL
 	 */
 	private Object referenceCode(EChangeOrder eo, ArrayList<Map<String, Object>> list) throws Exception {
 		String[] codes = eo.getModel() != null ? eo.getModel().split(",") : null;
-		
-		if(codes != null) {
+
+		if (codes != null) {
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(NumberCode.class, true);
-			for(int i = 0; i < codes.length; i++) {
-				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+			for (int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);
 			}
 			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "MODEL");
 			QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);

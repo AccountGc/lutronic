@@ -17,30 +17,30 @@ WTPart root = (WTPart) request.getAttribute("root");
 <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/jquery-contextmenu@2.9.2/dist/jquery.contextMenu.min.css">
 
 <style type="text/css">
-#treetable {
+#treetable, #righttable {
 	width: 100%;
 	border-top: 2px solid #86bff9;
 	font-size: 12px;
 }
 
-#treetable th {
+#treetable th, #righttable th {
 	background-color: #f2f2f2;
 	height: 30px;
 	border-bottom: 1px solid #a6a6a6;
 	border-right: 1px solid #a6a6a6;
 }
 
-#treetable th:first-child {
+#treetable th:first-child, #righttable th:first-child {
 	border-left: 1px solid #a6a6a6;
 }
 
-#treetable td {
+#treetable td, #righttable td {
 	height: 30px;
 	border-bottom: 1px solid #dedede;
 	border-right: 1px solid #dedede;
 }
 
-#treetable td:first-child {
+#treetable td:first-child, #righttable td:first-child {
 	border-left: 1px solid #dedede;
 }
 
@@ -82,64 +82,129 @@ WTPart root = (WTPart) request.getAttribute("root");
 	</tr>
 </table>
 
-<table id="treetable">
+<table>
 	<colgroup>
-		<col width="40px;"></col>
-		<col width="40px;"></col>
-		<col width="60px;"></col>
-		<col width="120px;"></col>
-		<col width="*"></col>
-		<col width="80px;"></col>
-		<col width="80px;"></col>
-		<col width="80px;"></col>
-		<col width="100px;"></col>
+		<col width="49%">
+		<col width="40px;">
+		<col width="49%">
 	</colgroup>
-	<thead>
-		<tr>
-			<th></th>
-			<th></th>
-			<th>레벨</th>
-			<th>부품번호</th>
-			<th>부품명</th>
-			<th>수량</th>
-			<th>REV</th>
-			<th>상태</th>
-			<th>작성자</th>
-		</tr>
-	</thead>
+	<tr>
+		<td valign="top">
+			<table id="treetable">
+				<colgroup>
+					<col width="40px;"></col>
+					<col width="40px;"></col>
+					<col width="60px;"></col>
+					<col width="120px;"></col>
+					<col width="*"></col>
+					<col width="80px;"></col>
+					<col width="80px;"></col>
+					<col width="80px;"></col>
+					<col width="100px;"></col>
+				</colgroup>
+				<thead>
+					<tr>
+						<th></th>
+						<th></th>
+						<th>레벨</th>
+						<th>부품번호</th>
+						<th>부품명</th>
+						<th>수량</th>
+						<th>REV</th>
+						<th>상태</th>
+						<th>작성자</th>
+					</tr>
+				</thead>
+			</table>
+		</td>
+		<td valign="top">&nbsp;</td>
+		<td valign="top">
+			<table class="search-table">
+				<colgroup>
+					<col width="130">
+					<col width="*">
+				</colgroup>
+				<tr>
+					<th>문서 분류</th>
+					<td class="indent5">
+						<input type="text" name="number" id="number" class="width-300" readonly="readonly">
+						<input type="hidden" name="poid" id="poid">
+						<input type="button" value="품목선택" title="품목선택" onclick="load();" class="blue">
+						<input type="button" value="초기화" title="초기화" onclick="destroy();">
+					</td>
+				</tr>
+			</table>
+			<br>
+			<table id="righttable">
+				<colgroup>
+					<col width="40px;"></col>
+					<col width="40px;"></col>
+					<col width="60px;"></col>
+					<col width="120px;"></col>
+					<col width="*"></col>
+					<col width="80px;"></col>
+					<col width="80px;"></col>
+					<col width="80px;"></col>
+					<col width="100px;"></col>
+				</colgroup>
+				<thead>
+					<tr>
+						<th></th>
+						<th></th>
+						<th>레벨</th>
+						<th>부품번호</th>
+						<th>부품명</th>
+						<th>수량</th>
+						<th>REV</th>
+						<th>상태</th>
+						<th>작성자</th>
+					</tr>
+				</thead>
+			</table>
+		</td>
+	</tr>
 </table>
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
 	const skip = true;
-
+	let CLIPBOARD = null;
 	document.addEventListener("DOMContentLoaded", function() {
-
 		$("#treetable").fancytree({
 			extensions : [ "dnd5", "filter", "table", "contextMenu" ],
 			checkbox : true,
 			quicksearch : true,
+			debugLevel : 0,
 			dnd5 : {
-				autoExpandMS : 1500,
+				autoExpandMS : 500,
+				preventRecursion : true, // Prevent dropping nodes on own descendants
+				preventVoidMoves : true, // Prevent moving nodes 'before self', etc.
 				dragStart : function(node, data) {
 					return true;
 				},
 				dragEnter : function(node, data) {
+					const sameTree = (data.otherNode.tree === data.tree);
+					if (sameTree) {
+						return false;
+					}
+					return true;
+				},
+				dragOver : function(node, data) {
+					if (data.hitMode === "after") {
+						return false;
+					}
+
+					if (data.hitMode === "before") {
+						return false;
+					}
 					return true;
 				},
 				dragDrop : function(node, data) {
-					var transfer = data.dataTransfer;
-
-					if (data.otherNode) {
-						data.otherNode.moveTo(node, data.hitMode);
-					} else {
-						node.addNode({
-							title : transfer.getData("text")
-						}, data.hitMode);
+					const hitMode = data.hitMode;
+					if (hitMode === "after" || hitMode === "before") {
+						return false;
 					}
-					// Expand target node when a child was created:
-					if (data.hitMode === "over") {
-						node.setExpanded();
-					}
+					data.otherNode.copyTo(node, data.hitMode);
+					drop(data.otherNode, node);
 				},
 			},
 			filter : {
@@ -183,10 +248,14 @@ WTPart root = (WTPart) request.getAttribute("root");
 			},
 			renderColumns : function(event, data) {
 				const node = data.node;
+				const isCheckOut = node.data.isCheckOut;
+				if (isCheckOut) {
+					// 					node.tr.style.backgroundColor = "yellow";
+				}
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
-				list[2].style.textAlign = "center";
-				list[2].textContent = node.data.thumb;
+				list[1].style.textAlign = "center";
+				list[1].textContent = node.data.thumb;
 				list[2].style.textAlign = "center";
 				list[2].textContent = node.data.level;
 				list[3].style.textAlign = "center";
@@ -202,22 +271,21 @@ WTPart root = (WTPart) request.getAttribute("root");
 			},
 			contextMenu : {
 				menu : {
-					"cut" : {
-						"name" : "잘라내기",
-						"icon" : "cut"
-					},
 					"copy" : {
 						"name" : "복사",
 						"icon" : "copy"
+					},
+					"cut" : {
+						"name" : "잘라내기",
+						"icon" : "cut"
 					},
 					"paste" : {
 						"name" : "붙여넣기",
 						"icon" : "paste"
 					},
-					"delete" : {
+					"removeLink" : {
 						"name" : "삭제",
 						"icon" : "delete",
-						"disabled" : true
 					},
 					"sep1" : "---------",
 					"checkout" : {
@@ -233,50 +301,82 @@ WTPart root = (WTPart) request.getAttribute("root");
 						"icon" : "quit"
 					},
 					"sep2" : "---------",
-					"fold1" : {
-						"name" : "Sub group",
-						"items" : {
-							"fold1-key1" : {
-								"name" : "Foo bar"
-							},
-							"fold2" : {
-								"name" : "Sub group 2",
-								"items" : {
-									"fold2-key1" : {
-										"name" : "alpha"
-									},
-									"fold2-key2" : {
-										"name" : "bravo"
-									},
-									"fold2-key3" : {
-										"name" : "charlie"
-									}
-								}
-							},
-							"fold1-key3" : {
-								"name" : "delta"
-							}
-						}
+					"new" : {
+						"name" : "신규품목추가",
+						"icon" : "new"
 					},
-					"fold1a" : {
-						"name" : "Other group",
-						"items" : {
-							"fold1a-key1" : {
-								"name" : "echo"
-							},
-							"fold1a-key2" : {
-								"name" : "foxtrot"
-							},
-							"fold1a-key3" : {
-								"name" : "golf"
-							}
-						}
+					"exist" : {
+						"name" : "기존품목추가",
+						"icon" : "exist"
+					},
+					"sep3" : "---------",
+					"replace_new" : {
+						"name" : "신규품목교체",
+						"icon" : "replace"
+					},
+					"replace_exist" : {
+						"name" : "기존품목교체",
+						"icon" : "replace"
 					}
 				},
 				actions : function(node, action, options) {
 					process(node, action);
 				}
 			},
+		}).on("nodeCommand", function(event, data) {
+			const tree = $.ui.fancytree.getTree(this);
+			const refNode = null;
+			const moveMode = null;
+			let node = tree.getActiveNode();
+			switch (data.cmd) {
+			case "cut":
+
+				break;
+			case "copy":
+				CLIPBOARD = {
+					mode : data.cmd,
+					data : node.toDict(true, function(dict, node) {
+						delete dict.key;
+					}),
+				};
+				break;
+			case "clear":
+				CLIPBOARD = null;
+				break;
+			case "paste":
+				if (CLIPBOARD.mode === "cut") {
+					CLIPBOARD.data.moveTo(node, "child");
+					CLIPBOARD.data.setActive();
+				} else if (CLIPBOARD.mode === "copy") {
+					node.addChildren(CLIPBOARD.data);
+					nodePaste(node, CLIPBOARD.data);
+				}
+				break;
+			case "removeLink":
+				process(node, "removeLink");
+				break;
+			default:
+				return;
+			}
+		}).on("keydown", function(e) {
+			let cmd = null;
+			switch ($.ui.fancytree.eventToString(e)) {
+			case "ctrl+c":
+				cmd = "copy";
+				break;
+			case "ctrl+v":
+				cmd = "paste";
+				break;
+			case "del":
+				cmd = "removeLink";
+				break;
+			}
+			if (cmd) {
+				$(this).trigger("nodeCommand", {
+					cmd : cmd
+				});
+				return false;
+			}
 		});
 		selectbox("depth");
 	});
@@ -285,41 +385,201 @@ WTPart root = (WTPart) request.getAttribute("root");
 	function process(node, action) {
 		let url;
 		const oid = node.data.oid;
+		const poid = node.data.poid;
+		const link = node.data.link;
 		const params = new Object();
-		openLayer();
 		logger(oid);
-		if (action === "checkout") {
+
+		// 기존항목교체
+		if (action === "replace_new") {
+		} else if (action === "replace_exist") {
+			url = getCallUrl("/part/popup?method=replace_exist&multi=false");
+			_popup(url, 1600, 800, "n");
+			// 신규 생성 후 붙이기
+		} else if (action === "new") {
+			url = getCallUrl("/part/append");
+			_popup(url, 1600, 800, "n");
+			// 기존 삽입
+		} else if (action === "cut") {
+			// 잘라내기
+		} else if (action === "exist") {
+			url = getCallUrl("/part/popup?method=exist&multi=false");
+			_popup(url, 1600, 800, "n");
+			// 복사
+		} else if (action === "copy") {
+			CLIPBOARD = {
+				mode : "copy",
+				data : node.toDict(true, function(dict, node) {
+					delete dict.key;
+				}),
+			};
+			// 붙여넣기
+		} else if (action === "paste") {
+			node.addChildren(CLIPBOARD.data);
+			nodePaste(node, CLIPBOARD.data);
+		} else if (action === "checkout") {
+			openLayer();
 			url = getCallUrl("/bom/checkout?oid=" + oid);
-			call(url, params, function(data) {
+			call(url, null, function(data) {
 				if (data.result) {
 					const resNode = data.resNode;
-					refresh(node, resNode);
+					updateNode(node, resNode);
 				}
 				closeLayer();
 			}, "GET");
 		} else if (action === "undocheckout") {
+			openLayer();
 			url = getCallUrl("/bom/undocheckout?oid=" + oid);
-			call(url, params, function(data) {
+			call(url, null, function(data) {
 				if (data.result) {
 					const resNode = data.resNode;
-					refresh(node, resNode);
+					updateNode(node, resNode);
 				}
 				closeLayer();
 			}, "GET");
 		} else if (action === "checkin") {
+			openLayer();
 			url = getCallUrl("/bom/checkin?oid=" + oid);
-			call(url, params, function(data) {
+			call(url, null, function(data) {
 				if (data.result) {
 					const resNode = data.resNode;
-					refresh(node, resNode);
+					updateNode(node, resNode);
 				}
 				closeLayer();
 			}, "GET");
+			// 삭제
+		} else if (action === "removeLink") {
+			openLayer();
+			url = getCallUrl("/bom/removeLink");
+			params.poid = poid;
+			params.oid = oid;
+			call(url, params, function(data) {
+				if (data.result) {
+					const resNode = data.resNode;
+					const parent = node.getParent();
+					updateNode(parent, resNode);
+				}
+				closeLayer();
+			});
 		}
 	}
 
-	function refresh(node, resNode) {
+	// 드랍
+	function drop(otherNode, node) {
+		const poid = node.data.oid; // 모
+		const oid = otherNode.data.oid; // 자
+		const url = getCallUrl("/bom/drop");
+		const params = {
+			poid : poid,
+			oid : oid
+		}
+		openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+				const resNode = data.resNode;
+				updateNode(node, resNode);
+			}
+			closeLayer();
+		});
+	}
+
+	// 기존항목 교체
+	function replace_exist(arr, callBack) {
+		const tree = $("#treetable").fancytree("getTree");
+		const node = tree.getActiveNode();
+		const item = arr[0].item; // 교체하는대상
+		const parent = node.getParent();
+		const roid = node.data.oid; // 교체되어지는 대상 OID
+		const poid = parent.data.oid; // 교체되어지는 대상의 부모
+		const oid = item.part_oid; // 붙여지는 대상
+		const url = getCallUrl("/bom/replace_exist");
+		const params = {
+			poid : poid,
+			roid : roid,
+			oid : oid
+		};
+		openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+				const resNode = data.resNode;
+				updateNode(parent, resNode);
+			}
+			closeLayer();
+		})
+		// 창닫기인데...
+		callBack(true, true, "");
+	}
+
+	// 기존 품목 추가
+	function exist(arr, callBack) {
+		const tree = $("#treetable").fancytree("getTree");
+		const node = tree.getActiveNode();
+		const item = arr[0].item;
+
+		const poid = node.data.oid; // 체크아웃될 대상
+		const oid = item.part_oid; // 붙여지는 대상
+		const url = getCallUrl("/bom/exist");
+		const params = {
+			poid : poid,
+			oid : oid
+		};
+		openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+				const resNode = data.resNode;
+				updateNode(node, resNode);
+			}
+			closeLayer();
+		})
+		// 창닫기인데...
+		callBack(true, true, "");
+	}
+
+	// 신규 품목 추가
+	function append(oid) {
+		const tree = $("#treetable").fancytree("getTree");
+		const node = tree.getActiveNode(); // 활성 노드
+		const url = getCallUrl("/bom/append");
+		const params = {
+			poid : node.data.oid,
+			oid : oid
+		};
+		call(url, params, function(data) {
+			if (data.result) {
+				const resNode = data.resNode;
+				updateNode(node, resNode);
+			}
+		})
+	}
+
+	function nodePaste(node, copyNode) {
+		const poid = node.data.oid; // 붙여넣기 되어지는 대상의 부모
+		const oid = copyNode.data.oid;
+		logger(poid);
+		logger(oid);
+		if (poid === oid) {
+			alert("붙여넣기 하려는 품목과 붙여지는 품목이 동일합니다.");
+			return false;
+		}
+		const url = getCallUrl("/bom/paste");
+		const params = {
+			poid : poid,
+			oid : oid
+		};
+		openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+				const resNode = data.resNode;
+				updateNode(node, resNode);
+			}
+			closeLayer();
+		})
+	}
+
+	// 추가 하는순간...무조건 LAZY변경.
+	function updateNode(node, resNode) {
 		node.fromDict({
+			lazy : true,
 			id : resNode.oid,
 			icon : resNode.icon,
 			data : {
@@ -328,228 +588,130 @@ WTPart root = (WTPart) request.getAttribute("root");
 			}
 		});
 		if (node.isLazy()) {
-			node.resetLazy();
-			node.load();
+			node.load(true);
 		}
+		// 		node.renderTitle();
+		// 		selectbox("depth");
 	}
 
-	$(function() {
-		// 		$("#bomEditView").contextmenu({
-		// 			delegate : "span.fancytree-node",
-		// 			menu : [ {
-		// 				title : "새 보기 버전",
-		// 				cmd : "newViewVersion",
-		// 				uiIcon : "ui-icon-newpart",
-		// 			}, {
-		// 				title : "----"
-		// 			}, {
-		// 				title : "확장",
-		// 				uiIcon : "ui-icon-expand",
-		// 				children : [ {
-		// 					title : "1 레벨",
-		// 					cmd : "l1expands",
-		// 					uiIcon : "ui-icon-expand",
-		// 				}, {
-		// 					title : "2 레벨",
-		// 					cmd : "l2expands",
-		// 					uiIcon : "ui-icon-expand",
-		// 				}, {
-		// 					title : "3 레벨",
-		// 					cmd : "l3expands",
-		// 					uiIcon : "ui-icon-expand",
-		// 				}, {
-		// 					title : "4 레벨",
-		// 					cmd : "l4expands",
-		// 					uiIcon : "ui-icon-expand",
-		// 				}, {
-		// 					title : "전체확장",
-		// 					cmd : "expands",
-		// 					uiIcon : "ui-icon-expand",
-		// 				}, {
-		// 					title : "전체축소",
-		// 					cmd : "collapse",
-		// 					uiIcon : "ui-icon-collapse",
-		// 				} ]
-		// 			}, {
-		// 				title : "----"
-		// 			}, {
-		// 				title : "삽입",
-		// 				uiIcon : "ui-icon-adds",
-		// 				cmd : "insert",
-		// 				disabled : true,
-		// 				children : [ {
-		// 					title : "신규부품추가",
-		// 					cmd : "addNewPart",
-		// 					uiIcon : "ui-icon-newpart",
-		// 				}, {
-		// 					title : "기존부품추가",
-		// 					cmd : "addExistPart",
-		// 					uiIcon : "ui-icon-oldpart",
-		// 				} ]
-		// 			}, {
-		// 				title : "구조변경",
-		// 				uiIcon : "ui-icon-structure",
-		// 				cmd : "struct",
-		// 				disabled : true,
-		// 				children : [ {
-		// 					title : "위로",
-		// 					cmd : "moveUp",
-		// 					uiIcon : "ui-icon-upPart",
-		// 					disabled : true,
-		// 				}, {
-		// 					title : "아래로",
-		// 					cmd : "moveDown",
-		// 					uiIcon : "ui-icon-downPart",
-		// 					disabled : true,
-		// 				}, {
-		// 					title : "오른쪽",
-		// 					cmd : "indent",
-		// 					uiIcon : "ui-icon-outdent",
-		// 					disabled : true,
-		// 				}, {
-		// 					title : "왼쪽",
-		// 					cmd : "outdent",
-		// 					uiIcon : "ui-icon-indent",
-		// 					disabled : true,
-		// 				} ]
-		// 			}, {
-		// 				title : "제거",
-		// 				cmd : "remove",
-		// 				uiIcon : "ui-icon-remove",
-		// 				disabled : true
-		// 			}, {
-		// 				title : "----"
-		// 			}, {
-		// 				title : "편집",
-		// 				uiIcon : "ui-icon-edits",
-		// 				children : [ {
-		// 					title : "개정",
-		// 					cmd : "revise",
-		// 					uiIcon : "ui-icon-revise",
-		// 					disabled : true
-		// 				}, {
-		// 					title : "체크인",
-		// 					cmd : "checkin",
-		// 					uiIcon : "ui-icon-checkin",
-		// 					disabled : true
-		// 				}, {
-		// 					title : "체크아웃",
-		// 					cmd : "checkout",
-		// 					uiIcon : "ui-icon-checkout",
-		// 					disabled : true
-		// 				}, {
-		// 					title : "체크아웃취소",
-		// 					cmd : "undocheckout",
-		// 					uiIcon : "ui-icon-undocheckout",
-		// 					disabled : true
-		// 				} ]
-		// 			}, {
-		// 				title : "----"
-		// 			}, {
-		// 				title : "잘라내기",
-		// 				cmd : "cut",
-		// 				uiIcon : "ui-icon-cut",
-		// 				disabled : true,
-		// 			}, {
-		// 				title : "복사하기",
-		// 				cmd : "copy",
-		// 				uiIcon : "ui-icon-copy",
-		// 				disabled : true,
-		// 			}, {
-		// 				title : "붙여넣기",
-		// 				cmd : "paste",
-		// 				uiIcon : "ui-icon-paste",
-		// 				disabled : true,
-		// 			}, {
-		// 				title : "비우기",
-		// 				cmd : "empty",
-		// 				uiIcon : "ui-icon-empty",
-		// 				disabled : true,
-		// 			}, ],
-		// 			beforeOpen : function(event, ui) {
-		// 				var node = $.ui.fancytree.getNode(ui.target);
+	// 품목 추가
+	function load() {
+		url = getCallUrl("/part/popup?method=loadTree&multi=false");
+		_popup(url, 1600, 800, "n");
+	}
 
-		// 				var type = node.type;
-		// 				var struct = true;
-		// 				if (type == "root") {
-		// 					struct = false;
-		// 				}
+	// 오른쪽 트리 파괴
+	function destroy() {
+		document.getElementById("number").value = "";
+		document.getElementById("poid").value = "";
+		const tree = $.ui.fancytree.getTree("#righttable");
+		tree.destroy();
+	}
 
-		// 				refNode = node.getPrevSibling();
-		// 				var indent = true;
-		// 				if (refNode != undefined) {
-		// 					if (refNode != undefined) {
-		// 						if (node.data.treeKey === refNode.data.treeKey) {
-		// 							indent = false;
-		// 						}
-
-		// 						if (refNode.data.state === "릴리즈됨" || refNode.data.state === "결재 중" || refNode.data.state === "폐기") {
-		// 							indent = false;
-		// 						}
-		// 					}
-		// 				}
-
-		// 				var moveup = true;
-		// 				if (node.parent.data.state === "릴리즈됨" || node.parent.data.state === "결재 중" || node.parent.data.state === "폐기") {
-		// 					moveup = false;
-		// 				}
-
-		// 				var movedown = true;
-		// 				if (node.parent.data.state === "릴리즈됨" || node.parent.data.state === "결재 중" || node.parent.data.state === "폐기") {
-		// 					movedown = false;
-		// 				}
-
-		// 				var outdent = true;
-		// 				if (node.parent.parent != undefined) {
-		// 					if (node.parent.parent.data.state === "릴리즈됨" || node.parent.parent.data.state === "결재 중" || node.parent.parent.data.state === "폐기") {
-		// 						outdent = false;
-		// 					}
-		// 				}
-
-		// 				var remove = true;
-		// 				if (node.parent != undefined) {
-		// 					if (node.parent.data.state === "릴리즈됨" || node.parent.data.state === "결재 중" || node.parent.data.state === "폐기") {
-		// 						remove = false;
-		// 					}
-		// 				}
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "paste", !!CLIPBOARD);
-		// 				$("#bomEditView").contextmenu("enableEntry", "empty", !!CLIPBOARD);
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "remove", node.type !== "root" && remove);
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "insert", (node.data.state !== "릴리즈됨" && node.data.state !== "결재 중" && node.data.state !== "폐기"));
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "checkout", node.data.cstate === "c/i" && (node.data.state !== "릴리즈됨" && node.data.state !== "결재 중" && node.data.state !== "폐기"));
-		// 				$("#bomEditView").contextmenu("enableEntry", "checkin", node.data.cstate === "wrk" || node.data.cstate === "c/o");
-		// 				$("#bomEditView").contextmenu("enableEntry", "undocheckout", node.data.cstate === "wrk" || node.data.cstate === "c/o");
-		// 				$("#bomEditView").contextmenu("enableEntry", "revise", (node.data.cstate === "c/i" && node.data.state === "릴리즈됨"));
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "struct", (node.parent.data.state !== "릴리즈됨" && node.parent.data.state !== "결재 중" && node.parent.data.state !== "폐기"));
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "indent", (node.parent.data.state !== "릴리즈됨" && node.parent.data.state !== "결재 중" && node.parent.data.state !== "폐기") && (indent && struct));
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "outdent", (outdent && struct));
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "moveUp", (moveup && struct));
-		// 				$("#bomEditView").contextmenu("enableEntry", "moveDown", (movedown && struct));
-
-		// 				$("#bomEditView").contextmenu("enableEntry", "copy", node.type != "root");
-		// 				$("#bomEditView").contextmenu("enableEntry", "cut", node.type != "root");
-
-		// 				node.setActive();
-		// 			},
-		// 			select : function(event, ui) {
-		// 				var that = this;
-		// 				// delay the event, so the menu can close and the
-		// 				// click event does
-		// 				// not interfere with the edit control
-		// 				setTimeout(function() {
-		// 					$(that).trigger("nodeCommand", {
-		// 						cmd : ui.cmd
-		// 					});
-		// 				}, 100);
-		// 			},
-		// 		});
-	})
+	// 오른쪽 트리 로드
+	function loadTree(arr, callBack) {
+		const item = arr[0].item;
+		const poid = item.part_oid;
+		const number = item.number;
+		const name = item.name;
+		document.getElementById("number").value = number + " / " + name;
+		document.getElementById("poid").value = poid;
+		$("#righttable").fancytree({
+			extensions : [ "dnd5", "table" ],
+			debugLevel : 0,
+			dnd5 : {
+				autoExpandMS : 100,
+				dragStart : function(node, data) {
+					return true;
+				},
+				dragEnter : function(node, data) {
+					const sameTree = (data.otherNode.tree === data.tree);
+					if (sameTree) {
+						return false;
+					}
+					return true;
+				},
+			},
+			filter : {
+				autoExpand : true,
+			},
+			table : {
+				indentation : 20,
+				nodeColumnIdx : 4,
+			},
+			source : $.ajax({
+				url : "/Windchill/plm/bom/loadEditor?oid=" + poid + "&skip=true",
+				type : "POST",
+			}),
+			preInit : function() {
+				openLayer();
+			},
+			init : function() {
+				closeLayer();
+			},
+			lazyLoad : function(event, data) {
+				const node = data.node;
+				const level = node.data.level;
+				const skip = true;
+				const params = {
+					oid : node.data.oid,
+					level : level,
+					skip : skip
+				}
+				data.result = {
+					url : "/Windchill/plm/bom/editorLazyLoad",
+					data : params,
+					type : "POST"
+				};
+			},
+			renderColumns : function(event, data) {
+				const node = data.node;
+				const list = node.tr.querySelectorAll("td");
+				list[0].style.textAlign = "center";
+				list[1].style.textAlign = "center";
+				list[1].textContent = node.data.thumb;
+				list[2].style.textAlign = "center";
+				list[2].textContent = node.data.level;
+				list[3].style.textAlign = "center";
+				list[3].textContent = node.data.number;
+				list[5].style.textAlign = "center";
+				list[5].textContent = node.data.qty + "개";
+				list[6].style.textAlign = "center";
+				list[6].textContent = node.data.version;
+				list[7].style.textAlign = "center";
+				list[7].textContent = node.data.state;
+				list[8].style.textAlign = "center";
+				list[8].textContent = node.data.creator;
+			},
+		}).on("nodeCommand", function(event, data) {
+			const tree = $.ui.fancytree.getTree(this);
+			const refNode = null;
+			const moveMode = null;
+			let node = tree.getActiveNode();
+			switch (data.cmd) {
+			case "copy":
+				CLIPBOARD = {
+					mode : data.cmd,
+					data : node.toDict(true, function(dict, node) {
+						delete dict.key;
+					}),
+				};
+				break;
+			}
+		}).on("keydown", function(e) {
+			let cmd = null;
+			switch ($.ui.fancytree.eventToString(e)) {
+			case "ctrl+c":
+				cmd = "copy";
+				break;
+			}
+			if (cmd) {
+				$(this).trigger("nodeCommand", {
+					cmd : cmd
+				});
+				return false;
+			}
+		});
+		callBack(true, true, "");
+	}
 </script>

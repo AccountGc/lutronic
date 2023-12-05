@@ -37,7 +37,6 @@ public interface PartService {
 
 	List<Map<String, Object>> partBomListGrid(String oid) throws Exception;
 
-
 	ResultData updatePackagePartAction(HttpServletRequest request, HttpServletResponse response);
 
 	/**
@@ -79,8 +78,6 @@ public interface PartService {
 
 	ResultData deletePartLinkAction(HttpServletRequest request, HttpServletResponse response);
 
-
-
 	void partTreeSelectAttachDown(HttpServletRequest request, HttpServletResponse response, Map<String, Object> param)
 			throws Exception;
 
@@ -101,7 +98,6 @@ public interface PartService {
 	ResultData createAUIPackagePartAction(HttpServletRequest request, HttpServletResponse response);
 
 	ResultData updateAUIPartChangeAction(Map<String, Object> param);
-
 
 	public void createComments(Map<String, Object> params) throws Exception;
 
@@ -131,5 +127,10 @@ public interface PartService {
 	 * 품목 재변환 요청
 	 */
 	public abstract void publish(String oid) throws Exception;
+
+	/**
+	 * BOM 품목 신규 등록
+	 */
+	public abstract WTPart append(Map<String, Object> params) throws Exception;
 
 }

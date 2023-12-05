@@ -16,7 +16,6 @@ iframe {
 </style>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-<input type="hidden" name="imgData" id="imgData">
 
 <table class="button-table">
 	<tr>

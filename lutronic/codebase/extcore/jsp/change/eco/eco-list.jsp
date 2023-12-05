@@ -211,7 +211,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function _layout() {
 				return [ {
 					dataField : "number",
-					headerText : "ECO번호",
+					headerText : "ECO 번호",
 					dataType : "string",
 					width : 120,
 					filter : {
@@ -229,7 +229,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "name",
-					headerText : "ECO제목",
+					headerText : "ECO 제목",
 					dataType : "string",
 					style : "aui-left",
 					filter : {

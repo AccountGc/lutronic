@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.part.service.PartHelper"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
@@ -46,8 +47,8 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 		<th>품목분류</th>
 		<td class="indent5">
 			<input type="hidden" name="oid" id="oid">
-			<input type="hidden" name="location" id="location" value="<%=DrawingHelper.ROOTLOCATION%>">
-			<span id="locationText"><%=DrawingHelper.ROOTLOCATION%></span>
+			<input type="hidden" name="location" id="location" value="<%=PartHelper.PART_ROOT%>">
+			<span id="locationText"><%=PartHelper.PART_ROOT%></span>
 		</td>
 		<th>등록자</th>
 		<td class="indent5">
@@ -240,7 +241,7 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 	<tr>
 		<td class="left">
 			<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
-			<input type="button" value="추가" title="추가" onclick="addBtn();">
+			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
@@ -265,7 +266,7 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 	<tr>
 		<td valign="top">
 			<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-				<jsp:param value="<%=DrawingHelper.ROOTLOCATION%>" name="location" />
+				<jsp:param value="<%=PartHelper.PART_ROOT%>" name="location" />
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
 				<jsp:param value="593" name="height" />
@@ -344,7 +345,7 @@ const columns = [ {
 	dataField : "version",
 	headerText : "REV",
 	dataType : "string",
-	width : 90,
+	width : 80,
 	renderer : {
 		type : "TemplateRenderer"
 	},
@@ -397,7 +398,7 @@ const columns = [ {
 		showIcon : true,
 		inline : true
 	},
-} ]
+}  ]
 
 function createAUIGrid(columnLayout) {
 	const props = {
@@ -455,35 +456,22 @@ function loadGridData() {
 		closeLayer();
 	});
 }
-	
-function addBtn() {
+
+function <%=method%>() {
 	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 	if (checkedItems.length === 0) {
 		alert("추가할 행을 선택하세요.");
 		return false;
 	}
-	<%if (limit) {%>
-		var state = checkedItems[0].item.state;
-		if(state!='작업 중'){
-			alert("부품이 작업 중인 상태는 등록할 수 없습니다.");
-			return false;
-		}
-	<%}%>
 	
-	openLayer();
-	<%if (!"".equals(rowId)) {%>
-		opener.<%=method%>(checkedItems,"<%=rowId%>" );
-		self.close();
-	<%} else {%>
-		opener.<%=method%>(checkedItems, function(res, close, msg) {
-			if(res) {
-				setTimeout(function() {
-					closeLayer();
-				}, 500);
-			}
-			trigger(close, msg);
-		})
-	<%}%>
+	opener.<%=method%>(checkedItems, function(res, close, msg) {
+		if(res) {
+			setTimeout(function() {
+				closeLayer();
+			}, 500);
+		}
+		trigger(close, msg);
+	})
 }
 
 function trigger(close, msg) {

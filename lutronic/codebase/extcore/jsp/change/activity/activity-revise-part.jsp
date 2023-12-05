@@ -23,12 +23,12 @@ String oid = (String) request.getAttribute("oid");
 	const link = window.link;
 	let myGridiD;
 	const columns = [ {
-		headerText : "부품번호",
+		headerText : "품목번호",
 		dataField : "part_number",
 		dataType : "string",
-		width : 140
+		width : 180
 	}, {
-		headerText : "부품명",
+		headerText : "품목명",
 		dataField : "part_name",
 		dataType : "string",
 		style : "aui-left",
@@ -36,17 +36,17 @@ String oid = (String) request.getAttribute("oid");
 		headerText : "REV",
 		dataField : "version",
 		dataType : "string",
-		width : 140
+		width : 80
 	}, {
 		headerText : "상태",
 		dataField : "state",
 		dataType : "string",
-		width : 140
+		width : 80
 	}, {
 		headerText : "최신버전",
 		dataField : "latest",
 		dataType : "string",
-		width : 140,
+		width : 100,
 		renderer : {
 			type : "CheckBoxEditRenderer",
 		}

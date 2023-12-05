@@ -613,7 +613,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				case 1:
 					// bom 에디터
-					_popup(getCallUrl("/bom/editor?oid=" + next_oid + "&eoid=" + oid), 1800, 750, "n");
+					url = getCallUrl("/bom/editor?oid=" + next_oid);
+					_popup(url, "", "", "f");
 					break;
 				case 2:
 					// bom 비교
@@ -808,7 +809,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeRow(myGridID, rowIndex);
 				}
 			}
-			
+
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("설변품목 리스트", "설변품목", "설변품목 리스트", [], sessionName);

@@ -385,7 +385,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",
-					width : 90,
+					width : 80,
 					renderer : {
 						type : "TemplateRenderer"
 					},

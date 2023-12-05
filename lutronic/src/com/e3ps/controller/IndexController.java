@@ -21,6 +21,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -105,15 +106,12 @@ public class IndexController extends BaseController {
 		}
 
 		// 기타 문서 권한처리
-		boolean isRa = false;
-		boolean isProduction = false;
-		boolean isCosmetic = false;
-		boolean isPathological = false;
-		boolean isClinical = false;
-		if ("".equals(department_name)) {
-
-		}
-		
+		boolean isRa = DepartmentHelper.manager.isRa(people, new String[] { "RA팀" });
+		boolean isProduction = DepartmentHelper.manager.isProduction(people,
+				new String[] { "제조팀", "제조기술팀", "QC팀", "구매자재팀", "제품기술팀" });
+		boolean isCosmetic = DepartmentHelper.manager.isCosmetic(people, new String[] { "RA팀", "PM팀" });
+		boolean isPathological = DepartmentHelper.manager.isPathological(people, new String[] { "병리연구팀" });
+		boolean isClinical = DepartmentHelper.manager.isClinical(people, new String[] { "임상개발팀" });
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 
@@ -137,9 +135,7 @@ public class IndexController extends BaseController {
 		model.addObject("isChange", isChange);
 		model.addObject("isEtc", isEtc);
 		model.addObject("dto", dto);
-		
-		
-		
+
 		model.setViewName("/extcore/layout/header.jsp");
 		return model;
 	}

@@ -34,10 +34,8 @@ import com.e3ps.change.service.ChangeHelper;
 import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.BatchDownData;
 import com.e3ps.common.beans.ResultData;
-import com.e3ps.common.beans.VersionData;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.CodeHelper;
-import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -48,12 +46,12 @@ import com.e3ps.common.message.Message;
 import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.POIUtil;
-import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.web.PageControl;
+import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.distribute.util.MakeZIPUtil;
@@ -63,9 +61,6 @@ import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
 import com.e3ps.drawing.service.EpmUtilHelper;
 import com.e3ps.drawing.util.EpmPublishUtil;
-import com.e3ps.groupware.workprocess.WFItem;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
-import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartDTO;
 import com.e3ps.part.dto.PartData;
@@ -76,7 +71,6 @@ import com.e3ps.rohs.PartToRohsLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
 import com.ptc.wvs.client.beans.PublishConfigSpec;
 import com.ptc.wvs.common.ui.Publisher;
 import com.ptc.wvs.server.util.PublishUtils;
@@ -90,7 +84,6 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
-import wt.enterprise.BasicTemplateProcessor;
 import wt.enterprise.RevisionControlled;
 import wt.epm.EPMDocument;
 import wt.epm.EPMDocumentMaster;
@@ -104,14 +97,12 @@ import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
 import wt.fc.ReferenceFactory;
-import wt.fc.WTObject;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.iba.value.IBAHolder;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
-import wt.lifecycle.LifeCycleManaged;
 import wt.lifecycle.LifeCycleTemplate;
 import wt.lifecycle.State;
 import wt.method.MethodContext;
@@ -3966,5 +3957,193 @@ public class StandardPartService extends StandardManager implements PartService 
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	@Override
+	public WTPart append(Map<String, Object> params) throws Exception {
+		WTPart part = null;
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle")); // LifeCycle
+			String view = StringUtil.checkNull((String) params.get("view")); // view
+			String location = StringUtil.checkNull((String) params.get("location")); // 분류체계
+			String wtPartType = StringUtil.checkNull((String) params.get("wtPartType"));
+			String source = StringUtil.checkNull((String) params.get("source"));
+
+			// String[] partNames = request.getParameterValues("partName");
+			String partName1 = StringUtil.checkNull((String) params.get("partName1")); // 품목명1 (NumberCode)
+			String partName2 = StringUtil.checkNull((String) params.get("partName2")); // 품목명2 (NumberCode)
+			String partName3 = StringUtil.checkNull((String) params.get("partName3")); // 품목명3 (NumberCode)
+			String partName4 = StringUtil.checkNull((String) params.get("partName4")); // 품목명4 (Key In)
+
+			String partType1 = StringUtil.checkNull((String) params.get("partType1")); // 품목구분 (NumberCode)
+			String partType2 = StringUtil.checkNull((String) params.get("partType2")); // 대 분류 (NumberCode)
+			String partType3 = StringUtil.checkNull((String) params.get("partType3")); // 중 분류 (NumberCode)
+			String seq = StringUtil.checkNull((String) params.get("seq")); // SEQ
+			String etc = StringUtil.checkNull((String) params.get("etc")); // 기타
+
+			// 품목 속성
+			String unit = StringUtil.checkNull((String) params.get("unit")); // 단위 (NumberCode)
+			String model = StringUtil.checkNull((String) params.get("model")); // 프로젝트 코드 (NumberCode, IBA)
+			String productmethod = StringUtil.checkNull((String) params.get("productmethod")); // 제작방법 (NumberCode, IBA)
+			String deptcode = StringUtil.checkNull((String) params.get("deptcode")); // 부서 (NumberCode, IBA)
+			String weight = StringUtil.checkNull((String) params.get("weight")); // 무게 (Key IN, IBA)
+			String manufacture = StringUtil.checkNull((String) params.get("manufacture")); // MANUTACTURE (NumberCode,
+																							// IBA)
+			String mat = StringUtil.checkNull((String) params.get("mat")); // 재질 (NumberCode, IBA)
+			String finish = StringUtil.checkNull((String) params.get("finish")); // 후처리 (NumberCode, IBA)
+			String remarks = StringUtil.checkNull((String) params.get("remarks")); // 비고 (Key IN, IBA)
+			String specification = StringUtil.checkNull((String) params.get("specification")); // 사양 (Key IN, iBA)
+			// 결재
+			ArrayList<Map<String, String>> approvalRows = (ArrayList<Map<String, String>>) params.get("approvalRows");
+			ArrayList<Map<String, String>> agreeRows = (ArrayList<Map<String, String>>) params.get("agreeRows");
+			ArrayList<Map<String, String>> receiveRows = (ArrayList<Map<String, String>>) params.get("receiveRows");
+
+			// 주 도면
+			String primary = StringUtil.checkNull((String) params.get("primary"));
+
+			// 관련 문서
+			ArrayList<Map<String, String>> rows90 = (ArrayList<Map<String, String>>) params.get("rows90");
+
+			// 관련 RoHs
+			ArrayList<Map<String, String>> rows106 = (ArrayList<Map<String, String>>) params.get("rows106");
+
+			// 첨부파일
+			ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
+
+			// 첨부 추가
+			String[] delocIds = (String[]) params.get("delocIds");
+
+			String partName = "";
+			String[] partNames = new String[] { partName1, partName2, partName3, partName4 };
+			for (int i = 0; i < partNames.length; i++) {
+				if (StringUtil.checkString(partNames[i])) {
+					if (i != 0 && partName.length() != 0) {
+						partName += "_";
+					}
+					partName += partNames[i];
+				}
+			}
+			String partNumber = partType1 + partType2 + partType3;
+
+			if (seq.length() == 0) {
+				seq = SequenceDao.manager.getSeqNo(partNumber, "000", "WTPartMaster", "WTPartNumber");
+			} else if (seq.length() == 1) {
+				seq = "00" + seq;
+			} else if (seq.length() == 2) {
+				seq = "0" + seq;
+			}
+
+			if (etc.length() == 0) {
+				etc = "00";
+			} else if (etc.length() == 1) {
+				etc = "0" + etc;
+			}
+			partNumber += seq + etc;
+
+			if (partNumber.length() > 10) {
+				throw new Exception(Message.get("허용된 품목번호의 길이가 아닙니다."));
+			}
+
+			part = WTPart.newWTPart();
+			PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+			WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
+			part.setContainer(product);
+
+			part.setNumber(partNumber);
+			part.setName(partName.trim());
+			part.setDefaultUnit(QuantityUnit.toQuantityUnit(unit));
+
+			if (wtPartType.length() > 0) {
+				part.setPartType(PartType.toPartType(wtPartType));
+			}
+			if (source.length() > 0) {
+				part.setSource(Source.toSource(source));
+			}
+
+			// 뷰 셋팅(Design 고정임)
+			if (view.length() > 0) {
+				ViewHelper.assignToView(part, ViewHelper.service.getView(view));
+			}
+
+			// 라이프사이클 셋팅
+
+			// 폴더 셋팅
+			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			FolderHelper.assignLocation((FolderEntry) part, folder);
+
+			// 문서 lifeCycle 설정
+			LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+			part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+
+			part = (WTPart) PersistenceHelper.manager.save(part);
+
+			// 작업함으로 이동 시킨다
+//			WorkDataHelper.service.create(part);
+			// IBA 설정
+			CommonHelper.service.changeIBAValues(part, params);
+			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, partName, "string");
+
+			// 주 도면
+			if (primary.length() > 0) {
+				params.put("oid", CommonUtil.getOIDString(part));
+				params.put("epmfid", location);
+				EPMDocument epm = DrawingHelper.service.createEPM(params);
+				EPMBuildRule link = EPMBuildRule.newEPMBuildRule(epm, part);
+				PersistenceServerHelper.manager.insert(link);
+			}
+
+			// 관련 문서 연결
+			for (Map<String, String> row90 : rows90) {
+				String gridState = row90.get("gridState");
+				// 신규 혹은 삭제만 있다. (added, removed
+				if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+					String oid = row90.get("oid");
+					WTDocument ref = (WTDocument) CommonUtil.getObject(oid);
+					WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, ref);
+					PersistenceServerHelper.manager.insert(link);
+				}
+			}
+
+			// 관련 ROHS 연결
+			for (Map<String, String> row106 : rows106) {
+				String gridState = row106.get("gridState");
+				// 신규 혹은 삭제만 있다. (added, removed
+				if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+					String oid = row106.get("oid");
+					ROHSMaterial ref = (ROHSMaterial) CommonUtil.getObject(oid);
+					PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, ref);
+					PersistenceHelper.manager.save(link);
+				}
+			}
+
+			// 첨부 파일
+			for (String secondary : secondarys) {
+				File vault = CommonContentHelper.manager.getFileFromCacheId(secondary);
+				ApplicationData applicationData = ApplicationData.newApplicationData(part);
+				applicationData.setRole(ContentRoleType.SECONDARY);
+				PersistenceHelper.manager.save(applicationData);
+				ContentServerHelper.service.updateContent(part, applicationData, vault.getPath());
+			}
+
+			// 결재시작
+//			if (approvalRows != null) {
+//				WorkspaceHelper.service.register(part, agreeRows, approvalRows, receiveRows);
+//			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null) {
+				trs.rollback();
+			}
+		}
+		return part;
 	}
 }

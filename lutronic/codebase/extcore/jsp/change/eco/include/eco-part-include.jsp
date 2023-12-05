@@ -283,8 +283,6 @@ String oid = request.getParameter("oid");
 			},
 		}
 		myGridID510 = AUIGrid.create("#grid510", columnLayout, props);
-		AUIGrid.setGridData(myGridID510,
-<%=AUIGridUtil.include(oid, "part")%>
-	);
+		AUIGrid.setGridData(myGridID510, <%=AUIGridUtil.include(oid, "part")%>);
 	}
 </script>

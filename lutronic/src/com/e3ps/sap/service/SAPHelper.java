@@ -21,6 +21,7 @@ import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.conn.SAPDevConnection;
 import com.e3ps.sap.dto.SAPBomDTO;
 import com.e3ps.sap.dto.SAPReverseBomDTO;
+import com.e3ps.sap.dto.SAPSendBomDTO;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoFunction;
@@ -484,11 +485,11 @@ public class SAPHelper {
 					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
-		String state = end.getLifeCycleState().toString();
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
-		}
+//		String state = end.getLifeCycleState().toString();
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+//		}
 
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 
@@ -554,11 +555,11 @@ public class SAPHelper {
 					view.getPersistInfo().getObjectIdentifier().getId()), new int[] { idx_part });
 		}
 
-		String state = end.getLifeCycleState().toString();
-		if (state != null) {
-			query.appendAnd();
-			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
-		}
+//		String state = end.getLifeCycleState().toString();
+//		if (state != null) {
+//			query.appendAnd();
+//			query.appendWhere(new SearchCondition(WTPart.class, "state.state", "=", state), new int[] { idx_part });
+//		}
 
 		QuerySpecUtils.toLatest(query, idx_part, WTPart.class);
 
@@ -623,12 +624,10 @@ public class SAPHelper {
 	 */
 	public boolean skipLength(String number) throws Exception {
 		if (number.length() > 10) {
-//			System.out.println("10자리 초과 품번 = " + number);
 			return true;
 		}
 
 		if (!(Pattern.matches("^[0-9]+$", number))) {
-//			System.out.println("숫자가 아닌 내용이 포함된 품번 = " + number);
 			return true;
 		}
 		return false;
@@ -638,12 +637,50 @@ public class SAPHelper {
 	 * 8번 품번 제외
 	 */
 	public boolean skipEight(String number) throws Exception {
-
 		if (number.startsWith("8")) {
-//			System.out.println("8로 시작하는 품번 = " + number);
 			return true;
 		}
 		// 정규식으로 알파벳 제외한다..
 		return false;
+	}
+
+	/**
+	 * 정전개 해서 보낸다.. 1레벨만 재귀 함수 X
+	 */
+	public ArrayList<SAPSendBomDTO> getOneLevel(WTPart parent, EChangeOrder eco) throws Exception {
+		ArrayList<SAPSendBomDTO> list = new ArrayList<SAPSendBomDTO>();
+		View view = ViewHelper.service.getView(parent.getViewName());
+		WTPartConfigSpec configSpec = WTPartConfigSpec
+				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
+		QueryResult qr = WTPartHelper.service.getUsesWTParts(parent, configSpec);
+		while (qr.hasMoreElements()) {
+			Object obj[] = (Object[]) qr.nextElement();
+			if (!(obj[1] instanceof WTPart)) {
+				continue;
+			}
+			WTPartUsageLink link = (WTPartUsageLink) obj[0];
+			WTPart child = (WTPart) obj[1];
+
+			if (SAPHelper.manager.skipEight(parent.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(parent.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipEight(child.getNumber())) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(child.getNumber())) {
+				continue;
+			}
+
+			SAPSendBomDTO dto = new SAPSendBomDTO(child, parent, link, eco);
+			list.add(dto);
+		}
+
+		return list;
 	}
 }

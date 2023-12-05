@@ -10,7 +10,7 @@ public interface BomService {
 	/**
 	 * BOM 연결 제거
 	 */
-	public abstract void removeLink(Map<String, String> params) throws Exception;
+	public abstract Map<String, Object> removeLink(Map<String, String> params) throws Exception;
 
 	/**
 	 * 체크아웃 취소
@@ -26,4 +26,29 @@ public interface BomService {
 	 * 체크인 후 변경된 노드 리턴
 	 */
 	public abstract Map<String, Object> checkin(String oid) throws Exception;
+
+	/**
+	 * BOM 에디터서 복사붙여넣기
+	 */
+	public abstract Map<String, Object> paste(Map<String, String> params) throws Exception;
+
+	/**
+	 * BOM 기존 품목 교체
+	 */
+	public abstract Map<String, Object> exist(Map<String, String> params) throws Exception;
+
+	/**
+	 * BOM 드랍
+	 */
+	public abstract Map<String, Object> drop(Map<String, String> params) throws Exception;
+
+	/**
+	 * BOM 신규 품목 추가
+	 */
+	public abstract Map<String, Object> append(Map<String, String> params) throws Exception;
+
+	/**
+	 * BOM 기존 항목 교체
+	 */
+	public abstract Map<String, Object> replace_exist(Map<String, String> params) throws Exception;
 }

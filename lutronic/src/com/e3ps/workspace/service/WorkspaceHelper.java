@@ -110,7 +110,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
 					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
@@ -254,7 +254,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
 					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
@@ -301,7 +301,7 @@ public class WorkspaceHelper {
 
 		if (!CommonUtil.isAdmin()) {
 			WTUser sessionUser = CommonUtil.sessionUser();
-			QuerySpecUtils.toCreator(query, idx, ApprovalLine.class,
+			QuerySpecUtils.toCreator(query, idx, ApprovalMaster.class,
 					sessionUser.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
@@ -312,7 +312,7 @@ public class WorkspaceHelper {
 		// 합의 어떻게 처리 할건지?
 		query.appendOpenParen();
 //		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_AGREE_REJECT);
-		QuerySpecUtils.toEqualsOr(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_REJECT);
+		QuerySpecUtils.toEquals(query, idx, ApprovalMaster.class, ApprovalMaster.STATE, STATE_MASTER_APPROVAL_REJECT);
 		query.appendCloseParen();
 
 		QuerySpecUtils.toLikeAnd(query, idx, ApprovalMaster.class, ApprovalMaster.NAME, name);

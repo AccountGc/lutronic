@@ -109,7 +109,13 @@ public class MailUtils {
 		hash.put("viewString", viewString);
 		hash.put("gubun", type);
 		hash.put("creatorName", creatorName);
-		hash.put("description", description);
+
+		if (StringUtil.checkString(description)) {
+			hash.put("description", description);
+		} else {
+			hash.put("description", "");
+		}
+
 		return hash;
 	}
 

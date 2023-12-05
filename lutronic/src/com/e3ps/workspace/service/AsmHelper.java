@@ -95,14 +95,17 @@ public class AsmHelper {
 			if (per instanceof WTDocument) {
 				WTDocument doc = (WTDocument) per;
 				String t = doc.getDocType().toString();
+				map.put("oid", doc.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("name", doc.getName());
 				map.put("number", doc.getNumber());
 				map.put("creator", doc.getCreatorFullName());
+				map.put("state", doc.getLifeCycleState().getDisplay());
 				map.put("createdDate_txt", doc.getCreateTimestamp().toString().substring(0, 16));
 				map.put("version", doc.getVersionIdentifier().getSeries().getValue() + "."
 						+ doc.getIterationIdentifier().getSeries().getValue());
 			} else if (per instanceof ROHSMaterial) {
 				ROHSMaterial rohs = (ROHSMaterial) per;
+				map.put("oid", rohs.getPersistInfo().getObjectIdentifier().getStringValue());
 				map.put("name", rohs.getName());
 				map.put("number", rohs.getNumber());
 				map.put("creator", rohs.getCreatorFullName());

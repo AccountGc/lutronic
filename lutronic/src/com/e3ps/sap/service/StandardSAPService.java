@@ -32,6 +32,7 @@ import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.dto.SAPBomDTO;
 import com.e3ps.sap.dto.SAPReverseBomDTO;
+import com.e3ps.sap.dto.SAPSendBomDTO;
 import com.e3ps.sap.util.SAPUtil;
 import com.sap.conn.jco.JCoDestination;
 import com.sap.conn.jco.JCoDestinationManager;
@@ -391,7 +392,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 			// ?? 코드: 단위 형태인지
 			insertTable.setValue("BRGEW", IBAUtil.getAttrfloatValue(part, "WEIGHT")); // 중량
-			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
+//			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
+			insertTable.setValue("GEWEI", "G");
 			insertTable.setValue("ZMATLT", IBAUtil.getStringValue(part, "MAT")); // 재질
 			insertTable.setValue("ZPOSTP", IBAUtil.getStringValue(part, "FINISH")); // 후처리
 			insertTable.setValue("ZDEVND", IBAUtil.getStringValue(part, "MANUFACTURE")); // 개발공급업체
@@ -447,42 +449,98 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		ecoTable.setValue("DATUV", today); // 보내는 날짜
 		ecoTable.setValue("AEGRU", eco.getName()); // 변경사유 테스트 일단 한줄
 		ecoTable.setValue("AETXT", "첫줄 테스트"); // 변경 내역 첫줄만 일단 테스트
-		ecoTable.setValue("AETXT_L", "테스트1<br>테스트2<br>테스트3"); // 변경 내역 전체 내용
+		ecoTable.setValue("AETXT_L", eco.getEoCommentA()); // 변경 내역 전체 내용
 
 		// 변경 대상품목을 가져온다..
 		JCoTable bomTable = function.getTableParameterList().getTable("ET_BOM");
 
-		// ECO 변경 대상품목중 젤 하위만 모아서 역전개로 전송 한다.
-		ArrayList<WTPart> list = SAPHelper.manager.getEcoEndParts(eco);
-		System.out.println("역전개 데이터 개수 =  " + list.size());
-		for (WTPart part : list) {
+		// ECO 대상품목 정전개 하는게 맞는거 같음..
+		QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+		System.out.println("정전개 대상 몇번인가 = " + qr.size());
+		while (qr.hasMoreElements()) {
+			EcoPartLink link = (EcoPartLink) qr.nextElement();
+			WTPartMaster master = link.getPart();
+			String version = link.getVersion();
+			WTPart target = PartHelper.manager.getPart(master.getNumber(), version);
+			boolean isPast = link.getPast();
 
-			// 개정 후 품목이 무조건 오는게 맞나 ...
-			ArrayList<SAPReverseBomDTO> dataList = SAPHelper.manager.getReverseBomData(part, eco);
+			WTPart part = null;
 
-			System.out.println("역전개 개수 = " + dataList.size());
+			if (!isPast) { // 과거 아닐경우 과거 데이터는 어떻게 할지..???
+				boolean isRight = link.getRightPart();
+				boolean isLeft = link.getLeftPart();
+				// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
+				if (isLeft) {
+					// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
+					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(target);
+					part = next_part;
+				} else if (isRight) {
+					// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
+					part = target;
+				}
 
-			for (SAPReverseBomDTO dto : dataList) {
+				String msg = "정전개 품번 = " + part.getNumber() + ", 버전 = "
+						+ part.getVersionIdentifier().getSeries().getValue();
 
-				System.out.println(
-						"부보품번 = " + dto.getNewParentPartNumber() + ", " + "자식품번 =  " + dto.getNewChildPartNumber()
-								+ ", 이전부모 = " + dto.getParentPartNumber() + ", 이전자식 = " + dto.getChildPartNumber());
+				System.out.println("SAP로 전송될 정전개 데이터 = " + part.getNumber() + ", 버전 = "
+						+ part.getVersionIdentifier().getSeries().getValue());
+				ArrayList<SAPSendBomDTO> sendList = SAPHelper.manager.getOneLevel(part, eco);
+				for (SAPSendBomDTO dto : sendList) {
 
-				bomTable.insertRow(idx);
-				bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
-				bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
-				bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
-				bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
-				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
-				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
-				bomTable.setValue("MENGE", dto.getQty()); // 수량
-				bomTable.setValue("MEINS", dto.getUnit()); // 단위
-				bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
+					System.out.println("정전개 품번" + msg + " 변경대상부모품번 = " + dto.getNewParentPartNumber() + ", "
+							+ " 변경대상자식품번 =  " + dto.getNewChildPartNumber() + ", 이전부모 = " + dto.getParentPartNumber()
+							+ ", 이전자식 = " + dto.getChildPartNumber());
 
-				idx++;
+					bomTable.insertRow(idx);
+					bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
+					bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
+					bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
+					bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
+					bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
+					bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
+					bomTable.setValue("MENGE", dto.getQty()); // 수량
+					bomTable.setValue("MEINS", dto.getUnit()); // 단위
+					bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
+
+					idx++;
+				}
 			}
 
 		}
+
+		// ECO 변경 대상품목중 젤 하위만 모아서 역전개로 전송 한다.
+//		ArrayList<WTPart> list = SAPHelper.manager.getEcoEndParts(eco);
+//		System.out.println("역전개대상의 마지막 품목 데이터 개수 =  " + list.size());
+//		for (WTPart part : list) {
+//
+//			System.out.println("대상 품목 번호 = " + part.getNumber());
+//
+//			// 개정 후 품목이 무조건 오는게 맞나 ...
+//			ArrayList<SAPReverseBomDTO> dataList = SAPHelper.manager.getReverseBomData(part, eco);
+//
+//			System.out.println("역전개 개수 = " + dataList.size());
+//
+//			for (SAPReverseBomDTO dto : dataList) {
+//
+//				System.out.println(
+//						"부보품번 = " + dto.getNewParentPartNumber() + ", " + "자식품번 =  " + dto.getNewChildPartNumber()
+//								+ ", 이전부모 = " + dto.getParentPartNumber() + ", 이전자식 = " + dto.getChildPartNumber());
+//
+//				bomTable.insertRow(idx);
+//				bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
+//				bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
+//				bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
+//				bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
+//				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
+//				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
+//				bomTable.setValue("MENGE", dto.getQty()); // 수량
+//				bomTable.setValue("MEINS", dto.getUnit()); // 단위
+//				bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
+//
+//				idx++;
+//			}
+//
+//		}
 
 		function.execute(destination);
 
@@ -532,26 +590,39 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			String version = link.getVersion();
 			WTPart target = PartHelper.manager.getPart(master.getNumber(), version);
 			boolean isApproved = target.getLifeCycleState().toString().equals("APPROVED");
+			boolean isFour = target.getName().startsWith("4"); // 4번 품목..
+			boolean isPast = link.getPast();
 
+			// 신규 데이터
 			WTPart part = null;
-			// 개정 케이스 - 이전품목을 가여와야한다.
-			if (isApproved) {
-				WTPart next_part = (WTPart) EChangeUtils.manager.getNext(target);
-				part = next_part;
-			} else {
-				WTPart pre_part = SAPHelper.manager.getPre(target, eco);
-				if (pre_part != null) {
-					part = pre_part;
+			if (!isPast) {
+				// 개정 케이스 - 이전품목을 가여와야한다.
+				// 변경 후 품목이냐 변경 대상 푼목이냐
+				boolean isLeft = link.getLeftPart();
+				boolean isRight = link.getRightPart();
+//				if (isApproved) {
+
+				// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
+				if (isLeft) {
+					// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
+					WTPart next_part = (WTPart) EChangeUtils.manager.getNext(target);
+					part = next_part;
+				} else if (isRight) {
+					// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
+					part = target;
 				}
-			}
 
-			String number = part.getNumber();
-			if (SAPHelper.manager.skipEight(number)) {
-				continue;
-			}
+				String number = part.getNumber();
+				if (SAPHelper.manager.skipEight(number)) {
+					continue;
+				}
 
-			if (SAPHelper.manager.skipLength(number)) {
-				continue;
+				if (SAPHelper.manager.skipLength(number)) {
+					continue;
+				}
+			} else {
+				// 과거 어떻게 전송할것인지
+
 			}
 
 			insertTable.insertRow(idx);
@@ -588,7 +659,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			}
 
 			insertTable.setValue("BRGEW", IBAUtil.getAttrfloatValue(part, "WEIGHT")); // 중량
-			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
+//			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
+			insertTable.setValue("GEWEI", "G"); // 고정..
 			insertTable.setValue("ZMATLT", IBAUtil.getStringValue(part, "MAT")); // 재질
 			insertTable.setValue("ZPOSTP", IBAUtil.getStringValue(part, "FINISH")); // 후처리
 			insertTable.setValue("ZDEVND", IBAUtil.getStringValue(part, "MANUFACTURE")); // 개발공급업체
@@ -601,6 +673,15 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		JCoParameterList result = function.getExportParameterList();
 		Object r_type = result.getValue("EV_STATUS");
 		Object r_msg = result.getValue("EV_MESSAGE");
+
+		JCoTable rtnTable = function.getTableParameterList().getTable("ET_MAT");
+		rtnTable.firstRow();
+		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+		}
+
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 		System.out.println("종료 SAP 인터페이스 - ECO 자재마스터 FUN : ZPPIF_PDM_001");

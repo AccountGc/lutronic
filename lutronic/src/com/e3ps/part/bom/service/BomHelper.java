@@ -2,6 +2,7 @@ package com.e3ps.part.bom.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -11,6 +12,7 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.ThumbnailUtil;
+import com.e3ps.part.bom.util.BomComparator;
 import com.e3ps.part.service.PartHelper;
 
 import net.sf.json.JSONArray;
@@ -167,6 +169,7 @@ public class BomHelper {
 //				node.put("expanded", true);
 			}
 			children.add(node);
+			Collections.sort(children, new BomComparator());
 		}
 		rootNode.put("children", children);
 		list.add(rootNode);
@@ -1353,6 +1356,7 @@ public class BomHelper {
 				node.put("lazy", true);
 			}
 			list.add(node);
+			Collections.sort(list, new BomComparator());
 		}
 		return list;
 	}

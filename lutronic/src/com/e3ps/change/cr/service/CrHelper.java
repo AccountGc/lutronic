@@ -53,15 +53,18 @@ public class CrHelper {
 		String writedFrom = (String) params.get("writedFrom");
 		String writedTo = (String) params.get("writedTo");
 //		String proposer = (String) params.get("proposer");
-		String changeSection = (String)params.get("changeSection");
+		String changeSection = (String) params.get("changeSection");
 		String model = (String) params.get("model");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(EChangeRequest.class, true);
-		
+
 		// 상태 임시저장 제외
-    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-    	query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE,
+				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
 		// 제목
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.EO_NAME, name);
 		// 번호
@@ -70,54 +73,59 @@ public class CrHelper {
 		QuerySpecUtils.toState(query, idx, EChangeRequest.class, state);
 		// 등록자
 		QuerySpecUtils.toCreatorQuery(query, idx, EChangeRequest.class, creator);
-		//등록일
-		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, createdFrom,
-				createdTo);
-		//승인일
-		if(approveFrom.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+		// 등록일
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP,
+				createdFrom, createdTo);
+		// 승인일
+		if (approveFrom.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.APPROVE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , approveFrom), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.APPROVE_DATE,
+					SearchCondition.GREATER_THAN_OR_EQUAL, approveFrom), new int[] { idx });
 		}
-		if(approveTo.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+		if (approveTo.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.APPROVE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , approveTo), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.APPROVE_DATE,
+					SearchCondition.LESS_THAN_OR_EQUAL, approveTo), new int[] { idx });
 		}
-		//작성자
-		if(writer!="") {
-			QuerySpecUtils.toEqualsAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER, Long.toString(CommonUtil.getOIDLongValue(writer)));
+		// 작성자
+		if (writer != "") {
+			QuerySpecUtils.toEqualsAnd(query, idx, EChangeRequest.class, EChangeRequest.WRITER,
+					Long.toString(CommonUtil.getOIDLongValue(writer)));
 		}
-		
-		//작성부서
+
+		// 작성부서
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CREATE_DEPART, createDepart);
-		
-		//작성일
-		if(writedFrom.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+
+		// 작성일
+		if (writedFrom.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.CREATE_DATE, SearchCondition.GREATER_THAN_OR_EQUAL , writedFrom), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.CREATE_DATE,
+					SearchCondition.GREATER_THAN_OR_EQUAL, writedFrom), new int[] { idx });
 		}
-		if(writedTo.length() > 0) {
-			if( query.getConditionCount() > 0 ) {
+		if (writedTo.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.CREATE_DATE, SearchCondition.LESS_THAN_OR_EQUAL , writedTo), new int[] {idx});
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.CREATE_DATE,
+					SearchCondition.LESS_THAN_OR_EQUAL, writedTo), new int[] { idx });
 		}
-		//제안자
+		// 제안자
 //		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.PROPOSER, proposer);
-		
-		//프로젝트 코드
+
+		// 프로젝트 코드
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.MODEL, model);
-		
+
 		// 변경구분
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.CHANGE_SECTION, changeSection);
-		
+
 		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.MODIFY_TIMESTAMP, true);
-		
+
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -139,7 +147,7 @@ public class CrHelper {
 	 */
 	public String displayToModel(String model) throws Exception {
 		String display = "";
-		if(model != null) {
+		if (model != null) {
 			String[] ss = model.split(",");
 			for (int i = 0; i < ss.length; i++) {
 				String s = ss[i];
@@ -148,7 +156,7 @@ public class CrHelper {
 				} else {
 					display += NumberCodeHelper.manager.getNumberCodeName(s, "MODEL") + ",";
 				}
-			}			
+			}
 		}
 		return display;
 	}
@@ -158,7 +166,7 @@ public class CrHelper {
 	 */
 	public String displayToSection(String section) throws Exception {
 		String display = "";
-		if(section != null) {
+		if (section != null) {
 			String[] ss = section.split(",");
 			for (int i = 0; i < ss.length; i++) {
 				String s = ss[i];
@@ -176,7 +184,7 @@ public class CrHelper {
 	 * 작성부서 코드 -> 값
 	 */
 	public String displayToDept(String dept) throws Exception {
-		if(dept == null) {
+		if (dept == null) {
 			return "";
 		}
 		return NumberCodeHelper.manager.getNumberCodeName(dept, "DEPTCODE");
@@ -196,14 +204,14 @@ public class CrHelper {
 	}
 
 	private Object referenceCode(EChangeRequest cr, ArrayList<Map<String, Object>> list) throws Exception {
-		
+
 		String[] codes = cr.getModel() != null ? cr.getModel().split(",") : null;
-		
-		if(codes != null) {
+
+		if (codes != null) {
 			QuerySpec query = new QuerySpec();
 			int idx = query.appendClassList(NumberCode.class, true);
-			for(int i = 0; i < codes.length; i++) {
-				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);			
+			for (int i = 0; i < codes.length; i++) {
+				QuerySpecUtils.toEqualsOr(query, idx, NumberCode.class, NumberCode.CODE, codes[i]);
 			}
 			QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "MODEL");
 			QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);

@@ -154,4 +154,57 @@ public class DepartmentHelper {
 		}
 		return dept;
 	}
+
+	/**
+	 * RA 문서 관리 권한 여부
+	 */
+	public boolean isRa(People people, String[] authList) throws Exception {
+		return isAuth(people, authList);
+	}
+
+	/**
+	 * 생산본수 문서 권한
+	 */
+	public boolean isProduction(People people, String[] authList) throws Exception {
+		return isAuth(people, authList);
+	}
+
+	/**
+	 * 화장품 문서 권한
+	 */
+	public boolean isCosmetic(People people, String[] authList) throws Exception {
+		return isAuth(people, authList);
+	}
+
+	/**
+	 * 병리연구 문서 권한
+	 */
+	public boolean isPathological(People people, String[] authList) throws Exception {
+		return isAuth(people, authList);
+	}
+
+	/**
+	 * 임삼개발 문서 권한
+	 */
+	public boolean isClinical(People people, String[] authList) throws Exception {
+		return isAuth(people, authList);
+	}
+
+	/**
+	 * 문서 권한 여부 체크
+	 */
+	private boolean isAuth(People people, String[] authList) throws Exception {
+		Department dept = people.getDepartment();
+		if (dept == null) {
+			return false;
+		} else {
+			String deptName = dept.getName();
+			for (String auth : authList) {
+				if (auth.trim().equals(deptName)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 }

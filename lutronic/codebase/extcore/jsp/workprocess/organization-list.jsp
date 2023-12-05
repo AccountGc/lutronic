@@ -23,7 +23,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -96,12 +96,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<td valign="top">
 					<jsp:include page="/extcore/jsp/workprocess/department-tree.jsp">
-						<jsp:param value="635" name="height" />
+						<jsp:param value="670" name="height" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -109,33 +109,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		</table>
 		<script type="text/javascript">
 			let myGridID;
-			const list = <%=list%>;
+			const list =
+		<%=list%>
+			;
 			const duty = [ "사장", "부사장" ];
-			const auths = [ {
-				key : "나의업무",
-				value : "나의업무"
-			}, {
-				key : "문서관리",
-				value : "문서관리"
-			}, {
-				key : "품목관리",
-				value : "품목관리"
-			}, {
-				key : "도면관리",
-				value : "도면관리"
-			}, {
-				key : "설계변경",
-				value : "설계변경"
-			}, {
-				key : "RoHS",
-				value : "RoHS"
-			}, {
-				key : "금형관리",
-				value : "금형관리"
-			}, {
-				key : "기타문서관리",
-				value : "기타문서관리"
-			} ];
+			const auths = [ "나의업무", "문서관리", "품목관리", "도면관리", "설계변경", "RoHS", "금형관리" ];
 			function _layout() {
 				return [ {
 					dataField : "id",
@@ -199,18 +177,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						multipleMode : true,
 						showCheckAll : true,
 						list : auths,
-						keyField : "key",
-						valueField : "value",
-					},
-					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-						let retStr = "";
-						for (let i = 0, len = auths.length; i < len; i++) {
-							if (auths[i]["key"] == value) {
-								retStr = auths[i]["value"];
-								break;
-							}
-						}
-						return retStr == "" ? value : retStr;
 					},
 					filter : {
 						showIcon : true,
@@ -304,7 +270,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerHeight : 30,
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
-					showAutoNoDataMessage : true,
+					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
 					enableMovingColumn : true,
 					enableFilter : true,
@@ -335,6 +301,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
+					logger(data);
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						// 페이징처리..
@@ -363,6 +330,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
+				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
@@ -400,10 +368,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("조직도 리스트", "조직도", "조직도 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("조직도 리스트", "조직도", "조직도 리스트", [], sessionName);
 			}
 		</script>
 	</form>

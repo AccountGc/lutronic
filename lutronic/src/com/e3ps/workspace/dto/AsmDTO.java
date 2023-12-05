@@ -23,6 +23,8 @@ public class AsmDTO {
 	private String state;
 	private String creator;
 	private String createdDate_txt;
+	private String modifiedDate_text;
+	private String description;
 	private String type;
 	private JSONArray data = new JSONArray();
 
@@ -43,5 +45,7 @@ public class AsmDTO {
 		setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 16));
 		setType(AsmHelper.manager.getAsmType(asm));
 		setData(AsmHelper.manager.data(asm));
+		setDescription(asm.getDescription());
+		setModifiedDate_text(asm.getModifyTimestamp().toString().substring(0, 16));
 	}
 }

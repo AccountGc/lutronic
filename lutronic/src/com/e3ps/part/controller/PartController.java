@@ -2425,4 +2425,44 @@ public class PartController extends BaseController {
 		}
 		return result;
 	}
+
+	@Description(value = "BOM에서 등록 후 바로 연결")
+	@GetMapping(value = "/append")
+	public ModelAndView append() throws Exception {
+		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		ArrayList<NumberCode> productmethodList = NumberCodeHelper.manager.getArrayCodeList("PRODUCTMETHOD");
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
+		ModelAndView model = new ModelAndView();
+		model.addObject("modelList", modelList);
+		model.addObject("productmethodList", productmethodList);
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("matList", matList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("finishList", finishList);
+		model.addObject("unitList", unitList);
+		model.setViewName("popup:/part/part-append");
+		return model;
+	}
+
+	@Description(value = "BOM 품목 신규 등록")
+	@ResponseBody
+	@PostMapping(value = "/append")
+	public Map<String, Object> append(@RequestBody Map<String, Object> params) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WTPart part = PartHelper.service.append(params);
+			result.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }
