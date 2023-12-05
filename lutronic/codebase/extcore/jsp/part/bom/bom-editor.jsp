@@ -271,6 +271,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 			},
 			contextMenu : {
 				menu : {
+					"info" : {
+						"name" : "정보보기",
+						"icon" : "info"
+					},
+					"sep0" : "---------",
 					"copy" : {
 						"name" : "복사",
 						"icon" : "copy"
@@ -361,6 +366,9 @@ WTPart root = (WTPart) request.getAttribute("root");
 		}).on("keydown", function(e) {
 			let cmd = null;
 			switch ($.ui.fancytree.eventToString(e)) {
+			case "ctrl+x":
+				cmd = "cut";
+				break;
 			case "ctrl+c":
 				cmd = "copy";
 				break;
@@ -390,8 +398,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 		const params = new Object();
 		logger(oid);
 
-		// 기존항목교체
-		if (action === "replace_new") {
+		// 정보보기
+		if (action === "info") {
+			url = getCallUrl("/part/view?oid=" + oid);
+			_popup(url, 1600, 800, "n");
+		} else if (action === "replace_new") {
 		} else if (action === "replace_exist") {
 			url = getCallUrl("/part/popup?method=replace_exist&multi=false");
 			_popup(url, 1600, 800, "n");
@@ -401,6 +412,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 			_popup(url, 1600, 800, "n");
 			// 기존 삽입
 		} else if (action === "cut") {
+			if (node.data.state === "승인됨") {
+				alert("승인됨 품목은 잘라내기를 할 수 없습니다.");
+				return false;
+			}
 			// 잘라내기
 		} else if (action === "exist") {
 			url = getCallUrl("/part/popup?method=exist&multi=false");
@@ -617,7 +632,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 		document.getElementById("number").value = number + " / " + name;
 		document.getElementById("poid").value = poid;
 		$("#righttable").fancytree({
-			extensions : [ "dnd5", "table" ],
+			extensions : [ "dnd5", "table", "contextMenu" ],
 			debugLevel : 0,
 			dnd5 : {
 				autoExpandMS : 100,
@@ -682,6 +697,17 @@ WTPart root = (WTPart) request.getAttribute("root");
 				list[7].textContent = node.data.state;
 				list[8].style.textAlign = "center";
 				list[8].textContent = node.data.creator;
+			},
+			contextMenu : {
+				menu : {
+					"info" : {
+						"name" : "정보보기",
+						"icon" : "info"
+					},
+				},
+				actions : function(node, action, options) {
+					process(node, action);
+				}
 			},
 		}).on("nodeCommand", function(event, data) {
 			const tree = $.ui.fancytree.getTree(this);
