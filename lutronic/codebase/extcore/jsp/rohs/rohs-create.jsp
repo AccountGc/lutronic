@@ -61,7 +61,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 				<td class="indent5">
 					<input type="text" name="rohsNumber" id="rohsNumber" class="width-400">
 					&nbsp;
-					<input type="button" value="번호 중복" title="번호 중복" onclick="NumberCheck();">
+					<input type="button" value="번호 중복" title="번호 중복" onclick="check();">
 				</td>
 				<th class="req">물질명</th>
 				<td class="indent5">
@@ -95,7 +95,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 				</td>
 				<th class="req">협력업체</th>
 				<td class="indent5">
-					<select name="manufacture" id="manufacture" class="width-500">
+					<select name="manufacture" id="manufacture" class="width-300">
 						<option value="">선택</option>
 						<%
 						for (NumberCode manufacture : manufactureList) {
@@ -124,7 +124,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 			<tr>
 				<th class="lb">파일구분</th>
 				<td class="indent5">
-					<select name="fileType" id="fileType" class="width-500">
+					<select name="fileType" id="fileType" class="width-200">
 						<option value="">선택</option>
 						<%
 						for (Map<String, String> type : typeList) {
@@ -246,7 +246,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 			}
 
 			// 번호 중복체크
-			function NumberCheck() {
+			function check() {
 				var params = new Object();
 				if (isEmpty($("#rohsNumber").val())) {
 					alert("입력된 물질번호가 없습니다.");
@@ -269,6 +269,7 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("rohsNumber");
 				selectbox("manufacture");
 				selectbox("fileType");
 				date("publicationDate");

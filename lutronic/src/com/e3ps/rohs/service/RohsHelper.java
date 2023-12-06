@@ -1,6 +1,7 @@
 package com.e3ps.rohs.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RoHSHolderData;
 import com.e3ps.rohs.dto.RohsData;
+import com.e3ps.rohs.util.RohsPartComparator;
 
 import net.sf.json.JSONArray;
 import wt.content.ApplicationData;
@@ -51,115 +53,153 @@ import wt.vc.config.LatestConfigSpec;
 public class RohsHelper {
 	public static final RohsService service = ServiceFactory.getService(RohsService.class);
 	public static final RohsHelper manager = new RohsHelper();
-	
+
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<RohsData> list = new ArrayList<>();
-    	
-    	QuerySpec query = new QuerySpec();
-    	int idx = query.addClassList(ROHSMaterial.class, true);
-    	
-    	try {
-    		String islastversion 	= StringUtil.checkNull((String)params.get("islastversion"));
-    		String rohsNumber 		= StringUtil.checkNull((String) params.get("rohsNumber"));
-    		String rohsName 		= StringUtil.checkNull((String) params.get("rohsName"));
-    		String description		= StringUtil.checkNull((String) params.get("description"));
-    		String predate 			= StringUtil.checkNull((String) params.get("createdFrom"));
-    		String postdate 		= StringUtil.checkNull((String) params.get("createdTo"));
-    		String predate_modify	= StringUtil.checkNull((String) params.get("modifiedFrom"));
-    		String postdate_modify	= StringUtil.checkNull((String) params.get("modifiedTo"));
-    		String creator 			= StringUtil.checkNull((String) params.get("creatorOid"));
-    		String state 			= StringUtil.checkNull((String) params.get("state"));
-    		String manufacture 		= StringUtil.checkNull((String) params.get("manufacture"));
-			
-			if(!StringUtil.checkString(islastversion)) {
-	    		islastversion = "true";
-	    	}
 
-	    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    	query.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx});
-	    	
-	    	if("true".equals(islastversion)) {
-	    		QuerySpecUtils.toLatest(query, idx, ROHSMaterial.class);
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(ROHSMaterial.class, true);
+
+		try {
+			String islastversion = StringUtil.checkNull((String) params.get("islastversion"));
+			String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
+			String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
+			String description = StringUtil.checkNull((String) params.get("description"));
+			String predate = StringUtil.checkNull((String) params.get("createdFrom"));
+			String postdate = StringUtil.checkNull((String) params.get("createdTo"));
+			String predate_modify = StringUtil.checkNull((String) params.get("modifiedFrom"));
+			String postdate_modify = StringUtil.checkNull((String) params.get("modifiedTo"));
+			String creator = StringUtil.checkNull((String) params.get("creatorOid"));
+			String state = StringUtil.checkNull((String) params.get("state"));
+			String manufacture = StringUtil.checkNull((String) params.get("manufacture"));
+
+			if (!StringUtil.checkString(islastversion)) {
+				islastversion = "true";
 			}
-	    	
-	    	// 상태 임시저장 제외
-	    	if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    	query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[]{idx});
-			
-	    	//문서번호
-	    	if(rohsNumber.length() > 0){
-	    		if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.NUMBER, SearchCondition.LIKE, "%" + rohsNumber + "%", false), new int[]{idx});
-	    	}
-	    	
-	    	//문서명
-	    	if(rohsName.length() > 0){
-	    		if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.NAME, SearchCondition.LIKE, "%" + rohsName + "%", false), new int[]{idx});
-	    	}
-	    	
-	    	// 설명
-			if(description.length() > 0) {
-				if(query.getConditionCount() > 0) { query.appendAnd(); }
-				query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.DESCRIPTION, SearchCondition.LIKE, "%"+description+"%", false), new int[] {idx} );
+
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
 			}
-	    	
-	    	//등록일
-	    	if(predate.length() > 0){
-	    		if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.CREATE_TIMESTAMP ,SearchCondition.GREATER_THAN,DateUtil.convertStartDate(predate)), new int[]{idx});
-	    	}
-	    	
-	    	if(postdate.length() > 0){
-	    		if(query.getConditionCount() > 0)query.appendAnd();
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.CREATE_TIMESTAMP,SearchCondition.LESS_THAN,DateUtil.convertEndDate(postdate)), new int[]{idx});
-	    	}
-	    	
-	    	//수정일
-	    	if(predate_modify.length() > 0){
-	    		if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate_modify)), new int[]{idx});
-	    	}
-	    	
-	    	if(postdate_modify.length() > 0){
-	    		if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate_modify)), new int[]{idx});
-	    	}
-	    	
-	    	//등록자
-	    	if(creator.length() > 0){
-	    		if(query.getConditionCount() > 0) { query.appendAnd(); } 
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class,"iterationInfo.creator.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(creator)), new int[]{idx});
-	    	}
-	    	
-	    	//상태
-	    	if(state.length() > 0){
-	    		if(query.getConditionCount() > 0) { query.appendAnd(); }
-	    		query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.LIFE_CYCLE_STATE, SearchCondition.EQUAL, state), new int[]{idx});
-	    	}
-	    	
-	    	
-	    	// 협력 업체
+			query.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[] { idx });
+
+			if ("true".equals(islastversion)) {
+				QuerySpecUtils.toLatest(query, idx, ROHSMaterial.class);
+			}
+
+			// 상태 임시저장 제외
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.LIFE_CYCLE_STATE,
+					SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
+
+			// 문서번호
+			if (rohsNumber.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.NUMBER, SearchCondition.LIKE,
+						"%" + rohsNumber + "%", false), new int[] { idx });
+			}
+
+			// 문서명
+			if (rohsName.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.NAME, SearchCondition.LIKE,
+						"%" + rohsName + "%", false), new int[] { idx });
+			}
+
+			// 설명
+			if (description.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.DESCRIPTION,
+						SearchCondition.LIKE, "%" + description + "%", false), new int[] { idx });
+			}
+
+			// 등록일
+			if (predate.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.CREATE_TIMESTAMP,
+						SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate)), new int[] { idx });
+			}
+
+			if (postdate.length() > 0) {
+				if (query.getConditionCount() > 0)
+					query.appendAnd();
+				query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.CREATE_TIMESTAMP,
+						SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate)), new int[] { idx });
+			}
+
+			// 수정일
+			if (predate_modify.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(
+						new SearchCondition(ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP,
+								SearchCondition.GREATER_THAN, DateUtil.convertStartDate(predate_modify)),
+						new int[] { idx });
+			}
+
+			if (postdate_modify.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(
+						new SearchCondition(ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP,
+								SearchCondition.LESS_THAN, DateUtil.convertEndDate(postdate_modify)),
+						new int[] { idx });
+			}
+
+			// 등록자
+			if (creator.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(ROHSMaterial.class, "iterationInfo.creator.key.id",
+						SearchCondition.EQUAL, CommonUtil.getOIDLongValue(creator)), new int[] { idx });
+			}
+
+			// 상태
+			if (state.length() > 0) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+				query.appendWhere(new SearchCondition(ROHSMaterial.class, ROHSMaterial.LIFE_CYCLE_STATE,
+						SearchCondition.EQUAL, state), new int[] { idx });
+			}
+
+			// 협력 업체
 			if (manufacture.length() > 0) {
-				AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MANUFACTURE);
+				AttributeDefDefaultView aview = IBADefinitionHelper.service
+						.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_MANUFACTURE);
 				if (aview != null) {
 					if (query.getConditionCount() > 0) {
 						query.appendAnd();
 					}
 					int _idx = query.appendClassList(StringValue.class, false);
-					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", ROHSMaterial.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
+					query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id",
+							ROHSMaterial.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
 					query.appendAnd();
-					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID", SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
+					query.appendWhere(new SearchCondition(StringValue.class, "definitionReference.hierarchyID",
+							SearchCondition.EQUAL, aview.getHierarchyID()), new int[] { _idx });
 					query.appendAnd();
-					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE, ("%" + manufacture + "%").toUpperCase()), new int[] { _idx });
+					query.appendWhere(new SearchCondition(StringValue.class, "value", SearchCondition.LIKE,
+							("%" + manufacture + "%").toUpperCase()), new int[] { _idx });
 				}
 			} else {
 				manufacture = "";
 			}
-			
+
 			QuerySpecUtils.toOrderBy(query, idx, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, true);
-			
+
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
 			while (result.hasMoreElements()) {
@@ -174,76 +214,80 @@ public class RohsHelper {
 			map.put("total", pager.getTotalSize());
 			map.put("sessionid", pager.getSessionId());
 			map.put("curPage", pager.getCpage());
-			
-	    }catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	return map;
-    	
+		return map;
+
 	}
-	
+
 	public JSONArray include_RohsView(String oid, String module, String roleType) throws Exception {
 		List<RohsData> list = null;
 		try {
-			if(oid.length() > 0){
-				if("rohs".equals(module)){
-					ROHSMaterial rohs = (ROHSMaterial)CommonUtil.getObject(oid);
-					list = RohsHelper.manager.getRepresentToLinkList(rohs,roleType);
-				}else if("part".equals(module)){
-					WTPart part = (WTPart)CommonUtil.getObject(oid);
+			if (oid.length() > 0) {
+				if ("rohs".equals(module)) {
+					ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
+					list = RohsHelper.manager.getRepresentToLinkList(rohs, roleType);
+				} else if ("part".equals(module)) {
+					WTPart part = (WTPart) CommonUtil.getObject(oid);
 					list = RohsHelper.manager.getPartToROHSList(part);
-				}else {
+				} else {
 					list = new ArrayList<RohsData>();
 				}
-			}else {
+			} else {
 				list = new ArrayList<RohsData>();
 			}
-			//System.out.println("include_RohsView ObjectComarator START =" + list.size());
+			// System.out.println("include_RohsView ObjectComarator START =" + list.size());
 			Collections.sort(list, new ObjectComarator());
-			//System.out.println("include_RohsView ObjectComarator end");
+			// System.out.println("include_RohsView ObjectComarator end");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return JSONArray.fromObject(list);
 	}
-	
-	public Map<String, Object> listRohsFile(Map<String, Object> params) throws Exception {
+
+	public Map<String, Object> file(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<RohsData> list = new ArrayList<>();
-    	
-		String fileType = StringUtil.checkNull((String)params.get("fileType"));
-		String publicationFrom = StringUtil.checkNull((String)params.get("publicationFrom"));
-		String publicationTo = StringUtil.checkNull((String)params.get("publicationTo"));
-		String fileName = StringUtil.checkNull((String)params.get("fileName"));
-		
+
+		String fileType = StringUtil.checkNull((String) params.get("fileType"));
+		String publicationFrom = StringUtil.checkNull((String) params.get("publicationFrom"));
+		String publicationTo = StringUtil.checkNull((String) params.get("publicationTo"));
+		String fileName = StringUtil.checkNull((String) params.get("fileName"));
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(ROHSContHolder.class, true);
 		int idx2 = query.addClassList(ROHSMaterial.class, false);
-		
+
 		QuerySpecUtils.toInnerJoin(query, ROHSContHolder.class, ROHSMaterial.class, "rohsReference.key.id",
 				"thePersistInfo.theObjectIdentifier.id", idx, idx2);
-		
-		if(query.getConditionCount() > 0) { query.appendAnd(); }
-    	query.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx2});
-    	
-    	QuerySpecUtils.toLatest(query, idx2, ROHSMaterial.class);
-		
-    	QuerySpecUtils.toEqualsAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_TYPE, fileType);
-    	QuerySpecUtils.toLikeAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_NAME, fileName.toUpperCase());
-    	if(publicationFrom.length() > 0) {
-			if(query.getConditionCount() > 0){
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+		query.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[] { idx2 });
+
+		QuerySpecUtils.toLatest(query, idx2, ROHSMaterial.class);
+
+		QuerySpecUtils.toEqualsAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_TYPE, fileType);
+		QuerySpecUtils.toLikeAnd(query, idx, ROHSContHolder.class, ROHSContHolder.FILE_NAME, fileName.toUpperCase());
+		if (publicationFrom.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.GREATER_THAN_OR_EQUAL, publicationFrom), new int[] {idx});
+			query.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE,
+					SearchCondition.GREATER_THAN_OR_EQUAL, publicationFrom), new int[] { idx });
 		}
-		if(publicationTo.length() > 0) {
-			if(query.getConditionCount() > 0){
+		if (publicationTo.length() > 0) {
+			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE, SearchCondition.LESS_THAN_OR_EQUAL, publicationTo), new int[] {idx});
+			query.appendWhere(new SearchCondition(ROHSContHolder.class, ROHSContHolder.PUBLICATION_DATE,
+					SearchCondition.LESS_THAN_OR_EQUAL, publicationTo), new int[] { idx });
 		}
-    	QuerySpecUtils.toOrderBy(query, idx, ROHSContHolder.class, ROHSContHolder.ROHS_REFERENCE + ".key.id", false);
-		
+		QuerySpecUtils.toOrderBy(query, idx, ROHSContHolder.class, ROHSContHolder.ROHS_REFERENCE + ".key.id", false);
+
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
@@ -260,27 +304,27 @@ public class RohsHelper {
 		map.put("total", pager.getTotalSize());
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
-			
-    	return map;
+
+		return map;
 	}
-	
-	public Map<String, Object> listAUIRoHSPart(Map<String, Object> params) throws Exception {
+
+	public Map<String, Object> part(Map<String, Object> params) throws Exception {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
-		List<Map<String,Object>> partRohslist = new ArrayList<Map<String,Object>>();
-		List<Map<String,Object>> partlist  = new ArrayList<Map<String,Object>>();
-		
-		String partOid = StringUtil.checkNull((String)params.get("partOid"));
-		if(partOid == ""){
+		List<Map<String, Object>> partRohslist = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> partlist = new ArrayList<Map<String, Object>>();
+
+		String partOid = StringUtil.checkNull((String) params.get("partOid"));
+		if (partOid == "") {
 			returnMap.put("partRohslist", partRohslist);
 			return returnMap;
 		}
-		WTPart part = (WTPart)CommonUtil.getObject(partOid);
-		if(part == null){
+		WTPart part = (WTPart) CommonUtil.getObject(partOid);
+		if (part == null) {
 			returnMap.put("partRohslist", partRohslist);
 			return returnMap;
 		}
-		
-		Map<String,Object>  productStateMap = RohsUtil.getProductRoHsState(partOid);
+
+		Map<String, Object> productStateMap = RohsUtil.getProductRoHsState(partOid);
 		returnMap.put("totalState", productStateMap.get("totalState"));
 		returnMap.put("passCount", productStateMap.get("passCount"));
 		returnMap.put("totalCount", productStateMap.get("totalCount"));
@@ -292,49 +336,44 @@ public class RohsHelper {
 		returnMap.put("orangeCount", productStateMap.get("orangeCount"));
 		returnMap.put("listCount", productStateMap.get("listCount"));
 		returnMap.put("isDumy_SonPartsCount", productStateMap.get("isDumy_SonPartsCount"));
-		
-		partlist = childPartPutMap(part, partlist,0);
-	    HashMap<String, Integer> stateMap = new HashMap<String, Integer>();
-	    
-	    int totalLevl = 0;
-		for(int i=0; i<partlist.size(); i++){
-			Map<String,Object> partMap = partlist.get(i);
-			
-			String oid = (String)partMap.get("partOid");
-			int level = (Integer)partMap.get("level");
-			
-			if(totalLevl < level){
+
+		partlist = childPartPutMap(part, partlist, 0);
+		HashMap<String, Integer> stateMap = new HashMap<String, Integer>();
+
+		int totalLevl = 0;
+		for (int i = 0; i < partlist.size(); i++) {
+			Map<String, Object> partMap = partlist.get(i);
+
+			String oid = (String) partMap.get("partOid");
+			int level = (Integer) partMap.get("level");
+
+			if (totalLevl < level) {
 				totalLevl = level;
 			}
-			WTPart supart = (WTPart)CommonUtil.getObject(oid);
-			
+			WTPart supart = (WTPart) CommonUtil.getObject(oid);
+
 			List<RohsData> rohslist = getPartROHSList(supart);
-			
-			stateMap = RohsUtil.getRohsState(stateMap,oid);
+
+			stateMap = RohsUtil.getRohsState(stateMap, oid);
 			int rohsState = stateMap.get(oid);
-			String state ="검은색";
-			if(rohsState == RohsUtil.STATE_NOT_APPROVED){
-				state ="빨강색";
-			}else if(rohsState ==RohsUtil.STATE_NONE_ROHS){
-				state ="주황색";
-			}else if(rohsState ==RohsUtil.STATE_ALL_APPROVED){
-				state ="녹색";
-			}else if(rohsState ==RohsUtil.STATE_NOT_ROHS){
-				state ="검은색";
+			String state = "검은색";
+			if (rohsState == RohsUtil.STATE_NOT_APPROVED) {
+				state = "빨강색";
+			} else if (rohsState == RohsUtil.STATE_NONE_ROHS) {
+				state = "주황색";
+			} else if (rohsState == RohsUtil.STATE_ALL_APPROVED) {
+				state = "녹색";
+			} else if (rohsState == RohsUtil.STATE_NOT_ROHS) {
+				state = "검은색";
 			}
-			
-			System.out.println("rohslist.size()=>"+rohslist.size());
-			if(rohslist.size()>0){
-				for(RohsData rohsData : rohslist){
-					//System.out.println("rohslist.size >0 .supart =" + supart.getNumber());
+			if (rohslist.size() > 0) {
+				for (RohsData rohsData : rohslist) {
 					ROHSMaterial material = (ROHSMaterial) CommonUtil.getObject(rohsData.getOid());
 					List<ROHSContHolder> holderList = getROHSContHolder(material);
-					
-					if(holderList.size() > 0){
-						
-						for(ROHSContHolder rohsHolder : holderList){
-							Map<String,Object> partRohsMap = new HashMap<String, Object>();
-							//partRohsMap1 = partMap;
+
+					if (holderList.size() > 0) {
+						for (ROHSContHolder rohsHolder : holderList) {
+							Map<String, Object> partRohsMap = new HashMap<String, Object>();
 							partRohsMap.put("rohsNumber", rohsData.getNumber());
 							partRohsMap.put("rohsName", rohsData.getName());
 							partRohsMap.put("rohsState", rohsState);
@@ -342,14 +381,11 @@ public class RohsHelper {
 							partRohsMap.put("rohslifeState", rohsData.getStateDisplay());
 							partRohsMap.put("fileName", rohsHolder.getFileName());
 							partRohsMap.put("docType", RohsUtil.getRohsDocTypeName(rohsHolder.getFileType()));
-							
 							partRohsMap = setPartROHMap(partRohsMap, partMap);
-							//System.out.println("holderList.size >0 .supart =" + partRohsMap.get("partNumber") +", getFileName" +partRohsMap.get("fileName"));
 							partRohslist.add(partRohsMap);
 						}
-					}else{
-						//System.out.println("holderList.size =0 .supart =" + supart.getNumber());
-						Map<String,Object> partRohsMap = new HashMap<String, Object>();
+					} else {
+						Map<String, Object> partRohsMap = new HashMap<String, Object>();
 						partRohsMap.put("rohsNumber", rohsData.getNumber());
 						partRohsMap.put("rohsName", rohsData.getName());
 						partRohsMap.put("rohsState", rohsState);
@@ -359,56 +395,47 @@ public class RohsHelper {
 						partRohslist.add(partRohsMap);
 					}
 				}
-			}else{
-				//System.out.println("rohslist.size =0 .supart =" + supart.getNumber());
-				Map<String,Object> partRohsMap = new HashMap<String, Object>();
-			
+			} else {
+				Map<String, Object> partRohsMap = new HashMap<String, Object>();
 				partRohsMap.put("rohsState", rohsState);
 				partRohsMap.put("rohsStateName", state);
 				partRohsMap = setPartROHMap(partRohsMap, partMap);
 				partRohslist.add(partRohsMap);
 			}
-			
+
 		}
-		
+
+		// 정렬
+		Collections.sort(partRohslist, new RohsPartComparator());
+
 		returnMap.put("totalLevel", totalLevl);
 		returnMap.put("partRohslist", partRohslist);
-		
-		/*
-		System.out.println("list =" + partRohlist.size());
-		
-		for(int i=0; i<partRohlist.size(); i++){
-			Map<String,Object> partMap2 = partRohlist.get(i);
-			System.out.println("partRohlist.get(i) =" + partRohlist.get(i));
-			//System.out.println(partMap2.get("fileName")+"," + partMap2.get("docType"));
-		}
-		*/
 		return returnMap;
 	}
-	
-	private Map<String,Object> setPartROHMap(Map<String,Object> partRohsMap, Map<String,Object> partMap){
+
+	private Map<String, Object> setPartROHMap(Map<String, Object> partRohsMap, Map<String, Object> partMap) {
 		partRohsMap.put("partOid", partMap.get("partOid"));
 		partRohsMap.put("partNumber", partMap.get("partNumber"));
 		partRohsMap.put("partName", partMap.get("partName"));
 		partRohsMap.put("partCreator", partMap.get("partCreateDate"));
 		partRohsMap.put("partState", partMap.get("partState"));
 		partRohsMap.put("level", partMap.get("level"));
-		int level =(Integer)partMap.get("level");
-		partRohsMap.put("L"+level, level);
+		int level = (Integer) partMap.get("level");
+		partRohsMap.put("L" + level, level);
 		return partRohsMap;
 	}
-	
-	public Map<String, Object> listRoHSProduct(Map<String, Object> params) throws Exception {
+
+	public Map<String, Object> product(Map<String, Object> params) throws Exception {
 		ArrayList<Map<String, Object>> partList = (ArrayList<Map<String, Object>>) params.get("partList");
-		Map<String,Object> result = new HashMap<String,Object>();
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(); 
-		
-		if(partList!=null) {
-			for(Map<String, Object> part : partList) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+		if (partList != null) {
+			for (Map<String, Object> part : partList) {
 				String partOid = (String) part.get("oid");
-				WTPart wtpart = (WTPart)CommonUtil.getObject(partOid);
+				WTPart wtpart = (WTPart) CommonUtil.getObject(partOid);
 				PartDTO dto = new PartDTO(wtpart);
-				Map<String,Object> map = new HashMap<String,Object>();
+				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("number", dto.getNumber());
 				map.put("name", dto.getName());
 				map.put("creator", dto.getCreator());
@@ -418,31 +445,27 @@ public class RohsHelper {
 				Double totalState = (Double) dataMap.get("totalState");
 				Double totalCount = (Double) dataMap.get("totalCount");
 				Double passCount = (Double) dataMap.get("passCount");
-				String rohsState = totalState+" % ("+passCount+"/"+totalCount+")";
+				String rohsState = totalState + " % (" + passCount + "/" + totalCount + ")";
 				map.put("rohsState", rohsState);
 				list.add(map);
 			}
 		}
 		result.put("list", list);
-		
 		return result;
 	}
-	
+
 	/**
 	 * 물질 전체 리스트 가져오기
-	 * @param params
-	 * @return
-	 * @throws Exception
 	 */
 	public ArrayList<RohsData> totalList() throws Exception {
 		ArrayList<RohsData> list = new ArrayList<>();
 		Map<String, Object> params = new HashMap<>();
-    	
-    	QuerySpec query = new QuerySpec();
-    	int idx = query.addClassList(ROHSMaterial.class, true);
-    	ReferenceFactory rf = new ReferenceFactory();
-    	
-    	try {
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.addClassList(ROHSMaterial.class, true);
+		ReferenceFactory rf = new ReferenceFactory();
+
+		try {
 			PageQueryUtils pager = new PageQueryUtils(params, query);
 			PagingQueryResult result = pager.find();
 			while (result.hasMoreElements()) {
@@ -450,34 +473,34 @@ public class RohsHelper {
 				RohsData data = new RohsData((ROHSMaterial) obj[0]);
 				list.add(data);
 			}
-	    }catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	return list;
+		return list;
 	}
-	
+
 	public ROHSMaterial getRohs(String name) throws Exception {
 		QuerySpec query = new QuerySpec();
-    	int idx = query.addClassList(ROHSMaterial.class, true);
-    	QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, name);
-    	QueryResult result = PersistenceHelper.manager.find(query);
-    	ROHSMaterial rohs = null;
-    	while (result.hasMoreElements()) {
+		int idx = query.addClassList(ROHSMaterial.class, true);
+		QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, name);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		ROHSMaterial rohs = null;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			rohs = (ROHSMaterial) obj[0];
 		}
-    	return rohs;
+		return rohs;
 	}
-	
-	public List<Map<String,Object>> getRohsContent(String oid) throws Exception {
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+
+	public List<Map<String, Object>> getRohsContent(String oid) throws Exception {
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
 		List<ROHSContHolder> holderList = RohsHelper.manager.getROHSContHolder(rohs);
-		for(ROHSContHolder holder : holderList){
+		for (ROHSContHolder holder : holderList) {
 			ApplicationData data = holder.getApp();
-			String url="/Windchill/plm/content/download?oid="+CommonUtil.getOIDString(data);
-			
-			Map<String,Object> map = new HashMap<String,Object>();
+			String url = "/Windchill/plm/content/download?oid=" + CommonUtil.getOIDString(data);
+
+			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("fileDown", url);
 			map.put("fileType", RohsUtil.getRohsDocTypeName(holder.getFileType()));
 			map.put("fileDate", holder.getPublicationDate());
@@ -490,318 +513,329 @@ public class RohsHelper {
 		}
 		return list;
 	}
-	
+
 	public int rohsCheck(Map<String, Object> params) throws Exception {
 		String rohsName = StringUtil.checkNull((String) params.get("rohsName"));
 		String rohsNumber = StringUtil.checkNull((String) params.get("rohsNumber"));
 		QuerySpec query = new QuerySpec();
-    	int idx = query.addClassList(ROHSMaterial.class, true);
-    	if(!"".equals(rohsName)) {
-    		QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
-    	}
-    	if(!"".equals(rohsNumber)) {
-    		QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, rohsNumber);
-    	}
-    	QueryResult result = PersistenceHelper.manager.find(query);
-    	int count = 0;
-    	while (result.hasMoreElements()) {
+		int idx = query.addClassList(ROHSMaterial.class, true);
+		if (!"".equals(rohsName)) {
+			QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
+		}
+		if (!"".equals(rohsNumber)) {
+			QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, rohsNumber);
+		}
+		QueryResult result = PersistenceHelper.manager.find(query);
+		int count = 0;
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ROHSMaterial rohs = (ROHSMaterial) obj[0];
 			count++;
 		}
-    	return count;
+		return count;
 	}
-	
-	public List<Map<String,String>> rohsFileType() {
-		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+
+	public List<Map<String, String>> rohsFileType() {
+		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		String[] fileCode = AttributeKey.RohsKey.ROHS_CODE;
 		String[] fileName = AttributeKey.RohsKey.ROHS_NAME;
-		
-		for(int i=0; i < fileCode.length; i++) {
-			Map<String,String> map = new HashMap<String,String>();
-			
+
+		for (int i = 0; i < fileCode.length; i++) {
+			Map<String, String> map = new HashMap<String, String>();
+
 			map.put("code", fileCode[i]);
 			map.put("name", fileName[i]);
-			
+
 			list.add(map);
 		}
 		return list;
 	}
-	
+
 	public String rohsNameCheck(Map<String, Object> params) throws Exception {
 		ArrayList<String> list = (ArrayList<String>) params.get("list");
 		String duplicate = "";
-		for(String rohsName : list) {
+		for (String rohsName : list) {
 			QuerySpec query = new QuerySpec();
-	    	int idx = query.addClassList(ROHSMaterial.class, true);
-	    	QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
-	    	QueryResult result = PersistenceHelper.manager.find(query);
-	    	while (result.hasMoreElements()) {
+			int idx = query.addClassList(ROHSMaterial.class, true);
+			QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NAME, rohsName);
+			QueryResult result = PersistenceHelper.manager.find(query);
+			while (result.hasMoreElements()) {
 				Object[] obj = (Object[]) result.nextElement();
 				ROHSMaterial rohs = (ROHSMaterial) obj[0];
 				return rohs.getName();
 			}
 		}
-		
-    	return duplicate;
+
+		return duplicate;
 	}
-	
-	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs) throws Exception{
+
+	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs) throws Exception {
 		return getROHSToPartList(rohs, CommonUtil.isLatestVersion(CommonUtil.getOIDString(rohs)));
 	}
-	
-	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs,boolean islastversion) throws Exception{
+
+	public List<PartDTO> getROHSToPartList(ROHSMaterial rohs, boolean islastversion) throws Exception {
 		List<PartDTO> list = new ArrayList<PartDTO>();
 		QueryResult result = PersistenceHelper.manager.navigate(rohs, "part", PartToRohsLink.class);
-		while(result.hasMoreElements()){
-			WTPart part = (WTPart)result.nextElement();
+		while (result.hasMoreElements()) {
+			WTPart part = (WTPart) result.nextElement();
 			PartDTO dto = new PartDTO(part);
 			list.add(dto);
 		}
 		return list;
 	}
-	
+
 	public ROHSContHolder getRohsContHolder(ROHSMaterial rohs) throws Exception {
 		ROHSContHolder ch = null;
 		QuerySpec qs = new QuerySpec();
-		int idx= qs.addClassList(ROHSContHolder.class, true);
-		qs.appendWhere(new SearchCondition(ROHSContHolder.class, "rohsReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(rohs)), new int[] {idx});
+		int idx = qs.addClassList(ROHSContHolder.class, true);
+		qs.appendWhere(new SearchCondition(ROHSContHolder.class, "rohsReference.key.id", SearchCondition.EQUAL,
+				CommonUtil.getOIDLongValue(rohs)), new int[] { idx });
 		QueryResult result = PersistenceHelper.manager.find(qs);
-    	while (result.hasMoreElements()) {
+		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			ch = (ROHSContHolder) obj[0];
 			return ch;
 		}
-    	return ch;
+		return ch;
 	}
-	
+
 	public List<ROHSContHolder> getROHSContHolder(ROHSMaterial rohs) throws Exception {
 		List<ROHSContHolder> list = new ArrayList<ROHSContHolder>();
-		
+
 		QuerySpec qs = new QuerySpec();
 		int idx = qs.addClassList(ROHSContHolder.class, true);
-		
-		qs.appendWhere(new SearchCondition(ROHSContHolder.class,"rohsReference.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(rohs)), new int[]{idx});
-		
+
+		qs.appendWhere(new SearchCondition(ROHSContHolder.class, "rohsReference.key.id", SearchCondition.EQUAL,
+				CommonUtil.getOIDLongValue(rohs)), new int[] { idx });
+
 		QueryResult rt = PersistenceHelper.manager.find(qs);
-		
-		while(rt.hasMoreElements()){
-			
+
+		while (rt.hasMoreElements()) {
+
 			Object[] oo = (Object[]) rt.nextElement();
-			ROHSContHolder rholder = (ROHSContHolder)oo[0];
+			ROHSContHolder rholder = (ROHSContHolder) oo[0];
 			list.add(rholder);
 		}
-		
+
 		return list;
 	}
-	
-	public List<RohsData>  getPartROHSList(WTPart part) throws Exception {
+
+	public List<RohsData> getPartROHSList(WTPart part) throws Exception {
 		List<RohsData> list = new ArrayList<RohsData>();
-		
+
 		QueryResult result = PersistenceHelper.manager.navigate(part, "rohs", PartToRohsLink.class);
-		while(result.hasMoreElements()){
-			ROHSMaterial rohs = (ROHSMaterial)result.nextElement();
+		while (result.hasMoreElements()) {
+			ROHSMaterial rohs = (ROHSMaterial) result.nextElement();
 			RohsData data = new RohsData(rohs);
 			list.add(data);
 		}
 		return list;
 	}
-	
-	public List<RohsData>  getPartROHSList(WTPart part, boolean islastversion) throws Exception {
+
+	public List<RohsData> getPartROHSList(WTPart part, boolean islastversion) throws Exception {
 		QuerySpec qs = new QuerySpec();
-		int idx1= qs.addClassList(ROHSMaterial.class, true);
+		int idx1 = qs.addClassList(ROHSMaterial.class, true);
 //        int idx2 = qs.addClassList(PartToRohsLink.class, true);
-        
-        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-    	qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx1});
-        
-        if(islastversion) {
-        	QuerySpecUtils.toLatest(qs, idx1, ROHSMaterial.class);
+
+		if (qs.getConditionCount() > 0) {
+			qs.appendAnd();
 		}
-        QuerySpecUtils.toOrderBy(qs, idx1, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, false);
-	
-		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs",qs,true);
+		qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[] { idx1 });
+
+		if (islastversion) {
+			QuerySpecUtils.toLatest(qs, idx1, ROHSMaterial.class);
+		}
+		QuerySpecUtils.toOrderBy(qs, idx1, ROHSMaterial.class, ROHSMaterial.MODIFY_TIMESTAMP, false);
+
+		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs", qs, true);
 		List<RohsData> list = new ArrayList<RohsData>();
-		while(rt.hasMoreElements()){
-			ROHSMaterial rohs = (ROHSMaterial)rt.nextElement();
+		while (rt.hasMoreElements()) {
+			ROHSMaterial rohs = (ROHSMaterial) rt.nextElement();
 			RohsData data = new RohsData(rohs);
-		
+
 			list.add(data);
 		}
 		return list;
 	}
-	
-	public List<PartToRohsLink> getPartToRohsLinkList(RevisionControlled rev) throws Exception{
+
+	public List<PartToRohsLink> getPartToRohsLinkList(RevisionControlled rev) throws Exception {
 		List<PartToRohsLink> list = new ArrayList<PartToRohsLink>();
 		String vr = CommonUtil.getVROID(rev);
-		rev = (RevisionControlled)CommonUtil.getObject(vr);
-		String roleType ="rohs";
-		if(rev instanceof ROHSMaterial){
+		rev = (RevisionControlled) CommonUtil.getObject(vr);
+		String roleType = "rohs";
+		if (rev instanceof ROHSMaterial) {
 			roleType = "part";
 		}
-		
-		QueryResult rt = PersistenceHelper.manager.navigate(rev, roleType, PartToRohsLink.class,false);
-	
-		while(rt.hasMoreElements()){
-			PartToRohsLink link = (PartToRohsLink)rt.nextElement();
+
+		QueryResult rt = PersistenceHelper.manager.navigate(rev, roleType, PartToRohsLink.class, false);
+
+		while (rt.hasMoreElements()) {
+			PartToRohsLink link = (PartToRohsLink) rt.nextElement();
 			list.add(link);
 		}
 		return list;
 	}
-	
-	public List<RepresentToLink> getRepresentLink(ROHSMaterial rohs) throws Exception{
+
+	public List<RepresentToLink> getRepresentLink(ROHSMaterial rohs) throws Exception {
 		List<RepresentToLink> list = new ArrayList<RepresentToLink>();
 		String vr = CommonUtil.getVROID(rohs);
-		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
-		
-		QueryResult rt = PersistenceHelper.manager.navigate(rohs, "composition", RepresentToLink.class,false);
-	
-		while(rt.hasMoreElements()){
-			RepresentToLink link = (RepresentToLink)rt.nextElement();
+		rohs = (ROHSMaterial) CommonUtil.getObject(vr);
+
+		QueryResult rt = PersistenceHelper.manager.navigate(rohs, "composition", RepresentToLink.class, false);
+
+		while (rt.hasMoreElements()) {
+			RepresentToLink link = (RepresentToLink) rt.nextElement();
 			list.add(link);
 		}
 		return list;
 	}
-	
+
 	public boolean duplicateNumber(String partOid, String rohsNumber) throws Exception {
 		boolean isDuble = false;
 		QuerySpec qs = new QuerySpec();
 		int idx = qs.addClassList(PartToRohsLink.class, true);
-		qs.appendWhere(new SearchCondition(PartToRohsLink.class, "roleAObjectRef.key.branchId", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(partOid)));
+		qs.appendWhere(new SearchCondition(PartToRohsLink.class, "roleAObjectRef.key.branchId", SearchCondition.EQUAL,
+				CommonUtil.getOIDLongValue(partOid)));
 		QueryResult qr = PersistenceHelper.manager.find(qs);
-		while(qr.hasMoreElements()){
-			Object[] obj = (Object[])qr.nextElement();
-			PartToRohsLink link = (PartToRohsLink)obj[0];
-			ROHSMaterial rohs=(ROHSMaterial)link.getRoleBObject();
-			//System.out.println("rohs.getNumber() =" + rohs.getNumber() +",rohsNumber="+rohsNumber + "===="+(rohs.getNumber().equals(rohsNumber)));
-			if(rohs.getNumber().equals(rohsNumber)){
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			PartToRohsLink link = (PartToRohsLink) obj[0];
+			ROHSMaterial rohs = (ROHSMaterial) link.getRoleBObject();
+			// System.out.println("rohs.getNumber() =" + rohs.getNumber()
+			// +",rohsNumber="+rohsNumber + "===="+(rohs.getNumber().equals(rohsNumber)));
+			if (rohs.getNumber().equals(rohsNumber)) {
 				isDuble = true;
 			}
 		}
 		return isDuble;
 	}
-	
-	public List<RohsData> getRepresentToLinkList(ROHSMaterial rohs,String roleType) throws Exception{
-		//composition 구성,represent 대표
+
+	public List<RohsData> getRepresentToLinkList(ROHSMaterial rohs, String roleType) throws Exception {
+		// composition 구성,represent 대표
 		List<RohsData> list = new ArrayList<RohsData>();
 		String vr = CommonUtil.getVROID(rohs);
-		rohs = (ROHSMaterial)CommonUtil.getObject(vr);
-		
-		QueryResult rt =PersistenceHelper.manager.navigate(rohs, roleType, RepresentToLink.class,true);
-		while(rt.hasMoreElements()){
-			ROHSMaterial rohsMaterial = (ROHSMaterial)rt.nextElement();
+		rohs = (ROHSMaterial) CommonUtil.getObject(vr);
+
+		QueryResult rt = PersistenceHelper.manager.navigate(rohs, roleType, RepresentToLink.class, true);
+		while (rt.hasMoreElements()) {
+			ROHSMaterial rohsMaterial = (ROHSMaterial) rt.nextElement();
 			RohsData data = new RohsData(rohsMaterial);
 			list.add(data);
 		}
 		return list;
 	}
-	
-	public List<RohsData> getPartToROHSList(WTPart part) throws Exception{
+
+	public List<RohsData> getPartToROHSList(WTPart part) throws Exception {
 		boolean islastversion = CommonUtil.isLatestVersion(part);
-		
+
 		QuerySpec qs = new QuerySpec();
-		int idx1= qs.addClassList(ROHSMaterial.class, true);
-        int idx2 = qs.addClassList(PartToRohsLink.class, true);
-        
-        if(qs.getConditionCount() > 0) { qs.appendAnd(); }
-    	qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[]{idx1});
-        
-        if(islastversion) {
-        	QuerySpecUtils.toLatest(qs, idx1, ROHSMaterial.class);
+		int idx1 = qs.addClassList(ROHSMaterial.class, true);
+		int idx2 = qs.addClassList(PartToRohsLink.class, true);
+
+		if (qs.getConditionCount() > 0) {
+			qs.appendAnd();
 		}
-        QuerySpecUtils.toOrderBy(qs, idx1, ROHSMaterial.class, ROHSMaterial.NUMBER, false);
-	
-		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs",qs,true);
+		qs.appendWhere(VersionControlHelper.getSearchCondition(ROHSMaterial.class, true), new int[] { idx1 });
+
+		if (islastversion) {
+			QuerySpecUtils.toLatest(qs, idx1, ROHSMaterial.class);
+		}
+		QuerySpecUtils.toOrderBy(qs, idx1, ROHSMaterial.class, ROHSMaterial.NUMBER, false);
+
+		QueryResult rt = PersistenceHelper.manager.navigate(part, "rohs", qs, true);
 		List<RohsData> list = new ArrayList<RohsData>();
-		while(rt.hasMoreElements()){
-			ROHSMaterial rohs = (ROHSMaterial)rt.nextElement();
+		while (rt.hasMoreElements()) {
+			ROHSMaterial rohs = (ROHSMaterial) rt.nextElement();
 			RohsData data = new RohsData(rohs);
-		
+
 			list.add(data);
 		}
 		return list;
 	}
-	
-	public List<Map<String,Object>> childPartPutMap(WTPart part, List<Map<String,Object>> list,int level) throws Exception {
-		Map<String,Object> map = new HashMap<String,Object>();
-		//boolean isChildCheck = isChildPartCheck(part);
-		if(PartUtil.isChange(part.getNumber())){
+
+	public List<Map<String, Object>> childPartPutMap(WTPart part, List<Map<String, Object>> list, int level)
+			throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// boolean isChildCheck = isChildPartCheck(part);
+		if (PartUtil.isChange(part.getNumber())) {
 			return list;
 		}
-		
+
 		map.put("partOid", part.getPersistInfo().getObjectIdentifier().toString());
 		map.put("partNumber", part.getNumber());
 		map.put("partName", part.getName());
 		map.put("partCreator", part.getCreatorFullName());
-		map.put("partCreateDate", DateUtil.subString(DateUtil.getDateString(part.getPersistInfo().getCreateStamp(), "a"),0,10));
+		map.put("partCreateDate",
+				DateUtil.subString(DateUtil.getDateString(part.getPersistInfo().getCreateStamp(), "a"), 0, 10));
 		map.put("partState", part.getLifeCycleState().getDisplay(Message.getLocale()));
 		map.put("level", level);
-		map.put("Level"+level, level);
-		
+		map.put("Level" + level, level);
+
 		list.add(map);
-		
+
 		QueryResult result = isChildPart(part, true);
 		List<WTPart> tempList = new ArrayList<WTPart>();
-		while(result.hasMoreElements()) {
-			Object[] o = (Object[])result.nextElement();
-			WTPartMaster childPartMaster = (WTPartMaster)o[0];
-			WTPart childPart = PartHelper.service.getPart(childPartMaster.getNumber());//getWTPartFormWTPartMaster(childPartMaster);
-			if(PartUtil.isChange(childPart.getNumber())){
+		while (result.hasMoreElements()) {
+			Object[] o = (Object[]) result.nextElement();
+			WTPartMaster childPartMaster = (WTPartMaster) o[0];
+			WTPart childPart = PartHelper.service.getPart(childPartMaster.getNumber());// getWTPartFormWTPartMaster(childPartMaster);
+			if (PartUtil.isChange(childPart.getNumber())) {
 				continue;
 			}
 			tempList.add(childPart);
 			/*
-			if(childPart != null){
-				childPartPutMap(childPart, list,level+1);
-			}
-			*/
+			 * if(childPart != null){ childPartPutMap(childPart, list,level+1); }
+			 */
 		}
-		
+
 		Collections.sort(tempList, new ObjectComarator());
-		for(WTPart childPart : tempList){
-			if(childPart != null){
-				childPartPutMap(childPart, list,level+1);
+		for (WTPart childPart : tempList) {
+			if (childPart != null) {
+				childPartPutMap(childPart, list, level + 1);
 			}
 		}
 		return list;
 	}
-	
+
 	private QueryResult isChildPart(WTPart part, boolean isData) throws Exception {
 		QuerySpec spec = new QuerySpec();
-		
+
 		int idx_master = spec.addClassList(WTPartMaster.class, isData);
 		int idx = spec.addClassList(WTPartUsageLink.class, false);
 		int idx_part = spec.addClassList(WTPart.class, false);
 		spec.setAdvancedQueryEnabled(true);
-		
+
 		ClassAttribute idx_l = new ClassAttribute(WTPartUsageLink.class, "roleAObjectRef.key.id");
 		ClassAttribute idx_p = new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id");
-		
-		spec.appendWhere(new SearchCondition(idx_l, SearchCondition.EQUAL, idx_p), new int[] {idx, idx_part});
-		
+
+		spec.appendWhere(new SearchCondition(idx_l, SearchCondition.EQUAL, idx_p), new int[] { idx, idx_part });
+
 		spec.appendAnd();
 		ClassAttribute idx_l2 = new ClassAttribute(WTPartUsageLink.class, "roleBObjectRef.key.id");
 		ClassAttribute idx_m = new ClassAttribute(WTPartMaster.class, "thePersistInfo.theObjectIdentifier.id");
-		
-		spec.appendWhere(new SearchCondition(idx_l2, SearchCondition.EQUAL, idx_m), new int[] {idx, idx_master});
-		
+
+		spec.appendWhere(new SearchCondition(idx_l2, SearchCondition.EQUAL, idx_m), new int[] { idx, idx_master });
+
 		spec.appendAnd();
-		spec.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true), new int[] { idx_part });
-		
+		spec.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
+				new int[] { idx_part });
+
 		spec.appendJoin(idx, "roleA", part);
-		
-		if(!isData) {
-			spec.appendGroupBy(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), idx_part, true);
+
+		if (!isData) {
+			spec.appendGroupBy(new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"), idx_part,
+					true);
 		}
-		
-		spec.appendOrderBy(new OrderBy(new ClassAttribute(WTPartMaster.class, WTPartMaster.NUMBER), true), new int[] { idx_master });
-		
-		//System.out.println(spec.toString());
+
+		spec.appendOrderBy(new OrderBy(new ClassAttribute(WTPartMaster.class, WTPartMaster.NUMBER), true),
+				new int[] { idx_master });
+
+		// System.out.println(spec.toString());
 		QueryResult result = PersistenceServerHelper.manager.query(spec);
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * 관련 객체 불러오기 메서드
 	 */
@@ -814,7 +848,7 @@ public class RohsHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
-	
+
 	/**
 	 * 관련 ROHS
 	 */
@@ -828,7 +862,7 @@ public class RohsHelper {
 		}
 		return list;
 	}
-	
+
 	/**
 	 * rohs 이력
 	 */
@@ -853,7 +887,7 @@ public class RohsHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
-	
+
 	/**
 	 * 최신버전
 	 */

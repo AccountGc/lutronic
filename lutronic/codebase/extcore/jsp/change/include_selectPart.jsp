@@ -59,7 +59,7 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 			
 		</th>
 		<%} %>
-		<td class="indent5" colspan="3">
+		<td class="indent5 pt5" colspan="3">
 			<%
 			if (isCreate || isUpdate) {
 			%>
@@ -78,6 +78,7 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
+		width : 180,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -86,6 +87,7 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
+		style : "aui-left",
 		filter : {
 			showIcon : true,
 			inline : true
@@ -94,6 +96,7 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
+		width : 80,
 		filter : {
 			showIcon : true,
 			inline : true
@@ -102,6 +105,16 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 		dataField : "bom",
 		headerText : "BOM",
 		dataType : "string",
+		width : 120,
+		renderer : {
+			type : "ButtonRenderer",
+			labelText : "BOM",
+			onclick : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				url = getCallUrl("/bom/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},		
 	}, {
 		dataField : "oid",
 		visible : false

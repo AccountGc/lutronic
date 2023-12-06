@@ -19,7 +19,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser user = (WTUser) request.getAttribute("sessionUser");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 %>
 <!DOCTYPE html>
 <html>
@@ -32,10 +32,10 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> 
-		<input type="hidden" name="curPage" id="curPage"> 
+		<input type="hidden" name="sessionid" id="sessionid">
+		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -67,33 +67,41 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				</td>
 				<th>등록일</th>
 				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
 			<tr>
 				<th>등록자</th>
 				<td class="indent5">
 					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
-					<input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-							<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-							}
+						}
 						}
 						%>
 					</select>
 				</td>
 				<th>수정일</th>
-				<td class="indent5"><input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="modifiedTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<td class="indent5">
+					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+					~
+					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
 			</tr>
 			<tr>
 				<th>협력업체</th>
@@ -103,7 +111,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 						<%
 						for (NumberCode manufacture : manufactureList) {
 						%>
-						<option value="<%=manufacture.getCode() %>"><%=manufacture.getName()%></option>
+						<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
 						<%
 						}
 						%>
@@ -119,9 +127,9 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('rohs-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('rohs-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('rohs-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -138,7 +146,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 		<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
-		
+
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
@@ -173,6 +181,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "name",
 					headerText : "물질명",
 					dataType : "string",
+					style : "aui-left",
 					filter : {
 						showIcon : true,
 						inline : true
@@ -199,7 +208,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
-					width : 100,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -208,7 +217,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 120,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -236,21 +245,20 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-		            headerHeight : 30,
-		            showRowNumColumn : true,
-		            showRowCheckColumn : true,
-		            rowNumHeaderText : "번호",
-		            showAutoNoDataMessage : false,
-		            selectionMode : "multipleCells",
-		            enableMovingColumn : true,
-		            enableFilter : true,
-		            showInlineFilter : true,
-		            useContextMenu : true,
-		            enableRightDownFocus : true,
-		            filterLayerWidth : 320,
-		            filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		            enableRowCheckShiftKey : true
-		        };
+					headerHeight : 30,
+					showRowNumColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
+					selectionMode : "multipleCells",
+					enableMovingColumn : true,
+					enableFilter : true,
+					showInlineFilter : true,
+					useContextMenu : true,
+					enableRightDownFocus : true,
+					filterLayerWidth : 320,
+					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
+				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
@@ -266,7 +274,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
-				const field = ["rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
+				const field = [ "rohsName", "rohsNumber", "description", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "manufacture" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -285,6 +293,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("rohsNumber");
 				const columns = loadColumnLayout("rohs-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);
@@ -315,10 +324,10 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("물질 리스트", "물질", "물질 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("물질 리스트", "물질", "물질 리스트", [], sessionName);
 			}
 		</script>
 	</form>

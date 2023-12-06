@@ -337,22 +337,22 @@ public class RohsController extends BaseController {
 	}
 
 	@Description(value = "파일검색 페이지")
-	@GetMapping(value = "/listRohsFile")
-	public ModelAndView listRohsFile() {
+	@GetMapping(value = "/file")
+	public ModelAndView file() {
 		ModelAndView model = new ModelAndView();
 		List<Map<String, String>> typeList = RohsHelper.manager.rohsFileType();
 		model.addObject("typeList", typeList);
-		model.setViewName("/extcore/jsp/rohs/rohsFile-list.jsp");
+		model.setViewName("/extcore/jsp/rohs/file-list.jsp");
 		return model;
 	}
 
 	@Description(value = "파일검색 조회 함수")
 	@ResponseBody
-	@PostMapping(value = "/listRohsFile")
-	public Map<String, Object> listRohsFile(@RequestBody Map<String, Object> params) throws Exception {
+	@PostMapping(value = "/file")
+	public Map<String, Object> file(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = RohsHelper.manager.listRohsFile(params);
+			result = RohsHelper.manager.file(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -363,20 +363,20 @@ public class RohsController extends BaseController {
 	}
 
 	@Description(value = "부품현황 페이지")
-	@GetMapping(value = "/listAUIRoHSPart")
-	public ModelAndView listAUIRoHSPart() {
+	@GetMapping(value = "/part")
+	public ModelAndView part() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/rohs/rohs-listAUIRoHSPart.jsp");
+		model.setViewName("/extcore/jsp/rohs/rohs-part-list.jsp");
 		return model;
 	}
 
 	@Description(value = "부품현황 조회 함수")
 	@ResponseBody
-	@PostMapping(value = "/listAUIRoHSPart")
+	@PostMapping(value = "/part")
 	public Map<String, Object> listAUIRoHSPart(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = RohsHelper.manager.listAUIRoHSPart(params);
+			result = RohsHelper.manager.part(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -387,20 +387,20 @@ public class RohsController extends BaseController {
 	}
 
 	@Description(value = "제품현황 페이지")
-	@GetMapping(value = "/listRoHSProduct")
-	public ModelAndView listRoHSProduct() {
+	@GetMapping(value = "/product")
+	public ModelAndView product() {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/rohs/rohs-listRoHSProduct.jsp");
+		model.setViewName("/extcore/jsp/rohs/rohs-product-list.jsp");
 		return model;
 	}
 
 	@Description(value = "제품현황 조회 함수")
 	@ResponseBody
-	@PostMapping(value = "/listRoHSProduct")
-	public Map<String, Object> listRoHSProduct(@RequestBody Map<String, Object> params) throws Exception {
+	@PostMapping(value = "/product")
+	public Map<String, Object> product(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = RohsHelper.manager.listRoHSProduct(params);
+			result = RohsHelper.manager.product(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -408,14 +408,6 @@ public class RohsController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
-	}
-
-	@Description(value = "일괄결재 페이지")
-	@GetMapping(value = "/all")
-	public ModelAndView all() {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/rohs/rohs-all.jsp");
-		return model;
 	}
 
 	/**

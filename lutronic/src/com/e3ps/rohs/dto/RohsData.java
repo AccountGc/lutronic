@@ -19,8 +19,8 @@ import wt.session.SessionHelper;
 
 @Getter
 @Setter
-public class RohsData{
-	
+public class RohsData {
+
 //	public ROHSMaterial rohs;
 	private String oid;
 	private String number;
@@ -41,17 +41,17 @@ public class RohsData{
 	private String fileType;
 	private String publicationDate;
 	private String fileName;
-	
+
 	// auth
 	private boolean isModify = false;
-	
+
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
-	
+
 	public RohsData(String oid) throws Exception {
 		this((ROHSMaterial) CommonUtil.getObject(oid));
 	}
-	
+
 	public RohsData(ROHSMaterial rohs) throws Exception {
 //		super(rohs);
 //		setRohs(rohs);
@@ -78,65 +78,67 @@ public class RohsData{
 		setDescription(StringUtil.checkNull(rohs.getDescription()));
 		setVersion(rohs.getVersionIdentifier().getValue() + "." + rohs.getIterationIdentifier().getValue());
 		ROHSContHolder ch = RohsHelper.manager.getRohsContHolder(rohs);
-		if(ch!=null) {
+		if (ch != null) {
 			setFileType(StringUtil.checkNull(ch.getFileType()));
 			setPublicationDate(StringUtil.checkNull(ch.getPublicationDate()));
 		}
 		setComments(CommentsHelper.manager.comments(rohs));
-		
+
 		setAuth(rohs);
 	}
-	
+
 	/**
-   * 회수 권한  승인중 && (소유자 || 관리자 ) && 기본 결재 
-   * @return
-   */
-   public boolean isWithDraw(){
-  	   try{
-			return  (state.equals("APPROVING") && ( isOwner() || CommonUtil.isAdmin()));
-  	   }catch(Exception e){
-			e.printStackTrace();
-  	   }
-  	   return false;
-		
-	}
-   
-   /**
-    * Owner 유무 체크
-    * @return
-    */
-	public boolean isOwner(){
-		
-		try{
-			return SessionHelper.getPrincipal().getName().equals(getCreator());
-		}catch(Exception e){
+	 * 회수 권한 승인중 && (소유자 || 관리자 ) && 기본 결재
+	 * 
+	 * @return
+	 */
+	public boolean isWithDraw() {
+		try {
+			return (state.equals("APPROVING") && (isOwner() || CommonUtil.isAdmin()));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		return false;
+
+	}
+
+	/**
+	 * Owner 유무 체크
+	 * 
+	 * @return
+	 */
+	public boolean isOwner() {
+
+		try {
+			return SessionHelper.getPrincipal().getName().equals(getCreator());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return false;
 	}
-	
+
 	/**
 	 * IBA 값 디스플레이 값으로 변경
 	 */
 	private String keyToValue(String code, String codeType) throws Exception {
 		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
 	}
-	
+
 	/**
 	 * 권한 설정
 	 */
 	private void setAuth(ROHSMaterial rohs) throws Exception {
 		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 재작업))
-		if (check("INWORK",rohs) || check("TEMPRARY",rohs) || check("REWORK",rohs)) {
+		if (check("INWORK", rohs) || check("TEMPRARY", rohs) || check("REWORK", rohs)) {
 			setModify(true);
 		}
 	}
-	
+
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state,ROHSMaterial rohs) throws Exception {
+	private boolean check(String state, ROHSMaterial rohs) throws Exception {
 		boolean check = false;
 		String compare = rohs.getLifeCycleState().toString();
 		if (compare.equals(state)) {

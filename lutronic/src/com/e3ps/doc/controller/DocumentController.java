@@ -1,20 +1,9 @@
 package com.e3ps.doc.controller;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
@@ -32,24 +21,18 @@ import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentHelper;
 
 import net.sf.json.JSONArray;
-import wt.clients.folder.FolderTaskLogic;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
-import wt.folder.Folder;
 import wt.part.WTPartDescribeLink;
-import wt.util.WTProperties;
 
 @Controller
 @RequestMapping(value = "/doc/**")
@@ -331,13 +314,6 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "문서 일괄결재")
-	@GetMapping(value = "/register")
-	public ModelAndView register() throws Exception {
-		ModelAndView model = new ModelAndView();
-		model.setViewName("popup:/document/document-register");
-		return model;
-	}
 
 	@Description(value = "문서 종료 바인더")
 	@ResponseBody

@@ -93,7 +93,6 @@ public class IndexController extends BaseController {
 		boolean isRohs = CommonUtil.isAdmin();
 		boolean isMold = CommonUtil.isAdmin();
 		boolean isChange = CommonUtil.isAdmin();
-		boolean isEtc = CommonUtil.isAdmin();
 		if (StringUtil.checkString(auths)) {
 			isWork = auths.contains("나의업무");
 			isDoc = auths.contains("문서관리");
@@ -102,7 +101,6 @@ public class IndexController extends BaseController {
 			isRohs = auths.contains("RoHS");
 			isMold = auths.contains("금형관리");
 			isChange = auths.contains("설계변경");
-			isEtc = auths.contains("기타문서관리");
 		}
 
 		// 기타 문서 권한처리
@@ -133,7 +131,6 @@ public class IndexController extends BaseController {
 		model.addObject("isRohs", isRohs);
 		model.addObject("isMold", isMold);
 		model.addObject("isChange", isChange);
-		model.addObject("isEtc", isEtc);
 		model.addObject("dto", dto);
 
 		model.setViewName("/extcore/layout/header.jsp");

@@ -15,7 +15,6 @@ boolean isEpm = (boolean) request.getAttribute("isEpm");
 boolean isChange = (boolean) request.getAttribute("isChange");
 boolean isMold = (boolean) request.getAttribute("isMold");
 boolean isRohs = (boolean) request.getAttribute("isRohs");
-boolean isEtc = (boolean) request.getAttribute("isEtc");
 
 // 기타 문서 권한처리
 boolean isRa = (boolean) request.getAttribute("isRa");
@@ -159,7 +158,10 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄등록');">문서 일괄등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asm/list?number=NDBT', '> 문서관리 > 일괄결재검색');">일괄결재검색</a>
+						<a onclick="moveToPage(this, '/asm/create?type=DOC', '> 문서관리 > 문서 일괄 결재');">문서 일괄 결재</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/asm/list?number=NDBT', '> 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 					<%
 					if (isAdmin) {
@@ -170,9 +172,6 @@ int eca = (int) request.getAttribute("eca");
 					<%
 					}
 					%>
-					<!-- 					<li> -->
-					<!-- 						<a onclick="moveToPage(this, '/doc/register', '> 문서관리 > 문서 일괄결재');">문서 일괄결재</a> -->
-					<!-- 					</li> -->
 				</ul>
 			</li>
 			<%
@@ -277,19 +276,19 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/rohs/create', '> RoHS > 물질 등록');">물질 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asm/list?number=ROHSBT', '> 문서관리 > 일괄결재검색');">일괄결재검색</a>
+						<a onclick="moveToPage(this, '/asm/list?number=ROHSBT', '> RoHS > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/rohs/listRohsFile', '> RoHS > 파일 검색');">파일 검색</a>
+						<a onclick="moveToPage(this, '/rohs/file', '> RoHS > 파일 검색');">파일 검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/rohs/listAUIRoHSPart', '> RoHS > 부품 현황');">부품 현황</a>
+						<a onclick="moveToPage(this, '/rohs/part', '> RoHS > 부품 현황');">부품 현황</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/rohs/listRoHSProduct', '> RoHS > 제품 현황');">제품 현황</a>
+						<a onclick="moveToPage(this, '/rohs/product', '> RoHS > 제품 현황');">제품 현황</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/rohs/all', '> RoHS > 물질 일괄결재');">물질 일괄결재</a>
+						<a onclick="moveToPage(this, '/asm/create?type=ROHS', '> RoHS > 물질 일괄 결재');">물질 일괄 결재</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄등록');">물질 일괄등록</a>
@@ -317,16 +316,18 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/mold/create', '> 금형관리 > 금형 등록');">금형 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/mold/all', '> 금형관리 > 금형 일괄결재');">금형 일괄결재</a>
+						<a onclick="moveToPage(this, '/asm/create', '> 금형관리 > 금형 일괄 결재');">금형 일괄 결재</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asm/list?number=MMBT', '> 문서관리 > 일괄결재검색');">일괄결재검색</a>
+						<a onclick="moveToPage(this, '/asm/list?number=MMBT', '> 금형관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 				</ul>
 			</li>
 			<%
 			}
-			if (isEtc) {
+			%>
+			<%
+			if (isProduction) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -346,6 +347,10 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isPathological) {
+			%>
 			<li>
 				<a href="css_animation.html">
 					<i class="fa fa-magic"></i>
@@ -364,6 +369,10 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isClinical) {
+			%>
 			<li>
 				<a href="css_animation.html">
 					<i class="fa fa-magic"></i>
@@ -382,6 +391,10 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isRa) {
+			%>
 			<li>
 				<a href="css_animation.html">
 					<i class="fa fa-magic"></i>
@@ -400,6 +413,10 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 				</ul>
 			</li>
+			<%
+			}
+			if (isCosmetic) {
+			%>
 			<li>
 				<a href="css_animation.html">
 					<i class="fa fa-magic"></i>

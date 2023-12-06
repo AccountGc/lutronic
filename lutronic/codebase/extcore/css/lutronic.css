@@ -315,8 +315,8 @@ input[type="button"].gray {
 	letter-spacing: 1px;
 	line-height: 20px;
 	padding: 0px 10px 25px 10px;
-/*	border: 1px solid darkgray;*/
-/*	background: darkgray;*/
+	/*	border: 1px solid darkgray;*/
+	/*	background: darkgray;*/
 	background: navy;
 }
 
@@ -721,4 +721,79 @@ span.red {
 /** TR 태그 숨기기 **/
 tr.hidden {
 	display: none;
+}
+
+/** 컨텍스트 메뉴 아이콘 정의 **/
+.ui-icon-checkin {
+	background-image: url("/Windchill/extcore/images/checkin.png") !important;
+	background-position: 2px;
+}
+
+.ui-icon-checkout {
+	background-image: url("/Windchill/extcore/images/checkout.png") !important;
+	background-position: 2px;
+}
+
+.ui-icon-undocheckout {
+	background-image: url("/Windchill/extcore/images/uncheckout.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-cut {
+	background-image: url("/Windchill/extcore/images/cut.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-copy {
+	background-image: url("/Windchill/extcore/images/copy.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-paste {
+	background-image: url("/Windchill/extcore/images/paste.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-info {
+	background-image: url("/Windchill/extcore/images/details.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-expand {
+	background-image: url("/Windchill/extcore/images/expand.png") !important;
+	background-position: 2px;
+}
+
+.ui-icon-collapse {
+	background-image: url("/Windchill/extcore/images/collapse.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-adds {
+	background-image: url("/Windchill/extcore/images/add_tb.png") !important;
+	background-position: 2px 1px;
+}
+
+.ui-icon-remove {
+	background-image: url("/Windchill/extcore/images/remove16x16.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-newpart {
+	background-image: url("/Windchill/extcore/images/part_add.gif") !important;
+}
+
+.ui-icon-oldpart {
+	background-image: url("/Windchill/extcore/images/paste_new_part.png") !important;
+	background-position: 4px;
+}
+
+.ui-icon-empty {
+	background-image: url("/Windchill/extcore/images/empty.gif") !important;
+	background-position: 2px;
+}
+
+.ui-icon-replace {
+	background-image: url("/Windchill/extcore/images/redo.gif") !important;
+	background-position: 2px;
 }

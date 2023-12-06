@@ -98,17 +98,14 @@ public class BomHelper {
 		rootNode.put("link", "");
 		rootNode.put("qty", 1);
 		rootNode.put("expanded", true);
-		rootNode.put("icon", "/Windchill/wtcore/images/part.gif");
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
-//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(root);
 		if (isCheckOut) {
 			rootNode.put("icon", "/Windchill/wtcore/images/part_checkout.png");
-			rootNode.put("isCheckOut", isCheckOut);
+		} else {
+			rootNode.put("icon", "/Windchill/wtcore/images/part.gif");
 		}
-//		if (isWorkCopy) {
-//			rootNode.put("isWorkCopy", isWorkCopy);
-//		}
+		rootNode.put("isCheckOut", isCheckOut);
 
 		JSONArray children = new JSONArray();
 
@@ -150,15 +147,12 @@ public class BomHelper {
 			node.put("qty", link.getQuantity().getAmount());
 			node.put("expanded", false);
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
-//			isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
-			node.put("icon", "/Windchill/wtcore/images/part.gif");
 			if (isCheckOut) {
-				node.put("isCheckOut", isCheckOut);
 				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
+			} else {
+				node.put("icon", "/Windchill/wtcore/images/part.gif");
 			}
-//			if (isWorkCopy) {
-//				node.put("isWorkCopy", isWorkCopy);
-//			}
+			node.put("isCheckOut", isCheckOut);
 
 			boolean isLazy = isLazy(p, view, state, skip);
 			if (!isLazy) {
@@ -1339,11 +1333,13 @@ public class BomHelper {
 			node.put("expanded", false);
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
-			node.put("icon", "/Windchill/wtcore/images/part.gif");
 			if (isCheckOut) {
 				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
-				node.put("isCheckOut", isCheckOut);
+			} else {
+				node.put("icon", "/Windchill/wtcore/images/part.gif");
 			}
+			node.put("isCheckOut", isCheckOut);
+
 //			if (isWorkCopy) {
 //				node.put("isWorkCopy", isWorkCopy);
 //			}
@@ -1370,18 +1366,12 @@ public class BomHelper {
 		node.put("version", part.getVersionIdentifier().getSeries().getValue() + "."
 				+ part.getIterationIdentifier().getSeries().getValue());
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(part);
-//		boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(part);
 		if (isCheckOut) {
-			node.put("isCheckOut", isCheckOut);
 			node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
 		} else {
-			node.put("isCheckOut", isCheckOut);
 			node.put("icon", "/Windchill/wtcore/images/part.gif");
 		}
-//		if (isWorkCopy) {
-//			System.out.println("복사본이냐");
-//			node.put("isWorkCopy", isWorkCopy);
-//		}
+		node.put("isCheckOut", isCheckOut);
 		return node;
 	}
 }
