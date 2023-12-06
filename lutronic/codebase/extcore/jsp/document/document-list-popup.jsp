@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.doc.DocumentType"%>
@@ -14,6 +15,7 @@ List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getA
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
+String state = (String) request.getAttribute("state");
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -90,7 +92,17 @@ boolean multi = (boolean) request.getAttribute("multi");
 				for (Map<String,String> lifecycle : lifecycleList) {
 					if(!lifecycle.get("code").equals("TEMPRARY")){
 				%>
-					<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+					<%
+						if(StringUtil.checkString(state)) {
+					%>
+					<option value="<%=lifecycle.get("code") %>" <%if(state.equals(lifecycle.get("code"))) { %> selected="selected" <%} %>><%=lifecycle.get("name")%></option>
+					<%
+						} else {
+					%>
+					<option value="<%=lifecycle.get("code") %>" ><%=lifecycle.get("name")%></option>
+					<%
+						}
+					%>
 				<%
 					}
 				}
@@ -228,22 +240,14 @@ boolean multi = (boolean) request.getAttribute("multi");
 <script type="text/javascript">
 let myGridID;
 const columns = [ {
-	dataField : "number",
-	headerText : "문서번호",
+	dataField : "name",
+	headerText : "문서명",
 	dataType : "string",
-	width : 120,
+	style : "aui-left",
+	width : 350,
 	filter : {
 		showIcon : true,
 		inline : true
-	},
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.oid;
-			const url = getCallUrl("/doc/view?oid=" + oid);
-			_popup(url, 1600, 800, "n");
-		}
 	},
 }, {
 	dataField : "interalnumber",
@@ -264,28 +268,10 @@ const columns = [ {
 		inline : true
 	},
 }, {
-	dataField : "name",
-	headerText : "문서명",
-	dataType : "string",
-	style : "aui-left",
-	width : 350,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.oid;
-			const url = getCallUrl("/doc/view?oid=" + oid);
-			_popup(url, 1600, 800, "n");
-		}
-	},
-}, {
 	dataField : "location",
 	headerText : "문서분류",
 	dataType : "string",
+	style : "aui-left",
 	width : 250,
 	filter : {
 		showIcon : true,
@@ -295,7 +281,10 @@ const columns = [ {
 	dataField : "version",
 	headerText : "REV",
 	dataType : "string",
-	width : 350,
+	width : 80,
+	renderer : {
+		type : "TemplateRenderer"
+	},
 	filter : {
 		showIcon : true,
 		inline : true
@@ -304,7 +293,7 @@ const columns = [ {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
-	width : 100,
+	width : 80,
 	filter : {
 		showIcon : true,
 		inline : true
@@ -322,7 +311,7 @@ const columns = [ {
 	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
-	width : 80,
+	width : 100,
 	filter : {
 		showIcon : true,
 		inline : true
@@ -349,7 +338,7 @@ const columns = [ {
 	dataField : "primary",
 	headerText : "주 첨부파일",
 	dataType : "string",
-	width : 100,
+	width : 80,
 	renderer : {
 		type : "TemplateRenderer"
 	},
@@ -446,6 +435,15 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("model");
 	selectbox("deptcode");
 	finderUser("writer");
+	
+	<%
+		if(StringUtil.checkString(state)) {
+	%>
+	$("#state").bindSelectSetValue("<%=state%>");
+	$("#state").bindSelectDisabled(true);
+	<%
+		}
+	%>
 });
 
 function <%=method%>() {

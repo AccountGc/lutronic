@@ -211,7 +211,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('document-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('document-list');">
-					<input type="button" value="일괄 결재" title="일괄 결재" class="blue" onclick="register();">
 					<input type="button" value="추가" title="추가" class="red" onclick="addRow();">
 				</td>
 				<td class="right">

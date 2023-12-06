@@ -69,8 +69,19 @@ public class AsmController extends BaseController {
 	public Map<String, Object> register(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
+
+			String msg = "";
+			String type = (String) params.get("type");
+			if ("DOC".equals(type)) {
+				msg = "문서 일괄 결재가 등록 되었습니다.";
+			} else if ("MOLD".equals(type)) {
+				msg = "금형문서 일괄 결재가 등록 되었습니다.";
+			} else if ("ROHS".equals(type)) {
+				msg = "RoHS 일괄 결재가 등록 되었습니다.";
+			}
+
 			AsmHelper.service.register(params);
-			result.put("msg", "일괄결재가 등록 되었습니다.");
+			result.put("msg", msg);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

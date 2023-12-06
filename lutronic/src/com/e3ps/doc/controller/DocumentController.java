@@ -128,13 +128,15 @@ public class DocumentController extends BaseController {
 
 	@Description(value = "관련 문서 팝업 페이지")
 	@GetMapping(value = "/popup")
-	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String state) throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
 		ModelAndView model = new ModelAndView();
+		model.addObject("state", state);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
@@ -313,7 +315,6 @@ public class DocumentController extends BaseController {
 		}
 		return result;
 	}
-
 
 	@Description(value = "문서 종료 바인더")
 	@ResponseBody
