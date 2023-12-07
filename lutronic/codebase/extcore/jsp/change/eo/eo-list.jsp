@@ -19,7 +19,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
-<body>
+<body style="overflow: hidden;">
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">

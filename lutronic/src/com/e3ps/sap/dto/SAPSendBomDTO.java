@@ -46,6 +46,8 @@ public class SAPSendBomDTO {
 		}
 		if (pre_child != null) {
 			setChildPartNumber(pre_child.getNumber());
+		} else {
+			setChildPartNumber(child.getNumber());
 		}
 		setQty((int) link.getQuantity().getAmount());
 		setUnit(link.getQuantity().getUnit().toString().toUpperCase());

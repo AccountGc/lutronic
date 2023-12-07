@@ -683,4 +683,24 @@ public class SAPHelper {
 
 		return list;
 	}
+
+	/**
+	 * 코드:이름 SAP 전송값으로 변경
+	 */
+	public String convertSapValue(WTPart part, String key) throws Exception {
+		String iba = IBAUtil.getStringValue(part, key);
+		return convertSapValue(iba, key);
+	}
+
+	/**
+	 * 코드:이름 SAP 전송값으로 변경
+	 */
+	private String convertSapValue(String iba, String key) throws Exception {
+		String value = iba + ":";
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(iba, key);
+		if (n != null) {
+			value += n.getName();
+		}
+		return value;
+	}
 }

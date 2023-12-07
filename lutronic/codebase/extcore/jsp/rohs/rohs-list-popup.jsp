@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Map"%>
 <%@page import="wt.org.WTUser"%>
@@ -7,6 +8,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 String method = (String) request.getAttribute("method");
+boolean multi = (boolean) request.getAttribute("multi");
+String state = (String) request.getAttribute("state");
 %>
 <input type="hidden" name="sessionid" id="sessionid"> 
 <input type="hidden" name="lastNum" id="lastNum"> 
@@ -49,7 +52,17 @@ String method = (String) request.getAttribute("method");
 				for (Map<String,String> lifecycle : lifecycleList) {
 					if(!lifecycle.get("code").equals("TEMPRARY")){
 				%>
-					<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+					<%
+						if(StringUtil.checkString(state)) {
+					%>
+					<option value="<%=lifecycle.get("code") %>" <%if(state.equals(lifecycle.get("code"))) { %> selected="selected" <%} %>><%=lifecycle.get("name")%></option>
+					<%
+						} else {
+					%>
+					<option value="<%=lifecycle.get("code") %>" ><%=lifecycle.get("name")%></option>
+					<%
+						}
+					%>
 				<%
 					}
 				}
@@ -255,6 +268,14 @@ String method = (String) request.getAttribute("method");
 		twindate("created");
 		twindate("modified");
 		selectbox("_psize");
+		<%
+		if(StringUtil.checkString(state)) {
+		%>
+		$("#state").bindSelectSetValue("<%=state%>");
+		$("#state").bindSelectDisabled(true);
+		<%
+			}
+		%>
 	});
 	
 	document.addEventListener("keydown", function(event) {

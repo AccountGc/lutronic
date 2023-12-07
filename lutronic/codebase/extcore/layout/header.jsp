@@ -276,6 +276,9 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/rohs/create', '> RoHS > 물질 등록');">물질 등록</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/asm/create?type=ROHS', '> RoHS > 물질 일괄 결재');">물질 일괄 결재</a>
+					</li>
+					<li>
 						<a onclick="moveToPage(this, '/asm/list?number=ROHSBT', '> RoHS > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 					<li>
@@ -286,9 +289,6 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/rohs/product', '> RoHS > 제품 현황');">제품 현황</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/asm/create?type=ROHS', '> RoHS > 물질 일괄 결재');">물질 일괄 결재</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄등록');">물질 일괄등록</a>
@@ -449,9 +449,6 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/code/list', '> 관리자 > 코드체계관리');">코드체계관리</a>
 					</li>
-					<!-- 					<li> -->
-					<!-- 						<a onclick="moveToPage(this, '/activity/list', '> 관리자 > 설계변경관리');">설계변경관리</a> -->
-					<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/admin/mail', '> 관리자 > 외부메일관리');">외부메일관리</a>
 					</li>
@@ -466,6 +463,9 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/form/list', '> 관리자 > 문서 템플릿관리');">문서 템플릿관리</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/class/list', '> 관리자 > 문서 채번관리');">문서 채번관리</a>
 					</li>
 				</ul>
 			</li>

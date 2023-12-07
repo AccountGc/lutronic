@@ -151,7 +151,7 @@ public class AUIGridUtil {
 			icon = "/Windchill/extcore/images/fileicon/file_excel.gif";
 		} else if (ext.equalsIgnoreCase("ppt") || ext.equalsIgnoreCase("pptx")) {
 			icon = "/Windchill/extcore/images/fileicon/file_ppoint.gif";
-		} else if (ext.equalsIgnoreCase("doc") || ext.equalsIgnoreCase("docs")) {
+		} else if (ext.equalsIgnoreCase("doc") || ext.equalsIgnoreCase("docx")) {
 			icon = "/Windchill/extcore/images/fileicon/file_msword.gif";
 		} else if (ext.equalsIgnoreCase("html") || ext.equalsIgnoreCase("htm")) {
 			icon = "/Windchill/extcore/images/fileicon/file_html.gif";

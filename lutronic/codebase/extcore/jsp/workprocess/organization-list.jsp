@@ -89,7 +89,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		</table>
 		<table>
 			<colgroup>
-				<col width="230">
+				<col width="300">
 				<col width="10">
 				<col width="*">
 			</colgroup>

@@ -27,13 +27,13 @@
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="req lb">일괄 결재 제목</th>
+				<th class="req lb">일괄결재 제목</th>
 				<td class="indent5">
 					<input type="text" name="appName" id="appName" class="width-400">
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">일괄 결재 설명</th>
+				<th class="lb">일괄결재 설명</th>
 				<td class="indent5">
 					<textarea name="description" id="description" rows="6"></textarea>
 				</td>
@@ -65,7 +65,6 @@
 			const columns = [ {
 				dataField : "interalnumber",
 				dataType : "string",
-				width : 120,
 				headerText : "내부문서번호",
 			}, {
 				dataField : "number",

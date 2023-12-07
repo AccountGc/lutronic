@@ -87,9 +87,10 @@ public class RohsController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "물질검색")
-	@GetMapping(value = "/listPopup")
-	public ModelAndView listPopup(@RequestParam String method) throws Exception {
+	@Description(value = "물질 팝업 검색")
+	@GetMapping(value = "/popup")
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String state) throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
@@ -98,6 +99,8 @@ public class RohsController extends BaseController {
 		model.addObject("sessionUser", sessionUser);
 		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
+		model.addObject("state", state);
 		model.setViewName("popup:/rohs/rohs-list-popup");
 		return model;
 	}
@@ -342,7 +345,7 @@ public class RohsController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		List<Map<String, String>> typeList = RohsHelper.manager.rohsFileType();
 		model.addObject("typeList", typeList);
-		model.setViewName("/extcore/jsp/rohs/file-list.jsp");
+		model.setViewName("/extcore/jsp/rohs/mold-file-list.jsp");
 		return model;
 	}
 

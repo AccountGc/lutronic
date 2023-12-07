@@ -435,7 +435,6 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("model");
 	selectbox("deptcode");
 	finderUser("writer");
-	
 	<%
 		if(StringUtil.checkString(state)) {
 	%>

@@ -823,12 +823,6 @@
 		<servlet-name>DownloadGW</servlet-name>
 		<url-pattern>/servlet/DownloadGW/*</url-pattern>
 	</servlet-mapping>
-
-	<servlet>
-		<servlet-name>SchedulerServlet</servlet-name>
-		<servlet-class>com.e3ps.common.scheduler.SchedulerServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
 	<!-- add lutronic -->
 
 	<servlet-mapping>

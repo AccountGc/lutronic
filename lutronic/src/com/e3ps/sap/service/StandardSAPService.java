@@ -31,7 +31,6 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDev600Connection;
 import com.e3ps.sap.dto.SAPBomDTO;
-import com.e3ps.sap.dto.SAPReverseBomDTO;
 import com.e3ps.sap.dto.SAPSendBomDTO;
 import com.e3ps.sap.util.SAPUtil;
 import com.sap.conn.jco.JCoDestination;
@@ -266,7 +265,12 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		eoTable.setValue("DATUV", today); // 보내는 날짜
 		eoTable.setValue("AEGRU", e.getEoName()); // 변경사유 테스트 일단 한줄
 		eoTable.setValue("AETXT", "첫 줄 어떻게 할것인기??"); // 변경 내역 첫줄만 일단 테스트
-		eoTable.setValue("AETXT_L", e.getEoCommentA()); // 변경 내역 전체 내용
+		String AETXT_L = e.getEoCommentA();
+		eoTable.setValue("AETXT_L", AETXT_L); // 변경 내역 전체 내용
+
+		System.out.println("1" + AETXT_L);
+		System.out.println("2" + AETXT_L.replaceAll("\n", "<br>"));
+		System.out.println("3" + AETXT_L.replaceAll("<br>", "\n"));
 
 		// 완제품으로 품목을 담는다.
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
@@ -314,7 +318,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			Object IDNRK_NEW = rtnTable.getValue("IDNRK_NEW");
 			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
 			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
-			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG + ", IDNRK_NEW=" + IDNRK_NEW);
+			System.out.println("EO BOM 결과 ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG + ", IDNRK_NEW=" + IDNRK_NEW);
 		}
 
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
@@ -361,25 +365,29 @@ public class StandardSAPService extends StandardManager implements SAPService {
 				continue;
 			}
 
-			System.out.println("전송된 자재 번호 = " + number);
+			System.out.println("전송된 자재 번호 = " + number + ", 단위 = " + part.getDefaultUnit().toString().toUpperCase());
 
 			// 샘플로 넣기
 			insertTable.insertRow(idx);
 			insertTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 8자리
 			insertTable.setValue("MATNR", number); // 자재번호
 			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
-			insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
 
-			String ZSPEC_CODE = IBAUtil.getStringValue(part, "SPECIFICATION");
-			insertTable.setValue("ZSPEC", SAPUtil.sapValue(ZSPEC_CODE, "SPECIFICATION")); // 사양
+			if (part.getDefaultUnit().toString().toUpperCase().equals("EA")) {
+				insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
+			} else {
+				insertTable.setValue("MEINS", "EA"); // 기본단위
+			}
 
-			String ZMODEL_CODE = IBAUtil.getStringValue(part, "MODEL");
+			insertTable.setValue("ZSPEC", IBAUtil.getStringValue(part, "SPECIFICATION")); // 사양
+
+			String ZMODEL_CODE = SAPHelper.manager.convertSapValue(part, "MODEL");
 			insertTable.setValue("ZMODEL", SAPUtil.sapValue(ZMODEL_CODE, "MODEL")); // Model:프로젝트
 
-			String ZPRODM_CODE = IBAUtil.getStringValue(part, "PRODUCTMETHOD");
+			String ZPRODM_CODE = SAPHelper.manager.convertSapValue(part, "PRODUCTMETHOD");
 			insertTable.setValue("ZPRODM", SAPUtil.sapValue(ZPRODM_CODE, "PRODUCTMETHOD")); // 제작방법
 
-			String ZDEPT_CODE = IBAUtil.getStringValue(part, "DEPTCODE");
+			String ZDEPT_CODE = SAPHelper.manager.convertSapValue(part, "DEPTCODE");
 			insertTable.setValue("ZDEPT", SAPUtil.sapValue(ZDEPT_CODE, "DEPTCODE")); // 부서
 
 			// 샘플링 실제는 2D여부 확인해서 전송
@@ -392,12 +400,15 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 			// ?? 코드: 단위 형태인지
 			insertTable.setValue("BRGEW", IBAUtil.getAttrfloatValue(part, "WEIGHT")); // 중량
-//			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
 			insertTable.setValue("GEWEI", "G");
-			insertTable.setValue("ZMATLT", IBAUtil.getStringValue(part, "MAT")); // 재질
-			insertTable.setValue("ZPOSTP", IBAUtil.getStringValue(part, "FINISH")); // 후처리
-			insertTable.setValue("ZDEVND", IBAUtil.getStringValue(part, "MANUFACTURE")); // 개발공급업체
+			String ZMATLT = SAPHelper.manager.convertSapValue(part, "MAT");
+			insertTable.setValue("ZMATLT", ZMATLT); // 재질
 
+			String ZPOSTP = SAPHelper.manager.convertSapValue(part, "FINISH");
+			insertTable.setValue("ZPOSTP", ZPOSTP); // 후처리
+
+			String ZDEVND = SAPHelper.manager.convertSapValue(part, "MANUFACTURE");
+			insertTable.setValue("ZDEVND", ZDEVND); // 개발공급업체
 			idx++;
 		}
 
@@ -406,6 +417,15 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		JCoParameterList result = function.getExportParameterList();
 		Object r_type = result.getValue("EV_STATUS");
 		Object r_msg = result.getValue("EV_MESSAGE");
+
+		JCoTable rtnTable = function.getTableParameterList().getTable("ET_MAT");
+		rtnTable.firstRow();
+		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+			System.out.println("EO 자재마스터 결과 ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+		}
+
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
 		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
 		System.out.println("종료 SAP 인터페이스 - EO 자재마스터 FUN : ZPPIF_PDM_001");
@@ -447,9 +467,19 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		ecoTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리??
 		ecoTable.setValue("ZECMID", "ECO"); // EO/ECO 구분
 		ecoTable.setValue("DATUV", today); // 보내는 날짜
-		ecoTable.setValue("AEGRU", eco.getName()); // 변경사유 테스트 일단 한줄
+		ecoTable.setValue("AEGRU", eco.getEoName()); // 변경사유 테스트 일단 한줄
 		ecoTable.setValue("AETXT", "첫줄 테스트"); // 변경 내역 첫줄만 일단 테스트
-		ecoTable.setValue("AETXT_L", eco.getEoCommentA()); // 변경 내역 전체 내용
+
+		if (StringUtil.checkString(eco.getEoCommentA())) {
+			String AETXT_L = eco.getEoCommentA();
+
+			System.out.println(AETXT_L);
+			System.out.println(AETXT_L.replaceAll("\n", "<br>"));
+			System.out.println(AETXT_L.replaceAll("<br>", "\n"));
+			ecoTable.setValue("AETXT_L", AETXT_L.replaceAll("\n", "<br>"));
+		} else {
+			ecoTable.setValue("AETXT_L", ""); // 변경 내역 전체 내용
+		}
 
 		// 변경 대상품목을 가져온다..
 		JCoTable bomTable = function.getTableParameterList().getTable("ET_BOM");
@@ -638,13 +668,13 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			String ZSPEC_CODE = IBAUtil.getStringValue(part, "SPECIFICATION");
 			insertTable.setValue("ZSPEC", SAPUtil.sapValue(ZSPEC_CODE, "SPECIFICATION")); // 사양
 
-			String ZMODEL_CODE = IBAUtil.getStringValue(part, "MODEL");
+			String ZMODEL_CODE = SAPHelper.manager.convertSapValue(part, "MODEL");
 			insertTable.setValue("ZMODEL", SAPUtil.sapValue(ZMODEL_CODE, "MODEL")); // Model:프로젝트
 
-			String ZPRODM_CODE = IBAUtil.getStringValue(part, "PRODUCTMETHOD");
+			String ZPRODM_CODE = SAPHelper.manager.convertSapValue(part, "PRODUCTMETHOD");
 			insertTable.setValue("ZPRODM", SAPUtil.sapValue(ZPRODM_CODE, "PRODUCTMETHOD")); // 제작방법
 
-			String ZDEPT_CODE = IBAUtil.getStringValue(part, "DEPTCODE");
+			String ZDEPT_CODE = SAPHelper.manager.convertSapValue(part, "DEPTCODE");
 			insertTable.setValue("ZDEPT", SAPUtil.sapValue(ZDEPT_CODE, "DEPTCODE")); // 부서
 
 			// 샘플링 실제는 2D여부 확인해서 전송
@@ -661,9 +691,15 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			insertTable.setValue("BRGEW", IBAUtil.getAttrfloatValue(part, "WEIGHT")); // 중량
 //			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
 			insertTable.setValue("GEWEI", "G"); // 고정..
-			insertTable.setValue("ZMATLT", IBAUtil.getStringValue(part, "MAT")); // 재질
-			insertTable.setValue("ZPOSTP", IBAUtil.getStringValue(part, "FINISH")); // 후처리
-			insertTable.setValue("ZDEVND", IBAUtil.getStringValue(part, "MANUFACTURE")); // 개발공급업체
+
+			String ZMATLT = SAPHelper.manager.convertSapValue(part, "MAT");
+			insertTable.setValue("ZMATLT", ZMATLT); // 재질
+
+			String ZPOSTP = SAPHelper.manager.convertSapValue(part, "FINISH");
+			insertTable.setValue("ZPOSTP", ZPOSTP); // 후처리
+
+			String ZDEVND = SAPHelper.manager.convertSapValue(part, "MANUFACTURE");
+			insertTable.setValue("ZDEVND", ZDEVND); // 개발공급업체
 
 			idx++;
 		}

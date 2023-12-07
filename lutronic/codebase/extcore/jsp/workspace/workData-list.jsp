@@ -174,8 +174,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							// 객체 OID 분기 처리
-							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE");
+							const url = toUrl(oid);
 							_popup(url, 1500, 800, "n");
 						}
 					},
@@ -263,6 +262,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const exceptColumnFields = [ "reads" ];
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("합의함 리스트", "합의함", "합의함 리스트", exceptColumnFields, sessionName);
+			}
+			
+			// URL 분기 처리
+			function toUrl(oid) {
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

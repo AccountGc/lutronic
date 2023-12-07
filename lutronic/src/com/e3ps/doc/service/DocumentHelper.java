@@ -158,7 +158,7 @@ public class DocumentHelper {
 			System.out.println("최신 아닐 경우 여기 타야지..");
 			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		}
-		
+
 		System.out.println(query);
 
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
@@ -471,13 +471,5 @@ public class DocumentHelper {
 		// 없으면 false 리턴
 
 		return true;
-	}
-
-	/**
-	 * 문서 이력 팝업창
-	 */
-	public ArrayList<DocumentColumn> iteraion(String oid) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

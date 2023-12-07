@@ -16,7 +16,7 @@
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						문서 일괄 결재
+						물질 일괄 결재
 					</div>
 				</td>
 			</tr>
@@ -63,35 +63,77 @@
 		<script type="text/javascript">
 			let myGridID;
 			const columns = [ {
-				dataField : "interalnumber",
-				dataType : "string",
-				width : 120,
-				headerText : "내부문서번호",
-			}, {
 				dataField : "number",
+				headerText : "물질번호",
 				dataType : "string",
-				headerText : "문서명",
-				style : "aui-left"
+				width : 200,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "manufactureDisplay",
+				headerText : "협력업체",
+				dataType : "string",
+				width : 150,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "name",
+				headerText : "물질명",
+				dataType : "string",
+				style : "aui-left",
+				filter : {
+					showIcon : true,
+					inline : true
+				},
 			}, {
 				dataField : "version",
-				dataType : "string",
 				headerText : "REV",
-				width : 80
-			}, {
-				dataField : "state",
 				dataType : "string",
+				width : 80,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "stateDisplay",
 				headerText : "상태",
-				width : 100
+				dataType : "string",
+				width : 80,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
 			}, {
 				dataField : "creator",
-				dataType : "string",
 				headerText : "등록자",
-				width : 100
-			}, {
-				dataField : "createdDate",
 				dataType : "string",
+				width : 100,
+				filter : {
+					showIcon : true,
+					inline : true
+				},
+			}, {
+				dataField : "createDate",
 				headerText : "등록일",
-				width : 100
+				dataType : "date",
+				width : 100,
+				filter : {
+					showIcon : true,
+					inline : true,
+				},
+			}, {
+				dataField : "modifyDate",
+				headerText : "수정일",
+				dataType : "date",
+				width : 100,
+				filter : {
+					showIcon : true,
+					inline : true,
+				},
 			}, {
 				dataField : "oid",
 				dataType : "string",
@@ -137,7 +179,7 @@
 					appName : appName.value,
 					description : description.value,
 					list : list,
-					type : "DOC"
+					type : "ROHS"
 				}
 				const url = getCallUrl("/asm/register");
 				parent.openLayer();
@@ -152,7 +194,7 @@
 			}
 
 			function popup() {
-				const url = getCallUrl("/doc/popup?method=insert90&multi=true&state=BATCHAPPROVAL");
+				const url = getCallUrl("/rohs/popup?method=insert90&multi=true&state=BATCHAPPROVAL");
 				_popup(url, 1800, 900, "n");
 			}
 

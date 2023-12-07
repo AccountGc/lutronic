@@ -107,7 +107,6 @@ public class AsmController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create(@RequestParam String type) throws Exception {
 		ModelAndView model = new ModelAndView();
-
 		if ("DOC".equals(type)) {
 			model.setViewName("/extcore/jsp/document/document-register.jsp");
 		} else if ("MOLD".equals(type)) {
@@ -115,7 +114,6 @@ public class AsmController extends BaseController {
 		} else if ("ROHS".equals(type)) {
 			model.setViewName("/extcore/jsp/rohs/rohs-register.jsp");
 		}
-
 		return model;
 	}
 }
