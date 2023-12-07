@@ -324,13 +324,15 @@ public class RohsController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "물질 일괄링크 실행")
+	@Description(value = "물질 일괄링크 함수")
 	@ResponseBody
 	@PostMapping(value = "/link")
 	public Map<String, Object> link(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = RohsHelper.service.rohsLink(params);
+			RohsHelper.service.link(params);
+			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

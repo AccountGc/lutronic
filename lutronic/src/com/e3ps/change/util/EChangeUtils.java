@@ -181,7 +181,6 @@ public class EChangeUtils {
 			ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
 
 			System.out.println("EO 대상 품목 개수 =  " + list.size());
-//		completeProduct(partList, eco);
 
 			// 개발일 경우 전송 하지 않는다.
 			if (eo.getEoType().trim().equals("PRODUCT")) {

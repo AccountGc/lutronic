@@ -18,6 +18,8 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.service.RohsHelper;
+import com.e3ps.system.SystemErrorLog;
+import com.e3ps.system.service.SystemHelper;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 
@@ -218,7 +220,9 @@ public class CommonContentHelper {
 		CacheDescriptor localCacheDescriptor = UploadToCacheHelper.service.getCacheDescriptor(1, true);
 		UploadToCacheHelper.service.getCacheDescriptor(1, true);
 
-//		File file = new File(filePath);
+		// DRM 로그
+		SystemHelper.service.fasooLogger(request);
+		
 		File file = FasooUtils.decryptedFile(savePath, name);
 		InputStream[] streams = new InputStream[1];
 		streams[0] = new FileInputStream(file);

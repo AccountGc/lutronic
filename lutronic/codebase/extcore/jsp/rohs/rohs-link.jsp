@@ -1,9 +1,5 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,13 +20,13 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="등록" title="등록" onclick="saveBtn();"> 
-					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> 
+					<input type="button" value="등록" title="등록" onclick="saveBtn();">
+					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
 					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 370px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 785px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
 			const columns = [ {
@@ -68,15 +64,15 @@
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					showRowCheckColumn : true,
-					fillColumnSizeMode: true,
+					fillColumnSizeMode : true,
 					editable : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				auiReadyHandler();
 			}
-			
+
 			function auiReadyHandler() {
-				var item = new Object();
+				const item = new Object();
 				AUIGrid.addRow(myGridID, item, 'last');
 			}
 
@@ -99,46 +95,47 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			// 추가
-			function addBtn(){
-				var item = new Object();
+			function addBtn() {
+				const item = new Object();
 				AUIGrid.addRow(myGridID, item, 'last');
 			}
-			
+
 			// 삭제
-			function deleteBtn(){
+			function deleteBtn() {
 				AUIGrid.removeCheckedRows(myGridID);
 			}
-			
+
 			// 저장
-			function saveBtn(){
-				var gridList = AUIGrid.getGridData(myGridID);
-				for(var i=0; i<gridList.length; i++){
-					if(isEmpty(gridList[i].partNumber)){
+			function saveBtn() {
+				const gridList = AUIGrid.getGridData(myGridID);
+				for (let i = 0; i < gridList.length; i++) {
+					if (isEmpty(gridList[i].partNumber)) {
 						alert("부품코드가 입력되지 않았습니다.");
 						return;
 					}
-					if(isEmpty(gridList[i].rohsNumber)){
+					if (isEmpty(gridList[i].rohsNumber)) {
 						alert("물질코드가 입력되지 않았습니다.");
 						return;
 					}
 				}
-				
-				if (!confirm("등록 하시겠습니까?")){
+
+				if (!confirm("등록 하시겠습니까?")) {
 					return;
 				}
-				
-				let params = new Object();
-				params.gridList = gridList;
+
+				const params = {
+					gridList : gridList
+				}
 				const url = getCallUrl("/rohs/link");
+				parent.openLayer();
 				call(url, params, function(data) {
-					if(data.result){
-						alert(data.msg);
-						location.reload();
-					}else{
-						alert(data.msg);
+					alert(data.msg);
+					if (data.result) {
+						document.location.reload();
 					}
+					parent.closeLayer();
 				});
 			}
 		</script>

@@ -35,7 +35,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						품목 일괄등록
+						품목 일괄 등록
 					</div>
 				</td>
 				<td class="right">
@@ -45,7 +45,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 740px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 785px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
 			let partType2Map = {};
@@ -912,7 +912,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const props = {
 					rowIdField: "id",
 					editable : true,
-					headerHeight : 35,
+					headerHeight : 30,
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",

@@ -16,11 +16,11 @@ import wt.util.WTException;
 
 @RemoteInterface
 public interface RohsService {
-	
-	List<Map<String,String>> rohsFileType();
-	
+
+	List<Map<String, String>> rohsFileType();
+
 	List<RohsData> include_RohsList(String oid) throws Exception;
-	
+
 	Map<String, Object> delete(String oid) throws Exception;
 
 	void createROHSToPartLink(RevisionControlled rv, String[] oids) throws WTException;
@@ -30,16 +30,19 @@ public interface RohsService {
 	void revisePartToROHSLink(WTPart oldPart, WTPart newPart) throws Exception;
 
 	ResultData batchROHSDown(HttpServletRequest request, HttpServletResponse response);
-			
+
 	public void create(Map<String, Object> params) throws Exception;
-	
+
 	public void batch(Map<String, Object> params) throws Exception;
-	
+
 	public void update(Map<String, Object> params) throws Exception;
-	
+
 	public void copyRohs(Map<String, Object> params) throws Exception;
-	
+
 	public void reviseRohs(Map<String, Object> params) throws Exception;
-	
-	public Map<String, Object> rohsLink(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 물질 일광 링크
+	 */
+	public abstract void link(Map<String, Object> params) throws Exception;
 }

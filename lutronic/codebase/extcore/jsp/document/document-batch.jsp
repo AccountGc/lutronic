@@ -28,7 +28,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						문서 일괄등록
+						문서 일괄 등록
 					</div>
 				</td>
 				<td class="right">
@@ -38,7 +38,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 				</td>
 			</tr>
 		</table>
-		<div id="grid_wrap" style="height: 740px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 785px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
 			let recentGridItem;
@@ -721,7 +721,7 @@ JSONArray tlist = (JSONArray) request.getAttribute("tlist"); // 보존기간
 			function createAUIGrid(columnLayout) {
 				const props = {
 					editable : true,
-					headerHeight : 35,
+					headerHeight : 30,
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",

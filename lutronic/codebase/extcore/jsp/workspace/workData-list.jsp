@@ -266,6 +266,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			
 			// URL 분기 처리
 			function toUrl(oid) {
+				alert(oid);
+				let url;
+				if(oid.indexOf("") > -1) {
+					
+				} else if(oid.indexOf("") > -1) {
+					
+				} else if(oid.indexOf("") > -1) {
+					
+				} else if(oid.indexOf("") > -1) {
+					
+				} else if(oid.indexOf("") > -1) {
+					
+				}
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

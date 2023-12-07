@@ -155,7 +155,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/doc/create', '> 문서관리 > 문서 등록');">문서 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄등록');">문서 일괄등록</a>
+						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄 등록');">문서 일괄 등록</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/asm/create?type=DOC', '> 문서관리 > 문서 일괄 결재');">문서 일괄 결재</a>
@@ -192,7 +192,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/part/create', '> 품목관리 > 제품/품목 등록');">제품/품목 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 제품/품목 일괄등록');">제품/품목 일괄등록</a>
+						<a onclick="moveToPage(this, '/part/batch', '> 품목관리 > 제품/품목 일괄 등록');">제품/품목 일괄 등록</a>
 					</li>
 					<!-- 					<li> -->
 					<!-- 						<a onclick="moveToPage(this, '/part/editor', '> 품목관리 > BOM EDITOR');">BOM EDITOR</a> -->
@@ -276,6 +276,12 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/rohs/create', '> RoHS > 물질 등록');">물질 등록</a>
 					</li>
 					<li>
+						<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄 등록');">물질 일괄 등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄 링크');">물질 일괄 링크</a>
+					</li>
+					<li>
 						<a onclick="moveToPage(this, '/asm/create?type=ROHS', '> RoHS > 물질 일괄 결재');">물질 일괄 결재</a>
 					</li>
 					<li>
@@ -289,12 +295,6 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/rohs/product', '> RoHS > 제품 현황');">제품 현황</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/rohs/batch', '> RoHS > 물질 일괄등록');">물질 일괄등록</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/rohs/link', '> RoHS > 물질 일괄링크');">물질 일괄링크</a>
 					</li>
 				</ul>
 			</li>

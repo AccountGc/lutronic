@@ -16,7 +16,6 @@ public class RoHSHolderData {
 	private String fileType;
 	private String publicationDate;
 	private String fileName;
-	private String primary;
 
 	public RoHSHolderData(ROHSContHolder holder) throws Exception {
 		setOid(holder.getPersistInfo().getObjectIdentifier().toString());
@@ -24,6 +23,5 @@ public class RoHSHolderData {
 		setFileType(holder.getFileType());
 		setPublicationDate(holder.getPublicationDate());
 		setFileName(holder.getFileName());
-		setPrimary(AUIGridUtil.primary(holder));
 	}
 }
