@@ -45,13 +45,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<tr>
 				<th>유저 검색</th>
 				<td class="indent5">
-					<input type="text" name="manager" id="manager" data-multi="false" class="width-200"> 
-					<input type="hidden" name="managerOid" id="managerOid"> 
+					<input type="text" name="manager" id="manager" data-multi="false" class="width-200">
+					<input type="hidden" name="managerOid" id="managerOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('manager')">
 				</td>
 				<th>다운로드일</th>
 				<td class="indent5">
-					<input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> 
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
 			</tr>
@@ -59,9 +61,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
-					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('downloadHistory-list');"> 
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('downloadHistory-list');"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('downloadHistory-list');">
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('downloadHistory-list');">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -100,6 +102,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "userName",
 					headerText : "이름",
 					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -108,6 +111,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -116,6 +120,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "info",
 					headerText : "해당모듈",
 					dataType : "string",
+					style : "aui-left",
 					filter : {
 						showIcon : true,
 						inline : true
@@ -133,6 +138,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "createdDate_txt",
 					headerText : "다운시간",
 					dataType : "date",
+					width : 150,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -178,9 +184,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function loadGridData() {
 				var params = new Object();
-				const field = ["managerOid","createdFrom","createdTo","type"];
+				const field = [ "managerOid", "createdFrom", "createdTo", "type" ];
 				params = toField(params, field);
-				if(params.type==""){
+				if (params.type == "") {
 					params.type = "EPMDocument";
 				}
 				var url = getCallUrl("/admin/downLoadHistory");
@@ -227,7 +233,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(typeGridID);
 			});
-			
+
 			// 사이드 메뉴 그리드
 			let typeGridID;
 			const typeColumns = [ {
@@ -243,38 +249,43 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					baseUrl : "javascript",
 					jsCallback : function(rowIndex, columnIndex, value, item) {
 						const menuType = item.menuType;
-						if(menuType=='도면관리'){
+						if (menuType == '도면관리') {
 							gotoView('EPMDocument');
-						}else if(menuType=='품목관리'){
+						} else if (menuType == '품목관리') {
 							gotoView('WTPart');
-						}else if(menuType=='설계변경'){
+						} else if (menuType == '설계변경') {
 							gotoView('change');
-						}else if(menuType=='문서관리'){
+						} else if (menuType == '문서관리') {
 							gotoView('WTDocument');
 						}
 					}
 				},
 			} ]
-			
+
 			function createAUIGridType(columnLayout) {
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : false,
-// 					rowNumHeaderText : "번호",
-					selectionMode: "multipleCells",
-					enableFilter : true, 
+					// 					rowNumHeaderText : "번호",
+					selectionMode : "multipleCells",
+					enableFilter : true,
 					displayTreeOpen : true,
 					useContextMenu : true
 				}
 				typeGridID = AUIGrid.create("#grid_type", columnLayout, props);
-				var typeList = [{"menuType" : "도면관리"}
-									,{"menuType" : "품목관리"}
-									,{"menuType" : "설계변경"}
-									,{"menuType" : "문서관리"}];
-				
+				var typeList = [ {
+					"menuType" : "도면관리"
+				}, {
+					"menuType" : "품목관리"
+				}, {
+					"menuType" : "설계변경"
+				}, {
+					"menuType" : "문서관리"
+				} ];
+
 				AUIGrid.setGridData(typeGridID, typeList);
 			}
-			
+
 			function gotoView(type) {
 				$("#type").val(type);
 				$("#sortValue").val("");
@@ -283,10 +294,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("#page").val(1);
 				loadGridData();
 			}
-			
+
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("다운로드 이력관리 리스트", "다운로드 이력관리", "다운로드 이력관리 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("다운로드 이력관리 리스트", "다운로드 이력관리", "다운로드 이력관리 리스트", [], sessionName);
 			}
 		</script>
 	</form>

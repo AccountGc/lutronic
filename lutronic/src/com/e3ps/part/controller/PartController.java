@@ -160,7 +160,6 @@ public class PartController extends BaseController {
 	@Description(value = "일괄 등록 페이지")
 	@GetMapping(value = "/batch")
 	public ModelAndView batch() throws Exception {
-
 		JSONArray folderList = PartHelper.manager.recurcive();
 		JSONArray modelList = NumberCodeHelper.manager.toJson("MODEL");
 		JSONArray deptcodeList = NumberCodeHelper.manager.toJson("DEPTCODE");
