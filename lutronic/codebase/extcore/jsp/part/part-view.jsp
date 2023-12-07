@@ -305,21 +305,21 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		const url = getCallUrl("/bom/view?oid=" + oid);
 		_popup(url, 1600, 800, "n");
 	}
-	
+
 	// 수정
-	function update () {
+	function update() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/part/update?oid=" + oid);
 		document.location.href = url;
 	};
-	
+
 	//삭제
-	function deleteBtn(){
-		
-			if (!confirm("삭제 하시겠습니까?")) {
-				return false;
-			}
-		
+	function deleteBtn() {
+
+		if (!confirm("삭제 하시겠습니까?")) {
+			return false;
+		}
+
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/part/delete");
 		const params = new Object();
@@ -327,9 +327,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+				if (parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null) {
 					parent.opener.location.reload();
-				}else {
+				} else {
 					parent.opener.$("#sessionId").val("");
 					parent.opener.lfn_Search();
 				}
@@ -384,7 +384,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGrid90(columns90);
 						$(".comment-table").hide();
 					}
-					
+
 					isCreated106 = AUIGrid.isCreated(myGridID106);
 					if (isCreated106) {
 						AUIGrid.resize(myGridID106);
@@ -413,7 +413,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 						createAUIGridEnDoc(columnEnDoc);
 						$(".comment-table").hide();
 					}
-					break;	
+					break;
 				case "tabs-7":
 					const isCreated50 = AUIGrid.isCreated(myGridID50); // 버전이력
 					if (isCreated50) {
@@ -435,26 +435,26 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					} else {
 						createAUIGrid80(columns80);
 					}
-					
+
 					const isCreated81 = AUIGrid.isCreated(myGridID81); // 하위 품목
 					if (isCreated81) {
 						AUIGrid.resize(myGridID81);
 					} else {
 						createAUIGrid81(columns81);
 					}
-					
+
 					const isCreated82 = AUIGrid.isCreated(myGridID82); // end item
 					if (isCreated82) {
 						AUIGrid.resize(myGridID82);
 					} else {
 						createAUIGrid82(columns82);
 					}
-					break;	
+					break;
 				}
 			},
 		});
 	});
-	
+
 	function _clean() {
 		if (!confirm("속성 CLEANING을 하시겠습니까?")) {
 			return false;
@@ -473,9 +473,9 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			closeLayer();
 		})
 	}
-	
+
 	// BOM 에디터
-	function (){
+	function editor() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/bom/editor?oid=" + oid);
 		_popup(url, "", "", "f");
@@ -492,92 +492,91 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		AUIGrid.resize(verGridID);
 		AUIGrid.resize(enDocGridID);
 	});
-	
+
 	const oid = document.querySelector("#oid").value;
-	
-	<%----------------------------------------------------------
+<%----------------------------------------------------------
 *                     AUI BOM 버튼
 ----------------------------------------------------------%>
-$(document).keydown(function(event) {
-	var charCode = (event.which) ? event.which : event.keyCode;
-	if(charCode ==17){
-		$("#bomSelect").val("true");
-	}else{
-		$("#bomSelect").val("false");
-	}
-})
-
-$("#auiBom").click(function() {
-	auiBom(oid,'');
-});
-
-function packageUpdate(){
-	const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);
-	_popup(url, 1500, 600,"n");
-}
-
-$("#bomE").click(function() {
-	var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
-	_popup(url, "1400", "600", "n");
-	
-})
-
-$("#Compare").click(function() {
-	var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
-	_popup(str, 1300, 600,"n");
-})
-
-function change(){
-	const url = getCallUrl("/part/change?oid=" + oid);
-	_popup(url, 1500, 600,"n");
-}
-
-function orderNumber_NewVersion(){
-	const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
-	_popup(url, 1500, 600,"n");
-}
-
-function restore(){
-	if (confirm("복원하시겠습니까?")){ 
-		partStateChange('INWORK');
-	}
-}
-function changeDev(){
-	if (confirm("변경하시겠습니까?")){ 
-		partStateChange('INWORK');
-	}
-}
-	
-window.partStateChange = function(state) {
-	var url	= getURLString("part", "partStateChange", "do");
-	$.ajax({
-		type:"POST",
-		url: url,
-		data: {
-			oid : $("#oid").val(),
-			state : state
-		},
-		dataType:"json",
-		async: true,
-		cache: false,
-		error:function(data){
-			var msg = "등록 오류";
-			alert(msg);
+	$(document).keydown(function(event) {
+		var charCode = (event.which) ? event.which : event.keyCode;
+		if (charCode == 17) {
+			$("#bomSelect").val("true");
+		} else {
+			$("#bomSelect").val("false");
 		}
-		,beforeSend: function() {
-			gfn_StartShowProcessing();
-        }
-		,complete: function() {
-			gfn_EndShowProcessing();
-        }
-		,success: function(data) {
-			if(data.result) {
-				alert("상태가 변경되었습니다.");
-				location.reload();
-			}else {
-				alert(data.message);
-			}
-		}
+	})
+
+	$("#auiBom").click(function() {
+		auiBom(oid, '');
 	});
-}
+
+	function packageUpdate() {
+		const url = getCallUrl("/part/updateAUIPackagePart?oid=" + oid);
+		_popup(url, 1500, 600, "n");
+	}
+
+	$("#bomE").click(function() {
+		var url = getCallUrl("/part/bomEditor") + "?oid=" + oid;
+		_popup(url, "1400", "600", "n");
+
+	})
+
+	$("#Compare").click(function() {
+		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
+		_popup(str, 1300, 600, "n");
+	})
+
+	function change() {
+		const url = getCallUrl("/part/change?oid=" + oid);
+		_popup(url, 1500, 600, "n");
+	}
+
+	function orderNumber_NewVersion() {
+		const url = getCallUrl("/part/updateAUIPartChange?oid=" + oid);
+		_popup(url, 1500, 600, "n");
+	}
+
+	function restore() {
+		if (confirm("복원하시겠습니까?")) {
+			partStateChange('INWORK');
+		}
+	}
+	function changeDev() {
+		if (confirm("변경하시겠습니까?")) {
+			partStateChange('INWORK');
+		}
+	}
+
+	window.partStateChange = function(state) {
+		var url = getURLString("part", "partStateChange", "do");
+		$.ajax({
+			type : "POST",
+			url : url,
+			data : {
+				oid : $("#oid").val(),
+				state : state
+			},
+			dataType : "json",
+			async : true,
+			cache : false,
+			error : function(data) {
+				var msg = "등록 오류";
+				alert(msg);
+			},
+			beforeSend : function() {
+				gfn_StartShowProcessing();
+			},
+			complete : function() {
+				gfn_EndShowProcessing();
+			},
+			success : function(data) {
+				if (data.result) {
+					alert("상태가 변경되었습니다.");
+					location.reload();
+				} else {
+					alert(data.message);
+				}
+			}
+		});
+	}
 </script>
