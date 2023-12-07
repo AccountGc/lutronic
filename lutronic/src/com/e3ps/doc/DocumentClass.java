@@ -17,7 +17,7 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "name", type = String.class),
 
-				@GeneratedProperty(name = "class", type = String.class),
+				@GeneratedProperty(name = "clazz", type = String.class),
 
 				@GeneratedProperty(name = "description", type = String.class),
 

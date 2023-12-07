@@ -1,0 +1,66 @@
+ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.abbreviatedDisplay=true
+ResourceInfo.deprecated=false
+
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable= 
+
+# Entry Contents
+
+#DEV - 개발문서
+DEV.value=개발문서
+DEV.order=10
+
+#CHANGE - 설계변경문서
+CHANGE.value=설계변경문서
+CHANGE.order=20
+
+#INSTRUCTION - 지침서
+INSTRUCTION.value=지침서
+INSTRUCTION.order=30
+
+#REPORT - 보고서
+REPORT.value=보고서
+REPORT.order=40
+
+#VAILDATION - 벨리데이션문서
+VAILDATION.value=벨리데이션문서
+VAILDATION.order=50
+
+#MEETING - 회의록
+MEETING.value=회의록
+MEETING.order=60
+
+#RND - 연구소문서
+RND.value=연구소문서
+RND.order=70
+
+#ELEC - 전자매체
+ELEC.value=전자매체
+ELEC.order=80
+
+#SOURCE - 개발소스
+SOURCE.value=개발소스
+SOURCE.order=90
+
+#APPROVAL - 승인원
+APPROVAL.value=승인원
+APPROVAL.order=100
+
+#ETC - 기타
+ETC.value=기타
+ETC.order=110

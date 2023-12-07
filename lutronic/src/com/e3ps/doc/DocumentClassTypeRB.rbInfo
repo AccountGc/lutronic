@@ -1,0 +1,66 @@
+ResourceInfo.class=wt.tools.resource.EnumResourceInfo
+ResourceInfo.abbreviatedDisplay=true
+ResourceInfo.deprecated=false
+
+
+# Entry Format (values equal to default value are not included)
+# <key>.value=
+# <key>.category=
+# <key>.comment=
+# <key>.argComment<n>=
+# <key>.constant=
+# <key>.customizable=
+# <key>.deprecated=
+# <key>.abbreviatedDisplay=
+# <key>.fullDisplay=
+# <key>.shortDescription=
+# <key>.longDescription=
+# <key>.order=
+# <key>.defaultValue=
+# <key>.selectable= 
+
+# Entry Contents
+
+#DEV - DEV
+DEV.value=DEV
+DEV.order=10
+
+#CHANGE - CHANGE
+CHANGE.value=CHANGE
+CHANGE.order=20
+
+#INSTRUCTION - INSTRUCTION
+INSTRUCTION.value=INSTRUCTION
+INSTRUCTION.order=30
+
+#REPORT - REPORT
+REPORT.value=REPORT
+REPORT.order=40
+
+#VAILDATION - VAILDATION
+VAILDATION.value=VAILDATION
+VAILDATION.order=50
+
+#MEETING - MEETING
+MEETING.value=MEETING
+MEETING.order=60
+
+#RND - RND
+RND.value=RND
+RND.order=70
+
+#ELEC - ELEC
+ELEC.value=ELEC
+ELEC.order=80
+
+#SOURCE - SOURCE
+SOURCE.value=SOURCE
+SOURCE.order=90
+
+#APPROVAL - APPROVAL
+APPROVAL.value=APPROVAL
+APPROVAL.order=100
+
+#ETC - ETC
+ETC.value=ETC
+ETC.order=110

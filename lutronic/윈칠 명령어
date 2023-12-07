@@ -10,6 +10,7 @@
 	- 한글 깨질시 해당 위치로 가저 에디터 플러스로 XXRB_ko 파일 오픈 하여, 문서 인코딩을 ANSI로 변경한후 아래 명령어 실행
 	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.message.** -Dbundle.buildLocales=true
 	- Shell -> tools bundle -Dbundle.input=com.e3ps.common.code.** -Dbundle.buildLocales=true
+	- Shell -> tools bundle -Dbundle.input=com.e3ps.doc.** -Dbundle.buildLocales=true
 	- Shell -> codebase 이동 ant -f MakeJar.xml 실행
 	
 4. 서비스 등록

@@ -127,14 +127,20 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/temprary/list', '> 나의업무 > 임시저장함');">임시저장함</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
-					</li>
-					<li>
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
+					</li>
+					<%
+						if(isAdmin) {
+					%>
+					<li>
+						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a>
 					</li>
+					<%
+						}
+					%>
 				</ul>
 			</li>
 			<%

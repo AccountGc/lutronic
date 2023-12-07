@@ -12,7 +12,7 @@
 	let _myGridID;
 	const _columns = [ {
 		dataField : "display",
-		headerText : "코드타입",
+		headerText : "문서타입",
 		dataType : "string",
 		filter : {
 			showIcon : true,
@@ -42,8 +42,8 @@
 		const params = {
 			codeType : type
 		}
-		document.getElementById("codeType").value = type;
-		const url = getCallUrl("/code/list");
+		document.getElementById("classType").value = type;
+		const url = getCallUrl("/class/list");
 		parent.openLayer();
 		call(url, params, function(data) {
 			if (data.result) {
@@ -56,7 +56,7 @@
 	}
 
 	function loadTree() {
-		const url = getCallUrl("/code/tree");
+		const url = getCallUrl("/class/tree");
 		AUIGrid.showAjaxLoader(_myGridID);
 		call(url, null, function(data) {
 			AUIGrid.removeAjaxLoader(_myGridID);

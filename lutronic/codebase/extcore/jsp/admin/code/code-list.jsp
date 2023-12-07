@@ -24,7 +24,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	<form>
 		<input type="hidden" name="codeType" id="codeType">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -57,27 +57,27 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5" colspan="3">
 					<input type="text" name="description" id="description" class="width-200">
 				</td>
-<!-- 				<th>활성화</th> -->
-<!-- 				<td> -->
-<!-- 					&nbsp; -->
-<!-- 					<div class="pretty p-switch"> -->
-<!-- 						<input type="radio" name="enabled" value="false" checked="checked"> -->
-<!-- 						<div class="state p-success"> -->
-<!-- 							<label> -->
-<!-- 								<b>ON</b> -->
-<!-- 							</label> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					&nbsp; -->
-<!-- 					<div class="pretty p-switch"> -->
-<!-- 						<input type="radio" name="enabled" value="true"> -->
-<!-- 						<div class="state p-success"> -->
-<!-- 							<label> -->
-<!-- 								<b>OFF</b> -->
-<!-- 							</label> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 				</td> -->
+				<!-- 				<th>활성화</th> -->
+				<!-- 				<td> -->
+				<!-- 					&nbsp; -->
+				<!-- 					<div class="pretty p-switch"> -->
+				<!-- 						<input type="radio" name="enabled" value="false" checked="checked"> -->
+				<!-- 						<div class="state p-success"> -->
+				<!-- 							<label> -->
+				<!-- 								<b>ON</b> -->
+				<!-- 							</label> -->
+				<!-- 						</div> -->
+				<!-- 					</div> -->
+				<!-- 					&nbsp; -->
+				<!-- 					<div class="pretty p-switch"> -->
+				<!-- 						<input type="radio" name="enabled" value="true"> -->
+				<!-- 						<div class="state p-success"> -->
+				<!-- 							<label> -->
+				<!-- 								<b>OFF</b> -->
+				<!-- 							</label> -->
+				<!-- 						</div> -->
+				<!-- 					</div> -->
+				<!-- 				</td> -->
 			</tr>
 		</table>
 		<table class="button-table">
@@ -89,6 +89,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="button" value="행 추가" title="행 추가" class="blue" onclick="addRow();">
 					<input type="button" value="자식 추가" title="자식 추가" class="orange" onclick="addTreeRow();">
 					<input type="button" value="행 삭제" title="행 삭제" class="red" onclick="deleteRow();">
+					<input type="button" value="저장" title="저장" class="gray" onclick="save();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -99,7 +100,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="저장" title="저장" class="red" onclick="save();">
 				</td>
 			</tr>
 		</table>
@@ -115,9 +115,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
-					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
-					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
+					<div id="grid_wrap" style="height: 670px; border-top: 1px solid #3180c3;"></div>
 				</td>
 			</tr>
 		</table>
@@ -171,10 +169,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
-// 						showLabel: true,
+						// 						showLabel: true,
 						editable : true,
-// 						checkValue: "true",
-// 						unCheckValue: "false",
+					// 						checkValue: "true",
+					// 						unCheckValue: "false",
 					}
 				} ]
 			}
@@ -191,7 +189,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableMovingColumn : true,
 					enableFilter : true,
 					showInlineFilter : true,
-					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
@@ -200,39 +197,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				AUIGrid.bind(myGridID, "contextMenu", function(event) {
-					const menu = [ {
-						label : "행 추가",
-						callback : auiContextHandler
-					}, {
-						label : "자식 추가",
-						callback : auiContextHandler
-					}, {
-						label : "삭제",
-						callback : auiContextHandler
-					} ];
-					return menu;
-				});
 				loadGridData();
-				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
-					hideContextMenu();
-				});
-				AUIGrid.bind(myGridID, "hScrollChange", function(event) {
-					hideContextMenu();
-				});
 			}
 
 			function loadGridData() {
 				const name = document.getElementById("name").value;
 				const code = document.getElementById("code").value;
 				const description = document.getElementById("description").value;
-// 				const enabled = document.querySelector("input[name=enabled]:checked").value;
+				// 				const enabled = document.querySelector("input[name=enabled]:checked").value;
 				const codeType = document.getElementById("codeType").value;
 				const params = {
 					name : name,
-					code: code,
-					description: description,
-// 					enabled: enabled,
+					code : code,
+					description : description,
+					// 					enabled: enabled,
 					codeType : codeType
 				}
 				const url = getCallUrl("/code/list");
@@ -248,21 +226,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				})
 			}
 
-			function auiReadyHandler() {
-			//	AUIGrid.showItemsOnDepth(myGridID, 2);
-			}
-			
 			// 행 추가
 			function addRow() {
 				const codeType = document.getElementById("codeType").value;
-				
-				if(codeType === ""){
+
+				if (codeType === "") {
 					alert("코드타입을 선택해주세요.");
-				}else{
+				} else {
 					const item = {
 						enabled : true,
 					};
-					AUIGrid.addRow(myGridID, item, "first");					
+					AUIGrid.addRow(myGridID, item, "first");
 				}
 			}
 
@@ -308,12 +282,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				const selItem = checkedItems[0].item;
 				const parentRowId = selItem.oid;
-				
-				if(parentRowId.indexOf("NumberCode") == -1){
+
+				if (parentRowId.indexOf("NumberCode") == -1) {
 					alert("새로 추가한 행을 먼저 저장해주세요.");
 					return false;
 				}
-				
+
 				const newItem = new Object();
 				newItem.parentRowId = parentRowId;
 				newItem.enabled = true;
@@ -339,28 +313,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 			})
 
-			document.addEventListener("click", function(event) {
-				hideContextMenu();
-			})
-
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 				AUIGrid.resize(_myGridID);
 			});
-
-			function auiContextHandler(event) {
-				switch (event.contextIndex) {
-				case 0:
-					addRow();
-					break;
-				case 1:
-					addTreeRow();
-					break;
-				case 2:
-					deleteRow();
-					break;
-				}
-			};
 
 			function save() {
 				// 추가된 행
@@ -369,9 +325,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const editedRowItems = AUIGrid.getEditedRowItems(myGridID);
 				// 삭제된 행
 				const removedRowItems = AUIGrid.getRemovedItems(myGridID);
-				
+
 				const codeType = document.getElementById("codeType").value;
-				
+
 				if (addedRowItems.length == 0 && editedRowItems.length == 0 && removedRowItems.length == 0) {
 					alert("변경된 내용이 없습니다.");
 					return false;
@@ -399,11 +355,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					parent.closeLayer();
 				});
 			}
-			
+
 			function exportExcel() {
-			    const exceptColumnFields = [ "enabled" ];
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("코드체계관리 리스트", "코드체계관리", "코드체계관리 리스트", exceptColumnFields, sessionName);
+				const exceptColumnFields = [ "enabled" ];
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("코드체계관리 리스트", "코드체계관리", "코드체계관리 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>
