@@ -4,8 +4,8 @@
 <%@page import="com.e3ps.rohs.dto.RohsData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-	ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
-	ArrayList<RohsData> rohsList = (ArrayList<RohsData>) request.getAttribute("rohsList");
+ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
+ArrayList<RohsData> rohsList = (ArrayList<RohsData>) request.getAttribute("rohsList");
 %>
 <!DOCTYPE html>
 <html>
@@ -27,31 +27,49 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="저장" title="저장" onclick="saveBtn();"> 
-					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();"> 
-					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+					<input type="button" value="저장" title="저장" onclick="save();">
+					<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow();">
 				</td>
 			</tr>
 		</table>
 		<div id="grid_wrap" style="height: 785px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
-			const lifecycleList = [{"code": "LC_Default", "value": "기본결재"}, {"code": "LC_Default_NonWF", "value": "일괄결재"}];
-			const fileDivision = [{"code": "TR", "value": "시험성적서"}, {"code": "DOC", "value": "보증서"}, {"code": "MSDS", "value": "MSDS 성분분석표"}, {"code": "XRF", "value": "XRF분석 성적서"}];
+			const lifecycleList = [ {
+				"code" : "LC_Default",
+				"value" : "기본결재"
+			}, {
+				"code" : "LC_Default_NonWF",
+				"value" : "일괄결재"
+			} ];
+			const fileDivision = [ {
+				"code" : "TR",
+				"value" : "시험성적서"
+			}, {
+				"code" : "DOC",
+				"value" : "보증서"
+			}, {
+				"code" : "MSDS",
+				"value" : "MSDS 성분분석표"
+			}, {
+				"code" : "XRF",
+				"value" : "XRF분석 성적서"
+			} ];
 			let manufactureList = [];
-			<% for(NumberCode manufacture : manufactureList){ %>
-				manufactureList.push({ "code" : "<%= manufacture.getCode() %>", "value" : "<%= manufacture.getName() %>"});
-			<% } %>
+			<%for (NumberCode manufacture : manufactureList) {%>
+				manufactureList.push({ "code" : "<%=manufacture.getCode()%>", "value" : "<%=manufacture.getName()%>"});
+			<%}%>
 			let rohsList = [];
-			<% for(RohsData rohs : rohsList){ %>
-				rohsList.push({ "code" : "<%= rohs.getNumber() %>", "value" : "<%= rohs.getName() %>"});
-			<% } %>
-			const layout = [{
+			<%for (RohsData rohs : rohsList) {%>
+				rohsList.push({ "code" : "<%=rohs.getNumber()%>", "value" : "<%=rohs.getName()%>"});
+		<%}%>
+			const layout = [ {
 				dataField : "lifecycleName",
 				headerText : "결재방식",
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -64,7 +82,7 @@
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 					var retStr = "";
 					for (var i = 0, len = lifecycleList.length; i < len; i++) {
 						if (lifecycleList[i]["code"] == value) {
@@ -75,20 +93,20 @@
 					return retStr == "" ? value : retStr;
 				},
 				editRenderer : {
-					type: "ComboBoxRenderer",
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					list: lifecycleList, 
-					keyField: "code", 
-					valueField: "value" 
+					type : "ComboBoxRenderer",
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					list : lifecycleList,
+					keyField : "code",
+					valueField : "value"
 				},
 			}, {
 				dataField : "manufactureName",
 				headerText : "협력업체",
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 				renderer : {
 					type : "IconRenderer",
 					iconWidth : 16,
@@ -101,11 +119,11 @@
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 					var retStr = "";
 					for (var i = 0, len = manufactureList.length; i < len; i++) {
 						if (manufactureList[i]["code"] == value) {
-                            AUIGrid.setCellValue(myGridID, rowIndex, "manufacture", value);
+							AUIGrid.setCellValue(myGridID, rowIndex, "manufacture", value);
 							retStr = manufactureList[i]["value"];
 							break;
 						}
@@ -113,31 +131,31 @@
 					return retStr == "" ? value : retStr;
 				},
 				editRenderer : {
-					type: "ComboBoxRenderer",
-					list: manufactureList, 
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value" 
+					type : "ComboBoxRenderer",
+					list : manufactureList,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "code",
+					valueField : "value"
 				},
 			}, {
 				dataField : "manufacture",
 				headerText : "협력업체코드",
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 			}, {
 				dataField : "rohsName",
 				headerText : "물질명",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 			}, {
 				dataField : "relatedRohs",
 				headerText : "관련물질",
 				dataType : "string",
 				width : 120,
-				cellMerge: true,
+				cellMerge : true,
 			}, {
 				dataField : "fileTypeName",
 				headerText : "파일구분",
@@ -155,7 +173,7 @@
 						AUIGrid.openInputer(event.pid);
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 					var retStr = "";
 					for (var i = 0, len = fileDivision.length; i < len; i++) {
 						if (fileDivision[i]["code"] == value) {
@@ -167,13 +185,13 @@
 					return retStr == "" ? value : retStr;
 				},
 				editRenderer : {
-					type: "ComboBoxRenderer",
-					list: fileDivision, 
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value" 
+					type : "ComboBoxRenderer",
+					list : fileDivision,
+					autoCompleteMode : true, // 자동완성 모드 설정
+					autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+					keyField : "code",
+					valueField : "value"
 				},
 			}, {
 				dataField : "fileType",
@@ -185,16 +203,16 @@
 				headerText : "발행일",
 				dataType : "string",
 				width : 120,
-				dateInputFormat: "yyyy-mm-dd", // 실제 데이터의 형식 지정
-				formatString: "yyyy-mm-dd", // 실제 데이터 형식을 어떻게 표시할지 지정
-				width: 160,
-				editRenderer: {
-					type: "CalendarRenderer",
-					showExtraDays: false, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
-					onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-					defaultFormat: "yyyy-mm-dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
-					showPlaceholder: true, // defaultFormat 설정된 값으로 플래스홀더 표시
-					validator: function (oldValue, newValue, item) { // 에디팅 유효성 검사
+				dateInputFormat : "yyyy-mm-dd", // 실제 데이터의 형식 지정
+				formatString : "yyyy-mm-dd", // 실제 데이터 형식을 어떻게 표시할지 지정
+				width : 160,
+				editRenderer : {
+					type : "CalendarRenderer",
+					showExtraDays : false, // 지난 달, 다음 달 여분의 날짜(days) 출력 안함
+					onlyCalendar : false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+					defaultFormat : "yyyy-mm-dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+					showPlaceholder : true, // defaultFormat 설정된 값으로 플래스홀더 표시
+					validator : function(oldValue, newValue, item) { // 에디팅 유효성 검사
 						var m, d;
 						var isValid = true;
 						m = parseInt(newValue.substring(5, 7));
@@ -207,7 +225,10 @@
 							isValid = true;
 						}
 						// 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-						return { "validate": isValid, "message": "유효한 날짜 형식으로 입력해주세요." };
+						return {
+							"validate" : isValid,
+							"message" : "유효한 날짜 형식으로 입력해주세요."
+						};
 					}
 				}
 			}, {
@@ -221,7 +242,7 @@
 				dataType : "string",
 				width : 120,
 				visible : false
-			}]
+			} ]
 
 			function createAUIGrid(columnLayout) {
 				const props = {
@@ -238,19 +259,18 @@
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					fillColumnSizeMode: true,
-					enableCellMerge: true,
+					fillColumnSizeMode : true,
+					enableCellMerge : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
 				auiReadyHandler();
 				AUIGrid.bind(myGridID, "cellClick", auiCellClickHandler);
-// 				AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
 			}
-			
+
 			function auiReadyHandler() {
 				var rowList = [];
-				for(var i=0; i<4; i++){
+				for (var i = 0; i < 4; i++) {
 					rowList[i] = {}
 				}
 				AUIGrid.addRow(myGridID, rowList, "last");
@@ -258,8 +278,8 @@
 
 			function auiKeyDownHandler(event) {
 				if (event.keyCode == 13) {
-					var selectedItems = AUIGrid.getSelectedItems(event.pid);
-					var rowIndex = selectedItems[0].rowIndex;
+					const selectedItems = AUIGrid.getSelectedItems(event.pid);
+					const rowIndex = selectedItems[0].rowIndex;
 					if (rowIndex === AUIGrid.getRowCount(event.pid) - 1) {
 						AUIGrid.addRow(event.pid, {});
 						return false;
@@ -267,10 +287,10 @@
 				}
 				return true;
 			}
-			
-			function auiCellClickHandler(event){
-				if(event.dataField=='fileName'){
-					const url = getCallUrl("/rohs/attachFile"+"?row="+event.rowIndex+"&method=addFile");
+
+			function auiCellClickHandler(event) {
+				if (event.dataField == 'fileName') {
+					const url = getCallUrl("/rohs/attachFile" + "?row=" + event.rowIndex + "&method=addFile");
 					_popup(url, 600, 500, "n");
 				}
 			}
@@ -283,126 +303,135 @@
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			// 파일 추가
-			function addFile(data){
+			function addFile(data) {
 				var fileName = "";
 				const arr = new Array();
 				for (let i = 0; i < data.length; i++) {
-					if(i==0){
+					if (i == 0) {
 						fileName = data[i].name;
-					}else{
-						fileName += "/"+data[i].name;
+					} else {
+						fileName += "/" + data[i].name;
 					}
-					arr.push(data[i].cacheId+"/"+data[i].saveName);
+					arr.push(data[i].cacheId + "/" + data[i].saveName);
 				}
 				AUIGrid.setCellValue(myGridID, data.row, "secondary", arr);
 				AUIGrid.setCellValue(myGridID, data.row, "fileName", fileName);
 			}
-			
+
 			// 파일명 입력됨
-			function fn_fileName(fileName){
+			function fn_fileName(fileName) {
 				var gridList = AUIGrid.getGridData(myGridID);
-				for(var i=0; i<gridList.length; i++){
+				for (var i = 0; i < gridList.length; i++) {
 					AUIGrid.setCellValue(myGridID, i, "fileName", fileName);
 				}
 			}
-			
+
 			// 추가
-			function addBtn(){
-				var rowList = [];
-				for(var i=0; i<4; i++){
-					rowList[i] = {}
+			function addRow() {
+				const item = [];
+				for (let i = 0; i < 4; i++) {
+					item[i] = {}
 				}
-				AUIGrid.addRow(myGridID, rowList, 'last');
+				AUIGrid.addRow(myGridID, item, 'last');
 			}
-			
+
 			// 저장
-			function saveBtn(){
+			function save() {
 				var gridList = AUIGrid.getGridData(myGridID);
-				for(var i=0; i<gridList.length; i++){
-					if(isEmpty(gridList[i].lifecycleName)){
+				for (var i = 0; i < gridList.length; i++) {
+					if (isEmpty(gridList[i].lifecycleName)) {
 						alert("선택된 결재방식이 없습니다.");
 						return;
 					}
-					if(isEmpty(gridList[i].manufactureName)){
+					if (isEmpty(gridList[i].manufactureName)) {
 						alert("선택된 협력업체가 없습니다.");
 						return;
 					}
-					if(isEmpty(gridList[i].manufacture)){
+					if (isEmpty(gridList[i].manufacture)) {
 						alert("입력된 협력업체코드가 없습니다.");
 						return;
 					}
-					if(isEmpty(gridList[i].rohsName)){
+					if (isEmpty(gridList[i].rohsName)) {
 						alert("선택된 물질명이 없습니다.");
 						return;
 					}
-// 					if(isEmpty(gridList[i].relatedRohs)){
-// 						alert("입력된 관련물질이 없습니다.");
-// 						return;
-// 					}
-// 					if(isEmpty(gridList[i].fileTypeName)){
-// 						alert("선택된 파일구분이 없습니다.");
-// 						return;
-// 					}
-// 					if(isEmpty(gridList[i].fileType)){
-// 						alert("입력된 파일구분코드가 없습니다.");
-// 						return;
-// 					}
-// 					if(isEmpty(gridList[i].publicationDate)){
-// 						alert("입력된 발행일이 없습니다.");
-// 						return;
-// 					}
-// 					if(isEmpty(gridList[i].fileName)){
-// 						alert("입력된 파일명이 없습니다.");
-// 						return;
-// 					}
+					// 					if(isEmpty(gridList[i].relatedRohs)){
+					// 						alert("입력된 관련물질이 없습니다.");
+					// 						return;
+					// 					}
+					// 					if(isEmpty(gridList[i].fileTypeName)){
+					// 						alert("선택된 파일구분이 없습니다.");
+					// 						return;
+					// 					}
+					// 					if(isEmpty(gridList[i].fileType)){
+					// 						alert("입력된 파일구분코드가 없습니다.");
+					// 						return;
+					// 					}
+					// 					if(isEmpty(gridList[i].publicationDate)){
+					// 						alert("입력된 발행일이 없습니다.");
+					// 						return;
+					// 					}
+					// 					if(isEmpty(gridList[i].fileName)){
+					// 						alert("입력된 파일명이 없습니다.");
+					// 						return;
+					// 					}
 				}
 				// 물질명 중복체크
 				nameCheck(gridList);
 			}
-			
-			function nameCheck(list){
+
+			function nameCheck(list) {
 				var arr = new Array();
-				for(var i=0; i<list.length; i++){
+				for (var i = 0; i < list.length; i++) {
 					arr.push(list[i].rohsName);
 				}
 				var params = new Object();
 				params.list = arr;
 				var url = getCallUrl("/rohs/rohsNameCheck");
 				call(url, params, function(data) {
-					if(data.result){
-						if(data.duplicate!=""){
-							alert("' "+data.duplicate+" '"+"은/는 이미 등록된 물질명 입니다.");
-						}else{
+					if (data.result) {
+						if (data.duplicate != "") {
+							alert("' " + data.duplicate + " '" + "은/는 이미 등록된 물질명 입니다.");
+						} else {
 							// 저장 처리
 							save(list);
 						}
-					}else{
+					} else {
 						alert(data.msg);
 					}
 				});
 			}
-			
-			function save(list){
-				if (!confirm("저장하시겠습니까?")){
+
+			function save(list) {
+				if (!confirm("저장하시겠습니까?")) {
 					return;
 				}
 				let params = new Object();
 				params.gridList = list;
-				
+
 				const url = getCallUrl("/rohs/batch");
 				call(url, params, function(data) {
 					alert(data.msg);
-					if(data.result){
+					if (data.result) {
 						document.location.href = getCallUrl("/rohs/list");
 					}
 				});
 			}
-			
+
 			// 삭제
-			function deleteBtn(){
-				AUIGrid.removeCheckedRows(myGridID);
+			function deleteRow() {
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				if (checkedItems.length === 0) {
+					alert("삭제할 행을 선택하세요.");
+					return false;
+				}
+
+				for (let i = checkedItems.length - 1; i >= 0; i--) {
+					const rowIndex = checkedItems[i].rowIndex;
+					AUIGrid.removeRow(myGridID, rowIndex);
+				}
 			}
 		</script>
 	</form>

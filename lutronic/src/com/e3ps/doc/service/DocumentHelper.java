@@ -27,6 +27,7 @@ import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.part.column.PartColumn;
+import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
@@ -47,6 +48,7 @@ import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
+import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -471,5 +473,39 @@ public class DocumentHelper {
 		// 없으면 false 리턴
 
 		return true;
+	}
+
+	/**
+	 * 마지막 번호 받아오기
+	 */
+	public String lastNumber(String number) throws Exception {
+		DecimalFormat df = new DecimalFormat("000");
+		String rtnNumber = "";
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTDocumentMaster.class, true);
+		SearchCondition sc = new SearchCondition(WTDocumentMaster.class, WTDocumentMaster.NUMBER, "LIKE", number + "%");
+		query.appendWhere(sc, new int[] { idx });
+
+		ClassAttribute ca = new ClassAttribute(WTDocumentMaster.class, WTDocumentMaster.NUMBER);
+		OrderBy by = new OrderBy(ca, true);
+		query.appendOrderBy(by, new int[] { idx });
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			WTDocumentMaster m = (WTDocumentMaster) obj[0];
+			String num = m.getNumber();
+			int last = num.lastIndexOf("N");
+			String s = num.substring(last + 1);
+			int next = Integer.parseInt(s) + 1;
+
+			// N까지..
+			String prefix = num.substring(0, last + 1);
+			rtnNumber = prefix + df.format(next);
+		}
+
+		if (qr.size() == 0) {
+			rtnNumber = "N001";
+		}
+		return rtnNumber;
 	}
 }

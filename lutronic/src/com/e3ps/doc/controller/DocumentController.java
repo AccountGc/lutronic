@@ -23,10 +23,12 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentClassType;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.doc.service.DocumentClassHelper;
 import com.e3ps.doc.service.DocumentHelper;
 
 import net.sf.json.JSONArray;
@@ -66,6 +68,11 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
+
+		// 문서 대분류
+		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
+
+		model.addObject("classTypes1", classTypes1);
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
@@ -388,5 +395,22 @@ public class DocumentController extends BaseController {
 		model.addObject("isAdmin", isAdmin);
 		model.setViewName("popup:/document/include/document-iteration-include");
 		return model;
+	}
+
+	@Description(value = "문서 마지막 시퀀시")
+	@ResponseBody
+	@GetMapping(value = "/lastNumber")
+	public Map<String, Object> lastNumber(@RequestParam String number) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			String lastNumber = DocumentHelper.manager.lastNumber(number);
+			result.put("lastNumber", lastNumber);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

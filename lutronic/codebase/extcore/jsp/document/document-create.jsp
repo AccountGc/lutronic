@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.doc.DocumentClassType"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="java.util.Map"%>
 <%@page import="net.sf.json.JSONArray"%>
@@ -13,6 +14,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
+ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 %>
@@ -30,6 +32,8 @@ iframe {
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
+<!-- 채번스크립트 -->
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js"></script>
 </head>
 <body>
 	<form>
@@ -74,6 +78,36 @@ iframe {
 						<%
 						}
 						%>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb req">대분류</th>
+				<td class="indent5">
+					<select name="classType1" id="classType1" class="width-200" onchange="genNumber(this);">
+						<option value="">선택</option>
+						<%
+						for (Map<String, String> map : classTypes1) {
+							String value = map.get("value");
+							String name = map.get("name");
+							String clazz = map.get("clazz");
+						%>
+						<option value="<%=value%>" data-clazz="<%=clazz%>"><%=name%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
+				<th>중분류</th>
+				<td class="indent5">
+					<select name="classType2" id="classType2" class="width-300" onchange="middleNumber();">
+						<option value="">선택</option>
+					</select>
+				</td>
+				<th>소분류</th>
+				<td class="indent5">
+					<select name="classType3" id="classType3" class="width-300">
+						<option value="">선택</option>
 					</select>
 				</td>
 			</tr>
@@ -140,7 +174,7 @@ iframe {
 				</td>
 				<th>프로젝트코드</th>
 				<td class="indent5">
-					<select name="model" id="model" class="width-200">
+					<select name="model" id="model" class="width-200" onchange="preNumberCheck(this);">
 						<option value="">선택</option>
 						<%
 						for (NumberCode model : modelList) {
@@ -168,7 +202,7 @@ iframe {
 				</td>
 				<th class="req">내부 문서번호</th>
 				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-200">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
 				</td>
 				<th>작성자</th>
 				<td class="indent5">
@@ -398,7 +432,6 @@ iframe {
 				selectbox("documentType");
 				selectbox("model");
 				selectbox("deptcode");
-				// 				finderUser("writer");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);
@@ -442,6 +475,7 @@ iframe {
 						}
 					},
 				});
+				toUI();
 			});
 
 			window.addEventListener("resize", function() {

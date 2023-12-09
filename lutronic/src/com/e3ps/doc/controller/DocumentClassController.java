@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -128,4 +129,39 @@ public class DocumentClassController extends BaseController {
 		}
 		return result;
 	}
+
+	@Description(value = "중분류 가져오기")
+	@ResponseBody
+	@GetMapping(value = "/classType2")
+	public Map<String, Object> classType2(@RequestParam String classType1) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, String>> classType2 = DocumentClassHelper.manager.classType2(classType1);
+			result.put("classType2", classType2);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "소분류 가져오기")
+	@ResponseBody
+	@GetMapping(value = "/classType3")
+	public Map<String, Object> classType3(@RequestParam String classType2) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, String>> classType3 = DocumentClassHelper.manager.classType3(classType2);
+			result.put("classType3", classType3);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 }

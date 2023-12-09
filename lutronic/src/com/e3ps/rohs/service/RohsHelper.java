@@ -901,4 +901,64 @@ public class RohsHelper {
 		}
 		return null;
 	}
+
+	/**
+	 * ROHS 번호 검증
+	 */
+	public ROHSMaterial validateRohsNumber(String number) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ROHSMaterial.class, true);
+		QuerySpecUtils.toEquals(query, idx, ROHSMaterial.class, ROHSMaterial.NUMBER, number);
+		QuerySpecUtils.toLatest(query, idx, ROHSMaterial.class);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			ROHSMaterial rohs = (ROHSMaterial) obj[0];
+			return rohs;
+		}
+		return null;
+	}
+
+	/**
+	 * 품목번호 검증
+	 */
+	public WTPart validatePartNumber(String number) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTPart.class, true);
+		QuerySpecUtils.toEquals(query, idx, WTPart.class, WTPart.NUMBER, number);
+		QuerySpecUtils.toLatest(query, idx, WTPart.class);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			WTPart part = (WTPart) obj[0];
+			return part;
+		}
+		return null;
+	}
+
+	/**
+	 * 링크 등록 중복 체크
+	 */
+	public Map<String, Object> checker(Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		ArrayList<Map<String, String>> data = (ArrayList<Map<String, String>>) params.get("data");
+		for (Map<String, String> map : data) {
+			String partNumber = map.get("partNumber");
+			String rohsNumber = map.get("rohsNumber");
+			// 화면에서 체크 하고 오니간..
+			WTPart part = validatePartNumber(partNumber);
+			QueryResult qr = PersistenceHelper.manager.navigate(part, "rohs", PartToRohsLink.class);
+			while (qr.hasMoreElements()) {
+				ROHSMaterial rohs = (ROHSMaterial) qr.nextElement();
+				if (rohs.getNumber().equals(rohsNumber)) {
+					String msg = partNumber + "와 " + rohsNumber + "는 이미 연관관계가 되어 있습니다.";
+					result.put("msg", msg);
+					result.put("checker", true);
+					return result;
+				}
+			}
+		}
+		result.put("checker", false);
+		return result;
+	}
 }

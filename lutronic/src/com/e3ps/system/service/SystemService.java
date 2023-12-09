@@ -7,5 +7,5 @@ import wt.method.RemoteInterface;
 @RemoteInterface
 public interface SystemService {
 
-	public abstract void fasooLogger(HttpServletRequest request) throws Exception;
+	public abstract void fasooLogger(String name, HttpServletRequest request) throws Exception;
 }

@@ -221,7 +221,7 @@ public class CommonContentHelper {
 		UploadToCacheHelper.service.getCacheDescriptor(1, true);
 
 		// DRM 로그
-		SystemHelper.service.fasooLogger(request);
+		SystemHelper.service.fasooLogger(name, request);
 		
 		File file = FasooUtils.decryptedFile(savePath, name);
 		InputStream[] streams = new InputStream[1];

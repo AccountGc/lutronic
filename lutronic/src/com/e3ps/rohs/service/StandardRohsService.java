@@ -1,6 +1,9 @@
 package com.e3ps.rohs.service;
 
-import java.io.File;leDateFormat;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,6 +24,7 @@ import com.e3ps.common.obj.ObjectUtil;
 import com.e3ps.common.service.CommonHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
+import com.e3ps.common.util.ObjectComarator;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
@@ -28,18 +32,40 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.distribute.util.MakeZIPUtil;
 import com.e3ps.download.service.DownloadHistoryHelper;
-import com.e3ps.part.dto.Obom.e3ps.part.util.BomBroker;
-
-import com.e3ps.rohs.ROHSCo.dto.RohsData;
+import com.e3ps.part.dto.PartTreeData;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.part.util.BomBroker;
+import com.e3ps.part.util.PartUtil;
+import com.e3ps.rohs.PartToRohsLink;
+import com.e3ps.rohs.ROHSAttr;
+import com.e3ps.rohs.ROHSContHolder;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.RepresentToLink;
+import com.e3ps.rohs.dto.RohsData;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
+import wt.content.ContentItem;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocumentMaster;
+import wt.doc.WTDocumentMasterIdentity;
+import wt.enterprise.RevisionControlled;
+import wt.fc.IdentityHelper;
+import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
+import wt.fc.ReferenceFactory;
+import wt.folder.Folder;
+import wt.folder.FolderEntry;
+import wt.folder.FolderHelper;
+import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleManaged;
+import wt.lifecycle.State;
+import wt.ownership.Ownership;
 import wt.part.WTPart;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
@@ -1098,49 +1124,18 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	@Override
 	public void link(Map<String, Object> params) throws Exception {
 		Transaction trs = new Transaction();
-		ArrayList<Map<String, Object>> gridList = (ArrayList<Map<String, Object>>) params.get("gridList");
+		ArrayList<Map<String, String>> data = (ArrayList<Map<String, String>>) params.get("data");
 		try {
 			trs.start();
 
-			for (Map<String, Object> map : gridList) {
-				// 부품코드
-				String partNumber = StringUtil.checkNull((String) map.get("partNumber"));
-				WTPart part = null;
-				String partOid = "";
-				if (!"".equals(partNumber)) {
-					part = PartHelper.service.getPart(partNumber);
-					if (part == null) {
-						result.put("result", false);
-						result.put("msg", partNumber + " 부품이 존재하지 않습니다.");
-						return result;
-					} else {
-						partOid = CommonUtil.getVROID(part);
-					}
-				}
+			for (Map<String, String> map : data) {
+				String partNumber = map.get("partNumber");
+				String rohsNumber = map.get("rohsNumber");
 
-				// 물질 코드
-				String rohsNumber = StringUtil.checkNull((String) map.get("rohsNumber"));
-				ROHSMaterial rohs = null;
-				String rohsOid = "";
-				if (!"".equals(rohsNumber)) {
-					rohs = getRoHs(rohsNumber);
-					if (rohs == null) {
-						result.put("result", false);
-						result.put("msg", rohsNumber + " 물질이 존재하지 않습니다.");
-						return result;
-					} else {
-						rohsOid = CommonUtil.getOIDString(rohs);
-					}
-				}
-
-				if (!RohsHelper.manager.duplicateNumber(partOid, rohsNumber)) {
-					PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, rohs);
-					PersistenceHelper.manager.save(link);
-				} else {
-					result.put("result", false);
-					result.put("msg", partNumber + "와 " + rohsNumber + "는 이미 연관관계가 되어 있습니다.");
-					return result;
-				}
+				WTPart part = RohsHelper.manager.validatePartNumber(partNumber);
+				ROHSMaterial rohs = RohsHelper.manager.validateRohsNumber(rohsNumber);
+				PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, rohs);
+				PersistenceHelper.manager.save(link);
 			}
 
 			trs.commit();
@@ -1155,3 +1150,4 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			}
 		}
 	}
+}

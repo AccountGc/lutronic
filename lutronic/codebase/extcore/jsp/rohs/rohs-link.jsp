@@ -20,9 +20,9 @@
 					</div>
 				</td>
 				<td class="right">
-					<input type="button" value="등록" title="등록" onclick="saveBtn();">
-					<input type="button" value="추가" title="추가" class="blue" onclick="addBtn();">
-					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+					<input type="button" value="등록" title="등록" onclick="link();">
+					<input type="button" value="추가" title="추가" class="blue" onclick="addRow();">
+					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow();">
 				</td>
 			</tr>
 		</table>
@@ -33,7 +33,6 @@
 				dataField : "partNumber",
 				headerText : "모 부품코드",
 				dataType : "string",
-				width : 180,
 				filter : {
 					showIcon : true,
 					inline : true
@@ -42,7 +41,6 @@
 				dataField : "rohsNumber",
 				headerText : "자 물질코드",
 				dataType : "string",
-				width : 180,
 				filter : {
 					showIcon : true,
 					inline : true
@@ -56,10 +54,8 @@
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
-					enableMovingColumn : true,
 					enableFilter : true,
 					showInlineFilter : false,
-					useContextMenu : true,
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
@@ -69,6 +65,50 @@
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				auiReadyHandler();
+				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
+				AUIGrid.bind(myGridID, "cellEditStart", auiCellEditEndHandler);
+			}
+
+			function auiCellEditEndHandler(event) {
+				const dataField = event.dataField;
+				const item = event.item;
+				logger(item);
+				if (dataField === "rohsNumber") {
+					const url = getCallUrl("/rohs/validateRohsNumber?number=" + item.rohsNumber);
+					parent.openLayer();
+					call(url, null, function(data) {
+						if (!data.exist) {
+							alert("존재하지 않는 RoHS번호입니다.");
+							item.rohsNumber = "";
+							AUIGrid.updateRow(myGridID, item, event.rowIndex);
+						}
+						parent.closeLayer();
+					}, "GET");
+				} else if (dataField === "partNumber") {
+					logger(item.partNumber);
+					const url = getCallUrl("/rohs/validatePartNumber?number=" + item.partNumber);
+					parent.openLayer();
+					call(url, null, function(data) {
+						if (!data.exist) {
+							alert("존재하지 않는 품목번호입니다.");
+							item.partNumber = "";
+							AUIGrid.updateRow(myGridID, item, event.rowIndex);
+						}
+						parent.closeLayer();
+					}, "GET");
+				}
+			}
+
+			function auiKeyDownHandler(event) {
+				if (event.keyCode == 13) {
+					const selectedItems = AUIGrid.getSelectedItems(event.pid);
+					const rowIndex = selectedItems[0].rowIndex;
+					if (rowIndex === AUIGrid.getRowCount(event.pid) - 1) {
+						AUIGrid.addRow(event.pid, {});
+						return false;
+					}
+				}
+				return true;
 			}
 
 			function auiReadyHandler() {
@@ -81,43 +121,45 @@
 				AUIGrid.resize(myGridID);
 			});
 
-			document.addEventListener("keydown", function(event) {
-				const keyCode = event.keyCode || event.which;
-				if (keyCode === 13) {
-					loadGridData();
-				}
-			})
-
-			document.addEventListener("click", function(event) {
-				hideContextMenu();
-			})
-
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
 
 			// 추가
-			function addBtn() {
+			function addRow() {
 				const item = new Object();
 				AUIGrid.addRow(myGridID, item, 'last');
 			}
 
 			// 삭제
-			function deleteBtn() {
-				AUIGrid.removeCheckedRows(myGridID);
+			function deleteRow() {
+				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				if (checkedItems.length === 0) {
+					alert("삭제할 행을 선택하세요.");
+					return false;
+				}
+
+				for (let i = checkedItems.length - 1; i >= 0; i--) {
+					const rowIndex = checkedItems[i].rowIndex;
+					AUIGrid.removeRow(myGridID, rowIndex);
+				}
 			}
 
 			// 저장
-			function saveBtn() {
-				const gridList = AUIGrid.getGridData(myGridID);
-				for (let i = 0; i < gridList.length; i++) {
-					if (isEmpty(gridList[i].partNumber)) {
-						alert("부품코드가 입력되지 않았습니다.");
-						return;
+			function link() {
+				const data = AUIGrid.getGridData(myGridID);
+				for (let i = 0; i < data.length; i++) {
+					const item = data[i];
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item._$uid);
+
+					if (isNull(item.partNumber)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 0, "모 품목번호를 입력되지 않았습니다.");
+						return false;
 					}
-					if (isEmpty(gridList[i].rohsNumber)) {
-						alert("물질코드가 입력되지 않았습니다.");
-						return;
+
+					if (isNull(item.rohsNumber)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 0, "자 물질코드가 입력되지 않았습니다.");
+						return false;
 					}
 				}
 
@@ -126,7 +168,7 @@
 				}
 
 				const params = {
-					gridList : gridList
+					data : data
 				}
 				const url = getCallUrl("/rohs/link");
 				parent.openLayer();

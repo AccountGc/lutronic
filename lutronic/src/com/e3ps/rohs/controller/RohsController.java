@@ -30,6 +30,7 @@ import com.e3ps.rohs.dto.RohsData;
 import com.e3ps.rohs.service.RohsHelper;
 
 import wt.org.WTUser;
+import wt.part.WTPart;
 import wt.session.SessionHelper;
 
 @Controller
@@ -318,7 +319,7 @@ public class RohsController extends BaseController {
 
 	@Description(value = "물질 일괄링크")
 	@GetMapping(value = "/link")
-	public ModelAndView link() {
+	public ModelAndView link() throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.setViewName("/extcore/jsp/rohs/rohs-link.jsp");
 		return model;
@@ -327,12 +328,63 @@ public class RohsController extends BaseController {
 	@Description(value = "물질 일괄링크 함수")
 	@ResponseBody
 	@PostMapping(value = "/link")
-	public Map<String, Object> link(@RequestBody Map<String, Object> params) {
+	public Map<String, Object> link(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			RohsHelper.service.link(params);
+			Map<String, Object> map = RohsHelper.manager.checker(params);
+			if ((boolean) map.get("checker")) {
+				result.put("result", FAIL);
+				result.put("msg", (String) map.get("msg"));
+			} else {
+				RohsHelper.service.link(params);
+				result.put("result", SUCCESS);
+				result.put("msg", SAVE_MSG);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "물질 링크 등록시 ROHS번호 검증")
+	@ResponseBody
+	@GetMapping(value = "/validateRohsNumber")
+	public Map<String, Object> validateRohsNumber(@RequestParam String number) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ROHSMaterial rohs = RohsHelper.manager.validateRohsNumber(number);
+			if (rohs == null) {
+				result.put("exist", false);
+			} else {
+				result.put("exist", true);
+			}
 			result.put("result", SUCCESS);
-			result.put("msg", SAVE_MSG);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "물질 링크 등록시 품목번호 검증")
+	@ResponseBody
+	@GetMapping(value = "/validatePartNumber")
+	public Map<String, Object> validatePartNumber(@RequestParam String number) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			WTPart part = RohsHelper.manager.validatePartNumber(number);
+			System.out.println("part=" + part);
+			if (part == null) {
+				result.put("exist", false);
+			} else {
+				result.put("exist", true);
+			}
+			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);

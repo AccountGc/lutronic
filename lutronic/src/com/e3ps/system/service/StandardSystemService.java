@@ -19,13 +19,13 @@ public class StandardSystemService extends StandardManager implements SystemServ
 	}
 
 	@Override
-	public void fasooLogger(HttpServletRequest request) throws Exception {
-		String name = (String)request.getParameter("name");
+	public void fasooLogger(String name, HttpServletRequest request) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			SystemFasooLog logger = SystemFasooLog.newSystemFasooLog();
+			logger.setName(name);
 			logger.setOwnership(CommonUtil.sessionOwner());
 			logger.setIp(request.getLocalAddr());
 			logger.setName(name);
