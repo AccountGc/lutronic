@@ -128,6 +128,7 @@ public class DocumentClassHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(DocumentClass.class, true);
 		QuerySpecUtils.toEquals(query, idx, DocumentClass.class, DocumentClass.CLASS_TYPE, classType1);
+		QuerySpecUtils.toEqualsAnd(query, idx, DocumentClass.class, "parentReference.key.id", 0L);
 		QuerySpecUtils.toOrderBy(query, idx, DocumentClass.class, DocumentClass.SORT, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		while (qr.hasMoreElements()) {
@@ -193,9 +194,7 @@ public class DocumentClassHelper {
 		if ("DEV".equals(key)) {
 			clazz = "RD-";
 		} else if ("INSTRUCTION".equals(key)) {
-			clazz = "R-";
-		} else if ("REPORT".equals(key)) {
-			clazz = "테스트보고서-";
+			clazz = "R";
 		} else if ("VAILDATION".equals(key)) {
 			clazz = "LR-";
 		}

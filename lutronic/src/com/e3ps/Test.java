@@ -1,13 +1,7 @@
 package com.e3ps;
 
-import com.e3ps.common.iba.IBAUtils;
-import com.e3ps.common.util.CommonUtil;
-import com.ibm.icu.text.DecimalFormat;
-
-import wt.fc.PersistenceHelper;
-import wt.fc.PersistenceServerHelper;
-import wt.part.QuantityUnit;
-import wt.part.WTPart;
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class Test {
 
@@ -19,11 +13,13 @@ public class Test {
 //
 //		System.out.println("종료");
 
-		String number = "RD-US21-DDF-N001";
-		int last = number.lastIndexOf("N");
-
-		String s = number.substring(0, last+1);
-		System.out.println(s);
+		String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+		System.out.println(today);
+		String suffixYear = today.substring(2, 4);
+		System.out.println(year);
+		String month = today.substring(5, 7);
+		System.out.println(month);
+		
 		System.exit(0);
 	}
 }

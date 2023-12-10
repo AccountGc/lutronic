@@ -1,7 +1,3 @@
-/**
- * 
- */
-
 const interalnumberId = "interalnumber";
 const classType1Id = "classType1";
 const classType2Id = "classType2";
@@ -27,9 +23,20 @@ function genNumber(obj) {
 		if (!checker) {
 			// 값 초기화
 			clearValue();
-			setReadOnly();
-			setClassType1Value(classType1);
-			//			classType2(classType1);
+			// 설변 경우
+			if (classType1 === "DEV") {
+				setReadOnly();
+				setCommonNumber(classType1);
+			} else if (classType1 === "CHANGE") {
+				classType2(classType1);
+				// 지침서
+			} else if (classType1 === "INSTRUCTION") {
+				setReadOnly();
+				setCommonNumber(classType1);
+				classType2(classType1);
+			} else if ("REPORT" === classType1) {
+				classType2(classType1);
+			}
 		} else {
 			// 채번 대상이 아닐경우
 			removeReadOnly();
@@ -43,13 +50,6 @@ function clearValue() {
 	tag.value = "";
 }
 
-// 클래스 타입 1 값 세팅
-function setClassType1Value(classType1) {
-	setCommonNumber(classType1);
-	// 개발문서 채번룰 세팅
-	if (classType1 === "DEV") {
-	}
-}
 
 // 기본 동일하게 적용되는 룰
 function setCommonNumber(classType1) {
@@ -71,6 +71,9 @@ function preNumberCheck(obj) {
 		if (classType1.value === "DEV") {
 			tag.value += value + "-";
 			classType2(classType1.value); // 증분류 활성화
+		} else if (classType1.value === "INSTRUCTION") { // 지침서
+			tag.value += value + "-WI-";
+			lastNumber(tag.value, classType1.value);
 		}
 	}
 }
@@ -85,7 +88,15 @@ function middleNumber() {
 	const tag = document.querySelector("#" + interalnumberId);
 	if ("DEV" === classType1) {
 		tag.value += value + "-";
-		lastNumber(tag.value);
+		lastNumber(tag.value, classType1);
+	} else if ("CHANGE" === classType1) {
+		tag.value += value + "-";
+		lastNumber(tag.value, classType1);
+	} else if ("INSTRUCTION" === classType1) {
+		tag.value += value + "-";
+	} else if ("REPORT" === classType1) {
+		tag.value += value + "-";
+		lastNumber(tag.value, classType1);
 	}
 }
 
@@ -94,9 +105,6 @@ function middleNumber() {
 // 클래스 2타입 가여조기
 // 중분류 세팅
 function classType2(classType1) {
-	// 사전 체크 
-	//	beforeCheck(classType1);
-
 	const url = getCallUrl("/class/classType2?classType1=" + classType1);
 	call(url, null, function(data) {
 		const classType2 = data.classType2;
@@ -140,15 +148,13 @@ function autoNumberChecker(classType1) {
 }
 
 // 시퀀시 따오기
-function lastNumber(value) {
-
+function lastNumber(value, classType1) {
 	const tag = document.querySelector("#" + interalnumberId);
-	const url = getCallUrl("/doc/lastNumber?number=" + value);
+	const url = getCallUrl("/doc/lastNumber?number=" + value + "&classType1=" + classType1);
 	call(url, null, function(data) {
-		logger(data);
 		if (data.result) {
 			tag.value = "";
-			tag.value= data.lastNumber;
+			tag.value = data.lastNumber;
 		}
 	}, "GET");
 }

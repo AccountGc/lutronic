@@ -1,6 +1,8 @@
 package com.e3ps.doc.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +15,6 @@ import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
@@ -41,9 +42,6 @@ import wt.folder.Folder;
 import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.folder.SubFolder;
-import wt.iba.definition.litedefinition.AttributeDefDefaultView;
-import wt.iba.definition.service.IBADefinitionHelper;
-import wt.iba.value.StringValue;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
@@ -478,7 +476,7 @@ public class DocumentHelper {
 	/**
 	 * 마지막 번호 받아오기
 	 */
-	public String lastNumber(String number) throws Exception {
+	public String lastNumber(String number, String classType1) throws Exception {
 		DecimalFormat df = new DecimalFormat("000");
 		String rtnNumber = "";
 		QuerySpec query = new QuerySpec();
@@ -497,15 +495,48 @@ public class DocumentHelper {
 			int last = num.lastIndexOf("N");
 			String s = num.substring(last + 1);
 			int next = Integer.parseInt(s) + 1;
-
-			// N까지..
 			String prefix = num.substring(0, last + 1);
 			rtnNumber = prefix + df.format(next);
+//			rtnNumber = getRtnNumberPattern(num, classType1);
 		}
 
 		if (qr.size() == 0) {
-			rtnNumber = "N001";
+			rtnNumber = number + firstNumber(classType1);
 		}
+		return rtnNumber;
+	}
+
+	/**
+	 * 값이 없을 경우 리턴
+	 */
+	private String firstNumber(String classType1) throws Exception {
+		String rtnNumber = "";
+		String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+		// 2023-23-12
+		String prefixYear = today.substring(0, 2);
+		String suffixYear = today.substring(2, 4);
+		String month = today.substring(5, 7);
+
+		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1)) {
+			rtnNumber = "N001";
+		} else if ("CHANGE".equals(classType1)) {
+			rtnNumber = suffixYear + "-" + month + "-N001";
+		}
+		return rtnNumber;
+	}
+
+	/**
+	 * 문서 타입에 의한 리턴 번호
+	 */
+	private String getRtnNumberPattern(String num, String classType1) throws Exception {
+		String rtnNumber = "";
+
+		if ("DEV".equals(classType1)) {
+
+		} else if ("CHANGE".equals(classType1)) {
+			// CR-23-10-N001
+		}
+
 		return rtnNumber;
 	}
 }

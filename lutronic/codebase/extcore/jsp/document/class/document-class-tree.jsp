@@ -48,6 +48,7 @@
 		call(url, params, function(data) {
 			if (data.result) {
 				AUIGrid.setGridData(myGridID, data.list);
+				AUIGrid.showItemsOnDepth(myGridID, 2);
 			} else {
 				alert(data.msg);
 			}

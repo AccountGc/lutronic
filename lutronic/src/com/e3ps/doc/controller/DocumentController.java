@@ -400,10 +400,10 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 마지막 시퀀시")
 	@ResponseBody
 	@GetMapping(value = "/lastNumber")
-	public Map<String, Object> lastNumber(@RequestParam String number) throws Exception {
+	public Map<String, Object> lastNumber(@RequestParam String number, @RequestParam String classType1) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			String lastNumber = DocumentHelper.manager.lastNumber(number);
+			String lastNumber = DocumentHelper.manager.lastNumber(number, classType1);
 			result.put("lastNumber", lastNumber);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {

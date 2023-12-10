@@ -156,6 +156,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function createAUIGrid(columnLayout) {
 				const props = {
+					rowIdField : "oid",
 					headerHeight : 30,
 					showRowNumColumn : true,
 					showRowCheckColumn : true,
@@ -192,6 +193,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				call(url, params, function(data) {
 					if (data.result) {
 						AUIGrid.setGridData(myGridID, data.list);
+						AUIGrid.showItemsOnDepth(myGridID, 2);
 					} else {
 						alert(data.msg);
 					}
@@ -236,8 +238,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				const selItem = checkedItems[0].item;
 				const parentRowId = selItem.oid;
-
-				if (parentRowId.indexOf("DocumentClass") == -1) {
+				if (parentRowId.indexOf("DocumentClass") <= -1) {
 					alert("새로 추가한 행을 먼저 저장해주세요.");
 					return false;
 				}
