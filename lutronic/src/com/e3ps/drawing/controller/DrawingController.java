@@ -568,7 +568,12 @@ public class DrawingController extends BaseController {
 		if (part != null) {
 			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 			if (epm != null) {
-				model.setViewName("/extcore/jsp/part/part-thumbnail.jsp");
+//				model.setViewName("/extcore/jsp/part/part-thumbnail.jsp");
+				EpmData dto = new EpmData(epm);
+				boolean isAdmin = CommonUtil.isAdmin();
+				model.addObject("isAdmin", isAdmin);
+				model.addObject("dto", dto);
+				model.setViewName("/extcore/jsp/drawing/drawing-view.jsp");
 			}
 		}
 		return model;
