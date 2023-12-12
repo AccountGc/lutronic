@@ -105,30 +105,33 @@
 		<script type="text/javascript">
 			function create(temp) {
 				const temprary = JSON.parse(temp); // 임시저장
+				const location = toId("location");
+				const number = toId("number");
+				const name = toId("name");
 				const primary = document.querySelector("input[name=primary]");
-				
-				if ($("#location").val() == "") {
-					alert("도면분류를 선택하세요.");
-					return;
-				}
-				if($("#number").val() == "") {
-					alert("도번을 입력하세요.");
-					return;
-				}
-				if($("#name").val() == "") {
-					alert("도면명 입력하세요.");
-					return;
-				}
-				if(primary == null){
-					alert("주 첨부파일을 첨부해주세요.");
-					return;
-				}
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 				} else {
+					if (isNull(location)) {
+						alert("도면분류를 선택하세요.");
+						return;
+					}
+					if(isNull(number)) {
+						alert("도번을 입력하세요.");
+						return;
+					}
+					if(isNull(name)) {
+						alert("도면명 입력하세요.");
+						return;
+					}
+					if(primary == null){
+						alert("주 첨부파일을 첨부해주세요.");
+						return;
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -136,9 +139,6 @@
 				
 				const lifecycle = toId("lifecycle");
 				const fid = toId("fid");
-				const location = toId("location");
-				const number = toId("number");
-				const name = toId("name");
 				const description = toId("description");
 				const secondarys = toArray("secondarys");
 				const partList = AUIGrid.getGridData(partGridID);
@@ -149,7 +149,7 @@
 					number : number,
 					name : name,
 					description : description,
-					primary : primary.value,
+					primary : primary==null ? '' : primary.value,
 					secondarys : secondarys,
 					partList : partList,
 					temprary : temprary

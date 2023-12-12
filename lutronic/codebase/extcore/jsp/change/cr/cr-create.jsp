@@ -190,38 +190,38 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					sections.push(item.value);
 				});
 
-				if (isEmpty(name.value)) {
-					alert("CR 제목을 입력해주세요.");
-					name.focus();
-					return;
-				}
-
-				if (isEmpty(number.value)) {
-					alert("CR 번호를 선택해주세요.");
-					number.focus();
-					return;
-				}
-
-				if (rows300.length == 0) {
-					alert("제품을 선택하세요.");
-					return;
-				}
-
-				if (sections.length === 0) {
-					alert("변경구분을 선택하세요.");
-					return false;
-				}
-
-				if (primary == null) {
-					alert("주 첨부파일을 첨부해주세요.");
-					return;
-				}
-
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 				} else {
+					if (isEmpty(name.value)) {
+						alert("CR 제목을 입력해주세요.");
+						name.focus();
+						return;
+					}
+
+					if (isEmpty(number.value)) {
+						alert("CR 번호를 선택해주세요.");
+						number.focus();
+						return;
+					}
+
+					if (rows300.length == 0) {
+						alert("제품을 선택하세요.");
+						return;
+					}
+
+					if (sections.length === 0) {
+						alert("변경구분을 선택하세요.");
+						return false;
+					}
+
+					if (primary == null) {
+						alert("주 첨부파일을 첨부해주세요.");
+						return;
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -238,7 +238,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
-					primary : primary.value,
+					primary : primary==null ? '' : primary.value,
 					secondarys : secondarys,
 					rows101 : rows101,
 					rows300 : rows300,

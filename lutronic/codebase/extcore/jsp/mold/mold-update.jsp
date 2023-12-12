@@ -218,19 +218,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				const temprary = JSON.parse(temp);
 				// 결재선
 // 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				if(isEmpty($("#name").val())) {
-					alert("문서명을 입력하세요.");
-					return;
-				}
-				if(isEmpty($("#moldtype").val())) {
-					alert("금형타입을 선택하세요.");
-					return;
-				}
 				const primary = document.querySelector("input[name=primary]");
-				if(primary == null){
-					alert("주 첨부파일을 첨부해주세요.");
-					return;
-				}
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -243,6 +231,19 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 // 					}
 					
 				} else {
+					if(isEmpty($("#name").val())) {
+						alert("문서명을 입력하세요.");
+						return;
+					}
+					if(isEmpty($("#moldtype").val())) {
+						alert("금형타입을 선택하세요.");
+						return;
+					}
+					if(primary == null){
+						alert("주 첨부파일을 첨부해주세요.");
+						return;
+					}
+					
 					if (!confirm("수정 하시겠습니까?")) {
 						return false;
 					}
@@ -254,7 +255,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				params.name = $("#name").val();
 				params.description = $("#description").val();
 				params.iterationNote = $("#iterationNote").val();
-				params.primary = primary.value;
+				params.primary = primary==null ? '' : primary.value;
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				params.manufacture_code = $("#manufacture").val();

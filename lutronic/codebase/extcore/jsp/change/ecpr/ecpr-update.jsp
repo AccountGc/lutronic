@@ -188,16 +188,6 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const number = document.getElementById("number");
 				const temprary = JSON.parse(temp);
 				
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
-					
-				} else {
-					if (!confirm("수정 하시겠습니까?")) {
-						return false;
-					}
-				}			
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
@@ -211,26 +201,37 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					sections.push(item.value);
 				});
 				
-				if(isEmpty(name.value)){
-					alert("CR 제목을 입력해주세요.");
-					name.focus();
-					return;
-				}
-				
-				if(isEmpty(number.value)){
-					alert("CR 번호를 선택해주세요.");
-					number.focus();
-					return;
-				}
-				
-				if(rows300.length == 0){
-					alert("제품명을 입력해주세요.");
-					return;
-				}
-				
-				if(primary == null){
-					alert("주 첨부파일을 첨부해주세요.");
-					return;
+				if (temprary) {
+					if (!confirm("임시저장하시겠습니까??")) {
+						return false;
+					}
+					
+				} else {
+					if(isEmpty(name.value)){
+						alert("CR 제목을 입력해주세요.");
+						name.focus();
+						return;
+					}
+					
+					if(isEmpty(number.value)){
+						alert("CR 번호를 선택해주세요.");
+						number.focus();
+						return;
+					}
+					
+					if(rows300.length == 0){
+						alert("제품명을 입력해주세요.");
+						return;
+					}
+					
+					if(primary == null){
+						alert("주 첨부파일을 첨부해주세요.");
+						return;
+					}
+					
+					if (!confirm("수정 하시겠습니까?")) {
+						return false;
+					}
 				}
 				
 				const params = {
@@ -245,7 +246,7 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
-					primary : primary.value,
+					primary : primary==null ? '' : primary.value,
 					rows101 : rows101,
 					rows300 : rows300,
 					temprary : temprary

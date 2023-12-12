@@ -1,4 +1,3 @@
-<%@page import="com.e3ps.doc.DocumentClassType"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="java.util.Map"%>
 <%@page import="net.sf.json.JSONArray"%>
@@ -364,28 +363,27 @@ iframe {
 					documentName.focus();
 					return false;
 				}
-
-				if (isNull(documentType.value)) {
-					alert("문서유형을 선택해주세요.");
-					return false;
-				}
-
 				if (isNull(interalnumber)) {
 					alert("내부문서번호를 입력해주세요.");
 					return false;
 				}
-
-				if (primary == null) {
-					alert("주 첨부파일을 첨부해주세요.");
-					return false;
-				}
-
+				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 
 				} else {
+					if (isNull(documentType.value)) {
+						alert("문서유형을 선택해주세요.");
+						return false;
+					}
+
+					if (primary == null) {
+						alert("주 첨부파일을 첨부해주세요.");
+						return false;
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -398,7 +396,7 @@ iframe {
 					description : description.value,
 					content : content,
 					secondarys : secondarys,
-					primary : primary.value,
+					primary : primary==null ? '' : primary.value,
 					location : location.value,
 					model_code : model,
 					deptcode_code : deptcode,

@@ -248,8 +248,8 @@
     <use_htmlprocess_worker use_set_api="0">1</use_htmlprocess_worker>
   </setting>
   <uploader_setting use_html5mode="1" upload_image_file_object="1">
-    <develop_langage desc="NET(C# 또는 ASP 환경인 경우), JAVA(JAVA 환경인 경우)">NET</develop_langage>
-    <handler_url></handler_url>
+    <develop_langage desc="NET(C# 또는 ASP 환경인 경우), JAVA(JAVA 환경인 경우)">JAVA</develop_langage>
+    <handler_url>http://www.dext5.com/dext5editor/handler/upload_handler.jsp</handler_url>
     <handler_url_save_for_notes desc="http://를 포함한 전체 경로"></handler_url_save_for_notes>
     <server_domain></server_domain>
     <to_save_path_url></to_save_path_url>

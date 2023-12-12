@@ -202,6 +202,7 @@ if (contentMap != null) {
 		const temprary = JSON.parse(temp);
 		const oid = document.getElementById("oid").value;
 		const name = document.getElementById("name");
+		const sendType = document.querySelector("input[name=sendType]:checked").value;
 
 		if (temprary) {
 			if (!confirm("임시저장하시겠습니까??")) {
@@ -209,6 +210,16 @@ if (contentMap != null) {
 			}
 
 		} else {
+			if (isEmpty(name.value)) {
+				alert("ECO 제목을 입력해주세요.");
+				return;
+			}
+
+			if (sendType.value === "") {
+				alert("ECO 타입을 선택하세요.");
+				return false;
+			}
+			
 			if (!confirm("수정 하시겠습니까?")) {
 				return false;
 			}
@@ -221,20 +232,9 @@ if (contentMap != null) {
 		const secondarys = toArray("secondarys");
 		const riskType = document.querySelector("input[name=riskType]:checked").value;
 		const licensing = document.querySelector("input[name=licensing]:checked").value;
-		const sendType = document.querySelector("input[name=sendType]:checked").value;
 		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 
-		if (isEmpty(name.value)) {
-			alert("ECO 제목을 입력해주세요.");
-			return;
-		}
-
-		if (sendType.value === "") {
-			alert("ECO 타입을 선택하세요.");
-			return false;
-		}
-		
 		for (let i = 0; i < rows200.length; i++) {
 			const dd = rows200[i];
 			const activeUser_oid = AUIGrid.getCellValue(myGridID200, i, "activeUser_oid");

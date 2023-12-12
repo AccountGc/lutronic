@@ -152,30 +152,30 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 		logger(rows200);
 		
-		if (name.value === "") {
-			alert("EO 제목을 입력하세요.");
-			name.focus();
-			return false;
-		}
-
-		if (rows300.length === 0) {
-			alert("제품명을 선택하세요.");
-			popup300();
-			return false;
-		}
-
-		if (rows104.length === 0) {
-			alert("완제품을 선택하세요.");
-			popup104();
-			return false;
-		}
-
 		if (temprary) {
 			if (!confirm("임시저장하시겠습니까??")) {
 				return false;
 			}
 
 		} else {
+			if (name.value === "") {
+				alert("EO 제목을 입력하세요.");
+				name.focus();
+				return false;
+			}
+
+			if (rows300.length === 0) {
+				alert("제품명을 선택하세요.");
+				popup300();
+				return false;
+			}
+
+			if (rows104.length === 0) {
+				alert("완제품을 선택하세요.");
+				popup104();
+				return false;
+			}
+			
 			if (!confirm("수정 하시겠습니까?")) {
 				return false;
 			}

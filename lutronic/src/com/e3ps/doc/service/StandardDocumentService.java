@@ -188,10 +188,13 @@ public class StandardDocumentService extends StandardManager implements Document
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			DocumentType docType = DocumentType.toDocumentType(documentType);
-			String interalnumber = dto.getInteralnumber();
+			
 			WTDocument doc = WTDocument.newWTDocument();
-			doc.setDocType(docType);
+			if(!documentType.equals("")) {
+				DocumentType docType = DocumentType.toDocumentType(documentType);
+				doc.setDocType(docType);
+			}
+			String interalnumber = dto.getInteralnumber();
 
 			// 문서 이름 세팅..
 			if (name.length() > 0) {

@@ -140,42 +140,42 @@
 				// 임시저장
 				const temprary = JSON.parse(temp);
 				
-				if(isEmpty($("#rohsName").val())) {
-					alert("물질명을 입력하세요.");
-					return;
-				}
-				if(nameChk==$("#rohsName").val()){
-					$("#duplicationChk").val("S");
-				}
-				
-				if($("#duplicationChk").val()=="F" || nameChk!=$("#rohsName").val()){
-					alert("물질명 중복체크 해주세요.");
-					return;
-				}
-				
-				if(isEmpty($("#manufacture").val())) {
-					alert("협력업체를 선택하세요.");
-					return;
-				}
-				
-				const secondarys = toArray("secondarys");
-				if(secondarys.length>0){
-					if(isEmpty($("#fileType").val())) {
-						alert("파일구분을 선택하세요.");
-						return;
-					}
-					if(isEmpty($("#publicationDate").val())) {
-						alert("발행일을 입력하세요.");
-						return;
-					}
-				}
-				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 					
 				} else {
+					if(isEmpty($("#rohsName").val())) {
+						alert("물질명을 입력하세요.");
+						return;
+					}
+					if(nameChk==$("#rohsName").val()){
+						$("#duplicationChk").val("S");
+					}
+					
+					if($("#duplicationChk").val()=="F" || nameChk!=$("#rohsName").val()){
+						alert("물질명 중복체크 해주세요.");
+						return;
+					}
+					
+					if(isEmpty($("#manufacture").val())) {
+						alert("협력업체를 선택하세요.");
+						return;
+					}
+					
+					const secondarys = toArray("secondarys");
+					if(secondarys.length>0){
+						if(isEmpty($("#fileType").val())) {
+							alert("파일구분을 선택하세요.");
+							return;
+						}
+						if(isEmpty($("#publicationDate").val())) {
+							alert("발행일을 입력하세요.");
+							return;
+						}
+					}
+					
 					if (!confirm("수정 하시겠습니까?")) {
 						return false;
 					}
