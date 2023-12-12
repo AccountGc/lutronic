@@ -266,11 +266,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		eoTable.setValue("AEGRU", e.getEoName()); // 변경사유 테스트 일단 한줄
 		eoTable.setValue("AETXT", "첫 줄 어떻게 할것인기??"); // 변경 내역 첫줄만 일단 테스트
 		String AETXT_L = e.getEoCommentA();
-		eoTable.setValue("AETXT_L", AETXT_L); // 변경 내역 전체 내용
-
-		System.out.println("1" + AETXT_L);
-		System.out.println("2" + AETXT_L.replaceAll("\n", "<br>"));
-		System.out.println("3" + AETXT_L.replaceAll("<br>", "\n"));
+		eoTable.setValue("AETXT_L", AETXT_L.replaceAll("<br>", "\n")); // 변경 내역 전체 내용
 
 		// 완제품으로 품목을 담는다.
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
@@ -472,10 +468,6 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 		if (StringUtil.checkString(eco.getEoCommentA())) {
 			String AETXT_L = eco.getEoCommentA();
-
-			System.out.println(AETXT_L);
-			System.out.println(AETXT_L.replaceAll("\n", "<br>"));
-			System.out.println(AETXT_L.replaceAll("<br>", "\n"));
 			ecoTable.setValue("AETXT_L", AETXT_L.replaceAll("\n", "<br>"));
 		} else {
 			ecoTable.setValue("AETXT_L", ""); // 변경 내역 전체 내용
@@ -803,7 +795,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 				// 진행율 업데이트??
 				EcnHelper.service.update(link_oid);
 			}
-//			function.execute(destination);
+			function.execute(destination);
 			JCoParameterList result = function.getExportParameterList();
 			Object r_type = result.getValue("EV_STATUS");
 			Object r_msg = result.getValue("EV_MESSAGE");

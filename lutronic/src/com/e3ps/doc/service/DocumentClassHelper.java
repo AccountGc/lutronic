@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.NumberCodeType;
-import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.doc.DocumentClass;
@@ -147,12 +144,13 @@ public class DocumentClassHelper {
 	/**
 	 * 문서 소분류
 	 */
-	public ArrayList<Map<String, String>> classType3(String classType2) throws Exception {
-		DocumentClassType clz = (DocumentClassType) CommonUtil.getObject(classType2);
+	public ArrayList<Map<String, String>> classType3(String classType1, String classType2) throws Exception {
+		DocumentClass parent = (DocumentClass) CommonUtil.getObject(classType2);
 		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(DocumentClass.class, true);
-		QuerySpecUtils.toEquals(query, idx, DocumentClass.class, "parentReference.key.id", clz);
+		QuerySpecUtils.toEquals(query, idx, DocumentClass.class, DocumentClass.CLASS_TYPE, classType1);
+		QuerySpecUtils.toEqualsAnd(query, idx, DocumentClass.class, "parentReference.key.id", parent);
 		QuerySpecUtils.toOrderBy(query, idx, DocumentClass.class, DocumentClass.SORT, false);
 		QueryResult qr = PersistenceHelper.manager.find(query);
 		while (qr.hasMoreElements()) {

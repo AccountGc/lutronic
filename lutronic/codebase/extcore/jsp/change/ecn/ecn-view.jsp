@@ -177,7 +177,7 @@ for (Map<String, String> map : list) {
 				},
 				editRenderer: {
 					type: "CalendarRenderer",
-					defaultFormat: "yyyy/mm/dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
+					defaultFormat: "yyyy-mm-dd", // 달력 선택 시 데이터에 적용되는 날짜 형식
 					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 출력 여부
 					onlyCalendar: false, // 사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
 					showExtraDays: true, // 지난 달, 다음 달 여분의 날짜(days) 출력

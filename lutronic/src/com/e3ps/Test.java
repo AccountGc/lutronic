@@ -1,25 +1,25 @@
 package com.e3ps;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import com.e3ps.common.iba.IBAUtils;
+import com.e3ps.common.util.CommonUtil;
+
+import wt.part.WTPart;
+
 
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-//		WTPart p = (WTPart) CommonUtil.getObject("wt.part.WTPart:1278829");
-//
-//		IBAUtils.createIBA(p, "SPECIFICATION", "사양 SAP 전달", "s");
-//		IBAUtils.createIBA(p, "WEIGHT", "2", "f");
-//
-//		System.out.println("종료");
+		WTPart p = (WTPart) CommonUtil.getObject("wt.part.WTPart:1342091");
+		IBAUtils.createIBA(p, "SPECIFICATION", "2023-12-12 사양 테스트", "s");
+		IBAUtils.createIBA(p, "MODEL", "ML16", "s");
+		IBAUtils.createIBA(p, "PRODUCTMETHOD", "PM001", "s");
+		IBAUtils.createIBA(p, "DEPTCODE", "Q", "s");
+		IBAUtils.createIBA(p, "WEIGHT", "3", "f");
+		IBAUtils.createIBA(p, "MAT", "MA002", "s");
+		IBAUtils.createIBA(p, "FINISH", "FI011", "s");
+		IBAUtils.createIBA(p, "MANUFACTURE", "MF101", "s");
 
-		String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
-		System.out.println(today);
-		String suffixYear = today.substring(2, 4);
-		System.out.println(year);
-		String month = today.substring(5, 7);
-		System.out.println(month);
-		
+		System.out.println("IBA 속성 생성!");
 		System.exit(0);
 	}
 }

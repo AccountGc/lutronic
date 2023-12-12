@@ -36,6 +36,9 @@ function genNumber(obj) {
 				classType2(classType1);
 			} else if ("REPORT" === classType1) {
 				classType2(classType1);
+				// 회의록
+			} else if ("MEETING" === classType1) {
+				classType2(classType1);
 			}
 		} else {
 			// 채번 대상이 아닐경우
@@ -81,21 +84,28 @@ function preNumberCheck(obj) {
 // 중분류 값 세팅
 function middleNumber() {
 	const selectElement = document.getElementById(classType2Id);
+	const value = selectElement.value;
 	const selectedIndex = selectElement.selectedIndex;
-	const value = selectElement.options[selectedIndex].getAttribute("data-clazz");
+	const clazz = selectElement.options[selectedIndex].getAttribute("data-clazz");
 
 	const classType1 = document.getElementById(classType1Id).value;
 	const tag = document.querySelector("#" + interalnumberId);
 	if ("DEV" === classType1) {
-		tag.value += value + "-";
+		tag.value += clazz + "-";
 		lastNumber(tag.value, classType1);
 	} else if ("CHANGE" === classType1) {
-		tag.value += value + "-";
+		tag.value += clazz + "-";
 		lastNumber(tag.value, classType1);
 	} else if ("INSTRUCTION" === classType1) {
-		tag.value += value + "-";
+		tag.value += clazz + "-";
 	} else if ("REPORT" === classType1) {
-		tag.value += value + "-";
+		const currentDate = new Date();
+		const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
+		const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로 표현		
+		tag.value += clazz + "-" + year + month + "-";
+		classType3(classType1, value);
+	} else if ("MEETING" === classType1) {
+		tag.value += clazz + "-";
 		lastNumber(tag.value, classType1);
 	}
 }
@@ -122,15 +132,50 @@ function classType2(classType1) {
 	selectbox("classType2");
 }
 
+// 클래스 2타입 가여조기
+// 소분류 세팅
+function classType3(classType1, classType2) {
+	const url = getCallUrl("/class/classType3?classType1=" + classType1 + "&classType2=" + classType2);
+	call(url, null, function(data) {
+		const classType3 = data.classType3;
+		if (data.result) {
+			document.querySelector("#classType3 option").remove();
+			document.querySelector("#classType3").innerHTML = "<option value=\"\">선택</option>";
+			for (let i = 0; i < classType3.length; i++) {
+				const value = classType3[i].value;
+				const clazz = classType3[i].clazz;
+				const tag = "<option data-clazz=\"" + clazz + "\" value=\"" + value + "\">" + classType3[i].name + "</option>";
+				document.querySelector("#classType3").innerHTML += tag;
+			}
+		}
+	}, "GET", false);
+	selectbox("classType3");
+}
+
+// 소분류 변경시
+function lastCheck() {
+	const selectElement = document.getElementById(classType3Id);
+	const selectedIndex = selectElement.selectedIndex;
+	const clazz = selectElement.options[selectedIndex].getAttribute("data-clazz");
+	const classType1 = document.getElementById(classType1Id).value;
+	const tag = document.querySelector("#" + interalnumberId);
+	if ("REPORT" === classType1) {
+		tag.value += clazz + "-";
+		lastNumber(tag.value, classType1);
+	}
+}
+
 // 내부 문서 인풋박스 읽기전용 속성제거
 function removeReadOnly() {
 	const tag = document.querySelector("#" + interalnumberId);
+	tag.value = "";
 	tag.removeAttribute("readonly");
 }
 
 // 내부 문서 인풋박스 읽기전용 속성추가
 function setReadOnly() {
 	const tag = document.querySelector("#" + interalnumberId);
+	tag.value = "";
 	tag.setAttribute("readonly", "readonly");
 }
 

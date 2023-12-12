@@ -517,26 +517,11 @@ public class DocumentHelper {
 		String suffixYear = today.substring(2, 4);
 		String month = today.substring(5, 7);
 
-		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1)) {
+		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1) || "REPORT".equals(classType1)) {
 			rtnNumber = "N001";
-		} else if ("CHANGE".equals(classType1)) {
+		} else if ("CHANGE".equals(classType1) || "MEETING".equals(classType1)) {
 			rtnNumber = suffixYear + "-" + month + "-N001";
 		}
-		return rtnNumber;
-	}
-
-	/**
-	 * 문서 타입에 의한 리턴 번호
-	 */
-	private String getRtnNumberPattern(String num, String classType1) throws Exception {
-		String rtnNumber = "";
-
-		if ("DEV".equals(classType1)) {
-
-		} else if ("CHANGE".equals(classType1)) {
-			// CR-23-10-N001
-		}
-
 		return rtnNumber;
 	}
 }

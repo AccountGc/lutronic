@@ -33,7 +33,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=7"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=13"></script>
 </head>
 <body>
 	<form>
@@ -106,7 +106,7 @@ iframe {
 				</td>
 				<th>소분류</th>
 				<td class="indent5">
-					<select name="classType3" id="classType3" class="width-300">
+					<select name="classType3" id="classType3" class="width-300" onchange="lastCheck();">
 						<option value="">선택</option>
 					</select>
 				</td>

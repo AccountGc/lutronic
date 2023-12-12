@@ -150,10 +150,10 @@ public class DocumentClassController extends BaseController {
 	@Description(value = "소분류 가져오기")
 	@ResponseBody
 	@GetMapping(value = "/classType3")
-	public Map<String, Object> classType3(@RequestParam String classType2) throws Exception {
+	public Map<String, Object> classType3(@RequestParam String classType1, @RequestParam String classType2) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			ArrayList<Map<String, String>> classType3 = DocumentClassHelper.manager.classType3(classType2);
+			ArrayList<Map<String, String>> classType3 = DocumentClassHelper.manager.classType3(classType1, classType2);
 			result.put("classType3", classType3);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
