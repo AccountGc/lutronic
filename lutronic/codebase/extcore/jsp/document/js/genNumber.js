@@ -51,6 +51,9 @@ function genNumber(obj) {
 function clearValue() {
 	const tag = document.querySelector("#" + interalnumberId);
 	tag.value = "";
+
+	$("#" + classType2Id).bindSelectSetValue("");
+	$("#" + classType3Id).bindSelectSetValue("");
 }
 
 
@@ -87,26 +90,27 @@ function middleNumber() {
 	const value = selectElement.value;
 	const selectedIndex = selectElement.selectedIndex;
 	const clazz = selectElement.options[selectedIndex].getAttribute("data-clazz");
-
 	const classType1 = document.getElementById(classType1Id).value;
 	const tag = document.querySelector("#" + interalnumberId);
-	if ("DEV" === classType1) {
-		tag.value += clazz + "-";
-		lastNumber(tag.value, classType1);
-	} else if ("CHANGE" === classType1) {
-		tag.value += clazz + "-";
-		lastNumber(tag.value, classType1);
-	} else if ("INSTRUCTION" === classType1) {
-		tag.value += clazz + "-";
-	} else if ("REPORT" === classType1) {
-		const currentDate = new Date();
-		const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
-		const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로 표현		
-		tag.value += clazz + "-" + year + month + "-";
-		classType3(classType1, value);
-	} else if ("MEETING" === classType1) {
-		tag.value += clazz + "-";
-		lastNumber(tag.value, classType1);
+	if (value !== "") {
+		if ("DEV" === classType1) {
+			tag.value += clazz + "-";
+			lastNumber(tag.value, classType1);
+		} else if ("CHANGE" === classType1) {
+			tag.value += clazz + "-";
+			lastNumber(tag.value, classType1);
+		} else if ("INSTRUCTION" === classType1) {
+			tag.value += clazz + "-";
+		} else if ("REPORT" === classType1) {
+			const currentDate = new Date();
+			const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
+			const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로 표현		
+			tag.value += clazz + "-" + year + month + "-";
+			classType3(classType1, value);
+		} else if ("MEETING" === classType1) {
+			tag.value += clazz + "-";
+			lastNumber(tag.value, classType1);
+		}
 	}
 }
 
@@ -156,12 +160,15 @@ function classType3(classType1, classType2) {
 function lastCheck() {
 	const selectElement = document.getElementById(classType3Id);
 	const selectedIndex = selectElement.selectedIndex;
+	const value = selectElement.value;
 	const clazz = selectElement.options[selectedIndex].getAttribute("data-clazz");
 	const classType1 = document.getElementById(classType1Id).value;
 	const tag = document.querySelector("#" + interalnumberId);
-	if ("REPORT" === classType1) {
-		tag.value += clazz + "-";
-		lastNumber(tag.value, classType1);
+	if (value !== "") {
+		if ("REPORT" === classType1) {
+			tag.value += clazz + "-";
+			lastNumber(tag.value, classType1);
+		}
 	}
 }
 

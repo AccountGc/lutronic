@@ -129,9 +129,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/org/userInfoView?oid=" + oid);
-							popup(url, 1600, 800);
+							const oid = item.woid;
+							const url = getCallUrl("/org/view?oid=" + oid);
+							_popup(url, 1400, 600, "n");
 						}
 					},
 				}, {
@@ -148,9 +148,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/org/userInfoView?oid=" + oid);
-							popup(url, 1600, 800);
+							const oid = item.woid;
+							const url = getCallUrl("/org/view?oid=" + oid);
+							_popup(url, 1400, 600, "n");
 						}
 					},
 				}, {

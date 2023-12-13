@@ -3,12 +3,10 @@ package com.e3ps.org.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.groupware.service.GroupwareHelper;
@@ -25,10 +22,9 @@ import com.e3ps.org.Department;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.org.service.OrgHelper;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.sf.json.JSONArray;
+import wt.org.WTUser;
 
 @Controller
 @RequestMapping(value = "/org/**")
@@ -144,5 +140,18 @@ public class OrgController extends BaseController {
 			result.put("result", FAIL);
 		}
 		return result;
+	}
+	
+	@Description(value = "사용자 정보상세")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser user = (WTUser) CommonUtil.getObject(oid);
+		PeopleDTO dto = new PeopleDTO(user);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/document/document-view");
+		return model;
 	}
 }

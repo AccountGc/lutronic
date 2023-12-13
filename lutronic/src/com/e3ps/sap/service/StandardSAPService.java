@@ -793,7 +793,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 					}
 				}
 				// 진행율 업데이트??
-				EcnHelper.service.update(link_oid);
+//				EcnHelper.service.update(link_oid);
 			}
 			function.execute(destination);
 			JCoParameterList result = function.getExportParameterList();

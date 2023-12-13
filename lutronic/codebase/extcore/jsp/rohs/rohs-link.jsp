@@ -66,8 +66,13 @@
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				auiReadyHandler();
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
-				AUIGrid.bind(myGridID, "cellEditStart", auiCellEditEndHandler);
+				AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEndHandler);
+// 				AUIGrid.bind(myGridID, "pasteEnd", auiPasteEndHandler);
 			}
+
+// 			function auiPasteEndHandler(event) {
+// 				logger(event);
+// 			}
 
 			function auiCellEditEndHandler(event) {
 				const dataField = event.dataField;
