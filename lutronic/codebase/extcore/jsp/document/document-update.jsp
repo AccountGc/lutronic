@@ -349,22 +349,22 @@ iframe {
 			documentName.focus();
 			return false;
 		}
-
-		if (isNull(documentType.value)) {
-			alert("문서유형을 선택해주세요.");
-			return false;
-		}
-
-		if (primary == null) {
-			alert("주 첨부파일을 첨부해주세요.");
-			return false;
-		}
 		
 		if(temprary) {
 			if (!confirm("임시저장하시겠습니까?")){
 				return false;
 			}	
 		} else {
+			if (isNull(documentType.value)) {
+				alert("문서유형을 선택해주세요.");
+				return false;
+			}
+
+			if (primary == null) {
+				alert("주 첨부파일을 첨부해주세요.");
+				return false;
+			}
+			
 			if (!confirm("<%=title%>하시겠습니까?")) {
 				return false;
 			}	
@@ -378,7 +378,7 @@ iframe {
 			description : description.value,
 			content : content,
 			secondarys : secondarys,
-			primary : primary.value,
+			primary : primary==null ? '' : primary.value,
 			location : location.value,
 			model_code : model,
 			deptcode_code : deptcode,

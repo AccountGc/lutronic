@@ -467,18 +467,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				headerText : "단위",
 				dataType : "string",
 				width : 120,
-				renderer : {
-					type : "IconRenderer",
-					iconWidth : 16,
-					iconHeight : 16,
-					iconPosition : "aisleRight",
-					iconTableRef : {
-						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
-					},
-					onClick : function(event) {
-						AUIGrid.openInputer(event.pid);
-					}
-				},
+				editable : false,
 				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
 					var retStr = "";
 					for (var i = 0, len = unitList.length; i < len; i++) {
@@ -488,29 +477,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						}
 					}
 					return retStr == "" ? value : retStr;
-				},
-				editRenderer : {
-					type: "ComboBoxRenderer",
-					list: unitList, 
-					matchFromFirst : false,
-					autoCompleteMode: true, // 자동완성 모드 설정
-					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value",
-					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-						let isValid = false;
-						for (let i = 0, len = unitList.length; i < len; i++) {
-							if (unitList[i]["value"] == newValue) {
-								isValid = true;
-								break;
-							}
-						}
-						return {
-							"validate" : isValid,
-							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-						};
-					}
 				},
 			}, {
 				headerText : "부서",
@@ -939,63 +905,47 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					const rowIndex = AUIGrid.rowIdToIndex(myGridID, item.id);
 					
 					if (isNull(item.location)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "저장위치를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 0, "저장위치를 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.partType1)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 6, "품목구분을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 1, "품목구분을 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.partType2)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 7, "대분류를 입력하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 2, "대분류를 입력하세요.");
 						return false;
 					}
 
 					if (isNull(item.partType3)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "중분류를 선택하세요.");
-						return false;
-					}
-
-
-					if (isNull(item.partName1)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 13, "품목명(대제목)을 입력하세요.");
-						return false;
-					}
-
-					if (isNull(item.partName2)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 14, "품목명(중제목)을 입력하세요.");
-						return false;
-					}
-
-					if (isNull(item.partName3)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 15, "품목명(소제목)을 입력하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 3, "중분류를 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.partName4)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 16, "품목명(KEY-IN)을 입력하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 11, "품목명(KEY-IN)을 입력하세요.");
 						return false;
 					}
 
 					if (isNull(item.unit)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 17, "단위를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 12, "단위를 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.deptcode)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 19, "부서를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 14, "부서를 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.model)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 21, "프로젝트 코드를 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 16, "프로젝트 코드를 선택하세요.");
 						return false;
 					}
 
 					if (isNull(item.productmethod)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 23, "제작방법을 선택하세요.");
+						AUIGrid.showToastMessage(myGridID, rowIndex, 18, "제작방법을 선택하세요.");
 						return false;
 					}
 
@@ -1007,8 +957,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				
 				const url = getCallUrl("/part/batch");
 				const params = {
-					gridData : gridData
-				}
+						gridData : gridData
+					}
 				
 				params.gridData.forEach((param)=>{
 					if(isEmpty(param.rows90)){

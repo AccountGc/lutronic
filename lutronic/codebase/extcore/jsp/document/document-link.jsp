@@ -317,20 +317,10 @@ iframe {
 		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 		// 내용
 		const content = DEXT5.getBodyValue("content");
-
+		
 		if (isNull(documentName.value)) {
 			alert("문서종류를 입력해주세요.");
 			documentName.focus();
-			return false;
-		}
-
-		if (isNull(documentType.value)) {
-			alert("문서유형을 선택해주세요.");
-			return false;
-		}
-
-		if (primary == null) {
-			alert("주 첨부파일을 첨부해주세요.");
 			return false;
 		}
 
@@ -340,6 +330,17 @@ iframe {
 			}
 
 		} else {
+
+			if (isNull(documentType.value)) {
+				alert("문서유형을 선택해주세요.");
+				return false;
+			}
+
+			if (primary == null) {
+				alert("주 첨부파일을 첨부해주세요.");
+				return false;
+			}
+			
 			if (!confirm("등록하시겠습니까?")) {
 				return false;
 			}
@@ -353,7 +354,7 @@ iframe {
 			description : description.value,
 			content : content,
 			secondarys : secondarys,
-			primary : primary.value,
+			primary : primary==null ? '' : primary.value,
 			location : location.value,
 			model_code : model,
 			deptcode_code : deptcode,

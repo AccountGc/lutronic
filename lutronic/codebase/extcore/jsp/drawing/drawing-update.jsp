@@ -131,10 +131,6 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				const temprary = JSON.parse(temp);
 				const primary = document.querySelector("input[name=primary]");
 // 				const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
-				if(primary == null){
-					alert("주 첨부파일을 첨부해주세요.");
-					return;
-				}
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -147,6 +143,11 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 // 					}
 					
 				} else {
+					if(primary == null){
+						alert("주 첨부파일을 첨부해주세요.");
+						return;
+					}
+					
 					if (!confirm("수정 하시겠습니까?")) {
 						return false;
 					}
@@ -162,7 +163,7 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 					oid : oid,
 					location : location,
 					description : description,
-					primary : primary.value,
+					primary : primary==null ? '' : primary.value,
 					secondarys : secondarys,
 					partList : partList,
 					temprary : temprary

@@ -188,34 +188,34 @@
 					sections.push(item.value);
 				});
 				
-				if(isEmpty(name.value)){
-					alert("ECPR 제목을 입력해주세요.");
-					name.focus();
-					return;
-				}
-				
-				if(isEmpty(number.value)){
-					alert("ECPR 번호를 선택해주세요.");
-					number.focus();
-					return;
-				}
-				
-				if(rows300.length == 0){
-					alert("제품명을 입력해주세요.");
-					return;
-				}
-				
-				if(primary == null){
-					alert("주 첨부파일을 첨부해주세요.");
-					return;
-				}
-				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 					
 				} else {
+					if(isEmpty(name.value)){
+						alert("ECPR 제목을 입력해주세요.");
+						name.focus();
+						return;
+					}
+					
+					if(isEmpty(number.value)){
+						alert("ECPR 번호를 선택해주세요.");
+						number.focus();
+						return;
+					}
+					
+					if(rows300.length == 0){
+						alert("제품명을 입력해주세요.");
+						return;
+					}
+					
+					if(primary == null){
+						alert("주 첨부파일을 첨부해주세요.");
+						return;
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -232,7 +232,7 @@
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
-					primary : primary.value,
+					primary : primary==null ? '' : primary.value,
 					rows101 : rows101,
 					rows300 : rows300,
 					temprary : temprary

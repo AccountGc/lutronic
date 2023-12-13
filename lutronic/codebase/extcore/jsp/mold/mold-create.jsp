@@ -180,18 +180,6 @@
 				// 임시저장
 				const temprary = JSON.parse(temp);
 				const primary = document.querySelector("input[name=primary]");
-				if(isEmpty($("#name").val())) {
-					alert("문서명을 입력하세요.");
-					return;
-				}
-				if($("#moldtype").val() == "") {
-					alert("금형타입을 선택하세요.");
-					return;
-				}
-				if(primary == null){
-					alert("주 첨부파일을 첨부해주세요.");
-					return;
-				}
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -199,6 +187,19 @@
 					}
 					
 				} else {
+					if(isEmpty($("#name").val())) {
+						alert("문서명을 입력하세요.");
+						return;
+					}
+					if($("#moldtype").val() == "") {
+						alert("금형타입을 선택하세요.");
+						return;
+					}
+					if(primary == null){
+						alert("주 첨부파일을 첨부해주세요.");
+						return;
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -216,7 +217,7 @@
 				params.description = $("#description").val();
 				params.documentType = $("#documentType").val();
 				params.location = $("#location").val();
-				params.primary = primary.value;
+				params.primary = primary==null ? '' : primary.value;
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				params.partList = AUIGrid.getGridData(partGridID);

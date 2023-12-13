@@ -382,49 +382,49 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				// RoHs
 				const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
 				
-	            if(isEmpty(location)){
-					alert("품목구분을 입력하세요.");
-					return;					
-				}
-	            if(isEmpty(partType1)){
-					alert("품목구분을 입력하세요.");
-					return;					
-				}
-	            if(isEmpty(partType2)){
-					alert("대분류를 입력하세요.");
-					return;					
-				}
-	            if(isEmpty(partType3)){
-					alert("중분류를 입력하세요.");
-					return;					
-				}
-				if(isEmpty(partName1) || isEmpty(partName2) || isEmpty(partName3) || isEmpty(partName4)){
-					alert("품목명을 입력하세요.");
-					return;					
-				}
-				if(isEmpty(model)){
-					alert("프로젝트 코드를 입력하세요.");
-					return;					
-				}
-				if(isEmpty(productmethod)){
-					alert("제작방법을 입력하세요.");
-					return;					
-				}
-				if(isEmpty(deptcode)){
-					alert("부서를 입력하세요.");
-					return;					
-				}
-				if(isEmpty(unit)){
-					alert("단위를 입력하세요.");
-					return;					
-				}
-				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 					
 				} else {
+					if(isEmpty(location)){
+						alert("품목구분을 입력하세요.");
+						return;					
+					}
+		            if(isEmpty(partType1)){
+						alert("품목구분을 입력하세요.");
+						return;					
+					}
+		            if(isEmpty(partType2)){
+						alert("대분류를 입력하세요.");
+						return;					
+					}
+		            if(isEmpty(partType3)){
+						alert("중분류를 입력하세요.");
+						return;					
+					}
+					if(isEmpty(partName4)){
+						alert("Key-in을 입력하세요.");
+						return;					
+					}
+					if(isEmpty(model)){
+						alert("프로젝트 코드를 선택하세요.");
+						return;					
+					}
+					if(isEmpty(productmethod)){
+						alert("제작방법을 선택하세요.");
+						return;					
+					}
+					if(isEmpty(deptcode)){
+						alert("부서를 선택하세요.");
+						return;					
+					}
+					if(isEmpty(unit)){
+						alert("단위를 선택하세요.");
+						return;					
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}

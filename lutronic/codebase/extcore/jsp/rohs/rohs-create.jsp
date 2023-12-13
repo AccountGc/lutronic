@@ -168,21 +168,6 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 			function create(temp) {
 				const temprary = JSON.parse(temp);
 
-				if (isEmpty($("#rohsName").val())) {
-					alert("물질명을 입력하세요.");
-					return;
-				}
-
-				if ($("#duplicationChk").val() == "F" || nameChk != $("#rohsName").val()) {
-					alert("물질명 중복체크 해주세요.");
-					return;
-				}
-
-				if (isEmpty($("#manufacture").val())) {
-					alert("협력업체를 선택하세요.");
-					return;
-				}
-
 				let params = new Object();
 				params.rohsNumber = $("#rohsNumber").val();
 				params.lifecycle = $('input[name=lifecycle]:checked').val();
@@ -204,6 +189,33 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 					}
 
 				} else {
+					if (isEmpty($("#rohsName").val())) {
+						alert("물질명을 입력하세요.");
+						return;
+					}
+
+					if ($("#duplicationChk").val() == "F" || nameChk != $("#rohsName").val()) {
+						alert("물질명 중복체크 해주세요.");
+						return;
+					}
+
+					if (isEmpty($("#manufacture").val())) {
+						alert("협력업체를 선택하세요.");
+						return;
+					}
+					
+					const secondarys = toArray("secondarys");
+					if(secondarys.length>0){
+						if(isEmpty($("#fileType").val())) {
+							alert("파일구분을 선택하세요.");
+							return;
+						}
+						if(isEmpty($("#publicationDate").val())) {
+							alert("발행일을 입력하세요.");
+							return;
+						}
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}

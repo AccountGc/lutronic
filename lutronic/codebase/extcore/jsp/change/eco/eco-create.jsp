@@ -201,20 +201,6 @@
 				const rows200 = AUIGrid.getGridDataWithState(myGridID200, "gridState");
 				const temprary = JSON.parse(temp);
 				const sendType = document.querySelector("input[name=sendType]:checked").value;
-				if (isEmpty(name.value)) {
-					alert("ECO 제목을 입력해주세요.");
-					return;
-				}
-
-				if (sendType.value === "") {
-					alert("ECO 타입을 선택하세요.");
-					return false;
-				}
-
-				if (rows200.length === 0) {
-					alert("설계변경 활동을 하나이상 추가하세요.");
-					return false;
-				}
 
 				for (let i = 0; i < rows200.length; i++) {
 					const dd = rows200[i];
@@ -246,6 +232,21 @@
 					}
 
 				} else {
+					if (isEmpty(name.value)) {
+						alert("ECO 제목을 입력해주세요.");
+						return;
+					}
+
+					if (sendType.value === "") {
+						alert("ECO 타입을 선택하세요.");
+						return false;
+					}
+
+					if (rows200.length === 0) {
+						alert("설계변경 활동을 하나이상 추가하세요.");
+						return false;
+					}
+					
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}

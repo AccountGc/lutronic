@@ -304,22 +304,7 @@ iframe {
 	}
 	
 	function print() {
-		var sw=screen.width;
-	 	var sh=screen.height;
-	 	var w=1000;//가로길이
-	 	var h=800;//세로길이
-	 	var xpos=(sw-w)/2; //화면에 띄울 위치
-	 	var ypos=(sh-h)/2; //중앙
-	 	
-	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
-	 	const content = DEXT5.getBodyValue("content");
-		printWindow.document.open();
-		printWindow.document.write('<html><head><style type="text/css">@page {size: auto;margin-top: 30mm;}@media print {html, body {border: 1px solid white;height: 99%;page-break-after: avoid;page-break-before: avoid;}}</style></head><body>');
-		//출력할 내용 추가
-		printWindow.document.write('<pre>' + content + '</pre>');
-		printWindow.document.write('</body></html>');
-		printWindow.document.close();
-		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
+		DEXT5.doPrint("머리글", "&b바닥글&b", "content");
 	}
 	
 	//수정 및 개정
