@@ -1,29 +1,34 @@
 package com.e3ps.mold.service;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.e3ps.common.iba.AttributeKey;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.doc.DocLocation;
+import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.mold.dto.MoldDTO;
 
 import net.sf.json.JSONArray;
+import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.folder.Folder;
+import wt.folder.IteratedFolderMemberLink;
 import wt.iba.definition.litedefinition.AttributeDefDefaultView;
 import wt.iba.definition.service.IBADefinitionHelper;
 import wt.iba.value.StringValue;
+import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -230,17 +235,33 @@ public class MoldHelper {
 			moldCost = "";
 		}
 
-		if (location.length() > 0) {
-			if (query.getConditionCount() > 0) {
-				query.appendAnd();
-			}
-			// Folder Search
-			int folder_idx = query.addClassList(DocLocation.class, false);
-			query.appendWhere(new SearchCondition(DocLocation.class, DocLocation.DOC, WTDocument.class, "thePersistInfo.theObjectIdentifier.id"), new int[] { folder_idx, idx });
+		Folder folder = FolderTaskLogic.getFolder(location, WCUtil.getWTContainerRef());
+		if (query.getConditionCount() > 0) {
 			query.appendAnd();
-
-			query.appendWhere(new SearchCondition(DocLocation.class, "loc", SearchCondition.LIKE, location + "%"), new int[] { folder_idx });
 		}
+		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+		SearchCondition fsc = new SearchCondition(fca, "=",
+				new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
+		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+		fsc.setOuterJoin(0);
+		query.appendWhere(fsc, new int[] { f_idx, idx });
+		query.appendAnd();
+
+		query.appendOpenParen();
+		long fid = folder.getPersistInfo().getObjectIdentifier().getId();
+		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+				new int[] { f_idx });
+
+		ArrayList<Folder> folders = FolderUtils.getSubFolders(folder, new ArrayList<Folder>());
+		for (int i = 0; i < folders.size(); i++) {
+			Folder sub = (Folder) folders.get(i);
+			query.appendOr();
+			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", sfid),
+					new int[] { f_idx });
+		}
+		query.appendCloseParen();
 		
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
 
