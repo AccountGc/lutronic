@@ -20,6 +20,7 @@ String height = request.getParameter("height");
 		const props = {
 			rowIdField : "oid",
 			headerHeight : 30,
+			showAutoNoDataMessage : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			selectionMode : "multipleCells",
@@ -69,8 +70,8 @@ String height = request.getParameter("height");
 		const oid = item.oid;
 		const location = item.location;
 		document.getElementById("oid").value = oid;
-		document.getElementById("location").value = oid;
-		document.getElementById("locationText").innerText = location;
+// 		document.getElementById("location").value = oid;
+		document.getElementById("locationName").innerText = location;
 	}
 
 	let timerId = null;
@@ -84,8 +85,8 @@ String height = request.getParameter("height");
 			const oid = primeCell.oid;
 			const location = primeCell.location;
 			document.getElementById("oid").value = oid;
-			document.getElementById("location").value = oid;
-			document.getElementById("locationText").innerText = location;
+// 			document.getElementById("location").value = oid;
+			document.getElementById("locationName").innerText = location;
 			loadGridData();
 		}, 500);
 	}

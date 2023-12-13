@@ -193,7 +193,7 @@ public class DocumentClassHelper {
 			clazz = "RD-";
 		} else if ("INSTRUCTION".equals(key)) {
 			clazz = "R";
-		} else if ("VAILDATION".equals(key)) {
+		} else if ("VALIDATION".equals(key)) {
 			clazz = "LR-";
 		}
 		return clazz;

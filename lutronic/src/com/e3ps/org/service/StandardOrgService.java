@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
@@ -25,6 +26,11 @@ import com.e3ps.org.Department;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
 
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentItem;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.load.LoadUser;
@@ -315,15 +321,17 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			for (LinkedHashMap<String, Object> edit : editRows) {
 				String oid = (String) edit.get("poid");
 				String auth = (String) edit.get("auth");
-				String department_name = (String) edit.get("department_name");
+				String department_oid = (String) edit.get("department_oid");
 				String duty = (String) edit.get("duty");
 				String email = (String) edit.get("email");
+				boolean isFire = (boolean) edit.get("isFire");
 				People people = (People) CommonUtil.getObject(oid);
 
-				if (StringUtil.checkString(department_name)) {
-					Department department = (Department) CommonUtil.getObject(department_name);
+				if (StringUtil.checkString(department_oid)) {
+					Department department = (Department) CommonUtil.getObject(department_oid);
 					people.setDepartment(department);
 				}
+				people.setIsDisable(isFire);
 				people.setEmail(email);
 				people.setDuty(duty);
 				people.setAuth(auth);
@@ -386,6 +394,40 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			}
 
 			workbook.close();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void modify(Map<String, Object> params) throws Exception {
+		String oid = (String) params.get("oid");
+		String primary = (String) params.get("primary");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			People people = (People) CommonUtil.getObject(oid);
+
+			QueryResult qr = ContentHelper.service.getContentsByRole(people, ContentRoleType.PRIMARY);
+			if (qr.hasMoreElements()) {
+				ContentItem item = (ContentItem) qr.nextElement();
+				ContentServerHelper.service.deleteContent(people, item);
+			}
+
+			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
+			ApplicationData applicationData = ApplicationData.newApplicationData(people);
+			applicationData.setRole(ContentRoleType.PRIMARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(people, applicationData, vault.getPath());
 
 			trs.commit();
 			trs = null;

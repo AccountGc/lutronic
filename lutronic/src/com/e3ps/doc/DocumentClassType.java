@@ -8,7 +8,7 @@ public class DocumentClassType extends _DocumentClassType {
 	public static final DocumentClassType CHANGE = toDocumentClassType("CHANGE"); // 설계변경
 	public static final DocumentClassType INSTRUCTION = toDocumentClassType("INSTRUCTION"); // 지침서
 	public static final DocumentClassType REPORT = toDocumentClassType("REPORT"); // 보고서
-	public static final DocumentClassType VAILDATION = toDocumentClassType("VAILDATION"); // 벨리데이션문서
+	public static final DocumentClassType VALIDATION = toDocumentClassType("VALIDATION"); // 벨리데이션문서
 	public static final DocumentClassType MEETING = toDocumentClassType("MEETING"); // 회의록
 	public static final DocumentClassType RND = toDocumentClassType("RND"); // 연구소문서
 	public static final DocumentClassType ELEC = toDocumentClassType("ELEC"); // 전자매체

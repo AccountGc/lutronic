@@ -66,7 +66,7 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 				<th class="req lb">결재선 지정</th>
 				<td>
 					<jsp:include page="/extcore/jsp/workspace/include/approval-register.jsp">
-						<jsp:param value="" name="oid" />
+						<jsp:param value="<%=dto.getOid() %>" name="oid" />
 						<jsp:param value="create" name="mode" />
 					</jsp:include>
 				</td>

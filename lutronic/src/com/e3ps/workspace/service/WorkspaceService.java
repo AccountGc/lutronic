@@ -3,6 +3,8 @@ package com.e3ps.workspace.service;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.workspace.WorkData;
+
 import wt.fc.Persistable;
 import wt.util.WTException;
 import wt.workflow.work.WorkItem;
@@ -17,8 +19,9 @@ public interface WorkspaceService {
 	/**
 	 * 결재 등록
 	 */
-	public abstract void register(Persistable per, String description, ArrayList<Map<String, String>> agreeRows,
-			ArrayList<Map<String, String>> approvalRows, ArrayList<Map<String, String>> receiveRows) throws Exception;
+	public abstract void register(WorkData data, Persistable per, String description,
+			ArrayList<Map<String, String>> agreeRows, ArrayList<Map<String, String>> approvalRows,
+			ArrayList<Map<String, String>> receiveRows) throws Exception;
 
 	/**
 	 * 자가결재
@@ -108,4 +111,9 @@ public interface WorkspaceService {
 	 * 결재 회수
 	 */
 	public abstract void withdraw(String oid, String remain) throws Exception;
+
+	/**
+	 * 모든 결재 정보를 초기화한다
+	 */
+	public abstract void resetLines(WorkData data) throws Exception;
 }

@@ -9,11 +9,18 @@
 
 package com.e3ps.org.dto;
 
+import java.util.HashMap;
+
+import com.e3ps.common.util.ContentUtils;
 import com.e3ps.org.People;
 import com.e3ps.org.WTUserPeopleLink;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
@@ -32,6 +39,10 @@ public class PeopleDTO {
 	private String email;
 	private String auth;
 	private String duty;
+	private boolean isFire;
+
+	@JsonIgnore
+	private HashMap<String, String> signature = new HashMap<>();
 
 	public PeopleDTO(Object[] obj) throws Exception {
 		this((People) obj[0]);
@@ -72,5 +83,23 @@ public class PeopleDTO {
 		setEmail(people.getEmail());
 		setAuth(people.getAuth());
 		setDuty(people.getDuty() != null ? people.getDuty() : "지정안됨");
+		setFire(people.isIsDisable());
+		setSignature(picture(people));
+	}
+
+	private HashMap<String, String> picture(People people) throws Exception {
+		QueryResult qr = ContentHelper.service.getContentsByRole(people, ContentRoleType.PRIMARY);
+		if (qr.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) qr.nextElement();
+			String fileIcon = ContentUtils.getFileIcon(data.getFileName());
+			signature.put("oid", people.getPersistInfo().getObjectIdentifier().getStringValue());
+			signature.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
+			signature.put("name", data.getFileName());
+			signature.put("fileSizeKB", data.getFileSizeKB() + "KB");
+			signature.put("fileIcon", fileIcon);
+			signature.put("url", "/Windchill/plm/content/download?oid="
+					+ data.getPersistInfo().getObjectIdentifier().getStringValue());
+		}
+		return signature;
 	}
 }

@@ -57,7 +57,7 @@ public class OrgController extends BaseController {
 		model.addObject("list", JSONArray.fromObject(list));
 		model.addObject("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		model.addObject("isAdmin", isAdmin);
-		model.setViewName("/extcore/jsp/workprocess/organization-list.jsp");
+		model.setViewName("/extcore/jsp/workspace/organization-list.jsp");
 		return model;
 	}
 
@@ -67,7 +67,7 @@ public class OrgController extends BaseController {
 	public Map<String, Object> organization(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = GroupwareHelper.manager.organization(params);
+			result = OrgHelper.manager.organization(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,7 +104,7 @@ public class OrgController extends BaseController {
 		model.addObject("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
 		model.addObject("multi", multi);
 		model.addObject("openerId", openerId);
-		model.setViewName("popup:/workprocess/organization-popup");
+		model.setViewName("popup:/workspace/organization-popup");
 		return model;
 	}
 
@@ -151,7 +151,38 @@ public class OrgController extends BaseController {
 		PeopleDTO dto = new PeopleDTO(user);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("popup:/document/document-view");
+		model.setViewName("popup:/workspace/user-view");
 		return model;
 	}
+	
+	@Description(value = "사용자 정보 수정 페이지")
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser user = (WTUser) CommonUtil.getObject(oid);
+		PeopleDTO dto = new PeopleDTO(user);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/workspace/user-modify");
+		return model;
+	}
+	
+	@Description(value = "사용자 정보 수정")
+	@PostMapping(value = "/modify")
+	@ResponseBody
+	public Map<String, Object> modify(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			OrgHelper.service.modify(params);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
+	
 }

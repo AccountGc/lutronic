@@ -44,9 +44,30 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<th>부서 및 사원 관리</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="hidden" name="oid" id="oid" value="<%=oid%>">
 					<span id="locationName">루트로닉</span>
+				</td>
+				<th>퇴사여부</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="isFire" value="false" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>재직</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="latest" value="true">
+						<div class="state p-success">
+							<label>
+								<b>퇴사</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -131,7 +152,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.woid;
 							const url = getCallUrl("/org/view?oid=" + oid);
-							_popup(url, 1400, 600, "n");
+							_popup(url, 1000, 400, "n");
 						}
 					},
 				}, {
@@ -150,7 +171,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.woid;
 							const url = getCallUrl("/org/view?oid=" + oid);
-							_popup(url, 1400, 600, "n");
+							_popup(url, 1000, 400, "n");
 						}
 					},
 				}, {
@@ -200,14 +221,27 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 					editRenderer : {
-						type : "DropDownListRenderer",
-						showEditorBtn : false,
-						showEditorBtnOver : false,
-						multipleMode : false,
-						showCheckAll : false,
+						type : "ComboBoxRenderer",
 						list : list,
+						matchFromFirst : false,
+						autoCompleteMode : true, // 자동완성 모드 설정
+						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
 						keyField : "oid",
 						valueField : "name",
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							for (let i = 0, len = list.length; i < len; i++) {
+								if (list[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
 					},
 					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 						let retStr = "";
@@ -262,6 +296,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showIcon : true,
 						inline : true
 					},
+				}, {
+					dataField : "isFire",
+					headerText : "퇴사여부",
+					dataType : "boolean",
+					width : 100,
+					renderer : {
+						editable : true,
+						type : "CheckBoxEditRenderer",
+					},
+					filter : {
+						showIcon : false,
+						inline : false
+					},
 				} ]
 			}
 
@@ -298,6 +345,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const url = getCallUrl("/org/organization");
 				const field = [ "name", "userId", "oid" ];
 				params = toField(params, field);
+				const isFire = document.querySelector("input[name=isFire]:checked").value;
+				params.isFire = JSON.parse(isFire);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {

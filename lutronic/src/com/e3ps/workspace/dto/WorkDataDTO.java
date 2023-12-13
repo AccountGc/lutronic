@@ -7,6 +7,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
 

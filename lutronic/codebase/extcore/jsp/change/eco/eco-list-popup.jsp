@@ -6,7 +6,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 %>
@@ -47,12 +47,12 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (Map<String,String> lifecycle : lifecycleList) {
-					if(!lifecycle.get("code").equals("TEMPRARY")){
+				for (Map<String, String> lifecycle : lifecycleList) {
+					if (!lifecycle.get("code").equals("TEMPRARY")) {
 				%>
-                      <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
-                <%
-					}
+				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+				<%
+				}
 				}
 				%>
 			</select>

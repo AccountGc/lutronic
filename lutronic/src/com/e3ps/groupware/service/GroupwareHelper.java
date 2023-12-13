@@ -373,42 +373,7 @@ public class GroupwareHelper {
 		return map;
 	}
 
-	public Map<String, Object> organization(Map<String, Object> params) throws Exception {
-		Map<String, Object> map = new HashMap<>();
-		ArrayList<PeopleDTO> list = new ArrayList<PeopleDTO>();
-
-		String name = (String) params.get("name");
-		String userId = (String) params.get("userId");
-		String oid = (String) params.get("oid"); // 부서 OID
-		long dOid = CommonUtil.getOIDLongValue(oid);
-
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(People.class, true);
-
-		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.NAME, name);
-		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.ID, userId);
-		QuerySpecUtils.toEqualsAnd(query, idx, People.class, "departmentReference.key.id", dOid);
-
-		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
-
-		PageQueryUtils pager = new PageQueryUtils(params, query);
-		PagingQueryResult result = pager.find();
-		
-		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			People people = (People) obj[0];
-			PeopleDTO data = new PeopleDTO(people);
-			list.add(data);
-		}
-
-		map.put("list", list);
-		map.put("topListCount", pager.getTotal());
-		map.put("pageSize", pager.getPsize());
-		map.put("total", pager.getTotalSize());
-		map.put("sessionid", pager.getSessionId());
-		map.put("curPage", pager.getCpage());
-		return map;
-	}
+	
 
 	public Map<String, Object> workItem(Map<String, Object> params) throws Exception {
 		boolean isDistribute = StringUtil.checkNull((String) params.get("distribute")).equals("true");

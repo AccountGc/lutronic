@@ -37,9 +37,9 @@ INSTRUCTION.order=30
 REPORT.value=보고서
 REPORT.order=40
 
-#VAILDATION - 벨리데이션문서
-VAILDATION.value=벨리데이션문서
-VAILDATION.order=50
+#VALIDATION - 벨리데이션문서
+VALIDATION.value=벨리데이션문서
+VALIDATION.order=50
 
 #MEETING - 회의록
 MEETING.value=회의록

@@ -18,7 +18,7 @@ import wt.util.WTException;
 		properties = {
 
 				@GeneratedProperty(name = "reads", type = Boolean.class, javaDoc = "결재 확인 여부", initialValue = "false"),
-				
+
 				@GeneratedProperty(name = "process", type = Boolean.class, javaDoc = "결재선 지정 완료 여부", initialValue = "false"),
 
 		},
@@ -28,6 +28,14 @@ import wt.util.WTException;
 				@GeneratedForeignKey(name = "PerWorkDataLink",
 
 						foreignKeyRole = @ForeignKeyRole(name = "per", type = Persistable.class,
+
+								constraints = @PropertyConstraints(required = true)),
+
+						myRole = @MyRole(name = "workData", cardinality = Cardinality.ONE)),
+
+				@GeneratedForeignKey(name = "ApprovalMasterWorkDataLink",
+
+						foreignKeyRole = @ForeignKeyRole(name = "appMaster", type = ApprovalMaster.class,
 
 								constraints = @PropertyConstraints(required = true)),
 

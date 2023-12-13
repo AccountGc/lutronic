@@ -82,7 +82,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	}
 
 	@Override
-	public void register(Persistable per, String description, ArrayList<Map<String, String>> agreeRows,
+	public void register(WorkData data, Persistable per, String description, ArrayList<Map<String, String>> agreeRows,
 			ArrayList<Map<String, String>> approvalRows, ArrayList<Map<String, String>> receiveRows) throws Exception {
 		boolean isAgree = !agreeRows.isEmpty();
 
@@ -104,6 +104,10 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			master.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
 		}
 		master = (ApprovalMaster) PersistenceHelper.manager.save(master);
+
+		// 마스터 세팅
+		data.setAppMaster(master);
+		PersistenceHelper.manager.modify(data);
 
 		// 기안 라인
 		ApprovalLine startLine = ApprovalLine.newApprovalLine();
@@ -962,16 +966,16 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 	}
 
 	@Override
-	public void withdraw(String oid, String remain) throws Exception {
+	public void withdraw(String oid, String remove) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
-			boolean _delete = Boolean.parseBoolean(remain);
+			boolean _remove = Boolean.parseBoolean(remove);
 
 			Persistable per = CommonUtil.getObject(oid);
 			// 안남기면 모두 삭제한다..
-			if (!_delete) {
+			if (_remove) {
 				ApprovalMaster m = WorkspaceHelper.manager.getMaster(per);
 				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
 
@@ -1001,11 +1005,63 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				WorkDataHelper.service.create(per);
 			} else {
 				QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
+				WorkData d = null;
 				if (qr.hasMoreElements()) {
-					WorkData d = (WorkData) qr.nextElement();
+					d = (WorkData) qr.nextElement();
 					d.setProcess(false);
 					PersistenceHelper.manager.modify(d);
 				}
+
+				d = (WorkData) PersistenceHelper.manager.refresh(d);
+
+				// 진행 되었던 모든 결재 정보를 초기화를 한다.
+				resetLines(d);
+
+				// 상태값 작업중으로 변경
+				if (per instanceof LifeCycleManaged) {
+					LifeCycleManaged lcm = (LifeCycleManaged) per;
+					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("INWORK"));
+				}
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	@Override
+	public void resetLines(WorkData data) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			ApprovalMaster m = data.getAppMaster();
+			ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(m);
+			for (ApprovalLine line : list) {
+				line.setDescription(null);
+				line.setStartTime(null);
+				line.setCompleteTime(null);
+
+				String t = line.getType();
+				// 기안
+				if (t.equals(WorkspaceHelper.SUBMIT_LINE)) {
+
+					// 합의
+				} else if (t.equals(WorkspaceHelper.AGREE_LINE)) {
+					// 결재
+				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
+					// 수신
+
+				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
+				}
+				PersistenceHelper.manager.modify(line);
 			}
 
 			trs.commit();

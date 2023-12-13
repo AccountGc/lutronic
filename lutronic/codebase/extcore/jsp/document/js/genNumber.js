@@ -39,6 +39,10 @@ function genNumber(obj) {
 				// 회의록
 			} else if ("MEETING" === classType1) {
 				classType2(classType1);
+			} else if ("VALIDATION" === classType1) {
+				setReadOnly();
+				setCommonNumber(classType1);
+				classType2(classType1);
 			}
 		} else {
 			// 채번 대상이 아닐경우
@@ -59,7 +63,7 @@ function clearValue() {
 
 // 기본 동일하게 적용되는 룰
 function setCommonNumber(classType1) {
-	if (classType1 === "DEV" || classType1 === "INSTRUCTION" || classType1 === "REPORT" || classType1 === "VAILDATION") {
+	if (classType1 === "DEV" || classType1 === "INSTRUCTION" || classType1 === "REPORT" || classType1 === "VALIDATION") {
 		const tag = document.querySelector("#" + interalnumberId);
 		const selectElement = document.getElementById(classType1Id);
 		const selectedIndex = selectElement.selectedIndex;
@@ -110,6 +114,8 @@ function middleNumber() {
 		} else if ("MEETING" === classType1) {
 			tag.value += clazz + "-";
 			lastNumber(tag.value, classType1);
+		} else if ("VALIDATION" === classType1) {
+			classType3(classType1, value);
 		}
 	}
 }
@@ -166,6 +172,9 @@ function lastCheck() {
 	const tag = document.querySelector("#" + interalnumberId);
 	if (value !== "") {
 		if ("REPORT" === classType1) {
+			tag.value += clazz + "-";
+			lastNumber(tag.value, classType1);
+		} else if ("VALIDATION" === classType1) {
 			tag.value += clazz + "-";
 			lastNumber(tag.value, classType1);
 		}

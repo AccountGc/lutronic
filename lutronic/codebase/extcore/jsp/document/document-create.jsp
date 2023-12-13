@@ -32,7 +32,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=31"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=35"></script>
 </head>
 <body>
 	<form>
@@ -367,7 +367,7 @@ iframe {
 					alert("내부문서번호를 입력해주세요.");
 					return false;
 				}
-				
+
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
@@ -383,7 +383,7 @@ iframe {
 						alert("주 첨부파일을 첨부해주세요.");
 						return false;
 					}
-					
+
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -396,7 +396,7 @@ iframe {
 					description : description.value,
 					content : content,
 					secondarys : secondarys,
-					primary : primary==null ? '' : primary.value,
+					primary : primary.value,
 					location : location.value,
 					model_code : model,
 					deptcode_code : deptcode,

@@ -31,7 +31,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-
+		<!-- 다운로드 링크 위한 프레임 -->
+		<iframe id="download" name="download" style="display: none;"></iframe>
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -274,7 +275,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "interalnumber",
 					headerText : "내부 문서번호",
 					dataType : "string",
-					width : 120,
+					width : 180,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -283,7 +284,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							const url = getCallUrl("/doc/view?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
-					},					
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -469,7 +470,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 					}, {
-						label : "결재회수",
+						label : "결재회수(결재선유지)",
+						callback : auiContextHandler
+					}, {
+						label : "결재회수(결재선초기화)",
 						callback : auiContextHandler
 					}, {
 						label : "인쇄하기",
@@ -482,6 +486,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function auiContextHandler(event) {
 				const item = event.item;
 				const oid = item.oid;
+				const state = item.state;
 				const authUrl = getCallUrl("/doc/isPermission?oid=" + oid);
 				let permission;
 				call(authUrl, null, function(data) {
@@ -491,10 +496,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}, "GET", false);
 
 				if (permission) {
-// 					alert("권한 체크 필요해요!");
+					// 					alert("권한 체크 필요해요!");
 				}
 
 				let url;
+				const download = document.getElementById("download");
 				switch (event.contextIndex) {
 				case 0:
 					url = getCallUrl("/doc/view?oid=" + oid);
@@ -503,8 +509,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				case 1:
 					break;
 				case 2:
+					url = getCallUrl("/doc/asdf?oid=" + oid);
+					download.src = url;
 					break;
 				case 3:
+					url = getCallUrl("/doc/asdf?oid=" + oid);
+					download.src = url;
 					break;
 				case 5:
 					url = getCallUrl("/doc/iteration?oid=" + oid + "&popup=true");
@@ -515,14 +525,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					_popup(url, 1200, 400, "n");
 					break;
 				case 8:
-					if(!confirm("진행중인 모든 결재 이력이 삭제되며, 결재선 지정단계로 되어집니다.\n진행하시겠습니까?")) {
+					if ("승인중" !== state) {
+						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
 						return false;
 					}
-					url = getCallUrl("/workspace/withdraw?oid="+oid);
+
+					if (!confirm("기존 지정한 결재선 유지한 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+						return false;
+					}
+					url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=false");
 					parent.openLayer();
 					call(url, null, function(data) {
 						alert(data.msg);
-						if(data.result) {
+						if (data.result) {
+							document.location.href = getCallUrl("/workData/list");
+						} else {
+							parent.closeLayer();
+						}
+					}, "GET");
+					break;
+				case 9:
+					if ("승인중" !== state) {
+						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
+						return false;
+					}
+					if (!confirm("결재선을 초기화 상태로 결재회수를 합니다.\n진행하시겠습니까?")) {
+						return false;
+					}
+					url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remove=true");
+					parent.openLayer();
+					call(url, null, function(data) {
+						alert(data.msg);
+						if (data.result) {
 							document.location.href = getCallUrl("/workData/list");
 						} else {
 							parent.closeLayer();
@@ -634,21 +668,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			//일괄 다운로드
-			function download() {
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("다운로드할 문서를 선택하세요.");
-					return false;
-				}
-				let oids = [];
-				items.forEach((item)=>{
-				    oids.push(item.oid)
-				});
-				document.location.href = "/Windchill/plm/content/downloadZIP?oids=" + oids;
-			}
-			
+			// 			function download() {
+			// 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
+			// 				if (items.length == 0) {
+			// 					alert("다운로드할 문서를 선택하세요.");
+			// 					return false;
+			// 				}
+			// 				let oids = [];
+			// 				items.forEach((item)=>{
+			// 				    oids.push(item.oid)
+			// 				});
+			// 				document.location.href = "/Windchill/plm/content/downloadZIP?oids=" + oids;
+			// 			}
 		</script>
 	</form>
 </body>

@@ -19,6 +19,7 @@ import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.distribute.util.DistUtils;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.DepartmentHelper;
@@ -79,8 +80,15 @@ public class IndexController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		People people = CommonUtil.sessionPeople();
 		PeopleDTO dto = new PeopleDTO(people);
-		String department_name = dto.getDepartment_name();
 		String auths = dto.getAuth();
+
+		// 배포 확인
+		// 배포 그룹이다
+		boolean isDist = false;
+		int distType = DistUtils.getType();
+		if (distType == 2 || distType == 1) {
+			isDist = true;
+		}
 
 		int workData = WorkDataHelper.manager.count();
 		int eca = ActivityHelper.manager.count();
@@ -112,6 +120,9 @@ public class IndexController extends BaseController {
 		boolean isClinical = DepartmentHelper.manager.isClinical(people, new String[] { "임상개발팀" });
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
+
+		// 배포
+		model.addObject("isDist", isDist);
 
 		// 결재 재수
 		model.addObject("count", count);

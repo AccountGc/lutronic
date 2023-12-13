@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.workspace.service.WorkspaceHelper"%>
 <%@page import="wt.fc.Persistable"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -44,7 +45,7 @@ boolean update = "update".equals(mode);
 			dataField : "type",
 			headerText : "결재타입",
 			dataType : "string",
-			width : 130,
+			width : 80,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if (value === "기안") {
 					return "submit";
@@ -61,7 +62,8 @@ boolean update = "update".equals(mode);
 			dataField : "name",
 			headerText : "이름",
 			dataType : "string",
-			width : 130
+			style : "aui-left"
+// 			width : 130
 		}, {
 			dataField : "id",
 			headerText : "아이디",
@@ -71,7 +73,7 @@ boolean update = "update".equals(mode);
 			dataField : "duty",
 			headerText : "직급",
 			dataType : "string",
-			width : 130
+			width : 100
 		}, {
 			dataField : "department_name",
 			headerText : "부서",
@@ -81,6 +83,7 @@ boolean update = "update".equals(mode);
 			dataField : "email",
 			headerText : "이메일",
 			dataType : "string",
+			style : 200,
 			style : "aui-left"
 		} ]
 
@@ -97,6 +100,7 @@ boolean update = "update".equals(mode);
 				autoGridHeight : true,
 			}
 			myGridID8 = AUIGrid.create("#grid8", columnLayout, props);
+			AUIGrid.setGridData(myGridID8, <%=WorkspaceHelper.manager.loadLines(oid)%>);
 		}
 
 		function popup8() {

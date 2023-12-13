@@ -2,6 +2,7 @@ package com.e3ps.org.service;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.json.JSONObject;
 import wt.method.RemoteInterface;
@@ -32,5 +33,10 @@ public interface OrgService {
 	 * 윈칠 사용자 로더 -> 개발용
 	 */
 	public abstract void loaderUser(String path) throws Exception;
+
+	/**
+	 * 사용자 정보 수정
+	 */
+	public abstract void modify(Map<String, Object> params) throws Exception;
 
 }

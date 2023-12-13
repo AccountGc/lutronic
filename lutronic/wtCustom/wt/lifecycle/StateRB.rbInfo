@@ -43,13 +43,22 @@ TEMPRARY.shortDescription=TEMPRARY
 #############################################################
 #		CHANGE 에서 사용하는 LifeCycle 상태 
 # ECO : 작업중-ECA 활동
-# 작업중-ECA 활동-승인중-승인됨-반려됨-재작업-폐기
+# 작업중-ECPR작성중-ECPR승인중-ECPR반려됨-ECA 활동-승인중-승인됨-반려됨-재작업-폐기-
 #############################################################
 ACTIVITY.value=ACTIVITY
 ACTIVITY.shortDescription=ACTIVITY
 
 APPROVE_REQUEST.value=APPROVE REQUEST
 APPROVE_REQUEST.shortDescription=APPROVE REQUEST
+
+CREATE_ECPR.value=CREATE ECPR
+CREATE_ECPR.shortDescription=CREATE ECPR
+
+APPROVAL_ECPR.value=APPROVAL ECPR
+APPROVAL_ECPR.shortDescription=APPROVAL ECPR
+
+RETURN_ECPR.value=RETURN ECPR
+RETURN_ECPR.shortDescription=RETURN ECPR
 #############################################################
 #
 #개발 업무 관리에서 사용하는 LifeCycle 상태 

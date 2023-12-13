@@ -24,6 +24,7 @@ import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
@@ -265,7 +266,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		eoTable.setValue("DATUV", today); // 보내는 날짜
 		eoTable.setValue("AEGRU", e.getEoName()); // 변경사유 테스트 일단 한줄
 		eoTable.setValue("AETXT", "첫 줄 어떻게 할것인기??"); // 변경 내역 첫줄만 일단 테스트
-		String AETXT_L = e.getEoCommentA();
+		String AETXT_L = e.getEoCommentA() != null ? e.getEoCommentA() : "";
 		eoTable.setValue("AETXT_L", AETXT_L.replaceAll("<br>", "\n")); // 변경 내역 전체 내용
 
 		// 완제품으로 품목을 담는다.
@@ -414,6 +415,14 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		Object r_type = result.getValue("EV_STATUS");
 		Object r_msg = result.getValue("EV_MESSAGE");
 
+		// 에러 리턴
+		if (true) {
+			// 테스트
+			MailUtils.manager.sendSAPErrorMail(e, "EO SAP 전송", (String) r_msg);
+//		if ("E".equals((String) r_type)) {
+
+		}
+
 		JCoTable rtnTable = function.getTableParameterList().getTable("ET_MAT");
 		rtnTable.firstRow();
 		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
@@ -467,7 +476,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		ecoTable.setValue("AETXT", "첫줄 테스트"); // 변경 내역 첫줄만 일단 테스트
 
 		if (StringUtil.checkString(eco.getEoCommentA())) {
-			String AETXT_L = eco.getEoCommentA();
+			String AETXT_L = eco.getEoCommentA() != null ? eco.getEoCommentA() : "";
 			ecoTable.setValue("AETXT_L", AETXT_L.replaceAll("\n", "<br>"));
 		} else {
 			ecoTable.setValue("AETXT_L", ""); // 변경 내역 전체 내용

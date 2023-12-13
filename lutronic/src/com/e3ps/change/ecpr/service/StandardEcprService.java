@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.common.code.NumberCode;
@@ -68,13 +69,13 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			for (int i = 0; i < rows300.size(); i++) {
 				Map<String, String> row300 = rows300.get(i);
 				String oid = row300.get("oid");
-				if(oid != null) {
+				if (oid != null) {
 					NumberCode n = (NumberCode) CommonUtil.getObject(oid);
 					if (rows300.size() - 1 == i) {
 						model += n.getCode();
 					} else {
 						model += n.getCode() + ",";
-					}					
+					}
 				}
 			}
 
@@ -93,11 +94,11 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoNumber(number);
 			ecpr.setCreateDate(writeDate);
 
-			if(!writer_oid.equals("")) {
+			if (!writer_oid.equals("")) {
 				long writerOid = CommonUtil.getOIDLongValue(writer_oid);
 				ecpr.setWriter(Long.toString(writerOid));
 			}
-			
+
 			ecpr.setApproveDate(approveDate);
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
@@ -116,7 +117,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			LifeCycleHelper.setLifeCycle(ecpr,
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			ecpr = (ECPRRequest) PersistenceHelper.manager.save(ecpr);
-			
+
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
@@ -128,7 +129,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 
 			// 관련 CR 링크
 			saveLink(ecpr, rows101);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -140,7 +141,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				trs.rollback();
 		}
 	}
-	
+
 	/**
 	 * 첨부 파일 저장
 	 */
@@ -165,7 +166,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ContentServerHelper.service.updateContent(ecpr, applicationData, vault.getPath());
 		}
 	}
-	
+
 	/**
 	 * 관련 CR링크
 	 */
@@ -181,7 +182,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			}
 		}
 	}
-	
+
 	/**
 	 * 첨부 파일 삭제
 	 */
@@ -230,22 +231,22 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			// 모델 배열 처리
 			String model = "";
 			for (int i = 0; i < rows300.size(); i++) {
 				Map<String, String> row300 = rows300.get(i);
 				String oid = row300.get("oid");
 				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
-				if(n != null) {
+				if (n != null) {
 					if (rows300.size() - 1 == i) {
 						model += n.getCode();
 					} else {
 						model += n.getCode() + ",";
-					}					
+					}
 				}
 			}
-			
+
 			String changeSection = "";
 			for (int i = 0; i < sections.size(); i++) {
 				String value = sections.get(i);
@@ -255,13 +256,13 @@ public class StandardEcprService extends StandardManager implements EcprService 
 					changeSection += value + ",";
 				}
 			}
-			
+
 			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(dto.getOid());
 			ecpr.setEoName(name);
 			ecpr.setEoNumber(number);
 			ecpr.setCreateDate(writeDate);
 
-			if(!writer_oid.equals("")) {
+			if (!writer_oid.equals("")) {
 				long writerOid = CommonUtil.getOIDLongValue(writer_oid);
 				ecpr.setWriter(Long.toString(writerOid));
 			}
@@ -273,18 +274,18 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoCommentA(eoCommentA);
 			ecpr.setEoCommentB(eoCommentB);
 			ecpr.setEoCommentC(eoCommentC);
-			
+
 			ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
-			
+
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
-			}else {
+			} else {
 				State state = State.toState("INWORK");
- 				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
+				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
 			}
-			
+
 			// 첨부 파일 삭제
 			removeAttach(ecpr);
 			saveAttach(ecpr, dto);
@@ -292,7 +293,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			// 링크 삭제
 			deleteLink(ecpr);
 			saveLink(ecpr, rows101);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -310,7 +311,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
 			PersistenceHelper.manager.delete(ecpr);
 
@@ -325,4 +326,5 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				trs.rollback();
 		}
 	}
+
 }

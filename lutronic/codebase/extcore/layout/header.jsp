@@ -7,6 +7,9 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+// 배포 확인
+boolean isDist = (boolean) request.getAttribute("isDist");
+
 Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count");
 boolean isWork = (boolean) request.getAttribute("isWork");
 boolean isDoc = (boolean) request.getAttribute("isDoc");
@@ -46,6 +49,11 @@ int eca = (int) request.getAttribute("eca");
 					</a>
 				</div>
 			</li>
+
+			<!-- 배포 아닐경우 보이게 처리 START-->
+			<%
+			if (isAdmin || !isDist) {
+			%>
 			<%
 			if (isWork) {
 			%>
@@ -130,7 +138,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="_popup('/Windchill/plm/groupware/password', 800, 300, 'n');">비밀번호 변경</a>
 					</li>
 					<%
-						if(isAdmin) {
+					if (isAdmin) {
 					%>
 					<li>
 						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
@@ -139,7 +147,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/groupware/manage', '> 나의업무 > 관리자메뉴');">관리자 메뉴</a>
 					</li>
 					<%
-						}
+					}
 					%>
 				</ul>
 			</li>
@@ -479,7 +487,10 @@ int eca = (int) request.getAttribute("eca");
 			}
 			%>
 			<%
-			if (isAdmin) {
+			}
+			%>
+			<%
+			if (isDist) {
 			%>
 			<li>
 				<a href="css_animation.html">

@@ -174,7 +174,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				loadGridData();
+// 				loadGridData();
 			}
 
 			function loadGridData() {

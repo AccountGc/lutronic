@@ -8,7 +8,6 @@ import com.e3ps.change.ECOChange;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
-import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
@@ -19,6 +18,7 @@ import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.ApprovalUserLine;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.PersistMasterLink;
+import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.column.ApprovalLineColumn;
 import com.e3ps.workspace.dto.ApprovalLineDTO;
 
@@ -30,6 +30,7 @@ import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.lifecycle.LifeCycleManaged;
+import wt.org.WTPrincipalReference;
 import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.query.QuerySpec;
@@ -514,6 +515,7 @@ public class WorkspaceHelper {
 		if (exclude) {
 			QuerySpecUtils.toNotEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, SUBMIT_LINE);
 		}
+		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.CREATE_TIMESTAMP, false);
 
 		// 정렬???
 		QueryResult result = PersistenceHelper.manager.find(query);
@@ -983,4 +985,29 @@ public class WorkspaceHelper {
 		return list;
 	}
 
+	public JSONArray loadLines(String oid) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList();
+		WorkData data = (WorkData) CommonUtil.getObject(oid);
+		ApprovalMaster m = data.getAppMaster();
+
+		if (m != null) {
+			// 기안라인 제거..
+			ArrayList<ApprovalLine> lines = getAllLines(m, true);
+			for (ApprovalLine line : lines) {
+				Map<String, String> map = new HashMap<>();
+				WTPrincipalReference ref = line.getOwnership().getOwner();
+				WTUser user = (WTUser) ref.getObject();
+				PeopleDTO dto = new PeopleDTO(user);
+				map.put("name", line.getName());
+				map.put("type", line.getType());
+				map.put("id", dto.getId());
+				map.put("duty", dto.getDuty());
+				map.put("email", dto.getEmail());
+				map.put("department_name", dto.getDepartment_name());
+				list.add(map);
+			}
+		}
+
+		return JSONArray.fromObject(list);
+	}
 }

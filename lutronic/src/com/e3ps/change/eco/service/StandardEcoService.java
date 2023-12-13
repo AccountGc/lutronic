@@ -17,6 +17,7 @@ import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
+import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
@@ -78,6 +79,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		boolean temprary = dto.isTemprary();
+		boolean ecprStart = dto.isEcprStart();
 
 		Transaction trs = new Transaction();
 		try {
@@ -134,16 +136,19 @@ public class StandardEcoService extends StandardManager implements EcoService {
 //			saveEcoPart(eco, clist);
 
 			// 설변 활동 생성
-			if (rows200.size() > 0) {
-				ActivityHelper.service.saveActivity(eco, rows200);
-			}
-
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
-			if (rows200.size() > 0) {
-				WorkspaceHelper.service.stand(eco);
-				// ECA 활동으로 변경
-				eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
-				LifeCycleHelper.service.setLifeCycleState(eco, State.toState("ACTIVITY"));
+			// ECPR 진행을 안할경우에만 바로 진행??
+			if (!ecprStart) {
+				if (rows200.size() > 0) {
+					ActivityHelper.service.saveActivity(eco, rows200);
+					WorkspaceHelper.service.stand(eco);
+					// ECA 활동으로 변경
+					eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
+					LifeCycleHelper.service.setLifeCycleState(eco, State.toState("ACTIVITY"));
+				}
+			} else {
+				// ECPR 작성중 상태로 변경한다..
+				LifeCycleHelper.service.setLifeCycleState(eco, State.toState("CREATE_ECPR"));
 			}
 
 			trs.commit();
@@ -393,7 +398,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			PersistenceHelper.manager.delete(link);
 		}
 	}
-
 
 	/**
 	 * ECO 삭제

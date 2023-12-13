@@ -51,6 +51,14 @@ ACTIVITY.shortDescription=ECA 활동
 APPROVE_REQUEST.value=승인요청
 APPROVE_REQUEST.shortDescription=승인요청
 
+CREATE_ECPR.value=ECPR작성중
+CREATE_ECPR.shortDescription=ECPR작성중
+
+APPROVAL_ECPR.value=ECPR승인중
+APPROVAL_ECPR.shortDescription=ECPR승인중
+
+RETURN_ECPR.value=ECPR반려됨
+RETURN_ECPR.shortDescription=ECPR반려됨
 #############################################################
 #
 #개발 업무 관리에서 사용하는 LifeCycle 상태 

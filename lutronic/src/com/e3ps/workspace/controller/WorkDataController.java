@@ -15,10 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.dto.WorkDataDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
 
 @Controller
 @RequestMapping(value = "/workData/**")
@@ -79,7 +77,7 @@ public class WorkDataController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "작업함 읽음 처리")
 	@ResponseBody
 	@GetMapping(value = "/read")

@@ -24,6 +24,61 @@ public class MailUtils {
 
 	}
 
+	public void sendSAPErrorMail(LifeCycleManaged lcm, String targetName, String errorMsg) throws Exception {
+		Hashtable<String, Object> hash = new Hashtable<>();
+		WTUser fromUser = (WTUser) SessionHelper.manager.getAdministrator();
+
+		// EO 전송의,ECO 전송의, ECN 전송의
+		String subject = targetName + "의 에러 알림 메일입니다.";
+
+		HashMap<String, String> to = new HashMap<>();
+		WTUser toUser = (WTUser) SessionHelper.manager.getPrincipal();
+		if (!StringUtil.checkString(toUser.getEMail())) {
+			throw new Exception("받는 사람 = " + toUser.getFullName() + " 이메일 주소가 없습니다.");
+		}
+
+		// 받는 사람 최종 결재자로??
+		to.put(toUser.getEMail(), toUser.getFullName());
+
+		String gubun = "";
+		String creatorName = "";
+		String loc = "";
+		String description = "";
+		String number = "";
+		if (lcm instanceof EChangeOrder) {
+			EChangeOrder e = (EChangeOrder) lcm;
+			if (e.getEoType().equals("CHANGE")) {
+				gubun = "ECO SAP 전송";
+				loc = "ECO";
+			} else {
+				gubun = "EO SAP 전송";
+				loc = "EO";
+			}
+			number = e.getEoNumber();
+			description = e.getEoCommentA();
+			creatorName = e.getCreatorFullName();
+		}
+
+		Hashtable<String, String> data = new Hashtable<>();
+		data.put("gubun", gubun);
+		data.put("creatorName", creatorName);
+		data.put("workName", "에러");
+		data.put("Location", loc);
+		data.put("number", number);
+		data.put("errorMsg", errorMsg);
+		data.put("description", description != null ? description : "");
+
+		MailHtmlContentTemplate mhct = MailHtmlContentTemplate.getInstance();
+		String mcontent = mhct.htmlContent(data, "sap_notice.html");
+
+		hash.put("FROM", fromUser);
+		hash.put("TO", to);
+		hash.put("SUBJECT", subject);
+		hash.put("CONTENT", mcontent);
+
+		sendMail(hash);
+	}
+
 	/**
 	 * 결재선 지정 메일
 	 */

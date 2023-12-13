@@ -25,31 +25,13 @@ import net.sf.json.JSONArray;
 @RequestMapping(value = "/department/**")
 public class DepartmentController extends BaseController {
 
-	@Description(value = "부서 트리")
-	@PostMapping(value = "/loadFolderTree")
-	@ResponseBody
-	public ModelAndView treeDepartment(@RequestBody Map<String, String> params) throws Exception {
-		ModelAndView model = new ModelAndView();
-
-		String root = params.get("code");
-		if (root == null) {
-			root = "ROOT";
-		}
-
-		Department dept = DepartmentHelper.service.getDepartment(root);
-
-		JSONObject json = OrgHelper.service.getDepartmentTree(dept);
-		model.addObject("json", json.toString());
-		return model;
-	}
-
 	@Description(value = "부서 트리 구조 가져오기")
 	@PostMapping(value = "/tree")
 	@ResponseBody
 	public Map<String, Object> tree() throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			JSONArray list = OrgHelper.manager.tree();
+			JSONArray list = DepartmentHelper.manager.tree();
 			result.put("list", list);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {

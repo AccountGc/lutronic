@@ -207,4 +207,67 @@ public class DepartmentHelper {
 		}
 		return false;
 	}
+
+	/**
+	 * 부서 트리 가져오기
+	 */
+	public JSONArray tree() throws Exception {
+		Department root = getRoot();
+		JSONArray list = new JSONArray();
+		if (root == null) {
+			return list;
+		}
+
+		JSONObject rootNode = new JSONObject();
+		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+		rootNode.put("name", root.getName());
+		rootNode.put("location", "루트로닉");
+
+		JSONArray children = new JSONArray();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, Department.class, "parentReference.key.id",
+				root.getPersistInfo().getObjectIdentifier().getId());
+		QuerySpecUtils.toOrderBy(query, idx, Department.class, Department.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			Department child = (Department) obj[0];
+			JSONObject node = new JSONObject();
+			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("name", child.getName());
+			node.put("location", "루트로닉/" + child.getName());
+			tree(child, node);
+			children.add(node);
+		}
+		rootNode.put("children", children);
+		list.add(rootNode);
+		return list;
+	}
+
+	/**
+	 * 부서 트리 가져오기 재귀 함수
+	 */
+	private void tree(Department parent, JSONObject parentNode) throws Exception {
+		JSONArray children = new JSONArray();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, Department.class, "parentReference.key.id",
+				parent.getPersistInfo().getObjectIdentifier().getId());
+		QuerySpecUtils.toOrderBy(query, idx, Department.class, Department.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		String pLoc = (String) parentNode.getString("location");
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			Department child = (Department) obj[0];
+			JSONObject node = new JSONObject();
+			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
+			node.put("name", child.getName());
+			node.put("location", pLoc + "/" + child.getName());
+			tree(child, node);
+			children.add(node);
+		}
+		parentNode.put("children", children);
+	}
 }

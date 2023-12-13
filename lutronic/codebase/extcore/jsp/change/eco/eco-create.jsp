@@ -69,6 +69,29 @@
 				</td>
 			</tr>
 			<tr>
+				<th class="req">ECPR 진행여부</th>
+				<td colspan="3">
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="ecprStart" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>진행</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="ecprStart" value="false">
+						<div class="state p-success">
+							<label>
+								<b>미진행</b>
+							</label>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">변경사유</th>
 				<td class="indent5" colspan="3">
 					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
@@ -202,6 +225,8 @@
 				const temprary = JSON.parse(temp);
 				const sendType = document.querySelector("input[name=sendType]:checked").value;
 
+				// ecpr 진행여부
+				const ecprStart = JSON.parse(document.querySelector("input[name=ecprStart]:checked").value);
 				for (let i = 0; i < rows200.length; i++) {
 					const dd = rows200[i];
 					const activeUser_oid = AUIGrid.getCellValue(myGridID200, i, "activeUser_oid");
@@ -246,7 +271,7 @@
 						alert("설계변경 활동을 하나이상 추가하세요.");
 						return false;
 					}
-					
+
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -265,6 +290,7 @@
 					rows101 : rows101, // 관련CR
 					rows200 : rows200, // 설변활동
 					temprary : temprary,
+					ecprStart : ecprStart
 				};
 				logger(params);
 				const url = getCallUrl("/eco/create");
@@ -272,7 +298,7 @@
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/eco/list");
+// 						document.location.href = getCallUrl("/eco/list");
 					} else {
 						parent.closeLayer();
 					}

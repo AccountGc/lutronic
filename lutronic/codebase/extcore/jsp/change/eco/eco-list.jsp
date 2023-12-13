@@ -276,7 +276,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 120,
 					filter : {
 						showIcon : true,
 						inline : true

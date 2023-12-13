@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
@@ -14,6 +15,7 @@ import com.e3ps.org.dto.PeopleDTO;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
@@ -27,65 +29,6 @@ public class OrgHelper {
 	public static final OrgService service = ServiceFactory.getService(OrgService.class);
 
 	public static final OrgHelper manager = new OrgHelper();
-
-	/**
-	 * 부서 트리 가져오기
-	 */
-	public JSONArray tree() throws Exception {
-		Department root = getRoot();
-		JSONArray list = new JSONArray();
-		if (root == null) {
-			return list;
-		}
-
-		JSONObject rootNode = new JSONObject();
-		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
-		rootNode.put("name", root.getName());
-
-		JSONArray children = new JSONArray();
-
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(Department.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, Department.class, "parentReference.key.id",
-				root.getPersistInfo().getObjectIdentifier().getId());
-		QuerySpecUtils.toOrderBy(query, idx, Department.class, Department.SORT, false);
-		QueryResult result = PersistenceHelper.manager.find(query);
-		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			Department child = (Department) obj[0];
-			JSONObject node = new JSONObject();
-			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
-			node.put("name", child.getName());
-			tree(child, node);
-			children.add(node);
-		}
-		rootNode.put("children", children);
-		list.add(rootNode);
-		return list;
-	}
-
-	/**
-	 * 부서 트리 가져오기 재귀 함수
-	 */
-	private void tree(Department parent, JSONObject parentNode) throws Exception {
-		JSONArray children = new JSONArray();
-		QuerySpec query = new QuerySpec();
-		int idx = query.appendClassList(Department.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, Department.class, "parentReference.key.id",
-				parent.getPersistInfo().getObjectIdentifier().getId());
-		QuerySpecUtils.toOrderBy(query, idx, Department.class, Department.SORT, false);
-		QueryResult result = PersistenceHelper.manager.find(query);
-		while (result.hasMoreElements()) {
-			Object[] obj = (Object[]) result.nextElement();
-			Department child = (Department) obj[0];
-			JSONObject node = new JSONObject();
-			node.put("oid", child.getPersistInfo().getObjectIdentifier().getStringValue());
-			node.put("name", child.getName());
-			tree(child, node);
-			children.add(node);
-		}
-		parentNode.put("children", children);
-	}
 
 	public Department getRoot() throws Exception {
 		QuerySpec query = new QuerySpec();
@@ -250,5 +193,70 @@ public class OrgHelper {
 			list.add(dto);
 		}
 		return list;
+	}
+
+	/**
+	 * 조직도 리스트
+	 */
+	public Map<String, Object> organization(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		ArrayList<PeopleDTO> list = new ArrayList<PeopleDTO>();
+
+		String name = (String) params.get("name");
+		String userId = (String) params.get("userId");
+		String oid = (String) params.get("oid"); // 부서 OID
+		boolean isFire = (boolean) params.get("isFire");
+
+		Department department = null;
+		if (StringUtil.checkString(oid)) {
+			department = (Department) CommonUtil.getObject(oid);
+		} else {
+			department = getRoot();
+		}
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+
+		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.NAME, name);
+		QuerySpecUtils.toLikeAnd(query, idx, People.class, People.ID, userId);
+//		QuerySpecUtils.toEqualsAnd(query, idx, People.class, "departmentReference.key.id", dOid);
+
+		QuerySpecUtils.toBooleanAnd(query, idx, People.class, People.IS_DISABLE, isFire);
+
+		query.appendAnd();
+		query.appendOpenParen();
+		SearchCondition sc = new SearchCondition(People.class, "departmentReference.key.id", "=",
+				department.getPersistInfo().getObjectIdentifier().getId());
+		query.appendWhere(sc, new int[] { idx });
+
+		ArrayList<Department> departments = OrgHelper.manager.getSubDepartment(department, new ArrayList<Department>());
+		for (int i = 0; i < departments.size(); i++) {
+			Department sub = (Department) departments.get(i);
+			query.appendOr();
+			long sfid = sub.getPersistInfo().getObjectIdentifier().getId();
+			query.appendWhere(new SearchCondition(People.class, "departmentReference.key.id", "=", sfid),
+					new int[] { idx });
+		}
+		query.appendCloseParen();
+
+		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
+
+		PageQueryUtils pager = new PageQueryUtils(params, query);
+		PagingQueryResult result = pager.find();
+
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			People people = (People) obj[0];
+			PeopleDTO data = new PeopleDTO(people);
+			list.add(data);
+		}
+
+		map.put("list", list);
+		map.put("topListCount", pager.getTotal());
+		map.put("pageSize", pager.getPsize());
+		map.put("total", pager.getTotalSize());
+		map.put("sessionid", pager.getSessionId());
+		map.put("curPage", pager.getCpage());
+		return map;
 	}
 }

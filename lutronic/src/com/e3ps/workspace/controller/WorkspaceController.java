@@ -510,10 +510,10 @@ public class WorkspaceController extends BaseController {
 	@Description(value = "결재 회수")
 	@ResponseBody
 	@GetMapping(value = "/withdraw")
-	public Map<String, Object> withdraw(@RequestParam String oid, @RequestParam String remain) throws Exception {
+	public Map<String, Object> withdraw(@RequestParam String oid, @RequestParam String remove) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			WorkspaceHelper.service.withdraw(oid, remain);
+			WorkspaceHelper.service.withdraw(oid, remove);
 			result.put("msg", "결재가 회수 되었습니다.");
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
