@@ -121,7 +121,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		startLine.setRole(WorkspaceHelper.WORKING_SUBMITTER);
 		if (StringUtil.checkString(description)) {
 			startLine.setDescription(description);
-			;
 		} else {
 			startLine.setDescription(ownership.getOwner().getFullName() + " 사용자가 결재를 기안하였습니다.");
 		}
@@ -1048,18 +1047,20 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				line.setDescription(null);
 				line.setStartTime(null);
 				line.setCompleteTime(null);
-
+				line.setReads(false);
 				String t = line.getType();
 				// 기안
 				if (t.equals(WorkspaceHelper.SUBMIT_LINE)) {
-
+					line.setState(WorkspaceHelper.STATE_SUBMIT_READY);
 					// 합의
 				} else if (t.equals(WorkspaceHelper.AGREE_LINE)) {
+					line.setState(WorkspaceHelper.STATE_AGREE_READY);
 					// 결재
 				} else if (t.equals(WorkspaceHelper.APPROVAL_LINE)) {
 					// 수신
-
+					line.setState(WorkspaceHelper.STATE_APPROVAL_READY);
 				} else if (t.equals(WorkspaceHelper.RECEIVE_LINE)) {
+					line.setState(WorkspaceHelper.STATE_RECEIVE_READY);
 				}
 				PersistenceHelper.manager.modify(line);
 			}

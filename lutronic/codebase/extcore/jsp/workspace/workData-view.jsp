@@ -75,8 +75,8 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 				<th class="lb">외부 메일 지정</th>
 				<td>
 					<jsp:include page="/extcore/jsp/workspace/include/mail-include.jsp">
-						<jsp:param value="" name="oid" />
-						<jsp:param value="create" name="mode" />
+						<jsp:param value="<%=dto.getOid() %>" name="oid" />
+						<jsp:param value="update" name="mode" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -94,14 +94,16 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 		function _submit() {
 			const oid = document.getElementById("oid").value;
 			const description = document.getElementById("description").value;
-			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+// 			const addRows8 = AUIGrid.getAddedRowItems(myGridID8);
+			const addRows8 = AUIGrid.getGridData(myGridID8);
 			if (addRows8.length === 0) {
 				alert("결재선을 지정하세요.");
 				addRows8();
 				return false;
 			}
 
-			const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+// 			const external = AUIGrid.getGridDataWithState(myGridID9, "gridState");
+			const external = AUIGrid.getGridData(myGridID9);
 			const url = getCallUrl("/workData/_submit");
 			const params = {
 				oid : oid,

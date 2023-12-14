@@ -26,8 +26,8 @@ DEV.value=개발문서
 DEV.order=10
 
 #CHANGE - 설계변경문서
-CHANGE.value=설계변경문서
-CHANGE.order=20
+#CHANGE.value=설계변경문서
+#CHANGE.order=20
 
 #INSTRUCTION - 지침서
 INSTRUCTION.value=지침서

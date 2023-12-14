@@ -165,6 +165,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
+					dataField : "number",
+					headerText : "번호",
+					dataType : "string",
+					width : 150,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.poid;
+							const url = toUrl(oid);
+							_popup(url, 1500, 800, "n");
+						}
+					},
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "name",
 					headerText : "제목",
 					dataType : "string",
@@ -173,7 +191,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
+							const oid = item.poid;
 							const url = toUrl(oid);
 							_popup(url, 1500, 800, "n");
 						}
@@ -263,21 +281,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("합의함 리스트", "합의함", "합의함 리스트", exceptColumnFields, sessionName);
 			}
-			
+
 			// URL 분기 처리
 			function toUrl(oid) {
 				alert(oid);
 				let url;
-				if(oid.indexOf("") > -1) {
-					
-				} else if(oid.indexOf("") > -1) {
-					
-				} else if(oid.indexOf("") > -1) {
-					
-				} else if(oid.indexOf("") > -1) {
-					
-				} else if(oid.indexOf("") > -1) {
-					
+				if (oid.indexOf("") > -1) {
+
+				} else if (oid.indexOf("") > -1) {
+
+				} else if (oid.indexOf("") > -1) {
+
+				} else if (oid.indexOf("") > -1) {
+
+				} else if (oid.indexOf("") > -1) {
+
 				}
 			}
 

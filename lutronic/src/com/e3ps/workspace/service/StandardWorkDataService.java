@@ -1,15 +1,20 @@
 package com.e3ps.workspace.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.dto.WorkDataDTO;
 
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.ownership.Ownership;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -67,11 +72,28 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			data.setProcess(true);
 			PersistenceHelper.manager.modify(data);
 
+			// 기존 연결된 .. 결재랑 외부 메일 있는지 확인한다
 			// 외부 메일 연결
-			MailUserHelper.service.saveLink(data.getPer(), external);
+			MailUserHelper.service.saveLink(data, data.getPer(), external);
 
 			// 결재 필수..
-			WorkspaceHelper.service.register(data, data.getPer(), description, agreeRows, approvalRows, receiveRows);
+			// 결재라인 + 워크데이터 연결
+
+			ApprovalMaster appMaster = data.getAppMaster();
+			if (appMaster == null) {
+				// 없을시 결재라인 생성
+				WorkspaceHelper.service.register(data, data.getPer(), description, agreeRows, approvalRows,
+						receiveRows);
+			} else {
+				// 모든 결재선을 지우고 다시 만든다????
+				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(appMaster);
+				for (ApprovalLine line : list) {
+					PersistenceHelper.manager.delete(line);
+				}
+				PersistenceHelper.manager.delete(appMaster);
+				WorkspaceHelper.service.register(data, data.getPer(), description, agreeRows, approvalRows,
+						receiveRows);
+			}
 
 			trs.commit();
 			trs = null;

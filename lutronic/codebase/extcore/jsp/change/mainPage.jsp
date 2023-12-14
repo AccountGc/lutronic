@@ -46,7 +46,7 @@
 
 			// 차트 열기/닫기
 			var isChartExpanded = false;
-			function chartBtn(){
+			function chartBtn() {
 				if (!isChartExpanded) {
 					$("#chartDiv").show();
 					isChartExpanded = true;

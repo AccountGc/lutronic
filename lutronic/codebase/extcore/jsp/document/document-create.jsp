@@ -115,10 +115,10 @@ iframe {
 				<td class="indent5">
 					<input type="text" name="docName" id="docName" class="width-300">
 				</td>
-				<th class="req">문서종류</th>
-				<td class="indent5">
-					<input type="text" name="documentName" id="documentName" class="width-300">
-				</td>
+<!-- 				<th class="req">문서종류</th> -->
+<!-- 				<td class="indent5"> -->
+<!-- 					<input type="text" name="documentName" id="documentName" class="width-300"> -->
+<!-- 				</td> -->
 				<th class="req">결재방식</th>
 				<td>
 					&nbsp;
@@ -142,22 +142,6 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">문서유형</th>
-				<td class="indent5">
-					<select name="documentType" id="documentType" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (int i = 0; i < docTypeList.size(); i++) {
-							JSONObject obj = (JSONObject) docTypeList.get(i);
-							String key = (String) obj.get("key");
-							String value = (String) obj.get("value");
-						%>
-						<option value="<%=key%>"><%=value%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
 				<th class="req">보존기간</th>
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
@@ -341,6 +325,11 @@ iframe {
 				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
 
+				// 클래스타입
+				const classType1_code = document.getElementById("classType1").value;
+				const classType2_oid = document.getElementById("classType2").value;
+				const classType3_oid = document.getElementById("classType3").value;
+
 				const url = getCallUrl("/doc/create");
 
 				// 관련문서
@@ -411,7 +400,11 @@ iframe {
 					rows101 : rows101,
 					rows103 : rows103,
 					rows105 : rows105,
-					temprary : temprary
+					temprary : temprary,
+					// 클래스타입
+					classType1_code : classType1_code,
+					classType2_oid : classType2_oid,
+					classType3_oid : classType3_oid
 				};
 				logger(params);
 				parent.openLayer();

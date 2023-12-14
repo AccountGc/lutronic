@@ -45,6 +45,7 @@ function genNumber(obj) {
 				classType2(classType1);
 			}
 		} else {
+			clearValue();
 			// 채번 대상이 아닐경우
 			removeReadOnly();
 		}

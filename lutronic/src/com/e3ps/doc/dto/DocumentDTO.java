@@ -57,6 +57,17 @@ public class DocumentDTO {
 	private String approvaltype_name;
 	private String approvaltype_code;
 
+	private String classType1_code;
+	private String classType1_name;
+
+	private String classType2_code;
+	private String classType2_name;
+	private String classType2_oid;
+
+	private String classType3_code;
+	private String classType3_name;
+	private String classType3_oid;
+
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
 

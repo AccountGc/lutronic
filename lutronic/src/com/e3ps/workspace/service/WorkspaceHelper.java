@@ -8,6 +8,7 @@ import com.e3ps.change.ECOChange;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.org.MailUser;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
 import com.e3ps.org.dto.PeopleDTO;
@@ -19,6 +20,7 @@ import com.e3ps.workspace.ApprovalUserLine;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.PersistMasterLink;
 import com.e3ps.workspace.WorkData;
+import com.e3ps.workspace.WorkDataMailUserLink;
 import com.e3ps.workspace.column.ApprovalLineColumn;
 import com.e3ps.workspace.dto.ApprovalLineDTO;
 
@@ -54,6 +56,7 @@ public class WorkspaceHelper {
 	/**
 	 * 기안 라인 상태
 	 */
+	public static final String STATE_SUBMIT_READY = "기안전";
 	public static final String STATE_SUBMIT_COMPLETE = "기안완료";
 
 	/*
@@ -845,13 +848,28 @@ public class WorkspaceHelper {
 	 */
 	public JSONArray getExternalMail(String oid) throws Exception {
 		ArrayList<Map<String, String>> list = new ArrayList<>();
-		ArrayList<MailWTobjectLink> data = MailUserHelper.manager.navigate(oid);
-		for (MailWTobjectLink link : data) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("oid", link.getUser().getPersistInfo().getObjectIdentifier().getStringValue());
-			map.put("name", link.getUser().getName());
-			map.put("email", link.getUser().getEmail());
-			list.add(map);
+
+		Persistable per = CommonUtil.getObject(oid);
+		if (per instanceof WorkData) {
+			WorkData data = (WorkData) per;
+			QueryResult qr = PersistenceHelper.manager.navigate(data, "mailUser", WorkDataMailUserLink.class);
+			while (qr.hasMoreElements()) {
+				MailUser user = (MailUser) qr.nextElement();
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("oid", user.getPersistInfo().getObjectIdentifier().getStringValue());
+				map.put("name", user.getName());
+				map.put("email", user.getEmail());
+				list.add(map);
+			}
+		} else {
+			ArrayList<MailWTobjectLink> data = MailUserHelper.manager.navigate(oid);
+			for (MailWTobjectLink link : data) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("oid", link.getUser().getPersistInfo().getObjectIdentifier().getStringValue());
+				map.put("name", link.getUser().getName());
+				map.put("email", link.getUser().getEmail());
+				list.add(map);
+			}
 		}
 		return JSONArray.fromObject(list);
 	}
@@ -1007,7 +1025,6 @@ public class WorkspaceHelper {
 				list.add(map);
 			}
 		}
-
 		return JSONArray.fromObject(list);
 	}
 }

@@ -58,7 +58,7 @@ HashMap<String, String> hash = dto.getSignature();
 		<td>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="isFire" value="false" checked="checked">
+				<input type="radio" name="isFire" value="false" <%if(!dto.isFire()) { %> checked="checked" <%] %>>
 				<div class="state p-success">
 					<label>
 						<b>재직</b>
@@ -67,7 +67,7 @@ HashMap<String, String> hash = dto.getSignature();
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="latest" value="true">
+				<input type="radio" name="latest" value="true" <%if(dto.isFire()) { %> checked="checked" <%] %>>
 				<div class="state p-success">
 					<label>
 						<b>퇴사</b>

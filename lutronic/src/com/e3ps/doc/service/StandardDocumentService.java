@@ -24,6 +24,8 @@ import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentClass;
+import com.e3ps.doc.DocumentClassType;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
@@ -46,7 +48,9 @@ import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.doc.WTDocumentMasterIdentity;
+import wt.doc.WTDocumentTypeInfo;
 import wt.fc.IdentityHelper;
+import wt.fc.ObjectReference;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -185,15 +189,39 @@ public class StandardDocumentService extends StandardManager implements Document
 		boolean temprary = dto.isTemprary();
 		// 설별 활동 링크 OID
 		String oid = dto.getOid();
+		String classType1_code = dto.getClassType1_code();
+		String classType2_oid = dto.getClassType2_oid();
+		String classType3_oid = dto.getClassType3_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
+
 			WTDocument doc = WTDocument.newWTDocument();
-			if(!documentType.equals("")) {
+
+			// 분류 속성
+			WTDocumentTypeInfo info = WTDocumentTypeInfo.newWTDocumentTypeInfo();
+			DocumentClassType docClassType = DocumentClassType.toDocumentClassType(classType1_code);
+			info.setPtc_str_2(docClassType.toString());
+
+			if (StringUtil.checkString(classType2_oid)) {
+				DocumentClass classType2 = (DocumentClass) CommonUtil.getObject(classType2_oid);
+				ObjectReference ref = ObjectReference.newObjectReference(classType2);
+				info.setPtc_ref_2(ref);
+			}
+
+			if (StringUtil.checkString(classType3_oid)) {
+				DocumentClass classType3 = (DocumentClass) CommonUtil.getObject(classType3_oid);
+				ObjectReference ref = ObjectReference.newObjectReference(classType3);
+				info.setPtc_ref_3(ref);
+			}
+
+			doc.setTypeInfoWTDocument(info);
+
+			if (!documentType.equals("")) {
 				DocumentType docType = DocumentType.toDocumentType(documentType);
 				doc.setDocType(docType);
 			}
+
 			String interalnumber = dto.getInteralnumber();
 
 			// 문서 이름 세팅..

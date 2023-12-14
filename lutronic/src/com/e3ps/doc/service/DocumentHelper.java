@@ -517,9 +517,12 @@ public class DocumentHelper {
 		String suffixYear = today.substring(2, 4);
 		String month = today.substring(5, 7);
 
-		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1) || "REPORT".equals(classType1) || "VALIDATION".equals(classType1)) {)
+		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1) || "REPORT".equals(classType1)
+				|| "VALIDATION".equals(classType1)) {
 			rtnNumber = "N001";
-		} else if ("CHANGE".equals(classType1) || "MEETING".equals(classType1)) {
+		} else if ("CHANGE".equals(classType1) || "MEETING".equals(classType1))
+
+		{
 			rtnNumber = suffixYear + "-" + month + "-N001";
 		}
 		return rtnNumber;

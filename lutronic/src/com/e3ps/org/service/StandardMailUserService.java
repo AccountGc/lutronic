@@ -5,6 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
+import com.e3ps.common.mail.MailUtil;
+import com.e3ps.common.message.Message;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.org.MailUser;
+import com.e3ps.org.MailWTobjectLink;
+import com.e3ps.workspace.WorkData;
+import com.e3ps.workspace.WorkDataMailUserLink;
+
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -16,14 +25,6 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.StandardManager;
 import wt.workflow.work.WorkItem;
-
-import com.e3ps.admin.dto.MailUserDTO;
-import com.e3ps.common.mail.MailUtil;
-import com.e3ps.common.message.Message;
-import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.MailUser;
-import com.e3ps.org.MailWTobjectLink;
 
 public class StandardMailUserService extends StandardManager implements MailUserService {
 
@@ -335,12 +336,12 @@ public class StandardMailUserService extends StandardManager implements MailUser
 		try {
 			trs.start();
 
-			if(addRow != null) {
+			if (addRow != null) {
 				for (Map<String, Object> map : addRow) {
 					String name = (String) map.get("name");
 					String email = (String) map.get("email");
 					boolean enable = (boolean) map.get("enable");
-					
+
 					MailUser mail = MailUser.newMailUser();
 					mail.setName(name);
 					mail.setEmail(email);
@@ -349,7 +350,7 @@ public class StandardMailUserService extends StandardManager implements MailUser
 				}
 			}
 
-			if(editRow != null) {
+			if (editRow != null) {
 				for (Map<String, Object> map : editRow) {
 					String oid = (String) map.get("oid");
 					String name = (String) map.get("name");
@@ -364,12 +365,12 @@ public class StandardMailUserService extends StandardManager implements MailUser
 			}
 
 			// 삭제
-			if(removeRow != null) {
+			if (removeRow != null) {
 				for (Map<String, Object> map : removeRow) {
 					String oid = (String) map.get("oid");
 					MailUser mail = (MailUser) CommonUtil.getObject(oid);
 					PersistenceHelper.manager.delete(mail);
-				}				
+				}
 			}
 
 			trs.commit();
@@ -387,13 +388,27 @@ public class StandardMailUserService extends StandardManager implements MailUser
 	}
 
 	@Override
-	public void saveLink(Persistable per, ArrayList<Map<String, String>> params) throws Exception {
+	public void saveLink(WorkData data, Persistable per, ArrayList<Map<String, String>> params) throws Exception {
 
 		for (Map<String, String> map : params) {
 			String s = map.get("oid");
 			MailUser user = (MailUser) CommonUtil.getObject(s);
-			MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) per, user);
-			PersistenceHelper.manager.save(link);
+
+			// 기존에 만들어 져잇는게 잇는지...
+			boolean exist = false;
+			QueryResult qr = PersistenceHelper.manager.navigate(user, "workData", WorkDataMailUserLink.class);
+			if (qr.hasMoreElements()) {
+				exist = true;
+			}
+			// 추가된것만
+			if (!exist) {
+				MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) per, user);
+				PersistenceHelper.manager.save(link);
+
+				// 메일유저 이력 연결
+				WorkDataMailUserLink mLink = WorkDataMailUserLink.newWorkDataMailUserLink(data, user);
+				PersistenceHelper.manager.save(mLink);
+			}
 		}
 	}
 

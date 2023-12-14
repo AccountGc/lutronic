@@ -6,12 +6,16 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.DocumentClass;
+import com.e3ps.doc.DocumentClassType;
 import com.e3ps.doc.service.DocumentHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
+import wt.doc.WTDocumentTypeInfo;
 import wt.vc.VersionControlHelper;
 
 @Getter
@@ -38,6 +42,10 @@ public class DocumentColumn {
 	private String modifiedDate_txt;
 	private String primary;
 	private String secondary;
+
+	private String classType1_name;
+	private String classType2_name;
+	private String classType3_name;
 
 	public DocumentColumn() {
 
@@ -69,6 +77,28 @@ public class DocumentColumn {
 		setModifiedDate_txt(doc.getModifyTimestamp().toString().substring(0, 10));
 		setPrimary(AUIGridUtil.primary(doc));
 		setSecondary(AUIGridUtil.secondary(doc));
+
+		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
+		if (info != null) {
+			if (StringUtil.checkString(info.getPtc_str_2())) {
+				DocumentClassType classType1 = DocumentClassType.toDocumentClassType(info.getPtc_str_2());
+				setClassType1_name(classType1.getDisplay());
+			}
+
+			if (info.getPtc_ref_2() != null) {
+				DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();
+				if (classType2 != null) {
+					setClassType2_name(classType2.getName());
+				}
+			}
+
+			if (info.getPtc_ref_3() != null) {
+				DocumentClass classType3 = (DocumentClass) info.getPtc_ref_3().getObject();
+				if (classType3 != null) {
+					setClassType3_name(classType3.getName());
+				}
+			}
+		}
 	}
 
 	/**

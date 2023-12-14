@@ -309,6 +309,33 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
+					dataField : "classTydpe1_name",
+					headerText : "대분류",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "classType2_name",
+					headerText : "중분류",
+					dataType : "string",
+					width : 200,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
+					dataField : "classType3_name",
+					headerText : "소분류",
+					dataType : "string",
+					width : 100,
+					filter : {
+						showIcon : true,
+						inline : true
+					},
+				}, {
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",

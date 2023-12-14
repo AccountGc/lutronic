@@ -39,7 +39,7 @@ public class WorkDataHelper {
 
 		QuerySpecUtils.toBooleanAnd(query, idx, WorkData.class, WorkData.PROCESS, false);
 
-		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, true);
+		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.MODIFY_TIMESTAMP, true);
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {

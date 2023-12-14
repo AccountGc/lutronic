@@ -36,7 +36,8 @@
 	- Shell -> java com.e3ps.admin.form.loader.FormTemplateLoader
 	
 9. 문서컬럼 추가
-	- Shell -> AddColumns.bat wt.doc.WTDocument InlineBLOB=1
+	- Shell -> AddColumns.bat wt.doc.WTDocument String=1
+	- Shell -> AddColumns.bat wt.doc.WTDocument ObjectReference=3
 	- Shell -> codebase -> ant -f MakeJar.xml
 
 10. 사용자 및 부서 로더 -> 개발할시에만 사용 용도

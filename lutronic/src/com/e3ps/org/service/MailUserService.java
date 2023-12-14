@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import com.e3ps.admin.dto.MailUserDTO;
 import com.e3ps.org.MailWTobjectLink;
+import com.e3ps.workspace.WorkData;
 
 import wt.fc.Persistable;
 import wt.fc.WTObject;
@@ -42,7 +42,8 @@ public interface MailUserService {
 	/**
 	 * 외부 메일 유저 링크 등록 - 객제 결재시
 	 */
-	public abstract void saveLink(Persistable per, ArrayList<Map<String, String>> params) throws Exception;
+	public abstract void saveLink(WorkData data, Persistable per, ArrayList<Map<String, String>> params)
+			throws Exception;
 
 	/**
 	 * 외부 메일 유저 링크 삭제 - 객제 결재시
