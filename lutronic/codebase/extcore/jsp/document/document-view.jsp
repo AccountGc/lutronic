@@ -304,7 +304,28 @@ iframe {
 	}
 	
 	function print() {
-		DEXT5.doPrint("머리글", "&b바닥글&b", "content");
+		var sw=screen.width;
+	 	var sh=screen.height;
+	 	var w=1000;//가로길이
+	 	var h=800;//세로길이
+	 	var xpos=(sw-w)/2; //화면에 띄울 위치
+	 	var ypos=(sh-h)/2; //중앙
+	 	
+	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
+	 	const content = DEXT5.getBodyValue("content");
+		printWindow.document.open();
+		printWindow.document.write('<html><head><style type="text/css">.fl{float:left;} .fr{float:right;} .ml-1{margin-left:42%;} .ml-2{margin-left:34%;} .div_footer {width:100%; height:30px; bottom:0; position: fixed; font-size: 9pt;}@media print {@page { margin: 0 1.6cm; size: A4;}tbody{page-break-inside:avoid; page-break-after:avoid;}}</style></head><body>');
+		//출력할 내용 추가
+		printWindow.document.write('<table><thead style="font-size:9pt;"><tr class="fl"><td>thead1</td></tr>');
+		printWindow.document.write('<tr class="fl ml-1"><td>thead1</td></tr>');
+		printWindow.document.write('<tr class="fr"><td>thead1</td></tr></thead>');
+		printWindow.document.write('<tbody><tr style="height:150px;"></tr><tr><td><pre>'+content+'</pre></td></tr></tbody>');
+		printWindow.document.write('<tfoot><tr><td></td></tr></tfoot></table>');
+		printWindow.document.write('<div class="div_footer"><span>QF-705-08(3)</span><span class="ml-2">QF-705-08(3)</span><span class="ml-2">QF-705-08(3)</span></div>');
+		printWindow.document.write('</body></html>');
+		printWindow.document.close();
+		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
+		printWindow.close();
 	}
 	
 	//수정 및 개정

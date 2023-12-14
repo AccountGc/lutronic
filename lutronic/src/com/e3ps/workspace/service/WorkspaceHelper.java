@@ -784,7 +784,8 @@ public class WorkspaceHelper {
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
 		String state = (String) params.get("state");
-
+		state = state==null?"합의중":state;
+		
 		// 쿼리문 작성
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
