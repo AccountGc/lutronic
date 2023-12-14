@@ -61,7 +61,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="latest" value="true">
+						<input type="radio" name="isFire" value="true">
 						<div class="state p-success">
 							<label>
 								<b>퇴사</b>

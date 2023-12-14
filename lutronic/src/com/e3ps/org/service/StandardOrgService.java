@@ -411,11 +411,14 @@ public class StandardOrgService extends StandardManager implements OrgService {
 	public void modify(Map<String, Object> params) throws Exception {
 		String oid = (String) params.get("oid");
 		String primary = (String) params.get("primary");
+		boolean isFire = (boolean) params.get("isFire");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			People people = (People) CommonUtil.getObject(oid);
+			people.setIsDisable(isFire); 
+			PersistenceHelper.manager.modify(people);
 
 			QueryResult qr = ContentHelper.service.getContentsByRole(people, ContentRoleType.PRIMARY);
 			if (qr.hasMoreElements()) {

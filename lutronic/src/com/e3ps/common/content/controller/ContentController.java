@@ -35,6 +35,7 @@ import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.web.WebUtil;
+import com.e3ps.controller.BaseController;
 import com.e3ps.download.service.DownloadHistoryHelper;
 
 import net.sf.json.JSONObject;
@@ -58,8 +59,45 @@ import wt.util.WTException;
 import wt.util.WTProperties;
 
 @Controller
-@RequestMapping("/content")
-public class ContentController {
+@RequestMapping(value = "/content/**")
+public class ContentController extends BaseController {
+
+//	@Description(value = "AUI 그리드 마우스 우클린 다운로드")
+//	@GetMapping(value = "/download")
+//	public ResponseEntity<byte[]> download(@RequestParam String oid, @RequestParam String type) {
+//		// p 주
+//		// s 일반 첨부 = ZIP 파일 형태로
+//		// a 모든 첨부파일 = ZIP 파일형태로
+//		HttpHeaders headers = new HttpHeaders();
+//		byte[] bytes = null;
+//		try {
+//			ApplicationData data = (ApplicationData) CommonUtil.getObject(oid);
+//
+//			// 다운로드 이력 생성..
+//			DownloadHistoryHelper.service.create(oid);
+//
+//			InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+//
+//			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//			byte[] buffer = new byte[1024];
+//			int length;
+//			while ((length = is.read(buffer)) != -1) {
+//				byteArrayOutputStream.write(buffer, 0, length);
+//			}
+//
+//			bytes = byteArrayOutputStream.toByteArray();
+//			String name = URLEncoder.encode(data.getFileName(), "UTF-8").replaceAll("\\+", "%20");
+//
+//			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//			headers.setContentLength(bytes.length);
+//			headers.setContentDispositionFormData("attachment", name);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+//	}
 
 	@Description(value = "파일 다운로드")
 	@GetMapping(value = "/download")
@@ -186,9 +224,9 @@ public class ContentController {
 		String oid = (String) request.getParameter("oid");
 		String roleType = (String) request.getParameter("roleType");
 		JSONObject list = null;
-		if(oid.contains("ROHSMaterial")) {
+		if (oid.contains("ROHSMaterial")) {
 			list = CommonContentHelper.manager.rohsList(oid);
-		}else {
+		} else {
 			list = CommonContentHelper.manager.list(oid, roleType);
 		}
 		return list;

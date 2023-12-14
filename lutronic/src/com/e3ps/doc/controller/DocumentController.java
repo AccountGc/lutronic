@@ -1,11 +1,18 @@
 package com.e3ps.doc.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +37,11 @@ import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentClassHelper;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.download.service.DownloadHistoryHelper;
 
 import net.sf.json.JSONArray;
+import wt.content.ApplicationData;
+import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.part.WTPartDescribeLink;

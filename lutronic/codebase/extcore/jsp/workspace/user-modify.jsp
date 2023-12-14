@@ -55,7 +55,26 @@ HashMap<String, String> hash = dto.getSignature();
 	</tr>
 	<tr>
 		<th class="lb">퇴사여부</th>
-		<td class="indent5"><%=dto.isFire() == false ? "재직" : "퇴사"%></td>
+		<td>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="isFire" value="false" checked="checked">
+				<div class="state p-success">
+					<label>
+						<b>재직</b>
+					</label>
+				</div>
+			</div>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="latest" value="true">
+				<div class="state p-success">
+					<label>
+						<b>퇴사</b>
+					</label>
+				</div>
+			</div>
+		</td>
 	</tr>
 	<tr>
 		<th class="req lb">서명</th>
@@ -76,9 +95,11 @@ HashMap<String, String> hash = dto.getSignature();
 			return false;
 		}
 		const oid = document.getElementById("oid").value;
+		const isFire = document.querySelector("input[name=isFire]:checked").value;
 		const params = {
 			primary : primary.value,
-			oid : oid
+			oid : oid,
+			isFire : JSON.parse(isFire)
 		};
 
 		if (!confirm("수정 하시겠습니까?")) {
