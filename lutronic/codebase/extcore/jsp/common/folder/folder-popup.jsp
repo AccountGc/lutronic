@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String location = (String) request.getAttribute("location");
+String method = (String) request.getAttribute("method");
+if (method == null) {
+	method = "set";
+}
 %>
 <input type="hidden" name="location" id="location" value="<%=location%>">
 <table class="button-table">
@@ -12,7 +16,7 @@ String location = (String) request.getAttribute("location");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="추가" title="추가" class="blue" onclick="set();">
+			<input type="button" value="추가" title="추가" class="blue" onclick="<%=method%>();">
 			<input type="button" value="닫기" title="닫기" onclick="self.close();">
 		</td>
 	</tr>
@@ -57,6 +61,19 @@ String location = (String) request.getAttribute("location");
 
 	}
 
+	function rowsUpdate() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length === 0) {
+			alert("폴더를 선택하세요.");
+			return false;
+		}
+		const item = checkedItems[0].item;
+		const oid = item.oid;
+		const location = item.location;
+		opener.rowsUpdate(oid, location);
+		self.close();
+	}
+	
 	function set() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 		if (checkedItems.length === 0) {

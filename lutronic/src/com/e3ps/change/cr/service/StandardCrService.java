@@ -57,6 +57,7 @@ public class StandardCrService extends StandardManager implements CrService {
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
+		boolean ecprStart = dto.isEcprStart();
 
 		Transaction trs = new Transaction();
 		try {
@@ -133,7 +134,12 @@ public class StandardCrService extends StandardManager implements CrService {
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(cr, state);
 			} else {
-				WorkDataHelper.service.create(cr);
+				// ECPR 진행시...
+				if (ecprStart) {
+
+				} else {
+					WorkDataHelper.service.create(cr);
+				}
 			}
 
 			trs.commit();

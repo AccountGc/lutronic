@@ -14,7 +14,7 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
 ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
-JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
+// JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 %>
 <!DOCTYPE html>

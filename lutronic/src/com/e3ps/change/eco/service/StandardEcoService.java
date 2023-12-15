@@ -79,7 +79,6 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		ArrayList<Map<String, String>> rows200 = dto.getRows200(); // 활동
 //		ArrayList<Map<String, String>> rows500 = dto.getRows500(); // 변경대상 품목
 		boolean temprary = dto.isTemprary();
-		boolean ecprStart = dto.isEcprStart();
 
 		Transaction trs = new Transaction();
 		try {
@@ -138,17 +137,12 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			// 설변 활동 생성
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
 			// ECPR 진행을 안할경우에만 바로 진행??
-			if (!ecprStart) {
-				if (rows200.size() > 0) {
-					ActivityHelper.service.saveActivity(eco, rows200);
-					WorkspaceHelper.service.stand(eco);
-					// ECA 활동으로 변경
-					eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
-					LifeCycleHelper.service.setLifeCycleState(eco, State.toState("ACTIVITY"));
-				}
-			} else {
-				// ECPR 작성중 상태로 변경한다..
-				LifeCycleHelper.service.setLifeCycleState(eco, State.toState("CREATE_ECPR"));
+			if (rows200.size() > 0) {
+				ActivityHelper.service.saveActivity(eco, rows200);
+				WorkspaceHelper.service.stand(eco);
+				// ECA 활동으로 변경
+				eco = (EChangeOrder) PersistenceHelper.manager.refresh(eco);
+				LifeCycleHelper.service.setLifeCycleState(eco, State.toState("ACTIVITY"));
 			}
 
 			trs.commit();

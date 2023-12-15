@@ -47,6 +47,8 @@ public class CrDTO {
 	private String changeCode;
 	private String model;
 
+	private boolean ecprStart;
+	
 	private EChangeRequest cr;
 	// auth
 	private boolean _delete = false;

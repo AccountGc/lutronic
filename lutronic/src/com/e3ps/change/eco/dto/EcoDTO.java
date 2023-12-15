@@ -56,7 +56,6 @@ public class EcoDTO {
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows200 = new ArrayList<>(); // 설변활동
 	private ArrayList<Map<String, String>> rows500 = new ArrayList<>(); // 대상품목
-	private boolean ecprStart = true;
 
 	private Map<String, Object> contentMap = null;
 

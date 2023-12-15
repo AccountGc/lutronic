@@ -239,6 +239,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
 						<jsp:param value="565" name="height" />
+						<jsp:param value="doc" name="type" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
@@ -263,6 +264,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
+							let permission = isPermission(oid);
+							if (!permission) {
+								authMsg();
+								return false;
+							}
 							const url = getCallUrl("/doc/view?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
@@ -281,6 +287,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
+							let permission = isPermission(oid);
+							if (!permission) {
+								authMsg();
+								return false;
+							}
 							const url = getCallUrl("/doc/view?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
@@ -309,7 +320,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						inline : true
 					},
 				}, {
-					dataField : "classTydpe1_name",
+					dataField : "classType1_name",
 					headerText : "대분류",
 					dataType : "string",
 					width : 100,
@@ -514,16 +525,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const item = event.item;
 				const oid = item.oid;
 				const state = item.state;
-				const authUrl = getCallUrl("/doc/isPermission?oid=" + oid);
-				let permission;
-				call(authUrl, null, function(data) {
-					if (data.result) {
-						permission = data.isPermission;
-					}
-				}, "GET", false);
-
-				if (permission) {
-					// 					alert("권한 체크 필요해요!");
+				let permission = isPermission(oid);
+				if (!permission) {
+					authMsg();
+					return false;
 				}
 
 				let url;
@@ -594,6 +599,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function loadGridData() {
+				// 				document.getElementById("sessionid").value = 0;
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
 				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
@@ -695,20 +701,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-
-			//일괄 다운로드
-			// 			function download() {
-			// 				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-			// 				if (items.length == 0) {
-			// 					alert("다운로드할 문서를 선택하세요.");
-			// 					return false;
-			// 				}
-			// 				let oids = [];
-			// 				items.forEach((item)=>{
-			// 				    oids.push(item.oid)
-			// 				});
-			// 				document.location.href = "/Windchill/plm/content/downloadZIP?oids=" + oids;
-			// 			}
 		</script>
 	</form>
 </body>

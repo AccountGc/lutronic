@@ -34,9 +34,6 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "sendType", type = String.class),
 
-				@GeneratedProperty(name = "ecprStart", type = Boolean.class),
-
-				@GeneratedProperty(name = "ecprEnd", type = Boolean.class)
 
 		},
 

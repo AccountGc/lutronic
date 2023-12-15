@@ -42,9 +42,10 @@ public class FolderController extends BaseController {
 
 	@Description(value = "폴더 팝업창")
 	@GetMapping(value = "/popup")
-	public ModelAndView popup(@RequestParam String location) throws Exception {
+	public ModelAndView popup(@RequestParam String location, @RequestParam(required = false) String method) throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.addObject("location", location);
+		model.addObject("method", method);
 		model.setViewName("popup:/common/folder/folder-popup");
 		return model;
 	}

@@ -45,4 +45,9 @@ public interface DocumentService {
 	 */
 	public abstract void force(DocumentDTO dto) throws Exception;
 
+	/**
+	 * 문서 이동
+	 */
+	public abstract void move(Map<String, Object> params) throws Exception;
+
 }

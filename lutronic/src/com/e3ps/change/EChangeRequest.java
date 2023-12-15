@@ -35,15 +35,21 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "proposer", type = String.class),
 
-				@GeneratedProperty(name = "changeSection", type = String.class)
+				@GeneratedProperty(name = "changeSection", type = String.class),
+
+				@GeneratedProperty(name = "ecprStart", type = Boolean.class),
+
+				@GeneratedProperty(name = "ecprEnd", type = Boolean.class)
 
 		},
 
-		foreignKeys = { @GeneratedForeignKey(myRoleIsRoleA = false,
+		foreignKeys = {
 
-				foreignKeyRole = @ForeignKeyRole(name = "worker",
+				@GeneratedForeignKey(myRoleIsRoleA = false,
 
-						type = WTUser.class), myRole = @MyRole(name = "ecr"))
+						foreignKeyRole = @ForeignKeyRole(name = "worker",
+
+								type = WTUser.class), myRole = @MyRole(name = "ecr"))
 
 		}
 

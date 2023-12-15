@@ -15,6 +15,7 @@ import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
@@ -155,11 +156,8 @@ public class DocumentHelper {
 
 		// 최신 이터레이션.
 		if (latest) {
-			System.out.println("최신 아닐 경우 여기 타야지..");
 			QuerySpecUtils.toLatest(query, idx, WTDocument.class);
 		}
-
-		System.out.println(query);
 
 		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
 
@@ -461,19 +459,6 @@ public class DocumentHelper {
 	}
 
 	/**
-	 * 문서 사용자 권한 체크
-	 */
-	public boolean isPermission(String oid) throws Exception {
-		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-
-		WTUser user = CommonUtil.sessionUser();
-
-		// 없으면 false 리턴
-
-		return true;
-	}
-
-	/**
 	 * 마지막 번호 받아오기
 	 */
 	public String lastNumber(String number, String classType1) throws Exception {
@@ -526,5 +511,54 @@ public class DocumentHelper {
 			rtnNumber = suffixYear + "-" + month + "-N001";
 		}
 		return rtnNumber;
+	}
+
+	/**
+	 * 옴길 대상 목록
+	 */
+	public JSONArray getMoveTarget(Folder f) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTDocument.class, true);
+		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
+		query.setAdvancedQueryEnabled(true);
+		query.setDescendantQuery(false);
+		QuerySpecUtils.toInnerJoin(query, WTDocument.class, WTDocumentMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+
+		if (query.getConditionCount() > 0) {
+			query.appendAnd();
+		}
+
+		int f_idx = query.appendClassList(IteratedFolderMemberLink.class, false);
+		ClassAttribute fca = new ClassAttribute(IteratedFolderMemberLink.class, "roleBObjectRef.key.branchId");
+		SearchCondition fsc = new SearchCondition(fca, "=",
+				new ClassAttribute(WTDocument.class, "iterationInfo.branchId"));
+		fsc.setFromIndicies(new int[] { f_idx, idx }, 0);
+		fsc.setOuterJoin(0);
+		query.appendWhere(fsc, new int[] { f_idx, idx });
+		query.appendAnd();
+		long fid = f.getPersistInfo().getObjectIdentifier().getId();
+		query.appendWhere(new SearchCondition(IteratedFolderMemberLink.class, "roleAObjectRef.key.id", "=", fid),
+				new int[] { f_idx });
+
+		QuerySpecUtils.toLatest(query, idx, WTDocument.class);
+		QuerySpecUtils.toOrderBy(query, idx, WTDocument.class, WTDocument.MODIFY_TIMESTAMP, true);
+
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		while (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			WTDocument doc = (WTDocument) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("oid", doc.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("name", doc.getName());
+			map.put("number", IBAUtils.getStringValue(doc, "INTERALNUMBER"));
+			map.put("location", doc.getLocation());
+			map.put("version", doc.getVersionIdentifier().getSeries().getValue() + "."
+					+ doc.getIterationIdentifier().getSeries().getValue());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
 	}
 }

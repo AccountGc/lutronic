@@ -49,6 +49,29 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				</td>
 			</tr>
 			<tr>
+				<th class="req">ECPR 진행여부</th>
+				<td colspan="3">
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="ecprStart" value="true" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>진행</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="ecprStart" value="false">
+						<div class="state p-success">
+							<label>
+								<b>미진행</b>
+							</label>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
 				<th class="lb">작성일</th>
 				<td class="indent5">
 					<input type="text" name="writeDate" id="writeDate" class="width-100">
@@ -174,7 +197,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 				const name = document.getElementById("name");
 				const number = document.getElementById("number");
 				const secondarys = toArray("secondarys");
-
+				const ecprStart = document.querySelector("input[name=ecprStart]:checked").value;
 				const temprary = JSON.parse(temp);
 
 				const primary = document.querySelector("input[name=primary]");
@@ -221,7 +244,7 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 						alert("주 첨부파일을 첨부해주세요.");
 						return;
 					}
-					
+
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -238,11 +261,12 @@ ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute
 					eoCommentB : toId("eoCommentB"),
 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
-					primary : primary==null ? '' : primary.value,
+					primary : primary == null ? '' : primary.value,
 					secondarys : secondarys,
 					rows101 : rows101,
 					rows300 : rows300,
 					temprary : temprary,
+					ecprStart : JSON.parse(ecprStart)
 				}
 				const url = getCallUrl("/cr/create");
 				logger(params);

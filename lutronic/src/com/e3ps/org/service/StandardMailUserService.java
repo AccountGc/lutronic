@@ -389,26 +389,21 @@ public class StandardMailUserService extends StandardManager implements MailUser
 
 	@Override
 	public void saveLink(WorkData data, Persistable per, ArrayList<Map<String, String>> params) throws Exception {
+		// 기존 연결 삭제
+		QueryResult qr = PersistenceHelper.manager.navigate(data, "mailUser", WorkDataMailUserLink.class, false);
+		while (qr.hasMoreElements()) {
+			WorkDataMailUserLink link = (WorkDataMailUserLink) qr.nextElement();
+			PersistenceHelper.manager.delete(link);
+		}
 
 		for (Map<String, String> map : params) {
 			String s = map.get("oid");
 			MailUser user = (MailUser) CommonUtil.getObject(s);
-
-			// 기존에 만들어 져잇는게 잇는지...
-			boolean exist = false;
-			QueryResult qr = PersistenceHelper.manager.navigate(user, "workData", WorkDataMailUserLink.class);
-			if (qr.hasMoreElements()) {
-				exist = true;
-			}
-			// 추가된것만
-			if (!exist) {
-				MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) per, user);
-				PersistenceHelper.manager.save(link);
-
-				// 메일유저 이력 연결
-				WorkDataMailUserLink mLink = WorkDataMailUserLink.newWorkDataMailUserLink(data, user);
-				PersistenceHelper.manager.save(mLink);
-			}
+			MailWTobjectLink link = MailWTobjectLink.newMailWTobjectLink((WTObject) per, user);
+			PersistenceHelper.manager.save(link);
+			// 메일유저 이력 연결
+			WorkDataMailUserLink mLink = WorkDataMailUserLink.newWorkDataMailUserLink(data, user);
+			PersistenceHelper.manager.save(mLink);
 		}
 	}
 

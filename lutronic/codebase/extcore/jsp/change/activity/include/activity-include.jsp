@@ -249,6 +249,10 @@ boolean create = "create".equals(mode);
 			todayText : "오늘 선택", // 오늘 날짜 버턴 텍스트
 			uncheckDateText : "날짜 선택 해제", // 날짜 선택 해제 버턴 텍스트
 			uncheckDateValue : "-", // 날짜 선택 해제 버턴 클릭 시 적용될 값.
+			validator : function(oldValue, newValue, rowItem){
+				console.log(newValue);
+				return {"validate" : true};
+			}			
 		}
 	}, ]
 

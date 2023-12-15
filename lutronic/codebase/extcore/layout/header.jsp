@@ -177,15 +177,6 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/asm/list?number=NDBT', '> 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
-					<%
-					if (isAdmin) {
-					%>
-					<li>
-						<a onclick="moveToPage(this, '/doc/permission', '> 문서관리 > 권한관리');">권한관리</a>
-					</li>
-					<%
-					}
-					%>
 				</ul>
 			</li>
 			<%
@@ -254,6 +245,9 @@ int eca = (int) request.getAttribute("eca");
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/ecpr/list', '> 설계변경 > ECPR 검색');">ECPR</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/ecrm/list', '> 설계변경 > ECRM 검색');">ECRM</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/eco/list', '> 설계변경 > ECO 검색');">ECO</a>
@@ -343,24 +337,24 @@ int eca = (int) request.getAttribute("eca");
 			<%
 			if (isProduction) {
 			%>
-			<li>
-				<a href="css_animation.html">
-					<i class="fa fa-magic"></i>
-					<span class="nav-label">생산본부 문서관리</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/etc/create?type=production', '> 생산본부 문서관리 > 생산본부 문서등록');">생산본부 문서등록</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/etc/list?type=production', '> 생산본부 문서관리 > 생산본부 문서검색');">생산본부 문서검색</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서결재');">생산본부 문서결재</a>
-					</li>
-				</ul>
-			</li>
+			<!-- 			<li> -->
+			<!-- 				<a href="css_animation.html"> -->
+			<!-- 					<i class="fa fa-magic"></i> -->
+			<!-- 					<span class="nav-label">생산본부 문서관리</span> -->
+			<!-- 					<span class="fa arrow"></span> -->
+			<!-- 				</a> -->
+			<!-- 				<ul class="nav nav-second-level collapse"> -->
+			<!-- 					<li> -->
+			<!-- 						<a onclick="moveToPage(this, '/etc/create?type=production', '> 생산본부 문서관리 > 생산본부 문서등록');">생산본부 문서등록</a> -->
+			<!-- 					</li> -->
+			<!-- 					<li> -->
+			<!-- 						<a onclick="moveToPage(this, '/etc/list?type=production', '> 생산본부 문서관리 > 생산본부 문서검색');">생산본부 문서검색</a> -->
+			<!-- 					</li> -->
+			<!-- 					<li> -->
+			<!-- 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 생산본부 문서관리 > 생산본부 문서결재');">생산본부 문서결재</a> -->
+			<!-- 					</li> -->
+			<!-- 				</ul> -->
+			<!-- 			</li> -->
 			<%
 			}
 			if (isPathological) {
@@ -409,24 +403,24 @@ int eca = (int) request.getAttribute("eca");
 			}
 			if (isRa) {
 			%>
-			<li>
-				<a href="css_animation.html">
-					<i class="fa fa-magic"></i>
-					<span class="nav-label">RA팀 문서관리</span>
-					<span class="fa arrow"></span>
-				</a>
-				<ul class="nav nav-second-level collapse">
-					<li>
-						<a onclick="moveToPage(this, '/etc/create?type=ra', '> RA팀 문서관리 > RA팀 문서등록');">RA팀 문서등록</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/etc/list?type=ra', '> RA팀 문서관리 > RA팀 문서검색');">RA팀 문서검색</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=production', '> RA팀 문서관리 > RA팀 문서결재');">RA팀 문서결재</a>
-					</li>
-				</ul>
-			</li>
+			<!-- 			<li> -->
+			<!-- 				<a href="css_animation.html"> -->
+			<!-- 					<i class="fa fa-magic"></i> -->
+			<!-- 					<span class="nav-label">RA팀 문서관리</span> -->
+			<!-- 					<span class="fa arrow"></span> -->
+			<!-- 				</a> -->
+			<!-- 				<ul class="nav nav-second-level collapse"> -->
+			<!-- 					<li> -->
+			<!-- 						<a onclick="moveToPage(this, '/etc/create?type=ra', '> RA팀 문서관리 > RA팀 문서등록');">RA팀 문서등록</a> -->
+			<!-- 					</li> -->
+			<!-- 					<li> -->
+			<!-- 						<a onclick="moveToPage(this, '/etc/list?type=ra', '> RA팀 문서관리 > RA팀 문서검색');">RA팀 문서검색</a> -->
+			<!-- 					</li> -->
+			<!-- 					<li> -->
+			<!-- 						<a onclick="moveToPage(this, '/etc/list?docType=production', '> RA팀 문서관리 > RA팀 문서결재');">RA팀 문서결재</a> -->
+			<!-- 					</li> -->
+			<!-- 				</ul> -->
+			<!-- 			</li> -->
 			<%
 			}
 			if (isCosmetic) {

@@ -44,6 +44,7 @@ import wt.content.ApplicationData;
 import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
+import wt.folder.Folder;
 import wt.part.WTPartDescribeLink;
 
 @Controller
@@ -77,13 +78,13 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
-		JSONArray docTypeList = DocumentHelper.manager.toJson();
+//		JSONArray docTypeList = DocumentHelper.manager.toJson();
 
 		// 문서 대분류
 		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
 
 		model.addObject("classTypes1", classTypes1);
-		model.addObject("docTypeList", docTypeList);
+//		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
@@ -379,23 +380,6 @@ public class DocumentController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "문서 권한 체크 함수")
-	@ResponseBody
-	@GetMapping(value = "/isPermission")
-	public Map<String, Object> isPermission(@RequestParam String oid) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
-		try {
-			boolean isPermission = DocumentHelper.manager.isPermission(oid);
-			result.put("isPermission", isPermission);
-			result.put("result", SUCCESS);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("result", FAIL);
-			result.put("msg", e.toString());
-		}
-		return result;
-	}
-
 	@Description(value = "버전 객체 이터레이션 정보 페이지")
 	@GetMapping(value = "/iteration")
 	public ModelAndView iteration(@RequestParam String oid) throws Exception {
@@ -410,11 +394,44 @@ public class DocumentController extends BaseController {
 	@Description(value = "문서 마지막 시퀀시")
 	@ResponseBody
 	@GetMapping(value = "/lastNumber")
-	public Map<String, Object> lastNumber(@RequestParam String number, @RequestParam String classType1) throws Exception {
+	public Map<String, Object> lastNumber(@RequestParam String number, @RequestParam String classType1)
+			throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			String lastNumber = DocumentHelper.manager.lastNumber(number, classType1);
 			result.put("lastNumber", lastNumber);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "문서 이동 페이지")
+	@GetMapping(value = "/move")
+	public ModelAndView move(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		Folder f = (Folder) CommonUtil.getObject(oid);
+		JSONArray moveList = DocumentHelper.manager.getMoveTarget(f);
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("moveList", moveList);
+		model.addObject("f", f);
+		model.addObject("oid", oid);
+		model.setViewName("popup:/document/document-move");
+		return model;
+	}
+	
+	@Description(value = "문서 이동 함수")
+	@ResponseBody
+	@PostMapping(value = "/move")
+	public Map<String, Object> move(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			DocumentHelper.service.move(params);
+			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

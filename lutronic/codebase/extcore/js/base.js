@@ -303,23 +303,46 @@ function toField(params, arr) {
 			params[arr[i]] = document.getElementById(arr[i]).value;
 		}
 	}
-	
-	if(document.getElementById("_psize") !=null){
+
+	if (document.getElementById("_psize") != null) {
 		params["_psize"] = document.getElementById("_psize").value;
 	}
-	if(document.getElementById("sessionid") !=null){
+	if (document.getElementById("sessionid") != null) {
 		params["sessionid"] = document.getElementById("sessionid").value;
 	}
-	if(document.getElementById("curPage") !=null){
+	if (document.getElementById("curPage") != null) {
 		params["curPage"] = document.getElementById("curPage").value;
 	}
-	
+
 	return params;
 }
 
 // 첨부파일 다운로드
 function download(oid) {
+	let permission = isPermission(oid);
+	if (!permission) {
+		authMsg();
+		return false;
+	}
+
 	document.location.href = "/Windchill/plm/content/download?oid=" + oid;
+}
+
+// 권한관리 호출
+function isPermission(oid) {
+	const authUrl = getCallUrl("/access/isPermission?oid=" + oid);
+	let permission;
+	call(authUrl, null, function(data) {
+		if (data.result) {
+			permission = data.isPermission;
+		}
+	}, "GET", false);
+	return permission;
+}
+
+// 권란 관련 메세지
+function authMsg() {
+	alert("권한이 없습니다.\nPDM 관리자에게 문의하세요.");
 }
 
 // 콘솔 로그

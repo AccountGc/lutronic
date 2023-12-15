@@ -184,7 +184,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String description = dto.getDescription();
 		String content = dto.getContent();
 		String documentType = dto.getDocumentType_code();
-		String documentName = dto.getDocumentName();
+//		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		boolean temprary = dto.isTemprary();
 		// 설별 활동 링크 OID
@@ -225,11 +225,12 @@ public class StandardDocumentService extends StandardManager implements Document
 			String interalnumber = dto.getInteralnumber();
 
 			// 문서 이름 세팅..
-			if (name.length() > 0) {
-				doc.setName(documentName + "-" + name);
-			} else {
-				doc.setName(documentName);
-			}
+			doc.setName(name); // 하나의 번호로 세팅합니다.
+//			if (name.length() > 0) {
+//				doc.setName(documentName + "-" + name);
+//			} else {
+//				doc.setName(documentName);
+//			}
 			doc.setNumber(interalnumber);
 			doc.setDescription(description);
 			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
@@ -705,6 +706,34 @@ public class StandardDocumentService extends StandardManager implements Document
 				trs.rollback();
 		}
 
+	}
+
+	@Override
+	public void move(Map<String, Object> params) throws Exception {
+		ArrayList<Map<String, String>> data = (ArrayList<Map<String, String>>) params.get("data");
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			for (Map<String, String> map : data) {
+				String oid = map.get("oid");
+				String foid = map.get("foid");
+
+				WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+				Folder folder = (Folder) CommonUtil.getObject(foid);
+				FolderHelper.service.changeFolder((FolderEntry) doc, folder);
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 
 }
