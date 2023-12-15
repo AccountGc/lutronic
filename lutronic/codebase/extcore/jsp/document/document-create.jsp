@@ -142,7 +142,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="req">보존기간</th>
+				<th class="req lb">보존기간</th>
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
 						<%
