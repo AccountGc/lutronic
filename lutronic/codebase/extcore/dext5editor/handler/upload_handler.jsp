@@ -1,7 +1,7 @@
-﻿<%@ page contentType="text/html;charset=utf-8"%>
-<%@ page import="com.dext5.DEXT5Handler" %>
+﻿<%@page import="com.dext5.DEXT5Handler"%>
+<%@ page contentType="text/html;charset=utf-8"%>
 <% 
-// 	out.clear(); // Servlet으로 handler 작업을 하시려면 제거해주세요.
+	out.clear(); // Servlet으로 handler 작업을 하시려면 제거해주세요.
 	
 	String _allowFileExt = "gif, jpg, jpeg, png, bmp, wmv, asf, swf, avi, mpg, mpeg, mp4, txt, doc, docx, xls, xlsx, ppt, pptx, hwp, zip, pdf,flv";
 	int upload_max_size = 2147483647;
