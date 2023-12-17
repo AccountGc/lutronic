@@ -263,6 +263,10 @@ ArrayList<NumberCode> productmethod = (ArrayList<NumberCode>) request.getAttribu
 		<th>ECO Date</th>
 		<td class="indent5"><%=attr.get("ecoDate")%></td>
 	</tr>
+	<tr>
+		<th class="lb">선구매여부</th>
+		<td class="indent5" colspan="3"><%=attr.get("preOrder")%></td>
+	</tr>
 </table>
 
 <script type="text/javascript">

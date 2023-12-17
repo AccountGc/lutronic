@@ -42,7 +42,8 @@ public class FolderController extends BaseController {
 
 	@Description(value = "폴더 팝업창")
 	@GetMapping(value = "/popup")
-	public ModelAndView popup(@RequestParam String location, @RequestParam(required = false) String method) throws Exception {
+	public ModelAndView popup(@RequestParam String location, @RequestParam(required = false) String method)
+			throws Exception {
 		ModelAndView model = new ModelAndView();
 		model.addObject("location", location);
 		model.addObject("method", method);
@@ -58,6 +59,22 @@ public class FolderController extends BaseController {
 		try {
 			JSONArray list = FolderUtils.tree(params);
 			result.put("list", list);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
+	@Description(value = "폴더 트리 저장")
+	@PostMapping(value = "/treeSave")
+	@ResponseBody
+	public Map<String, Object> treeSave(@RequestBody Map<String, String> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -1288,6 +1288,7 @@ public class PartHelper {
 		String des = IBAUtils.getStringValue(part, "DES");
 		String ecoNo = IBAUtils.getStringValue(part, "CHANGENO");
 		String ecoDate = IBAUtils.getStringValue(part, "CHANGEDATE");
+		String preOrder = IBAUtils.getBooleanValue(part, "PREORDER") == true ? "예" : "아니오";
 
 		result.put("model", model != null ? model : "");
 		result.put("productmethod", productmethod != null ? productmethod : "");
@@ -1307,6 +1308,7 @@ public class PartHelper {
 		result.put("des", des != null ? des : "");
 		result.put("ecoNo", ecoNo != null ? ecoNo : "");
 		result.put("ecoDate", ecoDate != null ? ecoDate : "");
+		result.put("preOrder", preOrder);
 		return result;
 	}
 

@@ -38,10 +38,10 @@ String height = request.getParameter("height");
 			enableRightDownFocus : true,
 		}
 		_myGridID = AUIGrid.create("#_grid_wrap", columnLayout, props);
-		<%if (isAdmin) {%>
-		AUIGrid.bind(_myGridID, "contextMenu", auiContextMenuHandler_);
-		<%}%>
-		AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
+<%if (isAdmin) {%>
+	AUIGrid.bind(_myGridID, "contextMenu", auiContextMenuHandler_);
+<%}%>
+	AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
 		tree();
@@ -65,6 +65,11 @@ String height = request.getParameter("height");
 		}, {
 			label : "폴더 수정",
 			callback : auiContextHandler_
+		}, {
+			label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+		}, {
+			label : "저장",
+			callback : auiContextHandler_
 		} ]
 		return menu;
 	}
@@ -79,10 +84,10 @@ String height = request.getParameter("height");
 			_popup(url, 1400, 600, "n");
 			break;
 		case 1:
-			if("doc" !== t) {
+			if ("doc" !== t) {
 				alert("문서관리에서만 가능한 기능입니다.");
 				return false;
-			} 
+			}
 			url = getCallUrl("/doc/move?oid=" + oid);
 			_popup(url, 1600, 600, "n");
 			break;
@@ -92,7 +97,26 @@ String height = request.getParameter("height");
 			break;
 		case 5:
 			break;
+		case 7:
+			treeSave();
+			break;
 		}
+	}
+
+	function treeSave() {
+		const data = AUIGrid.getGridData(_myGridID);
+		const url = getCallUrl("/folder/treeSave");
+		const params = {
+			data : data
+		};
+		parent.openLayer();
+		call(url, params, function(data) {
+			alert(data.msg);
+			if(data.result) {
+				tree();
+			}
+			parent.closeLayer();
+		})
 	}
 
 	function auiReadyHandler() {
