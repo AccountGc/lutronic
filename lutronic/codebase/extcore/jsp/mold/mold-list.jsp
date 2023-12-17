@@ -25,9 +25,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="location" id="/Default/금형문서">
+		<input type="hidden" name="location" id="location" value="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
-		<input type="hidden" name="searchType" id="searchType" value="MOLD">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		
 		<table class="button-table">
@@ -321,6 +320,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				params = toField(params, field);
 				params.islastversion = $('input[name=islastversion]:checked').val();
 				AUIGrid.showAjaxLoader(myGridID);
+				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);

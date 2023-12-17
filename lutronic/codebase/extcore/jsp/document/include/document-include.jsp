@@ -78,7 +78,7 @@ if (header) {
 		dataField : "interalnumber",
 		headerText : "내부 문서번호",
 		dataType : "string",
-		width : 120,
+		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",

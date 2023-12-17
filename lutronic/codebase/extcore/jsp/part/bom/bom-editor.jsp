@@ -675,7 +675,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			closeLayer();
 		})
 		// 창닫기인데...
-		callBack(true, true, "");
+		callBack(true, false, "");
 	}
 
 	// 신규 품목 추가
