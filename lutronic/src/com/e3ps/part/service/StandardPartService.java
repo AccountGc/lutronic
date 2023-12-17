@@ -234,7 +234,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			partNumber += seq + etc;
 
 			if (partNumber.length() > 10) {
-				throw new Exception(Message.get("허용된 품목번호의 길이가 아닙니다."));
+				throw new Exception("허용된 품목번호의 길이가 아닙니다.");
 			}
 
 			WTPart part = WTPart.newWTPart();
@@ -261,7 +261,12 @@ public class StandardPartService extends StandardManager implements PartService 
 			// 라이프사이클 셋팅
 
 			// 폴더 셋팅
-			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			Folder folder = null;
+			if (location.indexOf("Folder") > -1) {
+				folder = (Folder) CommonUtil.getObject(location);
+			} else {
+				folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+			}
 			FolderHelper.assignLocation((FolderEntry) part, folder);
 
 			// 문서 lifeCycle 설정

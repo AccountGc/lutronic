@@ -44,8 +44,11 @@ if (method == null) {
 			rowNumHeaderText : "번호",
 			selectionMode : "multipleCells",
 			enableFilter : true,
-			displayTreeOpen : true,
-			forceTreeView : true
+			displayTreeOpen : false,
+			forceTreeView : true,
+			showInlineFilter : true,
+			filterLayerWidth : 320,
+			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 		}
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		tree();
@@ -54,6 +57,18 @@ if (method == null) {
 	}
 
 	function auiCellClick(event) {
+		const item = event.item;
+		const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+		const rowId = item[rowIdField];
+
+		// 이미 체크 선택되었는지 검사
+		if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
+			// 엑스트라 체크박스 체크해제 추가
+			AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+		} else {
+			// 엑스트라 체크박스 체크 추가
+			AUIGrid.setCheckedRowsByIds(event.pid, rowId);
+		}
 
 	}
 
@@ -73,7 +88,7 @@ if (method == null) {
 		opener.rowsUpdate(oid, location);
 		self.close();
 	}
-	
+
 	function set() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 		if (checkedItems.length === 0) {
@@ -103,6 +118,7 @@ if (method == null) {
 		call(url, params, function(data) {
 			if (data.result) {
 				AUIGrid.setGridData(myGridID, data.list);
+				AUIGrid.showItemsOnDepth(myGridID, 2);
 			} else {
 				alert(data.msg);
 			}

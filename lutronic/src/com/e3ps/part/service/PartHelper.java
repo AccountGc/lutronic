@@ -1,6 +1,6 @@
 package com.e3ps.part.service;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -63,6 +63,7 @@ import wt.iba.definition.StringDefinition;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.PartDocHelper;
+import wt.part.QuantityUnit;
 import wt.part.WTPart;
 import wt.part.WTPartBaselineConfigSpec;
 import wt.part.WTPartConfigSpec;
@@ -685,12 +686,15 @@ public class PartHelper {
 	 * 품목 폴더 가져오기
 	 */
 	public JSONArray recurcive() throws Exception {
-		ArrayList<String> list = new ArrayList<>();
+		ArrayList<Map<String, String>> list = new ArrayList<>();
 		Folder root = FolderTaskLogic.getFolder(PART_ROOT, WCUtil.getWTContainerRef());
 		Enumeration result = FolderTaskLogic.getSubFolders(root);
 		while (result.hasMoreElements()) {
 			Folder folder = (Folder) result.nextElement();
-			list.add(folder.getFolderPath());
+			Map<String, String> map = new HashMap<>();
+			map.put("name", folder.getFolderPath());
+			map.put("oid", folder.getPersistInfo().getObjectIdentifier().getStringValue());
+			list.add(map);
 			recurcive(folder, list);
 		}
 		return JSONArray.fromObject(list);
@@ -699,11 +703,14 @@ public class PartHelper {
 	/**
 	 * 품목 폴더 가져오기 재귀함수
 	 */
-	private void recurcive(Folder parent, ArrayList<String> list) throws Exception {
+	private void recurcive(Folder parent, ArrayList<Map<String, String>> list) throws Exception {
 		QueryResult result = FolderHelper.service.findSubFolders(parent);
 		while (result.hasMoreElements()) {
 			SubFolder folder = (SubFolder) result.nextElement();
-			list.add(folder.getFolderPath());
+			Map<String, String> map = new HashMap<>();
+			map.put("name", folder.getFolderPath());
+			map.put("oid", folder.getPersistInfo().getObjectIdentifier().getStringValue());
+			list.add(map);
 			recurcive(folder, list);
 		}
 	}
@@ -1556,5 +1563,21 @@ public class PartHelper {
 			break;
 		}
 		return isLazy;
+	}
+
+	/**
+	 * 품목 단위 JSON 형태로
+	 */
+	public JSONArray toUnitJson() throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		QuantityUnit[] unitList = QuantityUnit.getQuantityUnitSet();
+		for (QuantityUnit unit : unitList) {
+			Map<String, String> map = new HashMap<>();
+			map.put("key", unit.toString());
+			map.put("value", unit.getDisplay() + " / " + unit.toString());
+			list.add(map);
+		}
+
+		return JSONArray.fromObject(list);
 	}
 }

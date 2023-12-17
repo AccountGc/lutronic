@@ -32,10 +32,11 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=35"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=1008861598"></script>
 </head>
 <body>
 	<form>
+		<input type="hidden" name="index" id="index">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -52,19 +53,23 @@ iframe {
 		</table>
 		<table class="create-table">
 			<colgroup>
-				<col width="150">
+				<col width="120">
 				<col width="*">
-				<col width="150">
+				<col width="120">
 				<col width="*">
-				<col width="150">
+				<col width="120">
 				<col width="*">
 			</colgroup>
 			<tr>
 				<th class="req lb">문서분류</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"> /Default/문서 </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
+				</td>
+				<th class="req">내부 문서번호</th>
+				<td class="indent5">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
 				</td>
 				<th class="req">문서 템플릿</th>
 				<td class="indent5">
@@ -83,7 +88,7 @@ iframe {
 			<tr>
 				<th class="lb req">대분류</th>
 				<td class="indent5">
-					<select name="classType1" id="classType1" class="width-200" onchange="genNumber(this);">
+					<select name="classType1" id="classType1" class="width-200" onchange="first(this);">
 						<option value="">선택</option>
 						<%
 						for (Map<String, String> map : classTypes1) {
@@ -99,26 +104,35 @@ iframe {
 				</td>
 				<th>중분류</th>
 				<td class="indent5">
-					<select name="classType2" id="classType2" class="width-300" onchange="middleNumber();">
+					<select name="classType2" id="classType2" class="width-300" onchange="second();">
 						<option value="">선택</option>
 					</select>
 				</td>
 				<th>소분류</th>
 				<td class="indent5">
-					<select name="classType3" id="classType3" class="width-300" onchange="lastCheck();">
+					<select name="classType3" id="classType3" class="width-300" onchange="last();">
 						<option value="">선택</option>
 					</select>
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">문서명</th>
+				<th class="lb req">문서명</th>
 				<td class="indent5">
-					<input type="text" name="docName" id="docName" class="width-300">
+					<input type="text" name="name" id="name" class="width-400" onkeydown="nameValidate(this);">
 				</td>
-<!-- 				<th class="req">문서종류</th> -->
-<!-- 				<td class="indent5"> -->
-<!-- 					<input type="text" name="documentName" id="documentName" class="width-300"> -->
-<!-- 				</td> -->
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<select name="model" id="model" class="width-200" onchange="preNumberCheck(this);">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
 				<th class="req">결재방식</th>
 				<td>
 					&nbsp;
@@ -155,22 +169,7 @@ iframe {
 						%>
 					</select>
 				</td>
-				<th>프로젝트코드</th>
-				<td class="indent5">
-					<select name="model" id="model" class="width-200" onchange="preNumberCheck(this);">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">부서</th>
+				<th>부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
 						<option value="">선택</option>
@@ -182,10 +181,6 @@ iframe {
 						}
 						%>
 					</select>
-				</td>
-				<th class="req">내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
 				</td>
 				<th>작성자</th>
 				<td class="indent5">
@@ -311,8 +306,8 @@ iframe {
 				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
 				const formType = document.getElementById("formType");
-				const name = document.getElementById("docName");
-				const documentType = document.getElementById("documentType");
+				const name = document.getElementById("name");
+				// 				const documentType = document.getElementById("documentType");
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
@@ -347,11 +342,12 @@ iframe {
 				// 내용
 				const content = DEXT5.getBodyValue("content");
 
-				if (isNull(documentName.value)) {
-					alert("문서종류를 입력해주세요.");
-					documentName.focus();
+				if (isNull(name.value)) {
+					alert("문서명을 입력하세요.");
+					name.focus();
 					return false;
 				}
+
 				if (isNull(interalnumber)) {
 					alert("내부문서번호를 입력해주세요.");
 					return false;
@@ -361,13 +357,7 @@ iframe {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
-
 				} else {
-					if (isNull(documentType.value)) {
-						alert("문서유형을 선택해주세요.");
-						return false;
-					}
-
 					if (primary == null) {
 						alert("주 첨부파일을 첨부해주세요.");
 						return false;
@@ -381,7 +371,6 @@ iframe {
 				const params = {
 					name : name.value,
 					lifecycle : lifecycle,
-					documentType_code : documentType.value,
 					description : description.value,
 					content : content,
 					secondarys : secondarys,
@@ -392,7 +381,6 @@ iframe {
 					interalnumber : interalnumber,
 					writer : writer,
 					preseration_code : preseration,
-					documentName : documentName.value,
 					// 링크 데이터
 					rows90 : rows90,
 					rows91 : rows91,
@@ -420,7 +408,7 @@ iframe {
 			document.addEventListener("DOMContentLoaded", function() {
 				selectbox("formType");
 				selectbox("preseration");
-				selectbox("documentType");
+				// 				selectbox("documentType");
 				selectbox("model");
 				selectbox("deptcode");
 				$("#preseration").bindSelectSetValue("PR001");
@@ -436,36 +424,6 @@ iframe {
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID103);
 				AUIGrid.resize(myGridID105);
-
-				// 문서명 규칙
-				$("#documentName").bindSelector({
-					reserveKeys : {
-						options : "list",
-						optionValue : "value",
-						optionText : "name"
-					},
-					optionPrintLength : "all",
-					onsearch : function(id, obj, callBack) {
-						const value = document.getElementById(id).value;
-						const url = getCallUrl("/doc/finder");
-						const params = {
-							value : value,
-						};
-						logger(params);
-						call(url, params, function(data) {
-							callBack({
-								options : data.list
-							})
-						})
-					},
-					onchange : function() {
-						const id = this.targetID;
-						if (this.selectedOption != null) {
-							const value = this.selectedOption.value;
-							document.getElementById(id).value = value;
-						}
-					},
-				});
 				toUI();
 			});
 

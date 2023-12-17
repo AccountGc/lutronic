@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.org.service.OrgHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -106,11 +107,13 @@ public class NumberCodeController extends BaseController {
 	@Description(value = "코드 저장")
 	@PostMapping(value = "/save")
 	@ResponseBody
-	public Map<String, Object> save(@RequestBody Map<String, Object> params)
-			throws Exception {
-		ArrayList<LinkedHashMap<String, Object>> addRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("addRows");
-		ArrayList<LinkedHashMap<String, Object>> editRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("editRows");
-		ArrayList<LinkedHashMap<String, Object>> removeRows = (ArrayList<LinkedHashMap<String, Object>>) params.get("removeRows");
+	public Map<String, Object> save(@RequestBody Map<String, Object> params) throws Exception {
+		ArrayList<LinkedHashMap<String, Object>> addRows = (ArrayList<LinkedHashMap<String, Object>>) params
+				.get("addRows");
+		ArrayList<LinkedHashMap<String, Object>> editRows = (ArrayList<LinkedHashMap<String, Object>>) params
+				.get("editRows");
+		ArrayList<LinkedHashMap<String, Object>> removeRows = (ArrayList<LinkedHashMap<String, Object>>) params
+				.get("removeRows");
 		String codeType = (String) params.get("codeType");
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
@@ -118,7 +121,7 @@ public class NumberCodeController extends BaseController {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 			ArrayList<NumberCodeDTO> addRow = new ArrayList<>();
-			if(addRows != null && addRows.size() > 0) {
+			if (addRows != null && addRows.size() > 0) {
 				for (LinkedHashMap<String, Object> add : addRows) {
 					NumberCodeDTO dto = mapper.convertValue(add, NumberCodeDTO.class);
 					addRow.add(dto);
@@ -126,15 +129,15 @@ public class NumberCodeController extends BaseController {
 			}
 
 			ArrayList<NumberCodeDTO> editRow = new ArrayList<>();
-			if(editRows != null && editRows.size() > 0) {
+			if (editRows != null && editRows.size() > 0) {
 				for (LinkedHashMap<String, Object> edit : editRows) {
 					NumberCodeDTO dto = mapper.convertValue(edit, NumberCodeDTO.class);
 					editRow.add(dto);
-				}				
+				}
 			}
 
 			ArrayList<NumberCodeDTO> removeRow = new ArrayList<>();
-			if(removeRows != null && removeRows.size() > 0) {
+			if (removeRows != null && removeRows.size() > 0) {
 				for (LinkedHashMap<String, Object> remove : removeRows) {
 					NumberCodeDTO dto = mapper.convertValue(remove, NumberCodeDTO.class);
 					removeRow.add(dto);
@@ -165,6 +168,23 @@ public class NumberCodeController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			ArrayList<Map<String, String>> list = NumberCodeHelper.manager.finder(params);
+			result.put("result", SUCCESS);
+			result.put("list", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
+
+	@Description(value = "부모 OID에 매칭하는 코드 값 가져오기")
+	@ResponseBody
+	@PostMapping(value = "/getChildCodeByParent")
+	public Map<String, Object> getChildCodeByParent(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			ArrayList<Map<String, String>> list = NumberCodeHelper.manager.getChildCodeByParent(params);
 			result.put("result", SUCCESS);
 			result.put("list", list);
 		} catch (Exception e) {

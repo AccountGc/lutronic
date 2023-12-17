@@ -183,7 +183,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String content = dto.getContent();
-		String documentType = dto.getDocumentType_code();
+//		String documentType = dto.getDocumentType_code();
 //		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		boolean temprary = dto.isTemprary();
@@ -217,10 +217,10 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			doc.setTypeInfoWTDocument(info);
 
-			if (!documentType.equals("")) {
-				DocumentType docType = DocumentType.toDocumentType(documentType);
-				doc.setDocType(docType);
-			}
+//			if (!documentType.equals("")) {
+//				DocumentType docType = DocumentType.toDocumentType(documentType);
+//				doc.setDocType(docType);
+//			}
 
 			String interalnumber = dto.getInteralnumber();
 

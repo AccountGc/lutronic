@@ -1,7 +1,7 @@
 /* eslint-disable */
 /**
  * AUIGrid 에서 사용되는 메세지들을 정의합니다. - 미국 영어
- * 마지막 추가된 버전 : v3.0.12
+ * 마지막 추가된 버전 : v3.0.13
  */
 var AUIGridMessages = {
 	/*
@@ -49,7 +49,7 @@ var AUIGridMessages = {
 		'_$line',
 		'Top 10',
 		'Above average',
-		'Below average',
+		'Below average'
 	],
 
 	/*
@@ -98,6 +98,7 @@ var AUIGridMessages = {
 		todayText: 'Today',
 		uncheckDateText: 'Delete the date',
 		firstDay: 0,
+		confirmText: 'Okay'
 	},
 
 	/*
@@ -127,7 +128,7 @@ var AUIGridMessages = {
 		'September',
 		'October',
 		'November',
-		'December',
+		'December'
 	],
 
 	/*

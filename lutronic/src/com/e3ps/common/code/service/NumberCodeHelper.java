@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.People;
 
 import net.sf.json.JSONArray;
 import wt.fc.PersistenceHelper;
@@ -27,9 +25,16 @@ public class NumberCodeHelper {
 	public static final NumberCodeService service = ServiceFactory.getService(NumberCodeService.class);
 
 	/**
-	 * AUI 그리드에서 사용하기 위한함수 JSO N형태로 리턴
+	 * AUI 그리드에서 사용하기 위한함수 JSON 형태로 리턴
 	 */
 	public JSONArray toJson(String codeType) throws Exception {
+		return toJson(codeType, "KEY");
+	}
+
+	/**
+	 * AUI 그리드에서 사용하기 위한함수 JSON 형태로 리턴, CODE OR OID 형태
+	 */
+	public JSONArray toJson(String codeType, String view) throws Exception {
 		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 
 		QuerySpec query = new QuerySpec();
@@ -42,7 +47,11 @@ public class NumberCodeHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode n = (NumberCode) obj[0];
 			Map<String, String> map = new HashMap<>();
-			map.put("key", n.getCode());
+			if ("KEY".equals(view)) {
+				map.put("key", n.getCode());
+			} else if ("OID".equals(view)) {
+				map.put("key", n.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
 			map.put("value", n.getName());
 			list.add(map);
 		}
@@ -277,7 +286,7 @@ public class NumberCodeHelper {
 		String description = (String) params.get("description");
 //		boolean enabled = "true".equals((String) params.get("enabled")) ? true : false;
 		String codeType = (String) params.get("codeType");
-		
+
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
@@ -401,14 +410,14 @@ public class NumberCodeHelper {
 	}
 
 	/**
-	 * 품목 분류 1레벨
+	 * 품목분류 1레벨
 	 */
-	public ArrayList<Map<String, String>> getOneLevel(String codeType) throws Exception {
-		ArrayList<Map<String, String>> list = new ArrayList<>();
+	public JSONArray toPartType1() throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(NumberCode.class, true);
 
-		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, "PARTTYPE");
 		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
 		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", 0L);
 		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
@@ -417,8 +426,34 @@ public class NumberCodeHelper {
 			Object[] obj = (Object[]) result.nextElement();
 			NumberCode n = (NumberCode) obj[0];
 			Map<String, String> map = new HashMap<>();
-			map.put("name", "[" + n.getCode() + "] " + n.getName());
-			map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("value", "[" + n.getCode() + "] " + n.getName());
+			map.put("key", n.getPersistInfo().getObjectIdentifier().getStringValue());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 자식 코드 가여괴 부모코드값이 있는
+	 */
+	public ArrayList<Map<String, String>> getChildCodeByParent(Map<String, Object> params) throws Exception {
+		String codeType = (String) params.get("codeType");
+		String parentOid = (String) params.get("parentOid");
+		NumberCode parent = (NumberCode) CommonUtil.getObject(parentOid);
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", parent);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode n = (NumberCode) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("value", "[" + n.getCode() + "] " + n.getName());
+			map.put("key", n.getPersistInfo().getObjectIdentifier().getStringValue());
 			list.add(map);
 		}
 		return list;

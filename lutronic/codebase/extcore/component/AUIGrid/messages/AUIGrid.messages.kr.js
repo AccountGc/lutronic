@@ -1,7 +1,7 @@
 /* eslint-disable */
 /**
  * AUIGrid 에서 사용되는 메세지들을 정의합니다. - 한국어
- * 마지막 추가된 버전 : v3.0.12
+ * 마지막 추가된 버전 : v3.0.13
  */
 var AUIGridMessages = {
 	/*
@@ -85,6 +85,7 @@ var AUIGridMessages = {
 		todayText: '오늘 선택',
 		uncheckDateText: '날짜 선택 해제',
 		firstDay: 0,
+		confirmText: '확 인'
 	},
 
 	/*
@@ -114,7 +115,7 @@ var AUIGridMessages = {
 		'September',
 		'October',
 		'November',
-		'December',
+		'December'
 	],
 
 	/*
@@ -133,7 +134,7 @@ var AUIGridMessages = {
 	exportProgress: {
 		init: '내보내기 초기화 중...',
 		progress: '내보내기 진행 중...',
-		complete: '내보내기가 곧 완료됩니다.',
+		complete: '내보내기가 곧 완료됩니다.'
 	},
 
 	/*

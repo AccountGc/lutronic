@@ -25,42 +25,38 @@ ResourceInfo.deprecated=false
 DEV.value=개발문서
 DEV.order=10
 
-#CHANGE - 설계변경문서
-#CHANGE.value=설계변경문서
-#CHANGE.order=20
-
 #INSTRUCTION - 지침서
 INSTRUCTION.value=지침서
-INSTRUCTION.order=30
+INSTRUCTION.order=20
 
 #REPORT - 보고서
 REPORT.value=보고서
-REPORT.order=40
+REPORT.order=30
 
 #VALIDATION - 벨리데이션문서
 VALIDATION.value=벨리데이션문서
-VALIDATION.order=50
+VALIDATION.order=40
 
 #MEETING - 회의록
 MEETING.value=회의록
-MEETING.order=60
+MEETING.order=50
 
 #RND - 연구소문서
 RND.value=연구소문서
-RND.order=70
+RND.order=60
 
 #ELEC - 전자매체
 ELEC.value=전자매체
-ELEC.order=80
+ELEC.order=70
 
 #SOURCE - 개발소스
 SOURCE.value=개발소스
-SOURCE.order=90
+SOURCE.order=80
 
 #APPROVAL - 승인원
 APPROVAL.value=승인원
-APPROVAL.order=100
+APPROVAL.order=90
 
 #ETC - 기타
-ETC.value=기타
-ETC.order=110
+ETC.value=기타 ETC
+ETC.order=100

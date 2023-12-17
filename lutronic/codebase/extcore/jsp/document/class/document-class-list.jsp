@@ -174,7 +174,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-// 				loadGridData();
+				// 				loadGridData();
 			}
 
 			function loadGridData() {
@@ -216,11 +216,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			// 행 삭제
 			function deleteRow() {
-				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				for (let i = checkedItems.length - 1; i >= 0; i--) {
-					const rowIndex = checkedItems[i].rowIndex;
-					AUIGrid.removeRow(myGridID, rowIndex);
-				}
+				AUIGrid.removeCheckedRows(myGridID);
 			}
 
 			// 자식 추가

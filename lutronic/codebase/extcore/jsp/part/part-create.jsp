@@ -210,8 +210,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<option value="">선택</option>
 						<%
 						for (QuantityUnit unit : unitList) {
+							String value = unit.toString();
 						%>
-						<option value="<%=unit.toString()%>"><%=unit.getDisplay()%></option>
+						<option value="<%=value%>"><%=unit.getDisplay()%> / <%=value %></option>
 						<%
 						}
 						%>
@@ -360,6 +361,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<script type="text/javascript">
 
 			function create(temp) {
+				const location = document.getElementById("location").value;
 				const partName1 = document.getElementById("partName1").value;
 				const partType1 = document.getElementById("partType1").value;
 				const partName2 = document.getElementById("partName2").value;
@@ -381,6 +383,12 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	            
 				// RoHs
 				const rows106 = AUIGrid.getGridDataWithState(myGridID106, "gridState");
+				
+				if(location === "/Default/PART_Drawing") {
+					alert("품목분류를 선택하세요.");
+					folder();
+					return false;
+				}
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -457,7 +465,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						source : toId("source"),
 						lifecycle : toId("lifecycle"),
 						view :toId("view"),
-						location : toId("location"),
+						location : location,
 						// 링크 데이터
 						rows90 : rows90,
 						rows106 : rows106,
@@ -492,6 +500,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
+				$("#unit").bindSelectSetValue("ea");
 			});
 			
 			window.addEventListener("resize", function() {

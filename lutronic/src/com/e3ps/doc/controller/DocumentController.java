@@ -117,12 +117,14 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
-		JSONArray docTypeList = DocumentHelper.manager.toJson();
+		// 문서 대분류
+		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
+
 		ModelAndView model = new ModelAndView();
+		model.addObject("classTypes1", classTypes1);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
-		model.addObject("docTypeList", docTypeList);
 		model.addObject("lifecycleList", lifecycleList);
 		model.setViewName("/extcore/jsp/document/document-list.jsp");
 		return model;

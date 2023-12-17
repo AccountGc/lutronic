@@ -13,11 +13,8 @@ JSONArray modelList = (JSONArray) request.getAttribute("modelList");
 JSONArray deptcodeList = (JSONArray) request.getAttribute("deptcodeList");
 JSONArray matList = (JSONArray) request.getAttribute("matList");
 JSONArray productmethodList = (JSONArray) request.getAttribute("productmethodList");
-JSONArray partName1List = (JSONArray) request.getAttribute("partName1List");
-JSONArray partName2List = (JSONArray) request.getAttribute("partName2List");
-JSONArray partName3List = (JSONArray) request.getAttribute("partName3List");
-ArrayList<NumberCodeDTO> partType1List = (ArrayList<NumberCodeDTO>) request.getAttribute("partType1List");
-QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
+JSONArray partType1List = (JSONArray) request.getAttribute("partType1List");
+JSONArray unitList = (JSONArray) request.getAttribute("unitList");
 %>
 <!DOCTYPE html>
 <html>
@@ -48,6 +45,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		<div id="grid_wrap" style="height: 785px; border-top: 1px solid #3180c3;"></div>
 		<script type="text/javascript">
 			let myGridID;
+			let partType1List = <%=partType1List%>
 			let partType2Map = {};
 			let partType3Map = {};
 			let recentGridItem = null;
@@ -56,19 +54,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			let deptcodeList = <%=deptcodeList%>
 			let productmethodList = <%=productmethodList%>
 			let modelList = <%=modelList%>
-			let partName1List = <%=partName1List%>
-			let partName2List = <%=partName2List%>
-			let partName3List = <%=partName3List%>
-			let partType1List = [];
-			<%for (NumberCodeDTO partType1 : partType1List) {%>
-				partType1List.push({"code" : "<%=partType1.getOid()%>", "value" : "[<%=partType1.getCode()%>]<%=partType1.getName()%>"});
-			<%}%>
-			let unitList = [];
-			<%for (QuantityUnit unit : unitList) {%>
-				unitList.push({ "code" : "<%=unit.toString()%>", "value" : "<%=unit.getDisplay()%> / <%=unit.toString()%>"});
-			<%}%>
-
-			const layout = [{ 
+			let unitList = <%=unitList%>
+			const columns = [{ 
 				dataField : "location",
 				headerText : "저장위치",
 				dataType : "string",
@@ -88,26 +75,51 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				editRenderer : {
 					type: "ComboBoxRenderer",
 					list: folderList, 
+					keyField : "oid",
+					valueField : "name",
 					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
+					showEditorBtnOver : false,
 					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						// 공백 선책가능하게
+						if(newValue == "") {
+							isValid = true;
+						}
+						
 						if(!fromClipboard) {
-							let isValid = false;
 							for (let i = 0, len = folderList.length; i < len; i++) {
-								if (folderList[i]["code"] == newValue) {
+								if (folderList[i]["name"] == newValue) {
 									isValid = true;
 									break;
 								}
 							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
+						} else {
+							// 복붙일경우.. 키값으로
+							for (let i = 0, len = folderList.length; i < len; i++) {
+								if (folderList[i]["oid"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
 						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
 					}
 				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = folderList.length; i < len; i++) {
+						if (folderList[i]["oid"] == value) {
+							retStr = folderList[i]["name"];
+							break;
+						}
+					}
+					return retStr == "" ? value : retStr;
+				},				
 			}, {
 				dataField : "partType1",
 				headerText : "품목구분<br>(1자리)",
@@ -126,56 +138,52 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				},
 				editRenderer : {
 					type: "ComboBoxRenderer",
+					list: partType1List, 
+					keyField : "key",
+					valueField : "value",
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					matchFromFirst : false,
-					showEditorBtnOver: true, // 마우스 오버 시 에디터버턴 보이기
-					list: partType1List, 
-					keyField: "code", 
-					valueField: "value",
+					showEditorBtnOver : false,
 					descendants : [ "partType2" ],
 					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						// 공백 선책가능하게
+						if(newValue == "") {
+							isValid = true;
+						}
+						
 						if(!fromClipboard) {
-							let isValid = false;
 							for (let i = 0, len = partType1List.length; i < len; i++) {
 								if (partType1List[i]["value"] == newValue) {
 									isValid = true;
 									break;
 								}
 							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
 						} else {
-							let isValid = false;
 							for (let i = 0, len = partType1List.length; i < len; i++) {
-								if (partType1List[i]["code"] == newValue) {
+								if (partType1List[i]["key"] == newValue) {
 									isValid = true;
 									break;
 								}
 							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
 						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
 					}
 				},
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = partType1List.length; i < len; i++) {
-						if (partType1List[i]["code"] == value) {
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = partType1List.length; i < len; i++) {
+						if (partType1List[i]["key"] == value) {
 							retStr = partType1List[i]["value"];
 							break;
 						}
 					}
 					return retStr == "" ? value : retStr;
-				},
-				filter : {
-					showIcon : true,
-					inline : true
-				},
+				},				
 			}, {
 				dataField : "partType2",
 				headerText : "대분류<br>(2자리)",
@@ -194,78 +202,68 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				},
 				editRenderer : {
 					type: "ComboBoxRenderer",
+					list: partType1List, 
+					keyField : "key",
+					valueField : "value",
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					matchFromFirst : false,
-					showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value",
+					showEditorBtnOver : false,
 					descendants : [ "partType3" ],
 					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-						if(!fromClipboard) {
-							const param = item.partType1;
-							const dd = partType2Map[param];
-							if (dd === undefined)
-								return;
-							let isValid = false;
-							for (let i = 0, len = dd.length; i < len; i++) {
-								if (dd[i]["value"] == newValue) {
-									isValid = true;
-									break;
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
-						} else {
-							const param = item.partType1;
-							const dd = partType2Map[param];
-							if (dd === undefined)
-								return;
-							let isValid = false;
-							for (let i = 0, len = dd.length; i < len; i++) {
-								if (dd[i]["code"] == newValue) {
-									isValid = true;
-									break;
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
+						let isValid = false;  
+						if(newValue == "") {
+							isValid = true;
 						}
+
+						const key = item.partType1;
+						const dd = partType2Map[key];
+						if(dd !== undefined) {
+							if(!fromClipboard) {
+								for (let i = 0, len = dd.length; i < len; i++) {
+									if (dd[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = dd.length; i < len; i++) {
+									if (dd[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
 					},
 					listFunction : function(rowIndex, columnIndex, item, dataField) {
-						const param = item.partType1;
-						const dd = partType2Map[param];
+						const key = item.partType1;
+						const dd = partType2Map[key];
 						if (dd === undefined) {
 							return [];
 						}
-						let result = [];
-						dd.forEach(d => {
-							result.push({ "code" : d.oid, "value" : "[" + d.code + "]" + d.name});
-						});
-						return result;
+						return dd;
 					},
 				},
 				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					const param = item.partType1;
-					const dd = partType2Map[param];
-					if (dd === undefined)
-						return value;
+					let retStr = "";
+					const key = item.partType1;
+					const dd = partType2Map[key];
+					if (dd === undefined) {
+						return "";
+					}
+					
 					for (let i = 0, len = dd.length; i < len; i++) {
-						if (dd[i]["oid"] == value) {
-							retStr = "[" + dd[i]["code"] + "]" + dd[i]["name"] ;
+						if (dd[i]["key"] == value) {
+							retStr = dd[i]["value"];
 							break;
 						}
 					}
 					return retStr == "" ? value : retStr;
-				},
-				filter : {
-					showIcon : true,
-					inline : true
 				},
 			}, {
 				dataField : "partType3",
@@ -286,77 +284,67 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				},
 				editRenderer : {
 					type: "ComboBoxRenderer",
+					list: partType1List, 
+					keyField : "key",
+					valueField : "value",
+					matchFromFirst : false,
 					autoCompleteMode: true, // 자동완성 모드 설정
 					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-					matchFromFirst : false,
-					showEditorBtnOver: false, // 마우스 오버 시 에디터버턴 보이기
-					keyField: "code", 
-					valueField: "value",
+					showEditorBtnOver : false,
 					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-						if(!fromClipboard) {
-							const param = item.partType2;
-							const dd = partType3Map[param];
-							if (dd === undefined)
-								return;
-							let isValid = false;
-							for (let i = 0, len = dd.length; i < len; i++) {
-								if (dd[i]["value"] == newValue) {
-									isValid = true;
-									break;
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
-						} else {
-							const param = item.partType2;
-							const dd = partType3Map[param];
-							if (dd === undefined)
-								return;
-							let isValid = false;
-							for (let i = 0, len = dd.length; i < len; i++) {
-								if (dd[i]["code"] == newValue) {
-									isValid = true;
-									break;
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
+						let isValid = false;  
+						if(newValue == "") {
+							isValid = true;
 						}
+
+						const key = item.partType2;
+						const dd = partType3Map[key];
+						if(dd !== undefined) {
+							if(!fromClipboard) {
+								for (let i = 0, len = dd.length; i < len; i++) {
+									if (dd[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = dd.length; i < len; i++) {
+									if (dd[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
 					},
 					listFunction : function(rowIndex, columnIndex, item, dataField) {
-						const param = item.partType2;
-						const dd = partType3Map[param];
+						const key = item.partType2;
+						const dd = partType3Map[key];
 						if (dd === undefined) {
 							return [];
 						}
-						let result = [];
-						dd.forEach(d => {
-							result.push({ "code" : d.oid, "value" : "[" + d.code + "]" + d.name});
-						});
-						return result;
+						return dd;
 					},
 				},
 				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					const param = item.partType2;
-					const dd = partType3Map[param];
-					if (dd === undefined)
-						return value;
+					let retStr = "";
+					const key = item.partType2;
+					const dd = partType3Map[key];
+					if (dd === undefined) {
+						return "";
+					}
+					
 					for (let i = 0, len = dd.length; i < len; i++) {
-						if (dd[i]["oid"] == value) {
-							retStr = "[" + dd[i]["code"] + "]" + dd[i]["name"] ;
+						if (dd[i]["key"] == value) {
+							retStr = dd[i]["value"];
 							break;
 						}
 					}
 					return retStr == "" ? value : retStr;
-				},
-				filter : {
-					showIcon : true,
-					inline : true
 				},
 			}, {
 				dataField : "seq",
@@ -370,7 +358,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				}
 			}, {
 				dataField : "etc",
-				headerText : "CUSTOM<br>(2자리)",
+				headerText : "기타<br>(2자리)",
 				dataType : "string",
 				width : 120,
 				editRenderer : {
@@ -417,15 +405,28 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						matchFromFirst : false,
 						autoCompleteMode : true, // 자동완성 모드 설정
 						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
+						showEditorBtnOver : false, // 마우스 오버 시 에디터버턴 보이기
 						keyField : "key",
 						valueField : "value",
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
-							for (let i = 0, len = matList.length; i < len; i++) {
-								if (matList[i] == newValue) {
-									isValid = true;
-									break;
+							if(newValue == "") {
+								isValid = true;
+							}
+							
+							if(!fromClipboard) {
+								for (let i = 0, len = matList.length; i < len; i++) {
+									if (matList[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = matList.length; i < len; i++) {
+									if (matList[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
 								}
 							}
 							return {
@@ -467,17 +468,64 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				headerText : "단위",
 				dataType : "string",
 				width : 120,
-				editable : false,
-				labelFunction: function (rowIndex, columnIndex, value, headerText, item) {
-					var retStr = "";
-					for (var i = 0, len = unitList.length; i < len; i++) {
-						if (unitList[i]["code"] == value) {
+				renderer : {
+					type : "IconRenderer",
+					iconWidth : 16,
+					iconHeight : 16,
+					iconPosition : "aisleRight",
+					iconTableRef : {
+						"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
+					},
+					onClick : function(event) {
+						AUIGrid.openInputer(event.pid);
+					}
+				},
+				editRenderer : {
+					type: "ComboBoxRenderer",
+					list: unitList, 
+					keyField : "key",
+					valueField : "value",
+					matchFromFirst : false,
+					autoCompleteMode: true, // 자동완성 모드 설정
+					autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+					showEditorBtnOver : false,
+					validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+						let isValid = false;
+						// 공백 선책가능하게
+						if(newValue == "") {
+							isValid = true;
+						}
+						if(!fromClipboard) {
+							for (let i = 0, len = unitList.length; i < len; i++) {
+								if (unitList[i]["value"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+						} else {
+							for (let i = 0, len = unitList.length; i < len; i++) {
+								if (unitList[i]["key"] == newValue) {
+									isValid = true;
+									break;
+								}
+							}
+						}
+						return {
+							"validate" : isValid,
+							"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+						};
+					}
+				},
+				labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+					let retStr = "";
+					for (let i = 0, len = unitList.length; i < len; i++) {
+						if (unitList[i]["key"] == value) {
 							retStr = unitList[i]["value"];
 							break;
 						}
 					}
 					return retStr == "" ? value : retStr;
-				},
+				},					
 			}, {
 				headerText : "부서",
 				children : [ {
@@ -501,6 +549,42 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							AUIGrid.openInputer(event.pid);
 						}
 					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: deptcodeList, 
+						keyField : "key",
+						valueField : "value",
+						matchFromFirst : false,
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : false,
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							// 공백 선책가능하게
+							if(newValue == "") {
+								isValid = true;
+							}
+							if(!fromClipboard) {
+								for (let i = 0, len = deptcodeList.length; i < len; i++) {
+									if (deptcodeList[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = deptcodeList.length; i < len; i++) {
+									if (deptcodeList[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
 					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 						let retStr = "";
 						for (let i = 0, len = deptcodeList.length; i < len; i++) {
@@ -510,30 +594,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							}
 						}
 						return retStr == "" ? value : retStr;
-					},
-					editRenderer : {
-						type : "ComboBoxRenderer",
-						list : deptcodeList,
-						matchFromFirst : false,
-						autoCompleteMode : true, // 자동완성 모드 설정
-						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-						keyField : "key",
-						valueField : "value",
-						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-							let isValid = false;
-							for (let i = 0, len = deptcodeList.length; i < len; i++) {
-								if (deptcodeList[i] == newValue) {
-									isValid = true;
-									break;
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
-						}
-					},
+					},		
 				} ]
 			}, {
 				headerText : "프로젝트 코드",
@@ -558,6 +619,42 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							AUIGrid.openInputer(event.pid);
 						}
 					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: modelList, 
+						keyField : "key",
+						valueField : "value",
+						matchFromFirst : false,
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : false,
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							// 공백 선책가능하게
+							if(newValue == "") {
+								isValid = true;
+							}
+							if(!fromClipboard) {
+								for (let i = 0, len = modelList.length; i < len; i++) {
+									if (modelList[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = modelList.length; i < len; i++) {
+									if (modelList[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
 					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 						let retStr = "";
 						for (let i = 0, len = modelList.length; i < len; i++) {
@@ -567,29 +664,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							}
 						}
 						return retStr == "" ? value : retStr;
-					},
-					editRenderer : {
-						type : "ComboBoxRenderer",
-						list : modelList,
-						matchFromFirst : false,
-						autoCompleteMode : true, // 자동완성 모드 설정
-						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-						keyField : "key",
-						valueField : "value",
-						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-							let isValid = false;
-							for (let i = 0, len = modelList.length; i < len; i++) {
-								if (modelList[i] == newValue) {
-									isValid = true;
-									break;
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
-						}
 					},
 				} ]
 			}, {
@@ -615,6 +689,43 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							AUIGrid.openInputer(event.pid);
 						}
 					},
+					editRenderer : {
+						type: "ComboBoxRenderer",
+						list: productmethodList, 
+						keyField : "key",
+						valueField : "value",
+						matchFromFirst : false,
+						autoCompleteMode: true, // 자동완성 모드 설정
+						autoEasyMode: true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
+						showEditorBtnOver : false,
+						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
+							let isValid = false;
+							// 공백 선책가능하게
+							if(newValue == "") {
+								isValid = true;
+							}
+							
+							if(!fromClipboard) {
+								for (let i = 0, len = productmethodList.length; i < len; i++) {
+									if (productmethodList[i]["value"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							} else {
+								for (let i = 0, len = productmethodList.length; i < len; i++) {
+									if (productmethodList[i]["key"] == newValue) {
+										isValid = true;
+										break;
+									}
+								}
+							}
+							return {
+								"validate" : isValid,
+								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
+							};
+						}
+					},
 					labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 						let retStr = "";
 						for (let i = 0, len = productmethodList.length; i < len; i++) {
@@ -624,29 +735,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 							}
 						}
 						return retStr == "" ? value : retStr;
-					},
-					editRenderer : {
-						type : "ComboBoxRenderer",
-						list : productmethodList,
-						matchFromFirst : false,
-						autoCompleteMode : true, // 자동완성 모드 설정
-						autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-						showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-						keyField : "key",
-						valueField : "value",
-						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-							let isValid = false;
-							for (let i = 0, len = productmethodList.length; i < len; i++) {
-								if (productmethodList[i] == newValue) {
-									isValid = true;
-									break;
-								}
-							}
-							return {
-								"validate" : isValid,
-								"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-							};
-						}
 					},
 				} ]
 			}, {
@@ -753,7 +841,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.bind(myGridID, "keyDown", auiKeyDownHandler);
 				AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditEndHandler);
 				auiReadyHandler();
-				AUIGrid.bind(myGridID, "ready", readyHandler);
 			}
 
 			function auiReadyHandler() {
@@ -762,79 +849,70 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				AUIGrid.addRow(myGridID, item, "first");
 			}
 			
-			function readyHandler() {
-				const item = AUIGrid.getGridData(myGridID);
-				for (let i = 0; i < item.length; i++) {
-					if (partType2Map.length === undefined) {
-						const partType = item[i].partType1;
-						const url = getCallUrl("/common/numberCodeList");
-					    const params = {
-					        codeType: 'PARTTYPE',
-					        parentOid: partType
-					    };
-					    return new Promise((resolve, reject) => {
-					        call(url, params, function(dataList) {
-					        	partType2Map[partType] = dataList;
-					        });
-					    });
-					}
-				}
-			}
-			
-// 			function auiCellEditBegin(event) {
-// 				const item = event.item;
-// 			}
-			
 			function auiCellEditEndHandler(event) {
 				const dataField = event.dataField;
 				const item = event.item;
 				const rowIndex = event.rowIndex;
 				
 				if (dataField === "partType1") {
-
 					const partType = item.partType1;
-					const url = getCallUrl("/common/numberCodeList");
-				    const params = {
-				        codeType: 'PARTTYPE',
-				        parentOid: partType
-				    };
+					if(partType === "") {
+						partType2Map = {};
+			        	const item = {
+								partType2 : ""
+						}
+			        	AUIGrid.updateRow(myGridID, item, rowIndex);
+					} else {
+						const url = getCallUrl("/code/getChildCodeByParent");
+					    const params = {
+				    		codeType: "PARTTYPE",
+					        parentOid: partType
+					    };
 
-				    return new Promise((resolve, reject) => {
-				        call(url, params, function(dataList) {
-				        	partType2Map[partType] = dataList;
-				        	const item = {
+					    parent.openLayer();
+				        call(url, params, function(data) {
+				        	if(data.result) {
+					        	partType2Map[partType] = data.list;
+					        	const item = {
 									partType2 : ""
-							}
-				        	AUIGrid.updateRow(myGridID, item, rowIndex);
+								}
+					        	AUIGrid.updateRow(myGridID, item, rowIndex);
+				        	} else {
+				        		alert(data.msg);
+				        	}
+				        	parent.closeLayer();
 				        });
-				    });
+					}
 				}
 				
 				if (dataField === "partType2") {
-
 					const partType = item.partType2;
-					const url = getCallUrl("/common/numberCodeList");
+					const url = getCallUrl("/code/getChildCodeByParent");
 				    const params = {
-				        codeType: 'PARTTYPE',
+				        codeType: "PARTTYPE",
 				        parentOid: partType
 				    };
 
-				    return new Promise((resolve, reject) => {
-				        call(url, params, function(dataList) {
-				        	partType3Map[partType] = dataList;
+				    parent.openLayer();
+			        call(url, params, function(data) {
+			        	if(data.result) {
+				        	partType3Map[partType] = data.list;
 				        	const item = {
-									partType3 : ""
+								partType3 : ""
 							}
 				        	AUIGrid.updateRow(myGridID, item, rowIndex);
-				        });
-				    });
+			        	} else {
+			        		alert(data.msg);
+			        	}
+			        	parent.closeLayer();
+			        });
 				}
 			}
 
 			function auiKeyDownHandler(event) {
 				if (event.keyCode == 13) {
-					var selectedItems = AUIGrid.getSelectedItems(event.pid);
-					var rowIndex = selectedItems[0].rowIndex;
+					const selectedItems = AUIGrid.getSelectedItems(event.pid);
+					const rowIndex = selectedItems[0].rowIndex;
 					if (rowIndex === AUIGrid.getRowCount(event.pid) - 1) {
 						const item = new Object();
 						item.unit = "ea";
@@ -846,7 +924,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				createAUIGrid(layout);
+				createAUIGrid(columns);
 				AUIGrid.resize(myGridID);
 			});
 
@@ -923,7 +1001,32 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						AUIGrid.showToastMessage(myGridID, rowIndex, 3, "중분류를 선택하세요.");
 						return false;
 					}
+					
+					if (isNull(item.seq)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 4, "SEQ(3자리)를 입력하세요.");
+						return false;
+					}
+					
+					if (isNull(item.etc)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 5, "ETC(2자리)를 입력하세요.");
+						return false;
+					}
 
+					if (isNull(item.partName1)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "품목명(대제목)을 입력하세요.");
+						return false;
+					}
+					
+					if (isNull(item.partName2)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 9, "품목명(중제목)을 입력하세요.");
+						return false;
+					}
+					
+					if (isNull(item.partName3)) {
+						AUIGrid.showToastMessage(myGridID, rowIndex, 10, "품목명(소제목)을 입력하세요.");
+						return false;
+					}
+					
 					if (isNull(item.partName4)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 11, "품목명(KEY-IN)을 입력하세요.");
 						return false;
@@ -1006,9 +1109,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					return;
 				}
 				
-				if (!confirm("삭제하시겠습니까?")){
-					return;
-				}
+// 				if (!confirm("삭제하시겠습니까?")){
+// 					return;
+// 				}
 				
 				AUIGrid.removeCheckedRows(myGridID);
 			}

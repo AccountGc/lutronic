@@ -1,13 +1,13 @@
 /* eslint-disable */
 /**
  * AUIGrid 에서 사용되는 메세지들을 정의합니다. - 캐나다 영어
- * 마지막 추가된 버전 : v3.0.12
+ * 마지막 추가된 버전 : v3.0.13
  */
 var AUIGridMessages = {
 	/*
 	 * 그리드에 출력시킬 데이터가 없는 메세지
 	 */
-	noDataMessage: '검색 결과가 없습니다',
+	noDataMessage: 'No Data to display',
 
 	/*
 	 * 그룹핑 패널 메세지
@@ -49,7 +49,7 @@ var AUIGridMessages = {
 		'_$line',
 		'Top 10',
 		'Above average',
-		'Below average',
+		'Below average'
 	],
 
 	/*
@@ -98,6 +98,7 @@ var AUIGridMessages = {
 		todayText: 'Today',
 		uncheckDateText: 'Delete the date',
 		firstDay: 0,
+		confirmText: 'Okay'
 	},
 
 	/*
@@ -127,7 +128,7 @@ var AUIGridMessages = {
 		'September',
 		'October',
 		'November',
-		'December',
+		'December'
 	],
 
 	/*
@@ -146,7 +147,7 @@ var AUIGridMessages = {
 	exportProgress: {
 		init: 'Initializing Exporting...',
 		progress: 'Exporting in progress...',
-		complete: 'Almost Complete...',
+		complete: 'Almost Complete...'
 	},
 
 	/*

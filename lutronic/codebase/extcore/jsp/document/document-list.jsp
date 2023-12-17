@@ -14,7 +14,7 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
-JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
+ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -32,7 +32,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<!-- 다운로드 링크 위한 프레임 -->
-		<iframe id="download" name="download" style="display: none;"></iframe>
+		<!-- 		<iframe id="download" name="download" style="display: none;"></iframe> -->
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -63,32 +63,42 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 				</td>
-				<!-- 				<th>문서 번호</th> -->
-				<!-- 				<td class="indent5"> -->
-				<!-- 					<input type="text" name="number" id="number" class="width-300"> -->
-				<!-- 				</td> -->
 				<th>문서명</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
 			</tr>
 			<tr>
-				<th>문서유형</th>
+				<th class="lb req">대분류</th>
 				<td class="indent5">
-					<select name="documentType" id="documentType" class="width-200">
+					<select name="classType1" id="classType1" class="width-200" onchange="first(this);">
 						<option value="">선택</option>
 						<%
-						for (int i = 0; i < docTypeList.size(); i++) {
-							JSONObject obj = (JSONObject) docTypeList.get(i);
-							String key = (String) obj.get("key");
-							String value = (String) obj.get("value");
+						for (Map<String, String> map : classTypes1) {
+							String value = map.get("value");
+							String name = map.get("name");
+							String clazz = map.get("clazz");
 						%>
-						<option value="<%=key%>"><%=value%></option>
+						<option value="<%=value%>" data-clazz="<%=clazz%>"><%=name%></option>
 						<%
 						}
 						%>
 					</select>
 				</td>
+				<th>중분류</th>
+				<td class="indent5">
+					<select name="classType2" id="classType2" class="width-300" onchange="second(this);">
+						<option value="">선택</option>
+					</select>
+				</td>
+				<th>소분류</th>
+				<td class="indent5">
+					<select name="classType3" id="classType3" class="width-300">
+						<option value="">선택</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<th>등록자</th>
 				<td class="indent5">
 					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -102,8 +112,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
-			</tr>
-			<tr>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
@@ -119,6 +127,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
+			</tr>
+			<tr>
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
@@ -131,6 +141,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					~
 					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+				</td>
+				<th>프로젝트코드</th>
+				<td class="indent5">
+					<select name="model" id="model" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode model : modelList) {
+						%>
+						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -168,25 +191,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 				</td>
-				<th>내용</th>
-				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-300">
-				</td>
-			</tr>
-			<tr>
-				<th>프로젝트코드</th>
-				<td class="indent5">
-					<select name="model" id="model" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode model : modelList) {
-						%>
-						<option value="<%=model.getCode()%>"><%=model.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
 				<th>부서</th>
 				<td class="indent5" colspan="3">
 					<select name="deptcode" id="deptcode" class="width-200">
@@ -200,9 +204,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<!-- 				<th>내부 문서번호</th> -->
+				<!-- 				<th>내용</th> -->
 				<!-- 				<td class="indent5"> -->
-				<!-- 					<input type="text" name="interalnumber" id="interalnumber" class="width-300"> -->
+				<!-- 					<input type="text" name="description" id="description" class="width-300"> -->
 				<!-- 				</td> -->
 			</tr>
 		</table>
@@ -437,7 +441,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
+					selectionMode : "multipleRows",
+					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,
 					showInlineFilter : true,
@@ -445,7 +450,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableRowCheckShiftKey : true
+					enableRowCheckShiftKey : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -491,14 +496,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						callback : auiContextHandler
 					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-					}, {
-						label : "주 첨부파일 다운로드",
-						callback : auiContextHandler
-					}, {
-						label : "첨부파일 다운로드",
-						callback : auiContextHandler
-					}, {
-						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+						// 					}, {
+						// 						label : "주 첨부파일 다운로드",
+						// 						callback : auiContextHandler
+						// 					}, {
+						// 						label : "첨부파일 다운로드",
+						// 						callback : auiContextHandler
+						// 					}, {
+						// 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 					}, {
 						label : "버전이력보기",
 						callback : auiContextHandler
@@ -540,23 +545,23 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				case 1:
 					break;
+				// 				case 2:
+				// 					url = getCallUrl("/doc/asdf?oid=" + oid);
+				// 					download.src = url;
+				// 					break;
+				// 				case 3:
+				// 					url = getCallUrl("/doc/asdf?oid=" + oid);
+				// 					download.src = url;
+				// 					break;
 				case 2:
-					url = getCallUrl("/doc/asdf?oid=" + oid);
-					download.src = url;
-					break;
-				case 3:
-					url = getCallUrl("/doc/asdf?oid=" + oid);
-					download.src = url;
-					break;
-				case 5:
 					url = getCallUrl("/doc/iteration?oid=" + oid + "&popup=true");
 					_popup(url, 1600, 600, "n");
 					break;
-				case 6:
+				case 3:
 					url = getCallUrl("/workspace/history?oid=" + oid + "&popup=true");
 					_popup(url, 1200, 400, "n");
 					break;
-				case 8:
+				case 5:
 					if ("승인중" !== state) {
 						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
 						return false;
@@ -576,7 +581,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					}, "GET");
 					break;
-				case 9:
+				case 6:
 					if ("승인중" !== state) {
 						alert("승인중 상태의 문서만 결재회수가 가능합니다.");
 						return false;
@@ -602,7 +607,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				// 				document.getElementById("sessionid").value = 0;
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
+				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
 				document.getElementById("sessionid").value = 0;
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;
@@ -624,6 +629,58 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
+			function first(obj) {
+				const classType1 = obj.value;
+				if (classType1 !== "") {
+					loadClassType2(classType1);
+				}
+			}
+
+			function loadClassType2(classType1) {
+				const url = getCallUrl("/class/classType2?classType1=" + classType1);
+				call(url, null, function(data) {
+					const classType2 = data.classType2;
+					if (data.result) {
+						document.querySelector("#classType2 option").remove();
+						document.querySelector("#classType2").innerHTML = "<option value=\"\">선택</option>";
+						for (let i = 0; i < classType2.length; i++) {
+							const value = classType2[i].value;
+							const clazz = classType2[i].clazz;
+							const tag = "<option data-clazz=\"" + clazz + "\" value=\"" + value + "\">" + classType2[i].name + "</option>";
+							document.querySelector("#classType2").innerHTML += tag;
+						}
+					}
+				}, "GET", false);
+				selectbox("classType2");
+			}
+
+			function second(obj) {
+				const classType1 = document.getElementById("classType1").value;
+				const classType2 = obj.value;
+				if (classType2 !== "") {
+					loadClassType3(classType1, classType2);
+				}
+			}
+
+			// 소분류 세팅
+			function loadClassType3(classType1, classType2) {
+				const url = getCallUrl("/class/classType3?classType1=" + classType1 + "&classType2=" + classType2);
+				call(url, null, function(data) {
+					const classType3 = data.classType3;
+					if (data.result) {
+						document.querySelector("#classType3 option").remove();
+						document.querySelector("#classType3").innerHTML = "<option value=\"\">선택</option>";
+						for (let i = 0; i < classType3.length; i++) {
+							const value = classType3[i].value;
+							const clazz = classType3[i].clazz;
+							const tag = "<option data-clazz=\"" + clazz + "\" value=\"" + value + "\">" + classType3[i].name + "</option>";
+							document.querySelector("#classType3").innerHTML += tag;
+						}
+					}
+				}, "GET", false);
+				selectbox("classType3");
+			}
+
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("interalnumber");
 				const columns = loadColumnLayout("document-list");
@@ -641,50 +698,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
-				selectbox("documentType");
 				selectbox("preseration");
 				selectbox("model");
 				selectbox("deptcode");
 				finderUser("writer");
+				selectbox("classType1");
+				selectbox("classType2");
+				selectbox("classType3");
 			});
 
 			function exportExcel() {
 				const exceptColumnFields = [ "primary", "secondary" ];
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("문서 리스트", "문서", "문서 리스트", exceptColumnFields, sessionName);
-			}
-
-			// 일괄결재 팝업
-			let p;
-			function register() {
-				const url = getCallUrl("/doc/register");
-				p = _popup(url, 1000, 600, "n");
-			}
-
-			function addRow() {
-				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				if (checkedItems.length === 0) {
-					alert("일괄결재 등록할 문서를 선택하세요.");
-					return false;
-				}
-
-				for (let i = 0; i < checkedItems.length; i++) {
-					const item = checkedItems[i].item;
-					const interalnumber = item.interalnumber;
-					if (item.state !== "일괄결재") {
-						alert(interalnumber + "문서는 일괄결재 가능한 문서가 아닙니다.");
-						return false;
-					}
-
-					if (!item.latest) {
-						alert(interalnumber + "문서는 최신REV의 문서가 아닙니다.");
-						return false;
-					}
-				}
-
-				if (p && !p.closed) {
-					p.receive(checkedItems);
-				}
 			}
 
 			document.addEventListener("keydown", function(event) {
