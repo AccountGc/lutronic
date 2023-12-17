@@ -111,7 +111,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoCommentC(eoCommentC);
 
 			String location = "/Default/설계변경/ECR";
-			String lifecycle = "LC_Default";
+			String lifecycle = "LC_ECR";
 
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) cr, folder);
