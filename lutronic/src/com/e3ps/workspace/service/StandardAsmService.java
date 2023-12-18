@@ -48,8 +48,13 @@ public class StandardAsmService extends StandardManager implements AsmService {
 				number = "ROHSBT";
 			} else if ("MOLD".equals(type)) {
 				number = "MMBT";
+			} else if ("PATHOLOGICAL".equals(type)) {
+				number = "AMBT";
+			} else if ("CLINICAL".equals(type)) {
+				number = "BMBT";
+			} else if ("COSMETIC".equals(type)) {
+				number = "CMBT";
 			}
-
 			String today = DateUtil.getDateString(new Date(), new SimpleDateFormat("yyyyMM"));
 			number = number.concat("-").concat(today).concat("-");
 			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "AsmApproval", "AsmNumber");

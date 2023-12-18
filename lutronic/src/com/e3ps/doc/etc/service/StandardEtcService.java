@@ -72,28 +72,25 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String content = dto.getContent();
-		String documentType = dto.getDocumentType_code();
-		String documentName = dto.getDocumentName();
+//		String documentType = dto.getDocumentType_code();
+//		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		boolean temprary = dto.isTemprary();
 
 		// 설별 활동 링크 OID
 		String oid = dto.getOid();
-		
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			DocumentType docType = DocumentType.toDocumentType(documentType);
+			// 기본설정으로..
+//			DocumentType docType = DocumentType.toDocumentType(documentType);
 			String interalnumber = dto.getInteralnumber();
 			WTDocument doc = WTDocument.newWTDocument();
-			doc.setDocType(docType);
+//			doc.setDocType(docType);
 
 			// 문서 이름 세팅..
-			if (name.length() > 0) {
-				doc.setName(documentName + "-" + name);
-			} else {
-				doc.setName(documentName);
-			}
+			doc.setName(name);
 			doc.setNumber(interalnumber);
 			doc.setDescription(description);
 			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
@@ -140,7 +137,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 				trs.rollback();
 		}
 	}
-	
+
 	private String getDocumentNumberSeq(String longDescription) throws Exception {
 
 		String today = DateUtil.getDateString(new Date(), new SimpleDateFormat("yyyyMM"));
@@ -152,7 +149,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 		return number;
 	}
-	
+
 	@Override
 	public Map<String, Object> delete(String oid) throws Exception {
 		Map<String, Object> result = new HashMap<>();
@@ -332,7 +329,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			deleteLink(workCopy);
 			// 관련 링크 세팅
 			saveLink(workCopy, dto);
-			
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -344,7 +341,7 @@ public class StandardEtcService extends StandardManager implements EtcService {
 				trs.rollback();
 		}
 	}
-	
+
 	/**
 	 * 문서 IBA 속성값 세팅 함수
 	 */
@@ -363,15 +360,13 @@ public class StandardEtcService extends StandardManager implements EtcService {
 		String preseration_code = dto.getPreseration_code();
 		dto.setIBAValue(doc, preseration_code, "PRESERATION");
 		// 작성자
-		String writer = "";
-		if(!dto.getWriter().equals("")) {
-			writer = Long.toString(CommonUtil.getOIDLongValue(dto.getWriter()));
-		}
+		String writer = dto.getWriter();
 		dto.setIBAValue(doc, writer, "DSGN");
 		// 결재 유형
 		String approvalType_code = dto.getLifecycle().equals("LC_Default") ? "DEFAUT" : "BATCH";
 		dto.setIBAValue(doc, approvalType_code, "APPROVALTYPE");
 	}
+
 	/**
 	 * 기타 문서 관련 객체 저장
 	 */
@@ -511,5 +506,5 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			ContentServerHelper.service.deleteContent(workCopy, item);
 		}
 	}
-	
+
 }

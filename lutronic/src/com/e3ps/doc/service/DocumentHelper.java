@@ -21,8 +21,11 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentCRLink;
+import com.e3ps.doc.DocumentClass;
+import com.e3ps.doc.DocumentClassType;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
@@ -91,12 +94,29 @@ public class DocumentHelper {
 		String writer = (String) params.get("writerOid");
 		String description = (String) params.get("description");
 
+		// 분류
+		String classType1 = (String) params.get("classType1");
+		String classType2 = (String) params.get("classType2");
+		String classType3 = (String) params.get("classType3");
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WTDocument.class, true);
 		int idx_m = query.appendClassList(WTDocumentMaster.class, false);
 
 		query.setAdvancedQueryEnabled(true);
 		query.setDescendantQuery(false);
+
+		QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_str_2", classType1);
+
+		if (StringUtil.checkString(classType2)) {
+			DocumentClass class2 = (DocumentClass) CommonUtil.getObject(classType2);
+			QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_ref_2.key.id", class2);
+		}
+
+		if (StringUtil.checkString(classType3)) {
+			DocumentClass class3 = (DocumentClass) CommonUtil.getObject(classType3);
+			QuerySpecUtils.toEqualsAnd(query, idx, WTDocument.class, "typeInfoWTDocument.ptc_ref_3.key.id", class3);
+		}
 
 		QuerySpecUtils.toInnerJoin(query, WTDocument.class, WTDocumentMaster.class, "masterReference.key.id",
 				WTAttributeNameIfc.ID_NAME, idx, idx_m);

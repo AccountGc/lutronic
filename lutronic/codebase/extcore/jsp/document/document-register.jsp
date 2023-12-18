@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	String type = (String)request.getAttribute("type");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,10 +10,10 @@
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 </head>
 <body>
 	<form>
+		<input type="hidden" name="type" id="type" value="<%=type %>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -133,11 +136,12 @@
 					return false;
 				}
 
+				const type = document.getElementById("type").value;
 				const params = {
 					appName : appName.value,
 					description : description.value,
 					list : list,
-					type : "DOC"
+					type : type
 				}
 				const url = getCallUrl("/asm/register");
 				parent.openLayer();

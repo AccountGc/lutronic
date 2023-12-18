@@ -30,6 +30,8 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 	<colgroup>
 		<col width="450">
 		<col width="10">
+		<col width="80">
+		<col width="10">
 		<col width="450">
 		<col width="10">
 		<col width="450">
@@ -37,6 +39,21 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 	<tr>
 		<td>
 			<div id="grid_wrap1" style="height: 530px; border-top: 1px solid #3180c3;"></div>
+		</td>
+		<td>&nbsp;</td>
+		<td valign="middle">
+			<table class="button-table">
+				<tr>
+					<td class="center">
+						<input type="button" value="설정(<-)" title="설정(<-)" class="blue" onclick="left();">
+					</td>
+				</tr>
+				<tr>
+					<td class="center">
+						<input type="button" value="해체(->)" title="해제(->)" class="red" onclick="right();">
+					</td>
+				</tr>
+			</table>
 		</td>
 		<td>&nbsp;</td>
 		<td>
@@ -93,6 +110,7 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 	function createAUIGrid1(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			showRowCheckColumn : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
@@ -111,6 +129,7 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 			fillColumnSizeMode : true
 		};
 		myGridID1 = AUIGrid.create("#grid_wrap1", columnLayout, props);
+		AUIGrid.bind(myGridID1, "cellClick", auiCellClick);
 		AUIGrid.setGridData(myGridID1,
 <%=authList%>
 	);
@@ -140,6 +159,7 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 	function createAUIGrid2(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			showRowCheckColumn : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
@@ -158,6 +178,7 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 			fillColumnSizeMode : true
 		};
 		myGridID2 = AUIGrid.create("#grid_wrap2", columnLayout, props);
+		AUIGrid.bind(myGridID2, "cellClick", auiCellClick);
 		AUIGrid.setGridData(myGridID2,
 <%=userList%>
 	);
@@ -175,6 +196,7 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 	function createAUIGrid3(columnLayout) {
 		const props = {
 			headerHeight : 30,
+			showRowCheckColumn : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
@@ -193,6 +215,7 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 			fillColumnSizeMode : true
 		};
 		myGridID3 = AUIGrid.create("#grid_wrap3", columnLayout, props);
+		AUIGrid.bind(myGridID3, "cellClick", auiCellClick);
 		AUIGrid.setGridData(myGridID3,
 <%=groupList%>
 	);
@@ -228,6 +251,61 @@ JSONArray authList = (JSONArray) request.getAttribute("authList");
 			}
 			closeLayer();
 		})
+	}
+
+	function left() {
+		const data2 = AUIGrid.getCheckedRowItems(myGridID2);
+		const data3 = AUIGrid.getCheckedRowItems(myGridID3);
+
+		if (data2.length === 0 && data3.length === 0) {
+			alert("사용자 혹은 그룹을 하나 이상 선택하세요.");
+			return false;
+		}
+
+		for (let i = 0; i < data2.length; i++) {
+			const item = data2[i].item;
+			AUIGrid.addRow(myGridID1, item, "first");
+		}
+
+		for (let i = 0; i < data3.length; i++) {
+			const item = data3[i].item;
+			AUIGrid.addRow(myGridID1, item, "first");
+		}
+
+		AUIGrid.removeCheckedRows(myGridID2);
+		AUIGrid.removeCheckedRows(myGridID3);
+	}
+
+	function right() {
+		const data1 = AUIGrid.getCheckedRowItems(myGridID1);
+
+		if (data1.length === 0) {
+			alert("사용자 혹은 그룹을 하나 이상 선택하세요.");
+			return false;
+		}
+
+		for (let i = 0; i < data1.length; i++) {
+			const item = data1[i].item;
+			const oid = item.oid;
+			if (oid.indexOf("WTUser") > -1) {
+				AUIGrid.addRow(myGridID2, item, "first");
+			} else if (oid.indexOf("WTGroup") > -1) {
+				AUIGrid.addRow(myGridID3, item, "first");
+			}
+		}
+
+		AUIGrid.removeCheckedRows(myGridID1);
+	}
+
+	function auiCellClick(event) {
+		const item = event.item;
+		const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+		const rowId = item[rowIdField];
+		if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
+			AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+		} else {
+			AUIGrid.addCheckedRowsByIds(event.pid, rowId);
+		}
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

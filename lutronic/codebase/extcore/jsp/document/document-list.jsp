@@ -496,14 +496,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						callback : auiContextHandler
 					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-						// 					}, {
-						// 						label : "주 첨부파일 다운로드",
-						// 						callback : auiContextHandler
-						// 					}, {
-						// 						label : "첨부파일 다운로드",
-						// 						callback : auiContextHandler
-						// 					}, {
-						// 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 					}, {
 						label : "버전이력보기",
 						callback : auiContextHandler
@@ -607,7 +599,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				// 				document.getElementById("sessionid").value = 0;
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
-				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
+				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
 				document.getElementById("sessionid").value = 0;
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;

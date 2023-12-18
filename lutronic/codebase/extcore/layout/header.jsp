@@ -357,7 +357,7 @@ int eca = (int) request.getAttribute("eca");
 			<!-- 			</li> -->
 			<%
 			}
-			if (isPathological) {
+			// 			if (isPathological) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -367,19 +367,22 @@ int eca = (int) request.getAttribute("eca");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create?type=pathological', '> 병리연구 문서관리 > 병리연구 문서등록');">병리연구 문서등록</a>
-					</li>
-					<li>
 						<a onclick="moveToPage(this, '/etc/list?type=pathological', '> 병리연구 문서관리 > 병리연구 문서검색');">병리연구 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 병리연구 문서관리 > 병리연구 문서결재');">병리연구 문서결재</a>
+						<a onclick="moveToPage(this, '/etc/create?type=pathological', '> 병리연구 문서관리 > 병리연구 문서등록');">병리연구 문서등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/asm/create?type=PATHOLOGICAL', '> 병리연구 문서관리 > 병리연구 문서 일괄 결재');">병리연구 문서 일괄 결재</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/asm/list?number=ADBT', '> 병리연구 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 				</ul>
 			</li>
 			<%
-			}
-			if (isClinical) {
+			// 			}
+			// 			if (isClinical) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -389,18 +392,21 @@ int eca = (int) request.getAttribute("eca");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create?type=clinical', '> 임상개발 문서관리 > 임상개발 문서등록');">임상개발 문서등록</a>
-					</li>
-					<li>
 						<a onclick="moveToPage(this, '/etc/list?type=clinical', '> 임상개발  문서관리 > 임상개발 문서검색');">임상개발 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 임상개발 문서관리 > 임상개발 문서결재');">임상개발 문서결재</a>
+						<a onclick="moveToPage(this, '/etc/create?type=clinical', '> 임상개발 문서관리 > 임상개발 문서등록');">임상개발 문서등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/asm/create?type=CLINICAL', '> 임상개발 문서관리 > 임상개발 문서 일괄 결재');">임상개발 문서 일괄 결재</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/asm/list?number=BDBT', '> 임상개발 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 				</ul>
 			</li>
 			<%
-			}
+			// 			}
 			if (isRa) {
 			%>
 			<!-- 			<li> -->
@@ -423,7 +429,7 @@ int eca = (int) request.getAttribute("eca");
 			<!-- 			</li> -->
 			<%
 			}
-			if (isCosmetic) {
+			// 			if (isCosmetic) {
 			%>
 			<li>
 				<a href="css_animation.html">
@@ -433,18 +439,21 @@ int eca = (int) request.getAttribute("eca");
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a onclick="moveToPage(this, '/etc/create?type=cosmetic', '> 화장품 문서관리 > RA팀 문서등록');">화장품 문서등록</a>
-					</li>
-					<li>
 						<a onclick="moveToPage(this, '/etc/list?type=cosmetic', '> 화장품 문서관리 >  문서검색');">화장품 문서검색</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/etc/list?docType=production', '> 화장품 문서관리 > 화장품 문서결재');">화장품 문서결재</a>
+						<a onclick="moveToPage(this, '/etc/create?type=cosmetic', '> 화장품 문서관리 > 화장품 문서등록');">화장품 문서등록</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/asm/create?type=COSMETIC', '> 화장품 문서관리 > 화장품 문서 일괄 결재');">화장품 문서 일괄 결재</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/asm/list?number=CDBT', '> 화장품 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 				</ul>
 			</li>
 			<%
-			}
+			// 			}
 			if (isAdmin) {
 			%>
 			<li>

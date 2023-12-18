@@ -32,6 +32,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		<input type="hidden" name="title" id="title" value="<%=title%>">
 
 		<table class="button-table">
 			<tr>
@@ -228,12 +229,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=location%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="535" name="height" />
+						<jsp:param value="565" name="height" />
+						<jsp:param value="doc" name="doc" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -243,17 +245,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "number",
-					headerText : "문서번호",
+					dataField : "name",
+					headerText : "문서명",
 					dataType : "string",
-					width : 180,
+					style : "aui-left",
+					width : 350,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const type = "<%= type %>";
-							const url = getCallUrl("/etc/view?oid=" + oid + "&type=" + type);
+							let permission = isPermission(oid);
+							if (!permission) {
+								authMsg();
+								return false;
+							}
+							const url = getCallUrl("/doc/view?oid=" + oid);
 							_popup(url, "", "", "f");
 						}
 					},
@@ -265,7 +272,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "interalnumber",
 					headerText : "내부 문서번호",
 					dataType : "string",
-					width : 120,
+					width : 180,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.oid;
+							let permission = isPermission(oid);
+							if (!permission) {
+								authMsg();
+								return false;
+							}
+							const url = getCallUrl("/doc/view?oid=" + oid);
+							_popup(url, "", "", "f");
+						}
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -275,25 +296,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "프로젝트 코드",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
-				}, {
-					dataField : "name",
-					headerText : "문서명",
-					dataType : "string",
-					style : "aui-left",
-					width : 350,
-					renderer : {
-						type : "LinkRenderer",
-						baseUrl : "javascript",
-						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.oid;
-							const url = getCallUrl("/etc/view?oid=" + oid + "&type=<%= type %>");
-							_popup(url, "", "", "f");
-						}
-					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -313,6 +315,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "REV",
 					dataType : "string",
 					width : 80,
+					renderer : {
+						type : "TemplateRenderer"
+					},
 					filter : {
 						showIcon : true,
 						inline : true
@@ -321,7 +326,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 120,
+					width : 80,
 					filter : {
 						showIcon : true,
 						inline : true
@@ -465,10 +470,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			});
 
 			function exportExcel() {
-			    const exceptColumnFields = [ "primary", "secondary" ];
-			    const sessionName = document.getElementById("sessionName").value;
-			    const title = "<%=title%>";
-			    exportToExcel(title+" 문서 리스트", title+" 문서", title+" 문서 리스트", exceptColumnFields, sessionName);
+				const exceptColumnFields = [ "primary", "secondary" ];
+				const sessionName = document.getElementById("sessionName").value;
+				const title = document.getElementById("title").value;
+				exportToExcel(title + " 문서 리스트", title + " 문서", title + " 문서 리스트", exceptColumnFields, sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {
@@ -485,20 +490,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
-			//일괄 다운로드
-			function download() {
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("다운로드할 문서를 선택하세요.");
-					return false;
-				}
-				let oids = [];
-				items.forEach((item)=>{
-				    oids.push(item.oid)
-				});
-				document.location.href = "/Windchill/plm/content/downloadZIP?oids=" + oids;
-			}
 		</script>
 	</form>
 </body>

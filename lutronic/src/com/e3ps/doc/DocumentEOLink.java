@@ -21,10 +21,8 @@ public class DocumentEOLink extends _DocumentEOLink {
 	static final long serialVersionUID = 1;
 
 	public static DocumentEOLink newDocumentEOLink(WTDocument document, EChangeOrder eo) throws WTException {
-		WorkflowHelper.service.getWorkItems(eo)
 		DocumentEOLink instance = new DocumentEOLink();
 		instance.initialize(document, eo);
 		return instance;
 	}
-
 }
