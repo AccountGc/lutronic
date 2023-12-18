@@ -77,7 +77,8 @@ JSONArray json = ECOHelper.manager.getCompletePartList(oid);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 			fillColumnSizeMode: true,
 		}

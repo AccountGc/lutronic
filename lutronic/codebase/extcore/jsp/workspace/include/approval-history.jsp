@@ -110,7 +110,8 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 			headerHeight : 30,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			enableSorting : false,
 			showAutoNoDataMessage : false,
 			autoGridHeight : true

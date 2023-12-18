@@ -130,7 +130,8 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			enableFilter : true,
 		}
 		myGridID50 = AUIGrid.create("#grid50", columnLayout, props);

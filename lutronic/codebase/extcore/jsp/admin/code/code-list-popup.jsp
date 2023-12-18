@@ -136,7 +136,8 @@ String codeType = (String) request.getAttribute("codeType");
 			<%}%>
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			enableMovingColumn : true,
 			enableFilter : true,
 			showInlineFilter : false,

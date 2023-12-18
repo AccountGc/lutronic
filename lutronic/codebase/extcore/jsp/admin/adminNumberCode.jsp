@@ -41,7 +41,8 @@ String codeheight = request.getParameter("codeheight");
 			headerHeight : 30,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
-			selectionMode: "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			enableFilter : true, 
 			displayTreeOpen : true,
 			useContextMenu : true

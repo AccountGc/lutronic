@@ -85,7 +85,8 @@ String oid = request.getParameter("oid");
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			autoGridHeight : true
 		}
 		myGridID700 = AUIGrid.create("#grid700", columnLayout, props);

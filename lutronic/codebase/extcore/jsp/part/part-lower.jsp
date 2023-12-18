@@ -64,7 +64,8 @@ JSONArray lower = (JSONArray) request.getAttribute("lower");
 			rowNumHeaderText : "번호",
 			noDataMessage : "하위품목이 없습니다.",
 			showAutoNoDataMessage : true,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		AUIGrid.setGridData(myGridID,

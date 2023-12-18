@@ -129,7 +129,8 @@ boolean header = request.getParameter("header")==null ? true : Boolean.parseBool
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			<%if (isCreate || isUpdate) {%>
 			showStateColumn : true,
 			showRowCheckColumn : true,

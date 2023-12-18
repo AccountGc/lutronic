@@ -162,7 +162,8 @@ const column = [ {
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : false,
 			displayTreeOpen : true,
 			forceTreeView : true

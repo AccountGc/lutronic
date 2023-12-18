@@ -94,7 +94,8 @@
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
+					selectionMode : "multipleRows",
+					hoverMode : "singleRow",
 					wordWrap : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);

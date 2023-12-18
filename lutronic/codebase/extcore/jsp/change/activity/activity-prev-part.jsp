@@ -74,7 +74,8 @@ String oid = (String) request.getAttribute("oid");
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			autoGridHeight : true,
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);

@@ -153,7 +153,8 @@ AsmDTO dto = (AsmDTO) request.getAttribute("dto");
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			enableFilter : true,
 			autoGridHeight : true
 		}

@@ -121,7 +121,8 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : true,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 			fillColumnSizeMode : false,
 			autoGridHeight : true
@@ -138,7 +139,8 @@ JSONArray json = RohsHelper.manager.include_RohsView(oid, module, roleType);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : true,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 			fillColumnSizeMode : false,
 			autoGridHeight : true

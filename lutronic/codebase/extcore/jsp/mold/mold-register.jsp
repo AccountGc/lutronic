@@ -105,7 +105,8 @@
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleCells",
+					selectionMode : "multipleRows",
+					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					autoGridHeight : true
 				};

@@ -157,7 +157,8 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 				showAutoNoDataMessage : false,
 				enableSorting : false,
 				softRemoveRowMode : true,
-				selectionMode : "multipleCells",
+				selectionMode : "multipleRows",
+				hoverMode : "singleRow",
 				<%if (create || update) {%>
 				showStateColumn : true,
 				showRowCheckColumn : true,
