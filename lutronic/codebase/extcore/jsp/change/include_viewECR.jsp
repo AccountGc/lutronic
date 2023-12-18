@@ -68,7 +68,8 @@ JSONArray json = ECRHelper.manager.include_ECRView(oid);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : true
 		}
 		ecrGridID = AUIGrid.create("#grid_ecr", columnLayout, props);

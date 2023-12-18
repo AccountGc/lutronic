@@ -73,7 +73,8 @@ Map<String, ArrayList<Map<String, Object>>> preData = (Map<String, ArrayList<Map
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			autoGridHeight : true,
 		};
 		preGridID = AUIGrid.create("#pre_wrap", columnLayout, props);

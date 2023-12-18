@@ -68,7 +68,8 @@ JSONArray json = ChangeHelper.manager.include_ECOList(oid, moduleType);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 			fillColumnSizeMode: true,
 		}

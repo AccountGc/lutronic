@@ -90,7 +90,8 @@ JSONArray json =  ECAHelper.manager.include_ecaList(oid);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : true
 		}
 		ecaGridID = AUIGrid.create("#grid_eca", columnLayout, props);

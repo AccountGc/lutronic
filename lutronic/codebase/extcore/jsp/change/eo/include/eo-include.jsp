@@ -148,7 +148,8 @@ if(view){
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : true,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			<%if (create || update) {%>
 			showStateColumn : true,
 			showRowCheckColumn : true,

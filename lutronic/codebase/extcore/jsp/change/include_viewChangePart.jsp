@@ -104,7 +104,8 @@ JSONArray json = ChangeWfHelper.manager.wf_CheckPart(oid, checkDummy, distribute
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 		}
 		changePartGridID = AUIGrid.create("#grid_changePart", columnLayout, props);

@@ -87,7 +87,8 @@ boolean isUpdate = "update".equals(mode);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			<%if (isCreate || isUpdate) {%>
 			showRowCheckColumn : true,
 			showStateColumn : true,

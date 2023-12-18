@@ -256,7 +256,8 @@ if (isCreate || isUpdate) {
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleCells",
+			selectionMode : "multipleRows",
+			hoverMode : "singleRow",
 			<%if (isCreate || isUpdate) {%>
 			showRowCheckColumn : true,
 			<%}%>
