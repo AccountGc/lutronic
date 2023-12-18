@@ -133,4 +133,8 @@ public interface PartService {
 	 */
 	public abstract WTPart append(Map<String, Object> params) throws Exception;
 
+	/**
+	 * 품목등록 로더
+	 */
+	public abstract void loaderPart(String path) throws Exception;
 }

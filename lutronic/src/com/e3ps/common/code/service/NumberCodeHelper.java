@@ -458,4 +458,22 @@ public class NumberCodeHelper {
 		}
 		return list;
 	}
+	
+	/**
+	 * 이름 & 코드타입으로 코드 객체 찾아오기
+	 */
+	public String getCodeName(String name, String codeType) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.NAME, name);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode numberCode = (NumberCode) obj[0];
+			return numberCode.getCode();
+		}
+		return null;
+	}
 }

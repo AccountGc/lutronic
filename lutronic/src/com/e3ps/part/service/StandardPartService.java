@@ -1,6 +1,6 @@
 package com.e3ps.part.service;
 
-import java.io.File;
+import java.io.File; 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -18,6 +18,10 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -35,7 +39,9 @@ import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.BatchDownData;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.service.CodeHelper;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.Comments;
 import com.e3ps.common.content.FileRequest;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -50,12 +56,9 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.common.web.PageControl;
-import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.distribute.util.MakeZIPUtil;
-import com.e3ps.doc.service.DocumentQueryHelper;
 import com.e3ps.drawing.beans.EpmUtil;
 import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.drawing.service.EpmSearchHelper;
@@ -75,6 +78,7 @@ import com.ptc.wvs.client.beans.PublishConfigSpec;
 import com.ptc.wvs.common.ui.Publisher;
 import com.ptc.wvs.server.util.PublishUtils;
 
+import net.sf.mpxj.common.NumberHelper;
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
 import wt.content.ApplicationData;
@@ -108,6 +112,7 @@ import wt.lifecycle.State;
 import wt.method.MethodContext;
 import wt.part.PartDocHelper;
 import wt.part.PartType;
+import wt.part.Quantity;
 import wt.part.QuantityUnit;
 import wt.part.Source;
 import wt.part.WTPart;
@@ -119,6 +124,7 @@ import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.DBProperties;
+import wt.pom.PersistenceException;
 import wt.pom.Transaction;
 import wt.pom.WTConnection;
 import wt.query.QuerySpec;
@@ -129,6 +135,7 @@ import wt.services.StandardManager;
 import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.util.WTProperties;
+import wt.util.WTPropertyVetoException;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
@@ -136,6 +143,8 @@ import wt.vc.baseline.ManagedBaseline;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 import wt.vc.wip.CheckoutLink;
+import wt.vc.wip.NonLatestCheckoutException;
+import wt.vc.wip.WorkInProgressException;
 import wt.vc.wip.WorkInProgressHelper;
 import wt.vc.wip.Workable;
 
@@ -4150,5 +4159,144 @@ public class StandardPartService extends StandardManager implements PartService 
 			}
 		}
 		return part;
+	}
+
+	@Override
+	public void loaderPart(String path) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+			
+			Map<String,Object> map = new HashMap<String, Object>();
+			File file = new File(path);
+
+			Workbook workbook = new XSSFWorkbook(file);
+			Sheet sheet = workbook.getSheetAt(0);
+
+			int rows = sheet.getPhysicalNumberOfRows(); // 시트의 행 개수 가져오기
+
+			// 모든 행(row)을 순회하면서 데이터 가져오기
+			for (int i = 1; i < rows; i++) {
+				Row row = sheet.getRow(i);
+
+				String level = getStringvalue(row.getCell(2));
+				// 값없을 경우 리턴
+				if (!StringUtil.checkString(level)) {
+					return;
+				}
+				String number = getStringvalue(row.getCell(3));
+				// 값없을 경우 리턴
+				if (!StringUtil.checkString(number)) {
+					return;
+				}
+				String name = getStringvalue(row.getCell(5));
+				// 값없을 경우 리턴
+				if (!StringUtil.checkString(name)) {
+					return;
+				}
+				String remarks = getStringvalue(row.getCell(7));
+				String specification = getStringvalue(row.getCell(10));
+				String qty = getStringvalue(row.getCell(11));
+				Double d_qty = Double.parseDouble(qty);
+				String model = getStringvalue(row.getCell(13));
+				model = NumberCodeHelper.manager.getCodeName(model, "MODEL");
+				String deptcode = getStringvalue(row.getCell(14));
+				deptcode = NumberCodeHelper.manager.getCodeName(deptcode, "DEPTCODE");
+				String manufacture = getStringvalue(row.getCell(15));
+				manufacture = NumberCodeHelper.manager.getCodeName(manufacture, "MANUFACTURE");
+				String productmethod = getStringvalue(row.getCell(16));
+				productmethod = NumberCodeHelper.manager.getCodeName(productmethod, "PRODUCTMETHOD");
+
+				QuerySpec query = new QuerySpec();
+				int idx = query.appendClassList(WTPart.class, true);
+				QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.NUMBER, number);
+				QueryResult result = PersistenceHelper.manager.find(query);
+				if (result.hasMoreElements()) {
+					return;
+				}
+				
+				WTPart part = WTPart.newWTPart();
+				PDMLinkProduct product = WCUtil.getPDMLinkProduct();
+				WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
+				part.setContainer(product);
+				part.setNumber(number);
+				part.setName(name);
+				part.setDefaultUnit(QuantityUnit.toQuantityUnit("ea"));
+				part.setPartType(PartType.toPartType("separable"));
+				part.setSource(Source.toSource("make"));
+				// 뷰 셋팅(Design 고정임)
+				ViewHelper.assignToView(part, ViewHelper.service.getView("Design"));
+				
+				// 폴더 셋팅
+				Folder folder = null;
+				String location = "/Default/PART_Drawing";
+				if (location.indexOf("Folder") > -1) {
+					folder = (Folder) CommonUtil.getObject(location);
+				} else {
+					folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
+				}
+				FolderHelper.assignLocation((FolderEntry) part, folder);
+				
+				// 문서 lifeCycle 설정
+				String lifecycle = "LC_PART";
+				LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+				part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
+				
+				part = (WTPart) PersistenceHelper.manager.save(part);
+				
+				// IBA 설정
+				Map<String,Object> params = new HashMap<String, Object>();
+				params.put("remarks", remarks);
+				params.put("specification", specification);
+				params.put("model", model);
+				params.put("deptcode", deptcode);
+				params.put("manufacture", manufacture);
+				params.put("productmethod", productmethod);
+				CommonHelper.service.changeIBAValues(part, params);
+				IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, name, "string");
+				// level 설정
+				addLevel(level, part, d_qty, map);
+			}
+
+			workbook.close();
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+	
+	public String getStringvalue(Cell cell) {
+		String rtnValue = "";
+		try {
+			rtnValue = cell.getStringCellValue();
+		}catch (Exception e) {
+			rtnValue = Integer.toString((int) cell.getNumericCellValue());
+		}
+		return rtnValue;
+	}
+	
+	public void addLevel(String level, WTPart part, Double qty, Map<String,Object> map) throws Exception {
+		int int_level = Integer.parseInt(level);
+		String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+		
+		if(0==int_level) {
+			map.put(level, oid);
+		}else {
+			int_level = int_level-1;
+			String str_level = Integer.toString(int_level);
+			String poid = (String) map.get(str_level);
+			WTPart parent = (WTPart) CommonUtil.getObject(poid);
+			WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(parent, part.getMaster());
+			usageLink.setQuantity(Quantity.newQuantity(qty, QuantityUnit.EA));
+			PersistenceHelper.manager.save(usageLink);
+			map.put(level, oid);
+		}
 	}
 }
