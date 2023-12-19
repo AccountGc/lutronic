@@ -115,11 +115,6 @@ public class StandardMoldService extends StandardManager implements MoldService 
 			// 문서 관련 객체 데이터 처리
 			saveLink(doc, dto);
 
-			// 결재시작
-			if (approvalRows.size() > 0) {
-				WorkspaceHelper.service.register(doc, agreeRows, approvalRows, receiveRows);
-			}
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
