@@ -12,9 +12,8 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 String type = (String) request.getAttribute("type");
-String location = EtcHelper.manager.toLocation(type);
+String location = (String) request.getAttribute("location");
 String title = (String) request.getAttribute("title");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
@@ -59,9 +58,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="location" id="location" value="<%=location%>">
 					<span id="locationText"><%=location%></span>
 				</td>
-				<th>문서 번호</th>
+				<th>내부 문서번호</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 				</td>
 				<th>문서명</th>
 				<td class="indent5">
@@ -69,22 +68,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 			<tr>
-				<th>문서유형</th>
-				<td class="indent5">
-					<select name="documentType" id="documentType" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (int i = 0; i < docTypeList.size(); i++) {
-							JSONObject obj = (JSONObject) docTypeList.get(i);
-							String key = (String) obj.get("key");
-							String value = (String) obj.get("value");
-						%>
-						<option value="<%=key%>"><%=value%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
 				<th>등록자</th>
 				<td class="indent5">
 					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -98,8 +81,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
-			</tr>
-			<tr>
 				<th>상태</th>
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
@@ -110,6 +91,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="RETURN">반려됨</option>
 					</select>
 				</td>
+			</tr>
+			<tr>
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
@@ -122,6 +105,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					~
 					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+				</td>
+				<th>보존기간</th>
+				<td class="indent5">
+					<select name="preseration" id="preseration" class="width-200">
+						<option value="">선택</option>
+						<%
+						for (NumberCode preseration : preserationList) {
+						%>
+						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -151,25 +147,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						%>
 					</select>
 				</td>
-				<th>내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
-				</td>
-			</tr>
-			<tr>
-				<th>보존기간</th>
-				<td class="indent5">
-					<select name="preseration" id="preseration" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode preseration : preserationList) {
-						%>
-						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
 				<th>REV</th>
 				<td>
 					&nbsp;
@@ -191,10 +168,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						</div>
 					</div>
 				</td>
-				<th>내용</th>
-				<td class="indent5">
-					<input type="text" name="description" id="description" class="width-300">
-				</td>
 			</tr>
 		</table>
 		<table class="button-table">
@@ -213,7 +186,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();">
+<!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
 				</td>
 			</tr>
 		</table>
@@ -447,7 +420,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				toFocus("number");
+				toFocus("interalnumber");
 				const columns = loadColumnLayout("etc-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);

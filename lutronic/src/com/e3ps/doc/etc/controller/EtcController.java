@@ -44,8 +44,7 @@ public class EtcController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		JSONArray docTypeList = DocumentHelper.manager.toJson();
-		String location = EtcHelper.manager.toLocation(type);
+		String location = EtcHelper.manager.getLocation(type);
 		String title = "";
 		if (location.contains("생산본부")) {
 			title = "생산본부";
@@ -63,8 +62,8 @@ public class EtcController extends BaseController {
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
-		model.addObject("docTypeList", docTypeList);
 		model.addObject("title", title);
+		model.addObject("location", location);
 		model.setViewName("/extcore/jsp/document/etc/etc-list.jsp");
 		return model;
 	}
