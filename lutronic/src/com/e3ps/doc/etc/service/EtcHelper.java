@@ -52,7 +52,7 @@ public class EtcHelper {
 	/**
 	 * 기타 문서 타입별 위치
 	 */
-	public String toLocation(String type) throws Exception {
+	public String getLocation(String type) throws Exception {
 		if ("ra".equalsIgnoreCase(type)) {
 			return RA;
 		} else if ("production".equalsIgnoreCase(type)) {

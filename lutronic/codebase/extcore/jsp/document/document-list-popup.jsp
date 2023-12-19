@@ -8,10 +8,11 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+String location = (String) request.getAttribute("location");
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
@@ -43,8 +44,19 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<th>문서 분류</th>
 		<td class="indent5">
+			<%
+				if(StringUtil.checkString(location)) {
+			%>
+			<input type="hidden" name="location" id="location" value="<%=location%>">
+			<span id="locationText"><%=location%></span>
+			<%
+				} else {
+			%>
 			<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 			<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
+			<%
+				}
+			%>
 		</td>
 		<th>문서 번호</th>
 		<td class="indent5">
@@ -89,22 +101,22 @@ String state = (String) request.getAttribute("state");
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (Map<String,String> lifecycle : lifecycleList) {
-					if(!lifecycle.get("code").equals("TEMPRARY")){
+				for (Map<String, String> lifecycle : lifecycleList) {
+					if (!lifecycle.get("code").equals("TEMPRARY")) {
 				%>
-					<%
-						if(StringUtil.checkString(state)) {
-					%>
-					<option value="<%=lifecycle.get("code") %>" <%if(state.equals(lifecycle.get("code"))) { %> selected="selected" <%} %>><%=lifecycle.get("name")%></option>
-					<%
-						} else {
-					%>
-					<option value="<%=lifecycle.get("code") %>" ><%=lifecycle.get("name")%></option>
-					<%
-						}
-					%>
 				<%
-					}
+				if (StringUtil.checkString(state)) {
+				%>
+				<option value="<%=lifecycle.get("code")%>" <%if (state.equals(lifecycle.get("code"))) {%> selected="selected" <%}%>><%=lifecycle.get("name")%></option>
+				<%
+				} else {
+				%>
+				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+				<%
+				}
+				%>
+				<%
+				}
 				}
 				%>
 			</select>
@@ -223,7 +235,17 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<td valign="top">
 			<jsp:include page="/extcore/jsp/common/folder-include.jsp">
+				<%
+					if(StringUtil.checkString(location)) {
+				%>
+				<jsp:param value="<%=location%>" name="location" />
+				<%
+					} else {
+				%>
 				<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
+				<%
+					}
+				%>
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
 				<jsp:param value="593" name="height" />
@@ -436,14 +458,10 @@ document.addEventListener("DOMContentLoaded", function() {
 	selectbox("model");
 	selectbox("deptcode");
 	finderUser("writer");
-	<%
-		if(StringUtil.checkString(state)) {
-	%>
+	<%if (StringUtil.checkString(state)) {%>
 	$("#state").bindSelectSetValue("<%=state%>");
 	$("#state").bindSelectDisabled(true);
-	<%
-		}
-	%>
+	<%}%>
 });
 
 function <%=method%>() {

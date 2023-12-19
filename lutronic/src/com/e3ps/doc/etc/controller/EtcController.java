@@ -2,6 +2,7 @@ package com.e3ps.doc.etc.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
@@ -46,15 +47,15 @@ public class EtcController extends BaseController {
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		String location = EtcHelper.manager.toLocation(type);
 		String title = "";
-		if(location.contains("생산본부")){
+		if (location.contains("생산본부")) {
 			title = "생산본부";
-		}else if(location.contains("병리연구")){
+		} else if (location.contains("병리연구")) {
 			title = "병리연구";
-		}else if(location.contains("임상개발")){
+		} else if (location.contains("임상개발")) {
 			title = "임상개발";
-		}else if(location.contains("RA팀")){
+		} else if (location.contains("RA팀")) {
 			title = "RA팀";
-		}else if(location.contains("화장품")){
+		} else if (location.contains("화장품")) {
 			title = "화장품";
 		}
 		ModelAndView model = new ModelAndView();
@@ -67,7 +68,7 @@ public class EtcController extends BaseController {
 		model.setViewName("/extcore/jsp/document/etc/etc-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "기타문서 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/list")
@@ -93,7 +94,7 @@ public class EtcController extends BaseController {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
-		String location = EtcHelper.manager.toLocation(type);
+		String location = EtcHelper.manager.getLocation(type);
 		model.addObject("location", location);
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
@@ -123,18 +124,23 @@ public class EtcController extends BaseController {
 
 	@Description(value = "관련 문서 팝업 페이지")
 	@GetMapping(value = "/popup")
-	public ModelAndView popup(@RequestParam String method, @RequestParam String multi, @RequestParam String location) throws Exception {
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String state, @RequestParam(required = false) String location)
+			throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
 		ModelAndView model = new ModelAndView();
+		model.addObject("state", state);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("docTypeList", docTypeList);
-		model.addObject("location", location);
+		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("method", method);
+		model.addObject("location", location);
 		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/document/etc/etc-list-popup");
 		return model;
@@ -152,10 +158,11 @@ public class EtcController extends BaseController {
 		model.setViewName("popup:/document/etc/etc-view");
 		return model;
 	}
-	
+
 	@Description(value = "기타문서 수정 및 개정 페이지")
 	@GetMapping(value = "/update")
-	public ModelAndView update(@RequestParam String oid, @RequestParam String mode, @RequestParam String type) throws Exception {
+	public ModelAndView update(@RequestParam String oid, @RequestParam String mode, @RequestParam String type)
+			throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		EtcDTO dto = new EtcDTO(oid);
@@ -260,7 +267,7 @@ public class EtcController extends BaseController {
 		System.out.println(result);
 		return result;
 	}
-	
+
 	@Description(value = "기타문서 최신버전 이동")
 	@GetMapping(value = "/latest")
 	public ModelAndView latest(@RequestParam String oid) throws Exception {

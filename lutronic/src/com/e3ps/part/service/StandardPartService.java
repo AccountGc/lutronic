@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -4179,22 +4180,25 @@ public class StandardPartService extends StandardManager implements PartService 
 			Sheet sheet = workbook.getSheetAt(0);
 
 			int rows = sheet.getPhysicalNumberOfRows(); // 시트의 행 개수 가져오기
-
+			DataFormatter df = new DataFormatter();
 			// 모든 행(row)을 순회하면서 데이터 가져오기
 			for (int i = 1; i < rows; i++) {
 				Row row = sheet.getRow(i);
 
-				String level = getStringvalue(row.getCell(2));
-				// 값없을 경우 리턴
-				if (!StringUtil.checkString(level)) {
-					continue;
-				}
-				String number = getStringvalue(row.getCell(3));
+//				String level = getStringvalue(row.getCell(2));
+//				// 값없을 경우 리턴
+//				if (!StringUtil.checkString(level)) {
+//					continue;
+//				}
+				String number = df.formatCellValue(row.getCell(3));
+
+				System.out.println("i = " + i + ", number = " + number);
+
 				// 값없을 경우 리턴
 				if (!StringUtil.checkString(number)) {
 					continue;
 				}
-				String name = getStringvalue(row.getCell(5));
+				String name = df.formatCellValue(row.getCell(5));
 				// 값없을 경우 리턴
 				if (!StringUtil.checkString(name)) {
 					continue;
@@ -4217,6 +4221,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.NUMBER, number);
 				QueryResult result = PersistenceHelper.manager.find(query);
 				if (result.hasMoreElements()) {
+					System.out.println("패스 되는 품목 = " + number);
 					continue;
 				}
 
@@ -4224,8 +4229,8 @@ public class StandardPartService extends StandardManager implements PartService 
 				PDMLinkProduct product = WCUtil.getPDMLinkProduct();
 				WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
 				part.setContainer(product);
-				part.setNumber(number);
-				part.setName(name);
+				part.setNumber(number.trim());
+				part.setName(name.trim());
 				part.setDefaultUnit(QuantityUnit.toQuantityUnit("ea"));
 				part.setPartType(PartType.toPartType("separable"));
 				part.setSource(Source.toSource("make"));
@@ -4233,13 +4238,8 @@ public class StandardPartService extends StandardManager implements PartService 
 				ViewHelper.assignToView(part, ViewHelper.service.getView("Design"));
 
 				// 폴더 셋팅
-				Folder folder = null;
 				String location = "/Default/PART_Drawing";
-				if (location.indexOf("Folder") > -1) {
-					folder = (Folder) CommonUtil.getObject(location);
-				} else {
-					folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
-				}
+				Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 				FolderHelper.assignLocation((FolderEntry) part, folder);
 
 				// 문서 lifeCycle 설정
@@ -4250,7 +4250,7 @@ public class StandardPartService extends StandardManager implements PartService 
 
 				part = (WTPart) PersistenceHelper.manager.save(part);
 
-				// IBA 설정
+				System.out.println("저장 = " + part.getNumber()); // IBA 설정
 				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("remarks", remarks);
 				params.put("specification", specification);
@@ -4260,22 +4260,6 @@ public class StandardPartService extends StandardManager implements PartService 
 				params.put("productmethod", productmethod);
 				CommonHelper.service.changeIBAValues(part, params);
 				IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, name, "string");
-				// level 설정
-//				int int_level = Integer.parseInt(level);
-//				String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
-//				
-//				if(0==int_level) {
-//					map.put(level, oid);
-//				}else {
-//					int_level = int_level-1;
-//					String str_level = Integer.toString(int_level);
-//					String poid = (String) map.get(str_level);
-//					WTPart parent = (WTPart) CommonUtil.getObject(poid);
-//					WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(parent, part.getMaster());
-//					usageLink.setQuantity(Quantity.newQuantity(d_qty, QuantityUnit.EA));
-//					PersistenceHelper.manager.save(usageLink);
-//					map.put(level, oid);
-//				}
 			}
 
 			workbook.close();

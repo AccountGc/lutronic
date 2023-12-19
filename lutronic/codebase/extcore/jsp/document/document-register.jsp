@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-	String type = (String)request.getAttribute("type");
+String type = (String) request.getAttribute("type");
+String location = (String) request.getAttribute("location");
 %>
 <!DOCTYPE html>
 <html>
@@ -13,7 +14,8 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="type" id="type" value="<%=type %>">
+		<input type="hidden" name="type" id="type" value="<%=type%>">
+		<input type="hidden" name="location" id="location" value="<%=location%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -157,7 +159,8 @@
 			}
 
 			function popup() {
-				const url = getCallUrl("/doc/popup?method=insert90&multi=true&state=BATCHAPPROVAL");
+				const location = document.getElementById("location").value;
+				const url = getCallUrl("/doc/popup?method=insert90&multi=true&state=BATCHAPPROVAL&location=" + location);
 				_popup(url, 1800, 900, "n");
 			}
 

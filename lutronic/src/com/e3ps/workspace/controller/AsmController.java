@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.doc.etc.service.EtcHelper;
 import com.e3ps.workspace.dto.AsmDTO;
 import com.e3ps.workspace.service.AsmHelper;
 import com.ptc.windchill.uwgm.proesrv.createesrdoc.AsmDocUtility;
@@ -107,6 +108,7 @@ public class AsmController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create(@RequestParam String type) throws Exception {
 		ModelAndView model = new ModelAndView();
+		String location = EtcHelper.manager.getLocation(type);
 		if ("DOC".equals(type)) {
 			model.setViewName("/extcore/jsp/document/document-register.jsp");
 		} else if ("MOLD".equals(type)) {
@@ -120,6 +122,7 @@ public class AsmController extends BaseController {
 		} else if ("PATHOLOGICAL".equals(type)) {
 			model.setViewName("/extcore/jsp/document/document-register.jsp");
 		}
+		model.addObject("location", location);
 		model.addObject("type", type);
 		return model;
 	}

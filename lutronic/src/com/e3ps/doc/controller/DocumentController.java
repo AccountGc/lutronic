@@ -149,7 +149,8 @@ public class DocumentController extends BaseController {
 	@Description(value = "관련 문서 팝업 페이지")
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
-			@RequestParam(required = false) String state) throws Exception {
+			@RequestParam(required = false) String state, @RequestParam(required = false) String location)
+			throws Exception {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
@@ -163,6 +164,7 @@ public class DocumentController extends BaseController {
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("method", method);
+		model.addObject("location", location);
 		model.addObject("multi", Boolean.parseBoolean(multi));
 		model.setViewName("popup:/document/document-list-popup");
 		return model;
@@ -425,7 +427,7 @@ public class DocumentController extends BaseController {
 		model.setViewName("popup:/document/document-move");
 		return model;
 	}
-	
+
 	@Description(value = "문서 이동 함수")
 	@ResponseBody
 	@PostMapping(value = "/move")
