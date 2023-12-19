@@ -236,7 +236,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,
@@ -265,6 +265,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
+					logger(data);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;

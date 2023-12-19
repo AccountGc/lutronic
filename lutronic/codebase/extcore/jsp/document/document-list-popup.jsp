@@ -14,7 +14,6 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
-DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String state = (String) request.getAttribute("state");
@@ -383,7 +382,7 @@ function createAUIGrid(columnLayout) {
 		<%}%>
 		rowNumHeaderText : "번호",
 		showAutoNoDataMessage : false,
-		selectionMode : "multipleRows",
+		selectionMode : "multipleCells",
 		hoverMode : "singleRow",
 		enableMovingColumn : true,
 		enableFilter : true,

@@ -53,7 +53,7 @@
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableFilter : true,
 					showInlineFilter : false,

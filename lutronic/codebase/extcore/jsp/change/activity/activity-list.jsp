@@ -311,7 +311,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					rowNumHeaderText : "번호",
 					fillColumnSizeMode : true,
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,

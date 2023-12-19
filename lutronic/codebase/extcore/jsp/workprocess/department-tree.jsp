@@ -23,7 +23,7 @@ String height = request.getParameter("height");
 			showAutoNoDataMessage : false,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableFilter : true,
 			showInlineFilter : true,

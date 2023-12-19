@@ -130,7 +130,7 @@ String height = StringUtil.checkReplaceStr(request.getParameter("height"), "150"
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableFilter : true,
 		}

@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
+<%@page import="java.util.Map"%>
 <%@page import="wt.doc.DocumentType"%>
 <%@page import="wt.org.WTUser"%>
 <%@page import="java.util.ArrayList"%>
@@ -7,10 +10,11 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 String location = (String) request.getAttribute("location");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
+String state = (String) request.getAttribute("state");
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
@@ -41,9 +45,9 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<input type="hidden" name="location" id="location" value="<%=location%>">
 			<span id="locationText"><%=location%></span>
 		</td>
-		<th>문서 번호</th>
+		<th>내부 문서번호</th>
 		<td class="indent5">
-			<input type="text" name="number" id="number" class="width-300">
+			<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 		</td>
 		<th>문서명</th>
 		<td class="indent5">
@@ -51,19 +55,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 		</td>
 	</tr>
 	<tr>
-		<th>문서유형</th>
-		<td class="indent5">
-			<select name="documentType" id="documentType" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (DocumentType docType : docTypeList) {
-				%>
-				<option value="<%=docType.toString()%>"><%=docType.getDisplay()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
 		<th>등록자</th>
 		<td class="indent5">
 			<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -77,22 +68,36 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<input type="text" name="createdTo" id="createdTo" class="width-100">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 		</td>
-	</tr>
-	<tr>
 		<th>상태</th>
 		<td class="indent5">
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
-				<option value="INWORK">작업 중</option>
-				<option value="UNDERAPPROVAL">승인 중</option>
-				<option value="APPROVED">승인됨</option>
-				<option value="RETURN">반려됨</option>
+				<%
+				for (Map<String, String> lifecycle : lifecycleList) {
+					if (!lifecycle.get("code").equals("TEMPRARY")) {
+				%>
+				<%
+				if (StringUtil.checkString(state)) {
+				%>
+				<option value="<%=lifecycle.get("code")%>" <%if (state.equals(lifecycle.get("code"))) {%> selected="selected" <%}%>><%=lifecycle.get("name")%></option>
+				<%
+				} else {
+				%>
+				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+				<%
+				}
+				%>
+				<%
+				}
+				}
+				%>
 			</select>
 		</td>
-		<th>수정자</th>
+	</tr>
+	<tr>
+		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 		</td>
 		<th>수정일</th>
 		<td class="indent5">
@@ -100,6 +105,19 @@ boolean multi = (boolean) request.getAttribute("multi");
 			~
 			<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+		</td>
+		<th>보존기간</th>
+		<td class="indent5">
+			<select name="preseration" id="preseration" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode preseration : preserationList) {
+				%>
+				<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
+				<%
+				}
+				%>
+			</select>
 		</td>
 	</tr>
 	<tr>
@@ -129,25 +147,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 				%>
 			</select>
 		</td>
-		<th>내부 문서번호</th>
-		<td class="indent5">
-			<input type="text" name="interalnumber" id="interalnumber" class="width-300">
-		</td>
-	</tr>
-	<tr>
-		<th>보존기간</th>
-		<td class="indent5">
-			<select name="preseration" id="preseration" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode preseration : preserationList) {
-				%>
-				<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
 		<th>REV</th>
 		<td>
 			&nbsp;
@@ -169,12 +168,9 @@ boolean multi = (boolean) request.getAttribute("multi");
 				</div>
 			</div>
 		</td>
-		<th>내용</th>
-		<td class="indent5">
-			<input type="text" name="description" id="description" class="width-300">
-		</td>
 	</tr>
 </table>
+
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -205,12 +201,12 @@ boolean multi = (boolean) request.getAttribute("multi");
 				<jsp:param value="<%=location%>" name="location" />
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
-				<jsp:param value="593" name="height" />
+				<jsp:param value="445" name="height" />
 			</jsp:include>
 		</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">
-			<div id="grid_wrap" style="height: 560px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap" style="height: 410px; border-top: 1px solid #3180c3;"></div>
 			<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 			<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		</td>
@@ -354,7 +350,7 @@ function createAUIGrid(columnLayout) {
 		<%}%>
 		rowNumHeaderText : "번호",
 		showAutoNoDataMessage : false,
-		selectionMode : "multipleRows",
+		selectionMode : "multipleCells",
 		hoverMode : "singleRow",
 		enableMovingColumn : true,
 		enableFilter : true,
@@ -390,7 +386,7 @@ function auiCellClick(event) {
 		// 엑스트라 체크박스 체크 추가
 		AUIGrid.setCheckedRowsByIds(event.pid, rowId);
 	}
-	<%}else{%>
+	<%} else {%>
 	if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
 		AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
 	} else {
@@ -402,12 +398,13 @@ function auiCellClick(event) {
 function loadGridData() {
 	let params = new Object();
 	const url = getCallUrl("/etc/list");
-	const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
+	const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description"];
 	const latest = !!document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
 	params.latest = latest;
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();
+	logger(params);
 	call(url, params, function(data) {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
@@ -423,7 +420,7 @@ function loadGridData() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-	toFocus("number");
+	toFocus("interalnumber");
 	const contenxtHeader = genColumnHtml(columns);
 	$("#h_item_ul").append(contenxtHeader);
 	$("#headerMenu").menu({
@@ -438,11 +435,13 @@ document.addEventListener("DOMContentLoaded", function() {
 	twindate("created");
 	twindate("modified");
 	selectbox("_psize");
-	selectbox("documentType");
 	selectbox("preseration");
 	selectbox("model");
 	selectbox("deptcode");
-	finderUser("writer");
+	<%if (StringUtil.checkString(state)) {%>
+	$("#state").bindSelectSetValue("<%=state%>");
+	$("#state").bindSelectDisabled(true);
+	<%}%>
 });
 
 function <%=method%>() {

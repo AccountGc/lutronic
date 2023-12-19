@@ -376,7 +376,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/asm/create?type=PATHOLOGICAL', '> 병리연구 문서관리 > 병리연구 문서 일괄 결재');">병리연구 문서 일괄 결재</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asm/list?number=ADBT', '> 병리연구 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
+						<a onclick="moveToPage(this, '/asm/list?number=AMBT', '> 병리연구 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 				</ul>
 			</li>
@@ -401,7 +401,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/asm/create?type=CLINICAL', '> 임상개발 문서관리 > 임상개발 문서 일괄 결재');">임상개발 문서 일괄 결재</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asm/list?number=BDBT', '> 임상개발 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
+						<a onclick="moveToPage(this, '/asm/list?number=BMBT', '> 임상개발 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 				</ul>
 			</li>
@@ -448,7 +448,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/asm/create?type=COSMETIC', '> 화장품 문서관리 > 화장품 문서 일괄 결재');">화장품 문서 일괄 결재</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asm/list?number=CDBT', '> 화장품 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
+						<a onclick="moveToPage(this, '/asm/list?number=CMBT', '> 화장품 문서관리 > 일괄 결재 검색');">일괄 결재 검색</a>
 					</li>
 				</ul>
 			</li>

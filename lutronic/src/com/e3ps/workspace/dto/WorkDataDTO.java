@@ -94,6 +94,7 @@ public class WorkDataDTO {
 			setCreator(rohs.getCreatorName());
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
 		} else if (per instanceof AsmApproval) {
+			System.out.println("여기..");
 			AsmApproval asm = (AsmApproval) per;
 			setNumber(asm.getNumber());
 			setName(asm.getName());

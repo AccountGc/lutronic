@@ -42,7 +42,7 @@ if (method == null) {
 			rowCheckToRadio : true,
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableFilter : true,
 			displayTreeOpen : false,

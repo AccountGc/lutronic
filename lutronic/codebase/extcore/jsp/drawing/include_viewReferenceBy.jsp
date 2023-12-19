@@ -77,7 +77,7 @@ JSONArray json = DrawingHelper.manager.include_ReferenceBy(oid);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 			fillColumnSizeMode: true,

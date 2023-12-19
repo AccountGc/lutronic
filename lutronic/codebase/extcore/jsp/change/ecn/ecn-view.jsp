@@ -205,7 +205,7 @@ i++;
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 // 			showRowCheckColumn : true,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			autoGridHeight : true,
 			editable : true,

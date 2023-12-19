@@ -104,7 +104,7 @@ JSONArray json = ChangeWfHelper.manager.wf_CheckPart(oid, checkDummy, distribute
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 		}

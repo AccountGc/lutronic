@@ -68,7 +68,7 @@ JSONArray json = ECRHelper.manager.include_ECRView(oid);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			rowCheckToRadio : true
 		}

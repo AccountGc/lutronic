@@ -235,7 +235,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			displayTreeOpen : true,
 			editable : false,

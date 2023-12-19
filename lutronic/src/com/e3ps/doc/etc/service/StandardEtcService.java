@@ -103,6 +103,12 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 			doc = (WTDocument) PersistenceHelper.manager.save(doc);
 
+			// 상태값 변경
+			if ("LC_Default_NonWF".equals(lifecycle)) {
+				doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+				LifeCycleHelper.service.setLifeCycleState(doc, State.toState("BATCHAPPROVAL"), false);
+			}
+
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..

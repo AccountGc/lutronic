@@ -111,7 +111,7 @@ if(request.getParameter("popup")!=null){
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			rowCheckToRadio : false,
 			fillColumnSizeMode: true,

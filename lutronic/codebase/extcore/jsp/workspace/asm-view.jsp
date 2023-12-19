@@ -3,6 +3,7 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 AsmDTO dto = (AsmDTO) request.getAttribute("dto");
+String title = (String) request.getAttribute("title");
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 
@@ -11,7 +12,7 @@ AsmDTO dto = (AsmDTO) request.getAttribute("dto");
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				일괄결재 상세보기
+				<%=title %> 일괄결재 상세보기
 			</div>
 		</td>
 		<td class="right">
@@ -29,15 +30,15 @@ AsmDTO dto = (AsmDTO) request.getAttribute("dto");
 
 <table class="view-table">
 	<colgroup>
-		<col width="130">
-		<col width="450">
-		<col width="130">
-		<col width="450">
+		<col width="150">
+		<col width="430">
+		<col width="150">
+		<col width="430">
 	</colgroup>
 	<tr>
-		<th class="lb">일괄결재제목</th>
+		<th class="lb"><%=title %> 일괄결재제목</th>
 		<td class="indent5"><%=dto.getName()%></td>
-		<th>일괄결재번호</th>
+		<th><%=title %> 일괄결재번호</th>
 		<td class="indent5"><%=dto.getNumber()%></td>
 	</tr>
 	<tr>
@@ -87,24 +88,6 @@ AsmDTO dto = (AsmDTO) request.getAttribute("dto");
 		headerText : "제목",
 		dataType : "string",
 		style : "aui-left",
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const type = item.type;
-				const oid = item.oid;
-				let url;
-
-				if (type === "문서") {
-					url = getCallUrl("/doc/view?oid=" + oid);
-				} else if (type === "RoHS") {
-
-				} else if (type === "금형문서") {
-
-				}
-				_popup(url, "", "", "f");
-			}
-		},
 		filter : {
 			showIcon : true,
 		},
@@ -121,9 +104,6 @@ AsmDTO dto = (AsmDTO) request.getAttribute("dto");
 		headerText : "REV",
 		dataType : "string",
 		width : 80,
-		renderer : {
-			type : "TemplateRenderer"
-		},
 		filter : {
 			showIcon : true,
 		},
@@ -153,7 +133,7 @@ AsmDTO dto = (AsmDTO) request.getAttribute("dto");
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableFilter : true,
 			autoGridHeight : true

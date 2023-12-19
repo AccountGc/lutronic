@@ -110,7 +110,7 @@ boolean isUpdate = "update".equals(mode);
 			showRowNumColumn : true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : true,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableMovingColumn : true,
 			enableFilter : false,

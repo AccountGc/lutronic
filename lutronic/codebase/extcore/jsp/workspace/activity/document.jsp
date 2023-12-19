@@ -170,7 +170,7 @@ boolean complete = docList.size() > 0;
 					showRowNumColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableRowCheckShiftKey : true,
 					autoGridHeight : true

@@ -81,7 +81,7 @@ List<PartDTO> partList = PartHelper.service.include_PartList(oid, moduleType);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : true,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 			fillColumnSizeMode : false,

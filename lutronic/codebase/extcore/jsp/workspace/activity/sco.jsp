@@ -512,7 +512,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					showAutoNoDataMessage : false,
 					enableSorting : false,
 					softRemoveRowMode : true,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					showRowCheckColumn : true,
 					enableFilter : true,

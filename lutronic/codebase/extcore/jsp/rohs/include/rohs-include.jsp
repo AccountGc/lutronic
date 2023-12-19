@@ -123,7 +123,7 @@ boolean create = "create".equals(mode);
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : true,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			<%if (create || update) {%>
 			showStateColumn : true,

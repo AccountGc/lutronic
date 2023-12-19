@@ -166,7 +166,7 @@ if (header) {
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			<%if (create || update) {%>
 			showStateColumn : true,

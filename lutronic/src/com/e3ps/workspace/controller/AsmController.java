@@ -33,13 +33,21 @@ public class AsmController extends BaseController {
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		boolean isAdmin = CommonUtil.isAdmin();
 		String title = "";
+
 		if ("NDBT".equals(number)) {
 			title = "문서";
 		} else if ("ROHSBT".equals(number)) {
 			title = "RoHS";
 		} else if ("MMBT".equals(number)) {
 			title = "금형";
+		} else if ("CMBT".equals(number)) {
+			title = "화장품";
+		} else if ("BMBT".equals(number)) {
+			title = "임상개발";
+		} else if ("AMBT".equals(number)) {
+			title = "병리연구";
 		}
+
 		model.addObject("title", title);
 		model.addObject("number", number);
 		model.addObject("isAdmin", isAdmin);
@@ -82,8 +90,8 @@ public class AsmController extends BaseController {
 			}
 
 			AsmHelper.service.register(params);
-			result.put("msg", msg);
 			result.put("result", SUCCESS);
+			result.put("msg", SAVE_MSG);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
@@ -98,6 +106,25 @@ public class AsmController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		AsmDTO dto = new AsmDTO(oid);
+		String number = dto.getNumber();
+		String title = "";
+		
+		if(number.startsWith("NDBT")) {
+			title = "문서";
+		} else if(number.startsWith("ROHSBT")) {
+			title = "RoHS";
+		} else if(number.startsWith("MMBT")) {
+			title = "금형";
+		} else if(number.startsWith("CMBT")) {
+			title = "화장품";
+		} else if(number.startsWith("BMBT")) {
+			title = "임상개발";
+		} else if(number.startsWith("AMBT")) {
+			title = "병리연구";
+		}
+		
+
+		model.addObject("title", title);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/workspace/asm-view");
@@ -109,19 +136,27 @@ public class AsmController extends BaseController {
 	public ModelAndView create(@RequestParam String type) throws Exception {
 		ModelAndView model = new ModelAndView();
 		String location = EtcHelper.manager.getLocation(type);
+		String title = "";
 		if ("DOC".equals(type)) {
+			title = "문서";
 			model.setViewName("/extcore/jsp/document/document-register.jsp");
 		} else if ("MOLD".equals(type)) {
+			title = "금형";
 			model.setViewName("/extcore/jsp/mold/mold-register.jsp");
 		} else if ("ROHS".equals(type)) {
+			title = "RoHS";
 			model.setViewName("/extcore/jsp/rohs/rohs-register.jsp");
 		} else if ("COSMETIC".equals(type)) {
+			title = "화장품";
 			model.setViewName("/extcore/jsp/document/etc/etc-register.jsp");
 		} else if ("CLINICAL".equals(type)) {
+			title = "임상개발";
 			model.setViewName("/extcore/jsp/document/etc/etc-register.jsp");
 		} else if ("PATHOLOGICAL".equals(type)) {
+			title = "병리연구";
 			model.setViewName("/extcore/jsp/document/etc/etc-register.jsp");
 		}
+		model.addObject("title", title);
 		model.addObject("location", location);
 		model.addObject("type", type);
 		return model;

@@ -1,3 +1,5 @@
+<%@page import="java.util.List"%>
+<%@page import="java.util.Map"%>
 <%@page import="wt.session.SessionHelper"%>
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="net.sf.json.JSONObject"%>
@@ -12,6 +14,7 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 String type = (String) request.getAttribute("type");
 String location = (String) request.getAttribute("location");
 String title = (String) request.getAttribute("title");
@@ -85,10 +88,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
-						<option value="INWORK">작업 중</option>
-						<option value="UNDERAPPROVAL">승인 중</option>
-						<option value="APPROVED">승인됨</option>
-						<option value="RETURN">반려됨</option>
+						<%
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
+						%>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<%
+						}
+						}
+						%>
 					</select>
 				</td>
 			</tr>
@@ -96,8 +104,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -186,7 +192,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
-<!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
+					<!-- 					<input type="button" value="일괄 다운로드" title="일괄 다운로드" onclick="download();"> -->
 				</td>
 			</tr>
 		</table>
@@ -202,13 +208,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<jsp:param value="<%=location%>" name="location" />
 						<jsp:param value="product" name="container" />
 						<jsp:param value="list" name="mode" />
-						<jsp:param value="565" name="height" />
+						<jsp:param value="600" name="height" />
 						<jsp:param value="doc" name="doc" />
 					</jsp:include>
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 565px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -374,7 +380,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,
@@ -398,7 +404,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function loadGridData() {
 				let params = new Object();
 				const url = getCallUrl("/etc/list");
-				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
+				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params = toField(params, field);
 				params.latest = JSON.parse(latest);
@@ -436,11 +442,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				twindate("created");
 				twindate("modified");
 				selectbox("_psize");
-				selectbox("documentType");
 				selectbox("preseration");
 				selectbox("model");
 				selectbox("deptcode");
-				finderUser("writer");
 			});
 
 			function exportExcel() {

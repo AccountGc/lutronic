@@ -73,7 +73,7 @@ Map<String, ArrayList<Map<String, Object>>> preData = (Map<String, ArrayList<Map
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			autoGridHeight : true,
 		};

@@ -139,7 +139,7 @@
 	//					rowNumHeaderText : "번호",
 					fillColumnSizeMode: true,
 					showAutoNoDataMessage : true,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,

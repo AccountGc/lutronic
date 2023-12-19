@@ -74,7 +74,7 @@ String oid = (String) request.getAttribute("oid");
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			autoGridHeight : true,
 		};

@@ -107,6 +107,12 @@ public class WorkDataColumn {
 				setPersistType("일괄결재(ROHS)");
 			} else if (number.startsWith("MMBT")) {
 				setPersistType("일괄결재(금형문서)");
+			} else if (number.startsWith("AMBT")) {
+				setPersistType("일괄결재(병리연구문서)");
+			} else if (number.startsWith("BMBT")) {
+				setPersistType("일괄결재(임상개발문서)");
+			} else if (number.startsWith("CMBT")) {
+				setPersistType("일괄결재(화장품문서)");
 			}
 			setName(asm.getName());
 			setState(asm.getLifeCycleState().getDisplay());

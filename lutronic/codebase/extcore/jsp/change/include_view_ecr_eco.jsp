@@ -77,7 +77,7 @@ if(moduleType.equals("ecr")){
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			rowCheckToRadio : true,
 			fillColumnSizeMode: true,

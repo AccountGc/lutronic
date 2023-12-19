@@ -2,6 +2,7 @@
 <%
 String type = (String) request.getAttribute("type");
 String location = (String) request.getAttribute("location");
+String title = (String) request.getAttribute("title");
 %>
 <!DOCTYPE html>
 <html>
@@ -21,7 +22,7 @@ String location = (String) request.getAttribute("location");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						문서 일괄 결재
+						<%=title %> 일괄 결재
 					</div>
 				</td>
 			</tr>
@@ -111,7 +112,7 @@ String location = (String) request.getAttribute("location");
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					autoGridHeight : true
@@ -161,7 +162,7 @@ String location = (String) request.getAttribute("location");
 			function popup() {
 				const location = document.getElementById("location").value;
 				const url = getCallUrl("/etc/popup?method=insert90&multi=true&state=BATCHAPPROVAL&location=" + location);
-				_popup(url, 1800, 900, "n");
+				_popup(url, 1400, 700, "n");
 			}
 
 			function deleteRow90() {

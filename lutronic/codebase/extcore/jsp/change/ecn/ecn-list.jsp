@@ -301,7 +301,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,

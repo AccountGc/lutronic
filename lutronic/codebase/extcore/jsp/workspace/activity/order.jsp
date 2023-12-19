@@ -518,7 +518,7 @@ ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) request.g
 					showAutoNoDataMessage : false,
 					enableSorting : false,
 					softRemoveRowMode : true,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					showRowCheckColumn : true,
 					enableFilter : true,

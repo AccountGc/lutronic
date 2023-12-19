@@ -128,7 +128,7 @@ String oid = request.getParameter("oid");
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableFilter : true,
 			autoGridHeight : true

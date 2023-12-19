@@ -13,7 +13,7 @@
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 String number = (String) request.getAttribute("number");
-String ttile = (String) request.getAttribute("title");
+String title = (String) request.getAttribute("title");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 %>
 <!DOCTYPE html>
@@ -37,7 +37,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						일괄결재 검색
+						<%=title %> 일괄결재 검색
 					</div>
 				</td>
 			</tr>
@@ -45,17 +45,17 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 		<table class="search-table">
 			<colgroup>
-				<col width="130">
+				<col width="150">
 				<col width="*">
-				<col width="130">
+				<col width="150">
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>일괄결재제목</th>
+				<th><%=title %> 일괄결재제목</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th>일괄결재번호</th>
+				<th><%=title %> 일괄결재번호</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300">
 				</td>
@@ -127,9 +127,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			function _layout() {
 				return [ {
 					dataField : "number",
-					headerText : "일괄결재번호",
+					headerText : "<%=title %> 일괄결재번호",
 					dataType : "string",
-					width : 150,
+					width : 180,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -145,7 +145,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					},
 				}, {
 					dataField : "name",
-					headerText : "일괄결재제목",
+					headerText : "<%=title %> 일괄결재제목",
 					dataType : "string",
 					style : "aui-left",
 					renderer : {
@@ -207,7 +207,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					// 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,

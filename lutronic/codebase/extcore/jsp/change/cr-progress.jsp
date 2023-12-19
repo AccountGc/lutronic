@@ -329,7 +329,7 @@ String oid = request.getParameter("oid");
 			fillColumnSizeMode: true,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableMovingColumn : true,
 			enableFilter : true,

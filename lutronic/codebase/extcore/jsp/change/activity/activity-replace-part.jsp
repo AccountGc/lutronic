@@ -97,7 +97,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 			showAutoNoDataMessage : false,
 			enableSorting : false,
 			softRemoveRowMode : true,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			showRowCheckColumn : true,
 			autoGridHeight : true,

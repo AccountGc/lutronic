@@ -341,7 +341,7 @@ JSONArray partName3 = (JSONArray) request.getAttribute("partName3");
 			rowNumHeaderTeext : "번호",
 			showRowCheckColumn : true,
 			showAutoNoDataMessage : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			displayTreeOpen : true,
 			editable : true,

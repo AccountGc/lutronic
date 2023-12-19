@@ -133,7 +133,7 @@ String partNumber = request.getParameter("partNumber");
 			showRowCheckColumn : false,
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
-			selectionMode : "multipleRows",
+			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableFilter : true,
 			showInlineFilter : false,

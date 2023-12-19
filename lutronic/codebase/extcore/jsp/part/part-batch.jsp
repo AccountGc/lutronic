@@ -834,7 +834,7 @@ JSONArray unitList = (JSONArray) request.getAttribute("unitList");
 					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
-					selectionMode : "multipleRows",
+					selectionMode : "multipleCells",
 					hoverMode : "singleRow",
 					wordWrap : true,
 				};
@@ -1013,20 +1013,20 @@ JSONArray unitList = (JSONArray) request.getAttribute("unitList");
 						return false;
 					}
 
-					if (isNull(item.partName1)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "품목명(대제목)을 입력하세요.");
-						return false;
-					}
+// 					if (isNull(item.partName1)) {
+// 						AUIGrid.showToastMessage(myGridID, rowIndex, 8, "품목명(대제목)을 입력하세요.");
+// 						return false;
+// 					}
 					
-					if (isNull(item.partName2)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 9, "품목명(중제목)을 입력하세요.");
-						return false;
-					}
+// 					if (isNull(item.partName2)) {
+// 						AUIGrid.showToastMessage(myGridID, rowIndex, 9, "품목명(중제목)을 입력하세요.");
+// 						return false;
+// 					}
 					
-					if (isNull(item.partName3)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 10, "품목명(소제목)을 입력하세요.");
-						return false;
-					}
+// 					if (isNull(item.partName3)) {
+// 						AUIGrid.showToastMessage(myGridID, rowIndex, 10, "품목명(소제목)을 입력하세요.");
+// 						return false;
+// 					}
 					
 					if (isNull(item.partName4)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 11, "품목명(KEY-IN)을 입력하세요.");

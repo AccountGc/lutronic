@@ -83,7 +83,7 @@ function createAUIGrid(columnLayout) {
 		rowNumHeaderText : "번호",
 		fillColumnSizeMode: false,
 		showAutoNoDataMessage : false,
-		selectionMode : "multipleRows",
+		selectionMode : "multipleCells",
 		hoverMode : "singleRow",
 		enableMovingColumn : true,
 		enableFilter : true,
