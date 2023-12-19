@@ -1,6 +1,6 @@
 package com.e3ps.part.service;
 
-import java.io.File; 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -4165,14 +4165,14 @@ public class StandardPartService extends StandardManager implements PartService 
 	@Override
 	public void loaderPart(String path) throws Exception {
 		SessionContext prev = SessionContext.newContext();
-		
+
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
-			
-			SessionHelper.manager.setAdministrator();.
-			
-			Map<String,Object> map = new HashMap<String, Object>();
+
+			SessionHelper.manager.setAdministrator();
+
+			Map<String, Object> map = new HashMap<String, Object>();
 			File file = new File(path);
 
 			Workbook workbook = new XSSFWorkbook(file);
@@ -4219,7 +4219,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				if (result.hasMoreElements()) {
 					continue;
 				}
-				
+
 				WTPart part = WTPart.newWTPart();
 				PDMLinkProduct product = WCUtil.getPDMLinkProduct();
 				WTContainerRef wtContainerRef = WTContainerRef.newWTContainerRef(product);
@@ -4231,7 +4231,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				part.setSource(Source.toSource("make"));
 				// 뷰 셋팅(Design 고정임)
 				ViewHelper.assignToView(part, ViewHelper.service.getView("Design"));
-				
+
 				// 폴더 셋팅
 				Folder folder = null;
 				String location = "/Default/PART_Drawing";
@@ -4241,16 +4241,17 @@ public class StandardPartService extends StandardManager implements PartService 
 					folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 				}
 				FolderHelper.assignLocation((FolderEntry) part, folder);
-				
+
 				// 문서 lifeCycle 설정
 				String lifecycle = "LC_PART";
-				LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, wtContainerRef);
+				LifeCycleTemplate tmpLifeCycle = LifeCycleHelper.service.getLifeCycleTemplate(lifecycle,
+						wtContainerRef);
 				part = (WTPart) LifeCycleHelper.setLifeCycle(part, tmpLifeCycle);
-				
+
 				part = (WTPart) PersistenceHelper.manager.save(part);
-				
+
 				// IBA 설정
-				Map<String,Object> params = new HashMap<String, Object>();
+				Map<String, Object> params = new HashMap<String, Object>();
 				params.put("remarks", remarks);
 				params.put("specification", specification);
 				params.put("model", model);
@@ -4291,12 +4292,12 @@ public class StandardPartService extends StandardManager implements PartService 
 			SessionContext.setContext(prev);
 		}
 	}
-	
+
 	public String getStringvalue(Cell cell) {
 		String rtnValue = "";
 		try {
 			rtnValue = cell.getStringCellValue();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			rtnValue = Integer.toString((int) cell.getNumericCellValue());
 		}
 		return rtnValue;
