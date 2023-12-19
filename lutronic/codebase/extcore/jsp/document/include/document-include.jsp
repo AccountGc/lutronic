@@ -198,11 +198,7 @@ if (header) {
 			alert("삭제할 행을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID90, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID90);
 	}
 
 	function insert90(arr, callBack) {

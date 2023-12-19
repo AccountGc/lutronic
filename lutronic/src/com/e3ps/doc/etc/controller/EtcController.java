@@ -65,6 +65,7 @@ public class EtcController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 		model.addObject("title", title);
+		model.addObject("type",type);
 		model.addObject("location", location);
 		model.setViewName("/extcore/jsp/document/etc/etc-list.jsp");
 		return model;
@@ -147,10 +148,11 @@ public class EtcController extends BaseController {
 
 	@Description(value = "기타문서 상세보기")
 	@GetMapping(value = "/view")
-	public ModelAndView view(@RequestParam String oid, @RequestParam String type) throws Exception {
+	public ModelAndView view(@RequestParam String oid, @RequestParam String title, @RequestParam String type) throws Exception {
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		EtcDTO dto = new EtcDTO(oid);
+		model.addObject("title", title);
 		model.addObject("type", type);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
@@ -169,9 +171,9 @@ public class EtcController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
-		DocumentType[] docTypeList = DocumentType.getDocumentTypeSet();
+		String location = EtcHelper.manager.getLocation(type);
+		model.addObject("location", location);
 		model.addObject("type", type);
-		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
@@ -225,23 +227,24 @@ public class EtcController extends BaseController {
 		try {
 
 			// true 연결 있음
-			if (EtcHelper.manager.isConnect(oid, DocumentECOLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 ECO가 있습니다.");
-				return result;
-			}
+			if (!CommonUtil.isAdmin()) {
+				if (EtcHelper.manager.isConnect(oid, DocumentECOLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 ECO가 있습니다.");
+					return result;
+				}
 
-			if (EtcHelper.manager.isConnect(oid, DocumentEOLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 EO가 있습니다.");
-				return result;
-			}
+				if (EtcHelper.manager.isConnect(oid, DocumentEOLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 EO가 있습니다.");
+					return result;
+				}
 
-			if (EtcHelper.manager.isConnect(oid, DocumentCRLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 CR이 있습니다.");
-				return result;
-			}
+				if (EtcHelper.manager.isConnect(oid, DocumentCRLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 CR이 있습니다.");
+					return result;
+				}
 
 //			if (DocumentHelper.manager.connect(doc, DocumentECPRLink.class)) {
 //				result.put("result", false);
@@ -249,10 +252,11 @@ public class EtcController extends BaseController {
 //				return result;
 //			}
 
-			if (EtcHelper.manager.isConnect(oid, WTPartDescribeLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 품목이 있습니다.");
-				return result;
+				if (EtcHelper.manager.isConnect(oid, WTPartDescribeLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 품목이 있습니다.");
+					return result;
+				}
 			}
 
 			result = EtcHelper.service.delete(oid);

@@ -64,6 +64,8 @@ public class EtcDTO {
 	private boolean _delete = false;
 	private boolean _modify = false;
 	private boolean _revise = false;
+	private boolean _print = false;
+	private boolean _withdraw = false;
 
 	// 변수용
 	private String iterationNote;
@@ -119,10 +121,8 @@ public class EtcDTO {
 	 */
 	private void setIBAAttributes(WTDocument doc) throws Exception {
 		// 작성자
-		String writer_oid = IBAUtil.getStringValue(doc, "DSGN");
-		String writer_name = CommonUtil.getUserNameFromOid(writer_oid);
-		setWriter(writer_oid);
-		setWriter_name(writer_name);
+		String writer = IBAUtil.getStringValue(doc, "DSGN");
+		setWriter(writer);
 		// 프로젝트 코드
 		String model_code = IBAUtil.getStringValue(doc, "MODEL");
 		String model_name = keyToValue(model_code, "MODEL");
@@ -159,14 +159,28 @@ public class EtcDTO {
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
 		// 개정 권한 - (최신버전 && 승인됨)
-		if (check("APPROVED") && isLatest()) {
-			set_revise(true);
-		}
-		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
-		if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
-			set_delete(true);
-			set_modify(true);
-		}
+//		if (!CommonCUtil.isAdmin()) {
+			if (check("APPROVED") && isLatest()) {
+				set_revise(true);
+				set_print(true);
+			}
+			// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
+			if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
+				set_delete(true);
+				set_modify(true);
+			}
+
+			if (check("APPROVING") && isLatest()) {
+				set_withdraw(true);
+			}
+			// 관리자는 일단 모든 권한 오픈
+//		} else {
+//			set_delete(true);
+//			set_modify(true);
+//			set_withdraw(true);
+//			set_revise(true);
+//			set_print(true);
+//		}
 	}
 
 	/**

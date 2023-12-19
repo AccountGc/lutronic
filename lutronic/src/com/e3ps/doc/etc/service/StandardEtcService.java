@@ -267,11 +267,10 @@ public class StandardEtcService extends StandardManager implements EtcService {
 	public void modify(EtcDTO dto) throws Exception {
 		String oid = dto.getOid();
 		String name = dto.getName();
+		String interalnumber = dto.getInteralnumber();
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String content = dto.getContent();
-		String documentType = dto.getDocumentType_code();
-		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
 
@@ -281,8 +280,8 @@ public class StandardEtcService extends StandardManager implements EtcService {
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
 
-			DocumentType docType = DocumentType.toDocumentType(documentType);
-			String number = getDocumentNumberSeq(docType.getLongDescription());
+//			DocumentType docType = DocumentType.toDocumentType(documentType);
+//			String number = getDocumentNumberSeq(docType.getLongDescription());
 
 			Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
 			CheckoutLink clink = WorkInProgressHelper.service.checkout(doc, cFolder, "문서 수정 체크 아웃");
@@ -293,18 +292,8 @@ public class StandardEtcService extends StandardManager implements EtcService {
 			WTDocumentMaster master = (WTDocumentMaster) workCopy.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 
-			// 문서 이름 세팅..
-			if (name.length() > 0) {
-				if (name.indexOf("-") == -1) {
-					identity.setName(documentName + "-" + name);
-				} else {
-					identity.setName(documentName + "-" + name.split("-")[1]);
-				}
-			} else {
-				identity.setName(documentName);
-			}
-//			master.setDocType(docType);
-			identity.setNumber(number);
+			identity.setName(name);
+			identity.setNumber(interalnumber);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			workCopy.getTypeInfoWTDocument().setPtc_rht_1(content);

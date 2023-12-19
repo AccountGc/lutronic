@@ -28,8 +28,8 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 </table>
 
 <%
-	// 테이블 처리 여부
-	if(header) {
+// 테이블 처리 여부
+if (header) {
 %>
 <table class="create-table">
 	<colgroup>
@@ -47,16 +47,16 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			<%
 			}
 			%>
-			<div id="grid91" style="height:  30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+			<div id="grid91" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 		</td>
 	</tr>
 </table>
 <%
-	} else {
+} else {
 %>
 <div id="grid91" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
-	}
+}
 %>
 <script type="text/javascript">
 	let myGridID91;
@@ -64,6 +64,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "number",
 		headerText : "품목번호",
 		dataType : "string",
+		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -97,6 +98,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -104,6 +106,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
+		width : 80,
 		filter : {
 			showIcon : true,
 		},
@@ -111,6 +114,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -118,6 +122,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -149,9 +154,9 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			autoGridHeight : true
 		}
 		myGridID91 = AUIGrid.create("#grid91", columnLayout, props);
-		<% if(view || update){ %>
+		<%if (view || update) {%>
 		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "part")%>);
-		<% } %>
+		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드
@@ -168,11 +173,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			alert("삭제할 행을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID91, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID91);
 	}
 
 	function insert91(arr, callBack) {

@@ -1,8 +1,8 @@
-<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="com.e3ps.common.util.AUIGridUtil"%>
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="net.sf.json.JSONArray"%>
-<%@page import="com.e3ps.doc.etc.service.EtcHelper"%>
+<%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
@@ -11,7 +11,6 @@ boolean view = "view".equals(mode);
 boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
-JSONArray data = AUIGridUtil.include(oid, "doc");
 %>
 <table class="button-table">
 	<tr>
@@ -21,11 +20,27 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 				관련 문서
 			</div>
 		</td>
+		<%
+		if (!header) {
+		%>
+		<td class="right">
+			<%
+			if (create || update) {
+			%>
+			<input type="button" value="추가" title="추가" class="blue" onclick="popup90();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteRow90();">
+			<%
+			}
+			%>
+		</td>
+		<%
+		}
+		%>
 	</tr>
 </table>
 <%
-	// 테이블 처리 여부
-	if(header) {
+// 테이블 처리 여부
+if (header) {
 %>
 
 <table class="create-table">
@@ -50,27 +65,29 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 </table>
 
 <%
-	} else {
+} else {
 %>
-<div id="grid90" style="height: <%if(data.size() == 0) { %>110px; <%} else { %>30px;<%} %> border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid90" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
-	}
+}
 %>
+
 <script type="text/javascript">
 	let myGridID90;
 	const columns90 = [ {
-		dataField : "number",
-		headerText : "문서번호",
+		dataField : "interalnumber",
+		headerText : "내부 문서번호",
 		dataType : "string",
+		width : 180,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
-				const url = getCallUrl("/etc/view?oid=" + oid);
+				const url = getCallUrl("/doc/view?oid=" + oid);
 				_popup(url, "", "", "f");
 			}
-		},		
+		},				
 		filter : {
 			showIcon : true,
 		},
@@ -84,7 +101,7 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 			baseUrl : "javascript",
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
-				const url = getCallUrl("/etc/view?oid=" + oid);
+				const url = getCallUrl("/doc/view?oid=" + oid);
 				_popup(url, "", "", "f");
 			}
 		},		
@@ -95,6 +112,7 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
+		width : 80,
 		filter : {
 			showIcon : true,
 		},
@@ -102,6 +120,7 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
+		width : 80,
 		renderer : {
 			type : "TemplateRenderer"
 		},
@@ -109,9 +128,18 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 			showIcon : true,
 		},
 	}, {
+		dataField : "writer",
+		headerText : "작성자",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -119,6 +147,7 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -158,7 +187,7 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup90() {
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/etc/popup?method=insert90&multi=" + multi);
+		const url = getCallUrl("/doc/popup?method=insert90&multi=" + multi);
 		_popup(url, 1800, 900, "n");
 	}
 
@@ -169,11 +198,7 @@ JSONArray data = AUIGridUtil.include(oid, "doc");
 			alert("삭제할 행을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			var rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID90, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID);		
 	}
 
 	function insert90(arr, callBack) {

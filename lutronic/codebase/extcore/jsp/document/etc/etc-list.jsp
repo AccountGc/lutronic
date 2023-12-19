@@ -15,9 +15,9 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
-String type = (String) request.getAttribute("type");
 String location = (String) request.getAttribute("location");
 String title = (String) request.getAttribute("title");
+String type = (String) request.getAttribute("type");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -35,7 +35,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 		<input type="hidden" name="title" id="title" value="<%=title%>">
-
+		<input type="hidden" name="type" id="type" value="<%=type%>">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -234,12 +234,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							let permission = isPermission(oid);
-							if (!permission) {
-								authMsg();
-								return false;
-							}
-							const url = getCallUrl("/doc/view?oid=" + oid);
+							const title = document.getElementById("title").value;
+							const type = document.getElementById("type").value;
+							const url = getCallUrl("/etc/view?oid=" + oid + "&title=" + title + "&type=" + type);
 							_popup(url, "", "", "f");
 						}
 					},
@@ -257,12 +254,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							let permission = isPermission(oid);
-							if (!permission) {
-								authMsg();
-								return false;
-							}
-							const url = getCallUrl("/doc/view?oid=" + oid);
+							const title = document.getElementById("title").value;
+							const type = document.getElementById("type").value;
+							const url = getCallUrl("/etc/view?oid=" + oid + "&title=" + title + "&type=" + type);
 							_popup(url, "", "", "f");
 						}
 					},

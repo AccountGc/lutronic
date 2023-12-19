@@ -8,6 +8,7 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 EtcDTO dto = (EtcDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
+String title = (String) request.getAttribute("title");
 String type = (String) request.getAttribute("type");
 %>
 <style type="text/css">
@@ -18,12 +19,14 @@ iframe {
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
-
+<input type="hidden" name="title" id="title" value="<%=title%>">
+<input type="hidden" name="type" id="type" value="<%=type%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
+				<%=title%>
 				문서 상세보기
 			</div>
 		</td>
@@ -79,12 +82,14 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb">문서번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
+				<th class="lb">내부문서번호</th>
+				<td class="indent5"><%=dto.getInteralnumber()%></td>
+				<th><%=title%>
+					문서명
+				</th>
+				<td class="indent5"><%=dto.getName()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
 				<th class="lb">REV</th>
@@ -117,8 +122,8 @@ iframe {
 			<tr>
 				<th class="lb">결재방식</th>
 				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
-				<th>내부문서번호</th>
-				<td class="indent5"><%=dto.getInteralnumber()%></td>
+				<th>상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
 				<th>프로젝트 코드</th>
 				<td class="indent5"><%=dto.getModel_name()%></td>
 			</tr>
@@ -133,13 +138,13 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getContent() != null ? dto.getContent() : "" %></textarea>
+					<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
 						DEXT5.config.Mode = "view";
 						
 						new Dext5editor('content');
-						var content = document.getElementById("contents").value;
+						const content = document.getElementById("contents").value;
 						DEXT5.setBodyValue(content, 'content');
 					</script>
 				</td>
@@ -301,8 +306,8 @@ iframe {
 
 	//수정 및 개정
 	function update(mode) {
-		const type = "<%= type %>";
-		const url = getCallUrl("/etc/update?oid=" + oid + "&mode=" + mode + "&type=" + type);
+		const type = document.getElementById("type").value;
+		const url = getCallUrl("/etc/update?oid=" + oid + "&mode=" + mode + "&type="+type);
 		document.location.href = url;
 	};
 
@@ -345,45 +350,11 @@ iframe {
 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
 	}
 
-	//일괄 다운로드
-	function batchSecondaryDown() {
-		const form = $("form[name=documentViewForm]").serialize();
-		const url = getCallUrl("/common/zip");
-		$.ajax({
-			type : "POST",
-			url : url,
-			data : form,
-			dataType : "json",
-			async : true,
-			cache : false,
-
-			error : function(data) {
-				var msg = "데이터 검색오류";
-				alert(msg);
-			},
-
-			success : function(data) {
-				console.log(data.message);
-				if (data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName=' + data.message + '&originFileName=' + data.message;
-				} else {
-					alert(data.message);
-				}
-			},
-			beforeSend : function() {
-				gfn_StartShowProcessing();
-			},
-			complete : function() {
-				gfn_EndShowProcessing();
-			}
-		});
-	}
-
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
+				const tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
 					break;
@@ -457,6 +428,7 @@ iframe {
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID100);
 		AUIGrid.resize(myGridID105);

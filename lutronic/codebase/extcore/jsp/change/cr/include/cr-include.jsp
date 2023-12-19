@@ -24,8 +24,8 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 </table>
 
 <%
-	// 테이블 처리 여부
-	if(header) {
+// 테이블 처리 여부
+if (header) {
 %>
 <table class="create-table">
 	<colgroup>
@@ -48,11 +48,11 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 	</tr>
 </table>
 <%
-	} else {
+} else {
 %>
 <div id="grid101" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
-	}
+}
 %>
 <script type="text/javascript">
 	let myGridID101;
@@ -63,7 +63,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		width : 150,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 		renderer : {
 			type : "LinkRenderer",
@@ -79,10 +78,8 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		headerText : "CR 제목",
 		dataType : "string",
 		style : "aui-left",
-		width : 350,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 		renderer : {
 			type : "LinkRenderer",
@@ -95,12 +92,11 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		},
 	}, {
 		dataField : "model",
-		headerText : "제품",
+		headerText : "제품명",
 		dataType : "string",
 		width : 220,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "changeSection",
@@ -109,7 +105,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		width : 220,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "createDepart",
@@ -118,7 +113,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "writer",
@@ -127,7 +121,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "approveDate",
@@ -136,16 +129,14 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 80,
+		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "creator",
@@ -154,7 +145,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "createdDate_txt",
@@ -163,7 +153,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	} ]
 	
@@ -208,11 +197,7 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 			alert("삭제할 행을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID101, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID101);
 	}
 
 	function insert101(arr, callBack) {

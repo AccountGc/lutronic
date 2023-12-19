@@ -11,11 +11,10 @@ ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttri
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
-DocumentType[] docTypeList = (DocumentType[]) request.getAttribute("docTypeList");
 EtcDTO dto = (EtcDTO) request.getAttribute("dto");
 String mode = (String) request.getAttribute("mode");
 String type = (String) request.getAttribute("type");
-String location = EtcHelper.manager.toLocation(type);
+String location = (String) request.getAttribute("location");
 String title = "";
 if ("modify".equals(mode)) {
 	title = "수정";
@@ -40,7 +39,7 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="<%=title %>" title="<%=title %>" class="blue" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -81,17 +80,13 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">문서명</th>
+		<th class="req lb">ㄴ</th>
 		<td class="indent5">
 			<input type="text" name="docName" id="docName" class="width-300" value="<%=dto.getName()%>">
 		</td>
-		<th class="req">문서종류</th>
+		<th>내부 문서번호</th>
 		<td class="indent5">
-			<input type="text" name="documentName" id="documentName" class="width-200" value="<%= dto.getName().indexOf("-") > -1 ? dto.getName().split("-")[0] : dto.getName() %>">
-			<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
-				<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
-				</ul>
-			</div>
+			<input type="text" name="interalnumber" id="interalnumber" class="width-200" value="<%=dto.getInteralnumber()%>">
 		</td>
 		<th class="req">결재방식</th>
 		<td>
@@ -116,21 +111,7 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">문서유형</th>
-		<td class="indent5">
-			<select name="documentType" id="documentType" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (DocumentType documentType : docTypeList) {
-					boolean selected = documentType.toString().equals(dto.getDocumentType_code());
-				%>
-				<option value="<%=documentType.toString()%>" <%if (selected) {%> selected="selected" <%}%>><%=documentType.getDisplay()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
-		<th class="req">보존기간</th>
+		<th class="req lb">보존기간</th>
 		<td class="indent5">
 			<select name="preseration" id="preseration" class="width-200">
 				<%
@@ -174,24 +155,19 @@ iframe {
 				%>
 			</select>
 		</td>
-		<th>내부 문서번호</th>
-		<td class="indent5">
-			<input type="text" name="interalnumber" id="interalnumber" class="width-200" value="<%=dto.getInteralnumber()%>">
-		</td>
+
 		<th>작성자</th>
 		<td class="indent5">
-			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%= dto.getWriter_name() != null ? dto.getWriter_name() : ""%>">
-			<input type="hidden" name="writerOid" id="writerOid"  value="<%= dto.getWriter() %>">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
+			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter()%>">
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">내용</th>
-		<td colspan="5" class="indent5">
-			<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getContent() != null ? dto.getContent() : "" %></textarea>
+		<td colspan="5" class="indent7 pb8">
+			<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 			<script type="text/javascript">
 				new Dext5editor('content');
-				var content = document.getElementById("contents").value;
+				const content = document.getElementById("contents").value;
 				DEXT5.setBodyValue(content, 'content');
 			</script>
 		</td>
@@ -276,7 +252,7 @@ iframe {
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="<%=title %>" title="<%=title %>" class="blue" onclick="<%=mode%>('false');">
+			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
 			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
@@ -313,17 +289,15 @@ iframe {
 		const location = document.getElementById("location");
 		const formType = document.getElementById("formType");
 		const name = document.getElementById("docName");
-		const documentType = document.getElementById("documentType");
 		const description = document.getElementById("description");
 		const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 		const secondarys = toArray("secondarys");
 		const primary = document.querySelector("input[name=primary]");
 		const model = document.getElementById("model").value;
-		const writer = document.getElementById("writerOid").value;
+		const writer = document.getElementById("writer").value;
 		const interalnumber = document.getElementById("interalnumber").value;
 		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
-		const documentName = document.getElementById("documentName");
 		const temprary = JSON.parse(temp);
 		const iterationNote = document.getElementById("iterationNote").value;
 	
@@ -344,22 +318,11 @@ iframe {
 		// 내용
 		const content = DEXT5.getBodyValue("content");
 		
-		if (isNull(documentName.value)) {
-			alert("문서종류를 입력해주세요.");
-			documentName.focus();
-			return false;
-		}
-		
 		if(temprary) {
 			if (!confirm("임시저장하시겠습니까?")){
 				return false;
 			}	
 		} else {
-
-			if (isNull(documentType.value)) {
-				alert("문서유형을 선택해주세요.");
-				return false;
-			}
 
 			if (primary == null) {
 				alert("주 첨부파일을 첨부해주세요.");
@@ -375,7 +338,6 @@ iframe {
 			oid : oid,
 			name : name.value,
 			lifecycle : lifecycle,
-			documentType_code : documentType.value,
 			description : description.value,
 			content : content,
 			secondarys : secondarys,
@@ -386,7 +348,6 @@ iframe {
 			interalnumber : interalnumber,
 			writer : writer,
 			preseration_code : preseration,
-			documentName : documentName.value,
 			iterationNote : iterationNote,
 			// 링크 데이터
 			rows90 : rows90,
@@ -411,12 +372,11 @@ iframe {
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
+// 		toFocus("iterationNote");
 		selectbox("formType");
 		selectbox("preseration");
-		selectbox("documentType");
 		selectbox("model");
 		selectbox("deptcode");
-		finderUser("writer");
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);
@@ -429,41 +389,8 @@ iframe {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-		$("#documentType").bindSelectDisabled(true);
-		
-		// 문서명 규칙
-		$("#documentName").bindSelector({
-				reserveKeys : {
-					options : "list",
-					optionValue : "value",
-					optionText : "name"
-				},
-				optionPrintLength : "all",
-				onsearch : function(id, obj, callBack) {
-					const value = document.getElementById(id).value;
-					const url = getCallUrl("/doc/finder");
-					const params = {
-						value : value,
-					};
-					logger(params);
-					call(url, params, function(data) {
-						callBack({
-							options : data.list
-						})
-					})
-				},
-				onchange : function() {
-					const id = this.targetID;
-					if (this.selectedOption != null) {
-						const value = this.selectedOption.value;
-						document.getElementById(id).value = value;
-					}
-				},
-			});
-		});
+	});
 	
-	
-
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID91);

@@ -244,35 +244,37 @@ public class DocumentController extends BaseController {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 
-			// true 연결 있음
-			if (DocumentHelper.manager.isConnect(oid, DocumentECOLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 ECO가 있습니다.");
-				return result;
-			}
+			if (!CommonUtil.isAdmin()) {
+				// true 연결 있음
+				if (DocumentHelper.manager.isConnect(oid, DocumentECOLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 ECO가 있습니다.");
+					return result;
+				}
 
-			if (DocumentHelper.manager.isConnect(oid, DocumentEOLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 EO가 있습니다.");
-				return result;
-			}
+				if (DocumentHelper.manager.isConnect(oid, DocumentEOLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 EO가 있습니다.");
+					return result;
+				}
 
-			if (DocumentHelper.manager.isConnect(oid, DocumentCRLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 CR이 있습니다.");
-				return result;
-			}
+				if (DocumentHelper.manager.isConnect(oid, DocumentCRLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 CR이 있습니다.");
+					return result;
+				}
 
-			if (DocumentHelper.manager.isConnect(oid, DocumentECPRLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 ECPR이 있습니다.");
-				return result;
-			}
+				if (DocumentHelper.manager.isConnect(oid, DocumentECPRLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 ECPR이 있습니다.");
+					return result;
+				}
 
-			if (DocumentHelper.manager.isConnect(oid, WTPartDescribeLink.class)) {
-				result.put("result", false);
-				result.put("msg", "문서와 연결된 품목이 있습니다.");
-				return result;
+				if (DocumentHelper.manager.isConnect(oid, WTPartDescribeLink.class)) {
+					result.put("result", false);
+					result.put("msg", "문서와 연결된 품목이 있습니다.");
+					return result;
+				}
 			}
 
 			result = DocumentHelper.service.delete(oid);

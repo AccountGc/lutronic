@@ -208,7 +208,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "CR 제목",
 					dataType : "string",
 					style : "aui-left",
-					width : 350,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -224,7 +223,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "model",
-					headerText : "제품",
+					headerText : "제품명",
 					dataType : "string",
 					width : 220,
 					filter : {
@@ -271,7 +270,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 100,
 					filter : {
 						showIcon : true,
 						inline : true

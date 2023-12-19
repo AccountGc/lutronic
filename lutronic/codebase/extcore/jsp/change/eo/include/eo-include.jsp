@@ -94,18 +94,28 @@ if(view){
 			}
 		},
 	}, {
+		dataField : "model",
+		headerText : "제품명",
+		dataType : "string",
+		width : 250,
+		filter : {
+			showIcon : true,
+			inline : true
+		},
+	}, {
 		dataField : "eoType",
 		headerText : "구분",
 		dataType : "string",
-		width : 120,
+		width : 80,
 		filter : {
 			showIcon : true,
+			inline : true
 		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 120,
+		width : 100,
 		filter : {
 			showIcon : true,
 		},
@@ -180,11 +190,7 @@ if(view){
 			alert("삭제할 행을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID100, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID100);
 	}
 
 	function insert100(arr, callBack) {

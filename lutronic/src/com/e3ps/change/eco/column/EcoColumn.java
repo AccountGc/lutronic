@@ -39,7 +39,6 @@ public class EcoColumn {
 		setOid(eco.getPersistInfo().getObjectIdentifier().getStringValue());
 		setNumber(eco.getEoNumber());
 		setName(eco.getEoName());
-		setSendType(eco.getSendType());
 		setLicensing(eco.getLicensingChange());
 		setRiskType(eco.getRiskType());
 		setLicensing_name(licensing(eco.getLicensingChange()));
@@ -49,8 +48,20 @@ public class EcoColumn {
 		setCreatedDate(eco.getCreateTimestamp());
 		setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate(eco.getEoApproveDate());
+		setSendTypeInfo(eco);
 	}
-	
+
+	private void setSendTypeInfo(EChangeOrder eco) throws Exception {
+		String sendType = eco.getSendType();
+		if ("ECO".equals(sendType)) {
+			setSendType("ECO");
+		} else if ("SCO".equals(sendType)) {
+			setSendType("SCO");
+		} else if ("ORDER".equals(sendType)) {
+			setSendType("선구매");
+		}
+	}
+
 	/**
 	 * 위험통제 디스플레이
 	 */

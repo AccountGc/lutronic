@@ -61,11 +61,11 @@ if(view || update){
 	let myGridID105;
 	const columns105 = [ {
 		dataField : "number",
-		headerText : "ECO번호",
+		headerText : "ECO 번호",
 		dataType : "string",
+		width : 120,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 		renderer : {
 			type : "LinkRenderer",
@@ -73,16 +73,16 @@ if(view || update){
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
 				const url = getCallUrl("/eco/view?oid=" + oid);
-				popup(url, 1600, 800);
+				_popup(url, 1600, 800, "n");
 			}
 		},
 	}, {
 		dataField : "name",
-		headerText : "ECO제목",
+		headerText : "ECO 제목",
 		dataType : "string",
+		style : "aui-left",
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 		renderer : {
 			type : "LinkRenderer",
@@ -90,32 +90,64 @@ if(view || update){
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
 				const url = getCallUrl("/eco/view?oid=" + oid);
-				popup(url, 1600, 800);
+				_popup(url, 1600, 800, "n");
 			}
+		},
+	}, {
+		dataField : "sendType",
+		headerText : "ECO 타입",
+		dataType : "string",
+		width : 80,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "licensing_name",
+		headerText : "인허가변경",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
+		},
+	}, {
+		dataField : "riskType_name",
+		headerText : "위험 통제",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
 		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
+		width : 120,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
+		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
 		},
 	}, {
-		dataField : "approveDate_txt",
-		headerText : "승인일",
-		dataType : "string",
+		dataField : "createdDate",
+		headerText : "등록일",
+		dataType : "date",
+		width : 100,
 		filter : {
 			showIcon : true,
-			inline : true
+		},
+	}, {
+		dataField : "approveDate",
+		headerText : "승인일",
+		dataType : "string",
+		width : 100,
+		filter : {
+			showIcon : true,
 		},
 	} ]
 	
@@ -158,11 +190,7 @@ if(view || update){
 			alert("삭제할 행을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID105, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID105);
 	}
 
 	function insert105(arr, callBack) {
