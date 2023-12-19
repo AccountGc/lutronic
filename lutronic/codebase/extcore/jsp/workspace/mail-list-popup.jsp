@@ -109,6 +109,17 @@
 		AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 			hideContextMenu();
 		});
+		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
+	}
+	
+	function auiCellClick(event) {
+		const item = event.item;
+		
+		if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
+			AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
+		} else {
+			AUIGrid.addCheckedRowsByIds(event.pid, item._$uid);
+		}
 	}
 
 	function loadGridData() {

@@ -9,6 +9,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String location = (String) request.getAttribute("location");
+location = StringUtil.checkString(location)==true?location:DocumentHelper.DOCUMENT_ROOT;
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -235,17 +236,7 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<td valign="top">
 			<jsp:include page="/extcore/jsp/common/folder-include.jsp">
-				<%
-					if(StringUtil.checkString(location)) {
-				%>
 				<jsp:param value="<%=location%>" name="location" />
-				<%
-					} else {
-				%>
-				<jsp:param value="<%=DocumentHelper.DOCUMENT_ROOT%>" name="location" />
-				<%
-					}
-				%>
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
 				<jsp:param value="593" name="height" />
@@ -411,6 +402,30 @@ function createAUIGrid(columnLayout) {
 	AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 		hideContextMenu();
 	});
+	AUIGrid.bind(myGridID, "cellClick", auiCellClick);
+}
+
+function auiCellClick(event) {
+	const item = event.item;
+	const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+	const rowId = item[rowIdField];
+	
+	<%if (!multi) {%>
+	// 이미 체크 선택되었는지 검사
+	if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
+		// 엑스트라 체크박스 체크해제 추가
+		AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+	} else {
+		// 엑스트라 체크박스 체크 추가
+		AUIGrid.setCheckedRowsByIds(event.pid, rowId);
+	}
+	<%}else{%>
+	if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
+		AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
+	} else {
+		AUIGrid.addCheckedRowsByIds(event.pid, item._$uid);
+	}
+	<%}%>
 }
 
 function loadGridData() {

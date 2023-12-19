@@ -323,6 +323,30 @@ boolean multi = (boolean) request.getAttribute("multi");
 		AUIGrid.bind(myGridID, "hScrollChange", function(event) {
 			hideContextMenu();
 		});
+		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
+	}
+	
+	function auiCellClick(event) {
+		const item = event.item;
+		const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+		const rowId = item[rowIdField];
+		
+		<%if (!multi) {%>
+		// 이미 체크 선택되었는지 검사
+		if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
+			// 엑스트라 체크박스 체크해제 추가
+			AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+		} else {
+			// 엑스트라 체크박스 체크 추가
+			AUIGrid.setCheckedRowsByIds(event.pid, rowId);
+		}
+		<%}else{%>
+		if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
+			AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
+		} else {
+			AUIGrid.addCheckedRowsByIds(event.pid, item._$uid);
+		}
+		<%}%>
 	}
 	
 	function loadGridData() {
