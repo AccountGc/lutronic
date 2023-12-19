@@ -2,7 +2,8 @@ const interalnumberId = "interalnumber";
 const classType1Id = "classType1";
 const classType2Id = "classType2";
 const classType3Id = "classType3";
-const nameId = "name";
+const preFixId = "preFix";
+const suffixId = "suffix";
 const modelId = "model";
 const indexId = "index";
 // 최초 화면 로드시 셀렉트 박스 변경
@@ -12,13 +13,12 @@ function toUI() {
 	selectbox(classType3Id);
 
 	const numberTag = document.querySelector("#" + interalnumberId);
-	const nameTag = document.querySelector("#" + nameId);
+	const nameTag = document.querySelector("#" + preFixId);
 	numberTag.setAttribute("readonly", "readonly");
 	nameTag.setAttribute("readonly", "readonly");
 	// 초기 사용 불가 상태
 	$("#" + classType2Id).bindSelectDisabled(true);
 	$("#" + classType3Id).bindSelectDisabled(true);
-	$("#" + nameId).bindSelectDisabled(true);
 	$("#" + modelId).bindSelectDisabled(true);
 }
 
@@ -26,11 +26,6 @@ function first(obj) {
 	const classType1 = obj.value;
 	clearValue();
 	if (classType1 !== "") {
-		const index = document.getElementById(indexId);
-		const selectElement = document.getElementById(classType1Id);
-		const selectedIndex = selectElement.selectedIndex;
-		const text = selectElement.options[selectedIndex].text;
-		//		index.value = text.length + 1;
 		let checker = autoNumberChecker(classType1);
 		// 채번 대상이다
 		if (!checker) {
@@ -62,7 +57,7 @@ function first(obj) {
 // 번호 및 제목 태그 활성화
 function removeReadOnly() {
 	const numberTag = document.querySelector("#" + interalnumberId);
-	const nameTag = document.querySelector("#" + nameId);
+	const nameTag = document.querySelector("#" + preFixId);
 	numberTag.value = "";
 	numberTag.removeAttribute("readonly");
 	nameTag.value = "";
@@ -99,7 +94,7 @@ function second() {
 	const text = selectElement.options[selectedIndex].text;
 	const classType1 = document.getElementById(classType1Id).value;
 	const tag = document.querySelector("#" + interalnumberId);
-	const nameTag = document.querySelector("#" + nameId);
+	const nameTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
 		if ("DEV" === classType1 || "INSTRUCTION" == classType1) {
 			tag.value += clazz + "-";
@@ -114,7 +109,7 @@ function second() {
 			classType3(classType1, value);
 		} else if ("MEETING" === classType1) {
 			tag.value += clazz + "-";
-			nameEnable();
+			suffixEnable();
 			nameTag.value = text + "-"
 			lastNumber(tag.value, classType1);
 		}
@@ -129,20 +124,20 @@ function last() {
 	const clazz = selectElement.options[selectedIndex].getAttribute("data-clazz");
 	const classType1 = document.getElementById(classType1Id).value;
 	const numberTag = document.querySelector("#" + interalnumberId);
-	const nameTag = document.querySelector("#" + nameId);
+	const preFixTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
 		const classType2 = document.getElementById(classType2Id);
 		const index = classType2.selectedIndex;
 		const text = classType2.options[index].text;
 		if ("REPORT" === classType1) {
 			numberTag.value += clazz + "-";
-			nameEnable();
-			nameTag.value = text + "-"
+			suffixEnable();
+			preFixTag.value = text + "-"
 			lastNumber(numberTag.value, classType1);
 		} else if ("VALIDATION" === classType1) {
 			numberTag.value += clazz + "-";
-			nameEnable();
-			nameTag.value = text + "-"
+			suffixEnable();
+			preFixTag.value = text + "-"
 			lastNumber(numberTag.value, classType1);
 		}
 	}
@@ -152,20 +147,21 @@ function last() {
 function preNumberCheck(obj) {
 	const tag = document.querySelector("#" + interalnumberId);
 	const value = obj.value;
-	const nameTag = document.querySelector("#" + nameId);
+	const preFixTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
 		const classType1 = document.getElementById(classType1Id);
-		const selectedIndex = classType1.selectedIndex;
-		const text = classType1.options[selectedIndex].text;
+		const classType2 = document.getElementById(classType2Id);
+		const selectedIndex = classType2.selectedIndex;
+		const text = classType2.options[selectedIndex].text;
 		if (classType1.value === "DEV") {
 			tag.value += value + "-";
-			nameEnable();
-			nameTag.value = text + "-";
+			suffixEnable();
+			preFixTag.value = text + "-";
 			lastNumber(tag.value, classType1.value);
 		} else if (classType1.value === "INSTRUCTION") {
 			tag.value += value + "-WI-";
-			nameEnable();
-			nameTag.value = text + "-";
+			suffixEnable();
+			preFixTag.value = text + "-";
 			lastNumber(tag.value, classType1.value);
 		}
 	}
@@ -191,17 +187,11 @@ function classType3(classType1, classType2) {
 }
 
 
-//문서명 앞부분 못건들게
-function nameValidate(obj) {
-	const value = obj.value;
-	logger(value.indexOf("-"));
-}
-
 // 문서명 활성화
-function nameEnable() {
-	const nameTag = document.querySelector("#" + nameId);
-	nameTag.value = "";
-	nameTag.removeAttribute("readonly");
+function suffixEnable() {
+	const suffixTag = document.querySelector("#" + suffixId);
+	suffixTag.value = "";
+	suffixTag.removeAttribute("readonly");
 }
 
 // 프로젝트 코드 활성화
@@ -212,18 +202,19 @@ function modelEnable() {
 // 값 초기화 + 읽기전용처리
 function clearValue() {
 	const numberTag = document.querySelector("#" + interalnumberId);
-	const nameTag = document.querySelector("#" + nameId);
+	const preFixTag = document.querySelector("#" + preFixId);
+	const suffixTag = document.querySelector("#" + suffixId);
 	numberTag.value = "";
-	nameTag.value = "";
+	preFixTag.value = "";
+	suffixTag.value = "";
 	numberTag.setAttribute("readonly", "readonly");
-	nameTag.setAttribute("readonly", "readonly");
+	preFixTag.setAttribute("readonly", "readonly");
+	suffixTag.setAttribute("readonly", "readonly");
 	$("#" + classType2Id).bindSelectSetValue("");
 	$("#" + classType3Id).bindSelectSetValue("");
 	$("#" + modelId).bindSelectSetValue("");
-
 	$("#" + classType2Id).bindSelectDisabled(true);
 	$("#" + classType3Id).bindSelectDisabled(true);
-	$("#" + nameId).bindSelectDisabled(true);
 	$("#" + modelId).bindSelectDisabled(true);
 }
 
@@ -238,8 +229,8 @@ function lastNumber(value, classType1) {
 			tag.value = data.lastNumber;
 		}
 	}, "GET");
-	const nameTag = document.querySelector("#" + nameId);
-	nameTag.focus();
+	const suffixTag = document.querySelector("#" + suffixId);
+	suffixTag.focus();
 }
 
 // 채번할지 말지 여부 체크

@@ -32,11 +32,10 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=1008861598"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=11898"></script>
 </head>
 <body>
 	<form>
-		<input type="hidden" name="index" id="index">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -118,7 +117,9 @@ iframe {
 			<tr>
 				<th class="lb req">문서명</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-400" onkeydown="nameValidate(this);">
+					<input type="text" name="preFix" id="preFix" class="width-200" readonly="readonly">
+					&nbsp;
+					<input type="text" name="suffix" id="suffix" class="width-200" readonly="readonly">
 				</td>
 				<th>프로젝트코드</th>
 				<td class="indent5">
@@ -306,8 +307,8 @@ iframe {
 				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
 				const formType = document.getElementById("formType");
-				const name = document.getElementById("name");
-				// 				const documentType = document.getElementById("documentType");
+				const preFix = document.getElementById("preFix").value;
+				const suffix = document.getElementById("suffix").value;
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
@@ -341,8 +342,8 @@ iframe {
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 내용
 				const content = DEXT5.getBodyValue("content");
-
-				if (isNull(name.value)) {
+				const name = preFix + "-" + suffix;
+				if (isNull(name)) {
 					alert("문서명을 입력하세요.");
 					name.focus();
 					return false;
@@ -369,7 +370,7 @@ iframe {
 				}
 
 				const params = {
-					name : name.value,
+					name : name,
 					lifecycle : lifecycle,
 					description : description.value,
 					content : content,
