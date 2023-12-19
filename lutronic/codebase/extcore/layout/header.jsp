@@ -496,104 +496,95 @@ int eca = (int) request.getAttribute("eca");
 			if (isDist) {
 			%>
 			<li>
-				<a href="css_animation.html">
+				<a href="#">
 					<i class="fa fa-magic"></i>
-					<span class="nav-label">배포관리</span>
+					<span class="nav-label">나의 업무</span>
 					<span class="fa arrow"></span>
 				</a>
 				<ul class="nav nav-second-level collapse">
 					<li>
-						<a href="#">
-							<i class="fa fa-magic"></i>
-							<span class="nav-label">나의 업무</span>
-							<span class="fa arrow"></span>
+						<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
+							합의함
+							<span class="label label-info float-right">
+								<%=count.get("agree")%>
+							</span>
 						</a>
-						<ul class="nav nav-second-level collapse">
-							<li>
-								<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
-									합의함
-									<span class="label label-info float-right">
-										<%=count.get("agree")%>
-									</span>
-								</a>
-							</li>
-							<li>
-								<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
-									결재함
-									<span class="label label-info float-right">
-										<%=count.get("approval")%>
-									</span>
-								</a>
-							</li>
-							<li>
-								<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
-									수신함
-									<span class="label label-info float-right">
-										<%=count.get("receive")%>
-									</span>
-								</a>
-							</li>
-							<li>
-								<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
-							</li>
-							<li>
-								<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
-							</li>
-						</ul>
 					</li>
 					<li>
-						<a href="#">
-							<i class="fa fa-desktop"></i>
-							<span class="nav-label">품목검색</span>
-							<span class="fa arrow"></span>
+						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
+							결재함
+							<span class="label label-info float-right">
+								<%=count.get("approval")%>
+							</span>
 						</a>
-						<ul class="nav nav-second-level collapse">
-							<li>
-								<a onclick="moveToPage(this, '/distribute/listPart', '> 품목관리 > 품목 검색');">품목 검색</a>
-							</li>
-							<li>
-								<a onclick="moveToPage(this, '/distribute/listProduction', '> 품목관리 > 완제품 검색');">완제품 검색</a>
-							</li>
-						</ul>
 					</li>
 					<li>
-						<a href="#">
-							<i class="fa fa-files-o"></i>
-							<span class="nav-label">설계변경</span>
-							<span class="fa arrow"></span>
+						<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
+							수신함
+							<span class="label label-info float-right">
+								<%=count.get("receive")%>
+							</span>
 						</a>
-						<ul class="nav nav-second-level collapse">
-							<li>
-								<a onclick="moveToPage(this, '/distribute/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
-								<!-- 								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a> -->
-							</li>
-							<li>
-								<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>
-								<!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
-							</li>
-						</ul>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/distribute/listDocument', '> 문서관리 > 문서 검색');">
-							<i class="fa fa-pie-chart"></i>
-							문서 검색
-						</a>
-						<!-- 						<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');"> -->
-						<!-- 							<i class="fa fa-pie-chart"></i> -->
-						<!-- 							<span class="nav-label">문서 검색</span> -->
-						<!-- 						</a> -->
+						<a onclick="moveToPage(this, '/org/organization', '> 나의업무 > 조직도');">조직도</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/distribute/listMold', '> 금형관리 > 금형 검색');">
-							<i class="fa fa-files-o"></i>
-							금형 검색
-						</a>
-						<!-- 						<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"> -->
-						<!-- 							<i class="fa fa-files-o"></i> -->
-						<!-- 							<span class="nav-label">금형 검색</span> -->
-						<!-- 						</a> -->
+						<a onclick="moveToPage(this, '/groupware/password', '> 나의업무 > 비밀번호변경');">비밀번호 변경</a>
 					</li>
 				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-desktop"></i>
+					<span class="nav-label">품목검색</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/distribute/listPart', '> 품목관리 > 품목 검색');">품목 검색</a>
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/distribute/listProduction', '> 품목관리 > 완제품 검색');">완제품 검색</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a href="#">
+					<i class="fa fa-files-o"></i>
+					<span class="nav-label">설계변경</span>
+					<span class="fa arrow"></span>
+				</a>
+				<ul class="nav nav-second-level collapse">
+					<li>
+						<a onclick="moveToPage(this, '/distribute/listEO', '> 설계변경 >EO 검색');">EO 검색</a>
+						<!-- 								<a onclick="moveToPage(this, '/changeECO/listEO', '> 설계변경 >EO 검색');">EO 검색</a> -->
+					</li>
+					<li>
+						<a onclick="moveToPage(this, '/distribute/listECO', '> 설계변경 > ECO 검색');">ECO 검색</a>
+						<!-- 								<a onclick="moveToPage(this, '/changeECO/list', '> 설계변경 > ECO 검색');">ECO 검색</a> -->
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a onclick="moveToPage(this, '/distribute/listDocument', '> 문서관리 > 문서 검색');">
+					<i class="fa fa-pie-chart"></i>
+					문서 검색
+				</a>
+				<!-- 						<a href="#" onclick="moveToPage(this, '/doc/list', '> 문서 관리 > 문서 검색');"> -->
+				<!-- 							<i class="fa fa-pie-chart"></i> -->
+				<!-- 							<span class="nav-label">문서 검색</span> -->
+				<!-- 						</a> -->
+			</li>
+			<li>
+				<a onclick="moveToPage(this, '/distribute/listMold', '> 금형관리 > 금형 검색');">
+					<i class="fa fa-files-o"></i>
+					금형 검색
+				</a>
+				<!-- 						<a href="#" onclick="moveToPage(this, '/mold/list', '> 금형관리 > 금형 검색');"> -->
+				<!-- 							<i class="fa fa-files-o"></i> -->
+				<!-- 							<span class="nav-label">금형 검색</span> -->
+				<!-- 						</a> -->
 			</li>
 			<%
 			}
