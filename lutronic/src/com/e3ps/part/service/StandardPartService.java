@@ -4182,17 +4182,17 @@ public class StandardPartService extends StandardManager implements PartService 
 				String level = getStringvalue(row.getCell(2));
 				// 값없을 경우 리턴
 				if (!StringUtil.checkString(level)) {
-					return;
+					continue;
 				}
 				String number = getStringvalue(row.getCell(3));
 				// 값없을 경우 리턴
 				if (!StringUtil.checkString(number)) {
-					return;
+					continue;
 				}
 				String name = getStringvalue(row.getCell(5));
 				// 값없을 경우 리턴
 				if (!StringUtil.checkString(name)) {
-					return;
+					continue;
 				}
 				String remarks = getStringvalue(row.getCell(7));
 				String specification = getStringvalue(row.getCell(10));
@@ -4212,7 +4212,7 @@ public class StandardPartService extends StandardManager implements PartService 
 				QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.NUMBER, number);
 				QueryResult result = PersistenceHelper.manager.find(query);
 				if (result.hasMoreElements()) {
-					return;
+					continue;
 				}
 				
 				WTPart part = WTPart.newWTPart();
@@ -4255,7 +4255,21 @@ public class StandardPartService extends StandardManager implements PartService 
 				CommonHelper.service.changeIBAValues(part, params);
 				IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, name, "string");
 				// level 설정
-				addLevel(level, part, d_qty, map);
+				int int_level = Integer.parseInt(level);
+				String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+				
+				if(0==int_level) {
+					map.put(level, oid);
+				}else {
+					int_level = int_level-1;
+					String str_level = Integer.toString(int_level);
+					String poid = (String) map.get(str_level);
+					WTPart parent = (WTPart) CommonUtil.getObject(poid);
+					WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(parent, part.getMaster());
+					usageLink.setQuantity(Quantity.newQuantity(d_qty, QuantityUnit.EA));
+					PersistenceHelper.manager.save(usageLink);
+					map.put(level, oid);
+				}
 			}
 
 			workbook.close();
@@ -4280,23 +4294,5 @@ public class StandardPartService extends StandardManager implements PartService 
 			rtnValue = Integer.toString((int) cell.getNumericCellValue());
 		}
 		return rtnValue;
-	}
-	
-	public void addLevel(String level, WTPart part, Double qty, Map<String,Object> map) throws Exception {
-		int int_level = Integer.parseInt(level);
-		String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
-		
-		if(0==int_level) {
-			map.put(level, oid);
-		}else {
-			int_level = int_level-1;
-			String str_level = Integer.toString(int_level);
-			String poid = (String) map.get(str_level);
-			WTPart parent = (WTPart) CommonUtil.getObject(poid);
-			WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(parent, part.getMaster());
-			usageLink.setQuantity(Quantity.newQuantity(qty, QuantityUnit.EA));
-			PersistenceHelper.manager.save(usageLink);
-			map.put(level, oid);
-		}
 	}
 }
