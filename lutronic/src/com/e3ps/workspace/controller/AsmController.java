@@ -116,11 +116,11 @@ public class AsmController extends BaseController {
 		} else if ("ROHS".equals(type)) {
 			model.setViewName("/extcore/jsp/rohs/rohs-register.jsp");
 		} else if ("COSMETIC".equals(type)) {
-			model.setViewName("/extcore/jsp/document/document-register.jsp");
+			model.setViewName("/extcore/jsp/document/etc/etc-register.jsp");
 		} else if ("CLINICAL".equals(type)) {
-			model.setViewName("/extcore/jsp/document/document-register.jsp");
+			model.setViewName("/extcore/jsp/document/etc/etc-register.jsp");
 		} else if ("PATHOLOGICAL".equals(type)) {
-			model.setViewName("/extcore/jsp/document/document-register.jsp");
+			model.setViewName("/extcore/jsp/document/etc/etc-register.jsp");
 		}
 		model.addObject("location", location);
 		model.addObject("type", type);

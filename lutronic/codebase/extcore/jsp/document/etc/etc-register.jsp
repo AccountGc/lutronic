@@ -160,7 +160,7 @@ String location = (String) request.getAttribute("location");
 
 			function popup() {
 				const location = document.getElementById("location").value;
-				const url = getCallUrl("/doc/popup?method=insert90&multi=true&state=BATCHAPPROVAL&location=" + location);
+				const url = getCallUrl("/etc/popup?method=insert90&multi=true&state=BATCHAPPROVAL&location=" + location);
 				_popup(url, 1800, 900, "n");
 			}
 
