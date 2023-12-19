@@ -132,6 +132,7 @@ import wt.query.SearchCondition;
 import wt.representation.Representable;
 import wt.representation.Representation;
 import wt.services.StandardManager;
+import wt.session.SessionContext;
 import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.util.WTProperties;
@@ -4163,9 +4164,13 @@ public class StandardPartService extends StandardManager implements PartService 
 
 	@Override
 	public void loaderPart(String path) throws Exception {
+		SessionContext prev = SessionContext.newContext();
+		
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+			
+			SessionHelper.manager.setAdministrator();.
 			
 			Map<String,Object> map = new HashMap<String, Object>();
 			File file = new File(path);
@@ -4255,21 +4260,21 @@ public class StandardPartService extends StandardManager implements PartService 
 				CommonHelper.service.changeIBAValues(part, params);
 				IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, name, "string");
 				// level 설정
-				int int_level = Integer.parseInt(level);
-				String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
-				
-				if(0==int_level) {
-					map.put(level, oid);
-				}else {
-					int_level = int_level-1;
-					String str_level = Integer.toString(int_level);
-					String poid = (String) map.get(str_level);
-					WTPart parent = (WTPart) CommonUtil.getObject(poid);
-					WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(parent, part.getMaster());
-					usageLink.setQuantity(Quantity.newQuantity(d_qty, QuantityUnit.EA));
-					PersistenceHelper.manager.save(usageLink);
-					map.put(level, oid);
-				}
+//				int int_level = Integer.parseInt(level);
+//				String oid = part.getPersistInfo().getObjectIdentifier().getStringValue();
+//				
+//				if(0==int_level) {
+//					map.put(level, oid);
+//				}else {
+//					int_level = int_level-1;
+//					String str_level = Integer.toString(int_level);
+//					String poid = (String) map.get(str_level);
+//					WTPart parent = (WTPart) CommonUtil.getObject(poid);
+//					WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(parent, part.getMaster());
+//					usageLink.setQuantity(Quantity.newQuantity(d_qty, QuantityUnit.EA));
+//					PersistenceHelper.manager.save(usageLink);
+//					map.put(level, oid);
+//				}
 			}
 
 			workbook.close();
@@ -4283,6 +4288,7 @@ public class StandardPartService extends StandardManager implements PartService 
 		} finally {
 			if (trs != null)
 				trs.rollback();
+			SessionContext.setContext(prev);
 		}
 	}
 	
