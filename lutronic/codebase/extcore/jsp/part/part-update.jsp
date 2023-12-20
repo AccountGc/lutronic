@@ -7,17 +7,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 PartData data = (PartData) request.getAttribute("data");
-String partName1 = "";
-String partName2 = "";
-String partName3 = "";
-String partName4 = "";
-if(data != null){
-	String[] partName = data.getName().split("_");
-	partName1 = partName[0];
-	partName2 = partName[1];
-	partName3 = partName[2];
-	partName4 = partName[3];
-}
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
@@ -63,10 +52,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 	<tr>
-		<th rowspan="4" class="req lb">품목명 <span style="color:red;">*</span></th>
+		<th rowspan="4" class="lb">품목명</th>
 		<th class="lb">대제목</th>
 		<td class="indent5">
-			<input id="partName1" name="partName1" class='partName width-300' type="text" value="<%= partName1 %>" >
+			<input id="partName1" name="partName1" class='partName width-300' type="text" value="<%= data.getPartName1() %>" >
 			<div id="partName1Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
 				<ul id="partName1UL" style="list-style-type: none; padding-left: 0px;">
 				</ul>
@@ -76,7 +65,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb">중제목</th>
 		<td class="indent5">
-			<input id="partName2" name="partName2" class='partName width-300' type="text" value="<%= partName2 %>" >
+			<input id="partName2" name="partName2" class='partName width-300' type="text" value="<%= data.getPartName2() %>" >
 			<div id="partName2Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
 				<ul id="partName2UL" style="list-style-type: none; padding-left: 0px;">
 				</ul>
@@ -86,7 +75,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 	<tr>
 		<th class="lb">소제목</th>
 		<td class="indent5">
-			<input id="partName3" name="partName3" class='partName width-300' type="text" value="<%= partName3 %>" >
+			<input id="partName3" name="partName3" class='partName width-300' type="text" value="<%= data.getPartName3() %>" >
 			<div id="partName3Search" style="display: none; border: 1px solid black ; position: absolute; background-color: white; width: 26%">
 				<ul id="partName3UL" style="list-style-type: none; padding-left: 0px;">
 				</ul>
@@ -94,9 +83,9 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 		</td>
 	</tr>
 	<tr>
-		<th class="lb">사용자 Key in</th>
+		<th class="lb req">사용자 Key in</th>
 		<td class="indent5">
-			<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%= partName4 %>" >
+			<input id="partName4" name="partName4" class='partName width-300' type="text" value="<%= data.getPartName4() %>" >
 		</td>
 	</tr>
 	<tr>

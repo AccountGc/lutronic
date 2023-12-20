@@ -72,7 +72,7 @@ public class StandardEoService extends StandardManager implements EoService {
 			String number = "E" + DateUtil.getCurrentDateString("ym");
 			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
 
-			number = number + seqNo;
+			number = number + "N" + seqNo;
 
 			// 모델 배열 처리
 			// US21,MD23,PN21,

@@ -88,4 +88,19 @@ public class FormTemplateHelper {
 		}
 		return list;
 	}
+
+	/**
+	 * 문서 양식 템플릿 이름으로 가져오기
+	 */
+	public FormTemplate getTemplate(String formType) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(FormTemplate.class, true);
+		QuerySpecUtils.toEqualsAnd(query, idx, FormTemplate.class, FormTemplate.FORM_TYPE, formType);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			return (FormTemplate) obj[0];
+		}
+		return null;
+	}
 }

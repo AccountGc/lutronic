@@ -89,7 +89,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			String number = "C" + new SimpleDateFormat("yyMM", Locale.KOREA).format(currentDate);
 			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
 
-			number = number + seqNo;
+			number = number + "N" + seqNo;
 
 			EChangeOrder eco = EChangeOrder.newEChangeOrder();
 			eco.setSendType(sendType);
