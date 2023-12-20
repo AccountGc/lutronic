@@ -5,6 +5,7 @@
 package com.e3ps.part.dto;
 
 import java.beans.PropertyDescriptor;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -100,6 +101,10 @@ public class PartData {
 	private boolean last;
 	private String location;
 	private double rohsState;
+	private String partName1;
+	private String partName2;
+	private String partName3;
+	private String partName4;
 
 	public PartData(WTPart part) throws Exception {
 //    	super(part);
@@ -153,7 +158,7 @@ public class PartData {
 		setLocation(part.getLocation());
 		Map<String, Object> dataMap = RohsUtil.getProductRoHsState(getOid());
 		setRohsState((double) dataMap.get("totalState"));
-		
+		setIBAPartName(part);
 	}
 
 	private ArrayList<Object[]> descentLastPart(WTPart part, Baseline baseline, boolean isCheckDummy, State state)
@@ -364,6 +369,17 @@ public class PartData {
 //		return "";
 //	}
 
+	private void setIBAPartName(WTPart part) throws Exception {
+		String partName1 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME1"));
+		setPartName1(partName1);
+		String partName2 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME2"));
+		setPartName2(partName2);
+		String partName3 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME3"));
+		setPartName3(partName3);
+		String partName4 = StringUtil.checkNull(IBAUtil.getAttrValue(part, "PARTNAME4"));
+		setPartName4(partName4);
+	}
+	
 //	public String getPartName(int index) {
 //		try {
 //			

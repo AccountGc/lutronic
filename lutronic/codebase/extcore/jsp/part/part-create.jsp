@@ -59,7 +59,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					<span id="locationText"><%=PartHelper.PART_ROOT%></span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 				</td>
-				<th class="req" rowspan="4">품목명</th>
+				<th rowspan="4">품목명</th>
 				<th class="lb">대제목</th>
 				<td class="indent5">
 					<input id="partName1" name="partName1" class='partName width-200' type="text">
@@ -108,7 +108,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						<option value="">선택</option>
 					</select>
 				</td>
-				<th class="lb">사용자 KEY IN</th>
+				<th class="lb req">사용자 KEY IN</th>
 				<td class="indent5">
 					<input type="text" class="partName width-200" name="partName4" id="partName4">
 				</td>
