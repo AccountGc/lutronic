@@ -15,3 +15,6 @@
 
 <!-- 공통 js -->
 <script type="text/javascript" src="/Windchill/extcore/jsp/js/common.js"></script>
+
+<!-- dext5 Editor -->
+<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
