@@ -12,7 +12,7 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
+// ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
 ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 // JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
@@ -32,10 +32,11 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=11224898"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=15003098"></script>
 </head>
 <body>
 	<form>
+		<input type="hidden" name="formType" id="formType">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -65,23 +66,13 @@ iframe {
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"> /Default/문서 </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
+					<input type="button" value="문서채번확인" title="문서채번확인" onclick="numberView();" class="red">
 				</td>
-				<th class="req">내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
-				</td>
-				<th>문서 템플릿</th>
-				<td class="indent5">
-					<select name="formType" id="formType" class="width-200" onchange="loadForm();">
-						<option value="">선택</option>
-						<%
-						for (FormTemplate formType : form) {
-						%>
-						<option value="<%=formType.getPersistInfo().getObjectIdentifier().getStringValue()%>"><%=formType.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+				<th class="lb req">문서명</th>
+				<td class="indent5" colspan="3">
+					<input type="text" name="preFix" id="preFix" class="width-300" readonly="readonly">
+					&nbsp;
+					<input type="text" name="suffix" id="suffix" class="width-300" readonly="readonly">
 				</td>
 			</tr>
 			<tr>
@@ -115,11 +106,9 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="lb req">문서명</th>
+				<th class="req">내부 문서번호</th>
 				<td class="indent5">
-					<input type="text" name="preFix" id="preFix" class="width-300" readonly="readonly">
-					&nbsp;
-					<input type="text" name="suffix" id="suffix" class="width-200" readonly="readonly">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
 				</td>
 				<th>프로젝트코드</th>
 				<td class="indent5">
@@ -285,22 +274,22 @@ iframe {
 				_popup(url, 500, 600, "n");
 			}
 
-			function loadForm() {
-				const oid = document.getElementById("formType").value;
-				if (oid === "") {
-					return false;
-				}
-				const url = getCallUrl("/form/html?oid=" + oid);
-				parent.openLayer();
-				call(url, null, function(data) {
-					if (data.result) {
-						DEXT5.setBodyValue(data.html, 'content');
-					} else {
-						alert(data.msg);
-					}
-					parent.closeLayer();
-				}, "GET");
-			}
+// 			function loadForm() {
+// 				const oid = document.getElementById("formType").value;
+// 				if (oid === "") {
+// 					return false;
+// 				}
+// 				const url = getCallUrl("/form/html?oid=" + oid);
+// 				parent.openLayer();
+// 				call(url, null, function(data) {
+// 					if (data.result) {
+// 						DEXT5.setBodyValue(data.html, 'content');
+// 					} else {
+// 						alert(data.msg);
+// 					}
+// 					parent.closeLayer();
+// 				}, "GET");
+// 			}
 
 			// 문서 등록
 			function create(temp) {
@@ -392,7 +381,8 @@ iframe {
 					// 클래스타입
 					classType1_code : classType1_code,
 					classType2_oid : classType2_oid,
-					classType3_oid : classType3_oid
+					classType3_oid : classType3_oid,
+					formType_oid : formType.value
 				};
 				logger(params);
 				parent.openLayer();
@@ -405,8 +395,23 @@ iframe {
 				});
 			}
 
+			function numberView() {
+				const classType = document.getElementById("classType1").value;
+				if (classType === "") {
+					alert("대분류를 선택하세요.");
+					return false;
+				}
+				if (classType !== "DEV" && classType !== "INSTRUCTION" && classType !== "REPORT" && classType !== "VALIDATION" && classType !== "MEETING") {
+					alert("채번 대상의 문서가 아닙니다.");
+					return false;
+				}
+
+				const url = getCallUrl("/doc/numberView?classType=" + classType);
+				_popup(url, 1000, 600, "n");
+			}
+
 			document.addEventListener("DOMContentLoaded", function() {
-				selectbox("formType");
+// 				selectbox("formType");
 				selectbox("preseration");
 				// 				selectbox("documentType");
 				selectbox("model");

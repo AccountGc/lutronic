@@ -77,7 +77,7 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
+//		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 //		JSONArray docTypeList = DocumentHelper.manager.toJson();
 
 		// 문서 대분류
@@ -88,7 +88,7 @@ public class DocumentController extends BaseController {
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
-		model.addObject("form", form);
+//		model.addObject("form", form);
 		model.setViewName("/extcore/jsp/document/document-create.jsp");
 		return model;
 	}
@@ -443,5 +443,15 @@ public class DocumentController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "전체 채번 리스트")
+	@GetMapping(value = "/numberView")
+	public ModelAndView numberView(String classType) throws Exception {
+		ModelAndView model = new ModelAndView();
+		JSONArray list = DocumentClassHelper.manager.numberView(classType);
+		model.addObject("list", list);
+		model.setViewName("popup:/document/document-numberView");
+		return model;
 	}
 }

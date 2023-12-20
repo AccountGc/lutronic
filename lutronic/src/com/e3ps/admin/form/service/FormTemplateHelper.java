@@ -74,19 +74,19 @@ public class FormTemplateHelper {
 	/**
 	 * 문서 타입에 따른 양식 가져오기
 	 */
-	public ArrayList<FormTemplate> getDataForType(String classType) throws Exception {
+	public FormTemplate getHtml(String code) throws Exception {
 		ArrayList<FormTemplate> list = new ArrayList<FormTemplate>();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(FormTemplate.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, FormTemplate.class, FormTemplate.FORM_TYPE, classType);
+		QuerySpecUtils.toEqualsAnd(query, idx, FormTemplate.class, FormTemplate.FORM_TYPE, code);
 		QuerySpecUtils.toOrderBy(query, idx, FormTemplate.class, FormTemplate.NAME, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			FormTemplate form = (FormTemplate) obj[0];
-			list.add(form);
+			return form;
 		}
-		return list;
+		return null;
 	}
 
 	/**

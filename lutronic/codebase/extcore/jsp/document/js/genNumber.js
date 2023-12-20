@@ -96,9 +96,11 @@ function second() {
 	const tag = document.querySelector("#" + interalnumberId);
 	const nameTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
+		// 개발문서
 		if ("DEV" === classType1 || "INSTRUCTION" == classType1) {
 			tag.value += clazz + "-";
 			modelEnable();
+			loadHtml(clazz);
 		} else if ("REPORT" === classType1) {
 			const currentDate = new Date();
 			const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
@@ -255,4 +257,20 @@ function setFirstNumber(classType1) {
 		const value = selectElement.options[selectedIndex].getAttribute("data-clazz");
 		tag.value = value;
 	}
+}
+
+// DEXT5 양식
+function loadHtml(classType2) {
+	const url = getCallUrl("/form/getHtml?code=" + classType2);
+	const formType = document.getElementById("formType");
+	parent.openLayer();
+	call(url, null, function(data) {
+		if (data.result) {
+			DEXT5.setBodyValue(data.html, 'content');
+			formType.value = data.oid;
+		} else {
+			alert(data.msg);
+		}
+		parent.closeLayer();
+	}, "GET");
 }

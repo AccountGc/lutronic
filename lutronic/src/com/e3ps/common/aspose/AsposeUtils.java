@@ -19,6 +19,7 @@ import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.util.FileUtil;
 import wt.util.WTProperties;
 
 public class AsposeUtils {
@@ -41,7 +42,7 @@ public class AsposeUtils {
 		System.out.println("문서 워드 TO PDF 컨버전 종료 = " + new Timestamp(new Date().getTime()));
 	}
 
-	public static void genWorkToPdf(Hashtable<String, String> hash) throws Exception {
+	public static void wordToPdf(Hashtable<String, String> hash) throws Exception {
 
 		System.out.println("문서 워드 TO PDF 컨버전 시작 = " + new Timestamp(new Date().getTime()));
 
@@ -58,10 +59,17 @@ public class AsposeUtils {
 		QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
 		String name = "";
 		String wordPath = tempDir;
+		boolean pass = false;
 		if (qr.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) qr.nextElement();
 			byte[] buffer = new byte[10240];
 			InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+			name = data.getFileName();
+			String ext = FileUtil.getExtension(name);
+			if (!ext.equalsIgnoreCase("docx") && !ext.equalsIgnoreCase("doc")) {
+				pass = true;
+			}
+
 			name = new String(data.getFileName().getBytes("EUC-KR"), "8859_1");
 			File file = new File(wordPath + File.separator + name);
 			FileOutputStream fos = new FileOutputStream(file);
@@ -73,27 +81,32 @@ public class AsposeUtils {
 			is.close();
 		}
 
-		File[] files = saveDir.listFiles();
-		for (File ff : files) {
-			System.out.println("삭제되는 파일들 = " + ff.getName());
-			ff.delete();
+		if (!pass) {
+
+			File[] files = saveDir.listFiles();
+			for (File ff : files) {
+				System.out.println("삭제되는 파일들 = " + ff.getName());
+				ff.delete();
+			}
+
+			int idx = name.lastIndexOf(".");
+			String pdfName = name.substring(0, idx) + ".pdf";
+			String pdfFilePath = savePath + File.separator + pdfName;
+			String wordFilePath = wordPath + File.separator + name;
+			setAsposeLic();
+
+			Document pdf = new Document(wordFilePath);
+			pdf.save(pdfFilePath, SaveFormat.PDF);
+
+			File pdfFIle = new File(pdfFilePath);
+			ApplicationData dd = ApplicationData.newApplicationData(doc);
+			dd.setRole(ContentRoleType.SECONDARY);
+			PersistenceHelper.manager.save(dd);
+			ContentServerHelper.service.updateContent(doc, dd, pdfFIle.getPath());
+
+		} else {
+			System.out.println("지원 대상의 파일이 아님");
 		}
-
-		int idx = name.lastIndexOf(".");
-		String pdfName = name.substring(0, idx) + ".pdf";
-		String pdfFilePath = savePath + File.separator + pdfName;
-		String wordFilePath = wordPath + File.separator + name;
-		setAsposeLic();
-
-		Document pdf = new Document(wordFilePath);
-		pdf.save(pdfFilePath, SaveFormat.PDF);
-
-		File pdfFIle = new File(pdfFilePath);
-		ApplicationData dd = ApplicationData.newApplicationData(doc);
-		dd.setRole(ContentRoleType.SECONDARY);
-		PersistenceHelper.manager.save(dd);
-		ContentServerHelper.service.updateContent(doc, dd, pdfFIle.getPath());
-
 		System.out.println("문서 워드 TO PDF 컨버전 종료 = " + new Timestamp(new Date().getTime()));
 	}
 }

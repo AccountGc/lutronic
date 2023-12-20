@@ -156,4 +156,22 @@ public class FormTemplateController extends BaseController {
 		}
 		return result;
 	}
+	
+	@Description(value = "문서 템플릿 가져오기 문서 채번에 맞게")
+	@ResponseBody
+	@GetMapping(value = "/getHtml")
+	public Map<String, Object> getHtml(@RequestParam String code) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			FormTemplate form = FormTemplateHelper.manager.getHtml(code);
+			result.put("html", form.getDescription());
+			result.put("oid", form.getPersistInfo().getObjectIdentifier().getStringValue());
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

@@ -1,18 +1,30 @@
 package com.e3ps.doc.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentClass;
 import com.e3ps.doc.DocumentClassType;
 import com.e3ps.doc.dto.DocumentClassDTO;
+import com.ptc.wpcfg.deliverables.library.WTDocumentMaker;
 
+import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
+import wt.doc.WTDocumentMaster;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.query.ClassAttribute;
+import wt.query.OrderBy;
 import wt.query.QuerySpec;
+import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 
 public class DocumentClassHelper {
@@ -197,5 +209,154 @@ public class DocumentClassHelper {
 			clazz = "LR-";
 		}
 		return clazz;
+	}
+
+	/**
+	 * 전체 채번 목록
+	 */
+	public JSONArray numberView(String classType) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		DocumentClassType classType1 = DocumentClassType.toDocumentClassType(classType);
+		String classType1Key = classType1.toString();
+		String classType1Name = classType1.getDisplay();
+
+		ArrayList<NumberCode> models = NumberCodeHelper.manager.getArrayCodeList("MODEL");
+		// 개발문서
+		if ("DEV".equals(classType1Key)) {
+			ArrayList<Map<String, String>> classTypes2 = classType2(classType1Key);
+			for (Map<String, String> classType2 : classTypes2) {
+				String classType2Name = classType2.get("name");
+				String classType2Key = classType2.get("clazz");
+
+				for (NumberCode model : models) {
+					Map<String, String> map = new HashMap<>();
+					String number = classType2Key + "-" + model.getCode() + "-";
+					String lastNumber = lastNumber(number);
+					map.put("classType1Name", classType1Name);
+					map.put("classType2Name", classType2Name);
+					map.put("classType3Name", "");
+					map.put("model", model.getCode());
+					map.put("lastNumber", lastNumber);
+					list.add(map);
+				}
+			}
+			// 지침서
+		} else if ("INSTRUCTION".equals(classType1Key)) {
+			ArrayList<Map<String, String>> classTypes2 = classType2(classType1Key);
+			for (Map<String, String> classType2 : classTypes2) {
+				String classType2Name = classType2.get("name");
+				String classType2Key = classType2.get("clazz");
+
+				for (NumberCode model : models) {
+					Map<String, String> map = new HashMap<>();
+					String number = classType2Key + "-" + model.getCode() + "-";
+					String lastNumber = lastNumber(number);
+					map.put("classType1Name", classType1Name);
+					map.put("classType2Name", classType2Name);
+					map.put("classType3Name", "");
+					map.put("model", model.getCode());
+					map.put("lastNumber", lastNumber);
+					list.add(map);
+				}
+			}
+			// 보고서
+		} else if ("REPORT".equals(classType1Key)) {
+
+			String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+			// 2023-23-12
+			String suffixYear = today.substring(2, 4);
+			String month = today.substring(5, 7);
+
+			ArrayList<Map<String, String>> classTypes2 = classType2(classType1Key);
+			for (Map<String, String> classType2 : classTypes2) {
+				String classType2Name = classType2.get("name");
+				String classType2Key = classType2.get("clazz");
+				String classType2Oid = classType2.get("value");
+
+				// 중분류-월달-소분류-
+				ArrayList<Map<String, String>> classTypes3 = classType3(classType1Key, classType2Oid);
+				for (Map<String, String> classType3 : classTypes3) {
+					Map<String, String> map = new HashMap<>();
+					String classType3Name = classType3.get("name");
+					String classType3Key = classType3.get("clazz");
+					String number = classType2Key + "-" + suffixYear + month + classType3Key + "-";
+					String lastNumber = lastNumber(number);
+					map.put("classType1Name", classType1Name);
+					map.put("classType2Name", classType2Name);
+					map.put("classType3Name", classType3Name);
+					map.put("model", "");
+					map.put("lastNumber", lastNumber);
+					list.add(map);
+				}
+			}
+			// 벨리데이션
+		} else if ("VALIDATION".equals(classType1Key)) {
+
+			ArrayList<Map<String, String>> classTypes2 = classType2(classType1Key);
+			for (Map<String, String> classType2 : classTypes2) {
+				String classType2Name = classType2.get("name");
+				String classType2Oid = classType2.get("value");
+
+				// 중분류-월달-소분류-
+				ArrayList<Map<String, String>> classTypes3 = classType3(classType1Key, classType2Oid);
+				for (Map<String, String> classType3 : classTypes3) {
+					Map<String, String> map = new HashMap<>();
+					String classType3Name = classType3.get("name");
+					String classType3Key = classType3.get("clazz");
+					String number = "LR-" + classType3Key + "-";
+					String lastNumber = lastNumber(number);
+					map.put("classType1Name", classType1Name);
+					map.put("classType2Name", classType2Name);
+					map.put("classType3Name", classType3Name);
+					map.put("model", "");
+					map.put("lastNumber", lastNumber);
+					list.add(map);
+				}
+			}
+			// 회의록
+		} else if ("MEETING".equals(classType1Key)) {
+			String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+			// 2023-23-12
+			String suffixYear = today.substring(2, 4);
+			String month = today.substring(5, 7);
+			ArrayList<Map<String, String>> classTypes2 = classType2(classType1Key);
+			for (Map<String, String> classType2 : classTypes2) {
+				String classType2Name = classType2.get("name");
+				String classType2Key = classType2.get("clazz");
+
+				Map<String, String> map = new HashMap<>();
+				String number = classType2Key + "-" + suffixYear + "-" + month + "-";
+				String lastNumber = lastNumber(number);
+				map.put("classType1Name", classType1Name);
+				map.put("classType2Name", classType2Name);
+				map.put("classType3Name", "");
+				map.put("model", "");
+				map.put("lastNumber", lastNumber);
+				list.add(map);
+			}
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	private String lastNumber(String number) throws Exception {
+		if (!StringUtil.checkString(number)) {
+			return null;
+		}
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(WTDocumentMaster.class, true);
+		SearchCondition sc = new SearchCondition(WTDocumentMaster.class, WTDocumentMaster.NUMBER, "LIKE", number + "%");
+		query.appendWhere(sc, new int[] { idx });
+
+		ClassAttribute ca = new ClassAttribute(WTDocumentMaster.class, WTDocumentMaster.NUMBER);
+		OrderBy by = new OrderBy(ca, true);
+		query.appendOrderBy(by, new int[] { idx });
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			WTDocumentMaster m = (WTDocumentMaster) obj[0];
+			return m.getNumber();
+		}
+		return null;
 	}
 }

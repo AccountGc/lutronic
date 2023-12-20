@@ -67,6 +67,8 @@ public class DocumentDTO {
 	private String classType3_code;
 	private String classType3_name;
 	private String classType3_oid;
+	
+	private String formType_oid;
 
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();

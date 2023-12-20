@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeActivity;
@@ -192,6 +193,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		String classType1_code = dto.getClassType1_code();
 		String classType2_oid = dto.getClassType2_oid();
 		String classType3_oid = dto.getClassType3_oid();
+		String formType_oid = dto.getFormType_oid();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -203,6 +205,11 @@ public class StandardDocumentService extends StandardManager implements Document
 			DocumentClassType docClassType = DocumentClassType.toDocumentClassType(classType1_code);
 			info.setPtc_str_2(docClassType.toString());
 
+			if(StringUtil.checkString(formType_oid)) {
+				FormTemplate form = (FormTemplate)CommonUtil.getObject(formType_oid);
+				ObjectReference ref = ObjectReference.newObjectReference(form);
+				info.setPtc_ref_1(ref);
+			}
 			if (StringUtil.checkString(classType2_oid)) {
 				DocumentClass classType2 = (DocumentClass) CommonUtil.getObject(classType2_oid);
 				ObjectReference ref = ObjectReference.newObjectReference(classType2);
@@ -279,7 +286,7 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 개발 구분과 지침서
 			System.out.println("classType1_code=" + classType1_code);
-			if (classType1_code == "DEV" || classType1_code == "INSTRUCTION") {
+			if (classType1_code.equals("DEV") || classType1_code.equals("INSTRUCTION")) {
 				DocumentHelper.manager.genWordToPdf(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
 

@@ -42,29 +42,20 @@ iframe {
 			<tr>
 				<th class="req lb">문서템플릿 번호</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-200">
+					<input type="text" name="number" id="number" class="width-300">
 				</td>
 				<th class="req">문서템플릿 제목</th>
 				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-400">
+					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th class="req">문서양식 유형</th>
+				<th class="req">코드</th>
 				<td class="indent5">
-					<select name="formType" id="formType" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode n : formType) {
-						%>
-						<option value="<%=n.getName()%>"><%=n.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="formType" id="formType" class="width-300">
 				</td>
 			</tr>
 			<tr>
 				<th class="req lb">내용</th>
-				<td colspan="5">
+				<td colspan="5" class="indent7 pb8">
 					<script type="text/javascript">
 						new Dext5editor('description');
 					</script>
@@ -85,7 +76,7 @@ iframe {
 	<script type="text/javascript">
 		document.addEventListener("DOMContentLoaded", function() {
 			toFocus("name");
-			selectbox("formType");
+// 			selectbox("formType");
 		});
 
 		function create() {
@@ -101,11 +92,12 @@ iframe {
 			const params = {
 				name : name.value,
 				number : number.value,
-				formType : formType.value,
-				description : description
+				description : description,
+				formType : formType.value
 			}
 			const url = getCallUrl("/form/create");
 			parent.openLayer();
+			logger(params);
 			call(url, params, function(data) {
 				alert(data.msg);
 				if (data.result) {
