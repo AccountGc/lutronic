@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
@@ -25,7 +26,6 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentCRLink;
 import com.e3ps.doc.DocumentClass;
-import com.e3ps.doc.DocumentClassType;
 import com.e3ps.doc.DocumentECOLink;
 import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
@@ -46,14 +46,17 @@ import wt.folder.Folder;
 import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.folder.SubFolder;
-import wt.org.WTUser;
+import wt.org.WTPrincipal;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
 import wt.query.OrderBy;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
+import wt.queue.ProcessingQueue;
+import wt.queue.QueueHelper;
 import wt.services.ServiceFactory;
+import wt.session.SessionHelper;
 import wt.util.WTAttributeNameIfc;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
@@ -69,6 +72,15 @@ public class DocumentHelper {
 	public static final DocumentService service = ServiceFactory.getService(DocumentService.class);
 	public static final DocumentHelper manager = new DocumentHelper();
 
+	/**
+	 * Word To Pdf 변환
+	 */
+	private static final String processQueueName = "WordToPdfProcessQueue";
+	private static final String className = "com.e3ps.common.aspose.AsposeUtils";
+	private static final String methodName = "wordToPdf";
+
+
+	
 	/**
 	 * 문서 검색
 	 */
@@ -580,5 +592,21 @@ public class DocumentHelper {
 			list.add(map);
 		}
 		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 워드 파일 PDF 생성
+	 */
+	public void genWordToPdf(String oid) throws Exception {
+		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", oid);
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, methodName, className, argClasses, argObjects);
 	}
 }

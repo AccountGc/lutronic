@@ -32,7 +32,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "eoCommentE", type = String.class),
 
-				@GeneratedProperty(name = "eoApproveDate", type = String.class)
+				@GeneratedProperty(name = "eoApproveDate", type = String.class),
+
+				@GeneratedProperty(name = "isNew", type = Boolean.class)
 
 }
 

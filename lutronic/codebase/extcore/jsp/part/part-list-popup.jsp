@@ -464,7 +464,8 @@ function loadGridData() {
 		"ecoNo", "eoNo" ,"creatorOid","specification"];
 	const  latest = document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
-	params.latest = JSON.parse(latest);
+// 	params.latest = JSON.parse(latest);
+params.latest = false;
 // 	params.latest = false;
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();

@@ -32,7 +32,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=11898"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=11224898"></script>
 </head>
 <body>
 	<form>
@@ -70,7 +70,7 @@ iframe {
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
 				</td>
-				<th class="req">문서 템플릿</th>
+				<th>문서 템플릿</th>
 				<td class="indent5">
 					<select name="formType" id="formType" class="width-200" onchange="loadForm();">
 						<option value="">선택</option>
@@ -117,7 +117,7 @@ iframe {
 			<tr>
 				<th class="lb req">문서명</th>
 				<td class="indent5">
-					<input type="text" name="preFix" id="preFix" class="width-200" readonly="readonly">
+					<input type="text" name="preFix" id="preFix" class="width-300" readonly="readonly">
 					&nbsp;
 					<input type="text" name="suffix" id="suffix" class="width-200" readonly="readonly">
 				</td>
@@ -318,7 +318,6 @@ iframe {
 				const interalnumber = document.getElementById("interalnumber").value;
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
-				const documentName = document.getElementById("documentName");
 				const temprary = JSON.parse(temp);
 
 				// 클래스타입
@@ -342,7 +341,7 @@ iframe {
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 내용
 				const content = DEXT5.getBodyValue("content");
-				const name = preFix + "-" + suffix;
+				const name = preFix + "_" + suffix;
 				if (isNull(name)) {
 					alert("문서명을 입력하세요.");
 					name.focus();

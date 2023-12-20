@@ -53,3 +53,6 @@
 	
 13. SAP 전송 큐 생성
 	- 사이트 > 유틸리티 > 대기열관리 > SapProcessQueue 프로세스 큐 생성	
+	
+13. 워드 To PDF 큐 생성
+	- 사이트 > 유틸리티 > 대기열관리 > WordToPdfProcessQueue 프로세스 큐 생성

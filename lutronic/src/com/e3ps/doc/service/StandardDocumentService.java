@@ -277,6 +277,12 @@ public class StandardDocumentService extends StandardManager implements Document
 				WorkDataHelper.service.create(doc);
 			}
 
+			// 개발 구분과 지침서
+			System.out.println("classType1_code=" + classType1_code);
+			if (classType1_code == "DEV" || classType1_code == "INSTRUCTION") {
+				DocumentHelper.manager.genWordToPdf(doc.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

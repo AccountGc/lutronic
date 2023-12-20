@@ -156,12 +156,12 @@ function preNumberCheck(obj) {
 		if (classType1.value === "DEV") {
 			tag.value += value + "-";
 			suffixEnable();
-			preFixTag.value = text + "-";
+			preFixTag.value = text;
 			lastNumber(tag.value, classType1.value);
 		} else if (classType1.value === "INSTRUCTION") {
 			tag.value += value + "-WI-";
 			suffixEnable();
-			preFixTag.value = text + "-";
+			preFixTag.value = value;
 			lastNumber(tag.value, classType1.value);
 		}
 	}

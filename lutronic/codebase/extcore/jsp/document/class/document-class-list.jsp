@@ -175,7 +175,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : true,
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
-				// 				loadGridData();
 			}
 
 			function loadGridData() {
@@ -194,7 +193,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				call(url, params, function(data) {
 					if (data.result) {
 						AUIGrid.setGridData(myGridID, data.list);
-						AUIGrid.showItemsOnDepth(myGridID, 2);
+// 						AUIGrid.showItemsOnDepth(myGridID, 1);
 					} else {
 						alert(data.msg);
 					}

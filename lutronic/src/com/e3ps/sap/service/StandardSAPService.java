@@ -264,8 +264,8 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		eoTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 12자리??
 		eoTable.setValue("ZECMID", "EO"); // EO/ECO 구분
 		eoTable.setValue("DATUV", today); // 보내는 날짜
-		eoTable.setValue("AEGRU", e.getEoName()); // 변경사유 테스트 일단 한줄
-		eoTable.setValue("AETXT", "첫 줄 어떻게 할것인기??"); // 변경 내역 첫줄만 일단 테스트
+		eoTable.setValue("AEGRU", "초도 BOM"); // 변경사유 테스트 일단 한줄
+		eoTable.setValue("AETXT", e.getEoName()); // 변경 내역 첫줄만 일단 테스트
 		String AETXT_L = e.getEoCommentA() != null ? e.getEoCommentA() : "";
 		eoTable.setValue("AETXT_L", AETXT_L.replaceAll("<br>", "\n")); // 변경 내역 전체 내용
 
@@ -418,7 +418,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		// 에러 리턴
 		if (true) {
 			// 테스트
-			MailUtils.manager.sendSAPErrorMail(e, "EO SAP 전송", (String) r_msg);
+//			MailUtils.manager.sendSAPErrorMail(e, "EO SAP 전송", (String) r_msg);
 //		if ("E".equals((String) r_type)) {
 
 		}
@@ -473,7 +473,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		ecoTable.setValue("ZECMID", "ECO"); // EO/ECO 구분
 		ecoTable.setValue("DATUV", today); // 보내는 날짜
 		ecoTable.setValue("AEGRU", eco.getEoName()); // 변경사유 테스트 일단 한줄
-		ecoTable.setValue("AETXT", "첫줄 테스트"); // 변경 내역 첫줄만 일단 테스트
+		ecoTable.setValue("AETXT", eco.getEoName()); // 변경 내역 첫줄만 일단 테스트
 
 		if (StringUtil.checkString(eco.getEoCommentA())) {
 			String AETXT_L = eco.getEoCommentA() != null ? eco.getEoCommentA() : "";
