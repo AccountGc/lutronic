@@ -23,7 +23,7 @@ String html = (String) request.getAttribute("html");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						CR 등록
+						ECRM 등록
 					</div>
 				</td>
 				<td class="right">
@@ -40,17 +40,17 @@ String html = (String) request.getAttribute("html");
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="req lb">CR 제목</th>
+				<th class="req lb">ECRM 제목</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th class="req">CR 번호</th>
+				<th class="req">ECRM 번호</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300">
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">ECPR 진행여부</th>
+				<th class="req lb">ECRM 진행여부</th>
 				<td colspan="3">
 					&nbsp;
 					<div class="pretty p-switch">

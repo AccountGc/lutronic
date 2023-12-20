@@ -1,6 +1,6 @@
 package com.e3ps.change.cr.controller;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.admin.form.FormTemplate;
+import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
 
 @Controller
 @RequestMapping(value = "/cr/**")
@@ -84,8 +85,10 @@ public class CrController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		FormTemplate form = FormTemplateHelper.manager.getTemplate("변경관리요청서(CR)");
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("sectionList", sectionList);
+		model.addObject("html", form==null?"":form.getDescription());
 		model.setViewName("/extcore/jsp/change/cr/cr-create.jsp");
 		return model;
 	}
