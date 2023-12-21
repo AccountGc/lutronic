@@ -66,5 +66,7 @@
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/fcwpkg_jni-1.9.0.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/javax.activation-1.2.0.jar"/>
 	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/aspose-words-23.12-jdk17.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/aspose-cells-22.10.jar"/>
+	<classpathentry kind="lib" path="D:/ptc/Windchill_11.1/Windchill/codebase/WEB-INF/lib/aspose-cells-22.10-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
