@@ -1027,7 +1027,13 @@ public class PartHelper {
 	 */
 	private void endRecursive(ArrayList<WTPart> list, WTPart part) throws Exception {
 		WTPartMaster master = (WTPartMaster) part.getMaster();
-		View view = ViewHelper.service.getView(part.getViewName());
+
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		State state = part.getLifeCycleState();
 		QuerySpec query = new QuerySpec();
 		int idx_usage = query.appendClassList(WTPartUsageLink.class, true);
