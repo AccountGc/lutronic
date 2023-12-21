@@ -102,7 +102,7 @@ public class AsposeUtils {
 
 			File pdfFIle = new File(pdfFilePath);
 			ApplicationData dd = ApplicationData.newApplicationData(doc);
-			dd.setRole(ContentRoleType.SECONDARY);
+			dd.setRole(ContentRoleType.toContentRoleType("PDF"));
 			PersistenceHelper.manager.save(dd);
 			ContentServerHelper.service.updateContent(doc, dd, pdfFIle.getPath());
 

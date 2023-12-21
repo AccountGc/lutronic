@@ -167,7 +167,8 @@ public class StandardPartService extends StandardManager implements PartService 
 			trx.start();
 
 			String lifecycle = StringUtil.checkNull((String) params.get("lifecycle")); // LifeCycle
-			String view = StringUtil.checkNull((String) params.get("view")); // view
+//			String view = StringUtil.checkNull((String) params.get("view")); // view
+			String view = "Design";
 			String location = StringUtil.checkNull((String) params.get("location")); // 분류체계
 			String wtPartType = StringUtil.checkNull((String) params.get("wtPartType"));
 			String source = StringUtil.checkNull((String) params.get("source"));

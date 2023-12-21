@@ -98,3 +98,9 @@ MSDS.shortDescription=MSDS 성분분석표
 
 XRF.value=XRF분석 성적서
 XRF.shortDescription=XRF분석 성적서
+
+COVER.value=COVER
+COVER.shortDescription=COVER
+
+PDF.value=PDF
+PDF.shortDescription=PDF

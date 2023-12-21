@@ -1307,7 +1307,6 @@ public class BomHelper {
 
 		View view = ViewHelper.service.getView(viewName);
 
-		View view = ViewHelper.service.getView(viewName);
 		State state = parent.getLifeCycleState();
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));

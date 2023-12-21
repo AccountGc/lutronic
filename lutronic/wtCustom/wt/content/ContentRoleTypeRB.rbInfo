@@ -99,3 +99,9 @@ MSDS.shortDescription=MSDS
 
 XRF.value=XRF
 XRF.shortDescription=XRF
+
+COVER.value=COVER
+COVER.shortDescription=COVER
+
+PDF.value=PDF
+PDF.shortDescription=PDF

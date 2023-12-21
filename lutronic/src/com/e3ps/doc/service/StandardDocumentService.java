@@ -820,13 +820,13 @@ public class StandardDocumentService extends StandardManager implements Document
 				}
 				String output = pdfPath + File.separator + name + ".pdf";
 				// excel to pdf
-				Workbook wb = new Workbook(rtnFile.getAbsolutePath());
+				Workbook wb = new Workbook(excelFile.getAbsolutePath());
 				wb.save(output, FileFormatType.PDF);
 
 				// save
 				File pdfFile = new File(output);
 				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-				applicationData.setRole(ContentRoleType.SECONDARY);
+				applicationData.setRole(ContentRoleType.toContentRoleType("COVER"));
 				PersistenceHelper.manager.save(applicationData);
 				ContentServerHelper.service.updateContent(doc, applicationData, pdfFile.getPath());
 
