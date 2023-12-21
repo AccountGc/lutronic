@@ -273,7 +273,7 @@
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-// 						document.location.href = getCallUrl("/eco/list");
+						document.location.href = getCallUrl("/eco/list");
 					} else {
 						parent.closeLayer();
 					}

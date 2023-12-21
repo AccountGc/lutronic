@@ -37,6 +37,8 @@ import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
@@ -615,5 +617,30 @@ public class DocumentHelper {
 	public File stamping(WTDocument doc, String key, File excelFile) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * PDF 병합
+	 */
+	public void mergePdf(WTDocument doc) throws Exception {
+
+		QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("COVER"));)
+		
+
+
+//String first = list.get(0);
+//Document firstPdf = new Document(first);
+//list.remove(0);
+//
+//for (String path : list) {
+//	Document pdf = new Document(path);
+//	firstPdf.getPages().add(pdf.getPages());
+//	pdf.close();
+//}
+//
+//String mergePdfPath = mergePath + num + ".pdf";
+//firstPdf.save(mergePdfPath);
+
+		
 	}
 }

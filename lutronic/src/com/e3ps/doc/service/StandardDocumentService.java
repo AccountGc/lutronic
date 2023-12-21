@@ -290,7 +290,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			}
 
 			// 개발 구분과 지침서
-			System.out.println("classType1_code=" + classType1_code);
 			if (classType1_code.equals("DEV") || classType1_code.equals("INSTRUCTION")) {
 				DocumentHelper.manager.genWordToPdf(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
@@ -830,6 +829,8 @@ public class StandardDocumentService extends StandardManager implements Document
 				PersistenceHelper.manager.save(applicationData);
 				ContentServerHelper.service.updateContent(doc, applicationData, pdfFile.getPath());
 
+				// pdf merge
+				DocumentHelper.manager.mergePdf(doc);
 			}
 
 			trs.commit();
