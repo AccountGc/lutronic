@@ -88,7 +88,8 @@ public class PeopleDTO {
 	}
 
 	private HashMap<String, String> picture(People people) throws Exception {
-		QueryResult qr = ContentHelper.service.getContentsByRole(people, ContentRoleType.PRIMARY);
+		WTUser user = people.getUser();
+		QueryResult qr = ContentHelper.service.getContentsByRole(user, ContentRoleType.PRIMARY);
 		if (qr.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) qr.nextElement();
 			String fileIcon = ContentUtils.getFileIcon(data.getFileName());

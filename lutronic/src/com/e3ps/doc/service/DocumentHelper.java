@@ -1,5 +1,6 @@
 package com.e3ps.doc.service;
 
+import java.io.File;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,8 +80,6 @@ public class DocumentHelper {
 	private static final String className = "com.e3ps.common.aspose.AsposeUtils";
 	private static final String methodName = "wordToPdf";
 
-
-	
 	/**
 	 * 문서 검색
 	 */
@@ -608,5 +607,13 @@ public class DocumentHelper {
 		Object[] argObjects = { hash };
 
 		queue.addEntry(principal, methodName, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 표지 싸인입력
+	 */
+	public File stamping(WTDocument doc, String key, File excelFile) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

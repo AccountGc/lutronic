@@ -106,7 +106,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="req">내부 문서번호</th>
+				<th class="req lb">내부 문서번호</th>
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
 				</td>

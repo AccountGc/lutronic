@@ -417,17 +417,18 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			trs.start();
 
 			People people = (People) CommonUtil.getObject(oid);
-			people.setIsDisable(isFire); 
+			people.setIsDisable(isFire);
 			PersistenceHelper.manager.modify(people);
 
-			QueryResult qr = ContentHelper.service.getContentsByRole(people, ContentRoleType.PRIMARY);
+			WTUser user = people.getUser();
+			QueryResult qr = ContentHelper.service.getContentsByRole(user, ContentRoleType.PRIMARY);
 			if (qr.hasMoreElements()) {
 				ContentItem item = (ContentItem) qr.nextElement();
 				ContentServerHelper.service.deleteContent(people, item);
 			}
 
 			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-			ApplicationData applicationData = ApplicationData.newApplicationData(people);
+			ApplicationData applicationData = ApplicationData.newApplicationData(user);
 			applicationData.setRole(ContentRoleType.PRIMARY);
 			PersistenceHelper.manager.save(applicationData);
 			ContentServerHelper.service.updateContent(people, applicationData, vault.getPath());

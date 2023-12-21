@@ -17,6 +17,7 @@ import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.workspace.AppPerLink;
@@ -491,6 +492,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			per = (Persistable) LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, state);
 			per = PersistenceHelper.manager.refresh(per);
 
+			
+			if(per instanceof WTDocument) {
+				WTDocument doc = (WTDocument)per;
+				DocumentHelper.service.createCover(doc);;
+			}
+			
 			// 일괄결재일경우 대상도.. 변경
 			if (per instanceof AsmApproval) {
 				AsmApproval asm = (AsmApproval) per;

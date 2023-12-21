@@ -109,7 +109,12 @@ public class BomHelper {
 
 		JSONArray children = new JSONArray();
 
-		View view = ViewHelper.service.getView(root.getViewName());
+		String viewName = root.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		State state = root.getLifeCycleState();
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
@@ -1294,7 +1299,15 @@ public class BomHelper {
 		boolean skip = Boolean.parseBoolean((String) params.get("skip"));
 		int level = Integer.parseInt((String) params.get("level"));
 		WTPart parent = (WTPart) CommonUtil.getObject(oid);
-		View view = ViewHelper.service.getView(parent.getViewName());
+
+		String viewName = parent.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+
+		View view = ViewHelper.service.getView(viewName);
 		State state = parent.getLifeCycleState();
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));

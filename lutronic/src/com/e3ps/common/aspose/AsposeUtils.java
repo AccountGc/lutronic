@@ -23,7 +23,8 @@ import wt.util.FileUtil;
 import wt.util.WTProperties;
 
 public class AsposeUtils {
-	private static final String licPath = "D:\\ptc\\license\\Aspose.WordsforJava.lic";
+	private static final String wordToPdflicPath = "D:\\ptc\\license\\Aspose.Words.Java.lic";
+	private static final String pdflicPath = "D:\\ptc\\license\\Aspose.PDF.Java.lic";
 
 	private AsposeUtils() {
 
@@ -31,7 +32,8 @@ public class AsposeUtils {
 
 	public static void setAsposeLic() throws Exception {
 		License license = new License();
-		license.setLicense(licPath);
+		license.setLicense(wordToPdflicPath);
+		license.setLicense(pdflicPath);
 	}
 
 	public static void saveWordToPdfTest(String wordPath, String pdfPath) throws Exception {

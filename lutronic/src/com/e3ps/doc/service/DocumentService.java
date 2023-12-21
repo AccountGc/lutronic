@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.doc.dto.DocumentDTO;
 
+import wt.doc.WTDocument;
 import wt.method.RemoteInterface;
 
 @RemoteInterface
@@ -49,5 +50,10 @@ public interface DocumentService {
 	 * 문서 이동
 	 */
 	public abstract void move(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 문서 표지 생성
+	 */
+	public abstract void createCover(WTDocument doc) throws Exception;
 
 }

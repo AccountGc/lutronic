@@ -2,6 +2,7 @@
 package com.e3ps.doc.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.aspose.cells.FileFormatType;
+import com.aspose.cells.Workbook;
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.change.DocumentActivityLink;
 import com.e3ps.change.ECPRRequest;
@@ -37,6 +40,7 @@ import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ptc.windchill.dpimpl.core.WTProcessStep;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
@@ -67,6 +71,7 @@ import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
 import wt.util.WTException;
+import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
 import wt.vc.wip.CheckoutLink;
 import wt.vc.wip.WorkInProgressHelper;
@@ -205,8 +210,8 @@ public class StandardDocumentService extends StandardManager implements Document
 			DocumentClassType docClassType = DocumentClassType.toDocumentClassType(classType1_code);
 			info.setPtc_str_2(docClassType.toString());
 
-			if(StringUtil.checkString(formType_oid)) {
-				FormTemplate form = (FormTemplate)CommonUtil.getObject(formType_oid);
+			if (StringUtil.checkString(formType_oid)) {
+				FormTemplate form = (FormTemplate) CommonUtil.getObject(formType_oid);
 				ObjectReference ref = ObjectReference.newObjectReference(form);
 				info.setPtc_ref_1(ref);
 			}
@@ -749,4 +754,93 @@ public class StandardDocumentService extends StandardManager implements Document
 		}
 	}
 
+	@Override
+	public void createCover(WTDocument doc) throws Exception {
+		System.out.println("커버 생성");
+		File excelFile = null;
+		File rtnFile = null;
+		String codebase = WTProperties.getLocalProperties().getProperty("wt.codebase.location");
+		String preFixPath = codebase + File.separator + "extcore" + File.separator + "jsp" + File.separator + "document"
+				+ File.separator + "cover";
+		String name = "";
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
+			if (info != null) {
+				String classType1Code = info.getPtc_str_2();
+
+				System.out.println("classType1Code=" + classType1Code);
+				// 과거 데이터는 없음
+				if (StringUtil.checkString(classType1Code)) {
+					// 개발문서 일 경우
+					if ("DEV".equals(classType1Code)) {
+
+						DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();
+						if (classType2 != null) {
+							String key = classType2.getClazz().trim();
+							// 위험관리보고서
+							name = key;
+							if ("RMR".equals(key)) {
+								excelFile = new File(preFixPath + File.separator + "RMR.xlsx");
+								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
+								// 위험관리계획서
+							} else if ("RMP".equals(key)) {
+								excelFile = new File(preFixPath + File.separator + "RMP.xlsx");
+								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
+								// 제품요구사양서
+							} else if ("PRS".equals(key)) {
+								excelFile = new File(preFixPath + File.separator + "PRS.xlsx");
+								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
+								// 제품표준서
+							} else if ("DMR".equals(key)) {
+								excelFile = new File(preFixPath + File.separator + "DMR.xlsx");
+								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
+								// 공통
+							} else {
+								excelFile = new File(preFixPath + File.separator + "COMMON.xlsx");
+								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
+
+							}
+						}
+					}
+
+					// 지침서
+					if ("".equals(classType1Code)) {
+
+					}
+				}
+
+				String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
+				String pdfPath = temp + File.separator + "pdf";
+				File f = new File(pdfPath);
+				if (!f.exists()) {
+					f.mkdirs();
+				}
+				String output = pdfPath + File.separator + name + ".pdf";
+				// excel to pdf
+				Workbook wb = new Workbook(rtnFile.getAbsolutePath());
+				wb.save(output, FileFormatType.PDF);
+
+				// save
+				File pdfFile = new File(output);
+				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+				applicationData.setRole(ContentRoleType.SECONDARY);
+				PersistenceHelper.manager.save(applicationData);
+				ContentServerHelper.service.updateContent(doc, applicationData, pdfFile.getPath());
+
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			trs.rollback();
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }
