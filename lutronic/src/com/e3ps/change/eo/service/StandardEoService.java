@@ -70,7 +70,7 @@ public class StandardEoService extends StandardManager implements EoService {
 			trs.start();
 
 			String number = "E" + DateUtil.getCurrentDateString("ym");
-			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
+			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
 
 			number = number + "N" + seqNo;
 

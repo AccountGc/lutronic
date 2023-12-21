@@ -87,7 +87,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			// 21.12.30_shjeong 기존 YYMM 으로 사용 시 12월 마지막주에는 다음 년도로 표기되는 오류로 인해 수정.
 			Date currentDate = new Date();
 			String number = "C" + new SimpleDateFormat("yyMM", Locale.KOREA).format(currentDate);
-			String seqNo = SequenceDao.manager.getSeqNo(number, "000", "EChangeOrder", EChangeOrder.EO_NUMBER);
+			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
 
 			number = number + "N" + seqNo;
 
