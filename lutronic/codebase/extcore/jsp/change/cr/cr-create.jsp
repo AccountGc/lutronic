@@ -142,7 +142,7 @@ String html = (String) request.getAttribute("html");
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent7 pb8">
-					<textarea name="contents" id="contents" style="display: none;"><%=html%></textarea>
+					<textarea name="contents" id="contents" style="display: none;"><%=html != null ? html : ""%></textarea>
 					<script type="text/javascript">
 						const html = toId("contents");
 						new Dext5editor('content');
