@@ -276,7 +276,6 @@ public class EcoHelper {
 //			WTPart part = PartHelper.manager.getLatest(master);
 			WTPart part = PartHelper.manager.getPart(master.getNumber(), link.getVersion());
 			Map<String, Object> map = new HashMap<>();
-			map.put("number", part.getNumber());
 
 			boolean isPast = link.getPast();
 
@@ -290,6 +289,7 @@ public class EcoHelper {
 				boolean isRevise = link.isRevise();
 
 				if (isLeft) {
+					map.put("part_number", part.getNumber());
 					map.put("part_name", part.getName());
 					map.put("part_state", part.getLifeCycleState().getDisplay());
 					map.put("part_version", part.getVersionIdentifier().getSeries().getValue() + "."
