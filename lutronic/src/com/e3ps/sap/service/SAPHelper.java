@@ -15,6 +15,7 @@ import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.sap.conn.SAPDev600Connection;
@@ -300,7 +301,14 @@ public class SAPHelper {
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
 		// root 추가
 		list.add(part);
-		View view = ViewHelper.service.getView(part.getViewName());
+
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -320,7 +328,13 @@ public class SAPHelper {
 	 * 품목 SAP 전용 BOM 구조 재귀 함수 - 중복제거 테스트용
 	 */
 	private void descendants(WTPart part, ArrayList<WTPart> list) throws Exception {
-		View view = ViewHelper.service.getView(part.getViewName());
+
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -340,7 +354,13 @@ public class SAPHelper {
 	 */
 	public void getterSkip(WTPart root, ArrayList<WTPart> list) throws Exception {
 		// root 추가
-		View view = ViewHelper.service.getView(root.getViewName());
+
+		String viewName = root.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(root, configSpec);
@@ -366,7 +386,13 @@ public class SAPHelper {
 		if (!list.contains(part)) {
 			list.add(part);
 		}
-		View view = ViewHelper.service.getView(part.getViewName());
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -390,7 +416,14 @@ public class SAPHelper {
 	public ArrayList<SAPBomDTO> getterBomData(WTPart part) throws Exception {
 		ArrayList<SAPBomDTO> list = new ArrayList<SAPBomDTO>();
 		// root 추가
-		View view = ViewHelper.service.getView(part.getViewName());
+
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
+
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -431,7 +464,12 @@ public class SAPHelper {
 	 */
 	private void getterBomData(WTPart part, ArrayList<SAPBomDTO> list) throws Exception {
 		// root 추가
-		View view = ViewHelper.service.getView(part.getViewName());
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -478,7 +516,12 @@ public class SAPHelper {
 		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
 				new int[] { idx_part });
 
-		View view = ViewHelper.service.getView(end.getViewName());
+		String viewName = end.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		if (view != null) {
 			query.appendAnd();
 			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
@@ -548,7 +591,12 @@ public class SAPHelper {
 		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
 				new int[] { idx_part });
 
-		View view = ViewHelper.service.getView(end.getViewName());
+		String viewName = end.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		if (view != null) {
 			query.appendAnd();
 			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
@@ -587,7 +635,12 @@ public class SAPHelper {
 			WTPartMaster master = link.getPart();
 			String version = link.getVersion();
 			WTPart part = PartHelper.manager.getPart(master.getNumber(), version);
-			View view = ViewHelper.service.getView(part.getViewName());
+			String viewName = part.getViewName();
+			if (!StringUtil.checkString(viewName)) {
+				viewName = "Design";
+			}
+
+			View view = ViewHelper.service.getView(viewName);
 			WTPartConfigSpec configSpec = WTPartConfigSpec
 					.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 			QueryResult qr = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -649,7 +702,12 @@ public class SAPHelper {
 	 */
 	public ArrayList<SAPSendBomDTO> getOneLevel(WTPart parent, EChangeOrder eco) throws Exception {
 		ArrayList<SAPSendBomDTO> list = new ArrayList<SAPSendBomDTO>();
-		View view = ViewHelper.service.getView(parent.getViewName());
+		String viewName = parent.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult qr = WTPartHelper.service.getUsesWTParts(parent, configSpec);
