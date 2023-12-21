@@ -167,8 +167,6 @@ public class StandardEcnService extends StandardManager implements EcnService {
 							String[] groups = group.split(",");
 							for (String s : groups) {
 								EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
-//								System.out.println("완제품 = " + endMaster.getNumber() + ", part=" + part.getNumber()
-//										+ ", group = " + ecr.getEoNumber());
 								EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
 								eLink.setEcr(ecr);
 								eLink.setCompletePart(endMaster);

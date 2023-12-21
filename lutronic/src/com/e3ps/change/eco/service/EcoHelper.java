@@ -299,6 +299,7 @@ public class EcoHelper {
 					// 개정된 데이터가 없을 경우
 					if (!isRevise && !isFour) {
 						map.put("next_oid", "");
+						map.put("next_number", "변경후 데이터가 없습니다.");
 						map.put("next_name", "변경후 데이터가 없습니다.");
 						map.put("next_state", "변경후 데이터가 없습니다.");
 						map.put("next_version", "변경후 데이터가 없습니다.");
@@ -308,6 +309,7 @@ public class EcoHelper {
 						WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 						// 개정데이터가 있을경우
 						map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("next_name", next_part.getNumber());
 						map.put("next_name", next_part.getName());
 						map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
 								+ next_part.getIterationIdentifier().getSeries().getValue());
@@ -318,6 +320,7 @@ public class EcoHelper {
 				} else if (isRight) {
 					WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
 					// 변경후
+					map.put("next_name", part.getNumber());
 					map.put("next_name", part.getName());
 					map.put("next_state", part.getLifeCycleState().getDisplay());
 					map.put("next_version", part.getVersionIdentifier().getSeries().getValue() + "."
@@ -326,6 +329,7 @@ public class EcoHelper {
 
 					if (pre_part == null) {
 						map.put("part_oid", "");
+						map.put("part_number", "변경전 데이터가 없습니다.");
 						map.put("part_name", "변경전 데이터가 없습니다.");
 						map.put("part_state", "변경전 데이터가 없습니다.");
 						map.put("part_version", "변경전 데이터가 없습니다.");
@@ -333,6 +337,7 @@ public class EcoHelper {
 						map.put("preMerge", true);
 					} else {
 						map.put("part_oid", pre_part.getPersistInfo().getObjectIdentifier().getStringValue());
+						map.put("part_number", pre_part.getNumber());
 						map.put("part_name", pre_part.getName());
 						map.put("part_state", pre_part.getLifeCycleState().getDisplay());
 						map.put("part_version", pre_part.getVersionIdentifier().getSeries().getValue() + "."

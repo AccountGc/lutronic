@@ -629,6 +629,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function complete() {
 				const data = AUIGrid.getGridData(myGridID);
+				const edit = AUIGrid.getEditedRowColumnItems(myGridID);
+
+				if (edit.length > 0) {
+					alert("저장되지 않은 내용이 있습니다.");
+					return false;
+				}
 
 				if (data.length === 0) {
 					alert("설변 대상 품목이 하나도 없습니다.");

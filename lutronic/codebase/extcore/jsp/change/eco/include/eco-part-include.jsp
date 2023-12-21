@@ -116,7 +116,9 @@ String oid = request.getParameter("oid");
 			autoGridHeight : true,
 		}
 		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
-		AUIGrid.setGridData(myGridID500, <%=AUIGridUtil.include(oid, "complete")%>);
+		AUIGrid.setGridData(myGridID500,
+<%=AUIGridUtil.include(oid, "complete")%>
+	);
 	}
 </script>
 
@@ -135,21 +137,37 @@ String oid = request.getParameter("oid");
 <script type="text/javascript">
 	let myGridID510;
 	const columns510 = [ {
-		dataField : "number",
-		headerText : "품목번호",
-		dataType : "string",
-		width : 180,
-		filter : {
-			showIcon : true,
-		},
-	}, {
 		headerText : "변경 전",
 		children : [ {
+			dataField : "part_number",
+			dataType : "string",
+			headerText : "품목명",
+			cellColMerge : true, // 셀 가로 병합 실행
+			cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
+			renderer : {
+				type : "LinkRenderer",
+				baseUrl : "javascript",
+				jsCallback : function(rowIndex, columnIndex, value, item) {
+					const oid = item.part_oid;
+					if (oid === "") {
+						return false;
+					}
+					const url = getCallUrl("/part/view?oid=" + oid);
+					_popup(url, 1600, 800, "n");
+				}
+			},
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (item.preMerge === true) {
+					return "preMerge";
+				}
+				return null;
+			},
+		}, {
 			dataField : "part_name",
 			dataType : "string",
 			headerText : "품목명",
 			cellColMerge : true, // 셀 가로 병합 실행
-			cellColSpan : 4, // 셀 가로 병합 대상은 6개로 설정
+			cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
 			renderer : {
 				type : "LinkRenderer",
 				baseUrl : "javascript",
@@ -187,6 +205,30 @@ String oid = request.getParameter("oid");
 	}, {
 		headerText : "변경 후",
 		children : [ {
+			dataField : "next_number",
+			dataType : "string",
+			headerText : "품목명",
+			cellColMerge : true, // 셀 가로 병합 실행
+			cellColSpan : 4, // 셀 가로 병합 대상은 6개로 설정
+			renderer : {
+				type : "LinkRenderer",
+				baseUrl : "javascript",
+				jsCallback : function(rowIndex, columnIndex, value, item) {
+					const oid = item.next_oid;
+					if (oid === "") {
+						return false;
+					}
+					const url = getCallUrl("/part/view?oid=" + oid);
+					_popup(url, 1600, 800, "n");
+				}
+			},
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (item.afterMerge === true) {
+					return "afterMerge";
+				}
+				return null;
+			},
+		}, {
 			dataField : "next_name",
 			dataType : "string",
 			headerText : "품목명",
@@ -285,6 +327,8 @@ String oid = request.getParameter("oid");
 			},
 		}
 		myGridID510 = AUIGrid.create("#grid510", columnLayout, props);
-		AUIGrid.setGridData(myGridID510, <%=AUIGridUtil.include(oid, "part")%>);
+		AUIGrid.setGridData(myGridID510,
+<%=AUIGridUtil.include(oid, "part")%>
+	);
 	}
 </script>
