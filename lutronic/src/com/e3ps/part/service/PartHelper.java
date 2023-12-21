@@ -749,7 +749,12 @@ public class PartHelper {
 		ArrayList<WTPart> list = new ArrayList<WTPart>();
 		// root 추가
 		list.add(part);
-		View view = ViewHelper.service.getView(part.getViewName());
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -769,7 +774,12 @@ public class PartHelper {
 	 * 품목 BOM 구조 재귀 함수
 	 */
 	private void descendants(WTPart part, ArrayList<WTPart> list) throws Exception {
-		View view = ViewHelper.service.getView(part.getViewName());
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		WTPartConfigSpec configSpec = WTPartConfigSpec
 				.newWTPartConfigSpec(WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null));
 		QueryResult result = WTPartHelper.service.getUsesWTParts(part, configSpec);
@@ -1144,7 +1154,13 @@ public class PartHelper {
 	public JSONArray lower(String oid, String baseline) throws Exception {
 		JSONArray lower = new JSONArray();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		View view = ViewHelper.service.getView(part.getViewName());
+
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		State state = part.getLifeCycleState();
 
 		// 베이스라인
@@ -1185,7 +1201,12 @@ public class PartHelper {
 	public JSONArray upper(String oid, String baseline) throws Exception {
 		JSONArray upper = new JSONArray();
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		View view = ViewHelper.service.getView(part.getViewName());
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		State state = part.getLifeCycleState();
 		WTPartMaster master = (WTPartMaster) part.getMaster();
 		QueryResult qr = null;
@@ -1435,7 +1456,12 @@ public class PartHelper {
 			rootNode.put("disabled", false);
 			rootNode.put("checked", true);
 		}
-		View view = ViewHelper.service.getView(root.getViewName());
+		String viewName = root.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		State state = root.getLifeCycleState();
 		JSONArray children = new JSONArray();
 //		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
@@ -1513,7 +1539,12 @@ public class PartHelper {
 	private ArrayList<Map<String, Object>> descendants(ArrayList<Map<String, Object>> list, String oid, int level)
 			throws Exception {
 		WTPart part = (WTPart) CommonUtil.getObject(oid);
-		View view = ViewHelper.service.getView(part.getViewName());
+		String viewName = part.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		State state = part.getLifeCycleState();
 //		WTPartStandardConfigSpec configSpec = WTPartStandardConfigSpec.newWTPartStandardConfigSpec(view, null);
 		WTPartConfigSpec configSpec = WTPartConfigSpec
