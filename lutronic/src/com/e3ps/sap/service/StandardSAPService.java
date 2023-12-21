@@ -583,9 +583,11 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		rtnTable.firstRow();
 		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
 //			Object IDNRK_NEW = rtnTable.getValue("IDNRK_NEW");
+			
+			Object MATNR_OLD = rtnTable.getValue("MATNR_OLD");
 			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
 			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
-			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+			System.out.println("MATNR_OLD+"+MATNR_OLD+ ", ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
 		}
 
 		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
