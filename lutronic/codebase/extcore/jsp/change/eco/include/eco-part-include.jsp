@@ -141,7 +141,7 @@ String oid = request.getParameter("oid");
 		children : [ {
 			dataField : "part_number",
 			dataType : "string",
-			headerText : "품목명",
+			headerText : "품목번호",
 			cellColMerge : true, // 셀 가로 병합 실행
 			cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
 			renderer : {
@@ -207,7 +207,7 @@ String oid = request.getParameter("oid");
 		children : [ {
 			dataField : "next_number",
 			dataType : "string",
-			headerText : "품목명",
+			headerText : "품목번호",
 			cellColMerge : true, // 셀 가로 병합 실행
 			cellColSpan : 4, // 셀 가로 병합 대상은 6개로 설정
 			renderer : {

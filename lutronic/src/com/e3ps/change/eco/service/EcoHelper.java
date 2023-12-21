@@ -309,7 +309,7 @@ public class EcoHelper {
 						WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
 						// 개정데이터가 있을경우
 						map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
-						map.put("next_name", next_part.getNumber());
+						map.put("next_number", next_part.getNumber());
 						map.put("next_name", next_part.getName());
 						map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
 								+ next_part.getIterationIdentifier().getSeries().getValue());
@@ -320,7 +320,7 @@ public class EcoHelper {
 				} else if (isRight) {
 					WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
 					// 변경후
-					map.put("next_name", part.getNumber());
+					map.put("next_number", part.getNumber());
 					map.put("next_name", part.getName());
 					map.put("next_state", part.getLifeCycleState().getDisplay());
 					map.put("next_version", part.getVersionIdentifier().getSeries().getValue() + "."

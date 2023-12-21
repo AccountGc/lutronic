@@ -498,7 +498,12 @@ public class StandardActivityService extends StandardManager implements Activity
 		query.appendWhere(new SearchCondition(WTPart.class, "iterationInfo.latest", SearchCondition.IS_TRUE, true),
 				new int[] { idx_part });
 
-		View view = ViewHelper.service.getView(end.getViewName());
+		String viewName = end.getViewName();
+		if (!StringUtil.checkString(viewName)) {
+			viewName = "Design";
+		}
+
+		View view = ViewHelper.service.getView(viewName);
 		if (view != null) {
 			query.appendAnd();
 			query.appendWhere(new SearchCondition(WTPart.class, "view.key.id", "=",
