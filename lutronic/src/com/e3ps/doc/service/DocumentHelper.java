@@ -1,6 +1,8 @@
 package com.e3ps.doc.service;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,6 +11,11 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.aspose.pdf.Document;
+import com.aspose.pdf.HorizontalAlignment;
+import com.aspose.pdf.Page;
+import com.aspose.pdf.PageNumberStamp;
+import com.aspose.pdf.VerticalAlignment;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -16,6 +23,7 @@ import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
+import com.e3ps.common.aspose.AsposeUtils;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
@@ -37,8 +45,10 @@ import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
 import wt.clients.folder.FolderTaskLogic;
+import wt.content.ApplicationData;
 import wt.content.ContentHelper;
 import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
@@ -61,6 +71,7 @@ import wt.queue.QueueHelper;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
 import wt.util.WTAttributeNameIfc;
+import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
 import wt.vc.config.ConfigHelper;
 import wt.vc.config.LatestConfigSpec;
@@ -80,7 +91,8 @@ public class DocumentHelper {
 	 */
 	private static final String processQueueName = "WordToPdfProcessQueue";
 	private static final String className = "com.e3ps.common.aspose.AsposeUtils";
-	private static final String methodName = "wordToPdf";
+	private static final String wordToPdfMethod = "wordToPdf";
+	private static final String genWordAndPdfMethod = "genWordAndPdf";
 
 	/**
 	 * 문서 검색
@@ -598,7 +610,7 @@ public class DocumentHelper {
 	/**
 	 * 워드 파일 PDF 생성
 	 */
-	public void genWordToPdf(String oid) throws Exception {
+	public void wordToPdfMethod(String oid) throws Exception {
 		WTPrincipal principal = SessionHelper.manager.getPrincipal();
 		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
 
@@ -608,7 +620,7 @@ public class DocumentHelper {
 		Class[] argClasses = { Hashtable.class };
 		Object[] argObjects = { hash };
 
-		queue.addEntry(principal, methodName, className, argClasses, argObjects);
+		queue.addEntry(principal, wordToPdfMethod, className, argClasses, argObjects);
 	}
 
 	/**
@@ -624,23 +636,114 @@ public class DocumentHelper {
 	 */
 	public void mergePdf(WTDocument doc) throws Exception {
 
-		QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("COVER"));)
-		
+		doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
 
+		String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
+		String mergePath = temp + File.separator + "merge";
+		File mergeFile = new File(mergePath);
+		if (!mergeFile.exists()) {
+			mergeFile.mkdirs();
+		}
 
-//String first = list.get(0);
-//Document firstPdf = new Document(first);
-//list.remove(0);
-//
-//for (String path : list) {
-//	Document pdf = new Document(path);
-//	firstPdf.getPages().add(pdf.getPages());
-//	pdf.close();
-//}
-//
-//String mergePdfPath = mergePath + num + ".pdf";
-//firstPdf.save(mergePdfPath);
+		QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("COVER"));
+		String coverPath = "";
+		if (qr.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+//			String name = new String(data.getFileName().getBytes("EUC-KR"), "8859_1");
+			String name = data.getFileName();
+			File file = new File(mergePath + File.separator + name);
+			coverPath = file.getAbsolutePath();
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
 
-		
+		qr.reset();
+		qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("PDF"));
+		String wordPath = "";
+		String name = "";
+		System.out.println("qr=" + qr.size());
+		if (qr.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) qr.nextElement();
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+//			String name = new String(data.getFileName().getBytes("EUC-KR"), "8859_1");
+			name = data.getFileName();
+			File file = new File(mergePath + File.separator + name);
+			wordPath = file.getAbsolutePath();
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+		}
+
+		// 기존 변환된 워드 문서 삭제
+		QueryResult result = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("PDF"));
+		if (result.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) result.nextElement();
+			ContentServerHelper.service.deleteContent(doc, data);
+		}
+
+		AsposeUtils.setAsposePdfLic();
+		System.out.println("coverPath=" + coverPath);
+		System.out.println("wordPath=" + wordPath);
+		Document coverPdf = new Document(coverPath);
+		Document wordPdf = new Document(wordPath);
+		coverPdf.getPages().add(wordPdf.getPages());
+		wordPdf.close();
+
+		String compPath = mergePath + File.separator + "complete" + name;
+		File compPdf = new File(compPath);
+		if (!compPdf.exists()) {
+			compPdf.mkdirs();
+		}
+
+		int newPageNumber = 1;
+
+		// Instantiate the PageNumberStamp
+		PageNumberStamp pageNoStamp = new PageNumberStamp();
+		pageNoStamp.setHorizontalAlignment(HorizontalAlignment.Center);
+		pageNoStamp.setVerticalAlignment(VerticalAlignment.Bottom);
+		pageNoStamp.setStartingNumber(1);
+		pageNoStamp.setFormat("#/" + coverPdf.getPages().size());
+
+		// Add stamp
+		for (int pageNumber = 0; pageNumber < coverPdf.getPages().size(); pageNumber++) {
+			coverPdf.getPages().get_Item(pageNumber + 1).addStamp(pageNoStamp);
+		}
+
+		coverPdf.save(compPath);
+		coverPdf.close();
+
+		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+		applicationData.setRole(ContentRoleType.SECONDARY);
+		PersistenceHelper.manager.save(applicationData);
+		ContentServerHelper.service.updateContent(doc, applicationData, compPdf.getPath());
+
+	}
+
+	/**
+	 * 일반 문서 워드 생성 및 PDF변환
+	 */
+	public void genWordAndPdfMethod(String oid) throws Exception {
+		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", oid);
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, genWordAndPdfMethod, className, argClasses, argObjects);
 	}
 }

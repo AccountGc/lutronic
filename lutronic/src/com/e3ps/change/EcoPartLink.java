@@ -39,7 +39,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "partStateCode", type = String.class),
 
-				@GeneratedProperty(name = "preOrder", type = Boolean.class)
+				@GeneratedProperty(name = "preOrder", type = Boolean.class),
+
+				@GeneratedProperty(name = "weight", type = Double.class)
 
 		},
 

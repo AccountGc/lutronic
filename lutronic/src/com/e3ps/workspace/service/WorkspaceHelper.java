@@ -1028,4 +1028,18 @@ public class WorkspaceHelper {
 		}
 		return JSONArray.fromObject(list);
 	}
+
+	/**
+	 * 최종 결재 종료 후 수신자에게 메일 전송
+	 */
+	public void sendReceiveMail(Persistable per) throws Exception {
+//		ArrayList<ApprovalLine> list = 
+	}
+
+	/**
+	 * 최종 결재 종료 후 외부메일 유저에게 메일 전송
+	 */
+	public void sendExternalMail(Persistable per) throws Exception {
+		
+	}
 }

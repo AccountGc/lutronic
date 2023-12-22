@@ -34,7 +34,16 @@ HashMap<String, String> hash = dto.getSignature();
 	<tr>
 		<th class="lb">이름</th>
 		<td class="indent5"><%=dto.getName()%></td>
-		<td rowspan="8">이름</td>
+		<td rowspan="8">
+			<%
+				out.println(hash);
+				if(hash.size() > 0) {
+			%>
+			asdf
+			<%
+				}
+			%>
+		</td>
 	</tr>
 	<tr>
 		<th class="lb">아이디</th>
@@ -64,7 +73,7 @@ HashMap<String, String> hash = dto.getSignature();
 		<th class="lb">서명</th>
 		<td class="indent5">
 			<jsp:include page="/extcore/jsp/common/primary-view.jsp">
-				<jsp:param value="<%=dto.getPoid()%>" name="oid" />
+				<jsp:param value="<%=dto.getWoid()%>" name="oid" />
 			</jsp:include>
 		</td>
 	</tr>

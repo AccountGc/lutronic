@@ -251,8 +251,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="ecoNo" id="ecoNo" class="width-300">
 				</td>
 				<th>EO NO</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="text" name="eoNo" id="eoNo" class="width-300">
+				</td>
+				<th>선구매</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="preOrder" value="yes">
+						<div class="state p-success">
+							<label>
+								<b>예</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="preOrder" value="no">
+						<div class="state p-success">
+							<label>
+								<b>아니오</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="preOrder" value="all" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>전체</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -560,7 +590,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function loadGridData() {
-				$("input[name=sessionid").val(0);
+				// 				$("input[name=sessionid").val(0);
 				let params = new Object();
 				const url = getCallUrl("/part/list");
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
@@ -574,7 +604,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
 						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

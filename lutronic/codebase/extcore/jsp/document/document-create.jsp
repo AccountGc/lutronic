@@ -66,7 +66,7 @@ iframe {
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"> /Default/문서 </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
-					<input type="button" value="문서채번확인" title="문서채번확인" onclick="numberView();" class="red">
+<!-- 					<input type="button" value="문서채번확인" title="문서채번확인" onclick="numberView();" class="red"> -->
 				</td>
 				<th class="lb req">문서명</th>
 				<td class="indent5" colspan="3">
@@ -395,20 +395,20 @@ iframe {
 				});
 			}
 
-			function numberView() {
-				const classType = document.getElementById("classType1").value;
-				if (classType === "") {
-					alert("대분류를 선택하세요.");
-					return false;
-				}
-				if (classType !== "DEV" && classType !== "INSTRUCTION" && classType !== "REPORT" && classType !== "VALIDATION" && classType !== "MEETING") {
-					alert("채번 대상의 문서가 아닙니다.");
-					return false;
-				}
+// 			function numberView() {
+// 				const classType = document.getElementById("classType1").value;
+// 				if (classType === "") {
+// 					alert("대분류를 선택하세요.");
+// 					return false;
+// 				}
+// 				if (classType !== "DEV" && classType !== "INSTRUCTION" && classType !== "REPORT" && classType !== "VALIDATION" && classType !== "MEETING") {
+// 					alert("채번 대상의 문서가 아닙니다.");
+// 					return false;
+// 				}
 
-				const url = getCallUrl("/doc/numberView?classType=" + classType);
-				_popup(url, 1000, 600, "n");
-			}
+// 				const url = getCallUrl("/doc/numberView?classType=" + classType);
+// 				_popup(url, 1000, 600, "n");
+// 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
 // 				selectbox("formType");

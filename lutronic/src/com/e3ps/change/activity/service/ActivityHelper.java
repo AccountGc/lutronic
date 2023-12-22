@@ -386,6 +386,7 @@ public class ActivityHelper {
 				map.put("order", link.getOrders());
 				map.put("part_state_code", link.getPartStateCode());
 				map.put("preOrder", preOrder);
+				map.put("weight", link.getWeight());
 //				if (isApproved) {
 				if(isLeft) {
 					// 개정 데이터

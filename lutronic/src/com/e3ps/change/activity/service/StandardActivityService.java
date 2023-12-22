@@ -878,8 +878,9 @@ public class StandardActivityService extends StandardManager implements Activity
 				String complete = (String) map.get("complete");
 				String inner = (String) map.get("inner");
 				String order = (String) map.get("order");
-				String partStateCode = (String) map.get("partStateCode");
+				String partStateCode = (String) map.get("part_state_code");
 				String link_oid = (String) map.get("link_oid");
+				double weight = (double) map.get("weight");
 
 				EcoPartLink eLink = (EcoPartLink) CommonUtil.getObject(link_oid);
 				eLink.setPreOrder(preOrder);
@@ -888,6 +889,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				eLink.setComplete(complete);
 				eLink.setInner(inner);
 				eLink.setOrders(order);
+				eLink.setWeight(weight);
 
 				if (preOrder) {
 					IBAUtil.createIba(nextPart, "boolean", "PREORDER", "true");

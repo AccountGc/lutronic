@@ -431,7 +431,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			ApplicationData applicationData = ApplicationData.newApplicationData(user);
 			applicationData.setRole(ContentRoleType.PRIMARY);
 			PersistenceHelper.manager.save(applicationData);
-			ContentServerHelper.service.updateContent(people, applicationData, vault.getPath());
+			ContentServerHelper.service.updateContent(user, applicationData, vault.getPath());
 
 			trs.commit();
 			trs = null;

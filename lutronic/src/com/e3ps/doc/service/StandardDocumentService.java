@@ -291,9 +291,10 @@ public class StandardDocumentService extends StandardManager implements Document
 
 			// 개발 구분과 지침서
 			if (classType1_code.equals("DEV") || classType1_code.equals("INSTRUCTION")) {
-				DocumentHelper.manager.genWordToPdf(doc.getPersistInfo().getObjectIdentifier().getStringValue());
+				DocumentHelper.manager.wordToPdfMethod(doc.getPersistInfo().getObjectIdentifier().getStringValue());
+			} else {
+				DocumentHelper.manager.genWordAndPdfMethod(doc.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -770,7 +771,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			if (info != null) {
 				String classType1Code = info.getPtc_str_2();
 
-				System.out.println("classType1Code=" + classType1Code);
 				// 과거 데이터는 없음
 				if (StringUtil.checkString(classType1Code)) {
 					// 개발문서 일 경우
@@ -780,7 +780,6 @@ public class StandardDocumentService extends StandardManager implements Document
 						if (classType2 != null) {
 							String key = classType2.getClazz().trim();
 							// 위험관리보고서
-							name = key;
 							if ("RMR".equals(key)) {
 								excelFile = new File(preFixPath + File.separator + "RMR.xlsx");
 								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
@@ -817,10 +816,18 @@ public class StandardDocumentService extends StandardManager implements Document
 				if (!f.exists()) {
 					f.mkdirs();
 				}
-				String output = pdfPath + File.separator + name + ".pdf";
+				String output = pdfPath + File.separator + doc.getNumber() + "_COVER.pdf";
 				// excel to pdf
 				Workbook wb = new Workbook(excelFile.getAbsolutePath());
 				wb.save(output, FileFormatType.PDF);
+
+				// 기존 커버 삭제
+				QueryResult result = ContentHelper.service.getContentsByRole(doc,
+						ContentRoleType.toContentRoleType("COVER"));
+				if (result.hasMoreElements()) {
+					ApplicationData data = (ApplicationData) result.nextElement();
+					ContentServerHelper.service.deleteContent(doc, data);
+				}
 
 				// save
 				File pdfFile = new File(output);
@@ -838,7 +845,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		} catch (Exception e) {
 			e.printStackTrace();
 			trs.rollback();
-			trs.rollback();
+			throw e;
 		} finally {
 			if (trs != null)
 				trs.rollback();

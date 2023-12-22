@@ -297,7 +297,7 @@ function createPagingNavigator(goPage, sessionid) {
 function moveToPage(goPage, sessionid) {
 	createPagingNavigator(goPage);
 	currentPage = goPage;
-//	document.getElementById("sessionid").value = sessionid;
+	document.getElementById("sessionid").value = sessionid;
 	document.getElementById("curPage").value = goPage;
 	loadGridData();
 }

@@ -408,6 +408,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 			cmd : "removeLink",
 			uiIcon : "ui-icon-remove",
 		}, {
+			title : "다중삭제",
+			cmd : "removeMultiLink",
+			uiIcon : "ui-icon-remove",
+		}, {
 			title : "----"
 		}, {
 			title : "체크인",
@@ -481,12 +485,13 @@ WTPart root = (WTPart) request.getAttribute("root");
 			const that = this;
 			const tree = $("#treetable").fancytree("getTree");
 			const node = tree.getActiveNode();
-			process(node, ui.cmd);
+			const selectedNodes = tree.getSelectedNodes();
+			process(node, selectedNodes, ui.cmd);
 		},
 	});
 
 	// 마우스 우클릭 액션
-	function process(node, action) {
+	function process(node, selectedNodes, action) {
 		let url;
 		const oid = node.data.oid;
 		const poid = node.data.poid;
@@ -515,7 +520,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			}
 			// 잘라내기
 		} else if (action === "exist") {
-			url = getCallUrl("/part/popup?method=exist&multi=false");
+			url = getCallUrl("/part/popup?method=exist&multi=true");
 			_popup(url, 1600, 800, "n");
 			// 복사
 		} else if (action === "copy") {
@@ -573,6 +578,24 @@ WTPart root = (WTPart) request.getAttribute("root");
 				}
 				closeLayer();
 			});
+		} else if (action === "removeMultiLink") {
+			if (selectedNodes.length === 0) {
+				alert("삭제할 품목을 선택하세요.");
+				return false;
+			}
+			let comp;
+			for (let i = 0; i < selectedNodes.length; i++) {
+				const poid = selectedNodes[i].data.poid;
+				if (comp === undefined) {
+					comp = poid;
+				} else {
+					if (comp !== poid) {
+						alert("모품목이 다른 품목을 다중으로 삭제 불가능합니다.");
+						return false;
+					}
+				}
+			}
+			alert(comp);
 		}
 
 		const rootNode = tree.getRootNode();
@@ -657,14 +680,18 @@ WTPart root = (WTPart) request.getAttribute("root");
 	function exist(arr, callBack) {
 		const tree = $("#treetable").fancytree("getTree");
 		const node = tree.getActiveNode();
-		const item = arr[0].item;
 
+		const list = new Array();
+		for (let i = 0; i < arr.length; i++) {
+			const item = arr[i].item;
+			const oid = item.part_oid; // 붙여지는 대상
+			list.push(oid);
+		}
 		const poid = node.data.oid; // 체크아웃될 대상
-		const oid = item.part_oid; // 붙여지는 대상
 		const url = getCallUrl("/bom/exist");
 		const params = {
 			poid : poid,
-			oid : oid
+			list : list
 		};
 		openLayer();
 		call(url, params, function(data) {

@@ -1,5 +1,6 @@
 package com.e3ps.part.bom.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -199,15 +200,22 @@ public class StandardBomService extends StandardManager implements BomService {
 	}
 
 	@Override
-	public Map<String, Object> exist(Map<String, String> params) throws Exception {
+	public Map<String, Object> exist(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		String poid = (String) params.get("poid");
-		String oid = (String) params.get("oid");
+//		String oid = (String) params.get("oid");
+		ArrayList<String> list = (ArrayList<String>) params.get("list");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			WTPart parent = (WTPart) CommonUtil.getObject(poid);
+			for (String oid : list) {
+				if (poid.trim().equals(oid.trim())) {
+					throw new Exception("추가 하하려는 품목중에 상위 품목과 동일한 품목이 존재합니다.");
+				}
+			}
+
 			WTPart workingCopy = null;
 			if (!WorkInProgressHelper.isCheckedOut(parent)) {
 				Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
@@ -218,10 +226,13 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 
 			// 복사본에... 생성
-			WTPart child = (WTPart) CommonUtil.getObject(oid);
-			WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
-			usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
-			PersistenceHelper.manager.save(usageLink);
+
+			for (String oid : list) {
+				WTPart child = (WTPart) CommonUtil.getObject(oid);
+				WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
+				usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
+				PersistenceHelper.manager.save(usageLink);
+			}
 
 			JSONObject node = BomHelper.manager.getNode(workingCopy);
 			map.put("resNode", node);

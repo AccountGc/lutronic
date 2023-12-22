@@ -128,6 +128,7 @@ String oid = request.getParameter("oid");
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
 				설계변경 품목
+				<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 			</div>
 		</td>
 	</tr>
@@ -136,6 +137,36 @@ String oid = request.getParameter("oid");
 <div id="grid510" style="height: 60px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID510;
+	const part_result_code = [ {
+		key : "O",
+		value : "그대로 사용(O)"
+	}, {
+		key : "R",
+		value : "수정하여 사용(R)"
+	}, {
+		key : "N",
+		value : "신규변경품으로(N)"
+	}, {
+		key : "S",
+		value : "폐기(S)"
+	}, {
+		key : "-",
+		value : "-"
+	}, ]
+
+	const part_state_code = [ {
+		key : "N",
+		value : "신규(N)"
+	}, {
+		key : "D",
+		value : "삭제(D)"
+	}, {
+		key : "R",
+		value : "변경(R)"
+	}, {
+		key : "C",
+		value : "전용(C)"
+	}, ];
 	const columns510 = [ {
 		headerText : "변경 전",
 		children : [ {
@@ -144,6 +175,7 @@ String oid = request.getParameter("oid");
 			headerText : "품목번호",
 			cellColMerge : true, // 셀 가로 병합 실행
 			cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
+			width : 130,
 			renderer : {
 				type : "LinkRenderer",
 				baseUrl : "javascript",
@@ -168,6 +200,7 @@ String oid = request.getParameter("oid");
 			headerText : "품목명",
 			cellColMerge : true, // 셀 가로 병합 실행
 			cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
+			width : 250,
 			renderer : {
 				type : "LinkRenderer",
 				baseUrl : "javascript",
@@ -210,6 +243,7 @@ String oid = request.getParameter("oid");
 			headerText : "품목번호",
 			cellColMerge : true, // 셀 가로 병합 실행
 			cellColSpan : 4, // 셀 가로 병합 대상은 6개로 설정
+			width : 130,
 			renderer : {
 				type : "LinkRenderer",
 				baseUrl : "javascript",
@@ -233,7 +267,8 @@ String oid = request.getParameter("oid");
 			dataType : "string",
 			headerText : "품목명",
 			cellColMerge : true, // 셀 가로 병합 실행
-			cellColSpan : 4, // 셀 가로 병합 대상은 6개로 설정
+			cellColSpan : 6, // 셀 가로 병합 대상은 6개로 설정
+			width : 250,
 			renderer : {
 				type : "LinkRenderer",
 				baseUrl : "javascript",
@@ -301,6 +336,89 @@ String oid = request.getParameter("oid");
 				}
 			}
 		} ]
+	}, {
+		dataField : "part_state_code",
+		headerText : "부품<br>상태<br>코드",
+		dataType : "string",
+		width : 80,
+		labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+			let retStr = "";
+			for (let i = 0, len = part_state_code.length; i < len; i++) {
+				if (part_state_code[i]["key"] == value) {
+					retStr = part_state_code[i]["value"];
+					break;
+				}
+			}
+			return retStr == "" ? value : retStr;
+		},
+	}, {
+		headerText : "기존 부품/장비",
+		children : [ {
+			headerText : "납풍 장비",
+			dataField : "delivery",
+			dataType : "string",
+			width : 120,
+			labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+				let retStr = "";
+				for (let i = 0, len = part_result_code.length; i < len; i++) {
+					if (part_result_code[i]["key"] == value) {
+						retStr = part_result_code[i]["value"];
+						break;
+					}
+				}
+				return retStr == "" ? value : retStr;
+			},
+		}, {
+			headerText : "완성 장비",
+			dataField : "complete",
+			dataType : "string",
+			width : 120,
+			labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+				let retStr = "";
+				for (let i = 0, len = part_result_code.length; i < len; i++) {
+					if (part_result_code[i]["key"] == value) {
+						retStr = part_result_code[i]["value"];
+						break;
+					}
+				}
+				return retStr == "" ? value : retStr;
+			},
+		}, {
+			headerText : "사내 재고",
+			dataField : "inner",
+			dataType : "string",
+			width : 120,
+			labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+				let retStr = "";
+				for (let i = 0, len = part_result_code.length; i < len; i++) {
+					if (part_result_code[i]["key"] == value) {
+						retStr = part_result_code[i]["value"];
+						break;
+					}
+				}
+				return retStr == "" ? value : retStr;
+			},
+		}, {
+			headerText : "발주 부품",
+			dataField : "order",
+			dataType : "string",
+			width : 120,
+			labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+				let retStr = "";
+				for (let i = 0, len = part_result_code.length; i < len; i++) {
+					if (part_result_code[i]["key"] == value) {
+						retStr = part_result_code[i]["value"];
+						break;
+					}
+				}
+				return retStr == "" ? value : retStr;
+			},
+		} ]
+	}, {
+		headerText : "중량(g)",
+		dataField : "weight",
+		dataType : "numeric",
+		width : 100
 	} ]
 
 	function createAUIGrid510(columnLayout) {
@@ -314,7 +432,6 @@ String oid = request.getParameter("oid");
 			hoverMode : "singleRow",
 			enableFilter : true,
 			autoGridHeight : true,
-			fillColumnSizeMode : true,
 			enableCellMerge : true,
 			cellColMergeFunction : function(rowIndex, columnIndex, item) {
 				if (item.preMerge === true) {
@@ -330,5 +447,45 @@ String oid = request.getParameter("oid");
 		AUIGrid.setGridData(myGridID510,
 <%=AUIGridUtil.include(oid, "part")%>
 	);
+	}
+
+	function exportExcel() {
+		_export("설변품목 리스트", "설변품목", "설변품목 리스트", [], "");
+	}
+	
+	function _export(fileName, headerName, sheetName, exceptColumnFields, creator) {
+		const date = new Date();
+		const year = date.getFullYear();
+		const month = (date.getMonth() + 1).toString().padStart(2, '0');
+		const day = date.getDate().toString().padStart(2, '0');
+		const today = year + "/" + month + "/" + day;
+		AUIGrid.exportToXlsx(myGridID510, {
+			// 저장하기 파일명
+			fileName: fileName,
+			progressBar: true,
+			sheetName: sheetName,
+			exportWithStyle: true,
+			exceptColumnFields: exceptColumnFields,
+			// 헤더 내용
+			headers: [{
+				text: "", height: 20 // 첫행 빈줄
+			}, {
+				text: headerName, height: 36, style:
+					{ fontSize: 20, textAlign: "center", fontWeight: "bold", background: "#DAD9FF" }
+			}, {
+				text: "작성자 : " + creator, style: { textAlign: "right", fontWeight: "bold" }
+			}, {
+				text: "작성일 : " + today, style: { textAlign: "right", fontWeight: "bold" }
+			}, {
+				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
+			}],
+			// 푸터 내용
+			footers: [{
+				text: "", height: 5, style: { background: "#555555" } // 빈줄 색깔 경계 만듬
+			}, {
+				text: "COPYRIGHT 2023 LUTRONIC", height: 24, style:
+					{ textAlign: "right", fontWeight: "bold", color: "#ffffff", background: "#222222" }
+			}]
+		});
 	}
 </script>

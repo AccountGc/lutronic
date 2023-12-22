@@ -100,7 +100,7 @@ function second() {
 		if ("DEV" === classType1 || "INSTRUCTION" == classType1) {
 			tag.value += clazz + "-";
 			modelEnable();
-			loadHtml(clazz);
+//			loadHtml(clazz);
 		} else if ("REPORT" === classType1) {
 			const currentDate = new Date();
 			const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리

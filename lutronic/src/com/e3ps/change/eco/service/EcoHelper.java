@@ -278,6 +278,14 @@ public class EcoHelper {
 			Map<String, Object> map = new HashMap<>();
 
 			boolean isPast = link.getPast();
+			boolean preOrder = link.getPreOrder();
+			map.put("delivery", link.getDelivery());
+			map.put("complete", link.getComplete());
+			map.put("inner", link.getInner());
+			map.put("order", link.getOrders());
+			map.put("part_state_code", link.getPartStateCode());
+			map.put("preOrder", preOrder);
+			map.put("weight", link.getWeight());
 
 			// 과저 데이터 처리
 			if (!isPast) {

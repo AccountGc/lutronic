@@ -467,6 +467,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				PersistenceHelper.manager.modify(master);
 
 				afterApprovalAction(per, tapOid);
+
+				// 결재가 끝낫을시 메일 전송한다. 수신인과 외부메일로 들어가 있는사람
+				WorkspaceHelper.manager.sendReceiveMail(per);
+
+				WorkspaceHelper.manager.sendExternalMail(per);
+
 			}
 
 			trs.commit();
@@ -492,12 +498,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			per = (Persistable) LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, state);
 			per = PersistenceHelper.manager.refresh(per);
 
-			
-			if(per instanceof WTDocument) {
-				WTDocument doc = (WTDocument)per;
-				DocumentHelper.service.createCover(doc);;
+			if (per instanceof WTDocument) {
+				WTDocument doc = (WTDocument) per;
+				DocumentHelper.service.createCover(doc);
+				;
 			}
-			
+
 			// 일괄결재일경우 대상도.. 변경
 			if (per instanceof AsmApproval) {
 				AsmApproval asm = (AsmApproval) per;

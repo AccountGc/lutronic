@@ -541,9 +541,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				} ]
 			}, {
 				headerText : "중량(g)",
-				dataField : "",
-				dataType : "string",
-				width : 100
+				dataField : "weight",
+				dataType : "numeric",
+				width : 100,
+				formatString : "#.0"
 			} ];
 
 			function createAUIGrid(columnLayout) {

@@ -119,7 +119,7 @@ public class BomController extends BaseController {
 	@Description(value = "BOM 기존품목 추가")
 	@PostMapping(value = "/exist")
 	@ResponseBody
-	public Map<String, Object> exist(@RequestBody Map<String, String> params) throws Exception {
+	public Map<String, Object> exist(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = BomHelper.service.exist(params);

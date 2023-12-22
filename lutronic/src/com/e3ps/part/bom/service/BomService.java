@@ -35,7 +35,7 @@ public interface BomService {
 	/**
 	 * BOM 기존 품목 교체
 	 */
-	public abstract Map<String, Object> exist(Map<String, String> params) throws Exception;
+	public abstract Map<String, Object> exist(Map<String, Object> params) throws Exception;
 
 	/**
 	 * BOM 드랍
