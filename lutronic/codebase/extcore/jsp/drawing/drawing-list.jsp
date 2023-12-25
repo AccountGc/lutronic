@@ -318,10 +318,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						onClick : function(event) {
 						}
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "_2d",
 					headerText : "2D",
@@ -333,28 +329,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						onClick : function(event) {
 						}
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "number",
 					headerText : "도면번호",
 					dataType : "string",
 					width : 200,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -369,10 +353,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					headerText : "도면명",
 					dataType : "string",
 					width : 250,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -387,10 +367,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					headerText : "도면분류",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "version",
 					headerText : "REV",
@@ -399,46 +375,26 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -471,7 +427,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				$("input[name=sessionid").val(0);
 				const url = getCallUrl("/drawing/list");
@@ -485,8 +444,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

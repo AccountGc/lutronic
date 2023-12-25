@@ -620,6 +620,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				case 2:
 					// bom 비교
+					url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + next_oid + "&ncId=5304500442831603818&locale=ko";
+					_popup(url, 1600, 600, "n");
 					break;
 				case 3:
 					// bom 역전개

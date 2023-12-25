@@ -69,37 +69,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "LEVEL",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "partNumber",
 					headerText : "품번",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "partName",
 					headerText : "품목명",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "partState",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "rohsState",
 					headerText : "ROHS 상태",
@@ -124,55 +108,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							}
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "rohsNumber",
 					headerText : "물질번호",
 					dataType : "string",
 					width : 200,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "rohsName",
 					headerText : "물질명",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "rohslifeState",
 					headerText : "물질 상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "fileName",
 					headerText : "파일명",
 					dataType : "string",
 					width : 250,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "docType",
 					headerText : "파일구분",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 

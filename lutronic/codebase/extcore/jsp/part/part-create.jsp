@@ -413,7 +413,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						return;					
 					}
 					if(isEmpty(partName4)){
-						alert("Key-in을 입력하세요.");
+						alert("품목명(KEY-IN)을 입력하세요.");
 						return;					
 					}
 					if(isEmpty(model)){
@@ -758,7 +758,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			})
 			
 			$('#partName4').focusout(function() {
-				$('#partName4').val(this.value.toUpperCase());
+// 				$('#partName4').val(this.value.toUpperCase());
 			})
 			
 			$(".partName").focusout(function () {

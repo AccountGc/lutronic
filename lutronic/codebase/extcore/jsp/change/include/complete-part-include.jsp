@@ -52,9 +52,6 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 				_popup(url, 1600, 800, "n");
 			}
 		},
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "name",
 		headerText : "품목명",
@@ -69,17 +66,11 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 				_popup(url, 1600, 800, "n");
 			}
 		},
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -88,25 +79,16 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 		renderer : {
 			type : "TemplateRenderer"
 		},
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "",
 		headerText : "BOM",
@@ -120,9 +102,6 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 				url = getCallUrl("/bom/view?oid=" + part_oid);
 				_popup(url, 1600, 800, "n");
 			}
-		},
-		filter : {
-			showIcon : false,
 		},
 	} ]
 
@@ -170,6 +149,7 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 				alert(item.number + " 품목은 이미 추가 되어있습니다.");
 			}
 		})
+		selectbox("_psize");
 		callBack(true, false, "");
 	}
 

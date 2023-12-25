@@ -42,65 +42,41 @@ String oid = request.getParameter("oid");
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "",
 		headerText : "BOM",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "",
 		headerText : "도면",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	} ]
 
 	function createAUIGrid500(columnLayout) {
@@ -112,7 +88,6 @@ String oid = request.getParameter("oid");
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
-			enableFilter : true,
 			autoGridHeight : true,
 		}
 		myGridID500 = AUIGrid.create("#grid500", columnLayout, props);
@@ -430,7 +405,6 @@ String oid = request.getParameter("oid");
 			enableSorting : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
-			enableFilter : true,
 			autoGridHeight : true,
 			enableCellMerge : true,
 			cellColMergeFunction : function(rowIndex, columnIndex, item) {

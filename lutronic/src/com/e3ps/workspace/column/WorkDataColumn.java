@@ -30,6 +30,9 @@ public class WorkDataColumn {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
+	private String viewUrl;
+
+	private final String context = "/Windchill/plm";
 
 	public WorkDataColumn() {
 
@@ -53,12 +56,18 @@ public class WorkDataColumn {
 	private void setInfo(Persistable per) throws Exception {
 		// 객체별 데이터 세팅
 		if (per instanceof WTDocument) {
-
 			// 세부 구분 금형문서, 일반문서
 			WTDocument doc = (WTDocument) per;
 			setNumber(doc.getNumber());
 			setName(doc.getName());
-			setPersistType("문사");
+			String docType = doc.getDocType().toString();
+			if ("$$MMDocument".equals(docType)) {
+				setPersistType("금형문서");
+				setViewUrl(this.context + "/mold/view?=" + getPoid());
+			} else {
+				setPersistType("문서");
+				setViewUrl(this.context + "/doc/view?=" + getPoid());
+			}
 			setState(doc.getLifeCycleState().getDisplay());
 			setCreator(doc.getCreatorName());
 			setCreatedDate(doc.getCreateTimestamp());
@@ -70,8 +79,10 @@ public class WorkDataColumn {
 
 			if (eco.getEoType().equals("CHANGE")) {
 				setPersistType("ECO");
+				setViewUrl(this.context + "/eco/view?=" + getPoid());
 			} else {
 				setPersistType("EO");
+				setViewUrl(this.context + "/eo/view?=" + getPoid());
 			}
 
 			setState(eco.getLifeCycleState().getDisplay());
@@ -87,6 +98,7 @@ public class WorkDataColumn {
 			setCreator(ecr.getCreatorName());
 			setCreatedDate(ecr.getCreateTimestamp());
 			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/cr/view?=" + getPoid());
 		} else if (per instanceof ROHSMaterial) {
 			ROHSMaterial rohs = (ROHSMaterial) per;
 			setNumber(rohs.getNumber());
@@ -96,6 +108,7 @@ public class WorkDataColumn {
 			setCreator(rohs.getCreatorName());
 			setCreatedDate(rohs.getCreateTimestamp());
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/eo/view?=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			AsmApproval asm = (AsmApproval) per;
 			String number = asm.getNumber();
@@ -119,6 +132,7 @@ public class WorkDataColumn {
 			setCreator(asm.getCreatorName());
 			setCreatedDate(asm.getCreateTimestamp());
 			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/asm/view?=" + getPoid());
 		}
 	}
 }

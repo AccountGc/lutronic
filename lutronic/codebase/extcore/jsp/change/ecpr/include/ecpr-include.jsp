@@ -22,8 +22,8 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 	</tr>
 </table>
 <%
-	// 테이블 처리 여부
-	if(header) {
+// 테이블 처리 여부
+if (header) {
 %>
 <table class="create-table">
 	<colgroup>
@@ -46,11 +46,11 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 	</tr>
 </table>
 <%
-	} else {
+} else {
 %>
 <div id="gridEcpr" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
-	}
+}
 %>
 <script type="text/javascript">
 	let myGridID103;
@@ -58,10 +58,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "number",
 		headerText : "ECPR 번호",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -76,10 +72,6 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		headerText : "ECPR 제목",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -93,59 +85,31 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 		dataField : "changeSection",
 		headerText : "변경구분",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "createDepart",
 		headerText : "작성부서",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "writer",
 		headerText : "작성자",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "writeDate",
 		headerText : "작성일",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 180,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	} ]
 	
 	function createAUIGrid103(columnLayout) {
@@ -170,9 +134,9 @@ boolean header = Boolean.parseBoolean(request.getParameter("header"));
 				autoGridHeight : true
 		}
 		myGridID103 = AUIGrid.create("#gridEcpr", columnLayout, props);
-		<% if(view || update){ %>
+		<%if (view || update) {%>
 		AUIGrid.setGridData(myGridID103, <%=AUIGridUtil.include(oid, "ecpr")%>);
-		<% } %>
+		<%}%>
 	}
 
 	// 추가 버튼 클릭 시 팝업창 메서드

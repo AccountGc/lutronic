@@ -1,8 +1,6 @@
 package com.e3ps.workspace.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 import com.e3ps.common.util.CommonUtil;
@@ -14,7 +12,6 @@ import com.e3ps.workspace.dto.WorkDataDTO;
 
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
-import wt.fc.QueryResult;
 import wt.ownership.Ownership;
 import wt.pom.Transaction;
 import wt.services.StandardManager;

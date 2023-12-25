@@ -10,10 +10,6 @@ String height = request.getParameter("height");
 		dataField : "name",
 		headerText : "부서명",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		}
 	} ]
 
 	function _createAUIGrid(columnLayout) {
@@ -71,7 +67,7 @@ String height = request.getParameter("height");
 		const oid = item.oid;
 		const location = item.location;
 		document.getElementById("oid").value = oid;
-// 		document.getElementById("location").value = oid;
+		// 		document.getElementById("location").value = oid;
 		document.getElementById("locationName").innerText = location;
 	}
 
@@ -86,7 +82,7 @@ String height = request.getParameter("height");
 			const oid = primeCell.oid;
 			const location = primeCell.location;
 			document.getElementById("oid").value = oid;
-// 			document.getElementById("location").value = oid;
+			// 			document.getElementById("location").value = oid;
 			document.getElementById("locationName").innerText = location;
 			loadGridData();
 		}, 500);

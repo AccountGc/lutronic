@@ -105,6 +105,22 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		AUIGrid.setGridData(myGridID, <%=list%>);
+		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
+	}
+	
+	function auiCellClick(event) {
+		const item = event.item;
+		const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
+		const rowId = item[rowIdField];
+		
+		// 이미 체크 선택되었는지 검사
+		if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
+			// 엑스트라 체크박스 체크해제 추가
+			AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+		} else {
+			// 엑스트라 체크박스 체크 추가
+			AUIGrid.setCheckedRowsByIds(event.pid, rowId);
+		}
 	}
 
 	function deleteRow() {

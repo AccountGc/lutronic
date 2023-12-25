@@ -168,9 +168,9 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/doc/create', '> 문서관리 > 문서 등록');">문서 등록</a>
 					</li>
-					<li>
-						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄 등록');">문서 일괄 등록</a>
-					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄 등록');">문서 일괄 등록</a> -->
+<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/asm/create?type=DOC', '> 문서관리 > 문서 일괄 결재');">문서 일괄 결재</a>
 					</li>
@@ -256,13 +256,13 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/ecn/list', '> 설계변경 > ECN 검색');">ECN</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/erp/send-listPARTERP', '> 관리자 >PART 전송 현황');">PART 전송 현황</a>
+						<a onclick="moveToPage(this, '/system/part', '> 관리자 >품목 전송 현황');">품목 전송 현황</a>
 					</li>
+<!-- 					<li> -->
+<!-- 						<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 관리자 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a> -->
+<!-- 					</li> -->
 					<li>
-						<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 관리자 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a>
-					</li>
-					<li>
-						<a onclick="moveToPage(this, '/erp/send-listBOMERP', '> 관리자 >BOM 전송 현황');">BOM 전송 현황</a>
+						<a onclick="moveToPage(this, '/system/bom', '> 관리자 >BOM 전송 현황');">BOM 전송 현황</a>
 					</li>
 				</ul>
 			</li>
@@ -324,7 +324,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/mold/create', '> 금형관리 > 금형 등록');">금형 등록</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/asm/create', '> 금형관리 > 금형 일괄 결재');">금형 일괄 결재</a>
+						<a onclick="moveToPage(this, '/asm/create?type=MOLD', '> 금형 일괄 결재');">금형 일괄 결재</a>
 					</li>
 					<li>
 						<a onclick="moveToPage(this, '/asm/list?number=MMBT', '> 금형관리 > 일괄 결재 검색');">일괄 결재 검색</a>

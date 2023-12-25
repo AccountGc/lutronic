@@ -36,4 +36,9 @@ public interface EcoService {
 	 * 베이스 라인 저장 함수
 	 */
 	public abstract void saveBaseline(EChangeOrder eco, ArrayList<EOCompletePartLink> completeParts) throws Exception;
+
+	/**
+	 * SAP 전송후 전송품목에 대한 상태값 변경
+	 */
+	public abstract void ecoPartApproved(EChangeOrder eco) throws Exception;
 }

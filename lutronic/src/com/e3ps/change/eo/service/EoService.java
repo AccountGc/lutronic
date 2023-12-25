@@ -38,4 +38,9 @@ public interface EoService {
 	 */
 	public abstract void saveBaseline(EChangeOrder eo, ArrayList<EOCompletePartLink> completeParts) throws Exception;
 
+	/**
+	 * SAP 전송완료시 모든 품목 상태값 변경 처리
+	 */
+	public abstract void eoPartApproved(ArrayList<WTPart> list) throws Exception;
+
 }

@@ -91,10 +91,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "point",
 					headerText : "진행단계",
@@ -103,48 +99,28 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "submiter",
 					headerText : "기안자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "completeTime",
 					headerText : "결재완료일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "기안일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 
@@ -177,7 +153,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/complete");
 				const field = [ "name", "receiveFrom", "receiveTo" ];
@@ -188,8 +167,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

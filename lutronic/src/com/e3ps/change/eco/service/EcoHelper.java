@@ -26,6 +26,7 @@ import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.part.service.PartHelper;
+import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
 import wt.epm.EPMDocument;
@@ -517,6 +518,28 @@ public class EcoHelper {
 				}
 			}
 		}
+	}
 
+	public String getNextNumber(String number) throws Exception {
+		DecimalFormat df = new DecimalFormat("00");
+		String rtn = null;
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeOrder.class, true);
+		SearchCondition sc = new SearchCondition(EChangeOrder.class, EChangeOrder.EO_NUMBER, "LIKE", number + "%");
+		query.appendWhere(sc, new int[] { idx });
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		// E2312N45
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EChangeOrder eco = (EChangeOrder) obj[0];
+			String ecoNumber = eco.getEoNumber();
+			String next = ecoNumber.substring(6); // 00
+			int n = Integer.parseInt(next) + 1;
+			rtn = number + df.format(n);
+		} else {
+			rtn = number + "01";
+		}
+		return rtn;
 	}
 }

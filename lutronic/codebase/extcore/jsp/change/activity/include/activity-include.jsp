@@ -7,7 +7,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 JSONArray list = OrgHelper.manager.toJsonWTUser();
-JSONArray slist = NumberCodeHelper.manager.toJson("EOSTEP");
+// JSONArray slist = NumberCodeHelper.manager.toJson("EOSTEP");
 JSONArray alist = ActivityHelper.manager.toJsonActMap();
 String oid = request.getParameter("oid");
 String mode = request.getParameter("mode");
@@ -49,74 +49,11 @@ boolean create = "create".equals(mode);
 </table>
 <script type="text/javascript">
 	let myGridID200;
-	const slist =
-<%=slist%>
 	const list =
 <%=list%>
 	const alist =
 <%=alist%>
 	const columns200 = [ {
-		dataField : "step_name",
-		dateType : "string",
-		visible : false
-	}, {
-		dataField : "step",
-		headerText : "STEP",
-		dateType : "string",
-		width : 150,
-		renderer : {
-			type : "IconRenderer",
-			iconWidth : 16,
-			iconHeight : 16,
-			iconPosition : "aisleRight",
-			iconTableRef : {
-				"default" : "/Windchill/extcore/component/AUIGrid/images/list-icon.png"
-			},
-			onClick : function(event) {
-				AUIGrid.openInputer(event.pid);
-			}
-		},
-		labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
-			let retStr = "";
-			for (let i = 0, len = slist.length; i < len; i++) {
-				if (slist[i]["key"] == value) {
-					retStr = slist[i]["value"];
-					break;
-				}
-			}
-			return retStr == "" ? value : retStr;
-		},
-		editRenderer : {
-			type : "ComboBoxRenderer",
-			list : slist,
-			matchFromFirst : false,
-			autoCompleteMode : true, // 자동완성 모드 설정
-			autoEasyMode : true, // 자동완성 모드일 때 자동 선택할지 여부 (기본값 : false)
-			showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-			keyField : "key",
-			valueField : "value",
-			validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
-				let isValid = false;
-				for (let i = 0, len = slist.length; i < len; i++) {
-					if (slist[i]["value"] == newValue) {
-						isValid = true;
-						break;
-					}
-				}
-				return {
-					"validate" : isValid,
-					"message" : "리스트에 있는 값만 선택(입력) 가능합니다."
-				};
-			}
-		},
-	}, 
-// 	{
-// 		dataField : "name",
-// 		headerText : "활동명",
-// 		dateType : "string",
-// 		width : 150
-// 	}, 
-	{
 		dataField : "activity_type",
 		headerText : "활동구분",
 		dateType : "string",

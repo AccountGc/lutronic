@@ -270,4 +270,20 @@ public class DepartmentHelper {
 		}
 		parentNode.put("children", children);
 	}
+
+	/**
+	 * 부서 명으로 부서 찾기
+	 */
+	public Department getDepartment(String deptName) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Department.class, true);
+		QuerySpecUtils.toEquals(query, idx, Department.class, Department.NAME, deptName);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			Department dept = (Department) obj[0];
+			return dept;
+		}
+		return null;
+	}
 }

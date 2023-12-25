@@ -82,10 +82,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "point",
 					headerText : "반려단계",
@@ -95,30 +91,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "completeTime",
 					headerText : "반려일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "기안일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, ]
 			}
 
@@ -151,7 +135,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/reject");
 				const field = [ "name" ];
@@ -162,8 +149,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

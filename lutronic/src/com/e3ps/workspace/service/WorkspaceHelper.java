@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.ECOChange;
+import com.e3ps.common.mail.MailUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.MailUser;
 import com.e3ps.org.MailWTobjectLink;
 import com.e3ps.org.People;
@@ -206,6 +208,7 @@ public class WorkspaceHelper {
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
 		String submiterOid = (String) params.get("submiterOid");
+		String state = (String) params.get("state");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
@@ -213,7 +216,21 @@ public class WorkspaceHelper {
 
 		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
 				WTAttributeNameIfc.ID_NAME, idx, idx_master);
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
+
+		if ("ALL".equals(state)) {
+			query.appendOpenParen();
+			QuerySpecUtils.toEquals(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
+			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_COMPLETE);
+			QuerySpecUtils.toEqualsOr(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_REJECT);
+			query.appendCloseParen();
+		} else if ("START".equals(state)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_START);
+		} else if ("COMPLETE".equals(state)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_COMPLETE);
+		} else if ("REJECT".equals(state)) {
+			QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_RECEIVE_REJECT);
+		}
+
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, RECEIVE_LINE);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, ApprovalLine.class, ApprovalLine.CREATE_TIMESTAMP, receiveFrom,
 				receiveTo);
@@ -784,8 +801,8 @@ public class WorkspaceHelper {
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
 		String state = (String) params.get("state");
-		state = state==null?"합의중":state;
-		
+		state = state == null ? "합의중" : state;
+
 		// 쿼리문 작성
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(ApprovalLine.class, true);
@@ -975,8 +992,17 @@ public class WorkspaceHelper {
 	 */
 	public boolean isAgreeApprovalLine(ApprovalMaster master) throws Exception {
 		boolean isAgreeApprovalLine = true;
-		ArrayList<ApprovalLine> list = getAgreeLine(master);
-		if (list.size() == 0) {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(ApprovalLine.class, true);
+		int idx_m = query.appendClassList(ApprovalMaster.class, true);
+		QuerySpecUtils.toInnerJoin(query, ApprovalLine.class, ApprovalMaster.class, "masterReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx, idx_m);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_AGREE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, AGREE_LINE);
+		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		if (result.size() == 0) {
 			isAgreeApprovalLine = false;
 		}
 		return isAgreeApprovalLine;
@@ -993,7 +1019,7 @@ public class WorkspaceHelper {
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, "masterReference.key.id", master);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.ROLE, WORKING_AGREE);
 		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.TYPE, AGREE_LINE);
-		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
+//		QuerySpecUtils.toEqualsAnd(query, idx, ApprovalLine.class, ApprovalLine.STATE, STATE_AGREE_START);
 		QuerySpecUtils.toOrderBy(query, idx, ApprovalLine.class, ApprovalLine.START_TIME, false);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
@@ -1040,6 +1066,16 @@ public class WorkspaceHelper {
 	 * 최종 결재 종료 후 외부메일 유저에게 메일 전송
 	 */
 	public void sendExternalMail(Persistable per) throws Exception {
-		
+		QueryResult qr = PersistenceHelper.manager.navigate(per, "user", MailWTobjectLink.class);
+		while (qr.hasMoreElements()) {
+			MailUser user = (MailUser) qr.nextElement();
+			String email = user.getEmail();
+			String name = user.getName();
+			if (!StringUtil.checkString(email)) {
+				throw new Exception(name + " 사용자의 이메일 주소가 없습ㄴ디ㅏ.");
+			}
+			// 반복적 메일 전송..
+			MailUtils.manager.sendExternalMail((LifeCycleManaged) per);
+		}
 	}
 }

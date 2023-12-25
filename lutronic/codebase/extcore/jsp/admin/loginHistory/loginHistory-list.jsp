@@ -82,55 +82,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "접속 IP",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "이름",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "id",
 					headerText : "아이디",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "department_name",
 					headerText : "부서",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "duty",
 					headerText : "직급",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createDate",
 					headerText : "접속시간",
 					dataType : "string",
 					width : 170,
 					formatString : "yyyy-mm-dd HH:MM:ss",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -161,16 +137,21 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const field = [ "userName", "userId" ];
 				params = toField(params, field);
 				const url = getCallUrl("/loginHistory/list");
+				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
+					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

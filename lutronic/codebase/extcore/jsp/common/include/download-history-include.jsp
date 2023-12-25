@@ -25,55 +25,31 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 		headerText : "모듈정보",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "name",
 		headerText : "파일명",
 		dataType : "string",
 		width : 300,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "userName",
 		headerText : "이름",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "id",
 		headerText : "아이디",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "duty",
 		headerText : "직급",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "department_name",
 		headerText : "부서",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, 
 // 	{
 // 		dataField : "count",
@@ -91,10 +67,6 @@ JSONArray data = DownloadHistoryHelper.manager.dLogger(oid);
 		headerText : "다운로드시간",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	} ]
 
 	function createAUIGrid51(columnLayout) {

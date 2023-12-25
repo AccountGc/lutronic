@@ -51,7 +51,7 @@ public class BomController extends BaseController {
 		}
 		return list;
 	}
-	
+
 	@Description(value = "BOM 신규품목추가")
 	@PostMapping(value = "/append")
 	@ResponseBody
@@ -84,10 +84,26 @@ public class BomController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "BOM 멀티 품목 제거")
+	@PostMapping(value = "/removeMultiLink")
+	@ResponseBody
+	public Map<String, Object> removeMultiLink(@RequestBody Map<String, Object> params) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			result = BomHelper.service.removeMultiLink(params);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 	@Description(value = "BOM 붙여넣기")
 	@PostMapping(value = "/paste")
 	@ResponseBody
-	public Map<String, Object> paste(@RequestBody Map<String, String> params) throws Exception {
+	public Map<String, Object> paste(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = BomHelper.service.paste(params);
@@ -101,12 +117,12 @@ public class BomController extends BaseController {
 	}
 
 	@Description(value = "BOM 기존품목 교체")
-	@PostMapping(value = "/replace_exist")
+	@PostMapping(value = "/replace")
 	@ResponseBody
 	public Map<String, Object> replace(@RequestBody Map<String, String> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			result = BomHelper.service.replace_exist(params);
+			result = BomHelper.service.replace(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -115,7 +131,7 @@ public class BomController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "BOM 기존품목 추가")
 	@PostMapping(value = "/exist")
 	@ResponseBody
@@ -131,7 +147,7 @@ public class BomController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "BOM 드래그 앤 드랍")
 	@PostMapping(value = "/drop")
 	@ResponseBody

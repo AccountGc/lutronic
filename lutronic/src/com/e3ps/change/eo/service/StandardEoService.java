@@ -29,6 +29,7 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -69,10 +70,11 @@ public class StandardEoService extends StandardManager implements EoService {
 		try {
 			trs.start();
 
-			String number = "E" + DateUtil.getCurrentDateString("ym");
-			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
+			String number = "E" + DateUtil.getCurrentDateString("ym") + "N";
+//			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
+//			number = number + "N" + seqNo;
 
-			number = number + "N" + seqNo;
+			number = EoHelper.manager.getNextNumber(number);
 
 			// 모델 배열 처리
 			// US21,MD23,PN21,
@@ -187,6 +189,7 @@ public class StandardEoService extends StandardManager implements EoService {
 		for (Map<String, String> map : rows104) {
 			String oid = map.get("part_oid");
 			WTPart part = (WTPart) CommonUtil.getObject(oid);
+
 			Map<String, Object> m = EoHelper.manager.validatePart(part);
 //			if (!(boolean) m.get("result")) {
 //				throw new Exception((String) m.get("msg"));
@@ -470,5 +473,39 @@ public class StandardEoService extends StandardManager implements EoService {
 		managedbaseline = (ManagedBaseline) PersistenceHelper.manager.save(managedbaseline);
 		managedbaseline = (ManagedBaseline) BaselineHelper.service.addToBaseline(v, managedbaseline);
 		SessionHelper.manager.setPrincipal(user.getName());
+	}
+
+	@Override
+	public void eoPartApproved(ArrayList<WTPart> list) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			State approved = State.toState("APPROVED");
+			for (WTPart part : list) {
+				// 부품 승인
+				LifeCycleHelper.service.setLifeCycleState(part, approved);
+				// 3D 승인
+				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+				if (epm != null) {
+					LifeCycleHelper.service.setLifeCycleState(epm, approved);
+					// 2D 승인
+					EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
+					if (epm2D != null) {
+						LifeCycleHelper.service.setLifeCycleState(epm2D, approved);
+					}
+				}
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }

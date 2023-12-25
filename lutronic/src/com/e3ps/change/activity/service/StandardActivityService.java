@@ -236,7 +236,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
 
 				EChangeActivity eca = EChangeActivity.newEChangeActivity();
-				eca.setStep(step_name);
+				eca.setStep("ES001"); // 강제 스텝1
 //			eca.setName(name);
 				eca.setActiveType(activity_type);
 				eca.setActiveUser(user);

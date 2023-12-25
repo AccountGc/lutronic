@@ -43,7 +43,7 @@ public class EcnController extends BaseController {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ModelAndView model = new ModelAndView();
-		JSONArray list = OrgHelper.manager.toJsonWTUser();
+		JSONArray list = OrgHelper.manager.toJsonWTUser("RA팀");
 		model.addObject("list", list);
 		model.addObject("modelList", modelList);
 		model.addObject("lifecycleList", lifecycleList);

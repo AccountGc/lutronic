@@ -32,7 +32,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=15003098"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=25003098"></script>
 </head>
 <body>
 	<form>
@@ -66,7 +66,7 @@ iframe {
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"> /Default/문서 </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
-<!-- 					<input type="button" value="문서채번확인" title="문서채번확인" onclick="numberView();" class="red"> -->
+					<!-- 					<input type="button" value="문서채번확인" title="문서채번확인" onclick="numberView();" class="red"> -->
 				</td>
 				<th class="lb req">문서명</th>
 				<td class="indent5" colspan="3">
@@ -108,7 +108,7 @@ iframe {
 			<tr>
 				<th class="req lb">내부 문서번호</th>
 				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-200" readonly="readonly">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300" readonly="readonly">
 				</td>
 				<th>프로젝트코드</th>
 				<td class="indent5">
@@ -274,22 +274,22 @@ iframe {
 				_popup(url, 500, 600, "n");
 			}
 
-// 			function loadForm() {
-// 				const oid = document.getElementById("formType").value;
-// 				if (oid === "") {
-// 					return false;
-// 				}
-// 				const url = getCallUrl("/form/html?oid=" + oid);
-// 				parent.openLayer();
-// 				call(url, null, function(data) {
-// 					if (data.result) {
-// 						DEXT5.setBodyValue(data.html, 'content');
-// 					} else {
-// 						alert(data.msg);
-// 					}
-// 					parent.closeLayer();
-// 				}, "GET");
-// 			}
+			// 			function loadForm() {
+			// 				const oid = document.getElementById("formType").value;
+			// 				if (oid === "") {
+			// 					return false;
+			// 				}
+			// 				const url = getCallUrl("/form/html?oid=" + oid);
+			// 				parent.openLayer();
+			// 				call(url, null, function(data) {
+			// 					if (data.result) {
+			// 						DEXT5.setBodyValue(data.html, 'content');
+			// 					} else {
+			// 						alert(data.msg);
+			// 					}
+			// 					parent.closeLayer();
+			// 				}, "GET");
+			// 			}
 
 			// 문서 등록
 			function create(temp) {
@@ -330,7 +330,16 @@ iframe {
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 내용
 				const content = DEXT5.getBodyValue("content");
-				const name = preFix + "_" + suffix;
+				let name;
+				if (preFix !== "") {
+					if (suffix === "") {
+						alert("문서명을 입력하세요,");
+						return false;
+					}
+					name = preFix + "_" + suffix;
+				} else {
+					name = suffix;
+				}
 				if (isNull(name)) {
 					alert("문서명을 입력하세요.");
 					name.focus();
@@ -395,23 +404,23 @@ iframe {
 				});
 			}
 
-// 			function numberView() {
-// 				const classType = document.getElementById("classType1").value;
-// 				if (classType === "") {
-// 					alert("대분류를 선택하세요.");
-// 					return false;
-// 				}
-// 				if (classType !== "DEV" && classType !== "INSTRUCTION" && classType !== "REPORT" && classType !== "VALIDATION" && classType !== "MEETING") {
-// 					alert("채번 대상의 문서가 아닙니다.");
-// 					return false;
-// 				}
+			// 			function numberView() {
+			// 				const classType = document.getElementById("classType1").value;
+			// 				if (classType === "") {
+			// 					alert("대분류를 선택하세요.");
+			// 					return false;
+			// 				}
+			// 				if (classType !== "DEV" && classType !== "INSTRUCTION" && classType !== "REPORT" && classType !== "VALIDATION" && classType !== "MEETING") {
+			// 					alert("채번 대상의 문서가 아닙니다.");
+			// 					return false;
+			// 				}
 
-// 				const url = getCallUrl("/doc/numberView?classType=" + classType);
-// 				_popup(url, 1000, 600, "n");
-// 			}
+			// 				const url = getCallUrl("/doc/numberView?classType=" + classType);
+			// 				_popup(url, 1000, 600, "n");
+			// 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-// 				selectbox("formType");
+				// 				selectbox("formType");
 				selectbox("preseration");
 				// 				selectbox("documentType");
 				selectbox("model");

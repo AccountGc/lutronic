@@ -182,10 +182,8 @@ public class EChangeUtils {
 
 			System.out.println("EO 대상 품목 개수 =  " + list.size());
 
-			// 개발일 경우 전송 하지 않는다.
-			if (eo.getEoType().trim().equals("PRODUCT")) {
-				SAPHelper.service.sendSapToEo(eo, completeParts);
-			}
+			// 개발이 없어진다.
+			SAPHelper.service.sendSapToEo(eo, completeParts, list);
 
 			EoHelper.service.saveBaseline(eo, completeParts);
 		} catch (Exception e) {

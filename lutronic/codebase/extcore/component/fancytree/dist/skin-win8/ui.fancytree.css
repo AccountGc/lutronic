@@ -750,11 +750,11 @@ table.fancytree-ext-table tbody tr.fancytree-selected:hover {
   outline: 1px solid #26A0DA;
 }
 table.fancytree-ext-table tbody tr.fancytree-active {
-  background-color: #F7F7F7;
+  background-color: rgb(230, 255, 170) !important;
   outline: 1px solid #DEDEDE;
 }
 table.fancytree-ext-table tbody tr.fancytree-selected {
-  background-color: #F7F7F7;
+  background-color: rgb(159, 249, 198) !important;
 }
 table.fancytree-ext-table.fancytree-treefocus tbody tr.fancytree-active {
   background-color: #CBE8F6;

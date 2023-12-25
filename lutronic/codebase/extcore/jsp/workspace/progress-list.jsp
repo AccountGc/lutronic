@@ -19,7 +19,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -83,10 +83,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "결재 제목",
@@ -101,10 +97,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "point",
 					headerText : "진행단계",
@@ -113,20 +105,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "기안일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 
@@ -159,7 +143,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/progress");
 				const field = [ "name" ];
@@ -171,8 +158,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -238,7 +224,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function exportExcel() {
 				const exceptColumnFields = [ "point" ];
 				const sessionName = document.getElementById("sessionName").value;

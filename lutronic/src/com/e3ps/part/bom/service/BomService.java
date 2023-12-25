@@ -30,7 +30,7 @@ public interface BomService {
 	/**
 	 * BOM 에디터서 복사붙여넣기
 	 */
-	public abstract Map<String, Object> paste(Map<String, String> params) throws Exception;
+	public abstract Map<String, Object> paste(Map<String, Object> params) throws Exception;
 
 	/**
 	 * BOM 기존 품목 교체
@@ -50,5 +50,10 @@ public interface BomService {
 	/**
 	 * BOM 기존 항목 교체
 	 */
-	public abstract Map<String, Object> replace_exist(Map<String, String> params) throws Exception;
+	public abstract Map<String, Object> replace(Map<String, String> params) throws Exception;
+
+	/**
+	 * BOM 품목 멀티 제거
+	 */
+	public abstract Map<String, Object> removeMultiLink(Map<String, Object> params) throws Exception;
 }

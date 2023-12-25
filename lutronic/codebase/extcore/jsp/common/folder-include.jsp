@@ -17,10 +17,6 @@ String height = request.getParameter("height");
 		dataField : "name",
 		headerText : "폴더명",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	} ]
 
 	function _createAUIGrid(columnLayout) {

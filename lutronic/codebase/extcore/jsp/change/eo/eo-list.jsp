@@ -19,7 +19,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
-<body style="overflow: hidden;">
+<body style="overflow-x: hidden;">
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
@@ -137,7 +137,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
 				</td>
 			</tr>
-			<tr class="hidden">
+			<tr>
 				<th class="lb">완제품 품목</th>
 				<td colspan="5" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
@@ -154,7 +154,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('eo-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('eo-list');">
-					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
+<!-- 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);"> -->
 					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
@@ -170,7 +170,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 520px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -181,10 +181,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "EO 번호",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -199,10 +195,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "EO 제목",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -217,55 +209,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "제품명",
 					dataType : "string",
 					width : 250,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "eoType",
 					headerText : "구분",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "approveDate",
 					headerText : "승인일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -296,7 +264,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/eo/list");
 				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "licensing", "model", "sortCheck", "sortValue", "riskType", "approveFrom", "approveTo" ];
@@ -310,8 +281,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

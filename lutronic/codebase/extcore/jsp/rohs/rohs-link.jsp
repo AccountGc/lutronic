@@ -33,18 +33,10 @@
 				dataField : "partNumber",
 				headerText : "모 부품코드",
 				dataType : "string",
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 			}, {
 				dataField : "rohsNumber",
 				headerText : "자 물질코드",
 				dataType : "string",
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 			} ]
 
 			function createAUIGrid(columnLayout) {

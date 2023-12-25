@@ -68,19 +68,6 @@ String state = (String) request.getAttribute("state");
 		</td>
 	</tr>
 	<tr>
-		<th>문서유형</th>
-		<td class="indent5">
-			<select name="documentType" id="documentType" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (DocumentType docType : docTypeList) {
-				%>
-				<option value="<%=docType.toString()%>"><%=docType.getDisplay()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
 		<th>등록자</th>
 		<td class="indent5">
 			<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -257,38 +244,22 @@ const columns = [ {
 	dataType : "string",
 	style : "aui-left",
 	width : 350,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "interalnumber",
 	headerText : "내부 문서번호",
 	dataType : "string",
 	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "model",
 	headerText : "프로젝트 코드",
 	dataType : "string",
 	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "location",
 	headerText : "문서분류",
 	dataType : "string",
 	style : "aui-left",
 	width : 250,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "version",
 	headerText : "REV",
@@ -297,55 +268,31 @@ const columns = [ {
 	renderer : {
 		type : "TemplateRenderer"
 	},
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
 	width : 80,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "writer",
 	headerText : "작성자",
 	dataType : "string",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "createdDate",
 	headerText : "등록일",
 	dataType : "date",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true,
-	},
 }, {
 	dataField : "modifiedDate",
 	headerText : "수정일",
 	dataType : "date",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true,
-	},
 }, {
 	dataField : "primary",
 	headerText : "주 첨부파일",
@@ -354,10 +301,6 @@ const columns = [ {
 	renderer : {
 		type : "TemplateRenderer"
 	},
-	filter : {
-		showIcon : false,
-		inline : false
-	},
 }, {
 	dataField : "secondary",
 	headerText : "첨부파일",
@@ -365,10 +308,6 @@ const columns = [ {
 	width : 100,
 	renderer : {
 		type : "TemplateRenderer"
-	},
-	filter : {
-		showIcon : false,
-		inline : false
 	},
 } ]
 
@@ -427,7 +366,10 @@ function auiCellClick(event) {
 	<%}%>
 }
 
-function loadGridData() {
+function loadGridData(movePage) {
+	if (movePage === undefined) {
+		document.getElementById("sessionid").value = 0;
+	}
 	let params = new Object();
 	const url = getCallUrl("/doc/list");
 	const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
@@ -441,8 +383,7 @@ function loadGridData() {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
 			totalPage = Math.ceil(data.total / data.pageSize);
-			document.getElementById("sessionid").value = data.sessionid;
-			createPagingNavigator(data.curPage);
+			createPagingNavigator(data.curPage, data.sessionid);
 			AUIGrid.setGridData(myGridID, data.list);
 		} else {
 			alert(data.msg);

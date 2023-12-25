@@ -12,7 +12,9 @@ package com.e3ps.org.dto;
 import java.util.HashMap;
 
 import com.e3ps.common.util.ContentUtils;
+import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.org.People;
+import com.e3ps.org.Signature;
 import com.e3ps.org.WTUserPeopleLink;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,6 +26,7 @@ import wt.content.ContentRoleType;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
 import wt.org.WTUser;
+import wt.query.QuerySpec;
 import wt.session.SessionHelper;
 
 @Getter
@@ -69,6 +72,8 @@ public class PeopleDTO {
 		setEmail(people.getEmail());
 		setAuth(people.getAuth());
 		setDuty(people.getDuty() != null ? people.getDuty() : "지정안됨");
+		setFire(people.isIsDisable());
+		setSignature(picture(people));
 	}
 
 	public PeopleDTO(People people) throws Exception {
@@ -88,18 +93,26 @@ public class PeopleDTO {
 	}
 
 	private HashMap<String, String> picture(People people) throws Exception {
-		WTUser user = people.getUser();
-		QueryResult qr = ContentHelper.service.getContentsByRole(user, ContentRoleType.PRIMARY);
-		if (qr.hasMoreElements()) {
-			ApplicationData data = (ApplicationData) qr.nextElement();
-			String fileIcon = ContentUtils.getFileIcon(data.getFileName());
-			signature.put("oid", people.getPersistInfo().getObjectIdentifier().getStringValue());
-			signature.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
-			signature.put("name", data.getFileName());
-			signature.put("fileSizeKB", data.getFileSizeKB() + "KB");
-			signature.put("fileIcon", fileIcon);
-			signature.put("url", "/Windchill/plm/content/download?oid="
-					+ data.getPersistInfo().getObjectIdentifier().getStringValue());
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Signature.class, true);
+		QuerySpecUtils.toEquals(query, idx, Signature.class, Signature.ID, people.getId());
+		QueryResult rs = PersistenceHelper.manager.find(query);
+		if (rs.hasMoreElements()) {
+			Object[] obj = (Object[]) rs.nextElement();
+			Signature sign = (Signature) obj[0];
+			QueryResult qr = ContentHelper.service.getContentsByRole(sign, ContentRoleType.PRIMARY);
+			if (qr.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) qr.nextElement();
+				String fileIcon = ContentUtils.getFileIcon(data.getFileName());
+				signature.put("oid", people.getPersistInfo().getObjectIdentifier().getStringValue());
+				signature.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
+				signature.put("name", data.getFileName());
+				signature.put("fileSizeKB", data.getFileSizeKB() + "KB");
+				signature.put("fileIcon", fileIcon);
+				signature.put("url", "/Windchill/plm/content/download?oid="
+						+ data.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
 		}
 		return signature;
 	}

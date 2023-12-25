@@ -102,56 +102,32 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "업체명",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "물질명",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "fileName",
 					headerText : "파일명",
 					dataType : "string",
 					width : 450,
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "publicationDate",
 					headerText : "발행일자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "creator",
 					headerText : "작성자",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 
@@ -184,8 +160,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
-				$("input[name=sessionid").val(0);
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/rohs/file");
 				const field = [ "fileType", "publicationFrom", "publicationTo", "fileName" ];
@@ -196,8 +174,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

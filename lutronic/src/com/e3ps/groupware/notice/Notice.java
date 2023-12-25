@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import wt.content.ContentHolder;
 import wt.content.HttpContentOperation;
+import wt.doc.WTDocument;
 import wt.fc.Item;
 import wt.org.WTPrincipalReference;
 import wt.pds.PersistentRetrieveIfc;
@@ -39,6 +40,7 @@ import com.ptc.windchill.annotations.metadata.*;
 
 				@GeneratedProperty(name = "count", type = int.class, javaDoc = "0")
 
+				
 		}
 
 )

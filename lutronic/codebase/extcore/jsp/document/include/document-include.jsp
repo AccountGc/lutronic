@@ -88,9 +88,6 @@ if (header) {
 				_popup(url, "", "", "f");
 			}
 		},				
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "name",
 		headerText : "문서명",
@@ -105,17 +102,11 @@ if (header) {
 				_popup(url, "", "", "f");
 			}
 		},		
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -124,33 +115,21 @@ if (header) {
 		renderer : {
 			type : "TemplateRenderer"
 		},
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "writer",
 		headerText : "작성자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "oid",
 		dataType : "string",
@@ -175,7 +154,6 @@ if (header) {
 			<%if (!multi) {%>
 			rowCheckToRadio : true,
 			<%}%>
-			enableFilter : true,
 			autoGridHeight : true
 		}
 		myGridID90 = AUIGrid.create("#grid90", columnLayout, props);

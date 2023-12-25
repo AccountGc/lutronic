@@ -265,7 +265,38 @@ ArrayList<NumberCode> productmethod = (ArrayList<NumberCode>) request.getAttribu
 	</tr>
 	<tr>
 		<th class="lb">선구매여부</th>
+		<%
+		if (!isAdmin) {
+		%>
 		<td class="indent5" colspan="3"><%=attr.get("preOrder")%></td>
+		<%
+		} else {
+			boolean preOrder = (boolean) attr.get("preOrder");
+		%>
+		<td colspan="3">
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="preOrder" value="true" <%if(preOrder) {%> checked="checked" <%} %>>
+				<div class="state p-success">
+					<label>
+						<b>예</b>
+					</label>
+				</div>
+			</div>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="preOrder" value="false" <%if(!preOrder) {%> checked="checked" <%} %>>
+				<div class="state p-success">
+				<div class="state p-success">
+					<label>
+						<b>아니오</b>
+					</label>
+				</div>
+			</div>
+			<%
+			}
+			%>
+		
 	</tr>
 </table>
 
@@ -306,10 +337,7 @@ ArrayList<NumberCode> productmethod = (ArrayList<NumberCode>) request.getAttribu
 		const remarks = document.getElementById("remarks").value;
 		const weight = document.getElementById("weight").value;
 		const finish = document.getElementById("finish").value;
-		// 		if (code === "") {
-		// 			alert("변경할 코드를 선택하세요.");
-		// 			return false;
-		// 		}
+		const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 
 		if (!confirm("속성변경을 하시겠습니까?")) {
 			return false;
@@ -326,7 +354,8 @@ ArrayList<NumberCode> productmethod = (ArrayList<NumberCode>) request.getAttribu
 			mat : mat,
 			remarks : remarks,
 			weight : weight,
-			specification : specification
+			specification : specification,
+			preOrder : preOrder
 		};
 		logger(params);
 		openLayer();

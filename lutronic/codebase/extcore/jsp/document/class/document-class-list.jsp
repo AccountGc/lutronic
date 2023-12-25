@@ -107,46 +107,26 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					style : "aui-left",
 					width : 450,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "clazz",
 					headerText : "코드",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "sort",
 					headerText : "소트",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "description",
 					headerText : "설명",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "enabled",
 					headerText : "활성화",
 					dataType : "boolean",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : false
-					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
 						editable : true,

@@ -64,9 +64,6 @@ if(view){
 		headerText : "EO 번호",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -81,9 +78,6 @@ if(view){
 		headerText : "EO 제목",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -98,51 +92,31 @@ if(view){
 		headerText : "제품명",
 		dataType : "string",
 		width : 250,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "eoType",
 		headerText : "구분",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "approveDate_txt",
 		headerText : "승인일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "oid",
 		dataType : "string",

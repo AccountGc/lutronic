@@ -104,17 +104,6 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 				}
 				%>
 			</select>
-			&nbsp;
-			<select name="compare" id="compare" class="AXSelect width-150">
-				<option value="" selected="selected" disabled="disabled">베이스라인 비교</option>
-				<%
-				for (Map<String, String> m : baseline) {
-				%>
-				<option value="<%=m.get("baseLine_oid")%>"><%=m.get("baseLine_name")%></option>
-				<%
-				}
-				%>
-			</select>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>

@@ -25,7 +25,8 @@ public interface SAPService {
 	/**
 	 * SAP EO 전송
 	 */
-	public abstract void sendSapToEo(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts) throws Exception;
+	public abstract void sendSapToEo(EChangeOrder e, ArrayList<EOCompletePartLink> completeParts,
+			ArrayList<WTPart> list) throws Exception;
 
 	/**
 	 * SAP ECO 전송

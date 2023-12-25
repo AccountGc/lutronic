@@ -28,6 +28,7 @@ public class CrColumn {
 	private Timestamp createdDate;
 	private String createdDate_txt;
 	private String approveDate;
+	private String ecprStart;
 
 	public CrColumn() {
 
@@ -51,5 +52,6 @@ public class CrColumn {
 		setCreatedDate(cr.getCreateTimestamp());
 		setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate(cr.getApproveDate());
+		setEcprStart(cr.getEcprStart() ? "ECPR진행" : "ECPR미진행");
 	}
 }

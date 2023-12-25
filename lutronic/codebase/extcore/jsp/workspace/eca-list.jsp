@@ -91,19 +91,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "STEP",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "activityName",
 					headerText : "활동구분",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -119,10 +111,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "구분",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "number",
 					headerText : "EO/ECO 번호",
@@ -143,57 +131,33 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "EO/ECO 제목",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "activityUser",
 					headerText : "담당자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "finishDate",
 					headerText : "완료 요청일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "도착일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 
@@ -226,7 +190,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/activity/eca");
 				const field = [ "name", "submiterOid", "receiveFrom", "receiveTo" ];
@@ -238,8 +205,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

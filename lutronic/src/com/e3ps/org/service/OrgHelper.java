@@ -1,8 +1,14 @@
 package com.e3ps.org.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.xml.utils.res.StringArrayWrapper;
+import org.mvel2.ast.Sign;
 
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
@@ -10,11 +16,16 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
+import com.e3ps.org.Signature;
 import com.e3ps.org.WTUserPeopleLink;
 import com.e3ps.org.dto.PeopleDTO;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentRoleType;
+import wt.content.ContentServerHelper;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -23,6 +34,7 @@ import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
 import wt.util.WTAttributeNameIfc;
+import wt.util.WTProperties;
 
 public class OrgHelper {
 
@@ -123,6 +135,31 @@ public class OrgHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			WTUser u = (WTUser) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("key", u.getPersistInfo().getObjectIdentifier().getStringValue());
+			map.put("value", u.getFullName());
+			list.add(map);
+		}
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * AUI 그리드에서 사용하기 위한함수 JSON(WTUser) 형태로 리턴
+	 */
+	public JSONArray toJsonWTUser(String deptName) throws Exception {
+		Department dept = DepartmentHelper.manager.getDepartment(deptName);
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(People.class, true);
+		QuerySpecUtils.toBooleanAnd(query, idx, People.class, People.IS_DISABLE, false);
+		QuerySpecUtils.toEqualsAnd(query, idx, People.class, "departmentReference.key.id", dept);
+		QuerySpecUtils.toOrderBy(query, idx, People.class, People.NAME, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			People p = (People) obj[0];
+			WTUser u = p.getUser();
 			Map<String, String> map = new HashMap<>();
 			map.put("key", u.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("value", u.getFullName());
@@ -258,5 +295,46 @@ public class OrgHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	/**
+	 * 서명 경로 가져오기
+	 */
+	public String getSignPath(String id) throws Exception {
+		String signPath = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "sign";
+		File f = new File(signPath);
+		File file = null;
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Signature.class, true);
+		QuerySpecUtils.toEquals(query, idx, Signature.class, Signature.ID, id);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			Signature sign = (Signature) obj[0];
+
+			QueryResult result = ContentHelper.service.getContentsByRole(sign, ContentRoleType.PRIMARY);
+			if (result.hasMoreElements()) {
+				ApplicationData data = (ApplicationData) result.nextElement();
+				byte[] buffer = new byte[10240];
+				InputStream is = ContentServerHelper.service.findLocalContentStream(data);
+				file = new File(signPath + File.separator + id + ".png");
+				FileOutputStream fos = new FileOutputStream(file);
+				int j = 0;
+				while ((j = is.read(buffer, 0, 10240)) > 0) {
+					fos.write(buffer, 0, j);
+				}
+				fos.close();
+				is.close();
+			}
+		}
+		
+		if(file == null) {
+			return null;
+		}
+		return file.getPath();
 	}
 }

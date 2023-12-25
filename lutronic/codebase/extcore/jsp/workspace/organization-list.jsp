@@ -142,10 +142,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 150,
 					editable : false,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -161,10 +157,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					width : 120,
 					editable : false,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -199,10 +191,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showCheckAll : true,
 						list : auths,
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "department_name",
 					headerText : "부서",
@@ -232,7 +220,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						validator : function(oldValue, newValue, item, dataField, fromClipboard, which) {
 							let isValid = false;
 							for (let i = 0, len = list.length; i < len; i++) {
-								if (list[i]["value"] == newValue) {
+								if (list[i]["name"] == newValue) {
 									isValid = true;
 									break;
 								}
@@ -252,10 +240,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							}
 						}
 						return retStr == "" ? value : retStr;
-					},
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "duty",
@@ -282,20 +266,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showCheckAll : false,
 						list : duty,
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "email",
 					headerText : "이메일",
 					dataType : "string",
 					width : 250,
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "isFire",
 					headerText : "퇴사여부",
@@ -304,10 +280,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						editable : true,
 						type : "CheckBoxEditRenderer",
-					},
-					filter : {
-						showIcon : false,
-						inline : false
 					},
 				} ]
 			}
@@ -322,6 +294,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hoverMode : "singleRow",
 					enableMovingColumn : true,
 					enableFilter : true,
+					showInlineFilter : true,
 					showInlineFilter : false,
 					useContextMenu : true,
 					enableRightDownFocus : true,
@@ -340,8 +313,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
-				$("input[name=sessionid").val(0);
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/org/organization");
 				const field = [ "name", "userId", "oid" ];
@@ -356,8 +331,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					if (data.result) {
 						// 페이징처리..
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -385,7 +359,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.reload();
+						// 						document.location.reload();
+						loadGridData();
 					}
 					parent.closeLayer();
 				})

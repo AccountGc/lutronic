@@ -24,6 +24,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.org.Department;
 import com.e3ps.org.People;
+import com.e3ps.org.Signature;
 import com.e3ps.org.WTUserPeopleLink;
 
 import wt.content.ApplicationData;
@@ -321,17 +322,17 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			for (LinkedHashMap<String, Object> edit : editRows) {
 				String oid = (String) edit.get("poid");
 				String auth = (String) edit.get("auth");
-				String department_oid = (String) edit.get("department_oid");
+				String department_oid = (String) edit.get("department_name");
 				String duty = (String) edit.get("duty");
 				String email = (String) edit.get("email");
-				boolean isFire = (boolean) edit.get("isFire");
+				boolean fire = (boolean) edit.get("fire");
 				People people = (People) CommonUtil.getObject(oid);
 
 				if (StringUtil.checkString(department_oid)) {
 					Department department = (Department) CommonUtil.getObject(department_oid);
 					people.setDepartment(department);
 				}
-				people.setIsDisable(isFire);
+				people.setIsDisable(fire);
 				people.setEmail(email);
 				people.setDuty(duty);
 				people.setAuth(auth);
@@ -418,20 +419,32 @@ public class StandardOrgService extends StandardManager implements OrgService {
 
 			People people = (People) CommonUtil.getObject(oid);
 			people.setIsDisable(isFire);
-			PersistenceHelper.manager.modify(people);
+			people = (People) PersistenceHelper.manager.modify(people);
 
-			WTUser user = people.getUser();
-			QueryResult qr = ContentHelper.service.getContentsByRole(user, ContentRoleType.PRIMARY);
-			if (qr.hasMoreElements()) {
-				ContentItem item = (ContentItem) qr.nextElement();
-				ContentServerHelper.service.deleteContent(people, item);
+			QuerySpec query = new QuerySpec();
+			int idx = query.appendClassList(Signature.class, true);
+			QuerySpecUtils.toEquals(query, idx, Signature.class, Signature.ID, people.getId());
+			QueryResult rs = PersistenceHelper.manager.find(query);
+			if (rs.hasMoreElements()) {
+				Object[] obj = (Object[]) rs.nextElement();
+				Signature signature = (Signature) obj[0];
+				QueryResult qr = ContentHelper.service.getContentsByRole(signature, ContentRoleType.PRIMARY);
+				if (qr.hasMoreElements()) {
+					ContentItem item = (ContentItem) qr.nextElement();
+					ContentServerHelper.service.deleteContent(people, item);
+				}
+				PersistenceHelper.manager.delete(signature);
 			}
 
+			Signature sign = Signature.newSignature();
+			sign.setId(people.getId());
+			PersistenceHelper.manager.save(sign);
+
 			File vault = CommonContentHelper.manager.getFileFromCacheId(primary);
-			ApplicationData applicationData = ApplicationData.newApplicationData(user);
+			ApplicationData applicationData = ApplicationData.newApplicationData(sign);
 			applicationData.setRole(ContentRoleType.PRIMARY);
 			PersistenceHelper.manager.save(applicationData);
-			ContentServerHelper.service.updateContent(user, applicationData, vault.getPath());
+			ContentServerHelper.service.updateContent(sign, applicationData, vault.getPath());
 
 			trs.commit();
 			trs = null;

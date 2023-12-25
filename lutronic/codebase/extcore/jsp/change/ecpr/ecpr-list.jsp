@@ -8,7 +8,7 @@
 <%
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
@@ -23,10 +23,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 </head>
 <body>
 	<form>
-		<input type="hidden" name="sessionid" id="sessionid"> 
+		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -49,20 +49,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<th>ECPR 번호</th>
-				<td class="indent5"><input type="text" name="number" id="number" class="width-300"></td>
+				<td class="indent5">
+					<input type="text" name="number" id="number" class="width-300">
+				</td>
 				<th>ECPR 제목</th>
-				<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-300">
+				</td>
 				<th>상태</th>
 				<td class="indent5">
-					<select name="state" id="state" class="width-200" >
+					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-                        <option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
-                        <%
-							}
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+						<%
+						}
 						}
 						%>
 					</select>
@@ -70,21 +74,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 			<tr>
 				<th>등록자</th>
-				<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> 
-					<input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+				<td class="indent5">
+					<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+					<input type="hidden" name="creatorOid" id="creatorOid">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 				</td>
 				<th>등록일</th>
-				<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+				<td class="indent5">
+					<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+					~
+					<input type="text" name="createdTo" id="createdTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+				</td>
 				<th>승인일</th>
-				<td class="indent5"><input type="text" name="approveFrom" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('approveFrom', 'approveTo')"></td>
+				<td class="indent5">
+					<input type="text" name="approveFrom" id="approveFrom" class="width-100">
+					~
+					<input type="text" name="approveTo" id="approveTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
+				</td>
 			</tr>
 			<tr>
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid"> 
+					<input type="hidden" name="writerOid" id="writerOid">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 				<th>작성부서</th>
@@ -94,24 +108,28 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<%
 						for (NumberCode deptcode : deptcodeList) {
 						%>
-						<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 						<%
 						}
 						%>
 					</select>
 				</td>
 				<th>작성일</th>
-				<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-					onclick="clearFromTo('writedFrom', 'writedTo')"></td>
-				
+				<td class="indent5">
+					<input type="text" name="writedFrom" id="writedFrom" class="width-100">
+					~
+					<input type="text" name="writedTo" id="writedTo" class="width-100">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('writedFrom', 'writedTo')">
+				</td>
+
 			</tr>
 			<tr>
-<!-- 				<th>제안자</th> -->
-<!-- 				<td class="indent5"> -->
-<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
-<!-- 					<input type="hidden" name="proposerOid" id="proposerOid">  -->
-<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-<!-- 				</td> -->
+				<!-- 				<th>제안자</th> -->
+				<!-- 				<td class="indent5"> -->
+				<!-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+				<!-- 					<input type="hidden" name="proposerOid" id="proposerOid">  -->
+				<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
+				<!-- 				</td> -->
 				<th>변경구분</th>
 				<td class="indent5">
 					<select name="changeSection" id="changeSection" class="width-200">
@@ -119,7 +137,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<%
 						for (NumberCode section : sectionList) {
 						%>
-						<option value="<%=section.getCode() %>"><%=section.getName()%></option>
+						<option value="<%=section.getCode()%>"><%=section.getName()%></option>
 						<%
 						}
 						%>
@@ -144,9 +162,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="button-table">
 			<tr>
 				<td class="left">
-					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();"> 
+					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecpr-list');">
-					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecpr-list');"> 
+					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecpr-list');">
 					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
@@ -156,13 +174,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<option value="100">100</option>
 						<option value="200">200</option>
 						<option value="300">300</option>
-					</select> 
+					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div> 
+		<div id="grid_wrap" style="height: 535px; border-top: 1px solid #3180c3;"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
@@ -172,10 +190,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "number",
 					headerText : "ECPR 번호",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -189,10 +203,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "name",
 					headerText : "ECPR 제목",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -206,79 +216,51 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "writeDate",
 					headerText : "작성일",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate_txt",
 					headerText : "등록일",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-		            headerHeight : 30,
-		            showRowNumColumn : true,
-		            showRowCheckColumn : true,
-		            rowNumHeaderText : "번호",
-		            showAutoNoDataMessage : false,
-		            selectionMode : "multipleCells",
-		            hoverMode : "singleRow",
-		            enableMovingColumn : true,
-		            enableFilter : true,
-		            showInlineFilter : true,
-		            useContextMenu : true,
-		            enableRightDownFocus : true,
-		            filterLayerWidth : 320,
-		            filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		            enableRowCheckShiftKey : true
-	         	};
+					headerHeight : 30,
+					showRowNumColumn : true,
+					showRowCheckColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
+					selectionMode : "multipleCells",
+					hoverMode : "singleRow",
+					enableMovingColumn : true,
+					enableFilter : true,
+					showInlineFilter : true,
+					useContextMenu : true,
+					enableRightDownFocus : true,
+					filterLayerWidth : 320,
+					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
+				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
@@ -290,11 +272,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
-				$("input[name=sessionid").val(0);
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/ecpr/list");
-				const field = ["name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection"];
+				const field = [ "name", "number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -302,8 +286,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -325,7 +308,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				selectbox("state");
 				finderUser("creator");
 				finderUser("writer");
-// 				finderUser("proposer");
+				// 				finderUser("proposer");
 				twindate("created");
 				twindate("approve");
 				twindate("writed");
@@ -349,15 +332,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			// 등록
-			function create(){
+			function create() {
 				location.href = getCallUrl("/ecpr/create");
 			}
-			
+
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("ECPR 리스트", "ECPR", "ECPR 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("ECPR 리스트", "ECPR", "ECPR 리스트", [], sessionName);
 			}
 		</script>
 	</form>

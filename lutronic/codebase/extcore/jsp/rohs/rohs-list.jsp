@@ -155,10 +155,6 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					headerText : "물질번호",
 					dataType : "string",
 					width : 200,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -173,19 +169,11 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					headerText : "협력업체",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "물질명",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -200,46 +188,26 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					headerText : "REV",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 
@@ -271,8 +239,10 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 				});
 			}
 
-			function loadGridData() {
-				$("input[name=sessionid").val(0);
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/rohs/list");
 				const field = [ "rohsName", "rohsNumber", "description", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "manufacture" ];
@@ -283,8 +253,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

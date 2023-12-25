@@ -61,9 +61,6 @@ if (header) {
 		headerText : "CR 번호",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -78,9 +75,6 @@ if (header) {
 		headerText : "CR 제목",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -95,65 +89,41 @@ if (header) {
 		headerText : "제품명",
 		dataType : "string",
 		width : 220,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "changeSection",
 		headerText : "변경구분",
 		dataType : "string",
 		width : 220,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "createDepart",
 		headerText : "작성부서",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "writer",
 		headerText : "작성자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "approveDate",
 		headerText : "승인일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	} ]
 	
 	function createAUIGrid101(columnLayout) {

@@ -20,6 +20,15 @@ boolean multi = (boolean) request.getAttribute("multi");
 String rowId = request.getParameter("rowId") == null ? "" : request.getParameter("rowId").toString();
 boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoolean(request.getParameter("limit"));
 %>
+<style type="text/css">
+.preOrder {
+	background-color: rgb(200, 255, 203) !important;
+}
+.checkout {
+	background-color: rgb(254, 192, 209) !important;
+}
+</style>
+
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
 
@@ -231,8 +240,38 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 			<input type="text" name="ecoNo" id="ecoNo" class="width-300">
 		</td>
 		<th>Eo No.</th>
-		<td class="indent5" colspan="3">
+		<td class="indent5">
 			<input type="text" name="eoNo" id="eoNo" class="width-300">
+		</td>
+		<th>선구매</th>
+		<td>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="preOrder" value="yes">
+				<div class="state p-success">
+					<label>
+						<b>예</b>
+					</label>
+				</div>
+			</div>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="preOrder" value="no">
+				<div class="state p-success">
+					<label>
+						<b>아니오</b>
+					</label>
+				</div>
+			</div>
+			&nbsp;
+			<div class="pretty p-switch">
+				<input type="radio" name="preOrder" value="all" checked="checked">
+				<div class="state p-success">
+					<label>
+						<b>전체</b>
+					</label>
+				</div>
+			</div>
 		</td>
 	</tr>
 </table>
@@ -294,10 +333,6 @@ const columns = [ {
 		onClick : function(event) {
 		}
 	},
-	filter : {
-		showIcon : false,
-		inline : false
-	},
 }, {
 	dataField : "_2d",
 	headerText : "2D",
@@ -309,38 +344,22 @@ const columns = [ {
 		onClick : function(event) {
 		}
 	},
-	filter : {
-		showIcon : false,
-		inline : false
-	},
 }, {
 	dataField : "number",
 	headerText : "품목번호",
 	dataType : "string",
 	width : 180,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "name",
 	headerText : "품목명",
 	dataType : "string",
 	style : "aui-left",
 	width : 380,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "location",
 	headerText : "품목분류",
 	dataType : "string",
 	width : 180,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "version",
 	headerText : "REV",
@@ -349,55 +368,31 @@ const columns = [ {
 	renderer : {
 		type : "TemplateRenderer"
 	},
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "remarks",
 	headerText : "OEM Info.",
 	dataType : "string",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
 	width : 140,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "createdDate",
 	headerText : "등록일",
 	dataType : "date",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "modifiedDate",
 	headerText : "수정일",
 	dataType : "date",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }  ]
 
 function createAUIGrid(columnLayout) {
@@ -420,6 +415,14 @@ function createAUIGrid(columnLayout) {
 		enableRightDownFocus : true,
 		filterLayerWidth : 320,
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+		rowStyleFunction : function(rowIndex, item) {
+			if (item.preOrder) {
+				return "preOrder";
+			} else if (item.checkout) {
+				return "checkout";
+			}
+			return "";
+		}
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 	loadGridData();
@@ -447,7 +450,7 @@ function auiCellClick(event) {
 		// 엑스트라 체크박스 체크 추가
 		AUIGrid.setCheckedRowsByIds(event.pid, rowId);
 	}
-	<%}else{%>
+	<%} else {%>
 	if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
 		AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
 	} else {
@@ -456,25 +459,24 @@ function auiCellClick(event) {
 	<%}%>
 }
 
-function loadGridData() {
-	$("input[name=sessionid").val(0);
+function loadGridData(movePage) {
+	if (movePage === undefined) {
+		document.getElementById("sessionid").value = 0;
+	}
 	let params = new Object();
 	const url = getCallUrl("/part/list");
 	const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
 		"ecoNo", "eoNo" ,"creatorOid","specification"];
 	const  latest = document.querySelector("input[name=latest]:checked").value;
 	params = toField(params, field);
-// 	params.latest = JSON.parse(latest);
-params.latest = false;
-// 	params.latest = false;
+	params.latest = JSON.parse(latest);
 	AUIGrid.showAjaxLoader(myGridID);
 	openLayer();
 	call(url, params, function(data) {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
 			totalPage = Math.ceil(data.total / data.pageSize);
-			document.getElementById("sessionid").value = data.sessionid;
-			createPagingNavigator(data.curPage);
+			createPagingNavigator(data.curPage, data.sessionid);
 			AUIGrid.setGridData(myGridID, data.list);
 		} else {
 			alert(data.msg);

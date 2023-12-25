@@ -27,8 +27,7 @@ public class CrDTO {
 	private String createdDate_text;
 	private String approveDate;
 	private String createDepart_name;
-	private String writer_name;
-	private String writer_oid;
+	private String writer;
 	private String proposer_name;
 	private String primary;
 	private String changeSection;
@@ -81,8 +80,7 @@ public class CrDTO {
 		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
 		setCreateDepart_name(
 				StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
-		setWriter_name(CommonUtil.getUserNameFromOid(cr.getWriter()));
-		setWriter_oid(CommonUtil.getUserOid(cr.getWriter()));
+		setWriteDate(cr.getWriter());
 		setProposer_name(StringUtil.checkNull(cr.getProposer()));
 		setChangeSection(StringUtil
 				.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getChangeSection(), "CHANGESECTION")));

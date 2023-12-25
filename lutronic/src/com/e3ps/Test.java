@@ -1,134 +1,134 @@
 package com.e3ps;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-
-import org.apache.poi.util.IOUtils;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
-import org.apache.poi.xssf.usermodel.XSSFCreationHelper;
-import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFPicture;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import com.aspose.cells.FileFormatType;
+import com.aspose.cells.BorderType;
+import com.aspose.cells.Cell;
+import com.aspose.cells.CellBorderType;
+import com.aspose.cells.Color;
+import com.aspose.cells.Font;
+import com.aspose.cells.Picture;
+import com.aspose.cells.Row;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
 import com.aspose.cells.Workbook;
-import com.aspose.words.BreakType;
-import com.aspose.words.Document;
-import com.aspose.words.DocumentBuilder;
-import com.aspose.words.HeaderFooterType;
-import com.aspose.words.PageSetup;
-import com.aspose.words.ParagraphAlignment;
-import com.aspose.words.PreferredWidth;
-import com.aspose.words.RelativeHorizontalPosition;
-import com.aspose.words.RelativeVerticalPosition;
-import com.aspose.words.Section;
-import com.aspose.words.WrapType;
+import com.aspose.cells.Worksheet;
+import com.e3ps.common.iba.IBAUtil;
+import com.e3ps.common.util.CommonUtil;
+import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.service.WorkspaceHelper;
+
+import wt.doc.WTDocument;
+import wt.org.WTUser;
 
 public class Test {
 
 	public static void main(String[] args) throws Exception {
-		FileInputStream excelFile = new FileInputStream("D:\\제품표준서.xlsx");
-		XSSFWorkbook workbook = new XSSFWorkbook(excelFile);
-		
-		// 이미지 사이즈 변경
-		Image oldImg = ImageIO.read(new File("D:\\lutronic_s.png"));
-		Image resizeImage = oldImg.getScaledInstance(200, 100, Image.SCALE_SMOOTH);
-		BufferedImage newImage = new BufferedImage(90, 90, BufferedImage.TYPE_INT_RGB );
-		Graphics g = newImage.getGraphics();
-		g.drawImage(resizeImage, 0, 0, null);
-		g.dispose();
-		ImageIO.write(newImage, "jpg", new File("D:\\lutronic_s.jpg"));
-		
-		//스트림으로 이미지 가져오기
-		FileInputStream is = new FileInputStream("D:\\lutronic_s.jpg");
-		
-		byte[] bytes = IOUtils.toByteArray(is);
-		int pictureIdx = workbook.addPicture(bytes, workbook.PICTURE_TYPE_PNG);
-		is.close();
-		XSSFSheet sheet = workbook.getSheetAt(0);
-		
-		XSSFCreationHelper helper = workbook.getCreationHelper();
-		XSSFDrawing drawing = sheet.createDrawingPatriarch();
-		//이미지에 대한 크기와 위치 설정하는 앵커
-		XSSFClientAnchor anchor = helper.createClientAnchor();
-		anchor.setRow1(20);
-		anchor.setCol1(2);
 
-		//이미지 삽입
-		XSSFPicture pic = drawing.createPicture(anchor, pictureIdx);
+		String oid = "wt.doc.WTDocument:1423614";
+		WTDocument d = (WTDocument) CommonUtil.getObject(oid);
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(d);
+		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
 
-		//셀 크기에 고정하지 않고 배율에 따라 크기 재설정.
-		pic.resize();
-		
-		FileOutputStream outStream = null;
+		Workbook workbook = new Workbook("D:\\DMR.xlsx");
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+		worksheet.getPageSetup().setFooter(0, "문서양식번호넣는곳");
 
-		outStream = new FileOutputStream("D:\\제품표준서.xlsx");
+		String imgPath = "D:\\test.PNG";
 
-		workbook.write(outStream);
-		
-		Workbook wb = new Workbook("D:\\제품표준서.xlsx");
-		FileOutputStream fospdf = new FileOutputStream("D:\\제품표준서.pdf");
-	    wb.save(fospdf, FileFormatType.PDF);
-		
-		// Open document
-	    com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document("D:\\제품표준서.pdf");
+		Cell modelCell = worksheet.getCells().get(4, 5);
+		modelCell.putValue(IBAUtil.getStringValue(d, "MODEL"));
 
-	    // Create header
-	    com.aspose.pdf.TextStamp headerTextStamp1 = new com.aspose.pdf.TextStamp("문서번호(개정 번호)");
-	    // Set properties of the stamp
-	    headerTextStamp1.setTopMargin(10);
-	    headerTextStamp1.setLeftMargin(10);
-	    headerTextStamp1.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Left);
-	    headerTextStamp1.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Top);
-	    // Create header
-	    com.aspose.pdf.TextStamp headerTextStamp2 = new com.aspose.pdf.TextStamp("제품표준서(####)");
-	    // Set properties of the stamp
-	    headerTextStamp2.setTopMargin(10);
-	    headerTextStamp2.setRightMargin(10);
-	    headerTextStamp2.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Right);
-	    headerTextStamp2.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Top);
+		Cell nameCell = worksheet.getCells().get(5, 0);
+		nameCell.putValue(d.getName());
 
-	    // Create footer
-	    com.aspose.pdf.TextStamp footerTextStamp1 = new com.aspose.pdf.TextStamp("QF-701-02(Rev0)");
-	    // Set properties of the stamp
-	    footerTextStamp1.setBottomMargin(10);
-	    footerTextStamp1.setLeftMargin(10);
-	    footerTextStamp1.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Left);
-	    footerTextStamp1.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
-	    // Create footer
-	    com.aspose.pdf.TextStamp footerTextStamp2 = new com.aspose.pdf.TextStamp("LUTRONIC");
-	    // Set properties of the stamp
-	    footerTextStamp2.setBottomMargin(10);
-	    footerTextStamp2.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Center);
-	    footerTextStamp2.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
-	    // Create footer
-	    com.aspose.pdf.TextStamp footerTextStamp3 = new com.aspose.pdf.TextStamp("A4(210X297)");
-	    // Set properties of the stamp
-	    footerTextStamp3.setBottomMargin(10);
-	    footerTextStamp3.setRightMargin(10);
-	    footerTextStamp3.setHorizontalAlignment(com.aspose.pdf.HorizontalAlignment.Right);
-	    footerTextStamp3.setVerticalAlignment(com.aspose.pdf.VerticalAlignment.Bottom);
+		Cell numberCell = worksheet.getCells().get(11, 3);
+		numberCell.putValue(IBAUtil.getStringValue(d, "INTERALNUMBER"));
 
-	    // Add header and footer on all pages
-	    for (com.aspose.pdf.Page page : pdfDocument.getPages()){
-			page.addStamp(headerTextStamp1);
-			page.addStamp(headerTextStamp2);
-			page.addStamp(footerTextStamp1);
-			page.addStamp(footerTextStamp2);
-			page.addStamp(footerTextStamp3);
-	    }
+		int rowIndex = 16;
+		int rowHeight = 30;
+		for (ApprovalLine agreeLine : agreeLines) {
+			Row row = worksheet.getCells().getRows().get(rowIndex);
+			row.setHeight(rowHeight);
 
-	    // Save updated document
-	    pdfDocument.save("D:\\result.pdf");
+			Cell cell = worksheet.getCells().get(rowIndex, 1); // 결재타입
+			cell.putValue("합의");
+			setCellStyle(cell);
 
-	    System.out.println("Done");
-		
+			WTUser user = (WTUser) agreeLine.getOwnership().getOwner().getObject();
+			PeopleDTO pdata = new PeopleDTO(user);
+			cell = worksheet.getCells().get(rowIndex, 2); // 이름+팀
+			cell.putValue(pdata.getName() + "[" + pdata.getDepartment_name() + "]");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 3); // 결재일
+			cell.putValue(
+					agreeLine.getCompleteTime() != null ? agreeLine.getCompleteTime().toString().substring(0, 10) : "");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 4);
+			setCellStyle(cell);
+//			int picIndex = worksheet.getPictures().add(rowIndex, 4, imgPath);
+//			Picture picture = worksheet.getPictures().get(picIndex);
+
+			int picIndex = worksheet.getPictures().add(rowIndex, 4, imgPath);
+			Picture picture = worksheet.getPictures().get(picIndex);
+			picture.setHeightCM(1);
+			picture.setWidthCM(4);
+
+			rowIndex++;
+		}
+
+		ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(m);
+		for (ApprovalLine approvalLine : approvalLines) {
+			Row row = worksheet.getCells().getRows().get(rowIndex);
+			row.setHeight(rowHeight);
+
+			Cell cell = worksheet.getCells().get(rowIndex, 1); // 결재타입
+			cell.putValue("결재");
+			setCellStyle(cell);
+
+			WTUser user = (WTUser) approvalLine.getOwnership().getOwner().getObject();
+			PeopleDTO pdata = new PeopleDTO(user);
+			cell = worksheet.getCells().get(rowIndex, 2); // 이름+팀
+			cell.putValue(pdata.getName() + "[" + pdata.getDepartment_name() + "]");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 3); // 결재일
+			cell.putValue(
+					approvalLine.getCompleteTime() != null ? approvalLine.getCompleteTime().toString().substring(0, 10)
+							: "");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 4);
+//			setCellStyle(cell);
+
+			rowIndex++;
+		}
+
+		// Save output Excel file
+		workbook.save("D:\\DMR2.xlsx");
+
+		System.out.println("Done");
+
 	}
+
+	private static void setCellStyle(Cell cell) throws Exception {
+		Style style = cell.getStyle();
+		Font font = style.getFont();
+		font.setBold(true);
+		style.setHorizontalAlignment(TextAlignmentType.CENTER);
+		style.setVerticalAlignment(TextAlignmentType.CENTER);
+		style.setBorder(BorderType.TOP_BORDER, CellBorderType.THIN, Color.getBlack());
+		style.setBorder(BorderType.BOTTOM_BORDER, CellBorderType.THIN, Color.getBlack());
+		style.setBorder(BorderType.LEFT_BORDER, CellBorderType.THIN, Color.getBlack());
+		style.setBorder(BorderType.RIGHT_BORDER, CellBorderType.THIN, Color.getBlack());
+		cell.setStyle(style);
+	}
+
 }

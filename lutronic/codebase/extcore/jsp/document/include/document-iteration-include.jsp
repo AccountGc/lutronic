@@ -34,19 +34,11 @@ boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 		dataType : "string",
 		style : "aui-left",
 		width : 350,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "interalnumber",
 		headerText : "내부 문서번호",
 		dataType : "string",
 		width : 120,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -55,46 +47,26 @@ boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 		renderer : {
 			type : "TemplateRenderer"
 		},
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "modifier",
 		headerText : "수정자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "modifiedDate",
 		headerText : "수정일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "primary",
 		headerText : "주 첨부파일",
@@ -102,10 +74,6 @@ boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 		width : 80,
 		renderer : {
 			type : "TemplateRenderer"
-		},
-		filter : {
-			showIcon : false,
-			inline : false
 		},
 	}, {
 		dataField : "secondary",
@@ -115,19 +83,11 @@ boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 		renderer : {
 			type : "TemplateRenderer"
 		},
-		filter : {
-			showIcon : false,
-			inline : false
-		},
 	}, {
 		dataField : "note",
 		headerText : "수정사유",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	} ]
 
 	function createAUIGrid50(columnLayout) {

@@ -109,28 +109,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "이름",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "email",
 					headerText : "이메일",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "enable",
 					headerText : "활성화",
 					dataType : "boolean",
 					width : 100,
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
 						editable : true
@@ -168,11 +156,14 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = {
 					name: toId("name"),
 					email: toId("email"),
-				}
+				};
 				const enable = document.querySelector("input[name=enable]:checked").value;
 				const url = getCallUrl("/admin/mail");
 				params.enable = JSON.parse(enable);
@@ -184,8 +175,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

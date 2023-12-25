@@ -14,10 +14,6 @@
 		dataField : "display",
 		headerText : "문서타입",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	} ]
 
 	function _createAUIGrid(columnLayout) {

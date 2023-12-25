@@ -55,7 +55,7 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 	<tr>
 		<th class="lb">첨부파일</th>
 		<td class="indent5" colspan="3">
-			<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
+			<jsp:include page="/extcore/jsp/common/	-view.jsp">
 				<jsp:param value="<%=data.getOid()%>" name="oid" />
 			</jsp:include>
 		</td>

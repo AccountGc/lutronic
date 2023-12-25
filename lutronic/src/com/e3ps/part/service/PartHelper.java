@@ -28,6 +28,7 @@ import com.e3ps.common.util.ThumbnailUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.org.People;
+import com.e3ps.part.PartToPartLink;
 import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.dto.ObjectComarator;
 import com.e3ps.part.dto.PartDTO;
@@ -60,6 +61,10 @@ import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.folder.SubFolder;
 import wt.iba.definition.StringDefinition;
+import wt.iba.definition.litedefinition.AttributeDefDefaultView;
+import wt.iba.definition.service.IBADefinitionHelper;
+import wt.iba.value.BooleanValue;
+import wt.iba.value.StringValue;
 import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.part.PartDocHelper;
@@ -120,6 +125,7 @@ public class PartHelper {
 		String ecoNo = StringUtil.checkNull((String) params.get("ecoNo"));
 		String eoNo = StringUtil.checkNull((String) params.get("eoNo"));
 		boolean latest = (boolean) params.get("latest");
+		String preOrder = (String) params.get("preOrder");
 
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(WTPart.class, true);
@@ -132,7 +138,7 @@ public class PartHelper {
 				new SearchCondition(WTPart.class, WTPart.LIFE_CYCLE_STATE, SearchCondition.NOT_EQUAL, "TEMPRARY"),
 				new int[] { idx });
 
-		QuerySpecUtils.toCI(query, idx, WTPart.class);
+//		QuerySpecUtils.toCI(query, idx, WTPart.class);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NUMBER, partNumber);
 		QuerySpecUtils.toLikeAnd(query, idx, WTPart.class, WTPart.NAME, partName);
 		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WTPart.class, WTPart.CREATE_TIMESTAMP, createdFrom, createdTo);
@@ -147,52 +153,38 @@ public class PartHelper {
 		SearchCondition sc = new SearchCondition(WTPart.class, "state.state", "<>", "TEMPRARY");
 		query.appendWhere(sc, new int[] { idx });
 
-		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
-		// EcoDate
-//		if (ecoPostdate.length() > 0 || ecoPredate.length() > 0) {
-//			// AttributeDefDefaultView aview =
-//			// IBADefinitionHelper.service.getAttributeDefDefaultViewByPath(AttributeKey.IBAKey.IBA_ECODATE);
-//
-//			// if (aview != null) {
-//			if (query.getConditionCount() > 0) {
-//				query.appendAnd();
-//			}
-//			int _idx = query.appendClassList(StringValue.class, false);
-//			query.appendWhere(new SearchCondition(StringValue.class, "theIBAHolderReference.key.id", WTPart.class,
-//					"thePersistInfo.theObjectIdentifier.id"), new int[] { _idx, idx });
-//			query.appendAnd();
-//			// query.appendWhere(new SearchCondition(StringValue.class,
-//			// "definitionReference.hierarchyID", SearchCondition.EQUAL,
-//			// aview.getHierarchyID()), new int[] { _idx });
-//			long did = getECODATESeqDefinitionId();
-//			// System.out.println("Long Check !!!!!!!!!!!!!! did = "+ did );
-//			SearchCondition sc = new SearchCondition(StringValue.class, "definitionReference.key.id", "=", did);
-//			query.appendWhere(sc, new int[] { _idx });
-//			ClassInfo classinfo = WTIntrospector.getClassInfo(StringValue.class);
-//			String task_seqColumnName = DatabaseInfoUtilities.getValidColumnName(classinfo, StringValue.VALUE);
-//			RelationalExpression paramRelationalExpression = new KeywordExpression(
-//					"SUBSTR(" + task_seqColumnName + ",INSTR(" + task_seqColumnName + ",',',-1)+1)");
-//
-//			if (ecoPredate.length() > 0) {
-//				query.appendAnd();
-//				RelationalExpression expression = new wt.query.ConstantExpression(ecoPredate);
-//				SearchCondition searchCondition = new SearchCondition(paramRelationalExpression,
-//						SearchCondition.GREATER_THAN_OR_EQUAL, expression);
-//				query.appendWhere(searchCondition, new int[] { _idx });
-//			}
-//			RelationalExpression paramRelationalExpression2 = new KeywordExpression(
-//					"SUBSTR(" + task_seqColumnName + ",INSTR(" + task_seqColumnName + ",',',-1)+1)");
-//
-//			if (ecoPostdate.length() > 0) {
-//				query.appendAnd();
-//				RelationalExpression expression = new wt.query.ConstantExpression(ecoPostdate);
-//				SearchCondition searchCondition2 = new SearchCondition(paramRelationalExpression2,
-//						SearchCondition.LESS_THAN_OR_EQUAL, expression);
-//				query.appendWhere(searchCondition2, new int[] { _idx });
-//			}
-//		}
-		// }
+		// 선구매 조건이 선택됫을 경우..
+		if ("yes".equals(preOrder) || "no".equals(preOrder)) {
 
+			AttributeDefDefaultView aview = IBADefinitionHelper.service.getAttributeDefDefaultViewByPath("PREORDER");
+			if (aview != null) {
+				if (query.getConditionCount() > 0) {
+					query.appendAnd();
+				}
+
+				int idx_ = query.appendClassList(BooleanValue.class, false);
+				SearchCondition sc_ = new SearchCondition(
+						new ClassAttribute(BooleanValue.class, "theIBAHolderReference.key.id"), "=",
+						new ClassAttribute(WTPart.class, "thePersistInfo.theObjectIdentifier.id"));
+				sc_.setFromIndicies(new int[] { idx_, idx }, 0);
+				sc_.setOuterJoin(0);
+				query.appendWhere(sc_, new int[] { idx_, idx });
+				query.appendAnd();
+				sc_ = new SearchCondition(BooleanValue.class, "definitionReference.key.id", "=",
+						aview.getObjectID().getId());
+				query.appendWhere(sc_, new int[] { idx_ });
+				query.appendAnd();
+
+				if (Boolean.parseBoolean(preOrder)) {
+					sc_ = new SearchCondition(BooleanValue.class, BooleanValue.VALUE, SearchCondition.IS_TRUE);
+				} else {
+					sc_ = new SearchCondition(BooleanValue.class, BooleanValue.VALUE, SearchCondition.IS_FALSE);
+				}
+				query.appendWhere(sc_, new int[] { idx_ });
+			}
+		}
+
+		QuerySpecUtils.toEqualsAnd(query, idx, WTPart.class, WTPart.DEFAULT_UNIT, unit);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_MODEL, model);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_PRODUCTMETHOD, productmethod);
 		QuerySpecUtils.toIBALikeAnd(query, WTPart.class, idx, AttributeKey.IBAKey.IBA_DEPTCODE, deptcode);
@@ -896,7 +888,7 @@ public class PartHelper {
 			throw new Exception("작업 복사본 부품 = " + part.getNumber());
 		}
 
-		return (WTPart) CommonUtil.getLatestVersion(part);
+		return latest(part.getPersistInfo().getObjectIdentifier().getStringValue());
 	}
 
 	/**
@@ -1315,7 +1307,7 @@ public class PartHelper {
 		String des = IBAUtils.getStringValue(part, "DES");
 		String ecoNo = IBAUtils.getStringValue(part, "CHANGENO");
 		String ecoDate = IBAUtils.getStringValue(part, "CHANGEDATE");
-		String preOrder = IBAUtils.getBooleanValue(part, "PREORDER") == true ? "예" : "아니오";
+		boolean preOrder = IBAUtils.getBooleanValue(part, "PREORDER");
 
 		result.put("model", model != null ? model : "");
 		result.put("productmethod", productmethod != null ? productmethod : "");
@@ -1618,5 +1610,118 @@ public class PartHelper {
 		}
 
 		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 품목 변경 이력 생성
+	 */
+	public JSONArray viewHistory(WTPart part) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+
+		// 선택된게 이전으로 선택된거
+		// 최신
+		frontPart(part, list);
+
+		// 대상의 중심은 ECO가 없다고 판단을한다??
+		Map<String, String> map = new HashMap<>();
+		map.put("selected", "YES");
+		map.put("eco_oid", "");
+		map.put("eoNumber", "");
+		map.put("eo_createdDate_txt", "");
+		map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
+		map.put("number", part.getNumber());
+		map.put("name", part.getName());
+		map.put("state", part.getLifeCycleState().getDisplay());
+		map.put("version", part.getVersionIdentifier().getSeries().getValue());
+		map.put("creator", part.getCreatorFullName());
+		map.put("createdDate_txt", part.getCreateTimestamp().toString().substring(0, 10));
+		list.add(map);
+		backPart(part, list);
+
+		return JSONArray.fromObject(list);
+	}
+
+	/**
+	 * 변경이력 가져오기 선택된 품목이 일단 이전 품번 일경우..
+	 */
+	private void frontPart(WTPart part, ArrayList<Map<String, String>> list) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(PartToPartLink.class, true);
+		QuerySpecUtils.toEquals(query, idx, PartToPartLink.class, "roleAObjectRef.key.id", part.getMaster());
+		QuerySpecUtils.toOrderBy(query, idx, PartToPartLink.class, PartToPartLink.CREATE_TIMESTAMP, false);
+		// 실제로는 무조건 하나 인거 같은데..
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			PartToPartLink link = (PartToPartLink) obj[0];
+			Map<String, String> map = new HashMap<>();
+			WTPartMaster nextMaster = link.getAfter();
+			String nextVersion = link.getAfterVersion();
+			WTPart nextPart = getPart(nextMaster.getNumber(), nextVersion);
+			EChangeOrder eco = link.getEco();
+			if (nextPart != null) {
+				map.put("selected", "NO");
+				if (eco != null) {
+					map.put("eco_oid", eco.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("eoNumber", eco.getEoNumber());
+					map.put("eo_createdDate_txt", eco.getCreateTimestamp().toString().substring(0, 10));
+				} else {
+					map.put("eco_oid", "");
+					map.put("eoNumber", "");
+					map.put("eo_createdDate_txt", "");
+				}
+				map.put("part_oid", nextPart.getPersistInfo().getObjectIdentifier().getStringValue());
+				map.put("number", nextPart.getNumber());
+				map.put("name", nextPart.getName());
+				map.put("state", nextPart.getLifeCycleState().getDisplay());
+				map.put("version", nextPart.getVersionIdentifier().getSeries().getValue());
+				map.put("creator", nextPart.getCreatorFullName());
+				map.put("createdDate_txt", nextPart.getCreateTimestamp().toString().substring(0, 10));
+				frontPart(nextPart, list);
+				list.add(map);
+			}
+		}
+	}
+
+	/**
+	 * 변경이력 가져오기 선택된 품목이 일단 다음 품번 일경우..
+	 */
+	private void backPart(WTPart part, ArrayList<Map<String, String>> list) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(PartToPartLink.class, true);
+		QuerySpecUtils.toEquals(query, idx, PartToPartLink.class, "roleBObjectRef.key.id", part.getMaster());
+		QuerySpecUtils.toOrderBy(query, idx, PartToPartLink.class, PartToPartLink.CREATE_TIMESTAMP, false);
+		// 실제로는 무조건 하나 인거 같은데..
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			PartToPartLink link = (PartToPartLink) obj[0];
+			Map<String, String> map = new HashMap<>();
+			WTPartMaster preMaster = link.getPrev();
+			String preVersion = link.getPreVersion();
+			WTPart prePart = getPart(preMaster.getNumber(), preVersion);
+			EChangeOrder eco = link.getEco();
+			if (prePart != null) {
+				if (eco != null) {
+					map.put("selected", "NO");
+					map.put("eco_oid", eco.getPersistInfo().getObjectIdentifier().getStringValue());
+					map.put("eoNumber", eco.getEoNumber());
+					map.put("eo_createdDate_txt", eco.getCreateTimestamp().toString().substring(0, 10));
+				} else {
+					map.put("eco_oid", "");
+					map.put("eoNumber", "");
+					map.put("eo_createdDate_txt", "");
+				}
+				map.put("part_oid", prePart.getPersistInfo().getObjectIdentifier().getStringValue());
+				map.put("number", prePart.getNumber());
+				map.put("name", prePart.getName());
+				map.put("state", prePart.getLifeCycleState().getDisplay());
+				map.put("version", prePart.getVersionIdentifier().getSeries().getValue());
+				map.put("creator", prePart.getCreatorFullName());
+				map.put("createdDate_txt", prePart.getCreateTimestamp().toString().substring(0, 10));
+				backPart(prePart, list);
+				list.add(map);
+			}
+		}
 	}
 }

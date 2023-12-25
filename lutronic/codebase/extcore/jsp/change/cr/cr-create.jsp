@@ -12,6 +12,11 @@ String html = (String) request.getAttribute("html");
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -100,9 +105,7 @@ String html = (String) request.getAttribute("html");
 				</td>
 				<th>작성자</th>
 				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
+					<input type="text" name="writer" id="writer" class="width-200">
 				</td>
 			</tr>
 			<tr>
@@ -252,7 +255,7 @@ String html = (String) request.getAttribute("html");
 					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
 					createDepart_code : toId("createDepart"),
-					writer_oid : toId("writerOid"),
+					writer : toId("writer"),
 					eoCommentA : content,
 					sections : sections, //변경 구분
 					primary : primary == null ? '' : primary.value,
@@ -280,7 +283,6 @@ String html = (String) request.getAttribute("html");
 				date("writeDate");
 				date("approveDate");
 				selectbox("createDepart");
-				finderUser("writer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				AUIGrid.resize(myGridID300);

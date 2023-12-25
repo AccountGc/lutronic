@@ -103,19 +103,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				headerText : "템플릿 타입",
 				dataType : "string",
 				width : 150,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 			}, {
 				dataField : "number",
 				headerText : "문서 템플릿 번호",
 				dataType : "string",
 				width : 150,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 				renderer : {
 					type : "LinkRenderer",
 					baseUrl : "javascript",
@@ -130,10 +122,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				headerText : "문서 템플릿 제목",
 				dataType : "string",
 				style : "aui-left",
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 				renderer : {
 					type : "LinkRenderer",
 					baseUrl : "javascript",
@@ -148,28 +136,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				headerText : "버전",
 				dataType : "numeric",
 				width : 100,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 			}, {
 				dataField : "creator",
 				headerText : "등록자",
 				dataType : "string",
 				width : 150,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 			}, {
 				dataField : "createdDate",
 				headerText : "등록일",
 				dataType : "date",
 				width : 100,
-				filter : {
-					showIcon : true,
-					inline : true
-				},
 			} ]
 		}
 
@@ -200,7 +176,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			});
 		}
 
-		function loadGridData() {
+		function loadGridData(movePage) {
+			if (movePage === undefined) {
+				document.getElementById("sessionid").value = 0;
+			}
 			let params = new Object();
 			const url = getCallUrl("/form/list");
 			const field = [ "name", "formType" ];
@@ -211,8 +190,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				AUIGrid.removeAjaxLoader(myGridID);
 				if (data.result) {
 					totalPage = Math.ceil(data.total / data.pageSize);
-					document.getElementById("sessionid").value = data.sessionid;
-					createPagingNavigator(data.curPage);
+					createPagingNavigator(data.curPage, data.sessionid);
 					AUIGrid.setGridData(myGridID, data.list);
 				} else {
 					alert(data.msg);
@@ -254,10 +232,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			const url = getCallUrl("/form/create");
 			document.location.href = url;
 		}
-		
+
 		function exportExcel() {
-		    const sessionName = document.getElementById("sessionName").value;
-		    exportToExcel("문서 템플릿관리 리스트", "문서 템플릿관리", "문서 템플릿관리 리스트", [], sessionName);
+			const sessionName = document.getElementById("sessionName").value;
+			exportToExcel("문서 템플릿관리 리스트", "문서 템플릿관리", "문서 템플릿관리 리스트", [], sessionName);
 		}
 	</script>
 </body>

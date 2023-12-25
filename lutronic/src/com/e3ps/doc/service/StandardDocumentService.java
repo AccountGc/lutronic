@@ -70,6 +70,7 @@ import wt.part.WTPartDescribeLink;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
+import wt.util.FileUtil;
 import wt.util.WTException;
 import wt.util.WTProperties;
 import wt.vc.VersionControlHelper;
@@ -767,6 +768,17 @@ public class StandardDocumentService extends StandardManager implements Document
 		try {
 			trs.start();
 
+			QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
+			if (qr.hasMoreElements()) {
+				ApplicationData dd = (ApplicationData) qr.nextElement();
+				String n = dd.getFileName();
+				String ext = FileUtil.getExtension(n);
+				if (!"docx".equalsIgnoreCase(ext)) {
+					System.out.println("대상파일이 아닙니다.");
+					return;
+				}
+			}
+
 			WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
 			if (info != null) {
 				String classType1Code = info.getPtc_str_2();
@@ -774,39 +786,9 @@ public class StandardDocumentService extends StandardManager implements Document
 				// 과거 데이터는 없음
 				if (StringUtil.checkString(classType1Code)) {
 					// 개발문서 일 경우
-					if ("DEV".equals(classType1Code)) {
-
-						DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();
-						if (classType2 != null) {
-							String key = classType2.getClazz().trim();
-							// 위험관리보고서
-							if ("RMR".equals(key)) {
-								excelFile = new File(preFixPath + File.separator + "RMR.xlsx");
-								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
-								// 위험관리계획서
-							} else if ("RMP".equals(key)) {
-								excelFile = new File(preFixPath + File.separator + "RMP.xlsx");
-								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
-								// 제품요구사양서
-							} else if ("PRS".equals(key)) {
-								excelFile = new File(preFixPath + File.separator + "PRS.xlsx");
-								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
-								// 제품표준서
-							} else if ("DMR".equals(key)) {
-								excelFile = new File(preFixPath + File.separator + "DMR.xlsx");
-								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
-								// 공통
-							} else {
-								excelFile = new File(preFixPath + File.separator + "COMMON.xlsx");
-								rtnFile = DocumentHelper.manager.stamping(doc, key, excelFile);
-
-							}
-						}
-					}
-
-					// 지침서
-					if ("".equals(classType1Code)) {
-
+					if ("DEV".equals(classType1Code) || "INSTRUCTION".equals(classType1Code)) {
+						excelFile = new File(preFixPath + File.separator + "DMR.xlsx");
+						rtnFile = DocumentHelper.manager.stamping(doc, excelFile);
 					}
 				}
 
@@ -818,7 +800,7 @@ public class StandardDocumentService extends StandardManager implements Document
 				}
 				String output = pdfPath + File.separator + doc.getNumber() + "_COVER.pdf";
 				// excel to pdf
-				Workbook wb = new Workbook(excelFile.getAbsolutePath());
+				Workbook wb = new Workbook(rtnFile.getAbsolutePath());
 				wb.save(output, FileFormatType.PDF);
 
 				// 기존 커버 삭제

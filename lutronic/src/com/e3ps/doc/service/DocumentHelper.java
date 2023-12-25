@@ -11,11 +11,18 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.aspose.cells.BorderType;
+import com.aspose.cells.Cell;
+import com.aspose.cells.CellBorderType;
+import com.aspose.cells.Color;
+import com.aspose.cells.Font;
+import com.aspose.cells.Picture;
+import com.aspose.cells.Row;
+import com.aspose.cells.Style;
+import com.aspose.cells.TextAlignmentType;
+import com.aspose.cells.Workbook;
+import com.aspose.cells.Worksheet;
 import com.aspose.pdf.Document;
-import com.aspose.pdf.HorizontalAlignment;
-import com.aspose.pdf.Page;
-import com.aspose.pdf.PageNumberStamp;
-import com.aspose.pdf.VerticalAlignment;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -25,6 +32,7 @@ import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.aspose.AsposeUtils;
 import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -40,7 +48,12 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.column.DocumentColumn;
+import com.e3ps.org.dto.PeopleDTO;
+import com.e3ps.org.service.OrgHelper;
 import com.e3ps.part.column.PartColumn;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.service.WorkspaceHelper;
 import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
@@ -60,6 +73,7 @@ import wt.folder.FolderHelper;
 import wt.folder.IteratedFolderMemberLink;
 import wt.folder.SubFolder;
 import wt.org.WTPrincipal;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.query.ClassAttribute;
@@ -626,9 +640,136 @@ public class DocumentHelper {
 	/**
 	 * 표지 싸인입력
 	 */
-	public File stamping(WTDocument doc, String key, File excelFile) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public File stamping(WTDocument d, File excelFile) throws Exception {
+		String number = IBAUtil.getStringValue(d, "INTERALNUMBER");
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(d);
+		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
+
+		Workbook workbook = new Workbook(excelFile.getPath());
+		Worksheet worksheet = workbook.getWorksheets().get(0);
+
+		worksheet.getPageSetup().setFooter(0, "문서양식번호넣는곳");
+
+		Cell modelCell = worksheet.getCells().get(4, 5);
+		modelCell.putValue(IBAUtil.getStringValue(d, "MODEL"));
+
+		Cell nameCell = worksheet.getCells().get(5, 0);
+		nameCell.putValue(d.getName());
+
+		Cell numberCell = worksheet.getCells().get(11, 3);
+		numberCell.putValue(number);
+
+		int rowIndex = 16;
+		int rowHeight = 30;
+
+		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(m);
+		if (submitLine != null) {
+			Row row = worksheet.getCells().getRows().get(rowIndex);
+			row.setHeight(rowHeight);
+
+			Cell cell = worksheet.getCells().get(rowIndex, 1); // 결재타입
+			cell.putValue("기안");
+			setCellStyle(cell);
+
+			WTUser user = (WTUser) submitLine.getOwnership().getOwner().getObject();
+			PeopleDTO pdata = new PeopleDTO(user);
+			cell = worksheet.getCells().get(rowIndex, 2); // 이름+팀
+			cell.putValue(pdata.getName() + "[" + pdata.getDepartment_name() + "]");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 3); // 결재일
+			cell.putValue(
+					submitLine.getCompleteTime() != null ? submitLine.getCompleteTime().toString().substring(0, 10)
+							: "");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 4);
+			setCellStyle(cell);
+			String signPath = OrgHelper.manager.getSignPath(user.getName());
+			if (signPath != null) {
+				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
+				Picture picture = worksheet.getPictures().get(picIndex);
+				picture.setHeightCM(0.8);
+				picture.setWidthCM(3.6);
+			}
+
+			rowIndex++;
+		}
+
+		for (ApprovalLine agreeLine : agreeLines) {
+			Row row = worksheet.getCells().getRows().get(rowIndex);
+			row.setHeight(rowHeight);
+
+			Cell cell = worksheet.getCells().get(rowIndex, 1); // 결재타입
+			cell.putValue("합의");
+			setCellStyle(cell);
+
+			WTUser user = (WTUser) agreeLine.getOwnership().getOwner().getObject();
+			PeopleDTO pdata = new PeopleDTO(user);
+			cell = worksheet.getCells().get(rowIndex, 2); // 이름+팀
+			cell.putValue(pdata.getName() + "[" + pdata.getDepartment_name() + "]");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 3); // 결재일
+			cell.putValue(
+					agreeLine.getCompleteTime() != null ? agreeLine.getCompleteTime().toString().substring(0, 10) : "");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 4);
+			setCellStyle(cell);
+
+			String signPath = OrgHelper.manager.getSignPath(user.getName());
+			if (signPath != null) {
+				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
+				Picture picture = worksheet.getPictures().get(picIndex);
+				picture.setHeightCM(0.8);
+				picture.setWidthCM(3.6);
+			}
+
+			rowIndex++;
+		}
+
+		ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(m);
+		for (ApprovalLine approvalLine : approvalLines) {
+			Row row = worksheet.getCells().getRows().get(rowIndex);
+			row.setHeight(rowHeight);
+
+			Cell cell = worksheet.getCells().get(rowIndex, 1); // 결재타입
+			cell.putValue("결재");
+			setCellStyle(cell);
+
+			WTUser user = (WTUser) approvalLine.getOwnership().getOwner().getObject();
+			PeopleDTO pdata = new PeopleDTO(user);
+			cell = worksheet.getCells().get(rowIndex, 2); // 이름+팀
+			cell.putValue(pdata.getName() + "[" + pdata.getDepartment_name() + "]");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 3); // 결재일
+			cell.putValue(
+					approvalLine.getCompleteTime() != null ? approvalLine.getCompleteTime().toString().substring(0, 10)
+							: "");
+			setCellStyle(cell);
+
+			cell = worksheet.getCells().get(rowIndex, 4);
+			setCellStyle(cell);
+			String signPath = OrgHelper.manager.getSignPath(user.getName());
+			if (signPath != null) {
+				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
+				Picture picture = worksheet.getPictures().get(picIndex);
+				picture.setHeightCM(0.8);
+				picture.setWidthCM(3.6);
+			}
+
+			rowIndex++;
+		}
+		String temp = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "cover";
+		File f = new File(temp);
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		String fullPath = temp + File.separator + number + ".xlsx";
+		workbook.save(fullPath);
+		return new File(fullPath);
 	}
 
 	/**
@@ -668,7 +809,6 @@ public class DocumentHelper {
 		qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("PDF"));
 		String wordPath = "";
 		String name = "";
-		System.out.println("qr=" + qr.size());
 		if (qr.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) qr.nextElement();
 			byte[] buffer = new byte[10240];
@@ -694,41 +834,48 @@ public class DocumentHelper {
 		}
 
 		AsposeUtils.setAsposePdfLic();
-		System.out.println("coverPath=" + coverPath);
-		System.out.println("wordPath=" + wordPath);
 		Document coverPdf = new Document(coverPath);
 		Document wordPdf = new Document(wordPath);
 		coverPdf.getPages().add(wordPdf.getPages());
 		wordPdf.close();
 
-		String compPath = mergePath + File.separator + "complete" + name;
+		String compPath = mergePath + File.separator + "complete";
 		File compPdf = new File(compPath);
 		if (!compPdf.exists()) {
 			compPdf.mkdirs();
 		}
-
-		int newPageNumber = 1;
-
-		// Instantiate the PageNumberStamp
-		PageNumberStamp pageNoStamp = new PageNumberStamp();
-		pageNoStamp.setHorizontalAlignment(HorizontalAlignment.Center);
-		pageNoStamp.setVerticalAlignment(VerticalAlignment.Bottom);
-		pageNoStamp.setStartingNumber(1);
-		pageNoStamp.setFormat("#/" + coverPdf.getPages().size());
-
-		// Add stamp
-		for (int pageNumber = 0; pageNumber < coverPdf.getPages().size(); pageNumber++) {
-			coverPdf.getPages().get_Item(pageNumber + 1).addStamp(pageNoStamp);
-		}
-
-		coverPdf.save(compPath);
+		String savePath = compPath + File.separator + name;
+		coverPdf.save(savePath);
 		coverPdf.close();
 
-		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-		applicationData.setRole(ContentRoleType.SECONDARY);
-		PersistenceHelper.manager.save(applicationData);
-		ContentServerHelper.service.updateContent(doc, applicationData, compPdf.getPath());
+		// 기존 주 첨부파일을 일반 첨부로 옴기고
+		// PDF 를 주 첨부로 등록
+		QueryResult rs = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
+		if (rs.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) rs.nextElement();
 
+			byte[] buffer = new byte[10240];
+			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+			File file = new File(mergePath + File.separator + dd.getFileName());
+			FileOutputStream fos = new FileOutputStream(file);
+			int j = 0;
+			while ((j = is.read(buffer, 0, 10240)) > 0) {
+				fos.write(buffer, 0, j);
+			}
+			fos.close();
+			is.close();
+
+			ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+			applicationData.setRole(ContentRoleType.SECONDARY);
+			PersistenceHelper.manager.save(applicationData);
+			ContentServerHelper.service.updateContent(doc, applicationData, file.getPath());
+			ContentServerHelper.service.deleteContent(doc, dd);
+		}
+
+		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+		applicationData.setRole(ContentRoleType.PRIMARY);
+		PersistenceHelper.manager.save(applicationData);
+		ContentServerHelper.service.updateContent(doc, applicationData, savePath);
 	}
 
 	/**
@@ -745,5 +892,21 @@ public class DocumentHelper {
 		Object[] argObjects = { hash };
 
 		queue.addEntry(principal, genWordAndPdfMethod, className, argClasses, argObjects);
+	}
+
+	/**
+	 * 엑셀 셀 스타일링
+	 */
+	private void setCellStyle(Cell cell) throws Exception {
+		Style style = cell.getStyle();
+		Font font = style.getFont();
+		font.setBold(true);
+		style.setHorizontalAlignment(TextAlignmentType.CENTER);
+		style.setVerticalAlignment(TextAlignmentType.CENTER);
+		style.setBorder(BorderType.TOP_BORDER, CellBorderType.THIN, Color.getBlack());
+		style.setBorder(BorderType.BOTTOM_BORDER, CellBorderType.THIN, Color.getBlack());
+		style.setBorder(BorderType.LEFT_BORDER, CellBorderType.THIN, Color.getBlack());
+		style.setBorder(BorderType.RIGHT_BORDER, CellBorderType.THIN, Color.getBlack());
+		cell.setStyle(style);
 	}
 }

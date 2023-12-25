@@ -18,9 +18,11 @@ import com.e3ps.change.activity.service.ActivityHelper;
 import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
 import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
@@ -35,6 +37,7 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -85,11 +88,17 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			trs.start();
 
 			// 21.12.30_shjeong 기존 YYMM 으로 사용 시 12월 마지막주에는 다음 년도로 표기되는 오류로 인해 수정.
-			Date currentDate = new Date();
-			String number = "C" + new SimpleDateFormat("yyMM", Locale.KOREA).format(currentDate);
-			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
+//			Date currentDate = new Date();
+//			String number = "C" + new SimpleDateFormat("yyMM", Locale.KOREA).format(currentDate);
+//			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
+//
+//			number = number + "N" + seqNo;
+			
+			String number = "C" + DateUtil.getCurrentDateString("ym") + "N";
+//			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
+//			number = number + "N" + seqNo;
 
-			number = number + "N" + seqNo;
+			number = EcoHelper.manager.getNextNumber(number);
 
 			EChangeOrder eco = EChangeOrder.newEChangeOrder();
 			eco.setSendType(sendType);
@@ -498,5 +507,68 @@ public class StandardEcoService extends StandardManager implements EcoService {
 		managedbaseline = (ManagedBaseline) PersistenceHelper.manager.save(managedbaseline);
 		managedbaseline = (ManagedBaseline) BaselineHelper.service.addToBaseline(v, managedbaseline);
 		SessionHelper.manager.setPrincipal(user.getName());
+	}
+
+	@Override
+	public void ecoPartApproved(EChangeOrder eco) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			State approved = State.toState("APPROVED");
+			QueryResult qr = PersistenceHelper.manager.navigate(eco, "part", EcoPartLink.class, false);
+			while (qr.hasMoreElements()) {
+				EcoPartLink link = (EcoPartLink) qr.nextElement();
+				boolean preOrder = link.getPreOrder();
+				WTPartMaster master = link.getPart();
+				String version = link.getVersion();
+				WTPart target = PartHelper.manager.getPart(master.getNumber(), version);
+				boolean isApproved = target.getLifeCycleState().toString().equals("APPROVED");
+				boolean isFour = target.getName().startsWith("4"); // 4번 품목..
+				boolean isPast = link.getPast();
+
+				// 신규 데이터
+				WTPart part = null;
+				if (!isPast) {
+					// 개정 케이스 - 이전품목을 가여와야한다.
+					// 변경 후 품목이냐 변경 대상 푼목이냐
+					boolean isLeft = link.getLeftPart();
+					boolean isRight = link.getRightPart();
+//					if (isApproved) {
+
+					// 오른쪽이면 다음 버전 품목을 전송해야한다.. 이게 맞는듯
+					if (isLeft) {
+						// 왼쪽이면 승인됨 데이터..그니깐 개정후 데이터를 보낸다 근데 변경점이 없지만 PDM상에서 버전은 올라간 상태
+						WTPart next_part = (WTPart) EChangeUtils.manager.getNext(target);
+						part = next_part;
+					} else if (isRight) {
+						// 오른쪽 데이터면 애시당초 바귄 대상 품번 그대로 넣어준다..
+						part = target;
+					}
+
+					// 부품 승인
+					LifeCycleHelper.service.setLifeCycleState(part, approved);
+					// 3D 승인
+					EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+					if (epm != null) {
+						LifeCycleHelper.service.setLifeCycleState(epm, approved);
+						// 2D 승인
+						EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
+						if (epm2D != null) {
+							LifeCycleHelper.service.setLifeCycleState(epm2D, approved);
+						}
+					}
+				}
+			}
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
 	}
 }

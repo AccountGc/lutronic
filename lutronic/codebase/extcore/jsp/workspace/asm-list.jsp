@@ -37,7 +37,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						<%=title %> 일괄결재 검색
+						<%=title%>
+						일괄결재 검색
 					</div>
 				</td>
 			</tr>
@@ -51,11 +52,15 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th><%=title %> 일괄결재제목</th>
+				<th><%=title%>
+					일괄결재제목
+				</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th><%=title %> 일괄결재번호</th>
+				<th><%=title%>
+					일괄결재번호
+				</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300">
 				</td>
@@ -127,7 +132,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			function _layout() {
 				return [ {
 					dataField : "number",
-					headerText : "<%=title %> 일괄결재번호",
+					headerText : "<%=title%> 일괄결재번호",
 					dataType : "string",
 					width : 180,
 					renderer : {
@@ -139,13 +144,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 							_popup(url, 1400, 500, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
-					headerText : "<%=title %> 일괄결재제목",
+					headerText : "<%=title%> 일괄결재제목",
 					dataType : "string",
 					style : "aui-left",
 					renderer : {
@@ -157,46 +158,26 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 							_popup(url, 1400, 500, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "type",
 					headerText : "타입",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate_txt",
 					headerText : "등록일",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -229,7 +210,10 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				const number = document.getElementById("number").value;
 				const url = getCallUrl("/asm/list");
 				const params = {
@@ -242,8 +226,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

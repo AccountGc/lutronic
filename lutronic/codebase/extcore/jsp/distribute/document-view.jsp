@@ -58,12 +58,12 @@ iframe {
 			<tr>
 				<!-- 				<th class="lb">문서번호</th> -->
 				<%-- 				<td class="indent5"><%=dto.getNumber()%></td> --%>
+				<th>문서명</th>
+				<td class="indent5"><%=dto.getName()%></td>
 				<th>내부문서번호</th>
 				<td class="indent5"><%=dto.getInteralnumber()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
 				<th class="lb">REV</th>
@@ -86,10 +86,10 @@ iframe {
 			<tr>
 				<th class="lb">결재방식</th>
 				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
-				<!-- 				<th>내부문서번호</th> -->
-				<%-- 				<td class="indent5"><%=dto.getInteralnumber()%></td> --%>
+				<th>상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
 				<th>프로젝트 코드</th>
-				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
+				<td class="indent5"><%=dto.getModel_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>

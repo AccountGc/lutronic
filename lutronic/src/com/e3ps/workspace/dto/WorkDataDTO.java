@@ -61,7 +61,12 @@ public class WorkDataDTO {
 			setName(doc.getName());
 			setNumber(doc.getNumber());
 			setName(doc.getName());
-			setPersistType("문사");
+			String docType = doc.getDocType().toString();
+			if ("$$MMDocument".equals(docType)) {
+				setPersistType("금형문서");
+			} else {
+				setPersistType("문서");
+			}
 			setState(doc.getLifeCycleState().getDisplay());
 			setCreator(doc.getCreatorName());
 			setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));

@@ -19,7 +19,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -39,8 +39,47 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<th>결재 제목</th>
-				<td colspan="3" class="indent5">
+				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
+				</td>
+				<th>상태</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="state" value="ALL">
+						<div class="state p-success">
+							<label>
+								<b>전체</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="state" value="COMPLETE">
+						<div class="state p-success">
+							<label>
+								<b>완료</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="state" value="START" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>수신확인중</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="state" value="REJECT">
+						<div class="state p-success">
+							<label>
+								<b>반려</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -92,10 +131,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "확인",
 					dataType : "boolean",
 					width : 60,
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
 					}
@@ -113,10 +148,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800);
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "role",
 					headerText : "역할",
@@ -130,10 +161,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_RECEIVE");
 							_popup(url, 1500, 800);
 						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "name",
@@ -149,10 +176,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800);
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "point",
 					headerText : "진행단계",
@@ -161,39 +184,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "submiter",
 					headerText : "기안자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "receiveTime",
 					headerText : "수신일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true,
-						displayFormatValues : true
-					},
 				} ]
 			}
 
@@ -226,19 +232,23 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/receive");
+				const state = document.querySelector("input[name=state]:checked").value;
 				const field = [ "name", "receiveFrom", "receiveTo", "submiterOid" ];
 				params = toField(params, field);
+				params.state = state;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

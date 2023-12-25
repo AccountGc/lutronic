@@ -74,9 +74,6 @@ if (header) {
 				_popup(url, 1600, 800, "n");
 			}
 		},
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "name",
 		headerText : "품목명",
@@ -91,41 +88,26 @@ if (header) {
 				_popup(url, 1600, 800, "n");
 			}
 		},
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "modifiedDate_txt",
 		headerText : "수정일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "part_oid",
 		dataType : "string",

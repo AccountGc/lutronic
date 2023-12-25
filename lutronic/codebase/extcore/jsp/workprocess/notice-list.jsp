@@ -94,10 +94,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "제목",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -112,38 +108,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "등록자",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "count",
 					headerText : "조회횟수",
 					dataType : "string",
 					width : 120,
 					postfix : "번",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "popup",
 					headerText : "팝업",
 					dataType : "string",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "secondary",
 					headerText : "첨부파일",
@@ -151,10 +131,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 100,
 					renderer : {
 						type : "TemplateRenderer"
-					},
-					filter : {
-						showIcon : false,
-						inline : false
 					},
 				} ]
 			}

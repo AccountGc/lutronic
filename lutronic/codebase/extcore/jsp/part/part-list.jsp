@@ -29,6 +29,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 .preOrder {
 	background-color: rgb(200, 255, 203) !important;
 }
+
+.checkout {
+	background-color: rgb(255, 234, 235) !important;
+}
 </style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
@@ -346,10 +350,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						onClick : function(event) {
 						}
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "_2d",
 					headerText : "2D",
@@ -360,10 +360,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						altField : null,
 						onClick : function(event) {
 						}
-					},
-					filter : {
-						showIcon : false,
-						inline : false
 					},
 				}, {
 					dataField : "number",
@@ -378,10 +374,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							const url = getCallUrl("/part/view?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "name",
@@ -398,19 +390,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "location",
 					headerText : "품목분류",
 					dataType : "string",
 					width : 180,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					style : "aui-left"
 				}, {
 					dataField : "version",
 					headerText : "REV",
@@ -419,55 +404,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "remarks",
 					headerText : "OEM Info.",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 140,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -491,6 +452,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					rowStyleFunction : function(rowIndex, item) {
 						if (item.preOrder) {
 							return "preOrder";
+						} else if (item.checkout) {
+							return "checkout";
 						}
 						return "";
 					}
@@ -566,7 +529,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "BOM 에디터",
 						callback : auiContextHandler
 					}, {
-						label : "변경이력보기",
+						label : "BOM 비교",
+						callback : auiContextHandler
+					}, {
+						label : "ECO(변경)이력보기",
 						callback : auiContextHandler
 					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
@@ -589,21 +555,24 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 			}
 
-			function loadGridData() {
-				// 				$("input[name=sessionid").val(0);
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
-				const url = getCallUrl("/part/list");
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
-				var latest = document.querySelector("input[name=latest]:checked").value;
+				const url = getCallUrl("/part/list");
+				const latest = document.querySelector("input[name=latest]:checked").value;
+				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 				params = toField(params, field);
-				params.latest = latest == "true" ? true : false;
+				params.latest = JSON.parse(latest);
+				params.preOrder = preOrder;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
 						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
@@ -702,20 +671,26 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					_popup(url, "", "", "f");
 					break;
 				case 11:
+					url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + part_oid + "&ncId=5304500442831603818&locale=ko";
+					_popup(url, 1600, 600, "n");
 					break;
-				case 13:
+				case 12:
+					url = getCallUrl("/part/viewHistory?oid=" + part_oid);
+					_popup(url, 1200, 500, "n");
+					break;
+				case 14:
 					url = getCallUrl("/part/upper?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 14:
+				case 15:
 					url = getCallUrl("/part/lower?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 15:
+				case 16:
 					url = getCallUrl("/part/end?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 17:
+				case 18:
 					publish(part_oid);
 					break;
 				}
@@ -727,9 +702,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				parent.openLayer();
 				call(url, null, function(data) {
 					alert(data.msg);
-					if (data.result) {
-						loadGridData();
-					}
+					parent.closeLayer();
 				}, "GET");
 			}
 

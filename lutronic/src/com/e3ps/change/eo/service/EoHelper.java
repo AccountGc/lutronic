@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.EChangeActivity;
-import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
@@ -23,9 +22,8 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
-import com.e3ps.org.People;
-import com.e3ps.part.column.PartColumn;
 import com.e3ps.part.service.PartHelper;
+import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -41,6 +39,7 @@ import wt.queue.ProcessingQueue;
 import wt.queue.QueueHelper;
 import wt.services.ServiceFactory;
 import wt.session.SessionHelper;
+import wt.vc.wip.WorkInProgressHelper;
 
 public class EoHelper {
 
@@ -273,7 +272,7 @@ public class EoHelper {
 		QueryResult result = PersistenceHelper.manager.navigate(eo, "completePart", EOCompletePartLink.class);
 		while (result.hasMoreElements()) {
 			WTPartMaster master = (WTPartMaster) result.nextElement();
-			WTPart part = PartHelper.manager.getLatest(master);
+			WTPart part = PartHelper.manager.latest(master);
 			Map<String, Object> map = new HashMap<>();
 			map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("number", part.getNumber());
@@ -329,9 +328,6 @@ public class EoHelper {
 			WTPartMaster m = link.getCompletePart();
 			String v = link.getVersion();
 			WTPart p = PartHelper.manager.getPart(m.getNumber(), v);
-
-			System.out.println("number = " + p.getNumber() + ", version = " + v);
-
 			list = PartHelper.manager.descendants(p);
 		}
 		return list;
@@ -377,5 +373,52 @@ public class EoHelper {
 			}
 		}
 		return list;
+	}
+
+	public String getNextNumber(String number) throws Exception {
+		DecimalFormat df = new DecimalFormat("00");
+		String rtn = null;
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeOrder.class, true);
+		SearchCondition sc = new SearchCondition(EChangeOrder.class, EChangeOrder.EO_NUMBER, "LIKE", number + "%");
+		query.appendWhere(sc, new int[] { idx });
+		QuerySpecUtils.toOrderBy(query, idx, EChangeOrder.class, EChangeOrder.CREATE_TIMESTAMP, true);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		// E2312N45
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EChangeOrder eo = (EChangeOrder) obj[0];
+			String eoNumber = eo.getEoNumber();
+			String next = eoNumber.substring(6); // 00
+			int n = Integer.parseInt(next) + 1;
+			rtn = number + df.format(n);
+		} else {
+			rtn = number + "01";
+		}
+		return rtn;
+	}
+
+	/**
+	 * EO 등록시 체크아웃된 품목이 있는지 확인
+	 */
+	public Map<String, Object> checkCheckout(EChangeOrder eo) throws Exception {
+		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
+		Map<String, Object> map = new HashMap<>();
+		for (EOCompletePartLink link : completeParts) {
+			WTPartMaster master = link.getCompletePart();
+			WTPart part = PartHelper.manager.getPart(master.getNumber(), link.getVersion());
+			ArrayList<WTPart> list = PartHelper.manager.descendants(part);
+			for (WTPart p : list) {
+				boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
+				if (isCheckOut) {
+					String msg = part.getNumber() + " 품목이 체크아웃 상태입니다.";
+					map.put("msg", msg);
+					map.put("result", false);
+					return map;
+				}
+			}
+		}
+		map.put("result", true);
+		return map;
 	}
 }

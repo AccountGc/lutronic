@@ -64,9 +64,6 @@ if(view || update){
 		headerText : "ECO 번호",
 		dataType : "string",
 		width : 120,
-		filter : {
-			showIcon : true,
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -81,9 +78,6 @@ if(view || update){
 		headerText : "ECO 제목",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -98,57 +92,36 @@ if(view || update){
 		headerText : "ECO 타입",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "licensing_name",
 		headerText : "인허가변경",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "riskType_name",
 		headerText : "위험 통제",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 120,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "date",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "approveDate",
 		headerText : "승인일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	} ]
 	
 	function createAUIGrid105(columnLayout) {

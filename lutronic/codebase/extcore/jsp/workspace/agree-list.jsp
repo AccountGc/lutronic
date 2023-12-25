@@ -131,10 +131,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "확인",
 					dataType : "boolean",
 					width : 60,
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
 					}
@@ -152,10 +148,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "persistType",
 					headerText : "객체유형",
@@ -169,10 +161,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_AGREE");
 							_popup(url, 1500, 800, "n");
 						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "role",
@@ -188,10 +176,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "결재 제목",
@@ -206,38 +190,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1500, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "submiter",
 					headerText : "기안자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "receiveTime",
 					headerText : "수신일",
 					dataType : "date",
 					formatString : "yyyy-mm-dd HH:MM:ss",
 					width : 170,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 
@@ -270,7 +238,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/workspace/agree");
 				const field = [ "name", "submiterOid", "receiveFrom", "receiveTo" ];
@@ -284,8 +255,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

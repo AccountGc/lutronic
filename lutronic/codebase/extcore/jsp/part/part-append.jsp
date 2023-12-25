@@ -6,6 +6,7 @@
 <%@page import="wt.part.QuantityUnit"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
+String method = (String) request.getAttribute("method");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> matList = (ArrayList<NumberCode>) request.getAttribute("matList");
@@ -28,7 +29,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+			<input type="button" value="등록" title="등록" class="red" onclick="create();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -340,13 +341,14 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+			<input type="button" value="등록" title="등록" class="red" onclick="create();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
 
 <script type="text/javascript">
+
 
 			function create() {
 				const partName1 = document.getElementById("partName1").value;
@@ -385,10 +387,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					alert("중분류를 입력하세요.");
 					return;					
 				}
-				if(isEmpty(partName1) || isEmpty(partName2) || isEmpty(partName3) || isEmpty(partName4)){
+	            
+	            if(isEmpty(partName4)) {
 					alert("품목명을 입력하세요.");
-					return;					
-				}
+					return;	            	
+	            }
+	            
+// 				if(isEmpty(partName1) || isEmpty(partName2) || isEmpty(partName3) || isEmpty(partName4)){
+// 					alert("품목명을 입력하세요.");
+// 					return;					
+// 				}
 				if(isEmpty(model)){
 					alert("프로젝트 코드를 입력하세요.");
 					return;					
@@ -446,7 +454,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						opener.append(data.oid);
+						opener.<%=method%>(data.oid);
+						// 교체일땐 창 닫기
 						self.close();
 					}
 					closeLayer();
@@ -472,6 +481,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				finderUser("creator");
 				twindate("created");
 				twindate("modified");
+				$("#unit").bindSelectSetValue("ea");
 			});
 			
 			window.addEventListener("resize", function() {
@@ -729,7 +739,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			})
 			
 			$('#partName4').focusout(function() {
-				$('#partName4').val(this.value.toUpperCase());
+// 				$('#partName4').val(this.value.toUpperCase());
 			})
 			
 			$(".partName").focusout(function () {

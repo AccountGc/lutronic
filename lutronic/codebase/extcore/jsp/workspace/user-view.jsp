@@ -72,9 +72,17 @@ HashMap<String, String> hash = dto.getSignature();
 	<tr>
 		<th class="lb">서명</th>
 		<td class="indent5">
-			<jsp:include page="/extcore/jsp/common/primary-view.jsp">
-				<jsp:param value="<%=dto.getWoid()%>" name="oid" />
-			</jsp:include>
+		<%
+			if(hash.size() > 0) {
+		%>
+		<a href="<%=hash.get("url")%>"><%=hash.get("name") %></a>
+		<%
+			} else {
+		%>
+		<font color="red"><b>등록된 서명이 없습니다.</b></font>
+		<%
+			}
+		%>
 		</td>
 	</tr>
 </table>

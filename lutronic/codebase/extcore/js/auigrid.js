@@ -299,5 +299,5 @@ function moveToPage(goPage, sessionid) {
 	currentPage = goPage;
 	document.getElementById("sessionid").value = sessionid;
 	document.getElementById("curPage").value = goPage;
-	loadGridData();
+	loadGridData(true);
 }

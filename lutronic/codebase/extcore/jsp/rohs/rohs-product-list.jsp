@@ -59,55 +59,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "제품코드",
 					dataType : "string",
 					width : 200,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "제품명",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "rohsState",
 					headerText : "RoHs 상태",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 

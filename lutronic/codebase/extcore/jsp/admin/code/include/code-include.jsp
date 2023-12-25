@@ -44,33 +44,21 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 		headerText : "이름",
 		dataType : "string",
 		width : 300,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "code",
 		headerText : "코드",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "sort",
 		headerText : "소트",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "description",
 		headerText : "설명",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "enabled",
 		headerText : "활성화",
@@ -79,9 +67,6 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 		renderer : {
 			type : "CheckBoxEditRenderer",
 			edtiable : false,
-		},
-		filter : {
-			showIcon : false,
 		},
 	}, {
 		dataField : "oid",

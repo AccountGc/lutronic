@@ -240,10 +240,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, "", "", "f");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "interalnumber",
 					headerText : "내부 문서번호",
@@ -260,29 +256,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, "", "", "f");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "model",
 					headerText : "프로젝트 코드",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "location",
 					headerText : "문서분류",
 					dataType : "string",
 					style : "aui-left",
 					width : 250,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "version",
 					headerText : "REV",
@@ -291,55 +275,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "primary",
 					headerText : "주 첨부파일",
@@ -348,10 +308,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "secondary",
 					headerText : "첨부파일",
@@ -359,10 +315,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 100,
 					renderer : {
 						type : "TemplateRenderer"
-					},
-					filter : {
-						showIcon : false,
-						inline : false
 					},
 				} ]
 			}
@@ -395,7 +347,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/etc/list");
 				const field = [ "location", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "documentType", "preseration", "model", "deptcode", "interalnumber", "writer", "description" ];
@@ -409,8 +364,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

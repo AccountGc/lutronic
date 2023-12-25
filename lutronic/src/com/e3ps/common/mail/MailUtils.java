@@ -207,7 +207,7 @@ public class MailUtils {
 	/**
 	 * 메일 전송
 	 */
-	public void sendMail(Hashtable<String, Object> hash) throws Exception {
+	private void sendMail(Hashtable<String, Object> hash) throws Exception {
 
 		HashMap<String, String> to = (HashMap<String, String>) hash.get("TO");
 		String subject = (String) hash.get("SUBJECT");
@@ -234,5 +234,12 @@ public class MailUtils {
 		mail.setHtml(content);
 //		mail.setHtmlAndFile(content, new String[] {});
 		mail.send(); // 메일 전송
+	}
+
+	/**
+	 * 외부 메일 발송용 함수
+	 */
+	public void sendExternalMail(LifeCycleManaged per) throws Exception {
+		
 	}
 }

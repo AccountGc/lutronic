@@ -199,10 +199,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "CR 제목",
@@ -217,91 +213,56 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "model",
 					headerText : "제품명",
 					dataType : "string",
 					width : 220,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
 					width : 220,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+				}, {
+					dataField : "ecprStart",
+					headerText : "ECPR 진행여부",
+					dataType : "string",
+					width : 120,
 				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "writeDate",
 					headerText : "작성일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "approveDate",
 					headerText : "승인일",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -332,7 +293,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/cr/list");
 				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "writerOid", "createDepart", "writedFrom", "writedTo", "changeSection", "model" ];
@@ -344,8 +308,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

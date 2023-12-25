@@ -15,6 +15,7 @@ iframe {
 }
 </style>
 <script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
+
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 
 <table class="button-table">
@@ -27,36 +28,6 @@ iframe {
 		</td>
 		<td class="right">
 			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
-			<%
-			if (dto.is_revise()) {
-			%>
-			<input type="button" value="개정" title="개정" onclick="update('revise');">
-			<%
-			}
-			%>
-			<%
-			if (dto.is_withdraw()) {
-			%>
-			<input type="button" value="결재회수" title="결재회수" class="red" onclick="withdraw();">
-			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="blue" onclick="force();">
-			<%
-			}
-			%>
-			<%
-			if (dto.is_modify()) {
-			%>
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('modify');">
-			<%
-			}
-			%>
-			<%
-			if (dto.is_delete()) {
-			%>
-			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
-			<%
-			}
-			%>
-			<!-- 			<input type="button" value="최신Rev." title="최신Rev."> -->
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -87,27 +58,17 @@ iframe {
 			<tr>
 				<!-- 				<th class="lb">문서번호</th> -->
 				<%-- 				<td class="indent5"><%=dto.getNumber()%></td> --%>
+				<th class="lb">문서명</th>
+				<td class="indent5"><%=dto.getName()%></td>
 				<th>내부문서번호</th>
 				<td class="indent5"><%=dto.getInteralnumber()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
 				<th class="lb">REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>.<%=dto.getIteration()%>
-					<%
-					if (!dto.isLatest()) {
-					%>
-					&nbsp;
-					<b>
-						<a href="javascript:latest();">(최신버전으로)</a>
-					</b>
-					<%
-					}
-					%>
 				</td>
 				<th>등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
@@ -123,6 +84,14 @@ iframe {
 				<td class="indent5"><%=dto.getDocumentType_name()%></td>
 			</tr>
 			<tr>
+				<th class="lb">결재방식</th>
+				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
+				<th>상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
+				<th>프로젝트 코드</th>
+				<td class="indent5"><%=dto.getModel_name()%></td>
+			</tr>
+			<tr>
 				<th class="lb">작성자</th>
 				<td class="indent5"><%=dto.getWriter()%></td>
 				<th>보존기간</th>
@@ -131,23 +100,15 @@ iframe {
 				<td class="indent5"><%=dto.getDeptcode_name()%></td>
 			</tr>
 			<tr>
-				<th class="lb">결재방식</th>
-				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
-				<!-- 				<th>내부문서번호</th> -->
-				<%-- 				<td class="indent5"><%=dto.getInteralnumber()%></td> --%>
-				<th>프로젝트 코드</th>
-				<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
-			</tr>
-			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent7 pb8">
+				<td colspan="5" class="indent5">
 					<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
 						DEXT5.config.Mode = "view";
 						
 						new Dext5editor('content');
-						const content = document.getElementById("contents").value;
+						var content = document.getElementById("contents").value;
 						DEXT5.setBodyValue(content, 'content');
 					</script>
 				</td>
@@ -257,7 +218,7 @@ iframe {
 			%>
 			<table class="view-table">
 				<colgroup>
-					<col width="135">
+					<col width="136">
 					<col width="*">
 				</colgroup>
 				<tr>
@@ -294,15 +255,12 @@ iframe {
 
 </div>
 
+
+
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
 
-	// 최신버전으로 페이지 이동
-	function latest() {
-		const url = getCallUrl("/doc/latest?oid=" + oid);
-		document.location.href = url;
-	}
-	
+	//내용인쇄
 	function print() {
 		var sw=screen.width;
 	 	var sh=screen.height;
@@ -314,71 +272,13 @@ iframe {
 	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
 	 	const content = DEXT5.getBodyValue("content");
 		printWindow.document.open();
-		printWindow.document.write('<html><head><style type="text/css">.fl{float:left;} .fr{float:right;} .ml-1{margin-left:42%;} .ml-2{margin-left:34%;} .div_footer {width:100%; height:30px; bottom:0; position: fixed; font-size: 9pt;}@media print {@page { margin: 0 1.6cm; size: A4;}tbody{page-break-inside:avoid; page-break-after:avoid;}}</style></head><body>');
+		printWindow.document.write('<html><head><style type="text/css">@page {size: auto;margin-top: 30mm;}@media print {html, body {border: 1px solid white;height: 99%;page-break-after: avoid;page-break-before: avoid;}}</style></head><body>');
 		//출력할 내용 추가
-		printWindow.document.write('<table><thead style="font-size:9pt;"><tr class="fl"><td>thead1</td></tr>');
-		printWindow.document.write('<tr class="fl ml-1"><td>thead1</td></tr>');
-		printWindow.document.write('<tr class="fr"><td>thead1</td></tr></thead>');
-		printWindow.document.write('<tbody><tr style="height:150px;"></tr><tr><td><pre>'+content+'</pre></td></tr></tbody>');
-		printWindow.document.write('<tfoot><tr><td></td></tr></tfoot></table>');
-		printWindow.document.write('<div class="div_footer"><span>QF-705-08(3)</span><span class="ml-2">QF-705-08(3)</span><span class="ml-2">QF-705-08(3)</span></div>');
+		printWindow.document.write('<pre>' + content + '</pre>');
 		printWindow.document.write('</body></html>');
 		printWindow.document.close();
 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
-		printWindow.close();
 	}
-	
-	//수정 및 개정
-	function update(mode) {
-		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
-		document.location.href = url;
-	}
-	
-	function force() {
-		const url = getCallUrl("/doc/force?oid=" + oid);
-		document.location.href = url;
-	}
-
-	//삭제
-	function _delete() {
-		if (!confirm("삭제 하시겠습니까?")) {
-			return false;
-		}
-		const url = getCallUrl("/doc/delete?oid=" + oid);
-		openLayer();
-		call(url, null, function(data) {
-			alert(data.msg);
-			if (data.result) {
-				self.close();
-				opener.loadGridData();
-			} else {
-				closeLayer();
-			}
-		}, "DELETE");
-	}
-	
-
-	// 결재 회수
-	function withdraw() {
-		const oid = document.getElementById("oid").value;
-		let remain = false;
-		if(confirm("확인 버튼을 누를시 기존 결재선을 유지한채 결재를 회수 합니다.\n취소를 선택시 모든 결재선 및 결재 이력이 초기화 됩니다.")) {
-			remain = true;
-		}
-		const url = getCallUrl("/workspace/withdraw?oid="+oid + "&remain="+remain);
-		alert(url);
-		openLayer();
-		call(url, null, function(data) {
-			alert(data.msg);
-			if(data.result) {
-				opener.document.location.href = getCallUrl("/workData/list");
-				self.close();
-			} else {
-				closeLayer();
-			}
-		}, "GET");
-	}
-	
 
 	//일괄 다운로드
 	function batchSecondaryDown() {
@@ -418,7 +318,7 @@ iframe {
 		$("#tabs").tabs({
 			active : 0,
 			activate : function(event, ui) {
-				const tabId = ui.newPanel.prop("id");
+				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-1":
 					break;

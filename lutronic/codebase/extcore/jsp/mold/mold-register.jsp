@@ -16,7 +16,7 @@
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						문서 일괄 결재
+						금형 일괄 결재
 					</div>
 				</td>
 			</tr>

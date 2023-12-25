@@ -6,7 +6,7 @@
 String oid = (String) request.getAttribute("oid");
 WTPart root = (WTPart) request.getAttribute("root");
 %>
-<link href="/Windchill/extcore/component/fancytree/src/skin-win8/ui.fancytree.css" rel="stylesheet">
+<link href="/Windchill/extcore/component/fancytree/src/skin-win8/ui.fancytree.css?v=4" rel="stylesheet">
 <link href="/Windchill/extcore/component/contextmenu/dist/jquery.contextMenu.css" rel="stylesheet">
 <script src="/Windchill/extcore/component/fancytree/src/jquery-ui-dependencies/jquery.fancytree.ui-deps.js"></script>
 <script src="/Windchill/extcore/component/fancytree/src/jquery.fancytree.js"></script>
@@ -78,6 +78,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				<option value="3">3레벨</option>
 				<option value="4">4레벨</option>
 				<option value="5">5레벨</option>
+				<option value="6">전체펼치기</option>
 			</select>
 			&nbsp;
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -130,7 +131,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				<tr>
 					<th>문서 분류</th>
 					<td class="indent5">
-						<input type="text" name="number" id="number" class="width-300" readonly="readonly">
+						<input type="text" name="number" id="number" class="width-400" readonly="readonly" onclick="load();">
 						<input type="hidden" name="poid" id="poid">
 						<input type="button" value="품목선택" title="품목선택" onclick="load();" class="blue">
 						<input type="button" value="초기화" title="초기화" onclick="destroy();">
@@ -177,6 +178,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			checkbox : true,
 			quicksearch : true,
 			debugLevel : 0,
+			selectMode : 3,
 			dnd5 : {
 				autoExpandMS : 500,
 				preventRecursion : true, // Prevent dropping nodes on own descendants
@@ -246,11 +248,18 @@ WTPart root = (WTPart) request.getAttribute("root");
 			renderColumns : function(event, data) {
 				const node = data.node;
 				const isCheckOut = node.data.isCheckOut;
+				// 				const isNew = node.data.isNew;
 				if (isCheckOut) {
 					node.tr.style.backgroundColor = "#FFCBCB";
 				} else {
 					node.tr.style.backgroundColor = "white";
 				}
+
+				// 				if (isNew) {
+				// 					node.tr.style.backgroundColor = "rgb(254, 233, 205)";
+				// 				} else {
+				// 					node.tr.style.backgroundColor = "white";
+				// 				}
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
@@ -273,11 +282,22 @@ WTPart root = (WTPart) request.getAttribute("root");
 				list[8].style.textAlign = "center";
 				list[8].textContent = node.data.creator;
 			},
+			click : function(event, data) {
+				if (event.originalEvent.ctrlKey) { // Ctrl 키를 누른 상태에서만 선택
+					data.node.toggleSelected();
+				} else {
+					data.tree.visit(function(node) {
+						node.setSelected(false);
+					});
+					data.node.setSelected(true);
+				}
+			}
 		}).on("nodeCommand", function(event, data) {
 			const tree = $.ui.fancytree.getTree(this);
 			const refNode = null;
 			const moveMode = null;
 			let node = tree.getActiveNode();
+
 			switch (data.cmd) {
 			case "cut":
 
@@ -294,11 +314,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 				CLIPBOARD = null;
 				break;
 			case "paste":
+				logger(CLIPBOARD);
 				if (CLIPBOARD.mode === "cut") {
 					CLIPBOARD.data.moveTo(node, "child");
 					CLIPBOARD.data.setActive();
 				} else if (CLIPBOARD.mode === "copy") {
-					node.addChildren(CLIPBOARD.data);
 					nodePaste(node, CLIPBOARD.data);
 				}
 				break;
@@ -383,11 +403,11 @@ WTPart root = (WTPart) request.getAttribute("root");
 			cmd : "replace",
 			children : [ {
 				title : "신규부품교체",
-				cmd : "new",
+				cmd : "replace_new",
 				uiIcon : "ui-icon-newpart",
 			}, {
 				title : "기존부품교체",
-				cmd : "exist",
+				cmd : "replace_exist",
 				uiIcon : "ui-icon-oldpart",
 			} ]
 		}, {
@@ -452,6 +472,8 @@ WTPart root = (WTPart) request.getAttribute("root");
 			disabled : true,
 		}, ],
 		beforeOpen : function(event, ui) {
+			const tree = $("#treetable").fancytree("getTree");
+			const selectedNodes = tree.getSelectedNodes();
 			const node = $.ui.fancytree.getNode(ui.target);
 			const isCheckOut = node.data.isCheckOut;
 			const isApproved = node.data.state === "승인됨";
@@ -459,6 +481,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			// 삭제 승인됨 상태가 아니여야함..
 			// 부모도 승인됨 상태가 아니여야할거같은데??
 			$("#treetable").contextmenu("enableEntry", "removeLink", !isApproved);
+			$("#treetable").contextmenu("enableEntry", "removeMultiLink", selectedNodes.length > 1);
 
 			// 추가 자체도.. 승인됨이 일단 아닐 경우
 			$("#treetable").contextmenu("enableEntry", "insert", !isApproved);
@@ -498,19 +521,20 @@ WTPart root = (WTPart) request.getAttribute("root");
 		const link = node.data.link;
 		const params = new Object();
 		const tree = $("#treetable").fancytree("getTree");
-		logger(oid);
 
 		// 정보보기
 		if (action === "info") {
 			url = getCallUrl("/part/view?oid=" + oid);
 			_popup(url, 1600, 800, "n");
 		} else if (action === "replace_new") {
+			url = getCallUrl("/part/append?method=replace_new");
+			_popup(url, 1600, 800, "n");
 		} else if (action === "replace_exist") {
 			url = getCallUrl("/part/popup?method=replace_exist&multi=false");
 			_popup(url, 1600, 800, "n");
 			// 신규 생성 후 붙이기
 		} else if (action === "new") {
-			url = getCallUrl("/part/append");
+			url = getCallUrl("/part/append?method=append");
 			_popup(url, 1600, 800, "n");
 			// 기존 삽입
 		} else if (action === "cut") {
@@ -532,7 +556,6 @@ WTPart root = (WTPart) request.getAttribute("root");
 			};
 			// 붙여넣기
 		} else if (action === "paste") {
-			node.addChildren(CLIPBOARD.data);
 			nodePaste(node, CLIPBOARD.data);
 		} else if (action === "checkout") {
 			openLayer();
@@ -584,8 +607,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 				return false;
 			}
 			let comp;
+			const arr = new Array();
 			for (let i = 0; i < selectedNodes.length; i++) {
 				const poid = selectedNodes[i].data.poid;
+				const target = selectedNodes[i].data.oid;
 				if (comp === undefined) {
 					comp = poid;
 				} else {
@@ -594,8 +619,21 @@ WTPart root = (WTPart) request.getAttribute("root");
 						return false;
 					}
 				}
+				arr.push(target);
 			}
-			alert(comp);
+			openLayer();
+			url = getCallUrl("/bom/removeMultiLink");
+			params.poid = poid;
+			params.arr = arr;
+			logger(params);
+			call(url, params, function(data) {
+				if (data.result) {
+					const resNode = data.resNode;
+					const parent = node.getParent();
+					updateNode(parent, resNode);
+				}
+				closeLayer();
+			});
 		}
 
 		const rootNode = tree.getRootNode();
@@ -658,7 +696,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 		const roid = node.data.oid; // 교체되어지는 대상 OID
 		const poid = parent.data.oid; // 교체되어지는 대상의 부모
 		const oid = item.part_oid; // 붙여지는 대상
-		const url = getCallUrl("/bom/replace_exist");
+		const url = getCallUrl("/bom/replace");
 		const params = {
 			poid : poid,
 			roid : roid,
@@ -705,6 +743,29 @@ WTPart root = (WTPart) request.getAttribute("root");
 		callBack(true, false, "");
 	}
 
+	// 신규 품목 교체
+	function replace_new(oid) {
+		const tree = $("#treetable").fancytree("getTree");
+		const node = tree.getActiveNode();
+		const parent = node.getParent();
+		const roid = node.data.oid;
+		const poid = parent.data.oid; // 교체되어지는 대상의 부모
+		const url = getCallUrl("/bom/replace");
+		const params = {
+			poid : poid,
+			roid : roid,
+			oid : oid
+		};
+		openLayer();
+		call(url, params, function(data) {
+			if (data.result) {
+				const resNode = data.resNode;
+				updateNode(parent, resNode);
+			}
+			closeLayer();
+		})
+	}
+
 	// 신규 품목 추가
 	function append(oid) {
 		const tree = $("#treetable").fancytree("getTree");
@@ -722,23 +783,27 @@ WTPart root = (WTPart) request.getAttribute("root");
 		})
 	}
 
-	function nodePaste(node, copyNode) {
+	function nodePaste(node, copyNodes) {
 		const poid = node.data.oid; // 붙여넣기 되어지는 대상의 부모
-		const oid = copyNode.data.oid;
-		logger(poid);
-		logger(oid);
-		if (poid === oid) {
-			alert("붙여넣기 하려는 품목과 붙여지는 품목이 동일합니다.");
-			return false;
+		const arr = new Array();
+		for (let i = 0; i < copyNodes.length; i++) {
+			const oid = copyNodes[i].data.oid;
+			const num = copyNodes[i].data.number;
+			if (poid === oid) {
+				alert("붙여넣는 품번 : " + num + " 품목이 상위품번과 같습니다.");
+				return false;
+			}
+			arr.push(oid);
 		}
 		const url = getCallUrl("/bom/paste");
 		const params = {
 			poid : poid,
-			oid : oid
+			arr : arr
 		};
 		openLayer();
 		call(url, params, function(data) {
 			if (data.result) {
+				node.addChildren(CLIPBOARD.data);
 				const resNode = data.resNode;
 				updateNode(node, resNode);
 			}
@@ -774,11 +839,14 @@ WTPart root = (WTPart) request.getAttribute("root");
 		document.getElementById("number").value = "";
 		document.getElementById("poid").value = "";
 		const tree = $.ui.fancytree.getTree("#righttable");
-		tree.destroy();
+		if (tree !== null) {
+			tree.destroy();
+		}
 	}
 
 	// 오른쪽 트리 로드
 	function loadTree(arr, callBack) {
+		destroy();
 		const item = arr[0].item;
 		const poid = item.part_oid;
 		const number = item.number;
@@ -788,10 +856,13 @@ WTPart root = (WTPart) request.getAttribute("root");
 		$("#righttable").fancytree({
 			extensions : [ "dnd5", "table" ],
 			debugLevel : 0,
+			checkbox : true,
+			selectMode : 3,
 			dnd5 : {
 				autoExpandMS : 100,
+				multiSource : true,
 				dragStart : function(node, data) {
-					return true;
+					return false;
 				},
 				dragEnter : function(node, data) {
 					const sameTree = (data.otherNode.tree === data.tree);
@@ -807,6 +878,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 			table : {
 				indentation : 20,
 				nodeColumnIdx : 4,
+				checkboxColumnIdx : 0
 			},
 			source : $.ajax({
 				url : "/Windchill/plm/bom/loadEditor?oid=" + poid + "&skip=true",
@@ -852,18 +924,30 @@ WTPart root = (WTPart) request.getAttribute("root");
 				list[8].style.textAlign = "center";
 				list[8].textContent = node.data.creator;
 			},
+			click : function(event, data) {
+				if (event.originalEvent.ctrlKey) { // Ctrl 키를 누른 상태에서만 선택
+					data.node.toggleSelected();
+				} else {
+					data.tree.visit(function(node) {
+						node.setSelected(false);
+					});
+					data.node.setSelected(true);
+				}
+			}
 		}).on("nodeCommand", function(event, data) {
 			const tree = $.ui.fancytree.getTree(this);
 			const refNode = null;
 			const moveMode = null;
 			let node = tree.getActiveNode();
+			const selectedNodes = tree.getSelectedNodes();
 			switch (data.cmd) {
 			case "copy":
 				CLIPBOARD = {
 					mode : data.cmd,
-					data : node.toDict(true, function(dict, node) {
-						delete dict.key;
-					}),
+					data : selectedNodes,
+				// 					data : node.toDict(true, function(dict, node) {
+				// 						delete dict.key;
+				// 					}),
 				};
 				break;
 			}

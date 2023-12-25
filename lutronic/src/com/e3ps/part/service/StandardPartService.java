@@ -3912,7 +3912,7 @@ public class StandardPartService extends StandardManager implements PartService 
 		String finish = (String) params.get("finish");
 		String weight = (String) params.get("weight");
 		String remarks = (String) params.get("remarks");
-
+		String preOrder = (String) params.get("preOrder");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -3927,7 +3927,7 @@ public class StandardPartService extends StandardManager implements PartService 
 			IBAUtils.createIBA(part, "FINISH", finish, "s");
 			IBAUtils.createIBA(part, "REMARKS", remarks, "s");
 			IBAUtils.createIBA(part, "SPECIFICATION", specification, "s");
-
+			IBAUtils.createIBA(part, "PREORDER", preOrder, "b");
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

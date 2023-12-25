@@ -131,10 +131,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "확인",
 					dataType : "boolean",
 					width : 60,
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 					renderer : {
 						type : "CheckBoxEditRenderer",
 					}
@@ -151,19 +147,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							document.location.href = getCallUrl("/workData/view?oid=" + oid);
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "persistType",
 					headerText : "객체유형",
 					dataType : "string",
 					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "number",
 					headerText : "번호",
@@ -173,14 +161,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.poid;
-							const url = toUrl(oid);
+							const url = item.viewUrl;
 							_popup(url, 1500, 800, "n");
 						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "name",
@@ -191,42 +174,25 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						type : "LinkRenderer",
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
-							const oid = item.poid;
-							const url = toUrl(oid);
+							const url = item.viewUrl;
 							_popup(url, 1500, 800, "n");
 						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "작성자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "작성일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				} ]
 			}
 
@@ -257,7 +223,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/workData/list");
 				const state = document.querySelector("input[name=state]:checked").value;
@@ -268,8 +237,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					logger(data);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -282,23 +250,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const exceptColumnFields = [ "reads" ];
 				const sessionName = document.getElementById("sessionName").value;
 				exportToExcel("합의함 리스트", "합의함", "합의함 리스트", exceptColumnFields, sessionName);
-			}
-
-			// URL 분기 처리
-			function toUrl(oid) {
-				alert(oid);
-				let url;
-				if (oid.indexOf("") > -1) {
-
-				} else if (oid.indexOf("") > -1) {
-
-				} else if (oid.indexOf("") > -1) {
-
-				} else if (oid.indexOf("") > -1) {
-
-				} else if (oid.indexOf("") > -1) {
-
-				}
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

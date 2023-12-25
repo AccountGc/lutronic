@@ -277,10 +277,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, "", "", "f");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "interalnumber",
 					headerText : "내부 문서번호",
@@ -300,56 +296,32 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, "", "", "f");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "model",
 					headerText : "프로젝트 코드",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "location",
 					headerText : "문서분류",
 					dataType : "string",
 					style : "aui-left",
 					width : 250,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "classType1_name",
 					headerText : "대분류",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "classType2_name",
 					headerText : "중분류",
 					dataType : "string",
 					width : 200,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "classType3_name",
 					headerText : "소분류",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "version",
 					headerText : "REV",
@@ -358,55 +330,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true,
-					},
 				}, {
 					dataField : "primary",
 					headerText : "주 첨부파일",
@@ -415,10 +363,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					renderer : {
 						type : "TemplateRenderer"
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "secondary",
 					headerText : "첨부파일",
@@ -426,10 +370,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 100,
 					renderer : {
 						type : "TemplateRenderer"
-					},
-					filter : {
-						showIcon : false,
-						inline : false
 					},
 				} ]
 			}
@@ -454,7 +394,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
-				AUIGrid.bind(myGridID, "contextMenu", _auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -463,59 +403,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function _auiContextMenuHandler(event) {
-				if (event.target == "header") { // 헤더 컨텍스트
-					if (nowHeaderMenuVisible) {
-						hideContextMenu();
-					}
-
-					nowHeaderMenuVisible = true;
-
-					// 컨텍스트 메뉴 생성된 dataField 보관.
-					currentDataField = event.dataField;
-
-					if (event.dataField == "id") { // ID 칼럼은 숨기기 못하게 설정
-						$("#h_item_4").addClass("ui-state-disabled");
-					} else {
-						$("#h_item_4").removeClass("ui-state-disabled");
-					}
-
-					// 헤더 에서 사용할 메뉴 위젯 구성
-					$("#headerMenu").menu({
-						select : headerMenuSelectHandler
-					});
-
-					$("#headerMenu").css({
-						left : event.pageX,
-						top : event.pageY
-					}).show();
-				} else {
-					hideContextMenu();
-					const menu = [ {
-						label : "문서 정보보기",
-						callback : auiContextHandler
-					}, {
-						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-					}, {
-						label : "버전이력보기",
-						callback : auiContextHandler
-					}, {
-						label : "결재이력보기",
-						callback : auiContextHandler
-					}, {
-						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-					}, {
-						label : "결재회수(결재선유지)",
-						callback : auiContextHandler
-					}, {
-						label : "결재회수(결재선초기화)",
-						callback : auiContextHandler
-					}, {
-						label : "인쇄하기",
-						callback : auiContextHandler
-					} ];
-					return menu;
-				}
+			function auiContextMenuHandler(event) {
+				const menu = [ {
+					label : "문서 정보보기",
+					callback : auiContextHandler
+				}, {
+					label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+				}, {
+					label : "버전이력보기",
+					callback : auiContextHandler
+				}, {
+					label : "결재이력보기",
+					callback : auiContextHandler
+				}, {
+					label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+				}, {
+					label : "결재회수(결재선유지)",
+					callback : auiContextHandler
+				}, {
+					label : "결재회수(결재선초기화)",
+					callback : auiContextHandler
+				}, {
+					label : "인쇄하기",
+					callback : auiContextHandler
+				} ];
+				return menu;
 			}
 
 			function auiContextHandler(event) {
@@ -595,8 +507,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 			}
 
-			function loadGridData() {
-				// 				document.getElementById("sessionid").value = 0;
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
+
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
 				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
@@ -611,8 +526,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

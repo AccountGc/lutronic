@@ -501,7 +501,6 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			if (per instanceof WTDocument) {
 				WTDocument doc = (WTDocument) per;
 				DocumentHelper.service.createCover(doc);
-				;
 			}
 
 			// 일괄결재일경우 대상도.. 변경
@@ -525,6 +524,11 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					EcoHelper.manager.postAfterAction(e);
 					// EO
 				} else {
+					Map<String, Object> s = EoHelper.manager.checkCheckout(e);
+					if (!(boolean) s.get("result")) {
+						throw new Exception((String) s.get("msg"));
+					}
+
 					System.out.println("EO 결재 완료");
 					EoHelper.manager.postAfterAction(e);
 				}

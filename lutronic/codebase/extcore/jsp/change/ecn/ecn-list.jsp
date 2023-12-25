@@ -106,7 +106,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('ecn-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('ecn-list');">
-					<input type="button" value="저장" title="저장" onclick="save();">
+					<input type="button" value="저장" title="저장" onclick="save();" class="red">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -122,7 +122,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 605px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 640px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
@@ -146,20 +146,12 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 							_popup(url, 1600, 500, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "partName",
 					headerText : "제품명",
 					dataType : "string",
 					width : 250,
 					editable : false,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "ecoNumber",
 					headerText : "ECO 번호",
@@ -176,10 +168,6 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 							_popup(url, 1600, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "number",
 					headerText : "ECN번호",
@@ -187,10 +175,6 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					width : 100,
 					cellMerge : true,
 					editable : false,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "name",
 					headerText : "ECN제목",
@@ -198,20 +182,12 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					style : "aui-left",
 					cellMerge : true,
 					editable : false,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "progress",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
 					editable : false,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "worker_oid",
 					headerText : "담당자",
@@ -272,10 +248,6 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					editable : false,
 					mergeRef : "number",
 					mergePolicy : "restrict",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
@@ -285,10 +257,6 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					editable : false,
 					mergeRef : "number",
 					mergePolicy : "restrict",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -315,6 +283,7 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
 				AUIGrid.bind(myGridID, "contextMenu", auiContextMenuHandler);
+				AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditBeginHandler);
 				AUIGrid.bind(myGridID, "vScrollChange", function(event) {
 					hideContextMenu();
 				});
@@ -322,37 +291,35 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 					hideContextMenu();
 				});
 			}
+			
+			function auiCellEditBeginHandler(event) {
+				const item = event.item;
+				const dataField = event.dataField;
+				if(dataField === "worker_oid") {
+					alert("RA팀 팀장님으로..");
+					if(true) {
+						return true;
+					} else {
+						return false;						
+					}
+				}
+				return true;
+			}
 
-			function loadGridData() {
-
-				// 								$.ajax({
-				// 									type : "POST",
-				// 									url : "/Windchill/extcore/jsp/change/ecn/sample.json",
-				// 									dataType : "JSON",
-				// 									crossDomain : true,
-				// 									// 					data: params,
-				// 									// 					async: async,
-				// 									contentType : "application/json; charset=UTF-8",
-				// 									beforeSend : function() {
-				// 									},
-				// 									success : function(res) {
-				// 										AUIGrid.setGridData(myGridID, res);
-				// 									},
-				// 								})
-
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/ecn/list");
 				const field = [ "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "model" ];
 				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
-				// 				document.getElementById("sessionid").value = 0;
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						// 						document.getElementById("sessionid").value = data.sessionid;
-						// 						document.getElementById("curPage").value = data.curPage;
 						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {

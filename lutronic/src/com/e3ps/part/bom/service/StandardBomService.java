@@ -159,10 +159,10 @@ public class StandardBomService extends StandardManager implements BomService {
 	}
 
 	@Override
-	public Map<String, Object> paste(Map<String, String> params) throws Exception {
+	public Map<String, Object> paste(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		String poid = (String) params.get("poid");
-		String oid = (String) params.get("oid"); // 복붙되는놈
+		ArrayList<String> arr = (ArrayList<String>) params.get("arr");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -178,10 +178,12 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 
 			// 복사본에... 생성
-			WTPart child = (WTPart) CommonUtil.getObject(oid);
-			WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
-			usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
-			PersistenceHelper.manager.save(usageLink);
+			for (String oid : arr) {
+				WTPart child = (WTPart) CommonUtil.getObject(oid);
+				WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
+				usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
+				PersistenceHelper.manager.save(usageLink);
+			}
 
 			JSONObject node = BomHelper.manager.getNode(workingCopy);
 			map.put("resNode", node);
@@ -333,7 +335,7 @@ public class StandardBomService extends StandardManager implements BomService {
 	}
 
 	@Override
-	public Map<String, Object> replace_exist(Map<String, String> params) throws Exception {
+	public Map<String, Object> replace(Map<String, String> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		String roid = (String) params.get("roid"); // 교체되는 대상
 		String poid = (String) params.get("poid"); // 교체되는 대상의 부모 체크아웃 처리
@@ -341,6 +343,10 @@ public class StandardBomService extends StandardManager implements BomService {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+
+			if (roid.equals(oid)) {
+				throw new Exception("교체하려는 품목과 교체되는 대상 품목이 일치합니다.");
+			}
 
 			WTPart child = (WTPart) CommonUtil.getObject(roid);
 			WTPart parent = (WTPart) CommonUtil.getObject(poid);
@@ -354,16 +360,60 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 
 			WTPartUsageLink usageLink = BomHelper.manager.getUsageLink(workingCopy, child.getMaster());
+			// 링크를 제거하고 신규 링크를 생성한다.
 			if (usageLink != null) {
-				// 자식을 교체한다?
-				WTPart part = (WTPart) CommonUtil.getObject(oid);
-				usageLink.setRoleBObject(part.getMaster());
-				PersistenceHelper.manager.modify(usageLink);
+				PersistenceHelper.manager.delete(usageLink);
 			}
+
+			WTPart replacePart = (WTPart) CommonUtil.getObject(oid);
+			WTPartUsageLink newLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, replacePart.getMaster());
+			newLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
+			PersistenceHelper.manager.save(newLink);
 
 			// 복사본에... 생성
 
 			JSONObject node = BomHelper.manager.getNode(workingCopy);
+			map.put("resNode", node);
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+		return map;
+	}
+
+	@Override
+	public Map<String, Object> removeMultiLink(Map<String, Object> params) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		String poid = (String) params.get("poid"); // 부모
+		ArrayList<String> arr = (ArrayList<String>) params.get("arr"); // 자식
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			WTPart parent = (WTPart) CommonUtil.getObject(poid);
+			if (!WorkInProgressHelper.isCheckedOut(parent)) {
+				Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
+				CheckoutLink clink = WorkInProgressHelper.service.checkout(parent, cFolder, "");
+				parent = (WTPart) clink.getWorkingCopy();
+			}
+
+			for (String oid : arr) {
+				WTPart part = (WTPart) CommonUtil.getObject(oid);
+				WTPartMaster child = part.getMaster();
+				WTPartUsageLink usageLink = BomHelper.manager.getUsageLink(parent, child);
+				if (usageLink != null) {
+					PersistenceHelper.manager.delete(usageLink);
+				}
+			}
+
+			JSONObject node = BomHelper.manager.getNode(parent);
 			map.put("resNode", node);
 
 			trs.commit();

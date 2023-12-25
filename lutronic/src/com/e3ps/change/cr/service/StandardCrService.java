@@ -48,7 +48,7 @@ public class StandardCrService extends StandardManager implements CrService {
 		String approveDate = dto.getApproveDate();
 		String writeDate = dto.getWriteDate();
 		String createDepart_code = dto.getCreateDepart_code();
-		String writer = dto.getWriter_oid();
+		String writer = dto.getWriter();
 //		String proposer_name= dto.getProposer_name();
 		String eoCommentA = dto.getEoCommentA();
 		String eoCommentB = dto.getEoCommentB();
@@ -93,11 +93,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoName(name);
 			cr.setEoNumber(number);
 			cr.setCreateDate(writeDate);
-
-			if (!writer.equals("")) {
-				long writerOid = CommonUtil.getOIDLongValue(writer);
-				cr.setWriter(Long.toString(writerOid));
-			}
+			cr.setWriter(writer);
 			cr.setApproveDate(approveDate);
 
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
@@ -136,7 +132,8 @@ public class StandardCrService extends StandardManager implements CrService {
 			} else {
 				// ECPR 진행시...
 				if (ecprStart) {
-
+					State state = State.toState("CREATE_ECPR");
+					LifeCycleHelper.service.setLifeCycleState(cr, state);
 				} else {
 					WorkDataHelper.service.create(cr);
 				}
@@ -264,11 +261,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoName(dto.getName());
 			cr.setEoNumber(dto.getNumber());
 			cr.setCreateDate(dto.getWriteDate());
-
-			if (!dto.getWriter_oid().equals("")) {
-				long writerOid = CommonUtil.getOIDLongValue(dto.getWriter_oid());
-				cr.setWriter(Long.toString(writerOid));
-			}
+			cr.setWriter(dto.getWriter());
 			cr.setApproveDate(dto.getApproveDate());
 
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");

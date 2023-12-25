@@ -14,6 +14,7 @@ import lombok.Setter;
 import wt.epm.EPMDocument;
 import wt.part.WTPart;
 import wt.vc.VersionControlHelper;
+import wt.vc.wip.WorkInProgressHelper;
 
 @Getter
 @Setter
@@ -33,6 +34,7 @@ public class PartColumn {
 	private String state;
 	private String creator;
 	private String modifier;
+	private boolean checkout;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
 	private String createdDate_txt;
@@ -67,6 +69,7 @@ public class PartColumn {
 		setModifiedDate_txt(part.getModifyTimestamp().toString().substring(0, 10));
 		setThumbnail(part);
 		setPreOrder(IBAUtil.getBooleanValue(part, "PREORDER"));
+		setCheckout(WorkInProgressHelper.isCheckedOut(part));
 	}
 
 	/**
