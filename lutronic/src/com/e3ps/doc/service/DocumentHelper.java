@@ -36,6 +36,7 @@ import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.FolderUtils;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -650,16 +651,34 @@ public class DocumentHelper {
 
 		worksheet.getPageSetup().setFooter(0, "문서양식번호넣는곳");
 
-		Cell modelCell = worksheet.getCells().get(4, 5);
+		Cell modelCell = worksheet.getCells().get(3, 5);
 		modelCell.putValue(IBAUtil.getStringValue(d, "MODEL"));
 
-		Cell nameCell = worksheet.getCells().get(5, 0);
-		nameCell.putValue(d.getName());
+		String n = d.getName();
+		String value = "";
+		int idx = n.lastIndexOf("_");
+		if (idx > -1) {
+			value = n.substring(0, idx);
+		} else {
+			value = n;
+		}
 
-		Cell numberCell = worksheet.getCells().get(11, 3);
+		Cell nameCell = worksheet.getCells().get(4, 0);
+		nameCell.putValue(value);
+
+		Cell numberCell = worksheet.getCells().get(10, 3);
 		numberCell.putValue(number);
 
-		int rowIndex = 16;
+		Cell versionCell = worksheet.getCells().get(11, 3);
+		versionCell.putValue(d.getVersionIdentifier().getSeries().getValue());
+
+		// 최종결재에 만들어지니 당일 날짜로 하면된다..
+
+		String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+		Cell dateCell = worksheet.getCells().get(12, 3);
+		dateCell.putValue(today);
+
+		int rowIndex = 15;
 		int rowHeight = 30;
 
 		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(m);
@@ -690,7 +709,7 @@ public class DocumentHelper {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);
 				picture.setHeightCM(1);
-				picture.setWidthCM(3.6);
+				picture.setWidthCM(2);
 			}
 
 			rowIndex++;
@@ -723,7 +742,7 @@ public class DocumentHelper {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);
 				picture.setHeightCM(1);
-				picture.setWidthCM(3.6);
+				picture.setWidthCM(2);
 			}
 
 			rowIndex++;
@@ -757,7 +776,7 @@ public class DocumentHelper {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);
 				picture.setHeightCM(1);
-				picture.setWidthCM(3.6);
+				picture.setWidthCM(2);
 			}
 
 			rowIndex++;

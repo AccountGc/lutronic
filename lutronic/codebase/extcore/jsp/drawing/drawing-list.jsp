@@ -126,7 +126,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				<td>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" id="latest" name="latest" value="true" checked="checked">
+						<input type="radio" name="latest" value="true" checked="checked">
 						<div class="state p-success">
 							<label>
 								<b>최신REV</b>
@@ -135,7 +135,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" id="islastversion" name="islastversion" value="">
+						<input type="radio" name="latest" value="false">
 						<div class="state p-success">
 							<label>
 								<b>모든REV</b>
@@ -432,7 +432,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					document.getElementById("sessionid").value = 0;
 				}
 				let params = new Object();
-				$("input[name=sessionid").val(0);
 				const url = getCallUrl("/drawing/list");
 				const field = [ "location", "cadDivision", "cadType", "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "model", "productmethod", "deptcode", "unit", "weight1", "weight2", "manufacture", "mat", "finish", "remarks", "specification" ];
 				const latest = $("input[name=latest]:checked").val();

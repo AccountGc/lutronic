@@ -28,6 +28,11 @@ public class WorkDataHelper {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ArrayList<WorkDataColumn> list = new ArrayList<>();
 
+		String name = (String) params.get("name");
+		String submiterOid = (String) params.get("submiterOid");
+		String receiveFrom = (String) params.get("receiveFrom");
+		String receiveTo = (String) params.get("receiveTo");
+
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(WorkData.class, true);
 

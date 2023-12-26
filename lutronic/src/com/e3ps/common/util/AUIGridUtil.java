@@ -44,13 +44,15 @@ public class AUIGridUtil {
 	public static String primary(ContentHolder holder) throws Exception {
 		String template = "";
 		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.PRIMARY);
+		String oid = holder.getPersistInfo().getObjectIdentifier().getStringValue();
 		if (result.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) result.nextElement();
+			String doid = data.getPersistInfo().getObjectIdentifier().getStringValue();
 			String ext = FileUtil.getExtension(data.getFileName());
 			String icon = getFileIcon(ext);
 			String url = "/Windchill/plm/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
-			template += "<a href=" + url + "><img src=" + icon + "></a>";
+			template += "<a href=\"javascript:download('" + oid + "', '" + doid + "');\"><img src=" + icon + "></a>";
 		}
 		return template;
 	}
@@ -61,13 +63,15 @@ public class AUIGridUtil {
 	public static String secondary(ContentHolder holder) throws Exception {
 		String template = "";
 		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.SECONDARY);
+		String oid = holder.getPersistInfo().getObjectIdentifier().getStringValue();
 		while (result.hasMoreElements()) {
 			ApplicationData data = (ApplicationData) result.nextElement();
+			String doid = data.getPersistInfo().getObjectIdentifier().getStringValue();
 			String ext = FileUtil.getExtension(data.getFileName());
 			String icon = getFileIcon(ext);
 			String url = "/Windchill/plm/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
-			template += "<a href=" + url + "><img src=" + icon + "></a>&nbsp;";
+			template += "<a href=\"javascript:download('" + oid + "', '" + doid + "');\"><img src=" + icon + "></a>";
 		}
 		return template;
 	}

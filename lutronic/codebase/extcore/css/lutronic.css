@@ -120,7 +120,7 @@ table.search-table {
 table.search-table th {
 	background-color: #f2f2f2;
 	height: 30px;
-	border-bottom: 1px solid rgb(255, 234, 235);
+	border-bottom: 1px solid #a6a6a6;
 	border-left: 1px solid #a6a6a6;
 	padding-bottom: 4px;
 	min-width: 100px;

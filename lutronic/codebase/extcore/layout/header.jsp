@@ -168,9 +168,9 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/doc/create', '> 문서관리 > 문서 등록');">문서 등록</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄 등록');">문서 일괄 등록</a> -->
-<!-- 					</li> -->
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/doc/batch', '> 문서관리 > 문서 일괄 등록');">문서 일괄 등록</a> -->
+					<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/asm/create?type=DOC', '> 문서관리 > 문서 일괄 결재');">문서 일괄 결재</a>
 					</li>
@@ -258,9 +258,9 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/system/part', '> 관리자 >품목 전송 현황');">품목 전송 현황</a>
 					</li>
-<!-- 					<li> -->
-<!-- 						<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 관리자 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a> -->
-<!-- 					</li> -->
+					<!-- 					<li> -->
+					<!-- 						<a onclick="moveToPage(this, '/erp/send-listECOERP', '> 관리자 >EO&ECO 전송 현황');">EO&ECO 전송 현황</a> -->
+					<!-- 					</li> -->
 					<li>
 						<a onclick="moveToPage(this, '/system/bom', '> 관리자 >BOM 전송 현황');">BOM 전송 현황</a>
 					</li>
@@ -618,8 +618,8 @@ int eca = (int) request.getAttribute("eca");
 	}
 
 	function mainPopUP(oid, position) {
-		const url = getCallUrl("/notice/viewPopup?oid=" + oid);
-		_popup2(url, 600, 450, position, "n");
+		const url = getCallUrl("/notice/poupp?oid=" + oid);
+		_popup2(url, 1000, 450, position, "n");
 	}
 
 	function mainIsPopup(oid) {

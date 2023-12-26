@@ -5,11 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.context.annotation.Description;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +20,6 @@ import com.e3ps.controller.BaseController;
 import com.e3ps.groupware.notice.Notice;
 import com.e3ps.groupware.notice.dto.NoticeDTO;
 import com.e3ps.groupware.notice.service.NoticeHelper;
-import com.e3ps.groupware.service.GroupwareHelper;
 
 @Controller
 @RequestMapping(value = "/notice/**")
@@ -94,10 +89,10 @@ public class NoticeController extends BaseController {
 		model.setViewName("popup:/workprocess/notice-view");
 		return model;
 	}
-	
+
 	@Description(value = "공지사항 상세 페이지")
-	@GetMapping(value = "/viewPopup")
-	public ModelAndView viewPopup(@RequestParam String oid) throws Exception {
+	@GetMapping(value = "/popup")
+	public ModelAndView popup(@RequestParam String oid) throws Exception {
 		NoticeHelper.service.updateCount(oid);
 		Notice notice = (Notice) CommonUtil.getObject(oid);
 		NoticeDTO data = new NoticeDTO(notice);
@@ -153,7 +148,7 @@ public class NoticeController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "팝업 공지사항 불러오기")
 	@ResponseBody
 	@PostMapping(value = "/popup")

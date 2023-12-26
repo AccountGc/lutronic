@@ -318,8 +318,8 @@ function toField(params, arr) {
 }
 
 // 첨부파일 다운로드
-function download(oid) {
-	let permission = isPermission(oid);
+function download(holder, oid) {
+	let permission = isPermission(holder);
 	if (!permission) {
 		authMsg();
 		return false;

@@ -100,19 +100,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/notice/view?oid=" + oid);
-							_popup(url, 1600, 550, "n");
+							_popup(url, 1000, 550, "n");
 						}
 					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 150,
+					width : 100,
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
-					width : 170,
+					width : 100,
 				}, {
 					dataField : "count",
 					headerText : "조회횟수",
@@ -123,7 +123,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "popup",
 					headerText : "팝업",
 					dataType : "string",
-					width : 170,
+					width : 100,
+					renderer : {
+						type : "CheckBoxEditRenderer",
+						editable : false
+					}
 				}, {
 					dataField : "secondary",
 					headerText : "첨부파일",

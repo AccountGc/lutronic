@@ -213,12 +213,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.part_oid;
-							if(oid !== "") {
+							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
 							}
 						}
-					},					
+					},
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.preMerge === true) {
 							return "preMerge";
@@ -236,12 +236,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.part_oid;
-							if(oid !== "") {
+							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
 							}
 						}
-					},							
+					},
 				}, {
 					dataField : "part_version",
 					dataType : "string",
@@ -282,15 +282,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.next_oid;
-							if(oid !== "") {
+							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
 							}
 						}
-					},							
+					},
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.afterMerge === true) {
-// 							return "afterMerge";
+							// 							return "afterMerge";
 						}
 						return null;
 					}
@@ -305,12 +305,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.part_oid;
-							if(oid !== "") {
+							if (oid !== "") {
 								const url = getCallUrl("/part/view?oid=" + oid);
 								_popup(url, 1600, 800, "n");
 							}
 						}
-					},							
+					},
 				}, {
 					dataField : "next_version",
 					dataType : "string",
@@ -703,6 +703,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 				const oid = document.getElementById("oid").value;
 				const description = document.getElementById("description").value;
+
+				if (!confirm("BOM 편집을 완료했는지 한번 더 확인 해주세요.")) {
+					return false;
+				}
+
 				if (!confirm("설변활동을 완료 하시겠습니까?")) {
 					return false;
 				}
@@ -712,7 +717,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					oid : oid,
 					description : description,
 					secondarys : secondarys,
-				// 					ecnUserOid : ecnUserOid
 				};
 				parent.openLayer();
 				call(url, params, function(data) {
@@ -764,15 +768,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function prev(arr, callBack) {
-// 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-// 				const oid = checkedItems[0].item.next_oid;
+				// 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+				// 				const oid = checkedItems[0].item.next_oid;
 				const item = arr[0].item;
 				const part_oid = item.part_oid;
 				const url = getCallUrl("/activity/prev");
 				const soid = document.getElementById("oid").value
 				const params = {
 					prev : part_oid,
-// 					after : oid,
+					// 					after : oid,
 					oid : soid
 				};
 				parent.openLayer();
@@ -833,7 +837,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				if (!confirm("저장 하시겠습니까?")) {
 					return false;
 				}
-				
+
 				const url = getCallUrl("/activity/saveData");
 				const oid = document.getElementById("oid").value;
 				parent.openLayer();

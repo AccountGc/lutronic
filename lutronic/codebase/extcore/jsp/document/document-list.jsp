@@ -515,7 +515,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				let params = new Object();
 				const url = getCallUrl("/doc/list");
 				const field = [ "location", "classType1", "classType2", "classType3", "name", "number", "state", "creatorOid", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "preseration", "model", "deptcode", "interalnumber", "writerOid", "description" ];
-				document.getElementById("sessionid").value = 0;
 				params = toField(params, field);
 				const latest = document.querySelector("input[name=latest]:checked").value;
 				params.latest = JSON.parse(latest);

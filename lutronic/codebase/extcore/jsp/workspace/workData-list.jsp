@@ -25,7 +25,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="left">
 					<div class="header">
 						<img src="/Windchill/extcore/images/header.png">
-						작업함
+						결재선 지정
 					</div>
 				</td>
 			</tr>
@@ -41,47 +41,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</colgroup>
 			<tr>
 				<th>결재 제목</th>
-				<td class="indent5">
+				<td class="indent5" colspan="3">
 					<input type="text" name="name" id="name" class="width-300">
-				</td>
-				<th>합의여부</th>
-				<td>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="전체">
-						<div class="state p-success">
-							<label>
-								<b>전체</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="합의중" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>합의중</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="합의반려">
-						<div class="state p-success">
-							<label>
-								<b>합의반려</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="state" value="합의완료">
-						<div class="state p-success">
-							<label>
-								<b>합의완료</b>
-							</label>
-						</div>
-					</div>
 				</td>
 			</tr>
 			<tr>
@@ -224,14 +185,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function loadGridData(movePage) {
-				if(movePage === undefined) {
+				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
 				}
 				let params = new Object();
 				const url = getCallUrl("/workData/list");
-				const state = document.querySelector("input[name=state]:checked").value;
+				const field = [ "name", "submiterOid", "receiveFrom", "receiveTo" ];
+				params = toField(params, field);
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					logger(data);
