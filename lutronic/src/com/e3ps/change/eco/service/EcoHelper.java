@@ -298,6 +298,7 @@ public class EcoHelper {
 				boolean isRevise = link.isRevise();
 
 				if (isLeft) {
+					map.put("part_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
 					map.put("part_number", part.getNumber());
 					map.put("part_name", part.getName());
 					map.put("part_state", part.getLifeCycleState().getDisplay());
@@ -329,6 +330,7 @@ public class EcoHelper {
 				} else if (isRight) {
 					WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
 					// 변경후
+					map.put("next_oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
 					map.put("next_number", part.getNumber());
 					map.put("next_name", part.getName());
 					map.put("next_state", part.getLifeCycleState().getDisplay());

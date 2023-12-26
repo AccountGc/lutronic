@@ -30,7 +30,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<td class="right">
 			<input type="button" value="BOM" title="BOM" onclick="view();">
 			<input type="button" value="BOM 에디터" title="BOM 에디터" onclick="editor();">
-			<input type="button" value="COMPARE" title="COMPARE">
+			<input type="button" value="COMPARE" title="COMPARE" onclick="compare();">
 			<%
 			if ("DEATH".equals(dto.getState()) && isAdmin) {
 			%>
@@ -521,10 +521,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 
 	})
 
-	$("#Compare").click(function() {
-		var str = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + $("#oid").val() + "&ncId=2374138740478986248&locale=ko"
-		_popup(str, 1300, 600, "n");
-	})
+	function compare() {
+		const oid = document.getElementById("oid").value;
+		const url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + oid + "&ncId=5304500442831603818&locale=ko";
+		_popup(url, 1600, 600, "n");
+	}
 
 	function change() {
 		const url = getCallUrl("/part/change?oid=" + oid);

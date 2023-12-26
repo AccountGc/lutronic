@@ -290,6 +290,8 @@ String oid = request.getParameter("oid");
 				labelText : "BOM 비교",
 				onClick : function(event) {
 					const oid = event.item.next_oid;
+					const url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + oid + "&ncId=5304500442831603818&locale=ko";
+					_popup(url, 1600, 600, "n");
 				}
 			}
 		}, {
