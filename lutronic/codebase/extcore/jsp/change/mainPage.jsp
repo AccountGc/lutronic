@@ -24,14 +24,11 @@
 
 		<div id="chartDiv" style="display: none;">
 			<div style="display: flex; width: 100%; justify-content: space-between;">
-				<div style="width: 33%">
+				<div style="width: 45%">
 					<jsp:include page="/extcore/jsp/change/cr-charts.jsp"></jsp:include>
 				</div>
-				<div style="width: 33%">
+				<div style="width: 45%">
 					<jsp:include page="/extcore/jsp/change/eco-charts.jsp"></jsp:include>
-				</div>
-				<div style="width: 33%">
-					<jsp:include page="/extcore/jsp/change/ecn-charts.jsp"></jsp:include>
 				</div>
 			</div>
 		</div>
