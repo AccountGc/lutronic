@@ -186,7 +186,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('eco-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('eco-list');">
-<!-- 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);"> -->
+					<!-- 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);"> -->
 					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
@@ -237,6 +237,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
+				}, {
+					dataField : "model",
+					headerText : "제품",
+					dataType : "string",
+					width : 250,
+					style : "aui-left"
 				}, {
 					dataField : "sendType",
 					headerText : "ECO 타입",

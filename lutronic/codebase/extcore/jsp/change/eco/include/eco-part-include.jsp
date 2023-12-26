@@ -42,11 +42,35 @@ String oid = request.getParameter("oid");
 		headerText : "품목번호",
 		dataType : "string",
 		width : 180,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				if (oid === "") {
+					return false;
+				}
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},		
 	}, {
 		dataField : "name",
 		headerText : "품목명",
 		dataType : "string",
 		style : "aui-left",
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				if (oid === "") {
+					return false;
+				}
+				const url = getCallUrl("/part/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},		
 	}, {
 		dataField : "state",
 		headerText : "상태",
@@ -71,7 +95,16 @@ String oid = request.getParameter("oid");
 		dataField : "",
 		headerText : "BOM",
 		dataType : "string",
-		width : 80,
+		width : 130,
+		renderer : {
+			type : "ButtonRenderer",
+			labelText : "BOM 보기",
+			onClick : function(event) {
+				const oid = event.item.oid;
+				const url = getCallUrl("/bom/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		}		
 	}, {
 		dataField : "",
 		headerText : "도면",

@@ -230,7 +230,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					headerText : "품목명",
 					editable : false,
-					width : 200
+					width : 200,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.part_oid;
+							if(oid !== "") {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
+							}
+						}
+					},							
 				}, {
 					dataField : "part_version",
 					dataType : "string",
@@ -266,13 +277,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					width : 140,
 					cellColMerge : true, // 셀 가로 병합 실행
 					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
-					jsCallback : function(rowIndex, columnIndex, value, item) {
-						const oid = item.next_oid;
-						if(oid !== "") {
-							const url = getCallUrl("/part/view?oid=" + oid);
-							_popup(url, 1600, 800, "n");
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.next_oid;
+							if(oid !== "") {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
+							}
 						}
-					},					
+					},							
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.afterMerge === true) {
 // 							return "afterMerge";
@@ -284,7 +299,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataType : "string",
 					headerText : "품목명",
 					editable : false,
-					width : 200
+					width : 200,
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.part_oid;
+							if(oid !== "") {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
+							}
+						}
+					},							
 				}, {
 					dataField : "next_version",
 					dataType : "string",
@@ -562,7 +588,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				dataField : "weight",
 				dataType : "numeric",
 				width : 100,
-				formatString : "#.0"
+				formatString : "#.#"
 			} ];
 
 			function createAUIGrid(columnLayout) {
@@ -738,15 +764,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function prev(arr, callBack) {
-				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-				const oid = checkedItems[0].item.next_oid;
+// 				const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+// 				const oid = checkedItems[0].item.next_oid;
 				const item = arr[0].item;
 				const part_oid = item.part_oid;
 				const url = getCallUrl("/activity/prev");
 				const soid = document.getElementById("oid").value
 				const params = {
 					prev : part_oid,
-					after : oid,
+// 					after : oid,
 					oid : soid
 				};
 				parent.openLayer();
@@ -788,10 +814,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function save() {
-				if (!confirm("저장 하시겠습니까?")) {
-					return false;
-				}
-
 				const editRows = AUIGrid.getEditedRowItems(myGridID);
 				const removeRows = AUIGrid.getRemovedItems(myGridID);
 
@@ -808,6 +830,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 
+				if (!confirm("저장 하시겠습니까?")) {
+					return false;
+				}
+				
 				const url = getCallUrl("/activity/saveData");
 				const oid = document.getElementById("oid").value;
 				parent.openLayer();

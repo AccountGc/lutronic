@@ -63,10 +63,10 @@ public class WorkDataColumn {
 			String docType = doc.getDocType().toString();
 			if ("$$MMDocument".equals(docType)) {
 				setPersistType("금형문서");
-				setViewUrl(this.context + "/mold/view?=" + getPoid());
+				setViewUrl(this.context + "/mold/view?oid=" + getPoid());
 			} else {
 				setPersistType("문서");
-				setViewUrl(this.context + "/doc/view?=" + getPoid());
+				setViewUrl(this.context + "/doc/view?oid=" + getPoid());
 			}
 			setState(doc.getLifeCycleState().getDisplay());
 			setCreator(doc.getCreatorName());
@@ -79,10 +79,10 @@ public class WorkDataColumn {
 
 			if (eco.getEoType().equals("CHANGE")) {
 				setPersistType("ECO");
-				setViewUrl(this.context + "/eco/view?=" + getPoid());
+				setViewUrl(this.context + "/eco/view?oid=" + getPoid());
 			} else {
 				setPersistType("EO");
-				setViewUrl(this.context + "/eo/view?=" + getPoid());
+				setViewUrl(this.context + "/eo/view?oid=" + getPoid());
 			}
 
 			setState(eco.getLifeCycleState().getDisplay());
@@ -98,7 +98,7 @@ public class WorkDataColumn {
 			setCreator(ecr.getCreatorName());
 			setCreatedDate(ecr.getCreateTimestamp());
 			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
-			setViewUrl(this.context + "/cr/view?=" + getPoid());
+			setViewUrl(this.context + "/cr/view?oid=" + getPoid());
 		} else if (per instanceof ROHSMaterial) {
 			ROHSMaterial rohs = (ROHSMaterial) per;
 			setNumber(rohs.getNumber());
@@ -108,7 +108,7 @@ public class WorkDataColumn {
 			setCreator(rohs.getCreatorName());
 			setCreatedDate(rohs.getCreateTimestamp());
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
-			setViewUrl(this.context + "/eo/view?=" + getPoid());
+			setViewUrl(this.context + "/eo/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			AsmApproval asm = (AsmApproval) per;
 			String number = asm.getNumber();
@@ -132,7 +132,7 @@ public class WorkDataColumn {
 			setCreator(asm.getCreatorName());
 			setCreatedDate(asm.getCreateTimestamp());
 			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
-			setViewUrl(this.context + "/asm/view?=" + getPoid());
+			setViewUrl(this.context + "/asm/view?oid=" + getPoid());
 		}
 	}
 }

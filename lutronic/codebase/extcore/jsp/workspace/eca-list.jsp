@@ -87,11 +87,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "step",
-					headerText : "STEP",
-					dataType : "string",
-					width : 100,
-				}, {
 					dataField : "activityName",
 					headerText : "활동구분",
 					dataType : "string",

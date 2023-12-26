@@ -755,7 +755,7 @@ public class StandardSAPService extends StandardManager implements SAPService {
 			insertTable.setValue("ZDEVND", ZDEVND); // 개발공급업체
 
 			idx++;
-
+			params.put("sendResult", true);
 			SystemHelper.service.saveSendPartLogger(params);
 		}
 

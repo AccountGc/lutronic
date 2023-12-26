@@ -26,6 +26,7 @@ public class EcoColumn {
 	private Timestamp createdDate;
 	private String createdDate_txt;
 	private String approveDate;
+	private String model;
 
 	public EcoColumn() {
 
@@ -49,6 +50,7 @@ public class EcoColumn {
 		setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate(eco.getEoApproveDate());
 		setSendTypeInfo(eco);
+		setModel(eco.getModel());
 	}
 
 	private void setSendTypeInfo(EChangeOrder eco) throws Exception {

@@ -253,6 +253,7 @@ public class EcoHelper {
 			WTPartMaster master = (WTPartMaster) result.nextElement();
 			WTPart part = PartHelper.manager.getLatest(master);
 			Map<String, Object> map = new HashMap<>();
+			map.put("oid", part.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("number", part.getNumber());
 			map.put("name", part.getName());
 			map.put("state", part.getLifeCycleState().getDisplay());
