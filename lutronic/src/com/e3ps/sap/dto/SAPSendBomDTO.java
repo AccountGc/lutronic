@@ -36,7 +36,7 @@ public class SAPSendBomDTO {
 		// 이전 자식
 		WTPart pre_child = SAPHelper.manager.getPre(child, eco);
 
-		if (pre_childe != null) {
+		if (pre_child != null) {
 			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child.getNumber());
 		} else {
 			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child);
