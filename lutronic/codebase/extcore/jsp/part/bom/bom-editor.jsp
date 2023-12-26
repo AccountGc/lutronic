@@ -204,11 +204,18 @@ WTPart root = (WTPart) request.getAttribute("root");
 					return true;
 				},
 				dragDrop : function(node, data) {
+					const sourceNodes = data.otherNodeList;
 					const hitMode = data.hitMode;
 					if (hitMode === "after" || hitMode === "before") {
 						return false;
 					}
-					data.otherNode.copyTo(node, data.hitMode);
+					
+					for(let i=0; i<sourceNodes.length; i++) {
+						const nn = sourceNodes[i];
+						nn.copyTo(node, data.hitMode);
+					}
+// 					logger(data.otherNode);
+// 					data.otherNode.copyTo(node, data.hitMode);
 					drop(data.otherNode, node);
 				},
 			},
@@ -862,7 +869,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				autoExpandMS : 100,
 				multiSource : true,
 				dragStart : function(node, data) {
-					return false;
+					return true;
 				},
 				dragEnter : function(node, data) {
 					const sameTree = (data.otherNode.tree === data.tree);

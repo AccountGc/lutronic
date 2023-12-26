@@ -689,7 +689,7 @@ public class DocumentHelper {
 			if (signPath != null) {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);
-				picture.setHeightCM(0.8);
+				picture.setHeightCM(1);
 				picture.setWidthCM(3.6);
 			}
 
@@ -722,7 +722,7 @@ public class DocumentHelper {
 			if (signPath != null) {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);
-				picture.setHeightCM(0.8);
+				picture.setHeightCM(1);
 				picture.setWidthCM(3.6);
 			}
 
@@ -756,7 +756,7 @@ public class DocumentHelper {
 			if (signPath != null) {
 				int picIndex = worksheet.getPictures().add(rowIndex, 4, signPath);
 				Picture picture = worksheet.getPictures().get(picIndex);
-				picture.setHeightCM(0.8);
+				picture.setHeightCM(1);
 				picture.setWidthCM(3.6);
 			}
 

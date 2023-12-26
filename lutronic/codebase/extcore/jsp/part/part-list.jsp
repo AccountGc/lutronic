@@ -27,7 +27,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <title></title>
 <style type="text/css">
 .preOrder {
-	background-color: rgb(200, 255, 203) !important;
+/* 	background-color: rgb(200, 255, 203) !important; */
 }
 
 .checkout {

@@ -71,6 +71,7 @@ public class BomHelper {
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 		// 체크아웃시 체크아웃된 데이터 가져오기
+		System.out.println("isCheckOut=" + isCheckOut);
 		if (isCheckOut) {
 			root = (WTPart) WorkInProgressHelper.service.workingCopyOf(root);
 		}

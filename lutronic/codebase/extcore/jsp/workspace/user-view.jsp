@@ -34,12 +34,11 @@ HashMap<String, String> hash = dto.getSignature();
 	<tr>
 		<th class="lb">이름</th>
 		<td class="indent5"><%=dto.getName()%></td>
-		<td rowspan="8">
+		<td rowspan="8" class="center">
 			<%
-				out.println(hash);
 				if(hash.size() > 0) {
 			%>
-			asdf
+			<img src="<%=hash.get("url") %>">
 			<%
 				}
 			%>
