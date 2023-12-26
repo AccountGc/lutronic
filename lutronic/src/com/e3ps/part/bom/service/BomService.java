@@ -40,7 +40,7 @@ public interface BomService {
 	/**
 	 * BOM 드랍
 	 */
-	public abstract Map<String, Object> drop(Map<String, String> params) throws Exception;
+	public abstract Map<String, Object> drop(Map<String, Object> params) throws Exception;
 
 	/**
 	 * BOM 신규 품목 추가

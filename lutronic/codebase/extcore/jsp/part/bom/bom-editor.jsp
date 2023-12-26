@@ -216,7 +216,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 					}
 // 					logger(data.otherNode);
 // 					data.otherNode.copyTo(node, data.hitMode);
-					drop(data.otherNode, node);
+					drop(node, sourceNodes);
 				},
 			},
 			filter : {
@@ -676,14 +676,18 @@ WTPart root = (WTPart) request.getAttribute("root");
 	}
 
 	// 드랍
-	function drop(otherNode, node) {
+	function drop(node, sourceNodes) {
+		const arr = new Array();
+		for(let i=0; i<sourceNodes.length; i++) {
+			arr.push(sourceNodes[i].data.oid);
+		}
 		const poid = node.data.oid; // 모
-		const oid = otherNode.data.oid; // 자
 		const url = getCallUrl("/bom/drop");
 		const params = {
 			poid : poid,
-			oid : oid
+			arr : arr
 		}
+		logger(params);
 		openLayer();
 		call(url, params, function(data) {
 			if (data.result) {

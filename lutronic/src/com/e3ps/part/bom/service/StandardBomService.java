@@ -253,10 +253,10 @@ public class StandardBomService extends StandardManager implements BomService {
 	}
 
 	@Override
-	public Map<String, Object> drop(Map<String, String> params) throws Exception {
+	public Map<String, Object> drop(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		String poid = (String) params.get("poid");
-		String oid = (String) params.get("oid");
+		ArrayList<String> arr = (ArrayList<String>) params.get("arr");
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -272,10 +272,12 @@ public class StandardBomService extends StandardManager implements BomService {
 			}
 
 			// 복사본에... 생성
-			WTPart child = (WTPart) CommonUtil.getObject(oid);
-			WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
-			usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
-			PersistenceHelper.manager.save(usageLink);
+			for (String oid : arr) {
+				WTPart child = (WTPart) CommonUtil.getObject(oid);
+				WTPartUsageLink usageLink = WTPartUsageLink.newWTPartUsageLink(workingCopy, child.getMaster());
+				usageLink.setQuantity(Quantity.newQuantity(1D, QuantityUnit.EA));
+				PersistenceHelper.manager.save(usageLink);
+			}
 
 			JSONObject node = BomHelper.manager.getNode(workingCopy);
 			map.put("resNode", node);

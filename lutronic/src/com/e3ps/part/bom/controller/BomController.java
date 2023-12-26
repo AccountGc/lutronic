@@ -151,7 +151,7 @@ public class BomController extends BaseController {
 	@Description(value = "BOM 드래그 앤 드랍")
 	@PostMapping(value = "/drop")
 	@ResponseBody
-	public Map<String, Object> drop(@RequestBody Map<String, String> params) throws Exception {
+	public Map<String, Object> drop(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
 			result = BomHelper.service.drop(params);
