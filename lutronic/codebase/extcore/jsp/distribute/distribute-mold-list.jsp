@@ -175,7 +175,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/mold/view?oid=" + oid);
+							const url = getCallUrl("/distribute/moldView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},
@@ -188,7 +188,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						baseUrl : "javascript",
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
-							const url = getCallUrl("/mold/view?oid=" + oid);
+							const url = getCallUrl("/distribute/moldView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
 					},

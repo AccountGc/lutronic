@@ -57,9 +57,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
 				</td>
-				<th>문서 번호</th>
+				<th>내부 문서번호</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 				</td>
 				<th>문서명</th>
 				<td class="indent5">
