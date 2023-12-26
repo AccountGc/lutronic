@@ -42,12 +42,12 @@ public class SAPSendBomDTO {
 			setParentPartNumber(pre_parent.getNumber());
 		} else {
 			// 최상위 까지 가면 기존꺼가 들어간다..
-			setParentPartNumber(parent.getNumber());
+			setParentPartNumber(null);
 		}
 		if (pre_child != null) {
 			setChildPartNumber(pre_child.getNumber());
 		} else {
-			setChildPartNumber(child.getNumber());
+			setChildPartNumber(null);
 		}
 		setQty((int) link.getQuantity().getAmount());
 		setUnit(link.getQuantity().getUnit().toString().toUpperCase());

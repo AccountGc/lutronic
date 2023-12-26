@@ -208,6 +208,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : false,
 					cellColMerge : true, // 셀 가로 병합 실행
 					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
+					renderer : {
+						type : "LinkRenderer",
+						baseUrl : "javascript",
+						jsCallback : function(rowIndex, columnIndex, value, item) {
+							const oid = item.part_oid;
+							if(oid !== "") {
+								const url = getCallUrl("/part/view?oid=" + oid);
+								_popup(url, 1600, 800, "n");
+							}
+						}
+					},					
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.preMerge === true) {
 							return "preMerge";
@@ -254,10 +265,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					editable : false,
 					width : 140,
 					cellColMerge : true, // 셀 가로 병합 실행
-					cellColSpan : 7, // 셀 가로 병합 대상은 6개로 설정
+					cellColSpan : 5, // 셀 가로 병합 대상은 6개로 설정
+					jsCallback : function(rowIndex, columnIndex, value, item) {
+						const oid = item.next_oid;
+						if(oid !== "") {
+							const url = getCallUrl("/part/view?oid=" + oid);
+							_popup(url, 1600, 800, "n");
+						}
+					},					
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (item.afterMerge === true) {
-							return "afterMerge";
+// 							return "afterMerge";
 						}
 						return null;
 					}

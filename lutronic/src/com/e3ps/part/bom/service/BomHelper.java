@@ -85,7 +85,7 @@ public class BomHelper {
 		JSONArray list = new JSONArray();
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
-		rootNode.put("thumb", ThumbnailUtil.thumbnailSmall(root));
+		rootNode.put("thum", ThumbnailUtil.thumbnailSmall(root));
 		rootNode.put("level", 1);
 		rootNode.put("number", root.getNumber());
 		rootNode.put("name", root.getName());
@@ -138,7 +138,7 @@ public class BomHelper {
 			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("poid", root.getPersistInfo().getObjectIdentifier().getStringValue());
-			node.put("thumb", ThumbnailUtil.thumbnailSmall(p));
+			node.put("thum", ThumbnailUtil.thumbnailSmall(p));
 			node.put("level", level);
 			node.put("number", p.getNumber());
 			node.put("name", p.getName());
@@ -1332,7 +1332,7 @@ public class BomHelper {
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("level", level);
 			node.put("poid", parent.getPersistInfo().getObjectIdentifier().getStringValue());
-			node.put("thumb", ThumbnailUtil.thumbnailSmall(p));
+			node.put("thum", ThumbnailUtil.thumbnailSmall(p));
 			node.put("number", p.getNumber());
 			node.put("title", p.getName());
 			node.put("name", p.getName());

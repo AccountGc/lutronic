@@ -242,8 +242,8 @@ if (contentMap != null) {
 			const finishDate = AUIGrid.getCellValue(myGridID200, i, "finishDate");
 			const step = AUIGrid.getCellValue(myGridID200, i, "step");
 			if (step === undefined) {
-				AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
-				return false;
+// 				AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
+// 				return false;
 			}
 			if (activity_type === undefined) {
 				AUIGrid.showToastMessage(myGridID200, i, 2, "활동구분을 선택하세요.");

@@ -267,6 +267,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				// 				} else {
 				// 					node.tr.style.backgroundColor = "white";
 				// 				}
+				logger(node);
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
