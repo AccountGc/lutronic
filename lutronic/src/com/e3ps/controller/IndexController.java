@@ -1,5 +1,6 @@
 package com.e3ps.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.change.activity.service.ActivityHelper;
+import com.e3ps.charts.service.ChartsHelper;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.history.service.LoginHistoryHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
@@ -25,6 +29,8 @@ import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
+
+import net.sf.json.JSONArray;
 
 @Controller
 public class IndexController extends BaseController {
@@ -68,8 +74,10 @@ public class IndexController extends BaseController {
 
 	@Description(value = "메인 페이지")
 	@GetMapping(value = "/mainPage")
-	public ModelAndView mainPage() {
+	public ModelAndView mainPage() throws Exception {
 		ModelAndView model = new ModelAndView();
+		JSONArray crPieList = ChartsHelper.manager.crPie();
+		model.addObject("crPieList", crPieList);
 		model.setViewName("/extcore/jsp/change/mainPage.jsp");
 		return model;
 	}

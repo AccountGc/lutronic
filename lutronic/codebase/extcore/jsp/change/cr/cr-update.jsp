@@ -74,8 +74,8 @@ String oid = (String) contentMap.get("aoid");
 		</td>
 		<th>작성자</th>
 		<td class="indent5">
-			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter_name() != null ? dto.getWriter_name() : ""%>">
-			<input type="hidden" name="writerOid" id="writerOid" value="<%=dto.getWriter_oid()%>">
+			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter() != null ? dto.getWriter() : ""%>">
+			<input type="hidden" name="writerOid" id="writerOid" value="<%=dto.getWriter()%>">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 		</td>
 	</tr>

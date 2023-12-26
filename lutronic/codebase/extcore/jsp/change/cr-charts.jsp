@@ -1,5 +1,8 @@
-<%@page import="wt.org.WTUser"%>
+<%@page import="net.sf.json.JSONArray"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+JSONArray crPieList = (JSONArray) request.getAttribute("crPieList");
+%>
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -17,7 +20,8 @@
 </div>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script type="text/javascript">
-
+	var pieData = <%=crPieList%>;
+	
 	//Create the bar chart
 	Highcharts.chart('cr_barChart', {
  		chart: {
@@ -144,21 +148,7 @@
 	    series: [{
 	        name: '작성부서',
 	        colorByPoint: true,
-	        data: [{
-	            name: '연구소',
-	            y: 70.67,
-	            sliced: true,
-	            selected: true
-	        }, {
-	            name: '제조',
-	            y: 14.77
-	        },  {
-	            name: '생산',
-	            y: 4.86
-	        }, {
-	            name: '기타',
-	            y: 2.63
-	        }]
+	        data: pieData
 	    }]
 	});
 
