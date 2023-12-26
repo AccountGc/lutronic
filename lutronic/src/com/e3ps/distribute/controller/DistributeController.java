@@ -31,6 +31,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.controller.BaseController;
 import com.e3ps.distribute.util.DistributeUtil;
 import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.doc.service.DocumentClassHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.erp.beans.BOMERPData;
 import com.e3ps.erp.beans.PARTERPData;
@@ -365,12 +366,13 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		JSONArray docTypeList = DocumentHelper.manager.toJson();
+		// 문서 대분류
+		ArrayList<Map<String, String>> classTypes1 = DocumentClassHelper.manager.getClassTypes1();
 		ModelAndView model = new ModelAndView();
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
-		model.addObject("docTypeList", docTypeList);
+		model.addObject("classTypes1", classTypes1);
 		model.setViewName("/extcore/jsp/distribute/distribute-document-list.jsp");
 		return model;
 	}
@@ -393,14 +395,12 @@ public class DistributeController extends BaseController {
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
 		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
-		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
 		ModelAndView model = new ModelAndView();
 		boolean isAdmin = CommonUtil.isAdmin();
 		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("manufactureList", manufactureList);
 		model.addObject("moldTypeList", moldTypeList);
-		model.addObject("lifecycleList", lifecycleList);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("sessionUser", sessionUser);
 		model.setViewName("/extcore/jsp/distribute/distribute-mold-list.jsp");

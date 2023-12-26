@@ -2192,9 +2192,9 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			file.renameTo(orgfile);
 			
 			// 결재시작
-			if (approvalRows!=null) {
-				WorkspaceHelper.service.register(epm, agreeRows, approvalRows, receiveRows);
-			}
+//			if (approvalRows!=null) {
+//				WorkspaceHelper.service.register(epm, agreeRows, approvalRows, receiveRows);
+//			}
 			
 			trs.commit();
 			trs = null;
@@ -2446,9 +2446,9 @@ public class StandardDrawingService extends StandardManager implements DrawingSe
 			}
  			
  			// 결재시작
-			if (approvalRows!=null) {
-				WorkspaceHelper.service.register(newEpm, agreeRows, approvalRows, receiveRows);
-			}
+//			if (approvalRows!=null) {
+//				WorkspaceHelper.service.register(newEpm, agreeRows, approvalRows, receiveRows);
+//			}
 		}
 	}
 }

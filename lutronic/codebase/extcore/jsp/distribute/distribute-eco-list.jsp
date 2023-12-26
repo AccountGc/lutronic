@@ -16,7 +16,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
-<body>
+<body style="overflow-x: hidden;">
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
@@ -37,11 +37,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
-				<col width="350">
+				<col width="*">
 				<col width="130">
-				<col width="350">
+				<col width="*">
 				<col width="130">
-				<col width="350">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>ECO 번호</th>
@@ -155,7 +155,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</div>
 				</td>
 			</tr>
-			<tr class="hidden">
+			<tr>
 				<th class="lb pt5">완제품 품목</th>
 				<td colspan="5" class="indent5 pt5">
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
@@ -172,7 +172,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-eco-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-eco-list');">
-					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
+<!-- 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);"> -->
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
@@ -198,11 +198,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "number",
 					headerText : "ECO번호",
 					dataType : "string",
-					width : 150,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					width : 120,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -217,10 +213,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "ECO제목",
 					dataType : "string",
 					style : "aui-left",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -231,59 +223,40 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
-					dataField : "licensing",
+					dataField : "sendType",
+					headerText : "ECO 타입",
+					dataType : "string",
+					width : 80,
+				}, {
+					dataField : "licensing_name",
 					headerText : "인허가변경",
 					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					width : 100,
 				}, {
-					dataField : "riskType",
+					dataField : "riskType_name",
 					headerText : "위험 통제",
 					dataType : "string",
-					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					width : 100,
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 130,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					width : 120,
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "approveDate",
 					headerText : "승인일",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
@@ -291,7 +264,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -303,7 +275,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -316,7 +287,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/eco/list");
 				const field = ["name","number","creatorOid","createdFrom","createdTo","approveFrom","approveTo","state"];
@@ -331,8 +305,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

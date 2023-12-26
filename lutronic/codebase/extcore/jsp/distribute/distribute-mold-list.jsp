@@ -8,7 +8,6 @@
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
 ArrayList<NumberCode> moldTypeList = (ArrayList<NumberCode>) request.getAttribute("moldTypeList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser user = (WTUser) request.getAttribute("sessionUser");
 %>
@@ -25,7 +24,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
-		<input type="hidden" name="location" id="/Default/금형문서">
+		<input type="hidden" name="location" id="location" value="/Default/금형문서">
 		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
 		<input type="hidden" name="searchType" id="searchType" value="MOLD">
 		<input type="hidden" name="state" id="state" value="APPROVED">
@@ -45,11 +44,11 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
-				<col width="350">
+				<col width="*">
 				<col width="130">
-				<col width="350">
+				<col width="*">
 				<col width="130">
-				<col width="350">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>금형 번호</th>
@@ -67,7 +66,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						<%
 						for (NumberCode moldType : moldTypeList) {
 						%>
-						<option value="<%=moldType.getCode() %>"><%=moldType.getName()%></option>
+						<option value="<%=moldType.getCode()%>"><%=moldType.getName()%></option>
 						<%
 						}
 						%>
@@ -88,12 +87,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					<input type="text" name="createdTo" id="createdTo" class="width-100">
 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 				</td>
-				<th>내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
-				</td>
-			</tr>
-			<tr>
 				<th>부서</th>
 				<td class="indent5">
 					<select name="deptcode" id="deptcode" class="width-200">
@@ -107,6 +100,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						%>
 					</select>
 				</td>
+			</tr>
+			<tr>
 				<th>Manufacturer</th>
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
@@ -119,6 +114,10 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						}
 						%>
 					</select>
+				</td>
+				<th>내부 문서번호</th>
+				<td class="indent5">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 				</td>
 				<th>수정일</th>
 				<td class="indent5">
@@ -160,7 +159,8 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 500px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+		<div id="grid_wrap" style="height: 530px; border-top: 1px solid #3180c3;"></div> 
+		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<script type="text/javascript">
 			let myGridID;
@@ -170,10 +170,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					headerText : "금형번호",
 					dataType : "string",
 					width : 200,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -187,10 +183,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "name",
 					headerText : "금형명",
 					dataType : "string",
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -205,66 +197,46 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					headerText : "REV",
 					dataType : "string",
 					width : 80,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 120,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createDate",
 					headerText : "등록일",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "modifyDate",
 					headerText : "수정일",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				} ]
 			}
 
 			function createAUIGrid(columnLayout) {
 				const props = {
-		            headerHeight : 30,
-		            showRowNumColumn : true,
-		            showRowCheckColumn : true,
-		            rowNumHeaderText : "번호",
-		            showAutoNoDataMessage : false,
-		            selectionMode : "multipleCells",
-		            hoverMode : "singleRow",
-		            enableMovingColumn : true,
-		            enableFilter : true,
-		            showInlineFilter : true,
-		            useContextMenu : true,
-		            enableRightDownFocus : true,
-		            filterLayerWidth : 320,
-		            filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		            enableRowCheckShiftKey : true
+					headerHeight : 30,
+					showRowNumColumn : true,
+					showRowCheckColumn : true,
+					rowNumHeaderText : "번호",
+					showAutoNoDataMessage : false,
+					selectionMode : "multipleCells",
+					hoverMode : "singleRow",
+					enableMovingColumn : true,
+					enableFilter : true,
+					showInlineFilter : true,
+					useContextMenu : true,
+					enableRightDownFocus : true,
+					filterLayerWidth : 320,
+					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+					enableRowCheckShiftKey : true
 	         	};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -277,8 +249,10 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 				});
 			}
 
-			function loadGridData() {
-				$("input[name=sessionid").val(0);
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
 				const url = getCallUrl("/mold/list");
 				const field = ["number","name","createdFrom","createdTo","modifiedFrom","modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber"];
@@ -290,8 +264,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

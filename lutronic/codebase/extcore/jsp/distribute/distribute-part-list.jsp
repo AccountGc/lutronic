@@ -47,11 +47,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="search-table">
 			<colgroup>
 				<col width="130">
-				<col width="350">
+				<col width="*">
 				<col width="130">
-				<col width="350">
+				<col width="*">
 				<col width="130">
-				<col width="350">
+				<col width="*">
 			</colgroup>
 			<tr>
 				<th>품목분류</th>
@@ -208,8 +208,38 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<input type="text" name="ecoNo" id="ecoNo" class="width-300">
 				</td>
 				<th>Eo No.</th>
-				<td class="indent5" colspan="3">
+				<td class="indent5">
 					<input type="text" name="eoNo" id="eoNo" class="width-300">
+				</td>
+				<th>선구매</th>
+				<td>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="preOrder" value="yes">
+						<div class="state p-success">
+							<label>
+								<b>예</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="preOrder" value="no">
+						<div class="state p-success">
+							<label>
+								<b>아니오</b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<div class="pretty p-switch">
+						<input type="radio" name="preOrder" value="all" checked="checked">
+						<div class="state p-success">
+							<label>
+								<b>전체</b>
+							</label>
+						</div>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -220,7 +250,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('distribute-part-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('distribute-part-list');">
-					<input type="button" value="BOM 편집" title="BOM 편집" class="blue" onclick="editBOM();">
 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
 				</td>
 				<td class="right">
@@ -253,7 +282,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td valign="top">&nbsp;</td>
 				<td valign="top">
-					<div id="grid_wrap" style="height: 570px; border-top: 1px solid #3180c3;"></div>
+					<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
 					<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 					<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 				</td>
@@ -274,10 +303,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						onClick : function(event) {
 						}
 					},
-					filter : {
-						showIcon : false,
-						inline : false
-					},
 				}, {
 					dataField : "_2d",
 					headerText : "2D",
@@ -288,10 +313,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						altField : null,
 						onClick : function(event) {
 						}
-					},
-					filter : {
-						showIcon : false,
-						inline : false
 					},
 				}, {
 					dataField : "number",
@@ -306,10 +327,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							const url = getCallUrl("/distribute/partView?oid=" + oid);
 							_popup(url, 1600, 800, "n");
 						}
-					},
-					filter : {
-						showIcon : true,
-						inline : true
 					},
 				}, {
 					dataField : "name",
@@ -326,76 +343,48 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							_popup(url, 1600, 800, "n");
 						}
 					},
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "location",
 					headerText : "품목분류",
 					dataType : "string",
 					width : 180,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					style : "aui-left"
 				}, {
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",
-					width : 90,
-					filter : {
-						showIcon : true,
-						inline : true
+					width : 80,
+					renderer : {
+						type : "TemplateRenderer"
 					},
 				}, {
 					dataField : "remarks",
 					headerText : "OEM Info.",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
 					width : 140,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
 				}, {
 					dataField : "createdDate",
 					headerText : "등록일",
 					dataType : "date",
-					width : 140,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					width : 100,
 				}, {
 					dataField : "modifiedDate",
 					headerText : "수정일",
 					dataType : "date",
-					width : 140,
-					filter : {
-						showIcon : true,
-						inline : true
-					},
+					width : 100,
 				} ]
 			}
-
+			
 			function createAUIGrid(columnLayout) {
 				const props = {
 					headerHeight : 30,
@@ -412,7 +401,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableRowCheckShiftKey : true
+					enableRowCheckShiftKey : true,
+					rowStyleFunction : function(rowIndex, item) {
+						if (item.preOrder) {
+							return "preOrder";
+						} else if (item.checkout) {
+							return "checkout";
+						}
+						return "";
+					}
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -424,23 +421,111 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 				});
 			}
+			
+			function _auiContextMenuHandler(event) {
+				if (event.target == "header") { // 헤더 컨텍스트
+					if (nowHeaderMenuVisible) {
+						hideContextMenu();
+					}
 
-			function loadGridData() {
-				$("input[name=sessionid").val(0);
+					nowHeaderMenuVisible = true;
+
+					// 컨텍스트 메뉴 생성된 dataField 보관.
+					currentDataField = event.dataField;
+
+					if (event.dataField == "id") { // ID 칼럼은 숨기기 못하게 설정
+						$("#h_item_4").addClass("ui-state-disabled");
+					} else {
+						$("#h_item_4").removeClass("ui-state-disabled");
+					}
+
+					// 헤더 에서 사용할 메뉴 위젯 구성
+					$("#headerMenu").menu({
+						select : headerMenuSelectHandler
+					});
+
+					$("#headerMenu").css({
+						left : event.pageX,
+						top : event.pageY
+					}).show();
+				} else {
+					hideContextMenu();
+					const menu = [ {
+						label : "썸네일 보기(3D)",
+						callback : auiContextHandler
+					}, {
+						label : "썸네일 보기(2D)",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "일괄 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "STEP 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "DXF 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "PDF 다운로드",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "속성보기",
+						callback : auiContextHandler
+					}, {
+						label : "BOM 보기",
+						callback : auiContextHandler
+					}, {
+						label : "BOM 에디터",
+						callback : auiContextHandler
+					}, {
+						label : "BOM 비교",
+						callback : auiContextHandler
+					}, {
+						label : "ECO(변경)이력보기",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "상위품목",
+						callback : auiContextHandler
+					}, {
+						label : "하위품목",
+						callback : auiContextHandler
+					}, {
+						label : "END ITEM",
+						callback : auiContextHandler
+					}, {
+						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
+					}, {
+						label : "재변환",
+						callback : auiContextHandler
+					} ];
+					return menu;
+				}
+			}
+
+			function loadGridData(movePage) {
+				if (movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
 				let params = new Object();
+				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
 				const url = getCallUrl("/part/list");
-				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creator", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks",
-						"ecoNo", "eoNo","creatorOid","specification","state"];
+				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 				params = toField(params, field);
 				params.latest = true;
+				params.preOrder = preOrder;
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
 				call(url, params, function(data) {
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);
@@ -475,23 +560,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				$("#_psize").bindSelectSetValue(100);
 			});
 
-			function editBOM() {
-				const items = AUIGrid.getCheckedRowItemsAll(myGridID);
-				if (items.length == 0) {
-					alert("편집할 부품을 선택하세요.");
-					return false;
-				}
-				
-				if (items.length > 1) {
-					alert("한개만 선택해 주세요.");
-					return false;
-				}
-				const oid = items[0].part_oid;
-				var url = getCallUrl("/part/bomEditor") + "?oid="+oid;
-				_popup(url, "1400", "600", "n");
-				
-			};
-
 			document.addEventListener("keydown", function(event) {
 				const keyCode = event.keyCode || event.which;
 				if (keyCode === 13) {
@@ -506,6 +574,88 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
+			
+			function auiContextHandler(event) {
+				const item = event.item;
+				const part_oid = item.part_oid;
+				let url;
+				// 				AUIGrid.setCheckedRowsByIds(myGridID, item._$uid);
+				switch (event.contextIndex) {
+				case 0:
+					url = getCallUrl("/part/thumbnail?oid=" + part_oid);
+					_popup(url, 800, 600, "n");
+					break;
+				case 1:
+					url = getCallUrl("/part/thumbnail?oid=" + part_oid);
+					_popup(url, 800, 600, "n");
+					break;
+				case 3:
+					//일괄
+					break;
+				case 4:
+					//STEP
+					url = getCallUrl("/drawing/step?oid=" + part_oid);
+					document.location.href = url;
+					break;
+				case 5:
+					//DXF
+					url = getCallUrl("/drawing/dxf?oid=" + part_oid);
+					document.location.href = url;
+					break;
+				case 6:
+					//PDF
+					url = getCallUrl("/drawing/pdf?oid=" + part_oid);
+					document.location.href = url;
+					break;
+				case 8:
+					//속성
+					url = getCallUrl("/part/attr?oid=" + part_oid);
+					_popup(url, 1000, 500, "n");
+					break;
+				case 9:
+					//BOM 뷰
+					url = getCallUrl("/bom/view?oid=" + part_oid);
+					_popup(url, 1600, 800, "n");
+					break;
+				case 10:
+					url = getCallUrl("/bom/editor?oid=" + part_oid);
+					_popup(url, "", "", "f");
+					break;
+				case 11:
+					url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + part_oid + "&ncId=5304500442831603818&locale=ko";
+					_popup(url, 1600, 600, "n");
+					break;
+				case 12:
+					url = getCallUrl("/part/viewHistory?oid=" + part_oid);
+					_popup(url, 1200, 500, "n");
+					break;
+				case 14:
+					url = getCallUrl("/part/upper?oid=" + part_oid);
+					_popup(url, 600, 430, "n");
+					break;
+				case 15:
+					url = getCallUrl("/part/lower?oid=" + part_oid);
+					_popup(url, 600, 430, "n");
+					break;
+				case 16:
+					url = getCallUrl("/part/end?oid=" + part_oid);
+					_popup(url, 600, 430, "n");
+					break;
+				case 18:
+					publish(part_oid);
+					break;
+				}
+			};
+			
+			// 재변환
+			function publish(oid) {
+				const url = getCallUrl("/part/publish?oid=" + oid);
+				parent.openLayer();
+				call(url, null, function(data) {
+					alert(data.msg);
+					parent.closeLayer();
+				}, "GET");
+			}
 
 			function spread(target) {
 				const e = document.querySelectorAll('.hidden');
