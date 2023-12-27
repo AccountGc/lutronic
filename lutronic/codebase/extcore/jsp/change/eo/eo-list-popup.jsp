@@ -119,10 +119,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 		</td>
 		<th>승인일</th>
 		<td class="indent5">
-			<input type="text" name="approveForm" id="approveFrom" class="width-100">
+			<input type="text" name="approveFrom" id="approveFrom" class="width-100">
 			~
 			<input type="text" name="approveTo" id="approveTo" class="width-100">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
 		</td>
 	</tr>
 	<tr class="hidden">

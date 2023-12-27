@@ -32,30 +32,30 @@ String codeType = (String) request.getAttribute("codeType");
 	</tr>
 	<tr>
 		<th>설명</th>
-		<td class="indent5">
+		<td class="indent5" colspan="3">
 			<input type="text" name="description" id="description" class="width-200">
 		</td>
-		<th>활성화</th>
-		<td>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="enabled" value="true" checked="checked">
-				<div class="state p-success">
-					<label>
-						<b>ON</b>
-					</label>
-				</div>
-			</div>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="enabled" value="false">
-				<div class="state p-success">
-					<label>
-						<b>OFF</b>
-					</label>
-				</div>
-			</div>
-		</td>
+<!-- 		<th>활성화</th> -->
+<!-- 		<td> -->
+<!-- 			&nbsp; -->
+<!-- 			<div class="pretty p-switch"> -->
+<!-- 				<input type="radio" name="enabled" value="true" checked="checked"> -->
+<!-- 				<div class="state p-success"> -->
+<!-- 					<label> -->
+<!-- 						<b>ON</b> -->
+<!-- 					</label> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 			&nbsp; -->
+<!-- 			<div class="pretty p-switch"> -->
+<!-- 				<input type="radio" name="enabled" value="false"> -->
+<!-- 				<div class="state p-success"> -->
+<!-- 					<label> -->
+<!-- 						<b>OFF</b> -->
+<!-- 					</label> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</td> -->
 	</tr>
 </table>
 <table class="button-table">
@@ -85,33 +85,21 @@ String codeType = (String) request.getAttribute("codeType");
 		headerText : "이름",
 		dataType : "string",
 		width : 300,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "code",
 		headerText : "코드",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "sort",
 		headerText : "소트",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "description",
 		headerText : "설명",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "enabled",
 		headerText : "활성화",
@@ -120,9 +108,6 @@ String codeType = (String) request.getAttribute("codeType");
 		renderer : {
 			type : "CheckBoxEditRenderer",
 			edtiable : false,
-		},
-		filter : {
-			showIcon : false,
 		},
 	} ]
 
@@ -183,10 +168,9 @@ String codeType = (String) request.getAttribute("codeType");
 	}
 
 	function loadGridData() {
-		const type = document.getElementById("codeType").value;
-		const params = {
-			codeType : type
-		}
+		let params = new Object();
+		const field = [ "name", "code", "description", "codeType" ];
+		params = toField(params, field);
 		const url = getCallUrl("/code/list");
 		openLayer();
 		call(url, params, function(data) {
@@ -231,7 +215,7 @@ String codeType = (String) request.getAttribute("codeType");
 	document.addEventListener("keydown", function(event) {
 		const keyCode = event.keyCode || event.which;
 		if (keyCode === 13) {
-			searchData();
+			loadGridData();
 		}
 	})
 
