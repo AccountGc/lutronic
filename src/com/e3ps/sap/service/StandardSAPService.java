@@ -555,89 +555,55 @@ public class StandardSAPService extends StandardManager implements SAPService {
 					part = target;
 				}
 
-				String msg = "정전개 품번 = " + part.getNumber() + ", 버전 = "
-						+ part.getVersionIdentifier().getSeries().getValue();
+				if (part != null) {
+					String msg = "정전개 품번 = " + part.getNumber() + ", 버전 = "
+							+ part.getVersionIdentifier().getSeries().getValue();
 
-				System.out.println("SAP로 전송될 정전개 데이터 = " + part.getNumber() + ", 버전 = "
-						+ part.getVersionIdentifier().getSeries().getValue());
-				ArrayList<SAPSendBomDTO> sendList = SAPHelper.manager.getOneLevel(part, eco);
-				for (SAPSendBomDTO dto : sendList) {
+					System.out.println("SAP로 전송될 정전개 데이터 = " + part.getNumber() + ", 버전 = "
+							+ part.getVersionIdentifier().getSeries().getValue());
+					ArrayList<SAPSendBomDTO> sendList = SAPHelper.manager.getOneLevel(part, eco);
+					for (SAPSendBomDTO dto : sendList) {
 
-					System.out.println("정전개 품번" + msg + " 변경대상부모품번 = " + dto.getNewParentPartNumber() + ", "
-							+ " 변경대상자식품번 =  " + dto.getNewChildPartNumber() + ", 이전부모 = " + dto.getParentPartNumber()
-							+ ", 이전자식 = " + dto.getChildPartNumber());
+						System.out.println("정전개 품번" + msg + " 변경대상부모품번 = " + dto.getNewParentPartNumber() + ", "
+								+ " 변경대상자식품번 =  " + dto.getNewChildPartNumber() + ", 이전부모 = "
+								+ dto.getParentPartNumber() + ", 이전자식 = " + dto.getChildPartNumber());
 
-					bomTable.insertRow(idx);
-					bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
-					bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
-					bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
-					bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
-					bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
-					bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
-					bomTable.setValue("MENGE", dto.getQty()); // 수량
-					bomTable.setValue("MEINS", dto.getUnit()); // 단위
-					bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
+						bomTable.insertRow(idx);
+						bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
+						bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
+						bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
+						bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
+						bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
+						bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
+						bomTable.setValue("MENGE", dto.getQty()); // 수량
+						bomTable.setValue("MEINS", dto.getUnit()); // 단위
+						bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
 
-					idx++;
+						idx++;
+					}
 				}
 			}
 
-		}
+			function.execute(destination);
 
-		// ECO 변경 대상품목중 젤 하위만 모아서 역전개로 전송 한다.
-//		ArrayList<WTPart> list = SAPHelper.manager.getEcoEndParts(eco);
-//		System.out.println("역전개대상의 마지막 품목 데이터 개수 =  " + list.size());
-//		for (WTPart part : list) {
-//
-//			System.out.println("대상 품목 번호 = " + part.getNumber());
-//
-//			// 개정 후 품목이 무조건 오는게 맞나 ...
-//			ArrayList<SAPReverseBomDTO> dataList = SAPHelper.manager.getReverseBomData(part, eco);
-//
-//			System.out.println("역전개 개수 = " + dataList.size());
-//
-//			for (SAPReverseBomDTO dto : dataList) {
-//
-//				System.out.println(
-//						"부보품번 = " + dto.getNewParentPartNumber() + ", " + "자식품번 =  " + dto.getNewChildPartNumber()
-//								+ ", 이전부모 = " + dto.getParentPartNumber() + ", 이전자식 = " + dto.getChildPartNumber());
-//
-//				bomTable.insertRow(idx);
-//				bomTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 12자리?
-//				bomTable.setValue("SEQNO", df.format(idx)); // 항목번호 ?? 고정인지.. 애매한데
-//				bomTable.setValue("MATNR_OLD", dto.getParentPartNumber()); // 이전 모품번
-//				bomTable.setValue("IDNRK_OLD", dto.getChildPartNumber()); // 이전 자품번
-//				bomTable.setValue("MATNR_NEW", dto.getNewParentPartNumber()); // 기존 모품번
-//				bomTable.setValue("IDNRK_NEW", dto.getNewChildPartNumber()); // 기존 자품번
-//				bomTable.setValue("MENGE", dto.getQty()); // 수량
-//				bomTable.setValue("MEINS", dto.getUnit()); // 단위
-//				bomTable.setValue("AENNR12", eco.getEoNumber() + df.format(idx)); // 변경번호 12자리
-//
-//				idx++;
-//			}
-//
-//		}
+			JCoParameterList result = function.getExportParameterList();
+			Object r_type = result.getValue("EV_STATUS");
+			Object r_msg = result.getValue("EV_MESSAGE");
 
-		function.execute(destination);
-
-		JCoParameterList result = function.getExportParameterList();
-		Object r_type = result.getValue("EV_STATUS");
-		Object r_msg = result.getValue("EV_MESSAGE");
-
-		JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
-		rtnTable.firstRow();
-		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			JCoTable rtnTable = function.getTableParameterList().getTable("ET_BOM");
+			rtnTable.firstRow();
+			for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
 //			Object IDNRK_NEW = rtnTable.getValue("IDNRK_NEW");
 
-			Object MATNR_OLD = rtnTable.getValue("MATNR_OLD");
-			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
-			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
-			System.out.println("MATNR_OLD+" + MATNR_OLD + ", ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+				Object MATNR_OLD = rtnTable.getValue("MATNR_OLD");
+				Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+				Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+				System.out.println("MATNR_OLD+" + MATNR_OLD + ", ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+			}
+			System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
+			System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
+			System.out.println("종료 SAP 인터페이스 - ECO BOM FUN : ZPPIF_PDM_002");
 		}
-
-		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
-		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
-		System.out.println("종료 SAP 인터페이스 - ECO BOM FUN : ZPPIF_PDM_002");
 	}
 
 	/**
@@ -691,91 +657,98 @@ public class StandardSAPService extends StandardManager implements SAPService {
 					part = target;
 				}
 
-				String number = part.getNumber();
-				if (SAPHelper.manager.skipEight(number)) {
-					continue;
-				}
+				// 삭제 처리가 된경우??/
+				if (part != null) {
+					String number = part.getNumber();
+					if (SAPHelper.manager.skipEight(number)) {
+						continue;
+					}
 
-				if (SAPHelper.manager.skipLength(number)) {
-					continue;
+					if (SAPHelper.manager.skipLength(number)) {
+						continue;
+					}
 				}
 			} else {
 				// 과거 어떻게 전송할것인지
 
 			}
 
-			insertTable.insertRow(idx);
-			String v = part.getVersionIdentifier().getSeries().getValue();
-			System.out.println("ECO(" + eco.getEoNumber() + ") 자재 마스터 전송 품번 : " + part.getNumber() + ", 변경 버전 = " + v);
+			// 변경 대상이 없다..
+			if (part != null) {
 
-			// 샘플로 넣기
-			insertTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 8자리
-			params.put("AENNR8", eco.getEoNumber());
-			insertTable.setValue("MATNR", part.getNumber()); // 자재번호
-			params.put("MATNR", part.getNumber());
-			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
-			params.put("MAKTX", part.getName());
-			insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
-			params.put("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
+				insertTable.insertRow(idx);
+				String v = part.getVersionIdentifier().getSeries().getValue();
+				System.out.println(
+						"ECO(" + eco.getEoNumber() + ") 자재 마스터 전송 품번 : " + part.getNumber() + ", 변경 버전 = " + v);
 
-			String ZSPEC_CODE = IBAUtil.getStringValue(part, "SPECIFICATION");
-			insertTable.setValue("ZSPEC", SAPUtil.sapValue(ZSPEC_CODE, "SPECIFICATION")); // 사양
+				// 샘플로 넣기
+				insertTable.setValue("AENNR8", eco.getEoNumber()); // 변경번호 8자리
+				params.put("AENNR8", eco.getEoNumber());
+				insertTable.setValue("MATNR", part.getNumber()); // 자재번호
+				params.put("MATNR", part.getNumber());
+				insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
+				params.put("MAKTX", part.getName());
+				insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
+				params.put("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
 
-			String ZMODEL_CODE = SAPHelper.manager.convertSapValue(part, "MODEL");
-			insertTable.setValue("ZMODEL", SAPUtil.sapValue(ZMODEL_CODE, "MODEL")); // Model:프로젝트
+				String ZSPEC_CODE = IBAUtil.getStringValue(part, "SPECIFICATION");
+				insertTable.setValue("ZSPEC", SAPUtil.sapValue(ZSPEC_CODE, "SPECIFICATION")); // 사양
 
-			String ZPRODM_CODE = SAPHelper.manager.convertSapValue(part, "PRODUCTMETHOD");
-			insertTable.setValue("ZPRODM", SAPUtil.sapValue(ZPRODM_CODE, "PRODUCTMETHOD")); // 제작방법
+				String ZMODEL_CODE = SAPHelper.manager.convertSapValue(part, "MODEL");
+				insertTable.setValue("ZMODEL", SAPUtil.sapValue(ZMODEL_CODE, "MODEL")); // Model:프로젝트
 
-			String ZDEPT_CODE = SAPHelper.manager.convertSapValue(part, "DEPTCODE");
-			insertTable.setValue("ZDEPT", SAPUtil.sapValue(ZDEPT_CODE, "DEPTCODE")); // 부서
+				String ZPRODM_CODE = SAPHelper.manager.convertSapValue(part, "PRODUCTMETHOD");
+				insertTable.setValue("ZPRODM", SAPUtil.sapValue(ZPRODM_CODE, "PRODUCTMETHOD")); // 제작방법
 
-			// 샘플링 실제는 2D여부 확인해서 전송
-			insertTable.setValue("ZDWGNO", part.getNumber() + ".DRW"); // 도면번호
+				String ZDEPT_CODE = SAPHelper.manager.convertSapValue(part, "DEPTCODE");
+				insertTable.setValue("ZDEPT", SAPUtil.sapValue(ZDEPT_CODE, "DEPTCODE")); // 부서
 
-			insertTable.setValue("ZEIVR", v); // 버전
-			// 테스트 용으로 전송
-			if (preOrder) {
-				insertTable.setValue("ZPREPO", "X"); // 선구매필요
-			} else {
-				insertTable.setValue("ZPREPO", "");
+				// 샘플링 실제는 2D여부 확인해서 전송
+				insertTable.setValue("ZDWGNO", part.getNumber() + ".DRW"); // 도면번호
+
+				insertTable.setValue("ZEIVR", v); // 버전
+				// 테스트 용으로 전송
+				if (preOrder) {
+					insertTable.setValue("ZPREPO", "X"); // 선구매필요
+				} else {
+					insertTable.setValue("ZPREPO", "");
+				}
+
+				insertTable.setValue("BRGEW", IBAUtil.getAttrfloatValue(part, "WEIGHT")); // 중량
+//			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
+				insertTable.setValue("GEWEI", "G"); // 고정..
+
+				String ZMATLT = SAPHelper.manager.convertSapValue(part, "MAT");
+				insertTable.setValue("ZMATLT", ZMATLT); // 재질
+
+				String ZPOSTP = SAPHelper.manager.convertSapValue(part, "FINISH");
+				insertTable.setValue("ZPOSTP", ZPOSTP); // 후처리
+
+				String ZDEVND = SAPHelper.manager.convertSapValue(part, "MANUFACTURE");
+				insertTable.setValue("ZDEVND", ZDEVND); // 개발공급업체
+
+				idx++;
+				params.put("sendResult", true);
+				SystemHelper.service.saveSendPartLogger(params);
 			}
 
-			insertTable.setValue("BRGEW", IBAUtil.getAttrfloatValue(part, "WEIGHT")); // 중량
-//			insertTable.setValue("GEWEI", part.getDefaultUnit().toString().toUpperCase()); // 중량 단위
-			insertTable.setValue("GEWEI", "G"); // 고정..
+			function.execute(destination);
 
-			String ZMATLT = SAPHelper.manager.convertSapValue(part, "MAT");
-			insertTable.setValue("ZMATLT", ZMATLT); // 재질
+			JCoParameterList result = function.getExportParameterList();
+			Object r_type = result.getValue("EV_STATUS");
+			Object r_msg = result.getValue("EV_MESSAGE");
 
-			String ZPOSTP = SAPHelper.manager.convertSapValue(part, "FINISH");
-			insertTable.setValue("ZPOSTP", ZPOSTP); // 후처리
-
-			String ZDEVND = SAPHelper.manager.convertSapValue(part, "MANUFACTURE");
-			insertTable.setValue("ZDEVND", ZDEVND); // 개발공급업체
-
-			idx++;
-			params.put("sendResult", true);
-			SystemHelper.service.saveSendPartLogger(params);
+			JCoTable rtnTable = function.getTableParameterList().getTable("ET_MAT");
+			rtnTable.firstRow();
+			for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+				Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+				Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+				System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
+			}
+			System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
+			System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
+			System.out.println("종료 SAP 인터페이스 - ECO 자재마스터 FUN : ZPPIF_PDM_001");
 		}
-
-		function.execute(destination);
-
-		JCoParameterList result = function.getExportParameterList();
-		Object r_type = result.getValue("EV_STATUS");
-		Object r_msg = result.getValue("EV_MESSAGE");
-
-		JCoTable rtnTable = function.getTableParameterList().getTable("ET_MAT");
-		rtnTable.firstRow();
-		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
-			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
-			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
-			System.out.println("ZIFSTA=" + ZIFSTA + ", ZIFMSG=" + ZIFMSG);
-		}
-
-		System.out.println("[ SAP JCO ] RETURN - TYPE:" + r_type);
-		System.out.println("[ SAP JCO ] RETURN - MESSAGE:" + r_msg);
-		System.out.println("종료 SAP 인터페이스 - ECO 자재마스터 FUN : ZPPIF_PDM_001");
 	}
 
 	@Override

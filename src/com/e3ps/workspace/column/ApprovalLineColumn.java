@@ -9,6 +9,7 @@ import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import lombok.Getter;
@@ -156,9 +157,9 @@ public class ApprovalLineColumn {
 			WTDocument doc = (WTDocument) per;
 			if ("$$MMDocument".equals(doc.getDocType().toString())) {
 				persistType = "금형";
-			} else if("$$ROHS".equals(doc.getDocType().toString())){
+			} else if ("$$ROHS".equals(doc.getDocType().toString())) {
 				persistType = "ROHS";
-			}else {
+			} else {
 				persistType = "문서";
 			}
 		} else if (per instanceof WTPart) {
@@ -179,6 +180,22 @@ public class ApprovalLineColumn {
 			persistType = "ECPR";
 		} else if (per instanceof EChangeNotice) {
 			persistType = "ECN";
+		} else if (per instanceof AsmApproval) {
+			AsmApproval asm = (AsmApproval) per;
+			String number = asm.getNumber();
+			if (number.startsWith("NDBT")) {
+				persistType = "일괄결재(문서)";
+			} else if (number.startsWith("ROHSBT")) {
+				persistType = "일괄결재(ROHS)";
+			} else if (number.startsWith("MMBT")) {
+				persistType = "일괄결재(금형문서)";
+			} else if (number.startsWith("AMBT")) {
+				persistType = "일괄결재(병리연구문서)";
+			} else if (number.startsWith("BMBT")) {
+				persistType = "일괄결재(임상개발문서)";
+			} else if (number.startsWith("CMBT")) {
+				persistType = "일괄결재(화장품문서)";
+			}
 		}
 		setPersistType(persistType);
 	}
