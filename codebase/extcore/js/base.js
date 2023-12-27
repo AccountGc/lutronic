@@ -319,10 +319,13 @@ function toField(params, arr) {
 
 // 첨부파일 다운로드
 function download(holder, oid) {
-	let permission = isPermission(holder);
-	if (!permission) {
-		authMsg();
-		return false;
+	// 문서일 경우만
+	if (holder.indexOf("WTDocument") > -1) {
+		let permission = isPermission(holder);
+		if (!permission) {
+			authMsg();
+			return false;
+		}
 	}
 
 	document.location.href = "/Windchill/plm/content/download?oid=" + oid;

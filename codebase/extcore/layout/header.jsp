@@ -618,7 +618,7 @@ int eca = (int) request.getAttribute("eca");
 	}
 
 	function mainPopUP(oid, position) {
-		const url = getCallUrl("/notice/poupp?oid=" + oid);
+		const url = getCallUrl("/notice/popup?oid=" + oid);
 		_popup2(url, 1000, 450, position, "n");
 	}
 

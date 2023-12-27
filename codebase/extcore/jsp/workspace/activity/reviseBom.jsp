@@ -199,6 +199,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				},
 			}, {
+				headerText : "",
+				dataField : "",
+				width : 100,
+				renderer : {
+					type : "ButtonRenderer",
+					labelText : "BOM 편집",
+					onClick : function(event) {
+						const oid = event.item.next_oid;
+						url = getCallUrl("/bom/editor?oid=" + oid);
+						_popup(url, "", "", "f");
+					}
+				}
+			}, {
 				headerText : "개정 전",
 				children : [ {
 					dataField : "part_number",
