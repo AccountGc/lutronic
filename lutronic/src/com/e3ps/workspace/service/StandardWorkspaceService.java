@@ -386,8 +386,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			trs.start();
 
 			for (String oid : arr) {
-				ApprovalLine l = (ApprovalLine) CommonUtil.getObject(oid);
-				ApprovalMaster master = l.getMaster();
+				ApprovalMaster master = (ApprovalMaster) CommonUtil.getObject(oid);
 				ArrayList<ApprovalLine> list = WorkspaceHelper.manager.getAllLines(master);
 				for (ApprovalLine line : list) {
 					// 모든결재 라인 삭제

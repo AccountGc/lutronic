@@ -39,12 +39,10 @@ EcprDTO dto = new EcprDTO(tapOid);
 			<td class="indent5"><%=dto.getWriteDate()%></td>
 		</tr>
 		<tr>
-			<th class="lb">제안자</th>
-			<td class="indent5"><%=dto.getProposer_name()%></td>
-			<th>변경부분</th>
-			<td class="indent5"><%=dto.getChangeSection()%></td>
-			<th>승인일</th>
+			<th class="lb">승인일</th>
 			<td class="indent5"><%=dto.getApproveDate()%></td>
+			<th>변경부분</th>
+			<td class="indent5" colspan="3"><%=dto.getChangeSection()%></td>
 		</tr>
 		<tr>
 			<th class="lb">제품명</th>
