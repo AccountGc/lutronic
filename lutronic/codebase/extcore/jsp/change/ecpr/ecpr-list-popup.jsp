@@ -144,7 +144,7 @@ const columns = [ {
 	dataField : "number",
 	headerText : "ECPR 번호",
 	dataType : "string",
-	width : 120,
+	width : 280,
 	filter : {
 		showIcon : true,
 		inline : true
@@ -162,7 +162,7 @@ const columns = [ {
 	dataField : "name",
 	headerText : "ECPR 제목",
 	dataType : "string",
-	width : 120,
+	width : 280,
 	filter : {
 		showIcon : true,
 		inline : true
