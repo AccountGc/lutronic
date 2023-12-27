@@ -1,3 +1,9 @@
+<%@page import="wt.content.ContentRoleType"%>
+<%@page import="wt.content.ContentHelper"%>
+<%@page import="wt.fc.QueryResult"%>
+<%@page import="com.e3ps.common.util.CommonUtil"%>
+<%@page import="wt.doc.WTDocument"%>
+<%@page import="java.util.Map"%>
 <%@page import="wt.iba.definition.litedefinition.IBAUtility"%>
 <%@page import="com.e3ps.common.comments.beans.CommentsDTO"%>
 <%@page import="java.util.ArrayList"%>
@@ -8,6 +14,13 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
+
+WTDocument doc = (WTDocument)CommonUtil.getObject(dto.getOid());
+QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("PDF"));
+// out.println(qr.size());
+
+
+
 %>
 <style type="text/css">
 iframe {
@@ -27,7 +40,20 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
+			<%
+			if (isAdmin) {
+			%>
+			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="red" onclick="force();">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_print()) {
+			%>
+			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();" class="blue">
+			<%
+			}
+			%>
 			<%
 			if (dto.is_revise()) {
 			%>
@@ -39,7 +65,6 @@ iframe {
 			if (dto.is_withdraw()) {
 			%>
 			<input type="button" value="결재회수" title="결재회수" class="red" onclick="withdraw();">
-			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="blue" onclick="force();">
 			<%
 			}
 			%>
@@ -132,14 +157,13 @@ iframe {
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
+					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
 						DEXT5.config.Mode = "view";
-						
-						new Dext5editor('content');
-						var content = document.getElementById("contents").value;
-						DEXT5.setBodyValue(content, 'content');
+						new Dext5editor("content");
+						const content = document.getElementById("contents").value;
+						DEXT5.setBodyValue(content, "content");
 					</script>
 				</td>
 			</tr>
@@ -155,6 +179,27 @@ iframe {
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">PDF</th>
+				<td class="indent5" colspan="5">
+					<%
+					Map<String, Object> pdf = dto.getPdf();
+					if (pdf != null) {
+					%>
+					<a href="<%=pdf.get("url")%>"><%=pdf.get("name")%>
+						<img src="<%=pdf.get("fileIcon")%>">
+					</a>
+					<%
+					} else {
+					%>
+					<b>
+						<font color="red">등록된 PDF가 없습니다.</font>
+					</b>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>

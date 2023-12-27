@@ -1,6 +1,7 @@
 package com.e3ps.doc.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -8,7 +9,9 @@ import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
 import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.CommonUtil;
+import com.e3ps.common.util.ContentUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.doc.DocumentClassType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -67,8 +70,13 @@ public class DocumentDTO {
 	private String classType3_code;
 	private String classType3_name;
 	private String classType3_oid;
-	
+
 	private String formType_oid;
+
+	/**
+	 * 병합PDF용
+	 */
+	private Map<String, Object> pdf = new HashMap<>();
 
 	// 댓글
 	private ArrayList<CommentsDTO> comments = new ArrayList<CommentsDTO>();
@@ -94,6 +102,9 @@ public class DocumentDTO {
 	private ArrayList<Map<String, String>> rows103 = new ArrayList<>(); // 관련 ECPR
 
 	private boolean temprary;
+
+	private String prefix;
+	private String suffix;
 
 	public DocumentDTO() {
 
@@ -127,6 +138,26 @@ public class DocumentDTO {
 		setIBAAttributes(doc);
 		setAuth(doc);
 		setComments(CommentsHelper.manager.comments(doc));
+		setPdf(ContentUtils.getContentData(getOid(), "MERGE"));
+		setNameInfo(doc);
+	}
+
+	private void setNameInfo(WTDocument doc) throws Exception {
+		// 과거 데이터는 어떻게 할것인지..
+		String classType1 = doc.getTypeInfoWTDocument().getPtc_str_2();
+		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1) || "REPORT".equals(classType1)
+				|| "VALIDATION".equals(classType1) || "MEETING".equals(classType1)) {
+			// _ 무조건 붙이게하도록...
+			String name = doc.getName();
+			int idx = name.lastIndexOf("_");
+			String prefix = name.substring(0, idx);
+			String suffix = name.substring(idx + 1);
+			setPrefix(prefix);
+			setSuffix(suffix);
+		} else {
+			setPrefix("");
+			setSuffix(doc.getName());
+		}
 	}
 
 	/**
@@ -176,20 +207,24 @@ public class DocumentDTO {
 	private void setAuth(WTDocument doc) throws Exception {
 		// 개정 권한 - (최신버전 && 승인됨)
 //		if (!CommonUtil.isAdmin()) {
-			if (check("APPROVED") && isLatest()) {
-				set_revise(true);
-				set_print(true);
-			}
-			// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
-			if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
-				set_delete(true);
-				set_modify(true);
-			}
+		if (check("APPROVED")) {
+			set_print(true);
+		}
 
-			if (check("APPROVING") && isLatest()) {
-				set_withdraw(true);
-			}
-			// 관리자는 일단 모든 권한 오픈
+		if (check("APPROVED") && isLatest()) {
+			set_revise(true);
+
+		}
+		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
+		if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
+			set_delete(true);
+			set_modify(true);
+		}
+
+		if (check("APPROVING") && isLatest()) {
+			set_withdraw(true);
+		}
+		// 관리자는 일단 모든 권한 오픈
 //		} else {
 //			set_delete(true);
 //			set_modify(true);

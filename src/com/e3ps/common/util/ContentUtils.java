@@ -286,4 +286,29 @@ public class ContentUtils {
 		}
 		return new File(TMP_PATH + File.separator + "tempFile" + File.separator + name);
 	}
+
+	/**
+	 * 특정 컨텐트타입의 데이터 가져오기
+	 */
+	public static Map<String, Object> getContentData(String oid, String roleType) throws Exception {
+		ContentHolder holder = (ContentHolder)CommonUtil.getObject(oid);
+		Map<String, Object> content = null;
+		QueryResult result = ContentHelper.service.getContentsByRole(holder, ContentRoleType.toContentRoleType(roleType));
+		if (result.hasMoreElements()) {
+			ApplicationData data = (ApplicationData) result.nextElement();
+			String fileIcon = getFileIcon(data.getFileName());
+			content = new HashMap<>();
+			content.put("oid", holder.getPersistInfo().getObjectIdentifier().getStringValue());
+			content.put("aoid", data.getPersistInfo().getObjectIdentifier().getStringValue());
+			content.put("name", data.getFileName());
+			content.put("fileSizeKB", data.getFileSizeKB() + "KB");
+			content.put("fileIcon", fileIcon);
+			content.put("url", "/Windchill/plm/content/download?oid="
+					+ data.getPersistInfo().getObjectIdentifier().getStringValue());
+			content.put("fileSize", data.getFileSize());
+			content.put("filePath", FILE_PATH);
+		}
+		return content;
+	
+	}
 }

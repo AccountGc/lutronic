@@ -169,15 +169,6 @@ const columns = [ {
 		showIcon : true,
 		inline : true
 	},
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.oid;
-			const url = getCallUrl("/eo/view?oid=" + oid);
-			popup(url, 1600, 800);
-		}
-	},
 }, {
 	dataField : "name",
 	headerText : "EO 제목",
@@ -187,15 +178,6 @@ const columns = [ {
 	filter : {
 		showIcon : true,
 		inline : true
-	},
-	renderer : {
-		type : "LinkRenderer",
-		baseUrl : "javascript",
-		jsCallback : function(rowIndex, columnIndex, value, item) {
-			const oid = item.oid;
-			const url = getCallUrl("/eo/view?oid=" + oid);
-			popup(url, 1600, 800);
-		}
 	},
 }, {
 	dataField : "eoType",

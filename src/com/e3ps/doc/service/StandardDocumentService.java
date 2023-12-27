@@ -287,7 +287,10 @@ public class StandardDocumentService extends StandardManager implements Document
 				LifeCycleHelper.service.setLifeCycleState(doc, state);
 			} else {
 				// 작업함으로 이동 시킨다
-				WorkDataHelper.service.create(doc);
+				// 일괄 결재가 아닐 경우에만 시작한다
+				if (!"LC_Default_NonWF".equals(lifecycle)) {
+					WorkDataHelper.service.create(doc);
+				}
 			}
 
 			// 개발 구분과 지침서
@@ -460,8 +463,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String content = dto.getContent();
-		String documentType = dto.getDocumentType_code();
-		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
 
@@ -475,26 +476,14 @@ public class StandardDocumentService extends StandardManager implements Document
 //			String msg = user.getFullName() + " 사용자가 문서를 개정 하였습니다.";
 			VersionControlHelper.setNote(latest, iterationNote);
 
-			DocumentType docType = DocumentType.toDocumentType(documentType);
-			String number = getDocumentNumberSeq(docType.getLongDescription());
-
 			latest.setDescription(description);
 
 			WTDocumentMaster master = (WTDocumentMaster) latest.getMaster();
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 
 			// 문서 이름 세팅..
-			if (name.length() > 0) {
-				if (name.indexOf("-") == -1) {
-					identity.setName(documentName + "-" + name);
-				} else {
-					identity.setName(documentName + "-" + name.split("-")[1]);
-				}
-			} else {
-				identity.setName(documentName);
-			}
-//						master.setDocType(docType);
-			identity.setNumber(number);
+			identity.setName(name + "-" + name);
+//			identity.setNumber(number);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			latest.getTypeInfoWTDocument().setPtc_rht_1(content);
@@ -524,6 +513,9 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 관련 링크 세팅
 			saveLink(latest, dto);
 
+			// 작업함으로 이동 시킨다
+			WorkDataHelper.service.create(latest);
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -543,8 +535,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		String location = dto.getLocation();
 		String description = dto.getDescription();
 		String content = dto.getContent();
-		String documentType = dto.getDocumentType_code();
-		String documentName = dto.getDocumentName();
 		String lifecycle = dto.getLifecycle();
 		String iterationNote = dto.getIterationNote();
 		boolean temprary = dto.isTemprary();
@@ -554,9 +544,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			trs.start();
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
-
-			DocumentType docType = DocumentType.toDocumentType(documentType);
-			String number = getDocumentNumberSeq(docType.getLongDescription());
 
 			Folder cFolder = CheckInOutTaskLogic.getCheckoutFolder();
 			CheckoutLink clink = WorkInProgressHelper.service.checkout(doc, cFolder, "문서 수정 체크 아웃");
@@ -568,17 +555,8 @@ public class StandardDocumentService extends StandardManager implements Document
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 
 			// 문서 이름 세팅..
-			if (name.length() > 0) {
-				if (name.indexOf("-") == -1) {
-					identity.setName(documentName + "-" + name);
-				} else {
-					identity.setName(documentName + "-" + name.split("-")[1]);
-				}
-			} else {
-				identity.setName(documentName);
-			}
-//			master.setDocType(docType);
-			identity.setNumber(number);
+			identity.setName(name);
+//			identity.setNumber(number);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 
 			workCopy.getTypeInfoWTDocument().setPtc_rht_1(content);
@@ -767,7 +745,6 @@ public class StandardDocumentService extends StandardManager implements Document
 		String codebase = WTProperties.getLocalProperties().getProperty("wt.codebase.location");
 		String preFixPath = codebase + File.separator + "extcore" + File.separator + "jsp" + File.separator + "document"
 				+ File.separator + "cover";
-		String name = "";
 		Transaction trs = new Transaction();
 		try {
 			trs.start();

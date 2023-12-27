@@ -189,13 +189,11 @@ public class DocumentController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
-		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 		JSONArray docTypeList = DocumentHelper.manager.toJson();
 		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
-		model.addObject("form", form);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.addObject("mode", mode);

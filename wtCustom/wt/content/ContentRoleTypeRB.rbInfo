@@ -108,3 +108,6 @@ PDF.shortDescription=PDF
 
 WORD.value=WORD
 WORD.shortDescription=WORD
+
+MERGE.value=MERGE
+MERGE.shortDescription=MERGE

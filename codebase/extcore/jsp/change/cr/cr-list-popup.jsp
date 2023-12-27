@@ -178,15 +178,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 			showIcon : true,
 			inline : true
 		},
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/cr/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
 	}, {
 		dataField : "name",
 		headerText : "CR 제목",
@@ -195,15 +186,6 @@ boolean multi = (boolean) request.getAttribute("multi");
 		filter : {
 			showIcon : true,
 			inline : true
-		},
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/cr/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
 		},
 	}, {
 		dataField : "model",

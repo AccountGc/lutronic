@@ -211,18 +211,18 @@ public class ActivityController extends BaseController {
 			EChangeOrder eco = (EChangeOrder) eca.getEo();
 			String sendType = eco.getSendType();
 			ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
-			if ("ECO".equals(sendType)) {
+//			if ("ECO".equals(sendType)) {
 				ArrayList<Map<String, String>> clist = ActivityHelper.manager.getEcoRefCr(oid);
 				model.addObject("list", list);
 				model.addObject("clist", JSONArray.fromObject(clist));
 				model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
-			} else if ("ORDER".equals(sendType)) {
-				model.addObject("list", list);
-				model.setViewName("/extcore/jsp/workspace/activity/order.jsp");
-			} else if ("SCO".equals(sendType)) {
-				model.addObject("list", list);
-				model.setViewName("/extcore/jsp/workspace/activity/sco.jsp");
-			}
+//			} else if ("ORDER".equals(sendType)) {
+//				model.addObject("list", list);
+//				model.setViewName("/extcore/jsp/workspace/activity/order.jsp");
+//			} else if ("SCO".equals(sendType)) {
+//				model.addObject("list", list);
+//				model.setViewName("/extcore/jsp/workspace/activity/sco.jsp");
+//			}
 
 		} else if (activityType.equals("DOCUMENT")) {
 			model.setViewName("/extcore/jsp/workspace/activity/document.jsp");

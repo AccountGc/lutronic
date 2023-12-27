@@ -32,11 +32,10 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=25003098"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=24581"></script>
 </head>
 <body>
 	<form>
-		<input type="hidden" name="formType" id="formType">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -70,8 +69,8 @@ iframe {
 				</td>
 				<th class="lb req">문서명</th>
 				<td class="indent5" colspan="3">
-					<input type="text" name="preFix" id="preFix" class="width-300" readonly="readonly">
-					<b><font color="red">_</font></b>
+					<input type="text" name="preFix" id="preFix" class="width-400" readonly="readonly">
+					&nbsp;&nbsp;
 					<input type="text" name="suffix" id="suffix" class="width-300" readonly="readonly">
 				</td>
 			</tr>
@@ -295,9 +294,8 @@ iframe {
 			function create(temp) {
 				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
-				const formType = document.getElementById("formType");
 				const preFix = document.getElementById("preFix").value;
-				const suffix = document.getElementById("suffix").value;
+				const suffix = document.getElementById("suffix");
 				const description = document.getElementById("description");
 				const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 				const secondarys = toArray("secondarys");
@@ -331,15 +329,17 @@ iframe {
 				// 내용
 				const content = DEXT5.getBodyValue("content");
 				let name;
+				if (suffix.value === "") {
+					alert("문서명을 입력하세요,");
+					suffix.focus();
+					return false;
+				}
 				if (preFix !== "") {
-					if (suffix === "") {
-						alert("문서명을 입력하세요,");
-						return false;
-					}
-					name = preFix + "_" + suffix;
+					name = preFix + suffix;
 				} else {
 					name = suffix;
 				}
+				
 				if (isNull(name)) {
 					alert("문서명을 입력하세요.");
 					name.focus();
@@ -361,7 +361,7 @@ iframe {
 						return false;
 					}
 
-					if (!confirm("등록하시겠습니까?")) {
+					if (!confirm("등록 후 문서번호를 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
 						return false;
 					}
 				}
@@ -391,7 +391,6 @@ iframe {
 					classType1_code : classType1_code,
 					classType2_oid : classType2_oid,
 					classType3_oid : classType3_oid,
-					formType_oid : formType.value
 				};
 				logger(params);
 				parent.openLayer();

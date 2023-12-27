@@ -83,6 +83,8 @@ public class StandardEcnService extends StandardManager implements EcnService {
 				WTUser worker = (WTUser) CommonUtil.getObject(worker_oid);
 				ecn.setWorker(worker);
 				PersistenceHelper.manager.modify(ecn);
+				
+				
 			}
 
 			trs.commit();
@@ -159,18 +161,25 @@ public class StandardEcnService extends StandardManager implements EcnService {
 							String group = "";
 							if (isApproved) {
 								WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
-								group = EChangeUtils.manager.getPartGroup(next_part, eco);
+								if (next_part != null) {
+									group = EChangeUtils.manager.getPartGroup(next_part, eco);
+								}
 							} else {
-								group = EChangeUtils.manager.getPartGroup(part, eco);
+								if (part != null) {
+									group = EChangeUtils.manager.getPartGroup(part, eco);
+								}
 							}
 
-							String[] groups = group.split(",");
-							for (String s : groups) {
-								EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
-								EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
-								eLink.setEcr(ecr);
-								eLink.setCompletePart(endMaster);
-								PersistenceHelper.manager.save(eLink);
+							if (group.length() > 0) {
+
+								String[] groups = group.split(",");
+								for (String s : groups) {
+									EChangeRequest ecr = (EChangeRequest) CommonUtil.getObject(s.trim());
+									EcnToPartLink eLink = EcnToPartLink.newEcnToPartLink(ecn, part);
+									eLink.setEcr(ecr);
+									eLink.setCompletePart(endMaster);
+									PersistenceHelper.manager.save(eLink);
+								}
 							}
 						}
 					}

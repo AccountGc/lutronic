@@ -57,7 +57,7 @@ function first(obj) {
 // 번호 및 제목 태그 활성화
 function removeReadOnly() {
 	const numberTag = document.querySelector("#" + interalnumberId);
-	const nameTag = document.querySelector("#" + preFixId);
+	const nameTag = document.querySelector("#" + suffixId);
 	numberTag.value = "";
 	numberTag.removeAttribute("readonly");
 	nameTag.value = "";
@@ -113,7 +113,7 @@ function second() {
 			tag.value += clazz + "-";
 			suffixEnable();
 			if (clazz !== "회의록") {
-				nameTag.value = text + "-"
+				nameTag.value = text + "_"
 			}
 			lastNumber(tag.value, classType1);
 		}
@@ -134,14 +134,15 @@ function last() {
 		const index = classType2.selectedIndex;
 		const text = classType2.options[index].text;
 		if ("REPORT" === classType1) {
+			loadForm(text);
 			numberTag.value += clazz + "-";
 			suffixEnable();
-			preFixTag.value = text + "-"
+			preFixTag.value = text + "_"
 			lastNumber(numberTag.value, classType1);
 		} else if ("VALIDATION" === classType1) {
 			numberTag.value += clazz + "-";
 			suffixEnable();
-			preFixTag.value = text + "-"
+			preFixTag.value = text + "_"
 			lastNumber(numberTag.value, classType1);
 		}
 	}
@@ -160,12 +161,12 @@ function preNumberCheck(obj) {
 		if (classType1.value === "DEV") {
 			tag.value += value + "-";
 			suffixEnable();
-			preFixTag.value = text;
+			preFixTag.value = text + "_" + value + "_";
 			lastNumber(tag.value, classType1.value);
 		} else if (classType1.value === "INSTRUCTION") {
 			tag.value += value + "-WI-";
 			suffixEnable();
-			preFixTag.value = value;
+			preFixTag.value = value + "_";
 			lastNumber(tag.value, classType1.value);
 		}
 	}
@@ -262,7 +263,7 @@ function setFirstNumber(classType1) {
 }
 
 // DEXT5 양식
-function loadHtml(classType2) {
+function loadForm(classType2) {
 	const url = getCallUrl("/form/getHtml?code=" + classType2);
 	const formType = document.getElementById("formType");
 	parent.openLayer();

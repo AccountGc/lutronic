@@ -3,7 +3,6 @@
 <%@page import="net.sf.json.JSONArray"%>
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@page import="wt.doc.DocumentType"%>
-<%@page import="com.e3ps.admin.form.FormTemplate"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="java.util.ArrayList"%>
@@ -12,8 +11,6 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
-JSONArray docTypeList = (JSONArray) request.getAttribute("docTypeList");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 String mode = (String) request.getAttribute("mode");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
@@ -63,36 +60,31 @@ iframe {
 			<span id="locationText"><%=dto.getLocation()%></span>
 			<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 		</td>
-		<th>개정/수정사유</th>
-		<td class="indent5">
-			<input type="text" name="iterationNote" id="iterationNote" class="width-300">
+		<th>문서명</th>
+		<td class="indent5" colspan="3">
+			<input type="text" name="preFix" id="preFix" class="width-400" readonly="readonly" value="<%=dto.getPrefix()%>">
+			&nbsp;&nbsp;
+			<input type="text" name="suffix" id="suffix" class="width-300" value="<%=dto.getSuffix()%>">
 		</td>
-		<th class="req">문서 템플릿</th>
+	</tr>
+	<tr>
+		<th class="lb">내부 문서번호</th>
 		<td class="indent5">
-			<select name="formType" id="formType" class="width-200" onchange="loadForm();">
+			<input type="text" name="interalnumber" id="interalnumber" class="width-200" value="<%=dto.getInteralnumber()%>" readonly="readonly">
+		</td>
+		<th>부서</th>
+		<td class="indent5">
+			<select name="deptcode" id="deptcode" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (FormTemplate formType : form) {
+				for (NumberCode deptcode : deptcodeList) {
+					boolean selected = deptcode.getCode().equals(dto.getDeptcode_code());
 				%>
-				<option value="<%=formType.getPersistInfo().getObjectIdentifier().getStringValue()%>"><%=formType.getName()%></option>
+				<option value="<%=deptcode.getCode()%>" <%if (selected) {%> selected="selected" <%}%>><%=deptcode.getName()%></option>
 				<%
 				}
 				%>
 			</select>
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">문서명</th>
-		<td class="indent5">
-			<input type="text" name="docName" id="docName" class="width-300" value="<%=dto.getName()%>">
-		</td>
-		<th class="req">문서종류</th>
-		<td class="indent5">
-			<input type="text" name="documentName" id="documentName" class="width-200" value="<%=dto.getName().indexOf("-") > -1 ? dto.getName().split("-")[0] : dto.getName()%>">
-			<div id="documentNameSearch" style="display: none; border: 1px solid black; position: absolute; background-color: white; z-index: 1;">
-				<ul id="documentNameUL" style="list-style-type: none; padding-left: 5px; text-align: left;">
-				</ul>
-			</div>
 		</td>
 		<th class="req">결재방식</th>
 		<td>
@@ -117,25 +109,7 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">문서유형</th>
-		<td class="indent5">
-			<select name="documentType" id="documentType" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (int i = 0; i < docTypeList.size(); i++) {
-					JSONObject obj = (JSONObject) docTypeList.get(i);
-					String key = (String) obj.get("key");
-					String value = (String) obj.get("value");
-
-					boolean selected = dto.getDocumentType_code().equals(key);
-				%>
-				<option value="<%=key%>" <%if (selected) {%> selected="selected" <%}%>><%=value%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
-		<th class="req">보존기간</th>
+		<th class="lb req">보존기간</th>
 		<td class="indent5">
 			<select name="preseration" id="preseration" class="width-200">
 				<%
@@ -163,29 +137,16 @@ iframe {
 				%>
 			</select>
 		</td>
-	</tr>
-	<tr>
-		<th class="lb">부서</th>
-		<td class="indent5">
-			<select name="deptcode" id="deptcode" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode deptcode : deptcodeList) {
-					boolean selected = deptcode.getCode().equals(dto.getDeptcode_code());
-				%>
-				<option value="<%=deptcode.getCode()%>" <%if (selected) {%> selected="selected" <%}%>><%=deptcode.getName()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
-		<th>내부 문서번호</th>
-		<td class="indent5">
-			<input type="text" name="interalnumber" id="interalnumber" class="width-200" value="<%=dto.getInteralnumber()%>">
-		</td>
 		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter() != null ? dto.getWriter() : ""%>">
+		</td>
+	</tr>
+	<tr>
+		<th class="lb req"><%=title%>사유
+		</th>
+		<td class="indent5" colspan="5">
+			<input type="text" name="iterationNote" id="iterationNote" class="width-600">
 		</td>
 	</tr>
 	<tr>
@@ -289,43 +250,23 @@ iframe {
 		_popup(url, 500, 600, "n");
 	}
 
-	function loadForm() {
-		const oid = document.getElementById("formType").value;
-		if (oid === "") {
-			return false;
-		}
-		const url = getCallUrl("/form/html?oid=" + oid);
-		parent.openLayer();
-		call(url, null, function(data) {
-			if (data.result) {
-				DEXT5.setBodyValue(data.html, 'content');
-			} else {
-				alert(data.msg);
-			}
-			parent.closeLayer();
-		}, "GET");
-	}
-
 	// 문서 등록
 	function <%=mode%>(temp) {
 		// temp 임시저장 여부 처리
 		const oid = document.getElementById("oid").value;
 		const location = document.getElementById("location");
-		const formType = document.getElementById("formType");
-		const name = document.getElementById("docName");
-		const documentType = document.getElementById("documentType");
 		const description = document.getElementById("description");
 		const lifecycle = document.querySelector("input[name=lifecycle]:checked").value;
 		const secondarys = toArray("secondarys");
 		const primary = document.querySelector("input[name=primary]");
 		const model = document.getElementById("model").value;
 		const writer = document.getElementById("writer").value;
-		const interalnumber = document.getElementById("interalnumber").value;
 		const deptcode = document.getElementById("deptcode").value;
 		const preseration = document.getElementById("preseration").value;
-		const documentName = document.getElementById("documentName");
 		const temprary = JSON.parse(temp);
-		const iterationNote = document.getElementById("iterationNote").value;
+		const iterationNote = document.getElementById("iterationNote");
+		const preFix = document.getElementById("preFix").value;
+		const suffix = document.getElementById("suffix").value;
 		
 		const url = getCallUrl("/doc/<%=mode%>");
 
@@ -344,10 +285,16 @@ iframe {
 		// 내용
 		const content = DEXT5.getBodyValue("content");
 
-		if (isNull(documentName.value)) {
-			alert("문서종류를 입력해주세요.");
-			documentName.focus();
+		let name;
+		if (suffix === "") {
+			alert("문서명을 입력하세요,");
 			return false;
+		}
+		
+		if (preFix !== "") {
+			name = preFix + suffix;
+		} else {
+			name = suffix;
 		}
 		
 		if(temprary) {
@@ -355,8 +302,17 @@ iframe {
 				return false;
 			}	
 		} else {
-			if (isNull(documentType.value)) {
-				alert("문서유형을 선택해주세요.");
+			
+			
+			
+			if(iterationNote.value === ""){
+				alert("<%=title%>사유를 입력하세요.");
+				iterationNote.focus();
+				return false;
+			}
+			
+			if(preseration === "") {
+				alert("보존기간을 선택하세요.");
 				return false;
 			}
 
@@ -372,9 +328,8 @@ iframe {
 
 		const params = {
 			oid : oid,
-			name : name.value,
+			name : name,
 			lifecycle : lifecycle,
-			documentType_code : documentType.value,
 			description : description.value,
 			content : content,
 			secondarys : secondarys,
@@ -382,11 +337,10 @@ iframe {
 			location : location.value,
 			model_code : model,
 			deptcode_code : deptcode,
-			interalnumber : interalnumber,
+// 			interalnumber : interalnumber,
 			writer : writer,
 			preseration_code : preseration,
-			documentName : documentName.value,
-			iterationNote : iterationNote,
+			iterationNote : iterationNote.value,
 			// 링크 데이터
 			rows90 : rows90,
 			rows91 : rows91,
@@ -413,9 +367,7 @@ iframe {
 
 	document.addEventListener("DOMContentLoaded", function() {
 // 		toFocus("iterationNote");
-		selectbox("formType");
 		selectbox("preseration");
-		selectbox("documentType");
 		selectbox("model");
 		selectbox("deptcode");
 // 		finderUser("writer");
@@ -431,37 +383,6 @@ iframe {
 		AUIGrid.resize(myGridID101);
 		AUIGrid.resize(myGridID103);
 		AUIGrid.resize(myGridID105);
-		$("#documentType").bindSelectDisabled(true);
-		
-		// 문서명 규칙
-		$("#documentName").bindSelector({
-			reserveKeys : {
-				options : "list",
-				optionValue : "value",
-				optionText : "name"
-			},
-			optionPrintLength : "all",
-			onsearch : function(id, obj, callBack) {
-				const value = document.getElementById(id).value;
-				const url = getCallUrl("/doc/finder");
-				const params = {
-					value : value,
-				};
-				logger(params);
-				call(url, params, function(data) {
-					callBack({
-						options : data.list
-					})
-				})
-			},
-			onchange : function() {
-				const id = this.targetID;
-				if (this.selectedOption != null) {
-					const value = this.selectedOption.value;
-					document.getElementById(id).value = value;
-				}
-			},
-		});
 	});
 
 	window.addEventListener("resize", function() {

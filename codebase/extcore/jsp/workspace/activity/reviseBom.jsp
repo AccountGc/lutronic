@@ -212,6 +212,17 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}, {
+				headerText : "선구매<br>여부",
+				dataField : "preOrder",
+				dataType : "boolean",
+				width : 60,
+				minWidth : 60,
+				editable : false,
+				renderer : {
+					type : "CheckboxEditRenderer",
+					editable : true
+				}
+			}, {
 				headerText : "개정 전",
 				children : [ {
 					dataField : "part_number",
@@ -701,13 +712,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
-// 				for (let i = 0; i < data.length; i++) {
-// 					const group = data[i].group;
-// 					if (group === "") {
-// 						alert("그룹핑이 안된 품목들이 존재합니다.");
-// 						return false;
-// 					}
-// 				}
+				// 				for (let i = 0; i < data.length; i++) {
+				// 					const group = data[i].group;
+				// 					if (group === "") {
+				// 						alert("그룹핑이 안된 품목들이 존재합니다.");
+				// 						return false;
+				// 					}
+				// 				}
 				// 				const ecnUserOid = document.getElementById("ecnUserOid").value;
 				// 				if (ecnUserOid === "") {
 				// 					alert("ECN 담당자를 선택하세요.");
@@ -839,13 +850,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
-// 				for (let i = 0; i < editRows.length; i++) {
-// 					const next_oid = editRows[i].next_oid;
-// 					if (next_oid === "") {
-// 						alert("개정 후 품목이 없습니다.");
-// 						return false;
-// 					}
-// 				}
+				// 				for (let i = 0; i < editRows.length; i++) {
+				// 					const next_oid = editRows[i].next_oid;
+				// 					if (next_oid === "") {
+				// 						alert("개정 후 품목이 없습니다.");
+				// 						return false;
+				// 					}
+				// 				}
 
 				if (!confirm("저장 하시겠습니까?")) {
 					return false;
