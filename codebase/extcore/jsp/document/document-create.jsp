@@ -71,7 +71,7 @@ iframe {
 				<th class="lb req">문서명</th>
 				<td class="indent5" colspan="3">
 					<input type="text" name="preFix" id="preFix" class="width-300" readonly="readonly">
-					&nbsp;
+					<b><font color="red">_</font></b>
 					<input type="text" name="suffix" id="suffix" class="width-300" readonly="readonly">
 				</td>
 			</tr>

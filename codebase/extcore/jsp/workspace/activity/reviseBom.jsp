@@ -839,13 +839,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
-				for (let i = 0; i < editRows.length; i++) {
-					const next_oid = editRows[i].next_oid;
-					if (next_oid === "") {
-						alert("개정 후 품목이 없습니다.");
-						return false;
-					}
-				}
+// 				for (let i = 0; i < editRows.length; i++) {
+// 					const next_oid = editRows[i].next_oid;
+// 					if (next_oid === "") {
+// 						alert("개정 후 품목이 없습니다.");
+// 						return false;
+// 					}
+// 				}
 
 				if (!confirm("저장 하시겠습니까?")) {
 					return false;

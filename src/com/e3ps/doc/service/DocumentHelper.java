@@ -66,6 +66,7 @@ import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
 import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
+import wt.fc.ObjectReference;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -654,17 +655,27 @@ public class DocumentHelper {
 		Cell modelCell = worksheet.getCells().get(3, 5);
 		modelCell.putValue(IBAUtil.getStringValue(d, "MODEL"));
 
-		String n = d.getName();
-		String value = "";
-		int idx = n.lastIndexOf("_");
-		if (idx > -1) {
-			value = n.substring(0, idx);
-		} else {
-			value = n;
+		ObjectReference ref = d.getTypeInfoWTDocument().getPtc_ref_2();
+		DocumentClass classType2 = null;
+		if (ref != null) {
+			classType2 = (DocumentClass) ref.getObject();
 		}
 
+//		String n = d.getName();
+//		String value = "";
+//		int idx = n.lastIndexOf("_");
+//		if (idx > -1) {
+//			value = n.substring(0, idx);
+//		} else {
+//			value = n;
+//		}
+
 		Cell nameCell = worksheet.getCells().get(4, 0);
-		nameCell.putValue(value);
+		if (classType2 != null) {
+			nameCell.putValue(classType2.getName());
+		} else {
+			nameCell.putValue("");
+		}
 
 		Cell numberCell = worksheet.getCells().get(10, 3);
 		numberCell.putValue(number);
