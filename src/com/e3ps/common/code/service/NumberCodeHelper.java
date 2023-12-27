@@ -476,4 +476,28 @@ public class NumberCodeHelper {
 		}
 		return null;
 	}
+	
+	/**
+	 * 품목 분류 1레벨
+	 */
+	public ArrayList<Map<String, String>> getOneLevel(String codeType) throws Exception {
+		ArrayList<Map<String, String>> list = new ArrayList<>();
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(NumberCode.class, true);
+
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, NumberCode.CODE_TYPE, codeType);
+		QuerySpecUtils.toBooleanAnd(query, idx, NumberCode.class, NumberCode.DISABLED, false);
+		QuerySpecUtils.toEqualsAnd(query, idx, NumberCode.class, "parentReference.key.id", 0L);
+		QuerySpecUtils.toOrderBy(query, idx, NumberCode.class, NumberCode.SORT, false);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			NumberCode n = (NumberCode) obj[0];
+			Map<String, String> map = new HashMap<>();
+			map.put("name", "[" + n.getCode() + "] " + n.getName());
+			map.put("oid", n.getPersistInfo().getObjectIdentifier().getStringValue());
+			list.add(map);
+		}
+		return list;
+	}
 }

@@ -1,3 +1,5 @@
+<%@page import="wt.session.SessionHelper"%>
+<%@page import="wt.org.WTUser"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="wt.part.WTPart"%>
@@ -6,6 +8,7 @@
 WTPart root = (WTPart) request.getAttribute("part");
 String oid = root.getPersistInfo().getObjectIdentifier().getStringValue();
 ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) request.getAttribute("baseline");
+WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <style type="text/css">
 .ap {
@@ -51,6 +54,7 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 }
 </style>
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
+<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -597,4 +601,9 @@ ArrayList<Map<String, String>> baseline = (ArrayList<Map<String, String>>) reque
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID);
 	});
+	
+	function exportExcel() {
+		const sessionName = document.getElementById("sessionName").value;
+		exportToExcel("BOM", "BOM", "BOM", [], sessionName);
+	}
 </script>

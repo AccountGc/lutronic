@@ -90,7 +90,7 @@ boolean isUpdate = "update".equals(mode);
 	}
 
 	function addRohs() {
-		const url = getCallUrl("/rohs/listPopup?method=rohsAppend&multi=true");
+		const url = getCallUrl("/rohs/popup?method=rohsAppend&multi=true");
 		_popup(url, 1500, 700, "n");
 	}
 	
