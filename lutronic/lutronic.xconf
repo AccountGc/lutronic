@@ -87,8 +87,33 @@
 	         targetFile="codebase/wt.properties"
 	         value="htmltemplate.properties,htmlcomponent.properties,wt/change2/change2.properties,com/ptc/windchill/cadx/propfiles/HTML.properties,com/ptc/windchill/cadx/propfiles/picker.properties,com/ptc/windchill/uwgm/caddoc.properties,com/ptc/core/foundation/admin/admin.properties,com/ptc/windchill/enterprise/prefs/prefs.properties,com/ptc/core/HTMLtemplateutil/copyToClipboard.properties,com/ptc/core/htmlcomp/htmlcomp.properties,com/ptc/windchill/uwgm/cadx.properties,wt/dataops/html.properties,com/ptc/netmarkets/wp/wphtmlcomp.properties,com/ptc/windchill/enterprise/revise/revise.properties,com/ptc/windchill/enterprise/baseline/baseline.properties,com/ptc/windchill/enterprise/doc/doc.properties,com/ptc/windchill/cadx/propfiles/caddoc.properties,com/ptc/windchill/pdmlink/templateutil/HTML.properties,com/ptc/windchill/pdmlink/workflow/workflow.properties,com/ptc/windchill/pdmlink/lifecycle/lifecycle.properties,com/ptc/windchill/pdmlink/change/change.properties,com/ptc/windchill/pdmlink/search/HTMLsearch.properties,com/ptc/windchill/pdmlink/doc/doc.properties,com/ptc/windchill/pdmlink/org/org.properties,com/ptc/windchill/pdmlink/folder/folder.properties,com/ptc/windchill/pdmlink/container/container.properties,com/ptc/windchill/pdmlink/product/product.properties,com/ptc/windchill/pdmlink/library/library.properties,com/ptc/windchill/pdmlink/caddoc/caddoc.properties,com/ptc/windchill/pdmlink/share/share.properties,com/ptc/windchill/pdmlink/part/part.properties,com/ptc/windchill/pdmlink/vc/vc.properties,com/e3ps/taskMap.properties"/>
 	         
-	<!-- Service Add -->
+   <!-- Service Add -->
    <Property name="wt.services.service.1000000" overridable="true"
              targetFile="codebase/wt.properties"
-             value="com.e3ps.org.service.OrgService/com.e3ps.org.service.StandardOrgService"/>	         	                  
+             value="com.e3ps.org.service.OrgService/com.e3ps.org.service.StandardOrgService"/>
+             
+             
+   <!-- Version Series -->
+   <Property name="wt.series.HarvardSeries.seriesNames" overridable="true" 
+   			 targetFile="codebase/wt.properties" 
+   			 value="LUTRONIC"/>
+   <Property name="wt.series.IntegerSeries.min" overridable="true" 
+             targetFile="codebase/wt.properties"
+             value="0"/>
+   <Property name="wt.series.IntegerSeries.max" overridable="true" 
+             targetFile="codebase/wt.properties"
+             value="2147483647"/>
+   <Property name="wt.series.IntegerSeries.delta" overridable="true"
+             targetFile="codebase/wt.properties"
+             value="1"/>
+
+   <Property name="wt.series.HarvardSeries.LUTRONIC.delimiter" overridable="true"
+             targetFile="codebase/wt.properties" 
+             value="."/>
+   <Property name="wt.series.HarvardSeries.LUTRONIC.depth" overridable="true" 
+             targetFile="codebase/wt.properties" 
+             value="16"/>
+   <Property name="wt.series.HarvardSeries.LUTRONIC.level.1" overridable="true" 
+             targetFile="codebase/wt.properties" 
+             value="wt.series.IntegerSeries"/>         	         	                  
 </Configuration>

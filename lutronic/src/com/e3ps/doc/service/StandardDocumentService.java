@@ -704,12 +704,16 @@ public class StandardDocumentService extends StandardManager implements Document
 	@Override
 	public void force(DocumentDTO dto) throws Exception {
 		String oid = dto.getOid();
+		String content = dto.getContent();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+			doc.getTypeInfoWTDocument().setPtc_rht_1(content);
+			PersistenceServerHelper.manager.update(doc);
 
+			doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
 			removeAttach(doc);
 
 			saveAttach(doc, dto);
