@@ -28,6 +28,36 @@ iframe {
 		</td>
 		<td class="right">
 			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();">
+			<%
+			if (dto.is_revise()) {
+			%>
+			<input type="button" value="개정" title="개정" onclick="update('revise');">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_withdraw()) {
+			%>
+			<input type="button" value="결재회수" title="결재회수" class="red" onclick="withdraw();">
+			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="blue" onclick="force();">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_modify()) {
+			%>
+			<input type="button" value="수정" title="수정" class="blue" onclick="update('modify');">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_delete()) {
+			%>
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
+			<%
+			}
+			%>
+			<!-- 			<input type="button" value="최신Rev." title="최신Rev."> -->
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -278,6 +308,57 @@ iframe {
 		printWindow.document.write('</body></html>');
 		printWindow.document.close();
 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
+	}
+	
+	//수정 및 개정
+	function update(mode) {
+		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
+		document.location.href = url;
+	}
+	
+	function force() {
+		const url = getCallUrl("/doc/force?oid=" + oid);
+		document.location.href = url;
+	}
+
+	//삭제
+	function _delete() {
+		if (!confirm("삭제 하시겠습니까?")) {
+			return false;
+		}
+		const url = getCallUrl("/doc/delete?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if (data.result) {
+				self.close();
+				opener.loadGridData();
+			} else {
+				closeLayer();
+			}
+		}, "DELETE");
+	}
+	
+
+	// 결재 회수
+	function withdraw() {
+		const oid = document.getElementById("oid").value;
+		let remain = false;
+		if(confirm("확인 버튼을 누를시 기존 결재선을 유지한채 결재를 회수 합니다.\n취소를 선택시 모든 결재선 및 결재 이력이 초기화 됩니다.")) {
+			remain = true;
+		}
+		const url = getCallUrl("/workspace/withdraw?oid="+oid + "&remain="+remain);
+		alert(url);
+		openLayer();
+		call(url, null, function(data) {
+			alert(data.msg);
+			if(data.result) {
+				opener.document.location.href = getCallUrl("/workData/list");
+				self.close();
+			} else {
+				closeLayer();
+			}
+		}, "GET");
 	}
 
 	//일괄 다운로드
