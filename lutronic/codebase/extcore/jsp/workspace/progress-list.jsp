@@ -181,8 +181,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const arr = new Array();
 				for (let i = checkedItems.length - 1; i >= 0; i--) {
 					const item = checkedItems[i].item;
-					const poid = item.poid;
-					arr.push(poid);
+					const oid = item.oid;
+					arr.push(oid);
 				}
 				const url = getCallUrl("/workspace/_reset");
 				const params = new Object();
