@@ -36,11 +36,11 @@ public class SAPSendBomDTO {
 		// 이전 자식
 		WTPart pre_child = SAPHelper.manager.getPre(child, eco);
 
-		if (pre_child != null) {
-			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child.getNumber());
-		} else {
-			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child);
-		}
+//		if (pre_child != null) {
+//			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child.getNumber());
+//		} else {
+//			System.out.println("child + " + child.getNumber() + ", pre_child=" + pre_child);
+//		}
 
 		setNewParentPartNumber(parent.getNumber());
 		setNewChildPartNumber(child.getNumber());
@@ -48,12 +48,12 @@ public class SAPSendBomDTO {
 			setParentPartNumber(pre_parent.getNumber());
 		} else {
 			// 최상위 까지 가면 기존꺼가 들어간다..
-			setParentPartNumber(null);
+			setParentPartNumber(parent.getNumber()u);
 		}
 		if (pre_child != null) {
 			setChildPartNumber(pre_child.getNumber());
 		} else {
-			setChildPartNumber(null);
+			setChildPartNumber(child.getNumber());
 		}
 		setQty((int) link.getQuantity().getAmount());
 		setUnit(link.getQuantity().getUnit().toString().toUpperCase());
