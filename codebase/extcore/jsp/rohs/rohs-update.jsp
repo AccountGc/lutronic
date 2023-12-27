@@ -139,6 +139,7 @@
 			function update(temp) {
 				// 임시저장
 				const temprary = JSON.parse(temp);
+				const secondarys = toArray("secondarys");
 				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -164,7 +165,6 @@
 						return;
 					}
 					
-					const secondarys = toArray("secondarys");
 					if(secondarys.length>0){
 						if(isEmpty($("#fileType").val())) {
 							alert("파일구분을 선택하세요.");
