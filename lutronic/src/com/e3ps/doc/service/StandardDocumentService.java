@@ -768,6 +768,8 @@ public class StandardDocumentService extends StandardManager implements Document
 		try {
 			trs.start();
 
+			boolean checker = true;
+
 			QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
 			if (qr.hasMoreElements()) {
 				ApplicationData dd = (ApplicationData) qr.nextElement();
@@ -775,53 +777,54 @@ public class StandardDocumentService extends StandardManager implements Document
 				String ext = FileUtil.getExtension(n);
 				if (!"docx".equalsIgnoreCase(ext)) {
 					System.out.println("대상파일이 아닙니다.");
-					return;
+					checker = false;
 				}
 			}
 
-			WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
-			if (info != null) {
-				String classType1Code = info.getPtc_str_2();
+			if (checker) {
+				WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
+				if (info != null) {
+					String classType1Code = info.getPtc_str_2();
 
-				// 과거 데이터는 없음
-				if (StringUtil.checkString(classType1Code)) {
-					// 개발문서 일 경우
-					if ("DEV".equals(classType1Code) || "INSTRUCTION".equals(classType1Code)) {
-						excelFile = new File(preFixPath + File.separator + "DMR.xlsx");
-						rtnFile = DocumentHelper.manager.stamping(doc, excelFile);
+					// 과거 데이터는 없음
+					if (StringUtil.checkString(classType1Code)) {
+						// 개발문서 일 경우
+						if ("DEV".equals(classType1Code) || "INSTRUCTION".equals(classType1Code)) {
+							excelFile = new File(preFixPath + File.separator + "DMR.xlsx");
+							rtnFile = DocumentHelper.manager.stamping(doc, excelFile);
+						}
 					}
+
+					String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
+					String pdfPath = temp + File.separator + "pdf";
+					File f = new File(pdfPath);
+					if (!f.exists()) {
+						f.mkdirs();
+					}
+					String output = pdfPath + File.separator + doc.getNumber() + "_COVER.pdf";
+					// excel to pdf
+					Workbook wb = new Workbook(rtnFile.getAbsolutePath());
+					wb.save(output, FileFormatType.PDF);
+
+					// 기존 커버 삭제
+					QueryResult result = ContentHelper.service.getContentsByRole(doc,
+							ContentRoleType.toContentRoleType("COVER"));
+					if (result.hasMoreElements()) {
+						ApplicationData data = (ApplicationData) result.nextElement();
+						ContentServerHelper.service.deleteContent(doc, data);
+					}
+
+					// save
+					File pdfFile = new File(output);
+					ApplicationData applicationData = ApplicationData.newApplicationData(doc);
+					applicationData.setRole(ContentRoleType.toContentRoleType("COVER"));
+					PersistenceHelper.manager.save(applicationData);
+					ContentServerHelper.service.updateContent(doc, applicationData, pdfFile.getPath());
+
+					// pdf merge
+					DocumentHelper.manager.mergePdf(doc);
 				}
-
-				String temp = WTProperties.getLocalProperties().getProperty("wt.temp");
-				String pdfPath = temp + File.separator + "pdf";
-				File f = new File(pdfPath);
-				if (!f.exists()) {
-					f.mkdirs();
-				}
-				String output = pdfPath + File.separator + doc.getNumber() + "_COVER.pdf";
-				// excel to pdf
-				Workbook wb = new Workbook(rtnFile.getAbsolutePath());
-				wb.save(output, FileFormatType.PDF);
-
-				// 기존 커버 삭제
-				QueryResult result = ContentHelper.service.getContentsByRole(doc,
-						ContentRoleType.toContentRoleType("COVER"));
-				if (result.hasMoreElements()) {
-					ApplicationData data = (ApplicationData) result.nextElement();
-					ContentServerHelper.service.deleteContent(doc, data);
-				}
-
-				// save
-				File pdfFile = new File(output);
-				ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-				applicationData.setRole(ContentRoleType.toContentRoleType("COVER"));
-				PersistenceHelper.manager.save(applicationData);
-				ContentServerHelper.service.updateContent(doc, applicationData, pdfFile.getPath());
-
-				// pdf merge
-				DocumentHelper.manager.mergePdf(doc);
 			}
-
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
