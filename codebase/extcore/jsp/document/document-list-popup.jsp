@@ -20,6 +20,7 @@ String state = (String) request.getAttribute("state");
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
+<input type="hidden" name="oid" id="oid">
 
 <table class="button-table">
 	<tr>

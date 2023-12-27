@@ -31,6 +31,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		<input type="hidden" name="oid" id="oid">
 		<!-- 다운로드 링크 위한 프레임 -->
 		<!-- 		<iframe id="download" name="download" style="display: none;"></iframe> -->
 		<table class="button-table">
