@@ -1112,11 +1112,11 @@ public class StandardRohsService extends StandardManager implements RohsService 
 
 			ROHSContHolder newHolder = ROHSContHolder.newROHSContHolder();
 			String fileName = newApp.getFileName().toUpperCase();
-			holder.setFileName(fileName);
-			holder.setFileType(holder.getFileType());
-			holder.setPublicationDate(holder.getPublicationDate());
-			holder.setApp(newApp);
-			holder.setRohs(newRohs);
+			newHolder.setFileName(fileName);
+			newHolder.setFileType(holder.getFileType());
+			newHolder.setPublicationDate(holder.getPublicationDate());
+			newHolder.setApp(newApp);
+			newHolder.setRohs(newRohs);
 			PersistenceHelper.manager.save(newHolder);
 		}
 	}
