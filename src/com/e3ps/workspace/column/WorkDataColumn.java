@@ -46,8 +46,10 @@ public class WorkDataColumn {
 		setOid(workData.getPersistInfo().getObjectIdentifier().getStringValue());
 		setRead(workData.getReads());
 		setWork("결재선 지정");
-		setPoid(workData.getPer().getPersistInfo().getObjectIdentifier().getStringValue());
-		setInfo(workData.getPer());
+		if (workData.getPer() != null) {
+			setPoid(workData.getPer().getPersistInfo().getObjectIdentifier().getStringValue());
+			setInfo(workData.getPer());
+		}
 	}
 
 	/**

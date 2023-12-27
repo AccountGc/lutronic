@@ -52,7 +52,9 @@ public class WorkDataDTO {
 	public WorkDataDTO(WorkData workData) throws Exception {
 		setOid(workData.getPersistInfo().getObjectIdentifier().getStringValue());
 		setPoid(workData.getPer().getPersistInfo().getObjectIdentifier().getStringValue());
-		setInfo(workData.getPer());
+		if (workData.getPer() != null) {
+			setInfo(workData.getPer());
+		}
 	}
 
 	/**
@@ -108,7 +110,6 @@ public class WorkDataDTO {
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
-			System.out.println("여기..");
 			AsmApproval asm = (AsmApproval) per;
 			setNumber(asm.getNumber());
 			setName(asm.getName());
