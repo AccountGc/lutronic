@@ -701,13 +701,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					return false;
 				}
 
-				for (let i = 0; i < data.length; i++) {
-					const group = data[i].group;
-					if (group === "") {
-						alert("그룹핑이 안된 품목들이 존재합니다.");
-						return false;
-					}
-				}
+// 				for (let i = 0; i < data.length; i++) {
+// 					const group = data[i].group;
+// 					if (group === "") {
+// 						alert("그룹핑이 안된 품목들이 존재합니다.");
+// 						return false;
+// 					}
+// 				}
 				// 				const ecnUserOid = document.getElementById("ecnUserOid").value;
 				// 				if (ecnUserOid === "") {
 				// 					alert("ECN 담당자를 선택하세요.");
