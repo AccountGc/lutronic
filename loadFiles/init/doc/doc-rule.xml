@@ -25,7 +25,7 @@
 
                <!-- set the version info to a generated version info -->
                <AttrValue id="MBA|versionInfo" algorithm="com.ptc.core.foundation.vc.server.impl.VersionInfoGenerator">
-                  <Arg>wt.series.HarvardSeries</Arg>
+                  <Arg>wt.series.HarvardSeries.LUTRONIC</Arg>
                </AttrValue>
                   
                <!-- set the doc type - enumerated type, this field is no longer displayed in the UI so just default it -->
