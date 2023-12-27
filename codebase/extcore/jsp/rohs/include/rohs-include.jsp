@@ -144,7 +144,7 @@ boolean create = "create".equals(mode);
 	// 추가 버튼 클릭 시 팝업창 메서드
 	function popup106() {
 		const multi = "<%=multi%>";
-		const url = getCallUrl("/rohs/listPopup?method=insert106&multi=" + multi);
+		const url = getCallUrl("/rohs/popup?method=insert106&multi=" + multi);
 		_popup(url, 1500, 700, "n");
 	}
 	
