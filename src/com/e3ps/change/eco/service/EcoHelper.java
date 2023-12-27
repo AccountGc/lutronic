@@ -318,15 +318,25 @@ public class EcoHelper {
 						map.put("afterMerge", true);
 					} else {
 						WTPart next_part = (WTPart) EChangeUtils.manager.getNext(part);
-						// 개정데이터가 있을경우
-						map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
-						map.put("next_number", next_part.getNumber());
-						map.put("next_name", next_part.getName());
-						map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
-								+ next_part.getIterationIdentifier().getSeries().getValue());
-						map.put("next_creator", next_part.getCreatorFullName());
-						map.put("next_state", next_part.getLifeCycleState().getDisplay());
-						map.put("afterMerge", false);
+						if (next_part != null) {
+							// 개정데이터가 있을경우
+							map.put("next_oid", next_part.getPersistInfo().getObjectIdentifier().getStringValue());
+							map.put("next_number", next_part.getNumber());
+							map.put("next_name", next_part.getName());
+							map.put("next_version", next_part.getVersionIdentifier().getSeries().getValue() + "."
+									+ next_part.getIterationIdentifier().getSeries().getValue());
+							map.put("next_creator", next_part.getCreatorFullName());
+							map.put("next_state", next_part.getLifeCycleState().getDisplay());
+							map.put("afterMerge", false);
+						} else {
+							map.put("next_oid", "");
+							map.put("next_number", "변경후 데이터가 없습니다.");
+							map.put("next_name", "변경후 데이터가 없습니다.");
+							map.put("next_state", "변경후 데이터가 없습니다.");
+							map.put("next_version", "변경후 데이터가 없습니다.");
+							map.put("next_creator", "변경후 데이터가 없습니다.");
+							map.put("afterMerge", true);
+						}
 					}
 				} else if (isRight) {
 					WTPart pre_part = EChangeUtils.manager.getEcoPrePart(eco, part);
