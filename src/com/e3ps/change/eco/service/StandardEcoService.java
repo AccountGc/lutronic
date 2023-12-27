@@ -93,7 +93,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 //			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
 //
 //			number = number + "N" + seqNo;
-			
+
 			String number = "C" + DateUtil.getCurrentDateString("ym") + "N";
 //			String seqNo = SequenceDao.manager.getSeqNo(number, "00", "EChangeOrder", EChangeOrder.EO_NUMBER);
 //			number = number + "N" + seqNo;
@@ -546,16 +546,19 @@ public class StandardEcoService extends StandardManager implements EcoService {
 						part = target;
 					}
 
-					// 부품 승인
-					LifeCycleHelper.service.setLifeCycleState(part, approved);
-					// 3D 승인
-					EPMDocument epm = PartHelper.manager.getEPMDocument(part);
-					if (epm != null) {
-						LifeCycleHelper.service.setLifeCycleState(epm, approved);
-						// 2D 승인
-						EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
-						if (epm2D != null) {
-							LifeCycleHelper.service.setLifeCycleState(epm2D, approved);
+					if (part != null) {
+
+						// 부품 승인
+						LifeCycleHelper.service.setLifeCycleState(part, approved);
+						// 3D 승인
+						EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+						if (epm != null) {
+							LifeCycleHelper.service.setLifeCycleState(epm, approved);
+							// 2D 승인
+							EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
+							if (epm2D != null) {
+								LifeCycleHelper.service.setLifeCycleState(epm2D, approved);
+							}
 						}
 					}
 				}
