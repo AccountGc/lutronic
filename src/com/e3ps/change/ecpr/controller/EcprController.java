@@ -130,7 +130,7 @@ public class EcprController extends BaseController {
 		model.addObject("sectionList", sectionList);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/change/ecpr/ecpr-update.jsp");
+		model.setViewName("popup:/change/ecpr/ecpr-update");
 		return model;
 	}
 
