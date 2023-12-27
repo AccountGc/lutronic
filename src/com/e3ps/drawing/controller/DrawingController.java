@@ -176,7 +176,7 @@ public class DrawingController extends BaseController {
 		boolean isAdmin = CommonUtil.isAdmin();
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/drawing/drawing-view.jsp");
+		model.setViewName("popup:/drawing/drawing-view");
 		return model;
 	}
 
@@ -315,7 +315,7 @@ public class DrawingController extends BaseController {
 		EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
 		EpmData dto = new EpmData(epm);
 		model.addObject("dto", dto);
-		model.setViewName("/extcore/jsp/drawing/drawing-update.jsp");
+		model.setViewName("popup:/drawing/drawing-update");
 		return model;
 	}
 
