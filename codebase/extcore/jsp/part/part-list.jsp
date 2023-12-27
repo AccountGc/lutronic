@@ -43,6 +43,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
+		<input type="hidden" name="oid" id="oid">
 
 		<table class="button-table">
 			<tr>

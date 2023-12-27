@@ -22,8 +22,10 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 %>
 <style type="text/css">
 .preOrder {
-/* 	background-color: rgb(200, 255, 203) !important; */
+	/* 	background-color: rgb(200, 255, 203) !important; */
+	
 }
+
 .checkout {
 	background-color: rgb(254, 192, 209) !important;
 }
@@ -31,6 +33,7 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
+<input type="hidden" name="oid" id="oid">
 
 <table class="button-table">
 	<tr>
