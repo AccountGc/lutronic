@@ -36,10 +36,10 @@
              value="MethodServer BackgroundMethodServer"/>       
    <Property name="wt.method.maxHeap" overridable="true"
              targetFile="codebase/wt.properties"
-             value="2048"/>                 
+             value="1024"/>                 
    <Property name="wt.method.minHeap" overridable="true"
              targetFile="codebase/wt.properties"
-             value="2048"/>                 
+             value="1024"/>                 
 
 	<!-- Server Manager -->
    <Property name="wt.manager.maxHeap" overridable="true"

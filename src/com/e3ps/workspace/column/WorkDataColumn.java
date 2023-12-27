@@ -108,7 +108,7 @@ public class WorkDataColumn {
 			setCreator(rohs.getCreatorName());
 			setCreatedDate(rohs.getCreateTimestamp());
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
-			setViewUrl(this.context + "/eo/view?oid=" + getPoid());
+			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			AsmApproval asm = (AsmApproval) per;
 			String number = asm.getNumber();

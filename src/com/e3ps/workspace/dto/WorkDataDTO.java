@@ -29,6 +29,9 @@ public class WorkDataDTO {
 	private String creator;
 	private String createdDate_txt;
 
+	private String viewUrl;
+	private final String context = "/Windchill/plm";
+
 	// 결재 변수
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
 	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
@@ -64,8 +67,10 @@ public class WorkDataDTO {
 			String docType = doc.getDocType().toString();
 			if ("$$MMDocument".equals(docType)) {
 				setPersistType("금형문서");
+				setViewUrl(this.context + "/mold/view?oid=" + getPoid());
 			} else {
 				setPersistType("문서");
+				setViewUrl(this.context + "/doc/view?oid=" + getPoid());
 			}
 			setState(doc.getLifeCycleState().getDisplay());
 			setCreator(doc.getCreatorName());
@@ -78,12 +83,15 @@ public class WorkDataDTO {
 			setState(ecr.getLifeCycleState().getDisplay());
 			setCreator(ecr.getCreatorName());
 			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/cr/view?oid=" + getPoid());
 		} else if (per instanceof EChangeOrder) {
 			EChangeOrder eco = (EChangeOrder) per;
 			if (eco.getEoType().equals("CHANGE")) {
 				setPersistType("ECO");
+				setViewUrl(this.context + "/eco/view?oid=" + getPoid());
 			} else {
 				setPersistType("EO");
+				setViewUrl(this.context + "/eo/view?oid=" + getPoid());
 			}
 			setNumber(eco.getEoNumber());
 			setName(eco.getEoName());
@@ -98,6 +106,7 @@ public class WorkDataDTO {
 			setState(rohs.getLifeCycleState().getDisplay());
 			setCreator(rohs.getCreatorName());
 			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			System.out.println("여기..");
 			AsmApproval asm = (AsmApproval) per;
@@ -107,6 +116,7 @@ public class WorkDataDTO {
 			setState(asm.getLifeCycleState().getDisplay());
 			setCreator(asm.getCreatorName());
 			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/asm/view?oid=" + getPoid());
 		}
 	}
 }

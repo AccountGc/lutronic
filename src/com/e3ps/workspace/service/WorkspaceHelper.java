@@ -1030,16 +1030,53 @@ public class WorkspaceHelper {
 		return list;
 	}
 
+	/**
+	 * 결재선에서 지정한 기존 결재라인 가져오기
+	 */
 	public JSONArray loadLines(String oid) throws Exception {
-		ArrayList<Map<String, String>> list = new ArrayList();
+		ArrayList<Map<String, Object>> list = new ArrayList();
 		WorkData data = (WorkData) CommonUtil.getObject(oid);
 		ApprovalMaster m = data.getAppMaster();
 
 		if (m != null) {
 			// 기안라인 제거..
-			ArrayList<ApprovalLine> lines = getAllLines(m, true);
-			for (ApprovalLine line : lines) {
-				Map<String, String> map = new HashMap<>();
+			// 합의 결재 수신 순서
+			ArrayList<ApprovalLine> agreeLines = getAgreeLine(m);
+			for (ApprovalLine line : agreeLines) {
+				Map<String, Object> map = new HashMap<>();
+				WTPrincipalReference ref = line.getOwnership().getOwner();
+				WTUser user = (WTUser) ref.getObject();
+				PeopleDTO dto = new PeopleDTO(user);
+				map.put("name", line.getName());
+				map.put("type", line.getType());
+				map.put("id", dto.getId());
+				map.put("duty", dto.getDuty());
+				map.put("email", dto.getEmail());
+				map.put("department_name", dto.getDepartment_name());
+				list.add(map);
+			}
+
+			ArrayList<ApprovalLine> approvalLines = getApprovalLines(m);
+			int sort = 1;
+			for (ApprovalLine line : approvalLines) {
+				Map<String, Object> map = new HashMap<>();
+				WTPrincipalReference ref = line.getOwnership().getOwner();
+				WTUser user = (WTUser) ref.getObject();
+				PeopleDTO dto = new PeopleDTO(user);
+				map.put("sort", sort);
+				map.put("name", line.getName());
+				map.put("type", line.getType());
+				map.put("id", dto.getId());
+				map.put("duty", dto.getDuty());
+				map.put("email", dto.getEmail());
+				map.put("department_name", dto.getDepartment_name());
+				list.add(map);
+				sort++;
+			}
+
+			ArrayList<ApprovalLine> receiveLines = getReceiveLines(m);
+			for (ApprovalLine line : receiveLines) {
+				Map<String, Object> map = new HashMap<>();
 				WTPrincipalReference ref = line.getOwnership().getOwner();
 				WTUser user = (WTUser) ref.getObject();
 				PeopleDTO dto = new PeopleDTO(user);

@@ -119,7 +119,6 @@ boolean update = "update".equals(mode);
 					receives.push(list[i]);
 				}
 			}
-
 			const url = getCallUrl("/workspace/popup");
 			const p = _popup(url, 1400, 900, "n");
 			p.approvals = approvals;

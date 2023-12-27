@@ -139,9 +139,6 @@ String oid = (String) request.getAttribute("oid");
 			<div id="grid900" style="height: 350px; border-top: 1px solid #3180c3;"></div>
 			<script type="text/javascript">
 				let myGridID900;
-				const approvals = window.approvals;
-				const agrees = window.agrees;
-				const receives = window.receives;
 				const columns900 = [ {
 					dataField : "name",
 					headerText : "부서명",
@@ -465,7 +462,8 @@ String oid = (String) request.getAttribute("oid");
 					<td>
 						<div id="grid2000" style="height: 233px; border-top: 1px solid #3180c3;"></div>
 						<script type="text/javascript">
-							let myGridID2000
+							let myGridID2000;
+							const agrees = window.agrees;
 							const columns2000 = [ {
 								dataField : "name",
 								headerText : "이름",
@@ -527,6 +525,7 @@ String oid = (String) request.getAttribute("oid");
 								// 									}
 								// 									return copy;
 								// 								});
+								logger(agrees);
 								AUIGrid.setGridData(myGridID2000, agrees);
 							}
 						</script>
@@ -551,6 +550,7 @@ String oid = (String) request.getAttribute("oid");
 						<div id="grid3000" style="height: 233px; border-top: 1px solid #3180c3;"></div>
 						<script type="text/javascript">
 							let myGridID3000;
+							const approvals = window.approvals;
 							const columns3000 = [ {
 								dataField : "name",
 								headerText : "이름",
@@ -637,6 +637,7 @@ String oid = (String) request.getAttribute("oid");
 						<div id="grid4000" style="height: 233px; border-top: 1px solid #3180c3;"></div>
 						<script type="text/javascript">
 							let myGridID4000;
+							const receives = window.receives;
 							const columns4000 = [ {
 								dataField : "name",
 								headerText : "이름",
@@ -931,9 +932,12 @@ function moveRow() {
 			const approval = data.approval;
 			const agree = data.agree;
 			const receive = data.receive;
-			AUIGrid.setGridData(myGridID2000, agree);
-			AUIGrid.setGridData(myGridID3000, approval);
-			AUIGrid.setGridData(myGridID4000, receive);
+
+			if(agree.length > 0 || approval.length > 0 || receive.length > 0) {
+				AUIGrid.setGridData(myGridID2000, agree);
+				AUIGrid.setGridData(myGridID3000, approval);
+				AUIGrid.setGridData(myGridID4000, receive);
+			}
 		})
 	}
 
