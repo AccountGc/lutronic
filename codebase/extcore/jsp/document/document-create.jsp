@@ -32,7 +32,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=24581"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=2441"></script>
 </head>
 <body>
 	<form>

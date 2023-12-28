@@ -33,8 +33,6 @@ public class FormTemplateController extends BaseController {
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> formType = NumberCodeHelper.manager.getArrayCodeList("DOCFORMTYPE");
-		model.addObject("formType", formType);
 		model.setViewName("/extcore/jsp/admin/form/form-list.jsp");
 		return model;
 	}
@@ -156,16 +154,19 @@ public class FormTemplateController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "문서 템플릿 가져오기 문서 채번에 맞게")
 	@ResponseBody
 	@GetMapping(value = "/getHtml")
-	public Map<String, Object> getHtml(@RequestParam String code) throws Exception {
+	public Map<String, Object> getHtml(@RequestParam String clazz) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			FormTemplate form = FormTemplateHelper.manager.getHtml(code);
-			result.put("html", form.getDescription());
-			result.put("oid", form.getPersistInfo().getObjectIdentifier().getStringValue());
+			FormTemplate form = FormTemplateHelper.manager.getHtml(clazz);
+			if (form != null) {
+				result.put("html", form.getDescription());
+			} else {
+				result.put("html", "");
+			}
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -40,26 +40,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			<colgroup>
 				<col width="174">
 				<col width="*">
-				<col width="174">
-				<col width="*">
 			</colgroup>
 			<tr>
 				<th>문서 템플릿 제목</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
-				</td>
-				<th>문서 템플릿 타입</th>
-				<td class="indent5">
-					<select name="formType" id="formType" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode n : formType) {
-						%>
-						<option value="<%=n.getName()%>"><%=n.getName()%></option>
-						<%
-						}
-						%>
-					</select>
 				</td>
 			</tr>
 		</table>
@@ -99,25 +84,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		let myGridID;
 		function _layout() {
 			return [ {
-				dataField : "formType",
-				headerText : "템플릿 타입",
-				dataType : "string",
-				width : 150,
-			}, {
-				dataField : "number",
-				headerText : "문서 템플릿 번호",
-				dataType : "string",
-				width : 150,
-				renderer : {
-					type : "LinkRenderer",
-					baseUrl : "javascript",
-					jsCallback : function(rowIndex, columnIndex, value, item) {
-						const oid = item.oid;
-						const url = getCallUrl("/form/view?oid=" + oid);
-						document.location.href = url;
-					}
-				},
-			}, {
 				dataField : "name",
 				headerText : "문서 템플릿 제목",
 				dataType : "string",
@@ -132,15 +98,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				},
 			}, {
-				dataField : "version",
-				headerText : "버전",
-				dataType : "numeric",
-				width : 100,
-			}, {
 				dataField : "creator",
 				headerText : "등록자",
 				dataType : "string",
-				width : 150,
+				width : 100,
 			}, {
 				dataField : "createdDate",
 				headerText : "등록일",

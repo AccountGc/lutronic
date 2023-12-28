@@ -115,6 +115,7 @@ function second() {
 			if (clazz !== "회의록") {
 				nameTag.value = text + "_"
 			}
+			loadForm(clazz);
 			lastNumber(tag.value, classType1);
 		}
 	}
@@ -264,13 +265,11 @@ function setFirstNumber(classType1) {
 
 // DEXT5 양식
 function loadForm(classType2) {
-	const url = getCallUrl("/form/getHtml?code=" + classType2);
-	const formType = document.getElementById("formType");
+	const url = getCallUrl("/form/getHtml?clazz=" + classType2);
 	parent.openLayer();
 	call(url, null, function(data) {
 		if (data.result) {
 			DEXT5.setBodyValue(data.html, 'content');
-			formType.value = data.oid;
 		} else {
 			alert(data.msg);
 		}
