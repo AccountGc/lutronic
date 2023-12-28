@@ -326,6 +326,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				String duty = (String) edit.get("duty");
 				String email = (String) edit.get("email");
 				boolean fire = (boolean) edit.get("fire");
+				boolean pdfAuth = (boolean) edit.get("pdfAuth");
 				People people = (People) CommonUtil.getObject(oid);
 
 				if (StringUtil.checkString(department_oid)) {
@@ -336,6 +337,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				people.setEmail(email);
 				people.setDuty(duty);
 				people.setAuth(auth);
+				people.setPdfAuth(pdfAuth);
 				PersistenceHelper.manager.modify(people);
 
 				WTUser user = people.getUser();

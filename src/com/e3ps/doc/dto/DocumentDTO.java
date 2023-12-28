@@ -150,8 +150,15 @@ public class DocumentDTO {
 			// _ 무조건 붙이게하도록...
 			String name = doc.getName();
 			int idx = name.lastIndexOf("_");
-			String prefix = name.substring(0, idx);
-			String suffix = name.substring(idx + 1);
+			String prefix = "";
+			String suffix = "";
+			if (idx > -1) {
+				prefix = name.substring(0, idx);
+				suffix = name.substring(idx + 1);
+			} else {
+				prefix = name;
+				suffix = "";
+			}
 			setPrefix(prefix);
 			setSuffix(suffix);
 		} else {

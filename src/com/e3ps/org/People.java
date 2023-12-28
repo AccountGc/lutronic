@@ -57,7 +57,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "auth", type = String.class),
 
-				@GeneratedProperty(name = "chief", type = Boolean.class, initialValue = "false")
+				@GeneratedProperty(name = "chief", type = Boolean.class, initialValue = "false"),
+
+				@GeneratedProperty(name = "pdfAuth", type = Boolean.class)
 
 		},
 

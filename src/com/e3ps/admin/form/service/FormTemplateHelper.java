@@ -105,6 +105,8 @@ public class FormTemplateHelper {
 			return "설계 및 검증 검토 회의록";
 		} else if ("PP완료여부회의".equals(clazz)) {
 			return "PP 완료 여부 검토 회의록";
+		} else if("테스트보고서".equals(clazz) {
+			return "보고서(테스트)";
 		}
 		return "";
 	}
