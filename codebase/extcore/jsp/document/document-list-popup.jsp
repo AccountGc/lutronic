@@ -9,7 +9,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 String location = (String) request.getAttribute("location");
-location = StringUtil.checkString(location)==true?location:DocumentHelper.DOCUMENT_ROOT;
+location = StringUtil.checkString(location) == true ? location : DocumentHelper.DOCUMENT_ROOT;
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
@@ -18,6 +18,12 @@ String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String state = (String) request.getAttribute("state");
 %>
+<style type="text/css">
+.approved {
+	font-weight: bold !important;
+	color: red !important;
+}
+</style>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
 <input type="hidden" name="oid" id="oid">
@@ -46,17 +52,17 @@ String state = (String) request.getAttribute("state");
 		<th>문서 분류</th>
 		<td class="indent5">
 			<%
-				if(StringUtil.checkString(location)) {
+			if (StringUtil.checkString(location)) {
 			%>
 			<input type="hidden" name="location" id="location" value="<%=location%>">
 			<span id="locationText"><%=location%></span>
 			<%
-				} else {
+			} else {
 			%>
 			<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 			<span id="locationText"><%=DocumentHelper.DOCUMENT_ROOT%></span>
 			<%
-				}
+			}
 			%>
 		</td>
 		<th>문서 번호</th>
@@ -274,6 +280,12 @@ const columns = [ {
 	headerText : "상태",
 	dataType : "string",
 	width : 80,
+	styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+		if (value === "승인됨") {
+			return "approved";
+		}
+		return null;
+	}	
 }, {
 	dataField : "writer",
 	headerText : "작성자",
@@ -358,7 +370,7 @@ function auiCellClick(event) {
 		// 엑스트라 체크박스 체크 추가
 		AUIGrid.setCheckedRowsByIds(event.pid, rowId);
 	}
-	<%}else{%>
+	<%} else {%>
 	if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
 		AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
 	} else {

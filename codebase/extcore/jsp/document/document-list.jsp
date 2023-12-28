@@ -22,6 +22,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+.approved {
+	font-weight: bold !important;
+	color: red !important;
+}
+</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -336,6 +342,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					dataType : "string",
 					width : 80,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}
 				}, {
 					dataField : "writer",
 					headerText : "작성자",

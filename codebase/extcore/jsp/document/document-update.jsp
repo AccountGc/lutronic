@@ -284,7 +284,9 @@ iframe {
 		const rows103 = AUIGrid.getGridDataWithState(myGridID103, "gridState");
 		// 내용
 		const content = DEXT5.getBodyValue("content");
-
+		
+		const interalnumber = document.getElementById("interalnumber").value;
+		
 		let name;
 		if (suffix === "") {
 			alert("문서명을 입력하세요,");
@@ -337,7 +339,7 @@ iframe {
 			location : location.value,
 			model_code : model,
 			deptcode_code : deptcode,
-// 			interalnumber : interalnumber,
+			interalnumber : interalnumber,
 			writer : writer,
 			preseration_code : preseration,
 			iterationNote : iterationNote.value,

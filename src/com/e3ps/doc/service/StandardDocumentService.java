@@ -516,6 +516,17 @@ public class StandardDocumentService extends StandardManager implements Document
 			// 작업함으로 이동 시킨다
 			WorkDataHelper.service.create(latest);
 
+			String classType1_code = latest.getTypeInfoWTDocument().getPtc_str_2();
+			if (StringUtil.checkString(classType1_code)) {
+				if (classType1_code.equals("DEV") || classType1_code.equals("INSTRUCTION")) {
+					DocumentHelper.manager
+							.wordToPdfMethod(latest.getPersistInfo().getObjectIdentifier().getStringValue());
+				} else {
+					DocumentHelper.manager
+							.genWordAndPdfMethod(latest.getPersistInfo().getObjectIdentifier().getStringValue());
+				}
+			}
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -596,6 +607,17 @@ public class StandardDocumentService extends StandardManager implements Document
 			} else {
 				State state = State.toState("INWORK");
 				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
+			}
+
+			String classType1_code = workCopy.getTypeInfoWTDocument().getPtc_str_2();
+			if (StringUtil.checkString(classType1_code)) {
+				if (classType1_code.equals("DEV") || classType1_code.equals("INSTRUCTION")) {
+					DocumentHelper.manager
+							.wordToPdfMethod(workCopy.getPersistInfo().getObjectIdentifier().getStringValue());
+				} else {
+					DocumentHelper.manager
+							.genWordAndPdfMethod(workCopy.getPersistInfo().getObjectIdentifier().getStringValue());
+				}
 			}
 
 			trs.commit();

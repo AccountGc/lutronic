@@ -366,6 +366,7 @@ public class DocumentHelper {
 			DocumentColumn dto = new DocumentColumn(d);
 			map.put("oid", dto.getOid());
 			map.put("name", dto.getName());
+			map.put("interalnumber", dto.getInteralnumber());
 			map.put("number", dto.getNumber());
 			map.put("version", dto.getVersion());
 			map.put("creator", dto.getCreator());
@@ -878,29 +879,12 @@ public class DocumentHelper {
 		coverPdf.save(savePath);
 		coverPdf.close();
 
-		// 기존 주 첨부파일을 일반 첨부로 옴기고
-		// PDF 를 주 첨부로 등록
-//		QueryResult rs = ContentHelper.service.getContentsByRole(doc, ContentRoleType.PRIMARY);
-//		if (rs.hasMoreElements()) {
-//			ApplicationData dd = (ApplicationData) rs.nextElement();
-//
-//			byte[] buffer = new byte[10240];
-//			InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
-//			File file = new File(mergePath + File.separator + dd.getFileName());
-//			FileOutputStream fos = new FileOutputStream(file);
-//			int j = 0;
-//			while ((j = is.read(buffer, 0, 10240)) > 0) {
-//				fos.write(buffer, 0, j);
-//			}
-//			fos.close();
-//			is.close();
-//
-//			ApplicationData applicationData = ApplicationData.newApplicationData(doc);
-//			applicationData.setRole(ContentRoleType.SECONDARY);
-//			PersistenceHelper.manager.save(applicationData);
-//			ContentServerHelper.service.updateContent(doc, applicationData, file.getPath());
-//			ContentServerHelper.service.deleteContent(doc, dd);
-//		}
+		// 기존꺼 제거...
+		QueryResult rs = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("MERGE"));
+		if (rs.hasMoreElements()) {
+			ApplicationData dd = (ApplicationData) rs.nextElement();
+			ContentServerHelper.service.deleteContent(doc, dd);
+		}
 
 		ApplicationData applicationData = ApplicationData.newApplicationData(doc);
 		applicationData.setRole(ContentRoleType.toContentRoleType("MERGE"));
