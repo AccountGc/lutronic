@@ -126,23 +126,34 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">변경사유</th>
-				<td class="indent5" colspan="3">
-					<textarea name="eoCommentA" id="eoCommentA" rows="10"><%= dto.getEoCommentA() != null ? dto.getEoCommentA() : "" %></textarea>
+				<th class="lb">내용</th>
+				<td colspan="5" class="indent7 pb8">
+					<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContents() != null ? dto.getContents() : ""%></textarea>
+					<script type="text/javascript">
+						new Dext5editor('content');
+						const content = document.getElementById("contents").value;
+						DEXT5.setBodyValue(content, 'content');
+					</script>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">변경사항</th>
-				<td class="indent5" colspan="3">
-					<textarea name="eoCommentB" id="eoCommentB" rows="10"><%= dto.getEoCommentB() != null ? dto.getEoCommentB() : "" %></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">참고사항</th>
-				<td class="indent5" colspan="3">
-					<textarea name="eoCommentC" id="eoCommentC" rows="10"><%= dto.getEoCommentC() != null ? dto.getEoCommentC() : "" %></textarea>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">변경사유</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<%-- 					<textarea name="eoCommentA" id="eoCommentA" rows="10"><%= dto.getEoCommentA() != null ? dto.getEoCommentA() : "" %></textarea> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<th class="lb">변경사항</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<%-- 					<textarea name="eoCommentB" id="eoCommentB" rows="10"><%= dto.getEoCommentB() != null ? dto.getEoCommentB() : "" %></textarea> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<th class="lb">참고사항</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<%-- 					<textarea name="eoCommentC" id="eoCommentC" rows="10"><%= dto.getEoCommentC() != null ? dto.getEoCommentC() : "" %></textarea> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="req lb">주 첨부파일</th>
 				<td class="indent5" colspan="3">
@@ -193,6 +204,8 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+				// 내용
+				const content = DEXT5.getBodyValue("content");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -242,10 +255,11 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					approveDate : toId("approveDate"),
 					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
-					eoCommentA : toId("eoCommentA"),
-					eoCommentB : toId("eoCommentB"),
-					eoCommentC : toId("eoCommentC"),
+// 					eoCommentA : toId("eoCommentA"),
+// 					eoCommentB : toId("eoCommentB"),
+// 					eoCommentC : toId("eoCommentC"),
 					sections : sections, //변경 구분
+					contents : content,
 					primary : primary==null ? '' : primary.value,
 					rows101 : rows101,
 					rows300 : rows300,

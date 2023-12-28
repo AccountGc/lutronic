@@ -256,7 +256,7 @@ iframe {
 					approveDate : toId("approveDate"),
 					createDepart_code : toId("createDepart"),
 					writer : toId("writer"),
-					eoCommentA : content,
+					contents : content,
 					sections : sections, //변경 구분
 					primary : primary == null ? '' : primary.value,
 					secondarys : secondarys,

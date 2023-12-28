@@ -5,6 +5,7 @@
 <%
 	ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 	ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
+	String html = (String) request.getAttribute("html");
 %>
 <!DOCTYPE html>
 <html>
@@ -115,23 +116,35 @@
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">변경사유</th>
-				<td class="indent5" colspan="3">
-					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
+				<th class="lb">내용</th>
+				<td colspan="5" class="indent7 pb8">
+					<textarea name="contents" id="contents" style="display: none;"><%=html != null ? html : ""%></textarea>
+					<script type="text/javascript">
+						const html = toId("contents");
+						new Dext5editor('content');
+						DEXT5.setBodyValue(html, 'content');
+					</script>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">변경사항</th>
-				<td class="indent5" colspan="3">
-					<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">참고사항</th>
-				<td class="indent5" colspan="3">
-					<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea>
-				</td>
-			</tr>
+			
+<!-- 			<tr> -->
+<!-- 				<th class="lb">변경사유</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<!-- 					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<th class="lb">변경사항</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<!-- 					<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<th class="lb">참고사항</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<!-- 					<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="req lb">주 첨부파일</th>
 				<td class="indent5" colspan="3">
@@ -220,6 +233,7 @@
 						return false;
 					}
 				}
+				const content = DEXT5.getBodyValue("content");
 				
 				const params = {
 					name : name.value,
@@ -228,9 +242,10 @@
 					approveDate : toId("approveDate"),
 					createDepart : toId("createDepart"),
 					writer_oid : toId("writerOid"),
-					eoCommentA : toId("eoCommentA"),
-					eoCommentB : toId("eoCommentB"),
-					eoCommentC : toId("eoCommentC"),
+// 					eoCommentA : toId("eoCommentA"),
+// 					eoCommentB : toId("eoCommentB"),
+// 					eoCommentC : toId("eoCommentC"),
+					contents : content,
 					sections : sections, //변경 구분
 					primary : primary==null ? '' : primary.value,
 					rows101 : rows101,

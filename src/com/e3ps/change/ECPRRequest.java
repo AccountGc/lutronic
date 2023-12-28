@@ -1,6 +1,8 @@
 package com.e3ps.change;
 
 import com.e3ps.common.util.OwnPersistable;
+import com.ptc.windchill.annotations.metadata.ColumnProperties;
+import com.ptc.windchill.annotations.metadata.ColumnType;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;
 import com.ptc.windchill.annotations.metadata.GeneratedForeignKey;
@@ -22,8 +24,8 @@ import wt.util.WTException;
 				@GeneratedProperty(name = "createDepart", type = String.class),
 				@GeneratedProperty(name = "writer", type = String.class),
 				@GeneratedProperty(name = "proposer", type = String.class),
-				@GeneratedProperty(name = "changeSection", type = String.class)
-
+				@GeneratedProperty(name = "changeSection", type = String.class),
+				@GeneratedProperty(name = "contents", type = String.class, columnProperties = @ColumnProperties(columnType = ColumnType.BLOB))
 		},
 
 		foreignKeys = { @GeneratedForeignKey(myRoleIsRoleA = false,

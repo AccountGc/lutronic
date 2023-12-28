@@ -35,6 +35,7 @@ public class EcprDTO {
 	private String eoCommentB;
 	private String eoCommentC;
 	private String writer_oid;
+	private String contents;
 
 	// 따로 추가
 	private String state;
@@ -79,6 +80,7 @@ public class EcprDTO {
 		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
 		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
 		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
+		setContents(StringUtil.checkNull(cr.getContents()));
 
 		// 따로 추가
 		setState(cr.getLifeCycleState().getDisplay());

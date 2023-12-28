@@ -34,6 +34,7 @@ public class CrDTO {
 	private String eoCommentA;
 	private String eoCommentB;
 	private String eoCommentC;
+	private String contents;
 
 	// 따로 추가
 	private String state;
@@ -87,7 +88,8 @@ public class CrDTO {
 		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
 		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
 		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
-
+		setContents(StringUtil.checkNull(cr.getContents()));
+		setEcprStart(cr.getEcprStart());
 		// 따로 추가
 		setCreateDepart_code(StringUtil.checkNull(cr.getCreateDepart()));
 		setState(cr.getLifeCycleState().getDisplay());

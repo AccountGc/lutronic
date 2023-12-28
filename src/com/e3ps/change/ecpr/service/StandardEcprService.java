@@ -51,9 +51,10 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
 		String writer_oid = dto.getWriter_oid();
-		String eoCommentA = dto.getEoCommentA();
-		String eoCommentB = dto.getEoCommentB();
-		String eoCommentC = dto.getEoCommentC();
+//		String eoCommentA = dto.getEoCommentA();
+//		String eoCommentB = dto.getEoCommentB();
+//		String eoCommentC = dto.getEoCommentC();
+		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
@@ -104,9 +105,10 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setModel(model);
 
 			ecpr.setChangeSection(changeSection);
-			ecpr.setEoCommentA(eoCommentA);
-			ecpr.setEoCommentB(eoCommentB);
-			ecpr.setEoCommentC(eoCommentC);
+			ecpr.setContents(contents);
+//			ecpr.setEoCommentA(eoCommentA);
+//			ecpr.setEoCommentB(eoCommentB);
+//			ecpr.setEoCommentC(eoCommentC);
 
 			String location = "/Default/설계변경/ECPR";
 			String lifecycle = "LC_Default";
@@ -220,9 +222,10 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
 		String writer_oid = dto.getWriter_oid();
-		String eoCommentA = dto.getEoCommentA();
-		String eoCommentB = dto.getEoCommentB();
-		String eoCommentC = dto.getEoCommentC();
+//		String eoCommentA = dto.getEoCommentA();
+//		String eoCommentB = dto.getEoCommentB();
+//		String eoCommentC = dto.getEoCommentC();
+		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
@@ -271,9 +274,10 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setModel(model);
 
 			ecpr.setChangeSection(changeSection);
-			ecpr.setEoCommentA(eoCommentA);
-			ecpr.setEoCommentB(eoCommentB);
-			ecpr.setEoCommentC(eoCommentC);
+			ecpr.setContents(contents);
+//			ecpr.setEoCommentA(eoCommentA);
+//			ecpr.setEoCommentB(eoCommentB);
+//			ecpr.setEoCommentC(eoCommentC);
 
 			ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
 
