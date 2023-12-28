@@ -28,6 +28,7 @@ public class WorkDataDTO {
 	private String state;
 	private String creator;
 	private String createdDate_txt;
+	private boolean isValidate = false;
 
 	private String viewUrl;
 	private final String context = "/Windchill/plm";
@@ -91,6 +92,7 @@ public class WorkDataDTO {
 			if (eco.getEoType().equals("CHANGE")) {
 				setPersistType("ECO");
 				setViewUrl(this.context + "/eco/view?oid=" + getPoid());
+				setValidate(true);
 			} else {
 				setPersistType("EO");
 				setViewUrl(this.context + "/eo/view?oid=" + getPoid());

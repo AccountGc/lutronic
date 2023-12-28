@@ -104,7 +104,8 @@ function second() {
 		} else if ("REPORT" === classType1) {
 			const currentDate = new Date();
 			const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
-			const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로 표현		
+			const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로 표현
+			loadForm(clazz);
 			tag.value += clazz + "-" + year + month + "-";
 			classType3(classType1, value);
 		} else if ("VALIDATION" === classType1) {

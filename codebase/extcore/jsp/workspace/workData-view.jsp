@@ -1,7 +1,9 @@
+<%@page import="wt.fc.Persistable"%>
 <%@page import="com.e3ps.workspace.dto.WorkDataDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
+boolean validate = dto.isValidate();
 %>
 <!DOCTYPE html>
 <html>
@@ -26,6 +28,13 @@ WorkDataDTO dto = (WorkDataDTO) request.getAttribute("dto");
 					</div>
 				</td>
 				<td class="right">
+					<%
+						if(validate) {
+					%>
+					<input type="button" value="검증" title="검증" class="blue" onclick="validate();">
+					<%
+						}
+					%>
 					<input type="button" value="기안" title="기안" class="red" onclick="_submit();">
 					<input type="button" value="뒤로" title="뒤로" class="gray" onclick="history.go(-1);">
 				</td>
