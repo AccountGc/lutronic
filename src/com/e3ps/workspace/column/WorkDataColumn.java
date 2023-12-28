@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import wt.doc.WTDocument;
 import wt.fc.Persistable;
+import wt.part.WTPart;
 
 @Getter
 @Setter
@@ -135,6 +136,16 @@ public class WorkDataColumn {
 			setCreatedDate(asm.getCreateTimestamp());
 			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/asm/view?oid=" + getPoid());
+		} else if (per instanceof WTPart) {
+			WTPart part = (WTPart) per;
+			setNumber(part.getNumber());
+			setName(part.getName());
+			setPersistType("품목");
+			setState(part.getLifeCycleState().getDisplay());
+			setCreator(part.getCreatorName());
+			setCreatedDate(part.getCreateTimestamp());
+			setCreatedDate_txt(part.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/part/view?oid=" + getPoid());
 		}
 	}
 }
