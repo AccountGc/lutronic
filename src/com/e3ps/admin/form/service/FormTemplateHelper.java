@@ -108,7 +108,7 @@ public class FormTemplateHelper {
 		} else if ("테스트보고서".equals(clazz)) {
 			return "보고서(테스트)";
 		} else if ("제3자검증의뢰서".equals(clazz)) {
-			return "";
+			return "제3자 시험의뢰서";
 		}
 		return "";
 	}

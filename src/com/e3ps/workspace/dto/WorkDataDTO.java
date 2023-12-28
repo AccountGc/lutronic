@@ -92,11 +92,11 @@ public class WorkDataDTO {
 			if (eco.getEoType().equals("CHANGE")) {
 				setPersistType("ECO");
 				setViewUrl(this.context + "/eco/view?oid=" + getPoid());
-				setValidate(true);
 			} else {
 				setPersistType("EO");
 				setViewUrl(this.context + "/eo/view?oid=" + getPoid());
 			}
+			setValidate(true);
 			setNumber(eco.getEoNumber());
 			setName(eco.getEoName());
 			setState(eco.getLifeCycleState().getDisplay());

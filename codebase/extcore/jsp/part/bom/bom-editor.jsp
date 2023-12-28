@@ -271,7 +271,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
-				list[1].textContent = "<img src=" + node.data.thumb + ">";
+				list[1].innerHTML  = "<img src=" + node.data.thumb + ">";
 				list[2].style.textAlign = "center";
 				list[2].textContent = node.data.level;
 				list[3].style.textAlign = "center";
@@ -290,16 +290,35 @@ WTPart root = (WTPart) request.getAttribute("root");
 				list[8].style.textAlign = "center";
 				list[8].textContent = node.data.creator;
 			},
-			click : function(event, data) {
-				if (event.originalEvent.ctrlKey) { // Ctrl 키를 누른 상태에서만 선택
-					data.node.toggleSelected();
-				} else {
-					data.tree.visit(function(node) {
-						node.setSelected(false);
-					});
-					data.node.setSelected(true);
-				}
-			}
+			beforeSelect: function(event, data) {
+				const tree = $("#treetable").fancytree("getTree");
+                if (event.originalEvent.shiftKey) {
+                    // Shift 키가 눌렸을 때
+                    const lastSelectedNode = tree.getSelectedNodes()[0];
+                    if (lastSelectedNode) {
+                        const startIndex = lastSelectedNode.getIndex();
+                        const endIndex = data.node.getIndex();
+                        const startNode = startIndex < endIndex ? lastSelectedNode : data.node;
+                        const endNode = startIndex < endIndex ? data.node : lastSelectedNode;
+                        const selectedNodes = [];
+
+                        // 선택된 범위의 노드를 수동으로 선택
+          for (let i = startNode.getIndex(); i <= endNode.getIndex(); i++) {
+    const node = data.tree.getNodeByKey(i.toString());
+    node.setSelected(true);
+    selectedNodes.push(node);
+}
+
+                        // 선택된 노드들에 대한 체크박스 상태를 관리
+                        selectedNodes.forEach(node => {
+                            node.setSelected(true);
+                            node.render();
+                        });
+
+                        return false; // 기본 동작 방지
+                    }
+                }
+            }
 		}).on("nodeCommand", function(event, data) {
 			const tree = $.ui.fancytree.getTree(this);
 			const refNode = null;
@@ -922,7 +941,7 @@ WTPart root = (WTPart) request.getAttribute("root");
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
-				list[1].textContent = "<img src=" + node.data.thumb + ">";
+				list[1].innerHTML  = "<img src=" + node.data.thumb + ">";
 				list[2].style.textAlign = "center";
 				list[2].textContent = node.data.level;
 				list[3].style.textAlign = "center";

@@ -18,6 +18,14 @@ boolean validate = dto.isValidate();
 	<form>
 		<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 		<input type="hidden" name="poid" id="poid" value="<%=dto.getPoid()%>">
+		<%
+			if(dto.isValidate()) {
+				// 검증..
+		%>
+		<input type="hidden" name="validate" id="validate"> 
+		<%
+			}
+		%>
 
 		<table class="button-table">
 			<tr>
@@ -106,6 +114,20 @@ boolean validate = dto.isValidate();
 		</table>
 	</form>
 	<script type="text/javascript">
+	
+		// SAP 전송전 검증 단계
+		function validate() {
+			const url = getCallUrl("/sap/validate");
+			const params = new Object();
+			parent.openLayer();
+			call(url, params, function(data) {
+				alert(data.msg);
+				if(data.result) {
+					
+				}
+				parent.closeLayer();
+			});
+		}
 	
 		function view(url) {
 			_popup(url, "", "", "f");

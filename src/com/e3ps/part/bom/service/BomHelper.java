@@ -85,7 +85,8 @@ public class BomHelper {
 		JSONArray list = new JSONArray();
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
-		rootNode.put("thum", ThumbnailUtil.thumbnailSmall(root));
+//		rootNode.put("thum", ThumbnailUtil.thumbnailSmall(root));
+		rootNode.put("thum", "1");
 		rootNode.put("level", 1);
 		rootNode.put("number", root.getNumber());
 		rootNode.put("name", root.getName());
