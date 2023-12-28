@@ -77,7 +77,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
-				<td class="indent5"><%=dto.getWriter()%></td>
+				<td class="indent5"><%=dto.getWriter() != null ? dto.getWriter() : ""%></td>
 				<th>작성부서</th>
 				<td class="indent5"><%=dto.getCreateDepart_name()%></td>
 				<th>작성일</th>
@@ -98,21 +98,16 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 				<td colspan="5" class="indent5"><%=dto.getModel()%></td>
 			</tr>
 			<tr>
-				<th class="lb">변경사유</th>
+				<th class="lb">내용</th>
 				<td colspan="5" class="indent5">
-					<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentA()%></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">변경사항</th>
-				<td colspan="5" class="indent5">
-					<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentB()%></textarea>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">참고사항</th>
-				<td colspan="5" class="indent5">
-					<textarea rows="10" readonly="readonly" id="description"><%=dto.getEoCommentC()%></textarea>
+					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContents() != null ? dto.getContents() : ""%></textarea>
+					<script type="text/javascript">
+						// 에디터를 view 모드로 설정합니다.
+						DEXT5.config.Mode = "view";
+						new Dext5editor("content");
+						const content = document.getElementById("contents").value;
+						DEXT5.setBodyValue(content, "content");
+					</script>
 				</td>
 			</tr>
 			<tr>

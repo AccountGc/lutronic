@@ -93,17 +93,30 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				<td class="indent5"><%=dto.getChangeCode()%></td>
 			</tr>
 			<tr>
-				<th class="lb">변경사유</th>
-				<td colspan="3" class="indent5"><%=dto.getEoCommentA()%></td>
+				<th class="lb">내용</th>
+				<td colspan="5" class="indent5">
+					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContents() != null ? dto.getContents() : ""%></textarea>
+					<script type="text/javascript">
+						// 에디터를 view 모드로 설정합니다.
+						DEXT5.config.Mode = "view";
+						new Dext5editor("content");
+						const content = document.getElementById("contents").value;
+						DEXT5.setBodyValue(content, "content");
+					</script>
+				</td>
 			</tr>
-			<tr>
-				<th class="lb">변경사항</th>
-				<td colspan="3" class="indent5"><%=dto.getEoCommentB()%></td>
-			</tr>
-			<tr>
-				<th class="lb">참고사항</th>
-				<td colspan="3" class="indent5"><%=dto.getEoCommentC()%></td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">변경사유</th> -->
+<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentA()%></td> --%>
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<th class="lb">변경사항</th> -->
+<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentB()%></td> --%>
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<th class="lb">참고사항</th> -->
+<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentC()%></td> --%>
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">주 첨부파일</th>
 				<td colspan="3" class="indent5">

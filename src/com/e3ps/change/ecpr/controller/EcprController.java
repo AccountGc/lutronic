@@ -1,6 +1,6 @@
 package com.e3ps.change.ecpr.controller;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.admin.form.FormTemplate;
+import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
 
 @Controller
 @RequestMapping(value = "/ecpr/**")
@@ -83,8 +84,10 @@ public class EcprController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		FormTemplate form = FormTemplateHelper.manager.getTemplate("설계변경 사전검토 회의록");
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("sectionList", sectionList);
+		model.addObject("html", form==null?"":form.getDescription());
 		model.setViewName("/extcore/jsp/change/ecpr/ecpr-create.jsp");
 		return model;
 	}

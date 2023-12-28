@@ -2,6 +2,8 @@
 package com.e3ps.change;
 
 import com.e3ps.common.util.OwnPersistable;
+import com.ptc.windchill.annotations.metadata.ColumnProperties;
+import com.ptc.windchill.annotations.metadata.ColumnType;
 //import wt.util.WTPropertyVetoException;
 import com.ptc.windchill.annotations.metadata.ForeignKeyRole;
 import com.ptc.windchill.annotations.metadata.GenAsPersistable;
@@ -39,7 +41,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "ecprStart", type = Boolean.class),
 
-				@GeneratedProperty(name = "ecprEnd", type = Boolean.class)
+				@GeneratedProperty(name = "ecprEnd", type = Boolean.class),
+				
+				@GeneratedProperty(name = "contents", type = String.class, columnProperties = @ColumnProperties(columnType = ColumnType.BLOB))
 
 		},
 
