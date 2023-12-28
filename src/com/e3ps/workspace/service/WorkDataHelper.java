@@ -11,7 +11,9 @@ import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.column.WorkDataColumn;
 
 import wt.fc.PagingQueryResult;
+import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
+import wt.fc.QueryResult;
 import wt.org.WTUser;
 import wt.query.QuerySpec;
 import wt.services.ServiceFactory;
@@ -78,5 +80,17 @@ public class WorkDataHelper {
 
 		QuerySpecUtils.toOrderBy(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, true);
 		return PersistenceHelper.manager.find(query).size();
+	}
+
+	/**
+	 * 결재선지정 객체 가져오기
+	 */
+	public WorkData getWorkData(Persistable per) throws Exception {
+		QueryResult qr = PersistenceHelper.manager.navigate(per, "workData", PerWorkDataLink.class);
+		if (qr.hasMoreElements()) {
+			WorkData dd = (WorkData) qr.nextElement();
+			return dd;
+		}
+		return null;
 	}
 }

@@ -15,12 +15,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
 
-WTDocument doc = (WTDocument)CommonUtil.getObject(dto.getOid());
+WTDocument doc = (WTDocument) CommonUtil.getObject(dto.getOid());
 QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("PDF"));
 // out.println(qr.size());
-
-
-
 %>
 <style type="text/css">
 iframe {
@@ -104,59 +101,56 @@ iframe {
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="450">
+				<col width="350">
 				<col width="130">
-				<col width="450">
+				<col width="350">
 				<col width="130">
-				<col width="450">
+				<col width="350">
+				<col width="130">
+				<col width="350">
 			</colgroup>
 			<tr>
-				<!-- 				<th class="lb">문서번호</th> -->
-				<%-- 				<td class="indent5"><%=dto.getNumber()%></td> --%>
-				<th class="lb">문서명</th>
-				<td class="indent5"><%=dto.getName()%></td>
-				<th>내부문서번호</th>
+				<th class="lb" colspan="8">
+					<%=dto.getName()%>
+				</th>
+			</tr>
+			<tr>
+				<th class="lb">내부문서번호</th>
 				<td class="indent5"><%=dto.getInteralnumber()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
-			</tr>
-			<tr>
-				<th class="lb">REV</th>
+				<th>상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
+				<th>REV</th>
 				<td class="indent5">
 					<%=dto.getVersion()%>.<%=dto.getIteration()%>
 				</td>
-				<th>등록자</th>
-				<td class="indent5"><%=dto.getCreator()%></td>
-				<th>수정자</th>
-				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록일</th>
 				<td class="indent5"><%=dto.getCreatedDate()%></td>
 				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate()%></td>
-				<th>문서유형</th>
-				<td class="indent5"><%=dto.getDocumentType_name()%></td>
+				<th>등록자</th>
+				<td class="indent5"><%=dto.getCreator()%></td>
+				<th>수정자</th>
+				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
-				<th class="lb">결재방식</th>
-				<td class="indent5"><%=dto.getApprovaltype_name()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
-				<th>프로젝트 코드</th>
+<!-- 				<th class="lb">결재방식</th> -->
+<%-- 				<td class="indent5"><%=dto.getApprovaltype_name()%></td> --%>
+				<th class="lb">프로젝트 코드</th>
 				<td class="indent5"><%=dto.getModel_name()%></td>
-			</tr>
-			<tr>
-				<th class="lb">작성자</th>
-				<td class="indent5"><%=dto.getWriter()%></td>
 				<th>보존기간</th>
 				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>
 				<td class="indent5"><%=dto.getDeptcode_name()%></td>
+				<th>작성자</th>
+				<td class="indent5"><%=dto.getWriter()%></td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent5">
+				<td colspan="7" class="indent5">
 					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
@@ -169,13 +163,13 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">설명</th>
-				<td colspan="5" class="indent5">
+				<td colspan="7" class="indent5">
 					<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">주 첨부파일</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5" colspan="7">
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -183,7 +177,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">PDF</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5" colspan="7">
 					<%
 					Map<String, Object> pdf = dto.getPdf();
 					if (pdf != null) {
@@ -207,7 +201,7 @@ iframe {
 					첨부파일
 					<!-- 					<input type="button" value="일괄 다운" title="일괄 다운" onclick=""> -->
 				</th>
-				<td class="indent5" colspan="5">
+				<td class="indent5" colspan="7">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>

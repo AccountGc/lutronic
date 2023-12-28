@@ -77,6 +77,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		dataField : "name",
 		headerText : "제목",
 		dataType : "string",
+		width : 250,
 		style : "aui-left"
 	}, {
 		dataField : "state",

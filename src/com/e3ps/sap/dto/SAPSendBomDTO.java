@@ -48,7 +48,7 @@ public class SAPSendBomDTO {
 			setParentPartNumber(pre_parent.getNumber());
 		} else {
 			// 최상위 까지 가면 기존꺼가 들어간다..
-			setParentPartNumber(parent.getNumber()u);
+			setParentPartNumber(parent.getNumber());
 		}
 		if (pre_child != null) {
 			setChildPartNumber(pre_child.getNumber());

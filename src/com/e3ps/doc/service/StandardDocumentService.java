@@ -37,6 +37,7 @@ import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.AsmApproval;
+import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -169,6 +170,12 @@ public class StandardDocumentService extends StandardManager implements Document
 			trs.start();
 
 			WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+
+			WorkData dd = WorkDataHelper.manager.getWorkData(doc);
+			if (dd != null) {
+				PersistenceHelper.manager.delete(dd);
+			}
+
 			PersistenceHelper.manager.delete(doc);
 
 			trs.commit();
