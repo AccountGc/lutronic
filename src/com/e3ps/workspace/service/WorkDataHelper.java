@@ -24,7 +24,7 @@ public class WorkDataHelper {
 	public static final WorkDataHelper manager = new WorkDataHelper();
 
 	/**
-	 * 합의함 조회 함수
+	 * 결재선 지정 조회 함수
 	 */
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
