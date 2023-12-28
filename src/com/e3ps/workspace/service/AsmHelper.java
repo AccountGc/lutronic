@@ -32,14 +32,23 @@ public class AsmHelper {
 	public Map<String, Object> list(Map<String, Object> params) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
+		String name = (String) params.get("name");
 		String number = (String) params.get("number");
+		String creatorOid = (String) params.get("creatorOid");
+		String state = (String) params.get("state");
+		String createdFrom = (String) params.get("createdFrom");
+		String createdTo = (String) params.get("createdTo");
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(AsmApproval.class, true);
 
 		// 검색 조건 추가
 		// 구분
+		QuerySpecUtils.toLike(query, idx, AsmApproval.class, AsmApproval.NAME, name);
 		QuerySpecUtils.toLikeAnd(query, idx, AsmApproval.class, AsmApproval.NUMBER, number);
-
+		QuerySpecUtils.toState(query, idx, AsmApproval.class, state);
+		QuerySpecUtils.toCreatorQuery(query, idx, AsmApproval.class, creatorOid);
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, AsmApproval.class, AsmApproval.CREATE_TIMESTAMP, createdFrom,
+				createdTo);
 		QuerySpecUtils.toOrderBy(query, idx, AsmApproval.class, AsmApproval.CREATE_TIMESTAMP, false);
 
 		PageQueryUtils pager = new PageQueryUtils(params, query);

@@ -12,7 +12,7 @@
 <%
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
-String number = (String) request.getAttribute("number");
+String numberType = (String) request.getAttribute("number");
 String title = (String) request.getAttribute("title");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 %>
@@ -27,7 +27,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 </head>
 <body>
 	<form>
-		<input type="hidden" name="number" id="number" value="<%=number%>">
+		<input type="hidden" name="numberType" id="numberType" value="<%=numberType%>">
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
@@ -53,16 +53,16 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			</colgroup>
 			<tr>
 				<th><%=title%>
-					일괄결재제목
-				</th>
-				<td class="indent5">
-					<input type="text" name="name" id="name" class="width-300">
-				</td>
-				<th><%=title%>
 					일괄결재번호
 				</th>
 				<td class="indent5">
 					<input type="text" name="number" id="number" class="width-300">
+				</td>
+				<th><%=title%>
+					일괄결재제목
+				</th>
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-300">
 				</td>
 			</tr>
 			<tr>
@@ -134,7 +134,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					dataField : "number",
 					headerText : "<%=title%> 일괄결재번호",
 					dataType : "string",
-					width : 180,
+					width : 250,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -162,17 +162,17 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					dataField : "type",
 					headerText : "타입",
 					dataType : "string",
-					width : 80,
+					width : 100,
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 100,
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 100,
+					width : 150,
 				}, {
 					dataField : "createdDate_txt",
 					headerText : "등록일",
@@ -214,11 +214,17 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
 				}
-				const number = document.getElementById("number").value;
+				let params = new Object();
+				const field = [ "name", "createdFrom", "createdTo", "creatorOid", "state" ];
+				params = toField(params, field);
+				const number = toId("number");
+				const numberType = toId("numberType");
+				if(number==""){
+					params.number = numberType;
+				}else{
+					params.number = number;
+				}
 				const url = getCallUrl("/asm/list");
-				const params = {
-					number : number
-				};
 
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();

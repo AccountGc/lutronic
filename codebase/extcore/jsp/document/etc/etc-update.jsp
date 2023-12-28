@@ -80,7 +80,7 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">ㄴ</th>
+		<th class="req lb">병리연구 문서명</th>
 		<td class="indent5">
 			<input type="text" name="docName" id="docName" class="width-300" value="<%=dto.getName()%>">
 		</td>
