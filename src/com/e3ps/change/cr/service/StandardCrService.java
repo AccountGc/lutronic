@@ -50,9 +50,10 @@ public class StandardCrService extends StandardManager implements CrService {
 		String createDepart_code = dto.getCreateDepart_code();
 		String writer = dto.getWriter();
 //		String proposer_name= dto.getProposer_name();
-		String eoCommentA = dto.getEoCommentA();
-		String eoCommentB = dto.getEoCommentB();
-		String eoCommentC = dto.getEoCommentC();
+//		String eoCommentA = dto.getEoCommentA();
+//		String eoCommentB = dto.getEoCommentB();
+//		String eoCommentC = dto.getEoCommentC();
+		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
@@ -102,9 +103,11 @@ public class StandardCrService extends StandardManager implements CrService {
 
 //			cr.setProposer(proposer_name);				
 			cr.setChangeSection(changeSection);
-			cr.setEoCommentA(eoCommentA);
-			cr.setEoCommentB(eoCommentB);
-			cr.setEoCommentC(eoCommentC);
+//			cr.setEoCommentA(eoCommentA);
+//			cr.setEoCommentB(eoCommentB);
+//			cr.setEoCommentC(eoCommentC);
+			cr.setContents(contents);
+			cr.setEcprStart(ecprStart);
 
 			String location = "/Default/설계변경/ECR";
 			String lifecycle = "LC_ECR";
@@ -270,9 +273,10 @@ public class StandardCrService extends StandardManager implements CrService {
 
 //			cr.setProposer(dto.getProposer_name());				
 			cr.setChangeSection(changeSection);
-			cr.setEoCommentA(dto.getEoCommentA());
-			cr.setEoCommentB(dto.getEoCommentB());
-			cr.setEoCommentC(dto.getEoCommentC());
+//			cr.setEoCommentA(dto.getEoCommentA());
+//			cr.setEoCommentB(dto.getEoCommentB());
+//			cr.setEoCommentC(dto.getEoCommentC());
+			cr.setContents(dto.getContents());
 
 			cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
 
