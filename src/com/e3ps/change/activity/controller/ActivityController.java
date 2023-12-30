@@ -27,6 +27,7 @@ import com.e3ps.controller.BaseController;
 import com.e3ps.org.service.OrgHelper;
 import com.e3ps.part.bom.service.BomHelper;
 import com.e3ps.workspace.dto.EcaDTO;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import net.sf.json.JSONArray;
 import wt.part.WTPart;
@@ -212,10 +213,10 @@ public class ActivityController extends BaseController {
 			String sendType = eco.getSendType();
 			ArrayList<Map<String, Object>> list = ActivityHelper.manager.getEcoRevisePart(oid);
 //			if ("ECO".equals(sendType)) {
-				ArrayList<Map<String, String>> clist = ActivityHelper.manager.getEcoRefCr(oid);
-				model.addObject("list", list);
-				model.addObject("clist", JSONArray.fromObject(clist));
-				model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
+			ArrayList<Map<String, String>> clist = ActivityHelper.manager.getEcoRefCr(oid);
+			model.addObject("list", list);
+			model.addObject("clist", JSONArray.fromObject(clist));
+			model.setViewName("/extcore/jsp/workspace/activity/reviseBom.jsp");
 //			} else if ("ORDER".equals(sendType)) {
 //				model.addObject("list", list);
 //				model.setViewName("/extcore/jsp/workspace/activity/order.jsp");
@@ -438,5 +439,22 @@ public class ActivityController extends BaseController {
 		model.addObject("root", root);
 		model.setViewName("popup:/change/activity/activity-bom-editor");
 		return model;
+	}
+
+	@Description(value = "결재관련 함들 개수 업데이트")
+	@ResponseBody
+	@GetMapping(value = "/update")
+	public Map<String, Object> update() throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			int count = ActivityHelper.manager.count();
+			result.put("count", count);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

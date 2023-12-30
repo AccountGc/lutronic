@@ -93,4 +93,21 @@ public class WorkDataController extends BaseController {
 		}
 		return result;
 	}
+
+	@Description(value = "결재선 지정개수 업데이트")
+	@ResponseBody
+	@GetMapping(value = "/update")
+	public Map<String, Object> update() throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			int count = WorkDataHelper.manager.count();
+			result.put("count", count);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

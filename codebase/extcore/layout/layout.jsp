@@ -64,6 +64,47 @@
 			}
 		})
 
+		
+		function updateWorkData() {
+			const workData = document.getElementById("workData");
+			const url = getCallUrl("/workData/update");
+			call(url, null, function(data) {
+				if(data.result) {
+					workData.innerHTML = data.count;
+				}
+			}, "GET");
+		}
+		
+		function updateWorkspace() {
+			const approval = document.getElementById("approval");
+			const agree = document.getElementById("agree");
+			const receive = document.getElementById("receive");
+			const complete = document.getElementById("complete");
+			const reject = document.getElementById("reject");
+			const progress = document.getElementById("progress");
+			const url = getCallUrl("/workspace/update");
+			call(url, null, function(data) {
+				if(data.result) {
+					approval.innerHTML = data.approval;
+					agree.innerHTML = data.agree;
+					receive.innerHTML = data.receive;
+					complete.innerHTML = data.complete;
+					reject.innerHTML = data.reject;
+					progress.innerHTML = data.progress;
+				}
+			}, "GET");
+		}
+		
+		function updateActivity() {
+			const activity = document.getElementById("eca");
+			const url = getCallUrl("/eca/update");
+			call(url, null, function(data) {
+				if(data.result) {
+					activity.innerHTML = data.count;
+				}
+			}, "GET");
+		}
+		
 		function openLayer() {
 			document.getElementById("loading_layer").style.display = "block";
 			cover.open();

@@ -22,6 +22,7 @@ import com.e3ps.org.service.DepartmentHelper;
 import com.e3ps.workspace.ApprovalLine;
 import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.dto.ApprovalLineDTO;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 @Controller
@@ -534,5 +535,28 @@ public class WorkspaceController extends BaseController {
 		model.addObject("isAdmin", isAdmin);
 		model.setViewName("popup:/workspace/include/approval-history");
 		return model;
+	}
+
+	@Description(value = "결재관련 함들 개수 업데이트")
+	@ResponseBody
+	@GetMapping(value = "/update")
+	public Map<String, Object> update() throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			Map<String, Integer> count = WorkspaceHelper.manager.count();
+
+			result.put("approval", count.get("approval"));
+			result.put("agree", count.get("agree"));
+			result.put("receive", count.get("receive"));
+			result.put("complete", count.get("complete"));
+			result.put("reject", count.get("reject"));
+			result.put("progress", count.get("progress"));
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

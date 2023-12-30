@@ -70,7 +70,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workData/list', '> 나의업무 > 작업함');">
 							결재선 지정
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="workData">
 								<%=workData%>
 							</span>
 						</a>
@@ -78,7 +78,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/activity/eca', '> 나의업무 > ECA 활동함');">
 							ECA 활동함
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="eca">
 								<%=eca%>
 							</span>
 						</a>
@@ -86,7 +86,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/approval', '> 나의업무 > 결재함');">
 							결재함
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="approval">
 								<%=count.get("approval")%>
 							</span>
 						</a>
@@ -94,7 +94,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/agree', '> 나의업무 > 합의함');">
 							합의함
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="agree">
 								<%=count.get("agree")%>
 							</span>
 						</a>
@@ -102,7 +102,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/progress', '> 나의업무 > 진행함');">
 							진행함
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="progress">
 								<%=count.get("progress")%>
 							</span>
 						</a>
@@ -110,7 +110,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/complete', '> 나의업무 > 완료함');">
 							완료함
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="complete">
 								<%=count.get("complete")%>
 							</span>
 						</a>
@@ -118,7 +118,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/receive', '> 나의업무 > 수신함');">
 							수신함
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="receive">
 								<%=count.get("receive")%>
 							</span>
 						</a>
@@ -126,7 +126,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/workspace/reject', '> 나의업무 > 반려함');">
 							반려함
-							<span class="label label-info float-right">
+							<span class="label label-info float-right" id="reject">
 								<%=count.get("reject")%>
 							</span>
 						</a>

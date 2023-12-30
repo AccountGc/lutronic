@@ -6,6 +6,7 @@ const preFixId = "preFix";
 const suffixId = "suffix";
 const modelId = "model";
 const indexId = "index";
+const requiredId = "required";
 // 최초 화면 로드시 셀렉트 박스 변경
 function toUI() {
 	selectbox(classType1Id);
@@ -22,6 +23,16 @@ function toUI() {
 	$("#" + modelId).bindSelectDisabled(true);
 }
 
+function requiredAdd() {
+	const primary = document.getElementById(requiredId);
+	primary.classList.add("req"); // 클래스를 제거
+}
+
+function requiredRemove() {
+	const primary = document.getElementById(requiredId);
+	primary.classList.remove("req"); // 클래스를 제거
+}
+
 function first(obj) {
 	const classType1 = obj.value;
 	clearValue();
@@ -29,27 +40,32 @@ function first(obj) {
 		let checker = autoNumberChecker(classType1);
 		// 채번 대상이다
 		if (!checker) {
-
 			if ("DEV" === classType1) {
 				classType2(classType1);
+				requiredAdd();
 			} else if ("INSTRUCTION" === classType1) {
 				setFirstNumber(classType1)
 				classType2(classType1);
+				requiredAdd();
 			} else if ("REPORT" === classType1) {
 				classType2(classType1);
 				modelEnable();
+				requiredRemove();
 			} else if ("VALIDATION" === classType1) {
 				setFirstNumber(classType1)
 				classType2(classType1);
 				modelEnable();
+				requiredRemove();
 			} else if ("MEETING" === classType1) {
 				classType2(classType1);
 				modelEnable();
+				requiredRemove();
 			}
 		} else {
 			// 채번 대상이 아닐경우
 			modelEnable();
 			removeReadOnly();
+			requiredRemove();
 		}
 	}
 }

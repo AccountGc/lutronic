@@ -680,7 +680,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			ContentServerHelper.service.updateContent(doc, applicationData, vault.getPath());
 		}
 
-		for (int i = 0; i < secondarys.size(); i++) {
+		for (int i = 0; secondarys != null && i < secondarys.size(); i++) {
 			String cacheId = secondarys.get(i);
 			File vault = CommonContentHelper.manager.getFileFromCacheId(cacheId);
 			ApplicationData applicationData = ApplicationData.newApplicationData(doc);

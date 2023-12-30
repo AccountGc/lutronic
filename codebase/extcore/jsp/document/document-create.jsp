@@ -32,7 +32,7 @@ iframe {
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 
 <!-- 채번스크립트 -->
-<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=2441"></script>
+<script type="text/javascript" src="/Windchill/extcore/jsp/document/js/genNumber.js?v=0441"></script>
 </head>
 <body>
 	<form>
@@ -191,7 +191,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">주 첨부파일</th>
+				<th class="lb" id="required">주 첨부파일</th>
 				<td class="indent5" colspan="5">
 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 						<jsp:param value="" name="oid" />
@@ -339,7 +339,7 @@ iframe {
 				} else {
 					name = suffix;
 				}
-				
+
 				if (isNull(name)) {
 					alert("문서명을 입력하세요.");
 					name.focus();
@@ -356,9 +356,12 @@ iframe {
 						return false;
 					}
 				} else {
-					if (primary == null) {
-						alert("주 첨부파일을 첨부해주세요.");
-						return false;
+
+					if ("DEV" === classType1_code || "INSTRUCTION" === classType1_code) {
+						if (primary == null) {
+							alert("주 첨부파일을 첨부해주세요.");
+							return false;
+						}
 					}
 
 					if (!confirm("등록 후 문서번호를 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
