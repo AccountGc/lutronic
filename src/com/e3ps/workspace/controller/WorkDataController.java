@@ -22,7 +22,7 @@ import com.e3ps.workspace.service.WorkDataHelper;
 @RequestMapping(value = "/workData/**")
 public class WorkDataController extends BaseController {
 
-	@Description(value = "작업함 리스트 페이지")
+	@Description(value = "결재선 지정 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
 		ModelAndView model = new ModelAndView();
@@ -32,7 +32,7 @@ public class WorkDataController extends BaseController {
 		return model;
 	}
 
-	@Description(value = "작업함 조회 함수")
+	@Description(value = "결재선 지정 조회 함수")
 	@ResponseBody
 	@PostMapping(value = "/list")
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) throws Exception {
@@ -49,7 +49,7 @@ public class WorkDataController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "결재선 지정 페이지")
+	@Description(value = "결재선 지정 상세 페이지")
 	@GetMapping(value = "/view")
 	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();

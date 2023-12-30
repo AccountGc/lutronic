@@ -104,7 +104,7 @@ String mode = request.getParameter("mode");
 			tag.parentNode.removeChild(tag);
 		}
 
-		var l = $("form:eq(0)").find("div.readyselect");
+		var l = $("form:eq(0)").find(".AXUpload5QueueBox_list").find("div.readyselect");
 		$.each(l, function(idx) {
 			var fid = l.eq(idx).attr("id");
 			secondary.removeUploadedList(fid);

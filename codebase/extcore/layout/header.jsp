@@ -68,7 +68,7 @@ int eca = (int) request.getAttribute("eca");
 						<a onclick="moveToPage(this, '/notice/list', '> 나의업무 > 공지사항');">공지사항</a>
 					</li>
 					<li>
-						<a onclick="moveToPage(this, '/workData/list', '> 나의업무 > 작업함');">
+						<a onclick="moveToPage(this, '/workData/list', '> 나의업무 > 결재선 지정');">
 							결재선 지정
 							<span class="label label-info float-right" id="workData">
 								<%=workData%>
