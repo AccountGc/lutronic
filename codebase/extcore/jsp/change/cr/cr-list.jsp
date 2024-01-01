@@ -218,6 +218,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "제품명",
 					dataType : "string",
 					width : 220,
+					style : "aui-left",
 				}, {
 					dataField : "changeSection",
 					headerText : "변경구분",

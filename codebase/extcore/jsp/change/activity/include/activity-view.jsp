@@ -42,11 +42,6 @@ String oid = request.getParameter("oid");
 			}
 		}
 	}, {
-		dataField : "step_name",
-		headerText : "단계",
-		dataType : "string",
-		width : 150,
-	}, {
 		dataField : "activity_name",
 		headerText : "활동구분",
 		dataType : "string",

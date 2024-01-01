@@ -371,7 +371,7 @@ public class EcoHelper {
 				list.add(map);
 				// 고도화 데이터 위
 			} else {
-
+				// 과거 데이터일 경우
 			}
 		}
 		return list;

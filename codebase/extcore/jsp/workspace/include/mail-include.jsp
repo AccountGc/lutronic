@@ -20,7 +20,7 @@ boolean update = "update".equals(mode);
 			dataField : "name",
 			headerText : "이름",
 			dataType : "string",
-			width : 120,
+			width : 250,
 		}, {
 			dataField : "email",
 			headerText : "이메일",
@@ -55,7 +55,7 @@ boolean update = "update".equals(mode);
 
 		function popup9() {
 			const url = getCallUrl("/workspace/mail");
-			const p = _popup(url, 700, 500, "n");
+			const p = _popup(url, 850, 600, "n");
 		}
 
 		function deleteRow9() {

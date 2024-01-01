@@ -101,6 +101,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setApproveDate(approveDate);
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
+			ecpr.setIsNew(true);
 
 			ecpr.setChangeSection(changeSection);
 			ecpr.setContents(contents);

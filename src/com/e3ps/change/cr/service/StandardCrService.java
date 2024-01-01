@@ -96,6 +96,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setCreateDate(writeDate);
 			cr.setWriter(writer);
 			cr.setApproveDate(approveDate);
+			cr.setIsNew(true);
 
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
 			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
