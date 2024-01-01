@@ -181,11 +181,20 @@ public class EChangeUtils {
 			ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
 
 			System.out.println("EO 대상 품목 개수 =  " + list.size());
+			
+			System.out.println("EO 대상품목 상태값 변경 시작");
+			EoHelper.service.eoPartApproved(list);
+			System.out.println("EO 대상품목 상태값 변경 완료");
+			
 
 			// 개발이 없어진다.
 			SAPHelper.service.sendSapToEo(eo, completeParts, list);
 
 			EoHelper.service.saveBaseline(eo, completeParts);
+			
+			// IBA 값 세팅
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

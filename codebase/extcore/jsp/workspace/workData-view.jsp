@@ -162,8 +162,8 @@ boolean validate = dto.isValidate();
 			call(url, params, function(data) {
 				alert(data.msg);
 				if (data.result) {
-					document.location.href = getCallUrl("/workData/list");
 					parent.updateWorkData();
+					document.location.href = getCallUrl("/workData/list");
 				}
 				parent.closeLayer();
 			})

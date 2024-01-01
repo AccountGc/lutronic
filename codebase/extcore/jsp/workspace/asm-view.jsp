@@ -80,49 +80,47 @@ String title = (String) request.getAttribute("title");
 		headerText : "번호",
 		dataType : "string",
 		width : 180,
-		filter : {
-			showIcon : true,
-		},
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const url = item.viewUrl;
+				_popup(url, "", "", "f");
+			}
+		},		
 	}, {
 		dataField : "name",
 		headerText : "제목",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-		},
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const url = item.viewUrl;
+				_popup(url, "", "", "f");
+			}
+		},		
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	}, {
 		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-		},
 	} ]
 
 	function createAUIGrid90(columnLayout) {

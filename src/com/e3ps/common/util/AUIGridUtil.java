@@ -14,9 +14,10 @@ import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.change.eo.service.EoHelper;
-import com.e3ps.doc.access.service.AccessHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.rohs.ROHSMaterial;
+import com.e3ps.rohs.service.RohsHelper;
 import com.ptc.wvs.server.util.PublishUtils;
 
 import net.sf.json.JSONArray;
@@ -71,7 +72,8 @@ public class AUIGridUtil {
 			String icon = getFileIcon(ext);
 			String url = "/Windchill/plm/content/download?oid="
 					+ data.getPersistInfo().getObjectIdentifier().getStringValue();
-			template += "<a href=\"javascript:download('" + oid + "', '" + doid + "');\"><img src=" + icon + "></a>";
+			template += "<a href=\"javascript:download('" + oid + "', '" + doid + "');\"><img src=" + icon
+					+ "></a>&nbsp;";
 		}
 		return template;
 	}
@@ -189,8 +191,15 @@ public class AUIGridUtil {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		Persistable per = CommonUtil.getObject(oid);
 		if (per instanceof WTDocument) {
-			// 문서 연관 객체
-			return DocumentHelper.manager.reference(oid, type);
+			WTDocument doc = (WTDocument) per;
+			String docType = doc.getDocType().toString();
+			if ("$$MMDocument".equals(docType)) {
+			} else if ("$$ROHS".equals(docType)) {
+				ROHSMaterial rohs = (ROHSMaterial) per;
+				return JSONArray.fromObject(RohsHelper.manager.getROHSToPartList(rohs));
+			} else {
+				return DocumentHelper.manager.reference(oid, type);
+			}
 		} else if (per instanceof EChangeOrder) {
 			// EO, ECO 연관 객체
 			EChangeOrder eco = (EChangeOrder) per;

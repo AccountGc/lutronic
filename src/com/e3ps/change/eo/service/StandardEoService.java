@@ -1,7 +1,9 @@
 package com.e3ps.change.eo.service;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -14,6 +16,7 @@ import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.SequenceDao;
@@ -313,9 +316,6 @@ public class StandardEoService extends StandardManager implements EoService {
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				LifeCycleHelper.service.setLifeCycleState(eo, state);
-			} else {
-				State state = State.toState("INWORK");
-				LifeCycleHelper.service.setLifeCycleState(eo, state);
 			}
 
 			// 관련 링크들
@@ -329,44 +329,29 @@ public class StandardEoService extends StandardManager implements EoService {
 			removeAttach(eo);
 			saveAttach(eo, dto);
 
-			// 수정은 임시저
 			if (rows200.size() > 0) {
-
-				for (Map<String, String> row200 : rows200) {
-					String gridState = row200.get("gridState");
-					String oid = row200.get("oid");
-					if ("removed".equals(gridState)) {
-						EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
-						PersistenceHelper.manager.delete(eca);
-						// 삭제..
-					} else if ("added".equals(gridState)) {
-						// 신규 추가
-//						ActivityHelper.service.saveActivity(eo, rows200);
-					} else {
-						// 변견 없음 수정..
-//						EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
-					}
-				}
+//				ActivityHelper.service.deleteActivity(eco);
+				ActivityHelper.service.saveActivity(eco, rows200);
 			}
-
+			
 			// 임시저장일 경우만 수정 가능한데...
-			if (rows200.size() > 0) {
-				if (temprary) {
-					State state = State.toState("TEMPRARY");
-					LifeCycleHelper.service.setLifeCycleState(eo, state);
-				} else {
-					eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
-					LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
-				}
-			} else {
-				if (temprary) {
-					State state = State.toState("TEMPRARY");
-					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-					LifeCycleHelper.service.setLifeCycleState(eo, state);
-				} else {
-					WorkDataHelper.service.create(eo);
-				}
-			}
+//			if (rows200.size() > 0) {
+//				if (temprary) {
+//					State state = State.toState("TEMPRARY");
+//					LifeCycleHelper.service.setLifeCycleState(eo, state);
+//				} else {
+//					eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
+//					LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
+//				}
+//			} else {
+//				if (temprary) {
+//					State state = State.toState("TEMPRARY");
+//					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+//					LifeCycleHelper.service.setLifeCycleState(eo, state);
+//				} else {
+//					WorkDataHelper.service.create(eo);
+//				}
+//			}
 
 			trs.commit();
 			trs = null;
@@ -476,7 +461,7 @@ public class StandardEoService extends StandardManager implements EoService {
 	}
 
 	@Override
-	public void eoPartApproved(ArrayList<WTPart> list) throws Exception {
+	public void eoPartApproved(EChangeOrder eo, ArrayList<WTPart> list) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -485,14 +470,21 @@ public class StandardEoService extends StandardManager implements EoService {
 			for (WTPart part : list) {
 				// 부품 승인
 				LifeCycleHelper.service.setLifeCycleState(part, approved);
+				String today = new Timestamp(new Date().getTime()).toString().substring(0, 10);
+				IBAUtils.appendIBA(part, "ECONO", eo.getEoNumber(), "s");
+				IBAUtils.appendIBA(part, "ECODATE", today, "s");
 				// 3D 승인
 				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 				if (epm != null) {
 					LifeCycleHelper.service.setLifeCycleState(epm, approved);
+					IBAUtils.appendIBA(epm, "ECONO", eo.getEoNumber(), "s");
+					IBAUtils.appendIBA(epm, "ECODATE", today, "s");
 					// 2D 승인
 					EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
 					if (epm2D != null) {
 						LifeCycleHelper.service.setLifeCycleState(epm2D, approved);
+						IBAUtils.appendIBA(epm2D, "ECONO", eo.getEoNumber(), "s");
+						IBAUtils.appendIBA(epm2D, "ECODATE", today, "s");
 					}
 				}
 			}

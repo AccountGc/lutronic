@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeNotice;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
@@ -15,6 +19,7 @@ import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
+import wt.fc.Persistable;
 import wt.fc.ReferenceFactory;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
@@ -40,12 +45,11 @@ public class TempraryHelper {
 		ReferenceFactory rf = new ReferenceFactory();
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(LifeCycleManaged.class, true);
-		
+
 		String number = StringUtil.checkNull((String) params.get("number"));
 		String name = StringUtil.checkNull((String) params.get("name"));
 		String dataType = StringUtil.checkNull((String) params.get("dataType"));
-		
-		
+
 		// 단순 상태값으로만??/
 		QuerySpecUtils.toState(query, idx, LifeCycleManaged.class, "TEMPRARY");
 		PageQueryUtils pager = new PageQueryUtils(params, query);
@@ -53,68 +57,65 @@ public class TempraryHelper {
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
 			TempraryColumn data = new TempraryColumn(obj);
-			if("품목".equals(data.getDataType()) || "도면".equals(data.getDataType()) || "ROHS".equals(data.getDataType()) || "금형".equals(data.getDataType()) || "문서".equals(data.getDataType())) {
-				if(CommonUtil.isLatestVersion(rf.getReference(data.getOid()).getObject())) {
-					boolean check =true;
+			if ("품목".equals(data.getDataType()) || "도면".equals(data.getDataType()) || "ROHS".equals(data.getDataType())
+					|| "금형".equals(data.getDataType()) || "문서".equals(data.getDataType())) {
+				if (CommonUtil.isLatestVersion(rf.getReference(data.getOid()).getObject())) {
+					boolean check = true;
 					String temNumber = data.getNumber();
 					String temName = data.getName();
 					String temDataType = data.getDataType();
-					
-					if((!"".equals(number) && temNumber.indexOf(number)>=0)) {
-						check=true;
-					}else if((!"".equals(number) && temNumber.indexOf(number)<0)) {
-						check=false;
+
+					if ((!"".equals(number) && temNumber.indexOf(number) >= 0)) {
+						check = true;
+					} else if ((!"".equals(number) && temNumber.indexOf(number) < 0)) {
+						check = false;
 					}
-					
-					
-					if(!"".equals(name) && temName.indexOf(name)>=0 && check) {
-						check =true;
-					}else if((!"".equals(name) && temName.indexOf(name)<0)) {
-						check=false;
+
+					if (!"".equals(name) && temName.indexOf(name) >= 0 && check) {
+						check = true;
+					} else if ((!"".equals(name) && temName.indexOf(name) < 0)) {
+						check = false;
 					}
-					
-					
-					if(!"".equals(dataType) && temDataType.equals(dataType) && check) {
-						check =true;
-					}else if(!"".equals(dataType) && !temDataType.equals(dataType)) {
-						check=false;
+
+					if (!"".equals(dataType) && temDataType.equals(dataType) && check) {
+						check = true;
+					} else if (!"".equals(dataType) && !temDataType.equals(dataType)) {
+						check = false;
 					}
-					
-					if(check) {
+
+					if (check) {
 						list.add(data);
 					}
 				}
-			}else {
-				boolean check =true;
+			} else {
+				boolean check = true;
 				String temNumber = data.getNumber();
 				String temName = data.getName();
 				String temDataType = data.getDataType();
-				
-				if((!"".equals(number) && temNumber.indexOf(number)>=0)) {
-					check=true;
-				}else if((!"".equals(number) && temNumber.indexOf(number)<0)) {
-					check=false;
+
+				if ((!"".equals(number) && temNumber.indexOf(number) >= 0)) {
+					check = true;
+				} else if ((!"".equals(number) && temNumber.indexOf(number) < 0)) {
+					check = false;
 				}
-				
-				
-				if(!"".equals(name) && temName.indexOf(name)>=0 && check) {
-					check =true;
-				}else if((!"".equals(name) && temName.indexOf(name)<0)) {
-					check=false;
+
+				if (!"".equals(name) && temName.indexOf(name) >= 0 && check) {
+					check = true;
+				} else if ((!"".equals(name) && temName.indexOf(name) < 0)) {
+					check = false;
 				}
-				
-				
-				if(!"".equals(dataType) && temDataType.equals(dataType) && check) {
-					check =true;
-				}else if(!"".equals(dataType) && !temDataType.equals(dataType)) {
-					check=false;
+
+				if (!"".equals(dataType) && temDataType.equals(dataType) && check) {
+					check = true;
+				} else if (!"".equals(dataType) && !temDataType.equals(dataType)) {
+					check = false;
 				}
-				
-				if(check) {
+
+				if (check) {
 					list.add(data);
 				}
 			}
-			
+
 		}
 
 		map.put("list", list);
@@ -124,5 +125,52 @@ public class TempraryHelper {
 		map.put("sessionid", pager.getSessionId());
 		map.put("curPage", pager.getCpage());
 		return map;
+	}
+
+	/**
+	 * 객체 마다 주소 가져오기
+	 */
+	public String getViewUrl(String oid) throws Exception {
+		Persistable per = CommonUtil.getObject(oid);
+		if (per instanceof WTDocument) {
+			WTDocument doc = (WTDocument) per;
+			if ("$$MMDocument".equals(doc.getDocType().toString())) {
+				// 금형
+				return "mold";
+			} else if ("$$ROHS".equals(doc.getDocType().toString())) {
+				return "rohs";
+			} else {
+				// 문서
+				return "doc";
+			}
+		} else if (per instanceof EChangeOrder) {
+			EChangeOrder eco = (EChangeOrder) per;
+			if (eco.getEoType().equals("CHANGE")) {
+				// ECO
+				return "eco";
+			} else {
+				// EO
+				return "eo";
+			}
+		} else if (per instanceof EChangeRequest) {
+			// CR
+			return "cr";
+		} else if (per instanceof EChangeNotice) {
+			// ECN
+			return "ecn";
+//		} else if (per instanceof ECrm) {
+//			// ECN
+//			return "ecrm";
+		} else if (per instanceof ECPRRequest) {
+			// ECPR
+			return "ecpr";
+		} else if (per instanceof WTPart) {
+			// 부품
+			return "part";
+		} else if (per instanceof EPMDocument) {
+			// 부품
+			return "drawing";
+		}
+		return null;
 	}
 }

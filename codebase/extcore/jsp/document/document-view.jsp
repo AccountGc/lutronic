@@ -15,8 +15,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
 
-WTDocument doc = (WTDocument) CommonUtil.getObject(dto.getOid());
-QueryResult qr = ContentHelper.service.getContentsByRole(doc, ContentRoleType.toContentRoleType("PDF"));
 // out.println(qr.size());
 %>
 <style type="text/css">
@@ -137,8 +135,8 @@ iframe {
 				<td class="indent5"><%=dto.getModifier()%></td>
 			</tr>
 			<tr>
-<!-- 				<th class="lb">결재방식</th> -->
-<%-- 				<td class="indent5"><%=dto.getApprovaltype_name()%></td> --%>
+				<!-- 				<th class="lb">결재방식</th> -->
+				<%-- 				<td class="indent5"><%=dto.getApprovaltype_name()%></td> --%>
 				<th class="lb">프로젝트 코드</th>
 				<td class="indent5"><%=dto.getModel_name()%></td>
 				<th>보존기간</th>
@@ -150,7 +148,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="7" class="indent5">
+				<td colspan="7" class="indent7 pb8">
 					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.

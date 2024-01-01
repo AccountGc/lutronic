@@ -8,6 +8,11 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 %>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
@@ -51,50 +56,44 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				<col width="450">
 				<col width="130">
 				<col width="450">
+				<col width="130">
+				<col width="450">
 			</colgroup>
 			<tr>
 				<th class="lb">ECPR 제목</th>
-				<td colspan="3" class="indent5"><%=dto.getName()%></td>
-			</tr>
-			<tr>
-				<th class="lb">ECPR 번호</th>
+				<td class="indent5"><%=dto.getName()%></td>
+				<th>ECPR 번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
 				<th>상태</th>
 				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
 				<th class="lb">등록자</th>
-				<td colspan="3" class="indent5"><%=dto.getCreator()%></td>
-			</tr>
-			<tr>
-				<th class="lb">등록일</th>
+				<td class="indent5"><%=dto.getCreator()%></td>
+				<th>등록일</th>
 				<td class="indent5"><%=dto.getCreatedDate()%></td>
 				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
-				<td class="indent5"><%=dto.getWriter_name()%></td>
+				<td class="indent5"><%=dto.getWriter()%></td>
 				<th>작성부서</th>
 				<td class="indent5"><%=dto.getCreateDepart_name() == null ? "" : dto.getCreateDepart_name()%></td>
-			</tr>
-			<tr>
-				<th class="lb">작성일</th>
+				<th>작성일</th>
 				<td class="indent5"><%=dto.getWriteDate()%></td>
-				<th>승인일</th>
-				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
-<!-- 				<th>제안자</th> -->
-<%-- 				<td><%=dto.getProposer()%></td> --%>
-				<th class="lb">제품명</th>
+				<th class="lb">승인일</th>
+				<td class="indent5"><%=dto.getApproveDate()%></td>
+				<th>제품명</th>
 				<td class="indent5"><%=dto.getModel()%></td>
 				<th>변경구분</th>
 				<td class="indent5"><%=dto.getChangeCode()%></td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent5">
+				<td colspan="5" class="indent7 pb8">
 					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContents() != null ? dto.getContents() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
@@ -105,31 +104,31 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 					</script>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">변경사유</th> -->
-<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentA()%></td> --%>
-<!-- 			</tr> -->
-<!-- 			<tr> -->
-<!-- 				<th class="lb">변경사항</th> -->
-<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentB()%></td> --%>
-<!-- 			</tr> -->
-<!-- 			<tr> -->
-<!-- 				<th class="lb">참고사항</th> -->
-<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentC()%></td> --%>
-<!-- 			</tr> -->
+			<!-- 			<tr> -->
+			<!-- 				<th class="lb">변경사유</th> -->
+			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentA()%></td> --%>
+			<!-- 			</tr> -->
+			<!-- 			<tr> -->
+			<!-- 				<th class="lb">변경사항</th> -->
+			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentB()%></td> --%>
+			<!-- 			</tr> -->
+			<!-- 			<tr> -->
+			<!-- 				<th class="lb">참고사항</th> -->
+			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentC()%></td> --%>
+			<!-- 			</tr> -->
 			<tr>
 				<th class="lb">주 첨부파일</th>
-				<td colspan="3" class="indent5">
+				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
-						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
-				<td colspan="3" class="indent5">
+				<td colspan="5" class="indent5">
 					<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
-						<jsp:param value="<%= dto.getOid() %>" name="oid"/>
+						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -149,13 +148,13 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 	</div>
 </div>
 <script type="text/javascript">
-	function update(){
+	function update() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/ecpr/update?oid=" + oid);
 		document.location.href = url;
 	}
 
-	function deleteBtn(){
+	function deleteBtn() {
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
@@ -171,14 +170,14 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 			}
 		});
 	}
-	
+
 	//결재 회수
 	$("#withDrawBtn").click(function() {
 		const oid = $("#oid").val();
 		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
 		_popup(url, 1500, 550, "n");
 	})
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
@@ -186,12 +185,6 @@ EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-2":
-					const isCreated300 = AUIGrid.isCreated(myGridID300); // MODEL
-					if (isCreated300) {
-						AUIGrid.resize(myGridID300);
-					} else {
-						createAUIGrid300(columns300);
-					}
 					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
 					if (isCreated101) {
 						AUIGrid.resize(myGridID101);

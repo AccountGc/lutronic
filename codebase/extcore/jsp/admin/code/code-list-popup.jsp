@@ -189,14 +189,9 @@ String codeType = (String) request.getAttribute("codeType");
 			alert("추가할 행을 선택하세요.");
 			return false;
 		}
-		
-		openLayer();
-		opener.<%=method%>(checkedItems, function(res) {
-			if(res) {
-				setTimeout(function() {
-					closeLayer();
-				}, 500);
-			}
+
+		opener.<%=method%>(checkedItems, function(res, close, msg) {
+			trigger(close, msg);
 		})
 	}
 

@@ -1,10 +1,11 @@
-package com.e3ps.change.ecpr.dto;
+package com.e3ps.change.ecrm.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
@@ -21,7 +22,7 @@ import wt.session.SessionHelper;
 
 @Getter
 @Setter
-public class EcprDTO {
+public class EcrmDTO {
 	private String oid;
 	private String name;
 	private String number;
@@ -46,7 +47,7 @@ public class EcprDTO {
 	private String writeDate;
 	private String changeCode;
 	private String model;
-	
+
 	private ECPRRequest ecpr;
 	// auth
 	private boolean isModify = false;
@@ -59,38 +60,37 @@ public class EcprDTO {
 
 	private boolean temprary;
 
-	public EcprDTO() {
+	public EcrmDTO() {
 
 	}
 
-	public EcprDTO(String oid) throws Exception {
-		this((ECPRRequest) CommonUtil.getObject(oid));
+	public EcrmDTO(String oid) throws Exception {
+		this((ECRMRequest) CommonUtil.getObject(oid));
 	}
 
-	public EcprDTO(ECPRRequest cr) throws Exception {
-		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
-		setName(StringUtil.checkNull(cr.getEoName()));
-		setNumber(StringUtil.checkNull(cr.getEoNumber()));
-		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
-		setCreateDepart_name(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
-		setWriter(cr.getWriter());
-		setChangeSection(cr.getChangeSection());
-		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
-		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
-		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
-		setContents(StringUtil.checkNull(cr.getContents()));
+	public EcrmDTO(ECRMRequest ecrm) throws Exception {
+		setOid(ecrm.getPersistInfo().getObjectIdentifier().getStringValue());
+		setName(StringUtil.checkNull(ecrm.getEoName()));
+		setNumber(StringUtil.checkNull(ecrm.getEoNumber()));
+		setApproveDate(StringUtil.checkNull(ecrm.getApproveDate()));
+		setCreateDepart_name(EcprHelper.manager.displayToDept(ecrm.getCreateDepart()));
+		setWriter(ecrm.getWriter());
+		setChangeSection(ecrm.getChangeSection());
+		setEoCommentA(StringUtil.checkNull(ecrm.getEoCommentA()));
+		setEoCommentB(StringUtil.checkNull(ecrm.getEoCommentB()));
+		setEoCommentC(StringUtil.checkNull(ecrm.getEoCommentC()));
+		setContents(StringUtil.checkNull(ecrm.getContents()));
 
 		// 따로 추가
-		setState(cr.getLifeCycleState().getDisplay());
-		setCreatedDate(cr.getCreateTimestamp().toString().substring(0, 10));
-		setModifiedDate(cr.getModifyTimestamp());
-		setModifiedDate_text(cr.getModifyTimestamp().toString().substring(0, 10));
-		setCreator(cr.getCreatorFullName());
-		setCreateDepart(StringUtil.checkNull(cr.getCreateDepart()));
-		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
-		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
-		
-		setEcpr(cr);
+		setState(ecrm.getLifeCycleState().getDisplay());
+		setCreatedDate(ecrm.getCreateTimestamp().toString().substring(0, 10));
+		setModifiedDate(ecrm.getModifyTimestamp());
+		setModifiedDate_text(ecrm.getModifyTimestamp().toString().substring(0, 10));
+		setCreator(ecrm.getCreatorFullName());
+		setCreateDepart(StringUtil.checkNull(ecrm.getCreateDepart()));
+		setWriteDate(StringUtil.checkNull(ecrm.getCreateDate()));
+		setModel(EcprHelper.manager.displayToModel(ecrm.getModel()));
+
 		setAuth();
 	}
 
@@ -132,7 +132,7 @@ public class EcprDTO {
 		this.changeCode = NumberCodeHelper.manager.getNumberCodeName(this.changeSection, "CHANGESECTION");
 		return changeCode;
 	}
-	
+
 	/**
 	 * 권한 설정
 	 */
@@ -142,7 +142,7 @@ public class EcprDTO {
 			setModify(true);
 		}
 	}
-	
+
 	/**
 	 * 상태값 여부 체크
 	 */

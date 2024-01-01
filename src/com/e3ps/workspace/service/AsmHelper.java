@@ -95,6 +95,8 @@ public class AsmHelper {
 	 * 일괄겱재 객체 데이터
 	 */
 	public JSONArray data(AsmApproval asm) throws Exception {
+		String viewUrl = "";
+		String context = "/Windchill/plm";
 		ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		QueryResult qr = PersistenceHelper.manager.navigate(asm, "persistable", AppPerLink.class);
 
@@ -104,7 +106,9 @@ public class AsmHelper {
 			if (per instanceof WTDocument) {
 				WTDocument doc = (WTDocument) per;
 				String t = doc.getDocType().toString();
-				map.put("oid", doc.getPersistInfo().getObjectIdentifier().getStringValue());
+				String oid = doc.getPersistInfo().getObjectIdentifier().getStringValue();
+				map.put("viewUrl", context + "/doc/view?oid=" + oid);
+				map.put("oid", oid);
 				map.put("name", doc.getName());
 				map.put("number", doc.getNumber());
 				map.put("creator", doc.getCreatorFullName());
@@ -114,7 +118,9 @@ public class AsmHelper {
 						+ doc.getIterationIdentifier().getSeries().getValue());
 			} else if (per instanceof ROHSMaterial) {
 				ROHSMaterial rohs = (ROHSMaterial) per;
-				map.put("oid", rohs.getPersistInfo().getObjectIdentifier().getStringValue());
+				String oid = rohs.getPersistInfo().getObjectIdentifier().getStringValue();
+				map.put("viewUrl", context + "/doc/view?oid=" + oid);
+				map.put("oid", oid);
 				map.put("name", rohs.getName());
 				map.put("number", rohs.getNumber());
 				map.put("creator", rohs.getCreatorFullName());

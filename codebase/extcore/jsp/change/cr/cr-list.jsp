@@ -248,6 +248,16 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						} else if (value === "ECPR작성중") {
+							return "ecprStart";
+						} else if (value === "ECPR승인중") {
+							return "ecprApproving";
+						}
+						return null;
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",

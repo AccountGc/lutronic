@@ -3,11 +3,10 @@ package com.e3ps.workspace.dto;
 import java.util.ArrayList;
 import java.util.Map;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.rohs.ROHSMaterial;
-import com.e3ps.workspace.ApprovalMaster;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
 
@@ -71,6 +70,9 @@ public class WorkDataDTO {
 			if ("$$MMDocument".equals(docType)) {
 				setPersistType("금형문서");
 				setViewUrl(this.context + "/mold/view?oid=" + getPoid());
+			} else if ("$$ROHS".equals(docType)) {
+				setPersistType("ROHS");
+				setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 			} else {
 				setPersistType("문서");
 				setViewUrl(this.context + "/doc/view?oid=" + getPoid());
@@ -102,15 +104,15 @@ public class WorkDataDTO {
 			setState(eco.getLifeCycleState().getDisplay());
 			setCreator(eco.getCreatorName());
 			setCreatedDate_txt(eco.getCreateTimestamp().toString().substring(0, 10));
-		} else if (per instanceof ROHSMaterial) {
-			ROHSMaterial rohs = (ROHSMaterial) per;
-			setNumber(rohs.getNumber());
-			setName(rohs.getName());
-			setPersistType("ROHS");
-			setState(rohs.getLifeCycleState().getDisplay());
-			setCreator(rohs.getCreatorName());
-			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
-			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
+//		} else if (per instanceof ROHSMaterial) {
+//			ROHSMaterial rohs = (ROHSMaterial) per;
+//			setNumber(rohs.getNumber());
+//			setName(rohs.getName());
+//			setPersistType("ROHS");
+//			setState(rohs.getLifeCycleState().getDisplay());
+//			setCreator(rohs.getCreatorName());
+//			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
+//			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			AsmApproval asm = (AsmApproval) per;
 			setNumber(asm.getNumber());
@@ -120,6 +122,15 @@ public class WorkDataDTO {
 			setCreator(asm.getCreatorName());
 			setCreatedDate_txt(asm.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/asm/view?oid=" + getPoid());
+		} else if (per instanceof ECPRRequest) {
+			ECPRRequest ecpr = (ECPRRequest) per;
+			setNumber(ecpr.getEoNumber());
+			setName(ecpr.getEoName());
+			setPersistType("ECPR");
+			setState(ecpr.getLifeCycleState().getDisplay());
+			setCreator(ecpr.getCreatorName());
+			setCreatedDate_txt(ecpr.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/ecpr/view?oid=" + getPoid());
 		}
 	}
 }

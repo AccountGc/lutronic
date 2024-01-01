@@ -29,7 +29,7 @@ import wt.session.SessionHelper;
 @Getter
 @Setter
 public class MoldDTO {
-	
+
 	private String oid;
 	private String name;
 	private String number;
@@ -47,7 +47,7 @@ public class MoldDTO {
 	private boolean isLatest;
 	private String iteration;
 	private String iterationNote; // 수정사유
-	
+
 	// IBA
 	private String manufacture_name;
 	private String manufacture_code;
@@ -60,10 +60,11 @@ public class MoldDTO {
 	private String deptcode_code;
 	private String approvaltype_name;
 	private String approvaltype_code;
-	
+
 	// auth
 	private boolean isModify = false;
-	
+	private boolean isRevise = false;
+
 	// 변수용
 	private String lifecycle;
 	private String primary;
@@ -71,14 +72,14 @@ public class MoldDTO {
 	private ArrayList<Map<String, String>> partList = new ArrayList<>(); // 관련 품목
 	private ArrayList<Map<String, String>> docList = new ArrayList<>(); // 관련 문서
 	private boolean temprary;
-	
+
 	// 결재 변수
 	private ArrayList<Map<String, String>> agreeRows = new ArrayList<>(); // 검토
 	private ArrayList<Map<String, String>> approvalRows = new ArrayList<>(); // 결재
 	private ArrayList<Map<String, String>> receiveRows = new ArrayList<>(); // 수신
-	
+
 	public MoldDTO() {
-		
+
 	}
 
 	public MoldDTO(WTDocument doc) throws Exception {
@@ -100,10 +101,10 @@ public class MoldDTO {
 		setDocumentTypeDisplay(doc.getDocType().getDisplay());
 		setIBAAttributes(doc);
 		setIterationNote(doc.getIterationNote());
-		
+
 		setAuth(doc);
 	}
-	
+
 	/**
 	 * IBA 값 세팅
 	 */
@@ -135,7 +136,7 @@ public class MoldDTO {
 		setApprovaltype_code(approvalType_code);
 		setApprovaltype_name(approvalType_name);
 	}
-	
+
 	/**
 	 * IBA 값 디스플레이 값으로 변경
 	 */
@@ -161,7 +162,7 @@ public class MoldDTO {
 		sv.setIBAHolderReference((IBAHolderReference.newIBAHolderReference(doc)));
 		PersistenceHelper.manager.save(sv);
 	}
-	
+
 	/**
 	 * IBA 값 가져오기 함수
 	 */
@@ -177,7 +178,7 @@ public class MoldDTO {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * IBA 값 삭제
 	 */
@@ -193,46 +194,51 @@ public class MoldDTO {
 			PersistenceHelper.manager.delete(sv);
 		}
 	}
-	
+
 	/**
-     * 회수 권한  승인중 && (소유자 || 관리자 ) && 기본 결재 
-     */
-	public boolean isWithDraw(){
-  	   	try{
-  	   		return  (state.equals("APPROVING") && ( isOwner() || CommonUtil.isAdmin()));
-  	   	}catch(Exception e){
-  	   		e.printStackTrace();
-  	   	}
-  	   	return false;
-	}
-	
-	/**
-	 * Owner 유무 체크
-	 * @return
+	 * 회수 권한 승인중 && (소유자 || 관리자 ) && 기본 결재
 	 */
-	public boolean isOwner(){
-		try{
-			return SessionHelper.getPrincipal().getName().equals(getCreator());
-		}catch(Exception e){
+	public boolean isWithDraw() {
+		try {
+			return (state.equals("APPROVING") && (isOwner() || CommonUtil.isAdmin()));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Owner 유무 체크
+	 * 
+	 * @return
+	 */
+	public boolean isOwner() {
+		try {
+			return SessionHelper.getPrincipal().getName().equals(getCreator());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	/**
 	 * 권한 설정
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
 		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
-		if (check("INWORK",doc) || check("TEMPRARY",doc) || check("BATCHAPPROVAL",doc) || check("REWORK",doc)) {
+		if (check("INWORK", doc) || check("TEMPRARY", doc) || check("BATCHAPPROVAL", doc) || check("REWORK", doc)) {
 			setModify(true);
 		}
+
+		if (check("APPROVED", doc)) {
+			setRevise(true);
+		}
 	}
-	
+
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state,WTDocument doc) throws Exception {
+	private boolean check(String state, WTDocument doc) throws Exception {
 		boolean check = false;
 		String compare = doc.getLifeCycleState().toString();
 		if (compare.equals(state)) {

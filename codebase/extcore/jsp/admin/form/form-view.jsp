@@ -37,27 +37,19 @@ iframe {
 			<colgroup>
 				<col width="150">
 				<col width="*">
-				<col width="150">
-				<col width="*">
-				<col width="150">
-				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="lb">문서템플릿 번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
-				<th>문서템플릿 제목</th>
+				<th class="lb">문서템플릿 제목</th>
 				<td class="indent5"><%=dto.getName()%></td>
-				<th>문서양식 유형</th>
-				<td class="indent5"><%=dto.getFormType()%></td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent5">
-					<textarea name="contents" id="contents" rows="15" style="display:none;"><%=dto.getDescription() != null ? dto.getDescription() : "" %></textarea>
+				<td class="indent5">
+					<textarea name="contents" id="contents" rows="20" style="display: none;"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.
 						DEXT5.config.Mode = "view";
-						
+
 						new Dext5editor('description');
 						var description = document.getElementById("contents").value;
 						DEXT5.setBodyValue(description, 'description');

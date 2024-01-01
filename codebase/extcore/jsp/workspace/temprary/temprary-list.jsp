@@ -212,7 +212,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				});
 			}
 
-			function loadGridData() {
+			function loadGridData(movePage) {
+				if(movePage === undefined) {
+					document.getElementById("sessionid").value = 0;
+				}
+				
 				let params = new Object();
 				const url = getCallUrl("/temprary/list");
 				const field = [ "number", "name", "dataType" ];
@@ -223,8 +227,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					AUIGrid.removeAjaxLoader(myGridID);
 					if (data.result) {
 						totalPage = Math.ceil(data.total / data.pageSize);
-						document.getElementById("sessionid").value = data.sessionid;
-						createPagingNavigator(data.curPage);
+						createPagingNavigator(data.curPage, data.sessionid);
 						AUIGrid.setGridData(myGridID, data.list);
 					} else {
 						alert(data.msg);

@@ -24,19 +24,11 @@ String oid = request.getParameter("oid");
 		headerText : "물질번호",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "name",
 		headerText : "물질명",
 		dataType : "string",
 		style : "aui-left",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -45,55 +37,35 @@ String oid = request.getParameter("oid");
 		renderer : {
 			type : "TemplateRenderer"
 		},
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 110,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		width : 100
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "string",
-		width : 180,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		width : 100
 	}, {
 		dataField : "modifier",
 		headerText : "수정자",
 		dataType : "string",
-		width : 110,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		width : 100
 	}, {
 		dataField : "modifiedDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 180,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
-// 	}, {
-// 		dataField : "note",
-// 		headerText : "수정사유",
-// 		dataType : "string",
-// 		style : "aui-left",
-// 		filter : {
-// 			showIcon : true,
-// 			inline : true
-// 		},
+		width : 100
+	// 	}, {
+	// 		dataField : "note",
+	// 		headerText : "수정사유",
+	// 		dataType : "string",
+	// 		style : "aui-left",
+	// 		filter : {
+	// 			showIcon : true,
+	// 			inline : true
+	// 		},
 	} ]
 
 	function createAUIGrid50(columnLayout) {
@@ -111,7 +83,7 @@ String oid = request.getParameter("oid");
 		}
 		myGridID50 = AUIGrid.create("#grid50", columnLayout, props);
 		AUIGrid.setGridData(myGridID50,
-			<%=RohsHelper.manager.allIterationsOf(oid)%>
-		);
+<%=RohsHelper.manager.allIterationsOf(oid)%>
+	);
 	}
 </script>

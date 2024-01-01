@@ -96,8 +96,8 @@
 		}
 		
 		function updateActivity() {
-			const activity = document.getElementById("eca");
-			const url = getCallUrl("/eca/update");
+			const activity = document.getElementById("activity");
+			const url = getCallUrl("/activity/update");
 			call(url, null, function(data) {
 				if(data.result) {
 					activity.innerHTML = data.count;

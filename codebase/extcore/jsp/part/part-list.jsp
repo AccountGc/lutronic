@@ -38,7 +38,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 </head>
-<body style="overflow: hidden;">
+<body style="overflow-x: hidden;">
 	<form>
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
@@ -204,7 +204,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<input type="text" name="weight" id="weight" class="width-300">
 				</td>
-				<th>Manufacturer</th>
+				<th>MANUFACTURER</th>
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
@@ -395,7 +395,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "location",
 					headerText : "품목분류",
 					dataType : "string",
-					width : 180,
+					width : 250,
 					style : "aui-left"
 				}, {
 					dataField : "version",
@@ -415,6 +415,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -502,13 +508,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						label : "썸네일 보기(3D)",
 						callback : auiContextHandler
 					}, {
-						label : "썸네일 보기(2D)",
-						callback : auiContextHandler
-					}, {
 						label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-					}, {
-						label : "일괄 다운로드",
-						callback : auiContextHandler
 					}, {
 						label : "STEP 다운로드",
 						callback : auiContextHandler
@@ -629,69 +629,72 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const item = event.item;
 				const part_oid = item.part_oid;
 				let url;
-				// 				AUIGrid.setCheckedRowsByIds(myGridID, item._$uid);
 				switch (event.contextIndex) {
 				case 0:
 					url = getCallUrl("/part/thumbnail?oid=" + part_oid);
 					_popup(url, 800, 600, "n");
 					break;
-				case 1:
-					url = getCallUrl("/part/thumbnail?oid=" + part_oid);
-					_popup(url, 800, 600, "n");
-					break;
-				case 3:
-					//일괄
-					break;
-				case 4:
-					//STEP
+				case 2:
+					if(item._3d === null) {
+						alert("STEP 파일이 존재하지 않습니다.");
+						return false;
+					}
 					url = getCallUrl("/drawing/step?oid=" + part_oid);
 					document.location.href = url;
 					break;
-				case 5:
+				case 3:
 					//DXF
+					if(item._2d === null) {
+						alert("DXF 파일이 존재하지 않습니다.");
+						return false;
+					}
 					url = getCallUrl("/drawing/dxf?oid=" + part_oid);
 					document.location.href = url;
 					break;
-				case 6:
+				case 4:
+					if(item._2d === null) {
+						alert("PDF 파일이 존재하지 않습니다.");
+						return false;
+					}
 					//PDF
 					url = getCallUrl("/drawing/pdf?oid=" + part_oid);
 					document.location.href = url;
 					break;
-				case 8:
+				case 6:
 					//속성
 					url = getCallUrl("/part/attr?oid=" + part_oid);
 					_popup(url, 1000, 500, "n");
 					break;
-				case 9:
+				case 7:
 					//BOM 뷰
 					url = getCallUrl("/bom/view?oid=" + part_oid);
 					_popup(url, 1600, 800, "n");
 					break;
-				case 10:
+				case 8:
 					url = getCallUrl("/bom/editor?oid=" + part_oid);
 					_popup(url, "", "", "f");
 					break;
-				case 11:
+				case 9:
 					url = "/Windchill/netmarkets/jsp/structureCompare/StructureCompare.jsp?oid=OR:" + part_oid + "&ncId=5304500442831603818&locale=ko";
 					_popup(url, 1600, 600, "n");
 					break;
-				case 12:
+				case 10:
 					url = getCallUrl("/part/viewHistory?oid=" + part_oid);
 					_popup(url, 1200, 500, "n");
 					break;
-				case 14:
+				case 12:
 					url = getCallUrl("/part/upper?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 15:
+				case 13:
 					url = getCallUrl("/part/lower?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 16:
+				case 14:
 					url = getCallUrl("/part/end?oid=" + part_oid);
 					_popup(url, 600, 430, "n");
 					break;
-				case 18:
+				case 16:
 					publish(part_oid);
 					break;
 				}

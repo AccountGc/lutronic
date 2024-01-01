@@ -227,8 +227,19 @@ public class StandardActivityService extends StandardManager implements Activity
 		int sort = 0;
 		for (Map<String, String> map : list) {
 			String gridState = map.get("gridState");
-			if ("added".equals(gridState)) { // 신규 추가 된것만 일단 등록..
-				String step_name = map.get("step_name");
+			if ("edited".equals(gridState)) {
+				String activity_type = map.get("activity_type");
+				String activeUser_oid = map.get("activeUser_oid");
+				String finishDate = map.get("finishDate");
+				String oid = (String) map.get("oid");
+				WTUser user = (WTUser) CommonUtil.getObject(activeUser_oid);
+				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+				eca.setActiveType(activity_type);
+				eca.setActiveUser(user);
+				eca.setFinishDate(DateUtil.convertDate(finishDate));
+				eca.setSortNumber(sort);
+				eca = (EChangeActivity) PersistenceHelper.manager.modify(eca);
+			} else if ("added".equals(gridState)) { // 신규 추가 된것만 일단 등록..
 				String activity_type = map.get("activity_type");
 				String activeUser_oid = map.get("activeUser_oid");
 				String finishDate = map.get("finishDate");
@@ -262,6 +273,10 @@ public class StandardActivityService extends StandardManager implements Activity
 					// STEP01 단계부터 무조건 시작
 					LifeCycleHelper.service.setLifeCycleState(eca, state);
 				}
+			} else if ("removed".equals(gridState)) {
+				String oid = (String) map.get("oid");
+				EChangeActivity eca = (EChangeActivity) CommonUtil.getObject(oid);
+				PersistenceHelper.manager.delete(eca);
 			}
 		}
 	}
@@ -740,6 +755,7 @@ public class StandardActivityService extends StandardManager implements Activity
 				return result;
 			}
 
+			String model = "";
 			for (LinkedHashMap<String, Object> map : addRows) {
 				String part_oid = (String) map.get("part_oid");
 				WTPart part = (WTPart) CommonUtil.getObject(part_oid);
@@ -751,6 +767,7 @@ public class StandardActivityService extends StandardManager implements Activity
 
 				boolean isApproved = part.getLifeCycleState().toString().equals("APPROVED");
 //				boolean isFour = part.getNumber().startsWith("4"); // 4로 시작하는것은 무조건 모두 새품번
+
 				// 승인된 데이터는 왼쪽으로
 				if (isApproved) {
 					link.setRightPart(false);
@@ -790,8 +807,27 @@ public class StandardActivityService extends StandardManager implements Activity
 						cLink.setVersion(endPart.getVersionIdentifier().getSeries().getValue());
 						PersistenceHelper.manager.save(cLink);
 					}
+
+					// endPart 쭉 돌아서 프로젝트 모델 값 입력
+					ArrayList<WTPart> ll = PartHelper.manager.descendants(endPart);
+					for (int k = 0; k < ll.size(); k++) {
+						WTPart pp = (WTPart) ll.get(k);
+						String value = IBAUtil.getStringValue(pp, "MODEL");
+						if (ll.size() - 1 == k) {
+							if (!model.contains(value)) {
+								model += value;
+							}
+						} else {
+							if (!model.contains(value)) {
+								model += value + ",";
+							}
+						}
+					}
 				}
 			}
+			// EO
+			eco.setModel(model);
+			PersistenceHelper.manager.modify(eco);
 
 			for (LinkedHashMap<String, Object> map : removeRows) {
 				String link_oid = (String) map.get("link_oid");

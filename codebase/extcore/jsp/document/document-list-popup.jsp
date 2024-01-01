@@ -17,6 +17,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String state = (String) request.getAttribute("state");
+ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
 %>
 <style type="text/css">
 .approved {
@@ -65,13 +66,43 @@ String state = (String) request.getAttribute("state");
 			}
 			%>
 		</td>
-		<th>문서 번호</th>
+		<th>내부 문서번호</th>
 		<td class="indent5">
-			<input type="text" name="number" id="number" class="width-300">
+			<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 		</td>
 		<th>문서명</th>
 		<td class="indent5">
 			<input type="text" name="name" id="name" class="width-300">
+		</td>
+	</tr>
+	<tr>
+		<th class="lb req">대분류</th>
+		<td class="indent5">
+			<select name="classType1" id="classType1" class="width-200" onchange="first(this);">
+				<option value="">선택</option>
+				<%
+				for (Map<String, String> map : classTypes1) {
+					String value = map.get("value");
+					String name = map.get("name");
+					String clazz = map.get("clazz");
+				%>
+				<option value="<%=value%>" data-clazz="<%=clazz%>"><%=name%></option>
+				<%
+				}
+				%>
+			</select>
+		</td>
+		<th>중분류</th>
+		<td class="indent5">
+			<select name="classType2" id="classType2" class="width-300" onchange="second(this);">
+				<option value="">선택</option>
+			</select>
+		</td>
+		<th>소분류</th>
+		<td class="indent5">
+			<select name="classType3" id="classType3" class="width-300">
+				<option value="">선택</option>
+			</select>
 		</td>
 	</tr>
 	<tr>
@@ -88,11 +119,9 @@ String state = (String) request.getAttribute("state");
 			<input type="text" name="createdTo" id="createdTo" class="width-100">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 		</td>
-	</tr>
-	<tr>
 		<th>상태</th>
 		<td class="indent5">
-			<select name="state" id="state" class="width-200">
+						<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
 				for (Map<String, String> lifecycle : lifecycleList) {
@@ -115,6 +144,8 @@ String state = (String) request.getAttribute("state");
 				%>
 			</select>
 		</td>
+	</tr>
+	<tr>
 		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
@@ -128,8 +159,6 @@ String state = (String) request.getAttribute("state");
 			<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
 		</td>
-	</tr>
-	<tr>
 		<th>프로젝트코드</th>
 		<td class="indent5">
 			<select name="model" id="model" class="width-200">
@@ -142,23 +171,6 @@ String state = (String) request.getAttribute("state");
 				}
 				%>
 			</select>
-		</td>
-		<th>부서</th>
-		<td class="indent5">
-			<select name="deptcode" id="deptcode" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode deptcode : deptcodeList) {
-				%>
-				<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-				<%
-				}
-				%>
-			</select>
-		</td>
-		<th>내부 문서번호</th>
-		<td class="indent5">
-			<input type="text" name="interalnumber" id="interalnumber" class="width-300">
 		</td>
 	</tr>
 	<tr>
@@ -196,10 +208,23 @@ String state = (String) request.getAttribute("state");
 				</div>
 			</div>
 		</td>
-		<th>내용</th>
-		<td class="indent5">
-			<input type="text" name="description" id="description" class="width-300">
+		<th>부서</th>
+		<td class="indent5" colspan="3">
+			<select name="deptcode" id="deptcode" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode deptcode : deptcodeList) {
+				%>
+				<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
+				<%
+				}
+				%>
+			</select>
 		</td>
+		<!-- 				<th>내용</th> -->
+		<!-- 				<td class="indent5"> -->
+		<!-- 					<input type="text" name="description" id="description" class="width-300"> -->
+		<!-- 				</td> -->
 	</tr>
 </table>
 <table class="button-table">
@@ -232,12 +257,12 @@ String state = (String) request.getAttribute("state");
 				<jsp:param value="<%=location%>" name="location" />
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
-				<jsp:param value="593" name="height" />
+				<jsp:param value="423" name="height" />
 			</jsp:include>
 		</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">
-			<div id="grid_wrap" style="height: 560px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap" style="height: 390px; border-top: 1px solid #3180c3;"></div>
 			<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 			<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		</td>
@@ -255,7 +280,7 @@ const columns = [ {
 	dataField : "interalnumber",
 	headerText : "내부 문서번호",
 	dataType : "string",
-	width : 120,
+	width : 180,
 }, {
 	dataField : "model",
 	headerText : "프로젝트 코드",
@@ -268,6 +293,21 @@ const columns = [ {
 	style : "aui-left",
 	width : 250,
 }, {
+	dataField : "classType1_name",
+	headerText : "대분류",
+	dataType : "string",
+	width : 100,
+}, {
+	dataField : "classType2_name",
+	headerText : "중분류",
+	dataType : "string",
+	width : 200,
+}, {
+	dataField : "classType3_name",
+	headerText : "소분류",
+	dataType : "string",
+	width : 100,
+}, {
 	dataField : "version",
 	headerText : "REV",
 	dataType : "string",
@@ -279,13 +319,13 @@ const columns = [ {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
-	width : 80,
+	width : 100,
 	styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 		if (value === "승인됨") {
 			return "approved";
 		}
 		return null;
-	}	
+	}
 }, {
 	dataField : "writer",
 	headerText : "작성자",
@@ -406,7 +446,7 @@ function loadGridData(movePage) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-	toFocus("number");
+	toFocus("interalnumber");
 	const contenxtHeader = genColumnHtml(columns);
 	$("#h_item_ul").append(contenxtHeader);
 	$("#headerMenu").menu({
@@ -430,26 +470,20 @@ document.addEventListener("DOMContentLoaded", function() {
 	$("#state").bindSelectSetValue("<%=state%>");
 	$("#state").bindSelectDisabled(true);
 	<%}%>
+	selectbox("classType1");
+	selectbox("classType2");
+	selectbox("classType3");	
 });
 
 function <%=method%>() {
 	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 	if (checkedItems.length === 0) {
-		alert("추가할 행을 선택하세요.");
+		alert("추가할 문서를 선택하세요.");
 		return false;
 	}
 	
-	openLayer();
 	opener.<%=method%>(checkedItems, function(res, close, msg) {
-		if(res) {
-			setTimeout(function() {
-				closeLayer();
-			}, 500);
-		}
-		if(close) {
-			alert(msg);
-			self.close();
-		}
+		trigger(close, msg);
 	})
 }
 	

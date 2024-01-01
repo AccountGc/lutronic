@@ -28,12 +28,12 @@
    <Property name="wt.manager.monitor.start.MethodServer" overridable="true"
              targetFile="codebase/wt.properties"
              value="1"/>  
-   <Property name="wt.manager.monitor.start.BackgroundMethodServer" overridable="true"
+   <!--Property name="wt.manager.monitor.start.BackgroundMethodServer" overridable="true"
              targetFile="codebase/wt.properties"
-             value="1"/>
+             value="1"/-->
    <Property name="wt.manager.monitor.services" overridable="true"
              targetFile="codebase/wt.properties"
-             value="MethodServer BackgroundMethodServer"/>       
+             value="MethodServer"/>       
    <Property name="wt.method.maxHeap" overridable="true"
              targetFile="codebase/wt.properties"
              value="1024"/>                 

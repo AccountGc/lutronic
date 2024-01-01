@@ -143,7 +143,7 @@ if (header) {
 	function popup103() {
 		const multi = "<%=multi%>";
 		const url = getCallUrl("/ecpr/popup?method=insert103&multi=" + multi);
-		_popup(url, 1800, 900, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 	

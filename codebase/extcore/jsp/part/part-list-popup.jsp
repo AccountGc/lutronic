@@ -19,6 +19,7 @@ String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String rowId = request.getParameter("rowId") == null ? "" : request.getParameter("rowId").toString();
 boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoolean(request.getParameter("limit"));
+boolean complete = (boolean) request.getAttribute("complete");
 %>
 <style type="text/css">
 .preOrder {
@@ -311,12 +312,12 @@ boolean limit = request.getParameter("limit") == null ? false : Boolean.parseBoo
 				<jsp:param value="<%=PartHelper.PART_ROOT%>" name="location" />
 				<jsp:param value="product" name="container" />
 				<jsp:param value="list" name="mode" />
-				<jsp:param value="593" name="height" />
+				<jsp:param value="483" name="height" />
 			</jsp:include>
 		</td>
 		<td valign="top">&nbsp;</td>
 		<td valign="top">
-			<div id="grid_wrap" style="height: 560px; border-top: 1px solid #3180c3;"></div>
+			<div id="grid_wrap" style="height: 450px; border-top: 1px solid #3180c3;"></div>
 			<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 			<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		</td>
@@ -362,7 +363,8 @@ const columns = [ {
 	dataField : "location",
 	headerText : "품목분류",
 	dataType : "string",
-	width : 180,
+	width : 250,
+	style : "aui-left"
 }, {
 	dataField : "version",
 	headerText : "REV",
@@ -381,6 +383,12 @@ const columns = [ {
 	headerText : "상태",
 	dataType : "string",
 	width : 100,
+	styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+		if (value === "승인됨") {
+			return "approved";
+		}
+		return null;
+	}
 }, {
 	dataField : "creator",
 	headerText : "등록자",
@@ -396,7 +404,7 @@ const columns = [ {
 	headerText : "수정일",
 	dataType : "date",
 	width : 100,
-}  ]
+} ]
 
 function createAUIGrid(columnLayout) {
 	const props = {
@@ -425,7 +433,24 @@ function createAUIGrid(columnLayout) {
 				return "checkout";
 			}
 			return "";
+		},
+		<%
+			if(complete) {
+		%>
+		rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
+			if (item.state !== "작업 중") {
+				return false; // false 반환하면 disabled 처리됨
+			}
+			
+			if(item.number.charAt(0) !== "1") {
+				return false; // false 반환하면 disabled 처리됨
+			}
+			
+			return true;
 		}
+		<%
+			}
+		%>
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 	loadGridData();
@@ -443,21 +468,40 @@ function auiCellClick(event) {
 	const item = event.item;
 	const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
 	const rowId = item[rowIdField];
+	let complete = false;
+	<%
+		if(complete) {
+	%>
+	if (item.state !== "작업 중") {
+		complete = true;
+	}
+	
+	if(item.number.charAt(0) !== "1") {
+		complete = true;
+	}
+	<%
+		}
+	%>
+	
 	
 	<%if (!multi) {%>
 	// 이미 체크 선택되었는지 검사
-	if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
-		// 엑스트라 체크박스 체크해제 추가
-		AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
-	} else {
-		// 엑스트라 체크박스 체크 추가
-		AUIGrid.setCheckedRowsByIds(event.pid, rowId);
+	if(!complete) {
+		if (AUIGrid.isCheckedRowById(event.pid, rowId)) {
+			// 엑스트라 체크박스 체크해제 추가
+			AUIGrid.addUncheckedRowsByIds(event.pid, rowId);
+		} else {
+			// 엑스트라 체크박스 체크 추가
+			AUIGrid.setCheckedRowsByIds(event.pid, rowId);
+		}
 	}
 	<%} else {%>
-	if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
-		AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
-	} else {
-		AUIGrid.addCheckedRowsByIds(event.pid, item._$uid);
+	if(!complete) {
+		if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
+			AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
+		} else {
+			AUIGrid.addCheckedRowsByIds(event.pid, item._$uid);
+		}
 	}
 	<%}%>
 }
@@ -491,35 +535,13 @@ function loadGridData(movePage) {
 function <%=method%>() {
 	const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 	if (checkedItems.length === 0) {
-		alert("추가할 행을 선택하세요.");
+		alert("추가할  품목을 선택하세요.");
 		return false;
 	}
 	
 	opener.<%=method%>(checkedItems, function(res, close, msg) {
-		if(res) {
-			setTimeout(function() {
-				closeLayer();
-			}, 500);
-		}
 		trigger(close, msg);
 	})
-}
-
-function trigger(close, msg) {
-	// 메세지 주고 창닫기
-	if(close && msg !== "") {
-		// true, msg...
-		alert(msg);
-		self.close();
-	}
-	
-	if(!close) {
-		if((msg !== "" && msg !== undefined)) {
-			alert(msg);
-		}
-	} else {
-		self.close();
-	}
 }
 
 document.addEventListener("DOMContentLoaded", function() {

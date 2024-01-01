@@ -26,7 +26,6 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 		<input type="hidden" name="sessionid" id="sessionid">
 		<input type="hidden" name="curPage" id="curPage">
 		<input type="hidden" name="location" id="location" value="/Default/금형문서">
-		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_Default">
 		<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 		<table class="button-table">
@@ -116,7 +115,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 						%>
 					</select>
 				</td>
-				<th>Manufacturer</th>
+				<th>MANUFACTURER</th>
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
@@ -220,6 +219,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					dataField : "name",
 					headerText : "금형명",
 					dataType : "string",
+					style : "aui-left",
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -239,11 +239,17 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 					headerText : "상태",
 					dataType : "string",
 					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 120,
+					width : 100,
 				}, {
 					dataField : "createDate",
 					headerText : "등록일",
@@ -312,6 +318,7 @@ WTUser user = (WTUser) request.getAttribute("sessionUser");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("number");
 				const columns = loadColumnLayout("mold-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);

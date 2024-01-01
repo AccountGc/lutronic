@@ -191,7 +191,13 @@ boolean create = "create".equals(mode);
 				return {"validate" : true};
 			}			
 		}
-	}, ]
+	}, {
+		dataField : "state",
+		dataType :"string",
+		headerText : "상태",
+		width : 100,
+		editable : false
+	} ]
 
 	function createAUIGrid200(columnLayout) {
 		const props = {
@@ -210,7 +216,13 @@ boolean create = "create".equals(mode);
 			<%}%>
 			enableFilter : true,
 			autoGridHeight : true,
-			editable : true
+			editable : true,
+			rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
+				if (item.state === "완료됨") {
+					return false; // false 반환하면 disabled 처리됨
+				}
+				return true;
+			}
 		}
 		myGridID200 = AUIGrid.create("#grid200", columnLayout, props);
 		<%if (view || update) {%>

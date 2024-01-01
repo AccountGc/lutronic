@@ -262,7 +262,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 120,
+					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",

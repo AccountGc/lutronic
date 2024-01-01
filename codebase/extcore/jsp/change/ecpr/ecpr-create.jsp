@@ -12,6 +12,11 @@
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -77,8 +82,6 @@
 				<th>작성자</th>
 				<td class="indent5">
 					<input type="text" name="writer" id="writer" data-multi="false" class="width-200"> 
-					<input type="hidden" name="writerOid" id="writerOid"> 
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 			</tr>
 			<tr>
@@ -96,7 +99,7 @@
 			</tr>
 			<tr>
 				<th class="lb">변경구분</th>
-				<td colspan="3" class="indent5">
+				<td colspan="3">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
@@ -167,8 +170,7 @@
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="true" name="multi" />
-			<jsp:param value="150" name="height" />
+			<jsp:param value="false" name="multi" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
 		
@@ -241,7 +243,7 @@
 					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
 					createDepart : toId("createDepart"),
-					writer_oid : toId("writerOid"),
+					writer : toId("writer"),
 // 					eoCommentA : toId("eoCommentA"),
 // 					eoCommentB : toId("eoCommentB"),
 // 					eoCommentC : toId("eoCommentC"),
@@ -255,10 +257,14 @@
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
 				const url = getCallUrl("/ecpr/create");
+				parent.openLayer();
+				logger(params);
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
 						location.href = getCallUrl("/ecpr/list");
+					} else {
+						parent.closeLayer();
 					}
 				});
 			}
@@ -268,7 +274,6 @@
 				date("writeDate");
 				date("approveDate");
 				selectbox("createDepart");
-				finderUser("writer");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				AUIGrid.resize(myGridID300);

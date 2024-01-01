@@ -119,7 +119,7 @@ public class FormTemplateHelper {
 	public FormTemplate getTemplate(String formType) throws Exception {
 		QuerySpec query = new QuerySpec();
 		int idx = query.appendClassList(FormTemplate.class, true);
-		QuerySpecUtils.toEqualsAnd(query, idx, FormTemplate.class, FormTemplate.FORM_TYPE, formType);
+		QuerySpecUtils.toEqualsAnd(query, idx, FormTemplate.class, FormTemplate.NAME, formType);
 		QueryResult result = PersistenceHelper.manager.find(query);
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();

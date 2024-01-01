@@ -29,44 +29,23 @@ import wt.util.WTException;
 import wt.util.WTPropertyVetoException;
 import com.ptc.windchill.annotations.metadata.*;
 
-/**
- *
- * <p>
- * Use the <code>newROHSMaterial</code> static factory method(s), not the
- * <code>ROHSMaterial</code> constructor, to construct instances of this
- * class.  Instances must be constructed using the static factory(s), in
- * order to ensure proper initialization of the instance.
- * <p>
- *
- *
- * @version   1.0
- **/
-
-@GenAsPersistable(superClass=WTDocument.class, 
-   serializable=Serialization.EXTERNALIZABLE_BASIC,
-   properties={
-   @GeneratedProperty(name="vendor", type=String.class)
-   })
+@GenAsPersistable(superClass = WTDocument.class, serializable = Serialization.EXTERNALIZABLE_BASIC, properties = {
+		@GeneratedProperty(name = "vendor", type = String.class) })
 public class ROHSMaterial extends _ROHSMaterial {
 
+	static final long serialVersionUID = 1;
 
-   static final long serialVersionUID = 1;
+	/**
+	 * Default factory for the class.
+	 *
+	 * @return ROHSMaterial
+	 * @exception wt.util.WTException
+	 **/
+	public static ROHSMaterial newROHSMaterial() throws WTException {
 
-
-
-
-   /**
-    * Default factory for the class.
-    *
-    * @return    ROHSMaterial
-    * @exception wt.util.WTException
-    **/
-   public static ROHSMaterial newROHSMaterial()
-            throws WTException {
-
-      ROHSMaterial instance = new ROHSMaterial();
-      instance.initialize();
-      return instance;
-   }
+		ROHSMaterial instance = new ROHSMaterial();
+		instance.initialize();
+		return instance;
+	}
 
 }

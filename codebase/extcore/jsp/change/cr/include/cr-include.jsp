@@ -61,29 +61,12 @@ if (header) {
 		headerText : "CR 번호",
 		dataType : "string",
 		width : 150,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/cr/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
 	}, {
 		dataField : "name",
 		headerText : "CR 제목",
 		dataType : "string",
 		style : "aui-left",
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/cr/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
+		width : 250,
 	}, {
 		dataField : "model",
 		headerText : "제품명",
@@ -95,6 +78,11 @@ if (header) {
 		dataType : "string",
 		width : 220,
 	}, {
+		dataField : "ecprStart",
+		headerText : "ECPR 진행여부",
+		dataType : "string",
+		width : 120,
+	}, {
 		dataField : "createDepart",
 		headerText : "작성부서",
 		dataType : "string",
@@ -105,25 +93,40 @@ if (header) {
 		dataType : "string",
 		width : 100,
 	}, {
-		dataField : "approveDate",
-		headerText : "승인일",
-		dataType : "string",
+		dataField : "writeDate",
+		headerText : "작성일",
+		dataType : "date",
 		width : 100,
 	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
 	}, {
-		dataField : "createdDate_txt",
+		dataField : "createdDate",
 		headerText : "등록일",
+		dataType : "date",
+		width : 100,
+	}, {
+		dataField : "approveDate",
+		headerText : "승인일",
 		dataType : "string",
 		width : 100,
+	}, {
+		dataField : "oid",
+		dataType : "string",
+		visible : false
 	} ]
 	
 	function createAUIGrid101(columnLayout) {
@@ -157,7 +160,7 @@ if (header) {
 	function popup101() {
 		const multi = "<%=multi%>";
 		const url = getCallUrl("/cr/popup?method=insert101&multi=" + multi);
-		_popup(url, 1800, 900, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 	
@@ -171,17 +174,27 @@ if (header) {
 	}
 
 	function insert101(arr, callBack) {
+		let checker = true;
+		let number;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
 			const unique = AUIGrid.isUniqueValue(myGridID101, "oid", item.oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID101, item, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.number + " CR은 이미 추가 되어있습니다.");
+			if (!unique) {
+				number = item.number;
+				checker = false;
+				return true;
 			}
 		})
-		callBack(true);
-	}	
+		
+		if(!checker) {
+			callBack(true, false, number +  " CR은 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				AUIGrid.addRow(myGridID101, item, rowIndex);
+			})
+		}
+	}		
 </script>

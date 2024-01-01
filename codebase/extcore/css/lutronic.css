@@ -797,3 +797,18 @@ tr.hidden {
 	background-image: url("/Windchill/extcore/images/redo.gif") !important;
 	background-position: 2px;
 }
+
+.approved {
+	font-weight: bold !important;
+	color: red !important;
+}
+
+.ecprStart {
+	font-weight: bold !important;
+	color: blue !important;
+}
+
+.ecprApproving {
+	font-weight: bold !important;
+	color: rgb(83, 149, 81) !important;
+}

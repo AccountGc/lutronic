@@ -241,9 +241,6 @@ public class StandardSAPService extends StandardManager implements SAPService {
 		sendToSapEoBom(e, completeParts);
 		System.out.println("EO SAP 인터페이스 종료");
 		// 모든 대상 품목 상태값 승인됨 처리 한다.
-		System.out.println("EO 대상품목 상태값 변경 시작");
-		EoHelper.service.eoPartApproved(list);
-		System.out.println("EO 대상품목 상태값 변경 완료");
 	}
 
 	/**
@@ -561,6 +558,16 @@ public class StandardSAPService extends StandardManager implements SAPService {
 
 					System.out.println("SAP로 전송될 정전개 데이터 = " + part.getNumber() + ", 버전 = "
 							+ part.getVersionIdentifier().getSeries().getValue());
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					ArrayList<SAPSendBomDTO> sendList = SAPHelper.manager.getOneLevel(part, eco);
 					for (SAPSendBomDTO dto : sendList) {
 

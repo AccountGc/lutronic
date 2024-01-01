@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="com.e3ps.common.util.CommonUtil"%>
 <%@page import="wt.part.WTPart"%>
 <%@page import="wt.session.SessionHelper"%>
@@ -11,6 +12,9 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 PartDTO dto = (PartDTO) request.getAttribute("dto");
+Map<String, String> pdf = dto.getPdf();
+Map<String, String> dxf = dto.getDxf();
+Map<String, String> step = dto.getStep();
 WTPart part = (WTPart) CommonUtil.getObject(dto.getOid());
 List<CommentsDTO> list = dto.getComments();
 String pnum = (String) request.getAttribute("pnum");
@@ -47,7 +51,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			%>
 			<input type="button" value="일괄 수정" title="일괄 수정" onclick="packageUpdate();">
 			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<input type="button" value="채번" title="채번" onclick="change();">
 			<input type="button" value="채번(새버전)" title="채번(새버전)" onclick="orderNumber_NewVersion();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -67,16 +71,10 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 			<a href="#tabs-1">기본 정보</a>
 		</li>
 		<li>
-			<a href="#tabs-2">주도면</a>
-		</li>
-		<li>
 			<a href="#tabs-3">참조 항목</a>
 		</li>
 		<li>
 			<a href="#tabs-4">관련 객체</a>
-		</li>
-		<li>
-			<a href="#tabs-6">환경규제문서</a>
 		</li>
 		<li>
 			<a href="#tabs-7">이력 관리</a>
@@ -86,11 +84,11 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<table class="view-table">
 			<colgroup>
 				<col width="130">
-				<col width="500">
+				<col width="300">
 				<col width="130">
-				<col width="320">
+				<col width="300">
 				<col width="80">
-				<col width="100">
+				<col width="150">
 			</colgroup>
 			<tr>
 				<th class="lb" colspan="6"><%=dto.getName()%></th>
@@ -102,7 +100,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 				<td class="indent5">
 					<%=dto.getLocation()%>
 				</td>
-				<td class="" align="center" rowspan="5" colspan="2">
+				<td class="" align="center" rowspan="8" colspan="2">
 					<jsp:include page="/extcore/jsp/common/thumbnail-view.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
@@ -146,6 +144,60 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 					<jsp:include page="/extcore/jsp/common/content/include_primaryFileView.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 					</jsp:include>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">STEP</th>
+				<td class="indent5" colspan="4">
+					<%
+					if (step.size() > 0) {
+					%>
+					<a href="<%=step.get("url")%>"><%=step.get("name")%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>STEP 파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">PDF</th>
+				<td class="indent5" colspan="4">
+					<%
+					if (pdf.size() > 0) {
+					%>
+					<a href="<%=pdf.get("url")%>"><%=pdf.get("name")%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>PDF 파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">DXF</th>
+				<td class="indent5" colspan="4">
+					<%
+					if (dxf.size() > 0) {
+					%>
+					<a href="<%=dxf.get("url")%>"><%=dxf.get("name")%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>DXF 파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 		</table>
@@ -264,17 +316,6 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 		<%@include file="/extcore/jsp/common/include/comments-include.jsp"%>
 	</div>
 
-	<!-- 	주도면 -->
-	<div id="tabs-2">
-		<jsp:include page="/extcore/jsp/drawing/drawingView_include.jsp">
-			<jsp:param value="part" name="moduleType" />
-			<jsp:param value="main" name="epmType" />
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-			<jsp:param value="주도면" name="title" />
-			<jsp:param value="epmOid" name="paramName" />
-		</jsp:include>
-	</div>
-
 	<!-- 참조 항목 -->
 	<div id="tabs-3">
 		<jsp:include page="/extcore/jsp/drawing/include_viewReferenceBy.jsp">
@@ -314,28 +355,24 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	};
 
 	//삭제
-	function deleteBtn() {
+	function _delete() {
 
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
 
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/part/delete");
-		const params = new Object();
-		params.oid = oid;
-		call(url, params, function(data) {
+		const url = getCallUrl("/part/delete?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				if (parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null) {
-					parent.opener.location.reload();
-				} else {
-					parent.opener.$("#sessionId").val("");
-					parent.opener.lfn_Search();
-				}
-				window.close();
+				opener.loadGridData();
+				self.close();
+			} else {
+				closeLayer();
 			}
-		});
+		}, "GET");
 	}
 
 	// 최신버전으로 페이지 이동

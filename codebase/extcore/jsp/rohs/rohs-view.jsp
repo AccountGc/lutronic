@@ -5,13 +5,10 @@
 <%@page import="com.e3ps.rohs.dto.RohsData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 RohsData dto = (RohsData) request.getAttribute("dto");
-List<Map<String,Object>> list = (List<Map<String,Object>>) request.getAttribute("list");
+List<Map<String, Object>> list = (List<Map<String, Object>>) request.getAttribute("list");
 ArrayList<CommentsDTO> commentsList = dto.getComments();
 %>
 
@@ -26,25 +23,25 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		</td>
 		<td class="right">
 			<%
-			if(dto.isLatest()){
+			if (dto.isLatest()) {
 			%>
-				<input type="button" value="물질복사" title="물질복사" onclick="copyRohs();">
-				<%
-				if(dto.getState().equals("APPROVED") || isAdmin){
-				%>
-					<input type="button" value="개정" title="개정" onclick="reviseBtn();">
-				<%	
-				}
-				%>
-				<%
-				if(dto.isModify() || isAdmin){
-				%>
-					<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
-					<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
-				<%	
-				}
-				%>
-			<%	
+			<input type="button" value="물질복사" title="물질복사" onclick="copyRohs();">
+			<%
+			if (dto.getState().equals("APPROVED") || isAdmin) {
+			%>
+			<input type="button" value="개정" title="개정" onclick="reviseBtn();">
+			<%
+			}
+			%>
+			<%
+			if (dto.isModify() || isAdmin) {
+			%>
+			<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+			<%
+			}
+			%>
+			<%
 			}
 			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -137,20 +134,22 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				<col width="*">
 			</colgroup>
 			<%
-			if(list.size()>0){
-				for(Map<String,Object> file : list){
-				%>
-					<tr>
-						<th class="lb"><%=file.get("fileType") %></th>
-						<td class="indent5"><a href="<%=file.get("fileDown")%>"><%=file.get("fileName") %></a></td>
-					</tr>
-				<%	
-				}
-			}else{
-			%>	
-				<tr>
-					<td colspan="2" class="center">데이터가 없습니다.</td>
-				</tr>
+			if (list.size() > 0) {
+				for (Map<String, Object> file : list) {
+			%>
+			<tr>
+				<th class="lb"><%=file.get("fileType")%></th>
+				<td class="indent5">
+					<a href="<%=file.get("fileDown")%>"><%=file.get("fileName")%></a>
+				</td>
+			</tr>
+			<%
+			}
+			} else {
+			%>
+			<tr>
+				<td colspan="2" class="center">데이터가 없습니다.</td>
+			</tr>
 			<%
 			}
 			%>
@@ -171,63 +170,63 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				int depth = cm.getDepth();
 				ArrayList<CommentsDTO> reply = cm.getReply();
 			%>
-				<table class="view-table">
-					<tr>
-						<th class="lb" style="background-color: rgb(193, 235, 255); width: 155px">
-							<%=cm.getCreator()%>
-							<br>
-							<%=cm.getCreatedDate()%>
-						</th>
-						<td class="indent5">
-							<textarea rows="5" readonly="readonly" style="resize: none;"><%=cm.getComment()%></textarea>
-						</td>
-						<td class="center" style="width: 80px">
-							<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
-							<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
-							<%
-							if (isAdmin) {
-							%>
-							<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
-							<%
-							}
-							%>
-						</td>
-					</tr>
-				</table>
-				<br>
-				<!-- 답글 -->
-				<%
-				for (CommentsDTO dd : reply) {
-					int width = dd.getDepth() * 25;
-				%>
-					<table class="view-table" style="border-top: none;">
-						<tr>
-							<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
-							<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 155px">
-								<%=dd.getCreator()%>
-								<br>
-								<%=dd.getCreatedDate()%>
-							</th>
-							<td class="indent5" style="border-top: 2px solid #86bff9;">
-								<textarea rows="5" readonly="readonly" style="resize: none;"><%=dd.getComment()%></textarea>
-							</td>
-							<td class="center" style="border-top: 2px solid #86bff9; width: 80px">
-								<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
-								<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
-								<%
-								if (isAdmin) {
-								%>
-								<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=dd.getOid()%>');">
-								<%
-								}
-								%>
-							</td>
-						</tr>
-					</table>
-					<br>
-				<%
-				}
-				%>
+			<table class="view-table">
+				<tr>
+					<th class="lb" style="background-color: rgb(193, 235, 255); width: 155px">
+						<%=cm.getCreator()%>
+						<br>
+						<%=cm.getCreatedDate()%>
+					</th>
+					<td class="indent5">
+						<textarea rows="5" readonly="readonly" style="resize: none;"><%=cm.getComment()%></textarea>
+					</td>
+					<td class="center" style="width: 80px">
+						<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
+						<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=cm.getOid()%>', '<%=cm.getDepth()%>');">
+						<%
+						if (isAdmin) {
+						%>
+						<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=cm.getOid()%>');">
+						<%
+						}
+						%>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<!-- 답글 -->
+			<%
+			for (CommentsDTO dd : reply) {
+				int width = dd.getDepth() * 25;
+			%>
+			<table class="view-table" style="border-top: none;">
+				<tr>
+					<td style="width: <%=width%>px; border-bottom: none; border-left: none; text-align: left; text-align: right; font-size: 22px;">⤷&nbsp;</td>
+					<th class="lb" style="background-color: rgb(193, 235, 255); border-top: 2px solid #86bff9; width: 155px">
+						<%=dd.getCreator()%>
+						<br>
+						<%=dd.getCreatedDate()%>
+					</th>
+					<td class="indent5" style="border-top: 2px solid #86bff9;">
+						<textarea rows="5" readonly="readonly" style="resize: none;"><%=dd.getComment()%></textarea>
+					</td>
+					<td class="center" style="border-top: 2px solid #86bff9; width: 80px">
+						<input type="button" value="답글" title="답글" class="blue mb5" data-bs-toggle="modal" data-bs-target="#reply" onclick="sendReply('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
+						<input type="button" value="수정" title="수정" class="mb5" data-bs-toggle="modal" data-bs-target="#modify" onclick="sendUpdate('<%=dd.getOid()%>', '<%=dd.getDepth()%>');">
+						<%
+						if (isAdmin) {
+						%>
+						<input type="button" value="삭제" title="삭제" class="red" onclick="cmdel('<%=dd.getOid()%>');">
+						<%
+						}
+						%>
+					</td>
+				</tr>
+			</table>
+			<br>
+			<%
+			}
+			%>
 			<%
 			}
 			%>
@@ -270,14 +269,14 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 
 <script type="text/javascript">
 	//수정
-	function updateBtn(){
+	function updateBtn() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/rohs/update?oid=" + oid);
 		document.location.href = url;
 	}
-	
+
 	//삭제
-	function deleteBtn(){
+	function deleteBtn() {
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
@@ -288,38 +287,37 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 		params.oid = oid;
 		openLayer();
 		call(url, params, function(data) {
+			alert(data.msg);
 			if (data.result) {
-				alert(data.msg);
 				opener.loadGridData();
 				self.close();
-			}else{
-				alert(data.msg);
-				clsoeLayer();
+			} else {
+				closeLayer();
 			}
 		});
 	}
-			
+
 	//개정
-	function reviseBtn(){
+	function reviseBtn() {
 		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/reviseRohs?oid=" + oid);
 		document.location.href = url;
 	}
-	
+
 	//copy
-	function copyRohs(){
+	function copyRohs() {
 		const oid = $("#oid").val();
 		const url = getCallUrl("/rohs/copyRohs?oid=" + oid);
-		_popup(url, 1500, 550, "n");
+		_popup(url, 1000, 250, "n");
 	}
-	
+
 	// 최신버전으로 페이지 이동
 	function latest() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/rohs/latest?oid=" + oid);
 		_popup(url, 1600, 550, "n");
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
@@ -327,11 +325,11 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-2":
-					const isCreated1 = AUIGrid.isCreated(partGridID); // 품목
+					const isCreated1 = AUIGrid.isCreated(myGridID91); // 품목
 					if (isCreated1) {
-						AUIGrid.resize(partGridID);
+						AUIGrid.resize(myGridID91);
 					} else {
-						createAUIGrid1(columnPart);
+						createAUIGrid91(columns91);
 					}
 					const isCreated2 = AUIGrid.isCreated(rohsGridID); // 대표물질
 					if (isCreated2) {
@@ -378,7 +376,7 @@ ArrayList<CommentsDTO> commentsList = dto.getComments();
 	});
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(partGridID);
+		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(rohsGridID);
 		AUIGrid.resize(rohs2GridID);
 		AUIGrid.resize(myGridID50);

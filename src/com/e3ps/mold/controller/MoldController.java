@@ -36,6 +36,30 @@ import wt.session.SessionHelper;
 @RequestMapping(value = "/mold/**")
 public class MoldController extends BaseController {
 
+	@Description(value = "금형 팝업 페이지")
+	@GetMapping(value = "/popup")
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String state) throws Exception {
+		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> manufactureList = NumberCodeHelper.manager.getArrayCodeList("MANUFACTURE");
+		ArrayList<NumberCode> moldTypeList = NumberCodeHelper.manager.getArrayCodeList("MOLDTYPE");
+		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_Default");
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("manufactureList", manufactureList);
+		model.addObject("moldTypeList", moldTypeList);
+		model.addObject("lifecycleList", lifecycleList);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("sessionUser", sessionUser);
+		model.addObject("state", state);
+		model.addObject("method", method);
+		model.addObject("multi", Boolean.parseBoolean(multi));
+		model.setViewName("popup:/mold/mold-list-popup");
+		return model;
+	}
+
 	@Description(value = "금형 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
@@ -121,7 +145,7 @@ public class MoldController extends BaseController {
 	@GetMapping(value = "/revise")
 	public ModelAndView revise(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		model.setViewName("/extcore/jsp/mold/mold-revise.jsp");
+		model.setViewName("popup:/mold/mold-revise");
 		return model;
 	}
 
@@ -169,7 +193,7 @@ public class MoldController extends BaseController {
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("dto", dto);
 		model.addObject("isAdmin", isAdmin);
-		model.setViewName("/extcore/jsp/mold/mold-update.jsp");
+		model.setViewName("popup:/mold/mold-update");
 		return model;
 	}
 
@@ -330,4 +354,5 @@ public class MoldController extends BaseController {
 	public ResultData approvalPackageMoldAction(HttpServletRequest request, HttpServletResponse response) {
 		return DocumentHelper.service.approvalPackageDocumentAction(request, response);
 	}
+
 }

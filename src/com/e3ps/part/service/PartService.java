@@ -54,7 +54,10 @@ public interface PartService {
 
 	Map<String, String> getAttributes(String oid) throws Exception;
 
-	Map<String, Object> delete(Map<String, Object> params) throws Exception;
+	/**
+	 * 품목 삭제
+	 */
+	Map<String, Object> delete(String oid) throws Exception;
 
 	Hashtable modify(Map hash, String[] loc, String[] deloc) throws Exception;
 

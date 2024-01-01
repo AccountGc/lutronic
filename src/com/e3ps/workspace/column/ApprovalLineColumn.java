@@ -156,7 +156,7 @@ public class ApprovalLineColumn {
 		if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
 			if ("$$MMDocument".equals(doc.getDocType().toString())) {
-				persistType = "금형";
+				persistType = "금형문서";
 			} else if ("$$ROHS".equals(doc.getDocType().toString())) {
 				persistType = "ROHS";
 			} else {

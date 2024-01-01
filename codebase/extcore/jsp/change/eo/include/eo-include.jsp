@@ -12,7 +12,7 @@ boolean update = "update".equals(mode);
 boolean create = "create".equals(mode);
 boolean header = Boolean.parseBoolean(request.getParameter("header"));
 JSONArray data = null;
-if(view){
+if (view) {
 	data = AUIGridUtil.include(oid, "eo");
 }
 %>
@@ -27,8 +27,8 @@ if(view){
 	</tr>
 </table>
 <%
-	// 테이블 처리 여부
-	if(header) {
+// 테이블 처리 여부
+if (header) {
 %>
 <table class="create-table">
 	<colgroup>
@@ -51,11 +51,11 @@ if(view){
 	</tr>
 </table>
 <%
-	} else {
+} else {
 %>
 <div id="grid100" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <%
-	}
+}
 %>
 <script type="text/javascript">
 	let myGridID100;
@@ -63,14 +63,14 @@ if(view){
 		dataField : "number",
 		headerText : "EO 번호",
 		dataType : "string",
-		width : 150,
+		width : 120,
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
 				const url = getCallUrl("/eo/view?oid=" + oid);
-				popup(url, 1600, 800);
+				_popup(url, 1600, 800, "n");
 			}
 		},
 	}, {
@@ -84,7 +84,7 @@ if(view){
 			jsCallback : function(rowIndex, columnIndex, value, item) {
 				const oid = item.oid;
 				const url = getCallUrl("/eo/view?oid=" + oid);
-				popup(url, 1600, 800);
+				_popup(url, 1600, 800, "n");
 			}
 		},
 	}, {
@@ -93,29 +93,30 @@ if(view){
 		dataType : "string",
 		width : 250,
 	}, {
-		dataField : "eoType",
-		headerText : "구분",
-		dataType : "string",
-		width : 80,
-	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
 		width : 100,
 	}, {
-		dataField : "createdDate_txt",
+		dataField : "createdDate",
 		headerText : "등록일",
-		dataType : "string",
+		dataType : "date",
 		width : 100,
 	}, {
-		dataField : "approveDate_txt",
+		dataField : "approveDate",
 		headerText : "승인일",
-		dataType : "string",
+		dataType : "date",
 		width : 100,
 	}, {
 		dataField : "oid",
@@ -154,7 +155,7 @@ if(view){
 	function popup100() {
 		const multi = "<%=multi%>";
 		const url = getCallUrl("/eo/popup?method=insert100&multi=" + multi);
-		_popup(url, 1800, 900, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 	
@@ -168,17 +169,28 @@ if(view){
 	}
 
 	function insert100(arr, callBack) {
+		let checker = true;
+		let number;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
 			const unique = AUIGrid.isUniqueValue(myGridID100, "oid", item.oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID100, item, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.number + " EO는 이미 추가 되어있습니다.");
+			if (!unique) {
+				number = item.number;
+				checker = false;
+				return true;
 			}
 		})
-		callBack(true);
+
+		
+		if(!checker) {
+			callBack(true, false, number +  " EO는 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				AUIGrid.addRow(myGridID100, item, rowIndex);
+			})
+		}
 	}	
 </script>

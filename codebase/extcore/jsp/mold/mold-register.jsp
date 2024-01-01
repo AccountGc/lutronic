@@ -7,7 +7,6 @@
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
-<script type="text/javascript" src="/Windchill/extcore/dext5editor/js/dext5editor.js"></script>
 </head>
 <body>
 	<form>
@@ -63,34 +62,58 @@
 		<script type="text/javascript">
 			let myGridID;
 			const columns = [ {
-				dataField : "interalnumber",
-				dataType : "string",
-				headerText : "내부문서번호",
-			}, {
 				dataField : "number",
+				headerText : "금형번호",
 				dataType : "string",
-				headerText : "문서명",
-				style : "aui-left"
+				width : 200,
+				renderer : {
+					type : "LinkRenderer",
+					baseUrl : "javascript",
+					jsCallback : function(rowIndex, columnIndex, value, item) {
+						const oid = item.oid;
+						const url = getCallUrl("/mold/view?oid=" + oid);
+						_popup(url, 1600, 800, "n");
+					}
+				},
+			}, {
+				dataField : "name",
+				headerText : "금형명",
+				dataType : "string",
+				style : "aui-left",
+				renderer : {
+					type : "LinkRenderer",
+					baseUrl : "javascript",
+					jsCallback : function(rowIndex, columnIndex, value, item) {
+						const oid = item.oid;
+						const url = getCallUrl("/mold/view?oid=" + oid);
+						_popup(url, 1600, 800, "n");
+					}
+				},
 			}, {
 				dataField : "version",
-				dataType : "string",
 				headerText : "REV",
-				width : 80
-			}, {
-				dataField : "state",
 				dataType : "string",
+				width : 80,
+			}, {
+				dataField : "stateDisplay",
 				headerText : "상태",
-				width : 100
+				dataType : "string",
+				width : 100,
 			}, {
 				dataField : "creator",
-				dataType : "string",
 				headerText : "등록자",
-				width : 100
-			}, {
-				dataField : "createdDate",
 				dataType : "string",
+				width : 100,
+			}, {
+				dataField : "createDate",
 				headerText : "등록일",
-				width : 100
+				dataType : "string",
+				width : 100,
+			}, {
+				dataField : "modifyDate",
+				headerText : "수정일",
+				dataType : "string",
+				width : 100,
 			}, {
 				dataField : "oid",
 				dataType : "string",
@@ -137,7 +160,7 @@
 					appName : appName.value,
 					description : description.value,
 					list : list,
-					type : "DOC"
+					type : "MOLD"
 				}
 				const url = getCallUrl("/asm/register");
 				parent.openLayer();
@@ -152,8 +175,8 @@
 			}
 
 			function popup() {
-				const url = getCallUrl("/doc/popup?method=insert90&multi=true&state=BATCHAPPROVAL");
-				_popup(url, 1800, 900, "n");
+				const url = getCallUrl("/mold/popup?method=insert90&multi=true&state=BATCHAPPROVAL");
+				_popup(url, 1400, 700, "n");
 			}
 
 			function deleteRow90() {
@@ -163,25 +186,32 @@
 					return false;
 				}
 
-				for (let i = checkedItems.length - 1; i >= 0; i--) {
-					const rowIndex = checkedItems[i].rowIndex;
-					AUIGrid.removeRow(myGridID, rowIndex);
-				}
+				AUIGrid.removeCheckedRows(myGridID);
 			}
 
 			function insert90(arr, callBack) {
+				let checker = true;
+				let number;
 				arr.forEach(function(dd) {
 					const rowIndex = dd.rowIndex;
 					const item = dd.item;
 					const unique = AUIGrid.isUniqueValue(myGridID, "oid", item.oid);
-					if (unique) {
-						AUIGrid.addRow(myGridID, item, rowIndex);
-					} else {
-						// 중복은 그냥 경고 없이 처리 할지 합의?
-						alert(item.number + " 문서는 이미 추가 되어있습니다.");
+					if (!unique) {
+						number = item.number;
+						checker = false;
+						return true;
 					}
 				})
-				callBack(true);
+
+				if (!checker) {
+					callBack(true, false, number + " 금형은 이미 추가 되어있습니다.");
+				} else {
+					arr.forEach(function(dd) {
+						const rowIndex = dd.rowIndex;
+						const item = dd.item;
+						AUIGrid.addRow(myGridID, item, rowIndex);
+					})
+				}
 			}
 
 			// jquery 삭제를 해가는 쪽으로 한다..

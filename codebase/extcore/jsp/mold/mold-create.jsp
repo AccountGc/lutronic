@@ -72,7 +72,7 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">Manufacturer</th>
+				<th class="lb">MANUFACTURER</th>
 				<td class="indent5">
 					<select name="manufacture" id="manufacture" class="width-200">
 						<option value="">선택</option>
@@ -157,10 +157,11 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 		</table>
 
 		<!-- 관련 품목 -->
-		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="doc" name="moduleType" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 관련 문서 -->
@@ -224,8 +225,8 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 				params.primary = primary == null ? '' : primary.value;
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
-				params.partList = AUIGrid.getGridData(partGridID);
-				params.docList = AUIGrid.getGridData(myGridID90);
+				params.partList = AUIGrid.getGridDataWithState(myGridID91, "gridState");
+				params.docList = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				params.temprary = temprary;
 
 				var url = getCallUrl("/mold/create");
@@ -245,14 +246,14 @@ ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribut
 				selectbox("moldtype");
 				selectbox("deptcode");
 
-				createAUIGrid2(columnsPart);
-				AUIGrid.resize(partGridID);
+				createAUIGrid91(columns91);
+				AUIGrid.resize(myGridID91);
 				createAUIGrid90(columns90);
 				AUIGrid.resize(myGridID90);
 			});
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(partGridID);
+				AUIGrid.resize(myGridID91);
 				AUIGrid.resize(myGridID90);
 			});
 		</script>

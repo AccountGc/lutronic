@@ -13,7 +13,7 @@ boolean update = "update".equals(mode);
 	<input type="button" value="외부 메일 추가" title="외부 메일 추가" class="blue" onclick="popup9();">
 	<input type="button" value="외부 메일 삭제" title="외부 메일 삭제" class="red" onclick="deleteRow9();">
 	<div id="grid9" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
-	
+
 	<script type="text/javascript">
 		let myGridID9;
 		const columns9 = [ {
@@ -21,19 +21,11 @@ boolean update = "update".equals(mode);
 			headerText : "이름",
 			dataType : "string",
 			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "email",
 			headerText : "이메일",
 			dataType : "string",
 			style : "aui-left",
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "oid",
 			dataType : "string",
@@ -68,26 +60,36 @@ boolean update = "update".equals(mode);
 
 		function deleteRow9() {
 			const checked = AUIGrid.getCheckedRowItems(myGridID9);
-			for (let i = checked.length - 1; i >= 0; i--) {
-				const rowIndex = checked[i].rowIndex;
-				AUIGrid.removeRow(myGridID9, rowIndex);
+			if (checkedItems.length === 0) {
+				alert("삭제할 행을 선택하세요.");
+				return false;
 			}
+			AUIGrid.removeCheckedRows(myGridID9);
 		}
 
 		function insert9(arr, callBack) {
+			let checker = true;
+			let name;
 			arr.forEach(function(dd) {
 				const rowIndex = dd.rowIndex;
 				const item = dd.item;
 				const unique = AUIGrid.isUniqueValue(myGridID9, "oid", item.oid);
-				logger(item);
-				if (unique) {
-					AUIGrid.addRow(myGridID9, item, rowIndex);
-				} else {
-					// 중복은 그냥 경고 없이 처리 할지 합의?
-					alert(item.name + " 메일은 이미 추가 되어있습니다.");
+				if (!unique) {
+					name = item.name;
+					checker = false;
+					return true;
 				}
 			})
-			callBack(true);
+			
+			if(!checker) {
+				callBack(true, false, name +  " 사용자는 이미 추가 되어있습니다.");
+			} else {
+				arr.forEach(function(dd) {
+					const rowIndex = dd.rowIndex;
+					const item = dd.item;
+					AUIGrid.addRow(myGridID9, item, rowIndex);
+				})
+			}
 		}
 	</script>
 </div>

@@ -75,20 +75,6 @@ if (header) {
 <script type="text/javascript">
 	let myGridID90;
 	const columns90 = [ {
-		dataField : "interalnumber",
-		headerText : "내부 문서번호",
-		dataType : "string",
-		width : 180,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/doc/view?oid=" + oid);
-				_popup(url, "", "", "f");
-			}
-		},				
-	}, {
 		dataField : "name",
 		headerText : "문서명",
 		dataType : "string",
@@ -103,10 +89,45 @@ if (header) {
 			}
 		},		
 	}, {
+		dataField : "interalnumber",
+		headerText : "내부 문서번호",
+		dataType : "string",
+		width : 180,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/doc/view?oid=" + oid);
+				_popup(url, "", "", "f");
+			}
+		},				
+	}, {
+		dataField : "classType1_name",
+		headerText : "대분류",
+		dataType : "string",
+		width : 100,
+	}, {
+		dataField : "classType2_name",
+		headerText : "중분류",
+		dataType : "string",
+		width : 200,
+	}, {
+		dataField : "classType3_name",
+		headerText : "소분류",
+		dataType : "string",
+		width : 100,
+	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 80,
+		width : 100,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}		
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -144,7 +165,7 @@ if (header) {
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			enableSorting : false,
-			softRemoveRowMode : false,
+			softRemoveRowMode : true,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			<%if (create || update) {%>
@@ -166,31 +187,41 @@ if (header) {
 	function popup90() {
 		const multi = "<%=multi%>";
 		const url = getCallUrl("/doc/popup?method=insert90&multi=" + multi);
-		_popup(url, 1800, 900, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 	
 	function deleteRow90() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID90);
 		if (checkedItems.length === 0) {
-			alert("삭제할 행을 선택하세요.");
+			alert("삭제할 문서를 선택하세요.");
 			return false;
 		}
 		AUIGrid.removeCheckedRows(myGridID90);
 	}
 
 	function insert90(arr, callBack) {
+		let checker = true;
+		let number;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
 			const unique = AUIGrid.isUniqueValue(myGridID90, "oid", item.oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID90, item, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.number + " 문서는 이미 추가 되어있습니다.");
+			if (!unique) {
+				number = item.interalnumber;
+				checker = false;
+				return true;
 			}
 		})
-		callBack(true);
-	}
+		
+		if(!checker) {
+			callBack(true, false, number +  " 문서는 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				AUIGrid.addRow(myGridID90, item, rowIndex);
+			})
+		}
+	}	
 </script>

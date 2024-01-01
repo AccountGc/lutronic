@@ -47,75 +47,61 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 		</td>
 	</tr>
 </table>
-<div id="tabs">
-	<ul>
-		<li>
-			<a href="#tabs-1">결재정보</a>
-		</li>
-		<li>
-			<a href="#tabs-2">결재대상정보</a>
-		</li>
-	</ul>
-	<div id="tabs-1">
-		<table class="view-table">
-			<colgroup>
-				<col width="130">
-				<col width="500">
-				<col width="130">
-				<col width="500">
-			</colgroup>
-			<tr>
-				<th class="lb">결재 제목</th>
-				<td class="indent5" colspan="3"><%=dto.getName()%></td>
-			</tr>
-			<tr>
-				<th class="lb">담당자</th>
-				<td class="indent5"><%=dto.getCreator()%></td>
-				<th>수신일</th>
-				<td class="indent5"><%=dto.getReceiveTime()%></td>
-			</tr>
-			<tr>
-				<th class="lb">구분</th>
-				<td class="indent5"><%=dto.getType()%></td>
-				<th>역할</th>
-				<td class="indent5"><%=dto.getRole()%></td>
-			</tr>
-			<tr>
-				<th class="lb">기안자</th>
-				<td class="indent5"><%=dto.getSubmiter()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
-			</tr>
-			<tr>
-				<th class="lb">위임</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="reassignUser" id="reassignUser">
-					<input type="hidden" name="reassignUserOid" id="reassignUserOid">
-					<input type="button" title="위임" value="위임" onclick="reassign();">
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">결재의견</th>
-				<td class="indent5" colspan="3">
-					<textarea name="description" id="description" rows="6"></textarea>
-				</td>
-			</tr>
-		</table>
+<table class="view-table">
+	<colgroup>
+		<col width="130">
+		<col width="500">
+		<col width="130">
+		<col width="500">
+	</colgroup>
+	<tr>
+		<th class="lb">결재 제목</th>
+		<td class="indent5" colspan="3"><%=dto.getName()%></td>
+	</tr>
+	<tr>
+		<th class="lb">담당자</th>
+		<td class="indent5"><%=dto.getCreator()%></td>
+		<th>수신일</th>
+		<td class="indent5"><%=dto.getReceiveTime()%></td>
+	</tr>
+	<tr>
+		<th class="lb">구분</th>
+		<td class="indent5"><%=dto.getType()%></td>
+		<th>역할</th>
+		<td class="indent5"><%=dto.getRole()%></td>
+	</tr>
+	<tr>
+		<th class="lb">기안자</th>
+		<td class="indent5"><%=dto.getSubmiter()%></td>
+		<th>상태</th>
+		<td class="indent5"><%=dto.getState()%></td>
+	</tr>
+	<tr>
+		<th class="lb">위임</th>
+		<td class="indent5" colspan="3">
+			<input type="text" name="reassignUser" id="reassignUser">
+			<input type="hidden" name="reassignUserOid" id="reassignUserOid">
+			<input type="button" title="위임" value="위임" onclick="reassign();">
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">결재의견</th>
+		<td class="indent5" colspan="3">
+			<textarea name="description" id="description" rows="6"></textarea>
+		</td>
+	</tr>
+</table>
 
-		<!-- 결재 이력 -->
-		<jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
-			<jsp:param value="<%=dto.getPoid()%>" name="oid" />
-			<jsp:param value="300" name="height" />
-		</jsp:include>
-
-	</div>
-
-	<div id="tabs-2">
-		<jsp:include page="<%=url%>">
-			<jsp:param value="<%=tapOid%>" name="tapOid" />
-		</jsp:include>
-	</div>
-</div>
+<!-- 결재 이력 -->
+<jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
+	<jsp:param value="<%=dto.getPoid()%>" name="oid" />
+	<jsp:param value="300" name="height" />
+</jsp:include>
+<!-- 	<div id="tabs-2"> -->
+<%-- 		<jsp:include page="<%=url%>"> --%>
+<%-- 			<jsp:param value="<%=tapOid%>" name="tapOid" /> --%>
+<%-- 		</jsp:include> --%>
+<!-- 	</div> -->
 
 <script type="text/javascript">
 	function reassign() {
@@ -142,6 +128,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(reassignUser.value + "사용자에게 " + data.msg);
 			if (data.result) {
 				opener.loadGridData();
+				opener.parent.updateWorkspace();
 				self.close();
 			} else {
 				closeLayer();
@@ -165,6 +152,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
+				opener.parent.updateWorkspace();
 				self.close();
 			} else {
 				closeLayer();
@@ -187,6 +175,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
+				opener.parent.updateWorkspace();
 				self.close();
 			} else {
 				closeLayer();
@@ -210,6 +199,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
+				opener.parent.updateWorkspace();
 				self.close();
 			} else {
 				closeLayer();
@@ -232,6 +222,7 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
+				opener.parent.updateWorkspace();
 				self.close();
 			} else {
 				closeLayer();
@@ -249,13 +240,14 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 		const params = {
 			oid : oid,
 			description : description,
-			tapOid : "<%=tapOid%>",
+			tapOid : "<%=tapOid%>"
 		}
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
+				opener.parent.updateWorkspace();
 				self.close();
 			} else {
 				closeLayer();
@@ -279,39 +271,6 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("description");
-		$("#tabs").tabs({
-			active : 0,
-			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
-				switch (tabId) {
-				case "tabs-1":
-					const isCreated10000 = AUIGrid.isCreated(columns10000);
-					if (isCreated10000) {
-						AUIGrid.resize(myGridID10000);
-					} else {
-						createAUIGrid10000(columns10000);
-					}
-					break;
-				case "tabs-2":
-					// 완제품
-					createAUIGrid104(columns104);
-					AUIGrid.resize(myGridID104);
-					const isCreated90 = AUIGrid.isCreated(myGridID90); // 관련문서
-					if (isCreated90) {
-						AUIGrid.resize(myGridID90);
-					} else {
-						createAUIGrid90(columns90);
-					}
-					const isCreated300 = AUIGrid.isCreated(myGridID300); // MODEL
-					if (isCreated300) {
-						AUIGrid.resize(myGridID300);
-					} else {
-						createAUIGrid300(columns300);
-					}
-					break;
-				}
-			}
-		});
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
 		finderUser("reassignUser");
@@ -320,9 +279,5 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID10000);
-		AUIGrid.resize(myGridID10001);
-		AUIGrid.resize(myGridID104);
-		AUIGrid.resize(myGridID90);
-		AUIGrid.resize(myGridID300);
 	});
 </script>

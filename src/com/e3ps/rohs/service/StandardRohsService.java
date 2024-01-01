@@ -42,6 +42,7 @@ import com.e3ps.rohs.ROHSContHolder;
 import com.e3ps.rohs.ROHSMaterial;
 import com.e3ps.rohs.RepresentToLink;
 import com.e3ps.rohs.dto.RohsData;
+import com.e3ps.workspace.service.WorkDataHelper;
 
 import wt.clients.folder.FolderTaskLogic;
 import wt.content.ApplicationData;
@@ -50,6 +51,7 @@ import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.DocumentType;
+import wt.doc.WTDocument;
 import wt.doc.WTDocumentMaster;
 import wt.doc.WTDocumentMasterIdentity;
 import wt.enterprise.RevisionControlled;
@@ -625,12 +627,6 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			rohs.setOwnership(Ownership.newOwnership(SessionHelper.manager.getPrincipalReference()));
 			rohs = (ROHSMaterial) PersistenceHelper.manager.save(rohs);
 
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(rohs, state);
-			}
-
 			ArrayList<String> secondarys = (ArrayList<String>) params.get("secondary");
 			Map<String, String> rohsMap = new HashMap<String, String>();
 			String fileType = StringUtil.checkNull((String) params.get("fileType"));
@@ -665,6 +661,18 @@ public class StandardRohsService extends StandardManager implements RohsService 
 			map.put("manufacture", manufacture);
 			CommonHelper.service.changeIBAValues(rohs, map);
 
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(rohs, state);
+			} else {
+				// 작업함으로 이동 시킨다
+				// 일괄 결재가 아닐 경우에만 시작한다
+				if (!"LC_Default_NonWF".equals(lifecycle)) {
+					WorkDataHelper.service.create(rohs);
+				}
+			}
+
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -681,36 +689,41 @@ public class StandardRohsService extends StandardManager implements RohsService 
 	public void createROHSToPartLink(RevisionControlled rv, List<Map<String, Object>> partList) throws WTException {
 
 		if (rv instanceof ROHSMaterial) {
-			if (partList.size() > 0) {
-				for (Map<String, Object> map : partList) {
-					String oid = (String) map.get("oid");
+			for (Map<String, Object> map : partList) {
+				String gridState = (String) map.get("gridState");
+				// 신규 혹은 삭제만 있다. (added, removed
+				if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+					String oid = (String) map.get("part_oid");
 					WTPart part = (WTPart) CommonUtil.getObject(oid);
 					PartToRohsLink link = PartToRohsLink.newPartToRohsLink(part, (ROHSMaterial) rv);
 					PersistenceHelper.manager.save(link);
 				}
 			}
-
 		} else {
-			if (partList.size() > 0) {
-				for (Map<String, Object> map : partList) {
+			for (Map<String, Object> map : partList) {
+				String gridState = (String) map.get("gridState");
+				// 신규 혹은 삭제만 있다. (added, removed
+				if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
 					String oid = (String) map.get("oid");
 					ROHSMaterial rohs = (ROHSMaterial) CommonUtil.getObject(oid);
 					PartToRohsLink link = PartToRohsLink.newPartToRohsLink((WTPart) rv, rohs);
 					PersistenceHelper.manager.save(link);
 				}
 			}
-
 		}
 	}
 
 	public void createROHSToROHSLink(ROHSMaterial rohs, List<Map<String, Object>> rohsList) throws WTException {
-
 		if (rohsList.size() > 0) {
 			for (Map<String, Object> map : rohsList) {
-				String oid = (String) map.get("oid");
-				ROHSMaterial composition = (ROHSMaterial) CommonUtil.getObject(oid);
-				RepresentToLink link = RepresentToLink.newRepresentToLink(rohs, composition);
-				PersistenceHelper.manager.save(link);
+				String gridState = (String) map.get("gridState");
+				// 신규 혹은 삭제만 있다. (added, removed
+				if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+					String oid = (String) map.get("oid");
+					ROHSMaterial composition = (ROHSMaterial) CommonUtil.getObject(oid);
+					RepresentToLink link = RepresentToLink.newRepresentToLink(rohs, composition);
+					PersistenceHelper.manager.save(link);
+				}
 			}
 		}
 	}

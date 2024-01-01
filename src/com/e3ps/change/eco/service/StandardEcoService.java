@@ -1,11 +1,8 @@
 package com.e3ps.change.eco.service;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
@@ -15,19 +12,13 @@ import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.EcoPartLink;
 import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.activity.service.ActivityHelper;
-import com.e3ps.change.ecn.service.EcnHelper;
 import com.e3ps.change.eco.dto.EcoDTO;
-import com.e3ps.change.ecpr.service.EcprHelper;
-import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
-import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.doc.DocumentEOLink;
-import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.part.service.PartHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
@@ -36,7 +27,6 @@ import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
-import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
@@ -287,13 +277,7 @@ public class StandardEcoService extends StandardManager implements EcoService {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(eco, state);
-			} else {
-				State state = State.toState("INWORK");
-				LifeCycleHelper.service.setLifeCycleState(eco, state);
 			}
-
-//			ArrayList<WTPart> clist = (ArrayList<WTPart>) dataMap.get("clist"); // 변경대상
-//			ArrayList<WTPart> plist = (ArrayList<WTPart>) dataMap.get("plist"); // 완제품
 
 			// 첨부 파일 저장
 			removeAttach(eco);
@@ -303,17 +287,9 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			deleteLink(eco);
 			saveLink(eco, dto);
 
-			// 완제품 연결
-//			deleteCompletPart(eco);
-//			saveCompletePart(eco, plist);
-
-			// 변경 대상 품목 링크
-//			deleteEcoPart(eco);
-//			saveEcoPart(eco, clist);
-
 			// 설변 활동 생성
 			if (rows200.size() > 0) {
-				ActivityHelper.service.deleteActivity(eco);
+//				ActivityHelper.service.deleteActivity(eco);
 				ActivityHelper.service.saveActivity(eco, rows200);
 			}
 

@@ -215,7 +215,11 @@ public class DocumentDTO {
 		// 개정 권한 - (최신버전 && 승인됨)
 //		if (!CommonUtil.isAdmin()) {
 		if (check("APPROVED")) {
-			set_print(true);
+			String classType1 = doc.getTypeInfoWTDocument().getPtc_str_2();
+			if (!classType1.equals("DEV")) {
+				// 개발문서가 아닐경우만..
+				set_print(true);
+			}
 		}
 
 		if (check("APPROVED") && isLatest()) {

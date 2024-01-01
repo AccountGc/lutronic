@@ -161,7 +161,7 @@ String location = (String) request.getAttribute("location");
 			function popup() {
 				const location = document.getElementById("location").value;
 				const url = getCallUrl("/doc/popup?method=insert90&multi=true&state=BATCHAPPROVAL&location=" + location);
-				_popup(url, 1800, 900, "n");
+				_popup(url, 1400, 700, "n");
 			}
 
 			function deleteRow90() {
@@ -174,18 +174,28 @@ String location = (String) request.getAttribute("location");
 			}
 
 			function insert90(arr, callBack) {
+				let checker = true;
+				let number;
 				arr.forEach(function(dd) {
 					const rowIndex = dd.rowIndex;
 					const item = dd.item;
 					const unique = AUIGrid.isUniqueValue(myGridID, "oid", item.oid);
-					if (unique) {
-						AUIGrid.addRow(myGridID, item, rowIndex);
-					} else {
-						// 중복은 그냥 경고 없이 처리 할지 합의?
-						alert(item.number + " 문서는 이미 추가 되어있습니다.");
+					if (!unique) {
+						number = item.interalnumber;
+						checker = false;
+						return true;
 					}
 				})
-				callBack(true);
+				
+				if(!checker) {
+					callBack(true, false, number +  " 문서는 이미 추가 되어있습니다.");
+				} else {
+					arr.forEach(function(dd) {
+						const rowIndex = dd.rowIndex;
+						const item = dd.item;
+						AUIGrid.addRow(myGridID, item, rowIndex);
+					})
+				}
 			}
 
 			// jquery 삭제를 해가는 쪽으로 한다..

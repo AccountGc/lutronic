@@ -502,8 +502,10 @@ WTPart root = (WTPart) request.getAttribute("root");
 			const tree = $("#treetable").fancytree("getTree");
 			const selectedNodes = tree.getSelectedNodes();
 			const node = $.ui.fancytree.getNode(ui.target);
+			const parent = node.parent;
 			const isCheckOut = node.data.isCheckOut;
-			const isApproved = node.data.state === "승인됨";
+			const isApproved = parent.data.state === "승인됨";
+// 			logger(node);
 
 			// 삭제 승인됨 상태가 아니여야함..
 			// 부모도 승인됨 상태가 아니여야할거같은데??

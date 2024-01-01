@@ -81,7 +81,7 @@ public class CrDTO {
 		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
 		setCreateDepart_name(
 				StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
-		setWriteDate(cr.getWriter());
+		setWriter(cr.getWriter());
 		setProposer_name(StringUtil.checkNull(cr.getProposer()));
 		setChangeSection(StringUtil
 				.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getChangeSection(), "CHANGESECTION")));

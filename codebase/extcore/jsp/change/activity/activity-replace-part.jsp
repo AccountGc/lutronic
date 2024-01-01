@@ -7,6 +7,12 @@
 String oid = (String) request.getAttribute("oid");
 EChangeOrder eco = (EChangeOrder) request.getAttribute("eco");
 JSONArray list = (JSONArray) request.getAttribute("list");
+String t = eco.getEoType();
+boolean complete = true;
+if(t.equals("CHANGE")) {
+	complete = false;
+}
+
 %>
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
 <table class="button-table">
@@ -137,13 +143,18 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 	}
 
 	function save() {
+		const addRows = AUIGrid.getAddedRowItems(myGridID);
+		const removeRows = AUIGrid.getRemovedItems(myGridID);
+		if(addRows.length === 0 && removeRows.length === 0) {
+			alert("변경 대상이 하나도 없습니다.");
+			return false;
+		}
+		
 		if (!confirm("저장 하시겠습니까?")) {
 			return false;
 		}
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/activity/replace");
-		const addRows = AUIGrid.getAddedRowItems(myGridID);
-		const removeRows = AUIGrid.getRemovedItems(myGridID);
 		const params = {
 			addRows : addRows,
 			removeRows : removeRows,
@@ -161,33 +172,41 @@ JSONArray list = (JSONArray) request.getAttribute("list");
 	}
 
 	function popup100() {
-		const url = getCallUrl("/part/popup?method=insert100&multi=true");
+		const url = getCallUrl("/part/popup?method=insert100&multi=true&complete=<%=complete%>");
 		_popup(url, 1600, 800, "n");
 	}
 
 	function insert100(arr, callBack) {
-		let msg = "";
-		for (let i = 0; i < arr.length; i++) {
-			const dd = arr[i];
+		let checker = true;
+		let number;
+		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
-			const newItem = new Object();
-			newItem.part_number = item.number;
-			newItem.part_name = item.name;
-			newItem.part_version = item.version;
-			newItem.part_oid = item.part_oid;
-			newItem.part_state = item.state;
-			newItem.part_creator = item.creator;
-			newItem.part_createdDate = item.createdDate;
-			const unique = AUIGrid.isUniqueValue(myGridID, "part_oid", newItem.part_oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID, newItem, rowIndex);
-			} else {
-				msg = item.number + " 품목은 이미 추가 되어있습니다.";
-				break;
+			const unique = AUIGrid.isUniqueValue(myGridID, "part_oid", item.part_oid);
+			if (!unique) {
+				number = item.number;
+				checker = false;
+				return true;
 			}
+		})
+		
+		if(!checker) {
+			callBack(true, false, number +  " 품목은 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				const newItem = new Object();
+				newItem.part_number = item.number;
+				newItem.part_name = item.name;
+				newItem.part_version = item.version;
+				newItem.part_oid = item.part_oid;
+				newItem.part_state = item.state;
+				newItem.part_creator = item.creator;
+				newItem.part_createdDate = item.createdDate;				
+				AUIGrid.addRow(myGridID, newItem, rowIndex);
+			})
 		}
-		callBack(true, false, msg);
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

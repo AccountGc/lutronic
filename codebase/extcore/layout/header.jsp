@@ -78,7 +78,7 @@ int eca = (int) request.getAttribute("eca");
 					<li>
 						<a onclick="moveToPage(this, '/activity/eca', '> 나의업무 > ECA 활동함');">
 							ECA 활동함
-							<span class="label label-info float-right" id="eca">
+							<span class="label label-info float-right" id="activity">
 								<%=eca%>
 							</span>
 						</a>
@@ -619,7 +619,7 @@ int eca = (int) request.getAttribute("eca");
 
 	function mainPopUP(oid, position) {
 		const url = getCallUrl("/notice/popup?oid=" + oid);
-		_popup2(url, 1000, 450, position, "n");
+		_popup2(url, 1000, 500, position, "n");
 	}
 
 	function mainIsPopup(oid) {

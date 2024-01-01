@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -225,6 +226,16 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			LifeCycleManaged lcm = (LifeCycleManaged) per;
 			// 상태값 변경
 			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
+
+			if (per instanceof ECPRRequest) {
+				ECPRRequest ecpr = (ECPRRequest) per;
+				QueryResult qr = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
+				while (qr.hasMoreElements()) {
+					EChangeRequest cr = (EChangeRequest) qr.nextElement();
+					LifeCycleHelper.service.setLifeCycleState(cr, State.toState("APPROVAL_ECPR"));
+				}
+			}
+
 //			if (lcm instanceof EChangeOrder) {
 //				// EO..
 //
@@ -499,7 +510,11 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			if (per instanceof WTDocument) {
 				WTDocument doc = (WTDocument) per;
-				DocumentHelper.service.createCover(doc);
+				String docType = doc.getDocType().toString();
+				// 금형 아닐경우
+				if (!"$$MMDocument".equals(docType) && !"$$ROHS".equals(docType)) {
+					DocumentHelper.service.createCover(doc);
+				}
 			}
 
 			// 일괄결재일경우 대상도.. 변경
@@ -513,11 +528,25 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				}
 			}
 
+			if (per instanceof ECPRRequest) {
+				ECPRRequest ecpr = (ECPRRequest) per;
+				QueryResult qr = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
+				while (qr.hasMoreElements()) {
+					EChangeRequest cr = (EChangeRequest) qr.nextElement();
+					WorkDataHelper.service.create(cr); // 자동으로 결재 시작 CR
+				}
+			}
+
 			// EO/ ECO
 			if (per instanceof EChangeOrder) {
 				EChangeOrder e = (EChangeOrder) per;
+				// 승인일.. 오케이하기
+
+				Timestamp today = new Timestamp(new Date().getTime());
+				e.setEoApproveDate(today.toString().substring(0, 10));
+				e = (EChangeOrder) PersistenceHelper.manager.modify(e);
+
 				String t = e.getEoType();
-				// ECO
 				if ("CHANGE".equals(t)) {
 					System.out.println("ECO 결재 완료");
 					EcoHelper.manager.postAfterAction(e);
@@ -532,10 +561,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					EoHelper.manager.postAfterAction(e);
 				}
 			}
-
 		}
-
-		// 함수로 처리하고 이벤트처리에서 제외한다
 	}
 
 	@Override
@@ -602,6 +628,15 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 		if (per instanceof LifeCycleManaged) {
 			LifeCycleManaged lcm = (LifeCycleManaged) per;
 			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("RETURN"));
+
+			if (lcm instanceof ECPRRequest) {
+				ECPRRequest ecpr = (ECPRRequest) lcm;
+				QueryResult qr = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
+				while (qr.hasMoreElements()) {
+					EChangeRequest cr = (EChangeRequest) qr.nextElement();
+					LifeCycleHelper.service.setLifeCycleState(cr, State.toState("RETURN_ECPR"));
+				}
+			}
 
 			if (lcm instanceof AsmApproval) {
 				AsmApproval asm = (AsmApproval) per;

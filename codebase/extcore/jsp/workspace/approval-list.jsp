@@ -106,7 +106,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL");
-							_popup(url, 1500, 800, "n");
+							_popup(url, 1400, 600, "n");
 						}
 					},
 				}, {
@@ -120,7 +120,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL");
-							_popup(url, 1500, 800, "n");
+							_popup(url, 1400, 600, "n");
 						}
 					},
 				}, {
@@ -134,7 +134,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL");
-							_popup(url, 1500, 800, "n");
+							_popup(url, 1400, 600, "n");
 						}
 					},
 				}, {
@@ -148,7 +148,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/workspace/lineView?oid=" + oid + "&columnType=COLUMN_APPROVAL");
-							_popup(url, 1500, 800, "n");
+							_popup(url, 1400, 600, "n");
 						}
 					},
 				}, {

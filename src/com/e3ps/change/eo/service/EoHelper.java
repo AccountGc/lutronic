@@ -411,7 +411,7 @@ public class EoHelper {
 			for (WTPart p : list) {
 				boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 				if (isCheckOut) {
-					String msg = part.getNumber() + " 품목이 체크아웃 상태입니다.";
+					String msg = p.getNumber() + " 품목이 체크아웃 상태입니다.";
 					map.put("msg", msg);
 					map.put("result", false);
 					return map;

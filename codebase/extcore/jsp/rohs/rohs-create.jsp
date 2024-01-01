@@ -61,13 +61,13 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 				<td class="indent5">
 					<input type="text" name="rohsNumber" id="rohsNumber" class="width-400">
 					&nbsp;
-					<input type="button" value="번호 중복" title="번호 중복" onclick="check();">
+					<input type="button" class="gray" value="번호 중복" title="번호 중복" onclick="check();">
 				</td>
 				<th class="req">물질명</th>
 				<td class="indent5">
 					<input type="text" name="rohsName" id="rohsName" class="width-400">
 					&nbsp;
-					<input type="button" value="물질명 중복" title="물질명 중복" onclick="NameCheck();">
+					<input type="button" class="gray" value="물질명 중복" title="물질명 중복" onclick="NameCheck();">
 					<input type="hidden" id="duplicationChk" value="F">
 				</td>
 			</tr>
@@ -135,22 +135,28 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 						%>
 					</select>
 				</td>
-				<th>발행일</th>
+				<th class="req">발행일</th>
 				<td class="indent5">
 					<input type="text" name="publicationDate" id="publicationDate" class="width-100">
 				</td>
 			</tr>
 		</table>
+
+
 		<!-- 관련 품목 -->
-		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<!-- 관련 rohs -->
-		<jsp:include page="/extcore/jsp/rohs/include_selectRohs.jsp">
+		<jsp:include page="/extcore/jsp/rohs/include/rohs-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 
 		<table class="button-table">
@@ -180,8 +186,8 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 				params.secondary = secondarys;
 				params.fileType = $("#fileType").val();
 				params.publicationDate = $("#publicationDate").val();
-				params.rohsList = AUIGrid.getGridData(rohsGridID);
-				params.partList = AUIGrid.getGridData(partGridID);
+				params.rohsList = AUIGrid.getGridDataWithState(myGridID106, "gridState");
+				params.partList = AUIGrid.getGridDataWithState(myGridID91, "gridState");
 
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
@@ -203,19 +209,19 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 						alert("협력업체를 선택하세요.");
 						return;
 					}
-					
+
 					const secondarys = toArray("secondarys");
-					if(secondarys.length>0){
-						if(isEmpty($("#fileType").val())) {
+					if (secondarys.length > 0) {
+						if (isEmpty($("#fileType").val())) {
 							alert("파일구분을 선택하세요.");
 							return;
 						}
-						if(isEmpty($("#publicationDate").val())) {
+						if (isEmpty($("#publicationDate").val())) {
 							alert("발행일을 입력하세요.");
 							return;
 						}
 					}
-					
+
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -285,15 +291,15 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 				selectbox("manufacture");
 				selectbox("fileType");
 				date("publicationDate");
-				createAUIGrid2(columnsPart);
-				AUIGrid.resize(partGridID);
-				createAUIGrid6(columnsRohs);
-				AUIGrid.resize(rohsGridID);
+				createAUIGrid91(columns91);
+				AUIGrid.resize(myGridID91);
+				createAUIGrid106(columns106);
+				AUIGrid.resize(myGridID106);
 			});
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(partGridID);
-				AUIGrid.resize(rohsGridID);
+				createAUIGrid106(columns106);
+				createAUIGrid106(columns91);
 			});
 		</script>
 	</form>

@@ -357,7 +357,8 @@ public class PartHelper {
 			map.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("name", p.getName());
 			map.put("number", p.getNumber());
-			map.put("version", p.getVersionIdentifier().getSeries().getValue());
+			map.put("version", p.getVersionIdentifier().getSeries().getValue() + "."
+					+ p.getIterationIdentifier().getSeries().getValue());
 			map.put("creator", p.getCreatorFullName());
 			map.put("createdDate", p.getCreateTimestamp().toString().substring(0, 10));
 			map.put("modifiedDate", p.getModifyTimestamp().toString().substring(0, 10));

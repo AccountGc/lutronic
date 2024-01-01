@@ -187,12 +187,18 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					dataField : "version",
 					headerText : "REV",
 					dataType : "string",
-					width : 80,
+					width : 100,
 				}, {
 					dataField : "stateDisplay",
 					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}					
 				}, {
 					dataField : "creator",
 					headerText : "등록자",

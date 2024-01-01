@@ -28,9 +28,7 @@ public class StandardFormTemplateService extends StandardManager implements Form
 	@Override
 	public void create(Map<String, Object> params) throws Exception {
 		String name = (String) params.get("name");
-		String number = (String) params.get("number");
 		String description = (String) params.get("description");
-		String formType = (String) params.get("formType");
 		Transaction trs = new Transaction();
 		try {
 
@@ -39,9 +37,7 @@ public class StandardFormTemplateService extends StandardManager implements Form
 			FormTemplate form = FormTemplate.newFormTemplate();
 			form.setName(name);
 			form.setOwnership(ownership);
-			form.setNumber(number);
 			form.setDescription(description);
-			form.setFormType(formType);
 			form.setVersion(1);
 			PersistenceHelper.manager.save(form);
 

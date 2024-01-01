@@ -34,28 +34,16 @@ iframe {
 			<colgroup>
 				<col width="150">
 				<col width="*">
-				<col width="150">
-				<col width="*">
-				<col width="150">
-				<col width="*">
 			</colgroup>
 			<tr>
-				<th class="req lb">문서템플릿 번호</th>
-				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
-				</td>
 				<th class="req">문서템플릿 제목</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th class="req">코드</th>
-				<td class="indent5">
-					<input type="text" name="formType" id="formType" class="width-300">
-				</td>
 			</tr>
 			<tr>
 				<th class="req lb">내용</th>
-				<td colspan="5" class="indent7 pb8">
+				<td class="indent7 pb8">
 					<script type="text/javascript">
 						new Dext5editor('description');
 					</script>
@@ -80,9 +68,7 @@ iframe {
 		});
 
 		function create() {
-			const number = document.getElementById("number");
 			const name = document.getElementById("name");
-			const formType = document.getElementById("formType");
 			// 내용
 			const description = DEXT5.getBodyValue("description");
 
@@ -91,9 +77,7 @@ iframe {
 			}
 			const params = {
 				name : name.value,
-				number : number.value,
 				description : description,
-				formType : formType.value
 			}
 			const url = getCallUrl("/form/create");
 			parent.openLayer();

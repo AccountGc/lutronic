@@ -12,6 +12,9 @@ import com.e3ps.workspace.dto.WorkDataDTO;
 
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
+import wt.lifecycle.LifeCycleHelper;
+import wt.lifecycle.LifeCycleManaged;
+import wt.lifecycle.State;
 import wt.ownership.Ownership;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -37,6 +40,8 @@ public class StandardWorkDataService extends StandardManager implements WorkData
 			data.setPer(per);
 			data.setOwnership(ownership);
 			PersistenceHelper.manager.save(data);
+
+			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) per, State.toState("LINE_REGISTER"));
 
 			// 메일발송하기!
 //			MailUtils.manager.sendWorkDataMail((LifeCycleManaged) per, "결재선지정", "결재선지정");

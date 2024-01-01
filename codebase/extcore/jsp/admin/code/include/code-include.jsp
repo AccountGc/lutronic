@@ -110,39 +110,45 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 	}
 
 	function insert300(arr, callBack) {
+		let checker = true;
+		let name;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
 			const unique = AUIGrid.isUniqueValue(myGridID300, "oid", item.oid);
-			const insert = {
-				code : item.code,
-				description : item.description,
-				enabled : item.enabled,
-				name : item.name,
-				oid : item.oid,
-				sort : item.sort
-			};
-			if (unique) {
-				AUIGrid.addRow(myGridID300, insert, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.name + " 제품은 이미 추가 되어있습니다.");
+			if (!unique) {
+				name = item.name;
+				checker = false;
+				return true;
 			}
 		})
-		callBack(true);
+		
+		if(!checker) {
+			callBack(true, false, name +  " 제품은 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				const newItem = {
+					oid : item.oid,
+					name : item.name,
+					description : item.description,
+					sort : item.sort,
+					code : item.code,
+					enabled : item.enabled
+				}
+				AUIGrid.addRow(myGridID300, newItem, rowIndex);
+			})
+		}
 	}
 
 	function deleteRow300() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID300);
 		if (checkedItems.length === 0) {
-			alert("삭제할 행을 선택하세요.");
+			alert("삭제할 제품을 선택하세요.");
 			return false;
 		}
-
-		for (let i = checkedItems.length - 1; i >= 0; i--) {
-			const rowIndex = checkedItems[i].rowIndex;
-			AUIGrid.removeRow(myGridID300, rowIndex);
-		}
+		AUIGrid.removeCheckedRows(myGridID300);
 	}
 	</script>
 </div>

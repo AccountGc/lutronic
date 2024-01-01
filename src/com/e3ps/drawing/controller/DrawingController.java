@@ -524,42 +524,6 @@ public class DrawingController extends BaseController {
 
 	}
 
-	/**
-	 * 부품 상태 수정
-	 * 
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping("/showThumAction")
-	public Map<String, Object> showThumAction(HttpServletRequest request, HttpServletResponse response) {
-		Map<String, Object> map = new HashMap<String, Object>();
-
-		try {
-			String oid = request.getParameter("oid");
-			EPMDocument epm = (EPMDocument) CommonUtil.getObject(oid);
-			EpmData data = new EpmData(epm);
-
-			if (data.getThum() != null) {
-				String num = data.number.replaceAll(" ", "_");
-				String imgpath = data.getThum();
-				String copyTag = data.getCopyTag();
-				map.put("num", num);
-				map.put("imgpath", imgpath);
-				map.put("copyTag", copyTag);
-				map.put("result", true);
-			} else {
-				map.put("result", false);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			map.put("result", false);
-		}
-		return map;
-	}
-
 	@Description(value = "SAP 에서 호출할 주소")
 	@GetMapping(value = "/viewToSap")
 	public ModelAndView viewToSap(@RequestParam String number, @RequestParam String version) throws Exception {

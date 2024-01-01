@@ -15,6 +15,8 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.workspace.service.WorkDataHelper;
+import com.e3ps.workspace.service.WorkDataService;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -50,7 +52,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String writeDate = dto.getWriteDate();
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
-		String writer_oid = dto.getWriter_oid();
+		String writer = dto.getWriter();
 //		String eoCommentA = dto.getEoCommentA();
 //		String eoCommentB = dto.getEoCommentB();
 //		String eoCommentC = dto.getEoCommentC();
@@ -94,11 +96,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoName(name);
 			ecpr.setEoNumber(number);
 			ecpr.setCreateDate(writeDate);
-
-			if (!writer_oid.equals("")) {
-				long writerOid = CommonUtil.getOIDLongValue(writer_oid);
-				ecpr.setWriter(Long.toString(writerOid));
-			}
+			ecpr.setWriter(writer);
 
 			ecpr.setApproveDate(approveDate);
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
@@ -120,18 +118,19 @@ public class StandardEcprService extends StandardManager implements EcprService 
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			ecpr = (ECPRRequest) PersistenceHelper.manager.save(ecpr);
 
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
-			}
-
 			// 첨부 파일 저장
 			saveAttach(ecpr, dto);
 
 			// 관련 CR 링크
 			saveLink(ecpr, rows101);
 
+			if (temprary) {
+				State state = State.toState("TEMPRARY");
+				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
+			} else {
+				WorkDataHelper.service.create(ecpr);
+			}
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -221,7 +220,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String writeDate = dto.getWriteDate();
 		String approveDate = dto.getApproveDate();
 		String createDepart = dto.getCreateDepart();
-		String writer_oid = dto.getWriter_oid();
+		String writer = dto.getWriter();
 //		String eoCommentA = dto.getEoCommentA();
 //		String eoCommentB = dto.getEoCommentB();
 //		String eoCommentC = dto.getEoCommentC();
@@ -265,10 +264,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			ecpr.setEoNumber(number);
 			ecpr.setCreateDate(writeDate);
 
-			if (!writer_oid.equals("")) {
-				long writerOid = CommonUtil.getOIDLongValue(writer_oid);
-				ecpr.setWriter(Long.toString(writerOid));
-			}
+			ecpr.setWriter(writer);
 			ecpr.setApproveDate(approveDate);
 			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);

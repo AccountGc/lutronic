@@ -2,6 +2,7 @@ package com.e3ps.workspace.column;
 
 import java.sql.Timestamp;
 
+import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.rohs.ROHSMaterial;
@@ -67,6 +68,9 @@ public class WorkDataColumn {
 			if ("$$MMDocument".equals(docType)) {
 				setPersistType("금형문서");
 				setViewUrl(this.context + "/mold/view?oid=" + getPoid());
+			} else if("$$ROHS".equals(docType)) {
+				setPersistType("ROHS");
+				setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 			} else {
 				setPersistType("문서");
 				setViewUrl(this.context + "/doc/view?oid=" + getPoid());
@@ -102,16 +106,16 @@ public class WorkDataColumn {
 			setCreatedDate(ecr.getCreateTimestamp());
 			setCreatedDate_txt(ecr.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/cr/view?oid=" + getPoid());
-		} else if (per instanceof ROHSMaterial) {
-			ROHSMaterial rohs = (ROHSMaterial) per;
-			setNumber(rohs.getNumber());
-			setName(rohs.getName());
-			setPersistType("ROHS");
-			setState(rohs.getLifeCycleState().getDisplay());
-			setCreator(rohs.getCreatorName());
-			setCreatedDate(rohs.getCreateTimestamp());
-			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
-			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
+//		} else if (per instanceof ROHSMaterial) {
+//			ROHSMaterial rohs = (ROHSMaterial) per;
+//			setNumber(rohs.getNumber());
+//			setName(rohs.getName());
+//			setPersistType("ROHS");
+//			setState(rohs.getLifeCycleState().getDisplay());
+//			setCreator(rohs.getCreatorName());
+//			setCreatedDate(rohs.getCreateTimestamp());
+//			setCreatedDate_txt(rohs.getCreateTimestamp().toString().substring(0, 10));
+//			setViewUrl(this.context + "/rohs/view?oid=" + getPoid());
 		} else if (per instanceof AsmApproval) {
 			AsmApproval asm = (AsmApproval) per;
 			String number = asm.getNumber();
@@ -146,6 +150,16 @@ public class WorkDataColumn {
 			setCreatedDate(part.getCreateTimestamp());
 			setCreatedDate_txt(part.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/part/view?oid=" + getPoid());
+		} else if(per instanceof ECPRRequest) {
+			ECPRRequest ecpr = (ECPRRequest) per;
+			setNumber(ecpr.getEoNumber());
+			setName(ecpr.getEoName());
+			setPersistType("ECPR");
+			setState(ecpr.getLifeCycleState().getDisplay());
+			setCreator(ecpr.getCreatorName());
+			setCreatedDate(ecpr.getCreateTimestamp());
+			setCreatedDate_txt(ecpr.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/ecpr/view?oid=" + getPoid());
 		}
 	}
 }

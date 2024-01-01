@@ -1,24 +1,32 @@
+<%@page import="com.e3ps.common.util.StringUtil"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.List"%>
 <%@page import="wt.org.WTUser"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.common.code.NumberCode"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
+ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> manufactureList = (ArrayList<NumberCode>) request.getAttribute("manufactureList");
+ArrayList<NumberCode> moldTypeList = (ArrayList<NumberCode>) request.getAttribute("moldTypeList");
 List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
+boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+WTUser user = (WTUser) request.getAttribute("sessionUser");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
+String state = (String) request.getAttribute("state");
 %>
 <input type="hidden" name="sessionid" id="sessionid">
 <input type="hidden" name="curPage" id="curPage">
+<input type="hidden" name="location" id="location" value="/Default/금형문서">
+<input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 
 <table class="button-table">
 	<tr>
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				ECO 검색
+				금형 검색
 			</div>
 		</td>
 	</tr>
@@ -34,31 +42,54 @@ boolean multi = (boolean) request.getAttribute("multi");
 		<col width="*">
 	</colgroup>
 	<tr>
-		<th>ECO 번호</th>
+		<th>금형 번호</th>
 		<td class="indent5">
 			<input type="text" name="number" id="number" class="width-300">
 		</td>
-		<th>ECO 제목</th>
+		<th>금형명</th>
 		<td class="indent5">
 			<input type="text" name="name" id="name" class="width-300">
 		</td>
-		<th>상태</th>
+		<th>금형타입</th>
 		<td class="indent5">
-			<select name="state" id="state" class="width-200">
+			<select name="moldtype" id="moldtype" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (Map<String, String> lifecycle : lifecycleList) {
-					if (!lifecycle.get("code").equals("TEMPRARY")) {
+				for (NumberCode moldType : moldTypeList) {
 				%>
-				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+				<option value="<%=moldType.getCode()%>"><%=moldType.getName()%></option>
 				<%
-				}
 				}
 				%>
 			</select>
 		</td>
 	</tr>
 	<tr>
+		<th>상태</th>
+		<td class="indent5">
+						<select name="state" id="state" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (Map<String, String> lifecycle : lifecycleList) {
+					if (!lifecycle.get("code").equals("TEMPRARY")) {
+				%>
+				<%
+				if (StringUtil.checkString(state)) {
+				%>
+				<option value="<%=lifecycle.get("code")%>" <%if (state.equals(lifecycle.get("code"))) {%> selected="selected" <%}%>><%=lifecycle.get("name")%></option>
+				<%
+				} else {
+				%>
+				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+				<%
+				}
+				%>
+				<%
+				}
+				}
+				%>
+			</select>
+		</td>
 		<th>등록자</th>
 		<td class="indent5">
 			<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
@@ -72,113 +103,77 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<input type="text" name="createdTo" id="createdTo" class="width-100">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 		</td>
-		<th>승인일</th>
-		<td class="indent5">
-			<input type="text" name="approveFrom" id="approveFrom" class="width-100">
-			~
-			<input type="text" name="approveTo" id="approveTo" class="width-100">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
-		</td>
 	</tr>
 	<tr>
-		<th class="lb">프로젝트 코드</th>
+		<th>부서</th>
 		<td class="indent5">
-			<select name="model" id="model" class="width-200">
+			<select name="deptcode" id="deptcode" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (NumberCode model : modelList) {
+				for (NumberCode deptcode : deptcodeList) {
 				%>
-				<option value="<%=model.getCode()%>"><%=model.getName()%></option>
+				<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 				<%
 				}
 				%>
 			</select>
 		</td>
-		<th>인허가변경</th>
-		<td>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="licensing" value="" checked="checked">
-				<div class="state p-success">
-					<label>
-						<b>전체</b>
-					</label>
-				</div>
-			</div>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="licensing" id="licensing" value="NONE">
-				<div class="state p-success">
-					<label>
-						<b>N/A</b>
-					</label>
-				</div>
-			</div>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="licensing" value="0">
-				<div class="state p-success">
-					<label>
-						<b>불필요</b>
-					</label>
-				</div>
-			</div>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="licensing" value="1">
-				<div class="state p-success">
-					<label>
-						<b>필요</b>
-					</label>
-				</div>
-			</div>
+		<th>MANUFACTURER</th>
+		<td class="indent5">
+			<select name="manufacture" id="manufacture" class="width-200">
+				<option value="">선택</option>
+				<%
+				for (NumberCode manufacture : manufactureList) {
+				%>
+				<option value="<%=manufacture.getCode()%>"><%=manufacture.getName()%></option>
+				<%
+				}
+				%>
+			</select>
 		</td>
-		<th>위험통제</th>
+		<th>수정일</th>
+		<td class="indent5">
+			<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+			~
+			<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
+		</td>
+	</tr>
+	<tr>
+		<th>내부 문서번호</th>
+		<td class="indent5">
+			<input type="text" name="interalnumber" id="interalnumber" class="width-300">
+		</td>
+		<th>업체자체금형번호</th>
+		<td class="indent5">
+			<input type="text" name="moldnumber" id="moldnumber" class="width-300">
+		</td>
+		<th>REV</th>
 		<td>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="riskType" value="" checked="checked">
+				<input type="radio" name="islastversion" value="true" checked="checked">
 				<div class="state p-success">
 					<label>
-						<b>전체</b>
+						<b>최신REV</b>
 					</label>
 				</div>
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="riskType" id="riskType" value="NONE">
+				<input type="radio" name="islastversion" value="">
 				<div class="state p-success">
 					<label>
-						<b>N/A</b>
-					</label>
-				</div>
-			</div>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="riskType" value="0">
-				<div class="state p-success">
-					<label>
-						<b>불필요</b>
-					</label>
-				</div>
-			</div>
-			&nbsp;
-			<div class="pretty p-switch">
-				<input type="radio" name="riskType" value="1">
-				<div class="state p-success">
-					<label>
-						<b>필요</b>
+						<b>모든REV</b>
 					</label>
 				</div>
 			</div>
 		</td>
 	</tr>
 	<tr>
-		<th class="lb">완제품 품목</th>
-		<td colspan="5" class="indent5 pt5">
-			<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
-				<jsp:param value="" name="oid" />
-			</jsp:include>
+		<th>금형개발비</th>
+		<td class="indent5" colspan="5">
+			<input type="text" name="moldcost" id="moldcost" class="width-300">
 		</td>
 	</tr>
 </table>
@@ -196,96 +191,79 @@ boolean multi = (boolean) request.getAttribute("multi");
 				<option value="200">200</option>
 				<option value="300">300</option>
 			</select>
-
-			<input type="button" value="검색" title="검색" onclick="loadGridData();">
-			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
+			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
+			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 410px; border-top: 1px solid #3180c3;"></div>
-<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
+<div id="grid_wrap" style="height: 380px; border-top: 1px solid #3180c3;"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <script type="text/javascript">
 	let myGridID;
-	const columns = [ {
-		dataField : "number",
-		headerText : "ECO 번호",
-		dataType : "string",
-		width : 120,
-	}, {
-		dataField : "name",
-		headerText : "ECO 제목",
-		dataType : "string",
-		style : "aui-left",
-	}, {
-		dataField : "model",
-		headerText : "제품",
-		dataType : "string",
-		width : 250,
-		style : "aui-left"
-	}, {
-		dataField : "sendType",
-		headerText : "ECO 타입",
-		dataType : "string",
-		width : 80,
-	}, {
-		dataField : "licensing_name",
-		headerText : "인허가변경",
-		dataType : "string",
-		width : 100,
-	}, {
-		dataField : "riskType_name",
-		headerText : "위험 통제",
-		dataType : "string",
-		width : 100,
-	}, {
-		dataField : "state",
-		headerText : "상태",
-		dataType : "string",
-		width : 100,
-		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-			if (value === "승인됨") {
-				return "approved";
+	function _layout() {
+		return [ {
+			dataField : "number",
+			headerText : "금형번호",
+			dataType : "string",
+			width : 200,
+		}, {
+			dataField : "name",
+			headerText : "금형명",
+			dataType : "string",
+			style : "aui-left",
+		}, {
+			dataField : "version",
+			headerText : "REV",
+			dataType : "string",
+			width : 80,
+		}, {
+			dataField : "stateDisplay",
+			headerText : "상태",
+			dataType : "string",
+			width : 100,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if (value === "승인됨") {
+					return "approved";
+				}
+				return null;
 			}
-			return null;
-		}
-	}, {
-		dataField : "creator",
-		headerText : "등록자",
-		dataType : "string",
-		width : 100,
-	}, {
-		dataField : "createdDate",
-		headerText : "등록일",
-		dataType : "date",
-		width : 100,
-	}, {
-		dataField : "approveDate",
-		headerText : "승인일",
-		dataType : "string",
-		width : 100,
-	} ]
-	
+		}, {
+			dataField : "creator",
+			headerText : "등록자",
+			dataType : "string",
+			width : 100,
+		}, {
+			dataField : "createDate",
+			headerText : "등록일",
+			dataType : "string",
+			width : 100,
+		}, {
+			dataField : "modifyDate",
+			headerText : "수정일",
+			dataType : "string",
+			width : 100,
+		} ]
+	}
+
 	function createAUIGrid(columnLayout) {
 		const props = {
 			headerHeight : 30,
 			showRowNumColumn : true,
 			showRowCheckColumn : true,
-			<%if (!multi) {%>
-			rowCheckToRadio : true,
-			<%}%>
 			rowNumHeaderText : "번호",
 			showAutoNoDataMessage : false,
 			selectionMode : "multipleCells",
 			hoverMode : "singleRow",
 			enableMovingColumn : true,
 			enableFilter : true,
-			showInlineFilter : false,
+			showInlineFilter : true,
 			useContextMenu : true,
 			enableRightDownFocus : true,
 			filterLayerWidth : 320,
 			filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
+			enableRowCheckShiftKey : true
 		};
 		myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 		loadGridData();
@@ -298,7 +276,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 		});
 		AUIGrid.bind(myGridID, "cellClick", auiCellClick);
 	}
-	
+
 	function auiCellClick(event) {
 		const item = event.item;
 		const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
@@ -321,19 +299,19 @@ boolean multi = (boolean) request.getAttribute("multi");
 		}
 		<%}%>
 	}
-	
+
 	function loadGridData(movePage) {
-		if(movePage === undefined) {
+		if (movePage === undefined) {
 			document.getElementById("sessionid").value = 0;
 		}
 		let params = new Object();
-		const url = getCallUrl("/eco/list");
-		const field = [ "name", "number", "creatorOid", "createdFrom", "createdTo", "approveFrom", "approveTo", "state" ];
-		const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
-		params.rows104 = rows104;
+		const url = getCallUrl("/mold/list");
+		const field = [ "number", "name", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "creatorOid", "state", "interalnumber", "deptcode", "description", "manufacture", "moldtype", "moldcost", "lifecycle", "location", "searchType", "moldnumber" ];
 		params = toField(params, field);
+		params.islastversion = $('input[name=islastversion]:checked').val();
 		AUIGrid.showAjaxLoader(myGridID);
-		openLayer();
+		logger(params);
+		parent.openLayer();
 		call(url, params, function(data) {
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
@@ -343,40 +321,45 @@ boolean multi = (boolean) request.getAttribute("multi");
 			} else {
 				alert(data.msg);
 			}
-			closeLayer();
+			parent.closeLayer();
 		});
 	}
-	
-	function <%=method%>() {
-		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
-		if (checkedItems.length === 0) {
-			alert("추가할 행을 선택하세요.");
-			return false;
-		}
-		opener.<%=method%>(checkedItems, function(res, close, msg) {
-			trigger(close, msg);
-		})
-	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("number");
+		const columns = loadColumnLayout("mold-list");
 		const contenxtHeader = genColumnHtml(columns);
 		$("#h_item_ul").append(contenxtHeader);
 		$("#headerMenu").menu({
 			select : headerMenuSelectHandler
 		});
 		createAUIGrid(columns);
-		createAUIGrid104(columns104);
 		AUIGrid.resize(myGridID);
-		AUIGrid.resize(myGridID104);
 		selectbox("state");
+		selectbox("manufacture");
+		selectbox("moldtype");
+		selectbox("deptcode");
 		finderUser("creator");
 		twindate("created");
-		twindate("approve");
 		twindate("modified");
 		selectbox("_psize");
-		selectbox("model");
+		<%if (StringUtil.checkString(state)) {%>
+		$("#state").bindSelectSetValue("<%=state%>");
+		$("#state").bindSelectDisabled(true);
+		<%}%>
 	});
+
+	function <%=method%>() {
+		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
+		if (checkedItems.length === 0) {
+			alert("추가할 금형을 선택하세요.");
+			return false;
+		}
+		
+		opener.<%=method%>(checkedItems, function(res, close, msg) {
+			trigger(close, msg);
+		})
+	}
 	
 	document.addEventListener("keydown", function(event) {
 		const keyCode = event.keyCode || event.which;
@@ -384,14 +367,12 @@ boolean multi = (boolean) request.getAttribute("multi");
 			loadGridData();
 		}
 	})
-	
+
 	document.addEventListener("click", function(event) {
 		hideContextMenu();
 	})
-	
+
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID);
-		AUIGrid.resize(myGridID104);
 	});
-	
-</script>
+</script

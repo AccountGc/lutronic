@@ -41,6 +41,6 @@ public interface EoService {
 	/**
 	 * SAP 전송완료시 모든 품목 상태값 변경 처리
 	 */
-	public abstract void eoPartApproved(ArrayList<WTPart> list) throws Exception;
+	public abstract void eoPartApproved(EChangeOrder eo, ArrayList<WTPart> list) throws Exception;
 
 }

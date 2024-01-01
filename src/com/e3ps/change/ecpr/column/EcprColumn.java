@@ -45,7 +45,7 @@ public class EcprColumn {
 		setChangeSection(EcprHelper.manager.displayToSection(cr.getChangeSection()));
 		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
 		setCreateDepart(EcprHelper.manager.displayToDept(cr.getCreateDepart()));
-		setWriter(CommonUtil.getUserNameFromOid(cr.getWriter()));
+		setWriter(cr.getWriter());
 		setApproveDate(cr.getApproveDate());
 		setState(cr.getLifeCycleState().getDisplay());
 		setCreator(cr.getCreatorFullName());

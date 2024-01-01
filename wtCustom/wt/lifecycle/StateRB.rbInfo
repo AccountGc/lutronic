@@ -67,6 +67,9 @@ RETURN_ECPR.shortDescription=RETURN ECPR
 #ACTIVITY - 진행중,완료됨
 #############################################################중
 
+LINE_REGISTER.value=LINE_REGISTER
+LINE_REGISTER.shortDescription=LINE_REGISTER
+
 PROGRESS.value=PROGRESS
 PROGRESS.shortDescription=PROGRESS
 

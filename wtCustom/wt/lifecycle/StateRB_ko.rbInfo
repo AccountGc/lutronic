@@ -67,6 +67,9 @@ RETURN_ECPR.shortDescription=ECPR반려됨
 #ACTIVITY - 진행중,완료됨
 #############################################################중
 
+LINE_REGISTER.value=결재선 지정
+LINE_REGISTER.shortDescription=결재선 지정
+
 PROGRESS.value=진행중
 PROGRESS.shortDescription=진행중
 

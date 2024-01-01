@@ -208,17 +208,19 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "model",
 					headerText : "제품명",
 					dataType : "string",
-					width : 250,
-				}, {
-					dataField : "eoType",
-					headerText : "구분",
-					dataType : "string",
-					width : 80,
+					width : 350,
+					style : "aui-left"
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
-					width : 80,
+					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -331,37 +333,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				location.href = getCallUrl("/eo/create");
 			}
 
-			function spread(target) {
-				const e = document.querySelectorAll('.hidden');
-				// 버근가..
-				for (let i = 0; i < e.length; i++) {
-					const el = e[i];
-					const style = window.getComputedStyle(el);
-					const display = style.getPropertyValue("display");
-					if (display === "none") {
-						el.style.display = "table-row";
-						target.value = "▲접기";
-						selectbox("state");
-						finderUser("creator");
-						twindate("created");
-						twindate("approve");
-						selectbox("_psize");
-						selectbox("model");
-						AUIGrid.resize(myGridID104);
-					} else {
-						el.style.display = "none";
-						target.value = "▼펼치기";
-						selectbox("state");
-						finderUser("creator");
-						twindate("created");
-						twindate("approve");
-						selectbox("_psize");
-						selectbox("model");
-						AUIGrid.resize(myGridID104);
-					}
-				}
-			}
-			
 			function exportExcel() {
 			    const sessionName = document.getElementById("sessionName").value;
 			    exportToExcel("EO 리스트", "EO", "EO 리스트", [], sessionName);

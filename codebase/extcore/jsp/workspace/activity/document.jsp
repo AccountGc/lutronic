@@ -184,7 +184,7 @@ boolean complete = docList.size() > 0;
 			// 추가 버튼 클릭 시 팝업창 메서드
 			function popup00() {
 				const url = getCallUrl("/doc/popup?method=insert00&multi=true");
-				_popup(url, 1800, 900, "n");
+				_popup(url, 1400, 700, "n");
 			}
 
 			function insert00(arr, callBack) {

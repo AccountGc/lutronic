@@ -40,7 +40,6 @@ import com.e3ps.change.service.ECOSearchHelper;
 import com.e3ps.common.beans.BatchDownData;
 import com.e3ps.common.beans.ResultData;
 import com.e3ps.common.code.NumberCode;
-import com.e3ps.common.code.NumberCodeType;
 import com.e3ps.common.code.service.CodeHelper;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.Comments;
@@ -57,6 +56,8 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.SequenceDao;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.common.web.PageControl;
+import com.e3ps.common.web.PageQueryBroker;
 import com.e3ps.development.devActive;
 import com.e3ps.development.devOutPutLink;
 import com.e3ps.distribute.util.MakeZIPUtil;
@@ -79,7 +80,6 @@ import com.ptc.wvs.client.beans.PublishConfigSpec;
 import com.ptc.wvs.common.ui.Publisher;
 import com.ptc.wvs.server.util.PublishUtils;
 
-import net.sf.mpxj.common.NumberHelper;
 import wt.clients.folder.FolderTaskLogic;
 import wt.clients.vc.CheckInOutTaskLogic;
 import wt.content.ApplicationData;
@@ -113,7 +113,6 @@ import wt.lifecycle.State;
 import wt.method.MethodContext;
 import wt.part.PartDocHelper;
 import wt.part.PartType;
-import wt.part.Quantity;
 import wt.part.QuantityUnit;
 import wt.part.Source;
 import wt.part.WTPart;
@@ -125,7 +124,6 @@ import wt.part.WTPartStandardConfigSpec;
 import wt.part.WTPartUsageLink;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.DBProperties;
-import wt.pom.PersistenceException;
 import wt.pom.Transaction;
 import wt.pom.WTConnection;
 import wt.query.QuerySpec;
@@ -137,7 +135,6 @@ import wt.session.SessionContext;
 import wt.session.SessionHelper;
 import wt.util.WTException;
 import wt.util.WTProperties;
-import wt.util.WTPropertyVetoException;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.Baseline;
 import wt.vc.baseline.BaselineMember;
@@ -145,8 +142,6 @@ import wt.vc.baseline.ManagedBaseline;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 import wt.vc.wip.CheckoutLink;
-import wt.vc.wip.NonLatestCheckoutException;
-import wt.vc.wip.WorkInProgressException;
 import wt.vc.wip.WorkInProgressHelper;
 import wt.vc.wip.Workable;
 
@@ -1424,102 +1419,68 @@ public class StandardPartService extends StandardManager implements PartService 
 	}
 
 	@Override
-	public Map<String, Object> delete(Map<String, Object> params) throws Exception {
-
-		Map<String, Object> rtnVal = new HashMap<String, Object>();
-		Transaction trx = new Transaction();
-		String oid = (String) params.get("oid");
-		boolean isDelete = true;
-
-		boolean result = true;
-		String msg = Message.get("삭제되었습니다");
-
+	public Map<String, Object> delete(String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		Transaction trs = new Transaction();
 		try {
-			trx.start();
+			trs.start();
 
-			if (StringUtil.checkString(oid)) {
-				ReferenceFactory rf = new ReferenceFactory();
-				WTPart part = (WTPart) rf.getReference(oid).getObject();
+			WTPart part = (WTPart) CommonUtil.getObject(oid);
 
-				// LENI_TODO 삭제 관련정보 점검
-				PartData data = new PartData(part);
-				QueryResult linkQr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
-				QueryResult eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class);
-				List<PartToRohsLink> list = RohsHelper.manager.getPartToRohsLinkList(part);
+			// LENI_TODO 삭제 관련정보 점검
+			QueryResult linkQr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
+			QueryResult eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class);
+			List<PartToRohsLink> list = RohsHelper.manager.getPartToRohsLinkList(part);
 
-				// 도면
-				if (isDelete && !"".equals(data.getEpmOid())) { // && (data.epmDoc != null)) {
-					isDelete = false;
-					// rtnVal.put("msg", "품목과 연계된 도면이 존재합니다.");
-					// rtnVal.put("oid", oid);
-					result = false;
-					msg = Message.get("품목과 연계된 도면이 존재합니다.");
-				}
-
-				// 관련문서
-				if (isDelete && linkQr.hasMoreElements()) {
-					isDelete = false;
-					// rtnVal.put("msg", "품목과 연계된 문서가 존재합니다.");
-					// rtnVal.put("oid", oid);
-					result = false;
-					msg = Message.get("품목과 연계된 문서가 존재합니다.");
-				}
-
-				if (isDelete && !list.isEmpty()) {
-					isDelete = false;
-					result = false;
-					msg = Message.get("품목과 연계된 물질이 존재합니다.");
-				}
-
-				// 관련EO
-				if (isDelete && eolinkQr.hasMoreElements()) {
-					isDelete = false;
-					// rtnVal.put("msg", "품목과 연계된 EO가 존재합니다.");
-					// rtnVal.put("oid", oid);
-					result = false;
-					msg = Message.get("품목과 연계된 EO가 존재합니다.");
-				}
-
-				if (isDelete && WorkInProgressHelper.isCheckedOut(part)) {
-					isDelete = false;
-					// rtnVal.put("msg", "체크아웃되어 있어서 삭제하실 수 없습니다.");
-					// rtnVal.put("oid", oid);
-					result = false;
-					msg = Message.get("체크아웃되어 있어서 삭제하실 수 없습니다.");
-				}
-
-				if (isDelete) {
-					part = (WTPart) PersistenceHelper.manager.delete(part);
-
-					result = true;
-					msg = Message.get("삭제되었습니다");
-
-					// rtnVal.put("rslt", "S");
-					// rtnVal.put("oid", "");
-					// rtnVal.put("msg", "삭제되었습니다");
-
-					trx.commit();
-					trx = null;
-				}
+			// 도면 연계 체크
+			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+			if (epm != null) {
+				result.put("msg", "품목과 연계된 도면(" + epm.getNumber() + "가 존재합니다.");
+				result.put("success", false);
+				return result;
 			}
-		} catch (Exception e) {
-			// rtnVal.put("rslt", "F");
-			// rtnVal.put("oid", oid);
-			// rtnVal.put("msg", "삭제 실패하였습니다");
-			result = false;
-			msg = Message.get("삭제 실패하였습니다. ") + "\n" + e.getLocalizedMessage();
 
+			// 관련문서
+			if (linkQr.size() > 0) {
+				result.put("msg", "품목과 연계된 문서가 존재합니다.");
+				result.put("success", false);
+				return result;
+			}
+
+			if (!list.isEmpty()) {
+				result.put("msg", "품목과 연계된 물질이 존재합니다.");
+				result.put("success", false);
+				return result;
+			}
+
+			// 관련EO
+			if (eolinkQr.size() > 0) {
+				result.put("msg", "품목과 연계된 EO가 존재합니다.");
+				result.put("success", false);
+				return result;
+			}
+
+			if (WorkInProgressHelper.isCheckedOut(part)) {
+				result.put("msg", "체크아웃된 품목은 삭제가 불가능합니다.");
+				result.put("success", false);
+				return result;
+			}
+
+			part = (WTPart) PersistenceHelper.manager.delete(part);
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
 			e.printStackTrace();
+			trs.rollback();
+			throw e;
 		} finally {
-			if (trx != null) {
-				trx.rollback();
+			if (trs != null) {
+				trs.rollback();
 			}
 		}
-
-		rtnVal.put("result", result);
-		rtnVal.put("msg", msg);
-
-		return rtnVal;
+		result.put("success", true);
+		result.put("msg", "삭제 되었습니다.");
+		return result;
 	}
 
 	/**

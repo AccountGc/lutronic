@@ -2,9 +2,6 @@
 <%@page import="com.e3ps.rohs.dto.RohsData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 MoldDTO dto = (MoldDTO) request.getAttribute("dto");
@@ -20,18 +17,18 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		</td>
 		<td class="right">
 			<%
-			if(dto.getState().equals("APPROVED") || isAdmin){
+			if (dto.getState().equals("APPROVED") || isAdmin) {
 			%>
-				<input type="button" value="개정" title="개정" onclick="revise();">
-			<%	
+			<input type="button" value="개정" title="개정" onclick="revise();">
+			<%
 			}
 			%>
 			<%
-			if(dto.isModify() || isAdmin){
+			if (dto.isModify() || isAdmin) {
 			%>
-				<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
-				<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
-			<%	
+			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
+			<%
 			}
 			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -125,13 +122,14 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				</td>
 			</tr>
 		</table>
-		
+
 		<!-- 속성 -->
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 금형 속성
+						<img src="/Windchill/extcore/images/header.png">
+						금형 속성
 					</div>
 				</td>
 			</tr>
@@ -147,19 +145,19 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 			</colgroup>
 			<tr>
 				<th class="lb">Manufacturer</th>
-				<td class="indent5"><%=dto.getManufacture_name() %></td>
+				<td class="indent5"><%=dto.getManufacture_name()%></td>
 				<th>금형타입</th>
-				<td class="indent5"><%=dto.getMoldtype_name() %></td>
+				<td class="indent5"><%=dto.getMoldtype_name()%></td>
 				<th>내부 문서번호</th>
-				<td class="indent5"><%=dto.getInteralnumber() %></td>
+				<td class="indent5"><%=dto.getInteralnumber()%></td>
 			</tr>
 			<tr>
 				<th class="lb">부서</th>
-				<td class="indent5"><%=dto.getDeptcode_name() %></td>
+				<td class="indent5"><%=dto.getDeptcode_name()%></td>
 				<th>업체 금형번호</th>
-				<td class="indent5"><%=dto.getMoldnumber() %></td>
+				<td class="indent5"><%=dto.getMoldnumber()%></td>
 				<th>금형개발비</th>
-				<td class="indent5"><%=dto.getMoldcost() %></td>
+				<td class="indent5"><%=dto.getMoldcost()%></td>
 			</tr>
 		</table>
 	</div>
@@ -179,51 +177,55 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 
 <script type="text/javascript">
 	//수정
-	function updateBtn(){
+	function update() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/mold/update?oid=" + oid);
 		document.location.href = url;
 	}
-			
+
 	//삭제
-	function deleteBtn(){
+	function _delete() {
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/mold/delete");
-		let params = new Object();
-		params.oid = oid;
+		const params = {
+			oid : oid
+		}
+		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
 				self.close();
+			} else {
+				closeLayer();
 			}
 		});
 	}
-			
+
 	//개정
-	function revise(){
-		const oid = $("#oid").val();
+	function revise() {
+		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/mold/revise?oid=" + oid);
 		document.location.href = url;
 	}
-	
+
 	// 최신버전으로 페이지 이동
 	function latest() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/mold/latest?oid=" + oid);
 		_popup(url, 1600, 550, "n");
 	}
-	
+
 	//결재 회수
 	$("#withDrawBtn").click(function() {
 		const oid = $("#oid").val();
 		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
 		_popup(url, 1500, 550, "n");
 	})
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
@@ -231,11 +233,11 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
 				case "tabs-2":
-					const isCreated2 = AUIGrid.isCreated(partGridID); // 품목
+					const isCreated2 = AUIGrid.isCreated(myGridID91); // 품목
 					if (isCreated2) {
-						AUIGrid.resize(partGridID);
+						AUIGrid.resize(myGridID91);
 					} else {
-						createAUIGrid1(columnPart);
+						createAUIGrid91(columns91);
 					}
 					const isCreated3 = AUIGrid.isCreated(myGridID90); // 문서
 					if (isCreated3) {
@@ -270,7 +272,7 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 	});
 
 	window.addEventListener("resize", function() {
-		AUIGrid.resize(partGridID);
+		AUIGrid.resize(myGridID91);
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID50);
 		AUIGrid.resize(myGridID51);

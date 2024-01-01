@@ -120,10 +120,6 @@ String state = (String) request.getAttribute("state");
 		headerText : "물질번호",
 		dataType : "string",
 		width : 200,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -138,18 +134,11 @@ String state = (String) request.getAttribute("state");
 		headerText : "협력업체",
 		dataType : "string",
 		width : 150,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "name",
 		headerText : "물질명",
 		dataType : "string",
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		style : "aui-left",
 		renderer : {
 			type : "LinkRenderer",
 			baseUrl : "javascript",
@@ -164,46 +153,32 @@ String state = (String) request.getAttribute("state");
 		headerText : "REV",
 		dataType : "string",
 		width : 80,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
 	}, {
 		dataField : "stateDisplay",
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 120,
-		filter : {
-			showIcon : true,
-			inline : true
-		},
+		width : 100,
 	}, {
 		dataField : "createDate",
 		headerText : "등록일",
 		dataType : "date",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true,
-		},
 	}, {
 		dataField : "modifyDate",
 		headerText : "수정일",
 		dataType : "date",
 		width : 100,
-		filter : {
-			showIcon : true,
-			inline : true,
-		},
 	} ]
 	
 	function createAUIGrid(columnLayout) {
@@ -245,7 +220,10 @@ String state = (String) request.getAttribute("state");
 		}
 	}
 	
-	function loadGridData() {
+	function loadGridData(movePage) {
+		if(movePage === undefined) {
+			document.getElementById("sessionid").value = 0;
+		}
 		let params = new Object();
 		const url = getCallUrl("/rohs/list");
 		const field = ["rohsName","rohsNumber","description","state","creatorOid","createdFrom","createdTo","modifiedFrom","modifiedTo","manufacture"];
@@ -256,8 +234,7 @@ String state = (String) request.getAttribute("state");
 			AUIGrid.removeAjaxLoader(myGridID);
 			if (data.result) {
 				totalPage = Math.ceil(data.total / data.pageSize);
-				document.getElementById("sessionid").value = data.sessionid;
-				createPagingNavigator(data.curPage);
+				createPagingNavigator(data.curPage, data.sessionid);
 				AUIGrid.setGridData(myGridID, data.list);
 			} else {
 				alert(data.msg);
@@ -311,14 +288,9 @@ String state = (String) request.getAttribute("state");
 			alert("추가할 행을 선택하세요.");
 			return false;
 		}
-		
-		openLayer();
-		opener.<%=method%>(checkedItems, function(res) {
-			if(res) {
-				setTimeout(function() {
-					closeLayer();
-				}, 500);
-			}
+
+		opener.<%=method%>(checkedItems, function(res, close, msg) {
+			trigger(close, msg);
 		})
 	}
 </script>

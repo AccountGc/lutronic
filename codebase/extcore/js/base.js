@@ -357,3 +357,22 @@ function logger(data) {
 function toId(id) {
 	return document.getElementById(id).value;
 }
+
+// 콜백함수 트리거
+
+function trigger(close, msg) {
+	// 메세지 주고 창닫기
+	if(close && msg !== "") {
+		// true, msg...
+		alert(msg);
+		self.close();
+	}
+	
+	if(!close) {
+		if((msg !== "" && msg !== undefined)) {
+			alert(msg);
+		}
+	} else {
+		self.close();
+	}
+}

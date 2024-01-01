@@ -6,7 +6,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 %>
@@ -47,12 +47,12 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (Map<String,String> lifecycle : lifecycleList) {
-					if(!lifecycle.get("code").equals("TEMPRARY")){
+				for (Map<String, String> lifecycle : lifecycleList) {
+					if (!lifecycle.get("code").equals("TEMPRARY")) {
 				%>
-				<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 				<%
-					}
+				}
 				}
 				%>
 			</select>
@@ -125,7 +125,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
 		</td>
 	</tr>
-	<tr class="hidden">
+	<tr>
 		<th class="lb">완제품 품목</th>
 		<td colspan="5" class="indent5 pt5">
 			<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
@@ -138,7 +138,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);">
+			<!-- 			<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);"> -->
 			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
@@ -155,7 +155,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 600px; border-top: 1px solid #3180c3;"></div>
+<div id="grid_wrap" style="height: 410px; border-top: 1px solid #3180c3;"></div>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <script type="text/javascript">
@@ -164,75 +164,37 @@ const columns = [ {
 	dataField : "number",
 	headerText : "EO 번호",
 	dataType : "string",
-	width : 150,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 120,
 }, {
 	dataField : "name",
 	headerText : "EO 제목",
 	dataType : "string",
 	style : "aui-left",
-	// 					width : 250,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
-	dataField : "eoType",
-	headerText : "구분",
+	dataField : "model",
+	headerText : "제품명",
 	dataType : "string",
-	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
-}, {
-	dataField : "eoType",
-	headerText : "구분",
-	dataType : "string",
-	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 250,
 }, {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
-	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 100,
 }, {
 	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "createdDate",
 	headerText : "등록일",
 	dataType : "date",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
-	dataField : "approveDate_txt",
+	dataField : "approveDate",
 	headerText : "승인일",
 	dataType : "date",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 } ]
 
 function createAUIGrid(columnLayout) {
@@ -281,7 +243,7 @@ function auiCellClick(event) {
 		// 엑스트라 체크박스 체크 추가
 		AUIGrid.setCheckedRowsByIds(event.pid, rowId);
 	}
-	<%}else{%>
+	<%} else {%>
 	if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
 		AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
 	} else {
@@ -320,13 +282,8 @@ function <%=method%>() {
 		return false;
 	}
 	
-	openLayer();
-	opener.<%=method%>(checkedItems, function(res) {
-		if(res) {
-			setTimeout(function() {
-				closeLayer();
-			}, 500);
-		}
+	opener.<%=method%>(checkedItems, function(res, close, msg) {
+		trigger(close, msg);
 	})
 }
 
@@ -368,36 +325,5 @@ window.addEventListener("resize", function() {
 // 등록
 function create() {
 	location.href = getCallUrl("/eo/create");
-}
-
-function spread(target) {
-	const e = document.querySelectorAll('.hidden');
-	// 버근가..
-	for (let i = 0; i < e.length; i++) {
-		const el = e[i];
-		const style = window.getComputedStyle(el);
-		const display = style.getPropertyValue("display");
-		if (display === "none") {
-			el.style.display = "table-row";
-			target.value = "▲접기";
-			selectbox("state");
-			finderUser("creator");
-			twindate("created");
-			twindate("approve");
-			selectbox("_psize");
-			selectbox("model");
-			AUIGrid.resize(myGridID104);
-		} else {
-			el.style.display = "none";
-			target.value = "▼펼치기";
-			selectbox("state");
-			finderUser("creator");
-			twindate("created");
-			twindate("approve");
-			selectbox("_psize");
-			selectbox("model");
-			AUIGrid.resize(myGridID104);
-		}
-	}
 }
 </script>

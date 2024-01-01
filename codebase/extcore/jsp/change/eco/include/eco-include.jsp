@@ -64,29 +64,17 @@ if(view || update){
 		headerText : "ECO 번호",
 		dataType : "string",
 		width : 120,
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/eco/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
 	}, {
 		dataField : "name",
 		headerText : "ECO 제목",
 		dataType : "string",
 		style : "aui-left",
-		renderer : {
-			type : "LinkRenderer",
-			baseUrl : "javascript",
-			jsCallback : function(rowIndex, columnIndex, value, item) {
-				const oid = item.oid;
-				const url = getCallUrl("/eco/view?oid=" + oid);
-				_popup(url, 1600, 800, "n");
-			}
-		},
+	}, {
+		dataField : "model",
+		headerText : "제품",
+		dataType : "string",
+		width : 250,
+		style : "aui-left"
 	}, {
 		dataField : "sendType",
 		headerText : "ECO 타입",
@@ -106,7 +94,13 @@ if(view || update){
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
-		width : 120,
+		width : 100,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
@@ -122,6 +116,10 @@ if(view || update){
 		headerText : "승인일",
 		dataType : "string",
 		width : 100,
+	}, {
+		dataField : "oid",
+		dataType : "string",
+		visible : false
 	} ]
 	
 	function createAUIGrid105(columnLayout) {
@@ -153,7 +151,7 @@ if(view || update){
 	function popup105() {
 		const multi = "<%=multi%>";
 		const url = getCallUrl("/eco/popup?method=insert105&multi=" + multi);
-		_popup(url, 1800, 900, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 	
@@ -167,17 +165,27 @@ if(view || update){
 	}
 
 	function insert105(arr, callBack) {
+		let checker = true;
+		let number;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
 			const unique = AUIGrid.isUniqueValue(myGridID105, "oid", item.oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID105, item, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.number + " ECO는 이미 추가 되어있습니다.");
+			if (!unique) {
+				number = item.number;
+				checker = false;
+				return true;
 			}
 		})
-		callBack(true);
+		
+		if(!checker) {
+			callBack(true, false, number +  " ECO는 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				AUIGrid.addRow(myGridID105, item, rowIndex);
+			})
+		}
 	}	
 </script>

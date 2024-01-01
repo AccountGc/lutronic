@@ -103,6 +103,10 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 				_popup(url, 1600, 800, "n");
 			}
 		},
+	}, {
+		dataField : "part_oid",
+		dataType : "string",
+		visible : false
 	} ]
 
 	function createAUIGrid104(columnLayout) {
@@ -133,24 +137,34 @@ boolean header = request.getParameter("header") != null ? Boolean.parseBoolean(r
 	}
 
 	function popup104() {
-		const url = getCallUrl("/part/popup?method=insert104&multi=true");
-		_popup(url, 1600, 800, "n");
+		const url = getCallUrl("/part/popup?method=insert104&multi=false&complete=true");
+		_popup(url, 1400, 700, "n");
 	}
 
 	function insert104(arr, callBack) {
+		let checker = true;
+		let number;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
 			const unique = AUIGrid.isUniqueValue(myGridID104, "part_oid", item.part_oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID104, item, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.number + " 품목은 이미 추가 되어있습니다.");
+			if (!unique) {
+				number = item.number;
+				checker = false;
+				return true;
 			}
 		})
-		selectbox("_psize");
-		callBack(true, false, "");
+		
+		if(!checker) {
+			selectbox("_psize");
+			callBack(true, false, number +  " 품목은 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				AUIGrid.addRow(myGridID104, item, rowIndex);
+			})
+		}
 	}
 
 	function deleteRow104() {

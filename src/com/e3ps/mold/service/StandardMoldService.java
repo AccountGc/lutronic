@@ -20,6 +20,7 @@ import com.e3ps.common.util.WCUtil;
 import com.e3ps.common.workflow.E3PSWorkflowHelper;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.mold.dto.MoldDTO;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.clients.folder.FolderTaskLogic;
@@ -100,10 +101,21 @@ public class StandardMoldService extends StandardManager implements MoldService 
 
 			doc = (WTDocument) PersistenceHelper.manager.save(doc);
 
+			if ("LC_Default_NonWF".equals(lifecycle)) {
+				doc = (WTDocument) PersistenceHelper.manager.refresh(doc);
+				LifeCycleHelper.service.setLifeCycleState(doc, State.toState("BATCHAPPROVAL"), false);
+			}
+
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
 				LifeCycleHelper.service.setLifeCycleState(doc, state);
+			} else {
+				// 작업함으로 이동 시킨다
+				// 일괄 결재가 아닐 경우에만 시작한다
+				if (!"LC_Default_NonWF".equals(lifecycle)) {
+					WorkDataHelper.service.create(doc);
+				}
 			}
 
 			// 첨부 파일 저장
@@ -215,19 +227,27 @@ public class StandardMoldService extends StandardManager implements MoldService 
 		ArrayList<Map<String, String>> partList = dto.getPartList();
 		// 관련품목
 		for (Map<String, String> map : partList) {
-			String oid = map.get("oid");
-			WTPart part = (WTPart) CommonUtil.getObject(oid);
-			WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
-			PersistenceServerHelper.manager.insert(link);
+			String gridState = map.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = map.get("part_oid");
+				WTPart part = (WTPart) CommonUtil.getObject(oid);
+				WTPartDescribeLink link = WTPartDescribeLink.newWTPartDescribeLink(part, doc);
+				PersistenceServerHelper.manager.insert(link);
+			}
 		}
 
 		ArrayList<Map<String, String>> docList = dto.getDocList();
 		// 관련문서
 		for (Map<String, String> map : docList) {
-			String oid = map.get("oid");
-			WTDocument ref = (WTDocument) CommonUtil.getObject(oid);
-			DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc, ref);
-			PersistenceServerHelper.manager.insert(link);
+			String gridState = map.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = map.get("oid");
+				WTDocument ref = (WTDocument) CommonUtil.getObject(oid);
+				DocumentToDocumentLink link = DocumentToDocumentLink.newDocumentToDocumentLink(doc, ref);
+				PersistenceServerHelper.manager.insert(link);
+			}
 		}
 	}
 

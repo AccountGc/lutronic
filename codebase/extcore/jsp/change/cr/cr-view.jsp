@@ -7,6 +7,11 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 CrDTO dto = (CrDTO) request.getAttribute("dto");
 %>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
@@ -99,7 +104,7 @@ CrDTO dto = (CrDTO) request.getAttribute("dto");
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent5">
+				<td colspan="5" class="indent7 pb8">
 					<textarea name="contents" id="contents" rows="7" style="display: none;"><%=dto.getContents() != null ? dto.getContents() : ""%></textarea>
 					<script type="text/javascript">
 						// 에디터를 view 모드로 설정합니다.

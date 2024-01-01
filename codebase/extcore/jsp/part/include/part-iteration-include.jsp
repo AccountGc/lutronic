@@ -22,7 +22,7 @@ String oid = request.getParameter("oid");
 		dataField : "number",
 		headerText : "부품번호",
 		dataType : "string",
-		width : 150,
+		width : 180,
 	}, {
 		dataField : "name",
 		headerText : "부품명",
@@ -32,47 +32,27 @@ String oid = request.getParameter("oid");
 		dataField : "version",
 		headerText : "REV",
 		dataType : "string",
-		width : 90,
+		width : 80,
 	}, {
 		dataField : "creator",
 		headerText : "등록자",
 		dataType : "string",
-		width : 110,
+		width : 100,
 	}, {
 		dataField : "createdDate",
 		headerText : "등록일",
 		dataType : "string",
-		width : 110,
+		width : 100,
 	}, {
 		dataField : "modifier",
 		headerText : "수정자",
 		dataType : "string",
-		width : 110,
+		width : 100,
 	}, {
 		dataField : "modifiedDate",
 		headerText : "수정일",
 		dataType : "string",
-		width : 110,
-	}, {
-		dataField : "primary",
-		headerText : "주 첨부파일",
-		dataType : "string",
-		width : 90,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-	}, {
-		dataField : "secondary",
-		headerText : "첨부파일",
-		dataType : "string",
-		width : 110,
-		renderer : {
-			type : "TemplateRenderer"
-		},
-	}, {
-		dataField : "note",
-		headerText : "수정사유",
-		dataType : "string",
+		width : 100,
 	} ]
 
 	function createAUIGrid50(columnLayout) {

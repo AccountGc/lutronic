@@ -746,6 +746,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
+						parent.updateActivity();
 						document.location.href = getCallUrl("/activity/eca");
 					}
 					parent.closeLayer();

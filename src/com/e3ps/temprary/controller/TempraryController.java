@@ -48,7 +48,7 @@ public class TempraryController extends BaseController {
 	@ResponseBody
 	@PostMapping(value = "/identity")
 	public String identity(@RequestBody String oid) {
-		return TempraryHelper.service.getViewIdentity(oid);
+		return TempraryHelper.manager.getViewUrl(oid);
 	}
 	
 }

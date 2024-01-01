@@ -89,10 +89,22 @@ if (header) {
 			}
 		},
 	}, {
+		dataField : "location",
+		headerText : "품목분류",
+		dataType : "string",
+		style : "aui-left",
+		width : 250,
+	}, {
 		dataField : "state",
 		headerText : "상태",
 		dataType : "string",
 		width : 100,
+		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+			if (value === "승인됨") {
+				return "approved";
+			}
+			return null;
+		}		
 	}, {
 		dataField : "version",
 		headerText : "REV",
@@ -133,11 +145,11 @@ if (header) {
 			rowCheckToRadio : true,
 			<%}%>
 			enableFilter : true,
-			autoGridHeight : true
+			autoGridHeight : true,
 		}
 		myGridID91 = AUIGrid.create("#grid91", columnLayout, props);
 		<%if (view || update) {%>
-		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "part")%>);
+		AUIGrid.setGridData(myGridID91, <%=AUIGridUtil.include(oid, "rohs")%>);
 		<%}%>
 	}
 
@@ -145,7 +157,7 @@ if (header) {
 	function popup91() {
 		const multi = "<%=multi%>";
 		const url = getCallUrl("/part/popup?method=insert91&multi=" + multi);
-		_popup(url, 1800, 900, "n");
+		_popup(url, 1400, 700, "n");
 	}
 
 
@@ -159,17 +171,27 @@ if (header) {
 	}
 
 	function insert91(arr, callBack) {
+		let checker = true;
+		let number;
 		arr.forEach(function(dd) {
 			const rowIndex = dd.rowIndex;
 			const item = dd.item;
 			const unique = AUIGrid.isUniqueValue(myGridID91, "part_oid", item.part_oid);
-			if (unique) {
-				AUIGrid.addRow(myGridID91, item, rowIndex);
-			} else {
-				// 중복은 그냥 경고 없이 처리 할지 합의?
-				alert(item.number + " 품목은 이미 추가 되어있습니다.");
+			if (!unique) {
+				number = item.number;
+				checker = false;
+				return true;
 			}
 		})
-		callBack(true);
+		
+		if(!checker) {
+			callBack(true, false, number +  " 품목은 이미 추가 되어있습니다.");
+		} else {
+			arr.forEach(function(dd) {
+				const rowIndex = dd.rowIndex;
+				const item = dd.item;
+				AUIGrid.addRow(myGridID91, item, rowIndex);
+			})
+		}
 	}	
 </script>

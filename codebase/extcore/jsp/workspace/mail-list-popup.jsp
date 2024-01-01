@@ -67,19 +67,11 @@
 			headerText : "이름",
 			dataType : "string",
 			width : 120,
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		}, {
 			dataField : "email",
 			headerText : "이메일",
 			dataType : "string",
 			style : "aui-left",
-			filter : {
-				showIcon : true,
-				inline : true
-			},
 		} ]
 	}
 
@@ -176,17 +168,11 @@
 	function addRow() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 		if (checkedItems.length === 0) {
-			alert("추가할 행을 선택하세요.");
+			alert("추가할 사용자를 선택하세요.");
 			return false;
 		}
-		
-		openLayer();
-		opener.insert9(checkedItems, function(res) {
-			if(res) {
-				setTimeout(function() {
-					closeLayer();
-				}, 500);
-			}
+		opener.insert9(checkedItems, function(res, close, msg) {
+			trigger(close, msg);
 		})
 	}
 

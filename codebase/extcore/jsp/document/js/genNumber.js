@@ -108,16 +108,31 @@ function second() {
 	const selectedIndex = selectElement.selectedIndex;
 	const clazz = selectElement.options[selectedIndex].getAttribute("data-clazz");
 	const text = selectElement.options[selectedIndex].text;
+
+	const selectElement1 = document.getElementById(classType2Id);
 	const classType1 = document.getElementById(classType1Id).value;
+	//	const selectedIndex1 = selectElement1.selectedIndex;
+	//	const clazz1 = selectElement1.options[selectedIndex1].getAttribute("data-clazz");
+
 	const tag = document.querySelector("#" + interalnumberId);
 	const nameTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
 		// 개발문서
-		if ("DEV" === classType1 || "INSTRUCTION" == classType1) {
+
+		if ("INSTRUCTION" == classType1) {
+			nameTag.value = "";
+			tag.value = "";
+			setFirstNumber("INSTRUCTION");
 			tag.value += clazz + "-";
 			modelEnable();
-			//			loadHtml(clazz);
+		} else if ("DEV" === classType1) {
+			nameTag.value = "";
+			tag.value = "";
+			tag.value += clazz + "-";
+			modelEnable();
 		} else if ("REPORT" === classType1) {
+			nameTag.value = "";
+			tag.value = "";
 			const currentDate = new Date();
 			const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
 			const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로 표현
@@ -125,8 +140,12 @@ function second() {
 			tag.value += clazz + "-" + year + month + "-";
 			classType3(classType1, value);
 		} else if ("VALIDATION" === classType1) {
+			nameTag.value = "";
+			tag.value = "";
+			setFirstNumber("VALIDATION");
 			classType3(classType1, value);
-		} else if ("MEETING" === classType1) {
+		} else if ("MEETING" == classType1) {
+			tag.value = "";
 			tag.value += clazz + "-";
 			suffixEnable();
 			if (clazz !== "회의록") {
@@ -148,16 +167,21 @@ function last() {
 	const numberTag = document.querySelector("#" + interalnumberId);
 	const preFixTag = document.querySelector("#" + preFixId);
 	if (value !== "") {
+		numberTag.value = "";
 		const classType2 = document.getElementById(classType2Id);
 		const index = classType2.selectedIndex;
 		const text = classType2.options[index].text;
+		const clazz2 = classType2.options[index].getAttribute("data-clazz");
 		if ("REPORT" === classType1) {
-			loadForm(text);
-			numberTag.value += clazz + "-";
+			const currentDate = new Date();
+			const year = currentDate.getFullYear() % 100; // 연도의 뒤 2자리
+			const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로 표현
+			numberTag.value += clazz2 + "-" + year + month + "-" + clazz + "-";
 			suffixEnable();
 			preFixTag.value = text + "_"
 			lastNumber(numberTag.value, classType1);
 		} else if ("VALIDATION" === classType1) {
+			setFirstNumber("VALIDATION");
 			numberTag.value += clazz + "-";
 			suffixEnable();
 			preFixTag.value = text + "_"
@@ -176,13 +200,18 @@ function preNumberCheck(obj) {
 		const classType2 = document.getElementById(classType2Id);
 		const selectedIndex = classType2.selectedIndex;
 		const text = classType2.options[selectedIndex].text;
+		const clazz2 = classType2.options[selectedIndex].getAttribute("data-clazz");
 		if (classType1.value === "DEV") {
-			tag.value += value + "-";
+			tag.value = "";
+			tag.value += clazz2 + "-" + value + "-";
 			suffixEnable();
 			preFixTag.value = text + "_" + value + "_";
 			lastNumber(tag.value, classType1.value);
 		} else if (classType1.value === "INSTRUCTION") {
-			tag.value += value + "-WI-";
+			tag.value = "";
+			setFirstNumber("INSTRUCTION");
+			tag.value += clazz2 + "-" + value + "-WI-";
+			//			tag.value += value + "-WI-";
 			suffixEnable();
 			preFixTag.value = value + "_";
 			lastNumber(tag.value, classType1.value);
@@ -219,6 +248,7 @@ function suffixEnable() {
 
 // 프로젝트 코드 활성화
 function modelEnable() {
+	$("#" + modelId).bindSelectSetValue("");
 	$("#" + modelId).bindSelectDisabled(false);
 }
 

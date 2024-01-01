@@ -136,7 +136,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 645px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+<div id="grid_wrap" style="height: 450px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <script type="text/javascript">
 let myGridID;
@@ -144,11 +144,7 @@ const columns = [ {
 	dataField : "number",
 	headerText : "ECPR 번호",
 	dataType : "string",
-	width : 280,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 140,
 	renderer : {
 		type : "LinkRenderer",
 		baseUrl : "javascript",
@@ -162,11 +158,7 @@ const columns = [ {
 	dataField : "name",
 	headerText : "ECPR 제목",
 	dataType : "string",
-	width : 280,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	style : "aui-left",
 	renderer : {
 		type : "LinkRenderer",
 		baseUrl : "javascript",
@@ -181,64 +173,36 @@ const columns = [ {
 	headerText : "변경구분",
 	dataType : "string",
 	width : 120,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "createDepart",
 	headerText : "작성부서",
 	dataType : "string",
-	width : 250,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 100,
 }, {
 	dataField : "writer",
 	headerText : "작성자",
 	dataType : "string",
-	width : 180,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 100,
 }, {
 	dataField : "writeDate",
 	headerText : "작성일",
 	dataType : "string",
-	width : 180,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 100,
 }, {
 	dataField : "state",
 	headerText : "상태",
 	dataType : "string",
 	width : 100,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
 }, {
 	dataField : "creator",
 	headerText : "등록자",
 	dataType : "string",
-	width : 180,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 100,
 }, {
 	dataField : "createdDate_txt",
 	headerText : "등록일",
 	dataType : "string",
-	width : 180,
-	filter : {
-		showIcon : true,
-		inline : true
-	},
+	width : 100,
 } ]
 
 function createAUIGrid(columnLayout) {
@@ -296,7 +260,10 @@ function auiCellClick(event) {
 	<%}%>
 }
 
-function loadGridData() {
+function loadGridData(movePage) {
+	if(movePage === undefined) {
+		document.getElementById("sessionid").value = 0;
+	}
 	let params = new Object();
 	const url = getCallUrl("/ecpr/list");
 	const field = ["name","number", "createdFrom", "createdTo", "creatorOid", "state", "writedFrom", "writedTo", "approveFrom", "approveTo", "createDepart", "writerOid", "model", "changeSection"];
@@ -307,8 +274,7 @@ function loadGridData() {
 		AUIGrid.removeAjaxLoader(myGridID);
 		if (data.result) {
 			totalPage = Math.ceil(data.total / data.pageSize);
-			document.getElementById("sessionid").value = data.sessionid;
-			createPagingNavigator(data.curPage);
+			createPagingNavigator(data.curPage, data.sessionid);
 			AUIGrid.setGridData(myGridID, data.list);
 		} else {
 			alert(data.msg);

@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.e3ps.change.EChangeOrder;
@@ -761,4 +763,101 @@ public class SAPHelper {
 		}
 		return value;
 	}
+
+	public ArrayList<WTPart> removeList(ArrayList<WTPart> lefts, ArrayList<WTPart> rights) throws Exception {
+		ArrayList<Map<String, Object>> mergedList = new ArrayList<>();
+		ArrayList<Map<String, Object>> compList = new ArrayList<Map<String, Object>>();
+
+		ArrayList<WTPart> removeList = new ArrayList<WTPart>();
+
+		for (WTPart l : rights) {
+			Map<String, Object> mergedData = new HashMap<>();
+			mergedData.put("number", l.getNumber());
+			mergedData.put("oid", l.getPersistInfo().getObjectIdentifier().getStringValue());
+			mergedList.add(mergedData);
+		}
+
+		for (WTPart r : lefts) {
+			String key = r.getPersistInfo().getObjectIdentifier().getStringValue();
+			boolean isExist = false;
+
+			for (Map<String, Object> mergedData : mergedList) {
+				String oid = (String) mergedData.get("oid");
+				String _key = oid;
+				if (key.equals(_key)) {
+					isExist = true;
+					break;
+				}
+			}
+
+			if (!isExist) {
+				// partNo가 동일한 데이터가 없으면 mergedList에 데이터를 추가
+				Map<String, Object> mergedData = new HashMap<>();
+				mergedData.put("oid", key);
+				mergedData.put("number", r.getNumber());
+				compList.add(mergedData);
+			}
+		}
+
+		for (Map<String, Object> m : compList) {
+			String oid = (String) m.get("oid");
+			WTPart pp = (WTPart) CommonUtil.getObject(oid);
+
+			QueryResult qr = PersistenceHelper.manager.navigate(pp.getMaster(), "after", PartToPartLink.class);
+			if (qr.size() > 0) {
+				continue;
+			}
+			removeList.add(pp);
+		}
+		return removeList;
+	}
+
+	public ArrayList<WTPart> addList(ArrayList<WTPart> lefts, ArrayList<WTPart> rights) throws Exception {
+		ArrayList<Map<String, Object>> mergedList = new ArrayList<>();
+		ArrayList<Map<String, Object>> compList = new ArrayList<Map<String, Object>>();
+
+		ArrayList<WTPart> addList = new ArrayList<WTPart>();
+
+		for (WTPart l : lefts) {
+			Map<String, Object> mergedData = new HashMap<>();
+			mergedData.put("number", l.getNumber());
+			mergedData.put("oid", l.getPersistInfo().getObjectIdentifier().getStringValue());
+			mergedList.add(mergedData);
+		}
+
+		for (WTPart r : rights) {
+			String key = r.getPersistInfo().getObjectIdentifier().getStringValue();
+			boolean isExist = false;
+
+			for (Map<String, Object> mergedData : mergedList) {
+				String oid = (String) mergedData.get("oid");
+				String _key = oid;
+				if (key.equals(_key)) {
+					isExist = true;
+					break;
+				}
+			}
+
+			if (!isExist) {
+				// partNo가 동일한 데이터가 없으면 mergedList에 데이터를 추가
+				Map<String, Object> mergedData = new HashMap<>();
+				mergedData.put("oid", key);
+				mergedData.put("number", r.getNumber());
+				compList.add(mergedData);
+			}
+		}
+
+		for (Map<String, Object> m : compList) {
+			String oid = (String) m.get("oid");
+			WTPart pp = (WTPart) CommonUtil.getObject(oid);
+
+			QueryResult qr = PersistenceHelper.manager.navigate(pp.getMaster(), "prev", PartToPartLink.class);
+			if (qr.size() > 0) {
+				continue;
+			}
+			addList.add(pp);
+		}
+		return addList;
+	}
+
 }

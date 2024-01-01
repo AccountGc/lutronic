@@ -113,7 +113,8 @@ public class PartController extends BaseController {
 
 	@Description(value = "관련 품목 팝업 페이지")
 	@GetMapping(value = "/popup")
-	public ModelAndView popup(@RequestParam String method, @RequestParam String multi) throws Exception {
+	public ModelAndView popup(@RequestParam String method, @RequestParam String multi,
+			@RequestParam(required = false) String complete) throws Exception {
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> matList = NumberCodeHelper.manager.getArrayCodeList("MAT");
@@ -122,6 +123,7 @@ public class PartController extends BaseController {
 		ArrayList<NumberCode> finishList = NumberCodeHelper.manager.getArrayCodeList("FINISH");
 		List<Map<String, String>> lifecycleList = CommonUtil.getLifeCycleState("LC_PART");
 		ModelAndView model = new ModelAndView();
+		model.addObject("complete", Boolean.parseBoolean(complete));
 		model.addObject("modelList", modelList);
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("matList", matList);
@@ -374,10 +376,10 @@ public class PartController extends BaseController {
 
 	@Description(value = "품목 삭제")
 	@ResponseBody
-	@RequestMapping("/delete")
-	public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = PartHelper.service.delete(params);
-		if ((boolean) result.get("result")) {
+	@GetMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = PartHelper.service.delete(oid);
+		if ((boolean) result.get("success")) {
 			result.put("msg", DELETE_MSG);
 			result.put("result", SUCCESS);
 		} else {

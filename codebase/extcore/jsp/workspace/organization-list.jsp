@@ -191,16 +191,18 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						showCheckAll : true,
 						list : auths,
 					},
-				}, {
-					dataField : "pdfAuth",
-					dataType : "boolean",
-					headerText : "PDF 권한",
-					width : 100,
-					renderer : {
-						type : "CheckBoxEditRenderer",
-						editable : true
-					}
-				}, {
+				}, 
+// 				{
+// 					dataField : "pdfAuth",
+// 					dataType : "boolean",
+// 					headerText : "PDF 권한",
+// 					width : 100,
+// 					renderer : {
+// 						type : "CheckBoxEditRenderer",
+// 						editable : true
+// 					}
+// 				},
+				{
 					dataField : "department_name",
 					headerText : "부서",
 					dataType : "string",

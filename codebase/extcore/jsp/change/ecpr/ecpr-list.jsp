@@ -190,6 +190,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "number",
 					headerText : "ECPR 번호",
 					dataType : "string",
+					width : 130,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -203,6 +204,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "name",
 					headerText : "ECPR 제목",
 					dataType : "string",
+					style : "aui-left",
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -216,30 +218,44 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
+					style : "aui-left",
+					width : 250
 				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
+					width : 100
 				}, {
 					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
+					width : 100
 				}, {
 					dataField : "writeDate",
 					headerText : "작성일",
 					dataType : "string",
+					width : 100
 				}, {
 					dataField : "state",
 					headerText : "상태",
 					dataType : "string",
+					width : 100,
+					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+						if (value === "승인됨") {
+							return "approved";
+						}
+						return null;
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
+					width : 100
 				}, {
 					dataField : "createdDate_txt",
 					headerText : "등록일",
 					dataType : "string",
+					width : 100
 				} ]
 			}
 
@@ -247,7 +263,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				const props = {
 					headerHeight : 30,
 					showRowNumColumn : true,
-					showRowCheckColumn : true,
 					rowNumHeaderText : "번호",
 					showAutoNoDataMessage : false,
 					selectionMode : "multipleCells",
@@ -259,7 +274,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					enableRightDownFocus : true,
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-					enableRowCheckShiftKey : true
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
