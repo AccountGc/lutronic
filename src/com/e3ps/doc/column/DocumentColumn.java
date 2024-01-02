@@ -75,8 +75,8 @@ public class DocumentColumn {
 		setModifier(doc.getModifierFullName());
 		setModifiedDate(doc.getModifyTimestamp());
 		setModifiedDate_txt(doc.getModifyTimestamp().toString().substring(0, 10));
-//		setPrimary(AUIGridUtil.primary(doc));
-//		setSecondary(AUIGridUtil.secondary(doc));
+		setPrimary(AUIGridUtil.primary(doc));
+		setSecondary(AUIGridUtil.secondary(doc));
 
 		WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
 		if (info != null) {

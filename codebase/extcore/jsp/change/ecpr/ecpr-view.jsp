@@ -79,7 +79,7 @@ iframe {
 				<th class="lb">작성자</th>
 				<td class="indent5"><%=dto.getWriter()%></td>
 				<th>작성부서</th>
-				<td class="indent5"><%=dto.getCreateDepart_name() == null ? "" : dto.getCreateDepart_name()%></td>
+				<td class="indent5"><%=dto.getCreateDepart()%></td>
 				<th>작성일</th>
 				<td class="indent5"><%=dto.getWriteDate()%></td>
 			</tr>

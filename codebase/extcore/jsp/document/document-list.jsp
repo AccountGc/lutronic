@@ -220,7 +220,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
-						<option value="15" selected="selected">15</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -363,22 +362,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "수정일",
 					dataType : "date",
 					width : 100,
-				// 				}, {
-				// 					dataField : "primary",
-				// 					headerText : "주 첨부파일",
-				// 					dataType : "string",
-				// 					width : 80,
-				// 					renderer : {
-				// 						type : "TemplateRenderer"
-				// 					},
-				// 				}, {
-				// 					dataField : "secondary",
-				// 					headerText : "첨부파일",
-				// 					dataType : "string",
-				// 					width : 100,
-				// 					renderer : {
-				// 						type : "TemplateRenderer"
-				// 					},
+				}, {
+					dataField : "primary",
+					headerText : "주 첨부파일",
+					dataType : "string",
+					width : 80,
+					renderer : {
+						type : "TemplateRenderer"
+					},
+				}, {
+					dataField : "secondary",
+					headerText : "첨부파일",
+					dataType : "string",
+					width : 100,
+					renderer : {
+						type : "TemplateRenderer"
+					},
 				} ]
 			}
 

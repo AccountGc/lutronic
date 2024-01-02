@@ -136,7 +136,7 @@ public class EcnHelper {
 
 			map.put("oid", link.getPersistInfo().getObjectIdentifier().getStringValue());
 			map.put("workEnd", link.getWorkEnd());
-			map.put("rate", Math.round(link.getRate()));
+//			map.put("rate", Math.round(link.getRate()));
 			map.put("partName", ecn.getPartName());
 			map.put("partNumber", ecn.getPartNumber());
 			map.put("ecoNumber", eco.getEoNumber());

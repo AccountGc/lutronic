@@ -9,7 +9,7 @@ import wt.query.QuerySpec;
 
 public class PageQueryUtils {
 
-	int psize = 15;
+	int psize = 30;
 	int cpage = 1;
 	int total = 0;
 	int pageCount = 10;
@@ -46,7 +46,7 @@ public class PageQueryUtils {
 
 		String psize = (String) this.param.get("_psize");
 		if (StringUtil.isNull(psize)) {
-			psize = "15";
+			psize = "30";
 		}
 
 		this.cpage = Integer.parseInt(cpage);

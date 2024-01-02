@@ -47,7 +47,9 @@
 	<tr>
 		<th class="lb">내용</th>
 		<td class="indent5">
-			<textarea name="contents" id="contents" rows="10"></textarea>
+			<div class="textarea-auto">
+				<textarea name="contents" id="contents" rows="5"></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
@@ -108,5 +110,6 @@
 
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("title");
+		autoTextarea();
 	});
 </script>

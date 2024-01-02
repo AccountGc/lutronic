@@ -303,7 +303,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
-						<option value="15" selected="selected">15</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
@@ -346,10 +345,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "_3d",
 					headerText : "3D",
 					dataType : "string",
-					width : 60,
+					width : 40,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
+						imgHeight : 16,
 						onClick : function(event) {
 						}
 					},
@@ -357,10 +357,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					dataField : "_2d",
 					headerText : "2D",
 					dataType : "string",
-					width : 60,
+					width : 40,
 					renderer : {
 						type : "ImageRenderer",
 						altField : null,
+						imgHeight : 16,
 						onClick : function(event) {
 						}
 					},
