@@ -346,22 +346,22 @@ const columns = [ {
 	headerText : "수정일",
 	dataType : "date",
 	width : 100,
-}, {
-	dataField : "primary",
-	headerText : "주 첨부파일",
-	dataType : "string",
-	width : 80,
-	renderer : {
-		type : "TemplateRenderer"
-	},
-}, {
-	dataField : "secondary",
-	headerText : "첨부파일",
-	dataType : "string",
-	width : 100,
-	renderer : {
-		type : "TemplateRenderer"
-	},
+// }, {
+// 	dataField : "primary",
+// 	headerText : "주 첨부파일",
+// 	dataType : "string",
+// 	width : 80,
+// 	renderer : {
+// 		type : "TemplateRenderer"
+// 	},
+// }, {
+// 	dataField : "secondary",
+// 	headerText : "첨부파일",
+// 	dataType : "string",
+// 	width : 100,
+// 	renderer : {
+// 		type : "TemplateRenderer"
+// 	},
 } ]
 
 function createAUIGrid(columnLayout) {

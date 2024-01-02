@@ -61,15 +61,15 @@ public class PartColumn {
 		setVersion(setVersionInfo(part));
 		setRemarks(IBAUtil.getAttrValue(part, "REMARKS"));
 		setState(part.getLifeCycleState().getDisplay());
-		setCreator(part.getCreatorName());
+		setCreator(part.getCreatorFullName());
 		setCreatedDate(part.getCreateTimestamp());
 		setCreatedDate_txt(part.getCreateTimestamp().toString().substring(0, 10));
-		setModifier(part.getModifierName());
+		setModifier(part.getModifierFullName());
 		setModifiedDate(part.getModifyTimestamp());
 		setModifiedDate_txt(part.getModifyTimestamp().toString().substring(0, 10));
 		setThumbnail(part);
-		setPreOrder(IBAUtil.getBooleanValue(part, "PREORDER"));
-		setCheckout(WorkInProgressHelper.isCheckedOut(part));
+//		setPreOrder(IBAUtil.getBooleanValue(part, "PREORDER"));
+//		setCheckout(WorkInProgressHelper.isCheckedOut(part));
 	}
 
 	/**
