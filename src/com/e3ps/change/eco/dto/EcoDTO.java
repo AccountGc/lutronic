@@ -119,9 +119,9 @@ public class EcoDTO {
 	private String licensing(String s) throws Exception {
 		if ("NONE".equals(s)) {
 			return "N/A";
-		} else if ("0".equals(s)) {
+		} else if ("LI002".equals(s)) {
 			return "불필요";
-		} else if ("1".equals(s)) {
+		} else if ("LI001".equals(s)) {
 			return "필요";
 		}
 		return "";

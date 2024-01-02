@@ -99,7 +99,7 @@
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="0">
+						<input type="radio" name="licensing" value="LI002">
 						<div class="state p-success">
 							<label>
 								<b>불필요</b>
@@ -108,7 +108,7 @@
 					</div>
 					&nbsp;
 					<div class="pretty p-switch">
-						<input type="radio" name="licensing" value="1">
+						<input type="radio" name="licensing" value="LI001">
 						<div class="state p-success">
 							<label>
 								<b>필요</b>
