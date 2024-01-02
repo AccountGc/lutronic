@@ -9,6 +9,7 @@
 <%
 // 배포 확인
 boolean isDist = (boolean) request.getAttribute("isDist");
+isDist = false;
 
 Map<String, Integer> count = (Map<String, Integer>) request.getAttribute("count");
 boolean isWork = (boolean) request.getAttribute("isWork");
