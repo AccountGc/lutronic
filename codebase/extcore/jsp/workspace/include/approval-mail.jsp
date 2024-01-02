@@ -44,7 +44,7 @@ JSONArray data = WorkspaceHelper.manager.getExternalMail(oid);
 		dataField : "name",
 		headerText : "이름",
 		dataType : "string",
-		width : 120,
+		width : 250,
 		filter : {
 			showIcon : true,
 			inline : true

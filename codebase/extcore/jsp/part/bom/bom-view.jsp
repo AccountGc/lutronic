@@ -264,24 +264,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}, {
 				label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 			}, {
-				label : "엑셀다운",
-				callback : auiContextHandler
-			}, {
-				label : "첨부",
-				callback : auiContextHandler
-			}, {
-				label : "도면",
-				callback : auiContextHandler
-			}, {
-				label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
-			}, {
 				label : "CREO VIEW 오픈",
 				callback : auiContextHandler
 			}, {
 				label : "썸네일 보기(3D)",
-				callback : auiContextHandler
-			}, {
-				label : "썸네일 보기(2D)",
 				callback : auiContextHandler
 			}, ];
 			return menu;
@@ -315,29 +301,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			url = getCallUrl("/part/attr?oid=" + oid);
 			_popup(url, 1000, 500, "n");
 			break;
-		case 6: // 엑셀
+		case 6:
 			break;
-		case 7: // 첨부
-			url = getCallUrl("/bom/batch?oid=" + root + "&target=attach");
-			_popup(url, 650, 310, "n");
-			break;
-		case 8: // 도면
-			url = getCallUrl("/bom/batch?oid=" + root + "&target=epm");
-			_popup(url, 650, 310, "n");
-			break;
-		case 10:
-			break;
-		case 11:
+		case 7:
 			url = getCallUrl("/part/thumbnail?oid=" + oid);
-			_popup(url, 800, 600, "n");
-			break;
-		case 12:
-			// AP도 못보게..
-			if (item.dwg_oid === "" || item.dwg_oid.indexOf("WTDocument") > -1) {
-				alert("2D 도면이 존재하지 않습니다.");
-				return false;
-			}
-			url = getCallUrl("/part/thumbnail?oid=" + item.dwg_oid);
 			_popup(url, 800, 600, "n");
 			break;
 		}

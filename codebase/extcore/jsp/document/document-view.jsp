@@ -71,7 +71,7 @@ iframe {
 			}
 			%>
 			<%
-			if (dto.is_delete()) {
+			if (dto.is_delete() || isAdmin) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%

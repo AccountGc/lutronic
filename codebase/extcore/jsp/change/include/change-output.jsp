@@ -73,7 +73,7 @@ for (int i = 0; i < list.size(); i++) {
 		<td colspan="5" style="padding-left: 11px;">
 			<table class="view-table" style="margin: 5px 0px 5px -5px;">
 				<colgroup>
-					<col width="120">
+					<col width="180">
 					<col width="*">
 					<col width="80">
 					<col width="80">

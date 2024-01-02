@@ -123,7 +123,7 @@ iframe {
 			%>
 			<tr>
 				<td class="lb">변경사유</td>
-				<td colspan="5">
+				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentA" id="eoCommentA" readonly="readonly"><%=dto.getEoCommentA()%></textarea>
 					</div>
@@ -131,7 +131,7 @@ iframe {
 			</tr>
 			<tr>
 				<td class="lb">변경사항</td>
-				<td colspan="5">
+				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentB" id="eoCommentB" readonly="readonly"><%=dto.getEoCommentB()%></textarea>
 					</div>
@@ -139,7 +139,7 @@ iframe {
 			</tr>
 			<tr>
 				<td class="lb">참고사항</td>
-				<td colspan="5">
+				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentC" id="eoCommentC" readonly="readonly"><%=dto.getEoCommentC()%></textarea>
 					</div>
