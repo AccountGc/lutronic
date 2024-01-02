@@ -27,7 +27,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <title></title>
 <style type="text/css">
 .preOrder {
-/* 	background-color: rgb(200, 255, 203) !important; */
+	/* 	background-color: rgb(200, 255, 203) !important; */
+	
 }
 
 .checkout {
@@ -302,7 +303,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
-						<option value="30"  selected="selected">30</option>
+						<option value="15" selected="selected">15</option>
+						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
 						<option value="200">200</option>
@@ -634,7 +636,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					_popup(url, 800, 600, "n");
 					break;
 				case 2:
-					if(item._3d === null) {
+					if (item._3d === null) {
 						alert("STEP 파일이 존재하지 않습니다.");
 						return false;
 					}
@@ -643,7 +645,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					break;
 				case 3:
 					//DXF
-					if(item._2d === null) {
+					if (item._2d === null) {
 						alert("DXF 파일이 존재하지 않습니다.");
 						return false;
 					}
@@ -651,7 +653,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					document.location.href = url;
 					break;
 				case 4:
-					if(item._2d === null) {
+					if (item._2d === null) {
 						alert("PDF 파일이 존재하지 않습니다.");
 						return false;
 					}
