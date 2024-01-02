@@ -47,7 +47,7 @@ public class StandardCrService extends StandardManager implements CrService {
 		String number = dto.getNumber();
 		String approveDate = dto.getApproveDate();
 		String writeDate = dto.getWriteDate();
-		String createDepart_code = dto.getCreateDepart_code();
+		String createDepart = dto.getCreateDepart();
 		String writer = dto.getWriter();
 //		String proposer_name= dto.getProposer_name();
 //		String eoCommentA = dto.getEoCommentA();
@@ -99,7 +99,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setIsNew(true);
 
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
-			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
+			cr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			cr.setModel(model);
 
 //			cr.setProposer(proposer_name);				
@@ -223,7 +223,7 @@ public class StandardCrService extends StandardManager implements CrService {
 	@Override
 	public void modify(CrDTO dto) throws Exception {
 
-		String createDepart_code = dto.getCreateDepart_code();
+		String createDepart = dto.getCreateDepart();
 		boolean temprary = dto.isTemprary();
 
 		ArrayList<String> sections = dto.getSections();
@@ -269,7 +269,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setApproveDate(dto.getApproveDate());
 
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
-			cr.setCreateDepart(createDepart_code); // 코드 넣엇을듯..
+			cr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			cr.setModel(model);
 
 //			cr.setProposer(dto.getProposer_name());				

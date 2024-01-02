@@ -92,16 +92,7 @@ iframe {
 			<tr>
 				<th class="lb">작성부서</th>
 				<td class="indent5">
-					<select name="createDepart" id="createDepart" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
-					</select>
+					<input type="text" name="createDepart" id="createDepart" class="width-200">
 				</td>
 				<th>작성자</th>
 				<td class="indent5">
@@ -254,7 +245,7 @@ iframe {
 					number : number.value,
 					writeDate : toId("writeDate"),
 					approveDate : toId("approveDate"),
-					createDepart_code : toId("createDepart"),
+					createDepart : toId("createDepart"),
 					writer : toId("writer"),
 					contents : content,
 					sections : sections, //변경 구분
@@ -282,7 +273,7 @@ iframe {
 				toFocus("name");
 				date("writeDate");
 				date("approveDate");
-				selectbox("createDepart");
+// 				selectbox("createDepart");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				AUIGrid.resize(myGridID300);

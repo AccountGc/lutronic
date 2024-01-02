@@ -48,18 +48,18 @@ public class CrDTO {
 	private String model;
 
 	private boolean ecprStart;
-	
+
 	private EChangeRequest cr;
 	// auth
 	private boolean _delete = false;
 	private boolean _modify = false;
 
-	// 신규CR 
+	// 신규CR
 	private boolean _isNew = false;
-	
+
 	// 변수용
 	private String proposer_oid;
-	private String createDepart_code;
+	private String createDepart;
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
@@ -82,8 +82,9 @@ public class CrDTO {
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
 		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
-		setCreateDepart_name(
-				StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
+		setCreateDepart_name(cr.getCreateDepart());
+//		setCreateDepart_name(
+//				StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
 		setWriter(cr.getWriter());
 		setProposer_name(StringUtil.checkNull(cr.getProposer()));
 		setChangeSection(StringUtil
@@ -94,7 +95,7 @@ public class CrDTO {
 		setContents(StringUtil.checkNull(cr.getContents()));
 		setEcprStart(cr.getEcprStart());
 		// 따로 추가
-		setCreateDepart_code(StringUtil.checkNull(cr.getCreateDepart()));
+//		setCreateDepart_code(StringUtil.checkNull(cr.getCreateDepart()));
 		setState(cr.getLifeCycleState().getDisplay());
 		setCreatedDate(cr.getCreateTimestamp());
 		setCreatedDate_text(cr.getCreateTimestamp().toString().substring(0, 10));

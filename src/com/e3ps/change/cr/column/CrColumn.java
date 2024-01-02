@@ -44,7 +44,8 @@ public class CrColumn {
 		setNumber(cr.getEoNumber());
 		setModel(CrHelper.manager.displayToModel(cr.getModel()));
 		setChangeSection(CrHelper.manager.displayToSection(cr.getChangeSection()));
-		setCreateDepart(CrHelper.manager.displayToDept(cr.getCreateDepart()));
+//		setCreateDepart(CrHelper.manager.displayToDept(cr.getCreateDepart()));
+		setCreateDepart(cr.getCreateDepart());
 		setWriter(cr.getWriter());
 		setWriteDate(cr.getCreateDate());
 		setState(cr.getLifeCycleState().getDisplay());

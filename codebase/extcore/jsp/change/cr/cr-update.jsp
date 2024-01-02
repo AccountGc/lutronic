@@ -60,17 +60,7 @@ String oid = (String) contentMap.get("aoid");
 	<tr>
 		<th class="lb">작성부서</th>
 		<td class="indent5">
-			<select name="createDepart" id="createDepart" class="width-200">
-				<option value="">선택</option>
-				<%
-				for (NumberCode deptcode : deptcodeList) {
-					boolean selected = (dto.getCreateDepart_code().equals(deptcode.getCode()));
-				%>
-				<option value="<%=deptcode.getCode()%>" <%if (selected) {%> selected="selected" <%}%>><%=deptcode.getName()%></option>
-				<%
-				}
-				%>
-			</select>
+			<input type="text" name="createDepart" id="createDepart" class="width-200">
 		</td>
 		<th>작성자</th>
 		<td class="indent5">
@@ -237,7 +227,7 @@ String oid = (String) contentMap.get("aoid");
 			number : number.value,
 			writeDate : toId("writeDate"),
 			approveDate : toId("approveDate"),
-			createDepart_code : toId("createDepart"),
+			createDepart : toId("createDepart"),
 			writer_oid : toId("writerOid"),
 			sections : sections, //변경 구분
 			contents : content,
@@ -267,7 +257,7 @@ String oid = (String) contentMap.get("aoid");
 		toFocus("name");
 		date("writeDate");
 		date("approveDate");
-		selectbox("createDepart");
+// 		selectbox("createDepart");
 		finderUser("writer");
 		createAUIGrid300(columns300);
 		createAUIGrid101(columns101);
