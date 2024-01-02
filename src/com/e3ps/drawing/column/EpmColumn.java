@@ -18,7 +18,7 @@ import wt.vc.VersionControlHelper;
 @Setter
 public class EpmColumn {
 
-	private boolean latest = false;
+//	private boolean latest = false;
 	private String part_oid; // 부품
 	private String epm_oid; // 3D
 	private String drawing_oid; // 2D
@@ -49,7 +49,7 @@ public class EpmColumn {
 
 	public EpmColumn(EPMDocument epm) throws Exception {
 		setCadType(epm.getDocType().getDisplay());
-		setLatest(CommonUtil.isLatestVersion(epm));
+//		setLatest(CommonUtil.isLatestVersion(epm));
 		setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
 		set_3d(ThumbnailUtil.thumbnailSmall(epm));
 		setNumber(epm.getNumber());
@@ -76,25 +76,25 @@ public class EpmColumn {
 			setDrawing_oid(epm_d.getPersistInfo().getObjectIdentifier().getStringValue());
 		}
 
-		WTPart part = DrawingHelper.manager.getWTPart(epm);
-		if (part != null) {
-			setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
-		}
+//		WTPart part = DrawingHelper.manager.getWTPart(epm);
+//		if (part != null) {
+//			setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
+//		}
 	}
 
 	/**
 	 * 최신버건과 함께 표시
 	 */
 	private String setVersionInfo(EPMDocument epm) throws Exception {
-		EPMDocument latest = DrawingHelper.manager.latest(getEpm_oid());
+//		EPMDocument latest = DrawingHelper.manager.latest(getEpm_oid());
 		String version = VersionControlHelper.getVersionDisplayIdentifier(epm) + "."
 				+ epm.getIterationIdentifier().getSeries().getValue();
-		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
-				+ latest.getIterationIdentifier().getSeries().getValue();
-		if (isLatest()) {
+//		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+//				+ latest.getIterationIdentifier().getSeries().getValue();
+//		if (isLatest()) {
 			return version;
-		} else {
-			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
-		}
+//		} else {
+//			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+//		}
 	}
 }
