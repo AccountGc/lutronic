@@ -183,7 +183,7 @@ public class EChangeUtils {
 			System.out.println("EO 대상 품목 개수 =  " + list.size());
 			
 			System.out.println("EO 대상품목 상태값 변경 시작");
-			EoHelper.service.eoPartApproved(list);
+			EoHelper.service.eoPartApproved(eo, list);
 			System.out.println("EO 대상품목 상태값 변경 완료");
 			
 

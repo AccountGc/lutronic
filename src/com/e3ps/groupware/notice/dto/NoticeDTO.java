@@ -15,6 +15,7 @@ import wt.util.WTProperties;
 import com.e3ps.auth.dto.E3PSAuthFlag;
 import com.e3ps.auth.service.E3PSAuthHelper;
 import com.e3ps.common.util.AUIGridUtil;
+import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.web.WebUtil;
 import com.e3ps.groupware.notice.Notice;
@@ -35,10 +36,18 @@ public class NoticeDTO {
 	private String contents;
 	private int count;
 	private String secondary;
-	private boolean isPopup;
+	private boolean popup;
+
+	// 권한 설정
+	private boolean isModify = false;
+	private boolean isDelete = false;
 
 	public NoticeDTO() {
 
+	}
+
+	public NoticeDTO(String oid) throws Exception {
+		this((Notice) CommonUtil.getObject(oid));
 	}
 
 	public NoticeDTO(Notice notice) throws Exception {
@@ -50,5 +59,13 @@ public class NoticeDTO {
 		setCount(notice.getCount());
 		setSecondary(AUIGridUtil.secondary(notice));
 		setPopup(notice.isIsPopup());
+		setAuth();
+	}
+
+	private void setAuth() throws Exception {
+		if (CommonUtil.isAdmin()) {
+			setModify(true);
+			setDelete(true);
+		}
 	}
 }

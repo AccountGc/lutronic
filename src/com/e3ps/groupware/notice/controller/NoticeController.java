@@ -81,25 +81,20 @@ public class NoticeController extends BaseController {
 	public ModelAndView view(@RequestParam String oid) throws Exception {
 		NoticeHelper.service.updateCount(oid);
 		Notice notice = (Notice) CommonUtil.getObject(oid);
-		NoticeDTO data = new NoticeDTO(notice);
+		NoticeDTO dto = new NoticeDTO(notice);
 		ModelAndView model = new ModelAndView();
-		boolean isAdmin = CommonUtil.isAdmin();
-		model.addObject("isAdmin", isAdmin);
-		model.addObject("data", data);
+		model.addObject("dto", dto);
 		model.setViewName("popup:/workprocess/notice-view");
 		return model;
 	}
 
-	@Description(value = "공지사항 상세 페이지")
+	@Description(value = "공지사항 팝업 페이지")
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String oid) throws Exception {
 		NoticeHelper.service.updateCount(oid);
-		Notice notice = (Notice) CommonUtil.getObject(oid);
-		NoticeDTO data = new NoticeDTO(notice);
+		NoticeDTO dto = new NoticeDTO(oid);
 		ModelAndView model = new ModelAndView();
-		boolean isAdmin = CommonUtil.isAdmin();
-		model.addObject("isAdmin", isAdmin);
-		model.addObject("data", data);
+		model.addObject("dto", dto);
 		model.setViewName("popup:/workprocess/notice-view-popup");
 		return model;
 	}
@@ -108,9 +103,8 @@ public class NoticeController extends BaseController {
 	@GetMapping(value = "/modify")
 	public ModelAndView modify(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
-		Notice notice = (Notice) CommonUtil.getObject(oid);
-		NoticeDTO data = new NoticeDTO(notice);
-		model.addObject("data", data);
+		NoticeDTO dto = new NoticeDTO(oid);
+		model.addObject("dto", dto);
 		model.setViewName("popup:/workprocess/notice-modify");
 		return model;
 	}
@@ -162,5 +156,4 @@ public class NoticeController extends BaseController {
 		}
 		return returnData;
 	}
-
 }

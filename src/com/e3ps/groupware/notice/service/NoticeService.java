@@ -1,6 +1,5 @@
 package com.e3ps.groupware.notice.service;
 
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ public interface NoticeService {
 	/**
 	 * 공지사항 등록
 	 */
-	public void create(Map<String, Object> params) throws Exception;
+	public abstract void create(Map<String, Object> params) throws Exception;
 
 	/**
 	 * 공지사항 삭제
@@ -29,7 +28,7 @@ public interface NoticeService {
 	/**
 	 * 공지사항 조회 횟수 카운트
 ㄴ	 */
-	public abstract void updateCount(String oid) throws Exception;
+	public abstract void read(String oid) throws Exception;
 
 	List<NoticeDTO> getPopUpNotice();
 

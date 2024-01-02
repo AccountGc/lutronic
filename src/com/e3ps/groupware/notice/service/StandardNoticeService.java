@@ -97,7 +97,7 @@ public class StandardNoticeService extends StandardManager implements NoticeServ
 	}
 
 	@Override
-	public void updateCount(String oid) throws Exception {
+	public void read(String oid) throws Exception {
 		Transaction trs = new Transaction();
 		try {
 			trs.start();

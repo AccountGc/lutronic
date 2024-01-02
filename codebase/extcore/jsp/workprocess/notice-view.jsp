@@ -5,10 +5,9 @@
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
-boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-NoticeDTO data = (NoticeDTO) request.getAttribute("data");
+NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 %>
-<input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
+<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -28,35 +27,35 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 	</colgroup>
 	<tr>
 		<th class="lb">제목</th>
-		<td colspan="3" class="indent5"><%=data.getTitle()%></td>
+		<td colspan="3" class="indent5"><%=dto.getTitle()%></td>
 	</tr>
 	<tr>
 		<th class="lb">등록자</th>
-		<td class="indent5"><%=data.getCreator()%></td>
+		<td class="indent5"><%=dto.getCreator()%></td>
 		<th>등록일</th>
 		<td class="indent5">
-			<%=data.getCreatedDate()%>
+			<%=dto.getCreatedDate()%>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">조회수</th>
-		<td class="indent5"><%=data.getCount()%></td>
+		<td class="indent5"><%=dto.getCount()%></td>
 		<th>팝업</th>
-		<td class="indent5">
-			<%=data.isPopup()%>
-		</td>
+		<td class="indent5"><%=dto.isPopup() == true ? "팝업 O" : "팝업 X"%></td>
 	</tr>
 	<tr>
 		<th class="lb">내용</th>
 		<td colspan="3" class="indent5">
-			<textarea rows="10" readonly="readonly"><%=data.getContents()%></textarea>
+			<div class="textarea-auto">
+				<textarea rows="5" readonly="readonly"><%=dto.getContents() != null ? dto.getContents() : ""%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">첨부파일</th>
 		<td class="indent5" colspan="3">
-			<jsp:include page="/extcore/jsp/common/primary-view.jsp">
-				<jsp:param value="<%=data.getOid()%>" name="oid" />
+			<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
+				<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			</jsp:include>
 		</td>
 	</tr>
@@ -66,9 +65,13 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 	<tr>
 		<td class="center">
 			<%
-			if (isAdmin) {
+			if (dto.isModify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
+			<%
+			}
+			if (dto.isDelete()) {
+			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
@@ -79,8 +82,8 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 </table>
 
 <script type="text/javascript">
+	const oid = document.getElementById("oid").value;
 	function modify() {
-		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/notice/modify?oid=" + oid);
 		document.location.href = url;
 	}
@@ -89,7 +92,6 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 		if (!confirm("삭제하시겠습니까?")) {
 			return false;
 		}
-		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/notice/delete?oid=" + oid);
 		openLayer();
 		call(url, null, function(data) {
@@ -102,10 +104,8 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 			}
 		}, "GET");
 	}
-
+	
 	document.addEventListener("DOMContentLoaded", function() {
-	});
-
-	window.addEventListener("resize", function() {
+		autoTextarea();
 	});
 </script>

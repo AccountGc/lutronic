@@ -2,9 +2,9 @@
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-NoticeDTO data = (NoticeDTO) request.getAttribute("data");
+NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 %>
-<input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
+<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
 		<td class="left">
@@ -17,13 +17,13 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 </table>
 <table class="create-table">
 	<colgroup>
-		<col width="174">
+		<col width="150">
 		<col width="*">
 	</colgroup>
 	<tr>
 		<th class="lb req">제목</th>
 		<td class="indent5">
-			<input type="text" name="title" id="title" class="width-500" value="<%=data.getTitle()%>">
+			<input type="text" name="title" id="title" class="width-500" value="<%=dto.getTitle()%>">
 		</td>
 	</tr>
 	<tr>
@@ -31,7 +31,7 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 		<td>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="isPopup" value="true" <%if (true==data.isPopup()) {%> checked="checked" <%}%>>
+				<input type="radio" name="isPopup" value="true" <%if (dto.isPopup()) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>팝업 O</b>
@@ -40,7 +40,7 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="isPopup" value="false" <%if (false==data.isPopup()) {%> checked="checked" <%}%>>
+				<input type="radio" name="isPopup" value="false" <%if (!dto.isPopup()) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>팝업 X</b>
@@ -52,14 +52,16 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 	<tr>
 		<th class="lb">내용</th>
 		<td class="indent5">
-			<textarea name="contents" id="contents" rows="10"><%=data.getContents()%></textarea>
+			<div class="textarea-auto">
+				<textarea name="contents" id="contents" rows="5"><%=dto.getContents()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">첨부파일</th>
 		<td class="indent5" colspan="3">
 			<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
-				<jsp:param value="<%=data.getOid()%>" name="oid" />
+				<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			</jsp:include>
 		</td>
 	</tr>
@@ -76,8 +78,8 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 </table>
 
 <script type="text/javascript">
+	const oid = document.getElementById("oid").value;
 	function modify() {
-		const oid = document.getElementById("oid").value;
 		const title = document.getElementById("title");
 		const contents = document.getElementById("contents").value;
 		const secondarys = toArray("secondarys");
@@ -93,11 +95,11 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 			title : title.value,
 			contents : contents,
 			secondarys : secondarys
-		}
-		
+		};
+
 		const isPopup = document.querySelector("input[name=isPopup]:checked").value;
 		params.isPopup = JSON.parse(isPopup);
-		
+
 		if (!confirm("수정하시겠습니까?")) {
 			return false;
 		}
@@ -114,4 +116,9 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 			}
 		})
 	}
+	
+	document.addEventListener("DOMContentLoaded", function() {
+		toFocus("title");
+		autoTextarea();
+	});
 </script>

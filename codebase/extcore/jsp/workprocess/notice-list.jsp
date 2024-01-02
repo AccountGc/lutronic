@@ -100,7 +100,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						jsCallback : function(rowIndex, columnIndex, value, item) {
 							const oid = item.oid;
 							const url = getCallUrl("/notice/view?oid=" + oid);
-							_popup(url, 1000, 550, "n");
+							_popup(url, 1000, 500, "n");
 						}
 					},
 				}, {
@@ -220,7 +220,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function create() {
 				const url = getCallUrl("/notice/create");
-				_popup(url, 1500, 500, "n");
+				_popup(url, 1200, 500, "n");
 			}
 
 			function exportExcel() {

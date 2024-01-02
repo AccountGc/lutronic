@@ -30,11 +30,14 @@ public class NoticeHelper {
 		QuerySpec query = new QuerySpec();
 		int idx = query.addClassList(Notice.class, true);
 		QuerySpecUtils.toLikeAnd(query, idx, Notice.class, Notice.TITLE, name);
-		//등록자
-    	if(creatorOid.length() > 0){
-    		if(query.getConditionCount() > 0) { query.appendAnd(); } 
-    		query.appendWhere(new SearchCondition(Notice.class,"owner.key.id", SearchCondition.EQUAL, CommonUtil.getOIDLongValue(creatorOid)), new int[]{idx});
-    	}
+		// 등록자
+		if (creatorOid.length() > 0) {
+			if (query.getConditionCount() > 0) {
+				query.appendAnd();
+			}
+			query.appendWhere(new SearchCondition(Notice.class, "owner.key.id", SearchCondition.EQUAL,
+					CommonUtil.getOIDLongValue(creatorOid)), new int[] { idx });
+		}
 
 		QuerySpecUtils.toOrderBy(query, idx, Notice.class, Notice.CREATE_TIMESTAMP, true);
 
@@ -42,8 +45,9 @@ public class NoticeHelper {
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {
 			Object[] obj = (Object[]) result.nextElement();
-			NoticeDTO data = new NoticeDTO((Notice) obj[0]);
-			list.add(data);
+			Notice n = (Notice) obj[0];
+			NoticeDTO dto = new NoticeDTO(n);
+			list.add(dto);
 		}
 
 		map.put("list", list);
