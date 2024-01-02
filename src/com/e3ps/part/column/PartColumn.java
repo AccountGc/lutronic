@@ -20,7 +20,7 @@ import wt.vc.wip.WorkInProgressHelper;
 @Setter
 public class PartColumn {
 
-	private boolean latest = false;
+//	private boolean latest = false;
 	private String part_oid; // 부품
 	private String epm_oid; // 3D
 	private String drawing_oid; // 2D
@@ -52,7 +52,7 @@ public class PartColumn {
 	}
 
 	public PartColumn(WTPart part) throws Exception {
-		setLatest(CommonUtil.isLatestVersion(part));
+//		setLatest(CommonUtil.isLatestVersion(part));
 		setPart_oid(part.getPersistInfo().getObjectIdentifier().getStringValue());
 		set_3d(ThumbnailUtil.thumbnailSmall(part));
 		setNumber(part.getNumber());
@@ -76,16 +76,16 @@ public class PartColumn {
 	 * 최신버건과 함께 표시
 	 */
 	private String setVersionInfo(WTPart part) throws Exception {
-		WTPart latest = PartHelper.manager.latest(getPart_oid());
+//		WTPart latest = PartHelper.manager.latest(getPart_oid());
 		String version = VersionControlHelper.getVersionDisplayIdentifier(part) + "."
 				+ part.getIterationIdentifier().getSeries().getValue();
-		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
-				+ latest.getIterationIdentifier().getSeries().getValue();
-		if (isLatest()) {
+//		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+//				+ latest.getIterationIdentifier().getSeries().getValue();
+//		if (isLatest()) {
 			return version;
-		} else {
-			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
-		}
+//		} else {
+//			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+//		}
 	}
 
 	private void setThumbnail(WTPart part) throws Exception {

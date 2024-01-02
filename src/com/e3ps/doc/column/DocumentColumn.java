@@ -23,7 +23,7 @@ import wt.vc.VersionControlHelper;
 public class DocumentColumn {
 
 	private String oid;
-	private boolean latest = false;
+//	private boolean latest = false;
 	private String number;
 	private String interalnumber;
 	private String model;
@@ -60,7 +60,7 @@ public class DocumentColumn {
 	 */
 	public DocumentColumn(WTDocument doc) throws Exception {
 		setOid(doc.getPersistInfo().getObjectIdentifier().getStringValue());
-		setLatest(CommonUtil.isLatestVersion(doc));
+//		setLatest(CommonUtil.isLatestVersion(doc));
 		setNumber(doc.getNumber());
 		setInteralnumber(IBAUtils.getStringValue(doc, "INTERALNUMBER"));
 		setModel(keyToValue(IBAUtils.getStringValue(doc, "MODEL"), "MODEL"));
@@ -105,16 +105,16 @@ public class DocumentColumn {
 	 * 최신버건과 함께 표시
 	 */
 	private String setVersionInfo(WTDocument doc) throws Exception {
-		WTDocument latest = DocumentHelper.manager.latest(getOid());
+//		WTDocument latest = DocumentHelper.manager.latest(getOid());
 		String version = VersionControlHelper.getVersionDisplayIdentifier(doc) + "."
 				+ doc.getIterationIdentifier().getSeries().getValue();
-		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
-				+ latest.getIterationIdentifier().getSeries().getValue();
-		if (isLatest()) {
+//		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
+//				+ latest.getIterationIdentifier().getSeries().getValue();
+//		if (isLatest()) {
 			return version;
-		} else {
-			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
-		}
+//		} else {
+//			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
+//		}
 	}
 
 	/**
