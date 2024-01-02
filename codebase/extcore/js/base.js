@@ -362,17 +362,38 @@ function toId(id) {
 
 function trigger(close, msg) {
 	// 메세지 주고 창닫기
-	if(close && msg !== "") {
+	if (close && msg !== "") {
 		// true, msg...
 		alert(msg);
 		self.close();
 	}
-	
-	if(!close) {
-		if((msg !== "" && msg !== undefined)) {
+
+	if (!close) {
+		if ((msg !== "" && msg !== undefined)) {
 			alert(msg);
 		}
 	} else {
 		self.close();
 	}
+}
+
+function autoTextarea() {
+	const textAreaAutoElements = document.querySelectorAll('.textarea-auto');
+
+	// 각 textarea 요소에 대한 이벤트 리스너를 등록합니다.
+	textAreaAutoElements.forEach(function(textAreaAutoElement) {
+		// 해당 요소 내의 textarea 요소를 선택합니다.
+		const textAreas = textAreaAutoElement.querySelectorAll('textarea');
+
+		// 각 textarea 요소에 대한 이벤트 리스너를 등록합니다.
+		textAreas.forEach(function(textArea) {
+			textArea.addEventListener('keyup', function(e) {
+				this.style.height = 'auto';
+				this.style.height = this.scrollHeight + 'px';
+			});
+		});
+
+		// 특정 이벤트를 트리거합니다. (keyup 이벤트를 강제로 발생)
+		textAreas[0].dispatchEvent(new Event('keyup'));
+	});
 }

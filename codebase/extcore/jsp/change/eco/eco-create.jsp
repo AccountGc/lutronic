@@ -68,17 +68,21 @@
 					</div>
 				</td>
 			</tr>
-		
+
 			<tr>
 				<th class="lb">변경사유</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
+					<div class="textarea-auto">
+						<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">변경사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea>
+					<div class="textarea-auto">
+						<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -145,13 +149,17 @@
 			<tr>
 				<th class="lb">특기사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea>
+					<div class="textarea-auto">
+						<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">기타사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentD" id="eoCommentD" rows="10"></textarea>
+					<div class="textarea-auto">
+						<textarea name="eoCommentD" id="eoCommentD" rows="10"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -209,10 +217,10 @@
 					const activity_type = AUIGrid.getCellValue(myGridID200, i, "activity_type");
 					const finishDate = AUIGrid.getCellValue(myGridID200, i, "finishDate");
 					const step = AUIGrid.getCellValue(myGridID200, i, "step");
-// 					if (step === undefined) {
-// 						AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
-// 						return false;
-// 					}
+					// 					if (step === undefined) {
+					// 						AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
+					// 						return false;
+					// 					}
 					if (activity_type === undefined) {
 						AUIGrid.showToastMessage(myGridID200, i, 2, "활동구분을 선택하세요.");
 						return false;
@@ -287,6 +295,7 @@
 				createAUIGrid200(columns200);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID200);
+				autoTextarea();
 			});
 
 			window.addEventListener("resize", function() {

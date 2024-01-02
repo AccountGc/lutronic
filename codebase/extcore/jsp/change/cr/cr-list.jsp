@@ -204,6 +204,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					headerText : "CR 제목",
 					dataType : "string",
 					style : "aui-left",
+					width : 300,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",

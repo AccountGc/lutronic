@@ -86,25 +86,33 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 			<tr>
 				<th class="lb">변경사항</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentA" rows="5"><%=dto.getEoCommentA()%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">변경사유</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentB" rows="5"><%=dto.getEoCommentB()%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">특기사항</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentC" rows="5"><%=dto.getEoCommentC()%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentC" rows="5"><%=dto.getEoCommentC()%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">기타사항</th>
 				<td colspan="3" class="indent5">
-					<textarea rows="5" readonly="readonly" id="eoCommentD" rows="5"><%=dto.getEoCommentD()%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="eoCommentD" rows="5"><%=dto.getEoCommentD()%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -140,15 +148,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 
 <script type="text/javascript">
 	const oid = document.getElementById("oid").value;
-
-	function autoHeight() {
-		const eoCommentC = document.getElementById("eoCommentC");
-		eoCommentC.style.height = "auto";
-		eoCommentC.style.height = "500px";
-		// 		const style = window.getComputedStyle(eoCommentC);
-		// 		console.log(style);
-
-	}
 
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
@@ -193,10 +192,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 		});
-
-		// 		autoHeight();
 		createAUIGrid700(columns700);
 		AUIGrid.resize(myGridID700);
+		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {

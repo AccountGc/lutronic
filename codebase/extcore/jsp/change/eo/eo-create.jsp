@@ -64,19 +64,25 @@
 			<tr>
 				<th class="lb">제품 설계 개요</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
+					<div class="textarea-auto">
+						<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">특기사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea>
+					<div class="textarea-auto">
+						<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th class="lb">기타사항</th>
 				<td class="indent5" colspan="3">
-					<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea>
+					<div class="textarea-auto">
+						<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -168,7 +174,7 @@
 						popup104();
 						return false;
 					}
-					
+
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
 					}
@@ -226,6 +232,7 @@
 				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID200);
+				autoTextarea();
 			});
 
 			window.addEventListener("resize", function() {

@@ -63,19 +63,25 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 	<tr>
 		<th class="lb">제품 설계 개요</th>
 		<td class="indent5" colspan="3">
-			<textarea name="eoCommentA" id="eoCommentA" rows="6"><%=dto.getEoCommentA()%></textarea>
+			<div class="textarea-auto">
+				<textarea name="eoCommentA" id="eoCommentA" rows="6"><%=dto.getEoCommentA()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">특기사항</th>
 		<td class="indent5" colspan="3">
-			<textarea name="eoCommentB" id="eoCommentB" rows="6"><%=dto.getEoCommentB()%></textarea>
+			<div class="textarea-auto">
+				<textarea name="eoCommentB" id="eoCommentB" rows="6"><%=dto.getEoCommentB()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">기타사항</th>
 		<td class="indent5" colspan="3">
-			<textarea name="eoCommentC" id="eoCommentC" rows="6"><%=dto.getEoCommentC()%></textarea>
+			<div class="textarea-auto">
+				<textarea name="eoCommentC" id="eoCommentC" rows="6"><%=dto.getEoCommentC()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
@@ -203,6 +209,7 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		AUIGrid.resize(myGridID104);
 		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID200);
+		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {

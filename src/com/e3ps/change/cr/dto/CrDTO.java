@@ -54,6 +54,9 @@ public class CrDTO {
 	private boolean _delete = false;
 	private boolean _modify = false;
 
+	// 신규CR 
+	private boolean _isNew = false;
+	
 	// 변수용
 	private String proposer_oid;
 	private String createDepart_code;
@@ -103,6 +106,7 @@ public class CrDTO {
 		setModel(cr.getModel());
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
 
+		set_isNew(cr.getIsNew()); // true 신규
 		setCr(cr);
 		setAuth(cr);
 	}

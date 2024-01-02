@@ -44,7 +44,7 @@ if (contentMap != null) {
 		<td>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="sendType" value="ECO" <%if("ECO".equals(dto.getSendType())) { %> checked="checked" <%} %>>
+				<input type="radio" name="sendType" value="ECO" <%if ("ECO".equals(dto.getSendType())) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>ECO</b>
@@ -53,7 +53,7 @@ if (contentMap != null) {
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="sendType" value="SCO" <%if("SCO".equals(dto.getSendType())) { %> checked="checked" <%} %>>
+				<input type="radio" name="sendType" value="SCO" <%if ("SCO".equals(dto.getSendType())) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>SCO</b>
@@ -62,7 +62,7 @@ if (contentMap != null) {
 			</div>
 			&nbsp;
 			<div class="pretty p-switch">
-				<input type="radio" name="sendType" value="ORDER" <%if("ORDER".equals(dto.getSendType())) { %> checked="checked" <%} %>>
+				<input type="radio" name="sendType" value="ORDER" <%if ("ORDER".equals(dto.getSendType())) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
 						<b>선구매</b>
@@ -74,13 +74,17 @@ if (contentMap != null) {
 	<tr>
 		<th class="lb">변경사유</th>
 		<td class="indent5" colspan="3">
-			<textarea id="eoCommentA" name="eoCommentA" rows="10"><%=dto.getEoCommentA()%></textarea>
+			<div class="textarea-auto">
+				<textarea id="eoCommentA" name="eoCommentA" rows="10"><%=dto.getEoCommentA()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">변경사항</th>
 		<td class="indent5" colspan="3">
-			<textarea name="eoCommentB" id="eoCommentB" rows="10"><%=dto.getEoCommentB()%></textarea>
+			<div class="textarea-auto">
+				<textarea name="eoCommentB" id="eoCommentB" rows="10"><%=dto.getEoCommentB()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
@@ -147,13 +151,17 @@ if (contentMap != null) {
 	<tr>
 		<th class="lb">특기사항</th>
 		<td class="indent5" colspan="3">
-			<textarea name="eoCommentC" id="eoCommentC" rows="10"><%=dto.getEoCommentC()%></textarea>
+			<div class="textarea-auto">
+				<textarea name="eoCommentC" id="eoCommentC" rows="10"><%=dto.getEoCommentC()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">기타사항</th>
 		<td class="indent5" colspan="3">
-			<textarea name="eoCommentD" id="eoCommentD" rows="10"><%=dto.getEoCommentD()%></textarea>
+			<div class="textarea-auto">
+				<textarea name="eoCommentD" id="eoCommentD" rows="10"><%=dto.getEoCommentD()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
@@ -219,7 +227,7 @@ if (contentMap != null) {
 				alert("ECO 타입을 선택하세요.");
 				return false;
 			}
-			
+
 			if (!confirm("수정 하시겠습니까?")) {
 				return false;
 			}
@@ -242,8 +250,8 @@ if (contentMap != null) {
 			const finishDate = AUIGrid.getCellValue(myGridID200, i, "finishDate");
 			const step = AUIGrid.getCellValue(myGridID200, i, "step");
 			if (step === undefined) {
-// 				AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
-// 				return false;
+				// 				AUIGrid.showToastMessage(myGridID200, i, 1, "STEP을 선택하세요.");
+				// 				return false;
 			}
 			if (activity_type === undefined) {
 				AUIGrid.showToastMessage(myGridID200, i, 2, "활동구분을 선택하세요.");
@@ -295,6 +303,7 @@ if (contentMap != null) {
 		AUIGrid.resize(myGridID101);
 		// 		AUIGrid.resize(myGridID500);
 		AUIGrid.resize(myGridID200);
+		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {
