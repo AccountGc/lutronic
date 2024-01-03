@@ -590,6 +590,12 @@ public class StandardDocumentService extends StandardManager implements Document
 			LifeCycleHelper.service.reassign(workCopy,
 					LifeCycleHelper.service.getLifeCycleTemplateReference(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 
+			if ("LC_Default_NonWF".equals(lifecycle)) {
+				workCopy = (WTDocument) PersistenceHelper.manager.refresh(workCopy);
+				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"), false);
+			}
+
+			
 			// 첨부 파일 클리어
 			removeAttach(workCopy);
 			// 첨부파일 저장
@@ -610,9 +616,6 @@ public class StandardDocumentService extends StandardManager implements Document
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
 				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
-			} else {
-				State state = State.toState("INWORK");
 				LifeCycleHelper.service.setLifeCycleState(workCopy, state);
 			}
 

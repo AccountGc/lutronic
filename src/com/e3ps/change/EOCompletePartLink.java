@@ -1,6 +1,5 @@
 package com.e3ps.change;
 
-//import wt.util.WTPropertyVetoException;
 import com.ptc.windchill.annotations.metadata.GenAsBinaryLink;
 import com.ptc.windchill.annotations.metadata.GeneratedProperty;
 import com.ptc.windchill.annotations.metadata.GeneratedRole;
@@ -18,6 +17,8 @@ import wt.util.WTException;
 @GenAsBinaryLink(superClass = ObjectToObjectLink.class, serializable = Serialization.EXTERNALIZABLE_BASIC,
 
 		properties = {
+
+				@GeneratedProperty(name = "hide", type = Boolean.class, initialValue = "false"),
 
 				@GeneratedProperty(name = "version", type = String.class)
 

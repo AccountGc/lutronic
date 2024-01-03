@@ -8,6 +8,7 @@ import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcoToEcprLink;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
@@ -58,7 +59,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 //		String eoCommentC = dto.getEoCommentC();
 		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
-		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
 
@@ -123,7 +123,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			saveAttach(ecpr, dto);
 
 			// 관련 CR 링크
-			saveLink(ecpr, rows101);
+			saveLink(ecpr, dto);
 
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
@@ -172,7 +172,8 @@ public class StandardEcprService extends StandardManager implements EcprService 
 	/**
 	 * 관련 CR링크
 	 */
-	private void saveLink(ECPRRequest ecpr, ArrayList<Map<String, String>> rows101) throws Exception {
+	private void saveLink(ECPRRequest ecpr, EcprDTO dto) throws Exception {
+		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		for (Map<String, String> row101 : rows101) {
 			String gridState = row101.get("gridState");
 			// 신규 혹은 삭제만 있다. (added, removed
@@ -183,6 +184,19 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
+
+		ArrayList<Map<String, String>> rows105 = dto.getRows105(); // 관련 ECO
+		for (Map<String, String> row105 : rows105) {
+			String gridState = row105.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row105.get("oid");
+				EChangeOrder ref = (EChangeOrder) CommonUtil.getObject(oid);
+				EcoToEcprLink link = EcoToEcprLink.newEcoToEcprLink(ref, ecpr);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+
 	}
 
 	/**

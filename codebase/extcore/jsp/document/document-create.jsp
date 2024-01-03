@@ -302,7 +302,7 @@ iframe {
 				const primary = document.querySelector("input[name=primary]");
 				const model = document.getElementById("model").value;
 				const writer = document.getElementById("writer").value;
-				const interalnumber = document.getElementById("interalnumber").value;
+				const interalnumber = document.getElementById("interalnumber");
 				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
 				const temprary = JSON.parse(temp);
@@ -346,7 +346,8 @@ iframe {
 					return false;
 				}
 
-				if (isNull(interalnumber)) {
+				if (isNull(interalnumber.value)) {
+					interalnumber.focus();
 					alert("내부문서번호를 입력해주세요.");
 					return false;
 				}
@@ -379,7 +380,7 @@ iframe {
 					location : location.value,
 					model_code : model,
 					deptcode_code : deptcode,
-					interalnumber : interalnumber,
+					interalnumber : interalnumber.value,
 					writer : writer,
 					preseration_code : preseration,
 					// 링크 데이터

@@ -165,6 +165,14 @@ iframe {
 			<jsp:param value="true" name="header" />
 		</jsp:include>
 		
+		<!-- 	관련 ECO -->
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="false" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
+		
 		<table class="button-table">
 			<tr>
 				<td class="center">

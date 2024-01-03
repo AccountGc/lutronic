@@ -7,10 +7,12 @@ import java.util.Map;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
+import com.e3ps.common.util.StringUtil;
 import com.e3ps.workspace.PerWorkDataLink;
 import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.column.WorkDataColumn;
 
+import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.Persistable;
 import wt.fc.PersistenceHelper;
@@ -31,7 +33,6 @@ public class WorkDataHelper {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ArrayList<WorkDataColumn> list = new ArrayList<>();
 
-		String name = (String) params.get("name");
 		String submiterOid = (String) params.get("submiterOid");
 		String receiveFrom = (String) params.get("receiveFrom");
 		String receiveTo = (String) params.get("receiveTo");
@@ -44,6 +45,14 @@ public class WorkDataHelper {
 			WTUser user = CommonUtil.sessionUser();
 			QuerySpecUtils.toEquals(query, idx, WorkData.class, "ownership.owner.key.id", user);
 		}
+
+		if (StringUtil.checkString(submiterOid)) {
+			WTUser user = (WTUser) CommonUtil.getObject(submiterOid);
+			QuerySpecUtils.toEquals(query, idx, WorkData.class, "ownership.owner.key.id", user);
+		}
+
+		QuerySpecUtils.toTimeGreaterAndLess(query, idx, WorkData.class, WorkData.CREATE_TIMESTAMP, receiveFrom,
+				receiveTo);
 
 		QuerySpecUtils.toBooleanAnd(query, idx, WorkData.class, WorkData.PROCESS, false);
 
