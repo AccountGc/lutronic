@@ -204,8 +204,10 @@ public class AsposeUtils {
 		pdfPage.setPageSize(597.6, 842.4);
 
 		MarginInfo marginInfo = new MarginInfo();
-		marginInfo.setLeft(5);
+		marginInfo.setLeft(25);
 		marginInfo.setRight(5);
+        marginInfo.setTop(10);
+        marginInfo.setBottom(10);
 		pdfPage.getPageInfo().setMargin(marginInfo);
 
 		// HTML 문자열을 PDF 페이지에 추가
@@ -215,7 +217,6 @@ public class AsposeUtils {
 		// PDF 파일로 저장
 		String tempPath = WTProperties.getLocalProperties().getProperty("wt.temp");
 		String name = tempPath + File.separator + e.getEoNumber() + ".pdf";
-		System.out.println("name=" + name);
 		pdfDocument.save(name);
 		pdfDocument.close();
 
@@ -224,6 +225,6 @@ public class AsposeUtils {
 		PersistenceHelper.manager.save(applicationData);
 		ContentServerHelper.service.updateContent(e, applicationData, name);
 
-		System.out.print("CR, ECPR, ECRM PDF 변경 및 첨부파일 세팅 종료");
+		System.out.println("CR, ECPR, ECRM PDF 변경 및 첨부파일 세팅 종료");
 	}
 }

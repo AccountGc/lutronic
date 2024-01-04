@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import com.e3ps.change.CrToDocumentLink;
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcoToEcprLink;
+import com.e3ps.change.EcprToDocumentLink;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.common.code.NumberCode;
@@ -27,6 +29,7 @@ import wt.content.ContentHelper;
 import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
+import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.fc.QueryResult;
@@ -194,6 +197,18 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				String oid = row105.get("oid");
 				EChangeOrder ref = (EChangeOrder) CommonUtil.getObject(oid);
 				EcoToEcprLink link = EcoToEcprLink.newEcoToEcprLink(ref, ecpr);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+
+		ArrayList<Map<String, String>> rows90 = dto.getRows90();
+		for (Map<String, String> row90 : rows90) {
+			String gridState = row90.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row90.get("oid");
+				WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+				EcprToDocumentLink link = EcprToDocumentLink.newEcprToDocumentLink(ecpr, doc);
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}

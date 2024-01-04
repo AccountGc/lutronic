@@ -56,6 +56,7 @@ public class EcprDTO {
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
+	private ArrayList<Map<String, String>> rows90 = new ArrayList<>(); // 관련 문서
 	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 

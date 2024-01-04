@@ -165,6 +165,14 @@ iframe {
 			</tr>
 		</table>
 
+		<!-- 	관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
+		
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
@@ -264,15 +272,18 @@ iframe {
 				date("writeDate");
 				date("approveDate");
 				selectbox("period");
+				createAUIGrid90(myGridID90);
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID101);
 			});
 
 			window.addEventListener("resize", function() {
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
