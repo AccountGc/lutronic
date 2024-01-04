@@ -1,7 +1,5 @@
 package com.e3ps.change.ecpr.service;
 
-import com.e3ps.change.EChangeOrder;
-import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 
 import wt.method.RemoteInterface;
