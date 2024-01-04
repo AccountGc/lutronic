@@ -35,6 +35,7 @@ import com.e3ps.doc.DocumentECPRLink;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.DocumentToDocumentLink;
 import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.AppPerLink;
 import com.e3ps.workspace.AsmApproval;
 import com.e3ps.workspace.WorkData;
@@ -66,11 +67,13 @@ import wt.folder.FolderHelper;
 import wt.inf.container.WTContainerRef;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.State;
+import wt.org.WTUser;
 import wt.part.WTPart;
 import wt.part.WTPartDescribeLink;
 import wt.pdmlink.PDMLinkProduct;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.FileUtil;
 import wt.util.WTException;
 import wt.util.WTProperties;
@@ -408,6 +411,8 @@ public class StandardDocumentService extends StandardManager implements Document
 	 */
 	private void setIBAAttributes(WTDocument doc, DocumentDTO dto) throws Exception {
 		// 내부 문서 번호
+		WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
+		PeopleDTO data = new PeopleDTO(user);
 		String interalnumber = dto.getInteralnumber();
 		// IBA 키값 어떻게 할지...
 		dto.setIBAValue(doc, interalnumber, "INTERALNUMBER");
@@ -416,7 +421,7 @@ public class StandardDocumentService extends StandardManager implements Document
 		dto.setIBAValue(doc, model_code, "MODEL");
 		// 부서
 		String deptcode_code = dto.getDeptcode_code();
-		dto.setIBAValue(doc, deptcode_code, "DEPTCODE");
+		dto.setIBAValue(doc, data.getDepartment_name(), "DEPTCODE"); // 부서코드...
 		// 보존기간
 		String preseration_code = dto.getPreseration_code();
 		dto.setIBAValue(doc, preseration_code, "PRESERATION");
@@ -425,7 +430,8 @@ public class StandardDocumentService extends StandardManager implements Document
 //		if (!dto.getWriter_oid().equals("")) {
 //			writer = Long.toString(CommonUtil.getOIDLongValue(dto.getWriter_oid()));
 //		}
-		dto.setIBAValue(doc, dto.getWriter(), "DSGN");
+
+		dto.setIBAValue(doc, user.getFullName(), "DSGN");
 		// 결재 유형
 		String approvalType_code = dto.getLifecycle().equals("LC_Default") ? "DEFAUT" : "BATCH";
 		dto.setIBAValue(doc, approvalType_code, "APPROVALTYPE");
@@ -595,7 +601,6 @@ public class StandardDocumentService extends StandardManager implements Document
 				LifeCycleHelper.service.setLifeCycleState(workCopy, State.toState("BATCHAPPROVAL"), false);
 			}
 
-			
 			// 첨부 파일 클리어
 			removeAttach(workCopy);
 			// 첨부파일 저장

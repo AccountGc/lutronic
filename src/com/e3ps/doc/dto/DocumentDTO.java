@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.comments.beans.CommentsDTO;
 import com.e3ps.common.comments.service.CommentsHelper;
@@ -205,7 +206,14 @@ public class DocumentDTO {
 	 * IBA 값 디스플레이 값으로 변경
 	 */
 	private String keyToValue(String code, String codeType) throws Exception {
-		return NumberCodeHelper.manager.getNumberCodeName(code, codeType);
+		String value = "";
+		NumberCode n = NumberCodeHelper.manager.getNumberCode(code, codeType);
+		if (n != null) {
+			value = n.getName();
+		} else {
+			value = code;
+		}
+		return value;
 	}
 
 	/**
@@ -222,7 +230,7 @@ public class DocumentDTO {
 //					set_print(true);
 //				}
 //			} else {
-				set_print(true);
+			set_print(true);
 //			}
 		}
 
@@ -231,7 +239,8 @@ public class DocumentDTO {
 
 		}
 		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
-		if (isLatest() && (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK"))) {
+		if (isLatest() && (check("LINE_REGISTER") || check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL")
+				|| check("REWORK"))) {
 			set_delete(true);
 			set_modify(true);
 		}

@@ -68,10 +68,10 @@ String location = (String) request.getAttribute("location");
 		<script type="text/javascript">
 			let myGridID;
 			const columns = [ {
-				dataField : "interalnumber",
+				dataField : "number",
 				dataType : "string",
 				width : 120,
-				headerText : "내부문서번호",
+				headerText : "문서번호",
 			}, {
 				dataField : "number",
 				dataType : "string",

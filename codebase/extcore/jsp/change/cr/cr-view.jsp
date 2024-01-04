@@ -122,7 +122,7 @@ iframe {
 			} else {
 			%>
 			<tr>
-				<td class="lb">변경사유</td>
+				<th class="lb">변경사유</td>
 				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentA" id="eoCommentA" readonly="readonly"><%=dto.getEoCommentA()%></textarea>
@@ -130,7 +130,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<td class="lb">변경사항</td>
+				<th class="lb">변경사항</td>
 				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentB" id="eoCommentB" readonly="readonly"><%=dto.getEoCommentB()%></textarea>
@@ -138,7 +138,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<td class="lb">참고사항</td>
+				<th class="lb">참고사항</td>
 				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentC" id="eoCommentC" readonly="readonly"><%=dto.getEoCommentC()%></textarea>
@@ -153,6 +153,7 @@ iframe {
 				<td colspan="5" class="indent5">
 					<%
 					Map<String, Object> contentMap = dto.getContentMap();
+					if(contentMap.size() > 0) {
 					%>
 					<div>
 						<a href="<%=contentMap.get("url")%>">
@@ -160,6 +161,13 @@ iframe {
 							<img src="<%=contentMap.get("fileIcon")%>" style="position: relative; top: 1px;">
 						</a>
 					</div>
+					<%
+					} else {
+					%>
+					<font color="red"><b>등록된 주 첨부파일이 없습니다.</b></font>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>

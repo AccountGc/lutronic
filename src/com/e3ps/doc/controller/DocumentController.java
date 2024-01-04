@@ -63,7 +63,7 @@ public class DocumentController extends BaseController {
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+//		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> modelList = NumberCodeHelper.manager.getArrayCodeList("MODEL");
 //		ArrayList<FormTemplate> form = FormTemplateHelper.manager.array();
 //		JSONArray docTypeList = DocumentHelper.manager.toJson();
@@ -74,7 +74,7 @@ public class DocumentController extends BaseController {
 		model.addObject("classTypes1", classTypes1);
 //		model.addObject("docTypeList", docTypeList);
 		model.addObject("preserationList", preserationList);
-		model.addObject("deptcodeList", deptcodeList);
+//		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("modelList", modelList);
 //		model.addObject("form", form);
 		model.setViewName("/extcore/jsp/document/document-create.jsp");

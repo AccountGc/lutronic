@@ -34,7 +34,9 @@ import wt.util.WTException;
 
 				@GeneratedProperty(name = "eoApproveDate", type = String.class),
 
-				@GeneratedProperty(name = "isNew", type = Boolean.class)
+				@GeneratedProperty(name = "isNew", type = Boolean.class),
+
+				@GeneratedProperty(name = "period", type = String.class)
 
 }
 

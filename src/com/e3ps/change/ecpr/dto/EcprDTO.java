@@ -37,6 +37,7 @@ public class EcprDTO {
 	private String contents;
 
 	// 따로 추가
+	private String period;
 	private String state;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp modifiedDate;

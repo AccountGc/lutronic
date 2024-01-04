@@ -7,12 +7,17 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Hashtable;
 
+import com.aspose.pdf.HtmlFragment;
+import com.aspose.pdf.MarginInfo;
+import com.aspose.pdf.Page;
 import com.aspose.words.Document;
 import com.aspose.words.DocumentBuilder;
 import com.aspose.words.SaveFormat;
-import com.e3ps.common.content.service.CommonContentHelper;
+import com.e3ps.change.ECOChange;
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
-import com.google.common.io.Files;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -167,5 +172,58 @@ public class AsposeUtils {
 		}
 
 		System.out.println("문서 워드 생성 및 PDF 컨버전 종료 = " + new Timestamp(new Date().getTime()));
+	}
+
+	/**
+	 * CR, ECRM, ECPR PDF 변경 및 첨부 파일 세팅
+	 */
+	public static void attachPdf(Hashtable<String, String> hash) throws Exception {
+		String oid = (String) hash.get("oid");
+		ECOChange e = (ECOChange) CommonUtil.getObject(oid);
+		String html = "";
+		if (e instanceof ECPRRequest) {
+			ECPRRequest ecpr = (ECPRRequest) e;
+			html = ecpr.getContents();
+		} else if (e instanceof EChangeRequest) {
+			EChangeRequest cr = (EChangeRequest) e;
+			html = cr.getContents();
+		} else if (e instanceof ECRMRequest) {
+			ECRMRequest ecrm = (ECRMRequest) e;
+			html = ecrm.getContents();
+		}
+
+//		System.out.println(html);
+		System.out.println("CR, ECPR, ECRM PDF 변경 및 첨부파일 세팅 시작");
+		setAsposePdfLic();
+
+		com.aspose.pdf.Document pdfDocument = new com.aspose.pdf.Document();
+		// A4 크기로 페이지 생성
+		Page pdfPage = pdfDocument.getPages().add();
+		// Set the page size as A4 (11.7 x 8.3 in) and in Aspose.Pdf, 1 inch = 72 points
+		// So A4 dimensions in points will be (842.4, 597.6)
+		pdfPage.setPageSize(597.6, 842.4);
+
+		MarginInfo marginInfo = new MarginInfo();
+		marginInfo.setLeft(5);
+		marginInfo.setRight(5);
+		pdfPage.getPageInfo().setMargin(marginInfo);
+
+		// HTML 문자열을 PDF 페이지에 추가
+		HtmlFragment htmlFragment = new HtmlFragment(html);
+		pdfPage.getParagraphs().add(htmlFragment);
+
+		// PDF 파일로 저장
+		String tempPath = WTProperties.getLocalProperties().getProperty("wt.temp");
+		String name = tempPath + File.separator + e.getEoNumber() + ".pdf";
+		System.out.println("name=" + name);
+		pdfDocument.save(name);
+		pdfDocument.close();
+
+		ApplicationData applicationData = ApplicationData.newApplicationData(e);
+		applicationData.setRole(ContentRoleType.PRIMARY);
+		PersistenceHelper.manager.save(applicationData);
+		ContentServerHelper.service.updateContent(e, applicationData, name);
+
+		System.out.print("CR, ECPR, ECRM PDF 변경 및 첨부파일 세팅 종료");
 	}
 }

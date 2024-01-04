@@ -83,10 +83,10 @@ public class CrController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		FormTemplate form = FormTemplateHelper.manager.getTemplate("변경관리요청서(CR)");
-		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("preserationList", preserationList);
 		model.addObject("sectionList", sectionList);
 		model.addObject("html", form==null?"":form.getDescription());
 		model.setViewName("/extcore/jsp/change/cr/cr-create.jsp");

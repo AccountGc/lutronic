@@ -10,7 +10,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+// ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
 // ArrayList<FormTemplate> form = (ArrayList<FormTemplate>) request.getAttribute("form");
 ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) request.getAttribute("classTypes1");
@@ -67,11 +67,22 @@ iframe {
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
 					<!-- 					<input type="button" value="문서채번확인" title="문서채번확인" onclick="numberView();" class="red"> -->
 				</td>
-				<th class="lb req">문서명</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="preFix" id="preFix" class="width-400" readonly="readonly">
-					&nbsp;&nbsp;
-					<input type="text" name="suffix" id="suffix" class="width-300" readonly="readonly">
+				<th class="req">문서번호</th>
+				<td class="indent5">
+					<input type="text" name="interalnumber" id="interalnumber" class="width-300" readonly="readonly">
+				</td>
+				<th class="req">보존기간</th>
+				<td class="indent5">
+					<select name="preseration" id="preseration" class="width-200">
+						<%
+						for (NumberCode preseration : preserationList) {
+							// 코드로 처리
+						%>
+						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
+					</select>
 				</td>
 			</tr>
 			<tr>
@@ -105,11 +116,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">내부 문서번호</th>
-				<td class="indent5">
-					<input type="text" name="interalnumber" id="interalnumber" class="width-300" readonly="readonly">
-				</td>
-				<th>프로젝트코드</th>
+				<th class="lb">프로젝트코드</th>
 				<td class="indent5">
 					<select name="model" id="model" class="width-200" onchange="preNumberCheck(this);">
 						<option value="">선택</option>
@@ -123,7 +130,7 @@ iframe {
 					</select>
 				</td>
 				<th class="req">결재방식</th>
-				<td>
+				<td colspan="3">
 					&nbsp;
 					<div class="pretty p-switch">
 						<input type="radio" name="lifecycle" value="LC_Default" checked="checked">
@@ -145,35 +152,11 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">보존기간</th>
-				<td class="indent5">
-					<select name="preseration" id="preseration" class="width-200">
-						<%
-						for (NumberCode preseration : preserationList) {
-							// 코드로 처리
-						%>
-						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<th>부서</th>
-				<td class="indent5">
-					<select name="deptcode" id="deptcode" class="width-200">
-						<option value="">선택</option>
-						<%
-						for (NumberCode deptcode : deptcodeList) {
-						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
-						<%
-						}
-						%>
-					</select>
-				</td>
-				<th>작성자</th>
-				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
+				<th class="lb req">문서명</th>
+				<td class="indent5" colspan="5">
+					<input type="text" name="preFix" id="preFix" class="width-500" readonly="readonly">
+					&nbsp;&nbsp;
+					<input type="text" name="suffix" id="suffix" class="width-400" readonly="readonly">
 				</td>
 			</tr>
 			<tr>
@@ -301,9 +284,7 @@ iframe {
 				const secondarys = toArray("secondarys");
 				const primary = document.querySelector("input[name=primary]");
 				const model = document.getElementById("model").value;
-				const writer = document.getElementById("writer").value;
 				const interalnumber = document.getElementById("interalnumber");
-				const deptcode = document.getElementById("deptcode").value;
 				const preseration = document.getElementById("preseration").value;
 				const temprary = JSON.parse(temp);
 
@@ -348,7 +329,7 @@ iframe {
 
 				if (isNull(interalnumber.value)) {
 					interalnumber.focus();
-					alert("내부문서번호를 입력해주세요.");
+					alert("문서번호를 입력해주세요.");
 					return false;
 				}
 
@@ -365,8 +346,8 @@ iframe {
 						}
 					}
 
-// 					if (!confirm("등록 후 문서번호의 변경은 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
-					if(!confirm("저장하시겠습니까?")) {
+					// 					if (!confirm("등록 후 문서번호의 변경은 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
+					if (!confirm("저장하시겠습니까?")) {
 						return false;
 					}
 				}
@@ -380,9 +361,7 @@ iframe {
 					primary : primary != null ? primary.value : "",
 					location : location.value,
 					model_code : model,
-					deptcode_code : deptcode,
 					interalnumber : interalnumber.value,
-					writer : writer,
 					preseration_code : preseration,
 					// 링크 데이터
 					rows90 : rows90,
@@ -402,7 +381,7 @@ iframe {
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						if(!temprary) {
+						if (!temprary) {
 							document.location.href = getCallUrl("/doc/list");
 						} else {
 							document.location.href = getCallUrl("/temprary/list");
@@ -433,7 +412,6 @@ iframe {
 				selectbox("preseration");
 				// 				selectbox("documentType");
 				selectbox("model");
-				selectbox("deptcode");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
 				createAUIGrid91(columns91);

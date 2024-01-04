@@ -3,7 +3,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 String html = (String) request.getAttribute("html");
 %>
@@ -46,55 +46,21 @@ iframe {
 			</colgroup>
 			<tr>
 				<th class="req lb">CR 제목</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="name" id="name" class="width-300">
+				<td class="indent5">
+					<input type="text" name="name" id="name" class="width-400">
 				</td>
-			</tr>
-			<!-- 			<tr> -->
-			<!-- 				<th class="req lb">ECPR 진행여부</th> -->
-			<!-- 				<td colspan="3"> -->
-			<!-- 					&nbsp; -->
-			<!-- 					<div class="pretty p-switch"> -->
-			<!-- 						<input type="radio" name="ecprStart" value="true" checked="checked"> -->
-			<!-- 						<div class="state p-success"> -->
-			<!-- 							<label> -->
-			<!-- 								<b>진행</b> -->
-			<!-- 							</label> -->
-			<!-- 						</div> -->
-			<!-- 					</div> -->
-			<!-- 					&nbsp; -->
-			<!-- 					<div class="pretty p-switch"> -->
-			<!-- 						<input type="radio" name="ecprStart" value="false"> -->
-			<!-- 						<div class="state p-success"> -->
-			<!-- 							<label> -->
-			<!-- 								<b>미진행</b> -->
-			<!-- 							</label> -->
-			<!-- 						</div> -->
-			<!-- 					</div> -->
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">작성일</th> -->
-			<!-- 				<td class="indent5"> -->
-			<!-- 					<input type="text" name="writeDate" id="writeDate" class="width-100"> -->
-			<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');"> -->
-			<!-- 				</td> -->
-			<!-- 				<th>승인일</th> -->
-			<!-- 				<td class="indent5"> -->
-			<!-- 					<input type="text" name="approveDate" id="approveDate" class="width-100"> -->
-			<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('approveDate');"> -->
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">작성부서</th> -->
-			<!-- 				<td class="indent5"> -->
-			<!-- 					<input type="text" name="createDepart" id="createDepart" class="width-200"> -->
-			<!-- 				</td> -->
-			<!-- 				<th>작성자</th> -->
-			<!-- 				<td class="indent5"> -->
-			<!-- 					<input type="text" name="writer" id="writer" class="width-200"> -->
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
+				<th class="req">보존년한</th>
+				<td class="indent5">
+					<select name="period" id="period" class="width-200">
+						<%
+						for (NumberCode preseration : preserationList) {
+						%>
+						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
+						<%
+						}
+						%>
+					</select>
+				</td>
 			<tr>
 				<th class="req lb">제품명</th>
 				<td colspan="3" class="indent5 pt5">
@@ -104,7 +70,6 @@ iframe {
 						<jsp:param value="insert300" name="method" />
 						<jsp:param value="MODEL" name="codeType" />
 						<jsp:param value="true" name="multi" />
-						<jsp:param value="150" name="height" />
 					</jsp:include>
 				</td>
 			</tr>
@@ -141,14 +106,14 @@ iframe {
 					</script>
 				</td>
 			</tr>
-			<tr>
-				<th class="lb">주 첨부파일</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
-						<jsp:param value="" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
+<!-- 			<tr> -->
+<!-- 				<th class="lb">주 첨부파일</th> -->
+<!-- 				<td class="indent5" colspan="3"> -->
+<%-- 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp"> --%>
+<%-- 						<jsp:param value="" name="oid" /> --%>
+<%-- 					</jsp:include> --%>
+<!-- 				</td> -->
+<!-- 			</tr> -->
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
@@ -187,12 +152,13 @@ iframe {
 		<script type="text/javascript">
 			function create(temp) {
 				const name = document.getElementById("name");
-				const number = document.getElementById("number");
+				const period = document.getElementById("period").value;
+// 				const number = document.getElementById("number");
 				const secondarys = toArray("secondarys");
-// 				const ecprStart = document.querySelector("input[name=ecprStart]:checked").value;
+				// 				const ecprStart = document.querySelector("input[name=ecprStart]:checked").value;
 				const temprary = JSON.parse(temp);
 
-				const primary = document.querySelector("input[name=primary]");
+// 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 관련ECO
@@ -217,15 +183,15 @@ iframe {
 						name.focus();
 						return;
 					}
-
-					// 					if (isEmpty(number.value)) {
-					// 						alert("CR 번호를 선택해주세요.");
-					// 						number.focus();
-					// 						return;
-					// 					}
+					
+					if (isEmpty(period)) {
+						alert("보존년한을 선택하세요.");
+						return;
+					}
 
 					if (rows300.length == 0) {
 						alert("제품을 선택하세요.");
+						popup300();
 						return;
 					}
 
@@ -233,11 +199,6 @@ iframe {
 						alert("변경사유을 선택하세요.");
 						return false;
 					}
-
-					// 					if (primary == null) {
-					// 						alert("주 첨부파일을 첨부해주세요.");
-					// 						return;
-					// 					}
 
 					if (!confirm("등록하시겠습니까?")) {
 						return false;
@@ -248,11 +209,7 @@ iframe {
 
 				const params = {
 					name : name.value,
-// 					number : number.value,
-					// 					writeDate : toId("writeDate"),
-					// 					approveDate : toId("approveDate"),
-					// 					createDepart : toId("createDepart"),
-					// 					writer : toId("writer"),
+					period : period,
 					contents : content,
 					sections : sections, //변경 구분
 					primary : primary == null ? "" : primary.value,
@@ -260,7 +217,6 @@ iframe {
 					rows101 : rows101,
 					rows300 : rows300,
 					temprary : temprary,
-// 					ecprStart : JSON.parse(ecprStart)
 				}
 				const url = getCallUrl("/cr/create");
 				logger(params);
@@ -277,9 +233,7 @@ iframe {
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-// 				date("writeDate");
-// 				date("approveDate");
-				// 				selectbox("createDepart");
+				selectbox("preserationList");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);

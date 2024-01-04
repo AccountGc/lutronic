@@ -25,7 +25,7 @@ import com.e3ps.controller.BaseController;
 @Controller
 @RequestMapping(value = "/ecrm/**")
 public class EcrmController extends BaseController {
-	
+
 	@Description(value = "ECRM 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
@@ -41,7 +41,7 @@ public class EcrmController extends BaseController {
 		model.setViewName("/extcore/jsp/change/ecrm/ecrm-list.jsp");
 		return model;
 	}
-	
+
 	@Description(value = "ECRM 검색 함수")
 	@ResponseBody
 	@PostMapping(value = "/list")
@@ -57,7 +57,7 @@ public class EcrmController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Description(value = "ECRM 등록 페이지")
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
@@ -67,7 +67,7 @@ public class EcrmController extends BaseController {
 		FormTemplate form = FormTemplateHelper.manager.getTemplate("설계변경 위험관리 보고서(ECRM)");
 		model.addObject("deptcodeList", deptcodeList);
 		model.addObject("sectionList", sectionList);
-		model.addObject("html", form==null?"":form.getDescription());
+		model.addObject("html", form == null ? "" : form.getDescription());
 		model.setViewName("/extcore/jsp/change/ecrm/ecrm-create.jsp");
 		return model;
 	}

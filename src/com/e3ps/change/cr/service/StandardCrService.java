@@ -110,7 +110,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			EChangeRequest cr = EChangeRequest.newEChangeRequest();
 			cr.setEoName(name);
 			cr.setEoNumber(number);
-			cr.setCreateDate(new Timestamp(new Date().getTime()).toString().substring(0, 10)); // 작성하는 날짜
+			cr.setCreateDate(currentDate.toString().substring(0, 10)); // 작성하는 날짜
 			cr.setWriter(sessionUser.getFullName());
 //			cr.setApproveDate(approveDate);
 			cr.setIsNew(true);
