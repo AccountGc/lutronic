@@ -1,6 +1,7 @@
 package com.e3ps.change.ecrm.controller;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +17,22 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
-import com.e3ps.change.cr.service.CrHelper;
+import com.e3ps.change.ecrm.dto.EcrmDTO;
+import com.e3ps.change.ecrm.service.EcrmHelper;
+import com.e3ps.change.ecrm.service.EcrmService;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 
+import wt.services.ServiceFactory;
+
 @Controller
 @RequestMapping(value = "/ecrm/**")
 public class EcrmController extends BaseController {
+	
+	public static final EcrmService service = ServiceFactory.getService(EcrmService.class);
+	public static final EcrmHelper manager = new EcrmHelper();
 	
 	@Description(value = "ECRM 검색 페이지")
 	@GetMapping(value = "/list")
@@ -70,5 +78,22 @@ public class EcrmController extends BaseController {
 		model.addObject("html", form==null?"":form.getDescription());
 		model.setViewName("/extcore/jsp/change/ecrm/ecrm-create.jsp");
 		return model;
+	}
+	
+	@Description(value = "ECPR 등록 함수")
+	@ResponseBody
+	@PostMapping(value = "/create")
+	public Map<String, Object> create(@RequestBody EcrmDTO dto) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcrmHelper.service.create(dto);
+			result.put("msg", SAVE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

@@ -192,7 +192,7 @@ String html = (String) request.getAttribute("html");
 				const number = document.getElementById("number");
 				const secondarys = toArray("secondarys");
 				const ecprStart = document.querySelector("input[name=ecprStart]:checked").value;
-				const temprary = JSON.parse(temp);
+				const temprary = JSON.parse(temp);//true면 임시저장 false면 등록
 
 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
@@ -262,13 +262,13 @@ String html = (String) request.getAttribute("html");
 					temprary : temprary,
 					ecprStart : JSON.parse(ecprStart)
 				}
-				const url = getCallUrl("/cr/create");
+				const url = getCallUrl("/ecrm/create");
 				logger(params);
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/cr/list");
+						document.location.href = getCallUrl("/ecrm/create");
 					}
 					parent.closeLayer();
 				});
