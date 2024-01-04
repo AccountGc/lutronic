@@ -489,7 +489,7 @@ public class StandardDocumentService extends StandardManager implements Document
 			WTDocumentMasterIdentity identity = (WTDocumentMasterIdentity) master.getIdentificationObject();
 
 			// 문서 이름 세팅..
-			identity.setName(name + "-" + name);
+			identity.setName(name);
 //			identity.setNumber(number);
 			master = (WTDocumentMaster) IdentityHelper.service.changeIdentity(master, identity);
 

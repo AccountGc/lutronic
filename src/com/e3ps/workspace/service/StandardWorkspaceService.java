@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.eco.service.EcoHelper;
@@ -535,6 +536,24 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 					EChangeRequest cr = (EChangeRequest) qr.nextElement();
 					WorkDataHelper.service.create(cr); // 자동으로 결재 시작 CR
 				}
+			}
+
+			if (per instanceof ECPRRequest) {
+				ECPRRequest ecpr = (ECPRRequest) per;
+				ecpr.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
+				PersistenceHelper.manager.modify(ecpr);
+			}
+
+			if (per instanceof ECRMRequest) {
+				ECRMRequest ecrm = (ECRMRequest) per;
+				ecrm.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
+				PersistenceHelper.manager.modify(ecrm);
+			}
+
+			if (per instanceof EChangeRequest) {
+				EChangeRequest cr = (EChangeRequest) per;
+				cr.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
+				PersistenceHelper.manager.modify(cr);
 			}
 
 			// EO/ ECO

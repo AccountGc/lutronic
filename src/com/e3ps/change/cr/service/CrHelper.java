@@ -19,6 +19,7 @@ import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.rohs.ROHSMaterial;
+import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -236,5 +237,31 @@ public class CrHelper {
 			list.add(map);
 		}
 		return list;
+	}
+
+	/**
+	 * CR 다음번호
+	 */
+	public String getNextNumber(String number) throws Exception {
+		DecimalFormat df = new DecimalFormat("000");
+		String rtn = null;
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(EChangeRequest.class, true);
+		SearchCondition sc = new SearchCondition(EChangeRequest.class, EChangeRequest.EO_NUMBER, "LIKE", number + "%");
+		query.appendWhere(sc, new int[] { idx });
+		QuerySpecUtils.toOrderBy(query, idx, EChangeRequest.class, EChangeRequest.CREATE_TIMESTAMP, true);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		// E2312N45
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			EChangeRequest cr = (EChangeRequest) obj[0];
+			String crNumber = cr.getEoNumber();
+			String next = crNumber.substring(crNumber.length() - 3);
+			int n = Integer.parseInt(next) + 1;
+			rtn = number + df.format(n);
+		} else {
+			rtn = number + "001";
+		}
+		return rtn;
 	}
 }

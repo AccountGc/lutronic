@@ -331,7 +331,7 @@ public class StandardEoService extends StandardManager implements EoService {
 
 			if (rows200.size() > 0) {
 //				ActivityHelper.service.deleteActivity(eco);
-				ActivityHelper.service.saveActivity(eco, rows200);
+				ActivityHelper.service.saveActivity(eo, rows200);
 			}
 			
 			// 임시저장일 경우만 수정 가능한데...

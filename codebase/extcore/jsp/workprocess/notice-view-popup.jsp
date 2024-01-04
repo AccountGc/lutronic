@@ -1,11 +1,10 @@
 <%@page import="com.e3ps.groupware.notice.dto.NoticeDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-NoticeDTO data = (NoticeDTO) request.getAttribute("data");
+NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 %>
 
-<input type="hidden" name="oid" id="oid" value="<%=data.getOid()%>">
+<input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 
 <table class="button-table">
 	<tr>
@@ -26,35 +25,35 @@ NoticeDTO data = (NoticeDTO) request.getAttribute("data");
 	</colgroup>
 	<tr>
 		<th class="lb">제목</th>
-		<td colspan="3" class="indent5"><%=data.getTitle()%></td>
+		<td colspan="3" class="indent5"><%=dto.getTitle()%></td>
 	</tr>
 	<tr>
 		<th class="lb">등록자</th>
-		<td class="indent5"><%=data.getCreator()%></td>
+		<td class="indent5"><%=dto.getCreator()%></td>
 		<th>등록일</th>
 		<td class="indent5">
-			<%=data.getCreatedDate()%>
+			<%=dto.getCreatedDate()%>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">조회수</th>
-		<td class="indent5"><%=data.getCount()%></td>
+		<td class="indent5"><%=dto.getCount()%></td>
 		<th>팝업</th>
 		<td class="indent5">
-			<%=data.isPopup() == true ? "팝업O" : "팝업X"%>
+			<%=dto.isPopup() == true ? "팝업 O" : "팝업 X"%>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">내용</th>
 		<td colspan="3" class="indent5">
-			<textarea rows="10" readonly="readonly"><%=data.getContents()%></textarea>
+			<textarea rows="10" readonly="readonly"><%=dto.getContents()%></textarea>
 		</td>
 	</tr>
 	<tr>
 		<th class="lb">첨부파일</th>
 		<td class="indent5" colspan="3">
 			<jsp:include page="/extcore/jsp/common/secondary-view.jsp">
-				<jsp:param value="<%=data.getOid()%>" name="oid" />
+				<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			</jsp:include>
 		</td>
 	</tr>

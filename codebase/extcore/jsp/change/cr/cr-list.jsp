@@ -129,7 +129,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<!-- 					<input type="hidden" name="proposerOid" id="proposerOid"> -->
 				<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
 				<!-- 				</td> -->
-				<th>변경구분</th>
+				<th>변경사유</th>
 				<td class="indent5">
 					<select name="changeSection" id="changeSection" class="width-200">
 						<option value="">선택</option>
@@ -222,14 +222,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					style : "aui-left",
 				}, {
 					dataField : "changeSection",
-					headerText : "변경구분",
+					headerText : "변경사유",
 					dataType : "string",
+					style : "aui-left",
 					width : 220,
-				}, {
-					dataField : "ecprStart",
-					headerText : "ECPR 진행여부",
-					dataType : "string",
-					width : 120,
 				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",

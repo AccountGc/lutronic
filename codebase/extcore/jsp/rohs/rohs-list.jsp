@@ -100,7 +100,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 					<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
 					~
 					<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('modifiedFrom', 'modifiedTo')">
 				</td>
 			</tr>
 			<tr>

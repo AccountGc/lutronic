@@ -365,7 +365,8 @@ iframe {
 						}
 					}
 
-					if (!confirm("등록 후 문서번호의 변경은 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
+// 					if (!confirm("등록 후 문서번호의 변경은 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
+					if(!confirm("저장하시겠습니까?")) {
 						return false;
 					}
 				}
@@ -376,7 +377,7 @@ iframe {
 					description : description.value,
 					content : content,
 					secondarys : secondarys,
-					primary : primary.value,
+					primary : primary != null ? primary.value : "",
 					location : location.value,
 					model_code : model,
 					deptcode_code : deptcode,
@@ -401,7 +402,12 @@ iframe {
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/doc/list");
+						if(!temprary) {
+							document.location.href = getCallUrl("/doc/list");
+						} else {
+							document.location.href = getCallUrl("/temprary/list");
+						}
+						//parent.updateWorkspace();
 					}
 					parent.closeLayer();
 				});

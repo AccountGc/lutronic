@@ -72,7 +72,7 @@ String target = (String) request.getAttribute("target");
 		const oid = document.getElementById("oid").value;
 		const arr = new Array();
 		for (let i = 0; i < gridData.length; i++) {
-			const item = gridData[i].item;
+			const item = gridData[i];
 			arr.push(item.oid);
 		}
 		const params = {
@@ -85,10 +85,12 @@ String target = (String) request.getAttribute("target");
 
 		openLayer();
 		const url = getCallUrl("/bom/batch");
-
+		logger(params);
 		call(url, params, function(data) {
+			const url = data.url;
+			alert(url);
 			if (data.result) {
-
+				document.location.href = url;
 			}
 			closeLayer();
 		})

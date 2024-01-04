@@ -1028,10 +1028,10 @@ JSONArray unitList = (JSONArray) request.getAttribute("unitList");
 // 						return false;
 // 					}
 					
-					if (isNull(item.partName4)) {
-						AUIGrid.showToastMessage(myGridID, rowIndex, 11, "품목명(KEY-IN)을 입력하세요.");
-						return false;
-					}
+// 					if (isNull(item.partName4)) {
+// 						AUIGrid.showToastMessage(myGridID, rowIndex, 11, "품목명(KEY-IN)을 입력하세요.");
+// 						return false;
+// 					}
 
 					if (isNull(item.unit)) {
 						AUIGrid.showToastMessage(myGridID, rowIndex, 12, "단위를 선택하세요.");

@@ -63,6 +63,7 @@ public class CrDTO {
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
+	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 ECO
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 
 	private Map<String, Object> contentMap = null;
@@ -87,13 +88,12 @@ public class CrDTO {
 //				StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
 		setWriter(cr.getWriter());
 		setProposer_name(StringUtil.checkNull(cr.getProposer()));
-		setChangeSection(StringUtil
-				.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getChangeSection(), "CHANGESECTION")));
+		setChangeSection(cr.getChangeSection());
 		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
 		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
 		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
 		setContents(StringUtil.checkNull(cr.getContents()));
-		setEcprStart(cr.getEcprStart());
+//		setEcprStart(cr.getEcprStart());
 		// 따로 추가
 //		setCreateDepart_code(StringUtil.checkNull(cr.getCreateDepart()));
 		setState(cr.getLifeCycleState().getDisplay());
