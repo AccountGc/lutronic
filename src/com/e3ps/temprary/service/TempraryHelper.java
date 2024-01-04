@@ -12,21 +12,16 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.common.util.WCUtil;
 import com.e3ps.temprary.column.TempraryColumn;
 
-import wt.clients.folder.FolderTaskLogic;
 import wt.doc.WTDocument;
 import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.Persistable;
 import wt.fc.ReferenceFactory;
-import wt.folder.Folder;
-import wt.folder.FolderEntry;
-import wt.folder.IteratedFolderMemberLink;
 import wt.lifecycle.LifeCycleManaged;
+import wt.org.WTUser;
 import wt.part.WTPart;
-import wt.query.ClassAttribute;
 import wt.query.QuerySpec;
 import wt.query.SearchCondition;
 import wt.services.ServiceFactory;
@@ -50,8 +45,14 @@ public class TempraryHelper {
 		String name = StringUtil.checkNull((String) params.get("name"));
 		String dataType = StringUtil.checkNull((String) params.get("dataType"));
 
-		// 단순 상태값으로만??/
-		QuerySpecUtils.toState(query, idx, LifeCycleManaged.class, "TEMPRARY");
+		if (!CommonUtil.isAdmin()) {
+			WTUser sessionUser = CommonUtil.sessionUser();
+			SearchCondition sc = new SearchCondition(LifeCycleManaged.class, "ownership.owner.key.id", "=",
+					sessionUser.getPersistInfo().getObjectIdentifier().getId());
+			query.appendWhere(sc, new int[] { idx });
+		}
+
+		QuerySpecUtils.toState(query, idx, LifeCycleManaged.class, "LINE_REGISTER");
 		PageQueryUtils pager = new PageQueryUtils(params, query);
 		PagingQueryResult result = pager.find();
 		while (result.hasMoreElements()) {

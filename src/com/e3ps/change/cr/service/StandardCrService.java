@@ -52,22 +52,9 @@ public class StandardCrService extends StandardManager implements CrService {
 	@Override
 	public void create(CrDTO dto) throws Exception {
 		String name = dto.getName();
-//		String number = dto.getNumber();
-//		String approveDate = dto.getApproveDate();
-//		String writeDate = dto.getWriteDate();
-//		String createDepart = dto.getCreateDepart();
-//		String writer = dto.getWriter();
-//		String proposer_name= dto.getProposer_name();
-//		String eoCommentA = dto.getEoCommentA();
-//		String eoCommentB = dto.getEoCommentB();
-//		String eoCommentC = dto.getEoCommentC();
 		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
-//		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
-//		ArrayList<Map<String, String>> rows105 = dto.getRows105(); // 관련 ECO
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
-		boolean temprary = dto.isTemprary();
-		boolean ecprStart = dto.isEcprStart();
 
 		Transaction trs = new Transaction();
 		try {
@@ -113,22 +100,13 @@ public class StandardCrService extends StandardManager implements CrService {
 			cr.setEoNumber(number);
 			cr.setCreateDate(currentDate.toString().substring(0, 10)); // 작성하는 날짜
 			cr.setWriter(sessionUser.getFullName());
-//			cr.setApproveDate(approveDate);
 			cr.setIsNew(true);
-
-//			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
-
 			PeopleDTO data = new PeopleDTO(sessionUser);
 			cr.setCreateDepart(data.getDepartment_name());
 			cr.setModel(model);
 
-//			cr.setProposer(proposer_name);				
 			cr.setChangeSection(changeSection);
-//			cr.setEoCommentA(eoCommentA);
-//			cr.setEoCommentB(eoCommentB);
-//			cr.setEoCommentC(eoCommentC);
 			cr.setContents(contents);
-//			cr.setEcprStart(ecprStart);
 
 			String location = "/Default/설계변경/ECR";
 			String lifecycle = "LC_ECR";
@@ -140,29 +118,11 @@ public class StandardCrService extends StandardManager implements CrService {
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef()));
 
 			cr = (EChangeRequest) PersistenceHelper.manager.save(cr);
-
-//			String[] ecrOids = (String[]) req.getParameterValues("ecrOid");
-//			updateECRToECRLink(ecr, ecrOids, false);
 			// 첨부 파일 저장
 			saveAttach(cr, dto);
-
 			// 관련 CR 링크
 			saveLink(cr, dto);
-
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(cr, state);
-			} else {
-				// ECPR 진행시...
-				// 추후 사용...
-//				if (ecprStart) {
-//					State state = State.toState("CREATE_ECPR");
-//					LifeCycleHelper.service.setLifeCycleState(cr, state);
-//				} else {
-				WorkDataHelper.service.create(cr);
-//				}
-			}
+			WorkDataHelper.service.create(cr);
 
 			trs.commit();
 			trs = null;
@@ -177,7 +137,7 @@ public class StandardCrService extends StandardManager implements CrService {
 	}
 
 	/**
-	 * 관련 CR링크
+	 * 관련 링크
 	 */
 	private void saveLink(EChangeRequest cr, CrDTO dto) throws Exception {
 		ArrayList<Map<String, String>> rows101 = dto.getRows101();
@@ -203,6 +163,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			}
 		}
 
+		// 문서
 		ArrayList<Map<String, String>> rows90 = dto.getRows90();
 		for (Map<String, String> row90 : rows90) {
 			String gridState = row90.get("gridState");
@@ -333,7 +294,7 @@ public class StandardCrService extends StandardManager implements CrService {
 
 			// 링크 삭제
 			deleteLink(cr);
-			saveLink(cr, rows101);
+			saveLink(cr, dto);
 
 			if (temprary) {
 				State state = State.toState("TEMPRARY");

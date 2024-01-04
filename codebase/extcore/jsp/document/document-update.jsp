@@ -39,7 +39,6 @@ iframe {
 		</td>
 		<td class="right">
 			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
-			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -236,7 +235,6 @@ iframe {
 	<tr>
 		<td class="center">
 			<input type="button" value="<%=title%>" title="<%=title%>" class="blue" onclick="<%=mode%>('false');">
-			<input type="button" value="임시저장" title="임시저장" class="" onclick="<%=mode%>('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>

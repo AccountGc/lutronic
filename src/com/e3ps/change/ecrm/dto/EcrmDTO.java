@@ -9,6 +9,7 @@ import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.DateUtil;
@@ -36,6 +37,8 @@ public class EcrmDTO {
 	private String eoCommentC;
 	private String writer;
 	private String contents;
+	private String period_name;
+	private String period_code;
 
 	// 따로 추가
 	private String state;
@@ -50,12 +53,15 @@ public class EcrmDTO {
 
 	private ECPRRequest ecpr;
 	// auth
-	private boolean isModify = false;
+	private boolean _modify = false;
+	private boolean _delete = false;
 
 	// 변수용
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows101 = new ArrayList<>(); // 관련 CR
+	private ArrayList<Map<String, String>> rows90 = new ArrayList<>(); // 관련 문서
+	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 CR
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 
 	private boolean temprary;
@@ -90,39 +96,12 @@ public class EcrmDTO {
 		setCreateDepart(StringUtil.checkNull(ecrm.getCreateDepart()));
 		setWriteDate(StringUtil.checkNull(ecrm.getCreateDate()));
 		setModel(EcprHelper.manager.displayToModel(ecrm.getModel()));
-
-		setAuth();
-	}
-
-	/**
-	 * 회수 권한 승인중 && (소유자 || 관리자 ) && 기본 결재
-	 * 
-	 * @return
-	 */
-	public boolean isWithDraw() {
-		try {
-			return (state.equals("APPROVING") && (isOwner() || CommonUtil.isAdmin()));
-		} catch (Exception e) {
-			e.printStackTrace();
+		NumberCode period = NumberCodeHelper.manager.getNumberCode(ecrm.getPeriod(), "PRESERATION");
+		if (period != null) {
+			setPeriod_code(period.getCode());
+			setPeriod_name(period.getName());
 		}
-		return false;
-
-	}
-
-	/**
-	 * Owner 유무 체크
-	 * 
-	 * @return
-	 */
-	public boolean isOwner() {
-
-		try {
-			return SessionHelper.getPrincipal().getName().equals(getCreator());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return false;
+		setAuth(ecrm);
 	}
 
 	/**
@@ -136,19 +115,22 @@ public class EcrmDTO {
 	/**
 	 * 권한 설정
 	 */
-	private void setAuth() throws Exception {
-		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
-		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
-			setModify(true);
+	private void setAuth(ECRMRequest ecrm) throws Exception {
+		boolean isAdmin = CommonUtil.isAdmin();
+		if (check(ecrm, "LINE_REGISTER") || isAdmin) {
+			set_modify(true);
+		}
+		if (isAdmin) {
+			set_delete(true);
 		}
 	}
 
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(ECRMRequest ecrm, String state) throws Exception {
 		boolean check = false;
-		String compare = getEcpr().getLifeCycleState().toString();
+		String compare = ecrm.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}

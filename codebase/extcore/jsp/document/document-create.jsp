@@ -46,7 +46,6 @@ iframe {
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -244,7 +243,6 @@ iframe {
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -275,7 +273,6 @@ iframe {
 
 			// 문서 등록
 			function create(temp) {
-				// temp 임시저장 여부 처리
 				const location = document.getElementById("location");
 				const preFix = document.getElementById("preFix").value;
 				const suffix = document.getElementById("suffix");
@@ -333,23 +330,16 @@ iframe {
 					return false;
 				}
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
+				if ("DEV" === classType1_code || "INSTRUCTION" === classType1_code) {
+					if (primary == null) {
+						alert("주 첨부파일을 첨부해주세요.");
 						return false;
 					}
-				} else {
+				}
 
-					if ("DEV" === classType1_code || "INSTRUCTION" === classType1_code) {
-						if (primary == null) {
-							alert("주 첨부파일을 첨부해주세요.");
-							return false;
-						}
-					}
-
-					// 					if (!confirm("등록 후 문서번호의 변경은 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
-					if (!confirm("저장하시겠습니까?")) {
-						return false;
-					}
+				// 					if (!confirm("등록 후 문서번호의 변경은 관리자에게 문의해야합니다.\n저장하시겠습니까?")) {
+				if (!confirm("저장하시겠습니까?")) {
+					return false;
 				}
 
 				const params = {

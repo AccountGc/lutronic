@@ -1,24 +1,36 @@
 package com.e3ps.change.ecrm.service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
+import com.e3ps.change.CrToDocumentLink;
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcrToEcrLink;
+import com.e3ps.change.EcrmToCrLink;
+import com.e3ps.change.EcrmToDocumentLink;
+import com.e3ps.change.EcrmToEcoLink;
+import com.e3ps.change.RequestOrderLink;
+import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecrm.dto.EcrmDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
+import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
 import wt.folder.Folder;
@@ -26,8 +38,10 @@ import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.State;
+import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 
 public class StandardEcrmService extends StandardManager implements EcrmService {
@@ -41,16 +55,9 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 	@Override
 	public void create(EcrmDTO dto) throws Exception {
 		String name = dto.getName();
-		String number = dto.getNumber();
-		String writeDate = dto.getWriteDate();
-		String approveDate = dto.getApproveDate();
-		String createDepart = dto.getCreateDepart();
-		String writer = dto.getWriter();
 		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
-		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
-		boolean temprary = dto.isTemprary();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -81,43 +88,43 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 				}
 			}
 
+			Date currentDate = new Date();
+
+			// 원하는 날짜 형식을 설정합니다.
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM");
+			String number = "ECRM-" + dateFormat.format(currentDate) + "-N";
+			number = EcrmHelper.manager.getNextNumber(number);
+
+			WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+			PeopleDTO data = new PeopleDTO(sessionUser);
 			ECRMRequest ecrm = ECRMRequest.newECRMRequest();
 			ecrm.setEoName(name);
 			ecrm.setEoNumber(number);
-			ecrm.setCreateDate(writeDate);
-			ecrm.setWriter(writer);
-
-			ecrm.setApproveDate(approveDate);
-			ecrm.setCreateDepart(createDepart);
+			ecrm.setCreateDate(currentDate.toString().substring(0, 10));
+			ecrm.setWriter(sessionUser.getFullName());
+			ecrm.setCreateDepart(data.getDepartment_name());
 			ecrm.setModel(model);
 			ecrm.setIsNew(true);
-			
+
 			ecrm.setChangeSection(changeSection);
 			ecrm.setContents(contents);
-			
-			String location = "/Default/설계변경/ECPR";
+
+			String location = "/Default/설계변경/ECRM";
 			String lifecycle = "LC_Default";
-			
+
 			Folder folder = FolderHelper.service.getFolder(location, WCUtil.getWTContainerRef());
 			FolderHelper.assignLocation((FolderEntry) ecrm, folder);
 			// 문서 lifeCycle 설정
 			LifeCycleHelper.setLifeCycle(ecrm,
 					LifeCycleHelper.service.getLifeCycleTemplate(lifecycle, WCUtil.getWTContainerRef())); // Lifecycle
 			ecrm = (ECRMRequest) PersistenceHelper.manager.save(ecrm);
-			
+
 			// 첨부 파일 저장
 			saveAttach(ecrm, dto);
-			
+
 			// 관련 CR 링크
-//			saveLink(ecrm, rows101);
-						
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(ecrm, state);
-			} else {
-				WorkDataHelper.service.create(ecrm);
-			}
+			saveLink(ecrm, dto);
+			WorkDataHelper.service.create(ecrm);
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {
@@ -130,6 +137,48 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 		}
 
 	}
+
+	/**
+	 * 관련 링크
+	 */
+	private void saveLink(ECRMRequest ecrm, EcrmDTO dto) throws Exception {
+		ArrayList<Map<String, String>> rows101 = dto.getRows101();
+		for (Map<String, String> row101 : rows101) {
+			String gridState = row101.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row101.get("oid");
+				EChangeRequest ref = (EChangeRequest) CommonUtil.getObject(oid);
+				EcrmToCrLink link = EcrmToCrLink.newEcrmToCrLink(ecrm, ref);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+		ArrayList<Map<String, String>> rows105 = dto.getRows105();
+		for (Map<String, String> row105 : rows105) {
+			String gridState = row105.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row105.get("oid");
+				EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+				EcrmToEcoLink link = EcrmToEcoLink.newEcrmToEcoLink(ecrm, eco);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+
+		// 문서
+		ArrayList<Map<String, String>> rows90 = dto.getRows90();
+		for (Map<String, String> row90 : rows90) {
+			String gridState = row90.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row90.get("oid");
+				WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+				EcrmToDocumentLink link = EcrmToDocumentLink.newEcrmToDocumentLink(ecrm, doc);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+	}
+
 	/**
 	 * 첨부 파일 저장
 	 */
@@ -154,7 +203,7 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 			ContentServerHelper.service.updateContent(ecrm, applicationData, vault.getPath());
 		}
 	}
-	
+
 	/**
 	 * 관련 CR링크
 	 */
@@ -169,5 +218,5 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 //				PersistenceServerHelper.manager.insert(link);
 //			}
 //		}
-	
+
 }

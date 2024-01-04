@@ -1,7 +1,6 @@
 package com.e3ps.change.ecrm.controller;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,32 +11,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
+import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.change.ecrm.dto.EcrmDTO;
 import com.e3ps.change.ecrm.service.EcrmHelper;
-import com.e3ps.change.ecrm.service.EcrmService;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
 
-import wt.services.ServiceFactory;
-
 @Controller
 @RequestMapping(value = "/ecrm/**")
 public class EcrmController extends BaseController {
-<<<<<<< HEAD
-	
-	public static final EcrmService service = ServiceFactory.getService(EcrmService.class);
-	public static final EcrmHelper manager = new EcrmHelper();
-	
-=======
 
->>>>>>> bd7373711d3075c78828c3f7342e9a46b2e8ed14
 	@Description(value = "ECRM 검색 페이지")
 	@GetMapping(value = "/list")
 	public ModelAndView list() throws Exception {
@@ -60,7 +51,7 @@ public class EcrmController extends BaseController {
 	public Map<String, Object> list(@RequestBody Map<String, Object> params) {
 		Map<String, Object> result = new HashMap<>();
 		try {
-//			result = CrHelper.manager.list(params);
+			result = EcrmHelper.manager.list(params);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,17 +65,17 @@ public class EcrmController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		FormTemplate form = FormTemplateHelper.manager.getTemplate("설계변경 위험관리 보고서(ECRM)");
-		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("preserationList", preserationList);
 		model.addObject("sectionList", sectionList);
 		model.addObject("html", form == null ? "" : form.getDescription());
 		model.setViewName("/extcore/jsp/change/ecrm/ecrm-create.jsp");
 		return model;
 	}
-	
-	@Description(value = "ECPR 등록 함수")
+
+	@Description(value = "ECRM 등록 함수")
 	@ResponseBody
 	@PostMapping(value = "/create")
 	public Map<String, Object> create(@RequestBody EcrmDTO dto) throws Exception {
@@ -99,5 +90,17 @@ public class EcrmController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "ECPR 상세 페이지")
+	@GetMapping(value = "/view")
+	public ModelAndView view(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EcrmDTO dto = new EcrmDTO(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/ecrm/ecrm-view");
+		return model;
 	}
 }

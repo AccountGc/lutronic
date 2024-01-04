@@ -2,9 +2,11 @@ package com.e3ps.change.cr.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ContentUtils;
@@ -13,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.session.SessionHelper;
 
 @Getter
 @Setter
@@ -46,10 +47,9 @@ public class CrDTO {
 	private String proposer;
 	private String changeCode;
 	private String model;
-
 	private boolean ecprStart;
-
-	private EChangeRequest cr;
+	private String period_name;
+	private String period_code;
 	// auth
 	private boolean _delete = false;
 	private boolean _modify = false;
@@ -67,7 +67,7 @@ public class CrDTO {
 	private ArrayList<Map<String, String>> rows105 = new ArrayList<>(); // 관련 ECO
 	private ArrayList<Map<String, String>> rows300 = new ArrayList<>(); // 모델
 
-	private Map<String, Object> contentMap = null;
+	private Map<String, Object> contentMap = new HashMap<>();
 
 	private boolean temprary;
 
@@ -85,8 +85,6 @@ public class CrDTO {
 		setNumber(cr.getEoNumber());
 		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
 		setCreateDepart_name(cr.getCreateDepart());
-//		setCreateDepart_name(
-//				StringUtil.checkNull(NumberCodeHelper.manager.getNumberCodeName(cr.getCreateDepart(), "DEPTCODE")));
 		setWriter(cr.getWriter());
 		setProposer_name(StringUtil.checkNull(cr.getProposer()));
 		setChangeSection(cr.getChangeSection());
@@ -94,9 +92,6 @@ public class CrDTO {
 		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
 		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
 		setContents(StringUtil.checkNull(cr.getContents()));
-//		setEcprStart(cr.getEcprStart());
-		// 따로 추가
-//		setCreateDepart_code(StringUtil.checkNull(cr.getCreateDepart()));
 		setState(cr.getLifeCycleState().getDisplay());
 		setCreatedDate(cr.getCreateTimestamp());
 		setCreatedDate_text(cr.getCreateTimestamp().toString().substring(0, 10));
@@ -107,9 +102,14 @@ public class CrDTO {
 		setProposer(StringUtil.checkNull(cr.getProposer()));
 		setModel(cr.getModel());
 		setContentMap(ContentUtils.getContentByRole(cr, "ECR"));
-
 		set_isNew(cr.getIsNew()); // true 신규
-		setCr(cr);
+
+		NumberCode period = NumberCodeHelper.manager.getNumberCode(cr.getPeriod(), "PRESERATION");
+		if (period != null) {
+			setPeriod_code(period.getCode());
+			setPeriod_name(period.getName());
+		}
+
 		setAuth(cr);
 	}
 
@@ -125,23 +125,24 @@ public class CrDTO {
 	 * 권한 설정
 	 */
 	private void setAuth(EChangeRequest cr) throws Exception {
-		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
-		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
-			set_delete(true);
+		boolean isAdmin = CommonUtil.isAdmin();
+		if (check(cr, "LINE_REGISTER") || isAdmin) {
 			set_modify(true);
+		}
+		if (isAdmin) {
+			set_delete(true);
 		}
 	}
 
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(EChangeRequest cr, String state) throws Exception {
 		boolean check = false;
-		String compare = getCr().getLifeCycleState().toString();
+		String compare = cr.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}
 		return check;
 	}
-
 }

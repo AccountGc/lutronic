@@ -3,7 +3,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
+ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 String html = (String) request.getAttribute("html");
 %>
@@ -12,6 +12,11 @@ String html = (String) request.getAttribute("html");
 <head>
 <meta charset="UTF-8">
 <title></title>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <%@include file="/extcore/jsp/common/css.jsp"%>
 <%@include file="/extcore/jsp/common/script.jsp"%>
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
@@ -28,81 +33,32 @@ String html = (String) request.getAttribute("html");
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 		<table class="create-table">
 			<colgroup>
 				<col width="150">
-				<col width="*">
+				<col width="600">
 				<col width="150">
-				<col width="*">
+				<col width="600">
 			</colgroup>
 			<tr>
 				<th class="req lb">ECRM 제목</th>
 				<td class="indent5">
 					<input type="text" name="name" id="name" class="width-300">
 				</td>
-				<th class="req">ECRM 번호</th>
+				<th class="req">보존년한</th>
 				<td class="indent5">
-					<input type="text" name="number" id="number" class="width-300">
-				</td>
-			</tr>
-			<tr>
-				<th class="req lb">ECRM 진행여부</th>
-				<td colspan="3">
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="ecprStart" value="true" checked="checked">
-						<div class="state p-success">
-							<label>
-								<b>진행</b>
-							</label>
-						</div>
-					</div>
-					&nbsp;
-					<div class="pretty p-switch">
-						<input type="radio" name="ecprStart" value="false">
-						<div class="state p-success">
-							<label>
-								<b>미진행</b>
-							</label>
-						</div>
-					</div>
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">작성일</th>
-				<td class="indent5">
-					<input type="text" name="writeDate" id="writeDate" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
-				</td>
-				<th>승인일</th>
-				<td class="indent5">
-					<input type="text" name="approveDate" id="approveDate" class="width-100">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="createDate('approveDate');">
-				</td>
-			</tr>
-			<tr>
-				<th class="lb">작성부서</th>
-				<td class="indent5">
-					<select name="createDepart" id="createDepart" class="width-200">
-						<option value="">선택</option>
+					<select name="period" id="period" class="width-200">
 						<%
-						for (NumberCode deptcode : deptcodeList) {
+						for (NumberCode preseration : preserationList) {
 						%>
-						<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
+						<option value="<%=preseration.getCode()%>"><%=preseration.getName()%></option>
 						<%
 						}
 						%>
 					</select>
-				</td>
-				<th>작성자</th>
-				<td class="indent5">
-					<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-					<input type="hidden" name="writerOid" id="writerOid">
-					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 				</td>
 			</tr>
 			<tr>
@@ -119,7 +75,7 @@ String html = (String) request.getAttribute("html");
 				</td>
 			</tr>
 			<tr>
-				<th class="lb req">변경구분</th>
+				<th class="lb">변경구분</th>
 				<td colspan="3">
 					&nbsp;
 					<%
@@ -151,14 +107,6 @@ String html = (String) request.getAttribute("html");
 				</td>
 			</tr>
 			<tr>
-				<th class="req lb">주 첨부파일</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
-						<jsp:param value="" name="oid" />
-					</jsp:include>
-				</td>
-			</tr>
-			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
 					<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
@@ -168,12 +116,27 @@ String html = (String) request.getAttribute("html");
 			</tr>
 		</table>
 
+		<!-- 	관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
+
+		<!-- 	관련 ECO -->
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+			<jsp:param value="" name="oid" />
+			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
+		
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
-			<jsp:param value="150" name="height" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
 
@@ -181,22 +144,21 @@ String html = (String) request.getAttribute("html");
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
-			function create(temp) {
+			function create() {
 				const name = document.getElementById("name");
-				const number = document.getElementById("number");
+				const period = document.getElementById("period").value;
 				const secondarys = toArray("secondarys");
-				const ecprStart = document.querySelector("input[name=ecprStart]:checked").value;
-				const temprary = JSON.parse(temp);//true면 임시저장 false면 등록
-
-				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+				// 관련ECO
+				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 
@@ -207,60 +169,39 @@ String html = (String) request.getAttribute("html");
 					sections.push(item.value);
 				});
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
-				} else {
-					if (isEmpty(name.value)) {
-						alert("CR 제목을 입력해주세요.");
-						name.focus();
-						return;
-					}
+				if (isEmpty(name.value)) {
+					alert("ECRM 제목을 입력해주세요.");
+					name.focus();
+					return;
+				}
 
-					if (isEmpty(number.value)) {
-						alert("CR 번호를 선택해주세요.");
-						number.focus();
-						return;
-					}
+				if (isEmpty(period)) {
+					alert("보존년한을 선택하세요.");
+					return;
+				}
 
-					if (rows300.length == 0) {
-						alert("제품을 선택하세요.");
-						return;
-					}
+				if (rows300.length == 0) {
+					alert("제품을 선택하세요.");
+					popup300();
+					return;
+				}
 
-					if (sections.length === 0) {
-						alert("변경구분을 선택하세요.");
-						return false;
-					}
-
-					if (primary == null) {
-						alert("주 첨부파일을 첨부해주세요.");
-						return;
-					}
-
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
 				}
 
 				const content = DEXT5.getBodyValue("content");
-				
+
 				const params = {
 					name : name.value,
-					number : number.value,
-					writeDate : toId("writeDate"),
-					approveDate : toId("approveDate"),
-					createDepart_code : toId("createDepart"),
-					writer_oid : toId("writerOid"),
-					eoCommentA : content,
+					period : period,
+					contents : content,
 					sections : sections, //변경 구분
-					primary : primary == null ? '' : primary.value,
 					secondarys : secondarys,
 					rows101 : rows101,
 					rows300 : rows300,
-					temprary : temprary,
-					ecprStart : JSON.parse(ecprStart)
+					rows90 : rows90,
+					rows105 : rows105
 				}
 				const url = getCallUrl("/ecrm/create");
 				logger(params);
@@ -268,7 +209,7 @@ String html = (String) request.getAttribute("html");
 				call(url, params, function(data) {
 					alert(data.msg);
 					if (data.result) {
-						document.location.href = getCallUrl("/ecrm/create");
+						document.location.href = getCallUrl("/ecrm/list");
 					}
 					parent.closeLayer();
 				});
@@ -277,19 +218,22 @@ String html = (String) request.getAttribute("html");
 			// jquery 삭제를 해가는 쪽으로 한다..
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				date("writeDate");
-				date("approveDate");
-				selectbox("createDepart");
-				finderUser("writer");
+				selectbox("period");
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
+				createAUIGrid90(columns90);
+				createAUIGrid105(columns105);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID105);
 			});
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID101);
+				AUIGrid.resize(myGridID105);
 			});
 		</script>
 	</form>

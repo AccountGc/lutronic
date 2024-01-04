@@ -5,19 +5,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
-import com.e3ps.change.EChangeRequest;
-import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
-import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
-import com.e3ps.org.service.MailUserHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
-import wt.session.SessionHelper;
 
 @Getter
 @Setter
@@ -47,10 +43,11 @@ public class EcprDTO {
 	private String writeDate;
 	private String changeCode;
 	private String model;
-	
-	private ECPRRequest ecpr;
+	private String period_name;
+	private String period_code;
 	// auth
-	private boolean isModify = false;
+	private boolean _modify = false;
+	private boolean _delete = false;
 
 	// 변수용
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분
@@ -70,62 +67,32 @@ public class EcprDTO {
 		this((ECPRRequest) CommonUtil.getObject(oid));
 	}
 
-	public EcprDTO(ECPRRequest cr) throws Exception {
-		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
-		setName(StringUtil.checkNull(cr.getEoName()));
-		setNumber(StringUtil.checkNull(cr.getEoNumber()));
-		setApproveDate(StringUtil.checkNull(cr.getApproveDate()));
-		setCreateDepart_name(cr.getCreateDepart());
-		setWriter(cr.getWriter());
-		setChangeSection(cr.getChangeSection());
-		setEoCommentA(StringUtil.checkNull(cr.getEoCommentA()));
-		setEoCommentB(StringUtil.checkNull(cr.getEoCommentB()));
-		setEoCommentC(StringUtil.checkNull(cr.getEoCommentC()));
-		setContents(StringUtil.checkNull(cr.getContents()));
-
-		// 따로 추가
-		setState(cr.getLifeCycleState().getDisplay());
-		setCreatedDate(cr.getCreateTimestamp().toString().substring(0, 10));
-		setModifiedDate(cr.getModifyTimestamp());
-		setModifiedDate_text(cr.getModifyTimestamp().toString().substring(0, 10));
-		setCreator(cr.getCreatorFullName());
-		setCreateDepart(StringUtil.checkNull(cr.getCreateDepart()));
-		setWriteDate(StringUtil.checkNull(cr.getCreateDate()));
-		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
-		
-		setEcpr(cr);
-		setAuth();
-	}
-
-	/**
-	 * 회수 권한 승인중 && (소유자 || 관리자 ) && 기본 결재
-	 * 
-	 * @return
-	 */
-	public boolean isWithDraw() {
-		try {
-			return (state.equals("APPROVING") && (isOwner() || CommonUtil.isAdmin()));
-		} catch (Exception e) {
-			e.printStackTrace();
+	public EcprDTO(ECPRRequest ecpr) throws Exception {
+		setOid(ecpr.getPersistInfo().getObjectIdentifier().getStringValue());
+		setName(StringUtil.checkNull(ecpr.getEoName()));
+		setNumber(StringUtil.checkNull(ecpr.getEoNumber()));
+		setApproveDate(StringUtil.checkNull(ecpr.getApproveDate()));
+		setCreateDepart_name(ecpr.getCreateDepart());
+		setWriter(ecpr.getWriter());
+		setChangeSection(ecpr.getChangeSection());
+		setEoCommentA(StringUtil.checkNull(ecpr.getEoCommentA()));
+		setEoCommentB(StringUtil.checkNull(ecpr.getEoCommentB()));
+		setEoCommentC(StringUtil.checkNull(ecpr.getEoCommentC()));
+		setContents(StringUtil.checkNull(ecpr.getContents()));
+		setState(ecpr.getLifeCycleState().getDisplay());
+		setCreatedDate(ecpr.getCreateTimestamp().toString().substring(0, 10));
+		setModifiedDate(ecpr.getModifyTimestamp());
+		setModifiedDate_text(ecpr.getModifyTimestamp().toString().substring(0, 10));
+		setCreator(ecpr.getCreatorFullName());
+		setCreateDepart(StringUtil.checkNull(ecpr.getCreateDepart()));
+		setWriteDate(StringUtil.checkNull(ecpr.getCreateDate()));
+		setModel(EcprHelper.manager.displayToModel(ecpr.getModel()));
+		NumberCode period = NumberCodeHelper.manager.getNumberCode(ecpr.getPeriod(), "PRESERATION");
+		if (period != null) {
+			setPeriod_code(period.getCode());
+			setPeriod_name(period.getName());
 		}
-		return false;
-
-	}
-
-	/**
-	 * Owner 유무 체크
-	 * 
-	 * @return
-	 */
-	public boolean isOwner() {
-
-		try {
-			return SessionHelper.getPrincipal().getName().equals(getCreator());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return false;
+		setAuth(ecpr);
 	}
 
 	/**
@@ -135,23 +102,26 @@ public class EcprDTO {
 		this.changeCode = NumberCodeHelper.manager.getNumberCodeName(this.changeSection, "CHANGESECTION");
 		return changeCode;
 	}
-	
+
 	/**
 	 * 권한 설정
 	 */
-	private void setAuth() throws Exception {
-		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
-		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
-			setModify(true);
+	private void setAuth(ECPRRequest ecpr) throws Exception {
+		boolean isAdmin = CommonUtil.isAdmin();
+		if (check(ecpr, "LINE_REGISTER") || isAdmin) {
+			set_modify(true);
+		}
+		if (isAdmin) {
+			set_delete(true);
 		}
 	}
-	
+
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(ECPRRequest ecpr, String state) throws Exception {
 		boolean check = false;
-		String compare = getEcpr().getLifeCycleState().toString();
+		String compare = ecpr.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}

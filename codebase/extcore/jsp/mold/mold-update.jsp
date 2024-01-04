@@ -20,7 +20,6 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		</td>
 		<td class="right">
 			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-			<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -167,7 +166,6 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 	<tr>
 		<td class="center">
 			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-			<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -238,7 +236,8 @@ MoldDTO dto = (MoldDTO) request.getAttribute("dto");
 		params.moldcost = $("#moldcost").val();
 		params.interalnumber = $("#interalnumber").val();
 		params.deptcode_code = $("#deptcode").val();
-		var lifecycle = "<%=dto.getApprovaltype_code().equals("DEFAULT") ? "LC_Default" : "LC_Default_NonWF"%>";
+		var lifecycle = "<%=dto.getApprovaltype_code().equals("DEFAULT") ? "LC_Default" : "LC_Default_NonWF"%>
+	";
 		params.lifecycle = lifecycle;
 		params.partList = AUIGrid.getGridDataWithState(myGridID91, "gridState");
 		params.docList = AUIGrid.getGridDataWithState(myGridID90, "gridState");

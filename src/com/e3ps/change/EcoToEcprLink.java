@@ -17,9 +17,9 @@ import wt.util.WTException;
 public class EcoToEcprLink extends _EcoToEcprLink {
 	static final long serialVersionUID = 1;
 
-	public static EcoToEcprLink newEcoToEcprLink(EChangeOrder cro, ECPRRequest ecpr) throws WTException {
+	public static EcoToEcprLink newEcoToEcprLink(EChangeOrder eco, ECPRRequest ecpr) throws WTException {
 		EcoToEcprLink instance = new EcoToEcprLink();
-		instance.initialize(cr, ecpr);
+		instance.initialize(eco, ecpr);
 		return instance;
 	}
 }

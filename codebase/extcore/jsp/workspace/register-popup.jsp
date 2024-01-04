@@ -953,24 +953,10 @@ function moveRow() {
 	
 	// 결재선 삭제
 	function deleteRow() {
-	const checkedAgree = AUIGrid.getCheckedRowItems(myGridID2000);
-	for (let i = checkedAgree.length - 1; i >= 0; i--) {
-		const rowIndex = checkedAgree[i].rowIndex;
-		AUIGrid.removeRow(myGridID2000, rowIndex);
+		AUIGrid.removeCheckedRows(myGridID2000);
+		AUIGrid.removeCheckedRows(myGridID3000);
+		AUIGrid.removeCheckedRows(myGridID4000);
 	}
-
-	const checkedApproval = AUIGrid.getCheckedRowItems(myGridID3000);
-	for (let i = checkedApproval.length - 1; i >= 0; i--) {
-		let rowIndex = checkedApproval[i].rowIndex;
-		AUIGrid.removeRow(myGridID3000, rowIndex);
-	}
-
-	const checkedReceive = AUIGrid.getCheckedRowItems(myGridID4000);
-	for (let i = checkedReceive.length - 1; i >= 0; i--) {
-		const rowIndex = checkedReceive[i].rowIndex;
-		AUIGrid.removeRow(myGridID4000, rowIndex);
-	}
-}
 
 	
 	document.addEventListener("DOMContentLoaded", function() {

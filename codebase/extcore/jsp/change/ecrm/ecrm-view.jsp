@@ -1,9 +1,10 @@
+<%@page import="com.e3ps.change.ecrm.dto.EcrmDTO"%>
 <%@page import="com.e3ps.change.ecpr.dto.EcprDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-EcprDTO dto = (EcprDTO) request.getAttribute("dto");
+EcrmDTO dto = (EcrmDTO) request.getAttribute("dto");
 %>
 <style type="text/css">
 iframe {
@@ -21,7 +22,7 @@ iframe {
 		</td>
 		<td class="right">
 			<%
-			if (dto.is_modify()) {
+			if(dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
 			<%

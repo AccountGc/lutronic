@@ -189,14 +189,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 		style : "aui-left",
 	}, {
 		dataField : "changeSection",
-		headerText : "변경구분",
+		headerText : "변경사유",
 		dataType : "string",
+		style : "aui-left",
 		width : 220,
-	}, {
-		dataField : "ecprStart",
-		headerText : "ECPR 진행여부",
-		dataType : "string",
-		width : 120,
 	}, {
 		dataField : "createDepart",
 		headerText : "작성부서",
@@ -220,6 +216,10 @@ boolean multi = (boolean) request.getAttribute("multi");
 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 			if (value === "승인됨") {
 				return "approved";
+			} else if (value === "ECPR작성중") {
+				return "ecprStart";
+			} else if (value === "ECPR승인중") {
+				return "ecprApproving";
 			}
 			return null;
 		}
@@ -322,7 +322,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 	function <%=method%>() {
 		const checkedItems = AUIGrid.getCheckedRowItems(myGridID);
 		if (checkedItems.length === 0) {
-			alert("추가할 행을 선택하세요.");
+			alert("추가할 CR을 선택하세요.");
 			return false;
 		}
 		

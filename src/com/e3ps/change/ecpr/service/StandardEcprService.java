@@ -59,7 +59,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
-		boolean temprary = dto.isTemprary();
 
 		Transaction trs = new Transaction();
 		try {
@@ -128,14 +127,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 
 			// 관련 CR 링크
 			saveLink(ecpr, dto);
-
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
-			} else {
-				WorkDataHelper.service.create(ecpr);
-			}
+			WorkDataHelper.service.create(ecpr);
 			trs.commit();
 			trs = null;
 		} catch (Exception e) {

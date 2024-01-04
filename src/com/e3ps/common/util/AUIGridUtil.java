@@ -7,12 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.change.ecrm.service.EcrmHelper;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.doc.service.DocumentHelper;
 import com.e3ps.part.service.PartHelper;
@@ -190,6 +192,7 @@ public class AUIGridUtil {
 	public static JSONArray include(String oid, String type) throws Exception {
 		ArrayList<Map<String, Object>> list = new ArrayList<>();
 		Persistable per = CommonUtil.getObject(oid);
+		// 문서
 		if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
 			String docType = doc.getDocType().toString();
@@ -200,28 +203,29 @@ public class AUIGridUtil {
 			} else {
 				return DocumentHelper.manager.reference(oid, type);
 			}
+			// EO, ECO
 		} else if (per instanceof EChangeOrder) {
-			// EO, ECO 연관 객체
 			EChangeOrder eco = (EChangeOrder) per;
-			// ECO
 			if (eco.getEoType().equals("CHANGE")) {
 				return EcoHelper.manager.reference(oid, type);
-				// EO
 			} else {
 				return EoHelper.manager.reference(oid, type);
 			}
 
+			// CR
 		} else if (per instanceof EChangeRequest) {
-			// CR 연관 겍체
 			return CrHelper.manager.reference(oid, type);
+			// ECN
 		} else if (per instanceof EChangeNotice) {
-			// ECN 연관 객체
+			// ECPR
 		} else if (per instanceof ECPRRequest) {
-			// ECPR 연관 객체
 			return EcprHelper.manager.reference(oid, type);
+			// 부품
 		} else if (per instanceof WTPart) {
-			// part 연관 객체
 			return PartHelper.manager.reference(oid, type);
+			// ECRM
+		} else if(per instanceof ECRMRequest) {
+			return EcrmHelper.manager.reference(oid, type);
 		}
 
 		return JSONArray.fromObject(list);

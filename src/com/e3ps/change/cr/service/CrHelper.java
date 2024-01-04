@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.e3ps.change.CrToDocumentLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
+import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.cr.column.CrColumn;
+import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
@@ -64,8 +67,13 @@ public class CrHelper {
 		if (query.getConditionCount() > 0) {
 			query.appendAnd();
 		}
-		query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE,
-				SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
+
+		// 관리자가 아닐경우 결재선 지정은 제외한다
+		if (!CommonUtil.isAdmin()) {
+			query.appendWhere(new SearchCondition(EChangeRequest.class, EChangeRequest.LIFE_CYCLE_STATE,
+					SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
+		}
+
 		// 제목
 		QuerySpecUtils.toLikeAnd(query, idx, EChangeRequest.class, EChangeRequest.EO_NAME, name);
 		// 번호
@@ -200,10 +208,45 @@ public class CrHelper {
 		} else if ("MODEL".equalsIgnoreCase(type)) {
 			// 제품명
 			return JSONArray.fromObject(referenceCode(cr, list));
+		} else if ("eco".equalsIgnoreCase(type)) {
+			return JSONArray.fromObject(referenceEco(cr, list));
+		} else if ("doc".equalsIgnoreCase(type)) {
+			return JSONArray.fromObject(referenceDoc(cr, list));
 		}
 		return JSONArray.fromObject(list);
 	}
 
+	/**
+	 * CR과 돤련된 문서
+	 */
+	private Object referenceDoc(EChangeRequest cr, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(cr, "doc", CrToDocumentLink.class);
+		while (result.hasMoreElements()) {
+			WTDocument doc = (WTDocument) result.nextElement();
+			DocumentColumn dto = new DocumentColumn(doc);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * CR과 돤련된 ECO
+	 */
+	private Object referenceEco(EChangeRequest cr, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(cr, "eco", RequestOrderLink.class);
+		while (result.hasMoreElements()) {
+			EChangeOrder eco = (EChangeOrder) result.nextElement();
+			EcoColumn dto = new EcoColumn(eco);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * CR과 관련된 제품
+	 */
 	private Object referenceCode(EChangeRequest cr, ArrayList<Map<String, Object>> list) throws Exception {
 
 		String[] codes = cr.getModel() != null ? cr.getModel().split(",") : null;
@@ -228,6 +271,9 @@ public class CrHelper {
 		return list;
 	}
 
+	/**
+	 * CR과 돤련된 CR
+	 */
 	private Object referenceCr(EChangeRequest cr, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(cr, "useBy", EcrToEcrLink.class);
 		while (result.hasMoreElements()) {

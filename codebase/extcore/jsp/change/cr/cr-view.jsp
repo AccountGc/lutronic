@@ -23,14 +23,14 @@ iframe {
 		</td>
 		<td class="right">
 			<%
-			if (dto.is_modify() || isAdmin) {
+			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<%
 			}
 			%>
 			<%
-			if (dto.is_delete() || isAdmin) {
+			if (dto.is_delete()) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
@@ -45,9 +45,6 @@ iframe {
 	<ul>
 		<li>
 			<a href="#tabs-1">기본 정보</a>
-		</li>
-		<li>
-			<a href="#tabs-2">관련 객체</a>
 		</li>
 		<li>
 			<a href="#tabs-3">이력 관리</a>
@@ -73,14 +70,6 @@ iframe {
 				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
-				<th class="lb">등록자</th>
-				<td class="indent5"><%=dto.getCreator()%></td>
-				<th>등록일</th>
-				<td class="indent5"><%=dto.getCreatedDate_text()%></td>
-				<th>수정일</th>
-				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
-			</tr>
-			<tr>
 				<th class="lb">작성자</th>
 				<td class="indent5"><%=dto.getWriter() != null ? dto.getWriter() : ""%></td>
 				<th>작성부서</th>
@@ -89,18 +78,18 @@ iframe {
 				<td class="indent5"><%=dto.getWriteDate()%></td>
 			</tr>
 			<tr>
-				<!-- 				<th class="lb">제안자</th> -->
-				<%-- 				<td class="indent5"><%=dto.getProposer_name()%></td> --%>
-				<!-- 				<th class="lb">제품명</th> -->
-				<%-- 				<td><%=dto.getModel()%></td> --%>
-				<th class="lb">변경부분</th>
-				<td class="indent5" colspan="3"><%=dto.getChangeSection()%></td>
+				<th class="lb">변경사유</th>
+				<td class="indent5"><%=dto.getChangeSection()%></td>
+				<th>수정일</th>
+				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
 				<th>승인일</th>
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
 				<th class="lb">제품명</th>
-				<td colspan="5" class="indent5"><%=dto.getModel()%></td>
+				<td colspan="3" class="indent5"><%=dto.getModel()%></td>
+				<th>보존년한</th>
+				<td class="indent5"><%=dto.getPeriod_name()%></td>
 			</tr>
 			<%
 			if (dto.is_isNew()) {
@@ -122,7 +111,7 @@ iframe {
 			} else {
 			%>
 			<tr>
-				<th class="lb">변경사유</td>
+				<th class="lb">변경사유</th>
 				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentA" id="eoCommentA" readonly="readonly"><%=dto.getEoCommentA()%></textarea>
@@ -130,7 +119,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">변경사항</td>
+				<th class="lb">변경사항</th>
 				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentB" id="eoCommentB" readonly="readonly"><%=dto.getEoCommentB()%></textarea>
@@ -138,7 +127,7 @@ iframe {
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">참고사항</td>
+				<th class="lb">참고사항</th>
 				<td colspan="5" class="indent5">
 					<div class="textarea-auto">
 						<textarea name="eoCommentC" id="eoCommentC" readonly="readonly"><%=dto.getEoCommentC()%></textarea>
@@ -153,7 +142,7 @@ iframe {
 				<td colspan="5" class="indent5">
 					<%
 					Map<String, Object> contentMap = dto.getContentMap();
-					if(contentMap.size() > 0) {
+					if (contentMap != null) {
 					%>
 					<div>
 						<a href="<%=contentMap.get("url")%>">
@@ -164,7 +153,9 @@ iframe {
 					<%
 					} else {
 					%>
-					<font color="red"><b>등록된 주 첨부파일이 없습니다.</b></font>
+					<font color="red">
+						<b>등록된 주 첨부파일이 없습니다.</b>
+					</font>
 					<%
 					}
 					%>
@@ -179,11 +170,26 @@ iframe {
 				</td>
 			</tr>
 		</table>
-	</div>
-	<div id="tabs-2">
-		<!-- 관련 객체 -->
-		<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp">
+
+		<!-- 	관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
+
+		<!-- 	관련 ECO -->
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>
+
+		<!-- 	관련 CR -->
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
 	</div>
 	<div id="tabs-3">
@@ -226,14 +232,6 @@ iframe {
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-2":
-					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR 
-					if (isCreated101) {
-						AUIGrid.resize(myGridID101);
-					} else {
-						createAUIGrid101(columns101);
-					}
-					break;
 				case "tabs-3":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력 
 					if (isCreated51) {
@@ -258,10 +256,18 @@ iframe {
 			}
 		});
 		autoTextarea();
+		createAUIGrid90(columns90);
+		createAUIGrid101(columns101);
+		createAUIGrid105(columns105);
+		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID105);
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID105);
 		AUIGrid.resize(myGridID51);
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);

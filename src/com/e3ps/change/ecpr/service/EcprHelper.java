@@ -6,9 +6,13 @@ import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcoToEcprLink;
+import com.e3ps.change.EcprToDocumentLink;
 import com.e3ps.change.cr.column.CrColumn;
 import com.e3ps.change.cr.service.CrHelper;
+import com.e3ps.change.eco.column.EcoColumn;
 import com.e3ps.change.ecpr.column.EcprColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
@@ -18,9 +22,11 @@ import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
 import com.e3ps.common.util.QuerySpecUtils;
 import com.e3ps.common.util.StringUtil;
+import com.e3ps.doc.column.DocumentColumn;
 import com.ibm.icu.text.DecimalFormat;
 
 import net.sf.json.JSONArray;
+import wt.doc.WTDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -61,8 +67,10 @@ public class EcprHelper {
 			if (query.getConditionCount() > 0) {
 				query.appendAnd();
 			}
-			query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.LIFE_CYCLE_STATE,
-					SearchCondition.NOT_EQUAL, "TEMPRARY"), new int[] { idx });
+			if (!CommonUtil.isAdmin()) {
+				query.appendWhere(new SearchCondition(ECPRRequest.class, ECPRRequest.LIFE_CYCLE_STATE,
+						SearchCondition.NOT_EQUAL, "LINE_REGISTER"), new int[] { idx });
+			}
 
 			// 제목
 			QuerySpecUtils.toLikeAnd(query, idx, ECPRRequest.class, ECPRRequest.EO_NAME, name);
@@ -201,10 +209,45 @@ public class EcprHelper {
 		} else if ("MODEL".equalsIgnoreCase(type)) {
 			// 제품명
 			return JSONArray.fromObject(referenceCode(ecpr, list));
+		} else if ("doc".equalsIgnoreCase(type)) {
+			return JSONArray.fromObject(referenceDoc(ecpr, list));
+		} else if ("eco".equalsIgnoreCase(type)) {
+			return JSONArray.fromObject(referenceEco(ecpr, list));
 		}
 		return JSONArray.fromObject(list);
 	}
 
+	/**
+	 * ECPR과 관련된 ECO
+	 */
+	private Object referenceEco(ECPRRequest ecpr, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(ecpr, "eco", EcoToEcprLink.class);
+		while (result.hasMoreElements()) {
+			EChangeOrder eco = (EChangeOrder) result.nextElement();
+			EcoColumn dto = new EcoColumn(eco);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * ECPR과 관련된 DOC
+	 */
+	private Object referenceDoc(ECPRRequest ecpr, ArrayList<Map<String, Object>> list) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(ecpr, "doc", EcprToDocumentLink.class);
+		while (result.hasMoreElements()) {
+			WTDocument doc = (WTDocument) result.nextElement();
+			DocumentColumn dto = new DocumentColumn(doc);
+			Map<String, Object> map = AUIGridUtil.dtoToMap(dto);
+			list.add(map);
+		}
+		return list;
+	}
+
+	/**
+	 * ECPR과 관련된 CR
+	 */
 	private Object referenceCr(ECPRRequest ecpr, ArrayList<Map<String, Object>> list) throws Exception {
 		QueryResult result = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
 		while (result.hasMoreElements()) {
@@ -216,6 +259,9 @@ public class EcprHelper {
 		return list;
 	}
 
+	/**
+	 * ECPR과 관련된 제품
+	 */
 	private Object referenceCode(ECPRRequest ecpr, ArrayList<Map<String, Object>> list) throws Exception {
 		String[] codes = ecpr.getModel() != null ? ecpr.getModel().split(",") : null;
 

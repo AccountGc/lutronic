@@ -64,11 +64,29 @@ if(view || update){
 		headerText : "ECO 번호",
 		dataType : "string",
 		width : 120,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/eco/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 	}, {
 		dataField : "name",
 		headerText : "ECO 제목",
 		dataType : "string",
 		style : "aui-left",
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/eco/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 	}, {
 		dataField : "model",
 		headerText : "제품",
@@ -107,7 +125,7 @@ if(view || update){
 		dataType : "string",
 		width : 100,
 	}, {
-		dataField : "createdDate",
+		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "date",
 		width : 100,

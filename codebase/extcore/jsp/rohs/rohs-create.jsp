@@ -45,7 +45,6 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -163,7 +162,6 @@ List<Map<String, String>> typeList = (List<Map<String, String>>) request.getAttr
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>

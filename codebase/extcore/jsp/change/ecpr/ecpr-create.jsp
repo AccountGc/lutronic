@@ -33,7 +33,6 @@ iframe {
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
@@ -119,7 +118,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent7 pb8">
+				<td colspan="3" class="indent7 pb8">
 					<textarea name="contents" id="contents" style="display: none;"><%=html != null ? html : ""%></textarea>
 					<script type="text/javascript">
 						const html = toId("contents");
@@ -172,17 +171,17 @@ iframe {
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
-		
-		<!-- 	관련 CR -->
-		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
+
+		<!-- 	관련 ECO -->
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
 
-		<!-- 	관련 ECO -->
-		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+		<!-- 	관련 CR -->
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
 			<jsp:param value="true" name="multi" />
@@ -193,18 +192,20 @@ iframe {
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
-			function create(temp) {
+			function create() {
 				const name = document.getElementById("name");
 				const period = document.getElementById("period").value;
-				const temprary = JSON.parse(temp);
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+				// 관련ECO
+				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 
@@ -215,31 +216,24 @@ iframe {
 					sections.push(item.value);
 				});
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
+				if (isEmpty(name.value)) {
+					alert("ECPR 제목을 입력해주세요.");
+					name.focus();
+					return;
+				}
 
-				} else {
-					if (isEmpty(name.value)) {
-						alert("ECPR 제목을 입력해주세요.");
-						name.focus();
-						return;
-					}
+				if (isEmpty(period)) {
+					alert("보존년한을 선택하세요.");
+					return;
+				}
+				if (rows300.length == 0) {
+					alert("제품을 선택해주세요.");
+					popup300();
+					return;
+				}
 
-					if (isEmpty(period)) {
-						alert("보존년한을 선택하세요.");
-						return;
-					}
-					if (rows300.length == 0) {
-						alert("제품을 선택해주세요.");
-						popup300();
-						return;
-					}
-
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
 				}
 				const content = DEXT5.getBodyValue("content");
 
@@ -250,7 +244,8 @@ iframe {
 					sections : sections, //변경 구분
 					rows101 : rows101,
 					rows300 : rows300,
-					temprary : temprary
+					rows90 : rows90,
+					rows105 : rows105
 				}
 				const secondarys = toArray("secondarys");
 				params.secondarys = secondarys;
@@ -269,10 +264,8 @@ iframe {
 
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
-				date("writeDate");
-				date("approveDate");
 				selectbox("period");
-				createAUIGrid90(myGridID90);
+				createAUIGrid90(columns90);
 				createAUIGrid300(columns300);
 				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);

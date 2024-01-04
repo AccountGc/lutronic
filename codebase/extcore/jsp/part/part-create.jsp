@@ -40,7 +40,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-<!-- 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');"> -->
 				</td>
 			</tr>
 		</table>
@@ -353,7 +352,6 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-<!-- 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');"> -->
 				</td>
 			</tr>
 		</table>

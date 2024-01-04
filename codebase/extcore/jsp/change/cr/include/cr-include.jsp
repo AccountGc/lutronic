@@ -142,6 +142,10 @@ if (header) {
 		headerText : "승인일",
 		dataType : "string",
 		width : 100,
+	}, {
+		dataField : "oid",
+		dataType : "string",
+		visible : "oid"
 	} ]
 	
 	function createAUIGrid101(columnLayout) {

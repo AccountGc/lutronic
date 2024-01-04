@@ -33,16 +33,15 @@ iframe {
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 		<table class="create-table">
 			<colgroup>
 				<col width="150">
-				<col width="*">
+				<col width="600">
 				<col width="150">
-				<col width="*">
+				<col width="600">
 			</colgroup>
 			<tr>
 				<th class="req lb">CR 제목</th>
@@ -97,7 +96,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
-				<td colspan="5" class="indent7 pb8">
+				<td colspan="3" class="indent7 pb8">
 					<textarea name="contents" id="contents" style="display: none;"><%=html != null ? html : ""%></textarea>
 					<script type="text/javascript">
 						const html = toId("contents");
@@ -106,14 +105,14 @@ iframe {
 					</script>
 				</td>
 			</tr>
-<!-- 			<tr> -->
-<!-- 				<th class="lb">주 첨부파일</th> -->
-<!-- 				<td class="indent5" colspan="3"> -->
-<%-- 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp"> --%>
-<%-- 						<jsp:param value="" name="oid" /> --%>
-<%-- 					</jsp:include> --%>
-<!-- 				</td> -->
-<!-- 			</tr> -->
+			<!-- 			<tr> -->
+			<!-- 				<th class="lb">주 첨부파일</th> -->
+			<!-- 				<td class="indent5" colspan="3"> -->
+			<%-- 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp"> --%>
+			<%-- 						<jsp:param value="" name="oid" /> --%>
+			<%-- 					</jsp:include> --%>
+			<!-- 				</td> -->
+			<!-- 			</tr> -->
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
@@ -131,7 +130,7 @@ iframe {
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
-		
+
 		<!-- 	관련 ECO -->
 		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
 			<jsp:param value="" name="oid" />
@@ -152,23 +151,19 @@ iframe {
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 				</td>
 			</tr>
 		</table>
 
 		<script type="text/javascript">
-			function create(temp) {
+			function create() {
 				const name = document.getElementById("name");
 				const period = document.getElementById("period").value;
-// 				const number = document.getElementById("number");
 				const secondarys = toArray("secondarys");
-				// 				const ecprStart = document.querySelector("input[name=ecprStart]:checked").value;
-				const temprary = JSON.parse(temp);
-
-// 				const primary = document.querySelector("input[name=primary]");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 모델
@@ -181,36 +176,30 @@ iframe {
 					sections.push(item.value);
 				});
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
-				} else {
-					if (isEmpty(name.value)) {
-						alert("CR 제목을 입력해주세요.");
-						name.focus();
-						return;
-					}
-					
-					if (isEmpty(period)) {
-						alert("보존년한을 선택하세요.");
-						return;
-					}
+				if (isEmpty(name.value)) {
+					alert("CR 제목을 입력해주세요.");
+					name.focus();
+					return;
+				}
 
-					if (rows300.length == 0) {
-						alert("제품을 선택하세요.");
-						popup300();
-						return;
-					}
+				if (isEmpty(period)) {
+					alert("보존년한을 선택하세요.");
+					return;
+				}
 
-					if (sections.length === 0) {
-						alert("변경사유을 선택하세요.");
-						return false;
-					}
+				if (rows300.length == 0) {
+					alert("제품을 선택하세요.");
+					popup300();
+					return;
+				}
 
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+				if (sections.length === 0) {
+					alert("변경사유을 선택하세요.");
+					return false;
+				}
+
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
 				}
 
 				const content = DEXT5.getBodyValue("content");
@@ -220,11 +209,11 @@ iframe {
 					period : period,
 					contents : content,
 					sections : sections, //변경 구분
-					primary : primary == null ? "" : primary.value,
 					secondarys : secondarys,
 					rows101 : rows101,
+					rows105 : rows105,
 					rows300 : rows300,
-					temprary : temprary,
+					rows90 : rows90,
 				}
 				const url = getCallUrl("/cr/create");
 				logger(params);
