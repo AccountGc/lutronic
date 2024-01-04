@@ -124,6 +124,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 		</table>
+		<!-- 	관련 CR -->
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
+		</jsp:include>		
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
@@ -192,12 +199,14 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 		});
+		createAUIGrid101(columns101);
 		createAUIGrid700(columns700);
 		AUIGrid.resize(myGridID700);
 		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {
+		AUIGrid.resize(myGridID1010);
 		AUIGrid.resize(myGridID700);
 		AUIGrid.resize(myGridID500);
 		AUIGrid.resize(myGridID510);

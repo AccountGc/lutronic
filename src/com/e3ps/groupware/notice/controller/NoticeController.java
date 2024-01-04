@@ -79,7 +79,7 @@ public class NoticeController extends BaseController {
 	@Description(value = "공지사항 상세 페이지")
 	@GetMapping(value = "/view")
 	public ModelAndView view(@RequestParam String oid) throws Exception {
-		NoticeHelper.service.updateCount(oid);
+		NoticeHelper.service.read(oid);
 		Notice notice = (Notice) CommonUtil.getObject(oid);
 		NoticeDTO dto = new NoticeDTO(notice);
 		ModelAndView model = new ModelAndView();
@@ -91,7 +91,7 @@ public class NoticeController extends BaseController {
 	@Description(value = "공지사항 팝업 페이지")
 	@GetMapping(value = "/popup")
 	public ModelAndView popup(@RequestParam String oid) throws Exception {
-		NoticeHelper.service.updateCount(oid);
+		NoticeHelper.service.read(oid);
 		NoticeDTO dto = new NoticeDTO(oid);
 		ModelAndView model = new ModelAndView();
 		model.addObject("dto", dto);

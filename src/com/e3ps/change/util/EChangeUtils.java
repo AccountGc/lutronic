@@ -31,9 +31,13 @@ import net.sf.json.JSONArray;
 import wt.enterprise.RevisionControlled;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
+import wt.org.WTPrincipal;
 import wt.part.WTPart;
 import wt.part.WTPartMaster;
 import wt.query.QuerySpec;
+import wt.queue.ProcessingQueue;
+import wt.queue.QueueHelper;
+import wt.session.SessionHelper;
 import wt.vc.VersionControlHelper;
 import wt.vc.baseline.BaselineMember;
 import wt.vc.baseline.ManagedBaseline;
@@ -45,6 +49,13 @@ import wt.vc.views.View;
 public class EChangeUtils {
 
 	public static final EChangeUtils manager = new EChangeUtils();
+
+	/**
+	 * 설변 PDF 변환용
+	 */
+	private static final String processQueueName = "AttachPdfProcessQueue";
+	private static final String className = "com.e3ps.common.aspose.AsposeUtils";
+	private static final String methodName = "attachPdf";
 
 	/**
 	 * 중복 제거한 베이스 라인 가져오기??
@@ -181,20 +192,18 @@ public class EChangeUtils {
 			ArrayList<WTPart> list = EoHelper.manager.getter(eo, completeParts);
 
 			System.out.println("EO 대상 품목 개수 =  " + list.size());
-			
+
 			System.out.println("EO 대상품목 상태값 변경 시작");
 			EoHelper.service.eoPartApproved(eo, list);
 			System.out.println("EO 대상품목 상태값 변경 완료");
-			
 
 			// 개발이 없어진다.
 			SAPHelper.service.sendSapToEo(eo, completeParts, list);
 
 			EoHelper.service.saveBaseline(eo, completeParts);
-			
+
 			// IBA 값 세팅
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -379,5 +388,21 @@ public class EChangeUtils {
 		}
 
 		return list;
+	}
+
+	/**
+	 * 설변 PDF 변환용
+	 */
+	public void attachPdfMethod(String oid) throws Exception {
+		WTPrincipal principal = SessionHelper.manager.getPrincipal();
+		ProcessingQueue queue = (ProcessingQueue) QueueHelper.manager.getQueue(processQueueName, ProcessingQueue.class);
+
+		Hashtable<String, String> hash = new Hashtable<>();
+		hash.put("oid", oid);
+
+		Class[] argClasses = { Hashtable.class };
+		Object[] argObjects = { hash };
+
+		queue.addEntry(principal, methodName, className, argClasses, argObjects);
 	}
 }

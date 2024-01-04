@@ -1,11 +1,19 @@
 package com.e3ps.part.bom.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.context.annotation.Description;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +26,12 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.change.util.EChangeUtils;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.download.service.DownloadHistoryHelper;
 import com.e3ps.part.bom.service.BomHelper;
 
 import net.sf.json.JSONArray;
+import wt.content.ApplicationData;
+import wt.content.ContentServerHelper;
 import wt.part.WTPart;
 
 @Controller
@@ -269,15 +280,15 @@ public class BomController extends BaseController {
 	@PostMapping(value = "/batch")
 	@ResponseBody
 	public Map<String, Object> batch(@RequestBody Map<String, Object> params) throws Exception {
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<>();
 		try {
-			File file = BomHelper.manager.batch(params);
-			result.put("path", file.getPath());
+			File f = BomHelper.manager.batch(params);
+			result.put("url", f.getPath());
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("result", FAIL);
 			result.put("msg", e.toString());
+			result.put("result", false);
 		}
 		return result;
 	}

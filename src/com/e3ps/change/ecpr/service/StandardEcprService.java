@@ -1,23 +1,26 @@
 package com.e3ps.change.ecpr.service;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
 import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcoToEcprLink;
+import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
-import com.e3ps.org.service.MailUserHelper;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
-import com.e3ps.workspace.service.WorkDataService;
-import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -35,6 +38,7 @@ import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 
 public class StandardEcprService extends StandardManager implements EcprService {
@@ -48,17 +52,9 @@ public class StandardEcprService extends StandardManager implements EcprService 
 	@Override
 	public void create(EcprDTO dto) throws Exception {
 		String name = dto.getName();
-		String number = dto.getNumber();
-		String writeDate = dto.getWriteDate();
-		String approveDate = dto.getApproveDate();
-		String createDepart = dto.getCreateDepart();
-		String writer = dto.getWriter();
-//		String eoCommentA = dto.getEoCommentA();
-//		String eoCommentB = dto.getEoCommentB();
-//		String eoCommentC = dto.getEoCommentC();
+		String period = dto.getPeriod();
 		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
-		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
 
@@ -92,22 +88,27 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				}
 			}
 
+			Timestamp currentDate = new Timestamp(new Date().getTime());
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM");
+			String number = "ECPR-" + dateFormat.format(currentDate) + "-N";
+			number = EcprHelper.manager.getNextNumber(number);
+
+			WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+
 			ECPRRequest ecpr = ECPRRequest.newECPRRequest();
 			ecpr.setEoName(name);
 			ecpr.setEoNumber(number);
-			ecpr.setCreateDate(writeDate);
-			ecpr.setWriter(writer);
+			ecpr.setPeriod(period);
+			ecpr.setCreateDate(currentDate.toString().substring(0, 10));
+			ecpr.setWriter(sessionUser.getFullName());
 
-			ecpr.setApproveDate(approveDate);
-			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
+			PeopleDTO data = new PeopleDTO(sessionUser);
+			ecpr.setCreateDepart(data.getDepartment_name());
 			ecpr.setModel(model);
 			ecpr.setIsNew(true);
 
 			ecpr.setChangeSection(changeSection);
 			ecpr.setContents(contents);
-//			ecpr.setEoCommentA(eoCommentA);
-//			ecpr.setEoCommentB(eoCommentB);
-//			ecpr.setEoCommentC(eoCommentC);
 
 			String location = "/Default/설계변경/ECPR";
 			String lifecycle = "LC_Default";
@@ -123,7 +124,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			saveAttach(ecpr, dto);
 
 			// 관련 CR 링크
-			saveLink(ecpr, rows101);
+			saveLink(ecpr, dto);
 
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
@@ -172,7 +173,8 @@ public class StandardEcprService extends StandardManager implements EcprService 
 	/**
 	 * 관련 CR링크
 	 */
-	private void saveLink(ECPRRequest ecpr, ArrayList<Map<String, String>> rows101) throws Exception {
+	private void saveLink(ECPRRequest ecpr, EcprDTO dto) throws Exception {
+		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		for (Map<String, String> row101 : rows101) {
 			String gridState = row101.get("gridState");
 			// 신규 혹은 삭제만 있다. (added, removed
@@ -183,6 +185,19 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
+
+		ArrayList<Map<String, String>> rows105 = dto.getRows105(); // 관련 ECO
+		for (Map<String, String> row105 : rows105) {
+			String gridState = row105.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row105.get("oid");
+				EChangeOrder ref = (EChangeOrder) CommonUtil.getObject(oid);
+				EcoToEcprLink link = EcoToEcprLink.newEcoToEcprLink(ref, ecpr);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+
 	}
 
 	/**
@@ -293,7 +308,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 
 			// 링크 삭제
 			deleteLink(ecpr);
-			saveLink(ecpr, rows101);
+			saveLink(ecpr, dto);
 
 			trs.commit();
 			trs = null;

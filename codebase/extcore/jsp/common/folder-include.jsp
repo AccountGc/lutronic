@@ -38,7 +38,7 @@ String height = request.getParameter("height");
 <%if (isAdmin) {%>
 	AUIGrid.bind(_myGridID, "contextMenu", auiContextMenuHandler_);
 <%}%>
-	AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
+// 	AUIGrid.bind(_myGridID, "cellDoubleClick", auiCellDoubleClick);
 		AUIGrid.bind(_myGridID, "cellClick", auiCellClick);
 		AUIGrid.bind(_myGridID, "ready", auiReadyHandler);
 		tree();
@@ -127,6 +127,7 @@ String height = request.getParameter("height");
 		document.getElementById("oid").value = oid;
 		document.getElementById("location").value = location;
 		document.getElementById("locationText").innerText = location;
+		loadGridData();
 	}
 
 	let timerId = null;

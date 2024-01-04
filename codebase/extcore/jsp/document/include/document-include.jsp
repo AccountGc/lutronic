@@ -89,8 +89,8 @@ if (header) {
 			}
 		},		
 	}, {
-		dataField : "interalnumber",
-		headerText : "내부 문서번호",
+		dataField : "number",
+		headerText : "문서번호",
 		dataType : "string",
 		width : 180,
 		renderer : {

@@ -1429,7 +1429,8 @@ public class StandardPartService extends StandardManager implements PartService 
 
 			// LENI_TODO 삭제 관련정보 점검
 			QueryResult linkQr = PersistenceHelper.manager.navigate(part, "describedBy", WTPartDescribeLink.class);
-			QueryResult eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class);
+			QueryResult eolinkQr = PersistenceHelper.manager.navigate(part.getMaster(), "eco", EcoPartLink.class,
+					false);
 			List<PartToRohsLink> list = RohsHelper.manager.getPartToRohsLinkList(part);
 
 			// 도면 연계 체크
@@ -1440,24 +1441,42 @@ public class StandardPartService extends StandardManager implements PartService 
 				return result;
 			}
 
-			// 관련문서
-			if (linkQr.size() > 0) {
-				result.put("msg", "품목과 연계된 문서가 존재합니다.");
-				result.put("success", false);
-				return result;
-			}
+			boolean isAdmin = CommonUtil.isAdmin();
+			if (!isAdmin) {
 
-			if (!list.isEmpty()) {
-				result.put("msg", "품목과 연계된 물질이 존재합니다.");
-				result.put("success", false);
-				return result;
-			}
+				// 관련문서
+				if (linkQr.size() > 0) {
+					result.put("msg", "품목과 연계된 문서가 존재합니다.");
+					result.put("success", false);
+					return result;
+				}
 
-			// 관련EO
-			if (eolinkQr.size() > 0) {
-				result.put("msg", "품목과 연계된 EO가 존재합니다.");
-				result.put("success", false);
-				return result;
+				if (!list.isEmpty()) {
+					result.put("msg", "품목과 연계된 물질이 존재합니다.");
+					result.put("success", false);
+					return result;
+				}
+
+				// 관련EO
+				if (eolinkQr.size() > 0) {
+					result.put("msg", "품목과 연계된 EO/ECO가 존재합니다.");
+					result.put("success", false);
+					return result;
+				}
+			} else {
+				while (linkQr.hasMoreElements()) {
+					WTPartDescribeLink link = (WTPartDescribeLink) linkQr.nextElement();
+					PersistenceServerHelper.manager.remove(link);
+				}
+
+				for (PartToRohsLink link : list) {
+					PersistenceServerHelper.manager.remove(link);
+				}
+
+				while (eolinkQr.hasMoreElements()) {
+					EcoPartLink link = (EcoPartLink) eolinkQr.nextElement();
+					PersistenceServerHelper.manager.remove(link);
+				}
 			}
 
 			if (WorkInProgressHelper.isCheckedOut(part)) {

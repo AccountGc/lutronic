@@ -95,7 +95,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				String id = u.getId();
 				WTUser user = OrganizationServicesMgr.getUser(id);
 				if (user == null) {
-					PersistenceHelper.manager.delete(u);
+					//PersistenceHelper.manager.delete(u);
 				}
 			}
 

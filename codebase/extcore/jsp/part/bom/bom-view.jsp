@@ -54,6 +54,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 }
 </style>
 <input type="hidden" name="oid" id="oid" value="<%=oid%>">
+<input type="hidden" name="number" id="number" value="<%=root.getNumber()%>">
 <input type="hidden" name="sessionName" id="sessionName" value="<%=user.getFullName()%>">
 <table class="button-table">
 	<tr>
@@ -73,7 +74,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<select name="depth" id="depth" onchange="loadDepth();" class="AXSelect width-120">
+			<select name="depth" id="depth" onchange="loadDepth(this.value);" class="AXSelect width-120">
 				<option value="0">전체확장</option>
 				<option value="1">1레벨</option>
 				<option value="2" selected="selected">2레벨</option>
@@ -95,7 +96,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					</label>
 				</div>
 			</div>
+			<font color="red">
+				<b>썸네일(X)</b>
+			</font>
 			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
+			&nbsp;&nbsp;&nbsp;
+			<font color="blue">
+				<b>썸네일(O)</b>
+			</font>
+			<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="excel();">
 		</td>
 		<td class="right">
 			<select name="baseline" id="baseline" class="AXSelect width-150" onchange="reloadTree();">
@@ -108,6 +117,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				%>
 			</select>
+			<input type="button" value="도면일괄다운" title="도면일괄다운" class="red" onclick="batch();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -384,18 +394,20 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		})
 	}
 
-	function loadDepth() {
-		const sort = document.getElementById("sort").value;
-		const depth = document.getElementById("depth").value;
-		const skip = document.querySelector("input[name=skip]").checked;
-		const baseline = document.getElementById("baseline").value;
-		// 모든 레벨 열기
-		if (Number(depth) === 0) {
-			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
-			for (let j = 0; j < grid.length; j++) {
-				const item = grid[j];
-				const isLazy = item.isLazy;
-				if (isLazy) {
+	function loadDepth(depth) {
+		openLayer();
+		setTimeout(function() {
+
+			const sort = document.getElementById("sort").value;
+			const skip = document.querySelector("input[name=skip]").checked;
+			const baseline = document.getElementById("baseline").value;
+			// 모든 레벨 열기
+			if (Number(depth) === 0) {
+				const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
+				for (let j = 0; j < grid.length; j++) {
+					const item = grid[j];
+					const isLazy = item.isLazy;
+					// 				if (isLazy) {
 					const oid = item.oid;
 					const level = item.level;
 					const params = {
@@ -414,44 +426,44 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						AUIGrid.updateRow(myGridID, grid[j], rowIndex);
 					}, "POST", false);
 				}
-			}
-			const tree = AUIGrid.getTreeGridData(myGridID);
-			AUIGrid.setGridData(myGridID, tree);
-			AUIGrid.expandAll(myGridID);
-		} else {
-			for (let i = 0; i < depth; i++) {
-				const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", i + 1);
-				for (let j = 0; j < grid.length; j++) {
-					const item = grid[j];
-					const isLazy = item.isLazy;
-					const _$lazyRequested = item._$lazyRequested;
-					logger(_$lazyRequested);
-					if (isLazy && !_$lazyRequested) {
-						const oid = item.oid;
-						const level = item.level;
-						const params = {
-							oid : oid,
-							skip : JSON.parse(skip),
-							level : level,
-							desc : JSON.parse(sort),
-							baseline : baseline
-						};
+				closeLayer();
+				const tree = AUIGrid.getTreeGridData(myGridID);
+				AUIGrid.setGridData(myGridID, tree);
+				AUIGrid.expandAll(myGridID);
+			} else {
+				for (let i = 0; i < depth; i++) {
+					const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", i + 1);
+					for (let j = 0; j < grid.length; j++) {
+						const item = grid[j];
+						const isLazy = item.isLazy;
+						const _$lazyRequested = item._$lazyRequested;
+						if (isLazy && !_$lazyRequested) {
+							const oid = item.oid;
+							const level = item.level;
+							const params = {
+								oid : oid,
+								skip : JSON.parse(skip),
+								level : level,
+								desc : JSON.parse(sort),
+								baseline : baseline
+							};
 
-						const url = getCallUrl("/bom/lazyLoad")
-						call(url, params, function(data) {
-							grid[j].children = data.list;
-							if (depth - 1 != grid[j]._$depth) {
-								grid[j] = recursion(grid[j], depth, skip, sort, baseline);
-							}
+							const url = getCallUrl("/bom/lazyLoad")
+							call(url, params, function(data) {
+								grid[j].children = data.list;
+								if (depth - 1 != grid[j]._$depth) {
+									grid[j] = recursion(grid[j], depth, skip, sort, baseline);
+								}
 
-							const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
-							AUIGrid.updateRow(myGridID, grid[j], rowIndex);
-						}, "POST", false);
+								const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+								AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+							}, "POST", false);
+						}
 					}
 				}
+				end(depth);
 			}
-			end(depth);
-		}
+		}, 1000);
 	}
 
 	function _recursion(parent, skip, sort, baseline) {
@@ -515,6 +527,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 		const data = AUIGrid.getTreeGridData(myGridID);
 		AUIGrid.setGridData(myGridID, data);
 		AUIGrid.showItemsOnDepth(myGridID, depth);
+		closeLayer();
 	}
 
 	function expandAll() {
@@ -568,9 +581,56 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID);
 	});
-	
+
+	function batch() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/bom/batch?oid=" + oid + "&target=epm");
+		_popup(url, 500, 350, "n");
+	}
+
+	function excel() {
+		alert("개발 진행중");
+	}
+
 	function exportExcel() {
-		const sessionName = document.getElementById("sessionName").value;
-		exportToExcel("BOM", "BOM", "BOM", [], sessionName);
+		const sort = document.getElementById("sort").value;
+		const skip = document.querySelector("input[name=skip]").checked;
+		const baseline = document.getElementById("baseline").value;
+		openLayer();
+		setTimeout(function() {
+			const grid = AUIGrid.getItemsByValue(myGridID, "_$depth", 1);
+			for (let j = 0; j < grid.length; j++) {
+				const item = grid[j];
+				const isLazy = item.isLazy;
+				// 				if (isLazy) {
+				const oid = item.oid;
+				const level = item.level;
+				const params = {
+					oid : oid,
+					skip : JSON.parse(skip),
+					level : level,
+					desc : JSON.parse(sort),
+					baseline : baseline
+				};
+
+				const url = getCallUrl("/bom/lazyLoad")
+				call(url, params, function(data) {
+					grid[j].children = data.list;
+					grid[j] = _recursion(grid[j], skip, sort, baseline);
+					const rowIndex = AUIGrid.rowIdToIndex(myGridID, grid[j]._$uid);
+					AUIGrid.updateRow(myGridID, grid[j], rowIndex);
+				}, "POST", false);
+			}
+			closeLayer();
+			const tree = AUIGrid.getTreeGridData(myGridID);
+			AUIGrid.setGridData(myGridID, tree);
+			AUIGrid.expandAll(myGridID);
+		}, 1000);
+		
+		setTimeout(function() {
+			const sessionName = document.getElementById("sessionName").value;
+			const number = document.getElementById("number").value;
+			exportToExcel(number + "_BOM 리스트", number + "_BOM 리스트", number + "_BOM 리스트", [], sessionName);
+		}, 1000);
 	}
 </script>

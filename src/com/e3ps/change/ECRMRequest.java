@@ -1,4 +1,3 @@
-
 package com.e3ps.change;
 
 import com.e3ps.common.util.OwnPersistable;

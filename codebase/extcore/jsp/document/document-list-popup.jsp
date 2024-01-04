@@ -66,9 +66,9 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 			}
 			%>
 		</td>
-		<th>내부 문서번호</th>
+		<th>문서번호</th>
 		<td class="indent5">
-			<input type="text" name="interalnumber" id="interalnumber" class="width-300">
+			<input type="text" name="number" id="number" class="width-300">
 		</td>
 		<th>문서명</th>
 		<td class="indent5">
@@ -277,8 +277,8 @@ const columns = [ {
 	style : "aui-left",
 	width : 350,
 }, {
-	dataField : "interalnumber",
-	headerText : "내부 문서번호",
+	dataField : "number",
+	headerText : "문서번호",
 	dataType : "string",
 	width : 180,
 }, {
@@ -346,22 +346,6 @@ const columns = [ {
 	headerText : "수정일",
 	dataType : "date",
 	width : 100,
-// }, {
-// 	dataField : "primary",
-// 	headerText : "주 첨부파일",
-// 	dataType : "string",
-// 	width : 80,
-// 	renderer : {
-// 		type : "TemplateRenderer"
-// 	},
-// }, {
-// 	dataField : "secondary",
-// 	headerText : "첨부파일",
-// 	dataType : "string",
-// 	width : 100,
-// 	renderer : {
-// 		type : "TemplateRenderer"
-// 	},
 } ]
 
 function createAUIGrid(columnLayout) {
@@ -446,7 +430,7 @@ function loadGridData(movePage) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-	toFocus("interalnumber");
+	toFocus("number");
 	const contenxtHeader = genColumnHtml(columns);
 	$("#h_item_ul").append(contenxtHeader);
 	$("#headerMenu").menu({

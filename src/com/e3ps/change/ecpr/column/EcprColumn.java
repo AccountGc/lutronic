@@ -29,6 +29,7 @@ public class EcprColumn {
 	private String createdDate_txt;
 	private String creator;
 	private String writeDate;
+	private String period;
 
 	public EcprColumn() {
 
@@ -38,20 +39,21 @@ public class EcprColumn {
 		this((ECPRRequest) obj[0]);
 	}
 	
-	public EcprColumn(ECPRRequest cr) throws Exception {
-		setOid(cr.getPersistInfo().getObjectIdentifier().getStringValue());
-		setName(cr.getEoName());
-		setNumber(cr.getEoNumber());
-		setChangeSection(EcprHelper.manager.displayToSection(cr.getChangeSection()));
-		setModel(EcprHelper.manager.displayToModel(cr.getModel()));
-		setCreateDepart(cr.getCreateDepart());
-		setWriter(cr.getWriter());
-		setApproveDate(cr.getApproveDate());
-		setState(cr.getLifeCycleState().getDisplay());
-		setCreator(cr.getCreatorFullName());
-		setCreatedDate(cr.getCreateTimestamp());
-		setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
-		setCreator(cr.getCreatorFullName());
-		setWriteDate(cr.getCreateDate());
+	public EcprColumn(ECPRRequest ecpr) throws Exception {
+		setOid(ecpr.getPersistInfo().getObjectIdentifier().getStringValue());
+		setName(ecpr.getEoName());
+		setNumber(ecpr.getEoNumber());
+		setChangeSection(EcprHelper.manager.displayToSection(ecpr.getChangeSection()));
+		setModel(EcprHelper.manager.displayToModel(ecpr.getModel()));
+		setCreateDepart(ecpr.getCreateDepart());
+		setWriter(ecpr.getWriter());
+		setApproveDate(ecpr.getApproveDate());
+		setState(ecpr.getLifeCycleState().getDisplay());
+		setCreator(ecpr.getCreatorFullName());
+		setCreatedDate(ecpr.getCreateTimestamp());
+		setCreatedDate_txt(ecpr.getCreateTimestamp().toString().substring(0, 10));
+		setCreator(ecpr.getCreatorFullName());
+		setWriteDate(ecpr.getCreateDate());
+		setPeriod(ecpr.getPeriod());
 	}
 }

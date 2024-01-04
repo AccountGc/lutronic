@@ -43,7 +43,7 @@ public class CrColumn {
 		setName(cr.getEoName());
 		setNumber(cr.getEoNumber());
 		setModel(CrHelper.manager.displayToModel(cr.getModel()));
-		setChangeSection(CrHelper.manager.displayToSection(cr.getChangeSection()));
+		setChangeSection(cr.getChangeSection());
 //		setCreateDepart(CrHelper.manager.displayToDept(cr.getCreateDepart()));
 		setCreateDepart(cr.getCreateDepart());
 		setWriter(cr.getWriter());
@@ -53,6 +53,6 @@ public class CrColumn {
 		setCreatedDate(cr.getCreateTimestamp());
 		setCreatedDate_txt(cr.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate(cr.getApproveDate());
-		setEcprStart(cr.getEcprStart() ? "ECPR진행" : "ECPR미진행");
+//		setEcprStart(cr.getEcprStart() ? "ECPR진행" : "ECPR미진행");
 	}
 }

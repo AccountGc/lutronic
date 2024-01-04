@@ -40,12 +40,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				<col width="*">
 			</colgroup>
 			<tr>
-				<th>결재 제목</th>
-				<td class="indent5" colspan="3">
-					<input type="text" name="name" id="name" class="width-300">
-				</td>
-			</tr>
-			<tr>
 				<th>기안자</th>
 				<td class="indent5">
 					<input type="text" name="submiter" id="submiter" data-multi="false">
@@ -81,21 +75,13 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			</tr>
 		</table>
 
-		<div id="grid_wrap" style="height: 635px; border-top: 1px solid #3180c3;"></div>
+		<div id="grid_wrap" style="height: 665px; border-top: 1px solid #3180c3;"></div>
 		<div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 		<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 		<script type="text/javascript">
 			let myGridID;
 			function _layout() {
 				return [ {
-					dataField : "read",
-					headerText : "확인",
-					dataType : "boolean",
-					width : 60,
-					renderer : {
-						type : "CheckBoxEditRenderer",
-					}
-				}, {
 					dataField : "work",
 					headerText : "업무",
 					dataType : "string",
@@ -216,7 +202,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
-				toFocus("name");
 				const columns = loadColumnLayout("workData-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);

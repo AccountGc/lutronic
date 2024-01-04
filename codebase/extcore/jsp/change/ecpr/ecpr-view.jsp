@@ -1,9 +1,6 @@
 <%@page import="com.e3ps.change.ecpr.dto.EcprDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
-<%@include file="/extcore/jsp/common/css.jsp"%>
-<%@include file="/extcore/jsp/common/script.jsp"%>
-<%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 EcprDTO dto = (EcprDTO) request.getAttribute("dto");
@@ -27,7 +24,7 @@ iframe {
 			if (isAdmin || dto.isModify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
-			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
 			%>
@@ -41,9 +38,9 @@ iframe {
 		<li>
 			<a href="#tabs-1">기본 정보</a>
 		</li>
-		<li>
-			<a href="#tabs-2">관련 객체</a>
-		</li>
+		<!-- 		<li> -->
+		<!-- 			<a href="#tabs-2">관련 객체</a> -->
+		<!-- 		</li> -->
 		<li>
 			<a href="#tabs-3">이력 관리</a>
 		</li>
@@ -89,7 +86,7 @@ iframe {
 				<th>제품명</th>
 				<td class="indent5"><%=dto.getModel()%></td>
 				<th>변경구분</th>
-				<td class="indent5"><%=dto.getChangeCode()%></td>
+				<td class="indent5"><%=dto.getChangeSection() != null ? dto.getChangeSection() : ""%></td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
@@ -133,13 +130,27 @@ iframe {
 				</td>
 			</tr>
 		</table>
-	</div>
-	<div id="tabs-2">
-		<!-- 관련 객체 -->
-		<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp">
+		<!-- 	관련 CR -->
+		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="true" name="header" />
+			<jsp:param value="true" name="multi" />
+		</jsp:include>
+		<!-- 	관련 ECO -->
+		<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="true" name="header" />
+			<jsp:param value="true" name="multi" />
 		</jsp:include>
 	</div>
+	<!-- 	<div id="tabs-2"> -->
+	<!-- 		<!-- 관련 객체 -->
+	<%-- 		<jsp:include page="/extcore/jsp/change/cr/include/cr-reference-include.jsp"> --%>
+	<%-- 			<jsp:param value="<%=dto.getOid()%>" name="oid" /> --%>
+	<%-- 		</jsp:include> --%>
+	<!-- 	</div> -->
 	<div id="tabs-3">
 		<!-- 이력관리 -->
 		<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-record-include.jsp">
@@ -154,7 +165,7 @@ iframe {
 		document.location.href = url;
 	}
 
-	function deleteBtn() {
+	function _delete() {
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
@@ -184,14 +195,6 @@ iframe {
 			activate : function(event, ui) {
 				var tabId = ui.newPanel.prop("id");
 				switch (tabId) {
-				case "tabs-2":
-					const isCreated101 = AUIGrid.isCreated(myGridID101); // CR
-					if (isCreated101) {
-						AUIGrid.resize(myGridID101);
-					} else {
-						createAUIGrid101(columns101);
-					}
-					break;
 				case "tabs-3":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
 					if (isCreated51) {
@@ -215,10 +218,15 @@ iframe {
 				}
 			}
 		});
+		createAUIGrid101(columns101)
+		AUIGrid.resize(myGridID101);
+		createAUIGrid105(columns105)
+		AUIGrid.resize(myGridID105);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID300);
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID105);
 	});
 </script>

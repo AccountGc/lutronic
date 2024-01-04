@@ -1,20 +1,25 @@
 package com.e3ps.change.cr.service;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
+import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EcrToEcrLink;
+import com.e3ps.change.RequestOrderLink;
 import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.content.service.CommonContentHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
+import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.org.service.MailUserHelper;
 import com.e3ps.workspace.service.WorkDataHelper;
-import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
 import wt.content.ContentHelper;
@@ -29,8 +34,10 @@ import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
 import wt.lifecycle.State;
+import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
+import wt.session.SessionHelper;
 import wt.util.WTException;
 
 public class StandardCrService extends StandardManager implements CrService {
@@ -44,18 +51,19 @@ public class StandardCrService extends StandardManager implements CrService {
 	@Override
 	public void create(CrDTO dto) throws Exception {
 		String name = dto.getName();
-		String number = dto.getNumber();
-		String approveDate = dto.getApproveDate();
-		String writeDate = dto.getWriteDate();
-		String createDepart = dto.getCreateDepart();
-		String writer = dto.getWriter();
+//		String number = dto.getNumber();
+//		String approveDate = dto.getApproveDate();
+//		String writeDate = dto.getWriteDate();
+//		String createDepart = dto.getCreateDepart();
+//		String writer = dto.getWriter();
 //		String proposer_name= dto.getProposer_name();
 //		String eoCommentA = dto.getEoCommentA();
 //		String eoCommentB = dto.getEoCommentB();
 //		String eoCommentC = dto.getEoCommentC();
 		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
-		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
+//		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
+//		ArrayList<Map<String, String>> rows105 = dto.getRows105(); // 관련 ECO
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		boolean temprary = dto.isTemprary();
 		boolean ecprStart = dto.isEcprStart();
@@ -90,16 +98,27 @@ public class StandardCrService extends StandardManager implements CrService {
 				}
 			}
 
+			Date currentDate = new Date();
+
+			// 원하는 날짜 형식을 설정합니다.
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yy-MM");
+			String number = "CR-" + dateFormat.format(currentDate) + "-N";
+			number = CrHelper.manager.getNextNumber(number);
+
+			WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
+
 			EChangeRequest cr = EChangeRequest.newEChangeRequest();
 			cr.setEoName(name);
 			cr.setEoNumber(number);
-			cr.setCreateDate(writeDate);
-			cr.setWriter(writer);
-			cr.setApproveDate(approveDate);
+			cr.setCreateDate(currentDate.toString().substring(0, 10)); // 작성하는 날짜
+			cr.setWriter(sessionUser.getFullName());
+//			cr.setApproveDate(approveDate);
 			cr.setIsNew(true);
 
 //			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
-			cr.setCreateDepart(createDepart); // 코드 넣엇을듯..
+
+			PeopleDTO data = new PeopleDTO(sessionUser);
+			cr.setCreateDepart(data.getDepartment_name());
 			cr.setModel(model);
 
 //			cr.setProposer(proposer_name);				
@@ -108,7 +127,7 @@ public class StandardCrService extends StandardManager implements CrService {
 //			cr.setEoCommentB(eoCommentB);
 //			cr.setEoCommentC(eoCommentC);
 			cr.setContents(contents);
-			cr.setEcprStart(ecprStart);
+//			cr.setEcprStart(ecprStart);
 
 			String location = "/Default/설계변경/ECR";
 			String lifecycle = "LC_ECR";
@@ -127,7 +146,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			saveAttach(cr, dto);
 
 			// 관련 CR 링크
-			saveLink(cr, rows101);
+			saveLink(cr, dto);
 
 			if (temprary) {
 				State state = State.toState("TEMPRARY");
@@ -135,12 +154,13 @@ public class StandardCrService extends StandardManager implements CrService {
 				LifeCycleHelper.service.setLifeCycleState(cr, state);
 			} else {
 				// ECPR 진행시...
-				if (ecprStart) {
-					State state = State.toState("CREATE_ECPR");
-					LifeCycleHelper.service.setLifeCycleState(cr, state);
-				} else {
-					WorkDataHelper.service.create(cr);
-				}
+				// 추후 사용...
+//				if (ecprStart) {
+//					State state = State.toState("CREATE_ECPR");
+//					LifeCycleHelper.service.setLifeCycleState(cr, state);
+//				} else {
+				WorkDataHelper.service.create(cr);
+//				}
 			}
 
 			trs.commit();
@@ -158,7 +178,8 @@ public class StandardCrService extends StandardManager implements CrService {
 	/**
 	 * 관련 CR링크
 	 */
-	private void saveLink(EChangeRequest cr, ArrayList<Map<String, String>> rows101) throws Exception {
+	private void saveLink(EChangeRequest cr, CrDTO dto) throws Exception {
+		ArrayList<Map<String, String>> rows101 = dto.getRows101();
 		for (Map<String, String> row101 : rows101) {
 			String gridState = row101.get("gridState");
 			// 신규 혹은 삭제만 있다. (added, removed
@@ -166,6 +187,17 @@ public class StandardCrService extends StandardManager implements CrService {
 				String oid = row101.get("oid");
 				EChangeRequest ref = (EChangeRequest) CommonUtil.getObject(oid);
 				EcrToEcrLink link = EcrToEcrLink.newEcrToEcrLink(cr, ref);
+				PersistenceServerHelper.manager.insert(link);
+			}
+		}
+		ArrayList<Map<String, String>> rows105 = dto.getRows105();
+		for (Map<String, String> row105 : rows105) {
+			String gridState = row105.get("gridState");
+			// 신규 혹은 삭제만 있다. (added, removed
+			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
+				String oid = row105.get("oid");
+				EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+				RequestOrderLink link = RequestOrderLink.newRequestOrderLink(eco, cr);
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}

@@ -113,8 +113,8 @@ iframe {
 				</th>
 			</tr>
 			<tr>
-				<th class="lb">내부문서번호</th>
-				<td class="indent5"><%=dto.getInteralnumber()%></td>
+				<th class="lb">문서번호</th>
+				<td class="indent5"><%=dto.getNumber()%></td>
 				<th>문서분류</th>
 				<td class="indent5"><%=dto.getLocation()%></td>
 				<th>상태</th>

@@ -40,7 +40,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+<!-- 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');"> -->
 				</td>
 			</tr>
 		</table>
@@ -353,7 +353,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
+<!-- 					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');"> -->
 				</td>
 			</tr>
 		</table>
@@ -368,7 +368,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const partType2 = document.getElementById("partType2").value;
 				const partName3 = document.getElementById("partName3").value;
 				const partType3 = document.getElementById("partType3").value;
-				const partName4 = document.getElementById("partName4").value;
+				const partName4 = document.getElementById("partName4");
 				const model = document.getElementById("model").value;
 				const productmethod = document.getElementById("productmethod").value;
 				const deptcode = document.getElementById("deptcode").value;
@@ -390,32 +390,31 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					return false;
 				}
 				
+	            if(isEmpty(partType1)){
+					alert("품목구분을 입력하세요.");
+					return;					
+				}
+	            if(isEmpty(partType2)){
+					alert("대분류를 입력하세요.");
+					return;					
+				}
+	            if(isEmpty(partType3)){
+					alert("중분류를 입력하세요.");
+					return;					
+				}
+				if(isEmpty(partName4.value)){
+					alert("품목명(KEY-IN)을 입력하세요.");
+					partName4.focus();
+					return;					
+				}
+				
 				if (temprary) {
 					if (!confirm("임시저장하시겠습니까??")) {
 						return false;
 					}
 					
 				} else {
-					if(isEmpty(location)){
-						alert("품목구분을 입력하세요.");
-						return;					
-					}
-		            if(isEmpty(partType1)){
-						alert("품목구분을 입력하세요.");
-						return;					
-					}
-		            if(isEmpty(partType2)){
-						alert("대분류를 입력하세요.");
-						return;					
-					}
-		            if(isEmpty(partType3)){
-						alert("중분류를 입력하세요.");
-						return;					
-					}
-					if(isEmpty(partName4)){
-						alert("품목명(KEY-IN)을 입력하세요.");
-						return;					
-					}
+
 					if(isEmpty(model)){
 						alert("프로젝트 코드를 선택하세요.");
 						return;					
@@ -442,7 +441,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						partName1 : partName1,
 						partName2 : partName2,
 						partName3 : partName3,
-						partName4 : partName4,
+						partName4 : partName4.value,
 						partType1 : partType1,
 						partType2 : partType2,
 						partType3 : partType3,

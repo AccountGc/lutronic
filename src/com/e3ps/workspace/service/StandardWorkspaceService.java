@@ -8,11 +8,15 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.e3ps.change.CrToEcprLink;
+import com.e3ps.change.ECOChange;
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.eco.service.EcoHelper;
 import com.e3ps.change.eo.service.EoHelper;
+import com.e3ps.change.util.EChangeUtils;
+import com.e3ps.common.aspose.AsposeUtils;
 import com.e3ps.common.mail.MailHtmlContentTemplate;
 import com.e3ps.common.mail.MailUtil;
 import com.e3ps.common.util.CommonUtil;
@@ -228,12 +232,12 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			LifeCycleHelper.service.setLifeCycleState((LifeCycleManaged) lcm, State.toState("APPROVING"));
 
 			if (per instanceof ECPRRequest) {
-				ECPRRequest ecpr = (ECPRRequest) per;
-				QueryResult qr = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
-				while (qr.hasMoreElements()) {
-					EChangeRequest cr = (EChangeRequest) qr.nextElement();
-					LifeCycleHelper.service.setLifeCycleState(cr, State.toState("APPROVAL_ECPR"));
-				}
+//				ECPRRequest ecpr = (ECPRRequest) per;
+//				QueryResult qr = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
+//				while (qr.hasMoreElements()) {
+//					EChangeRequest cr = (EChangeRequest) qr.nextElement();
+//					LifeCycleHelper.service.setLifeCycleState(cr, State.toState("APPROVAL_ECPR"));
+//				}
 			}
 
 //			if (lcm instanceof EChangeOrder) {
@@ -528,13 +532,27 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				}
 			}
 
+			// aspose pdf 변경 3가지가..
 			if (per instanceof ECPRRequest) {
+				System.out.println("ECPR PDF 변경!");
 				ECPRRequest ecpr = (ECPRRequest) per;
-				QueryResult qr = PersistenceHelper.manager.navigate(ecpr, "cr", CrToEcprLink.class);
-				while (qr.hasMoreElements()) {
-					EChangeRequest cr = (EChangeRequest) qr.nextElement();
-					WorkDataHelper.service.create(cr); // 자동으로 결재 시작 CR
-				}
+				ecpr.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
+				ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
+				EChangeUtils.manager.attachPdfMethod(ecpr.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
+
+			if (per instanceof ECRMRequest) {
+				ECRMRequest ecrm = (ECRMRequest) per;
+				ecrm.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
+				ecrm = (ECRMRequest) PersistenceHelper.manager.modify(ecrm);
+				EChangeUtils.manager.attachPdfMethod(ecrm.getPersistInfo().getObjectIdentifier().getStringValue());
+			}
+
+			if (per instanceof EChangeRequest) {
+				EChangeRequest cr = (EChangeRequest) per;
+				cr.setApproveDate(new Timestamp(new Date().getTime()).toString().substring(0, 10));
+				cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
+				EChangeUtils.manager.attachPdfMethod(cr.getPersistInfo().getObjectIdentifier().getStringValue());
 			}
 
 			// EO/ ECO

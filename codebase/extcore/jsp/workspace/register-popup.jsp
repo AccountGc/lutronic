@@ -915,7 +915,8 @@ function moveRow() {
 		call(url, null, function(data) {
 			alert(data.msg);
 			if(data.result) {
-				loadGridLine();
+				loadLine();
+				loadFavorite();
 			} else {
 				AUIGrid.removeAjaxLoader(myGridID5000);
 			}
@@ -966,7 +967,7 @@ function moveRow() {
 
 	const checkedReceive = AUIGrid.getCheckedRowItems(myGridID4000);
 	for (let i = checkedReceive.length - 1; i >= 0; i--) {
-		const rowIndex = checkedItems[i].rowIndex;
+		const rowIndex = checkedReceive[i].rowIndex;
 		AUIGrid.removeRow(myGridID4000, rowIndex);
 	}
 }

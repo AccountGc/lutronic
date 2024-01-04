@@ -61,27 +61,42 @@ if (header) {
 		headerText : "CR 번호",
 		dataType : "string",
 		width : 150,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/cr/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 	}, {
 		dataField : "name",
 		headerText : "CR 제목",
 		dataType : "string",
 		style : "aui-left",
-		width : 250,
+		width : 300,
+		renderer : {
+			type : "LinkRenderer",
+			baseUrl : "javascript",
+			jsCallback : function(rowIndex, columnIndex, value, item) {
+				const oid = item.oid;
+				const url = getCallUrl("/cr/view?oid=" + oid);
+				_popup(url, 1600, 800, "n");
+			}
+		},
 	}, {
 		dataField : "model",
 		headerText : "제품명",
 		dataType : "string",
 		width : 220,
+		style : "aui-left",
 	}, {
 		dataField : "changeSection",
-		headerText : "변경구분",
+		headerText : "변경사유",
 		dataType : "string",
+		style : "aui-left",
 		width : 220,
-	}, {
-		dataField : "ecprStart",
-		headerText : "ECPR 진행여부",
-		dataType : "string",
-		width : 120,
 	}, {
 		dataField : "createDepart",
 		headerText : "작성부서",
@@ -105,6 +120,10 @@ if (header) {
 		styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 			if (value === "승인됨") {
 				return "approved";
+			} else if (value === "ECPR작성중") {
+				return "ecprStart";
+			} else if (value === "ECPR승인중") {
+				return "ecprApproving";
 			}
 			return null;
 		}
@@ -114,7 +133,7 @@ if (header) {
 		dataType : "string",
 		width : 100,
 	}, {
-		dataField : "createdDate",
+		dataField : "createdDate_txt",
 		headerText : "등록일",
 		dataType : "date",
 		width : 100,
@@ -123,10 +142,6 @@ if (header) {
 		headerText : "승인일",
 		dataType : "string",
 		width : 100,
-	}, {
-		dataField : "oid",
-		dataType : "string",
-		visible : false
 	} ]
 	
 	function createAUIGrid101(columnLayout) {

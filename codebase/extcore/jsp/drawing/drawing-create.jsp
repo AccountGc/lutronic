@@ -1,10 +1,6 @@
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="wt.org.WTUser"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-// boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,22 +12,23 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="lifecycle"	id="lifecycle" 	value="LC_PART" />
-		<input type="hidden" name="fid" 		id="fid"		value="" />
-		<input type="hidden" name="location" 	id="location"	value="/Default/PART_Drawing" />
+		<input type="hidden" name="lifecycle" id="lifecycle" value="LC_PART" />
+		<input type="hidden" name="fid" id="fid" value="" />
+		<input type="hidden" name="location" id="location" value="/Default/PART_Drawing" />
 
 		<table class="button-table">
 			<tr>
 				<td class="left">
 					<div class="header">
-						<img src="/Windchill/extcore/images/header.png"> 도면 정보
+						<img src="/Windchill/extcore/images/header.png">
+						도면 정보
 					</div>
 				</td>
 				<td class="right">
-						<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-						<input type="button" value="임시저장" title="임시저장" onclick="create('true');">
-					</td>
-				</tr>
+					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
+<!-- 					<input type="button" value="임시저장" title="임시저장" onclick="create('true');"> -->
+				</td>
+			</tr>
 		</table>
 		<table class="create-table">
 			<colgroup>
@@ -43,14 +40,14 @@
 			<tr>
 				<th class="req lb">도면분류</th>
 				<td class="indent5" colspan="3">
-				
+
 					<input type="hidden" name="location" id="location" value="<%=DocumentHelper.DOCUMENT_ROOT%>">
 					<span id="locationText"> /Default/PART_Drawing </span>
 					<input type="button" value="폴더선택" title="폴더선택" onclick="folder();" class="blue">
-				
-<!-- 					<span id="locationName"> -->
-<!--                			/Default/PART_Drawing -->
-<!--                		</span> -->
+
+					<!-- 					<span id="locationName"> -->
+					<!--                			/Default/PART_Drawing -->
+					<!--                		</span> -->
 				</td>
 			</tr>
 			<tr>
@@ -65,7 +62,7 @@
 			</tr>
 			<tr>
 				<th class="lb">도면설명</th>
-				<td class="indent5"  colspan="3">
+				<td class="indent5" colspan="3">
 					<input type="text" name="description" id="description" class="width-800">
 				</td>
 			</tr>
@@ -86,13 +83,16 @@
 				</td>
 			</tr>
 		</table>
-		
+
 		<br>
-		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+		<!-- 관련 품목 -->
+		<jsp:include page="/extcore/jsp/part/include/part-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
+			<jsp:param value="true" name="multi" />
+			<jsp:param value="true" name="header" />
 		</jsp:include>
-		
+
 		<table class="button-table">
 			<tr>
 				<td class="center">
@@ -104,44 +104,42 @@
 
 		<script type="text/javascript">
 			function create(temp) {
-				const temprary = JSON.parse(temp); // 임시저장
+// 				const temprary = JSON.parse(temp); // 임시저장
 				const location = toId("location");
-				const number = toId("number");
-				const name = toId("name");
+				const number = document.getElementById("number");
+				const name = document.getElementById("name");
 				const primary = document.querySelector("input[name=primary]");
-				
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
-				} else {
-					if (isNull(location)) {
-						alert("도면분류를 선택하세요.");
-						return;
-					}
-					if(isNull(number)) {
-						alert("도번을 입력하세요.");
-						return;
-					}
-					if(isNull(name)) {
-						alert("도면명 입력하세요.");
-						return;
-					}
-					if(primary == null){
-						alert("주 첨부파일을 첨부해주세요.");
-						return;
-					}
-					
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+
+				if (location === "/Default/PART_Drawing") {
+					alert("도면분류를 선택하세요.");
+					folder();
+					return false;
 				}
-				
+
+				if (isNull(number.value)) {
+					number.focus();
+					alert("도번을 입력하세요.");
+					return;
+				}
+				if (isNull(name.value)) {
+					name.focus();
+					alert("도면명 입력하세요.");
+					return;
+				}
+				if (primary == null) {
+					alert("주 첨부파일을 첨부해주세요.");
+					return;
+				}
+
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
+				}
+
 				const lifecycle = toId("lifecycle");
 				const fid = toId("fid");
 				const description = toId("description");
 				const secondarys = toArray("secondarys");
-				const partList = AUIGrid.getGridData(partGridID);
+				const rows91 = AUIGrid.getGridDataWithState(myGridID91, "gridState");
 				const params = {
 					lifecycle : lifecycle,
 					fid : fid,
@@ -149,26 +147,26 @@
 					number : number,
 					name : name,
 					description : description,
-					primary : primary==null ? '' : primary.value,
+					primary : primary == null ? '' : primary.value,
 					secondarys : secondarys,
-					partList : partList,
-					temprary : temprary
+					rows91 : rows91,
+// 					temprary : temprary
 				}
-				
-				var url = getCallUrl("/drawing/create");
+
+				const url = getCallUrl("/drawing/create");
 				parent.openLayer();
 				call(url, params, function(data) {
 					alert(data.msg);
-					if(data.result){
+					if (data.result) {
 						document.location.href = getCallUrl("/drawing/list");
 					}
 					parent.closeLayer();
 				});
 			}
-			
+
 			document.addEventListener("DOMContentLoaded", function() {
-				createAUIGrid2(columnsPart);
-				AUIGrid.resize(partGridID);
+				createAUIGrid91(columns91);
+				AUIGrid.resize(partGridID91);
 				selectbox("state");
 				selectbox("type");
 				selectbox("depart");
@@ -186,15 +184,14 @@
 			})
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(partGridID);
+				AUIGrid.resize(partGridID91);
 			});
-			
+
 			function folder() {
 				const location = decodeURIComponent("/Default/PART_Drawing");
 				const url = getCallUrl("/folder/popup?location=" + location);
 				_popup(url, 500, 600, "n");
 			}
-			
 		</script>
 	</form>
 </body>

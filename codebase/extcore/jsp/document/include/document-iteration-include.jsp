@@ -35,10 +35,10 @@ boolean popup = Boolean.parseBoolean((String) request.getParameter("popup"));
 		style : "aui-left",
 		width : 350,
 	}, {
-		dataField : "interalnumber",
-		headerText : "내부 문서번호",
+		dataField : "number",
+		headerText : "문서번호",
 		dataType : "string",
-		width : 120,
+		width : 180,
 	}, {
 		dataField : "version",
 		headerText : "REV",

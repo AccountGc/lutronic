@@ -294,7 +294,7 @@ iframe {
 		}
 		
 		if (preFix !== "") {
-			name = preFix + suffix;
+			name = preFix + "_"+ suffix;
 		} else {
 			name = suffix;
 		}

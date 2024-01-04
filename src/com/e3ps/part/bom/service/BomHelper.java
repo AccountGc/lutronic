@@ -1,11 +1,15 @@
 package com.e3ps.part.bom.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import com.e3ps.common.iba.IBAUtils;
 import com.e3ps.common.util.CommonUtil;
@@ -1133,12 +1137,72 @@ public class BomHelper {
 		String target = (String) params.get("target");
 		String reason = (String) params.get("reason");
 		String description = (String) params.get("description");
+		String o = (String) params.get("oid");
 
-		for (String oid : arr) {
-			WTPart part = (WTPart) CommonUtil.getObject(oid);
+		WTPart root = (WTPart) CommonUtil.getObject(o);
+
+		File rtnFile = null;
+		FileOutputStream fos = null;
+		ZipOutputStream zipOut = null;
+		try {
+			if ("epm".equals(target)) {
+				String zipFileName = "D:" + File.separator + "temp" + File.separator + root.getNumber()
+						+ "_BOM 도면일괄다운로드.zip";
+				fos = new FileOutputStream(zipFileName);
+				zipOut = new ZipOutputStream(fos);
+//				for (String oid : arr) {
+//					WTPart part = (WTPart) CommonUtil.getObject(oid);
+
+					File folder = new File("D:\\");
+					File[] files = folder.listFiles();
+
+					for (File file : files) {
+						if (!file.isFile()) {
+							continue;
+						}
+						System.out.println("f="+file.getName());
+						FileInputStream fis = new FileInputStream(file);
+						ZipEntry zipEntry = new ZipEntry(file.getName());
+						zipOut.putNextEntry(zipEntry);
+
+						byte[] bytes = new byte[1024];
+						int length;
+						while ((length = fis.read(bytes)) >= 0) {
+							zipOut.write(bytes, 0, length);
+						}
+
+						fis.close();
+					}
+
+//				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+//				if (epm != null) {
+//					EPMDocument epm2d = PartHelper.manager.getEPMDocument2D(epm);
+//					if (epm2d != null) {
+//						Representation representation = PublishUtils.getRepresentation(epm2d);
+//						if (representation != null) {
+//							QueryResult result = ContentHelper.service.getContentsByRole(representation,
+//									ContentRoleType.SECONDARY);
+//							while (result.hasMoreElements()) {
+//								ApplicationData data = (ApplicationData) result.nextElement();
+//								String ext = FileUtil.getExtension(data.getFileName());
+//								if ("dxf".equalsIgnoreCase(ext)) {
+//								}
+//							}
+//						}
+//					}
+//				}
+					rtnFile = new File(zipFileName);
+//				}
+			} else if ("attach".equals(target)) {
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			zipOut.close();
+			fos.close();
 		}
-
-		return null;
+		return rtnFile;
 	}
 
 	/**

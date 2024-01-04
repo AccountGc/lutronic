@@ -357,7 +357,7 @@ WTUser sessionUser = (WTUser) SessionHelper.manager.getPrincipal();
 	//삭제
 	function _delete() {
 
-		if (!confirm("삭제 하시겠습니까?")) {
+		if (!confirm("연관된 내용들이 다 삭제 됩니다. (EX:문서, EO, ECO..)\n삭제하시겠습니까?")) {
 			return false;
 		}
 

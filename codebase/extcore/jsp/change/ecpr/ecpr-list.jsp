@@ -221,6 +221,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					style : "aui-left",
 					width : 250
 				}, {
+					dataField : "period",
+					headerText : "보존년한",
+					dataType : "string",
+					width : 100
+				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
@@ -254,6 +259,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}, {
 					dataField : "createdDate_txt",
 					headerText : "등록일",
+					dataType : "string",
+					width : 100
+				}, {
+					dataField : "approvedDate",
+					headerText : "승인일",
 					dataType : "string",
 					width : 100
 				} ]
