@@ -131,7 +131,7 @@ iframe {
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
 		</jsp:include>
-		
+
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 			<jsp:param value="" name="oid" />
@@ -153,14 +153,14 @@ iframe {
 				const name = document.getElementById("name");
 				const period = document.getElementById("period").value;
 				const secondarys = toArray("secondarys");
+				// 모델
+				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
-				// 관련문서
-				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
-				// 모델
-				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -220,11 +220,11 @@ iframe {
 				toFocus("name");
 				selectbox("period");
 				createAUIGrid300(columns300);
-				createAUIGrid101(columns101);
 				createAUIGrid90(columns90);
+				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);
-				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
 			});

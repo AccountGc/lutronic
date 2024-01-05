@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.change.ecrm.dto.EcrmDTO"%>
 <%@page import="com.e3ps.change.ecpr.dto.EcprDTO"%>
 <%@page import="com.e3ps.doc.service.DocumentHelper"%>
 <%@page import="java.util.ArrayList"%>
@@ -7,7 +8,7 @@
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-EcprDTO dto = (EcprDTO) request.getAttribute("dto");
+EcrmDTO dto = (EcrmDTO) request.getAttribute("dto");
 %>
 <style type="text/css">
 iframe {
@@ -20,7 +21,7 @@ iframe {
 		<td class="left">
 			<div class="header">
 				<img src="/Windchill/extcore/images/header.png">
-				ECPR 수정
+				ECRM 수정
 			</div>
 		</td>
 		<td class="right">
@@ -37,7 +38,7 @@ iframe {
 		<col width="600">
 	</colgroup>
 	<tr>
-		<th class="req lb">ECPR 제목</th>
+		<th class="req lb">ECRM 제목</th>
 		<td class="indent5">
 			<input type="text" name="name" id="name" class="width-300" value="<%=dto.getName()%>">
 		</td>
@@ -172,7 +173,7 @@ iframe {
 		});
 
 		if (isEmpty(name.value)) {
-			alert("ECPR 제목을 입력해주세요.");
+			alert("ECRM 제목을 입력해주세요.");
 			name.focus();
 			return;
 		}
@@ -201,7 +202,7 @@ iframe {
 
 		const secondarys = toArray("secondarys");
 		params.secondarys = secondarys;
-		const url = getCallUrl("/ecpr/modify");
+		const url = getCallUrl("/ecrm/modify");
 		openLayer();
 		call(url, params, function(data) {
 			alert(data.msg);

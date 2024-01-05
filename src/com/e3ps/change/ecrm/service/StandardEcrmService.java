@@ -12,6 +12,8 @@ import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.EcoToEcprLink;
+import com.e3ps.change.EcprToDocumentLink;
 import com.e3ps.change.EcrToEcrLink;
 import com.e3ps.change.EcrmToCrLink;
 import com.e3ps.change.EcrmToDocumentLink;
@@ -28,11 +30,14 @@ import com.e3ps.org.dto.PeopleDTO;
 import com.e3ps.workspace.service.WorkDataHelper;
 
 import wt.content.ApplicationData;
+import wt.content.ContentHelper;
+import wt.content.ContentItem;
 import wt.content.ContentRoleType;
 import wt.content.ContentServerHelper;
 import wt.doc.WTDocument;
 import wt.fc.PersistenceHelper;
 import wt.fc.PersistenceServerHelper;
+import wt.fc.QueryResult;
 import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
@@ -206,9 +211,55 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 
 	@Override
 	public void modify(EcrmDTO dto) throws Exception {
+		String name = dto.getName();
+		String contents = dto.getContents();
+		String period = dto.getPeriod_code();
+		ArrayList<String> sections = dto.getSections(); // 변경 구분
+		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
+
+			// 모델 배열 처리
+			String model = "";
+			for (int i = 0; i < rows300.size(); i++) {
+				Map<String, String> row300 = rows300.get(i);
+				String oid = row300.get("oid");
+				NumberCode n = (NumberCode) CommonUtil.getObject(oid);
+				if (n != null) {
+					if (rows300.size() - 1 == i) {
+						model += n.getCode();
+					} else {
+						model += n.getCode() + ",";
+					}
+				}
+			}
+
+			String changeSection = "";
+			for (int i = 0; i < sections.size(); i++) {
+				String value = sections.get(i);
+				if (sections.size() - 1 == i) {
+					changeSection += value;
+				} else {
+					changeSection += value + ",";
+				}
+			}
+
+			ECRMRequest ecrm = (ECRMRequest) CommonUtil.getObject(dto.getOid());
+			ecrm.setEoName(name);
+			ecrm.setModel(model);
+			ecrm.setChangeSection(changeSection);
+			ecrm.setContents(contents);
+			ecrm.setPeriod(period);
+			ecrm = (ECRMRequest) PersistenceHelper.manager.modify(ecrm);
+
+			// 첨부 파일 삭제
+			removeAttach(ecrm);
+			saveAttach(ecrm, dto);
+
+			// 링크 삭제
+			deleteLink(ecrm);
+			saveLink(ecrm, dto);
 
 			trs.commit();
 			trs = null;
@@ -219,6 +270,49 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 		} finally {
 			if (trs != null)
 				trs.rollback();
+		}
+	}
+
+	/**
+	 * 관련링크 삭제
+	 */
+	private void deleteLink(ECRMRequest ecrm) throws Exception {
+		QueryResult result = PersistenceHelper.manager.navigate(ecrm, "cr", EcrmToCrLink.class, false);
+		while (result.hasMoreElements()) {
+			EcrmToCrLink link = (EcrmToCrLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+
+		result.reset();
+		result = PersistenceHelper.manager.navigate(ecrm, "eco", EcrmToEcoLink.class, false);
+		while (result.hasMoreElements()) {
+			EcrmToEcoLink link = (EcrmToEcoLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+
+		result.reset();
+		result = PersistenceHelper.manager.navigate(ecrm, "doc", EcrmToDocumentLink.class, false);
+		while (result.hasMoreElements()) {
+			EcrmToDocumentLink link = (EcrmToDocumentLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+	}
+
+	/**
+	 * 첨부파일 삭제
+	 */
+	private void removeAttach(ECRMRequest ecrm) throws Exception {
+		QueryResult result = ContentHelper.service.getContentsByRole(ecrm, ContentRoleType.PRIMARY);
+		if (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(ecrm, item);
+		}
+
+		result.reset();
+		result = ContentHelper.service.getContentsByRole(ecrm, ContentRoleType.SECONDARY);
+		while (result.hasMoreElements()) {
+			ContentItem item = (ContentItem) result.nextElement();
+			ContentServerHelper.service.deleteContent(ecrm, item);
 		}
 	}
 }

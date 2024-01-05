@@ -799,6 +799,11 @@ public class StandardDocumentService extends StandardManager implements Document
 				}
 			}
 
+			// 없을 경우도 패스
+			if (qr.size() == 0) {
+				checker = false;
+			}
+
 			if (checker) {
 				WTDocumentTypeInfo info = doc.getTypeInfoWTDocument();
 				if (info != null) {
