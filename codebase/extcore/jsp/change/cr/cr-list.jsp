@@ -249,10 +249,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 						if (value === "승인됨") {
 							return "approved";
-						} else if (value === "ECPR작성중") {
-							return "ecprStart";
-						} else if (value === "ECPR승인중") {
-							return "ecprApproving";
 						}
 						return null;
 					}

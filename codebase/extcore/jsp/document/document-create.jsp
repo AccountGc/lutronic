@@ -169,7 +169,9 @@ iframe {
 			<tr>
 				<th class="lb">문서설명</th>
 				<td colspan="5" class="indent5">
-					<textarea name="description" id="description" rows="5"></textarea>
+					<div class="textarea-auto">
+						<textarea name="description" id="description" rows="5"></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -254,23 +256,6 @@ iframe {
 				_popup(url, 500, 600, "n");
 			}
 
-			// 			function loadForm() {
-			// 				const oid = document.getElementById("formType").value;
-			// 				if (oid === "") {
-			// 					return false;
-			// 				}
-			// 				const url = getCallUrl("/form/html?oid=" + oid);
-			// 				parent.openLayer();
-			// 				call(url, null, function(data) {
-			// 					if (data.result) {
-			// 						DEXT5.setBodyValue(data.html, 'content');
-			// 					} else {
-			// 						alert(data.msg);
-			// 					}
-			// 					parent.closeLayer();
-			// 				}, "GET");
-			// 			}
-
 			// 문서 등록
 			function create(temp) {
 				const location = document.getElementById("location");
@@ -306,6 +291,13 @@ iframe {
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 내용
 				const content = DEXT5.getBodyValue("content");
+
+				if (location.value === "/Default/문서") {
+					alert("문서분류를 선택하세요.");
+					folder();
+					return false;
+				}
+
 				let name;
 				if (suffix.value === "") {
 					alert("문서명을 입력하세요,");
@@ -315,7 +307,7 @@ iframe {
 				if (preFix !== "") {
 					name = preFix + suffix.value;
 				} else {
-					name = suffix;
+					name = suffix.value;
 				}
 
 				if (isNull(name)) {
@@ -382,25 +374,8 @@ iframe {
 				});
 			}
 
-			// 			function numberView() {
-			// 				const classType = document.getElementById("classType1").value;
-			// 				if (classType === "") {
-			// 					alert("대분류를 선택하세요.");
-			// 					return false;
-			// 				}
-			// 				if (classType !== "DEV" && classType !== "INSTRUCTION" && classType !== "REPORT" && classType !== "VALIDATION" && classType !== "MEETING") {
-			// 					alert("채번 대상의 문서가 아닙니다.");
-			// 					return false;
-			// 				}
-
-			// 				const url = getCallUrl("/doc/numberView?classType=" + classType);
-			// 				_popup(url, 1000, 600, "n");
-			// 			}
-
 			document.addEventListener("DOMContentLoaded", function() {
-				// 				selectbox("formType");
 				selectbox("preseration");
-				// 				selectbox("documentType");
 				selectbox("model");
 				$("#preseration").bindSelectSetValue("PR001");
 				createAUIGrid90(columns90);
@@ -416,6 +391,7 @@ iframe {
 				AUIGrid.resize(myGridID103);
 				AUIGrid.resize(myGridID105);
 				toUI();
+				autoTextarea();
 			});
 
 			window.addEventListener("resize", function() {

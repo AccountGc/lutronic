@@ -36,7 +36,17 @@ iframe {
 		</td>
 		<td class="right">
 			<%
-			if (isAdmin) {
+				if(isAdmin) {
+			%>
+			<select name="state" id="state" class="width-200" onchange="lcm(this);">
+				<option value="">선택</option>
+				<option value="APPROVED">승인됨</option>
+			</select>
+			<%
+				}
+			%>
+			<%
+			if (dto.is_force()) {
 			%>
 			<input type="button" value="관리자 권한 수정" title="관리자 권한 수정" class="red" onclick="force();">
 			<%
@@ -57,13 +67,6 @@ iframe {
 			}
 			%>
 			<%
-			if (dto.is_withdraw()) {
-			%>
-			<input type="button" value="결재회수" title="결재회수" class="red" onclick="withdraw();">
-			<%
-			}
-			%>
-			<%
 			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="update('modify');">
@@ -71,13 +74,12 @@ iframe {
 			}
 			%>
 			<%
-			if (dto.is_delete() || isAdmin) {
+			if (dto.is_delete()) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
 			%>
-			<!-- 			<input type="button" value="최신Rev." title="최신Rev."> -->
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -507,6 +509,7 @@ iframe {
 				}
 			}
 		});
+		selectbox("state");
 	});
 
 	window.addEventListener("resize", function() {

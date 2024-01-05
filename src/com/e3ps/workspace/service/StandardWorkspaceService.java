@@ -1073,7 +1073,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 상태값 작업중으로 변경
 				if (per instanceof LifeCycleManaged) {
 					LifeCycleManaged lcm = (LifeCycleManaged) per;
-					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("INWORK"));
+					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
 				}
 				WorkDataHelper.service.create(per);
 			} else {
@@ -1093,7 +1093,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 				// 상태값 작업중으로 변경
 				if (per instanceof LifeCycleManaged) {
 					LifeCycleManaged lcm = (LifeCycleManaged) per;
-					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("INWORK"));
+					LifeCycleHelper.service.setLifeCycleState(lcm, State.toState("LINE_REGISTER"));
 				}
 			}
 

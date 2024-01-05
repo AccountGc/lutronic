@@ -49,7 +49,7 @@ import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 
 @Controller
-@RequestMapping("/common")
+@RequestMapping("/common/**")
 public class CommonController extends BaseController {
 
 	@Description(value = "주 도면 팝업창")
@@ -990,5 +990,22 @@ public class CommonController extends BaseController {
 		}
 
 		return returnData;
+	}
+	
+
+	@Description(value="상태값 변경")
+	@GetMapping(value="/lcm")
+	public Map<String, Object> lcm(@RequestParam String oid, @RequestParam String key) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			CommonHelper.service.lcm(oid, key);
+			result.put("msg", "상태가 변경되었습니다.");
+			result.put("result", SUCCESS);
+		} catch(Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
 	}
 }

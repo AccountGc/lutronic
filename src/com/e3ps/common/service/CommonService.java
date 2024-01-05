@@ -19,7 +19,7 @@ public interface CommonService {
 	Map<String, Object> downloadHistory(Map<String, Object> params) throws Exception;
 
 	Map<String, String> getAttributes(String oid) throws Exception;
-	
+
 	Map<String, String> getAttributes(String oid, String mode) throws Exception;
 
 	Map<String, Object> versionHistory(String oid) throws Exception;
@@ -33,21 +33,22 @@ public interface CommonService {
 	List<Map<String, String>> include_Document() throws Exception;
 
 	List<Map<String, String>> include_Drawing(HttpServletRequest request) throws Exception;
-	
-	void changeIBAValues(IBAHolder ibaHolder, Map<String,Object> map) throws Exception;
 
-	List<Map<String,String>> documentTypeList(HttpServletRequest request, HttpServletResponse response);
-	
-	Map<String,String> setRequestParamToMap(HttpServletRequest request);
+	void changeIBAValues(IBAHolder ibaHolder, Map<String, Object> map) throws Exception;
+
+	List<Map<String, String>> documentTypeList(HttpServletRequest request, HttpServletResponse response);
+
+	Map<String, String> setRequestParamToMap(HttpServletRequest request);
 
 	void setManagedDefaultSetting(LifeCycleManaged lm, String location, String lifecycle) throws Exception;
 
-	List<Map<String, String>> include_MyDevelopment(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	List<Map<String,String>> autoSearchUserName(HttpServletRequest request, HttpServletResponse response) throws Exception;
-
-	void copyInstanceIBA(IBAHolder ibaHolder, Map<String, Object> map)
+	List<Map<String, String>> include_MyDevelopment(HttpServletRequest request, HttpServletResponse response)
 			throws Exception;
+
+	List<Map<String, String>> autoSearchUserName(HttpServletRequest request, HttpServletResponse response)
+			throws Exception;
+
+	void copyInstanceIBA(IBAHolder ibaHolder, Map<String, Object> map) throws Exception;
 
 	void doTempDelete(boolean uploadFolder) throws WTException;
 
@@ -55,7 +56,12 @@ public interface CommonService {
 
 	ResultData withDrawAction(String oid, boolean isInit);
 
-	ResultData batchSecondaryDown(HttpServletRequest request,HttpServletResponse response);
-	
+	ResultData batchSecondaryDown(HttpServletRequest request, HttpServletResponse response);
+
 	public Map<String, Object> withDraw(Map<String, Object> params) throws Exception;
+
+	/**
+	 * 상태 변경
+	 */
+	public abstract void lcm(String oid, String key) throws Exception;
 }

@@ -121,7 +121,7 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 		</td>
 		<th>상태</th>
 		<td class="indent5">
-						<select name="state" id="state" class="width-200">
+			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
 				for (Map<String, String> lifecycle : lifecycleList) {

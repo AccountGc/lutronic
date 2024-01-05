@@ -88,6 +88,7 @@ public class DocumentDTO {
 	private boolean _revise = false;
 	private boolean _withdraw = false;
 	private boolean _print = false;
+	private boolean _force = false;
 
 	// 변수용
 	private String iterationNote;
@@ -175,9 +176,6 @@ public class DocumentDTO {
 		// 작성자
 		String writer = IBAUtil.getStringValue(doc, "DSGN");
 		setWriter(writer);
-//		String writer_name = CommonUtil.getUserNameFromOid(writer_oid);
-//		setWriter_oid(writer_oid);
-//		setWriter_name(writer_name);
 		// 프로젝트 코드
 		String model_code = IBAUtil.getStringValue(doc, "MODEL");
 		String model_name = keyToValue(model_code, "MODEL");
@@ -220,42 +218,29 @@ public class DocumentDTO {
 	 * 권한 설정
 	 */
 	private void setAuth(WTDocument doc) throws Exception {
-		// 개정 권한 - (최신버전 && 승인됨)
-//		if (!CommonUtil.isAdmin()) {
+		// 승인된경우 프린트
 		if (check("APPROVED")) {
-//			String classType1 = doc.getTypeInfoWTDocument().getPtc_str_2();
-//			if (classType1 != null) {
-//				if (!classType1.equals("DEV")) {
-//					// 개발문서가 아닐경우만..
-//					set_print(true);
-//				}
-//			} else {
 			set_print(true);
-//			}
 		}
 
+		// 승인되고 최신버전일경우 개정가능
 		if (check("APPROVED") && isLatest()) {
 			set_revise(true);
-
 		}
-		// 삭제, 수정 권한 - (최신버전 && ( 임시저장 || 작업중 || 일괄결재중 || 재작업))
-		if (isLatest() && (check("LINE_REGISTER") || check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL")
-				|| check("REWORK"))) {
-			set_delete(true);
+
+		// 최신버전이고 결재선 지정상태일 경우 승인가능
+		if (isLatest() && check("LINE_REGISTER")) {
 			set_modify(true);
 		}
 
+		// 승인중일 경우 회수 가능
 		if (check("APPROVING") && isLatest()) {
 			set_withdraw(true);
 		}
-		// 관리자는 일단 모든 권한 오픈
-//		} else {
-//			set_delete(true);
-//			set_modify(true);
-//			set_withdraw(true);
-//			set_revise(true);
-//			set_print(true);
-//		}
+
+		if (CommonUtil.isAdmin()) {
+			set_force(true);
+		}
 	}
 
 	/**

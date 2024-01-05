@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -138,4 +139,27 @@ public class EcrmController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "ECPR 삭제 함수")
+	@ResponseBody
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			// true 연결 있음
+//			if (EcprHelper.manager.isConnect(oid)) {
+//				result.put("result", false);
+//				result.put("msg", "ECPR과 연결된 CE이 있습니다.");
+//				return result;
+//			}
+
+			EcrmHelper.service.delete(oid);
+			result.put("msg", DELETE_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
 }

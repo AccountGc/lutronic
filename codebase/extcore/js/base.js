@@ -397,3 +397,23 @@ function autoTextarea() {
 		textAreas[0].dispatchEvent(new Event('keyup'));
 	});
 }
+
+function lcm(obj) {
+	
+	if(!confirm("상태값을 변경하시겠습니까?")) {
+		return false;
+	}
+	
+	const oid = document.getElementById("oid").value;
+	const key = obj.value;
+	const url = getCallUrl("/common/lcm?oid=" + oid + "&key=" + key);
+	openLayer();
+	call(url, null, function(data) {
+		alert(data.msg);
+		if (data.result) {
+			document.location.reload();
+		} else {
+			closeLayer();
+		}
+	}, "GET");
+}

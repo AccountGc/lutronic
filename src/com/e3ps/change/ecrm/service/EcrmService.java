@@ -16,4 +16,9 @@ public interface EcrmService {
 	 * ECRM 수정
 	 */
 	public abstract void modify(EcrmDTO dto) throws Exception;
+
+	/**
+	 * ECRM 삭제
+	 */
+	public abstract void delete(String oid) throws Exception;
 }

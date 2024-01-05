@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -157,17 +158,16 @@ public class EcprController extends BaseController {
 
 	@Description(value = "ECPR 삭제 함수")
 	@ResponseBody
-	@PostMapping(value = "/delete")
-	public Map<String, Object> delete(@RequestBody Map<String, Object> params) throws Exception {
+	@DeleteMapping(value = "/delete")
+	public Map<String, Object> delete(@RequestParam String oid) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			String oid = (String) params.get("oid");
 			// true 연결 있음
-			if (EcprHelper.manager.isConnect(oid)) {
-				result.put("result", false);
-				result.put("msg", "ECPR과 연결된 CE이 있습니다.");
-				return result;
-			}
+//			if (EcprHelper.manager.isConnect(oid)) {
+//				result.put("result", false);
+//				result.put("msg", "ECPR과 연결된 CE이 있습니다.");
+//				return result;
+//			}
 
 			EcprHelper.service.delete(oid);
 			result.put("msg", DELETE_MSG);

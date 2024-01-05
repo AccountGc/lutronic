@@ -39,75 +39,59 @@ iframe {
 </table>
 <table class="create-table">
 	<colgroup>
-		<col width="150">
-		<col width="*">
-		<col width="150">
-		<col width="*">
-		<col width="150">
-		<col width="*">
+		<col width="130">
+		<col width="350">
+		<col width="130">
+		<col width="350">
+		<col width="130">
+		<col width="350">
+		<col width="130">
+		<col width="350">
 	</colgroup>
 	<tr>
-		<!-- 				<th class="lb">문서번호</th> -->
-		<%-- 				<td class="indent5"><%=dto.getNumber()%></td> --%>
-		<th>내부문서번호</th>
-		<td class="indent5"><%=dto.getInteralnumber()%></td>
+		<th class="lb" colspan="8">
+			<%=dto.getName()%>
+		</th>
+	</tr>
+	<tr>
+		<th class="lb">문서번호</th>
+		<td class="indent5"><%=dto.getNumber()%></td>
 		<th>문서분류</th>
 		<td class="indent5"><%=dto.getLocation()%></td>
 		<th>상태</th>
 		<td class="indent5"><%=dto.getState()%></td>
-	</tr>
-	<tr>
-		<th class="lb">REV</th>
+		<th>REV</th>
 		<td class="indent5">
 			<%=dto.getVersion()%>.<%=dto.getIteration()%>
-			<%
-			if (!dto.isLatest()) {
-			%>
-			&nbsp;
-			<b>
-				<a href="javascript:latest();">(최신버전으로)</a>
-			</b>
-			<%
-			}
-			%>
 		</td>
-		<th>등록자</th>
-		<td class="indent5"><%=dto.getCreator()%></td>
-		<th>수정자</th>
-		<td class="indent5"><%=dto.getModifier()%></td>
 	</tr>
 	<tr>
 		<th class="lb">등록일</th>
 		<td class="indent5"><%=dto.getCreatedDate()%></td>
 		<th>수정일</th>
 		<td class="indent5"><%=dto.getModifiedDate()%></td>
-		<th>문서유형</th>
-		<td class="indent5"><%=dto.getDocumentType_name()%></td>
+		<th>등록자</th>
+		<td class="indent5"><%=dto.getCreator()%></td>
+		<th>수정자</th>
+		<td class="indent5"><%=dto.getModifier()%></td>
 	</tr>
 	<tr>
-		<th class="lb">작성자</th>
-		<td class="indent5"><%=dto.getWriter()%></td>
+		<!-- 				<th class="lb">결재방식</th> -->
+		<%-- 				<td class="indent5"><%=dto.getApprovaltype_name()%></td> --%>
+		<th class="lb">프로젝트 코드</th>
+		<td class="indent5"><%=dto.getModel_name()%></td>
 		<th>보존기간</th>
 		<td class="indent5"><%=dto.getPreseration_name()%></td>
 		<th>부서</th>
 		<td class="indent5"><%=dto.getDeptcode_name()%></td>
-	</tr>
-	<tr>
-		<th class="lb">결재방식</th>
-		<td class="indent5"><%=dto.getApprovaltype_name()%></td>
-		<!-- 				<th>내부문서번호</th> -->
-		<%-- 				<td class="indent5"><%=dto.getInteralnumber()%></td> --%>
-		<th>프로젝트 코드</th>
-		<td class="indent5" colspan="3"><%=dto.getModel_name()%></td>
+		<th>작성자</th>
+		<td class="indent5"><%=dto.getWriter()%></td>
 	</tr>
 	<tr>
 		<th class="lb">내용</th>
-		<td colspan="5" class="indent7 pb8">
+		<td colspan="7" class="indent7 pb8">
 			<textarea name="contents" id="contents" rows="15" style="display: none;"><%=dto.getContent() != null ? dto.getContent() : ""%></textarea>
 			<script type="text/javascript">
-				// 에디터를 view 모드로 설정합니다.
-				DEXT5.config.Mode = "view";
-
 				new Dext5editor('content');
 				const content = document.getElementById("contents").value;
 				DEXT5.setBodyValue(content, 'content');
@@ -115,14 +99,16 @@ iframe {
 		</td>
 	</tr>
 	<tr>
-		<th class="lb">설명</th>
-		<td colspan="5" class="indent5">
-			<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+		<th class="lb">문서설명</th>
+		<td colspan="7" class="indent5">
+			<div class="textarea-auto">
+				<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">주 첨부파일</th>
-		<td class="indent5" colspan="5">
+		<th class="lb">주 첨부파일</th>
+		<td class="indent5" colspan="7">
 			<jsp:include page="/extcore/jsp/common/attach-primary.jsp">
 				<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			</jsp:include>
@@ -149,26 +135,20 @@ iframe {
 
 <script type="text/javascript">
 	function force() {
-
-		const primary = document.querySelector("input[name=primary]");
-
-		if (primary == null) {
-			alert("주 첨부파일을 선택하세요.");
-			return false;
-		}
-
 		if (!confirm("수정 하시겠습니까?")) {
 			return false;
 		}
 
 		const oid = document.getElementById("oid").value;
 		const secondarys = toArray("secondarys");
-
+		const primary = document.querySelector("input[name=primary]");
+		const content = DEXT5.getBodyValue("content");
 		const url = getCallUrl("/doc/force");
 		const params = {
 			oid : oid,
 			secondarys : secondarys,
-			primary : primary.value,
+			primary : primary != null ? primary.value : "",
+			content : content
 		};
 
 		openLayer();
@@ -184,6 +164,7 @@ iframe {
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
+		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {

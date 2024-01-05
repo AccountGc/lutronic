@@ -26,7 +26,7 @@ iframe {
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<%
 			}
-			if(dto.is_delete()) {
+			if (dto.is_delete()) {
 			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
@@ -172,24 +172,18 @@ iframe {
 			return false;
 		}
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/ecpr/delete");
-		let params = new Object();
-		params.oid = oid;
-		call(url, params, function(data) {
+		const url = getCallUrl("/ecpr/delete?oid=" + oid);
+		openLayer();
+		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
 				opener.loadGridData();
 				self.close();
+			} else {
+				closeLayer();
 			}
-		});
+		}, "DELETE");
 	}
-
-	//결재 회수
-	$("#withDrawBtn").click(function() {
-		const oid = $("#oid").val();
-		const url = getCallUrl("/common/withDrawPopup?oid=" + oid);
-		_popup(url, 1500, 550, "n");
-	})
 
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
