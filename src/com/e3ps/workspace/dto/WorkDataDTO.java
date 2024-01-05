@@ -139,7 +139,6 @@ public class WorkDataDTO {
 			setPersistType("ECRM");
 			setState(ecrm.getLifeCycleState().getDisplay());
 			setCreator(ecrm.getCreatorName());
-			setCreatedDate(ecrm.getCreateTimestamp());
 			setCreatedDate_txt(ecrm.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/ecrm/view?oid=" + getPoid());
 		}
