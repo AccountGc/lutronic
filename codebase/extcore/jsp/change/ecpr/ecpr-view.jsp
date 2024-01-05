@@ -23,7 +23,7 @@ iframe {
 			<%
 			if (dto.is_modify()) {
 			%>
-			<input type="button" value="수정" title="수정" class="blue" onclick="update();">
+			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<%
 			}
 			if(dto.is_delete()) {
@@ -161,9 +161,9 @@ iframe {
 	</div>
 </div>
 <script type="text/javascript">
-	function update() {
+	function modify() {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/ecpr/update?oid=" + oid);
+		const url = getCallUrl("/ecpr/modify?oid=" + oid);
 		document.location.href = url;
 	}
 

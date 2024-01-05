@@ -14,7 +14,7 @@ public interface EcprService {
 	/**
 	 * ECPR 수정
 	 */
-	public abstract void update(EcprDTO dto) throws Exception;
+	public abstract void modify(EcprDTO dto) throws Exception;
 
 	/**
 	 * ECPR 삭제

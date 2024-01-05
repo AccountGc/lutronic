@@ -83,11 +83,9 @@ public class CrController extends BaseController {
 	@GetMapping(value = "/create")
 	public ModelAndView create() throws Exception {
 		ModelAndView model = new ModelAndView();
-		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		FormTemplate form = FormTemplateHelper.manager.getTemplate("변경관리요청서(CR)");
 		model.addObject("preserationList", preserationList);
-		model.addObject("sectionList", sectionList);
 		model.addObject("html", form==null?"":form.getDescription());
 		model.setViewName("/extcore/jsp/change/cr/cr-create.jsp");
 		return model;
@@ -140,18 +138,16 @@ public class CrController extends BaseController {
 	}
 
 	@Description(value = "CR 수정 페이지")
-	@GetMapping(value = "/update")
-	public ModelAndView update(@RequestParam String oid) throws Exception {
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		CrDTO dto = new CrDTO(oid);
 		boolean isAdmin = CommonUtil.isAdmin();
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
-		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		model.addObject("deptcodeList", deptcodeList);
-		model.addObject("sectionList", sectionList);
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		model.addObject("preserationList", preserationList);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("popup:/change/cr/cr-update");
+		model.setViewName("popup:/change/cr/cr-modify");
 		return model;
 	}
 

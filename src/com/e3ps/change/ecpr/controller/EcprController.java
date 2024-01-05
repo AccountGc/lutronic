@@ -123,28 +123,28 @@ public class EcprController extends BaseController {
 	}
 
 	@Description(value = "ECPR 수정 페이지")
-	@GetMapping(value = "/update")
-	public ModelAndView update(@RequestParam String oid) throws Exception {
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
 		EcprDTO dto = new EcprDTO(oid);
 		boolean isAdmin = CommonUtil.isAdmin();
-		ArrayList<NumberCode> deptcodeList = NumberCodeHelper.manager.getArrayCodeList("DEPTCODE");
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
-		model.addObject("deptcodeList", deptcodeList);
+		model.addObject("preserationList", preserationList);
 		model.addObject("sectionList", sectionList);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
-		model.setViewName("popup:/change/ecpr/ecpr-update");
+		model.setViewName("popup:/change/ecpr/ecpr-modify");
 		return model;
 	}
 
 	@Description(value = "ECPR 수정 함수")
 	@ResponseBody
-	@PostMapping(value = "/update")
-	public Map<String, Object> update(@RequestBody EcprDTO dto) throws Exception {
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody EcprDTO dto) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
-			EcprHelper.service.update(dto);
+			EcprHelper.service.modify(dto);
 			result.put("msg", MODIFY_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {
@@ -165,7 +165,7 @@ public class EcprController extends BaseController {
 			// true 연결 있음
 			if (EcprHelper.manager.isConnect(oid)) {
 				result.put("result", false);
-				result.put("msg", "ecpr과 연결된 cr이 있습니다.");
+				result.put("msg", "ECPR과 연결된 CE이 있습니다.");
 				return result;
 			}
 

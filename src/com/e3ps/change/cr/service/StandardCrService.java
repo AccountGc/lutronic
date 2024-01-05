@@ -34,7 +34,6 @@ import wt.folder.Folder;
 import wt.folder.FolderEntry;
 import wt.folder.FolderHelper;
 import wt.lifecycle.LifeCycleHelper;
-import wt.lifecycle.State;
 import wt.org.WTUser;
 import wt.pom.Transaction;
 import wt.services.StandardManager;
@@ -53,6 +52,7 @@ public class StandardCrService extends StandardManager implements CrService {
 	public void create(CrDTO dto) throws Exception {
 		String name = dto.getName();
 		String contents = dto.getContents();
+		String period = dto.getPeriod_code();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 
@@ -104,6 +104,7 @@ public class StandardCrService extends StandardManager implements CrService {
 			PeopleDTO data = new PeopleDTO(sessionUser);
 			cr.setCreateDepart(data.getDepartment_name());
 			cr.setModel(model);
+			cr.setPeriod(period);
 
 			cr.setChangeSection(changeSection);
 			cr.setContents(contents);
@@ -229,15 +230,11 @@ public class StandardCrService extends StandardManager implements CrService {
 
 	@Override
 	public void modify(CrDTO dto) throws Exception {
-
-		String createDepart = dto.getCreateDepart();
-		boolean temprary = dto.isTemprary();
-
-		ArrayList<String> sections = dto.getSections();
-		ArrayList<Map<String, String>> rows101 = dto.getRows101();
-		ArrayList<Map<String, String>> rows300 = dto.getRows300();
-
-//		String model_oid = dto.getModel_oid();
+		String name = dto.getName();
+		String contents = dto.getContents();
+		String period = dto.getPeriod_code()
+		ArrayList<String> sections = dto.getSections(); // 변경 구분
+		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -268,23 +265,11 @@ public class StandardCrService extends StandardManager implements CrService {
 			}
 
 			EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(dto.getOid());
-
-			cr.setEoName(dto.getName());
-			cr.setEoNumber(dto.getNumber());
-			cr.setCreateDate(dto.getWriteDate());
-			cr.setWriter(dto.getWriter());
-			cr.setApproveDate(dto.getApproveDate());
-
-//			NumberCode dept = NumberCodeHelper.manager.getNumberCode(createDepart_code, "DEPTCODE");
-			cr.setCreateDepart(createDepart); // 코드 넣엇을듯..
+			cr.setEoName(name);
 			cr.setModel(model);
-
-//			cr.setProposer(dto.getProposer_name());				
 			cr.setChangeSection(changeSection);
-//			cr.setEoCommentA(dto.getEoCommentA());
-//			cr.setEoCommentB(dto.getEoCommentB());
-//			cr.setEoCommentC(dto.getEoCommentC());
-			cr.setContents(dto.getContents());
+			cr.setContents(contents);
+			cr.setPeriod(period);
 
 			cr = (EChangeRequest) PersistenceHelper.manager.modify(cr);
 
@@ -295,15 +280,6 @@ public class StandardCrService extends StandardManager implements CrService {
 			// 링크 삭제
 			deleteLink(cr);
 			saveLink(cr, dto);
-
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(cr, state);
-			} else {
-				State state = State.toState("INWORK");
-				LifeCycleHelper.service.setLifeCycleState(cr, state);
-			}
 
 			trs.commit();
 			trs = null;
@@ -342,6 +318,20 @@ public class StandardCrService extends StandardManager implements CrService {
 		QueryResult result = PersistenceHelper.manager.navigate(cr, "useBy", EcrToEcrLink.class, false);
 		while (result.hasMoreElements()) {
 			EcrToEcrLink link = (EcrToEcrLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+
+		result.reset();
+		result = PersistenceHelper.manager.navigate(cr, "eco", RequestOrderLink.class, false);
+		while (result.hasMoreElements()) {
+			RequestOrderLink link = (RequestOrderLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+
+		result.reset();
+		result = PersistenceHelper.manager.navigate(cr, "doc", CrToDocumentLink.class, false);
+		while (result.hasMoreElements()) {
+			CrToDocumentLink link = (CrToDocumentLink) result.nextElement();
 			PersistenceServerHelper.manager.remove(link);
 		}
 	}

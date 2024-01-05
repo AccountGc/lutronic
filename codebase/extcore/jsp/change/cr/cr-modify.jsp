@@ -5,13 +5,15 @@
 <%@page import="com.e3ps.change.cr.dto.CrDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
-ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
+ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 CrDTO dto = (CrDTO) request.getAttribute("dto");
-Map<String, Object> contentMap = dto.getContentMap();
-String oid = (String) contentMap.get("aoid");
 %>
+<style type="text/css">
+iframe {
+	margin-top: 3px;
+}
+</style>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
 	<tr>
@@ -22,8 +24,7 @@ String oid = (String) contentMap.get("aoid");
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-			<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
+			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
@@ -31,42 +32,28 @@ String oid = (String) contentMap.get("aoid");
 <table class="create-table">
 	<colgroup>
 		<col width="150">
-		<col width="*">
+		<col width="600">
 		<col width="150">
-		<col width="*">
+		<col width="600">
 	</colgroup>
 	<tr>
 		<th class="req lb">CR 제목</th>
 		<td class="indent5">
 			<input type="text" name="name" id="name" class="width-300" value="<%=dto.getName()%>">
 		</td>
-		<th class="req">CR 번호</th>
+		<th class="req">보존년한</th>
 		<td class="indent5">
-			<input type="text" name="number" id="number" class="width-300" value="<%=dto.getNumber()%>">
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">작성일</th>
-		<td class="indent5">
-			<input type="text" name="writeDate" id="writeDate" class="width-100" value="<%=dto.getWriteDate() != null ? dto.getWriteDate() : ""%>">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearDate('writeDate');">
-		</td>
-		<th>승인일</th>
-		<td class="indent5">
-			<input type="text" name="approveDate" id="approveDate" class="width-100" value="<%=dto.getApproveDate() != null ? dto.getApproveDate() : ""%>">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="createDate('approveDate');">
-		</td>
-	</tr>
-	<tr>
-		<th class="lb">작성부서</th>
-		<td class="indent5">
-			<input type="text" name="createDepart" id="createDepart" class="width-200">
-		</td>
-		<th>작성자</th>
-		<td class="indent5">
-			<input type="text" name="writer" id="writer" data-multi="false" class="width-200" value="<%=dto.getWriter() != null ? dto.getWriter() : ""%>">
-			<input type="hidden" name="writerOid" id="writerOid" value="<%=dto.getWriter()%>">
-			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
+			<select name="period" id="period" class="width-200">
+				<%
+				String c = dto.getPeriod_code();
+				for (NumberCode preseration : preserationList) {
+					String key = preseration.getCode();
+				%>
+				<option value="<%=key%>" <%if(c.equals(key)) { %> selected="selected" <%} %>><%=preseration.getName()%></option>
+				<%
+				}
+				%>
+			</select>
 		</td>
 	</tr>
 	<tr>
@@ -82,27 +69,20 @@ String oid = (String) contentMap.get("aoid");
 			</jsp:include>
 		</td>
 	</tr>
-	<!-- 			<tr> -->
-	<!-- 				<th class="lb">제안자</th> -->
-	<!-- 				<td class="indent5" colspan="3"> -->
-	<%-- 					<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200" value="<%= dto.getProposer_name() != null ? dto.getProposer_name() : ""%>"> --%>
-	<%-- 					<input type="hidden" name="proposerOid" id="proposerOid" value="<%= dto.getProposer_oid()%>"> --%>
-	<!-- 					<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('proposer')"> -->
-	<!-- 				</td> -->
-	<!-- 			</tr> -->
 	<tr>
-		<th class="lb req">변경구분</th>
+		<th class="lb req">변경사유</th>
 		<td colspan="3">
 			&nbsp;
 			<%
-			for (NumberCode section : sectionList) {
-				int isInclude = dto.getChangeSection().indexOf(section.getName());
+			String[] ss = new String[]{"영업/마케팅", "원가 절감", "기능/성능 변경", "공정 변경", "자재 변경", "허가/규제 변경", "품질 개선", "라벨링", "기타"};
+			for (String s : ss) {
+				int include = dto.getChangeSection().indexOf(s);
 			%>
 			<div class="pretty p-switch">
-				<input type="checkbox" name="changeSection" value="<%=section.getCode()%>" <%if (isInclude >= 0) {%> checked="checked" <%}%>>
+				<input type="checkbox" name="changeSection" value="<%=s%>" <%if (include > -1) {%> checked="checked" <%}%>>
 				<div class="state p-success">
 					<label>
-						<b><%=section.getName()%></b>
+						<b><%=s%></b>
 					</label>
 				</div>
 			</div>
@@ -124,16 +104,6 @@ String oid = (String) contentMap.get("aoid");
 		</td>
 	</tr>
 	<tr>
-		<th class="req lb">주 첨부파일</th>
-		<td class="indent5" colspan="3">
-			<jsp:include page="/extcore/jsp/common/attach-eco.jsp">
-				<jsp:param value="<%=oid%>" name="oid" />
-				<jsp:param value="modify" name="mode" />
-				<jsp:param value="ECR" name="roleType" />
-			</jsp:include>
-		</td>
-	</tr>
-	<tr>
 		<th class="lb">첨부파일</th>
 		<td class="indent5" colspan="3">
 			<jsp:include page="/extcore/jsp/common/attach-secondary.jsp">
@@ -144,46 +114,54 @@ String oid = (String) contentMap.get("aoid");
 	</tr>
 </table>
 
+<!-- 	관련 문서 -->
+<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="true" name="header" />
+</jsp:include>
+
+<!-- 	관련 ECO -->
+<jsp:include page="/extcore/jsp/change/eco/include/eco-include.jsp">
+	<jsp:param value="<%=dto.getOid()%>" name="oid" />
+	<jsp:param value="update" name="mode" />
+	<jsp:param value="true" name="multi" />
+	<jsp:param value="true" name="header" />
+</jsp:include>
+
 <!-- 	관련 CR -->
 <jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
 	<jsp:param value="<%=dto.getOid()%>" name="oid" />
 	<jsp:param value="update" name="mode" />
 	<jsp:param value="true" name="multi" />
-	<jsp:param value="150" name="height" />
 	<jsp:param value="true" name="header" />
 </jsp:include>
 
 <table class="button-table">
 	<tr>
 		<td class="center">
-			<input type="button" value="수정" title="수정" class="blue" onclick="update('false');">
-			<input type="button" value="임시저장" title="임시저장" onclick="update('true');">
+			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
 		</td>
 	</tr>
 </table>
 
 <script type="text/javascript">
-	function update(temp) {
+	function modify() {
 		const name = document.getElementById("name");
-		const number = document.getElementById("number");
-		const temprary = JSON.parse(temp);
+		const period = document.getElementById("period").value;
 		const secondarys = toArray("secondarys");
-
-		if (temprary) {
-			if (!confirm("임시저장하시겠습니까??")) {
-				return false;
-			}
-		} else {
-			if (!confirm("수정 하시겠습니까?")) {
-				return false;
-			}
-		}
+		const oid = document.getElementById("oid").value;
 		const primary = document.querySelector("input[name=primary]");
-		// 관련CR
-		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 		// 모델
 		const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+		// 관련문서
+		const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
+		// 관련CR
+		const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+		// 관련ECO
+		const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 		// 내용
 		const content = DEXT5.getBodyValue("content");
 
@@ -200,42 +178,37 @@ String oid = (String) contentMap.get("aoid");
 			return;
 		}
 
-		if (isEmpty(number.value)) {
-			alert("CR 번호를 선택해주세요.");
-			number.focus();
+		if (isEmpty(period)) {
+			alert("보존년한을 선택하세요.");
 			return;
 		}
 
 		if (rows300.length == 0) {
-			alert("제품명을 입력해주세요.");
+			alert("제품을 선택해주세요.");
+			popup300();
 			return;
 		}
 
 		if (sections.length === 0) {
-			alert("변경구분을 선택하세요.");
+			alert("변경사유를 선택하세요.");
 			return false;
 		}
 
-		if (primary == null) {
-			alert("주 첨부파일을 첨부해주세요.");
-			return;
+		if (!confirm("수정하시겠습니까?")) {
+			return false;
 		}
-		const oid = document.getElementById("oid").value;
+
 		const params = {
 			oid : oid,
 			name : name.value,
-			number : number.value,
-			writeDate : toId("writeDate"),
-			approveDate : toId("approveDate"),
-			createDepart : toId("createDepart"),
-			writer_oid : toId("writerOid"),
-			sections : sections, //변경 구분
+			period_code : period,
 			contents : content,
-			primary : primary.value,
+			sections : sections, //변경 구분
 			secondarys : secondarys,
-			rows101 : rows101,
 			rows300 : rows300,
-			temprary : temprary,
+			rows90 : rows90,
+			rows101 : rows101,
+			rows105 : rows105,
 		}
 
 		const url = getCallUrl("/cr/modify");
@@ -255,18 +228,21 @@ String oid = (String) contentMap.get("aoid");
 	// jquery 삭제를 해가는 쪽으로 한다..
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("name");
-		date("writeDate");
-		date("approveDate");
-// 		selectbox("createDepart");
-		finderUser("writer");
+		selectbox("period");
 		createAUIGrid300(columns300);
+		createAUIGrid90(columns90);
 		createAUIGrid101(columns101);
+		createAUIGrid105(columns105);
 		AUIGrid.resize(myGridID300);
+		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID105);
 	});
 
 	window.addEventListener("resize", function() {
 		AUIGrid.resize(myGridID300);
+		AUIGrid.resize(myGridID90);
 		AUIGrid.resize(myGridID101);
+		AUIGrid.resize(myGridID105);
 	});
 </script>

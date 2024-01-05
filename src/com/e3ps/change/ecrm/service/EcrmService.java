@@ -11,4 +11,9 @@ public interface EcrmService {
 	 * ECRM 등록
 	 */
 	public abstract void create(EcrmDTO dto) throws Exception;
+
+	/**
+	 * ECRM 수정
+	 */
+	public abstract void modify(EcrmDTO dto) throws Exception;
 }

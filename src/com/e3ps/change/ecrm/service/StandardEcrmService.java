@@ -204,19 +204,21 @@ public class StandardEcrmService extends StandardManager implements EcrmService 
 		}
 	}
 
-	/**
-	 * 관련 CR링크
-	 */
-//	private void saveLink(ECRMRequest ecrm, ArrayList<Map<String, String>> rows101) throws Exception {
-//		for (Map<String, String> row101 : rows101) {
-//			String gridState = row101.get("gridState");
-//			// 신규 혹은 삭제만 있다. (added, removed
-//			if ("added".equals(gridState) || !StringUtil.checkString(gridState)) {
-//				String oid = row101.get("oid");
-//				EChangeRequest ref = (EChangeRequest) CommonUtil.getObject(oid);
-//				CrToEcprLink link = CrToEcprLink.newCrToEcprLink(ref, ecrm);
-//				PersistenceServerHelper.manager.insert(link);
-//			}
-//		}
+	@Override
+	public void modify(EcrmDTO dto) throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
 
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
 }

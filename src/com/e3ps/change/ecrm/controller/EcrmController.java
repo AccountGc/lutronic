@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
 import com.e3ps.change.ecpr.dto.EcprDTO;
+import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.change.ecrm.dto.EcrmDTO;
 import com.e3ps.change.ecrm.service.EcrmHelper;
 import com.e3ps.common.code.NumberCode;
@@ -92,7 +93,7 @@ public class EcrmController extends BaseController {
 		return result;
 	}
 
-	@Description(value = "ECPR 상세 페이지")
+	@Description(value = "ECRM 상세 페이지")
 	@GetMapping(value = "/view")
 	public ModelAndView view(@RequestParam String oid) throws Exception {
 		ModelAndView model = new ModelAndView();
@@ -103,4 +104,38 @@ public class EcrmController extends BaseController {
 		model.setViewName("popup:/change/ecrm/ecrm-view");
 		return model;
 	}
+
+	@Description(value = "ECRM 수정 페이지")
+	@GetMapping(value = "/modify")
+	public ModelAndView modify(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EcprDTO dto = new EcprDTO(oid);
+		boolean isAdmin = CommonUtil.isAdmin();
+		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		model.addObject("preserationList", preserationList);
+		model.addObject("sectionList", sectionList);
+		model.addObject("isAdmin", isAdmin);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/ecrm/ecrm-modify");
+		return model;
+	}
+
+	@Description(value = "ECRM 수정 함수")
+	@ResponseBody
+	@PostMapping(value = "/modify")
+	public Map<String, Object> modify(@RequestBody EcrmDTO dto) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		try {
+			EcrmHelper.service.modify(dto);
+			result.put("msg", MODIFY_MSG);
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("result", FAIL);
+			result.put("msg", e.toString());
+		}
+		return result;
+	}
+
 }

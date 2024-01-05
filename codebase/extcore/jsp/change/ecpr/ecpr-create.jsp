@@ -127,32 +127,6 @@ iframe {
 					</script>
 				</td>
 			</tr>
-
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">변경사유</th> -->
-			<!-- 				<td class="indent5" colspan="3"> -->
-			<!-- 					<textarea name="eoCommentA" id="eoCommentA" rows="10"></textarea> -->
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">변경사항</th> -->
-			<!-- 				<td class="indent5" colspan="3"> -->
-			<!-- 					<textarea name="eoCommentB" id="eoCommentB" rows="10"></textarea> -->
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">참고사항</th> -->
-			<!-- 				<td class="indent5" colspan="3"> -->
-			<!-- 					<textarea name="eoCommentC" id="eoCommentC" rows="10"></textarea> -->
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
-			<tr>
-				<!-- 				<th class="lb">주 첨부파일</th> -->
-				<!-- 				<td class="indent5" colspan="3"> -->
-				<%-- 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp"> --%>
-				<%-- 						<jsp:param value="" name="oid" /> --%>
-				<%-- 					</jsp:include> --%>
-				<!-- 				</td> -->
 			</tr>
 			<tr>
 				<th class="lb">첨부파일</th>
@@ -200,12 +174,12 @@ iframe {
 			function create() {
 				const name = document.getElementById("name");
 				const period = document.getElementById("period").value;
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 관련CR
 				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
 				// 관련ECO
 				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
-				// 관련문서
-				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
 
@@ -239,12 +213,12 @@ iframe {
 
 				const params = {
 					name : name.value,
-					period : period,
+					period_code : period,
 					contents : content,
 					sections : sections, //변경 구분
-					rows101 : rows101,
 					rows300 : rows300,
 					rows90 : rows90,
+					rows101 : rows101,
 					rows105 : rows105
 				}
 				const secondarys = toArray("secondarys");
@@ -265,19 +239,19 @@ iframe {
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
 				selectbox("period");
-				createAUIGrid90(columns90);
 				createAUIGrid300(columns300);
+				createAUIGrid90(columns90);
 				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);
-				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID101);
 			});
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
 			});

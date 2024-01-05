@@ -55,7 +55,7 @@ public class StandardEcprService extends StandardManager implements EcprService 
 	@Override
 	public void create(EcprDTO dto) throws Exception {
 		String name = dto.getName();
-		String period = dto.getPeriod();
+		String period = dto.getPeriod_code();
 		String contents = dto.getContents();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
@@ -204,7 +204,6 @@ public class StandardEcprService extends StandardManager implements EcprService 
 				PersistenceServerHelper.manager.insert(link);
 			}
 		}
-
 	}
 
 	/**
@@ -234,25 +233,29 @@ public class StandardEcprService extends StandardManager implements EcprService 
 			CrToEcprLink link = (CrToEcprLink) result.nextElement();
 			PersistenceServerHelper.manager.remove(link);
 		}
+
+		result.reset();
+		result = PersistenceHelper.manager.navigate(ecpr, "eco", EcoToEcprLink.class, false);
+		while (result.hasMoreElements()) {
+			EcoToEcprLink link = (EcoToEcprLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
+
+		result.reset();
+		result = PersistenceHelper.manager.navigate(ecpr, "doc", EcprToDocumentLink.class, false);
+		while (result.hasMoreElements()) {
+			EcprToDocumentLink link = (EcprToDocumentLink) result.nextElement();
+			PersistenceServerHelper.manager.remove(link);
+		}
 	}
 
 	@Override
-	public void update(EcprDTO dto) throws Exception {
+	public void modify(EcprDTO dto) throws Exception {
 		String name = dto.getName();
-		String number = dto.getNumber();
-		String writeDate = dto.getWriteDate();
-		String approveDate = dto.getApproveDate();
-		String createDepart = dto.getCreateDepart();
-		String writer = dto.getWriter();
-//		String eoCommentA = dto.getEoCommentA();
-//		String eoCommentB = dto.getEoCommentB();
-//		String eoCommentC = dto.getEoCommentC();
 		String contents = dto.getContents();
+		String period = dto.getPeriod_code();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
-		ArrayList<Map<String, String>> rows101 = dto.getRows101(); // 관련 CR
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
-		boolean temprary = dto.isTemprary();
-
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -284,30 +287,11 @@ public class StandardEcprService extends StandardManager implements EcprService 
 
 			ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(dto.getOid());
 			ecpr.setEoName(name);
-			ecpr.setEoNumber(number);
-			ecpr.setCreateDate(writeDate);
-
-			ecpr.setWriter(writer);
-			ecpr.setApproveDate(approveDate);
-			ecpr.setCreateDepart(createDepart); // 코드 넣엇을듯..
 			ecpr.setModel(model);
-
 			ecpr.setChangeSection(changeSection);
 			ecpr.setContents(contents);
-//			ecpr.setEoCommentA(eoCommentA);
-//			ecpr.setEoCommentB(eoCommentB);
-//			ecpr.setEoCommentC(eoCommentC);
-
+			ecpr.setPeriod(period);
 			ecpr = (ECPRRequest) PersistenceHelper.manager.modify(ecpr);
-
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
-			} else {
-				State state = State.toState("INWORK");
-				LifeCycleHelper.service.setLifeCycleState(ecpr, state);
-			}
 
 			// 첨부 파일 삭제
 			removeAttach(ecpr);

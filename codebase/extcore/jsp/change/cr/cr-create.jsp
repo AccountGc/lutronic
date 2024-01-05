@@ -4,7 +4,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 ArrayList<NumberCode> preserationList = (ArrayList<NumberCode>) request.getAttribute("preserationList");
-ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 String html = (String) request.getAttribute("html");
 %>
 <!DOCTYPE html>
@@ -105,14 +104,6 @@ iframe {
 					</script>
 				</td>
 			</tr>
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">주 첨부파일</th> -->
-			<!-- 				<td class="indent5" colspan="3"> -->
-			<%-- 					<jsp:include page="/extcore/jsp/common/attach-primary.jsp"> --%>
-			<%-- 						<jsp:param value="" name="oid" /> --%>
-			<%-- 					</jsp:include> --%>
-			<!-- 				</td> -->
-			<!-- 			</tr> -->
 			<tr>
 				<th class="lb">첨부파일</th>
 				<td class="indent5" colspan="3">
@@ -160,14 +151,14 @@ iframe {
 				const name = document.getElementById("name");
 				const period = document.getElementById("period").value;
 				const secondarys = toArray("secondarys");
-				// 관련CR
-				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
-				// 관련문서
-				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
-				// 관련ECO
-				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 				// 모델
 				const rows300 = AUIGrid.getGridDataWithState(myGridID300, "gridState");
+				// 관련문서
+				const rows90 = AUIGrid.getGridDataWithState(myGridID90, "gridState");
+				// 관련CR
+				const rows101 = AUIGrid.getGridDataWithState(myGridID101, "gridState");
+				// 관련ECO
+				const rows105 = AUIGrid.getGridDataWithState(myGridID105, "gridState");
 
 				// 변경 구분 배열 처리
 				const changeSection = document.querySelectorAll('input[name="changeSection"]:checked');
@@ -206,14 +197,14 @@ iframe {
 
 				const params = {
 					name : name.value,
-					period : period,
+					period_code : period,
 					contents : content,
 					sections : sections, //변경 구분
 					secondarys : secondarys,
-					rows101 : rows101,
-					rows105 : rows105,
 					rows300 : rows300,
 					rows90 : rows90,
+					rows101 : rows101,
+					rows105 : rows105,
 				}
 				const url = getCallUrl("/cr/create");
 				logger(params);
@@ -231,19 +222,19 @@ iframe {
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
 				selectbox("period");
-				createAUIGrid90(columns90);
 				createAUIGrid300(columns300);
+				createAUIGrid90(columns90);
 				createAUIGrid101(columns101);
 				createAUIGrid105(columns105);
-				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
 			});
 
 			window.addEventListener("resize", function() {
-				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID300);
+				AUIGrid.resize(myGridID90);
 				AUIGrid.resize(myGridID101);
 				AUIGrid.resize(myGridID105);
 			});

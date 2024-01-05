@@ -202,7 +202,7 @@ iframe {
 <script type="text/javascript">
 	function modify() {
 		const oid = document.getElementById("oid").value;
-		const url = getCallUrl("/cr/update?oid=" + oid);
+		const url = getCallUrl("/cr/modify?oid=" + oid);
 		document.location.href = url;
 	}
 

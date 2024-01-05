@@ -211,7 +211,8 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						for (QuantityUnit unit : unitList) {
 							String value = unit.toString();
 						%>
-						<option value="<%=value%>"><%=unit.getDisplay()%> / <%=value %></option>
+						<option value="<%=value%>"><%=unit.getDisplay()%> /
+							<%=value%></option>
 						<%
 						}
 						%>
@@ -406,33 +407,25 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 					return;					
 				}
 				
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
-					
-				} else {
-
-					if(isEmpty(model)){
-						alert("프로젝트 코드를 선택하세요.");
-						return;					
-					}
-					if(isEmpty(productmethod)){
-						alert("제작방법을 선택하세요.");
-						return;					
-					}
-					if(isEmpty(deptcode)){
-						alert("부서를 선택하세요.");
-						return;					
-					}
-					if(isEmpty(unit)){
-						alert("단위를 선택하세요.");
-						return;					
-					}
-					
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+				if(isEmpty(model)){
+					alert("프로젝트 코드를 선택하세요.");
+					return;					
+				}
+				if(isEmpty(productmethod)){
+					alert("제작방법을 선택하세요.");
+					return;					
+				}
+				if(isEmpty(deptcode)){
+					alert("부서를 선택하세요.");
+					return;					
+				}
+				if(isEmpty(unit)){
+					alert("단위를 선택하세요.");
+					return;					
+				}
+				
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
 				}
 				
 				const params ={
@@ -552,10 +545,10 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 				const partType3 = document.getElementById("partType3").value;
 				const seq = document.getElementById("seq").value;
 				const partNumber = partType1+partType2+partType3+seq;
-				if(partNumber.length !== 8) {
-					alert("SEQ 현황을 보기 위해서 모든 채번 정보를 선택 및 입력하세요.");
-					return false;
-				}
+// 				if(partNumber.length !== 8) {
+// 					alert("SEQ 현황을 보기 위해서 모든 채번 정보를 선택 및 입력하세요.");
+// 					return false;
+// 				}
 				const url = getCallUrl("/part/seq?partNumber=" + partNumber);
 				_popup(url, 900, 450, "n");
 			}
