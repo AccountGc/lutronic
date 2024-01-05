@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -166,6 +167,8 @@ public class ApprovalLineColumn {
 			persistType = "품목";
 		} else if (per instanceof EPMDocument) {
 			persistType = "도면";
+		} else if (per instanceof ECRMRequest) {
+			persistType = "ECRM";
 		} else if (per instanceof EChangeRequest) {
 			persistType = "CR";
 		} else if (per instanceof EChangeOrder) {

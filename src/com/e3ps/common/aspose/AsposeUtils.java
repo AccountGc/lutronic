@@ -204,8 +204,8 @@ public class AsposeUtils {
 		pdfPage.setPageSize(597.6, 842.4);
 
 		MarginInfo marginInfo = new MarginInfo();
-		marginInfo.setLeft(25);
-		marginInfo.setRight(5);
+		marginInfo.setLeft(50);
+		marginInfo.setRight(10);
         marginInfo.setTop(10);
         marginInfo.setBottom(10);
 		pdfPage.getPageInfo().setMargin(marginInfo);
