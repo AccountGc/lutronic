@@ -100,6 +100,8 @@ public class EcrmController extends BaseController {
 		ModelAndView model = new ModelAndView();
 		EcrmDTO dto = new EcrmDTO(oid);
 		boolean isAdmin = CommonUtil.isAdmin();
+		ArrayList<NumberCode> sectionList = NumberCodeHelper.manager.getArrayCodeList("CHANGESECTION");
+		model.addObject("sectionList", sectionList);
 		model.addObject("isAdmin", isAdmin);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/change/ecrm/ecrm-view");

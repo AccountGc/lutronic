@@ -1,9 +1,12 @@
+<%@page import="com.e3ps.common.code.NumberCode"%>
+<%@page import="java.util.ArrayList"%>
 <%@page import="com.e3ps.change.ecrm.dto.EcrmDTO"%>
 <%@page import="com.e3ps.change.ecpr.dto.EcprDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 EcrmDTO dto = (EcrmDTO) request.getAttribute("dto");
 %>
 <style type="text/css">

@@ -1,8 +1,11 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.e3ps.common.code.NumberCode"%>
 <%@page import="com.e3ps.change.ecpr.dto.EcprDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
+ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 EcprDTO dto = (EcprDTO) request.getAttribute("dto");
 %>
 <style type="text/css">
@@ -20,8 +23,8 @@ iframe {
 			</div>
 		</td>
 		<td class="right">
-		<%
-			if(dto.is_print()) {
+			<%
+			if (dto.is_print()) {
 			%>
 			<input type="button" value="인쇄" title="인쇄" class="gray" onclick="print();">
 			<%
@@ -65,20 +68,17 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb">ECPR 제목</th>
-				<td class="indent5"><%=dto.getName()%></td>
-				<th>ECPR 번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
+				<th class="lb" colspan="5">
+					<%=dto.getName()%>
+				</th>
 			</tr>
 			<tr>
-				<th class="lb">등록자</th>
-				<td class="indent5"><%=dto.getCreator()%></td>
-				<th>등록일</th>
-				<td class="indent5"><%=dto.getCreatedDate()%></td>
-				<th>수정일</th>
-				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
+				<th class="lb">ECPR 번호</th>
+				<td class="indent5"><%=dto.getNumber()%></td>
+				<th>보존년한</th>
+				<td class="indent5"><%=dto.getPeriod_name()%></td>
+				<th>상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
@@ -89,12 +89,37 @@ iframe {
 				<td class="indent5"><%=dto.getWriteDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">승인일</th>
-				<td class="indent5"><%=dto.getApproveDate()%></td>
-				<th>제품명</th>
+				<th class="lb">제품명</th>
 				<td class="indent5"><%=dto.getModel()%></td>
-				<th>변경구분</th>
-				<td class="indent5"><%=dto.getChangeSection() != null ? dto.getChangeSection() : ""%></td>
+				<th>수정일</th>
+				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
+				<th>승인일</th>
+				<td class="indent5"><%=dto.getApproveDate()%></td>
+			</tr>
+			<tr>
+				<th class="lb">변경구분</th>
+				<td colspan="3">
+					&nbsp;
+					<%
+					for (NumberCode section : sectionList) {
+						int isInclude = -1;
+						if (dto.getChangeSection() != null) {
+							isInclude = dto.getChangeSection().indexOf(section.getCode());
+						}
+					%>
+					<div class="pretty p-switch">
+						<input type="checkbox" name="changeSection" value="<%=section.getCode()%>" <%if (isInclude >= 0) {%> checked <%}%>>
+						<div class="state p-success">
+							<label>
+								<b><%=section.getName()%></b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<%
+					}
+					%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
@@ -109,18 +134,6 @@ iframe {
 					</script>
 				</td>
 			</tr>
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">변경사유</th> -->
-			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentA()%></td> --%>
-			<!-- 			</tr> -->
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">변경사항</th> -->
-			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentB()%></td> --%>
-			<!-- 			</tr> -->
-			<!-- 			<tr> -->
-			<!-- 				<th class="lb">참고사항</th> -->
-			<%-- 				<td colspan="3" class="indent5"><%=dto.getEoCommentC()%></td> --%>
-			<!-- 			</tr> -->
 			<tr>
 				<th class="lb">주 첨부파일</th>
 				<td colspan="5" class="indent5">
