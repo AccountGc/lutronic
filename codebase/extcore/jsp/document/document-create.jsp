@@ -313,7 +313,7 @@ iframe {
 					return false;
 				}
 				if (preFix !== "") {
-					name = preFix + suffix;
+					name = preFix + suffix.value;
 				} else {
 					name = suffix;
 				}
