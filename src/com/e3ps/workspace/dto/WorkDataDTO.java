@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
@@ -131,6 +132,16 @@ public class WorkDataDTO {
 			setCreator(ecpr.getCreatorName());
 			setCreatedDate_txt(ecpr.getCreateTimestamp().toString().substring(0, 10));
 			setViewUrl(this.context + "/ecpr/view?oid=" + getPoid());
+		} else if (per instanceof ECRMRequest) {
+			ECRMRequest ecrm = (ECRMRequest) per;
+			setNumber(ecrm.getEoNumber());
+			setName(ecrm.getEoName());
+			setPersistType("ECRM");
+			setState(ecrm.getLifeCycleState().getDisplay());
+			setCreator(ecrm.getCreatorName());
+			setCreatedDate(ecrm.getCreateTimestamp());
+			setCreatedDate_txt(ecrm.getCreateTimestamp().toString().substring(0, 10));
+			setViewUrl(this.context + "/ecrm/view?oid=" + getPoid());
 		}
 	}
 }
