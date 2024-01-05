@@ -53,6 +53,7 @@ public class CrDTO {
 	// auth
 	private boolean _delete = false;
 	private boolean _modify = false;
+	private boolean _print = false;
 
 	// 신규CR
 	private boolean _isNew = false;

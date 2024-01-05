@@ -399,11 +399,11 @@ function autoTextarea() {
 }
 
 function lcm(obj) {
-	
-	if(!confirm("상태값을 변경하시겠습니까?")) {
+
+	if (!confirm("상태값을 변경하시겠습니까?")) {
 		return false;
 	}
-	
+
 	const oid = document.getElementById("oid").value;
 	const key = obj.value;
 	const url = getCallUrl("/common/lcm?oid=" + oid + "&key=" + key);

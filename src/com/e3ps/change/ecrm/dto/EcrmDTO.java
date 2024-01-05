@@ -55,6 +55,7 @@ public class EcrmDTO {
 	// auth
 	private boolean _modify = false;
 	private boolean _delete = false;
+	private boolean _print = false;
 
 	// 변수용
 	private ArrayList<String> sections = new ArrayList<String>(); // 변경 구분

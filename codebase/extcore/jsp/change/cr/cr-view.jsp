@@ -23,6 +23,13 @@ iframe {
 		</td>
 		<td class="right">
 			<%
+			if(dto.is_print()) {
+			%>
+			<input type="button" value="인쇄" title="인쇄" class="gray" onclick="print();">
+			<%
+			}
+			%>
+			<%
 			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">

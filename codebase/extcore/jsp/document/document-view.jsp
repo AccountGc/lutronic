@@ -55,7 +55,7 @@ iframe {
 			<%
 			if (dto.is_print()) {
 			%>
-			<input type="button" value="내용인쇄" title="내용인쇄" onclick="print();" class="blue">
+			<input type="button" value="인쇄" title="인쇄" onclick="print();" class="gray">
 			<%
 			}
 			%>

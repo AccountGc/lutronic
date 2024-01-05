@@ -181,15 +181,19 @@ public class AsposeUtils {
 		String oid = (String) hash.get("oid");
 		ECOChange e = (ECOChange) CommonUtil.getObject(oid);
 		String html = "";
+		ContentRoleType roleType = null;
 		if (e instanceof ECPRRequest) {
 			ECPRRequest ecpr = (ECPRRequest) e;
 			html = ecpr.getContents();
+			roleType = ContentRoleType.PRIMARY;
 		} else if (e instanceof EChangeRequest) {
 			EChangeRequest cr = (EChangeRequest) e;
 			html = cr.getContents();
+			roleType = ContentRoleType.toContentRoleType("ECR");
 		} else if (e instanceof ECRMRequest) {
 			ECRMRequest ecrm = (ECRMRequest) e;
 			html = ecrm.getContents();
+			roleType = ContentRoleType.PRIMARY;
 		}
 
 //		System.out.println(html);
@@ -206,8 +210,8 @@ public class AsposeUtils {
 		MarginInfo marginInfo = new MarginInfo();
 		marginInfo.setLeft(50);
 		marginInfo.setRight(10);
-        marginInfo.setTop(10);
-        marginInfo.setBottom(10);
+		marginInfo.setTop(10);
+		marginInfo.setBottom(10);
 		pdfPage.getPageInfo().setMargin(marginInfo);
 
 		// HTML 문자열을 PDF 페이지에 추가
@@ -221,7 +225,7 @@ public class AsposeUtils {
 		pdfDocument.close();
 
 		ApplicationData applicationData = ApplicationData.newApplicationData(e);
-		applicationData.setRole(ContentRoleType.PRIMARY);
+		applicationData.setRole(roleType);
 		PersistenceHelper.manager.save(applicationData);
 		ContentServerHelper.service.updateContent(e, applicationData, name);
 
