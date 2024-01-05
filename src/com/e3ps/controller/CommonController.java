@@ -991,17 +991,17 @@ public class CommonController extends BaseController {
 
 		return returnData;
 	}
-	
 
-	@Description(value="상태값 변경")
-	@GetMapping(value="/lcm")
+	@Description(value = "상태값 변경")
+	@GetMapping(value = "/lcm")
+	@ResponseBody
 	public Map<String, Object> lcm(@RequestParam String oid, @RequestParam String key) throws Exception {
 		Map<String, Object> result = new HashMap<>();
 		try {
 			CommonHelper.service.lcm(oid, key);
 			result.put("msg", "상태가 변경되었습니다.");
 			result.put("result", SUCCESS);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("result", FAIL);
 			result.put("msg", e.toString());

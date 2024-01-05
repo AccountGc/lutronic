@@ -219,6 +219,7 @@ iframe {
 			document.addEventListener("DOMContentLoaded", function() {
 				toFocus("name");
 				selectbox("period");
+				$("#period").bindSelectSetValue("PR004");
 				createAUIGrid300(columns300);
 				createAUIGrid90(columns90);
 				createAUIGrid101(columns101);

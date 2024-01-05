@@ -282,14 +282,14 @@ public class StandardPartService extends StandardManager implements PartService 
 
 			part = (WTPart) PersistenceHelper.manager.save(part);
 
-			if (temprary) {
-				State state = State.toState("TEMPRARY");
-				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-				LifeCycleHelper.service.setLifeCycleState(part, state);
-			} else {
-				// 작업함으로 이동 시킨다
-				WorkDataHelper.service.create(part);
-			}
+//			if (temprary) {
+//				State state = State.toState("TEMPRARY");
+//				// 상태값 변경해준다 임시저장 <<< StateRB 추가..
+//				LifeCycleHelper.service.setLifeCycleState(part, state);
+//			} else {
+//				// 작업함으로 이동 시킨다
+//				WorkDataHelper.service.create(part);
+//			}
 			// IBA 설정
 			CommonHelper.service.changeIBAValues(part, params);
 			IBAUtil.changeIBAValue(part, AttributeKey.IBAKey.IBA_DES, partName, "string");

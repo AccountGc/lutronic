@@ -23,7 +23,7 @@ iframe {
 		</td>
 		<td class="right">
 			<%
-			if(dto.is_print()) {
+			if (dto.is_print()) {
 			%>
 			<input type="button" value="인쇄" title="인쇄" class="gray" onclick="print();">
 			<%
@@ -69,10 +69,15 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
+				<th class="lb" colspan="5">
+					<%=dto.getName()%>
+				</th>
+			</tr>
+			<tr>
 				<th class="lb">CR 번호</th>
 				<td class="indent5"><%=dto.getNumber()%></td>
-				<th>CR 제목</th>
-				<td class="indent5"><%=dto.getName()%></td>
+				<th>보존년한</th>
+				<td class="indent5"><%=dto.getPeriod_name()%></td>
 				<th>상태</th>
 				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
@@ -85,18 +90,35 @@ iframe {
 				<td class="indent5"><%=dto.getWriteDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">변경사유</th>
-				<td class="indent5"><%=dto.getChangeSection()%></td>
+				<th class="lb">제품명</th>
+				<td class="indent5"><%=dto.getModel()%></td>
 				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
 				<th>승인일</th>
 				<td class="indent5"><%=dto.getApproveDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">제품명</th>
-				<td colspan="3" class="indent5"><%=dto.getModel()%></td>
-				<th>보존년한</th>
-				<td class="indent5"><%=dto.getPeriod_name()%></td>
+				<th class="lb">변경사유</th>
+				<td colspan="5">
+					&nbsp;
+					<%
+					String[] ss = new String[]{"영업/마케팅", "원가 절감", "기능/성능 변경", "공정 변경", "자재 변경", "허가/규제 변경", "품질 개선", "라벨링", "기타"};
+					for (String s : ss) {
+						int include = dto.getChangeSection().indexOf(s);
+					%>
+					<div class="pretty p-switch">
+						<input type="checkbox" name="changeSection" disabled="disabled" value="<%=s%>" <%if (include > -1) {%> checked="checked" <%}%>>
+						<div class="state p-success">
+							<label>
+								<b><%=s%></b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<%
+					}
+					%>
+				</td>
 			</tr>
 			<%
 			if (dto.is_isNew()) {

@@ -14,8 +14,6 @@
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
 ArrayList<CommentsDTO> list = dto.getComments();
-
-// out.println(qr.size());
 %>
 <style type="text/css">
 iframe {
@@ -36,14 +34,14 @@ iframe {
 		</td>
 		<td class="right">
 			<%
-				if(isAdmin) {
+			if (isAdmin) {
 			%>
 			<select name="state" id="state" class="width-200" onchange="lcm(this);">
 				<option value="">선택</option>
 				<option value="APPROVED">승인됨</option>
 			</select>
 			<%
-				}
+			}
 			%>
 			<%
 			if (dto.is_force()) {
@@ -331,30 +329,32 @@ iframe {
 
 	//내용인쇄
 	function print() {
-		var sw=screen.width;
-	 	var sh=screen.height;
-	 	var w=1000;//가로길이
-	 	var h=800;//세로길이
-	 	var xpos=(sw-w)/2; //화면에 띄울 위치
-	 	var ypos=(sh-h)/2; //중앙
-	 	
-	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
-	 	const content = DEXT5.getBodyValue("content");
-		printWindow.document.open();
-		printWindow.document.write('<html><head><style type="text/css">@page {size: auto;margin-top: 30mm;}@media print {html, body {border: 1px solid white;height: 99%;page-break-after: avoid;page-break-before: avoid;}}</style></head><body>');
-		//출력할 내용 추가
-		printWindow.document.write('<pre>' + content + '</pre>');
-		printWindow.document.write('</body></html>');
-		printWindow.document.close();
-		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
+		const url = getCallUrl("/doc/print?oid=" + oid);
+		_popup(url, "", "", "f");
+		// 		var sw=screen.width;
+		// 	 	var sh=screen.height;
+		// 	 	var w=1000;//가로길이
+		// 	 	var h=800;//세로길이
+		// 	 	var xpos=(sw-w)/2; //화면에 띄울 위치
+		// 	 	var ypos=(sh-h)/2; //중앙
+
+		// 	 	const printWindow = window.open("","print","width=" + w +",height="+ h +",top=" + ypos + ",left="+ xpos +",status=yes,scrollbars=yes");
+		// 	 	const content = DEXT5.getBodyValue("content");
+		// 		printWindow.document.open();
+		// 		printWindow.document.write('<html><head><style type="text/css">@page {size: auto;margin-top: 30mm;}@media print {html, body {border: 1px solid white;height: 99%;page-break-after: avoid;page-break-before: avoid;}}</style></head><body>');
+		// 		//출력할 내용 추가
+		// 		printWindow.document.write('<pre>' + content + '</pre>');
+		// 		printWindow.document.write('</body></html>');
+		// 		printWindow.document.close();
+		// 		printWindow.print(); // 창에 대한 프린트 다이얼로그 열기
 	}
-	
+
 	//수정 및 개정
 	function update(mode) {
 		const url = getCallUrl("/doc/update?oid=" + oid + "&mode=" + mode);
 		document.location.href = url;
 	}
-	
+
 	function force() {
 		const url = getCallUrl("/doc/force?oid=" + oid);
 		document.location.href = url;
@@ -377,21 +377,20 @@ iframe {
 			}
 		}, "DELETE");
 	}
-	
 
 	// 결재 회수
 	function withdraw() {
 		const oid = document.getElementById("oid").value;
 		let remain = false;
-		if(confirm("확인 버튼을 누를시 기존 결재선을 유지한채 결재를 회수 합니다.\n취소를 선택시 모든 결재선 및 결재 이력이 초기화 됩니다.")) {
+		if (confirm("확인 버튼을 누를시 기존 결재선을 유지한채 결재를 회수 합니다.\n취소를 선택시 모든 결재선 및 결재 이력이 초기화 됩니다.")) {
 			remain = true;
 		}
-		const url = getCallUrl("/workspace/withdraw?oid="+oid + "&remain="+remain);
+		const url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remain=" + remain);
 		alert(url);
 		openLayer();
 		call(url, null, function(data) {
 			alert(data.msg);
-			if(data.result) {
+			if (data.result) {
 				opener.document.location.href = getCallUrl("/workData/list");
 				self.close();
 			} else {

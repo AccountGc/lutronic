@@ -29,6 +29,9 @@ import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.dto.DocumentDTO;
 import com.e3ps.doc.service.DocumentClassHelper;
 import com.e3ps.doc.service.DocumentHelper;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
@@ -441,6 +444,24 @@ public class DocumentController extends BaseController {
 		JSONArray list = DocumentClassHelper.manager.numberView(classType);
 		model.addObject("list", list);
 		model.setViewName("popup:/document/document-numberView");
+		return model;
+	}
+
+	@Description(value = "문서 인쇄하기")
+	@GetMapping(value = "/print")
+	public ModelAndView print(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		WTDocument doc = (WTDocument) CommonUtil.getObject(oid);
+		DocumentDTO dto = new DocumentDTO(doc);
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(doc);
+		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(m);
+		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
+		ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(m);
+		model.addObject("submitLine", submitLine);
+		model.addObject("approvalLines", approvalLines);
+		model.addObject("approvalLines", approvalLines);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/document/document-print");
 		return model;
 	}
 }
