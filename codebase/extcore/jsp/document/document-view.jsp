@@ -139,7 +139,7 @@ iframe {
 				<%-- 				<td class="indent5"><%=dto.getApprovaltype_name()%></td> --%>
 				<th class="lb">프로젝트 코드</th>
 				<td class="indent5"><%=dto.getModel_name()%></td>
-				<th>보존기간</th>
+				<th>보존년한</th>
 				<td class="indent5"><%=dto.getPreseration_name()%></td>
 				<th>부서</th>
 				<td class="indent5"><%=dto.getDeptcode_name()%></td>

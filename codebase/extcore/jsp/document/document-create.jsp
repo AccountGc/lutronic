@@ -70,7 +70,7 @@ iframe {
 				<td class="indent5">
 					<input type="text" name="interalnumber" id="interalnumber" class="width-300" readonly="readonly">
 				</td>
-				<th class="req">보존기간</th>
+				<th class="req">보존년한</th>
 				<td class="indent5">
 					<select name="preseration" id="preseration" class="width-200">
 						<%

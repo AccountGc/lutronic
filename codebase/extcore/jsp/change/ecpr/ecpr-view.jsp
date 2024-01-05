@@ -108,7 +108,7 @@ iframe {
 						}
 					%>
 					<div class="pretty p-switch">
-						<input type="checkbox" name="changeSection" value="<%=section.getCode()%>" <%if (isInclude >= 0) {%> checked <%}%>>
+						<input type="checkbox" name="changeSection" disabled="disabled" value="<%=section.getCode()%>" <%if (isInclude >= 0) {%> checked <%}%>>
 						<div class="state p-success">
 							<label>
 								<b><%=section.getName()%></b>
