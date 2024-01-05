@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -101,9 +102,9 @@ public class TempraryHelper {
 		} else if (per instanceof EChangeNotice) {
 			// ECN
 			return "ecn";
-//		} else if (per instanceof ECrm) {
-//			// ECN
-//			return "ecrm";
+		} else if (per instanceof ECRMRequest) {
+			// ECN
+			return "ecrm";
 		} else if (per instanceof ECPRRequest) {
 			// ECPR
 			return "ecpr";

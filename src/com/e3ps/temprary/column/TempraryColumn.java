@@ -3,6 +3,7 @@ package com.e3ps.temprary.column;
 import java.sql.Timestamp;
 
 import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeNotice;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
@@ -48,7 +49,7 @@ public class TempraryColumn {
 	 * 기본객체 설정값
 	 */
 	private void setInfo(LifeCycleManaged lcm) throws Exception {
-		 if(lcm instanceof WTDocument) {
+		if (lcm instanceof WTDocument) {
 			// 문서
 			WTDocument doc = (WTDocument) lcm;
 			setName(doc.getName());
@@ -58,13 +59,13 @@ public class TempraryColumn {
 			setCreatedDate_txt(doc.getCreateTimestamp().toString().substring(0, 10));
 			if ("$$MMDocument".equals(doc.getDocType().toString())) {
 				setDataType("금형");
-			} else if("$$ROHS".equals(doc.getDocType().toString())){
+			} else if ("$$ROHS".equals(doc.getDocType().toString())) {
 				setDataType("ROHS");
-			}else {
-				setDataType("문서");	
+			} else {
+				setDataType("문서");
 			}
-		}else if(lcm instanceof EChangeRequest) {
-			// CR 
+		} else if (lcm instanceof EChangeRequest) {
+			// CR
 			EChangeRequest cr = (EChangeRequest) lcm;
 			setName(cr.getEoName());
 			setNumber(cr.getEoNumber());
@@ -95,6 +96,15 @@ public class TempraryColumn {
 			setCreator(ecn.getCreatorFullName());
 			setCreatedDate(ecn.getCreateTimestamp());
 			setCreatedDate_txt(ecn.getCreateTimestamp().toString().substring(0, 10));
+		} else if (lcm instanceof ECRMRequest) {
+			// ECPR
+			ECRMRequest ecrm = (ECRMRequest) lcm;
+			setName(ecrm.getEoName());
+			setNumber(ecrm.getEoNumber());
+			setDataType("ECRM");
+			setCreator(ecrm.getCreatorFullName());
+			setCreatedDate(ecrm.getCreateTimestamp());
+			setCreatedDate_txt(ecrm.getCreateTimestamp().toString().substring(0, 10));
 		} else if (lcm instanceof ECPRRequest) {
 			// ECPR
 			ECPRRequest ecpr = (ECPRRequest) lcm;
