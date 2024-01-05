@@ -232,7 +232,7 @@ public class StandardCrService extends StandardManager implements CrService {
 	public void modify(CrDTO dto) throws Exception {
 		String name = dto.getName();
 		String contents = dto.getContents();
-		String period = dto.getPeriod_code()
+		String period = dto.getPeriod_code();
 		ArrayList<String> sections = dto.getSections(); // 변경 구분
 		ArrayList<Map<String, String>> rows300 = dto.getRows300(); // 모델
 		Transaction trs = new Transaction();
