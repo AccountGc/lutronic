@@ -118,6 +118,9 @@ public class EcrmDTO {
 	 */
 	private void setAuth(ECRMRequest ecrm) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
+		if (check(ecrm, "APPROVED")) {
+			set_print(true);
+		}
 		if (check(ecrm, "LINE_REGISTER") || isAdmin) {
 			set_modify(true);
 		}

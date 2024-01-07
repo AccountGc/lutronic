@@ -46,9 +46,9 @@ public class EcoDTO {
 	private String approveDate = "";
 	private String model_name;
 
-	private EChangeOrder eco;
 	// auth
-	private boolean isModify = false;
+	private boolean _modify = false;
+	private boolean _delete = false;
 
 	// 변수용
 	private String primary;
@@ -94,9 +94,7 @@ public class EcoDTO {
 			setModel_name(EcoHelper.manager.displayToModel(eco.getModel()));
 		}
 		setContentMap(ContentUtils.getContentByRole(eco, "ECO"));
-
-		setEco(eco);
-		setAuth();
+		setAuth(eco);
 	}
 
 	/**
@@ -130,19 +128,22 @@ public class EcoDTO {
 	/**
 	 * 권한 설정
 	 */
-	private void setAuth() throws Exception {
-		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
-		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
-			setModify(true);
+	private void setAuth(EChangeOrder eco) throws Exception {
+		boolean isAdmin = CommonUtil.isAdmin();
+		if (check(eco, "LINE_REGISTER") || (check(eco, "ACTIVITY")) || isAdmin) {
+			set_modify(true);
+		}
+		if (isAdmin) {
+			set_delete(true);
 		}
 	}
 
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(EChangeOrder eco, String state) throws Exception {
 		boolean check = false;
-		String compare = getEco().getLifeCycleState().toString();
+		String compare = eco.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}

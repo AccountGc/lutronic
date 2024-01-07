@@ -234,11 +234,10 @@ ArrayList<Map<String, String>> classTypes1 = (ArrayList<Map<String, String>>) re
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
+				<option value="10">10</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">

@@ -147,6 +147,11 @@ public class DocumentDTO {
 	private void setNameInfo(WTDocument doc) throws Exception {
 		// 과거 데이터는 어떻게 할것인지..
 		String classType1 = doc.getTypeInfoWTDocument().getPtc_str_2();
+		DocumentClassType dct = DocumentClassType.toDocumentClassType(classType1);
+		if (dct != null) {
+			setClassType1_code(dct.toString());
+			setClassType1_name(dct.getDisplay());
+		}
 		if ("DEV".equals(classType1) || "INSTRUCTION".equals(classType1) || "REPORT".equals(classType1)
 				|| "VALIDATION".equals(classType1) || "MEETING".equals(classType1)) {
 			// _ 무조건 붙이게하도록...

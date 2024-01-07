@@ -15,9 +15,20 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 		<td class="right">
 			<%
-			if (isAdmin || dto.isModify()) {
+			if (isAdmin) {
+			%>
+			<input type="button" value="SAP재전송" title="SAP재전송" class="blue" onclick="sendEoSap();">
+			<%
+			}
+			%>
+			<%
+			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
+			<%
+			}
+			if (dto.is_delete()) {
+			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
@@ -34,9 +45,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</li>
 		<li>
 			<a href="#tabs-2">산출물</a>
-		</li>
-		<li>
-			<a href="#tabs-3">관련 객체</a>
 		</li>
 		<li>
 			<a href="#tabs-4">이력 관리</a>
@@ -62,16 +70,16 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
-				<th class="lb">제품명</th>
-				<td class="indent5"><%=dto.getModel_name()%></td>
-			</tr>
-			<tr>
 				<th class="lb">등록자</th>
 				<td class="indent5"><%=dto.getCreator()%></td>
 				<th>등록일</th>
 				<td class="indent5"><%=dto.getCreatedDate()%></td>
 				<th>수정일</th>
 				<td class="indent5"><%=dto.getModifiedDate()%></td>
+			</tr>
+			<tr>
+				<th class="lb">제품명</th>
+				<td class="indent5" colspan="5"><%=dto.getModel_name()%></td>
 			</tr>
 			<tr>
 				<th class="lb">제품 설계 개요</th>
@@ -106,32 +114,30 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 			</tr>
 			<tr>
-				<th class="lb">황제품</th>
+				<th class="lb">완제품</th>
 				<td colspan="5">
 					<!-- 완제품 품목 -->
 					<jsp:include page="/extcore/jsp/change/include/complete-part-include.jsp">
 						<jsp:param value="<%=dto.getOid()%>" name="oid" />
 						<jsp:param value="view" name="mode" />
-						<jsp:param value="300" name="height" />
 						<jsp:param value="false" name="header" />
 					</jsp:include>
 				</td>
 			</tr>
 		</table>
-
-
+		<!-- 	관련 문서 -->
+		<jsp:include page="/extcore/jsp/document/include/document-include.jsp">
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="view" name="mode" />
+			<jsp:param value="false" name="header" />
+		</jsp:include>
+		<!-- 설변활동 -->
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
 	<div id="tabs-2">
 		<jsp:include page="/extcore/jsp/change/include/change-output.jsp">
-			<jsp:param value="<%=dto.getOid()%>" name="oid" />
-		</jsp:include>
-	</div>
-	<div id="tabs-3">
-		<!-- 관련 객체 -->
-		<jsp:include page="/extcore/jsp/change/eo/include/eo-reference-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>
@@ -169,6 +175,12 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		}, "DELETE");
 	}
 
+	function sendEoSap() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/eo/sendEoSap?oid=" + oid);
+		_popup(url, 1200, 600, "n");
+	}
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
@@ -190,20 +202,6 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					}
 					break;
 				case "tabs-2":
-					break;
-				case "tabs-3":
-					const isCreated90 = AUIGrid.isCreated(myGridID90); // 문서
-					if (isCreated90) {
-						AUIGrid.resize(myGridID90);
-					} else {
-						createAUIGrid90(columns90);
-					}
-					const isCreated300 = AUIGrid.isCreated(myGridID300); // MODEL
-					if (isCreated300) {
-						AUIGrid.resize(myGridID300);
-					} else {
-						createAUIGrid300(columns300);
-					}
 					break;
 				case "tabs-4":
 					const isCreated51 = AUIGrid.isCreated(myGridID51); // 다운로드이력
@@ -228,9 +226,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				}
 			}
 		});
+		createAUIGrid90(columns90);
 		createAUIGrid104(columns104);
-		AUIGrid.resize(myGridID104);
 		createAUIGrid700(columns700);
+		AUIGrid.resize(myGridID90);
+		AUIGrid.resize(myGridID104);
 		AUIGrid.resize(myGridID700);
 		autoTextarea();
 	});

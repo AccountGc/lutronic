@@ -17,9 +17,13 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</td>
 		<td class="right">
 			<%
-			if (isAdmin || dto.isModify()) {
+			if (dto.is_modify()) {
 			%>
 			<input type="button" value="수정" title="수정" class="blue" onclick="modify();">
+			<%
+			}
+			if (dto.is_delete()) {
+			%>
 			<input type="button" value="삭제" title="삭제" class="red" onclick="_delete();">
 			<%
 			}
@@ -126,11 +130,11 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 		</table>
 		<!-- 	관련 CR -->
 		<jsp:include page="/extcore/jsp/change/cr/include/cr-include.jsp">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 			<jsp:param value="view" name="mode" />
 			<jsp:param value="true" name="multi" />
 			<jsp:param value="true" name="header" />
-		</jsp:include>		
+		</jsp:include>
 		<jsp:include page="/extcore/jsp/change/activity/include/activity-view.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>

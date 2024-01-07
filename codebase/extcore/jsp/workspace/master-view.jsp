@@ -26,84 +26,52 @@ String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
 		</td>
 	</tr>
 </table>
-<div id="tabs">
-	<ul>
-		<li>
-			<a href="#tabs-1">결재정보</a>
-		</li>
-		<li>
-			<a href="#tabs-2">결재대상정보</a>
-		</li>
-	</ul>
-	<div id="tabs-1">
-		<table class="view-table">
-			<colgroup>
-				<col width="10%">
-				<col width="300">
-				<col width="130">
-				<col width="300">
-				<col width="130">
-				<col width="300">
-			</colgroup>
-			<tr>
-				<th class="lb">결재 제목</th>
-				<td class="indent5" colspan="5"><%=dto.getName()%></td>
-			</tr>
-			<tr>
-				<th class="lb">수신일</th>
-				<td class="indent5"><%=dto.getReceiveTime()%></td>
-				<th>기안자</th>
-				<td class="indent5"><%=dto.getSubmiter()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
-			</tr>
-			<tr>
-				<th class="lb">결재의견</th>
-				<td class="indent5" colspan="5">
-					<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
-				</td>
-			</tr>
-		</table>
+<table class="view-table">
+	<colgroup>
+		<col width="10%">
+		<col width="300">
+		<col width="130">
+		<col width="300">
+		<col width="130">
+		<col width="300">
+	</colgroup>
+	<tr>
+		<th class="lb">결재 제목</th>
+		<td class="indent5" colspan="5">
+			<a href="javascript:dataView();"><%=dto.getName()%></a>
+		</td>
+	</tr>
+	<tr>
+		<th class="lb">수신일</th>
+		<td class="indent5"><%=dto.getReceiveTime()%></td>
+		<th>기안자</th>
+		<td class="indent5"><%=dto.getSubmiter()%></td>
+		<th>상태</th>
+		<td class="indent5"><%=dto.getState()%></td>
+	</tr>
+	<tr>
+		<th class="lb">결재의견</th>
+		<td class="indent5" colspan="5">
+			<textarea name="description" id="description" rows="6" readonly="readonly"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+		</td>
+	</tr>
+</table>
 
-		<!-- 결재이력 -->
-		<jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
-			<jsp:param value="<%=dto.getPoid()%>" name="oid" />
-		</jsp:include>
-	</div>
-	
-	<div id="tabs-2">
-		<jsp:include page="<%=url%>">
-			<jsp:param value="<%=dto.getPoid()%>" name="tapOid" />
-		</jsp:include>
-		
-	</div>
-</div>
+<!-- 결재이력 -->
+<jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
+	<jsp:param value="<%=dto.getPoid()%>" name="oid" />
+</jsp:include>
 
 <script type="text/javascript">
+	function dataView() {
+		const url = "<%=dto.getViewUrl()%>";
+		_popup(url, 1600, 800, "n");
+	}
+	
 	document.addEventListener("DOMContentLoaded", function() {
 		toFocus("description");
-		$("#tabs").tabs({
-			active : 0,
-			activate : function(event, ui) {
-				var tabId = ui.newPanel.prop("id");
-				switch (tabId) {
-				case "tabs-1":
-					const isCreated10000 = AUIGrid.isCreated(columns10000);
-					if (isCreated10000) {
-						AUIGrid.resize(myGridID10000);
-					} else {
-						createAUIGrid10000(columns10000);
-					}
-					break;
-				case "tabs-2":
-					break;
-				}
-			}
-		});
 		createAUIGrid10000(columns10000);
 		AUIGrid.resize(myGridID10000);
-		// 		createAUIGrid(columns);
-		// 		AUIGrid.resize(myGridID);
 		finderUser("reassignUser");
 	})
 

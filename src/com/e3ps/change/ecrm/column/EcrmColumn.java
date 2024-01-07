@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
+import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -29,7 +32,7 @@ public class EcrmColumn {
 	private Timestamp createdDate;
 	private String createdDate_txt;
 	private String approveDate;
-	private String ecprStart;
+	private String period;
 
 	public EcrmColumn() {
 
@@ -44,8 +47,7 @@ public class EcrmColumn {
 		setName(ecrm.getEoName());
 		setNumber(ecrm.getEoNumber());
 		setModel(CrHelper.manager.displayToModel(ecrm.getModel()));
-		setChangeSection(ecrm.getChangeSection());
-//		setCreateDepart(CrHelper.manager.displayToDept(cr.getCreateDepart()));
+		setChangeSection(EcprHelper.manager.displayToSection(ecrm.getChangeSection()));
 		setCreateDepart(ecrm.getCreateDepart());
 		setWriter(ecrm.getWriter());
 		setWriteDate(ecrm.getCreateDate());
@@ -54,6 +56,9 @@ public class EcrmColumn {
 		setCreatedDate(ecrm.getCreateTimestamp());
 		setCreatedDate_txt(ecrm.getCreateTimestamp().toString().substring(0, 10));
 		setApproveDate(ecrm.getApproveDate());
-//		setEcprStart(cr.getEcprStart() ? "ECPR진행" : "ECPR미진행");
+		NumberCode period = NumberCodeHelper.manager.getNumberCode(ecrm.getPeriod(), "PRESERATION");
+		if (period != null) {
+			setPeriod(period.getName());
+		}
 	}
 }

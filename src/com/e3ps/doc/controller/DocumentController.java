@@ -459,7 +459,7 @@ public class DocumentController extends BaseController {
 		ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(m);
 		model.addObject("submitLine", submitLine);
 		model.addObject("approvalLines", approvalLines);
-		model.addObject("approvalLines", approvalLines);
+		model.addObject("agreeLines", agreeLines);
 		model.addObject("dto", dto);
 		model.setViewName("popup:/document/document-print");
 		return model;

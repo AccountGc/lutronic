@@ -255,23 +255,21 @@ WTPart root = (WTPart) request.getAttribute("root");
 			renderColumns : function(event, data) {
 				const node = data.node;
 				const isCheckOut = node.data.isCheckOut;
-				// 				const isNew = node.data.isNew;
 				if (isCheckOut) {
-					node.tr.style.backgroundColor = "#FFCBCB";
+// 					node.tr.style.backgroundColor = "#FFCBCB";
 				} else {
 					node.tr.style.backgroundColor = "white";
 				}
-
-				// 				if (isNew) {
-				// 					node.tr.style.backgroundColor = "rgb(254, 233, 205)";
-				// 				} else {
-				// 					node.tr.style.backgroundColor = "white";
-				// 				}
-				logger(node);
+				
+				const thum = node.data.thum;
 				const list = node.tr.querySelectorAll("td");
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
-				list[1].innerHTML  = "<img src=" + node.data.thumb + ">";
+				if(thum != undefined) {
+					list[1].innerHTML  = "<img src=" + node.data.thum + ">";
+				} else {
+					list[1].innerHTML  = "";
+				}
 				list[2].style.textAlign = "center";
 				list[2].textContent = node.data.level;
 				list[3].style.textAlign = "center";
@@ -941,9 +939,14 @@ WTPart root = (WTPart) request.getAttribute("root");
 			renderColumns : function(event, data) {
 				const node = data.node;
 				const list = node.tr.querySelectorAll("td");
+				const thum = node.data.thum;
 				list[0].style.textAlign = "center";
 				list[1].style.textAlign = "center";
-				list[1].innerHTML  = "<img src=" + node.data.thumb + ">";
+				if(thum != undefined) {
+					list[1].innerHTML  = "<img src=" + node.data.thum + ">";
+				} else {
+					list[1].innerHTML  = "";
+				}
 				list[2].style.textAlign = "center";
 				list[2].textContent = node.data.level;
 				list[3].style.textAlign = "center";

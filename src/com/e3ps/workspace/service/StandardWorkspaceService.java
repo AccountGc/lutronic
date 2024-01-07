@@ -456,7 +456,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 
 			for (ApprovalLine approvalLine : approvalLines) {
 				int sort = approvalLine.getSort();
-				if (sort == 1) {
+				if (sort == 0) {
 					approvalLine.setStartTime(completeTime);
 					approvalLine.setState(WorkspaceHelper.STATE_APPROVAL_APPROVING);
 					approvalLine = (ApprovalLine) PersistenceHelper.manager.modify(approvalLine);
@@ -467,6 +467,7 @@ public class StandardWorkspaceService extends StandardManager implements Workspa
 			master = (ApprovalMaster) PersistenceHelper.manager.modify(master);
 
 			boolean isEndApprovalLine = WorkspaceHelper.manager.isEndApprovalLine(master, 0);
+			System.out.println(isEndApprovalLine);
 			if (isEndApprovalLine) {
 
 				// 모든 수신라인 상태 변경

@@ -146,7 +146,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						<%
 						for (QuantityUnit unit : unitList) {
 						%>
-						<option value="<%=unit.toString() %>"><%=unit.getDisplay() %></option>
+						<option value="<%=unit.toString()%>"><%=unit.getDisplay()%></option>
 						<%
 						}
 						%>
@@ -254,12 +254,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
-						<option value="15" selected="selected">15</option>
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -403,14 +401,6 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					filterLayerWidth : 320,
 					filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
 					enableRowCheckShiftKey : true,
-					rowStyleFunction : function(rowIndex, item) {
-						if (item.preOrder) {
-							return "preOrder";
-						} else if (item.checkout) {
-							return "checkout";
-						}
-						return "";
-					}
 				};
 				myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 				loadGridData();
@@ -422,7 +412,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					hideContextMenu();
 				});
 			}
-			
+
 			function _auiContextMenuHandler(event) {
 				if (event.target == "header") { // 헤더 컨텍스트
 					if (nowHeaderMenuVisible) {
@@ -515,7 +505,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				}
 				let params = new Object();
 				const field = [ "location", "partNumber", "partName", "createdFrom", "createdTo", "modifiedFrom", "modifiedTo", "state", "model", "productmethod", "deptcode", "unit", "weight", "mat", "finish", "remarks", "ecoNo", "eoNo", "creatorOid", "specification" ];
-                const url = getCallUrl("/distribute/listProduction");
+				const url = getCallUrl("/distribute/listProduction");
 				const preOrder = document.querySelector("input[name=preOrder]:checked").value;
 				params = toField(params, field);
 				params.latest = true;
@@ -574,7 +564,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
 			});
-			
+
 			function auiContextHandler(event) {
 				const item = event.item;
 				const part_oid = item.part_oid;
@@ -695,11 +685,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					}
 				}
 			}
-			
+
 			function exportExcel() {
 				const exceptColumnFields = [ "_3d", "_2d" ];
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("완제품 리스트", "완제품", "완제품 리스트", exceptColumnFields, sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("완제품 리스트", "완제품", "완제품 리스트", exceptColumnFields, sessionName);
 			}
 		</script>
 	</form>

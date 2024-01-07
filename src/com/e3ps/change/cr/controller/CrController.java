@@ -1,6 +1,6 @@
 package com.e3ps.change.cr.controller;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +18,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.doc.dto.DocumentDTO;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.service.WorkspaceHelper;
+
+import wt.doc.WTDocument;
 
 @Controller
 @RequestMapping(value = "/cr/**")
@@ -86,7 +94,7 @@ public class CrController extends BaseController {
 		ArrayList<NumberCode> preserationList = NumberCodeHelper.manager.getArrayCodeList("PRESERATION");
 		FormTemplate form = FormTemplateHelper.manager.getTemplate("변경관리요청서(CR)");
 		model.addObject("preserationList", preserationList);
-		model.addObject("html", form==null?"":form.getDescription());
+		model.addObject("html", form == null ? "" : form.getDescription());
 		model.setViewName("/extcore/jsp/change/cr/cr-create.jsp");
 		return model;
 	}
@@ -166,5 +174,23 @@ public class CrController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+
+	@Description(value = "CR 인쇄하기")
+	@GetMapping(value = "/print")
+	public ModelAndView print(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		EChangeRequest cr = (EChangeRequest) CommonUtil.getObject(oid);
+		CrDTO dto = new CrDTO(cr);
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(cr);
+		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(m);
+		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
+		ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(m);
+		model.addObject("submitLine", submitLine);
+		model.addObject("approvalLines", approvalLines);
+		model.addObject("agreeLines", agreeLines);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/cr/cr-print");
+		return model;
 	}
 }

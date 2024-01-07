@@ -7,13 +7,13 @@
 <%
 ArrayList<NumberCode> sectionList = (ArrayList<NumberCode>) request.getAttribute("sectionList");
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 ArrayList<NumberCode> deptcodeList = (ArrayList<NumberCode>) request.getAttribute("deptcodeList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 %>
-<input type="hidden" name="sessionid" id="sessionid"> 
-<input type="hidden" name="lastNum" id="lastNum"> 
+<input type="hidden" name="sessionid" id="sessionid">
+<input type="hidden" name="lastNum" id="lastNum">
 <input type="hidden" name="curPage" id="curPage">
 
 <table class="search-table">
@@ -27,20 +27,24 @@ boolean multi = (boolean) request.getAttribute("multi");
 	</colgroup>
 	<tr>
 		<th>ECPR 번호</th>
-		<td class="indent5"><input type="text" name="number" id="number" class="width-300"></td>
+		<td class="indent5">
+			<input type="text" name="number" id="number" class="width-300">
+		</td>
 		<th>ECPR 제목</th>
-		<td class="indent5"><input type="text" name="name" id="name" class="width-300"></td>
+		<td class="indent5">
+			<input type="text" name="name" id="name" class="width-300">
+		</td>
 		<th>상태</th>
 		<td class="indent5">
-			<select name="state" id="state" class="width-200" >
+			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (Map<String,String> lifecycle : lifecycleList) {
-					if(!lifecycle.get("code").equals("TEMPRARY")){
+				for (Map<String, String> lifecycle : lifecycleList) {
+					if (!lifecycle.get("code").equals("TEMPRARY")) {
 				%>
-				<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 				<%
-					}
+				}
 				}
 				%>
 			</select>
@@ -48,19 +52,31 @@ boolean multi = (boolean) request.getAttribute("multi");
 	</tr>
 	<tr>
 		<th>등록자</th>
-		<td class="indent5"><input type="text" name="creator" id="creator" data-multi="false" class="width-200"> <input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"></td>
+		<td class="indent5">
+			<input type="text" name="creator" id="creator" data-multi="false" class="width-200">
+			<input type="hidden" name="creatorOid" id="creatorOid">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+		</td>
 		<th>등록일</th>
-		<td class="indent5"><input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-			onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+		<td class="indent5">
+			<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+			~
+			<input type="text" name="createdTo" id="createdTo" class="width-100">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+		</td>
 		<th>승인일</th>
-		<td class="indent5"><input type="text" name="approveFrom" id="approveFrom" class="width-100"> ~ <input type="text" name="approveTo" id="approveTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-			onclick="clearFromTo('approveFrom', 'approveTo')"></td>
+		<td class="indent5">
+			<input type="text" name="approveFrom" id="approveFrom" class="width-100">
+			~
+			<input type="text" name="approveTo" id="approveTo" class="width-100">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('approveFrom', 'approveTo')">
+		</td>
 	</tr>
 	<tr>
 		<th>작성자</th>
 		<td class="indent5">
 			<input type="text" name="writer" id="writer" data-multi="false" class="width-200">
-			<input type="hidden" name="writerOid" id="writerOid"> 
+			<input type="hidden" name="writerOid" id="writerOid">
 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('writer')">
 		</td>
 		<th>작성부서</th>
@@ -70,24 +86,28 @@ boolean multi = (boolean) request.getAttribute("multi");
 				<%
 				for (NumberCode deptcode : deptcodeList) {
 				%>
-				<option value="<%=deptcode.getCode() %>"><%=deptcode.getName()%></option>
+				<option value="<%=deptcode.getCode()%>"><%=deptcode.getName()%></option>
 				<%
 				}
 				%>
 			</select>
 		</td>
 		<th>작성일</th>
-		<td class="indent5"><input type="text" name="writedFrom" id="writedFrom" class="width-100"> ~ <input type="text" name="writedTo" id="writedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-			onclick="clearFromTo('writedFrom', 'writedTo')"></td>
-		
+		<td class="indent5">
+			<input type="text" name="writedFrom" id="writedFrom" class="width-100">
+			~
+			<input type="text" name="writedTo" id="writedTo" class="width-100">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('writedFrom', 'writedTo')">
+		</td>
+
 	</tr>
 	<tr>
-<!-- 		<th>제안자</th> -->
-<!-- 		<td class="indent5"> -->
-<!-- 			<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
-<!-- 			<input type="hidden" name="proposerOid" id="proposerOid">  -->
-<!-- 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"> -->
-<!-- 		</td> -->
+		<!-- 		<th>제안자</th> -->
+		<!-- 		<td class="indent5"> -->
+		<!-- 			<input type="text" name="proposer" id="proposer" data-multi="false" class="width-200"> -->
+		<!-- 			<input type="hidden" name="proposerOid" id="proposerOid">  -->
+		<!-- 			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')"> -->
+		<!-- 		</td> -->
 		<th>변경구분</th>
 		<td class="indent5">
 			<select name="changeSection" id="changeSection" class="width-200">
@@ -95,7 +115,7 @@ boolean multi = (boolean) request.getAttribute("multi");
 				<%
 				for (NumberCode section : sectionList) {
 				%>
-				<option value="<%=section.getCode() %>"><%=section.getName()%></option>
+				<option value="<%=section.getCode()%>"><%=section.getName()%></option>
 				<%
 				}
 				%>
@@ -124,19 +144,19 @@ boolean multi = (boolean) request.getAttribute("multi");
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
+				<option value="10">10</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
-			</select> 
+			</select>
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
 		</td>
 	</tr>
 </table>
 
-<div id="grid_wrap" style="height: 450px; border-top: 1px solid #3180c3;"></div> <%@include file="/extcore/jsp/common/aui-context.jsp"%>
+<div id="grid_wrap" style="height: 450px; border-top: 1px solid #3180c3;"></div>
+<%@include file="/extcore/jsp/common/aui-context.jsp"%>
 <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
 <script type="text/javascript">
 let myGridID;
@@ -251,7 +271,7 @@ function auiCellClick(event) {
 		// 엑스트라 체크박스 체크 추가
 		AUIGrid.setCheckedRowsByIds(event.pid, rowId);
 	}
-	<%}else{%>
+	<%} else {%>
 	if (AUIGrid.isCheckedRowById(event.pid, item._$uid)) {
 		AUIGrid.addUncheckedRowsByIds(event.pid,item._$uid);
 	} else {

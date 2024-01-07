@@ -34,6 +34,7 @@ public class PartColumn {
 	private String state;
 	private String creator;
 	private String modifier;
+	private String icon;
 	private boolean checkout;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Timestamp createdDate;
@@ -69,7 +70,13 @@ public class PartColumn {
 		setModifiedDate_txt(part.getModifyTimestamp().toString().substring(0, 10));
 		setThumbnail(part);
 //		setPreOrder(IBAUtil.getBooleanValue(part, "PREORDER"));
-//		setCheckout(WorkInProgressHelper.isCheckedOut(part));
+		boolean isCheckedOut = WorkInProgressHelper.isCheckedOut(part);
+		if (isCheckedOut) {
+			setIcon("/Windchill/extcore/images/icon/partcheckout.gif");
+		} else {
+			setIcon("/Windchill/extcore/images/icon/part.gif");
+		}
+		setCheckout(isCheckedOut);
 	}
 
 	/**
@@ -82,7 +89,7 @@ public class PartColumn {
 //		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
 //				+ latest.getIterationIdentifier().getSeries().getValue();
 //		if (isLatest()) {
-			return version;
+		return version;
 //		} else {
 //			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
 //		}

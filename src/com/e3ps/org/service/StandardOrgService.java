@@ -95,7 +95,7 @@ public class StandardOrgService extends StandardManager implements OrgService {
 				String id = u.getId();
 				WTUser user = OrganizationServicesMgr.getUser(id);
 				if (user == null) {
-					//PersistenceHelper.manager.delete(u);
+					// PersistenceHelper.manager.delete(u);
 				}
 			}
 
@@ -458,5 +458,75 @@ public class StandardOrgService extends StandardManager implements OrgService {
 			if (trs != null)
 				trs.rollback();
 		}
+	}
+
+	@Override
+	public void loaderSign() throws Exception {
+		Transaction trs = new Transaction();
+		try {
+			trs.start();
+
+			String signFolder = WTProperties.getLocalProperties().getProperty("wt.temp") + File.separator + "sign";
+			File folder = new File(signFolder);
+			File[] list = folder.listFiles();
+			for (File f : list) {
+				if (f.isDirectory()) {
+					continue;
+				}
+
+				String fname = f.getName();
+				int ff = fname.lastIndexOf(".");
+				String id = fname.substring(0, ff);
+
+				QuerySpec query = new QuerySpec();
+				int idx = query.appendClassList(People.class, true);
+				QuerySpecUtils.toEquals(query, idx, People.class, People.ID, id);
+				QueryResult result = PersistenceHelper.manager.find(query);
+				if (result.hasMoreElements()) {
+					Object[] obj = (Object[]) result.nextElement();
+					People p = (People) obj[0];
+					saveSign(p, f.getPath());
+				}
+			}
+
+			trs.commit();
+			trs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			trs.rollback();
+			throw e;
+		} finally {
+			if (trs != null)
+				trs.rollback();
+		}
+	}
+
+	/**
+	 * 서명 저장
+	 */
+	private void saveSign(People people, String path) throws Exception {
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Signature.class, true);
+		QuerySpecUtils.toEquals(query, idx, Signature.class, Signature.ID, people.getId());
+		QueryResult rs = PersistenceHelper.manager.find(query);
+		if (rs.hasMoreElements()) {
+			Object[] obj = (Object[]) rs.nextElement();
+			Signature signature = (Signature) obj[0];
+			QueryResult qr = ContentHelper.service.getContentsByRole(signature, ContentRoleType.PRIMARY);
+			if (qr.hasMoreElements()) {
+				ContentItem item = (ContentItem) qr.nextElement();
+				ContentServerHelper.service.deleteContent(people, item);
+			}
+			PersistenceHelper.manager.delete(signature);
+		}
+
+		Signature sign = Signature.newSignature();
+		sign.setId(people.getId());
+		PersistenceHelper.manager.save(sign);
+
+		ApplicationData applicationData = ApplicationData.newApplicationData(sign);
+		applicationData.setRole(ContentRoleType.PRIMARY);
+		PersistenceHelper.manager.save(applicationData);
+		ContentServerHelper.service.updateContent(sign, applicationData, path);
 	}
 }

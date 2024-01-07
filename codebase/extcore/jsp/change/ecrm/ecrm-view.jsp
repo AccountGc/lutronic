@@ -69,20 +69,17 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb">ECPR 제목</th>
-				<td class="indent5"><%=dto.getName()%></td>
-				<th>ECPR 번호</th>
-				<td class="indent5"><%=dto.getNumber()%></td>
-				<th>상태</th>
-				<td class="indent5"><%=dto.getState()%></td>
+				<th class="lb" colspan="6">
+					<%=dto.getName()%>
+				</th>
 			</tr>
 			<tr>
-				<th class="lb">등록자</th>
-				<td class="indent5"><%=dto.getCreator()%></td>
-				<th>등록일</th>
-				<td class="indent5"><%=dto.getCreatedDate()%></td>
-				<th>수정일</th>
-				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
+				<th class="lb">ECRM 번호</th>
+				<td class="indent5"><%=dto.getNumber()%></td>
+				<th>보존년한</th>
+				<td class="indent5"><%=dto.getPeriod_name()%></td>
+				<th>상태</th>
+				<td class="indent5"><%=dto.getState()%></td>
 			</tr>
 			<tr>
 				<th class="lb">작성자</th>
@@ -93,12 +90,37 @@ iframe {
 				<td class="indent5"><%=dto.getWriteDate()%></td>
 			</tr>
 			<tr>
-				<th class="lb">승인일</th>
-				<td class="indent5"><%=dto.getApproveDate()%></td>
-				<th>제품명</th>
+				<th class="lb">제품명</th>
 				<td class="indent5"><%=dto.getModel()%></td>
-				<th>변경구분</th>
-				<td class="indent5"><%=dto.getChangeSection() != null ? dto.getChangeSection() : ""%></td>
+				<th>수정일</th>
+				<td class="indent5"><%=dto.getModifiedDate_text()%></td>
+				<th>승인일</th>
+				<td class="indent5"><%=dto.getApproveDate()%></td>
+			</tr>
+			<tr>
+				<th class="lb">변경구분</th>
+				<td colspan="5">
+					&nbsp;
+					<%
+					for (NumberCode section : sectionList) {
+						int isInclude = -1;
+						if (dto.getChangeSection() != null) {
+							isInclude = dto.getChangeSection().indexOf(section.getCode());
+						}
+					%>
+					<div class="pretty p-switch">
+						<input type="checkbox" name="changeSection" disabled="disabled" value="<%=section.getCode()%>" <%if (isInclude >= 0) {%> checked <%}%>>
+						<div class="state p-success">
+							<label>
+								<b><%=section.getName()%></b>
+							</label>
+						</div>
+					</div>
+					&nbsp;
+					<%
+					}
+					%>
+				</td>
 			</tr>
 			<tr>
 				<th class="lb">내용</th>
@@ -240,4 +262,12 @@ iframe {
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
 	});
+	
+	function print() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/ecrm/print?oid=" + oid);
+		const p = _popup(url, "", "", "f");
+		const content = DEXT5.getBodyValue("content");
+		p.data = content;
+	}
 </script>

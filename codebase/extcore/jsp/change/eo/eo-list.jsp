@@ -7,7 +7,7 @@
 <%@page import="com.e3ps.common.code.NumberCode"%>
 <%
 ArrayList<NumberCode> modelList = (ArrayList<NumberCode>) request.getAttribute("modelList");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 %>
 <!DOCTYPE html>
@@ -59,12 +59,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<select name="state" id="state" class="width-200">
 						<option value="">선택</option>
 						<%
-						for (Map<String,String> lifecycle : lifecycleList) {
-							if(!lifecycle.get("code").equals("TEMPRARY")){
+						for (Map<String, String> lifecycle : lifecycleList) {
+							if (!lifecycle.get("code").equals("TEMPRARY")) {
 						%>
-						<option value="<%=lifecycle.get("code") %>"><%=lifecycle.get("name")%></option>
+						<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
 						<%
-							}
+						}
 						}
 						%>
 					</select>
@@ -154,16 +154,15 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/fileicon/file_excel.gif" title="엑셀 다운로드" onclick="exportExcel();">
 					<img src="/Windchill/extcore/images/save.gif" title="테이블 저장" onclick="saveColumnLayout('eo-list');">
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('eo-list');">
-<!-- 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);"> -->
+					<!-- 					<input type="button" value="▼펼치기" title="▼펼치기" class="red" onclick="spread(this);"> -->
 					<input type="button" value="등록" title="등록" class="blue" onclick="create();">
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -334,8 +333,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("EO 리스트", "EO", "EO 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("EO 리스트", "EO", "EO 리스트", [], sessionName);
 			}
 		</script>
 	</form>

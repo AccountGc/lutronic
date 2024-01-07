@@ -127,6 +127,9 @@ public class CrDTO {
 	 */
 	private void setAuth(EChangeRequest cr) throws Exception {
 		boolean isAdmin = CommonUtil.isAdmin();
+		if(check(cr, "APPROVED")) {
+			set_print(true);
+		}
 		if (check(cr, "LINE_REGISTER") || isAdmin) {
 			set_modify(true);
 		}

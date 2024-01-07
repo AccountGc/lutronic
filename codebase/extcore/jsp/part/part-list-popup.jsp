@@ -288,11 +288,10 @@ boolean complete = (boolean) request.getAttribute("complete");
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
-				<option value="30" selected="selected">30</option>
+				<option value="10">10</option>
+				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" onclick="loadGridData()">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -426,17 +425,7 @@ function createAUIGrid(columnLayout) {
 		enableRightDownFocus : true,
 		filterLayerWidth : 320,
 		filterItemMoreMessage : "필터링 검색이 너무 많습니다. 검색을 이용해주세요.",
-		rowStyleFunction : function(rowIndex, item) {
-			if (item.preOrder) {
-				return "preOrder";
-			} else if (item.checkout) {
-				return "checkout";
-			}
-			return "";
-		},
-		<%
-			if(complete) {
-		%>
+		<%if (complete) {%>
 		rowCheckDisabledFunction: function (rowIndex, isChecked, item) {
 			if (item.state !== "작업 중") {
 				return false; // false 반환하면 disabled 처리됨
@@ -448,9 +437,7 @@ function createAUIGrid(columnLayout) {
 			
 			return true;
 		}
-		<%
-			}
-		%>
+		<%}%>
 	};
 	myGridID = AUIGrid.create("#grid_wrap", columnLayout, props);
 	loadGridData();
@@ -469,9 +456,7 @@ function auiCellClick(event) {
 	const rowIdField = AUIGrid.getProp(event.pid, "rowIdField"); // rowIdField 얻기
 	const rowId = item[rowIdField];
 	let complete = false;
-	<%
-		if(complete) {
-	%>
+	<%if (complete) {%>
 	if (item.state !== "작업 중") {
 		complete = true;
 	}
@@ -479,9 +464,7 @@ function auiCellClick(event) {
 	if(item.number.charAt(0) !== "1") {
 		complete = true;
 	}
-	<%
-		}
-	%>
+	<%}%>
 	
 	
 	<%if (!multi) {%>

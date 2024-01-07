@@ -162,7 +162,9 @@ iframe {
 	<tr>
 		<th class="lb">문서설명</th>
 		<td colspan="5" class="indent5">
-			<textarea name="description" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+			<div class="textarea-auto">
+				<textarea name="description" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
@@ -366,11 +368,10 @@ iframe {
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
-// 		toFocus("iterationNote");
+		autoTextarea();
 		selectbox("preseration");
 		selectbox("model");
 		selectbox("deptcode");
-// 		finderUser("writer");
 		createAUIGrid90(columns90);
 		createAUIGrid91(columns91);
 		createAUIGrid100(columns100);

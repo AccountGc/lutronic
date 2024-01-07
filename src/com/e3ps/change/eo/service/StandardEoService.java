@@ -24,6 +24,7 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.WorkData;
 import com.e3ps.workspace.service.WorkDataHelper;
 
 import wt.content.ApplicationData;
@@ -68,7 +69,6 @@ public class StandardEoService extends StandardManager implements EoService {
 		ArrayList<Map<String, String>> rows104 = dto.getRows104();
 		ArrayList<Map<String, String>> rows200 = dto.getRows200();
 		ArrayList<Map<String, String>> rows300 = dto.getRows300();
-		boolean temprary = dto.isTemprary();
 		Transaction trs = new Transaction();
 		try {
 			trs.start();
@@ -98,7 +98,7 @@ public class StandardEoService extends StandardManager implements EoService {
 			eo.setEoName(dto.getName());
 			eo.setEoNumber(number);
 			eo.setModel(model);
-			eo.setEoType(dto.getEoType());
+			eo.setEoType("PRODUCT");
 			eo.setEoCommentA(dto.getEoCommentA());
 			eo.setEoCommentB(dto.getEoCommentB());
 			eo.setEoCommentC(dto.getEoCommentC());
@@ -131,22 +131,10 @@ public class StandardEoService extends StandardManager implements EoService {
 			// 활동이 잇을 경우 상태값 대기모드로 변경한다.
 			if (rows200.size() > 0) {
 //				WorkspaceHelper.service.stand(eo);
-				// 설변활동이 있으면서 임시 활동일 경우...
-				if (temprary) {
-					State state = State.toState("TEMPRARY");
-					LifeCycleHelper.service.setLifeCycleState(eo, state);
-				} else {
-					eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
-					LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
-				}
+				eo = (EChangeOrder) PersistenceHelper.manager.refresh(eo);
+				LifeCycleHelper.service.setLifeCycleState(eo, State.toState("ACTIVITY"));
 			} else {
-				if (temprary) {
-					State state = State.toState("TEMPRARY");
-					// 상태값 변경해준다 임시저장 <<< StateRB 추가..
-					LifeCycleHelper.service.setLifeCycleState(eo, state);
-				} else {
-					WorkDataHelper.service.create(eo);
-				}
+				WorkDataHelper.service.create(eo);
 			}
 
 			trs.commit();
@@ -265,6 +253,18 @@ public class StandardEoService extends StandardManager implements EoService {
 				PersistenceHelper.manager.delete(link);
 			}
 
+			// ECA 삭제
+			ArrayList<EChangeActivity> list = ActivityHelper.manager.getActivity(eo);
+			for (EChangeActivity eca : list) {
+				PersistenceHelper.manager.delete(eca);
+			}
+
+			// 결재선 지정 삭제
+			WorkData dd = WorkDataHelper.manager.getWorkData(eo);
+			if (dd != null) {
+				PersistenceHelper.manager.delete(dd);
+			}
+
 			PersistenceHelper.manager.delete(eo);
 
 			trs.commit();
@@ -333,7 +333,7 @@ public class StandardEoService extends StandardManager implements EoService {
 //				ActivityHelper.service.deleteActivity(eco);
 				ActivityHelper.service.saveActivity(eo, rows200);
 			}
-			
+
 			// 임시저장일 경우만 수정 가능한데...
 //			if (rows200.size() > 0) {
 //				if (temprary) {

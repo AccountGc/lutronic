@@ -6,6 +6,8 @@ import com.e3ps.change.ECPRRequest;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.cr.service.CrHelper;
 import com.e3ps.change.ecpr.service.EcprHelper;
+import com.e3ps.common.code.NumberCode;
+import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -34,11 +36,11 @@ public class EcprColumn {
 	public EcprColumn() {
 
 	}
-	
+
 	public EcprColumn(Object[] obj) throws Exception {
 		this((ECPRRequest) obj[0]);
 	}
-	
+
 	public EcprColumn(ECPRRequest ecpr) throws Exception {
 		setOid(ecpr.getPersistInfo().getObjectIdentifier().getStringValue());
 		setName(ecpr.getEoName());
@@ -54,6 +56,9 @@ public class EcprColumn {
 		setCreatedDate_txt(ecpr.getCreateTimestamp().toString().substring(0, 10));
 		setCreator(ecpr.getCreatorFullName());
 		setWriteDate(ecpr.getCreateDate());
-		setPeriod(ecpr.getPeriod());
+		NumberCode period = NumberCodeHelper.manager.getNumberCode(ecpr.getPeriod(), "PRESERATION");
+		if (period != null) {
+			setPeriod(period.getName());
+		}
 	}
 }

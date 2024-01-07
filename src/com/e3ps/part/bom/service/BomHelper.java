@@ -44,6 +44,8 @@ import wt.vc.baseline.BaselineMember;
 import wt.vc.views.View;
 import wt.vc.views.ViewHelper;
 import wt.vc.wip.WorkInProgressHelper;
+import wt.vc.wip.WorkInProgressServerHelper;
+import wt.vc.wip.Workable;
 
 public class BomHelper {
 
@@ -73,12 +75,15 @@ public class BomHelper {
 		String oid = (String) params.get("oid");
 		boolean skip = Boolean.parseBoolean((String) params.get("skip"));
 		WTPart root = (WTPart) CommonUtil.getObject(oid);
-		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
-		// 체크아웃시 체크아웃된 데이터 가져오기
-		System.out.println("isCheckOut=" + isCheckOut);
-		if (isCheckOut) {
-			root = (WTPart) WorkInProgressHelper.service.workingCopyOf(root);
-		}
+//		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
+//		// 체크아웃시 체크아웃된 데이터 가져오기
+//		System.out.println("isCheckOut=" + isCheckOut);
+//		if (isCheckOut) {
+//			return loadEditor(root, skip);
+//		} else {
+//			if (!WorkInProgressHelper.isWorkingCopy(root))
+//				root = (WTPart) WorkInProgressHelper.service.workingCopyOf(root);
+//		}
 		return loadEditor(root, skip);
 	}
 
@@ -89,8 +94,8 @@ public class BomHelper {
 		JSONArray list = new JSONArray();
 		JSONObject rootNode = new JSONObject();
 		rootNode.put("oid", root.getPersistInfo().getObjectIdentifier().getStringValue());
-//		rootNode.put("thum", ThumbnailUtil.thumbnailSmall(root));
-		rootNode.put("thum", "1");
+		rootNode.put("thum", ThumbnailUtil.thumbnailSmall(root));
+//		rootNode.put("thum", "1");
 		rootNode.put("level", 1);
 		rootNode.put("number", root.getNumber());
 		rootNode.put("name", root.getName());
@@ -107,7 +112,7 @@ public class BomHelper {
 
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(root);
 		if (isCheckOut) {
-			rootNode.put("icon", "/Windchill/wtcore/images/part_checkout.png");
+			rootNode.put("icon", "/Windchill/extcore/images/icon/partcheckout.gif");
 		} else {
 			rootNode.put("icon", "/Windchill/wtcore/images/part.gif");
 		}
@@ -143,6 +148,7 @@ public class BomHelper {
 			JSONObject node = new JSONObject();
 			node.put("oid", p.getPersistInfo().getObjectIdentifier().getStringValue());
 			node.put("poid", root.getPersistInfo().getObjectIdentifier().getStringValue());
+//			node.put("thum", "12");
 			node.put("thum", ThumbnailUtil.thumbnailSmall(p));
 			node.put("level", level);
 			node.put("number", p.getNumber());
@@ -159,7 +165,7 @@ public class BomHelper {
 			node.put("expanded", false);
 			isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 			if (isCheckOut) {
-				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
+				node.put("icon", "/Windchill/extcore/images/icon/partcheckout.gif");
 			} else {
 				node.put("icon", "/Windchill/wtcore/images/part.gif");
 			}
@@ -1153,26 +1159,26 @@ public class BomHelper {
 //				for (String oid : arr) {
 //					WTPart part = (WTPart) CommonUtil.getObject(oid);
 
-					File folder = new File("D:\\");
-					File[] files = folder.listFiles();
+				File folder = new File("D:\\");
+				File[] files = folder.listFiles();
 
-					for (File file : files) {
-						if (!file.isFile()) {
-							continue;
-						}
-						System.out.println("f="+file.getName());
-						FileInputStream fis = new FileInputStream(file);
-						ZipEntry zipEntry = new ZipEntry(file.getName());
-						zipOut.putNextEntry(zipEntry);
-
-						byte[] bytes = new byte[1024];
-						int length;
-						while ((length = fis.read(bytes)) >= 0) {
-							zipOut.write(bytes, 0, length);
-						}
-
-						fis.close();
+				for (File file : files) {
+					if (!file.isFile()) {
+						continue;
 					}
+					System.out.println("f=" + file.getName());
+					FileInputStream fis = new FileInputStream(file);
+					ZipEntry zipEntry = new ZipEntry(file.getName());
+					zipOut.putNextEntry(zipEntry);
+
+					byte[] bytes = new byte[1024];
+					int length;
+					while ((length = fis.read(bytes)) >= 0) {
+						zipOut.write(bytes, 0, length);
+					}
+
+					fis.close();
+				}
 
 //				EPMDocument epm = PartHelper.manager.getEPMDocument(part);
 //				if (epm != null) {
@@ -1191,7 +1197,7 @@ public class BomHelper {
 //						}
 //					}
 //				}
-					rtnFile = new File(zipFileName);
+				rtnFile = new File(zipFileName);
 //				}
 			} else if ("attach".equals(target)) {
 
@@ -1412,7 +1418,7 @@ public class BomHelper {
 			boolean isCheckOut = WorkInProgressHelper.isCheckedOut(p);
 //			boolean isWorkCopy = WorkInProgressHelper.isWorkingCopy(p);
 			if (isCheckOut) {
-				node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
+				node.put("icon", "/Windchill/extcore/images/icon/partcheckout.gif");
 			} else {
 				node.put("icon", "/Windchill/wtcore/images/part.gif");
 			}
@@ -1445,7 +1451,7 @@ public class BomHelper {
 				+ part.getIterationIdentifier().getSeries().getValue());
 		boolean isCheckOut = WorkInProgressHelper.isCheckedOut(part);
 		if (isCheckOut) {
-			node.put("icon", "/Windchill/wtcore/images/part_checkout.png");
+			node.put("icon", "/Windchill/extcore/images/icon/partcheckout.gif");
 		} else {
 			node.put("icon", "/Windchill/wtcore/images/part.gif");
 		}

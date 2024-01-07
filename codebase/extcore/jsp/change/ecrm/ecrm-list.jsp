@@ -168,11 +168,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -187,9 +186,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			function _layout() {
 				return [ {
 					dataField : "number",
-					headerText : "ECRM 번호",
+					headerText : "ECPR 번호",
 					dataType : "string",
-					width : 150,
+					width : 130,
 					renderer : {
 						type : "LinkRenderer",
 						baseUrl : "javascript",
@@ -201,7 +200,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					},
 				}, {
 					dataField : "name",
-					headerText : "ECRM 제목",
+					headerText : "ECPR 제목",
 					dataType : "string",
 					style : "aui-left",
 					renderer : {
@@ -214,30 +213,31 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 						}
 					},
 				}, {
-					dataField : "model",
-					headerText : "제품명",
-					dataType : "string",
-					width : 220,
-				}, {
 					dataField : "changeSection",
 					headerText : "변경구분",
 					dataType : "string",
-					width : 220,
+					style : "aui-left",
+					width : 250
+				}, {
+					dataField : "period",
+					headerText : "보존년한",
+					dataType : "string",
+					width : 100
 				}, {
 					dataField : "createDepart",
 					headerText : "작성부서",
 					dataType : "string",
-					width : 100,
+					width : 100
 				}, {
 					dataField : "writer",
 					headerText : "작성자",
 					dataType : "string",
-					width : 100,
+					width : 100
 				}, {
 					dataField : "writeDate",
 					headerText : "작성일",
-					dataType : "date",
-					width : 100,
+					dataType : "string",
+					width : 100
 				}, {
 					dataField : "state",
 					headerText : "상태",
@@ -248,22 +248,22 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 							return "approved";
 						}
 						return null;
-					}					
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
 					dataType : "string",
-					width : 100,
+					width : 100
 				}, {
-					dataField : "createdDate",
+					dataField : "createdDate_txt",
 					headerText : "등록일",
-					dataType : "date",
-					width : 100,
+					dataType : "string",
+					width : 100
 				}, {
-					dataField : "approveDate",
+					dataField : "approvedDate",
 					headerText : "승인일",
 					dataType : "string",
-					width : 100,
+					width : 100
 				} ]
 			}
 

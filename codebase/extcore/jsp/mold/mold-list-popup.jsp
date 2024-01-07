@@ -67,7 +67,7 @@ String state = (String) request.getAttribute("state");
 	<tr>
 		<th>상태</th>
 		<td class="indent5">
-						<select name="state" id="state" class="width-200">
+			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
 				for (Map<String, String> lifecycle : lifecycleList) {
@@ -185,11 +185,10 @@ String state = (String) request.getAttribute("state");
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
+				<option value="10">10</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">

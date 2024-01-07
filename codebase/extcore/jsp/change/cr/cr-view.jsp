@@ -23,6 +23,16 @@ iframe {
 		</td>
 		<td class="right">
 			<%
+			if (isAdmin) {
+			%>
+			<select name="state" id="state" class="width-100" onchange="lcm(this);">
+				<option value="">선택</option>
+				<option value="APPROVED">승인됨</option>
+			</select>
+			<%
+			}
+			%>
+			<%
 			if (dto.is_print()) {
 			%>
 			<input type="button" value="인쇄" title="인쇄" class="gray" onclick="print();">
@@ -69,7 +79,7 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb" colspan="5">
+				<th class="lb" colspan="6">
 					<%=dto.getName()%>
 				</th>
 			</tr>
@@ -284,6 +294,7 @@ iframe {
 				}
 			}
 		});
+		selectbox("state");
 		autoTextarea();
 		createAUIGrid90(columns90);
 		createAUIGrid101(columns101);
@@ -301,4 +312,12 @@ iframe {
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
 	});
+
+	function print() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/cr/print?oid=" + oid);
+		const p = _popup(url, "", "", "f");
+		const content = DEXT5.getBodyValue("content");
+		p.data = content;
+	}
 </script>

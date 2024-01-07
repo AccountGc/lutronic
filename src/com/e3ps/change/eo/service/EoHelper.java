@@ -15,6 +15,7 @@ import com.e3ps.change.eo.column.EoColumn;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.dto.NumberCodeDTO;
 import com.e3ps.common.code.service.NumberCodeHelper;
+import com.e3ps.common.iba.IBAUtil;
 import com.e3ps.common.util.AUIGridUtil;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.PageQueryUtils;
@@ -23,10 +24,20 @@ import com.e3ps.common.util.StringUtil;
 import com.e3ps.doc.DocumentEOLink;
 import com.e3ps.doc.column.DocumentColumn;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.conn.SAPDev600Connection;
+import com.e3ps.sap.service.SAPHelper;
+import com.e3ps.sap.util.SAPUtil;
+import com.e3ps.system.service.SystemHelper;
 import com.ibm.icu.text.DecimalFormat;
+import com.sap.conn.jco.JCoDestination;
+import com.sap.conn.jco.JCoDestinationManager;
+import com.sap.conn.jco.JCoFunction;
+import com.sap.conn.jco.JCoParameterList;
+import com.sap.conn.jco.JCoTable;
 
 import net.sf.json.JSONArray;
 import wt.doc.WTDocument;
+import wt.epm.EPMDocument;
 import wt.fc.PagingQueryResult;
 import wt.fc.PersistenceHelper;
 import wt.fc.QueryResult;
@@ -420,5 +431,135 @@ public class EoHelper {
 		}
 		map.put("result", true);
 		return map;
+	}
+
+	/**
+	 * SAP 전송전 사전 검증
+	 */
+	public boolean sendPartValidate(String oid) throws Exception {
+		EChangeOrder e = (EChangeOrder) CommonUtil.getObject(oid);
+		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(e);
+		JCoDestination destination = JCoDestinationManager.getDestination(SAPDev600Connection.DESTINATION_NAME);
+		JCoFunction function = destination.getRepository().getFunction("ZPPIF_PDM_001");
+		if (function == null) {
+			throw new RuntimeException("STFC_CONNECTION not found in SAP.");
+		}
+
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		for (EOCompletePartLink link : completeParts) {
+			String version = link.getVersion();
+			WTPart root = PartHelper.manager.getPart(link.getCompletePart().getNumber(), version);
+			list = SAPHelper.manager.getterSkip(root);
+		}
+
+		JCoParameterList importTable = function.getImportParameterList();
+		importTable.setValue("IV_WERKS", "1000"); // 플랜트
+		int idx = 1;
+		JCoTable insertTable = function.getTableParameterList().getTable("ET_MAT");
+		// 자재는 한번에 넘기고 함수 호출
+		for (WTPart part : list) {
+			Map<String, Object> params = new HashMap<>();
+			String number = part.getNumber();
+			// 전송 제외 품목
+			if (SAPHelper.manager.skipEight(number)) {
+				continue;
+			}
+
+			if (SAPHelper.manager.skipLength(number)) {
+				continue;
+			}
+
+			insertTable.insertRow(idx);
+			insertTable.setValue("AENNR8", e.getEoNumber()); // 변경번호 8자리
+			params.put("AENNR8", e.getEoNumber());
+			insertTable.setValue("MATNR", number); // 자재번호
+			params.put("MATNR", number);
+			insertTable.setValue("MAKTX", part.getName()); // 자재내역(자재명)
+			params.put("MAKTX", part.getName());
+
+			if (part.getDefaultUnit().toString().toUpperCase().equals("EA")) {
+				insertTable.setValue("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
+				params.put("MEINS", part.getDefaultUnit().toString().toUpperCase()); // 기본단위
+			} else {
+				insertTable.setValue("MEINS", "EA"); // 기본단위
+				params.put("MEINS", "EA");
+			}
+
+			insertTable.setValue("ZSPEC", IBAUtil.getStringValue(part, "SPECIFICATION")); // 사양
+			params.put("ZSPEC", IBAUtil.getStringValue(part, "SPECIFICATION")); // 사양
+
+			String ZMODEL_CODE = SAPHelper.manager.convertSapValue(part, "MODEL");
+			String ZMODEL_VALUE = SAPUtil.sapValue(ZMODEL_CODE, "MODEL"); // Model:프로젝트
+			insertTable.setValue("ZMODEL", ZMODEL_VALUE);
+			params.put("ZMODEL", ZMODEL_VALUE);
+
+			String ZPRODM_CODE = SAPHelper.manager.convertSapValue(part, "PRODUCTMETHOD");
+			String ZPRODM_VALUE = SAPUtil.sapValue(ZPRODM_CODE, "PRODUCTMETHOD"); // 제작방법
+			insertTable.setValue("ZPRODM", ZPRODM_VALUE);
+			params.put("ZPRODM", ZPRODM_VALUE);
+
+			String ZDEPT_CODE = SAPHelper.manager.convertSapValue(part, "DEPTCODE");
+			String ZDEPT_VALUE = SAPUtil.sapValue(ZDEPT_CODE, "DEPTCODE"); // 부서
+			insertTable.setValue("ZDEPT", ZDEPT_VALUE);
+			params.put("ZDEPT", ZDEPT_VALUE);
+
+			// 샘플링 실제는 2D여부 확인해서 전송
+
+			EPMDocument epm = PartHelper.manager.getEPMDocument(part);
+			if (epm != null) {
+				EPMDocument epm2D = PartHelper.manager.getEPMDocument2D(epm);
+				if (epm2D != null) {
+					insertTable.setValue("ZDWGNO", epm2D.getNumber());
+					params.put("ZDWGNO", "");
+				}
+			} else {
+				insertTable.setValue("ZDWGNO", "");
+				params.put("ZDWGNO", "");
+			}
+
+			String v = part.getVersionIdentifier().getSeries().getValue();
+			insertTable.setValue("ZEIVR", v); // 버전
+			params.put("ZEIVR", v);
+			// 테스트 용으로 전송
+			insertTable.setValue("ZPREPO", ""); // 선구매필요 EO 시에는 어떻게 처리??
+			params.put("ZPREPO", "");
+
+			// ?? 코드: 단위 형태인지
+			String weight = IBAUtil.getAttrfloatValue(part, "WEIGHT"); // 중량
+			insertTable.setValue("BRGEW", weight);
+			params.put("BRGEW", weight);
+
+			insertTable.setValue("GEWEI", "G");
+			params.put("GEWEI", "G");
+
+			String ZMATLT = SAPHelper.manager.convertSapValue(part, "MAT");
+			insertTable.setValue("ZMATLT", ZMATLT); // 재질
+			params.put("ZMATLT", ZMATLT);
+
+			String ZPOSTP = SAPHelper.manager.convertSapValue(part, "FINISH");
+			insertTable.setValue("ZPOSTP", ZPOSTP); // 후처리
+			params.put("ZPOSTP", ZPOSTP);
+
+			String ZDEVND = SAPHelper.manager.convertSapValue(part, "MANUFACTURE");
+			insertTable.setValue("ZDEVND", ZDEVND); // 개발공급업체
+			params.put("ZDEVND", ZDEVND);
+			params.put("sendResult", true);
+			idx++;
+		}
+
+//		function.execute(destination);
+
+		JCoParameterList result = function.getExportParameterList();
+		Object r_type = result.getValue("EV_STATUS");
+		Object r_msg = result.getValue("EV_MESSAGE");
+
+		JCoTable rtnTable = function.getTableParameterList().getTable("ET_MAT");
+		rtnTable.firstRow();
+		for (int i = 0; i < rtnTable.getNumRows(); i++, rtnTable.nextRow()) {
+			Object ZIFSTA = rtnTable.getValue("ZIFSTA");
+			Object ZIFMSG = rtnTable.getValue("ZIFMSG");
+			System.out.println("ZIFSTA=" + ZIFSTA);
+		}
+		return true;
 	}
 }

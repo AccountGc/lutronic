@@ -36,7 +36,7 @@ iframe {
 			<%
 			if (isAdmin) {
 			%>
-			<select name="state" id="state" class="width-200" onchange="lcm(this);">
+			<select name="state" id="state" class="width-100" onchange="lcm(this);">
 				<option value="">선택</option>
 				<option value="APPROVED">승인됨</option>
 			</select>
@@ -146,6 +146,9 @@ iframe {
 				<th>작성자</th>
 				<td class="indent5"><%=dto.getWriter()%></td>
 			</tr>
+			<%
+			if (dto.getContent() != null) {
+			%>
 			<tr>
 				<th class="lb">내용</th>
 				<td colspan="7" class="indent7 pb8">
@@ -159,10 +162,15 @@ iframe {
 					</script>
 				</td>
 			</tr>
+			<%
+			}
+			%>
 			<tr>
 				<th class="lb">설명</th>
 				<td colspan="7" class="indent5">
-					<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+					<div class="textarea-auto">
+						<textarea rows="5" readonly="readonly" id="description" rows="5"><%=dto.getDescription() != null ? dto.getDescription() : ""%></textarea>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -330,7 +338,9 @@ iframe {
 	//내용인쇄
 	function print() {
 		const url = getCallUrl("/doc/print?oid=" + oid);
-		_popup(url, "", "", "f");
+		const p = _popup(url, "", "", "f");
+		const content = DEXT5.getBodyValue("content");
+		p.data = content;
 		// 		var sw=screen.width;
 		// 	 	var sh=screen.height;
 		// 	 	var w=1000;//가로길이
@@ -376,61 +386,6 @@ iframe {
 				closeLayer();
 			}
 		}, "DELETE");
-	}
-
-	// 결재 회수
-	function withdraw() {
-		const oid = document.getElementById("oid").value;
-		let remain = false;
-		if (confirm("확인 버튼을 누를시 기존 결재선을 유지한채 결재를 회수 합니다.\n취소를 선택시 모든 결재선 및 결재 이력이 초기화 됩니다.")) {
-			remain = true;
-		}
-		const url = getCallUrl("/workspace/withdraw?oid=" + oid + "&remain=" + remain);
-		alert(url);
-		openLayer();
-		call(url, null, function(data) {
-			alert(data.msg);
-			if (data.result) {
-				opener.document.location.href = getCallUrl("/workData/list");
-				self.close();
-			} else {
-				closeLayer();
-			}
-		}, "GET");
-	}
-
-	//일괄 다운로드
-	function batchSecondaryDown() {
-		const form = $("form[name=documentViewForm]").serialize();
-		const url = getCallUrl("/common/zip");
-		$.ajax({
-			type : "POST",
-			url : url,
-			data : form,
-			dataType : "json",
-			async : true,
-			cache : false,
-
-			error : function(data) {
-				var msg = "데이터 검색오류";
-				alert(msg);
-			},
-
-			success : function(data) {
-				console.log(data.message);
-				if (data.result) {
-					location.href = '/Windchill/jsp/common/content/FileDownload.jsp?fileName=' + data.message + '&originFileName=' + data.message;
-				} else {
-					alert(data.message);
-				}
-			},
-			beforeSend : function() {
-				gfn_StartShowProcessing();
-			},
-			complete : function() {
-				gfn_EndShowProcessing();
-			}
-		});
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {
@@ -509,6 +464,7 @@ iframe {
 			}
 		});
 		selectbox("state");
+		autoTextarea();
 	});
 
 	window.addEventListener("resize", function() {

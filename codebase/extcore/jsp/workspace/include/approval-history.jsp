@@ -47,7 +47,7 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		%>
 	</tr>
 </table>
-<div id="grid10000" style="height: 50px; border-top: 1px solid #3180c3; margin: 5px;"></div>
+<div id="grid10000" style="height: 30px; border-top: 1px solid #3180c3; margin: 5px;"></div>
 <script type="text/javascript">
 	let myGridID10000;
 	const columns10000 = [ {
@@ -77,7 +77,6 @@ JSONArray data = WorkspaceHelper.manager.history(oid);
 		dataField : "name",
 		headerText : "제목",
 		dataType : "string",
-		width : 250,
 		style : "aui-left"
 	}, {
 		dataField : "state",

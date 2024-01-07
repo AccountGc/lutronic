@@ -30,11 +30,11 @@ public class EoDTO {
 	private String eoCommentA = "";
 	private String eoCommentB = "";
 	private String eoCommentC = "";
-	
-	private EChangeOrder eo;
+
 	// auth
-	private boolean isModify = false;
-	
+	private boolean _delete = false;
+	private boolean _modify = false;
+
 	// 변수용
 	private ArrayList<String> secondarys = new ArrayList<>();
 	private ArrayList<Map<String, String>> rows104 = new ArrayList<>(); // 완제품
@@ -69,17 +69,15 @@ public class EoDTO {
 		setCreator(eo.getCreatorFullName());
 		setCreatedDate(eo.getCreateTimestamp().toString().substring(0, 10));
 		setModifiedDate(eo.getModifyTimestamp().toString().substring(0, 10));
-		setEoCommentA(eo.getEoCommentA()==null?"":eo.getEoCommentA());
-		setEoCommentB(eo.getEoCommentB()==null?"":eo.getEoCommentB());
-		setEoCommentC(eo.getEoCommentC()==null?"":eo.getEoCommentC());
-		
-		setEo(eo);
-		setAuth();
+		setEoCommentA(eo.getEoCommentA() == null ? "" : eo.getEoCommentA());
+		setEoCommentB(eo.getEoCommentB() == null ? "" : eo.getEoCommentB());
+		setEoCommentC(eo.getEoCommentC() == null ? "" : eo.getEoCommentC());
+		setAuth(eo);
 	}
 
 	private ArrayList<Map<String, String>> getModel(String model) throws Exception {
 		ArrayList<Map<String, String>> result = new ArrayList<Map<String, String>>();
-		if(model != null) {
+		if (model != null) {
 			String[] ss = model.split(",");
 			for (int i = 0; i < ss.length; i++) {
 				Map<String, String> data = new HashMap<String, String>();
@@ -92,11 +90,11 @@ public class EoDTO {
 				data.put("enabled", code.getEngName());
 				data.put("oid", code.getPersistInfo().getObjectIdentifier().getStringValue());
 				result.add(data);
-			}			
+			}
 		}
 		return result;
 	}
-	
+
 	/*
 	 * ( EO 구분 변경
 	 */
@@ -109,23 +107,26 @@ public class EoDTO {
 		}
 		return rtn;
 	}
-	
+
 	/**
 	 * 권한 설정
 	 */
-	private void setAuth() throws Exception {
-		// 삭제, 수정 권한 - (최신버전 && ( 작업중 || 임시저장 || 일괄결재중 || 재작업))
-		if (check("INWORK") || check("TEMPRARY") || check("BATCHAPPROVAL") || check("REWORK")) {
-			setModify(true);
+	private void setAuth(EChangeOrder eo) throws Exception {
+		boolean isAdmin = CommonUtil.isAdmin();
+		if (check(eo, "LINE_REGISTER") || check(eo, "ACTIVITY") || isAdmin) {
+			set_modify(true);
+		}
+		if (isAdmin) {
+			set_delete(true);
 		}
 	}
-	
+
 	/**
 	 * 상태값 여부 체크
 	 */
-	private boolean check(String state) throws Exception {
+	private boolean check(EChangeOrder eo, String state) throws Exception {
 		boolean check = false;
-		String compare = getEo().getLifeCycleState().toString();
+		String compare = eo.getLifeCycleState().toString();
 		if (compare.equals(state)) {
 			check = true;
 		}

@@ -46,7 +46,9 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 	<tr>
 		<th class="lb">내용</th>
 		<td colspan="3" class="indent5">
-			<textarea rows="10" readonly="readonly"><%=dto.getContents()%></textarea>
+			<div class="textarea-auto">
+				<textarea rows="10" readonly="readonly"><%=dto.getContents()%></textarea>
+			</div>
 		</td>
 	</tr>
 	<tr>
@@ -91,4 +93,7 @@ NoticeDTO dto = (NoticeDTO) request.getAttribute("dto");
 		document.cookie = cookies;
 		self.close();
 	}
+	document.addEventListener("DOMContentLoaded", function() {
+		autoTextarea();
+	})
 </script>

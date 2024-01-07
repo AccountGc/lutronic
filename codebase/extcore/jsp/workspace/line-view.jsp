@@ -56,7 +56,9 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 	</colgroup>
 	<tr>
 		<th class="lb">결재 제목</th>
-		<td class="indent5" colspan="3"><%=dto.getName()%></td>
+		<td class="indent5" colspan="3">
+			<a href="javascript:dataView();"><%=dto.getName()%></a>
+		</td>
 	</tr>
 	<tr>
 		<th class="lb">담당자</th>
@@ -267,6 +269,11 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 			}
 			closeLayer();
 		}, "GET");
+	}
+	
+	function dataView() {
+		const url = "<%=dto.getViewUrl()%>";
+		_popup(url, 1600, 800, "n");
 	}
 
 	document.addEventListener("DOMContentLoaded", function() {

@@ -16,13 +16,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.e3ps.change.EChangeOrder;
+import com.e3ps.change.EOCompletePartLink;
 import com.e3ps.change.eo.dto.EoDTO;
 import com.e3ps.change.eo.service.EoHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
-import com.e3ps.groupware.workprocess.service.WFItemHelper;
+import com.e3ps.part.column.PartColumn;
+import com.e3ps.part.service.PartHelper;
+import com.e3ps.sap.service.SAPHelper;
+
+import net.sf.json.JSONArray;
+import wt.part.WTPart;
 
 @Controller
 @RequestMapping(value = "/eo/**")
@@ -155,4 +162,51 @@ public class EoController extends BaseController {
 		return result;
 	}
 
+	@Description(value = "EO SAP 재전송")
+	@GetMapping(value = "/sendEoSap")
+	public ModelAndView sendEoSap(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		boolean isAdmin = CommonUtil.isAdmin();
+		EChangeOrder eo = (EChangeOrder) CommonUtil.getObject(oid);
+		EoDTO dto = new EoDTO(eo);
+		ArrayList<EOCompletePartLink> completeParts = EoHelper.manager.completeParts(eo);
+		ArrayList<WTPart> list = new ArrayList<WTPart>();
+		for (EOCompletePartLink link : completeParts) {
+			String version = link.getVersion();
+			WTPart root = PartHelper.manager.getPart(link.getCompletePart().getNumber(), version);
+			// 중복 품목 제외를 한다.
+			list = SAPHelper.manager.getterSkip(root);
+		}
+
+		ArrayList<PartColumn> data = new ArrayList<PartColumn>();
+		for (WTPart p : list) {
+			PartColumn column = new PartColumn(p);
+			data.add(column);
+		}
+		model.addObject("dto", dto);
+		model.addObject("data", JSONArray.fromObject(data));
+		model.addObject("isAdmin", isAdmin);
+		model.setViewName("popup:/change/eo/eo-resend-sap");
+		return model;
+	}
+
+	@Description(value = "EO SAP 재전송전 검증")
+	@GetMapping(value = "/sendValidate")
+	@ResponseBody
+	public Map<String, Object> sendValidate(@RequestParam String oid) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		try {
+
+			boolean success = EoHelper.manager.sendPartValidate(oid);
+			if(success) {
+			} else {
+			}
+			result.put("result", SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("msg", e.toString());
+			result.put("result", FAIL);
+		}
+		return result;
+	}
 }

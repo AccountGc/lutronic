@@ -101,10 +101,10 @@ boolean complete = docList.size() > 0;
 		<script type="text/javascript">
 			let myGridiD;
 			const columns = [ {
-				dataField : "interalnumber",
-				headerText : "내부 문서번호",
+				dataField : "number",
+				headerText : "문서번호",
 				dataType : "string",
-				width : 120,
+				width : 180,
 			}, {
 				dataField : "name",
 				dataType : "string",

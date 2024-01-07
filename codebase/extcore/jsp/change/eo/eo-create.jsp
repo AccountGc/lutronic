@@ -11,7 +11,6 @@
 </head>
 <body>
 	<form>
-		<input type="hidden" name="eoType" id="eoType" value="PRODUCT">
 		<table class="button-table">
 			<tr>
 				<td class="left">
@@ -22,7 +21,6 @@
 				</td>
 				<td class="right">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 					<input type="button" value="이전" title="이전" class="gray" onclick="history.back();">
 				</td>
 			</tr>
@@ -114,21 +112,17 @@
 			<tr>
 				<td class="center">
 					<input type="button" value="등록" title="등록" class="red" onclick="create('false');">
-					<input type="button" value="임시저장" title="임시저장" class="" onclick="create('true');">
 					<input type="button" value="이전" title="이전" class="gray" onclick="history.back();">
 				</td>
 			</tr>
 		</table>
 		<script type="text/javascript">
-			function create(temp) {
-
+			function create() {
 				const name = document.getElementById("name");
 				const eoCommentA = toId("eoCommentA");
 				const eoCommentB = toId("eoCommentB");
 				const eoCommentC = toId("eoCommentC");
 				const secondarys = toArray("secondarys");
-				const eoType = toId("eoType");
-				const temprary = JSON.parse(temp);
 				// 완제품
 				const rows104 = AUIGrid.getGridDataWithState(myGridID104, "gridState");
 				// 관련문서
@@ -142,42 +136,33 @@
 					eoCommentA : eoCommentA,
 					eoCommentB : eoCommentB,
 					eoCommentC : eoCommentC,
-					eoType : eoType,
 					secondarys : secondarys,
 					rows104 : rows104,
 					rows90 : rows90,
 					rows200 : rows200,
 					rows300 : rows300,
-					temprary : temprary
 				}
 
-				if (temprary) {
-					if (!confirm("임시저장하시겠습니까??")) {
-						return false;
-					}
+				if (name.value === "") {
+					alert("EO 제목을 입력하세요.");
+					name.focus();
+					return false;
+				}
 
-				} else {
-					if (name.value === "") {
-						alert("EO 제목을 입력하세요.");
-						name.focus();
-						return false;
-					}
+				if (rows300.length === 0) {
+					alert("제품명을 선택하세요.");
+					popup300();
+					return false;
+				}
 
-					if (rows300.length === 0) {
-						alert("제품명을 선택하세요.");
-						popup300();
-						return false;
-					}
+				if (rows104.length === 0) {
+					alert("완제품을 선택하세요.");
+					popup104();
+					return false;
+				}
 
-					if (rows104.length === 0) {
-						alert("완제품을 선택하세요.");
-						popup104();
-						return false;
-					}
-
-					if (!confirm("등록하시겠습니까?")) {
-						return false;
-					}
+				if (!confirm("등록하시겠습니까?")) {
+					return false;
 				}
 
 				const url = getCallUrl("/eo/create");
@@ -191,35 +176,6 @@
 						parent.closeLayer();
 					}
 				});
-			}
-
-			function finder(id) {
-				axdom("#" + id).bindSelector({
-					reserveKeys : {
-						options : "list",
-						optionValue : "oid",
-						optionText : "name"
-					},
-					optionPrintLength : "all",
-					onsearch : function(id, obj, callBack) {
-						const value = document.getElementById(id).value;
-						const params = new Object();
-						const url = getCallUrl("/code/finder");
-						params.codeType = id.toUpperCase();
-						params.value = value;
-						params.obj = obj;
-						call(url, params, function(data) {
-							callBack({
-								options : data.list
-							})
-						})
-					},
-					onchange : function() {
-						const id = this.targetID;
-						const value = this.selectedOption.oid
-						document.getElementById(id + "_oid").value = value;
-					},
-				})
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {

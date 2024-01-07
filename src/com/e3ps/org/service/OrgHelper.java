@@ -331,10 +331,47 @@ public class OrgHelper {
 				is.close();
 			}
 		}
-		
-		if(file == null) {
+
+		if (file == null) {
 			return null;
 		}
 		return file.getPath();
+	}
+
+	/**
+	 * 서명 다운로드 주소
+	 */
+	public String getSignFileName(String id) throws Exception {
+		String path = WTProperties.getLocalProperties().getProperty("wt.codebase.location") + File.separator + "extcore"
+				+ File.separator + "jsp" + File.separator + "org" + File.separator + "sign";
+		File save = new File(path);
+		if (!save.exists()) {
+			save.mkdirs();
+		}
+		QuerySpec query = new QuerySpec();
+		int idx = query.appendClassList(Signature.class, true);
+		QuerySpecUtils.toEquals(query, idx, Signature.class, Signature.ID, id);
+		QueryResult qr = PersistenceHelper.manager.find(query);
+		if (qr.hasMoreElements()) {
+			Object[] obj = (Object[]) qr.nextElement();
+			Signature sign = (Signature) obj[0];
+
+			QueryResult rs = ContentHelper.service.getContentsByRole(sign, ContentRoleType.PRIMARY);
+			if (rs.hasMoreElements()) {
+				ApplicationData dd = (ApplicationData) rs.nextElement();
+				byte[] buffer = new byte[10240];
+				InputStream is = ContentServerHelper.service.findLocalContentStream(dd);
+				File file = new File(path + File.separator + dd.getFileName());
+				FileOutputStream fos = new FileOutputStream(file);
+				int j = 0;
+				while ((j = is.read(buffer, 0, 10240)) > 0) {
+					fos.write(buffer, 0, j);
+				}
+				fos.close();
+				is.close();
+				return dd.getFileName();
+			}
+		}
+		return null;
 	}
 }

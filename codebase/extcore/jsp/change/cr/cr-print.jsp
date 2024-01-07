@@ -1,3 +1,4 @@
+<%@page import="com.e3ps.change.cr.dto.CrDTO"%>
 <%@page import="com.e3ps.org.service.OrgHelper"%>
 <%@page import="com.e3ps.org.dto.PeopleDTO"%>
 <%@page import="wt.org.WTUser"%>
@@ -8,13 +9,12 @@
 <%@page import="com.e3ps.doc.dto.DocumentDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-DocumentDTO dto = (DocumentDTO) request.getAttribute("dto");
+CrDTO dto = (CrDTO) request.getAttribute("dto");
 ApprovalLine submitLine = (ApprovalLine) request.getAttribute("submitLine");
 WTUser submitUser = (WTUser) submitLine.getOwnership().getOwner().getPrincipal();
 PeopleDTO submit = new PeopleDTO(submitUser);
 ArrayList<ApprovalLine> agreeLines = (ArrayList<ApprovalLine>) request.getAttribute("agreeLines");
 ArrayList<ApprovalLine> approvalLines = (ArrayList<ApprovalLine>) request.getAttribute("approvalLines");
-String classType1 = dto.getClassType1_name();
 SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
 String submitDate = dateFormat.format(submitLine.getCompleteTime());
 %>
@@ -143,8 +143,9 @@ td {
 		</tr>
 	</table>
 </div>
+
 <%
-if (agreeLines.size() > 0) {
+	if(agreeLines.size() > 0) {
 %>
 <div style="float: right; padding-bottom: 10px;">
 	<table style="border-top: 1px solid black;">
@@ -209,9 +210,8 @@ if (agreeLines.size() > 0) {
 	</table>
 </div>
 <%
-}
+	}
 %>
-
 <table style="width: 100%; border-top: 1px solid black;">
 	<colgroup>
 		<col style="width: 13%;" />
@@ -221,22 +221,22 @@ if (agreeLines.size() > 0) {
 		<col style="width: 13%" />
 		<col style="width: 21%" />
 	</colgroup>
-	<tr>
-		<th style="max-width: 100px; min-width: 100px;">작성자</th>
-		<td class="center"><%=dto.getWriter()%></td>
-		<th style="max-width: 100px; min-width: 100px;">작성부서</th>
-		<td class="center"><%=dto.getDeptcode_name()%></td>
-		<th style="max-width: 100px; min-width: 100px;">문서번호</th>
-		<td class="center"><%=dto.getNumber()%></td>
-	</tr>
-	<tr>
-		<th style="max-width: 100px; min-width: 100px;">문서분류</th>
-		<td class="center"><%=classType1%></td>
-		<th style="max-width: 100px; min-width: 100px;">프로젝트코드</th>
-		<td class="center"><%=dto.getModel_name()%></td>
-		<th style="max-width: 100px; min-width: 100px;">보존년한</th>
-		<td class="center"><%=dto.getPreseration_name()%></td>
-	</tr>
+<!-- 	<tr> -->
+<!-- 		<th style="max-width: 100px; min-width: 100px;">작성자</th> -->
+<%-- 		<td class="center"><%=dto.getWriter()%></td> --%>
+<!-- 		<th style="max-width: 100px; min-width: 100px;">작성부서</th> -->
+<%-- 		<td class="center"><%=dto.getDeptcode_name()%></td> --%>
+<!-- 		<th style="max-width: 100px; min-width: 100px;">문서번호</th> -->
+<%-- 		<td class="center"><%=dto.getNumber()%></td> --%>
+<!-- 	</tr> -->
+<!-- 	<tr> -->
+<!-- 		<th style="max-width: 100px; min-width: 100px;">문서분류</th> -->
+<%-- 		<td class="center"><%=classType1%></td> --%>
+<!-- 		<th style="max-width: 100px; min-width: 100px;">프로젝트코드</th> -->
+<%-- 		<td class="center"><%=dto.getModel_name()%></td> --%>
+<!-- 		<th style="max-width: 100px; min-width: 100px;">보존년한</th> -->
+<%-- 		<td class="center"><%=dto.getPreseration_name()%></td> --%>
+<!-- 	</tr> -->
 </table>
 
 <table style="margin-top: 10px; width: 100%; border-top: 1px solid black;">

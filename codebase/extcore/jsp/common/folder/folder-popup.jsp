@@ -16,7 +16,7 @@ if (method == null) {
 			</div>
 		</td>
 		<td class="right">
-			<input type="button" value="추가" title="추가" class="blue" onclick="<%=method%>();">
+			<input type="button" value="선택" title="선택" class="blue" onclick="<%=method%>();">
 			<input type="button" value="닫기" title="닫기" onclick="self.close();">
 		</td>
 	</tr>

@@ -6,14 +6,14 @@
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
-List<Map<String,String>> lifecycleList = (List<Map<String,String>>) request.getAttribute("lifecycleList");
+List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.getAttribute("lifecycleList");
 String method = (String) request.getAttribute("method");
 boolean multi = (boolean) request.getAttribute("multi");
 String state = (String) request.getAttribute("state");
 %>
-<input type="hidden" name="sessionid" id="sessionid"> 
-<input type="hidden" name="lastNum" id="lastNum"> 
-<input type="hidden" name="curPage" id="curPage"> 
+<input type="hidden" name="sessionid" id="sessionid">
+<input type="hidden" name="lastNum" id="lastNum">
+<input type="hidden" name="curPage" id="curPage">
 
 <table class="search-table">
 	<colgroup>
@@ -35,43 +35,51 @@ String state = (String) request.getAttribute("state");
 		</td>
 		<th>등록일</th>
 		<td class="indent5">
-			<input type="text" name="createdFrom" id="createdFrom" class="width-100"> ~ <input type="text" name="createdTo" id="createdTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+			<input type="text" name="createdFrom" id="createdFrom" class="width-100">
+			~
+			<input type="text" name="createdTo" id="createdTo" class="width-100">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
 		</td>
 	</tr>
 	<tr>
 		<th>등록자</th>
 		<td class="indent5">
 			<input type="text" name="creator" id="creator" data-multi="false" class="width-300">
-			<input type="hidden" name="creatorOid" id="creatorOid"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
+			<input type="hidden" name="creatorOid" id="creatorOid">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearUser('creator')">
 		</td>
 		<th>상태</th>
 		<td class="indent5">
 			<select name="state" id="state" class="width-200">
 				<option value="">선택</option>
 				<%
-				for (Map<String,String> lifecycle : lifecycleList) {
-					if(!lifecycle.get("code").equals("TEMPRARY")){
+				for (Map<String, String> lifecycle : lifecycleList) {
+					if (!lifecycle.get("code").equals("TEMPRARY")) {
 				%>
-					<%
-						if(StringUtil.checkString(state)) {
-					%>
-					<option value="<%=lifecycle.get("code") %>" <%if(state.equals(lifecycle.get("code"))) { %> selected="selected" <%} %>><%=lifecycle.get("name")%></option>
-					<%
-						} else {
-					%>
-					<option value="<%=lifecycle.get("code") %>" ><%=lifecycle.get("name")%></option>
-					<%
-						}
-					%>
 				<%
-					}
+				if (StringUtil.checkString(state)) {
+				%>
+				<option value="<%=lifecycle.get("code")%>" <%if (state.equals(lifecycle.get("code"))) {%> selected="selected" <%}%>><%=lifecycle.get("name")%></option>
+				<%
+				} else {
+				%>
+				<option value="<%=lifecycle.get("code")%>"><%=lifecycle.get("name")%></option>
+				<%
+				}
+				%>
+				<%
+				}
 				}
 				%>
 			</select>
 		</td>
 		<th>수정일</th>
-		<td class="indent5"><input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100"> ~ <input type="text" name="modifiedTo" id="modifiedTo" class="width-100"> <img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제"
-			onclick="clearFromTo('createdFrom', 'createdTo')"></td>
+		<td class="indent5">
+			<input type="text" name="modifiedFrom" id="modifiedFrom" class="width-100">
+			~
+			<input type="text" name="modifiedTo" id="modifiedTo" class="width-100">
+			<img src="/Windchill/extcore/images/delete.png" class="delete" title="삭제" onclick="clearFromTo('createdFrom', 'createdTo')">
+		</td>
 	</tr>
 	<tr>
 		<th>협력업체</th>
@@ -94,15 +102,14 @@ String state = (String) request.getAttribute("state");
 <table class="button-table">
 	<tr>
 		<td class="left">
-			<input type="button" value="추가" title="추가"  onclick="<%=method%>();">    
+			<input type="button" value="추가" title="추가" onclick="<%=method%>();">
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
+				<option value="10">10</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" onclick="loadGridData();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -257,14 +264,10 @@ String state = (String) request.getAttribute("state");
 		twindate("created");
 		twindate("modified");
 		selectbox("_psize");
-		<%
-		if(StringUtil.checkString(state)) {
-		%>
+		<%if (StringUtil.checkString(state)) {%>
 		$("#state").bindSelectSetValue("<%=state%>");
 		$("#state").bindSelectDisabled(true);
-		<%
-			}
-		%>
+		<%}%>
 	});
 	
 	document.addEventListener("keydown", function(event) {

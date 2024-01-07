@@ -2,6 +2,8 @@ package com.e3ps.download.beans;
 
 import java.sql.Timestamp;
 
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.ECRMRequest;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.common.util.CommonUtil;
@@ -86,17 +88,30 @@ public class DownloadDTO {
 			info = "[도면] " + epm.getNumber() + " - (" + epm.getName() + ")";
 		} else if (per instanceof WTDocument) {
 			WTDocument doc = (WTDocument) per;
-			info = "[문서] " + doc.getNumber() + " - (" + doc.getName() + ")";
-		} else if (per instanceof EChangeOrder) {
-			EChangeOrder eco = (EChangeOrder) per;
-			if (eco.getEoType().equals("CHANGE")) {
-				info = "[ECO] " + eco.getEoNumber() + " - (" + eco.getEoName() + ")";
+			String docType = doc.getDocType().toString();
+			if ("$$MMDocument".equals(docType)) {
+				info = "[금형문서] " + doc.getNumber() + " - (" + doc.getName() + ")";
+			} else if ("$$ROHS".equals(docType)) {
+				info = "[ROHS] " + doc.getNumber() + " - (" + doc.getName() + ")";
 			} else {
-				info = "[EO] " + eco.getEoNumber() + " - (" + eco.getEoName() + ")";
+				info = "[문서] " + doc.getNumber() + " - (" + doc.getName() + ")";
+			}
+		} else if (per instanceof EChangeOrder) {
+			EChangeOrder e = (EChangeOrder) per;
+			if (e.getEoType().equals("CHANGE")) {
+				info = "[ECO] " + e.getEoNumber() + " - (" + e.getEoName() + ")";
+			} else {
+				info = "[EO] " + e.getEoNumber() + " - (" + e.getEoName() + ")";
 			}
 		} else if (per instanceof EChangeRequest) {
-			EChangeRequest ecr = (EChangeRequest) per;
-			info = "[ECR] " + ecr.getEoNumber() + " - (" + ecr.getEoName() + ")";
+			EChangeRequest cr = (EChangeRequest) per;
+			info = "[CR] " + cr.getEoNumber() + " - (" + cr.getEoName() + ")";
+		} else if (per instanceof ECPRRequest) {
+			ECPRRequest ecpr = (ECPRRequest) per;
+			info = "[ECPR] " + ecpr.getEoNumber() + " - (" + ecpr.getEoName() + ")";
+		} else if (per instanceof ECRMRequest) {
+			ECRMRequest ecrm = (ECRMRequest) per;
+			info = "[ECRM] " + ecrm.getEoNumber() + " - (" + ecrm.getEoName() + ")";
 		}
 		setInfo(info);
 	}

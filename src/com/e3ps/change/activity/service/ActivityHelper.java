@@ -725,4 +725,25 @@ public class ActivityHelper {
 		QuerySpecUtils.toOrderBy(query, idx_eca, EChangeActivity.class, EChangeActivity.CREATE_TIMESTAMP, true);
 		return PersistenceHelper.manager.find(query).size();
 	}
+
+	/**
+	 * EO/ECO 관련 설변
+	 */
+	public ArrayList<EChangeActivity> getActivity(EChangeOrder e) throws Exception {
+		ArrayList<EChangeActivity> list = new ArrayList<EChangeActivity>();
+		QuerySpec query = new QuerySpec();
+		int idx_eca = query.appendClassList(EChangeActivity.class, true);
+		int idx_eco = query.appendClassList(EChangeOrder.class, false);
+
+		QuerySpecUtils.toInnerJoin(query, EChangeActivity.class, EChangeOrder.class, "eoReference.key.id",
+				WTAttributeNameIfc.ID_NAME, idx_eca, idx_eco);
+		QuerySpecUtils.toEquals(query, idx_eco, EChangeActivity.class, "eoReference.key.id", e);
+		QueryResult result = PersistenceHelper.manager.find(query);
+		while (result.hasMoreElements()) {
+			Object[] obj = (Object[]) result.nextElement();
+			EChangeActivity eca = (EChangeActivity) obj[0];
+			list.add(eca);
+		}
+		return list;
+	}
 }

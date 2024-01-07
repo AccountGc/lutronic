@@ -133,11 +133,10 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -198,7 +197,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 							return "approved";
 						}
 						return null;
-					}					
+					}
 				}, {
 					dataField : "creator",
 					headerText : "등록자",
@@ -246,7 +245,7 @@ List<Map<String, String>> lifecycleList = (List<Map<String, String>>) request.ge
 			}
 
 			function loadGridData(movePage) {
-				if(movePage === undefined) {
+				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
 				}
 				let params = new Object();

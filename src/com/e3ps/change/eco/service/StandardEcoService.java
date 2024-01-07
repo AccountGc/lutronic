@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.e3ps.change.EChangeActivity;
 import com.e3ps.change.EChangeOrder;
 import com.e3ps.change.EChangeRequest;
 import com.e3ps.change.EOCompletePartLink;
@@ -20,6 +21,8 @@ import com.e3ps.common.util.DateUtil;
 import com.e3ps.common.util.StringUtil;
 import com.e3ps.common.util.WCUtil;
 import com.e3ps.part.service.PartHelper;
+import com.e3ps.workspace.WorkData;
+import com.e3ps.workspace.service.WorkDataHelper;
 import com.e3ps.workspace.service.WorkspaceHelper;
 
 import wt.content.ApplicationData;
@@ -388,6 +391,19 @@ public class StandardEcoService extends StandardManager implements EcoService {
 			trs.start();
 
 			EChangeOrder eco = (EChangeOrder) CommonUtil.getObject(oid);
+
+			// ECA 삭제
+			ArrayList<EChangeActivity> list = ActivityHelper.manager.getActivity(eco);
+			for (EChangeActivity eca : list) {
+				PersistenceHelper.manager.delete(eca);
+			}
+
+			// 결재선 지정 삭제
+			WorkData dd = WorkDataHelper.manager.getWorkData(eco);
+			if (dd != null) {
+				PersistenceHelper.manager.delete(dd);
+			}
+
 			PersistenceHelper.manager.delete(eco);
 
 			trs.commit();

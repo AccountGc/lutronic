@@ -72,11 +72,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -213,10 +212,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			}
 
 			function loadGridData(movePage) {
-				if(movePage === undefined) {
+				if (movePage === undefined) {
 					document.getElementById("sessionid").value = 0;
 				}
-				
+
 				let params = new Object();
 				const url = getCallUrl("/temprary/list");
 				const field = [ "number", "name", "dataType" ];
@@ -251,8 +250,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 			});
 
 			function exportExcel() {
-			    const sessionName = document.getElementById("sessionName").value;
-			    exportToExcel("임시저장함 리스트", "임시저장함", "임시저장함 리스트", [], sessionName);
+				const sessionName = document.getElementById("sessionName").value;
+				exportToExcel("임시저장함 리스트", "임시저장함", "임시저장함 리스트", [], sessionName);
 			}
 
 			document.addEventListener("keydown", function(event) {

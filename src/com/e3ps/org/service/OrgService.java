@@ -39,4 +39,9 @@ public interface OrgService {
 	 */
 	public abstract void modify(Map<String, Object> params) throws Exception;
 
+	/**
+	 * 서명 로더
+	 */
+	public abstract void loaderSign() throws Exception;
+
 }

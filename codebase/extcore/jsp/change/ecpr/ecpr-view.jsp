@@ -68,7 +68,7 @@ iframe {
 				<col width="450">
 			</colgroup>
 			<tr>
-				<th class="lb" colspan="5">
+				<th class="lb" colspan="6">
 					<%=dto.getName()%>
 				</th>
 			</tr>
@@ -98,7 +98,7 @@ iframe {
 			</tr>
 			<tr>
 				<th class="lb">변경구분</th>
-				<td colspan="3">
+				<td colspan="5">
 					&nbsp;
 					<%
 					for (NumberCode section : sectionList) {
@@ -250,4 +250,12 @@ iframe {
 		AUIGrid.resize(myGridID10000);
 		AUIGrid.resize(myGridID10001);
 	});
+	
+	function print() {
+		const oid = document.getElementById("oid").value;
+		const url = getCallUrl("/ecpr/print?oid=" + oid);
+		const p = _popup(url, "", "", "f");
+		const content = DEXT5.getBodyValue("content");
+		p.data = content;
+	}
 </script>

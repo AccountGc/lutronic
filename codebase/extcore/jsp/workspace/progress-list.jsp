@@ -52,11 +52,10 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="결재 초기화" title="결재 초기화" onclick="_reset();" class="blue">
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">

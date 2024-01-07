@@ -18,12 +18,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.e3ps.admin.form.FormTemplate;
 import com.e3ps.admin.form.service.FormTemplateHelper;
+import com.e3ps.change.ECPRRequest;
+import com.e3ps.change.EChangeRequest;
+import com.e3ps.change.cr.dto.CrDTO;
 import com.e3ps.change.ecpr.dto.EcprDTO;
 import com.e3ps.change.ecpr.service.EcprHelper;
 import com.e3ps.common.code.NumberCode;
 import com.e3ps.common.code.service.NumberCodeHelper;
 import com.e3ps.common.util.CommonUtil;
 import com.e3ps.controller.BaseController;
+import com.e3ps.workspace.ApprovalLine;
+import com.e3ps.workspace.ApprovalMaster;
+import com.e3ps.workspace.service.WorkspaceHelper;
 
 @Controller
 @RequestMapping(value = "/ecpr/**")
@@ -179,5 +185,23 @@ public class EcprController extends BaseController {
 			result.put("msg", e.toString());
 		}
 		return result;
+	}
+	
+	@Description(value = "ECPR 인쇄하기")
+	@GetMapping(value = "/print")
+	public ModelAndView print(@RequestParam String oid) throws Exception {
+		ModelAndView model = new ModelAndView();
+		ECPRRequest ecpr = (ECPRRequest) CommonUtil.getObject(oid);
+		EcprDTO dto = new EcprDTO(ecpr);
+		ApprovalMaster m = WorkspaceHelper.manager.getMaster(ecpr);
+		ApprovalLine submitLine = WorkspaceHelper.manager.getSubmitLine(m);
+		ArrayList<ApprovalLine> agreeLines = WorkspaceHelper.manager.getAgreeLine(m);
+		ArrayList<ApprovalLine> approvalLines = WorkspaceHelper.manager.getApprovalLines(m);
+		model.addObject("submitLine", submitLine);
+		model.addObject("approvalLines", approvalLines);
+		model.addObject("agreeLines", agreeLines);
+		model.addObject("dto", dto);
+		model.setViewName("popup:/change/ecpr/ecpr-print");
+		return model;
 	}
 }
