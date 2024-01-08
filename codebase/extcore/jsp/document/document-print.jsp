@@ -28,7 +28,7 @@ String submitDate = dateFormat.format(submitLine.getCompleteTime());
 
 @media print {
 	body {
-		zoom: 70%; 
+		zoom: 80%; 
 	}
 }
 

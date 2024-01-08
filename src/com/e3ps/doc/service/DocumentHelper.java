@@ -940,21 +940,23 @@ public class DocumentHelper {
 			DocumentClass classType2 = (DocumentClass) info.getPtc_ref_2().getObject();
 			if (classType2 != null) {
 				String name = classType2.getName();
-				if ("제3자검증의뢰서".equals(name)) {
-
+				if ("설계계획검토회의".equals(name)) {
+					return "QF-705-17";
 				} else if ("회의록".equals(name)) {
 					return "P7.3-1-16";
+				} else if ("산업디자인검토회의".equals(name)) {
+					return "QF-705-27";
+				} else if ("설계및검증검토회의".equals(name)) {
+					return "QF-705-23";
+				} else if ("PP완료여부회의".equals(name)) {
+					return "QF-705-25";
+				} else if ("테스트보고서".equals(name)) {
+					return "QF-705-08";
+				} else if ("제3자검증의뢰서".equals(name)) {
+					return "P7.3-2-1";
 				}
 			}
 		}
-
-//		테스트보고서	QF-705-08
-//		제3자 시험의뢰서	P7.3-2-1
-//		산업 디자인 검토 회의록	QF-705-27
-//		설계 계획 검토 회의록	QF-705-17
-//		설계 및 검증 검토 회의록	QF-705-23
-//		PP 완료 여부 검토 회의록	QF-705-25
-
 		return "";
 	}
 }
