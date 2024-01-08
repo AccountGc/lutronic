@@ -29,11 +29,12 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 				</td>
 			</tr>
 		</table>
+
 		<!-- 제품 -->
-		<jsp:include page="/extcore/jsp/change/include_selectPart.jsp">
+		<jsp:include page="/extcore/jsp/rohs/include/rohs-complete-include.jsp">
 			<jsp:param value="" name="oid" />
 			<jsp:param value="create" name="mode" />
-			<jsp:param value="false" name="header" />
+			<jsp:param value="true" name="multi" />
 		</jsp:include>
 
 		<table class="button-table">
@@ -119,7 +120,7 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			function loadGridData() {
 				let params = new Object();
-				params.partList = AUIGrid.getGridData(partGridID);
+				params.partList = AUIGrid.getGridData(myGridID104);
 				const url = getCallUrl("/rohs/product");
 				AUIGrid.showAjaxLoader(myGridID);
 				parent.openLayer();
@@ -142,9 +143,9 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					select : headerMenuSelectHandler
 				});
 				createAUIGrid(columns);
+				createAUIGrid104(columns104);
 				AUIGrid.resize(myGridID);
-				createAUIGrid2(columnsPart);
-				AUIGrid.resize(partGridID);
+				AUIGrid.resize(myGridID104);
 			});
 
 			document.addEventListener("keydown", function(event) {
@@ -160,21 +161,8 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 
 			window.addEventListener("resize", function() {
 				AUIGrid.resize(myGridID);
-				AUIGrid.resize(partGridID);
+				AUIGrid.resize(myGridID104);
 			});
-
-			function deleteBtn() {
-				const checked = AUIGrid.getCheckedRowItems(partGridID);
-				if (checked.length === 0) {
-					alert("삭제할 행을 선택하세요.");
-					return false;
-				}
-
-				for (let i = checked.length - 1; i >= 0; i--) {
-					const rowIndex = checked[i].rowIndex;
-					AUIGrid.removeRow(partGridID, rowIndex);
-				}
-			}
 
 			function exportExcel() {
 				const sessionName = document.getElementById("sessionName").value;

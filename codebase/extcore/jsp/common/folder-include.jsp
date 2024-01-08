@@ -33,6 +33,13 @@ String height = request.getParameter("height");
 			forceTreeView : true,
 			useContextMenu : true,
 			enableRightDownFocus : true,
+			<%
+				if(isAdmin) {
+			%>
+			editable : true
+			<%
+				}
+			%>
 		}
 		_myGridID = AUIGrid.create("#_grid_wrap", columnLayout, props);
 <%if (isAdmin) {%>
@@ -60,9 +67,6 @@ String height = request.getParameter("height");
 			label : "폴더 생성(동일레벨)",
 			callback : auiContextHandler_
 		}, {
-			label : "폴더 수정",
-			callback : auiContextHandler_
-		}, {
 			label : "_$line" // label 에 _$line 을 설정하면 라인을 긋는 아이템으로 인식합니다.
 		}, {
 			label : "저장",
@@ -75,6 +79,8 @@ String height = request.getParameter("height");
 		const t = document.getElementById("type").value;
 		const item = event.item;
 		const oid = item.oid;
+		const poid = item.poid;
+		const isNew = item.isNew;
 		switch (event.contextIndex) {
 		case 0:
 			url = getCallUrl("/access/view?oid=" + oid);
@@ -89,24 +95,30 @@ String height = request.getParameter("height");
 			_popup(url, 1600, 600, "n");
 			break;
 		case 3:
+			addTreeRow(oid, isNew);
 			break;
 		case 4:
+			addRow(poid, isNew);
 			break;
 		case 5:
 			break;
-		case 7:
+		case 6:
 			treeSave();
 			break;
 		}
 	}
 
 	function treeSave() {
-		const data = AUIGrid.getGridData(_myGridID);
+		const editRows = AUIGrid.getEditedRowItems(_myGridID);
+		const addRows = AUIGrid.getAddedRowItems(_myGridID);
+		
 		const url = getCallUrl("/folder/treeSave");
 		const params = {
-			data : data
+			editRows:editRows,
+			addRows:addRows,
 		};
 		parent.openLayer();
+		logger(params);
 		call(url, params, function(data) {
 			alert(data.msg);
 			if(data.result) {
@@ -129,7 +141,7 @@ String height = request.getParameter("height");
 		document.getElementById("locationText").innerText = location;
 		loadGridData();
 	}
-
+	
 	let timerId = null;
 	function auiCellDoubleClick(event) {
 <%if ("list".equals(mode)) {%>
@@ -148,6 +160,26 @@ String height = request.getParameter("height");
 			loadGridData();
 		}, 500);
 <%}%>
+	}
+	
+	function addTreeRow(oid) {
+		const parentRowId = oid;
+		const newItem = new Object();
+		newItem.parentRowId = parentRowId;
+		newItem.poid = oid;
+		newItem.name = "새 폴더";
+		newItem.isNew = true;
+		AUIGrid.addTreeRow(_myGridID, newItem, parentRowId, "selectionDown");
+	}
+	
+	function addRow(poid) {
+		const parentRowId = poid;
+		const newItem = new Object();
+		newItem.poid = poid;
+		newItem.parentRowId = parentRowId;
+		newItem.name = "새 폴더";
+		newItem.isNew = true;
+		AUIGrid.addTreeRow(_myGridID, newItem, parentRowId, "selectionDown");
 	}
 
 	function tree() {

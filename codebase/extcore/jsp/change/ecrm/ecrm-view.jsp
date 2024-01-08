@@ -188,7 +188,7 @@ iframe {
 	</div>
 	<div id="tabs-3">
 		<!-- 이력관리 -->
-		<jsp:include page="/extcore/jsp/change/ecpr/include/ecpr-record-include.jsp">
+		<jsp:include page="/extcore/jsp/change/ecrm/include/ecrm-record-include.jsp">
 			<jsp:param value="<%=dto.getOid()%>" name="oid" />
 		</jsp:include>
 	</div>

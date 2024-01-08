@@ -90,12 +90,11 @@ WTUser user = (WTUser) SessionHelper.manager.getPrincipal();
 					<img src="/Windchill/extcore/images/redo.gif" title="테이블 초기화" onclick="resetColumnLayout('organization-list');">
 				</td>
 				<td class="right">
-					<select name="_psize" id="_psize">
+				<select name="_psize" id="_psize">
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<%
 					if (isAdmin) {

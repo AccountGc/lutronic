@@ -432,7 +432,7 @@ public class RohsHelper {
 
 		if (partList != null) {
 			for (Map<String, Object> part : partList) {
-				String partOid = (String) part.get("oid");
+				String partOid = (String) part.get("part_oid");
 				WTPart wtpart = (WTPart) CommonUtil.getObject(partOid);
 				PartDTO dto = new PartDTO(wtpart);
 				Map<String, Object> map = new HashMap<String, Object>();

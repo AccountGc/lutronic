@@ -107,11 +107,10 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				</td>
 				<td class="right">
 					<select name="_psize" id="_psize">
+						<option value="10">10</option>
 						<option value="30">30</option>
 						<option value="50">50</option>
 						<option value="100">100</option>
-						<option value="200">200</option>
-						<option value="300">300</option>
 					</select>
 					<input type="button" value="검색" title="검색" onclick="loadGridData();">
 				</td>
@@ -146,7 +145,8 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 					},
 				}, {
 					dataField : "name",
-					headerText : "<%=title%> 일괄결재제목",
+					headerText : "<%=title%>
+			일괄결재제목",
 					dataType : "string",
 					style : "aui-left",
 					renderer : {
@@ -219,9 +219,9 @@ boolean isAdmin = (boolean) request.getAttribute("isAdmin");
 				params = toField(params, field);
 				const number = toId("number");
 				const numberType = toId("numberType");
-				if(number==""){
+				if (number == "") {
 					params.number = numberType;
-				}else{
+				} else {
 					params.number = number;
 				}
 				const url = getCallUrl("/asm/list");

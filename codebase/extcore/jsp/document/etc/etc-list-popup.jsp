@@ -45,9 +45,9 @@ String state = (String) request.getAttribute("state");
 			<input type="hidden" name="location" id="location" value="<%=location%>">
 			<span id="locationText"><%=location%></span>
 		</td>
-		<th>내부 문서번호</th>
+		<th>문서번호</th>
 		<td class="indent5">
-			<input type="text" name="interalnumber" id="interalnumber" class="width-300">
+			<input type="text" name="number" id="number" class="width-300">
 		</td>
 		<th>문서명</th>
 		<td class="indent5">
@@ -178,11 +178,10 @@ String state = (String) request.getAttribute("state");
 		</td>
 		<td class="right">
 			<select name="_psize" id="_psize">
+				<option value="10">10</option>
 				<option value="30">30</option>
 				<option value="50">50</option>
 				<option value="100">100</option>
-				<option value="200">200</option>
-				<option value="300">300</option>
 			</select>
 			<input type="button" value="검색" title="검색" class="blue" onclick="loadGridData();">
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="javascript:self.close();">
@@ -224,8 +223,8 @@ const columns = [ {
 		inline : true
 	},
 }, {
-	dataField : "interalnumber",
-	headerText : "내부 문서번호",
+	dataField : "number",
+	headerText : "문서번호",
 	dataType : "string",
 	width : 120,
 	filter : {
@@ -420,7 +419,7 @@ function loadGridData() {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-	toFocus("interalnumber");
+	toFocus("number");
 	const contenxtHeader = genColumnHtml(columns);
 	$("#h_item_ul").append(contenxtHeader);
 	$("#headerMenu").menu({

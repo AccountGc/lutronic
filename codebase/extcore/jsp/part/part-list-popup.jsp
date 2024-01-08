@@ -329,10 +329,11 @@ const columns = [ {
 	dataField : "_3d",
 	headerText : "3D",
 	dataType : "string",
-	width : 60,
+	width : 40,
 	renderer : {
 		type : "ImageRenderer",
 		altField : null,
+		imgHeight : 16,
 		onClick : function(event) {
 		}
 	},
@@ -340,12 +341,23 @@ const columns = [ {
 	dataField : "_2d",
 	headerText : "2D",
 	dataType : "string",
-	width : 60,
+	width : 40,
 	renderer : {
 		type : "ImageRenderer",
 		altField : null,
+		imgHeight : 16,
 		onClick : function(event) {
 		}
+	},
+}, {
+	dataField : "icon",
+	headerText : "",
+	dataType : "string",
+	width : 40,
+	renderer : {
+		type : "ImageRenderer",
+		altField : null,
+		imgHeight : 16,
 	},
 }, {
 	dataField : "number",

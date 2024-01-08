@@ -71,9 +71,10 @@ public class FolderController extends BaseController {
 	@Description(value = "폴더 트리 저장")
 	@PostMapping(value = "/treeSave")
 	@ResponseBody
-	public Map<String, Object> treeSave(@RequestBody Map<String, String> params) throws Exception {
+	public Map<String, Object> treeSave(@RequestBody Map<String, Object> params) throws Exception {
 		Map<String, Object> result = new HashMap<String, Object>();
 		try {
+			FolderUtils.treeSave(params);
 			result.put("msg", SAVE_MSG);
 			result.put("result", SUCCESS);
 		} catch (Exception e) {

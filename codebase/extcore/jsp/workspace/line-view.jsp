@@ -97,13 +97,12 @@ String tapOid = dto.getPersist().getPersistInfo().getObjectIdentifier().getStrin
 <!-- 결재 이력 -->
 <jsp:include page="/extcore/jsp/workspace/include/approval-history.jsp">
 	<jsp:param value="<%=dto.getPoid()%>" name="oid" />
-	<jsp:param value="300" name="height" />
 </jsp:include>
-<!-- 	<div id="tabs-2"> -->
-<%-- 		<jsp:include page="<%=url%>"> --%>
-<%-- 			<jsp:param value="<%=tapOid%>" name="tapOid" /> --%>
-<%-- 		</jsp:include> --%>
-<!-- 	</div> -->
+
+<!-- 외부 유저 메일 -->
+<jsp:include page="/extcore/jsp/workspace/include/approval-mail.jsp">
+	<jsp:param value="<%=dto.getPoid()%>" name="oid" />
+</jsp:include>
 
 <script type="text/javascript">
 	function reassign() {

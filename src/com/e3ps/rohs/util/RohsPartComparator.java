@@ -9,8 +9,8 @@ public class RohsPartComparator implements Comparator {
 	public int compare(Object o1, Object o2) {
 		Map<String, Object> map1 = (Map<String, Object>) o1;
 		Map<String, Object> map2 = (Map<String, Object>) o2;
-		String level1 = (String) map1.get("level");
-		String level2 = (String) map2.get("level");
-		return level1.compareTo(level2);
+		int level1 = (int) map1.get("level");
+		int level2 = (int) map2.get("level");
+		return level1 - level2;
 	}
 }

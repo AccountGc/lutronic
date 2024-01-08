@@ -62,6 +62,11 @@ String url = "/extcore/jsp/workspace/" + jsp + ".jsp";
 	<jsp:param value="<%=dto.getPoid()%>" name="oid" />
 </jsp:include>
 
+<!-- 외부 유저 메일 -->
+<jsp:include page="/extcore/jsp/workspace/include/approval-mail.jsp">
+	<jsp:param value="<%=dto.getPoid()%>" name="oid" />
+</jsp:include>
+
 <script type="text/javascript">
 	function dataView() {
 		const url = "<%=dto.getViewUrl()%>";
