@@ -2,16 +2,17 @@ package com.e3ps.drawing.column;
 
 import java.sql.Timestamp;
 
-import com.e3ps.common.util.CommonUtil;
 import com.e3ps.common.util.ThumbnailUtil;
-import com.e3ps.drawing.service.DrawingHelper;
 import com.e3ps.part.service.PartHelper;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Getter;
 import lombok.Setter;
+import wt.enterprise.BasicTemplateProcessor;
 import wt.epm.EPMDocument;
-import wt.part.WTPart;
+import wt.fc.IconDelegate;
+import wt.fc.IconDelegateFactory;
+import wt.util.IconSelector;
 import wt.vc.VersionControlHelper;
 
 @Getter
@@ -24,6 +25,7 @@ public class EpmColumn {
 	private String drawing_oid; // 2D
 	private String _3d;
 	private String _2d;
+	private String icon;
 	private String cadType;
 	private String cadTypeKey;
 	private String number;
@@ -51,6 +53,7 @@ public class EpmColumn {
 	public EpmColumn(EPMDocument epm) throws Exception {
 		setCadType(epm.getDocType().getDisplay());
 		setCadTypeKey(epm.getDocType().toString());
+		iconInfo(epm);
 //		setLatest(CommonUtil.isLatestVersion(epm));
 		setEpm_oid(epm.getPersistInfo().getObjectIdentifier().getStringValue());
 		set_3d(ThumbnailUtil.thumbnailSmall(epm));
@@ -94,9 +97,16 @@ public class EpmColumn {
 //		String latest_version = latest.getVersionIdentifier().getSeries().getValue() + "."
 //				+ latest.getIterationIdentifier().getSeries().getValue();
 //		if (isLatest()) {
-			return version;
+		return version;
 //		} else {
 //			return version + " <b><font color='red'>(" + latest_version + ")</font></b>";
 //		}
+	}
+
+	private void iconInfo(EPMDocument epm) throws Exception {
+		IconDelegateFactory factory = IconDelegateFactory.getInstance();
+		IconDelegate delegate = factory.getIconDelegate(epm);
+		IconSelector selector = delegate.getStandardIconSelector();
+		setIcon("/Windchill/" + selector.getIconKey());
 	}
 }

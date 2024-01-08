@@ -331,6 +331,16 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 						}
 					},
 				}, {
+					dataField : "icon",
+					headerText : "",
+					dataType : "string",
+					width : 40,
+					renderer : {
+						type : "ImageRenderer",
+						altField : null,
+						imgHeight : 16,
+					},
+				}, {
 					dataField : "cadType",
 					headerText : "CAD타입",
 					dataType : "string",
@@ -492,6 +502,7 @@ QuantityUnit[] unitList = (QuantityUnit[]) request.getAttribute("unitList");
 			}
 
 			document.addEventListener("DOMContentLoaded", function() {
+				toFocus("number");
 				const columns = loadColumnLayout("drawing-list");
 				const contenxtHeader = genColumnHtml(columns);
 				$("#h_item_ul").append(contenxtHeader);

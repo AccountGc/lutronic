@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="com.e3ps.drawing.beans.EpmData"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="wt.org.WTUser"%>
@@ -6,8 +7,10 @@
 <%@include file="/extcore/jsp/common/auigrid.jsp"%>
 <%
 boolean isAdmin = (boolean) request.getAttribute("isAdmin");
-// WTUser sessionUser = (WTUser) request.getAttribute("sessionUser");
 EpmData dto = (EpmData) request.getAttribute("dto");
+Map<String, String> pdf = dto.getPdf();
+Map<String, String> dxf = dto.getDxf();
+Map<String, String> step = dto.getStep();
 %>
 <input type="hidden" name="oid" id="oid" value="<%=dto.getOid()%>">
 <table class="button-table">
@@ -20,18 +23,18 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 		</td>
 		<td class="right">
 			<%
-			if(dto.isNameSyschronization){
+			if (dto.isNameSyschronization) {
 			%>
-				<input type="button" value="Name 동기화" title="Name 동기화">
-			<%	
+			<input type="button" value="Name 동기화" title="Name 동기화">
+			<%
 			}
 			%>
 			<%
-			if(dto.isUpdate){
+			if (dto.isUpdate) {
 			%>
-				<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
-				<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
-			<%	
+			<input type="button" value="수정" title="수정" class="blue" onclick="updateBtn();">
+			<input type="button" value="삭제" title="삭제" class="red" onclick="deleteBtn();">
+			<%
 			}
 			%>
 			<input type="button" value="닫기" title="닫기" class="gray" onclick="self.close();">
@@ -113,15 +116,61 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 				<td class="indent5"><%=dto.getApplicationType()%></td>
 			</tr>
 			<tr>
-				<th class="lb">dxf</th>
+				<th class="lb">DXF</th>
 				<td class="indent5" colspan="3"></td>
 			</tr>
+<tr>
+				<th class="lb">STEP</th>
+				<td class="indent5" colspan="4">
+					<%
+					if (step.size() > 0) {
+					%>
+					<a href="<%=step.get("url")%>"><%=step.get("name")%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>STEP 파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
+			</tr>
 			<tr>
-				<th class="lb">주 첨부파일</th>
-				<td class="indent5" colspan="3">
-					<jsp:include page="/extcore/jsp/common/primary-view.jsp">
-						<jsp:param value="<%=dto.getOid()%>" name="oid" />
-					</jsp:include>
+				<th class="lb">PDF</th>
+				<td class="indent5" colspan="4">
+					<%
+					if (pdf.size() > 0) {
+					%>
+					<a href="<%=pdf.get("url")%>"><%=pdf.get("name")%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>PDF 파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
+				</td>
+			</tr>
+			<tr>
+				<th class="lb">DXF</th>
+				<td class="indent5" colspan="4">
+					<%
+					if (dxf.size() > 0) {
+					%>
+					<a href="<%=dxf.get("url")%>"><%=dxf.get("name")%></a>
+					<%
+					} else {
+					%>
+					<font color="red">
+						<b>DXF 파일이 없습니다.</b>
+					</font>
+					<%
+					}
+					%>
 				</td>
 			</tr>
 			<tr>
@@ -137,8 +186,8 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 	<div id="tabs-2">
 		<!-- 참조 -->
 		<jsp:include page="/extcore/jsp/drawing/include_viewReference.jsp">
-			<jsp:param value="<%=dto.getOid() %>" name="oid" />
-			<jsp:param value="drawing"  name="moduleType"/>
+			<jsp:param value="<%=dto.getOid()%>" name="oid" />
+			<jsp:param value="drawing" name="moduleType" />
 		</jsp:include>
 	</div>
 
@@ -152,27 +201,27 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 
 <script type="text/javascript">
 	//수정
-	function updateBtn(){
+	function updateBtn() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/drawing/update?oid=" + oid);
 		document.location.href = url;
 	}
-	
+
 	//삭제
-	function deleteBtn(){
-	
+	function deleteBtn() {
+
 		if (!confirm("삭제 하시겠습니까?")) {
 			return false;
 		}
-	
+
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/drawing/delete?oid=" + oid);
 		call(url, null, function(data) {
 			alert(data.msg);
 			if (data.result) {
-				if(parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null){
+				if (parent.opener.$("#sessionId").val() == "undefined" || parent.opener.$("#sessionId").val() == null) {
 					parent.opener.location.reload();
-				}else {
+				} else {
 					parent.opener.$("#sessionId").val("");
 					parent.opener.lfn_Search();
 				}
@@ -180,14 +229,14 @@ EpmData dto = (EpmData) request.getAttribute("dto");
 			}
 		}, "DELETE");
 	}
-			
+
 	//최신버전
 	function latest() {
 		const oid = document.getElementById("oid").value;
 		const url = getCallUrl("/drawing/latest?oid=" + oid);
 		_popup(url, 1600, 550, "n");
 	}
-	
+
 	document.addEventListener("DOMContentLoaded", function() {
 		$("#tabs").tabs({
 			active : 0,
